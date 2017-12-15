@@ -996,3 +996,88 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 }
 add_filter( 'get_post_metadata', '_edd_discount_post_meta_bc_filter', 99, 4 );
+
+
+/**
+ * Listen for calls to update_post_meta and see if we need to filter them.
+ *
+ * @since  3.4
+ * @param mixed   $check       Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table
+ * @param  int    $object_id   The object ID post meta was requested for.
+ * @param  string $meta_key    The meta key requested.
+ * @param  mixed  $meta_value  The value get_post_meta would return if we don't filter.
+ * @param  mixed  $prev_value  The previous value of the meta
+ * @return mixed               Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta
+ */
+function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+	global $wpdb;
+
+	$meta_keys = apply_filters( 'edd_update_post_meta_discount_backwards_compat_keys', array(
+		'_edd_discount_status',
+		'_edd_discount_amount',
+		'_edd_discount_uses',
+		'_edd_discount_name',
+		'_edd_discount_code',
+	) );
+
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return $check;
+	}
+
+	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+	$discount      = new EDD_Discount( $object_id );
+	if( ! $discount || ! $discount->id > 0 ) {
+
+		// We didn't find a discount record with this ID...so let's check and see if it was a migrated one
+		$object_id = $wpdb->get_var( "SELECT discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = '_edd_discount_legacy_id' AND meta_value = $object_id" );
+
+		if ( ! empty( $object_id ) ) {
+			$discount = new EDD_Discount( $object_id );
+		} else {
+			return $check;
+		}
+	}
+
+	if( ! $discount || ! $discount->id > 0 ) {
+		return $check;
+	}
+
+	switch( $meta_key ) {
+
+		case '_edd_discount_name':
+		case '_edd_discount_status':
+		case '_edd_discount_amount':
+		case '_edd_discount_uses':
+		case '_edd_discount_code':
+
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+
+			$discount->$key = $meta_value;
+			$check = $discount->save();
+
+			// Since the old commission data was simply stored in a single post meta entry, just don't let it be added.
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'Discount data is no longer stored in post meta. Please use the new custom database tables to insert a discount record.', 'eddc' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+
+		default:
+			/*
+			 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
+			 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
+			 */
+			$check = apply_filters( 'edd_update_post_meta_discount_backwards_compat-' . $meta_key, $check, $object_id, $meta_value, $prev_value );
+			break;
+	}
+
+	return $check;
+
+}
+add_filter( 'update_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
