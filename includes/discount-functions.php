@@ -945,6 +945,12 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 	$meta_keys = apply_filters( 'edd_post_meta_discount_backwards_compat_keys', array(
 		'_edd_discount_status',
+		'_edd_discount_amount',
+		'_edd_discount_uses',
+		'_edd_discount_name',
+		'_edd_discount_code',
+		'_edd_discount_expiration',
+		'_edd_discount_start',
 	) );
 
 	if ( ! in_array( $meta_key, $meta_keys ) ) {
@@ -973,9 +979,17 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 	switch( $meta_key ) {
 
+		case '_edd_discount_name':
 		case '_edd_discount_status':
+		case '_edd_discount_amount':
+		case '_edd_discount_uses':
+		case '_edd_discount_code':
+		case '_edd_discount_expiration':
+		case '_edd_discount_start':
 
-			$value = $discount->status;
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+
+			$value = $discount->$key;
 
 			if ( $show_notice ) {
 				// Throw deprecated notice if WP_DEBUG is defined and on
@@ -1022,6 +1036,8 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 		'_edd_discount_uses',
 		'_edd_discount_name',
 		'_edd_discount_code',
+		'_edd_discount_expiration',
+		'_edd_discount_start',
 	) );
 
 	if ( ! in_array( $meta_key, $meta_keys ) ) {
@@ -1054,6 +1070,8 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 		case '_edd_discount_amount':
 		case '_edd_discount_uses':
 		case '_edd_discount_code':
+		case '_edd_discount_expiration':
+		case '_edd_discount_start':
 
 			$key = str_replace( '_edd_discount_', '', $meta_key );
 
