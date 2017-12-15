@@ -172,7 +172,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 	} else {
 		$discount = new EDD_Discount( $discount_id );
 		$discount->update( $details );
-		$return = (int) $discount->ID;
+		$return = (int) $discount->id;
 	}
 
 	return $return;
