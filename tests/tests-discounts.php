@@ -11,9 +11,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public static $_flat_post_id = null;
 	public static $_negative_post_id = null;
 
-	public static function wpSetUpBeforeClass() {
+	public function setUp() {
 
-		parent::wpSetUpBeforeClass();
+		parent::setUp();
 
 		self::$_post_id = EDD_Helper_Discount::create_simple_percent_discount();
 		self::$_download = EDD_Helper_Download::create_simple_download();
@@ -32,14 +32,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		self::$_flat_post_id = EDD_Helper_Discount::create_simple_flat_discount();
 	}
 
-	public static function tearDownAfterClass() {
-
-		parent::tearDownAfterClass();
-
-		EDD_Helper_Discount::delete_discount( self::$_post_id );
-		EDD_Helper_Discount::delete_discount( self::$_negative_post_id );
-		EDD_Helper_Discount::delete_discount( self::$_flat_post_id );
-
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_discount_created() {
@@ -113,7 +107,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		$this->assertFalse( edd_is_discount_active( $expired_post_id, false ) );
 
-		$this->assertEquals( get_post_meta( $expired_post_id, '_edd_discount_status', true ), 'expired' );
+		$this->assertEquals( 'expired', get_post_meta( $expired_post_id, '_edd_discount_status', true ) );
 
 	}
 
@@ -240,7 +234,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$uses = edd_get_discount_uses( $id );
 
 		$increased = edd_increase_discount_usage( '20OFF' );
-		$this->assertequals( $increased, $uses + 1 );
+		$this->assertequals( $increased, (int) $uses + 1 );
 
 		// Test missing codes
 		$this->assertFalse( edd_increase_discount_usage( 'INVALIDDISCOUNTCODE' ) );
@@ -252,17 +246,15 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		update_post_meta( self::$_post_id, '_edd_discount_uses', $max_uses - 1 );
 
-		$this->assertEquals( get_post_meta( self::$_post_id, '_edd_discount_status', true ), 'active' );
+		$this->assertEquals( 'active', get_post_meta( self::$_post_id, '_edd_discount_status', true ) );
 
 		$code = edd_get_discount_code( self::$_post_id );
 		edd_increase_discount_usage( $code );
 
-		$this->assertEquals( get_post_meta( self::$_post_id, '_edd_discount_status', true ), 'inactive' );
-		$this->assertEquals( get_post_status( self::$_post_id ), 'inactive' );
+		$this->assertEquals( 'inactive', get_post_meta( self::$_post_id, '_edd_discount_status', true ) );
 
 		edd_decrease_discount_usage( $code );
-		$this->assertEquals( get_post_meta( self::$_post_id, '_edd_discount_status', true ), 'active' );
-		$this->assertEquals( get_post_status( self::$_post_id ), 'active' );
+		$this->assertEquals( 'active', get_post_meta( self::$_post_id, '_edd_discount_status', true ) );
 	}
 
 	public function test_decrease_discount_usage() {
@@ -270,7 +262,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$uses = edd_get_discount_uses( $id );
 
 		$decreased = edd_decrease_discount_usage( '20OFF' );
-		$this->assertSame( $decreased, $uses - 1 );
+		$this->assertSame( $decreased, (int) $uses - 1 );
 
 		// Test missing codes
 		$this->assertFalse( edd_decrease_discount_usage( 'INVALIDDISCOUNTCODE' ) );
@@ -283,8 +275,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_edd_get_discount_by() {
 		$discount = edd_get_discount_by( 'id', self::$_post_id );
-		$this->assertObjectHasAttribute( 'ID', $discount );
-		$this->assertSame( self::$_post_id, $discount->ID );
+		$this->assertEquals( $discount->ID, self::$_post_id );
 		$this->assertObjectHasAttribute( 'post_title', edd_get_discount_by( 'code', '20OFF' ) );
 		$this->assertSame( self::$_post_id, edd_get_discount_by( 'code', '20OFF' )->ID );
 		$this->assertObjectHasAttribute( 'post_name', edd_get_discount_by( 'name', '20 Percent Off' ) );
@@ -444,16 +435,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_discounts() {
-		$defaults = array(
-			'post_type'      => 'edd_discount',
-			'posts_per_page' => 30,
-			'paged'          => null,
-			'post_status'    => array( 'active', 'inactive', 'expired' )
-		);
-
-		$hash            = md5( json_encode( $defaults ) );
-		$found_discounts = edd_get_discounts();
-
+		$found_discounts = edd_get_discounts( array( 'posts_per_page' => 3 ));
 		$this->assertSame( 3, count( $found_discounts ) );
 	}
 }
