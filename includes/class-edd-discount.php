@@ -203,7 +203,7 @@ class EDD_Discount {
 		} else if ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 		} else {
-			$_id_or_code_or_name = absint( $_id_or_code_or_name );
+			$_id_or_code_or_name = intval( $_id_or_code_or_name );
 			$discount = $this->db->get( $_id_or_code_or_name );
 		}
 
@@ -239,8 +239,13 @@ class EDD_Discount {
 
 				// Account for old property keys from pre 3.0
 				case 'post_author' :
+					break;
 				case 'post_date' :
 				case 'post_date_gmt' :
+
+					return $this->created_date;
+					break;
+
 				case 'post_content' :
 				case 'post_title' :
 
@@ -249,6 +254,9 @@ class EDD_Discount {
 
 				case 'post_excerpt' :
 				case 'post_status' :
+					return $this->status;
+					break;
+
 				case 'comment_status' :
 				case 'ping_status' :
 				case 'post_password' :
@@ -323,16 +331,65 @@ class EDD_Discount {
 
 		// Only real properties can be saved.
 		$keys = array_keys( get_class_vars( get_called_class() ) );
+		$old_keys = array(
+			'is_single_use',
+			'uses',
+			'expiration',
+			'start',
+			'min_price',
+			'use_once',
+			'is_single_use',
+			'is_not_global',
+		);
 
-		if ( ! in_array( $key, $keys ) ) {
+		if ( ! in_array( $key, $keys ) && ! in_array( $key, $old_keys ) ) {
 			return false;
 		}
 
 		// Dispatch to setter method if value needs to be sanitized
 		if ( method_exists( $this, 'set_' . $key ) ) {
+
 			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
+
+		} elseif( in_array( $key, $old_keys ) ) {
+
+			switch( $key ) {
+
+				case 'expiration' :
+
+						$this->end_date = $value;
+						break;
+
+					case 'start' :
+
+						$this->start_date = $value;
+						break;
+
+					case 'min_price' :
+
+						$this->min_cart_price = $value;
+						break;
+
+					case 'use_once' :
+					case 'is_single_use' :
+
+						$this->once_per_customer = $value;
+						break;
+
+					case 'uses' :
+
+						$this->use_count = $value;
+						break;
+
+					case 'is_not_global' :
+
+						$this->applies_globally = $value ? 0 : 1;
+						break;
+				}
 		} else {
+
 			$this->{$key} = $value;
+
 		}
 	}
 
@@ -827,35 +884,13 @@ class EDD_Discount {
 			return false;
 		}
 
-		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
-		$old = array(
-			'uses'       => 'use_count',
-			'max'        => 'max_uses',
-			'start'      => 'start_date',
-			'expiration' => 'end_date',
-			'min_price'  => 'min_cart_price',
-		);
-
-		foreach( $old as $old_key => $new_key ) {
-			if( isset( $args[ $old_key ] ) ) {
-				$args[ $new_key ] = $args[ $old_key ];
-				unset( $args[ $old_key ] );
-			}
-		}
-
 		if ( ! empty( $this->id ) && $this->exists() ) {
 
 			return $this->update( $args );
 
 		} else {
 
-			if( ! empty( $args['start_date'] ) ) {
-				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
-			}
-
-			if( ! empty( $args['end_date'] ) ) {
-				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
-			}
+			$args = $this->convert_legacy_args( $args );
 
 			if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
 
@@ -865,6 +900,18 @@ class EDD_Discount {
 				if( $start_timestamp > $end_timestamp ) {
 					// Set the expiration date to the start date if start is later than expiration
 					$args['end_date'] = $args['start_date'];
+				}
+			}
+
+			if( ! empty( $args['start_date'] ) ) {
+				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
+			}
+
+			if( ! empty( $args['end_date'] ) ) {
+				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
+			
+				if( $args['end_date'] < current_time( 'timestamp' ) ) {
+					$args['status'] = 'expired';
 				}
 			}
 
@@ -899,7 +946,7 @@ class EDD_Discount {
 
 
 			// The DB class 'add' implies an update if the discount being asked to be created already exists
-			if ( $this->db->insert( $args ) ) {
+			if ( $id = $this->db->insert( $args ) ) {
 
 				// We've successfully added/updated the discount, reset the class vars with the new data
 				$discount = $this->find_by_code( $args['code'] );
@@ -933,7 +980,7 @@ class EDD_Discount {
 			do_action( 'edd_post_insert_discount', $args, $this->id );
 
 			// Discount code created
-			return $this->id;
+			return $id;
 		}
 	}
 
@@ -950,6 +997,8 @@ class EDD_Discount {
 
 		$ret = false;
 
+		$args = $this->convert_legacy_args( $args );
+
 		/**
 		 * Filter the data being updated
 		 *
@@ -962,14 +1011,6 @@ class EDD_Discount {
 
 		$args = $this->sanitize_columns( $args );
 
-		if( ! empty( $args['start_date'] ) ) {
-			$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
-		}
-
-		if( ! empty( $args['end_date'] ) ) {
-			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
-		}
-
 		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
 
 			$start_timestamp = strtotime( $args['start_date'], current_time( 'timestamp' ) );
@@ -979,6 +1020,14 @@ class EDD_Discount {
 				// Set the expiration date to the start date if start is later than expiration
 				$args['end_date'] = $args['start_date'];
 			}
+		}
+
+		if( ! empty( $args['start_date'] ) ) {
+			$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
+		}
+
+		if( ! empty( $args['end_date'] ) ) {
+			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
 		}
 
 		/**
@@ -1023,6 +1072,7 @@ class EDD_Discount {
 	 * @return bool If the status been updated or not.
 	 */
 	public function update_status( $new_status = 'active' ) {
+
 		/**
 		 * Fires before the status of the discount is updated.
 		 *
@@ -1739,5 +1789,26 @@ class EDD_Discount {
 		}
 
 		return $data;
+	}
+
+	private function convert_legacy_args( $args = array() ) {
+
+		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
+		$old = array(
+			'uses'       => 'use_count',
+			'max'        => 'max_uses',
+			'start'      => 'start_date',
+			'expiration' => 'end_date',
+			'min_price'  => 'min_cart_price',
+		);
+
+		foreach( $old as $old_key => $new_key ) {
+			if( isset( $args[ $old_key ] ) ) {
+				$args[ $new_key ] = $args[ $old_key ];
+				unset( $args[ $old_key ] );
+			}
+		}
+
+		return $args;
 	}
 }
