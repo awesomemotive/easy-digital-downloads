@@ -30,6 +30,10 @@ function edd_get_discounts( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	if( isset( $args['posts_per_page'] ) ) {
+		$args['number'] = $args['posts_per_page'];
+	}
+
 	$discounts = EDD()->discounts->get_discounts( $args );
 
 	if( $discounts ) {
