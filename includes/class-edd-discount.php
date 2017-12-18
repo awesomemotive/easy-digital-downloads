@@ -894,8 +894,19 @@ class EDD_Discount {
 			return $this->update( $args );
 
 		} else {
-
 			$args = $this->convert_legacy_args( $args );
+
+			if( ! empty( $args['start_date'] ) ) {
+				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
+			}
+
+			if( ! empty( $args['end_date'] ) ) {
+				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
+			
+				if(  strtotime( $args['end_date'], current_time( 'timestamp' ) )  < current_time( 'timestamp' ) ) {
+					$args['status'] = 'expired';
+				}
+			}
 
 			if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
 
@@ -905,18 +916,6 @@ class EDD_Discount {
 				if( $start_timestamp > $end_timestamp ) {
 					// Set the expiration date to the start date if start is later than expiration
 					$args['end_date'] = $args['start_date'];
-				}
-			}
-
-			if( ! empty( $args['start_date'] ) ) {
-				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
-			}
-
-			if( ! empty( $args['end_date'] ) ) {
-				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
-			
-				if( $args['end_date'] < current_time( 'timestamp' ) ) {
-					$args['status'] = 'expired';
 				}
 			}
 
@@ -944,7 +943,6 @@ class EDD_Discount {
 			 * @param array $args Discount args.
 			 */
 			do_action( 'edd_pre_insert_discount', $args );
-
 			foreach( $args as $key => $value ) {
 				$this->$key = $value;
 			}
