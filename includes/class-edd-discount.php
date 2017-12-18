@@ -1804,11 +1804,12 @@ class EDD_Discount {
 
 		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
 		$old = array(
-			'uses'       => 'use_count',
-			'max'        => 'max_uses',
-			'start'      => 'start_date',
-			'expiration' => 'end_date',
-			'min_price'  => 'min_cart_price',
+			'uses'               => 'use_count',
+			'max'                => 'max_uses',
+			'start'              => 'start_date',
+			'expiration'         => 'end_date',
+			'min_price'          => 'min_cart_price',
+			'excluded-products'  => 'excluded_products',
 		);
 
 		foreach( $old as $old_key => $new_key ) {
