@@ -1885,15 +1885,23 @@ class EDD_Discount {
 				continue;
 			}
 
-			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value[0];
+			$value = maybe_unserialize( $value[0] );
+			if( is_array( $value ) ) {
+				$value = json_encode( $value );
+			}
+
+			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
 		
 		}
 
-		$d = new EDD_Discount();
-		$d->add( $args );
-		$d->add_meta( 'legacy_id', $old_discount->ID );
+		$d  = new EDD_Discount();
+		$id = $d->add( $args );
+		
+		$discount = new EDD_Discount( $id );
 
-		return true;
+		$discount->add_meta( 'legacy_id', $old_discount->ID );
+
+		return $discount->id;
 
 	}
 
