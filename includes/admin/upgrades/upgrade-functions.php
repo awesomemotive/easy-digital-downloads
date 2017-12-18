@@ -57,8 +57,12 @@ add_action( 'admin_init', 'edd_do_automatic_upgrades' );
  * @return void
 */
 function edd_show_upgrade_notices() {
-	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' )
+
+	global $wpdb;
+
+	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' ) {
 		return; // Don't show notices on the upgrades page
+	}
 
 	$edd_version = get_option( 'edd_version' );
 
@@ -87,7 +91,7 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
-	if ( version_compare( $edd_version, '1.3.4', '<' ) || version_compare( $edd_version, '1.4', '<' ) ) {
+	if ( version_compare( $edd_version, '1.3.0', '<' ) || version_compare( $edd_version, '1.4', '<' ) ) {
 		printf(
 			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
@@ -176,6 +180,51 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
+		if ( ! edd_has_upgrade_completed( 'migrate_discounts' ) ) {
+
+
+			// Check to see if we have discounts in the Database
+			$results       = $wpdb->get_row( "SELECT count(ID) as has_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount' LIMIT 0, 1" );
+			$has_discounts = ! empty( $results->has_discounts ) ? true : false;
+
+			if ( ! $has_discounts ) {
+				edd_set_upgrade_complete( 'migrate_discounts' );
+				edd_set_upgrade_complete( 'remove_legacy_discounts' );
+			} else {
+				printf(
+					'<div class="updated">' .
+					'<p>' .
+					__( 'Easy Digital Downloads needs to upgrade the discounts records database, click <a href="%s">here</a> to start the upgrade. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
+					'</p>' .
+					'<p style="display: none;">' .
+					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all discounts records and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd-discountss migrate_discounts</code>', 'easy-digital-downloads' ) .
+					'</p>' .
+					'</div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discountss_migration' ) )
+				);
+			}
+		}
+
+		if ( edd_has_upgrade_completed( 'migrate_discounts' ) && ! edd_has_upgrade_completed( 'remove_legacy_discounts' ) ) {
+			printf(
+				'<div class="updated">' .
+				'<p>' .
+				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%s">remove the legacy data</a>. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				'</p>' .
+				'<p style="display: none;">' .
+				__( '<strong>Removing legacy data:</strong><br />All discountss records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
+				'<br /><br />' .
+				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				'</p>' .
+				'</div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_discounts' ) )
+			);
+		}
+
 		/*
 		 *  NOTICE:
 		 *
@@ -217,7 +266,7 @@ function edd_trigger_upgrades() {
 		edd_v131_upgrades();
 	}
 
-	if ( version_compare( $edd_version, '1.3.4', '<' ) ) {
+	if ( version_compare( $edd_version, '1.3.0', '<' ) ) {
 		edd_v134_upgrades();
 	}
 
@@ -357,9 +406,9 @@ function edd_v131_upgrades() {
 }
 
 /**
- * Upgrade routine for v1.3.4
+ * Upgrade routine for v1.3.0
  *
- * @since 1.3.4
+ * @since 1.3.0
  * @return void
  */
 function edd_v134_upgrades() {
@@ -1163,3 +1212,128 @@ function edd_v26_upgrades() {
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
 }
+
+
+/**
+ * Migrates all discountss and their meta to the new custom table
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_discounts_migration() {
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+	set_time_limit( 0 );
+
+	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+	if ( empty( $total ) || $total <= 1 ) {
+		$total_sql = "SELECT COUNT(ID) as total_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount'";
+		$results   = $wpdb->get_row( $total_sql, 0 );
+		$total     = $results->total_discounts;
+	}
+
+	if ( 1 === $step ) {
+		$discounts_db = EDD()->discounts;
+		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
+			@$discounts_db->create_table();
+		}
+
+		$discount_meta = EDD()->discount_meta;
+		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
+			@$discount_meta->create_table();
+		}
+	}
+
+	$discounts = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
+			$offset,
+			$number
+		)
+	);
+
+	if ( ! empty( $discounts ) ) {
+
+		// discountss found so migrate them
+		foreach ( $discounts as $old_discount ) {
+
+			$discount = new EDD_Discount;
+			$discount->migrate( $old_discount->ID );
+
+		}
+
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'discounts_migration',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_safe_redirect( $redirect );
+		exit;
+
+	} else {
+
+		// No more discounts found, finish up
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'migrate_discounts' );
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() );
+		exit;
+
+	}
+}
+add_action( 'edd_discounts_migration', 'edd_discounts_migration' );
+
+/**
+ * Removes legacy discount date
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_remove_legacy_discounts() {
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+	set_time_limit( 0 );
+
+	$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
+	$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
+	$discount_ids = implode( ', ', $discount_ids );
+
+	if( ! empty( $discount_ids ) ) {
+
+		$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
+		$wpdb->query( $delete_posts_query );
+
+		$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
+		$wpdb->query( $delete_postmeta_query );
+
+	}
+
+	// No more discountss found, finish up
+	edd_set_upgrade_complete( 'remove_legacy_discounts' );
+
+	delete_option( 'edd_doing_upgrade' );
+
+	wp_redirect( admin_url() );
+	exit;
+
+}
+add_action( 'edd_remove_legacy_discounts', 'edd_remove_legacy_discounts' );

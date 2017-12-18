@@ -914,7 +914,7 @@ class EDD_Discount {
 
 			if( ! empty( $args['end_date'] ) ) {
 				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
-			
+
 				if(  strtotime( $args['end_date'], current_time( 'timestamp' ) )  < current_time( 'timestamp' ) ) {
 					$args['status'] = 'expired';
 				}
@@ -1774,16 +1774,16 @@ class EDD_Discount {
 					} elseif ( 'notes' == $key ) {
 						$data[$key] = strip_tags( $data[$key] );
 					} else {
-	
+
 						if( is_array( $data[$key] ) ) {
 
 							$data[$key] = json_encode( $data[$key] );
-	
+
 						} else {
 
 							$data[$key] = sanitize_text_field( $data[$key] );
 						}
-	
+
 					}
 					break;
 
@@ -1840,17 +1840,17 @@ class EDD_Discount {
 
 		foreach( $old as $old_key => $new_key ) {
 			if( isset( $args[ $old_key ] ) ) {
-		
+
 				if( $old_key == 'is_not_global' ) {
-				
+
 					$args[ $new_key ] = $args[ $old_key ] ? 0 : 1;
 
 				} else {
 
 					$args[ $new_key ] = $args[ $old_key ];
-					
+
 				}
-		
+
 				unset( $args[ $old_key ] );
 
 			}
@@ -1891,15 +1891,17 @@ class EDD_Discount {
 			}
 
 			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
-		
+
 		}
 
 		$d  = new EDD_Discount();
 		$id = $d->add( $args );
-		
+
 		$discount = new EDD_Discount( $id );
 
 		$discount->add_meta( 'legacy_id', $old_discount->ID );
+
+		do_action( 'edd_migrate_discount_record', $old_discount->ID, $discount );
 
 		return $discount->id;
 
