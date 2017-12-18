@@ -204,7 +204,7 @@ function edd_show_upgrade_notices() {
 					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd-discountss migrate_discounts</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discountss_migration' ) )
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discounts_migration' ) )
 				);
 			}
 		}
