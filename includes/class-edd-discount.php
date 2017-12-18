@@ -947,6 +947,8 @@ class EDD_Discount {
 			// This filter is here to maintain backwards compatibility
 			$args = apply_filters( 'edd_insert_discount_args', $args, $args );
 
+			$args = $this->sanitize_columns( $args );
+
 			/**
 			 * Fires before the discount has been added to the database.
 			 *
