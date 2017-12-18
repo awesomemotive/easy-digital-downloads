@@ -36,7 +36,111 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		parent::tearDown();
 	}
 
+	public function test_discount_instantiated() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertTrue( $d->id > 0 );
+		$this->assertTrue( is_a( $d, 'EDD_Discount' ) );
+	}
 
+	public function test_id_is_0_when_no_id_is_passed() {
+		$d = new EDD_Discount();
+		$this->assertTrue( $d->id === 0 );
+	}
+
+	public function test_discount_id_matches_id() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertSame( $d->id, $this->discount_id );
+	}
+
+	public function test_discount_id_matches_discount_id() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertSame( $d->discount_id, $this->discount_id );
+	}
+
+	public function test_discount_id_matches_capital_ID() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertSame( $d->ID, $this->discount_id );
+	}
+
+	public function test_get_discount_name() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '20 Percent Off', $d->name );
+	}
+
+	public function test_get_discount_name_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '20OFF', $d->code );
+	}
+
+	public function test_get_discount_name_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '20OFF', $d->get_code() );
+	}
+
+	public function test_get_discount_status_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( 'active', $d->status );
+	}
+
+	public function test_get_discount_status_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( 'active', $d->get_status() );
+	}
+
+	public function test_get_discount_expiration_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '2050-12-31 23:59:59', $d->expiration );
+	}
+
+	public function test_get_discount_expiration_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '2050-12-31 23:59:59', $d->get_expiration() );
+	}
+
+	public function test_get_discount_type_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( 'percent', $d->type );
+	}
+
+	public function test_get_discount_type_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( 'percent', $d->get_type() );
+	}
+
+	public function test_get_discount_type_of_flat_discount() {
+		$d = new EDD_Discount( $this->_flatdiscount_id );
+		$this->assertEquals( 'flat', $d->get_type() );
+	}
+
+	public function test_get_discount_amount_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '20', $d->amount );
+	}
+
+	public function test_get_discount_amount_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertEquals( '20', $d->get_amount() );
+	}
+
+	public function test_get_discount_product_requirements_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertSame( array(), $d->product_reqs );
+	}
+
+	public function test_get_discount_product_requirements_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertTrue( empty( $d->get_product_recs() ) );
+	}
+
+	public function test_get_discount_excluded_products_by_method() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertSame( array(), $d->excluded_products );
+	}
+
+	public function test_get_discount_excluded_products_by_property() {
+		$d = new EDD_Discount( $this->discount_id );
+		$this->assertSame( array(), $d->get_excluded_products() );
+	}
 
 
 	/*
