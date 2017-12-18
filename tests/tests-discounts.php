@@ -143,6 +143,221 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 
+
+	/*
+	 * Migration tests
+	 *
+	 * These tests help ensure that the migration() method of EDD_Discount works properly.
+	 */
+	public function test_creating_legacy_discount() {
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$this->assertInternalType( 'int', $old_id );
+		$this->assertTrue( $old_id > 0 );
+	}
+
+	public function test_instantiating_non_migrated_legacy_discount() {
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount( $old_id );
+		$this->assertTrue( empty( $discount->id ) );
+	}
+
+	public function test_migrating_legacy_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated = $d->migrate( $old_id );
+		$this->assertInternalType( 'int', $migrated );
+
+	}
+
+	public function test_code_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertSame( 'OLD', $d2->code );
+
+	}
+
+	public function test_status_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( 'active', $d2->status );
+
+	}
+
+	public function test_uses_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertSame( 10, $d2->uses );
+
+	}
+
+	public function test_max_uses_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertSame( 20, $d2->max_uses );
+
+	}
+
+	public function test_amount_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( '20', $d2->amount );
+
+	}
+
+	public function test_start_date_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( '2000-01-01 00:00:00', $d2->start_date );
+
+	}
+
+	public function test_end_date_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( '2050-12-31 23:59:59', $d2->end_date );
+
+	}
+
+	public function test_type_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( 'percent', $d2->type );
+	}
+
+	public function test_min_cart_price_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( '10.50', $d2->min_cart_price );
+	}
+
+	public function test_product_recs_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( in_array( 57, $d2->product_reqs ) );
+	}
+
+	public function test_product_condition_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertEquals( 'all', $d2->product_condition );
+	}
+
+	public function test_excluded_products_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( in_array( 75, $d2->excluded_products ) );
+	}
+
+	public function test_is_not_global_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( $d2->is_not_global );
+	}
+
+	public function test_applies_globally_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( empty( $d2->applies_globally ) );
+	}
+
+	public function test_is_single_use_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( ! empty( $d2->is_single_use() ) );
+	}
+
+	public function test_once_per_customer_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( ! empty( $d2->once_per_customer ) );
+	}
+
+	public function test_is_started_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( $d2->is_started() );
+	}
+
+	public function test_is_expired_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertFalse( $d2->is_expired() );
+	}
+
+	public function test_is_maxed_out_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertFalse( $d2->is_maxed_out( false ) );
+	}
+
+	public function test_is_active_of_migrated_discount() {
+
+		$old_id = EDD_Helper_Discount::create_legacy_discount();
+		$d = new EDD_Discount();
+		$migrated_id = $d->migrate( $old_id );
+		$d2 = new EDD_Discount( $migrated_id );
+		$this->assertTrue( $d2->is_active( false, false ) );
+	}
+
+
 	/*
 	 * Legacy tests
 	 *
@@ -150,8 +365,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * EDD 3.0 stores them in a custom table.
 	 * The below tests are left here to help ensure the backwards compatibility layers work properly
 	 */
-
-
 	public function test_discount_created() {
 
 		$this->assertInternalType( 'int', $this->discount_id );
