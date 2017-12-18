@@ -1803,6 +1803,13 @@ class EDD_Discount {
 		return $data;
 	}
 
+	/**
+	 * Converts pre-3.0 arguments to the 3.0+ version.
+	 *
+	 * @param $args array Arguments to be converted..
+	 * @since 3.0
+	 * @return array      The converted arguments.
+	 */
 	private function convert_legacy_args( $args = array() ) {
 
 		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
@@ -1828,9 +1835,9 @@ class EDD_Discount {
 	/**
 	 * Migrates a legacy discount (pre 3.0) to the new DB structure.
 	 *
-	 * @param $old_id The old post ID to migirate to the new schema.
+	 * @param $old_id int The old post ID to migirate to the new schema.
 	 * @since 3.0
-	 * @return bool True if successful, false if already migrated or migration failed.
+	 * @return bool       True if successful, false if already migrated or migration failed.
 	 */
 	public function migrate( $old_id = 0 ) {
 
