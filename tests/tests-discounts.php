@@ -19,8 +19,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->_negativediscount_id = EDD_Helper_Discount::create_simple_percent_discount();
 
 		// Create legacy data records for backwards compatibility
-		EDD()->discount_meta->add_meta( $this->discount_id, '_edd_discount_legacy_id', $this->discount_id );
-		EDD()->discount_meta->add_meta( $this->_negativediscount_id, '_edd_discount_legacy_id', $this->_negativediscount_id );
+		EDD()->discount_meta->add_meta( $this->discount_id, 'legacy_id', $this->discount_id );
+		EDD()->discount_meta->add_meta( $this->_negativediscount_id, 'legacy_id', $this->_negativediscount_id );
 
 		// Update meta via old method. If these work properly, it helps show backwards compatibility is working
 		update_post_meta( $this->_negativediscount_id, '_edd_discount_name', 'Double Double' );
