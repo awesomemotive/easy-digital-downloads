@@ -364,18 +364,18 @@ class EDD_CLI extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 * 	 --email=<customer_email>: The email address of the customer to retrieve
-	 * 
+	 *
 	 * ## EXAMPLES
-	 * 
+	 *
 	 * wp edd sales
 	 * wp edd sales --email=john@test.com
 	 */
 	public function sales( $args, $assoc_args ) {
-		
+
 		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )  ? $assoc_args['email'] : '';
-		
-		global $wp_query;	
-	
+
+		global $wp_query;
+
 		$wp_query->query_vars['email'] = $email;
 
 		$sales = $this->api->get_recent_sales();

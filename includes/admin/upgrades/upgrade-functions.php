@@ -1263,7 +1263,7 @@ function edd_discounts_migration() {
 
 	if ( ! empty( $discounts ) ) {
 
-		// discountss found so migrate them
+		// discounts found so migrate them
 		foreach ( $discounts as $old_discount ) {
 
 			$discount = new EDD_Discount;
