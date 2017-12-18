@@ -1870,7 +1870,7 @@ class EDD_Discount {
 	 */
 	public function is_migrated() {
 
-		if( $this->get_meta( 'legacy_id' true ) ) {
+		if( $this->get_meta( 'legacy_id', true ) ) {
 			return true;
 		}
 
