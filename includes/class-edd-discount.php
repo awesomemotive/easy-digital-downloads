@@ -1828,16 +1828,17 @@ class EDD_Discount {
 	/**
 	 * Migrates a legacy discount (pre 3.0) to the new DB structure.
 	 *
+	 * @param $old_id The old post ID to migirate to the new schema.
 	 * @since 3.0
 	 * @return bool True if successful, false if already migrated or migration failed.
 	 */
-	public function migrate() {
+	public function migrate( $old_id = 0 ) {
 
-		if( $this->is_migrated() ) {
+		if( $this->is_migrated( $old_id ) ) {
 			return false;
 		}
 
-		$old_discount = get_post( $this->ID );
+		$old_discount = get_post( $old_id );
 
 		if( 'edd_discount' !== $old_discount->post_type ) {
 			return false;
@@ -1850,7 +1851,7 @@ class EDD_Discount {
 				continue;
 			}
 
-			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
+			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value[0];
 		
 		}
 
