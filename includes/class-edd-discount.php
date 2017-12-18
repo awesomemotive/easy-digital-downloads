@@ -294,8 +294,9 @@ class EDD_Discount {
 
 				case 'use_once' :
 				case 'is_single_use' :
+				case 'once_per_customer' :
 
-					return $this->once_per_customer;
+					return $this->get_is_single_use();
 					break;
 
 				case 'uses' :
@@ -307,7 +308,6 @@ class EDD_Discount {
 
 					return $this->applies_globally ? 0 : 1;
 					break;
-
 
 			}
 
@@ -782,6 +782,18 @@ class EDD_Discount {
 	 * @return bool Once use per customer?
 	 */
 	public function get_is_single_use() {
+		return $this->get_once_per_customer();
+	}
+
+	/**
+	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
+	 *
+	 * @since 3.0
+	 * @access public
+	 *
+	 * @return bool Once use per customer?
+	 */
+	public function get_once_per_customer() {
 		/**
 		 * Filters the single use meta value.
 		 *
