@@ -79,7 +79,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var array
 	 */
-	protected $product_reqs = null;
+	protected $product_reqs = array();
 
 	/**
 	 * Excluded Downloads.
@@ -88,7 +88,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var array
 	 */
-	protected $excluded_products = null;
+	protected $excluded_products = array();
 
 	/**
 	 * Created Date.
