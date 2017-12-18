@@ -228,7 +228,7 @@ class EDD_Discount {
 		$key = sanitize_key( $key );
 
 		if( 'discount_id' === $key || 'ID' == $key ) {
-			return $this->id;
+			return (int) $this->id;
 		} else if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
 		} else if ( property_exists( $this, $key ) ) {
@@ -509,6 +509,11 @@ class EDD_Discount {
 					if ( ! empty( $value ) ) {
 						$this->$key = $value;
 					}
+					break;
+
+				case 'id' :
+
+					$this->$key = (int) $value;
 					break;
 
 				default:
