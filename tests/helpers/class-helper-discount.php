@@ -73,4 +73,45 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 
 	}
 
+
+	/**
+	 * Create legacy discount code.
+	 *
+	 * @since 3.0
+	 */
+	public static function create_legacy_discount() {
+
+		$discount_id = wp_insert_post( array(
+			'post_type'   => 'edd_discount',
+			'post_title'  => 'Legacy Discount',
+			'post_status' => 'active',
+		) );
+
+		$meta = array(
+			'code'              => 'OLD',
+			'status'            => 'active',
+			'uses'              => 10,
+			'max_uses'          => 20,
+			'amount'            => 20,
+			'start'             => '01/01/2000 00:00:00',
+			'expiration'        => '12/31/2050 23:59:59',
+			'type'              => 'percent',
+			'min_price'         => '10.50',
+			'product_reqs'      => array( 57 ),
+			'product_condition' => 'all',
+			'excluded_products' => array( 75 ),
+			'is_not_global'     => true,
+			'is_single_use'     => true,
+		);
+
+		remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 95 );
+		foreach( $meta as $key => $value ) {
+			add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+		}
+
+		return $discount_id;
+		add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 95, 5 );
+
+	}
+
 }
