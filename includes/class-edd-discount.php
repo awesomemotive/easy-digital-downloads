@@ -1834,12 +1834,25 @@ class EDD_Discount {
 			'expiration'         => 'end_date',
 			'min_price'          => 'min_cart_price',
 			'excluded-products'  => 'excluded_products',
+			'is_not_global'      => 'applies_globally',
+			'is_single_use'      => 'once_per_customer',
 		);
 
 		foreach( $old as $old_key => $new_key ) {
 			if( isset( $args[ $old_key ] ) ) {
-				$args[ $new_key ] = $args[ $old_key ];
+		
+				if( $old_key == 'is_not_global' ) {
+				
+					$args[ $new_key ] = $args[ $old_key ] ? 0 : 1;
+
+				} else {
+
+					$args[ $new_key ] = $args[ $old_key ];
+					
+				}
+		
 				unset( $args[ $old_key ] );
+
 			}
 		}
 
