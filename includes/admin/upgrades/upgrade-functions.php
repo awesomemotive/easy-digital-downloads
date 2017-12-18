@@ -201,7 +201,7 @@ function edd_show_upgrade_notices() {
 					'<br /><br />' .
 					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
 					'<br /><br />' .
-					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd-discountss migrate_discounts</code>', 'easy-digital-downloads' ) .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_discounts</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
 					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discounts_migration' ) )
