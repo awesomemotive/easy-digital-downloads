@@ -82,6 +82,20 @@ class EDD_Discount {
 	protected $product_reqs = array();
 
 	/**
+	 * Scope of the discount.
+	 *
+	 * global     - Applies to all products in the cart, save for those explicitly excluded through excluded_products
+	 * not_global - Applies only to the products set in product_reqs
+	 *
+	 * This used to be called "is_not_global" but was changed to "scope" in 3.0.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var bool
+	 */
+	protected $scope = null;
+
+	/**
 	 * Excluded Downloads.
 	 *
 	 * @since 2.7
@@ -89,6 +103,15 @@ class EDD_Discount {
 	 * @var array
 	 */
 	protected $excluded_products = array();
+
+	/**
+	 * Product Condition
+	 *
+	 * @since 2.7
+	 * @access protected
+	 * @var string
+	 */
+	protected $product_condition = null;
 
 	/**
 	 * Created Date.
@@ -152,24 +175,6 @@ class EDD_Discount {
 	 * @var bool
 	 */
 	protected $once_per_customer = null;
-
-	/**
-	 * Applies globally to all products?
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @var bool
-	 */
-	protected $applies_globally = null;
-
-	/**
-	 * Product Condition
-	 *
-	 * @since 2.7
-	 * @access protected
-	 * @var string
-	 */
-	protected $product_condition = null;
 
 	/**
 	 * The Database Abstraction
@@ -306,7 +311,7 @@ class EDD_Discount {
 
 				case 'is_not_global' :
 
-					return $this->applies_globally ? 0 : 1;
+					return $this->scope === 'global' ? false : true;
 					break;
 
 			}
@@ -383,7 +388,7 @@ class EDD_Discount {
 
 					case 'is_not_global' :
 
-						$this->applies_globally = $value ? 0 : 1;
+						$this->scope = $value ? 'not_global' : 'global';
 						break;
 				}
 		} else {
@@ -653,6 +658,47 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Retrieve the discount scope.
+	 *
+	 * This used to be called "is_not_global". That filter is still here for backwards compatibility. 
+	 *
+	 * @since 3.0
+	 * @access public
+	 *
+	 * @return string The scope, i.e. "global".
+	 */
+	public function get_scope() {
+	
+		$legacy_value = apply_filters( 'edd_discount_is_not_global', null, $this->id );
+
+		if( ! is_null( $legacy_value ) ) {
+			$this->scope = $legacy_value ? 'global' : 'not_global';
+		}
+
+		return apply_filters( 'edd_get_discount_scope', $this->scope, $this->id );
+	}
+
+	/**
+	 * Retrieve the product condition.
+	 *
+	 * @since 2.7
+	 * @access public
+	 *
+	 * @return string Product condition
+	 */
+	public function get_product_condition() {
+		/**
+		 * Filters the product condition.
+		 *
+		 * @since 2.7
+		 *
+		 * @param string $product_condition Product condition.
+		 * @param int    $ID                Discount ID.
+		 */
+		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->id );
+	}
+
+	/**
 	 * Retrieve the downloads that are excluded from having this discount code applied.
 	 *
 	 * @since 2.7
@@ -803,53 +849,6 @@ class EDD_Discount {
 		 * @param int  $ID            Discount ID.
 		 */
 		return (bool) apply_filters( 'edd_is_discount_single_use', $this->once_per_customer, $this->id );
-	}
-
-	/**
-	 * Retrieve the property determining if a discount is not global.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @return bool Whether or not the discount code is global.
-	 */
-	public function get_is_not_global() {
-
-		$ret = true;
-
-		if( $this->applies_globally ) {
-			$ret = false;
-		}
-
-		/**
-		 * Filters if the discount is global or not.
-		 *
-		 * @since 2.7
-		 *
-		 * @param bool $is_not_global Is the discount global or not.
-		 * @param int  $ID            Discount ID.
-		 */
-		return (bool) apply_filters( 'edd_discount_is_not_global', $ret, $this->id );
-	}
-
-	/**
-	 * Retrieve the product condition.
-	 *
-	 * @since 2.7
-	 * @access public
-	 *
-	 * @return string Product condition
-	 */
-	public function get_product_condition() {
-		/**
-		 * Filters the product condition.
-		 *
-		 * @since 2.7
-		 *
-		 * @param string $product_condition Product condition.
-		 * @param int    $ID                Discount ID.
-		 */
-		return apply_filters( 'edd_discount_product_condition', $this->product_condition, $this->id );
 	}
 
 	/**
@@ -1834,7 +1833,7 @@ class EDD_Discount {
 			'expiration'         => 'end_date',
 			'min_price'          => 'min_cart_price',
 			'excluded-products'  => 'excluded_products',
-			'is_not_global'      => 'applies_globally',
+			'is_not_global'      => 'scope',
 			'is_single_use'      => 'once_per_customer',
 		);
 
@@ -1843,7 +1842,7 @@ class EDD_Discount {
 
 				if( $old_key == 'is_not_global' ) {
 
-					$args[ $new_key ] = $args[ $old_key ] ? 0 : 1;
+					$args[ $new_key ] = $args[ $old_key ] ? 'not_global' : 'global';
 
 				} else {
 
@@ -1861,7 +1860,7 @@ class EDD_Discount {
 
 	/**
 	 * Migrates a legacy discount (pre 3.0) to the new DB structure.
-	 *
+	 *migrate
 	 * @param $old_id int The old post ID to migirate to the new schema.
 	 * @since 3.0
 	 * @return bool       True if successful, false if already migrated or migration failed.

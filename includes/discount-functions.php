@@ -412,13 +412,29 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
  *
  * @since 1.5
  * @since 2.7 Updated to use EDD_Discount object.
- *
+ * @since 3.0 Please use edd_get_discount_scope() instead.
  * @param int $code_id Discount ID.
  * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
 	$discount = new EDD_Discount( $code_id );
 	return $discount->is_not_global;
+}
+
+/**
+ * Retrieve the discount scope.
+ *
+ * By default this will return "global" as discounts are applied to all products in the cart. Non global discounts are
+ * applied only to the products selected as requirements.
+ *
+ * @since 3.0
+ *
+ * @param int $code_id Discount ID.
+ * @return string global or not_global.
+ */
+function edd_get_discount_scope( $code_id = 0 ) {
+	$discount = new EDD_Discount( $code_id );
+	return $discount->scope;
 }
 
 /**
