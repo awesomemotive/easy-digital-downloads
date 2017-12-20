@@ -120,7 +120,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'        => 'excluded_products[]',
-						'id'          => 'excluded-products',
+						'id'          => 'excluded_products',
 						'selected'    => $excluded_products,
 						'multiple'    => true,
 						'chosen'      => true,

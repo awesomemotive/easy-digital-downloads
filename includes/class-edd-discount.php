@@ -708,6 +708,8 @@ class EDD_Discount {
 	 */
 	public function get_excluded_products() {
 
+		$excluded_products = $this->get_meta( 'excluded_product', false );
+
 		/**
 		 * Filters the excluded downloads.
 		 *
@@ -716,7 +718,7 @@ class EDD_Discount {
 		 * @param array $excluded_products IDs of excluded products.
 		 * @param int   $ID                Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_excluded_products', json_decode( $this->excluded_products ), $this->id );
+		return (array) apply_filters( 'edd_get_discount_excluded_products', $this->excluded_products, $this->id );
 	}
 
 	/**
@@ -930,6 +932,26 @@ class EDD_Discount {
 				}
 			}
 
+			if( isset( $args['excluded_products'] ) ) {
+
+				if( is_array( $args['excluded_products'] ) ) {
+
+					// Reset meta
+					$this->delete_meta( 'excluded_product' );
+
+					// Now add each newly excluded product
+					foreach( $args['excluded_products'] as $product ) {
+						$this->add_meta( 'excluded_product', absint( $product ) );
+					}
+					
+				} else {
+
+					$this->delete_meta( 'excluded_product' );
+
+				}
+
+			}
+
 			/**
 			 * Add a new discount to the database.
 			 */
@@ -1044,6 +1066,27 @@ class EDD_Discount {
 
 		if( ! empty( $args['end_date'] ) ) {
 			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
+		}
+
+		if( isset( $args['excluded_products'] ) ) {
+
+			if( is_array( $args['excluded_products'] ) ) {
+
+				// Reset meta
+				$this->delete_meta( 'excluded_product' );
+
+				// Now add each newly excluded product
+				foreach( $args['excluded_products'] as $product ) {
+					var_dump( $product );
+					$this->add_meta( 'excluded_product', absint( $product ) );
+				}
+				
+			} else {
+
+				$this->delete_meta( 'excluded_product' );
+
+			}
+
 		}
 
 		/**

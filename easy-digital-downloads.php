@@ -133,7 +133,7 @@ final class Easy_Digital_Downloads {
 	 * EDD Discount meta DB Object.
 	 *
 	 * @var object|EDD_DB_Discount_Meta
-	 * @since 2.6
+	 * @since 3.0
 	 */
 	public $discount_meta;
 
