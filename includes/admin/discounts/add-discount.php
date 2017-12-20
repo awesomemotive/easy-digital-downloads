@@ -105,7 +105,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'        => 'excluded-products[]',
-						'id'          => 'excluded-products',
+						'id'          => 'excluded_products',
 						'selected'    => array(),
 						'multiple'    => true,
 						'chosen'      => true,

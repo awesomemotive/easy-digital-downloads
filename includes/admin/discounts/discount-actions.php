@@ -64,7 +64,6 @@ function edd_add_discount( $data ) {
 					break;
 
 				case 'product_reqs' :
-				case 'excluded_products' :
 					$to_add[ $column ] = json_encode( $data[ $column ] );
 					break;
 
@@ -75,6 +74,12 @@ function edd_add_discount( $data ) {
 			}
 
 		}
+	}
+
+	if( isset( $data['excluded_products'] ) ) {
+		$to_add['excluded_products'] = $data['excluded_products'];
+	} else {
+		$to_add['excluded_products'] = '';
 	}
 
 	$created = $discount->add( $to_add );
@@ -136,7 +141,6 @@ function edd_edit_discount( $data ) {
 					break;
 
 				case 'product_reqs' :
-				case 'excluded_products' :
 					$to_update[ $column ] = json_encode( $data[ $column ] );
 					break;
 
@@ -158,13 +162,18 @@ function edd_edit_discount( $data ) {
 					break;
 
 				case 'product_reqs' :
-				case 'excluded_products' :
 					$to_update[ $column ] = json_encode( array() );
 					break;
 
 			}
 
 		}
+	}
+
+	if( isset( $data['excluded_products'] ) ) {
+		$to_update['excluded_products'] = $data['excluded_products'];
+	} else {
+		$to_update['excluded_products'] = '';
 	}
 
 	$updated = $discount->update( $to_update );
