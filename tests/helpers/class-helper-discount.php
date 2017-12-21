@@ -17,7 +17,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	public static function delete_discount( $discount_id ) {
 
 		// Delete the post
-		edd_remove_discount( $discount_id, true );
+		edd_remove_discount( $discount_id );
 
 	}
 
@@ -104,13 +104,15 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'is_single_use'     => true,
 		);
 
-		remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 95 );
+		remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
+
 		foreach( $meta as $key => $value ) {
 			add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
+		add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+
 		return $discount_id;
-		add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 95, 5 );
 
 	}
 
