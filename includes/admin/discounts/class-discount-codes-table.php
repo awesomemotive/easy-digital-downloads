@@ -210,7 +210,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Start  date
 	 */
 	function column_start_date( $item ) {
-	    $start_date = $item->get_start_date();
+		$start_date = $item->get_start_date();
 
 		if ( $start_date ) {
 			$display = date( 'F j, Y', strtotime( $start_date ) );
