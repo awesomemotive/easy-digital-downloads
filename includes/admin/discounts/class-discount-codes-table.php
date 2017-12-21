@@ -210,7 +210,15 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Start  date
 	 */
 	function column_start_date( $item ) {
-		return date( 'F j, Y', strtotime( $item->get_start_date() ) );
+	    $start_date = $item->get_start_date();
+
+		if ( $start_date ) {
+			$display = date( 'F j, Y', strtotime( $start_date ) );
+		} else {
+			$display = __( 'No start date', 'easy-digital-downloads' );
+		}
+
+		return $display;
 	}
 
 	/**
@@ -225,7 +233,15 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Expiration  date
 	 */
 	function column_end_date( $item ) {
-		return date( 'F j, Y', strtotime( $item->get_expiration() ) );
+		$expiration = $item->get_expiration();
+
+		if ( $expiration ) {
+			$display = date( 'F j, Y', strtotime( $expiration ) );
+		} else {
+			$display = __( 'No expiration', 'easy-digital-downloads' );
+		}
+
+		return $display;
 	}
 
 	/**

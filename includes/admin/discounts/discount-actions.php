@@ -54,7 +54,7 @@ function edd_add_discount( $data ) {
 
 		// Each column gets passed through a generic sanitization method during the update() call
 
-		if( isset( $data[ $column ] ) ) {
+		if( isset( $data[ $column ] ) && ! empty( $data[ $column ] ) ) {
 
 			switch( $column ) {
 

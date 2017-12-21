@@ -509,6 +509,14 @@ class EDD_Discount {
 
 			switch ( $key ) {
 
+				case 'start_date' :
+				case 'end_date' :
+
+					if ( '0000-00-00 00:00:00' == $value ) {
+						$this->$key = false;
+						break;
+					}
+
 				case 'notes' :
 
 					if ( ! empty( $value ) ) {
