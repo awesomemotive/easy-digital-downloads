@@ -67,7 +67,7 @@ function edd_add_discount( $data ) {
 					break;
 
 				case 'product_reqs' :
-					$to_add[ $column ] = json_encode( $data[ $column ] );
+					$to_add[ $column ] = $data[ $column ];
 					break;
 
 				default :
@@ -79,25 +79,19 @@ function edd_add_discount( $data ) {
 		}
 	}
 
-	if ( isset( $data['excluded-products'] ) ) {
-		$to_add['excluded_products'] = $data['excluded-products'];
-	} else {
-		$to_add['excluded_products'] = '';
-	}
+	// Meta values
+	$to_add['product_reqs'] = isset( $data['product_reqs'] ) ? $data['product_reqs'] : '';
+	$to_add['excluded_products'] = isset( $data['excluded-products'] ) ? $data['excluded-products'] : '';
 
 	$created = $discount->add( $to_add );
 
 	if ( $created ) {
-
-		wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
-
+		wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) );
+		edd_die();
 	} else {
-
-		wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
-
+		wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) );
+		edd_die();
 	}
-
-
 }
 add_action( 'edd_add_discount', 'edd_add_discount' );
 
@@ -114,23 +108,23 @@ function edd_edit_discount( $data ) {
 		return;
 	}
 
-	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	if( empty( $data['discount-id'] ) ) {
+	if ( empty( $data['discount-id'] ) ) {
 		wp_die( __( 'No discount ID supplied', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$discount = new EDD_Discount( absint( $data['discount-id'] ) );
 
-	if( ! $discount || ! $discount->ID > 0 ) {
+	if ( ! $discount || ! $discount->ID > 0 ) {
 		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$to_update  = array();
 
-	foreach( $discount->db->get_columns() as $column => $value ) {
+	foreach ( $discount->db->get_columns() as $column => $value ) {
 
 		// Each column gets passed through a generic sanitization method during the update() call
 
@@ -144,10 +138,6 @@ function edd_edit_discount( $data ) {
 
 				case 'end_date':
 					$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
-					break;
-
-				case 'product_reqs' :
-					$to_update[ $column ] = json_encode( $data[ $column ] );
 					break;
 
 				default :
@@ -167,33 +157,23 @@ function edd_edit_discount( $data ) {
 					$to_update[ $column ] = 0;
 					break;
 
-				case 'product_reqs' :
-					$to_update[ $column ] = json_encode( array() );
-					break;
-
 			}
 
 		}
 	}
 
-	if ( isset( $data['excluded_products'] ) ) {
-		$to_update['excluded_products'] = $data['excluded_products'];
-	} else {
-		$to_update['excluded_products'] = '';
-	}
+	$to_update['product_reqs'] = isset( $data['product_reqs'] ) ? $data['product_reqs'] : '';
+	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
 
 	$updated = $discount->update( $to_update );
 
 	if ( $updated ) {
-
-		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
-
+		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) );
+		edd_die();
 	} else {
-
-		wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ); edd_die();
-
+		wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) );
+		edd_die();
 	}
-
 }
 add_action( 'edd_edit_discount', 'edd_edit_discount' );
 
