@@ -129,7 +129,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_get_discount_product_requirements_by_property() {
 		$d = new EDD_Discount( $this->discount_id );
-		$this->assertTrue( empty( $d->get_product_reqs() ) );
+		$this->assertSame( array(), $d->get_product_reqs() );
 	}
 
 	public function test_get_discount_excluded_products_by_method() {
