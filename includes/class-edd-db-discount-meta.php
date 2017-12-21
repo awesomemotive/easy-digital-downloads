@@ -169,7 +169,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext,
 			PRIMARY KEY  (meta_id),
-			KEY discount_id (discount_id),
+			KEY discount_id (edd_discount_id),
 			KEY meta_key (meta_key)
 			) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
