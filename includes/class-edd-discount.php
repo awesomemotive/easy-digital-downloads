@@ -939,46 +939,6 @@ class EDD_Discount {
 				}
 			}
 
-			if ( isset( $args['excluded_products'] ) ) {
-
-				if ( is_array( $args['excluded_products'] ) ) {
-
-					// Reset meta
-					$this->delete_meta( 'excluded_product' );
-
-					// Now add each newly excluded product
-					foreach( $args['excluded_products'] as $product ) {
-						$this->add_meta( 'excluded_product', absint( $product ) );
-					}
-					
-				} else {
-
-					$this->delete_meta( 'excluded_product' );
-
-				}
-
-			}
-
-			if ( isset( $args['product_reqs'] ) ) {
-
-				if ( is_array( $args['product_reqs'] ) ) {
-
-					// Reset meta
-					$this->delete_meta( 'product_requirement' );
-
-					// Now add each newly required product
-					foreach( $args['product_reqs'] as $product ) {
-						$this->add_meta( 'product_requirement', absint( $product ) );
-					}
-
-				} else {
-
-					$this->delete_meta( 'product_requirement' );
-
-				}
-
-			}
-
 			/**
 			 * Add a new discount to the database.
 			 */
@@ -1012,6 +972,24 @@ class EDD_Discount {
 
 			// The DB class 'add' implies an update if the discount being asked to be created already exists
 			if ( $id = $this->db->insert( $args ) ) {
+				// We need to update the ID of the instance of the object in order to add meta
+				$this->id = $id;
+
+				if ( isset( $args['excluded_products'] ) ) {
+					if ( is_array( $args['excluded_products'] ) ) {
+						foreach( $args['excluded_products'] as $product ) {
+							$this->add_meta( 'excluded_product', absint( $product ) );
+						}
+					}
+				}
+
+				if ( isset( $args['product_reqs'] ) ) {
+					if ( is_array( $args['product_reqs'] ) ) {
+						foreach ( $args['product_reqs'] as $product ) {
+							$this->add_meta( 'product_requirement', absint( $product ) );
+						}
+					}
+				}
 
 				// We've successfully added/updated the discount, reset the class vars with the new data
 				$discount = $this->find_by_code( $args['code'] );
