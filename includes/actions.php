@@ -21,8 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_get_actions() {
-	if ( isset( $_GET['edd_action'] ) ) {
-		do_action( 'edd_' . $_GET['edd_action'], $_GET );
+	$key = ! empty( $_GET['edd_action'] ) ? sanitize_key( $_GET['edd_action'] ) : false;
+	if ( ! empty( $key ) ) {
+		do_action( "edd_{$key}" , $_GET );
 	}
 }
 add_action( 'init', 'edd_get_actions' );
@@ -36,8 +37,9 @@ add_action( 'init', 'edd_get_actions' );
  * @return void
 */
 function edd_post_actions() {
-	if ( isset( $_POST['edd_action'] ) ) {
-		do_action( 'edd_' . $_POST['edd_action'], $_POST );
+	$key = ! empty( $_POST['edd_action'] ) ? sanitize_key( $_POST['edd_action'] ) : false;
+	if ( ! empty( $key ) ) {
+		do_action( "edd_{$key}", $_POST );
 	}
 }
 add_action( 'init', 'edd_post_actions' );
