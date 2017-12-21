@@ -41,10 +41,10 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	*/
 	public function get_columns() {
 		return array(
-			'meta_id'     => '%d',
-			'discount_id' => '%d',
-			'meta_key'    => '%s',
-			'meta_value'  => '%s',
+			'meta_id'         => '%d',
+			'edd_discount_id' => '%d',
+			'meta_key'        => '%s',
+			'meta_value'      => '%s',
 		);
 	}
 
@@ -78,7 +78,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 			return false;
 		}
 
-		return get_metadata( 'discount', $discount_id, $meta_key, $single );
+		return get_metadata( 'edd_discount', $discount_id, $meta_key, $single );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 			return false;
 		}
 
-		return add_metadata( 'discount', $discount_id, $meta_key, $meta_value, $unique );
+		return add_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $unique );
 	}
 
 	/**
@@ -129,7 +129,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 			return false;
 		}
 
-		return update_metadata( 'discount', $discount_id, $meta_key, $meta_value, $prev_value );
+		return update_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	 * @since   3.0
 	 */
 	public function delete_meta( $discount_id = 0, $meta_key = '', $meta_value = '' ) {
-		return delete_metadata( 'discount', $discount_id, $meta_key, $meta_value );
+		return delete_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value );
 	}
 
 	/**
@@ -165,7 +165,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 
 		$sql = "CREATE TABLE {$this->table_name} (
 			meta_id bigint(20) NOT NULL AUTO_INCREMENT,
-			discount_id bigint(20) NOT NULL,
+			edd_discount_id bigint(20) NOT NULL,
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext,
 			PRIMARY KEY  (meta_id),

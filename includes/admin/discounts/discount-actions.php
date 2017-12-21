@@ -176,8 +176,8 @@ function edd_edit_discount( $data ) {
 		}
 	}
 
-	if ( isset( $data['excluded-products'] ) ) {
-		$to_update['excluded_products'] = $data['excluded-products'];
+	if ( isset( $data['excluded_products'] ) ) {
+		$to_update['excluded_products'] = $data['excluded_products'];
 	} else {
 		$to_update['excluded_products'] = '';
 	}

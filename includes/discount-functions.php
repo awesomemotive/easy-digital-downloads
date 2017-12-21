@@ -980,7 +980,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 	if( ! $discount || ! $discount->id > 0 ) {
 
 		// We didn't find a discount record with this ID...so let's check and see if it was a migrated one
-		$object_id = $wpdb->get_var( "SELECT discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
+		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
 
 		if ( ! empty( $object_id ) ) {
 			$discount = new EDD_Discount( $object_id );
@@ -1066,7 +1066,7 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 	if( ! $discount || ! $discount->id > 0 ) {
 
 		// We didn't find a discount record with this ID...so let's check and see if it was a migrated one
-		$object_id = $wpdb->get_var( "SELECT discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
+		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
 
 		if ( ! empty( $object_id ) ) {
 			$discount = new EDD_Discount( $object_id );
