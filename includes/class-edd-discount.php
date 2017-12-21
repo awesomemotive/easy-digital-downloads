@@ -548,6 +548,7 @@ class EDD_Discount {
 		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
 		 */
 		$this->excluded_products = (array) $this->get_meta( 'excluded_product', false );
+		$this->product_reqs = (array) $this->get_meta( 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -664,7 +665,7 @@ class EDD_Discount {
 		 * @param array $product_reqs IDs of required products.
 		 * @param int   $ID           Discount ID.
 		 */
-		return (array) apply_filters( 'edd_get_discount_product_reqs', json_decode( $this->product_reqs ), $this->id );
+		return (array) apply_filters( 'edd_get_discount_product_reqs', $this->product_reqs, $this->id );
 	}
 
 	/**
@@ -678,10 +679,9 @@ class EDD_Discount {
 	 * @return string The scope, i.e. "global".
 	 */
 	public function get_scope() {
-	
 		$legacy_value = apply_filters( 'edd_discount_is_not_global', null, $this->id );
 
-		if( ! is_null( $legacy_value ) ) {
+		if ( ! is_null( $legacy_value ) ) {
 			$this->scope = $legacy_value ? 'global' : 'not_global';
 		}
 
@@ -939,9 +939,9 @@ class EDD_Discount {
 				}
 			}
 
-			if( isset( $args['excluded_products'] ) ) {
+			if ( isset( $args['excluded_products'] ) ) {
 
-				if( is_array( $args['excluded_products'] ) ) {
+				if ( is_array( $args['excluded_products'] ) ) {
 
 					// Reset meta
 					$this->delete_meta( 'excluded_product' );
@@ -954,6 +954,26 @@ class EDD_Discount {
 				} else {
 
 					$this->delete_meta( 'excluded_product' );
+
+				}
+
+			}
+
+			if ( isset( $args['product_reqs'] ) ) {
+
+				if ( is_array( $args['product_reqs'] ) ) {
+
+					// Reset meta
+					$this->delete_meta( 'product_requirement' );
+
+					// Now add each newly required product
+					foreach( $args['product_reqs'] as $product ) {
+						$this->add_meta( 'product_requirement', absint( $product ) );
+					}
+
+				} else {
+
+					$this->delete_meta( 'product_requirement' );
 
 				}
 
@@ -1057,27 +1077,26 @@ class EDD_Discount {
 		$args = $this->sanitize_columns( $args );
 
 		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
-
 			$start_timestamp = strtotime( $args['start_date'], current_time( 'timestamp' ) );
 			$end_timestamp   = strtotime( $args['end_date'], current_time( 'timestamp' ) );
 
-			if( $start_timestamp > $end_timestamp ) {
+			if ( $start_timestamp > $end_timestamp ) {
 				// Set the expiration date to the start date if start is later than expiration
 				$args['end_date'] = $args['start_date'];
 			}
 		}
 
-		if( ! empty( $args['start_date'] ) ) {
+		if ( ! empty( $args['start_date'] ) ) {
 			$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
 		}
 
-		if( ! empty( $args['end_date'] ) ) {
+		if ( ! empty( $args['end_date'] ) ) {
 			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
 		}
 
-		if( isset( $args['excluded_products'] ) ) {
+		if ( isset( $args['excluded_products'] ) ) {
 
-			if( is_array( $args['excluded_products'] ) ) {
+			if ( is_array( $args['excluded_products'] ) ) {
 
 				// Reset meta
 				$this->delete_meta( 'excluded_product' );
@@ -1091,6 +1110,26 @@ class EDD_Discount {
 			} else {
 
 				$this->delete_meta( 'excluded_product' );
+
+			}
+
+		}
+
+		if ( isset( $args['product_reqs'] ) ) {
+
+			if ( is_array( $args['product_reqs'] ) ) {
+
+				// Reset meta
+				$this->delete_meta( 'product_requirement' );
+
+				// Now add each newly required product
+				foreach( $args['product_reqs'] as $product ) {
+					$this->add_meta( 'product_requirement', absint( $product ) );
+				}
+
+			} else {
+
+				$this->delete_meta( 'product_requirement' );
 
 			}
 
