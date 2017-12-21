@@ -61,15 +61,15 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'type'                => '%s',
 			'amount'              => '%s',
 			'description'         => '%s',
+			'created_date'        => '%s',
+			'start_date'          => '%s',
+			'end_date'            => '%s',
 			'max_uses'            => '%d',
 			'use_count'           => '%d',
 			'min_cart_price'      => '%f',
 			'once_per_customer'   => '%d',
 			'product_condition'   => '%s',
 			'scope'               => '%s',
-			'created_date'        => '%s',
-			'start_date'          => '%s',
-			'end_date'            => '%s',
 			'notes'               => '%s',
 		);
 	}
