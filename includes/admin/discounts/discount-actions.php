@@ -81,7 +81,7 @@ function edd_add_discount( $data ) {
 
 	// Meta values
 	$to_add['product_reqs'] = isset( $data['product_reqs'] ) ? $data['product_reqs'] : '';
-	$to_add['excluded_products'] = isset( $data['excluded-products'] ) ? $data['excluded-products'] : '';
+	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
 
 	$created = $discount->add( $to_add );
 
