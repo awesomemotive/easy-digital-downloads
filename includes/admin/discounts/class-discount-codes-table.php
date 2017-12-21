@@ -210,7 +210,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Start  date
 	 */
 	function column_start_date( $item ) {
-		return $item->get_start_date();
+		return date( 'F j, Y', strtotime( $item->get_start_date() ) );
 	}
 
 	/**
@@ -225,7 +225,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Expiration  date
 	 */
 	function column_end_date( $item ) {
-		return $item->get_expiration();
+		return date( 'F j, Y', strtotime( $item->get_expiration() ) );
 	}
 
 	/**
