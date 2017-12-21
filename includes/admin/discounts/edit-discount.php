@@ -17,13 +17,14 @@ if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 }
 
 $discount_id       = absint( $_GET['discount'] );
-$discount          = edd_get_discount( $discount_id );
-$product_reqs      = edd_get_discount_product_reqs( $discount_id );
-$excluded_products = edd_get_discount_excluded_products( $discount_id );
-$condition         = edd_get_discount_product_condition( $discount_id );
-$single_use        = edd_discount_is_single_use( $discount_id );
-$flat_display      = edd_get_discount_type( $discount_id ) == 'flat' ? '' : ' style="display:none;"';
-$percent_display   = edd_get_discount_type( $discount_id ) == 'percent' ? '' : ' style="display:none;"';
+
+$discount          = new EDD_Discount( $discount_id );
+$product_reqs      = $discount->product_reqs;
+$excluded_products = $discount->excluded_products;
+$condition         = $discount->product_condition;
+$single_use        = $discount->is_single_use;
+$flat_display      = $discount->type === 'flat' ? '' : ' style="display:none;"';
+$percent_display   = $discount->type === 'percent' ? '' : ' style="display:none;"';
 $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 ?>
 <h2><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'easy-digital-downloads' ); ?></a></h2>

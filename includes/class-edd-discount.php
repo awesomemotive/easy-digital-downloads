@@ -480,7 +480,6 @@ class EDD_Discount {
 	 * @return bool Object var initialisation successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
-
 		if ( null == $discount ) {
 			return false;
 		}
@@ -546,6 +545,11 @@ class EDD_Discount {
 		}
 
 		/**
+		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
+		 */
+		$this->excluded_products = (array) $this->get_meta( 'excluded_product', false );
+
+		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
 		 *
 		 * @since 2.7
@@ -555,10 +559,8 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_setup_discount', $this, $discount );
 
-		if( ! empty( $this->id ) ) {
-
+		if ( ! empty( $this->id ) ) {
 			return true;
-
 		}
 
 		return false;
@@ -715,9 +717,6 @@ class EDD_Discount {
 	 * @return array IDs of excluded downloads.
 	 */
 	public function get_excluded_products() {
-
-		$excluded_products = $this->get_meta( 'excluded_product', false );
-
 		/**
 		 * Filters the excluded downloads.
 		 *
