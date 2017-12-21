@@ -79,8 +79,8 @@ function edd_add_discount( $data ) {
 		}
 	}
 
-	if( isset( $data['excluded_products'] ) ) {
-		$to_add['excluded_products'] = $data['excluded_products'];
+	if ( isset( $data['excluded-products'] ) ) {
+		$to_add['excluded_products'] = $data['excluded-products'];
 	} else {
 		$to_add['excluded_products'] = '';
 	}
@@ -176,8 +176,8 @@ function edd_edit_discount( $data ) {
 		}
 	}
 
-	if( isset( $data['excluded_products'] ) ) {
-		$to_update['excluded_products'] = $data['excluded_products'];
+	if ( isset( $data['excluded-products'] ) ) {
+		$to_update['excluded_products'] = $data['excluded-products'];
 	} else {
 		$to_update['excluded_products'] = '';
 	}
