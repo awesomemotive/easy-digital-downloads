@@ -939,6 +939,11 @@ class EDD_Discount {
 				}
 			}
 
+			// Assume discount status is "active" if it has not been set
+			if ( ! isset( $args['status'] ) ) {
+				$args['status'] = 'active';
+			}
+
 			/**
 			 * Add a new discount to the database.
 			 */
@@ -1081,7 +1086,6 @@ class EDD_Discount {
 
 				// Now add each newly excluded product
 				foreach( $args['excluded_products'] as $product ) {
-					var_dump( $product );
 					$this->add_meta( 'excluded_product', absint( $product ) );
 				}
 				
