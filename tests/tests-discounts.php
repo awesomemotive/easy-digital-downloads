@@ -309,7 +309,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$d = new EDD_Discount();
 		$migrated_id = $d->migrate( $old_id );
 		$d2 = new EDD_Discount( $migrated_id );
-		$this->assertTrue( ! empty( $d2->is_single_use() ) );
+		$is_single_use = $d2->is_single_use();
+		$this->assertTrue( ! empty( $is_single_use ) );
 	}
 
 	public function test_once_per_customer_of_migrated_discount() {
