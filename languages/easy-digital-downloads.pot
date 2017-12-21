@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.15\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.16\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-12-13 20:39:35+00:00\n"
+"POT-Creation-Date: 2017-12-21 21:34:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -90,7 +90,7 @@ msgstr ""
 #: includes/api/class-edd-api.php:1990 includes/api/class-edd-api.php:1995
 #: includes/api/class-edd-api.php:2007 includes/api/class-edd-api.php:2009
 #: includes/cart/class-edd-cart.php:1470 includes/cart/class-edd-cart.php:1484
-#: includes/class-edd-license-handler.php:307
+#: includes/class-edd-license-handler.php:309
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1248
 #: includes/emails/actions.php:53 includes/emails/template.php:243
@@ -546,7 +546,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/api/class-edd-api.php:1990
-#: includes/class-edd-license-handler.php:307
+#: includes/class-edd-license-handler.php:309
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -4728,7 +4728,7 @@ msgstr ""
 msgid "Copy Entire Log"
 msgstr ""
 
-#: includes/admin/tracking.php:256
+#: includes/admin/tracking.php:267
 msgid ""
 "Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
 "our newsletter and immediately be emailed a discount to the EDD shop, valid "
@@ -4736,11 +4736,11 @@ msgid ""
 "sensitive data is tracked."
 msgstr ""
 
-#: includes/admin/tracking.php:257
+#: includes/admin/tracking.php:268
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/tracking.php:258
+#: includes/admin/tracking.php:269
 msgid "Do not allow"
 msgstr ""
 
@@ -5549,15 +5549,15 @@ msgstr ""
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:566
+#: includes/class-edd-cli.php:570
 msgid "Invalid status '%s', defaulting to 'complete'"
 msgstr ""
 
-#: includes/class-edd-cli.php:604
+#: includes/class-edd-cli.php:608
 msgid "Specified ID is not a product"
 msgstr ""
 
-#: includes/class-edd-cli.php:722
+#: includes/class-edd-cli.php:743
 msgid "Created %s payments"
 msgstr ""
 
@@ -5634,24 +5634,24 @@ msgstr ""
 msgid "Enter username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:166
+#: includes/class-edd-license-handler.php:168
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:199
+#: includes/class-edd-license-handler.php:201
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:424
+#: includes/class-edd-license-handler.php:426
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. Please "
 "go to the <a href=\"%s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:463
+#: includes/class-edd-license-handler.php:465
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -6783,23 +6783,23 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/actions.php:443 includes/payments/actions.php:503
+#: includes/payments/actions.php:460 includes/payments/actions.php:520
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:447
+#: includes/payments/actions.php:464
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:525 includes/payments/actions.php:559
+#: includes/payments/actions.php:542 includes/payments/actions.php:576
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:527
+#: includes/payments/actions.php:544
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:528 templates/shortcode-login.php:33
+#: includes/payments/actions.php:545 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -7220,7 +7220,7 @@ msgid "Enter the password confirmation"
 msgstr ""
 
 #: includes/process-purchase.php:624
-msgid "You must login or register to complete your purchase"
+msgid "You must log in or register to complete your purchase"
 msgstr ""
 
 #: includes/process-purchase.php:651
