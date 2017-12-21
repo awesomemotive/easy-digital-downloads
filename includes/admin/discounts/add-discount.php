@@ -69,8 +69,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<td>
 					<p>
 						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'products[]',
-							'id'          => 'products',
+							'name'        => 'product_reqs[]',
+							'id'          => 'edd-products',
 							'multiple'    => true,
 							'chosen'      => true,
 							'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -100,11 +100,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			<?php do_action( 'edd_add_discount_form_before_excluded_products' ); ?>
 			<tr>
 				<th scope="row" valign="top">
-					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
+					<label for="excluded_products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
-						'name'        => 'excluded-products[]',
+						'name'        => 'excluded_products[]',
 						'id'          => 'excluded_products',
 						'selected'    => array(),
 						'multiple'    => true,
