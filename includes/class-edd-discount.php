@@ -1952,9 +1952,6 @@ class EDD_Discount {
 			}
 
 			$value = maybe_unserialize( $value[0] );
-			if( is_array( $value ) ) {
-				$value = json_encode( $value );
-			}
 
 			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
 

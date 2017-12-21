@@ -129,7 +129,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_get_discount_product_requirements_by_property() {
 		$d = new EDD_Discount( $this->discount_id );
-		$this->assertTrue( empty( $d->get_product_recs() ) );
+		$this->assertTrue( empty( $d->get_product_reqs() ) );
 	}
 
 	public function test_get_discount_excluded_products_by_method() {
@@ -158,7 +158,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_instantiating_non_migrated_legacy_discount() {
 		$old_id = EDD_Helper_Discount::create_legacy_discount();
 		$d = new EDD_Discount( $old_id );
-		$this->assertTrue( empty( $discount->id ) );
+		$this->assertTrue( empty( $d->id ) );
 	}
 
 	public function test_migrating_legacy_discount() {
@@ -258,7 +258,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertEquals( '10.50', $d2->min_cart_price );
 	}
 
-	public function test_product_recs_of_migrated_discount() {
+	public function test_product_reqs_of_migrated_discount() {
 
 		$old_id = EDD_Helper_Discount::create_legacy_discount();
 		$d = new EDD_Discount();
