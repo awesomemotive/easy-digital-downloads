@@ -177,7 +177,7 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optin( $data ) {
-		if ( ! current_user_can( 'manage_optoins' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -196,7 +196,7 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
-		if ( ! current_user_can( 'manage_optoins' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
