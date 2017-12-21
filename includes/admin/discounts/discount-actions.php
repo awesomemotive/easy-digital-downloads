@@ -54,15 +54,15 @@ function edd_add_discount( $data ) {
 
 		// Each column gets passed through a generic sanitization method during the update() call
 
-		if( isset( $data[ $column ] ) && ! empty( $data[ $column ] ) ) {
+		if ( isset( $data[ $column ] ) && ! empty( $data[ $column ] ) ) {
 
-			switch( $column ) {
+			switch ( $column ) {
 
 				case 'start_date':
 					$to_add[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
 					break;
 
-				case 'end_date'  :
+				case 'end_date':
 					$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
 					break;
 
@@ -134,13 +134,16 @@ function edd_edit_discount( $data ) {
 
 		// Each column gets passed through a generic sanitization method during the update() call
 
-		if( isset( $data[ $column ] ) ) {
+		if ( isset( $data[ $column ] ) ) {
 
-			switch( $column ) {
+			switch ( $column ) {
 
 				case 'start_date':
-				case 'end_date'  :
-					$to_update[ $column ] = date( 'Y-n-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					$to_add[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				case 'end_date':
+					$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
 					break;
 
 				case 'product_reqs' :
