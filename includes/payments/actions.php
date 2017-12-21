@@ -284,10 +284,18 @@ add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
 /**
  * Updates week-old+ 'pending' orders to 'abandoned'
  *
+ *  This function is only intended to be used by WordPress cron.
+ *
  * @since 1.6
  * @return void
 */
 function edd_mark_abandoned_orders() {
+
+	// Bail if not in WordPress cron
+	if ( ! edd_doing_cron() ) {
+		return;
+	}
+
 	$args = array(
 		'status' => 'pending',
 		'number' => -1,
@@ -438,7 +446,16 @@ function edd_recover_payment() {
 		return;
 	}
 
-	if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
+	if (
+		// Logged in, but wrong user ID
+		( is_user_logged_in() && $payment->user_id != get_current_user_id() )
+
+		// ...OR...
+		||
+
+		// Logged out, but payment is for a user
+		( ! is_user_logged_in() && ! empty( $payment->user_id ) )
+	) {
 		$redirect = get_permalink( edd_get_option( 'purchase_history_page' ) );
 		edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
 		wp_redirect( $redirect );

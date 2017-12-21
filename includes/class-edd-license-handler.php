@@ -104,7 +104,9 @@ class EDD_License {
 		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
 
 		// Check that license is valid once per week
-		add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+		if ( edd_doing_cron() ) {
+			add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+		}
 
 		// For testing license notices, uncomment this line to force checks on every page load
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );

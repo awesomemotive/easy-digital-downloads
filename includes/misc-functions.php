@@ -676,11 +676,19 @@ function edd_get_upload_dir() {
 /**
  * Delete symbolic links after they have been used
  *
+ * This function is only intended to be used by WordPress cron.
+ *
  * @access public
  * @since  1.5
  * @return void
  */
 function edd_cleanup_file_symlinks() {
+
+	// Bail if not in WordPress cron
+	if ( ! edd_doing_cron() ) {
+		return;
+	}
+
 	$path = edd_get_symlink_dir();
 	$dir = opendir( $path );
 
@@ -949,4 +957,29 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	}
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}
+
+/**
+ * Abstraction for WordPress cron checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific cron related jobs. You probably won't want to use it until then.
+ *
+ * @since 2.8.16
+ *
+ * @return boolean
+ */
+function edd_doing_cron() {
+
+	// Bail if not doing WordPress cron (>4.8.0)
+	if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
+		return true;
+
+	// Bail if not doing WordPress cron (<4.8.0)
+	} elseif ( defined( 'DOING_CRON' ) && ( true === DOING_CRON ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
 }
