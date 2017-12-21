@@ -642,10 +642,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_deletion_of_discount() {
 		edd_remove_discount( $this->discount_id );
-		$this->assertFalse( wp_cache_get( $this->discount_id, 'posts' ) );
+		$this->assertFalse( edd_get_discount( $this->discount_id ) );
 
 		edd_remove_discount( $this->_negativediscount_id );
-		$this->assertFalse( wp_cache_get( $this->_negativediscount_id, 'posts' ) );
+		$this->assertFalse( edd_get_discount( $this->_negativediscount_id ) );
 	}
 
 	public function test_set_discount() {
