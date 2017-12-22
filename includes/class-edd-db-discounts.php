@@ -438,7 +438,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 		min_cart_price mediumtext NOT NULL,
 		product_condition varchar(3) NOT NULL DEFAULT 'all',
 		scope varchar(30) NOT NULL DEFAULT 'global',
-		created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		created_date datetime NOT NULL,
 		start_date datetime NOT NULL,
 		end_date datetime NOT NULL,
 		notes longtext NOT NULL,
