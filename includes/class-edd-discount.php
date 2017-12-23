@@ -120,7 +120,7 @@ class EDD_Discount {
 	 * @access protected
 	 * @var string
 	 */
-	protected $created_date = null;
+	protected $date_created = null;
 
 	/**
 	 * Start Date.
@@ -248,7 +248,7 @@ class EDD_Discount {
 				case 'post_date' :
 				case 'post_date_gmt' :
 
-					return $this->created_date;
+					return $this->date_created;
 					break;
 
 				case 'post_content' :
