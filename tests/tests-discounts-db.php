@@ -24,7 +24,6 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 
 	public function tearDown() {
 		self::_delete_all_data();
-		edd_empty_cart();
 		parent::tearDown();
 	}
 
