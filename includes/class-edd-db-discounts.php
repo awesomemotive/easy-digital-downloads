@@ -190,6 +190,10 @@ class EDD_DB_Discounts extends EDD_DB  {
 			$args['number'] = 999999999999;
 		}
 
+		if ( isset( $args['search'] ) && ! empty( $args['search'] ) ) {
+			$args['search'] = $wpdb->esc_like( $args['search'] );
+		}
+
 		$where = $this->parse_where( $args );
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
@@ -205,12 +209,12 @@ class EDD_DB_Discounts extends EDD_DB  {
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
-		if( $discounts === false ) {
+		if ( false === $discounts ) {
 			$discounts = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
 
-			if( ! empty( $discounts ) ) {
+			if ( ! empty( $discounts ) ) {
 
-				foreach( $discounts as $key => $discount ) {
+				foreach ( $discounts as $key => $discount ) {
 					$discounts[ $key ] = new EDD_Discount( $discount );
 				}
 
@@ -227,9 +231,9 @@ class EDD_DB_Discounts extends EDD_DB  {
 		$where = '';
 
 		// Specific types
-		if( ! empty( $args['type'] ) ) {
+		if ( ! empty( $args['type'] ) ) {
 
-			if( is_array( $args['type'] ) ) {
+			if ( is_array( $args['type'] ) ) {
 				$types = implode( "','", array_map( 'sanitize_text_field', $args['type'] ) );
 			} else {
 				$types = sanitize_text_field( $args['type'] );
@@ -240,9 +244,9 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Specific statuses
-		if( ! empty( $args['status'] ) ) {
+		if ( ! empty( $args['status'] ) ) {
 
-			if( is_array( $args['status'] ) ) {
+			if ( is_array( $args['status'] ) ) {
 				$statuses = implode( "','", array_map( 'sanitize_text_field', $args['status'] ) );
 			} else {
 				$statuses = sanitize_text_field( $args['status'] );
@@ -253,11 +257,11 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Created for a specific date or in a date range
-		if( ! empty( $args['created_date'] ) ) {
+		if ( ! empty( $args['created_date'] ) ) {
 
-			if( is_array( $args['created_date'] ) ) {
+			if ( is_array( $args['created_date'] ) ) {
 
-				if( ! empty( $args['created_date']['start'] ) ) {
+				if ( ! empty( $args['created_date']['start'] ) ) {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['created_date']['start'] ) );
 
@@ -265,7 +269,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 
 				}
 
-				if( ! empty( $args['created_date']['end'] ) ) {
+				if ( ! empty( $args['created_date']['end'] ) ) {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['created_date']['end'] ) );
 
@@ -285,11 +289,11 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Specific pend_date date
-		if( ! empty( $args['end_date'] ) ) {
+		if ( ! empty( $args['end_date'] ) ) {
 
-			if( is_array( $args['end_date'] ) ) {
+			if ( is_array( $args['end_date'] ) ) {
 
-				if( ! empty( $args['end_date']['start'] ) ) {
+				if ( ! empty( $args['end_date']['start'] ) ) {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['end_date']['start'] ) );
 
@@ -297,7 +301,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 
 				}
 
-				if( ! empty( $args['end_date']['end'] ) ) {
+				if ( ! empty( $args['end_date']['end'] ) ) {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['end_date']['end'] ) );
 
@@ -317,11 +321,11 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Specific paid date or in a paid date range
-		if( ! empty( $args['start_date'] ) ) {
+		if ( ! empty( $args['start_date'] ) ) {
 
-			if( is_array( $args['start_date'] ) ) {
+			if ( is_array( $args['start_date'] ) ) {
 
-				if( ! empty( $args['start_date']['start_date'] ) ) {
+				if ( ! empty( $args['start_date']['start_date'] ) ) {
 
 					$start_date = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start_date'] ) );
 
@@ -329,7 +333,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 
 				}
 
-				if( ! empty( $args['start_date']['end'] ) ) {
+				if ( ! empty( $args['start_date']['end'] ) ) {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['end'] ) );
 
@@ -346,6 +350,11 @@ class EDD_DB_Discounts extends EDD_DB  {
 				$where .= " AND $year = YEAR ( start_date ) AND $month = MONTH ( start_date ) AND $day = DAY ( start_date )";
 			}
 
+		}
+
+		// Specific search query
+		if ( ! empty( $args['search'] ) ) {
+			$where .= " AND ( name LIKE '%" . $args['search'] . "%' OR code LIKE '%" . $args['search'] . "%' )";
 		}
 
 		if ( ! empty( $where ) ) {
