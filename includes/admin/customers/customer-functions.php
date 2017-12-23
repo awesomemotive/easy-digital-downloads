@@ -115,3 +115,46 @@ function edd_maybe_remove_menu_profile_links() {
 
 }
 add_action( 'admin_init', 'edd_maybe_remove_menu_profile_links' );
+
+/**
+ * Add Customer column to Users list table.
+ *
+ * @since 3.0
+ *
+ * @param array $columns Existing columns.
+ *
+ * @return array $columns Columns with `Customer` added.
+ */
+function edd_add_customer_column_to_users_table( $columns ) {
+	$columns['edd_customer'] = __( 'Customer', 'easy-digital-downloads' );
+	return $columns;
+}
+add_filter( 'manage_users_columns', 'edd_add_customer_column_to_users_table' );
+
+/**
+ * Display customer details on Users list table.
+ *
+ * @since 3.0
+ *
+ * @param string $value       Existing value of the custom column.
+ * @param string $column_name Column name.
+ * @param int    $user_id     User ID.
+ *
+ * @return string URL to Customer page, existing value otherwise.
+ */
+function edd_render_customer_column( $value, $column_name, $user_id ) {
+	if ( 'edd_customer' === $column_name ) {
+		$customer = new EDD_Customer( $user_id, true );
+
+		if ( $customer->id > 0 ) {
+			$name     = '#' . $customer->id . ' ';
+			$name     .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
+			$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+
+			return '<a href="' . $view_url . '">' . $name . '</a>';
+		}
+	}
+
+	return $value;
+}
+add_action( 'manage_users_custom_column',  'edd_render_customer_column', 10, 3 );
