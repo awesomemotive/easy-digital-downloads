@@ -186,7 +186,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 
 		$args  = wp_parse_args( $args, $defaults );
 
-		if( $args['number'] < 1 ) {
+		if ( $args['number'] < 1 ) {
 			$args['number'] = 999999999999;
 		}
 
@@ -198,7 +198,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		if( 'amount' == $args['orderby'] ) {
+		if ( 'amount' == $args['orderby'] ) {
 			$args['orderby'] = 'amount+0';
 		}
 
@@ -354,7 +354,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 
 		// Specific search query
 		if ( ! empty( $args['search'] ) ) {
-			$where .= " AND ( name LIKE '%" . $args['search'] . "%' OR code LIKE '%" . $args['search'] . "%' )";
+			$where .= " AND ( name LIKE '%%" . $args['search'] . "%%' OR code LIKE '%%" . $args['search'] . "%%' )";
 		}
 
 		if ( ! empty( $where ) ) {

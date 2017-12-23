@@ -201,7 +201,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'search' => '10FLAT',
 		) );
 
-		$this->assertTrue( 2 === count( $discounts ) );
+		$this->assertTrue( 1 === count( $discounts ) );
 		$this->assertTrue( '10FLAT' === $discounts[0]->code );
 	}
 
@@ -214,7 +214,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'search' => '$10 Off',
 		) );
 
-		$this->assertTrue( 2 === count( $discounts ) );
+		$this->assertTrue( 1 === count( $discounts ) );
 		$this->assertTrue( '10FLAT' === $discounts[0]->code );
 	}
 
@@ -279,7 +279,13 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 
 		$this->assertTrue( 2 === count( $discounts ) );
 
-		$discounts = self::$db->get_discounts( array( 'type' => array( 'percent', 'flat' ) ) );
+		$discounts = self::$db->get_discounts( array(
+			'type' => array(
+				'percent',
+				'flat',
+			),
+		) );
+
 		$this->assertTrue( 3 === count( $discounts ) );
 	}
 
@@ -365,7 +371,17 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers EDD_DB_Discounts::count()
 	 */
 	public function test_count_with_search() {
-		$this->markTestIncomplete( 'test_count_with_search(): Needs implementing after search is introduced' );
+		$discounts = self::$db->count( array(
+			'search' => '20OFF',
+		) );
+
+		$this->assertTrue( 1 === $discounts );
+
+		$discounts = self::$db->count( array(
+			'search' => 'FREE',
+		) );
+
+		$this->assertTrue( 0 === $discounts );
 	}
 
 	/**
