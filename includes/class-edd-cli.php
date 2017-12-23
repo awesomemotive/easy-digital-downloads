@@ -528,11 +528,13 @@ class EDD_CLI extends WP_CLI_Command {
 		$id         = false;
 		$price_id   = false;
 		$tax        = 0;
-		$email      = 'guest@local.dev';
+		$email      = 'guest@edd.local';
 		$fname      = 'Pippin';
 		$lname      = 'Williamson';
 		$date       = false;
 		$range      = 30;
+
+		$generate_users = false;
 
 		if( count( $assoc_args ) > 0 ) {
 			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] )             : $number;
@@ -544,6 +546,8 @@ class EDD_CLI extends WP_CLI_Command {
 			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : $lname;
 			$date       = ( array_key_exists( 'date', $assoc_args ) )     ? sanitize_text_field( $assoc_args['date'] )  : $date;
 			$range      = ( array_key_exists( 'range', $assoc_args ) )    ? absint( $assoc_args['range'] )              : $range;
+
+			$generate_users = ( array_key_exists( 'generate_users', $assoc_args ) ) ? (bool) absint( $assoc_args['generate_users'] ) : $generate_users;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -683,6 +687,23 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			if ( $generate_users ) {
+				$fname  = $this->get_fname();
+				$lname  = $this->get_lname();
+				$domain = $this->get_domain();
+				$tld    = $this->get_tld();
+
+				$email  = $fname . '.' . $lname . '@' . $domain . '.' . $tld;
+
+				$user_info = array(
+					'id'            => 0,
+					'email'         => $email,
+					'first_name'    => $fname,
+					'last_name'     => $lname,
+					'discount'      => 'none'
+				);
+			}
+
 			$purchase_data = array(
 				'price'	        => edd_sanitize_amount( $total ),
 				'tax'           => 0,
@@ -737,7 +758,7 @@ class EDD_CLI extends WP_CLI_Command {
 	 */
 	public function migrate_discounts( $args, $assoc_args ) {
 		global $wpdb;
-		$force  = isset( $assoc_args['force'] ) ? true : false;
+		$force = isset( $assoc_args['force'] ) ? true : false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_discounts' );
 
@@ -755,16 +776,15 @@ class EDD_CLI extends WP_CLI_Command {
 			@$discount_meta->create_table();
 		}
 
-		$sql     = "SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount'";
+		$sql = "SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount'";
 		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+		$total = count( $results );
 
 		if ( ! empty( $total ) ) {
 
 			$progress = new \cli\progress\Bar( 'Migrating Discounts', $total );
 
-			foreach ( $discounts as $old_discount ) {
-
+			foreach ( $results as $old_discount ) {
 				$discount = new EDD_Discount;
 				$discount->migrate( $old_discount->ID );
 				$progress->tick();
@@ -773,7 +793,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = EDD()->discounts->count( array( 'number' => -1 ) );
+			$new_count = EDD()->discounts->count( array( 'number' => - 1 ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts WHERE post_type ='edd_discount'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
@@ -803,6 +823,39 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_set_upgrade_complete( 'remove_legacy_discounts' );
 
 		}
+	}
 
+	private function get_fname() {
+		$names = array(
+			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
+			'Marisa','Maybelle','Onie','Donnette','Henry','Sheryll','Leighann','Wilson',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	private function get_lname() {
+		$names = array(
+			'Warner','Roush','Lenahan','Theiss','Sack','Troutt','Vanderburg','Lisi','Lemons','Christon','Kogut',
+			'Broad','Wernick','Horstmann','Schoenfeld','Dolloff','Murph','Shipp','Hursey','Jacobi',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	private function get_domain() {
+		$domains = array(
+			'example', 'edd', 'rcp', 'affwp',
+		);
+
+		return $domains[ rand( 0, ( count( $domains ) - 1 ) ) ];
+	}
+
+	private function get_tld() {
+		$tlds = array(
+			'local', 'test', 'example', 'localhost', 'invalid',
+		);
+
+		return $tlds[ rand( 0, ( count( $tlds ) - 1 ) ) ];
 	}
 }
