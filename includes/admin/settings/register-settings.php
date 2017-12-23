@@ -211,12 +211,12 @@ function edd_register_settings() {
 				) );
 
 				if ( 'hidden' === $args['type'] ) {
-				    if ( ! empty( $args['class'] ) ) {
-				        $args['class'] .= ' hidden';
-                    } else {
-				        $args['class'] = 'hidden';
-                    }
-                }
+					if ( ! empty( $args['class'] ) ) {
+						$args['class'] .= ' hidden';
+					} else {
+						$args['class'] = 'hidden';
+					}
+				}
 
 				add_settings_field(
 					'edd_settings[' . $args['id'] . ']',
