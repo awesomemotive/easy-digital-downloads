@@ -61,7 +61,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'type'                => '%s',
 			'amount'              => '%s',
 			'description'         => '%s',
-			'created_date'        => '%s',
+			'date_created'        => '%s',
 			'start_date'          => '%s',
 			'end_date'            => '%s',
 			'max_uses'            => '%d',
@@ -95,7 +95,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 			'once_per_customer'   => 0,
 			'product_condition'   => '',
 			'scope'               => 'global',
-			'created_date'        => date( 'Y-m-d H:i:s' ),
+			'date_created'        => date( 'Y-m-d H:i:s' ),
 			'start_date'          => '0000-00-00 00:00:00',
 			'end_date'            => '0000-00-00 00:00:00',
 			'notes'               => '',
@@ -257,33 +257,33 @@ class EDD_DB_Discounts extends EDD_DB  {
 		}
 
 		// Created for a specific date or in a date range
-		if ( ! empty( $args['created_date'] ) ) {
+		if ( ! empty( $args['date_created'] ) ) {
 
-			if ( is_array( $args['created_date'] ) ) {
+			if ( is_array( $args['date_created'] ) ) {
 
-				if ( ! empty( $args['created_date']['start'] ) ) {
+				if ( ! empty( $args['date_created']['start'] ) ) {
 
-					$start = date( 'Y-m-d H:i:s', strtotime( $args['created_date']['start'] ) );
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['start'] ) );
 
-					$where .= " AND `created_date` >= '{$start}'";
+					$where .= " AND `date_created` >= '{$start}'";
 
 				}
 
-				if ( ! empty( $args['created_date']['end'] ) ) {
+				if ( ! empty( $args['date_created']['end'] ) ) {
 
-					$end = date( 'Y-m-d H:i:s', strtotime( $args['created_date']['end'] ) );
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['end'] ) );
 
-					$where .= " AND `created_date` <= '{$end}'";
+					$where .= " AND `date_created` <= '{$end}'";
 
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['created_date'] ) );
-				$month = date( 'm', strtotime( $args['created_date'] ) );
-				$day   = date( 'd', strtotime( $args['created_date'] ) );
+				$year  = date( 'Y', strtotime( $args['date_created'] ) );
+				$month = date( 'm', strtotime( $args['date_created'] ) );
+				$day   = date( 'd', strtotime( $args['date_created'] ) );
 
-				$where .= " AND $year = YEAR ( created_date ) AND $month = MONTH ( created_date ) AND $day = DAY ( created_date )";
+				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
 			}
 
 		}
@@ -437,7 +437,7 @@ class EDD_DB_Discounts extends EDD_DB  {
 		min_cart_price mediumtext NOT NULL,
 		product_condition varchar(3) NOT NULL DEFAULT 'all',
 		scope varchar(30) NOT NULL DEFAULT 'global',
-		created_date datetime NOT NULL,
+		date_created datetime NOT NULL,
 		start_date datetime NOT NULL,
 		end_date datetime NOT NULL,
 		notes longtext NOT NULL,

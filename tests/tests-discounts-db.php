@@ -39,7 +39,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'type'              => '%s',
 			'amount'            => '%s',
 			'description'       => '%s',
-			'created_date'      => '%s',
+			'date_created'      => '%s',
 			'start_date'        => '%s',
 			'end_date'          => '%s',
 			'max_uses'          => '%d',
@@ -72,7 +72,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'once_per_customer' => 0,
 			'product_condition' => '',
 			'scope'             => 'global',
-			'created_date'      => date( 'Y-m-d H:i:s' ),
+			'date_created'      => date( 'Y-m-d H:i:s' ),
 			'start_date'        => '0000-00-00 00:00:00',
 			'end_date'          => '0000-00-00 00:00:00',
 			'notes'             => '',
@@ -302,9 +302,9 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	/**
 	 * @covers EDD_DB_Discounts::get_discounts()
 	 */
-	public function test_get_discounts_with_created_date() {
+	public function test_get_discounts_with_date_created() {
 		$discounts = self::$db->get_discounts( array(
-			'created_date' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
 		$this->assertTrue( 1 === count( $discounts ) );
@@ -315,7 +315,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_get_discounts_with_created_start_date() {
 		$discounts = self::$db->get_discounts( array(
-			'created_date' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
 		$this->assertTrue( 1 === count( $discounts ) );
@@ -326,7 +326,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_get_discounts_with_created_end_date() {
 		$discounts = self::$db->get_discounts( array(
-			'created_date' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
 		$this->assertTrue( 1 === count( $discounts ) );
@@ -416,9 +416,9 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	/**
 	 * @covers EDD_DB_Discounts::count()
 	 */
-	public function test_count_with_created_date() {
+	public function test_count_with_date_created() {
 		$this->assertTrue( 1 === self::$db->count( array(
-			'created_date' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) ) );
 	}
 
