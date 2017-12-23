@@ -210,6 +210,14 @@ function edd_register_settings() {
 				    'field_class'   => '',
 				) );
 
+				if ( 'hidden' === $args['type'] ) {
+				    if ( ! empty( $args['class'] ) ) {
+				        $args['class'] .= ' hidden';
+                    } else {
+				        $args['class'] = 'hidden';
+                    }
+                }
+
 				add_settings_field(
 					'edd_settings[' . $args['id'] . ']',
 					$args['name'],
@@ -2114,6 +2122,28 @@ function edd_tax_rates_callback($args) {
  */
 function edd_descriptive_text_callback( $args ) {
 	$html = wp_kses_post( $args['desc'] );
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
+ * Hidden field callback.
+ *
+ * "Renders" a hidden field.
+ *
+ * @since 3.0
+ * @param array $args Arguments passed by the setting.
+ */
+function edd_hidden_callback( $args ) {
+	$edd_option = edd_get_option( $args['id'] );
+
+	if ( $edd_option ) {
+		$value = $edd_option;
+	} else {
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+	}
+
+	$html = '<input type="hidden" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
