@@ -73,6 +73,32 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 
 	}
 
+	/**
+	 * Create an expired flat discount.
+	 *
+	 * @since 3.0
+	 */
+	public static function created_expired_flat_discount() {
+
+		$post = array(
+			'code'              => '20FLAT',
+			'uses'              => 0,
+			'max'               => 20,
+			'name'              => '$20 Off',
+			'type'              => 'flat',
+			'amount'            => '20',
+			'start'             => '12/12/2010 00:00:00',
+			'expiration'        => '12/31/2012 23:59:59',
+			'min_price'         => 128,
+			'status'            => 'expired',
+			'product_condition' => 'all'
+		);
+		$discount_id = edd_store_discount( $post );
+
+		return $discount_id;
+
+	}
+
 
 	/**
 	 * Create legacy discount code.
