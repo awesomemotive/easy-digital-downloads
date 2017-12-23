@@ -365,19 +365,9 @@ class EDD_DB_Discounts extends EDD_DB  {
 	public function count( $args = array() ) {
 		global $wpdb;
 
-		$where     = $this->parse_where( $args );
-		$cache_key = md5( 'edd_discounts_count' . serialize( $args ) );
-
-		$count = wp_cache_get( $cache_key, 'discounts' );
-
-		if( $count === false ) {
-
-			$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
-			$count = $wpdb->get_var( $sql );
-
-			wp_cache_set( $cache_key, $count, 'discounts', 3600 );
-
-		}
+		$where = $this->parse_where( $args );
+		$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
+		$count = $wpdb->get_var( $sql );
 
 		return absint( $count );
 	}
