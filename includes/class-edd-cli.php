@@ -744,7 +744,7 @@ class EDD_CLI extends WP_CLI_Command {
 		return;
 	}
 
-	private function get_fname() {
+	protected function get_fname() {
 		$names = array(
 			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
 			'Marisa','Maybelle','Onie','Donnette','Henry','Sheryll','Leighann','Wilson',
@@ -753,7 +753,7 @@ class EDD_CLI extends WP_CLI_Command {
 		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
 	}
 
-	private function get_lname() {
+	protected function get_lname() {
 		$names = array(
 			'Warner','Roush','Lenahan','Theiss','Sack','Troutt','Vanderburg','Lisi','Lemons','Christon','Kogut',
 			'Broad','Wernick','Horstmann','Schoenfeld','Dolloff','Murph','Shipp','Hursey','Jacobi',
@@ -762,7 +762,7 @@ class EDD_CLI extends WP_CLI_Command {
 		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
 	}
 
-	private function get_domain() {
+	protected function get_domain() {
 		$domains = array(
 			'example', 'edd', 'rcp', 'affwp',
 		);
@@ -770,7 +770,7 @@ class EDD_CLI extends WP_CLI_Command {
 		return $domains[ rand( 0, ( count( $domains ) - 1 ) ) ];
 	}
 
-	private function get_tld() {
+	protected function get_tld() {
 		$tlds = array(
 			'local', 'test', 'example', 'localhost', 'invalid',
 		);
