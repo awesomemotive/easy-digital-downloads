@@ -60,6 +60,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-registry.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/formatting.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/widgets.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/mime-types.php' );
