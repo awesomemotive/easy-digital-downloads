@@ -52,6 +52,15 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	/**
 	 * @covers \EDD_Registry::add_item()
 	 */
+	public function test_add_item_with_empty_attributes_should_return_WP_Error_code_registry__missing_attributes() {
+		$result = $this->mockRegistry->add_item( 'foo', array() );
+
+		$this->assertSame( 'registry__missing_attributes', $result->get_error_code() );
+	}
+
+	/**
+	 * @covers \EDD_Registry::add_item()
+	 */
 	public function test_add_item_with_empty_attributes_should_return_WP_Error_with_item_id() {
 		$expected = array(
 			'item_id'    => 'foo',
@@ -111,6 +120,15 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	 */
 	public function test_get_item_with_invalid_item_id_should_return_WP_Error_object() {
 		$this->assertWPError( $this->mockRegistry->get_item( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::get_item()
+	 */
+	public function test_get_item_with_invalid_item_id_should_return_WP_Error_with_code_registry__invalid_item_id() {
+		$result = $this->mockRegistry->get_item( 'foo' );
+
+		$this->assertSame( 'registry__invalid_item_id', $result->get_error_code() );
 	}
 
 	/**
