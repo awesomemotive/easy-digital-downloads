@@ -1234,22 +1234,27 @@ function edd_discounts_migration() {
 	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
 	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
 
+	edd_debug_log( 'Beginning step ' . $step . ' of discounts migration' );
+
 	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
 		$total     = $results->total_discounts;
+		edd_debug_log( $total . ' to migrate' );
 	}
 
 	if ( 1 === $step ) {
 		$discounts_db = EDD()->discounts;
 		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
 			@$discounts_db->create_table();
+			edd_debug_log( $discounts_db->table_name . ' created successfully' );
 		}
 
 		$discount_meta = EDD()->discount_meta;
 		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
 			@$discount_meta->create_table();
+			edd_debug_log( $discount_meta->table_name . ' created successfully' );
 		}
 	}
 
@@ -1263,13 +1268,15 @@ function edd_discounts_migration() {
 
 	if ( ! empty( $discounts ) ) {
 
-		// discounts found so migrate them
+		// Discounts found so migrate them
 		foreach ( $discounts as $old_discount ) {
-
 			$discount = new EDD_Discount;
-			$discount->migrate( $old_discount->ID );
+			$id = $discount->migrate( $old_discount->ID );
 
+			edd_debug_log( $old_discount->ID . ' successfully migrated to ' . $id );
 		}
+
+		edd_debug_log( 'Step ' . $step . ' of discounts migration complete' );
 
 		$step++;
 		$redirect = add_query_arg( array(
@@ -1289,6 +1296,8 @@ function edd_discounts_migration() {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'migrate_discounts' );
 		delete_option( 'edd_doing_upgrade' );
+
+		edd_debug_log( 'All old discounts migrated, upgrade complete.' );
 
 		wp_redirect( admin_url() );
 		exit;
@@ -1317,6 +1326,8 @@ function edd_remove_legacy_discounts() {
 	$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
 	$discount_ids = implode( ', ', $discount_ids );
 
+	edd_debug_log( 'Beginning removal of legacy discounts' );
+
 	if ( ! empty( $discount_ids ) ) {
 		$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
 		$wpdb->query( $delete_posts_query );
@@ -1329,6 +1340,8 @@ function edd_remove_legacy_discounts() {
 	edd_set_upgrade_complete( 'remove_legacy_discounts' );
 
 	delete_option( 'edd_doing_upgrade' );
+
+	edd_debug_log( 'Legacy discounts removed, upgrade complete.' );
 
 	wp_redirect( admin_url() );
 	exit;
