@@ -1317,17 +1317,15 @@ function edd_remove_legacy_discounts() {
 	$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
 	$discount_ids = implode( ', ', $discount_ids );
 
-	if( ! empty( $discount_ids ) ) {
-
+	if ( ! empty( $discount_ids ) ) {
 		$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
 		$wpdb->query( $delete_posts_query );
 
 		$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
 		$wpdb->query( $delete_postmeta_query );
-
 	}
 
-	// No more discountss found, finish up
+	// No more discounts found, finish up.
 	edd_set_upgrade_complete( 'remove_legacy_discounts' );
 
 	delete_option( 'edd_doing_upgrade' );
