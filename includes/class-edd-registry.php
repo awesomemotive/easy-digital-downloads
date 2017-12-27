@@ -103,7 +103,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 */
 	public function _reset_items() {
 		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
-			_doing_it_wrong( 'This method is only intended for use in phpunit tests', '1.0.0' );
+			_doing_it_wrong( 'This method is only intended for use in phpunit tests', '3.0' );
 		} else {
 			$this->items = array();
 		}
