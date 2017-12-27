@@ -1153,6 +1153,8 @@ function _edd_discount_get_post_doing_it_wrong( $query ) {
 		'https://easydigitaldownloads.com/development/'
 	);
 
+	edd_debug_log( 'Discounts not queried correctly and not using edd_get_discounts(), edd_get_discount(), or instantiating EDD_Discount object. ' . var_export( $query, true )  );
+
 	_doing_it_wrong( 'get_posts()/get_post()', $message, '3.0' );
 }
 add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
