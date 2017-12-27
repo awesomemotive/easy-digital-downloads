@@ -88,18 +88,21 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @since 3.0
 	 *
 	 * @param string $item_id Item ID.
-	 * @return array|\WP_Error Array of attributes for the item if registered, otherwise a WP_Error object..
+	 * @return array|\WP_Error Array of attributes for the item if registered,
+	 *                         otherwise a WP_Error object..
 	 */
-	public function get( $item_id ) {
+	public function get_item( $item_id ) {
 		if ( isset( $this->items[ $item_id ] ) ) {
-			return $this->items[ $item_id ];
+			$result = $this->items[ $item_id ];
+		} else {
+			$result = new \WP_Error(
+				'registry__invalid_item_id',
+				sprintf( 'The %s item does not exist.', (string) $item_id ),
+				array( 'item_id' => $item_id )
+			);
 		}
 
-		return new \WP_Error(
-			'invalid_item',
-			sprintf( 'Item %s does not exist', (string) $item_id ),
-			$item_id
-		);
+		return $result;
 	}
 
 	/**
