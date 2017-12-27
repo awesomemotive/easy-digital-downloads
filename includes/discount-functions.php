@@ -1075,7 +1075,7 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 			"
 				SELECT edd_discount_id
 				FROM $table_name
-				WHERE meta_key = %s AND meta_value = %s
+				WHERE meta_key = %s AND meta_value = %d
 			", 'legacy_id', $object_id
 		) );
 
