@@ -1119,3 +1119,31 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 }
 add_filter( 'update_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
 add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+
+/**
+ * Add a message for anyone to trying to get discounts via get_post/get_posts/WP_Query.
+ *
+ * @since 3.0
+ *
+ * @param WP_Query $query
+ */
+function _edd_discount_get_post_doing_it_wrong( $query ) {
+	global $wpdb;
+
+	if ( 'edd_discount' !== $query->get( 'post_type' ) ) {
+		return;
+	}
+
+	$message = sprintf(
+		__( 'As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information.', 'easy-digital-downloads' ),
+		'<code>' . $wpdb->posts . '</code>',
+		'<code>' . EDD()->discounts->table_name . '</code>',
+		'<code>edd_get_discounts()</code>',
+		'<code>edd_get_discount()</code>',
+		'<code>EDD_Discount</code>',
+		'https://easydigitaldownloads.com/development/'
+	);
+
+	_doing_it_wrong( 'get_posts()/get_post()', $message, '3.0' );
+}
+add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
