@@ -5,7 +5,7 @@
  * @group edd_registry
  * @group edd_utils
  */
-class Tests extends EDD_UnitTestCase {
+class EDD_Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Mock registry test fixture.
