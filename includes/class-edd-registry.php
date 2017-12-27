@@ -138,7 +138,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return bool True if the item exists, false on failure.
 	 */
 	public function offsetExists( $offset ) {
-		if ( ! is_wp_error( $this->get( $offset ) ) ) {
+		if ( ! is_wp_error( $this->get_item( $offset ) ) ) {
 			return true;
 		}
 
@@ -156,7 +156,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return mixed|\WP_Error The registered item, if it exists, otherwise a WP_Error object.
 	 */
 	public function offsetGet( $offset ) {
-		return $this->get( $offset );
+		return $this->get_item( $offset );
 	}
 
 	/**
