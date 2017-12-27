@@ -1069,7 +1069,15 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 
 	if ( ! $discount || ! $discount->id > 0 ) {
 		// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
-		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
+		$table_name = EDD()->discount_meta->table_name;
+
+		$object_id = $wpdb->get_var( $wpdb->prepare(
+			"
+				SELECT edd_discount_id
+				FROM $table_name
+				WHERE meta_key = %s AND meta_value = %s
+			", 'legacy_id', $object_id
+		) );
 
 		if ( ! empty( $object_id ) ) {
 			$discount = new EDD_Discount( $object_id );
