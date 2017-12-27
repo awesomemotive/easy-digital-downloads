@@ -75,14 +75,18 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @since 3.0
 	 *
 	 * @param string $item_id Item ID.
-	 * @return array|false Array of attributes for the item if registered, otherwise false.
+	 * @return array|\WP_Error Array of attributes for the item if registered, otherwise a WP_Error object..
 	 */
 	public function get( $item_id ) {
 		if ( isset( $this->items[ $item_id ] ) ) {
 			return $this->items[ $item_id ];
 		}
 
-		return false;
+		return new \WP_Error(
+			'invalid_item',
+			sprintf( 'Item %s does not exist', (string) $item_id ),
+			$item_id
+		);
 	}
 
 	/**
@@ -118,7 +122,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return bool True if the item exists, false on failure.
 	 */
 	public function offsetExists( $offset ) {
-		if ( false !== $this->get( $offset ) ) {
+		if ( ! is_wp_error( $this->get( $offset ) ) ) {
 			return true;
 		}
 
@@ -133,7 +137,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @since 3.0
 	 *
 	 * @param string $offset Item ID.
-	 * @return mixed The registered item, if it exists.
+	 * @return mixed|\WP_Error The registered item, if it exists, otherwise a WP_Error object.
 	 */
 	public function offsetGet( $offset ) {
 		return $this->get( $offset );
