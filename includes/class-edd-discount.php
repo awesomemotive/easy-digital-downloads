@@ -1129,13 +1129,19 @@ class EDD_Discount {
 		 */
 		do_action( 'edd_pre_update_discount', $args, $this->id );
 
-		if ( $this->db->update( $this->id, $args ) ) {
+		// If we are using the discounts DB
+		if ( count( array_intersect_key( $args, $this->db->get_columns() ) ) > 0 ) {
+			if ( $this->db->update( $this->id, $args ) ) {
+				$discount = $this->db->get( $this->id );
+				$this->setup_discount( $discount );
 
+				$ret = true;
+			}
+		} elseif ( 0 === count( array_intersect_key( $args, $this->db->get_columns() ) ) && count( array_intersect_key( $args, EDD()->discount_meta->get_columns() ) ) > 0 ) {
 			$discount = $this->db->get( $this->id );
 			$this->setup_discount( $discount );
 
 			$ret = true;
-
 		}
 
 		/**
