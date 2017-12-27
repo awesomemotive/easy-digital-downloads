@@ -202,4 +202,89 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 		$this->assertEqualSets( array(), $this->mockRegistry->get_items() );
 	}
 
+	/**
+	 * @covers \EDD_Registry::offsetExists()
+	 */
+	public function test_offsetExists_should_return_fakse_if_the_item_does_not_exist() {
+		$this->assertFalse( $this->mockRegistry->offsetExists( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetExists()
+	 */
+	public function test_offsetExists_should_return_true_if_the_item_exists() {
+		$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
+
+		$this->assertTrue( $this->mockRegistry->offsetExists( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetGet()
+	 */
+	public function test_offsetGet_with_invalid_item_id_should_return_a_WP_Error_object() {
+		$this->assertWPError( $this->mockRegistry->offsetGet( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetGet()
+	 */
+	public function test_offsetGet_with_valid_item_id_should_return_that_item() {
+		$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
+
+		$expected = array(
+			'key' => 'value'
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, $this->mockRegistry->offsetGet( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetSet()
+	 */
+	public function test_offsetSet_with_empty_attributes_should_return_a_WP_Error_object() {
+		$this->assertWPError( $this->mockRegistry->offsetSet( 'foo', array() ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetSet()
+	 */
+	public function test_offsetSet_with_non_empty_attributes_should_return_true() {
+		$result = $this->mockRegistry->offsetSet( 'foo', array( 'bar' ) );
+
+		$this->assertTrue( $result );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetSet()
+	 */
+	public function test_offsetSet_should_register_the_item() {
+		$this->mockRegistry->offsetSet( 'foobar', array(
+			'class' => 'Foo\Bar',
+			'file'  => 'path/to/foobar.php'
+		) );
+
+		$this->assertArrayHasKey( 'foobar', $this->mockRegistry->get_items() );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetUnset()
+	 */
+	public function test_offsetUnset_with_invalid_item_id_should_effect_no_change() {
+		$this->mockRegistry->add_item( 'foo', array( 'bar' ) );
+
+		$this->mockRegistry->offsetUnset( 'bar' );
+
+		$this->assertTrue( $this->mockRegistry->offsetExists( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD_Registry::offsetUnset()
+	 */
+	public function test_offsetUnset_with_valid_item_id_should_remove_that_item() {
+		$this->mockRegistry->add_item( 'foo', array( 'bar' ) );
+
+		$this->mockRegistry->offsetUnset( 'foo' );
+
+		$this->assertFalse( $this->mockRegistry->offsetExists( 'foo' ) );
+	}
 }
