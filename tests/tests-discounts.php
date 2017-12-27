@@ -163,7 +163,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers EDD_Discount::get_expiration()
 	 */
 	public function test_get_discount_expiration_by_method() {
-		$d = new EDD_Discount( $this->discount_id );
+		$d = new EDD_Discount( $this->_discount_id );
 		$this->assertEquals( '2050-12-31 23:59:59', $this->_discount->get_expiration() );
 	}
 
@@ -450,7 +450,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * The below tests are left here to help ensure the backwards compatibility layers work properly
 	 */
 	public function test_discount_created() {
-		$this->assertInternalType( 'int', $this->discount_id );
+		$this->assertInternalType( 'int', $this->_discount_id );
 	}
 
 	public function test_addition_of_negative_discount() {
@@ -476,12 +476,12 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'status'            => 'active'
 		);
 
-		$updateddiscount_id = edd_store_discount( $post, $this->discount_id );
+		$updateddiscount_id = edd_store_discount( $post, $this->_discount_id );
 		$this->assertInternalType( 'int', $updateddiscount_id );
 	}
 
 	public function test_discount_status_update() {
-		$this->assertTrue( edd_update_discount_status( $this->discount_id, 'active' ) );
+		$this->assertTrue( edd_update_discount_status( $this->_discount_id, 'active' ) );
 	}
 
 	public function test_discount_status_update_fail() {
@@ -489,14 +489,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discounts_exists() {
-		edd_update_discount_status( $this->discount_id, 'active' );
+		edd_update_discount_status( $this->_discount_id, 'active' );
 		$this->assertTrue( edd_has_active_discounts() );
 	}
 
 	public function test_is_discount_active() {
-		edd_update_discount_status( $this->discount_id, 'active' );
-		$this->assertTrue( edd_is_discount_active( $this->discount_id, true ) );
-		$this->assertTrue( edd_is_discount_active( $this->discount_id, false ) );
+		edd_update_discount_status( $this->_discount_id, 'active' );
+		$this->assertTrue( edd_is_discount_active( $this->_discount_id, true ) );
+		$this->assertTrue( edd_is_discount_active( $this->_discount_id, false ) );
 
 		$post = array(
 			'name'              => '20 Percent Off',
@@ -521,45 +521,45 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_exists() {
-		$this->assertTrue( edd_discount_exists( $this->discount_id ) );
+		$this->assertTrue( edd_discount_exists( $this->_discount_id ) );
 	}
 
 	public function test_get_discount() {
 
-		edd_update_discount_status( $this->discount_id, 'active' );
+		edd_update_discount_status( $this->_discount_id, 'active' );
 
-		$discount = edd_get_discount( $this->discount_id );
-		$this->assertEquals( $this->discount_id, $discount->ID );
+		$discount = edd_get_discount( $this->_discount_id );
+		$this->assertEquals( $this->_discount_id, $discount->ID );
 		$this->assertEquals( '20 Percent Off', $discount->post_title );
 		$this->assertEquals( 'active', $discount->post_status );
 	}
 
 	public function test_get_discount_code() {
-		$this->assertSame( '20OFF', edd_get_discount_code( $this->discount_id ) );
+		$this->assertSame( '20OFF', edd_get_discount_code( $this->_discount_id ) );
 	}
 
 	public function test_discount_start_date() {
-		$this->assertSame( '2010-12-12 00:00:00', edd_get_discount_start_date( $this->discount_id ) );
+		$this->assertSame( '2010-12-12 00:00:00', edd_get_discount_start_date( $this->_discount_id ) );
 	}
 
 	public function test_discount_expiration_date() {
-		$this->assertSame( '2050-12-31 23:59:59', edd_get_discount_expiration( $this->discount_id ) );
+		$this->assertSame( '2050-12-31 23:59:59', edd_get_discount_expiration( $this->_discount_id ) );
 	}
 
 	public function test_discount_max_uses() {
-		$this->assertSame( 10, edd_get_discount_max_uses( $this->discount_id ) );
+		$this->assertSame( 10, edd_get_discount_max_uses( $this->_discount_id ) );
 	}
 
 	public function test_discount_uses() {
-		$this->assertSame( 54, edd_get_discount_uses( $this->discount_id ) );
+		$this->assertSame( 54, edd_get_discount_uses( $this->_discount_id ) );
 	}
 
 	public function testDiscountMinPrice() {
-		$this->assertSame( 128.0, edd_get_discount_min_price( $this->discount_id ) );
+		$this->assertSame( 128.0, edd_get_discount_min_price( $this->_discount_id ) );
 	}
 
 	public function test_discount_amount() {
-		$this->assertSame( 20.0, edd_get_discount_amount( $this->discount_id ) );
+		$this->assertSame( 20.0, edd_get_discount_amount( $this->_discount_id ) );
 	}
 
 	public function test_discount_amount_negative() {
@@ -567,35 +567,35 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_type() {
-		$this->assertSame( 'percent', edd_get_discount_type( $this->discount_id ) );
+		$this->assertSame( 'percent', edd_get_discount_type( $this->_discount_id ) );
 	}
 
 	public function test_discount_product_condition() {
-		$this->assertSame( 'all', edd_get_discount_product_condition( $this->discount_id ) );
+		$this->assertSame( 'all', edd_get_discount_product_condition( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_not_global() {
-		$this->assertFalse( edd_is_discount_not_global( $this->discount_id ) );
+		$this->assertFalse( edd_is_discount_not_global( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_single_use() {
-		$this->assertFalse( edd_discount_is_single_use( $this->discount_id ) );
+		$this->assertFalse( edd_discount_is_single_use( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_started() {
-		$this->assertTrue( edd_is_discount_started( $this->discount_id ) );
+		$this->assertTrue( edd_is_discount_started( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_expired() {
-		$this->assertFalse( edd_is_discount_expired( $this->discount_id ) );
+		$this->assertFalse( edd_is_discount_expired( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_maxed_out() {
-		$this->assertTrue( edd_is_discount_maxed_out( $this->discount_id ) );
+		$this->assertTrue( edd_is_discount_maxed_out( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_min_met() {
-		$this->assertFalse( edd_discount_is_min_met( $this->discount_id ) );
+		$this->assertFalse( edd_discount_is_min_met( $this->_discount_id ) );
 	}
 
 	public function test_discount_is_used() {
@@ -650,28 +650,28 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_inactive_at_max() {
-		update_post_meta( $this->discount_id, '_edd_discount_status', 'active' );
+		update_post_meta( $this->_discount_id, '_edd_discount_status', 'active' );
 
-		$code = edd_get_discount_code( $this->discount_id );
+		$code = edd_get_discount_code( $this->_discount_id );
 
-		update_post_meta( $this->discount_id, '_edd_discount_max', 10 );
-		update_post_meta( $this->discount_id, '_edd_discount_uses', 9 );
+		update_post_meta( $this->_discount_id, '_edd_discount_max', 10 );
+		update_post_meta( $this->_discount_id, '_edd_discount_uses', 9 );
 
 		edd_increase_discount_usage( $code );
 
-		$this->assertEquals( 'inactive', get_post_meta( $this->discount_id, '_edd_discount_status', true ) );
+		$this->assertEquals( 'inactive', get_post_meta( $this->_discount_id, '_edd_discount_status', true ) );
 	}
 
 	public function test_discount_active_after_decreasing_at_max() {
-		update_post_meta( $this->discount_id, '_edd_discount_max', 10 );
-		update_post_meta( $this->discount_id, '_edd_discount_uses', 10 );
-		update_post_meta( $this->discount_id, '_edd_discount_status', 'inactive' );
+		update_post_meta( $this->_discount_id, '_edd_discount_max', 10 );
+		update_post_meta( $this->_discount_id, '_edd_discount_uses', 10 );
+		update_post_meta( $this->_discount_id, '_edd_discount_status', 'inactive' );
 
-		$code = edd_get_discount_code( $this->discount_id );
+		$code = edd_get_discount_code( $this->_discount_id );
 
 		edd_decrease_discount_usage( $code );
 
-		$this->assertEquals( 'active', get_post_meta( $this->discount_id, '_edd_discount_status', true ) );
+		$this->assertEquals( 'active', get_post_meta( $this->_discount_id, '_edd_discount_status', true ) );
 	}
 
 	public function test_decrease_discount_usage() {
@@ -686,13 +686,13 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_formatted_discount_amount() {
-		$rate = get_post_meta( $this->discount_id, '_edd_discount_amount', true );
+		$rate = get_post_meta( $this->_discount_id, '_edd_discount_amount', true );
 		$this->assertSame( '20%', edd_format_discount_rate( 'percent', $rate ) );
 	}
 
 	public function test_edd_get_discount_by() {
-		$discount = edd_get_discount_by( 'id', $this->discount_id );
-		$this->assertEquals( $discount->ID, $this->discount_id );
+		$discount = edd_get_discount_by( 'id', $this->_discount_id );
+		$this->assertEquals( $discount->ID, $this->_discount_id );
 		$this->assertEquals( '20 Percent Off', edd_get_discount_by( 'code', '20OFF' )->post_title );
 		$this->assertEquals( $discount->ID, edd_get_discount_by( 'code', '20OFF' )->ID );
 		$this->assertEquals( $discount->ID, edd_get_discount_by( 'name', '20 Percent Off' )->ID );
@@ -709,16 +709,16 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_excluded_products() {
-		$this->assertInternalType( 'array', edd_get_discount_excluded_products( $this->discount_id ) );
+		$this->assertInternalType( 'array', edd_get_discount_excluded_products( $this->_discount_id ) );
 	}
 
 	public function test_discount_product_reqs() {
-		$this->assertInternalType( 'array', edd_get_discount_product_reqs( $this->discount_id ) );
+		$this->assertInternalType( 'array', edd_get_discount_product_reqs( $this->_discount_id ) );
 	}
 
 	public function test_deletion_of_discount() {
-		edd_remove_discount( $this->discount_id );
-		$this->assertFalse( edd_get_discount( $this->discount_id ) );
+		edd_remove_discount( $this->_discount_id );
+		$this->assertFalse( edd_get_discount( $this->_discount_id ) );
 
 		edd_remove_discount( $this->_negativediscount_id );
 		$this->assertFalse( edd_get_discount( $this->_negativediscount_id ) );
@@ -731,7 +731,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		$this->assertEquals( '20.00', edd_get_cart_total() );
 
-		edd_set_cart_discount( edd_get_discount_code( $this->discount_id ) );
+		edd_set_cart_discount( edd_get_discount_code( $this->_discount_id ) );
 		$this->assertEquals( '16.00', edd_get_cart_total() );
 	}
 
@@ -746,7 +746,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		// Test a single discount code
 
-		$code = edd_get_discount_code( $this->discount_id );
+		$code = edd_get_discount_code( $this->_discount_id );
 
 		$discounts = edd_set_cart_discount( $code );
 
