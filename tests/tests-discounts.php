@@ -91,7 +91,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_discount_instantiated() {
 		$this->assertGreaterThan( 0, $this->_discount->id );
-		$this->assertInstanceOf( EDD_Discount::class, $this->_discount );
+		$this->assertInstanceOf( 'EDD_Discount', $this->_discount );
 	}
 
 	/**
