@@ -48,14 +48,27 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *     @type string $class Item handler class.
 	 *     @type string $file  Item handler class file.
 	 * }
-	 * @return true Always true.
+	 * @return true|\WP_Error True if `$attributes` is not empty, otherwise a WP_Error object.
 	 */
 	public function add_item( $item_id, $attributes ) {
-		foreach ( $attributes as $attribute => $value ) {
-			$this->items[ $item_id ][ $attribute ] = $value;
+		if ( ! empty( $attributes ) ) {
+			foreach ( $attributes as $attribute => $value ) {
+				$this->items[ $item_id ][ $attribute ] = $value;
+			}
+
+			$result = true;
+		} else {
+			$result = new \WP_Error(
+				'registry__missing_attributes',
+				sprintf( 'The attributes for item %s are missing.', (string) $item_id ),
+				array(
+					'item_id'    => $item_id,
+					'attributes' => $attributes
+				)
+			);
 		}
 
-		return true;
+		return $result;
 	}
 
 	/**
