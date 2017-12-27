@@ -168,9 +168,10 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *
 	 * @param string $offset Item ID.
 	 * @param mixed  $value  Item attributes.
+	 * @return true|\WP_Error True if `$attributes` is not empty, otherwise a WP_Error object.
 	 */
 	public function offsetSet( $offset, $value ) {
-		$this->add_item( $offset, $value );
+		return $this->add_item( $offset, $value );
 	}
 
 	/**
