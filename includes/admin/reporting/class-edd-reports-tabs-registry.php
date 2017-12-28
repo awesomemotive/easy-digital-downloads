@@ -42,9 +42,81 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 	}
 
 	/**
+	 * Adds a new reports tab to the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $tab_id     Reports tab ID.
+	 * @param array  $attributes
+	 * @return bool
+	 */
+	public function add_tab( $tab_id, $attributes ) {
+		$result = false;
+
+		try {
+
+			$result = parent::add_item( $tab_id, $attributes );
+
+		} catch( EDD_Exception $e ) {
+
+			$e->log();
+
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Removes a reports tab by ID from the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $tab_id Reports tab ID.
+	 */
+	public function remove_item( $tab_id ) {
+		parent::remove_item( $tab_id );
+	}
+
+	/**
+	 * Retrieves a specific reports tab by ID from the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $tab_id Name of the reports tab to retrieve.
+	 * @return array The tab's attributes if it exists, otherwise an empty array.
+	 */
+	public function get_tab( $tab_id ) {
+		$tab = array();
+
+		try {
+
+			$tab = parent::get_item( $tab_id );
+
+		} catch( EDD_Exception $e ) {
+
+			$e->log();
+
+		}
+
+		return $tab;
+	}
+
+	/**
+	 * Retrieves all of the registered reports tab records.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array All registered reports tabs.
+	 */
+	public function get_tabs() {
+		return parent::get_items();
+	}
+
+	/**
 	 * Initializes the registry.
 	 *
 	 * @since 3.0
 	 */
 	public function init() {}
+	
 }
