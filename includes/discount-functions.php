@@ -1224,6 +1224,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 					$args['orderby'] = 'id';
 					break;
 				case 'date':
+				case 'post_date':
 					$args['orderby'] = 'date_created';
 					break;
 				default:
