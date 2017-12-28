@@ -50,7 +50,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *     @type string $class Item handler class.
 	 *     @type string $file  Item handler class file.
 	 * }
-	 * @return true|\WP_Error True if `$attributes` is not empty, otherwise a WP_Error object.
+	 * @return bool True if `$attributes` is not empty, otherwise false.
 	 */
 	public function add_item( $item_id, $attributes ) {
 		$result = false;
@@ -161,7 +161,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @since 3.0
 	 *
 	 * @param string $offset Item ID.
-	 * @return mixed|\WP_Error The registered item, if it exists, otherwise a WP_Error object.
+	 * @return array The registered item's attributes, if it exists, otherwise an empty array.
 	 */
 	public function offsetGet( $offset ) {
 		try {
