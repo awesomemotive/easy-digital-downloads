@@ -1155,8 +1155,150 @@ function _edd_discount_get_post_doing_it_wrong( $query ) {
 
 	$stack = print_r( debug_backtrace(), true );
 
-	edd_debug_log( 'Discounts not queried correctly and not using edd_get_discounts(), edd_get_discount(), or instantiating EDD_Discount object. ' . $stack );
+//	edd_debug_log( 'Discounts not queried correctly and not using edd_get_discounts(), edd_get_discount(), or instantiating EDD_Discount object. ' . $stack );
 
 	_doing_it_wrong( 'get_posts()/get_post()', $message, '3.0' );
 }
 add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
+
+/**
+ * Force filters to run for all queries that have `edd_discount` as the post type.
+ *
+ * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+ *
+ * @since 3.0
+ *
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ * @return mixed null|array Null if discounts aren't being requested, otherwise a set of posts
+ */
+function _edd_discounts_bc_force_filters( $query ) {
+	if ( 'pre_get_posts' !== current_filter() ) {
+		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
+	}
+
+	if ( 'edd_discount' === $query->get( 'post_type' ) ) {
+		$query->set( 'suppress_filters', false );
+	}
+}
+add_action( 'pre_get_posts', '_edd_discounts_bc_force_filters', 10, 1 );
+
+/**
+ * Hijack the SQL query and rewrite it to fetch data from the discounts table.
+ *
+ * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+ *
+ * @since 3.0
+ *
+ * @param string $request SQL request.
+ * @param WP_Query $query Instance of WP_Query.
+ *
+ * @return string $request Rewritten SQL query.
+ */
+function _edd_discounts_bc_posts_request( $request, $query ) {
+	if ( 'posts_request' !== current_filter() ) {
+		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
+	}
+
+	if ( 'edd_discount' === $query->get( 'post_type' ) ) {
+		$defaults = array(
+			'number'  => 30,
+			'status'  => array( 'active', 'inactive', 'expired' ),
+			'order'   => 'DESC',
+			'orderby' => 'date_created',
+		);
+
+		$args = array(
+			'number' => $query->get( 'posts_per_page' ),
+			'status' => $query->get( 'post_status', array( 'active', 'inactive' ) ),
+		);
+
+		$orderby = $query->get( 'orderby', false );
+		if ( $orderby ) {
+			switch ( $orderby ) {
+				case 'none':
+				case 'ID':
+				case 'author':
+				case 'post__in':
+					$args['orderby'] = 'id';
+					break;
+				case 'date':
+					$args['orderby'] = 'date_created';
+					break;
+				default:
+					$args['orderby'] = 'id';
+					break;
+			}
+		}
+
+		$offset = $query->get( 'offset', false );
+		if ( $offset ) {
+			$args['offset'] = $offset;
+		}
+
+		if ( 'any' === $args['status'] ) {
+			$args['status'] = $defaults['status'];
+		}
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['offset'] = absint( $args['offset'] );
+		$args['number'] = absint( $args['number'] );
+
+		$table_name = EDD()->discounts->table_name;
+
+		$where = '';
+
+		$request = "SELECT id FROM {$table_name} $where ORDER BY {$args['orderby']} {$args['order']} LIMIT {$args['offset']}, {$args['number']};";
+	}
+
+	return $request;
+}
+add_filter( 'posts_request', '_edd_discounts_bc_posts_request', 10, 2 );
+
+/**
+ * Fill the returned WP_Post objects with the data from the discounts table.
+ *
+ * @since 3.0
+ *
+ * @param array $posts Posts returned from the SQL query.
+ * @param WP_Query $query Instance of WP_Query.
+ *
+ * @return array New WP_Post objects.
+ */
+function _edd_discounts_bc_posts_results( $posts, $query ) {
+	if ( 'posts_results' !== current_filter() ) {
+		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
+	}
+
+	if ( 'edd_discount' === $query->get( 'post_type' ) ) {
+		$new_posts = array();
+
+		foreach ( $posts as $post ) {
+			$discount = edd_get_discount( $post->id );
+
+			$object_vars = array(
+				'ID'          => $discount->id,
+				'post_title'  => $discount->name,
+				'post_status' => $discount->status,
+				'post_type'   => 'edd_discount',
+				'post_date'   => $discount->date_created,
+			);
+
+			foreach ( $object_vars as $object_var => $value ) {
+				$post->{$object_var} = $value;
+			}
+
+			$post = new WP_Post( $post );
+
+			$new_posts[] = $post;
+		}
+
+		return $new_posts;
+	}
+
+	return $posts;
+}
+add_filter( 'posts_results', '_edd_discounts_bc_posts_results', 10, 2 );
