@@ -196,6 +196,9 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
+	// Create the logs table
+	@EDD()->logs->create_table();
+
 	// Create the customer databases
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
