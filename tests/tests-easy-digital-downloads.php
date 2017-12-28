@@ -58,6 +58,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/formatting.php' );
