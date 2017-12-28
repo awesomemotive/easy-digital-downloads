@@ -144,7 +144,9 @@ abstract class EDD_Registry extends \ArrayObject {
 			$this->get_item( $offset );
 
 			return true;
-		} catch( EDD_Exception $e ) {
+		} catch( EDD_Exception $exception ) {
+			$exception->log( 'Method: offsetExists.' );
+
 			return false;
 		}
 	}
@@ -162,7 +164,9 @@ abstract class EDD_Registry extends \ArrayObject {
 	public function offsetGet( $offset ) {
 		try {
 			$item = $this->get_item( $offset );
-		} catch( EDD_Exception $e ) {
+		} catch( EDD_Exception $exception ) {
+			$exception->log( 'Method: offsetGet.' );
+
 			$item = array();
 		}
 
@@ -185,7 +189,9 @@ abstract class EDD_Registry extends \ArrayObject {
 			$this->add_item( $offset, $value );
 
 			$result = true;
-		} catch( EDD_Exception $e ) {
+		} catch( EDD_Exception $exception ) {
+			$exception->log( 'Method: offsetSet.' );
+
 			$result = false;
 		}
 
