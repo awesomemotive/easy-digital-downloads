@@ -5,7 +5,7 @@
  * This class is for interacting with the discounts database table
  *
  * @package     EDD
- * @subpackage  Classes/DB Customers
+ * @subpackage  Classes/Discounts
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
