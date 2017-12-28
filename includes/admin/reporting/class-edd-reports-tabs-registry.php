@@ -57,9 +57,9 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 
 			$result = parent::add_item( $tab_id, $attributes );
 
-		} catch( EDD_Exception $e ) {
+		} catch( EDD_Exception $exception ) {
 
-			$e->log();
+			$exception->log();
 
 		}
 
@@ -92,9 +92,9 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 
 			$tab = parent::get_item( $tab_id );
 
-		} catch( EDD_Exception $e ) {
+		} catch( EDD_Exception $exception ) {
 
-			$e->log();
+			$exception->log();
 
 		}
 
