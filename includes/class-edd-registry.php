@@ -43,8 +43,8 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *
 	 * @throws EDD_Exception If the `$attributes` array is empty.
 	 *
-	 * @param int   $item_id    Item ID.
-	 * @param array $attributes Array of item attributes. Each extending registry will
+	 * @param string $item_id    Item ID.
+	 * @param array  $attributes Array of item attributes. Each extending registry will
 	 *                          handle item ID and attribute building in different ways.
 	 * @return bool True if `$attributes` is not empty, otherwise false.
 	 */
@@ -59,7 +59,7 @@ abstract class EDD_Registry extends \ArrayObject {
 			$result = true;
 		} else {
 
-			$message = sprintf( "The attributes were missing when attempting to add item '%s'.", (string) $item_id );
+			$message = sprintf( "The attributes were missing when attempting to add item '%s'.", $item_id );
 
 			throw new \EDD_Exception( $message );
 		}
@@ -99,7 +99,7 @@ abstract class EDD_Registry extends \ArrayObject {
 
 		} else {
 
-			$message = sprintf( "The item '%s' does not exist.", (string) $item_id );
+			$message = sprintf( "The item '%s' does not exist.", $item_id );
 
 			throw new \EDD_Exception( $message );
 		}
