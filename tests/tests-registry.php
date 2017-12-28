@@ -44,32 +44,19 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD_Registry::add_item()
+	 * @expectedException EDD_Exception
 	 */
-	public function test_add_item_with_empty_attributes_should_return_WP_Error() {
-		$this->assertWPError( $this->mockRegistry->add_item( 'foo', array() ) );
+	public function test_add_item_with_empty_attributes_should_return_false() {
+		$this->assertFalse( $this->mockRegistry->add_item( 'foo', array() ) );
 	}
 
 	/**
 	 * @covers \EDD_Registry::add_item()
 	 */
-	public function test_add_item_with_empty_attributes_should_return_WP_Error_code_registry__missing_attributes() {
-		$result = $this->mockRegistry->add_item( 'foo', array() );
+	public function test_add_item_with_empty_attributes_should_throw_exception() {
+		$this->setExpectedException( 'EDD_Exception', "The attributes were missing when attempting to add item 'foo'." );
 
-		$this->assertSame( 'registry__missing_attributes', $result->get_error_code() );
-	}
-
-	/**
-	 * @covers \EDD_Registry::add_item()
-	 */
-	public function test_add_item_with_empty_attributes_should_return_WP_Error_with_item_id() {
-		$expected = array(
-			'item_id'    => 'foo',
-			'attributes' => array(),
-		);
-
-		$result = $this->mockRegistry->add_item( 'foo', array() );
-
-		$this->assertEqualSetsWithIndex( $expected, $result->get_error_data() );
+		$this->mockRegistry->add_item( 'foo', array() );
 	}
 
 	/**
@@ -118,30 +105,21 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	/**
 	 * @covers \EDD_Registry::get_item()
 	 */
-	public function test_get_item_with_invalid_item_id_should_return_WP_Error_object() {
-		$this->assertWPError( $this->mockRegistry->get_item( 'foo' ) );
+	public function test_get_item_with_invalid_item_id_should_return_an_empty_array() {
+		$this->setExpectedException( 'EDD_Exception', "The item 'foo' does not exist." );
+
+		$result = $this->mockRegistry->get_item( 'foo' );
+
+		$this->assertEqualSets( array(), $result );
 	}
 
 	/**
 	 * @covers \EDD_Registry::get_item()
 	 */
-	public function test_get_item_with_invalid_item_id_should_return_WP_Error_with_code_registry__invalid_item_id() {
-		$result = $this->mockRegistry->get_item( 'foo' );
+	public function test_get_item_with_invalid_item_id_should_throw_an_exception() {
+		$this->setExpectedException( 'EDD_Exception', "The item 'foo' does not exist." );
 
-		$this->assertSame( 'registry__invalid_item_id', $result->get_error_code() );
-	}
-
-	/**
-	 * @covers \EDD_Registry::get_item()
-	 */
-	public function test_get_item_with_invalid_item_id_should_return_WP_Error_with_item_id() {
-		$expected = array(
-			'item_id' => 'foo'
-		);
-
-		$result = $this->mockRegistry->get_item( 'foo' );
-
-		$this->assertEqualSetsWithIndex( $expected, $result->get_error_data() );
+		$this->mockRegistry->get_item( 'foo' );
 	}
 
 	/**
@@ -221,28 +199,28 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	/**
 	 * @covers \EDD_Registry::offsetGet()
 	 */
-	public function test_offsetGet_with_invalid_item_id_should_return_a_WP_Error_object() {
-		$this->assertWPError( $this->mockRegistry->offsetGet( 'foo' ) );
+	public function test_offsetGet_with_invalid_item_id_should_return_an_empty_array() {
+		$result = $this->mockRegistry->offsetGet( 'foo' );
+
+		$this->assertEqualSets( array(), $result );
 	}
 
 	/**
 	 * @covers \EDD_Registry::offsetGet()
 	 */
 	public function test_offsetGet_with_valid_item_id_should_return_that_item() {
-		$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
+		try {
+			$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
+		} catch( EDD_Exception $e ) {}
 
-		$expected = array(
-			'key' => 'value'
-		);
-
-		$this->assertEqualSetsWithIndex( $expected, $this->mockRegistry->offsetGet( 'foo' ) );
+		$this->assertEqualSetsWithIndex( array( 'key' => 'value' ), $this->mockRegistry->offsetGet( 'foo' ) );
 	}
 
 	/**
 	 * @covers \EDD_Registry::offsetSet()
 	 */
-	public function test_offsetSet_with_empty_attributes_should_return_a_WP_Error_object() {
-		$this->assertWPError( $this->mockRegistry->offsetSet( 'foo', array() ) );
+	public function test_offsetSet_with_empty_attributes_should_return_false() {
+		$this->assertFalse( $this->mockRegistry->offsetSet( 'foo', array() ) );
 	}
 
 	/**
