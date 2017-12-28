@@ -54,13 +54,14 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/api/class-edd-api-v1.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-exception.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-registry.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-registry.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/formatting.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/widgets.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/mime-types.php' );
