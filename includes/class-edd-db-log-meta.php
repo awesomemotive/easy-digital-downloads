@@ -67,6 +67,11 @@ class EDD_DB_Log_Meta extends EDD_DB {
 	 */
 	public function register_table() {
 		global $wpdb;
+
+		if ( ! $this->table_exists( $this->table_name ) ) {
+			$this->create_table();
+		}
+
 		$wpdb->edd_logmeta = $this->table_name;
 	}
 
@@ -96,6 +101,7 @@ class EDD_DB_Log_Meta extends EDD_DB {
 
 		return get_metadata( 'edd_log', $log_id, $meta_key, $single );
 	}
+
 	/**
 	 * Add meta data field to a log.
 	 *
@@ -123,6 +129,7 @@ class EDD_DB_Log_Meta extends EDD_DB {
 
 		return add_metadata( 'edd_log', $log_id, $meta_key, $meta_value, $unique );
 	}
+
 	/**
 	 * Update log meta field based on log ID.
 	 *
@@ -152,6 +159,7 @@ class EDD_DB_Log_Meta extends EDD_DB {
 
 		return update_metadata( 'edd_log', $log_id, $meta_key, $meta_value, $prev_value );
 	}
+
 	/**
 	 * Remove metadata matching criteria from a log.
 	 *
@@ -177,6 +185,26 @@ class EDD_DB_Log_Meta extends EDD_DB {
 	public function delete_meta( $log_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'edd_log', $log_id, $meta_key, $meta_value );
 	}
+
+	/**
+	 * Delete all meta associated with a log.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param int $log_id Log ID.
+	 */
+	public function delete_all_meta( $log_id ) {
+		global $wpdb;
+
+		$sql  = 'SELECT meta_key, meta_value FROM {$this->table_name} WHERE edd_log_id = %d';
+		$meta = $wpdb->get_results( $wpdb->prepare( $sql, $log_id ) );
+
+		foreach ( $meta as $meta_row ) {
+			$this->delete_meta( $log_id, $meta_row->meta_key, $meta_row->meta_value );
+		}
+	}
+
 	/**
 	 * Create the table.
 	 *
@@ -202,6 +230,7 @@ class EDD_DB_Log_Meta extends EDD_DB {
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
+
 	/**
 	 * Given a log ID, make sure it's a positive number, greater than zero before inserting or adding.
 	 *
