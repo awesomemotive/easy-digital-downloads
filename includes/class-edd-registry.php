@@ -140,15 +140,17 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return bool True if the item exists, false on failure.
 	 */
 	public function offsetExists( $offset ) {
+		$exists = false;
+
 		try {
 			$this->get_item( $offset );
 
-			return true;
+			$exists = true;
 		} catch( EDD_Exception $exception ) {
 			$exception->log( 'Method: offsetExists.' );
-
-			return false;
 		}
+
+		return $exists;
 	}
 
 	/**
@@ -162,12 +164,12 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return array The registered item's attributes, if it exists, otherwise an empty array.
 	 */
 	public function offsetGet( $offset ) {
+		$item = array();
+
 		try {
 			$item = $this->get_item( $offset );
 		} catch( EDD_Exception $exception ) {
 			$exception->log( 'Method: offsetGet.' );
-
-			$item = array();
 		}
 
 		return $item;
@@ -185,14 +187,14 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return bool True if the item as set, otherwise false.
 	 */
 	public function offsetSet( $offset, $value ) {
+		$result = false;
+
 		try {
 			$this->add_item( $offset, $value );
 
 			$result = true;
 		} catch( EDD_Exception $exception ) {
 			$exception->log( 'Method: offsetSet.' );
-
-			$result = false;
 		}
 
 		return $result;
