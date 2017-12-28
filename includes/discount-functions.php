@@ -1169,7 +1169,6 @@ add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
  * @since 3.0
  *
  * @param WP_Query $query The WP_Query instance (passed by reference).
- * @return mixed null|array Null if discounts aren't being requested, otherwise a set of posts
  */
 function _edd_discounts_bc_force_filters( $query ) {
 	if ( 'pre_get_posts' !== current_filter() ) {
