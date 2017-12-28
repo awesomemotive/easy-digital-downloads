@@ -40,6 +40,15 @@ class EDD_Log {
 	protected $object_id;
 
 	/**
+	 * Object type.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $object_type;
+
+	/**
 	 * Log type.
 	 *
 	 * @since  3.0
