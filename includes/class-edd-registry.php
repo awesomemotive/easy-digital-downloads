@@ -41,6 +41,8 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
+	 * @throws EDD_Exception If the `$attributes` array is empty.
+	 *
 	 * @param int    $item_id   Item ID.
 	 * @param array  $attributes {
 	 *     Item attributes.
@@ -51,6 +53,8 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return true|\WP_Error True if `$attributes` is not empty, otherwise a WP_Error object.
 	 */
 	public function add_item( $item_id, $attributes ) {
+		$result = false;
+
 		if ( ! empty( $attributes ) ) {
 			foreach ( $attributes as $attribute => $value ) {
 				$this->items[ $item_id ][ $attribute ] = $value;
@@ -58,14 +62,10 @@ abstract class EDD_Registry extends \ArrayObject {
 
 			$result = true;
 		} else {
-			$result = new \WP_Error(
-				'registry__missing_attributes',
-				sprintf( 'The attributes for item %s are missing.', (string) $item_id ),
-				array(
-					'item_id'    => $item_id,
-					'attributes' => $attributes
-				)
-			);
+
+			$message = sprintf( "The attributes were missing when attempting to add item '%s'.", (string) $item_id );
+
+			throw new \EDD_Exception( $message );
 		}
 
 		return $result;
@@ -87,19 +87,25 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
+	 * @throws EDD_Exception if the item does not exist.
+	 *
 	 * @param string $item_id Item ID.
-	 * @return array|\WP_Error Array of attributes for the item if registered,
-	 *                         otherwise a WP_Error object..
+	 * @return array Array of attributes for the item if the item is set,
+	 *               otherwise an empty array.
 	 */
 	public function get_item( $item_id ) {
+
+		$result = array();
+
 		if ( isset( $this->items[ $item_id ] ) ) {
+
 			$result = $this->items[ $item_id ];
+
 		} else {
-			$result = new \WP_Error(
-				'registry__invalid_item_id',
-				sprintf( 'The %s item does not exist.', (string) $item_id ),
-				array( 'item_id' => $item_id )
-			);
+
+			$message = sprintf( "The item '%s' does not exist.", (string) $item_id );
+
+			throw new \EDD_Exception( $message );
 		}
 
 		return $result;
