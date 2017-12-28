@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/DB Discount Meta
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
@@ -17,11 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_DB_Discount_Meta extends EDD_DB {
 
 	/**
-	 * Get things started
+	 * Initialise object variables and register table.
 	 *
-	 * @access  public
-	 * @since   3.0
-	*/
+	 * @since 3.0
+	 */
 	public function __construct() {
 		global $wpdb;
 
@@ -30,15 +29,16 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 		$this->version     = '1.0';
 
 		add_action( 'plugins_loaded', array( $this, 'register_table' ), 11 );
-
 	}
 
 	/**
-	 * Get table columns and data types
+	 * Retrieve table columns and data types.
 	 *
-	 * @access  public
-	 * @since   3.0
-	*/
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @return array Array of table columns and data types.
+	 */
 	public function get_columns() {
 		return array(
 			'meta_id'         => '%d',
@@ -49,31 +49,36 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	}
 
 	/**
-	 * Register the table with $wpdb so the metadata api can find it
+	 * Register the table with $wpdb so the metadata API can find it.
 	 *
-	 * @access  public
-	 * @since   3.0
-	*/
+	 * @access public
+	 * @since 3.0
+	 */
 	public function register_table() {
 		global $wpdb;
 		$wpdb->edd_discountmeta = $this->table_name;
 	}
 
 	/**
-	 * Retrieve customer meta field for a customer.
+	 * Retrieve meta field for a discount.
 	 *
 	 * For internal use only. Use EDD_Discount->get_meta() for public usage.
 	 *
-	 * @param   int    $discount_id   Customer ID.
-	 * @param   string $meta_key      The meta key to retrieve.
-	 * @param   bool   $single        Whether to return a single value.
-	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 * @access public
+	 * @since 3.0
 	 *
-	 * @access  private
-	 * @since   3.0
+	 * @param int    $discount_id Discount ID.
+	 * @param string $meta_key    Optional. Metadata key. If not specified, retrieve all metadata for
+	 *                            the specified object.
+	 * @param bool   $single      Optional, default is false.
+	 *                            If true, return only the first value of the specified meta_key.
+	 *                            This parameter has no effect if meta_key is not specified.
+	 *
+	 * @return mixed array|false Single metadata value, or array of values.
 	 */
 	public function get_meta( $discount_id = 0, $meta_key = '', $single = false ) {
 		$discount_id = $this->sanitize_discount_id( $discount_id );
+
 		if ( false === $discount_id ) {
 			return false;
 		}
@@ -82,21 +87,26 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	}
 
 	/**
-	 * Add meta data field to a customer.
+	 * Add meta data field to a discount.
 	 *
 	 * For internal use only. Use EDD_Discount->add_meta() for public usage.
 	 *
-	 * @param   int    $discount_id   Customer ID.
-	 * @param   string $meta_key      Metadata name.
-	 * @param   mixed  $meta_value    Metadata value.
-	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
-	 * @return  bool                  False for failure. True for success.
+	 * @access public
+	 * @since 3.0
 	 *
-	 * @access  private
-	 * @since   3.0
+	 * @param int    $discount_id Discount ID.
+	 * @param string $meta_key    Metadata key.
+	 * @param mixed  $meta_value  Metadata value.
+	 * @param bool   $unique      Optional, default is false.
+	 *                            Whether the specified metadata key should be unique for the object.
+	 *                            If true, and the object already has a value for the specified metadata key,
+	 *                            no change will be made.
+	 *
+	 * @return int|false The meta ID on success, false on failure.
 	 */
 	public function add_meta( $discount_id = 0, $meta_key = '', $meta_value, $unique = false ) {
 		$discount_id = $this->sanitize_discount_id( $discount_id );
+
 		if ( false === $discount_id ) {
 			return false;
 		}
@@ -105,26 +115,28 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	}
 
 	/**
-	 * Update customer meta field based on Customer ID.
+	 * Update discount meta field based on discount ID.
 	 *
 	 * For internal use only. Use EDD_Discount->update_meta() for public usage.
 	 *
 	 * Use the $prev_value parameter to differentiate between meta fields with the
 	 * same key and Discount ID.
 	 *
-	 * If the meta field for the customer does not exist, it will be added.
+	 * If the meta field for the discount does not exist, it will be added.
 	 *
-	 * @param   int    $discount_id   Discount ID.
-	 * @param   string $meta_key      Metadata key.
-	 * @param   mixed  $meta_value    Metadata value.
-	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
-	 * @return  bool                  False on failure, true if success.
+	 * @access public
+	 * @since 3.0
 	 *
-	 * @access  private
-	 * @since   3.0
+	 * @param int    $discount_id Discount ID.
+	 * @param string $meta_key    Metadata key.
+	 * @param mixed  $meta_value  Metadata value.
+	 * @param mixed  $prev_value  Optional. Previous value to check before removing.
+	 *
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $discount_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
 		$discount_id = $this->sanitize_discount_id( $discount_id );
+
 		if ( false === $discount_id ) {
 			return false;
 		}
@@ -133,7 +145,7 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	}
 
 	/**
-	 * Remove metadata matching criteria from a customer.
+	 * Remove metadata matching criteria from a discount.
 	 *
 	 * For internal use only. Use EDD_Discount->delete_meta() for public usage.
 	 *
@@ -141,13 +153,18 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	 * value, will keep from removing duplicate metadata with the same key. It also
 	 * allows removing all metadata matching key, if needed.
 	 *
-	 * @param   int    $discount_id   Discount ID.
-	 * @param   string $meta_key      Metadata name.
-	 * @param   mixed  $meta_value    Optional. Metadata value.
-	 * @return  bool                  False for failure. True for success.
+	 * @access public
+	 * @since 3.0
 	 *
-	 * @access  private
-	 * @since   3.0
+	 * @param int    $discount_id Discount ID.
+	 * @param string $meta_key    Metadata key.
+	 * @param mixed  $meta_value  Optional. Metadata value. Must be serializable if non-scalar. If specified, only delete
+	 *                            metadata entries with this value. Otherwise, delete all entries with the specified meta_key.
+	 *                            Pass `null, `false`, or an empty string to skip this check. (For backward compatibility,
+	 *                            it is not possible to pass an empty string to delete those entries with an empty string
+	 *                            for a value.)
+	 *
+	 * @return bool True on successful delete, false on failure.
 	 */
 	public function delete_meta( $discount_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value );
@@ -156,11 +173,10 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	/**
 	 * Create the table
 	 *
-	 * @access  public
-	 * @since   3.0
-	*/
+	 * @access public
+	 * @since 3.0
+	 */
 	public function create_table() {
-
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE {$this->table_name} (
@@ -181,9 +197,12 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	/**
 	 * Given a discount ID, make sure it's a positive number, greater than zero before inserting or adding.
 	 *
-	 * @since  3.0
-	 * @param  int|stirng $discount_id A passed discount ID.
-	 * @return int|bool                The normalized discount ID or false if it's found to not be valid.
+	 * @access private
+	 * @since 3.0
+	 *
+	 * @param mixed int|string $discount_id Discount ID.
+	 *
+	 * @return mixed int|bool The normalized discount ID or false if it's found to not be valid.
 	 */
 	private function sanitize_discount_id( $discount_id ) {
 		if ( ! is_numeric( $discount_id ) ) {
@@ -202,7 +221,5 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 		}
 
 		return absint( $discount_id );
-
 	}
-
 }
