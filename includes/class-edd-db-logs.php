@@ -264,7 +264,7 @@ class EDD_DB_Logs extends EDD_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "
-		CREATE TABLE " . $this->table_name . " (
+		CREATE TABLE {$this->table_name} (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			object_id BIGINT(20) UNSIGNED NOT NULL,
 			object_type VARCHAR(200) NOT NULL,

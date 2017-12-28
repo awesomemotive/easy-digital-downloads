@@ -198,6 +198,7 @@ function edd_run_install() {
 
 	// Create the logs table
 	@EDD()->logs->create_table();
+	@EDD()->log_meta->create_table();
 
 	// Create the customer databases
 	@EDD()->customers->create_table();
@@ -296,6 +297,14 @@ function edd_after_install() {
 	$edd_table_check = get_option( '_edd_table_check', false );
 
 	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
+
+		if ( ! @EDD()->log_meta->installed() ) {
+			@EDD()->log_meta->create_table();
+		}
+
+		if ( ! @EDD()->logs->installed() ) {
+			@EDD()->logs->create_table();
+		}
 
 		if ( ! @EDD()->customer_meta->installed() ) {
 
