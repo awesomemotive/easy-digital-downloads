@@ -73,7 +73,7 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 	 *
 	 * @param string $tab_id Reports tab ID.
 	 */
-	public function remove_item( $tab_id ) {
+	public function remove_tab( $tab_id ) {
 		parent::remove_item( $tab_id );
 	}
 
