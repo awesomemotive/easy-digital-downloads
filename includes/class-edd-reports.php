@@ -18,7 +18,7 @@
  *
  * @since 3.0
  */
-class EDD_Reports {
+final class EDD_Reports {
 
 	/**
 	 * Sets up the Reports API.
