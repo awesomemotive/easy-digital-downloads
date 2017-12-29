@@ -301,6 +301,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-log-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api-request-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-file-download-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
