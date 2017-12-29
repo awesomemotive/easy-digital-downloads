@@ -151,6 +151,8 @@ class EDD_File_Download_Log {
 
 			$this->post_parent = $this->download_id;
 			$this->post_type = 'edd_log';
+			$this->post_date = $this->date_created;
+			$this->post_date_gmt = $this->date_created;
 		}
 	}
 

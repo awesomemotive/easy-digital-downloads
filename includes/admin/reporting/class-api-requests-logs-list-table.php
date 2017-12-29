@@ -256,8 +256,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @return array $logs_data Array of all the Log entires
 	 */
 	public function get_logs() {
-		global $edd_logs;
-
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(
