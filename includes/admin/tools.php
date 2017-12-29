@@ -1176,7 +1176,7 @@ function edd_tools_tab_logs() {
 	$log_views    = edd_log_default_views();
 
 	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) )
-		$current_view = $_GET['view'];
+		$current_view = sanitize_text_field( $_GET['view'] );
 
 	/**
 	 * Fires when a given logs view should be rendered.
