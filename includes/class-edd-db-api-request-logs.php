@@ -59,7 +59,7 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 		return array(
 			'id'           => '%d',
 			'user_id'      => '%d',
-			'key'          => '%s',
+			'api_key'      => '%s',
 			'version'      => '%s',
 			'request'      => '%s',
 			'ip'           => '%s',
@@ -80,7 +80,7 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 		return array(
 			'id'           => 0,
 			'user_id'      => 0,
-			'key'          => '',
+			'api_key'      => '',
 			'version'      => '',
 			'request'      => '',
 			'ip'           => '',
@@ -263,7 +263,7 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 		CREATE TABLE {$this->table_name} (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			user_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
-			key VARCHAR(32) NOT NULL DEFAULT 'public',
+			api_key VARCHAR(32) NOT NULL DEFAULT 'public',
 			version VARCHAR(30) NOT NULL,
 			request LONGTEXT NOT NULL,
 			ip VARCHAR(100) NOT NULL,
