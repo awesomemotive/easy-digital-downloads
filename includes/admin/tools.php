@@ -73,6 +73,7 @@ function edd_get_tools_tabs() {
 	}
 
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
+	$tabs['logs']          = __( 'Logs', 'easy-digital-downloads' );
 	
 	if( edd_is_debug_mode() ) {
 		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
