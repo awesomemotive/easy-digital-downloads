@@ -194,6 +194,25 @@ class EDD_Logging {
 
 		do_action( 'edd_pre_insert_log', $log_data, $log_meta );
 
+		if ( 'api_request' === $log_data['log_type'] ) {
+			$data = array(
+				'user_id' => $log_meta['user'],
+				'api_key' => $log_meta['key'],
+				'token'   => $log_meta['token'],
+				'version' => $log_meta['version'],
+				'request' => $log_data['post_excerpt'],
+				'error'   => $log_data['post_content'],
+				'ip'      => $log_meta['request_ip'],
+				'time'    => $log_meta['time'],
+			);
+
+			$log_id = EDD()->api_request_logs->insert( $data );
+
+			do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
+
+			return $log_id;
+		}
+
 		// Store the log entry
 		$log_id = wp_insert_post( $args );
 
