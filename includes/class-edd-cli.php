@@ -859,6 +859,116 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 	}
 
+	/**
+	 * Migrate the file download logs to the custom table.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_file_download_logs
+	 * wp edd migrate_file_download_logs --force
+	 */
+	public function migrate_file_download_logs( $args, $assoc_args ) {
+		global $wpdb;
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_file_download_logs' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The file download logs custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		$file_download_logs_db = EDD()->file_download_logs;
+		if ( ! $file_download_logs_db->table_exists( $file_download_logs_db->table_name ) ) {
+			@$file_download_logs_db->create_table();
+		}
+
+		$term_id_sql = "SELECT t.term_id FROM wp_terms AS t  INNER JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('edd_log_type') AND t.slug IN ('file_download')";
+		$term_id = $wpdb->get_var( $term_id_sql );
+
+		$sql = "
+			SELECT *
+			FROM wp_posts
+		  	LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+		  	WHERE wp_term_relationships.term_taxonomy_id = {$term_id}
+		  	AND wp_posts.post_type = 'edd_log'
+		  	GROUP BY wp_posts.ID
+			ORDER BY wp_posts.post_date ASC
+		";
+		$results = $wpdb->get_results( $sql );
+		$total = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating File Download Logs', $total );
+
+			foreach ( $results as $log_post ) {
+				// Prevent an already migrated item from being migrated.
+				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $log_post->ID" );
+				if ( ! empty( $migrated ) ) {
+					$progress->tick();
+					continue;
+				}
+
+				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $log_post->ID ) );
+
+				$post_meta = array();
+
+				foreach ( $meta as $meta_item ) {
+					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+				}
+
+				$log_data = array(
+					'download_id'  => $log_post->post_parent,
+					'file_id'      => $post_meta['_edd_log_file_id'],
+					'payment_id'   => $post_meta['_edd_log_payment_id'],
+					'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+					'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+					'ip'           => $post_meta['_edd_log_ip'],
+					'date_created' => $log_post->post_date,
+				);
+
+				$new_log_id = $file_download_logs_db->insert( $log_data );
+
+				if ( ! empty( $new_log_id ) ) {
+					add_post_meta( $log_post->ID, '_edd_log_migrated_id', $new_log_id );
+				}
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			WP_CLI::line( __( 'File Download Log Migration Complete.', 'easy-digital-downloads' ) );
+			$new_count = $file_download_logs_db->count();
+			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
+			WP_CLI::line( __( 'Old File Download Log Count: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'New File Download Log_count: ', 'easy-digital-downloads' ) . $new_count );
+
+			WP_CLI::confirm( __( 'Remove legacy file download logs?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::line( __( 'Removing old file download logs.', 'easy-digital-downloads' ) );
+
+			$log_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
+			$log_ids = implode( ', ', $log_ids );
+
+			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$log_ids})";
+			$wpdb->query( $delete_posts_query );
+
+			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$log_ids})";
+			$wpdb->query( $delete_postmeta_query );
+			edd_set_upgrade_complete( 'remove_legacy_file_download_logs' );
+
+			WP_CLI::line( __( 'All Legacy File Download Logs Removed.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'No file download logs found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_file_download_logs' );
+			edd_set_upgrade_complete( 'remove_legacy_file_download_logs' );
+		}
+	}
+
 	private function get_fname() {
 		$names = array(
 			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
