@@ -1,6 +1,6 @@
 <?php
 /**
- * Log Object
+ * API Request Log Object.
  *
  * @package     EDD
  * @subpackage  Classes/Logs
@@ -13,14 +13,14 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * EDD Log Class.
+ * EDD_API_Request_Log Class.
  *
  * @since 3.0
  */
-class EDD_Log {
+class EDD_API_Request_Log {
 
 	/**
-	 * Log ID.
+	 * API request log ID.
 	 *
 	 * @since  3.0
 	 * @access protected
@@ -29,49 +29,58 @@ class EDD_Log {
 	protected $id;
 
 	/**
-	 * Object ID.
+	 * User ID of the user making the API request.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $object_id;
+	protected $user_id;
 
 	/**
-	 * Object type.
+	 * API key.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
-	protected $object_type;
+	protected $api_key;
 
 	/**
-	 * Log type.
+	 * API version.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
-	protected $type;
+	protected $version;
 
 	/**
-	 * Log title.
+	 * API request.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
-	protected $title;
+	protected $request;
 
 	/**
-	 * Log message.
+	 * IP address of the client making the API request.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
-	protected $message;
+	protected $ip;
+
+	/**
+	 * Speed of the API request.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    float
+	 */
+	protected $time;
 
 	/**
 	 * Date log was created.
@@ -99,13 +108,13 @@ class EDD_Log {
 	 *
 	 * @param int $log_id Log ID.
 	 */
-	public function __construct( $log_id = 0 ) {
-		$this->db = EDD()->api_request_logs;
-
+	public function __construct( $log_id ) {
 		$log = $this->db->get( $log_id );
 
 		if ( $log ) {
-			$this->setup_log( $log );
+			foreach ( get_object_vars( $log ) as $key => $value ) {
+				$this->{$key} = $value;
+			}
 		}
 	}
 
@@ -124,7 +133,7 @@ class EDD_Log {
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
 		} elseif ( property_exists( $this, $key ) ) {
-			return apply_filters( 'edd_log_' . $key, $this->{$key}, $this->id );
+			return apply_filters( 'edd_api_request_log_' . $key, $this->{$key}, $this->id );
 		}
 	}
 
@@ -187,19 +196,6 @@ class EDD_Log {
 	}
 
 	/**
-	 * Setup object vars.
-	 *
-	 * @since 3.0
-	 * @access private
-	 *
-	 * @param object $log Log data.
-	 * @return bool Object var initialisation successful or not.
-	 */
-	private function setup_log( $log ) {
-
-	}
-
-	/**
 	 * Create a new log.
 	 *
 	 * @since 3.0
@@ -219,7 +215,7 @@ class EDD_Log {
 		 *
 		 * @param array $args Discount args.
 		 */
-		$args = apply_filters( 'edd_insert_log', $args );
+		$args = apply_filters( 'edd_insert_api_request_log', $args );
 
 		$args = $this->sanitize_columns( $args );
 
@@ -230,7 +226,7 @@ class EDD_Log {
 		 *
 		 * @param array $args Discount args.
 		 */
-		do_action( 'edd_pre_insert_log', $args );
+		do_action( 'edd_pre_insert_api_request_log', $args );
 
 		$id = $this->db->insert( $args );
 
@@ -250,7 +246,7 @@ class EDD_Log {
 		 * @param array $args Log args.
 		 * @param int   $id   Log ID.
 		 */
-		do_action( 'edd_post_insert_log', $args, $this->id );
+		do_action( 'edd_post_insert_api_request_log', $args, $this->id );
 	}
 
 	/**
@@ -266,7 +262,7 @@ class EDD_Log {
 	 * * @return bool True on success, false otherwise.
 	 */
 	public function update( $args = array() ) {
-		return EDD()->logs->update( $this->id, $args );
+		return $this->db->update( $this->id, $args );
 	}
 
 	/**
@@ -278,13 +274,7 @@ class EDD_Log {
 	 * @return bool True if deleted, false otherwise.
 	 */
 	public function delete() {
-		$deleted = EDD()->logs->delete( $this->id );
-
-		if ( $deleted ) {
-			EDD()->log_meta->delete_all_meta( $this->id );
-		}
-
-		return $deleted;
+		return $this->db->delete( $this->id );
 	}
 
 	/**
@@ -338,5 +328,4 @@ class EDD_Log {
 
 		return $data;
 	}
-
 }
