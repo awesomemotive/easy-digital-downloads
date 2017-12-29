@@ -1,6 +1,6 @@
 <?php
 /**
- * Logs UI
+ * Logs UI (moved)
  *
  * @package     EDD
  * @subpackage  Admin/Reports
