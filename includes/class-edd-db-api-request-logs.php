@@ -182,6 +182,63 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 	 */
 	public function get_logs( $args = array() ) {
 		global $wpdb;
+
+		$defaults = array(
+			'number'  => 20,
+			'offset'  => 0,
+			'search'  => '',
+			'orderby' => 'id',
+			'order'   => 'DESC',
+		);
+
+		// Account for 'paged' in legacy $args
+		if ( isset( $args['paged'] ) && $args['paged'] > 1 ) {
+			$number         = isset( $args['number'] ) ? $args['number'] : $defaults['number'];
+			$args['offset'] = ( ( $args['paged'] - 1 ) * $number );
+			unset( $args['paged'] );
+		}
+
+		$args = wp_parse_args( $args, $defaults );
+
+		if ( $args['number'] < 1 ) {
+			$args['number'] = 999999999999;
+		}
+
+		if ( isset( $args['search'] ) && ! empty( $args['search'] ) ) {
+			$args['search'] = $wpdb->esc_like( $args['search'] );
+		}
+
+		$where = $this->parse_where( $args );
+
+		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
+
+		$cache_key = md5( 'edd_api_request_logs_' . serialize( $args ) );
+
+		$logs = wp_cache_get( $cache_key, 'api_request_logs' );
+
+		$args['orderby'] = esc_sql( $args['orderby'] );
+		$args['order']   = esc_sql( $args['order'] );
+
+		if ( false === $logs ) {
+			$logs = $wpdb->get_col( $wpdb->prepare(
+				"
+					SELECT id
+					FROM {$this->table_name}
+					{$where}
+					ORDER BY {$args['orderby']} {$args['order']}
+					LIMIT %d,%d;
+				", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
+
+			if ( ! empty( $logs ) ) {
+				foreach ( $logs as $key => $log ) {
+					$logs[ $key ] = new EDD_API_Request_Log( $log );
+				}
+
+				wp_cache_set( $cache_key, $logs, 'api_request_logs', 3600 );
+			}
+		}
+
+		return $logs;
 	}
 
 	/**
@@ -198,6 +255,10 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 	 */
 	private function parse_where( $args ) {
 		$where = '';
+
+		if ( ! empty( $where ) ) {
+			$where = ' WHERE 1=1 ' . $where;
+		}
 
 		return $where;
 	}

@@ -298,6 +298,25 @@ class EDD_Logging {
 			);
 		}
 
+		if ( 'api_request' === $query_args['log_type'] ) {
+			$args = array(
+				'number' => $query_args['posts_per_page'],
+				'paged'  => $query_args['paged'],
+			);
+
+			if ( isset( $query_args['meta_query'] ) && is_array( $query_args['meta_query'] ) ) {
+				$args['meta_query'] = $query_args['meta_query'];
+			}
+
+			$logs = EDD()->api_request_logs->get_logs( $args );
+
+			if ( $logs ) {
+				return $logs;
+			} else {
+				return false;
+			}
+		}
+
 		$logs = get_posts( $query_args );
 
 		if ( $logs )
