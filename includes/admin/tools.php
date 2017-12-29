@@ -73,7 +73,6 @@ function edd_get_tools_tabs() {
 	}
 
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
-	$tabs['logs']          = __( 'Logs', 'easy-digital-downloads' );
 	
 	if( edd_is_debug_mode() ) {
 		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
@@ -308,13 +307,12 @@ add_action( 'edd_tools_tab_betas', 'edd_tools_betas_display' );
 
 
 /**
- * Retrieves an array of all extensions with beta support.
+ * Return an array of all extensions with beta support
  *
  * Extensions should be added as 'extension-slug' => 'Extension Name'
  *
- * @since 2.6.11
- *
- * @return array $extensions The array of extensions
+ * @since       2.6.11
+ * @return      array $extensions The array of extensions
  */
 function edd_get_beta_enabled_extensions() {
 	return apply_filters( 'edd_beta_enabled_extensions', array() );
@@ -322,12 +320,11 @@ function edd_get_beta_enabled_extensions() {
 
 
 /**
- * Checks if a given extensions has beta support enabled.
+ * Check if a given extensions has beta support enabled
  *
- * @since 2.6.11
- *
- * @param string $slug The slug of the extension to check.
- * @return bool True if enabled, false otherwise
+ * @since       2.6.11
+ * @param       string $slug The slug of the extension to check
+ * @return      bool True if enabled, false otherwise
  */
 function edd_extension_has_beta_support( $slug ) {
 	$enabled_betas = edd_get_option( 'enabled_betas', array() );
@@ -342,11 +339,10 @@ function edd_extension_has_beta_support( $slug ) {
 
 
 /**
- * Saves enabled betas.
+ * Save enabled betas
  *
- * @since 2.6.11
- *
- * @return void
+ * @since       2.6.11
+ * @return      void
  */
 function edd_tools_enabled_betas_save() {
 	if( ! wp_verify_nonce( $_POST['edd_save_betas_nonce'], 'edd_save_betas_nonce' ) ) {
@@ -367,11 +363,11 @@ function edd_tools_enabled_betas_save() {
 add_action( 'edd_save_enabled_betas', 'edd_tools_enabled_betas_save' );
 
 /**
- * Sanitizes the supported beta values by making them booleans.
+ * Sanitize the supported beta values by making them booleans
  *
  * @since 2.6.11
- *
  * @param mixed $value The value being sent in, determining if beta support is enabled.
+ *
  * @return bool
  */
 function edd_tools_enabled_betas_sanitize_value( $value ) {
@@ -380,11 +376,10 @@ function edd_tools_enabled_betas_sanitize_value( $value ) {
 
 
 /**
- * Saves banned emails.
+ * Save banned emails
  *
- * @since 2.0
- *
- * @return void
+ * @since       2.0
+ * @return      void
  */
 function edd_tools_banned_emails_save() {
 
@@ -417,11 +412,10 @@ function edd_tools_banned_emails_save() {
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
 
 /**
- * Executes an upgrade notice clear.
+ * Execute upgrade notice clear
  *
- * @since 2.3.5
- *
- * @return void
+ * @since       2.3.5
+ * @return      void
  */
 function edd_tools_clear_upgrade_notice() {
 	if( ! wp_verify_nonce( $_POST['edd_clear_upgrades_nonce'], 'edd_clear_upgrades_nonce' ) ) {
@@ -438,11 +432,10 @@ add_action( 'edd_clear_doing_upgrade', 'edd_tools_clear_upgrade_notice' );
 
 
 /**
- * Displays the tools import/export tab.
+ * Display the tools import/export tab
  *
- * @since 2.0
- *
- * @return void
+ * @since       2.0
+ * @return      void
  */
 function edd_tools_import_export_display() {
 
@@ -974,11 +967,10 @@ add_action( 'edd_tools_tab_import_export', 'edd_tools_import_export_display' );
 
 
 /**
- * Processes a settings export that generates a .json file of the shop settings.
+ * Process a settings export that generates a .json file of the shop settings
  *
- * @since 1.7
- *
- * @return void
+ * @since       1.7
+ * @return      void
  */
 function edd_tools_import_export_process_export() {
 
@@ -1015,10 +1007,9 @@ add_action( 'edd_export_settings', 'edd_tools_import_export_process_export' );
 
 
 /**
- * Processes a settings import from a json file.
+ * Process a settings import from a json file
  *
  * @since 1.7
- *
  * @return void
  */
 function edd_tools_import_export_process_import() {
@@ -1070,11 +1061,10 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
 
 
 /**
- * Renders the Debug Log tab in the Tools screen.
+ * Display the debug log tab
  *
- * @since 2.8.7
- *
- * @return void
+ * @since       2.8.7
+ * @return      void
  */
 function edd_tools_debug_log_display() {
 
@@ -1144,11 +1134,10 @@ function edd_handle_submit_debug_log() {
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );
 
 /**
- * Renders the System Info tab in the Tools screen.
+ * Display the system info tab
  *
- * @since 2.0
- *
- * @return void
+ * @since       2.0
+ * @return      void
  */
 function edd_tools_sysinfo_display() {
 
@@ -1169,47 +1158,12 @@ function edd_tools_sysinfo_display() {
 add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
 
 /**
- * Renders the Logs tab in the Tools screen.
+ * Get system info
  *
- * @since 3.0
- *
- * @return void
- */
-function edd_tools_tab_logs() {
-
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
-
-	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
-
-	$current_view = 'file_downloads';
-	$log_views    = edd_log_default_views();
-
-	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) ) {
-		$current_view = sanitize_text_field( $_GET['view'] );
-	}
-
-	/**
-	 * Fires when a given logs view should be rendered.
-	 *
-	 * The dynamic portion of the hook name, `$current_view`, represents the slug
-	 * of the logs view to render.
-	 *
-	 * @since 1.4
-	 */
-	do_action( 'edd_logs_view_' . $current_view );
-}
-add_action( 'edd_tools_tab_logs', 'edd_tools_tab_logs' );
-
-/**
- * Retrieves the System Info log.
- *
- * @since 2.0
- *
- * @global wpdb $wpdb Used to query the database using the WordPress Database API.
- *
- * @return string A string containing the info to output.
+ * @since       2.0
+ * @access      public
+ * @global      object $wpdb Used to query the database using the WordPress Database API
+ * @return      string $return A string containing the info to output
  */
 function edd_tools_sysinfo_get() {
 	global $wpdb;
@@ -1514,11 +1468,10 @@ function edd_tools_sysinfo_get() {
 
 
 /**
- * Generates a System Info download file.
+ * Generates a System Info download file
  *
- * @since 2.0
- *
- * @return void
+ * @since       2.0
+ * @return      void
  */
 function edd_tools_sysinfo_download() {
 
@@ -1535,3 +1488,37 @@ function edd_tools_sysinfo_download() {
 	edd_die();
 }
 add_action( 'edd_download_sysinfo', 'edd_tools_sysinfo_download' );
+
+/**
+ * Renders the Logs tab in the Tools screen.
+ *
+ * @since 3.0
+ *
+ * @return void
+ */
+function edd_tools_tab_logs() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
+	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
+
+	$current_view = 'file_downloads';
+	$log_views    = edd_log_default_views();
+
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) ) {
+		$current_view = sanitize_text_field( $_GET['view'] );
+	}
+
+	/**
+	 * Fires when a given logs view should be rendered.
+	 *
+	 * The dynamic portion of the hook name, `$current_view`, represents the slug
+	 * of the logs view to render.
+	 *
+	 * @since 1.4
+	 */
+	do_action( 'edd_logs_view_' . $current_view );
+}
+add_action( 'edd_tools_tab_logs', 'edd_tools_tab_logs' );
