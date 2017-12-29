@@ -254,7 +254,99 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 	 * @return string `WHERE` clause for the SQL query.
 	 */
 	private function parse_where( $args ) {
+		global $wpdb;
+
 		$where = '';
+
+		// Adapted from WP_Meta_Query
+		if ( isset( $args['meta_query'] ) ) {
+			foreach ( $args['meta_query'] as $key => $clause ) {
+				if ( 'relation' === $key ) {
+					$relation = $args['meta_query']['relation'];
+				} elseif ( is_array( $clause ) ) {
+					if ( isset( $clause['compare'] ) ) {
+						$clause['compare'] = strtoupper( $clause['compare'] );
+					} else {
+						$clause['compare'] = isset( $clause['value'] ) && is_array( $clause['value'] ) ? 'IN' : '=';
+					}
+
+					if ( array_key_exists( 'key', $clause ) ) {
+						// Convert $key to new correct column names
+						switch ( $clause['key'] ) {
+							case '_edd_log_request_ip':
+							case '_edd_log_user':
+							case '_edd_log_key':
+							case '_edd_log_token':
+							case '_edd_log_time':
+							case '_edd_log_version':
+								$clause['key'] = str_replace( '_edd_log_', '', $clause['key'] );
+
+								if ( 'request_ip' === $clause['key'] ) {
+									$clause['key'] = 'ip';
+								}
+
+								if ( 'key' === $clause['key'] ) {
+									$clause['key'] = 'api_key';
+								}
+
+								if ( 'user' === $clause['key'] ) {
+									$clause['key'] = 'user_id';
+								}
+								break;
+						}
+
+						$where .= ' AND ' . trim( $clause['key'] ) . ' = ';
+					}
+
+					if ( array_key_exists( 'value', $clause ) ) {
+						$meta_value = $clause['value'];
+
+						if ( in_array( $clause['compare'], array( 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN' ) ) ) {
+							if ( ! is_array( $meta_value ) ) {
+								$meta_value = preg_split( '/[,\s]+/', $meta_value );
+							}
+						} else {
+							$meta_value = trim( $meta_value );
+						}
+
+						switch ( $clause['compare'] ) {
+							case 'IN':
+							case 'NOT IN':
+								$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
+								$where .= $wpdb->prepare( $meta_compare_string, $meta_value );
+								break;
+
+							case 'BETWEEN':
+							case 'NOT BETWEEN':
+								$meta_value = array_slice( $meta_value, 0, 2 );
+								$where .= $wpdb->prepare( '%s AND %s', $meta_value );
+								break;
+
+							case 'LIKE':
+							case 'NOT LIKE':
+								$meta_value = '%' . $wpdb->esc_like( $meta_value ) . '%';
+								$where .= $wpdb->prepare( '%s', $meta_value );
+								break;
+
+							// EXISTS with a value is interpreted as '='.
+							case 'EXISTS':
+								$meta_compare = '=';
+								$where .= $wpdb->prepare( '%s', $meta_value );
+								break;
+
+							// 'value' is ignored for NOT EXISTS.
+							case 'NOT EXISTS':
+								$where = '';
+								break;
+
+							default:
+								$where .= $wpdb->prepare( '%s', $meta_value );
+								break;
+						}
+					}
+				}
+			}
+		}
 
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE 1=1 ' . $where;
