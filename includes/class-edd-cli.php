@@ -744,6 +744,101 @@ class EDD_CLI extends WP_CLI_Command {
 		return;
 	}
 
+	/**
+	 * Migrate the API requests to the custom table.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_api_request_logs
+	 * wp edd migrate_api_request_logs --force
+	 */
+	public function migrate_api_request_logs( $args, $assoc_args ) {
+		global $wpdb;
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_api_request_logs' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The API request logs custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		$api_request_logs_db = EDD()->api_request_logs;
+		if ( ! $api_request_logs_db->table_exists( $api_request_logs_db->table_name ) ) {
+			@$api_request_logs_db->create_table();
+		}
+
+		$term_id_sql = "SELECT t.term_id FROM wp_terms AS t  INNER JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('edd_log_type') AND t.slug IN ('api_request')";
+		$term_id = $wpdb->get_var( $term_id_sql );
+
+		$sql = "
+			SELECT *
+			FROM wp_posts
+		  	LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+		  	WHERE wp_term_relationships.term_taxonomy_id = {$term_id}
+		  	AND wp_posts.post_type = 'edd_log'
+		  	GROUP BY wp_posts.ID
+			ORDER BY wp_posts.post_date ASC
+		";
+		$results = $wpdb->get_results( $sql );
+		$total = count( $results );
+
+		if ( ! empty( $total ) ) {
+			// Store all the new logs, Key = Legacy Log ID, Value = New Log ID
+			$new_log_ids = array();
+
+			$progress = new \cli\progress\Bar( 'Migrating API Request Logs', $total );
+
+			foreach ( $results as $log_post ) {
+				// Prevent an already migrated item from being migrated.
+				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $log_post->ID" );
+				if ( ! empty( $migrated ) ) {
+					$progress->tick();
+					continue;
+				}
+
+				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $log_post->ID ) );
+
+				$post_meta = array();
+
+				foreach ( $meta as $meta_item ) {
+					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+				}
+
+				$log_data = array(
+					'ip'           => $post_meta['_edd_log_request_ip'],
+					'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
+					'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
+					'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+					'time'         => $post_meta['_edd_log_time'],
+					'request'      => $log_post->post_excerpt,
+					'error'        => $log_post->post_content,
+					'date_created' => $log_post->post_date,
+				);
+
+				$new_log_id = $api_request_logs_db->insert( $log_data );
+
+				if ( ! empty( $new_log_id ) ) {
+					add_post_meta( $log_post->ID, '_edd_log_migrated_id', $new_log_id );
+				}
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			WP_CLI::line( __( 'API Request Log Migration complete.', 'easy-digital-downloads' ) );
+			$new_count = $api_request_logs_db->count();
+			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type ='edd_log'", 0 );
+			WP_CLI::line( __( 'Old API Request Log Count: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'New API Request Log_count: ', 'easy-digital-downloads' ) . $new_count );
+		}
+	}
+
 	private function get_fname() {
 		$names = array(
 			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
