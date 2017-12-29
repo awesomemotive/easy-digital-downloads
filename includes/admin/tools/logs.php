@@ -56,7 +56,14 @@ function edd_logs_view_file_downloads() {
 	$logs_table->prepare_items();
 	?>
 	<div class="wrap">
-		<?php do_action( 'edd_logs_file_downloads_top' ); ?>
+		<?php
+		/**
+		 * Fires at the top of the File Downloads logs view.
+		 *
+		 * @since 1.4
+		 */
+		do_action( 'edd_logs_file_downloads_top' );
+		?>
 		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs' ); ?>">
 			<?php
 			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' );
@@ -66,7 +73,14 @@ function edd_logs_view_file_downloads() {
 			<input type="hidden" name="page" value="edd-reports" />
 			<input type="hidden" name="tab" value="logs" />
 		</form>
-		<?php do_action( 'edd_logs_file_downloads_bottom' ); ?>
+		<?php
+		/**
+		 * Fires at the bottom of the File Downloads logs view.
+		 *
+		 * @since 1.4
+		 */
+		do_action( 'edd_logs_file_downloads_bottom' );
+		?>
 	</div>
 <?php
 }
@@ -116,7 +130,14 @@ function edd_logs_view_api_requests() {
 	$logs_table->prepare_items();
 	?>
 	<div class="wrap">
-		<?php do_action( 'edd_logs_api_requests_top' ); ?>
+		<?php
+		/**
+		 * Fires at the top of the API Requests logs view.
+		 *
+		 * @since 1.5
+		 */
+		do_action( 'edd_logs_api_requests_top' );
+		?>
 		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs' ); ?>">
 			<?php
 			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-api-requests' );
@@ -126,7 +147,14 @@ function edd_logs_view_api_requests() {
 			<input type="hidden" name="page" value="edd-reports" />
 			<input type="hidden" name="tab" value="logs" />
 		</form>
-		<?php do_action( 'edd_logs_api_requests_bottom' ); ?>
+		<?php
+		/**
+		 * Fires at the bottom of the API Requests logs view.
+		 *
+		 * @since 1.5
+		 */
+		do_action( 'edd_logs_api_requests_bottom' );
+		?>
 	</div>
 <?php
 }
@@ -147,6 +175,14 @@ function edd_log_default_views() {
 		'api_requests'    => __( 'API Requests', 'easy-digital-downloads' )
 	);
 
+	/**
+	 * Filters the default logs views.
+	 *
+	 * @since 1.4
+	 *
+	 * @param array $views Logs views. Each key/value pair represents the view slug
+	 *                     and label, respectively.
+	 */
 	$views = apply_filters( 'edd_log_views', $views );
 
 	return $views;
@@ -170,7 +206,14 @@ function edd_log_views() {
 			<?php endforeach; ?>
 		</select>
 
-		<?php do_action( 'edd_log_view_actions' ); ?>
+		<?php
+		/**
+		 * Fires immediately after the logs view actions are rendered in the Logs screen.
+		 *
+		 * @since 1.3
+		 */
+		do_action( 'edd_log_view_actions' );
+		?>
 
 		<input type="hidden" name="post_type" value="download"/>
 		<input type="hidden" name="page" value="edd-tools"/>
