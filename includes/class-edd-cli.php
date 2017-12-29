@@ -814,6 +814,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
 					'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
 					'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+					'version'      => $post_meta['_edd_log_version'],
 					'time'         => $post_meta['_edd_log_time'],
 					'request'      => $log_post->post_excerpt,
 					'error'        => $log_post->post_content,

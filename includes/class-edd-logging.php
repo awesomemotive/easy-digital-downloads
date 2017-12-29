@@ -198,7 +198,7 @@ class EDD_Logging {
 			$data = array(
 				'user_id' => $log_meta['user'],
 				'api_key' => $log_meta['key'],
-				'token'   => $log_meta['token'],
+				'token'   => null === $log_meta['token'] ? 'public' : $log_meta['token'],
 				'version' => $log_meta['version'],
 				'request' => $log_data['post_excerpt'],
 				'error'   => $log_data['post_content'],
