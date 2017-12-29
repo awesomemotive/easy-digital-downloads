@@ -275,10 +275,10 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 					'speed'   => $log->time,
 					'ip'      => $log->ip,
 					'date'    => $log->date_created,
-                    'api_key' => $log->api_key,
-                    'request' => $log->request,
-                    'error'   => $log->error,
-                    'user_id' => $log->user_id,
+					'api_key' => $log->api_key,
+					'request' => $log->request,
+					'error'   => $log->error,
+					'user_id' => $log->user_id,
 				);
 			}
 		}
