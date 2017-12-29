@@ -1158,6 +1158,37 @@ function edd_tools_sysinfo_display() {
 }
 add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
 
+/**
+ * Renders the Logs tab in the Tools screen.
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_tools_tab_logs() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
+	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
+
+	$current_view = 'file_downloads';
+	$log_views    = edd_log_default_views();
+
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) )
+		$current_view = $_GET['view'];
+
+	/**
+	 * Fires when a given logs view should be rendered.
+	 *
+	 * The dynamic portion of the hook name, `$current_view`, represents the slug
+	 * of the logs view to render.
+	 *
+	 * @since 1.4
+	 */
+	do_action( 'edd_logs_view_' . $current_view );
+}
+add_action( 'edd_tools_tab_logs', 'edd_tools_tab_logs' );
 
 /**
  * Get system info
