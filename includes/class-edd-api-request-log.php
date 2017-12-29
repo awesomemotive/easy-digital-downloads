@@ -47,6 +47,15 @@ class EDD_API_Request_Log {
 	protected $api_key;
 
 	/**
+	 * API token.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $token;
+
+	/**
 	 * API version.
 	 *
 	 * @since  3.0
