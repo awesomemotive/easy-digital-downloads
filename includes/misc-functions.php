@@ -995,7 +995,9 @@ function edd_doing_cron() {
 function edd_get_registry( $name ) {
 	switch( $name ) {
 		case 'reports:tabs':
-			$registry = EDD_Reports_Tabs_Registry::instance();
+			if ( class_exists( 'EDD_Reports_Tabs_Registry' ) ) {
+				$registry = EDD_Reports_Tabs_Registry::instance();
+			}
 			break;
 
 		default:
