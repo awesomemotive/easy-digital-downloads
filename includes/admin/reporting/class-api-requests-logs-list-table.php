@@ -300,14 +300,12 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		global $edd_logs;
-
 		$columns               = $this->get_columns();
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable, 'ID' );
 		$this->items           = $this->get_logs();
-		$total_items           = $edd_logs->get_log_count( 0, 'api_requests' );
+		$total_items           = EDD()->api_request_logs->count();
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
