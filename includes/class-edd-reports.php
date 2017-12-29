@@ -38,7 +38,7 @@ final class EDD_Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD_Reports_Tabs_Registry $tabs Report tabs registry instance.
+		 * @param \EDD_Reports_Tabs_Registry $tabs Report tabs registry instance, passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_tabs_init', array( &$tabs ) );
 	}
