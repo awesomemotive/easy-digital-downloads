@@ -47,7 +47,12 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 	 * @since 3.0
 	 *
 	 * @param string $tab_id     Reports tab ID.
-	 * @param array  $attributes
+	 * @param array  $attributes {
+	 *     Attributes of the reports tab.
+	 *
+	 * @type string $label Tab label.
+	 * @type
+	 * }
 	 * @return bool
 	 */
 	public function add_tab( $tab_id, $attributes ) {
