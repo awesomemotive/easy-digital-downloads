@@ -261,22 +261,20 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(
-			'log_type'   => 'api_request',
 			'paged'      => $paged,
 			'meta_query' => $this->get_meta_query(),
 		);
 
-		$logs = $edd_logs->get_connected_logs( $log_query );
+		$logs = EDD()->api_request_logs->get_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-
 				$logs_data[] = array(
-					'ID'      => $log->ID,
-					'version' => get_post_meta( $log->ID, '_edd_log_version', true ),
-					'speed'   => get_post_meta( $log->ID, '_edd_log_time', true ),
-					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
-					'date'    => $log->post_date,
+					'ID'      => $log->id,
+					'version' => $log->version,
+					'speed'   => $log->time,
+					'ip'      => $log->ip,
+					'date'    => $log->date_created,
 				);
 			}
 		}
