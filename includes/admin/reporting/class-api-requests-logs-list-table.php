@@ -138,20 +138,20 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
 
-			$request = get_post_field( 'post_excerpt', $item['ID'] );
-			$error   = get_post_field( 'post_content', $item['ID'] );
+			$request = $item['request'];
+			$error   = $item['error'];
 			echo '<p><strong>' . __( 'API Request:', 'easy-digital-downloads' ) . '</strong></p>';
 			echo '<div>' . $request . '</div>';
-			if( ! empty( $error ) ) {
+			if ( ! empty( $error ) ) {
 				echo '<p><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong></p>';
 				echo '<div>' . esc_html( $error ) . '</div>';
 			}
 			echo '<p><strong>' . __( 'API User:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_user', true ) . '</div>';
+			echo '<div>' . $item['user_id'] . '</div>';
 			echo '<p><strong>' . __( 'API Key:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_key', true ) . '</div>';
+			echo '<div>' . $item['api_key'] . '</div>';
 			echo '<p><strong>' . __( 'Request Date:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . get_post_field( 'post_date', $item['ID'] ) . '</div>';
+			echo '<div>' . $item['date'] . '</div>';
 			?>
 		</div>
 	<?php
@@ -275,6 +275,10 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 					'speed'   => $log->time,
 					'ip'      => $log->ip,
 					'date'    => $log->date_created,
+                    'api_key' => $log->api_key,
+                    'request' => $log->request,
+                    'error'   => $log->error,
+                    'user_id' => $log->user_id,
 				);
 			}
 		}
