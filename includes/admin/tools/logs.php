@@ -26,7 +26,7 @@ function edd_logs_view_sales() {
 		return;
 	}
 
-	include( dirname( __FILE__ ) . '/class-sales-logs-list-table.php' );
+	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-sales-logs-list-table.php';
 
 	$logs_table = new EDD_Sales_Log_Table();
 	$logs_table->prepare_items();
@@ -50,7 +50,7 @@ function edd_logs_view_file_downloads() {
 		return;
 	}
 
-	include( dirname( __FILE__ ) . '/class-file-downloads-logs-list-table.php' );
+	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-file-downloads-logs-list-table.php';
 
 	$logs_table = new EDD_File_Downloads_Log_Table();
 	$logs_table->prepare_items();
@@ -86,7 +86,7 @@ function edd_logs_view_gateway_errors() {
 		return;
 	}
 
-	include( dirname( __FILE__ ) . '/class-gateway-error-logs-list-table.php' );
+	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-gateway-error-logs-list-table.php';
 
 	$logs_table = new EDD_Gateway_Error_Log_Table();
 	$logs_table->prepare_items();
@@ -109,8 +109,8 @@ function edd_logs_view_api_requests() {
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
-	
-	include( dirname( __FILE__ ) . '/class-api-requests-logs-list-table.php' );
+
+	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-api-requests-logs-list-table.php';
 
 	$logs_table = new EDD_API_Request_Log_Table();
 	$logs_table->prepare_items();
