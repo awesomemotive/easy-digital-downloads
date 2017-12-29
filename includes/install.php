@@ -200,6 +200,9 @@ function edd_run_install() {
 	@EDD()->logs->create_table();
 	@EDD()->log_meta->create_table();
 
+	// Create the API request logs table
+	@EDD()->api_request_logs->create_table();
+
 	// Create the customer databases
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
@@ -304,6 +307,10 @@ function edd_after_install() {
 
 		if ( ! @EDD()->logs->installed() ) {
 			@EDD()->logs->create_table();
+		}
+
+		if ( ! @EDD()->api_request_logs->installed() ) {
+			@EDD()->api_request_logs->create_table();
 		}
 
 		if ( ! @EDD()->customer_meta->installed() ) {
