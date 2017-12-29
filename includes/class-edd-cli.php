@@ -831,11 +831,30 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'API Request Log Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'API Request Log Migration Complete.', 'easy-digital-downloads' ) );
 			$new_count = $api_request_logs_db->count();
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type ='edd_log'", 0 );
+			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
 			WP_CLI::line( __( 'Old API Request Log Count: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New API Request Log_count: ', 'easy-digital-downloads' ) . $new_count );
+
+			WP_CLI::confirm( __( 'Remove legacy API request logs?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::line( __( 'Removing old API request logs.', 'easy-digital-downloads' ) );
+
+			$log_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
+			$log_ids = implode( ', ', $log_ids );
+
+			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$log_ids})";
+			$wpdb->query( $delete_posts_query );
+
+			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$log_ids})";
+			$wpdb->query( $delete_postmeta_query );
+			edd_set_upgrade_complete( 'remove_legacy_api_request_logs' );
+
+			WP_CLI::line( __( 'All Legacy API Request Logs Removed.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'No API request logs found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_api_request_logs' );
+			edd_set_upgrade_complete( 'remove_legacy_api_request_logs' );
 		}
 	}
 
