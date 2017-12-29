@@ -308,12 +308,13 @@ add_action( 'edd_tools_tab_betas', 'edd_tools_betas_display' );
 
 
 /**
- * Return an array of all extensions with beta support
+ * Retrieves an array of all extensions with beta support.
  *
  * Extensions should be added as 'extension-slug' => 'Extension Name'
  *
- * @since       2.6.11
- * @return      array $extensions The array of extensions
+ * @since 2.6.11
+ *
+ * @return array $extensions The array of extensions
  */
 function edd_get_beta_enabled_extensions() {
 	return apply_filters( 'edd_beta_enabled_extensions', array() );
@@ -321,11 +322,12 @@ function edd_get_beta_enabled_extensions() {
 
 
 /**
- * Check if a given extensions has beta support enabled
+ * Checks if a given extensions has beta support enabled.
  *
- * @since       2.6.11
- * @param       string $slug The slug of the extension to check
- * @return      bool True if enabled, false otherwise
+ * @since 2.6.11
+ *
+ * @param string $slug The slug of the extension to check.
+ * @return bool True if enabled, false otherwise
  */
 function edd_extension_has_beta_support( $slug ) {
 	$enabled_betas = edd_get_option( 'enabled_betas', array() );
@@ -340,10 +342,11 @@ function edd_extension_has_beta_support( $slug ) {
 
 
 /**
- * Save enabled betas
+ * Saves enabled betas.
  *
- * @since       2.6.11
- * @return      void
+ * @since 2.6.11
+ *
+ * @return void
  */
 function edd_tools_enabled_betas_save() {
 	if( ! wp_verify_nonce( $_POST['edd_save_betas_nonce'], 'edd_save_betas_nonce' ) ) {
@@ -364,11 +367,11 @@ function edd_tools_enabled_betas_save() {
 add_action( 'edd_save_enabled_betas', 'edd_tools_enabled_betas_save' );
 
 /**
- * Sanitize the supported beta values by making them booleans
+ * Sanitizes the supported beta values by making them booleans.
  *
  * @since 2.6.11
- * @param mixed $value The value being sent in, determining if beta support is enabled.
  *
+ * @param mixed $value The value being sent in, determining if beta support is enabled.
  * @return bool
  */
 function edd_tools_enabled_betas_sanitize_value( $value ) {
@@ -377,10 +380,11 @@ function edd_tools_enabled_betas_sanitize_value( $value ) {
 
 
 /**
- * Save banned emails
+ * Saves banned emails.
  *
- * @since       2.0
- * @return      void
+ * @since 2.0
+ *
+ * @return void
  */
 function edd_tools_banned_emails_save() {
 
@@ -413,10 +417,11 @@ function edd_tools_banned_emails_save() {
 add_action( 'edd_save_banned_emails', 'edd_tools_banned_emails_save' );
 
 /**
- * Execute upgrade notice clear
+ * Executes an upgrade notice clear.
  *
- * @since       2.3.5
- * @return      void
+ * @since 2.3.5
+ *
+ * @return void
  */
 function edd_tools_clear_upgrade_notice() {
 	if( ! wp_verify_nonce( $_POST['edd_clear_upgrades_nonce'], 'edd_clear_upgrades_nonce' ) ) {
@@ -433,10 +438,11 @@ add_action( 'edd_clear_doing_upgrade', 'edd_tools_clear_upgrade_notice' );
 
 
 /**
- * Display the tools import/export tab
+ * Displays the tools import/export tab.
  *
- * @since       2.0
- * @return      void
+ * @since 2.0
+ *
+ * @return void
  */
 function edd_tools_import_export_display() {
 
@@ -968,10 +974,11 @@ add_action( 'edd_tools_tab_import_export', 'edd_tools_import_export_display' );
 
 
 /**
- * Process a settings export that generates a .json file of the shop settings
+ * Processes a settings export that generates a .json file of the shop settings.
  *
- * @since       1.7
- * @return      void
+ * @since 1.7
+ *
+ * @return void
  */
 function edd_tools_import_export_process_export() {
 
@@ -1008,9 +1015,10 @@ add_action( 'edd_export_settings', 'edd_tools_import_export_process_export' );
 
 
 /**
- * Process a settings import from a json file
+ * Processes a settings import from a json file.
  *
  * @since 1.7
+ *
  * @return void
  */
 function edd_tools_import_export_process_import() {
@@ -1062,10 +1070,11 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
 
 
 /**
- * Display the debug log tab
+ * Renders the Debug Log tab in the Tools screen.
  *
- * @since       2.8.7
- * @return      void
+ * @since 2.8.7
+ *
+ * @return void
  */
 function edd_tools_debug_log_display() {
 
@@ -1135,10 +1144,11 @@ function edd_handle_submit_debug_log() {
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );
 
 /**
- * Display the system info tab
+ * Renders the System Info tab in the Tools screen.
  *
- * @since       2.0
- * @return      void
+ * @since 2.0
+ *
+ * @return void
  */
 function edd_tools_sysinfo_display() {
 
@@ -1162,6 +1172,7 @@ add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
  * Renders the Logs tab in the Tools screen.
  *
  * @since 3.0
+ *
  * @return void
  */
 function edd_tools_tab_logs() {
@@ -1175,8 +1186,9 @@ function edd_tools_tab_logs() {
 	$current_view = 'file_downloads';
 	$log_views    = edd_log_default_views();
 
-	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) )
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) ) {
 		$current_view = sanitize_text_field( $_GET['view'] );
+	}
 
 	/**
 	 * Fires when a given logs view should be rendered.
@@ -1191,12 +1203,13 @@ function edd_tools_tab_logs() {
 add_action( 'edd_tools_tab_logs', 'edd_tools_tab_logs' );
 
 /**
- * Get system info
+ * Retrieves the System Info log.
  *
- * @since       2.0
- * @access      public
- * @global      object $wpdb Used to query the database using the WordPress Database API
- * @return      string $return A string containing the info to output
+ * @since 2.0
+ *
+ * @global wpdb $wpdb Used to query the database using the WordPress Database API.
+ *
+ * @return string A string containing the info to output.
  */
 function edd_tools_sysinfo_get() {
 	global $wpdb;
@@ -1501,10 +1514,11 @@ function edd_tools_sysinfo_get() {
 
 
 /**
- * Generates a System Info download file
+ * Generates a System Info download file.
  *
- * @since       2.0
- * @return      void
+ * @since 2.0
+ *
+ * @return void
  */
 function edd_tools_sysinfo_download() {
 
