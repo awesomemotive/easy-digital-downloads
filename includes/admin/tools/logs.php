@@ -173,7 +173,7 @@ function edd_log_views() {
 		<?php do_action( 'edd_log_view_actions' ); ?>
 
 		<input type="hidden" name="post_type" value="download"/>
-		<input type="hidden" name="page" value="edd-reports"/>
+		<input type="hidden" name="page" value="edd-tools"/>
 		<input type="hidden" name="tab" value="logs"/>
 
 		<?php submit_button( __( 'Apply', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
