@@ -41,6 +41,10 @@ class EDD_DB_Discounts extends EDD_DB {
 		$this->table_name  = $wpdb->prefix . 'edd_discounts';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
+
+		if ( ! $this->table_exists( $this->table_name ) ) {
+			$this->create_table();
+		}
 	}
 
 	/**
