@@ -29,33 +29,26 @@ class EDD_Exception extends \Exception {
 	 *                      alongside the exception message.
 	 */
 	public function log( $extra = '' ) {
-		/**
-		 * Filters whether to skip logging EDD exceptions to the debug log.
-		 *
-		 * @since 3.0
-		 *
-		 * @param bool $skip Whether to skip logging exceptions. Default false (proceed).
-		 */
-		if ( false === apply_filters( 'edd_skip_logging_exceptions', false ) ) {
+		if ( $this->getCode() ) {
 
-			if ( $this->getCode() ) {
+			$message = sprintf( 'Exception Code: %1$s – Message: %2$s',
+				$this->getCode(),
+				$this->getMessage()
+			);
 
-				edd_debug_log( sprintf( 'Exception Code: %1$s – Message: %2$s %3$s',
-					$this->getCode(),
-					$this->getMessage(),
-					$extra
-				) );
+		} else {
 
-			} else {
-
-				edd_debug_log( sprintf( 'Exception Message: %1$s %2$s',
-					$this->getMessage(),
-					$extra
-				) );
-
-			}
+			$message = sprintf( 'Exception Message: %1$s',
+				$this->getMessage()
+			);
 
 		}
+
+		if ( ! empty( $extra ) ) {
+			$message = sprintf( "{$message} %s", $extra );
+		}
+
+		edd_debug_log( $message );
 	}
 
 	/**
