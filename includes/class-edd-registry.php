@@ -20,23 +20,6 @@
 abstract class EDD_Registry extends \ArrayObject {
 
 	/**
-	 * Array of registry items.
-	 *
-	 * @since 3.0
-	 * @var   array
-	 */
-	private $items = array();
-
-	/**
-	 * Initializes the registry.
-	 *
-	 * Each sub-class will need to do various initialization operations in this method.
-	 *
-	 * @since 3.0
-	 */
-	abstract public function init();
-
-	/**
 	 * Adds an item to the registry.
 	 *
 	 * @since 3.0

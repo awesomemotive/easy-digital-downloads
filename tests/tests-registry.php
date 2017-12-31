@@ -36,13 +36,6 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::init()
-	 */
-	public function test_class_should_have_an_init_method() {
-		$this->assertTrue( method_exists( $this->mockRegistry, 'init' ) );
-	}
-
-	/**
 	 * @covers \EDD_Registry::add_item()
 	 * @expectedException EDD_Exception
 	 */
