@@ -51,17 +51,4 @@ class EDD_Exception extends \Exception {
 		edd_debug_log( $message );
 	}
 
-	/**
-	 * Constructs an EDD_Exception instance.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string         $message  Optional. Exception message. Default empty string.
-	 * @param int            $code     Optional. Exception code. Default zero.
-	 * @param Throwable|null $previous Optional. Previous exception used when chaining. Default null.
-	 */
-	public function __construct( $message = "", $code = 0, Throwable $previous = null ) {
-		parent::__construct( $message, $code, $previous );
-	}
-
 }
