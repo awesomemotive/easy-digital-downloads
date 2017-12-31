@@ -35,9 +35,7 @@ abstract class EDD_Registry extends \ArrayObject {
 		$result = false;
 
 		if ( ! empty( $attributes ) ) {
-			foreach ( $attributes as $attribute => $value ) {
-				$this->items[ $item_id ][ $attribute ] = $value;
-			}
+			$this->offsetSet( $item_id, $attributes );
 
 			$result = true;
 		} else {
@@ -58,7 +56,9 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @param string $item_id Item ID.
 	 */
 	public function remove_item( $item_id ) {
-		unset( $this->items[ $item_id ] );
+		if ( $this->offsetExists( $item_id ) ) {
+			return $this->offsetUnset( $item_id );
+		}
 	}
 
 	/**
@@ -74,11 +74,11 @@ abstract class EDD_Registry extends \ArrayObject {
 	 */
 	public function get_item( $item_id ) {
 
-		$result = array();
+		$item = array();
 
-		if ( isset( $this->items[ $item_id ] ) ) {
+		if ( $this->offsetExists( $item_id ) ) {
 
-			$result = $this->items[ $item_id ];
+			$item = $this->offsetGet( $item_id );
 
 		} else {
 
@@ -87,7 +87,7 @@ abstract class EDD_Registry extends \ArrayObject {
 			throw new \EDD_Exception( $message );
 		}
 
-		return $result;
+		return $item;
 	}
 
 	/**
@@ -98,7 +98,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 * @return array The list of registered items.
 	 */
 	public function get_items() {
-		return $this->items;
+		return $this->getArrayCopy();
 	}
 
 	/**
@@ -110,90 +110,8 @@ abstract class EDD_Registry extends \ArrayObject {
 		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
 			_doing_it_wrong( 'This method is only intended for use in phpunit tests', '3.0' );
 		} else {
-			$this->items = array();
+			$this->exchangeArray( array() );
 		}
-	}
-
-	/**
-	 * Determines whether an item exists.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $offset Item ID.
-	 * @return bool True if the item exists, false on failure.
-	 */
-	public function offsetExists( $offset ) {
-		$exists = false;
-
-		try {
-			$this->get_item( $offset );
-
-			$exists = true;
-		} catch( EDD_Exception $exception ) {
-			$exception->log( 'Method: offsetExists.' );
-		}
-
-		return $exists;
-	}
-
-	/**
-	 * Retrieves an item by its ID.
-	 *
-	 * Defined only for compatibility with ArrayAccess, use get() directly.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $offset Item ID.
-	 * @return array The registered item's attributes, if it exists, otherwise an empty array.
-	 */
-	public function offsetGet( $offset ) {
-		$item = array();
-
-		try {
-			$item = $this->get_item( $offset );
-		} catch( EDD_Exception $exception ) {
-			$exception->log( 'Method: offsetGet.' );
-		}
-
-		return $item;
-	}
-
-	/**
-	 * Adds/overwrites an item in the registry.
-	 *
-	 * Defined only for compatibility with ArrayAccess, use add_item() directly.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $offset Item ID.
-	 * @param mixed  $value  Item attributes.
-	 * @return bool True if the item as set, otherwise false.
-	 */
-	public function offsetSet( $offset, $value ) {
-		$result = false;
-
-		try {
-			$this->add_item( $offset, $value );
-
-			$result = true;
-		} catch( EDD_Exception $exception ) {
-			$exception->log( 'Method: offsetSet.' );
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Removes an item from the registry.
-	 *
-	 * Defined only for compatibility with ArrayAccess, use remove_item() directly.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $offset Item ID.
-	 */
-	public function offsetUnset( $offset ) {
-		$this->remove_item( $offset );
 	}
 
 }
