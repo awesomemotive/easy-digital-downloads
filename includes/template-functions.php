@@ -831,7 +831,7 @@ function edd_microdata_wrapper_open( $query ) {
 
 	if ( $query && ! empty( $query->query['post_type'] ) && $query->query['post_type'] == 'download' && is_singular( 'download' ) && $query->is_main_query() ) {
 		$microdata_open = true;
-		echo '<div itemscope itemtype="http://schema.org/Product">';
+		echo '<span itemscope itemtype="http://schema.org/Product">';
 	}
 
 }
@@ -856,7 +856,7 @@ function edd_microdata_wrapper_close() {
 
 	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		$microdata_close = true;
-		echo '</div>';
+		echo '</span>';
 	}
 }
 add_action( 'loop_end', 'edd_microdata_wrapper_close', 10 );
