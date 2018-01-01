@@ -10,6 +10,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Utils;
 
 /**
  * Defines the construct for building an item registry.
@@ -17,7 +18,7 @@
  * @since 3.0.0
  * @abstract
  */
-abstract class EDD_Registry extends \ArrayObject {
+abstract class Registry extends \ArrayObject {
 
 	/**
 	 * Adds an item to the registry.
