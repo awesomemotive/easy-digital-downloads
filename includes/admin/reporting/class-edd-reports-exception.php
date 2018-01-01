@@ -17,4 +17,14 @@ namespace EDD\Admin\Reports;
  *
  * @see \EDD\Utils\Exception
  */
-class Exception extends \EDD\Utils\Exception {}
+class Exception extends \EDD\Utils\Exception {
+
+	/**
+	 * Exception type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	public $type = 'Reports';
+
+}
