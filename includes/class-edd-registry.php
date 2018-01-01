@@ -102,17 +102,4 @@ abstract class Registry extends \ArrayObject {
 		return $this->getArrayCopy();
 	}
 
-	/**
-	 * Only intended for use by tests.
-	 *
-	 * @since 3.0
-	 */
-	public function _reset_items() {
-		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
-			_doing_it_wrong( 'This method is only intended for use in phpunit tests', '3.0' );
-		} else {
-			$this->exchangeArray( array() );
-		}
-	}
-
 }
