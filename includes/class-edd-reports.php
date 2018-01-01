@@ -9,6 +9,8 @@
  * @since       3.0
  */
 
+namespace EDD\Admin;
+
 /**
  * Core class that implements the Reports API.
  *
@@ -18,7 +20,7 @@
  *
  * @since 3.0
  */
-final class EDD_Reports {
+final class Reports {
 
 	/**
 	 * Sets up the Reports API.
