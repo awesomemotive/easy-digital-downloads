@@ -8,21 +8,25 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Admin\Reports;
+
+use EDD\Utils\Registry;
+use EDD\Utils\Exception as EDD_Exception;
 
 /**
  * Implements a singleton registry for registering reports tiles.
  *
  * @since 3.0
  *
- * @see \EDD_Registry
+ * @see \EDD\Utils\Registry
  */
-class EDD_Reports_Tiles_Registry extends \EDD_Registry {
+class Tiles_Registry extends Registry {
 
 	/**
-	 * The one true EDD_Reports_Tiles_Registry instance.
+	 * The one true Tiles_Registry instance.
 	 *
 	 * @since 3.0
-	 * @var   \EDD_Reports_Tiles_Registry
+	 * @var   \EDD\Admin\Reports\Tiles_Registry
 	 */
 	private static $instance;
 
@@ -31,11 +35,11 @@ class EDD_Reports_Tiles_Registry extends \EDD_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @return \EDD_Reports_Tiles_Registry Reports tiles registry instance.
+	 * @return \EDD\Admin\Reports\Tiles_Registry Reports tiles registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new EDD_Reports_Tiles_Registry;
+			self::$instance = new Tiles_Registry;
 		}
 
 		return self::$instance;
