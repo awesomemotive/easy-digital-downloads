@@ -87,7 +87,7 @@ class Tiles_Registry extends Registry {
 
 		} else {
 
-			$message = sprintf( "The '%1$s' tab did not exist when attempting to add tile '%2$s'.", $tab_id, $tile_id );
+			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
 
 			throw new Reports_Exception( $message );
 
@@ -113,7 +113,7 @@ class Tiles_Registry extends Registry {
 
 		} else {
 
-			$message = sprintf( "The '%1$s' tab did not exist when attempting to remove '%2$s' tile.", $tab_id, $tile_id );
+			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
 
 			throw new Reports_Exception( $message );
 
@@ -148,7 +148,7 @@ class Tiles_Registry extends Registry {
 
 		} else {
 
-			$message = sprintf( "The '%1$s' tab did not exist when attempting to remove '%2$s' tile.", $tab_id, $tile_id );
+			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
 
 			throw new Reports_Exception( $message );
 
