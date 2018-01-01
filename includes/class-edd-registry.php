@@ -10,6 +10,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Utils;
 
 /**
  * Defines the construct for building an item registry.
@@ -17,14 +18,14 @@
  * @since 3.0.0
  * @abstract
  */
-abstract class EDD_Registry extends \ArrayObject {
+abstract class Registry extends \ArrayObject {
 
 	/**
 	 * Adds an item to the registry.
 	 *
 	 * @since 3.0
 	 *
-	 * @throws EDD_Exception If the `$attributes` array is empty.
+	 * @throws \EDD\Utils\Exception If the `$attributes` array is empty.
 	 *
 	 * @param string $item_id    Item ID.
 	 * @param array  $attributes Array of item attributes. Each extending registry will
@@ -42,7 +43,7 @@ abstract class EDD_Registry extends \ArrayObject {
 
 			$message = sprintf( "The attributes were missing when attempting to add item '%s'.", $item_id );
 
-			throw new \EDD_Exception( $message );
+			throw new \EDD\Utils\Exception( $message );
 		}
 
 		return $result;
@@ -66,7 +67,7 @@ abstract class EDD_Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws EDD_Exception if the item does not exist.
+	 * @throws \EDD\Utils\Exception if the item does not exist.
 	 *
 	 * @param string $item_id Item ID.
 	 * @return array Array of attributes for the item if the item is set,
@@ -84,7 +85,7 @@ abstract class EDD_Registry extends \ArrayObject {
 
 			$message = sprintf( "The item '%s' does not exist.", $item_id );
 
-			throw new \EDD_Exception( $message );
+			throw new \EDD\Utils\Exception( $message );
 		}
 
 		return $item;
