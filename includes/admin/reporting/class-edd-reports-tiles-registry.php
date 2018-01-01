@@ -12,6 +12,7 @@ namespace EDD\Admin\Reports;
 
 use EDD\Utils\Registry;
 use EDD\Utils\Exception as EDD_Exception;
+use EDD\Admin\Reports\Exception as Reports_Exception;
 
 /**
  * Implements a singleton registry for registering reports tiles.
@@ -50,6 +51,8 @@ class Tiles_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
+	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
+	 *
 	 * @param string $tab_id      Reports tab ID for the tile.
 	 * @param string $tile_id     Reports tile ID.
 	 * @param array  $attributes {
@@ -76,7 +79,7 @@ class Tiles_Registry extends Registry {
 
 			$message = sprintf( 'The %1$s tab does not exist when attempting to add tile %2$s.', $tab_id, $tile_id );
 
-			throw new EDD_Exception( $message );
+			throw new Reports_Exception( $message );
 
 		}
 
@@ -87,6 +90,8 @@ class Tiles_Registry extends Registry {
 	 * Removes a reports tile by ID from the master registry.
 	 *
 	 * @since 3.0
+	 *
+	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
 	 *
 	 * @param string $tab_id  Reports tab ID.
 	 * @param string $tile_id Reports tile ID.
@@ -100,7 +105,7 @@ class Tiles_Registry extends Registry {
 
 			$message = sprintf( "The '%1$s' tab does not exist when attempting to remove '%2$s' tile.", $tab_id, $tile_id );
 
-			throw new EDD_Exception( $message );
+			throw new Reports_Exception( $message );
 
 		}
 	}
@@ -109,6 +114,8 @@ class Tiles_Registry extends Registry {
 	 * Retrieves a specific reports tile by ID from the master registry.
 	 *
 	 * @since 3.0
+	 *
+	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
 	 *
 	 * @param string $tab_id  ID of the reports tab to retrieve the tile for.
 	 * @param string $tile_id ID of the reports tile to retrieve.
@@ -133,7 +140,7 @@ class Tiles_Registry extends Registry {
 
 			$message = sprintf( "The '%1$s' tab does not exist when attempting to remove '%2$s' tile.", $tab_id, $tile_id );
 
-			throw new EDD_Exception( $message );
+			throw new Reports_Exception( $message );
 
 		}
 
