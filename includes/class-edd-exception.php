@@ -10,6 +10,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Utils;
 
 /**
  * Implements some EDD-specific logic for exception handling.
@@ -18,7 +19,7 @@
  *
  * @see \Exception
  */
-class EDD_Exception extends \Exception {
+class Exception extends \Exception {
 
 	/**
 	 * Logs an exception to the EDD debug log.
