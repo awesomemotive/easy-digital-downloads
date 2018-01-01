@@ -1,17 +1,19 @@
 <?php
+namespace EDD\Utils;
+
 /**
  * Tests for the Registry API.
  *
  * @group edd_registry
  * @group edd_utils
  */
-class EDD_Registry_Tests extends EDD_UnitTestCase {
+class Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Mock registry test fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD_Registry
+	 * @var    \EDD\Utils\Registry
 	 */
 	protected $mockRegistry;
 
@@ -21,7 +23,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->mockRegistry = $this->getMockForAbstractClass( 'EDD_Registry' );
+		$this->mockRegistry = $this->getMockForAbstractClass( '\EDD\Utils\Registry' );
 	}
 
 	/**
@@ -36,7 +38,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::add_item()
+	 * @covers \EDD\Utils\Registry::add_item()
 	 * @expectedException EDD_Exception
 	 */
 	public function test_add_item_with_empty_attributes_should_return_false() {
@@ -44,7 +46,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::add_item()
+	 * @covers \EDD\Utils\Registry::add_item()
 	 */
 	public function test_add_item_with_empty_attributes_should_throw_exception() {
 		$this->setExpectedException( 'EDD_Exception', "The attributes were missing when attempting to add item 'foo'." );
@@ -53,7 +55,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::add_item()
+	 * @covers \EDD\Utils\Registry::add_item()
 	 */
 	public function test_add_item_with_non_empty_attributes_should_return_true() {
 		$result = $this->mockRegistry->add_item( 'foo', array( 'bar' ) );
@@ -62,7 +64,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::add_item()
+	 * @covers \EDD\Utils\Registry::add_item()
 	 */
 	public function test_add_item_should_register_the_item() {
 		$this->mockRegistry->add_item( 'foobar', array(
@@ -74,7 +76,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::remove_item()
+	 * @covers \EDD\Utils\Registry::remove_item()
 	 */
 	public function test_remove_item_with_invalid_item_id_should_effect_no_change() {
 		$this->mockRegistry->add_item( 'foo', array( 'bar' ) );
@@ -85,7 +87,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::remove_item()
+	 * @covers \EDD\Utils\Registry::remove_item()
 	 */
 	public function test_remove_item_with_valid_item_id_should_remove_that_item() {
 		$this->mockRegistry->add_item( 'foo', array( 'bar' ) );
@@ -96,7 +98,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::get_item()
+	 * @covers \EDD\Utils\Registry::get_item()
 	 */
 	public function test_get_item_with_invalid_item_id_should_return_an_empty_array() {
 		$this->setExpectedException( 'EDD_Exception', "The item 'foo' does not exist." );
@@ -107,7 +109,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::get_item()
+	 * @covers \EDD\Utils\Registry::get_item()
 	 */
 	public function test_get_item_with_invalid_item_id_should_throw_an_exception() {
 		$this->setExpectedException( 'EDD_Exception', "The item 'foo' does not exist." );
@@ -116,7 +118,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::get_item()
+	 * @covers \EDD\Utils\Registry::get_item()
 	 */
 	public function test_get_item_with_valid_item_id_should_return_that_item() {
 		$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
@@ -129,14 +131,14 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::get_items()
+	 * @covers \EDD\Utils\Registry::get_items()
 	 */
 	public function test_get_items_should_be_empty_with_no_registered_items() {
 		$this->assertEqualSets( array(), $this->mockRegistry->get_items() );
 	}
 
 	/**
-	 * @covers \EDD_Registry::get_items()
+	 * @covers \EDD\Utils\Registry::get_items()
 	 */
 	public function test_get_items_should_return_registered_items() {
 		$item = array(
@@ -157,7 +159,7 @@ class EDD_Registry_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Registry::_reset_items()
+	 * @covers \EDD\Utils\Registry::_reset_items()
 	 */
 	public function test__reset_items_should_reset_items() {
 		// Add an item.
