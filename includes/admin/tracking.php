@@ -38,9 +38,9 @@ class EDD_Tracking {
 
 		add_action( 'init', array( $this, 'schedule_send' ) );
 		add_action( 'edd_settings_general_sanitize', array( $this, 'check_for_settings_optin' ) );
-		add_action( 'edd_opt_into_tracking', array( $this, 'check_for_optin' ) );
+		add_action( 'edd_opt_into_tracking',   array( $this, 'check_for_optin'  ) );
 		add_action( 'edd_opt_out_of_tracking', array( $this, 'check_for_optout' ) );
-		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+		add_action( 'admin_notices',           array( $this, 'admin_notice'     ) );
 
 	}
 
@@ -177,6 +177,9 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optin( $data ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		edd_update_option( 'allow_tracking', 1 );
 
@@ -193,6 +196,10 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		edd_delete_option( 'allow_tracking' );
 		update_option( 'edd_tracking_notice', '1' );
 		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
@@ -211,12 +218,16 @@ class EDD_Tracking {
 	/**
 	 * Schedule a weekly checkin
 	 *
+	 * We send once a week (while tracking is allowed) to check in, which can be
+	 * used to determine active sites.
+	 *
 	 * @access public
 	 * @return void
 	 */
 	public function schedule_send() {
-		// We send once a week (while tracking is allowed) to check in, which can be used to determine active sites
-		add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
+		if ( edd_doing_cron() ) {
+			add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
+		}
 	}
 
 	/**
