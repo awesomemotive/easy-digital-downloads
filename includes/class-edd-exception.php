@@ -22,6 +22,14 @@ namespace EDD\Utils;
 class Exception extends \Exception {
 
 	/**
+	 * Exception type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	public $type = '';
+
+	/**
 	 * Logs an exception to the EDD debug log.
 	 *
 	 * @since 3.0
@@ -30,16 +38,21 @@ class Exception extends \Exception {
 	 *                      alongside the exception message.
 	 */
 	public function log( $extra = '' ) {
+
+		$label = empty( $this->type ) ? 'Exception' : "{$this->type} Exception";
+
 		if ( $this->getCode() ) {
 
-			$message = sprintf( 'Exception Code: %1$s – Message: %2$s',
+			$message = sprintf( '%1$s: %2$s – %3$s',
+				$label,
 				$this->getCode(),
 				$this->getMessage()
 			);
 
 		} else {
 
-			$message = sprintf( 'Exception Message: %1$s',
+			$message = sprintf( '%1$s: %2$s',
+				$label,
 				$this->getMessage()
 			);
 
