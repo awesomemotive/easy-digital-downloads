@@ -82,14 +82,6 @@ final class Easy_Digital_Downloads {
 	public $session;
 
 	/**
-	 * EDD Reports API Object.
-	 *
-	 * @since 3.0
-	 * @var   \EDD_Reports
-	 */
-	public $reports;
-
-	/**
 	 * EDD HTML Element Helper Object.
 	 *
 	 * @var object|EDD_HTML_Elements
@@ -163,7 +155,6 @@ final class Easy_Digital_Downloads {
 			self::$instance->roles         = new EDD_Roles();
 			self::$instance->fees          = new EDD_Fees();
 			self::$instance->api           = new EDD_API();
-			self::$instance->reports       = new EDD_Reports();
 			self::$instance->session       = new EDD_Session();
 			self::$instance->html          = new EDD_HTML_Elements();
 			self::$instance->emails        = new EDD_Emails();
