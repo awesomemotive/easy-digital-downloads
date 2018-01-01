@@ -7,7 +7,7 @@ namespace EDD\Utils;
  * @group edd_registry
  * @group edd_utils
  */
-class Registry_Tests extends EDD_UnitTestCase {
+class Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Mock registry test fixture.
