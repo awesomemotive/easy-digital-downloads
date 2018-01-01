@@ -8,6 +8,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Admin\Reports;
+
+use EDD\Utils\Registry;
+use EDD\Utils\Exception as EDD_Exception;
 
 /**
  * Implements a singleton registry for registering reports tabs.
@@ -16,13 +20,13 @@
  *
  * @see \EDD_Registry
  */
-class EDD_Reports_Tabs_Registry extends \EDD_Registry {
+class Tabs_Registry extends Registry {
 
 	/**
 	 * The one true EDD_Reports_Tabs_Registry instance.
 	 *
 	 * @since 3.0
-	 * @var   \EDD_Reports_Tabs_Registry
+	 * @var   \EDD\Admin\Reports\Tabs_Registry
 	 */
 	private static $instance;
 
@@ -31,11 +35,11 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @return \EDD_Reports_Tabs_Registry Reports tabs registry instance.
+	 * @return \EDD\Admin\Reports\Tabs_Registry Reports tabs registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new EDD_Reports_Tabs_Registry;
+			self::$instance = new Tabs_Registry;
 		}
 
 		return self::$instance;
