@@ -25,7 +25,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws EDD_Exception If the `$attributes` array is empty.
+	 * @throws \EDD\Utils\Exception If the `$attributes` array is empty.
 	 *
 	 * @param string $item_id    Item ID.
 	 * @param array  $attributes Array of item attributes. Each extending registry will
@@ -43,7 +43,7 @@ abstract class Registry extends \ArrayObject {
 
 			$message = sprintf( "The attributes were missing when attempting to add item '%s'.", $item_id );
 
-			throw new \EDD_Exception( $message );
+			throw new \EDD\Utils\Exception( $message );
 		}
 
 		return $result;
@@ -67,7 +67,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws EDD_Exception if the item does not exist.
+	 * @throws \EDD\Utils\Exception if the item does not exist.
 	 *
 	 * @param string $item_id Item ID.
 	 * @return array Array of attributes for the item if the item is set,
@@ -85,7 +85,7 @@ abstract class Registry extends \ArrayObject {
 
 			$message = sprintf( "The item '%s' does not exist.", $item_id );
 
-			throw new \EDD_Exception( $message );
+			throw new \EDD\Utils\Exception( $message );
 		}
 
 		return $item;
