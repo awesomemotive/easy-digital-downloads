@@ -50,6 +50,7 @@ final class Reports {
 	 * @since 3.0
 	 */
 	private function includes() {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-reports-exception.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-reports-tabs-registry.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-reports-tiles-registry.php';
 	}
