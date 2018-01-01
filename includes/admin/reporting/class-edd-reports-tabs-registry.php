@@ -118,10 +118,77 @@ class EDD_Reports_Tabs_Registry extends \EDD_Registry {
 	}
 
 	/**
-	 * Initializes the registry.
+	 * Registers a new Reports tab tile.
 	 *
 	 * @since 3.0
+	 *
+	 * @param string $tab_id     Reports tab ID.
+	 * @param string $tile_id    Reports tab tile ID.
+	 * @param array  $attributes Tile attributes.
+	 * @return bool True if the tile was added, otherwise false.
 	 */
-	public function init() {}
-	
+	public function add_tile( $tab_id, $tile_id, $attributes ) {
+		$tiles = edd_get_registry( 'reports:tiles' );
+		$added = false;
+
+		try {
+
+			$tiles->add_tile( $tab_id, $tile_id, $attributes );
+
+			$added = true;
+
+		} catch( EDD_Exception $exception ) {
+
+			$exception->log();
+
+		}
+
+		return $added;
+	}
+
+	/**
+	 * Removes a tile from a tab.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $tab_id  Reports tab ID.
+	 * @param string $tile_id Reports tab tile ID.
+	 */
+	public function remove_tile( $tab_id, $tile_id ) {
+		$tiles = edd_get_registry( 'reports:tiles' );
+
+		try {
+
+			$tiles->remove_tile( $tab_id, $tile_id );
+
+		} catch( EDD_Exception $exception ) {
+			$exception->log();
+		}
+
+	}
+
+	/**
+	 * Retrieves a tile record.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $tab_id  Reports tab ID.
+	 * @param string $tile_id Reports tab tile ID.
+	 * @return array Attributes for the requested tile if it exists, otherwise an empty array.
+	 */
+	public function get_tile( $tab_id, $tile_id ) {
+		$tiles = edd_get_registry( 'reports:tiles' );
+		$tile  = array();
+
+		try {
+
+			$tile = $tiles->get_tile( $tab_id, $tile_id );
+
+		} catch( EDD_Exception $exception ) {
+			$exception->log();
+		}
+
+		return $tile;
+	}
+
 }
