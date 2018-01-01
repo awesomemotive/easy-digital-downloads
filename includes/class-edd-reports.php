@@ -8,7 +8,6 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-
 namespace EDD\Admin;
 
 /**
@@ -40,7 +39,7 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD_Reports_Tabs_Registry $tabs Report tabs registry instance, passed by reference.
+		 * @param \EDD\Admin\Reports\Tabs_Registry $tabs Report tabs registry instance, passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_tabs_init', array( &$tabs ) );
 	}
@@ -68,7 +67,7 @@ final class Reports {
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD_Reports_Tabs_Registry $tabs Reports tabs registry.
+	 * @param \EDD\Admin\Reports\Tabs_Registry $tabs Reports tabs registry.
 	 */
 	public function register_core_tabs( $tabs ) {
 		$tabs->add_tab( 'core:test', array(
