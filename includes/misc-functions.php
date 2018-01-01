@@ -960,6 +960,24 @@ function edd_can_view_receipt( $payment_key = '' ) {
 }
 
 /**
+ * Given a Payment ID, generate a link to IP address provider (ipinfo.io)
+ *
+ * @since  2.8.15
+ * @param  int		$payment_id The Payment ID
+ * @return string	A link to the IP details provider
+ */
+function edd_payment_get_ip_address_url( $payment_id ) {
+	
+	$payment = new EDD_Payment( $payment_id );
+  
+	$base_url = 'https://ipinfo.io/';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->ip ) . '" target="_blank">' . esc_attr( $payment->ip ) . '</a>';
+
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->ip, $payment_id );
+
+}
+  
+/**
  * Abstraction for WordPress cron checking, to avoid code duplication.
  *
  * In future versions of EDD, this function will be changed to only refer to
