@@ -55,10 +55,12 @@ class Tabs_Registry extends Registry {
 	 * @param array  $attributes {
 	 *     Attributes of the reports tab.
 	 *
-	 * @type string $label Tab label.
-	 * @type
+	 *     @type string $label    Tab label.
+	 *     @type int    $priority Priority by which to register the tab.
+	 *     @type array  $filters  Registered filters to expose for the tab.
+	 *     @type string $graph    Class to instantiate for building the graph.
 	 * }
-	 * @return bool
+	 * @return bool True if the tab was successfully registered, otherwise false.
 	 */
 	public function add_tab( $tab_id, $attributes ) {
 		$result = false;
