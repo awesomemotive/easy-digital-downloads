@@ -22,6 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 function edd_reports_page() {
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
+
+	// Start the Reports API.
+	new EDD_Reports();
+
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
 	?>
 	<div class="wrap">
