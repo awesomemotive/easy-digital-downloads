@@ -7,7 +7,7 @@ namespace EDD\Utils;
  * @group edd_registry
  * @group edd_utils
  */
-class Registry_Tests extends EDD_UnitTestCase {
+class Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Mock registry test fixture.
@@ -32,7 +32,7 @@ class Registry_Tests extends EDD_UnitTestCase {
 	 * @access public
 	 */
 	public function tearDown() {
-		$this->mockRegistry->_reset_items();
+		$this->mockRegistry->exchangeArray( array() );
 
 		parent::tearDown();
 	}
@@ -156,23 +156,6 @@ class Registry_Tests extends EDD_UnitTestCase {
 
 		// Confirm the item is retrieved.
 		$this->assertEqualSets( $item, $this->mockRegistry->get_items() );
-	}
-
-	/**
-	 * @covers \EDD\Utils\Registry::_reset_items()
-	 */
-	public function test__reset_items_should_reset_items() {
-		// Add an item.
-		$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
-
-		// Confirm it's there.
-		$this->assertArrayHasKey( 'foo', $this->mockRegistry->get_items() );
-
-		// Reset the registry.
-		$this->mockRegistry->_reset_items();
-
-		// Confirm it's now empty.
-		$this->assertEqualSets( array(), $this->mockRegistry->get_items() );
 	}
 
 }
