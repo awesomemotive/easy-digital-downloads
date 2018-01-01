@@ -12,13 +12,14 @@ namespace EDD\Admin\Reports;
 
 use EDD\Utils\Registry;
 use EDD\Utils\Exception as EDD_Exception;
+use EDD\Admin\Reports\Exception as Reports_Exception;
 
 /**
  * Implements a singleton registry for registering reports tabs.
  *
  * @since 3.0
  *
- * @see \EDD_Registry
+ * @see \EDD\Utils\Registry
  */
 class Tabs_Registry extends Registry {
 
