@@ -57,6 +57,16 @@ class Tiles_Registry extends Registry {
 	 * @param string $tile_id     Reports tile ID.
 	 * @param array  $attributes {
 	 *     Attributes of the reports tile.
+	 *
+	 *     @type string   $label            Tile label. Default 'Meta Box'.
+	 *     @type string   $context          Tile context. Maps to the corresponding meta box `$context` value.
+	 *                                      Accepts 'primary', 'secondary', and 'tertiary'. Default 'primary'.
+	 *     @type string   $type             Tile type (used for formatting purposes). Accepts 'number', 'amount',
+	 *                                      or empty. Default 'number'.
+	 *     @type mixed    $data             The data value to supply to the tile. Default empty.
+	 *     @type mixed    $comparison_data  Comparison data to pair with `$data`. Default empty.
+	 *     @type callable $display_callback Display callback to use for the tile. Default is 'default_tile',
+	 *                                      which leverages `$type`.
 	 * }
 	 * @return bool True if the tile was successfully added, otherwise false.
 	 */
