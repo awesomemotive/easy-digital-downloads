@@ -8,6 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
+use EDD\Admin\Reports;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -1043,19 +1044,19 @@ function edd_doing_cron() {
  * @since 3.0
  *
  * @param string $name Registry name.
- * @return EDD_Registry|null Null if the registry doesn't exist, otherwise the object instance.
+ * @return \EDD\Utils\Registry|null Null if the registry doesn't exist, otherwise the object instance.
  */
 function edd_get_registry( $name ) {
 	switch( $name ) {
 		case 'reports:tabs':
 			if ( class_exists( '\EDD\Admin\Reports\Tabs_Registry' ) ) {
-				$registry = \EDD\Admin\Reports\Tabs_Registry::instance();
+				$registry = Reports\Tabs_Registry::instance();
 			}
 			break;
 
 		case 'reports:tiles':
-			if ( class_exists( 'EDD_Reports_Tiles_Registry' ) ) {
-				$registry = EDD_Reports_Tiles_Registry::instance();
+			if ( class_exists( '\EDD\Admin\Reports\Tiles_Registry' ) ) {
+				$registry = Reports\Tiles_Registry::instance();
 			}
 			break;
 
