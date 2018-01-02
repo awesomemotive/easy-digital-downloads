@@ -1280,11 +1280,12 @@ function _edd_discounts_bc_posts_results( $posts, $query ) {
 			$discount = edd_get_discount( $post->id );
 
 			$object_vars = array(
-				'ID'          => $discount->id,
-				'post_title'  => $discount->name,
-				'post_status' => $discount->status,
-				'post_type'   => 'edd_discount',
-				'post_date'   => $discount->date_created,
+				'ID'            => $discount->id,
+				'post_title'    => $discount->name,
+				'post_status'   => $discount->status,
+				'post_type'     => 'edd_discount',
+				'post_date'     => $discount->date_created,
+				'post_date_gmt' => $discount->date_created,
 			);
 
 			foreach ( $object_vars as $object_var => $value ) {
