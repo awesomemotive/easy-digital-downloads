@@ -1402,3 +1402,29 @@ function _edd_discounts_bc_posts_results( $posts, $query ) {
 	return $posts;
 }
 add_filter( 'posts_results', '_edd_discounts_bc_posts_results', 10, 2 );
+
+/**
+ * Backwards compatibility layer for wp_count_posts().
+ *
+ * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+ *
+ * @since 3.0
+ *
+ * @param string $request SQL request.
+ * @param WP_Query $query Instance of WP_Query.
+ *
+ * @return string $request Rewritten SQL query.
+ */
+function _edd_discounts_bc_wp_count_posts( $query ) {
+	global $wpdb;
+
+	$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
+
+	if ( $expected === $query ) {
+		$discounts_table = EDD()->discounts->table_name;
+		$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$discounts_table} GROUP BY post_status";
+	}
+
+	return $query;
+}
+add_filter( 'query', '_edd_discounts_bc_wp_count_posts', 10, 1 );

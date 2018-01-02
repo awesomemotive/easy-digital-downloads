@@ -410,7 +410,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'paged'          => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'        => $orderby,
 			'order'          => $order,
-			'post_status'    => $status,
+			'status'         => $status,
 			'search'         => $search
 		);
 
