@@ -188,11 +188,10 @@ class Tabs_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $tab_id  Reports tab ID.
 	 * @param string $tile_id Reports tab tile ID.
+	 * @param string $tab_id  Reports tab ID.
 	 */
-	public function remove_tile( $tab_id, $tile_id ) {
-		$tiles = edd_get_registry( 'reports:tiles' );
+	public function remove_tile( $tile_id, $tab_id ) {
 
 		try {
 
