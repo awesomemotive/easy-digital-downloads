@@ -382,7 +382,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function get_discount_code_counts() {
-		$discount_code_count  = wp_count_posts( 'edd_discount' );
+		$discount_code_count  = EDD()->discounts->count_by_status();
 		$this->active_count   = $discount_code_count->active;
 		$this->inactive_count = $discount_code_count->inactive;
 		$this->total_count    = $discount_code_count->active + $discount_code_count->inactive;
