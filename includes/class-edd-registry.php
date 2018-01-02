@@ -102,4 +102,51 @@ abstract class Registry extends \ArrayObject {
 		return $this->getArrayCopy();
 	}
 
+	/**
+	 * Retrieves the value of a given attribute for a given item.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD\Utils\Exception if the attribute and/or item does not exist.
+	 *
+	 * @param string $attribute_name Key of the attribute to retrieve.
+	 * @param string $item_id        Item ID to retrieve the attribute from.
+	 * @return mixed|null The attribute value if set, otherwise null.
+	 */
+	public function get_attribute( $attribute_name, $item_id ) {
+
+		$attribute = $item = null;
+
+		try {
+
+			$item = $this->get_item( $item_id );
+
+		} catch( EDD_Exception $exception ) {
+
+			$exception->log();
+
+		}
+
+		if ( ! is_null( $item ) ) {
+
+			if ( isset( $item[ $attribute_name ] ) ) {
+
+				$attribute = $item[ $attribute_name ];
+
+			} else {
+
+				$message = sprintf( "The '%1$s' attribute does not exist for the '%2$s' item.", $attribute, $item_id );
+				throw new EDD_Exception( $message );
+			}
+
+		} else {
+
+			$message = sprintf( "The '%1$s' item does not exist to retrieve attributes from.", $item_id );
+			throw new EDD_Exception( $message );
+		}
+
+		return $attribute;
+
+	}
+
 }
