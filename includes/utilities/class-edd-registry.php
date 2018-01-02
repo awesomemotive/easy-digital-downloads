@@ -41,7 +41,7 @@ abstract class Registry extends \ArrayObject {
 			$result = true;
 		} else {
 
-			$message = sprintf( "The attributes were missing when attempting to add item '%s'.", $item_id );
+			$message = sprintf( "The attributes were missing when attempting to add the '%s' item.", $item_id );
 
 			throw new \EDD\Utils\Exception( $message );
 		}
@@ -83,9 +83,9 @@ abstract class Registry extends \ArrayObject {
 
 		} else {
 
-			$message = sprintf( "The item '%s' does not exist.", $item_id );
+			$message = sprintf( "The '%s' registry item does not exist.", $item_id );
 
-			throw new \EDD\Utils\Exception( $message );
+			throw new Exceptions\Exception( $message );
 		}
 
 		return $item;
