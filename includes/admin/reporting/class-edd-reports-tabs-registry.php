@@ -252,4 +252,33 @@ class Tabs_Registry extends Registry {
 		return $tile;
 	}
 
+	/**
+	 * Retrieves all of the tile records for a given tab.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD\Admin\Reports\Exception if the tab doesn't exist.
+	 *
+	 * @param string $tab_id Tab to retrieve tiles for.
+	 * @return array All registered reports tiles.
+	 */
+	public function get_tiles( $tab_id ) {
+		$tiles = array();
+
+		if ( $this->tab_exists( $tab_id ) ) {
+
+			$tab   = $this->get_tab( $tab_id );
+			$tiles = $tab['tiles']->getArrayCopy();
+
+		} else {
+
+			$message = sprintf( "Tiles cannot be retrieve for the nonexistent '%1$s' tab.", $tab_id );
+
+			throw new Reports_Exception( $message );
+
+		}
+
+		return $tiles;
+	}
+
 }
