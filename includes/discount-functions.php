@@ -1260,10 +1260,27 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 		$meta_query = $query->get( 'meta_query' );
 
 		$clauses = array();
-		$sql_where = '';
+		$sql_where = 'WHERE 1=1';
+
+		$meta_key = $query->get( 'meta_key', false );
+		$meta_value = $query->get( 'meta_value', false );
+
+		// 'meta_key' and 'meta_value' passed as arguments
+		if ( $meta_key && $meta_value ) {
+			/**
+			 * Check that the key exists as a column in the table.
+			 * Note: there is no backwards compatibility support for product requirements and excluded
+			 * products as these would be serialised under the old schema.
+			 */
+			if ( in_array( $meta_key, array_keys( EDD()->discounts->get_columns() ) ) ) {
+				$sql_where .= ' ' . $wpdb->prepare( $meta_key . ' = %s', $meta_value );
+			}
+		}
 
 		if ( ! empty( $meta_query ) ) {
 			foreach ( $meta_query as $key => $query ) {
+				$relation = 'AND'; // Default relation
+
 				if ( is_string( $query ) && 'relation' === $key ) {
 					$relation = $query;
 				}
@@ -1272,6 +1289,11 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 					if ( array_key_exists( 'key', $query ) ) {
 						$query['key'] = str_replace( '_edd_discount_', '', $query['key'] );
 
+						/**
+						 * Check that the key exists as a column in the table.
+						 * Note: there is no backwards compatibility support for product requirements and excluded
+						 * products as these would be serialised under the old schema.
+						 */
 				 		if ( in_array( $query['key'], array_keys( EDD()->discounts->get_columns() ) ) && array_key_exists( 'value', $query ) ) {
 							$meta_compare = $query['compare'];
 							$meta_compare = strtoupper( $meta_compare );
@@ -1320,8 +1342,8 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 						}
 					}
 
-					if ( 1 < count( $clauses['where'] ) ) {
-						$sql_where = array( '( ' . implode( ' AND ', $clauses['where'] ) . ' )' );
+					if ( 0 < count( $clauses['where'] ) ) {
+						$sql_where .= ' AND ( ' . implode( ' ' . $relation . ' ', $clauses['where'] ) . ' )';
 					}
 				}
 			}
