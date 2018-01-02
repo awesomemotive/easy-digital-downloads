@@ -76,9 +76,24 @@ final class Reports {
 	 * @param \EDD\Admin\Reports\Tabs_Registry $tabs Reports tabs registry.
 	 */
 	public function register_core_tabs( $tabs ) {
-		$tabs->add_tab( 'core:test', array(
-			'key' => 'value'
-		) );
+
+		// Test code: The 'core' tab doesn't exist, so exception(s) should bubble up and be caught.
+		try {
+
+			$tabs->add_tab( 'core_test', array(
+				'label' => __( 'Test', 'easy-digital-downloads' )
+			) );
+
+			$tabs->add_tile( 'test_tile', 'core', array(
+				'label' => __( 'Test Tile' )
+			) );
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+		}
+
 	}
 
 }
