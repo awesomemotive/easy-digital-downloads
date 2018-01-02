@@ -140,7 +140,6 @@ class Tabs_Registry extends Registry {
 	 * @return array All registered reports tabs.
 	 */
 	public function get_tabs( $extract_tiles = true ) {
-		/** @var \ArrayObject[] $tabs */
 		$tabs = parent::get_items();
 
 		if ( true === $extract_tiles ) {
@@ -165,7 +164,6 @@ class Tabs_Registry extends Registry {
 	 * @return bool True if the tile was added, otherwise false.
 	 */
 	public function add_tile( $tile_id, $tab_id, $attributes ) {
-
 		$added = false;
 
 		if ( $this->offsetExists( $tab_id ) ) {
