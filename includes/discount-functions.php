@@ -1243,7 +1243,9 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 
 		$offset = $query->get( 'offset', false );
 		if ( $offset ) {
-			$args['offset'] = $offset;
+			$args['offset'] = absint( $offset );
+		} else {
+			$args['offset'] = 0;
 		}
 
 		if ( 'any' === $args['status'] ) {
@@ -1252,8 +1254,9 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$args['offset'] = absint( $args['offset'] );
-		$args['number'] = absint( $args['number'] );
+		if ( array_key_exists( 'number', $args ) ) {
+			$args['number'] = absint( $args['number'] );
+		}
 
 		$table_name = EDD()->discounts->table_name;
 
