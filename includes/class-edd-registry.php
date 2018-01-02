@@ -58,7 +58,7 @@ abstract class Registry extends \ArrayObject {
 	 */
 	public function remove_item( $item_id ) {
 		if ( $this->offsetExists( $item_id ) ) {
-			return $this->offsetUnset( $item_id );
+			$this->offsetUnset( $item_id );
 		}
 	}
 
