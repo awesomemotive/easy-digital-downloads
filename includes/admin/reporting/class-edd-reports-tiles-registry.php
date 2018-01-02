@@ -99,7 +99,7 @@ class Tiles_Registry extends Registry {
 	}
 
 	/**
-	 * Removes a reports tile by ID from the master registry.
+	 * Removes a reports tile by ID from the registry.
 	 *
 	 * @since 3.0
 	 *
@@ -161,28 +161,14 @@ class Tiles_Registry extends Registry {
 	}
 
 	/**
-	 * Retrieves all of the registered reports tile records.
+	 * Retrieves the list of tiles for the current registry instance.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array All registered reports tiles.
+	 * @return array Array of tile records in the current registry.
 	 */
 	public function get_tiles() {
 		return parent::get_items();
-	}
-
-	/**
-	 * Determines whether the given reports tab exists.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $tab_id Reports tab ID.
-	 * @return bool True if the tab is registered and exists, otherwise false.
-	 */
-	public function tab_exists( $tab_id ) {
-		$tabs = edd_get_registry( 'reports:tabs' );
-
-		return $tabs->offsetExists( $tab_id );
 	}
 
 }
