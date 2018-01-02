@@ -204,17 +204,18 @@ class Tabs_Registry extends Registry {
 	}
 
 	/**
-	 * Retrieves a tile record.
+	 * Retrieves a specific reports tile by ID from the master registry.
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $tab_id  Reports tab ID.
-	 * @param string $tile_id Reports tab tile ID.
-	 * @return array Attributes for the requested tile if it exists, otherwise an empty array.
+	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
+	 *
+	 * @param string $tile_id ID of the reports tile to retrieve.
+	 * @param string $tab_id  ID of the reports tab to retrieve the tile for.
+	 * @return array The tile's attributes if it exists, otherwise an empty array.
 	 */
-	public function get_tile( $tab_id, $tile_id ) {
-		$tiles = edd_get_registry( 'reports:tiles' );
-		$tile  = array();
+	public function get_tile( $tile_id, $tab_id ) {
+		$tile = array();
 
 		try {
 
