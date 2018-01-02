@@ -168,16 +168,21 @@ class Tabs_Registry extends Registry {
 
 		$added = false;
 
-		try {
+		if ( $this->offsetExists( $tab_id ) ) {
 
-			$tiles->add_tile( $tab_id, $tile_id, $attributes );
+			$tab = $this->get_tab( $tab_id, false );
 
-			$added = true;
+			try {
 
-		} catch( EDD_Exception $exception ) {
+				$tab['tiles']->add_tile( $tile_id, $attributes );
 
-			$exception->log();
+				$added = true;
 
+			} catch( Reports_Exception $exception ) {
+
+				$exception->log();
+
+			}
 		}
 
 		return $added;
@@ -193,12 +198,17 @@ class Tabs_Registry extends Registry {
 	 */
 	public function remove_tile( $tile_id, $tab_id ) {
 
-		try {
+		if ( $this->offsetExists( $tab_id ) ) {
 
-			$tiles->remove_tile( $tab_id, $tile_id );
+			$tab = $this->get_tab( $tab_id, false );
 
-		} catch( EDD_Exception $exception ) {
-			$exception->log();
+			$tab['tiles']->remove_tile( $tile_id );
+
+		} else {
+
+			$message = sprintf( "Tile '%1$s' cannot be removed from the nonexistent '%2$s' tab.", $tile_id, $tab_id );
+
+			throw new Reports_Exception( $message );
 		}
 
 	}
@@ -217,12 +227,26 @@ class Tabs_Registry extends Registry {
 	public function get_tile( $tile_id, $tab_id ) {
 		$tile = array();
 
-		try {
+		if ( $this->tab_exists( $tab_id ) ) {
 
-			$tile = $tiles->get_tile( $tab_id, $tile_id );
+			$tab = $this->get_tab( $tab_id, false );
 
-		} catch( EDD_Exception $exception ) {
-			$exception->log();
+			try {
+
+				$tile = $tab['tiles']->get_item( $tile_id );
+
+			} catch( EDD_Exception $exception ) {
+
+				$exception->log();
+
+			}
+
+		} else {
+
+			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
+
+			throw new Reports_Exception( $message );
+
 		}
 
 		return $tile;
