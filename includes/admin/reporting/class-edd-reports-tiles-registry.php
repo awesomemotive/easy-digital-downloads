@@ -75,6 +75,8 @@ class Tiles_Registry extends Registry {
 
 		if ( $this->tab_exists( $tab_id ) ) {
 
+			$attributes['tile_id'] = $tile_id;
+
 			try {
 
 				$result = parent::add_item( "{$tab_id}:{$tile_id}", $attributes );
@@ -107,7 +109,8 @@ class Tiles_Registry extends Registry {
 	 * @param string $tile_id Reports tile ID.
 	 */
 	public function remove_tile( $tab_id, $tile_id ) {
-		if ( $this->tab_exists( $tab_id ) ) {
+
+		if ( $this->tab_exists( $tab_id ) && $this->offsetExists( "{$tab_id}:{$tile_id}" ) ) {
 
 			parent::remove_item( "{$tab_id}:{$tile_id}" );
 
