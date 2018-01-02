@@ -29,7 +29,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @param string $item_id    Item ID.
 	 * @param array  $attributes Array of item attributes. Each extending registry will
-	 *                          handle item ID and attribute building in different ways.
+	 *                           handle item ID and attribute building in different ways.
 	 * @return bool True if `$attributes` is not empty, otherwise false.
 	 */
 	public function add_item( $item_id, $attributes ) {
