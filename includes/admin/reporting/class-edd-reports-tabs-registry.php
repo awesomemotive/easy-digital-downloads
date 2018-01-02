@@ -114,6 +114,13 @@ class Tabs_Registry extends Registry {
 
 			$tab = parent::get_item( $tab_id );
 
+			if ( true === $extract_tiles ) {
+				// Reduce tile registry to an array.
+				if ( ! empty( $tab['tiles'] ) ) {
+					$tab['tiles'] = $tab['tiles']->getArrayCopy();
+				}
+			}
+
 		} catch( EDD_Exception $exception ) {
 
 			$exception->log();
