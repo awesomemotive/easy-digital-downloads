@@ -33,7 +33,7 @@ class Tab_Not_Found extends \OutOfBoundsException implements \EDD_Exception {
 	 * @return \EDD\Admin\Reports\Exceptions\Tab_Not_Found Exception instance.
 	 */
 	public static function from_tab( $tab_id, $code = null, $previous = null ) {
-		$message = sprintf( "The '%1$s' reports tab does not exist.", $tab_id );
+		$message = sprintf( "The '%s' reports tab does not exist.", $tab_id );
 
 		return new static( $message, $code, $previous);
 	}
