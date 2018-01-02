@@ -766,20 +766,4 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertFalse( edd_get_option( 'test_setting' ) );
 	}
 
-	/**
-	 * @covers edd_get_registry()
-	 */
-	public function test_edd_get_registry_with_invalid_name_should_return_null() {
-		$this->assertNull( edd_get_registry( 'foo' ) );
-	}
-
-	/**
-	 * @covers edd_get_registry()
-	 */
-	public function test_edd_get_registry_with_valid_name_should_return_that_registry_instance() {
-		$result = edd_get_registry( 'reports:tabs' );
-
-		$this->assertInstanceOf( 'EDD_Reports_Tabs_Registry', $result );
-	}
-
 }
