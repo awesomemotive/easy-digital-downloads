@@ -33,7 +33,7 @@ class Tile_Not_Found extends \OutOfBoundsException implements \EDD_Exception {
 	 * @return \EDD\Admin\Reports\Exceptions\Tile_Not_Found Exception instance.
 	 */
 	public static function from_tile( $tile_id, $code = null, $previous = null ) {
-		$message = sprintf( "The '%1$s' reports tile does not exist.", $tile_id );
+		$message = sprintf( "The '%s' reports tile does not exist.", $tile_id );
 
 		return new static( $message, $code, $previous);
 	}
