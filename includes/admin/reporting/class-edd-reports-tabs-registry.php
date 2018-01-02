@@ -159,13 +159,13 @@ class Tabs_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
+	 * @param string $tile_id    New tab tile ID.
 	 * @param string $tab_id     Reports tab ID.
-	 * @param string $tile_id    Reports tab tile ID.
 	 * @param array  $attributes Tile attributes.
 	 * @return bool True if the tile was added, otherwise false.
 	 */
-	public function add_tile( $tab_id, $tile_id, $attributes ) {
-		$tiles = edd_get_registry( 'reports:tiles' );
+	public function add_tile( $tile_id, $tab_id, $attributes ) {
+
 		$added = false;
 
 		try {
