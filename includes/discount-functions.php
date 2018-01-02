@@ -1195,6 +1195,8 @@ add_action( 'pre_get_posts', '_edd_discounts_bc_force_filters', 10, 1 );
  * @return string $request Rewritten SQL query.
  */
 function _edd_discounts_bc_posts_request( $request, $query ) {
+	global $wpdb;
+
 	if ( 'posts_request' !== current_filter() ) {
 		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
 		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
@@ -1220,10 +1222,17 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 				case 'ID':
 				case 'author':
 				case 'post__in':
+				case 'type':
+				case 'post_type':
 					$args['orderby'] = 'id';
+					break;
+				case 'title':
+					$args['orderby'] = 'name';
 					break;
 				case 'date':
 				case 'post_date':
+				case 'modified':
+				case 'post_modified':
 					$args['orderby'] = 'date_created';
 					break;
 				default:
@@ -1248,9 +1257,77 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 
 		$table_name = EDD()->discounts->table_name;
 
-		$where = '';
+		$meta_query = $query->get( 'meta_query' );
 
-		$request = "SELECT id FROM {$table_name} $where ORDER BY {$args['orderby']} {$args['order']} LIMIT {$args['offset']}, {$args['number']};";
+		$clauses = array();
+		$sql_where = '';
+
+		if ( ! empty( $meta_query ) ) {
+			foreach ( $meta_query as $key => $query ) {
+				if ( is_string( $query ) && 'relation' === $key ) {
+					$relation = $query;
+				}
+
+				if ( is_array( $query ) ) {
+					if ( array_key_exists( 'key', $query ) ) {
+						$query['key'] = str_replace( '_edd_discount_', '', $query['key'] );
+
+				 		if ( in_array( $query['key'], array_keys( EDD()->discounts->get_columns() ) ) && array_key_exists( 'value', $query ) ) {
+							$meta_compare = $query['compare'];
+							$meta_compare = strtoupper( $meta_compare );
+
+							$meta_value = $query['value'];
+
+							$where = null;
+
+							switch ( $meta_compare ) {
+								case 'IN':
+								case 'NOT IN':
+									$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
+									$where = $wpdb->prepare( $meta_compare_string, $meta_value );
+									break;
+
+								case 'BETWEEN':
+								case 'NOT BETWEEN':
+									$meta_value = array_slice( $meta_value, 0, 2 );
+									$where      = $wpdb->prepare( '%s AND %s', $meta_value );
+									break;
+
+								case 'LIKE':
+								case 'NOT LIKE':
+									$meta_value = '%' . $wpdb->esc_like( $meta_value ) . '%';
+									$where      = $wpdb->prepare( '%s', $meta_value );
+									break;
+
+								// EXISTS with a value is interpreted as '='.
+								case 'EXISTS':
+									$where = $wpdb->prepare( '%s', $meta_value );
+									break;
+
+								// 'value' is ignored for NOT EXISTS.
+								case 'NOT EXISTS':
+									$where = $query['key'] . ' IS NULL';
+									break;
+
+								default:
+									$where = $wpdb->prepare( '%s', $meta_value );
+									break;
+							}
+
+							if ( ! is_null( $where ) ) {
+								$clauses['where'][] = $query['key'] . ' ' . $meta_compare . ' ' . $where;
+							}
+						}
+					}
+
+					if ( 1 < count( $clauses['where'] ) ) {
+						$sql_where = array( '( ' . implode( ' AND ', $clauses['where'] ) . ' )' );
+					}
+				}
+			}
+		}
+
+		$request = "SELECT id FROM {$table_name} $sql_where ORDER BY {$args['orderby']} {$args['order']} LIMIT {$args['offset']}, {$args['number']};";
 	}
 
 	return $request;
