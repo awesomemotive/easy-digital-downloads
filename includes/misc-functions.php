@@ -1054,12 +1054,6 @@ function edd_get_registry( $name ) {
 			}
 			break;
 
-		case 'reports:tiles':
-			if ( class_exists( '\EDD\Admin\Reports\Tiles_Registry' ) ) {
-				$registry = Reports\Tiles_Registry::instance();
-			}
-			break;
-
 		default:
 			$registry = null;
 			break;
