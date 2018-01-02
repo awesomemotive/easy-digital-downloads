@@ -15,7 +15,7 @@ use EDD\Utils\Exception as EDD_Exception;
 use EDD\Admin\Reports\Exception as Reports_Exception;
 
 /**
- * Implements a singleton registry for registering reports tiles.
+ * Implements a registry for registering reports tiles.
  *
  * @since 3.0
  *
@@ -24,26 +24,26 @@ use EDD\Admin\Reports\Exception as Reports_Exception;
 class Tiles_Registry extends Registry {
 
 	/**
-	 * The one true Tiles_Registry instance.
+	 * Constructs the Tiles_Registry instance.
 	 *
 	 * @since 3.0
-	 * @var   \EDD\Admin\Reports\Tiles_Registry
+	 *
+	 * @throws \EDD\Admin\Reports\Exception if a non-empty value is passed to $input.
+	 *
+	 * @param array|object $input          Unused.
+	 * @param int          $flags          Optional. Flags to control the behaviour of the ArrayObject
+	 *                                     object. Default 0.
+	 * @param string       $iterator_class Optional. The class that will be used for iteration of the
+	 *                                     ArrayObjectobject. Default 'ArrayIterator'.
 	 */
-	private static $instance;
+	public function __construct( $input = array(), $flags = 0, $iterator_class = "ArrayIterator" ) {
+		if ( ! empty( $input ) ) {
+			throw new Reports_Exception( 'Tiles_Registry items must be registered through CRUD methods.' );
 
-	/**
-	 * Retrieves the one true Reports Tabs Registry instance.
-	 *
-	 * @since 3.0
-	 *
-	 * @return \EDD\Admin\Reports\Tiles_Registry Reports tiles registry instance.
-	 */
-	public static function instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new Tiles_Registry;
+			$input = array();
 		}
 
-		return self::$instance;
+		parent::__construct( $input, $flags, $iterator_class );
 	}
 
 	/**
