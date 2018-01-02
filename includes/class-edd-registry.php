@@ -136,12 +136,14 @@ abstract class Registry extends \ArrayObject {
 			} else {
 
 				$message = sprintf( "The '%1$s' attribute does not exist for the '%2$s' item.", $attribute, $item_id );
+
 				throw new EDD_Exception( $message );
 			}
 
 		} else {
 
 			$message = sprintf( "The '%1$s' item does not exist to retrieve attributes from.", $item_id );
+
 			throw new EDD_Exception( $message );
 		}
 
