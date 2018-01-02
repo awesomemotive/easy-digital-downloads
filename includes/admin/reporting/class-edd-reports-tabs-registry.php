@@ -11,8 +11,7 @@
 namespace EDD\Admin\Reports;
 
 use EDD\Utils\Registry;
-use EDD\Utils\Exception as EDD_Exception;
-use EDD\Admin\Reports\Exception as Reports_Exception;
+use EDD\Utils\Exceptions\Exception;
 
 /**
  * Implements a singleton registry for registering reports tabs.
