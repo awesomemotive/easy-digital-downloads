@@ -135,10 +135,23 @@ class Tabs_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
+	 * @param bool $extract_tiles Optional. Whether to extract registered tiles as arrays.
+	 *                            Default true.
 	 * @return array All registered reports tabs.
 	 */
-	public function get_tabs() {
-		return parent::get_items();
+	public function get_tabs( $extract_tiles = true ) {
+		/** @var \ArrayObject[] $tabs */
+		$tabs = parent::get_items();
+
+		if ( true === $extract_tiles ) {
+			foreach ( $tabs as $tab_id => $attributes ) {
+				if ( ! empty( $attributes['tiles'] ) ) {
+					$tabs[ $tab_id ]['tiles'] = $attributes['tiles']->getArrayCopy();
+				}
+			}
+		}
+
+		return $tabs;
 	}
 
 	/**
