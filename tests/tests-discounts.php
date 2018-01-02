@@ -1234,4 +1234,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		$this->assertTrue( 3 === count( $found_discounts ) );
 	}
+
+	/**
+	 * @covers _edd_discounts_bc_wp_count_posts()
+	 */
+	public function test_edd_discounts_bc_wp_count_posts() {
+		$counts = wp_count_posts( 'edd_discount' );
+
+		$this->assertEquals( 3, (int) $counts->active );
+		$this->assertEquals( 0, (int) $counts->inactive );
+	}
 }
