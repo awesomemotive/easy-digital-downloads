@@ -65,6 +65,14 @@ class Tabs_Registry extends Registry {
 	public function add_tab( $tab_id, $attributes ) {
 		$result = false;
 
+		if ( ! is_array( $attributes ) ) {
+			throw new Reports_Exception( 'New tab attributes must take the form of an array.' );
+
+			return $result;
+		} else {
+			$attributes['tiles'] = new Tiles_Registry();
+		}
+
 		try {
 
 			$result = parent::add_item( $tab_id, $attributes );
