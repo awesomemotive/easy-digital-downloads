@@ -30,7 +30,7 @@ final class Reports {
 		$this->includes();
 		$this->hooks();
 
-		$tabs = edd_get_registry( 'reports:tabs' );
+		$tabs = EDD()->utils->get_registry( 'reports:tabs' );
 
 		/**
 		 * Fires when the reports tab registry is initialized.

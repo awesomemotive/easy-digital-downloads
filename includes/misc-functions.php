@@ -1037,27 +1037,3 @@ function edd_doing_cron() {
 	// Default to false
 	return false;
 }
-
-/**
- * Retrieves a given registry instance by name.
- *
- * @since 3.0
- *
- * @param string $name Registry name.
- * @return \EDD\Utils\Registry|null Null if the registry doesn't exist, otherwise the object instance.
- */
-function edd_get_registry( $name ) {
-	switch( $name ) {
-		case 'reports:tabs':
-			if ( class_exists( '\EDD\Admin\Reports\Tabs_Registry' ) ) {
-				$registry = Reports\Tabs_Registry::instance();
-			}
-			break;
-
-		default:
-			$registry = null;
-			break;
-	}
-
-	return $registry;
-}
