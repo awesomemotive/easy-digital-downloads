@@ -94,10 +94,12 @@ class Tabs_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $tab_id Name of the reports tab to retrieve.
+	 * @param string $tab_id        Name of the reports tab to retrieve.
+	 * @param bool   $extract_tiles Optional. Whether to extract registered tiles as an array.
+	 *                              Default true.
 	 * @return array The tab's attributes if it exists, otherwise an empty array.
 	 */
-	public function get_tab( $tab_id ) {
+	public function get_tab( $tab_id, $extract_tiles = true ) {
 		$tab = array();
 
 		try {
