@@ -499,6 +499,8 @@ class EDD_DB_Discounts extends EDD_DB {
 			";
 			$results = (array) $wpdb->get_results( $sql, ARRAY_A );
 
+			$counts = array_fill_keys( array( 'active', 'inactive', 'expired' ), 0 );
+
 			foreach ( $results as $row ) {
 				$counts[ $row['status'] ] = $row['num_discounts'];
 			}
