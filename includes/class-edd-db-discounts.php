@@ -479,6 +479,40 @@ class EDD_DB_Discounts extends EDD_DB {
 	}
 
 	/**
+	 * Count the number of discounts in the table and group by status.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @return object Counts by status.
+	 */
+	public function count_by_status() {
+		global $wpdb;
+
+		$counts = wp_cache_get( 'counts', $this->cache_group );
+
+		if ( false === $counts ) {
+			$sql = "
+				SELECT status, COUNT( * ) AS num_discounts
+				FROM {$this->table_name}
+				GROUP BY status
+			";
+			$results = (array) $wpdb->get_results( $sql, ARRAY_A );
+
+			foreach ( $results as $row ) {
+				$counts[ $row['status'] ] = $row['num_discounts'];
+			}
+
+			$counts = (object) $counts;
+			wp_cache_set( 'counts', $counts, $this->cache_group );
+
+			return $counts;
+		} else {
+			return $counts;
+		}
+	}
+
+	/**
 	 * Sets the last_changed cache key for discounts.
 	 *
 	 * @access public
