@@ -227,7 +227,7 @@ class Tabs_Registry extends Registry {
 	public function get_tile( $tile_id, $tab_id ) {
 		$tile = array();
 
-		if ( $this->tab_exists( $tab_id ) ) {
+		if ( $this->offsetExists( $tab_id ) ) {
 
 			$tab = $this->get_tab( $tab_id, false );
 
@@ -265,7 +265,7 @@ class Tabs_Registry extends Registry {
 	public function get_tiles( $tab_id ) {
 		$tiles = array();
 
-		if ( $this->tab_exists( $tab_id ) ) {
+		if ( $this->offsetExists( $tab_id ) ) {
 
 			$tab   = $this->get_tab( $tab_id );
 			$tiles = $tab['tiles']->getArrayCopy();
