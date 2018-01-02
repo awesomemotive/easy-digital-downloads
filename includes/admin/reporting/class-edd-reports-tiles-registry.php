@@ -99,6 +99,32 @@ class Tiles_Registry extends Registry {
 	}
 
 	/**
+	 * Attempts to retrieve a given tile from the registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $tile_id Tile ID.
+	 * @return array Array of tile attributes if it exists, otherwise an empty array.
+	 */
+	public function get_tile( $tile_id ) {
+		$tile = array();
+
+		try {
+
+			$tile = parent::get_item( $tile_id );
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			throw Exceptions\Tile_Not_Found::from_tile( $tile_id, null, $exception );
+
+		}
+
+		return $tile;
+	}
+
+	/**
 	 * Retrieves the list of tiles for the current registry instance.
 	 *
 	 * @since 3.0
