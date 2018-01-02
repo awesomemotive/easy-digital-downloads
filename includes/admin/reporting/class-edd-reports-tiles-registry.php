@@ -70,28 +70,16 @@ class Tiles_Registry extends Registry {
 	 * }
 	 * @return bool True if the tile was successfully added, otherwise false.
 	 */
-	public function add_tile( $tab_id, $tile_id, $attributes ) {
+	public function add_tile( $tile_id, $attributes ) {
 		$result = false;
 
-		if ( $this->tab_exists( $tab_id ) ) {
+		try {
 
-			$attributes['tile_id'] = $tile_id;
+			$result = parent::add_item( $tile_id, $attributes );
 
-			try {
+		} catch( EDD_Exception $exception ) {
 
-				$result = parent::add_item( "{$tab_id}:{$tile_id}", $attributes );
-
-			} catch( EDD_Exception $exception ) {
-
-				$exception->log();
-
-			}
-
-		} else {
-
-			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
-
-			throw new Reports_Exception( $message );
+			$exception->log();
 
 		}
 
@@ -103,61 +91,10 @@ class Tiles_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
-	 *
-	 * @param string $tab_id  Reports tab ID.
 	 * @param string $tile_id Reports tile ID.
 	 */
-	public function remove_tile( $tab_id, $tile_id ) {
-
-		if ( $this->tab_exists( $tab_id ) && $this->offsetExists( "{$tab_id}:{$tile_id}" ) ) {
-
-			parent::remove_item( "{$tab_id}:{$tile_id}" );
-
-		} else {
-
-			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
-
-			throw new Reports_Exception( $message );
-
-		}
-	}
-
-	/**
-	 * Retrieves a specific reports tile by ID from the master registry.
-	 *
-	 * @since 3.0
-	 *
-	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
-	 *
-	 * @param string $tab_id  ID of the reports tab to retrieve the tile for.
-	 * @param string $tile_id ID of the reports tile to retrieve.
-	 * @return array The tile's attributes if it exists, otherwise an empty array.
-	 */
-	public function get_tile( $tab_id, $tile_id ) {
-		$tile = array();
-
-		if ( $this->tab_exists( $tab_id ) ) {
-
-			try {
-
-				$tile = parent::get_item( "{$tab_id}:{$tile_id}" );
-
-			} catch( EDD_Exception $exception ) {
-
-				$exception->log();
-
-			}
-
-		} else {
-
-			$message = sprintf( "The '%1$s' tile could not be added because the '%2$s' tab does not exist.", $tile_id, $tab_id );
-
-			throw new Reports_Exception( $message );
-
-		}
-
-		return $tile;
+	public function remove_tile( $tile_id ) {
+		parent::remove_item( $tile_id );
 	}
 
 	/**
