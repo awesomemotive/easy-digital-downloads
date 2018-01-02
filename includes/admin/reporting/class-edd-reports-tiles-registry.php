@@ -37,7 +37,7 @@ class Tiles_Registry extends Registry {
 	 */
 	public function __construct( $input = array(), $flags = 0, $iterator_class = "ArrayIterator" ) {
 		if ( ! empty( $input ) ) {
-			throw new Reports_Exception( 'Tiles_Registry items must be registered through CRUD methods.' );
+			throw new Exception( 'Tiles_Registry items must be registered through CRUD methods.' );
 
 			$input = array();
 		}
@@ -76,9 +76,11 @@ class Tiles_Registry extends Registry {
 
 			$result = parent::add_item( $tile_id, $attributes );
 
-		} catch( EDD_Exception $exception ) {
+		} catch( \EDD_Exception $exception ) {
 
-			$exception->log();
+			edd_debug_log_exception( $exception );
+
+			throw $exception;
 
 		}
 
