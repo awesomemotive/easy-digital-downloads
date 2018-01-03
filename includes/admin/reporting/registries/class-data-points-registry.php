@@ -83,4 +83,19 @@ class Data_Point_Registry extends Utils\Registry implements Utils\Static_Registr
 		}
 	}
 
+	/**
+	 * Adds a new reports data point to the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $data_point_id   Reports data point ID.
+	 * @param array  $attributes {
+	 *     Attributes of the reports data point.
+	 * }
+	 * @return bool True if the data point was successfully registered, otherwise false.
+	 */
+	public function add_data_point( $data_point_id, $attributes ) {
+		return parent::add_item( $data_point_id, $attributes );
+	}
+
 }
