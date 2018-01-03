@@ -103,7 +103,7 @@ abstract class Registry extends \ArrayObject {
 				$this->type
 			);
 
-			throw new Exceptions\Exception( $message );
+			throw new Exception( $message );
 		}
 
 		return $item;
