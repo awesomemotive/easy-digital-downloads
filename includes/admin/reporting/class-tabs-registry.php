@@ -46,7 +46,7 @@ class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new Tabs_Registry;
+			self::$instance = new Tabs_Registry();
 		}
 
 		return self::$instance;

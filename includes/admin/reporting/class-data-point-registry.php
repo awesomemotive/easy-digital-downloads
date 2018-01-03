@@ -19,4 +19,36 @@ use EDD\Utils;
  */
 class Data_Point_Registry extends Utils\Registry implements Utils\Static_Registry {
 
+	/**
+	 * Registry type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	public $type = 'data point';
+
+	/**
+	 * The one true Data_Point_Registry instance.
+	 *
+	 * @since 3.0
+	 * @var   \EDD\Admin\Reports\Data_Point_Registry
+	 */
+	private static $instance;
+
+	/**
+	 * Retrieves the one true Data_Point_Registry instance.
+	 *
+	 * @since 3.0
+	 *
+	 * @return \EDD\Admin\Reports\Data_Point_Registry Registry instance.
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new Data_Point_Registry();
+		}
+
+		return self::$instance;
+	}
+
+
 }
