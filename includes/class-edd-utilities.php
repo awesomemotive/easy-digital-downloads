@@ -33,8 +33,11 @@ class EDD_Utilities {
 	private function includes() {
 		$utils_dir = EDD_PLUGIN_DIR . 'includes/utilities/';
 
-		// Exceptions.
+		// Interfaces.
 		require_once $utils_dir . 'exceptions/interface-edd-exception.php';
+		require_once $utils_dir . 'interface-static-registry.php';
+
+		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
 		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
 
