@@ -771,6 +771,13 @@ class EDD_CLI extends WP_CLI_Command {
 					'post_status' => 'active',
 				) );
 
+				$download_ids = get_posts( array(
+					'post_type'      => 'download',
+					'posts_per_page' => 2,
+					'fields'         => 'ids',
+					'orderby'        => 'rand',
+				) );
+
 				$meta = array(
 					'code'              => 'LEGACY' . $i,
 					'status'            => 'active',
@@ -782,9 +789,9 @@ class EDD_CLI extends WP_CLI_Command {
 					'expiration'        => '12/31/2050 23:59:59',
 					'type'              => 'percent',
 					'min_price'         => '10.50',
-					'product_reqs'      => array( 57 ),
+					'product_reqs'      => array( $download_ids[0] ),
 					'product_condition' => 'all',
-					'excluded_products' => array( 75 ),
+					'excluded_products' => array( $download_ids[1] ),
 					'is_not_global'     => true,
 					'is_single_use'     => true,
 				);
