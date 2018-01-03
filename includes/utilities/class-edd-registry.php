@@ -12,6 +12,8 @@
  */
 namespace EDD\Utils;
 
+use EDD\Utils\Exceptions;
+
 /**
  * Defines the construct for building an item registry.
  *
@@ -57,7 +59,7 @@ abstract class Registry extends \ArrayObject {
 				$this->type
 			);
 
-			throw new \EDD\Utils\Exception( $message );
+			throw new Exception( $message );
 		}
 
 		return $result;
@@ -127,49 +129,24 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @throws \EDD\Utils\Exception if the attribute and/or item does not exist.
 	 *
-	 * @param string $attribute_name Key of the attribute to retrieve.
-	 * @param string $item_id        Item ID to retrieve the attribute from.
+	 * @param string $key           Key of the attribute to retrieve.
+	 * @param string $collection_id Collection to retrieve the attribute from.
 	 * @return mixed|null The attribute value if set, otherwise null.
 	 */
-	public function get_attribute( $attribute_name, $item_id ) {
+	public function get_attribute( $key, $item_id ) {
 
 		$attribute = $item = null;
 
-		try {
+		$item = $this->get_item( $item_id );
 
-			$item = $this->get_item( $item_id );
+		if ( ! empty( $item[ $key ] ) ) {
 
-		} catch( EDD_Exception $exception ) {
-
-			$exception->log();
-
-		}
-
-		if ( ! is_null( $item ) ) {
-
-			if ( isset( $item[ $attribute_name ] ) ) {
-
-				$attribute = $item[ $attribute_name ];
-
-			} else {
-
-				$message = sprintf( 'The \'%1$s\' attribute does not exist for the \'%2$s\' %3$s.',
-					$attribute,
-					$item_id,
-					$this->type
-				);
-
-				throw new EDD_Exception( $message );
-			}
+			$attribute = $item[ $key ];
 
 		} else {
 
-			$message = sprintf( 'The \'%1$s\' %2$s does not exist to retrieve attributes from.',
-				$item_id,
-				$this->type
-			);
+			throw Exceptions\Attribute_Not_Found::from_attr( $key, $collection_id );
 
-			throw new EDD_Exception( $message );
 		}
 
 		return $attribute;
