@@ -55,7 +55,7 @@ final class Reports {
 		// Registries.
 		require_once $reports_dir . '/registries/class-tabs-registry.php';
 		require_once $reports_dir . '/registries/class-tiles-registry.php';
-		require_once $reports_dir . '/registries/class-data-point-registry.php';
+		require_once $reports_dir . '/registries/class-data-points-registry.php';
 	}
 
 	/**
