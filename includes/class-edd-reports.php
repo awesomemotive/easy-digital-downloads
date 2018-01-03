@@ -53,8 +53,8 @@ final class Reports {
 		$reports_dir = EDD_PLUGIN_DIR . 'includes/admin/reporting/';
 
 		// Registries.
-		require_once $reports_dir . '/registries/class-tabs-registry.php';
-		require_once $reports_dir . '/registries/class-data-points-registry.php';
+		require_once $reports_dir . '/class-tabs-registry.php';
+		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
 	/**
