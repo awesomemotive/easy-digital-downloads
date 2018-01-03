@@ -10,8 +10,7 @@
  */
 namespace EDD\Admin\Reports;
 
-use EDD\Utils\Registry;
-use EDD\Utils\Exception;
+use EDD\Utils;
 
 /**
  * Implements a singleton registry for registering reports tabs.
@@ -20,7 +19,7 @@ use EDD\Utils\Exception;
  *
  * @see \EDD\Utils\Registry
  */
-class Tabs_Registry extends Registry {
+class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Registry type.
