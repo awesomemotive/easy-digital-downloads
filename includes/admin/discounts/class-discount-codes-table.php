@@ -4,11 +4,11 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
+ * @since       3.0 - Updated to work with the discount code migration to custom tables.
  */
-
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -24,7 +24,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the Discount Codes table on the Discount Codes page
  *
  * @since 1.4
- * @author Sunny Ratilal
+ * @since 3.0 - Updated to work with the discount code migration to custom tables.
  */
 class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
@@ -67,8 +67,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
 		parent::__construct( array(
 			'singular' => 'discount',
 			'plural'   => 'discounts',
@@ -90,20 +88,24 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return svoid
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 			return;
+		}
 
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) )
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		if ( ! empty( $_REQUEST['order'] ) )
+		}
+
+		if ( ! empty( $_REQUEST['order'] ) ) {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
+            <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
 		</p>
 	<?php
 	}
@@ -116,17 +118,17 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return array $views All the views available
 	 */
 	public function get_views() {
-		$base           = admin_url('edit.php?post_type=download&page=edd-discounts');
+		$base = admin_url( 'edit.php?post_type=download&page=edd-discounts' );
 
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
+		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
-		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
+		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'easy-digital-downloads') . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'easy-digital-downloads') . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'easy-digital-downloads') . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'easy-digital-downloads' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'easy-digital-downloads' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'easy-digital-downloads' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -137,6 +139,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
+     *
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
@@ -159,6 +162,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
+     *
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
@@ -189,7 +193,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @access public
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the discount code
+	 * @param EDD_Discount $item Discount object.
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -205,7 +209,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since 3.0
 	 *
 	 * @param EDD_Discount $item Data for the discount code.
-	 *
 	 * @return string Formatted amount.
 	 */
 	public function column_amount( $item ) {
@@ -218,9 +221,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param array $item Contains all the data of the discount code
-	 * @param string $column_name The name of the column
-	 *
+	 * @param EDD_Discount $item Discount object.
 	 * @return string Start  date
 	 */
 	function column_start_date( $item ) {
@@ -236,14 +237,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * This function renders the expiration column..
+	 * This function renders the expiration column.
 	 *
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param array $item Contains all the data of the discount code
-	 * @param string $column_name The name of the column
-	 *
+	 * @param EDD_Discount $item Discount object.
 	 * @return string Expiration  date
 	 */
 	function column_end_date( $item ) {
@@ -263,7 +262,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @param array $item Contains all the data of the discount code
+     *
+	 * @param EDD_Discount $item Discount object.
 	 * @return string Data shown in the Name column
 	 */
 	function column_name( $item ) {
@@ -271,9 +271,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $item->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
-		if( strtolower( $item->status ) == 'active' ) {
+		if ( strtolower( $item->status ) == 'active' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
-		} elseif( strtolower( $item->status ) == 'inactive' ) {
+		} elseif ( strtolower( $item->status ) == 'inactive' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -289,7 +289,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @param array $item Contains all the data for the checkbox column
+     *
+	 * @param EDD_Discount $item Discount object.
 	 * @return string Displays a checkbox
 	 */
 	function column_cb( $item ) {
@@ -305,22 +306,24 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.9.9
-	 * @param array $item Contains all the data for the checkbox column
+     *
+	 * @param EDD_Discount $item Discount object.
 	 * @return string Displays the discount status
 	 */
 	function column_status( $item ) {
-		switch( $item->status ){
-			case 'expired' :
+		switch ( $item->status ) {
+			case 'expired':
 				$status = __( 'Expired', 'easy-digital-downloads' );
 				break;
-			case 'inactive' :
+			case 'inactive':
 				$status = __( 'Inactive', 'easy-digital-downloads' );
 				break;
-			case 'active' :
-			default :
+			case 'active':
+			default:
 				$status = __( 'Active', 'easy-digital-downloads' );
 				break;
 		}
+
 		return $status;
 	}
 
@@ -359,20 +362,19 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-
-		if( empty( $_REQUEST['_wpnonce'] ) ) {
+		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
 
-		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
 			return;
 		}
 
 		$ids = isset( $_GET['discount'] ) ? $_GET['discount'] : false;
 
-		if ( ! is_array( $ids ) )
+		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
-
+		}
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
@@ -385,7 +387,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				edd_update_discount_status( $id, 'inactive' );
 			}
 		}
-
 	}
 
 	/**
@@ -410,22 +411,18 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return array $discount_codes_data Array of all the data for the discount codes
 	 */
 	public function discount_codes_data() {
-		$discount_codes_data = array();
-
-		$per_page = $this->per_page;
-
-		$orderby  = isset( $_GET['orderby'] )  ? $_GET['orderby']                  : 'ID';
-		$order    = isset( $_GET['order'] )    ? $_GET['order']                    : 'DESC';
-		$status   = isset( $_GET['status'] )   ? $_GET['status']                   : array( 'active', 'inactive' );
-		$search   = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'ID';
+		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
+		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : array( 'active', 'inactive' );
+		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
-			'posts_per_page' => $per_page,
-			'paged'          => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
+			'posts_per_page' => $this->per_page,
+			'paged'          => isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1,
 			'orderby'        => $orderby,
 			'order'          => $order,
 			'status'         => $status,
-			'search'         => $search
+			'search'         => $search,
 		);
 
 		return edd_get_discounts( $args );
@@ -459,9 +456,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$data = $this->discount_codes_data();
 
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'any';
 
-		switch( $status ) {
+		switch ( $status ) {
 			case 'active':
 				$total_items = $this->active_count;
 				break;
@@ -477,10 +474,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->items = $data;
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
-			)
-		);
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil( $total_items / $per_page ),
+		) );
 	}
 }
