@@ -60,6 +60,14 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public $inactive_count;
 
 	/**
+	 * Number of expired discounts.
+	 *
+	 * @var int
+	 * @since 3.0
+	 */
+	public $expired_count;
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.4
@@ -124,11 +132,13 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
+		$expired_count =  '&nbsp;<span class="count">(' . $this->expired_count . ')</span>';
 
 		$views = array(
 			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'easy-digital-downloads' ) . $total_count ),
 			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'easy-digital-downloads' ) . $active_count ),
 			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'easy-digital-downloads' ) . $inactive_count ),
+			'expired'  => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'expired', $base ), $current === 'expired' ? ' class="current"' : '', __( 'Expired', 'easy-digital-downloads' ) . $expired_count ),
 		);
 
 		return $views;
@@ -400,7 +410,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$discount_code_count  = EDD()->discounts->count_by_status();
 		$this->active_count   = $discount_code_count->active;
 		$this->inactive_count = $discount_code_count->inactive;
-		$this->total_count    = $discount_code_count->active + $discount_code_count->inactive;
+		$this->expired_count  = $discount_code_count->expired;
+		$this->total_count    = $discount_code_count->active + $discount_code_count->inactive + $discount_code_count->expired;
 	}
 
 	/**
