@@ -145,17 +145,7 @@ class Tabs_Registry extends Registry {
 		$tab = $this->get_tab( $tab_id, false );
 
 		if ( ! empty( $tab ) ) {
-
-			try {
-
-				$added = $tab['tiles']->add_tile( $tile_id, $attributes )
-
-			} catch( \EDD_Exception $exception ) {
-
-				edd_debug_log_exception( $exception );
-
-				throw $exception;
-			}
+			$added = $tab['tiles']->add_tile( $tile_id, $attributes );
 		}
 
 		return $added;
