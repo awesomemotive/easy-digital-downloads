@@ -11,7 +11,7 @@
 namespace EDD\Admin\Reports;
 
 use EDD\Utils\Registry;
-use EDD\Utils\Exceptions\Exception;
+use EDD\Utils\Exception;
 
 /**
  * Implements a registry for registering reports tiles.
