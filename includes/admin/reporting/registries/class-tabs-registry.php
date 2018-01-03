@@ -1,6 +1,6 @@
 <?php
 /**
- * Reports API Tabs Registry
+ * Reports API - Tabs Registry
  *
  * @package     EDD
  * @subpackage  Admin/Reports

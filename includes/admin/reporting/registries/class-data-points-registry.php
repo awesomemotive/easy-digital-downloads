@@ -1,6 +1,6 @@
 <?php
 /**
- * Reports API Data Points Registry
+ * Reports API - Data Points Registry
  *
  * @package     EDD
  * @subpackage  Admin/Reports
