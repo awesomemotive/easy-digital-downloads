@@ -48,9 +48,11 @@ abstract class Registry extends \ArrayObject {
 		$result = false;
 
 		if ( ! empty( $attributes ) ) {
+
 			$this->offsetSet( $item_id, $attributes );
 
 			$result = true;
+
 		} else {
 
 			$message = sprintf(
@@ -127,7 +129,8 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception if the attribute and/or item does not exist.
+	 * @throws \EDD\Utils\Exceptions\Attribute_Not_Found if the attribute and/or item
+	 *                                                   does not exist.
 	 *
 	 * @param string $key           Key of the attribute to retrieve.
 	 * @param string $collection_id Collection to retrieve the attribute from.
@@ -145,7 +148,7 @@ abstract class Registry extends \ArrayObject {
 
 		} else {
 
-			throw Exceptions\Attribute_Not_Found::from_attr( $key, $collection_id );
+			throw Exceptions\Attribute_Not_Found::from_attr( $key, $item_id );
 
 		}
 
