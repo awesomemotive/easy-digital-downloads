@@ -1928,6 +1928,11 @@ class EDD_Discount {
 			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
 		}
 
+		// If the discount name was not stored in post_meta, use value from the WP_Post object
+		if ( ! isset( $args['name'] ) ) {
+			$args['name'] = $old_discount->post_title;
+		}
+
 		$discount = new EDD_Discount();
 		$discount->add( $args );
 		$discount->add_meta( 'legacy_id', $old_discount->ID );
