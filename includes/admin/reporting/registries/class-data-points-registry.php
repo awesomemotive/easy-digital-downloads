@@ -69,11 +69,11 @@ class Data_Point_Registry extends Utils\Registry implements Utils\Static_Registr
 	public function __call( $name, $arguments ) {
 		switch( $name ) {
 			case 'get_data_point':
-				return parent::get_item( $name );
+				return parent::get_item( $arguments[0] );
 				break;
 
 			case 'remove_data_point':
-				parent::remove_item( $name );
+				parent::remove_item( $arguments[0] );
 				break;
 
 			case 'get_data_points':
