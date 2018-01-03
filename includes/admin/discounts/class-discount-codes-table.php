@@ -199,7 +199,21 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * This function renders the start column..
+	 * This function renders the amount column.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param EDD_Discount $item Data for the discount code.
+	 *
+	 * @return string Formatted amount.
+	 */
+	public function column_amount( $item ) {
+		return edd_format_discount_rate( $item->type, $item->amount );
+    }
+
+	/**
+	 * This function renders the start column.
 	 *
 	 * @access public
 	 * @since 3.0
