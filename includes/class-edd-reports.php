@@ -50,9 +50,12 @@ final class Reports {
 	 * @since 3.0
 	 */
 	private function includes() {
+		$reports_dir = EDD_PLUGIN_DIR . 'includes/admin/reporting/';
+
 		// Registries.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-tabs-registry.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-tiles-registry.php';
+		require_once $reports_dir . '/registries/class-tabs-registry.php';
+		require_once $reports_dir . '/registries/class-tiles-registry.php';
+		require_once $reports_dir . '/registries/class-data-point-registry.php';
 	}
 
 	/**
