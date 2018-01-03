@@ -758,8 +758,6 @@ class EDD_CLI extends WP_CLI_Command {
 	 * wp edd create_discounts --number=50 --legacy
 	 */
 	public function create_discounts( $args, $assoc_args ) {
-		$error = false;
-
 		$number = array_key_exists( 'number', $assoc_args ) ? absint( $assoc_args['number'] ) : 1;
 		$legacy = array_key_exists( 'legacy', $assoc_args ) ? true : false;
 
@@ -814,13 +812,13 @@ class EDD_CLI extends WP_CLI_Command {
 					'uses'              => mt_rand( 0, 100 ),
 					'max'               => mt_rand( 0, 100 ),
 					'name'              => 'Auto-Generated Discount #' . $i,
-					'type'              => $type[ $type_index[0] ],
+					'type'              => $type[ $type_index ],
 					'amount'            => mt_rand( 10, 95 ),
 					'start'             => '12/12/2010 00:00:00',
 					'expiration'        => '12/31/2050 23:59:59',
 					'min_price'         => mt_rand( 30, 255 ),
-					'status'            => $status[ $status_index[0] ],
-					'product_condition' => $product_condition[ $product_condition_index[0] ],
+					'status'            => $status[ $status_index ],
+					'product_condition' => $product_condition[ $product_condition_index ],
 				);
 
 				edd_store_discount( $post );
