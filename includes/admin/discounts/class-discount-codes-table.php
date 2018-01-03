@@ -413,7 +413,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function discount_codes_data() {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'ID';
 		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : array( 'active', 'inactive' );
+		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : array( 'active', 'inactive', 'expired' );
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
