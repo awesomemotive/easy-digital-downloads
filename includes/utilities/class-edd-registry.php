@@ -21,6 +21,16 @@ namespace EDD\Utils;
 abstract class Registry extends \ArrayObject {
 
 	/**
+	 * Singular registry type.
+	 *
+	 * Used for customizing exception messages. Default 'item'.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	public $type = 'item';
+
+	/**
 	 * Adds an item to the registry.
 	 *
 	 * @since 3.0
@@ -41,7 +51,11 @@ abstract class Registry extends \ArrayObject {
 			$result = true;
 		} else {
 
-			$message = sprintf( "The attributes were missing when attempting to add the '%s' item.", $item_id );
+			$message = sprintf(
+				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
+				$item_id,
+				$this->type
+			);
 
 			throw new \EDD\Utils\Exception( $message );
 		}
@@ -83,7 +97,11 @@ abstract class Registry extends \ArrayObject {
 
 		} else {
 
-			$message = sprintf( "The '%s' registry item does not exist.", $item_id );
+			$message = sprintf(
+				'The \'%1$s\' registry %2$s does not exist.',
+				$item_id,
+				$this->type
+			);
 
 			throw new Exceptions\Exception( $message );
 		}
@@ -135,14 +153,21 @@ abstract class Registry extends \ArrayObject {
 
 			} else {
 
-				$message = sprintf( "The '%1$s' attribute does not exist for the '%2$s' item.", $attribute, $item_id );
+				$message = sprintf( 'The \'%1$s\' attribute does not exist for the \'%2$s\' %3$s.',
+					$attribute,
+					$item_id,
+					$this->type
+				);
 
 				throw new EDD_Exception( $message );
 			}
 
 		} else {
 
-			$message = sprintf( "The '%1$s' item does not exist to retrieve attributes from.", $item_id );
+			$message = sprintf( 'The \'%1$s\' %2$s does not exist to retrieve attributes from.',
+				$item_id,
+				$this->type
+			);
 
 			throw new EDD_Exception( $message );
 		}

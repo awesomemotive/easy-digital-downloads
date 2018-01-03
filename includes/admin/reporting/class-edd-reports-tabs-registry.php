@@ -23,6 +23,14 @@ use EDD\Utils\Exceptions\Exception;
 class Tabs_Registry extends Registry {
 
 	/**
+	 * Registry type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	public $type = 'tab';
+
+	/**
 	 * The one true EDD_Reports_Tabs_Registry instance.
 	 *
 	 * @since 3.0

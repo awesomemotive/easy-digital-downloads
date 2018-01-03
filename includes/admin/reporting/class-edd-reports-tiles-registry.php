@@ -23,6 +23,14 @@ use EDD\Utils\Exceptions\Exception;
 class Tiles_Registry extends Registry {
 
 	/**
+	 * Registry type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	public $type = 'tile';
+
+	/**
 	 * Constructs the Tiles_Registry instance.
 	 *
 	 * @since 3.0
