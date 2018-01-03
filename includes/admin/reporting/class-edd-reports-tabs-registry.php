@@ -70,35 +70,9 @@ class Tabs_Registry extends Registry {
 	 * @return bool True if the tab was successfully registered, otherwise false.
 	 */
 	public function add_tab( $tab_id, $attributes ) {
-		$result = false;
+		$attributes['tiles'] = new Tiles_Registry();
 
-		// TODO adjust this for parsing all required args and strategies.
-		if ( ! is_array( $attributes ) ) {
-
-			$message   = 'New tab attributes must take the form of an array.';
-			throw new Exception( $message );
-
-			return $result;
-
-		} else {
-
-			$attributes['tiles'] = new Tiles_Registry();
-
-		}
-
-		try {
-
-			$result = parent::add_item( $tab_id, $attributes );
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw $exception;
-
-		}
-
-		return $result;
+		return parent::add_item( $tab_id, $attributes );
 	}
 
 	/**
@@ -123,23 +97,10 @@ class Tabs_Registry extends Registry {
 	 * @return array The tab's attributes if it exists, otherwise an empty array.
 	 */
 	public function get_tab( $tab_id, $extract_tiles = true ) {
-		$tab = array();
+		$tab = parent::get_item( $tab_id );
 
-		try {
-
-			$tab = parent::get_item( $tab_id );
-
-			if ( true === $extract_tiles ) {
-				// Reduce tile registry to an array.
-				if ( ! empty( $tab['tiles'] ) ) {
-					$tab['tiles'] = $tab['tiles']->getArrayCopy();
-				}
-			}
-
-		} catch( EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
+		if ( ! empty( $tab ) && true === $extract_tiles ) {
+			$tab['tiles'] = $tab['tiles']->getArrayCopy();
 		}
 
 		return $tab;
@@ -181,29 +142,20 @@ class Tabs_Registry extends Registry {
 	public function add_tile( $tile_id, $tab_id, $attributes ) {
 		$added = false;
 
-		try {
+		$tab = $this->get_tab( $tab_id, false );
 
-			$tab = $this->get_tab( $tab_id, false );
+		if ( ! empty( $tab ) ) {
 
 			try {
 
-				$tab['tiles']->add_tile( $tile_id, $attributes );
-
-				$added = true;
+				$added = $tab['tiles']->add_tile( $tile_id, $attributes )
 
 			} catch( \EDD_Exception $exception ) {
 
 				edd_debug_log_exception( $exception );
 
 				throw $exception;
-
 			}
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw Exceptions\Tab_Not_Found::from_tab( $tab_id, null, $exception );
 		}
 
 		return $added;
@@ -219,20 +171,13 @@ class Tabs_Registry extends Registry {
 	 */
 	public function remove_tile( $tile_id, $tab_id ) {
 
-		try {
+		$tab = $this->get_tab( $tab_id, false );
 
-			$tab = $this->get_tab( $tab_id, false );
+		if ( ! empty( $tab ) ) {
 
 			$tab['tiles']->remove_tile( $tile_id );
 
-		} catch ( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw Exceptions\Tab_Not_Found::from_tab( $tab_id, null, $exception );
-
 		}
-
 	}
 
 	/**
@@ -240,38 +185,16 @@ class Tabs_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
-	 *
 	 * @param string $tile_id ID of the reports tile to retrieve.
 	 * @param string $tab_id  ID of the reports tab to retrieve the tile for.
 	 * @return array The tile's attributes if it exists, otherwise an empty array.
 	 */
 	public function get_tile( $tile_id, $tab_id ) {
+		$tab  = $this->get_tab( $tab_id, false );
 		$tile = array();
 
-		try {
-
-			$tab = $this->get_tab( $tab_id, false );
-
-			try {
-
-				$tile = $tab['tiles']->get_tile( $tile_id );
-
-			} catch( \EDD_Exception $exception ) {
-
-				edd_debug_log_exception( $exception );
-
-				throw $exception;
-
-			}
-
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw Exceptions\Tab_Not_Found::from_tab( $tab_id, null, $exception );
-
+		if ( ! empty( $tab ) ) {
+			$tile = $tab['tiles']->get_tile( $tile_id );
 		}
 
 		return $tile;
@@ -282,25 +205,15 @@ class Tabs_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Admin\Reports\Exception if the tab doesn't exist.
-	 *
 	 * @param string $tab_id Tab to retrieve tiles for.
 	 * @return array All registered reports tiles.
 	 */
 	public function get_tiles( $tab_id ) {
 		$tiles = array();
+		$tab   = $this->get_tab( $tab_id );
 
-		try {
-
-			$tab   = $this->get_tab( $tab_id );
+		if ( ! empty( $tab ) ) {
 			$tiles = $tab['tiles']->getArrayCopy();
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw Exceptions\Tab_Not_Found::from_tab( $tab_id, null, $exception );
-
 		}
 
 		return $tiles;

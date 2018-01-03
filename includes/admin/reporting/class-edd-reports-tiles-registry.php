@@ -58,8 +58,6 @@ class Tiles_Registry extends Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Admin\Reports\Exception if the tab does not exist.
-	 *
 	 * @param string $tab_id      Reports tab ID for the tile.
 	 * @param string $tile_id     Reports tile ID.
 	 * @param array  $attributes {
@@ -78,21 +76,7 @@ class Tiles_Registry extends Registry {
 	 * @return bool True if the tile was successfully added, otherwise false.
 	 */
 	public function add_tile( $tile_id, $attributes ) {
-		$result = false;
-
-		try {
-
-			$result = parent::add_item( $tile_id, $attributes );
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw $exception;
-
-		}
-
-		return $result;
+		return parent::add_item( $tile_id, $attributes );
 	}
 
 	/**
@@ -115,21 +99,7 @@ class Tiles_Registry extends Registry {
 	 * @return array Array of tile attributes if it exists, otherwise an empty array.
 	 */
 	public function get_tile( $tile_id ) {
-		$tile = array();
-
-		try {
-
-			$tile = parent::get_item( $tile_id );
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-			throw Exceptions\Tile_Not_Found::from_tile( $tile_id, null, $exception );
-
-		}
-
-		return $tile;
+		return parent::get_item( $tile_id );
 	}
 
 	/**
