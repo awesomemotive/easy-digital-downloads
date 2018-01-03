@@ -436,21 +436,22 @@ class EDD_CLI extends WP_CLI_Command {
 
 		$discounts = $this->api->get_discounts( $discount_id );
 
-		if( isset( $discounts['error'] ) ) {
+		if ( isset( $discounts['error'] ) ) {
 			WP_CLI::error( $discounts['error'] );
 		}
 
-		if( empty( $discounts ) ) {
+		if ( empty( $discounts ) ) {
 			WP_CLI::error( __( 'No discounts found', 'easy-digital-downloads' ) );
+
 			return;
 		}
 
-		foreach( $discounts['discounts'] as $discount ) {
+		foreach ( $discounts['discounts'] as $discount ) {
 			WP_CLI::line( WP_CLI::colorize( '%G' . $discount['ID'] . '%N' ) );
 			WP_CLI::line( sprintf( __( 'Name: %s', 'easy-digital-downloads' ), $discount['name'] ) );
 			WP_CLI::line( sprintf( __( 'Code: %s', 'easy-digital-downloads' ), $discount['code'] ) );
 
-			if( $discount['type'] == 'percent' ) {
+			if ( $discount['type'] == 'percent' ) {
 				$amount = $discount['amount'] . '%';
 			} else {
 				$amount = edd_format_amount( $discount['amount'] ) . ' ' . edd_get_currency();
@@ -465,10 +466,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( '' );
 
-			if( array_key_exists( 0, $discount['product_requirements'] ) ) {
+			if ( array_key_exists( 0, $discount['product_requirements'] ) ) {
 				WP_CLI::line( __( 'Product Requirements:', 'easy-digital-downloads' ) );
 
-				foreach( $discount['product_requirements'] as $req => $req_id ) {
+				foreach ( $discount['product_requirements'] as $req => $req_id ) {
 					WP_CLI::line( sprintf( __( '  Product: %s', 'easy-digital-downloads' ), $req_id ) );
 				}
 			}
@@ -481,7 +482,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( '' );
 		}
 	}
-
 
 	/**
 	 * Create sample purchase data for your EDD site
@@ -741,6 +741,97 @@ class EDD_CLI extends WP_CLI_Command {
 		$progress->finish();
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
+		return;
+	}
+
+	/**
+	 * Create discount codes for your EDD site
+	 *
+	 * ## OPTIONS
+	 *
+	 * --legacy: Create legacy discount codes using pre-3.0 schema
+	 * --number: The number of discounts to create
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd create_discounts --number=100
+	 * wp edd create_discounts --number=50 --legacy
+	 */
+	public function create_discounts( $args, $assoc_args ) {
+		$error = false;
+
+		$number = array_key_exists( 'number', $assoc_args ) ? absint( $assoc_args['number'] ) : 1;
+		$legacy = array_key_exists( 'legacy', $assoc_args ) ? true : false;
+
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Discount Codes', $number );
+
+		for ( $i = 0; $i < $number; $i++ ) {
+			if ( $legacy ) {
+				$discount_id = wp_insert_post( array(
+					'post_type'   => 'edd_discount',
+					'post_title'  => 'Auto-Generated Legacy Discount #' . $i,
+					'post_status' => 'active',
+				) );
+
+				$meta = array(
+					'code'              => 'LEGACY' . $i,
+					'status'            => 'active',
+					'uses'              => 10,
+					'max_uses'          => 20,
+					'name'              => 'Auto-Generated Legacy Discount #' . $i,
+					'amount'            => 20,
+					'start'             => '01/01/2000 00:00:00',
+					'expiration'        => '12/31/2050 23:59:59',
+					'type'              => 'percent',
+					'min_price'         => '10.50',
+					'product_reqs'      => array( 57 ),
+					'product_condition' => 'all',
+					'excluded_products' => array( 75 ),
+					'is_not_global'     => true,
+					'is_single_use'     => true,
+				);
+
+				remove_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
+				remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
+
+				foreach ( $meta as $key => $value ) {
+					add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+				}
+
+				add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+				add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
+			} else {
+				$type = array( 'flat', 'percent' );
+				$status = array( 'active', 'inactive' );
+				$product_condition = array( 'any', 'all' );
+
+				$type_index = array_rand( $type, 1 );
+				$status_index = array_rand( $status, 1 );
+				$product_condition_index = array_rand( $product_condition, 1 );
+
+				$post = array(
+					'code'              => md5( time() ),
+					'uses'              => mt_rand( 0, 100 ),
+					'max'               => mt_rand( 0, 100 ),
+					'name'              => 'Auto-Generated Discount #' . $i,
+					'type'              => $type[ $type_index[0] ],
+					'amount'            => mt_rand( 10, 95 ),
+					'start'             => '12/12/2010 00:00:00',
+					'expiration'        => '12/31/2050 23:59:59',
+					'min_price'         => mt_rand( 30, 255 ),
+					'status'            => $status[ $status_index[0] ],
+					'product_condition' => $product_condition[ $product_condition_index[0] ],
+				);
+
+				edd_store_discount( $post );
+
+				$progress->tick();
+			}
+		}
+
+		$progress->finish();
+
+		WP_CLI::success( sprintf( __( 'Created %s discounts', 'easy-digital-downloads' ), $number ) );
 		return;
 	}
 
