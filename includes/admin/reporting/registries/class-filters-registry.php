@@ -83,5 +83,19 @@ class Filters_Registry extends Utils\Registry implements Utils\Static_Registry {
 		}
 	}
 
+	/**
+	 * Adds a new reports filter to the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $filter_id   Reports filter ID.
+	 * @param array  $attributes {
+	 *     Attributes of the reports filter.
+	 * }
+	 * @return bool True if the filter was successfully registered, otherwise false.
+	 */
+	public function add_filter( $filter_id, $attributes ) {
+		return parent::add_item( $filter_id, $attributes );
+	}
 
 }
