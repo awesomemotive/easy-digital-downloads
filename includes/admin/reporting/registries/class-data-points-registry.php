@@ -16,6 +16,13 @@ use EDD\Utils;
  * Implements a singleton registry for registering reports data points.
  *
  * @since 3.0
+ *
+ * @see \EDD\Utils\Registry
+ * @see \EDD\Utils\Static_Registry
+ *
+ * @method array get_data_point( string $item_id )
+ * @method void  remove_data_point( string $item_id )
+ * @method array get_data_points()
  */
 class Data_Point_Registry extends Utils\Registry implements Utils\Static_Registry {
 
@@ -50,5 +57,30 @@ class Data_Point_Registry extends Utils\Registry implements Utils\Static_Registr
 		return self::$instance;
 	}
 
+	/**
+	 * Handles magic method calls for data point manipulation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $name      Method name.
+	 * @param array  $arguments Method arguments (if any)
+	 * @return mixed Results of the method call (if any).
+	 */
+	public function __call( $name, $arguments ) {
+		switch( $name ) {
+			case 'get_data_point':
+				return parent::get_item( $name );
+				break;
+
+			case 'remove_data_point':
+				parent::remove_item( $name );
+				break;
+
+			case 'get_data_points':
+				return parent::get_items();
+				break;
+
+		}
+	}
 
 }
