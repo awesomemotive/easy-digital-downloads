@@ -91,6 +91,9 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
 	 *     Attributes of the reports data point.
+	 *
+	 *     @type string $model Model ID.
+	 *     @type string $view  View ID.
 	 * }
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
