@@ -20,7 +20,9 @@ use EDD\Utils;
  * @see \EDD\Utils\Registry
  * @see \EDD\Utils\Static_Registry
  *
- * @method void remove_tab( string $tab_id )
+ * @method array get_tab( string $tab_id )
+ * @method void  remove_tab( string $tab_id )
+ * @method array get_tabs()
  */
 class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 
