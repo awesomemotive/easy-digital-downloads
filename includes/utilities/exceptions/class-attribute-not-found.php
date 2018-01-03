@@ -22,7 +22,7 @@ namespace EDD\Utils\Exceptions;
 class Attribute_Not_Found extends \OutOfBoundsException implements \EDD_Exception {
 
 	/**
-	 * Retrieves an informed Tab_Not_Found instance via late-static binding.
+	 * Retrieves an informed Attribute_Not_Found instance via late-static binding.
 	 *
 	 * @since 3.0
 	 *
