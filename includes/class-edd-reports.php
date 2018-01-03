@@ -51,8 +51,8 @@ final class Reports {
 	 */
 	private function includes() {
 		// Registries.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-reports-tabs-registry.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-reports-tiles-registry.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-tabs-registry.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-tiles-registry.php';
 	}
 
 	/**
