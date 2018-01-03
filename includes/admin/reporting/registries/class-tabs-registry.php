@@ -18,6 +18,9 @@ use EDD\Utils;
  * @since 3.0
  *
  * @see \EDD\Utils\Registry
+ * @see \EDD\Utils\Static_Registry
+ *
+ * @method void remove_tab( string $tab_id )
  */
 class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 
@@ -53,6 +56,23 @@ class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 	}
 
 	/**
+	 * Handles magic method calls for tab manipulation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $name      Method name.
+	 * @param array  $arguments Method arguments (if any)
+	 * @return mixed Results of the method call (if any).
+	 */
+	public function __call( $name, $arguments ) {
+		switch( $name ) {
+			case 'remove_tab':
+				parent::remove_item( $name );
+				break;
+		}
+	}
+
+	/**
 	 * Adds a new reports tab to the master registry.
 	 *
 	 * @since 3.0
@@ -72,17 +92,6 @@ class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 		$attributes['tiles'] = new Tiles_Registry();
 
 		return parent::add_item( $tab_id, $attributes );
-	}
-
-	/**
-	 * Removes a reports tab by ID from the master registry.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $tab_id Reports tab ID.
-	 */
-	public function remove_tab( $tab_id ) {
-		parent::remove_item( $tab_id );
 	}
 
 	/**
