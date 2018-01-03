@@ -83,10 +83,6 @@ final class Reports {
 				'label' => __( 'Test', 'easy-digital-downloads' )
 			) );
 
-			$tabs->add_tile( 'test_tile', 'core', array(
-				'label' => __( 'Test Tile' )
-			) );
-
 		} catch( \EDD_Exception $exception ) {
 
 			edd_debug_log_exception( $exception );
