@@ -16,6 +16,13 @@ use EDD\Utils;
  * Implements a singleton registry for registering reports filters.
  *
  * @since 3.0
+ *
+ * @see \EDD\Utils\Registry
+ * @see \EDD\Utils\Static_Registry
+ *
+ * @method array get_filter( string $filter_id )
+ * @method void  remove_filter( string $filter_id )
+ * @method array get_filters()
  */
 class Filters_Registry extends Utils\Registry implements Utils\Static_Registry {
 
@@ -48,6 +55,32 @@ class Filters_Registry extends Utils\Registry implements Utils\Static_Registry {
 		}
 
 		return self::$instance;
+	}
+
+	/**
+	 * Handles magic method calls for filter manipulation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $name      Method name.
+	 * @param array  $arguments Method arguments (if any)
+	 * @return mixed Results of the method call (if any).
+	 */
+	public function __call( $name, $arguments ) {
+		switch( $name ) {
+			case 'get_filter':
+				return parent::get_item( $name );
+				break;
+
+			case 'remove_filter':
+				parent::remove_item( $name );
+				break;
+
+			case 'get_filters':
+				return parent::get_items();
+				break;
+
+		}
 	}
 
 
