@@ -20,8 +20,8 @@ use EDD\Utils;
  * @see \EDD\Utils\Registry
  * @see \EDD\Utils\Static_Registry
  *
- * @method array get_data_point( string $item_id )
- * @method void  remove_data_point( string $item_id )
+ * @method array get_data_point( string $data_point_id )
+ * @method void  remove_data_point( string $data_point_id )
  * @method array get_data_points()
  */
 class Data_Point_Registry extends Utils\Registry implements Utils\Static_Registry {
