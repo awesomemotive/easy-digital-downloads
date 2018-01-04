@@ -226,7 +226,7 @@ class EDD_DB_Notes extends EDD_DB {
 				", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
 
 			if ( ! empty( $notes ) ) {
-				foreach ( $notes as $key => $discount ) {
+				foreach ( $notes as $key => $note ) {
 
 				}
 
