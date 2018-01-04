@@ -200,6 +200,10 @@ function edd_run_install() {
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
 
+	// Create the notes tables
+	@EDD()->notes->create_table();
+	@EDD()->note_meta->create_table();
+
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
 
@@ -293,6 +297,14 @@ function edd_after_install() {
 	$edd_table_check = get_option( '_edd_table_check', false );
 
 	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
+
+		if ( ! @EDD()->notes->installed() ) {
+			@EDD()->notes->create_table();
+		}
+
+		if ( ! @EDD()->note_meta->installed() ) {
+			@EDD()->note_meta->create_table();
+		}
 
 		if ( ! @EDD()->customer_meta->installed() ) {
 
