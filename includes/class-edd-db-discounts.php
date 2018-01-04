@@ -73,7 +73,6 @@ class EDD_DB_Discounts extends EDD_DB {
 			'once_per_customer' => '%d',
 			'product_condition' => '%s',
 			'scope'             => '%s',
-			'notes'             => '%s',
 		);
 	}
 
@@ -103,7 +102,6 @@ class EDD_DB_Discounts extends EDD_DB {
 			'date_created'      => date( 'Y-m-d H:i:s' ),
 			'start_date'        => '0000-00-00 00:00:00',
 			'end_date'          => '0000-00-00 00:00:00',
-			'notes'             => '',
 		);
 	}
 
@@ -574,7 +572,6 @@ class EDD_DB_Discounts extends EDD_DB {
 		date_created datetime NOT NULL,
 		start_date datetime NOT NULL,
 		end_date datetime NOT NULL,
-		notes longtext NOT NULL,
 		PRIMARY KEY (id),
 		KEY code (code)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
