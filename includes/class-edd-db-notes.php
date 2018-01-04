@@ -100,7 +100,7 @@ class EDD_DB_Notes extends EDD_DB {
 	 *      @type float  $date_created Date created (default blank and auto-filled on insert).
 	 * }
 	 *
-	 * @return int ID of the inserted discount.
+	 * @return int ID of the inserted note.
 	 */
 	public function insert( $data, $type = '' ) {
 		$result = parent::insert( $data, $type );
@@ -174,7 +174,7 @@ class EDD_DB_Notes extends EDD_DB {
 	 *      Query arguments.
 	 * }
 	 *
-	 * @return array $discounts Array of `EDD_Discount` objects.
+	 * @return array $notes Array of `EDD_Note` objects.
 	 */
 	public function get_notes( $args = array() ) {
 		global $wpdb;
@@ -250,9 +250,9 @@ class EDD_DB_Notes extends EDD_DB {
 	 *      @type int                $user_id      User ID.
 	 *      @type mixed array|string $date_created Date created. Can pass a `start` and `end` key in the array to allow
 	 *                                             for further filtering.
-	 *      @type mixed array|string $end_date     Discount expiration date. Can pass a `start` and `end` key in the
+	 *      @type mixed array|string $end_date     Note Noteexpiration date. Can pass a `start` and `end` key in the
 	 *                                             array to allow for further filtering.
-	 *      @type mixed array|string $start_date   Discount start date. Can pass a `start` and `end` key in the array to
+	 *      @type mixed array|string $start_date   Note start date. Can pass a `start` and `end` key in the array to
 	 *                                             allow for further filtering.
 	 *      @type string             $search       Search parameters.
 	 * }
@@ -366,14 +366,14 @@ class EDD_DB_Notes extends EDD_DB {
 	 *      @type int                $user_id      User ID.
 	 *      @type mixed array|string $date_created Date created. Can pass a `start` and `end` key in the array to allow
 	 *                                             for further filtering.
-	 *      @type mixed array|string $end_date     Discount expiration date. Can pass a `start` and `end` key in the
+	 *      @type mixed array|string $end_date     Note expiration date. Can pass a `start` and `end` key in the
 	 *                                             array to allow for further filtering.
-	 *      @type mixed array|string $start_date   Discount start date. Can pass a `start` and `end` key in the array to
+	 *      @type mixed array|string $start_date   Note start date. Can pass a `start` and `end` key in the array to
 	 *                                             allow for further filtering.
 	 *      @type string             $search       Search parameters.
 	 * }
 	 *
-	 * @return int $count Number of discounts in the database.
+	 * @return int $count Number of notes in the database.
 	 */
 	public function count( $args = array() ) {
 		global $wpdb;
@@ -384,7 +384,7 @@ class EDD_DB_Notes extends EDD_DB {
 	}
 
 	/**
-	 * Sets the last_changed cache key for discounts.
+	 * Sets the last_changed cache key for notes.
 	 *
 	 * @access public
 	 * @since 3.0
@@ -394,12 +394,12 @@ class EDD_DB_Notes extends EDD_DB {
 	}
 
 	/**
-	 * Retrieves the value of the last_changed cache key for discounts.
+	 * Retrieves the value of the last_changed cache key for notes.
 	 *
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @return string Value of the last_changed cache key for discounts.
+	 * @return string Value of the last_changed cache key for notes.
 	 */
 	public function get_last_changed() {
 		if ( function_exists( 'wp_cache_get_last_changed' ) ) {
