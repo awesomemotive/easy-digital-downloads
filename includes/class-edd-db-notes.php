@@ -208,10 +208,6 @@ class EDD_DB_Notes extends EDD_DB {
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		if ( 'amount' === $args['orderby'] ) {
-			$args['orderby'] = 'amount+0';
-		}
-
 		$cache_key = md5( 'edd_notes_' . serialize( $args ) );
 
 		$notes = wp_cache_get( $cache_key, 'notes' );
