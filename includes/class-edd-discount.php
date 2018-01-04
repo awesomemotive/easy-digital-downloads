@@ -1933,6 +1933,8 @@ class EDD_Discount {
 			$args['name'] = $old_discount->post_title;
 		}
 
+		$args['status'] = get_post_status( $old_discount->ID );
+
 		$discount = new EDD_Discount();
 		$discount->add( $args );
 		$discount->add_meta( 'legacy_id', $old_discount->ID );
