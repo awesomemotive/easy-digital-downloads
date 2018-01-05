@@ -56,7 +56,7 @@ abstract class Registry extends \ArrayObject {
 		} else {
 
 			$message = sprintf(
-				'The attributes were missing when attempting to add the \'%1$s\' registry %2$s.',
+				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
 				$item_id,
 				$this->type
 			);
@@ -102,7 +102,7 @@ abstract class Registry extends \ArrayObject {
 		} else {
 
 			$message = sprintf(
-				'The \'%1$s\' registry %2$s does not exist.',
+				'The \'%1$s\' %2$s does not exist.',
 				$item_id,
 				$this->type
 			);

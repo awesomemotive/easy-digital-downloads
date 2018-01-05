@@ -32,7 +32,7 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $type = 'data endpoint';
+	public $type = 'reports endpoint';
 
 	/**
 	 * The one true Endpoint_Registry instance.
