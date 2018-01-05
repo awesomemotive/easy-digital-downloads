@@ -100,16 +100,36 @@ class EDD_DB_Notes extends EDD_DB {
 	 *      @type float  $date_created Date created (default blank and auto-filled on insert).
 	 * }
 	 *
-	 * @return int ID of the inserted note.
+	 * @return int|false ID of the inserted note, false otherwise.
 	 */
 	public function insert( $data, $type = '' ) {
+		$data = wp_parse_args( $data, array(
+			'object_id'    => 0,
+			'object_type'  => '',
+			'note'         => '',
+			'user_id'      => 0,
+		) );
+
+		if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $data['note'] ) ) {
+			$data['note'] = sanitize_text_field( $data['note'] );
+		}
+
+		$data['object_id'] = absint( $data['object_id'] );
+		$data['user_id'] = absint( $data['user_id'] );
+
 		$result = parent::insert( $data, $type );
 
 		if ( $result ) {
 			$this->set_last_changed();
+
+			return $result;
 		}
 
-		return $result;
+		return false;
 	}
 
 	/**
@@ -130,13 +150,15 @@ class EDD_DB_Notes extends EDD_DB {
 	 * }
 	 * @param mixed string|array $where Where clause to filter update.
 	 *
-	 * @return  bool
+	 * @return bool True on success, false otherwise.
 	 */
 	public function update( $row_id, $data = array(), $where = '' ) {
 		$result = parent::update( $row_id, $data, $where );
+
 		if ( $result ) {
 			$this->set_last_changed();
 		}
+
 		return $result;
 	}
 
