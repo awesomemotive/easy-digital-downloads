@@ -1917,7 +1917,7 @@ class EDD_Discount {
 
 		$args = array();
 		$meta = get_post_custom( $old_discount->ID );
-		$meta_to_migrate = array()
+		$meta_to_migrate = array();
 
 		foreach ( $meta as $key => $value ) {
 			if ( false === strpos( $key, '_edd_discount' ) ) {
