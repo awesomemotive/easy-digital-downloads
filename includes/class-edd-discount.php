@@ -1917,9 +1917,14 @@ class EDD_Discount {
 
 		$args = array();
 		$meta = get_post_custom( $old_discount->ID );
+		$meta_to_migrate = array()
 
 		foreach ( $meta as $key => $value ) {
 			if ( false === strpos( $key, '_edd_discount' ) ) {
+
+				// This is custom meta from another plugin that needs to be migrated to the new meta table
+				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+
 				continue;
 			}
 
@@ -1938,6 +1943,19 @@ class EDD_Discount {
 		$discount = new EDD_Discount();
 		$discount->add( $args );
 		$discount->add_meta( 'legacy_id', $old_discount->ID );
+
+		unset( $value );
+		unset( $key );
+
+		if( ! empty( $meta_to_migrate ) ) {
+
+			foreach( $meta_to_migrate as $key => $value ) {
+
+				$discount->add_meta( $key, $value );
+
+			}
+
+		}
 
 		do_action( 'edd_migrate_discount_record', $old_discount->ID, $discount );
 
