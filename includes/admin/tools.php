@@ -1157,7 +1157,6 @@ function edd_tools_sysinfo_display() {
 }
 add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
 
-
 /**
  * Get system info
  *
