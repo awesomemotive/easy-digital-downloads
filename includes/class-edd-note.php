@@ -262,6 +262,65 @@ class EDD_Note {
 	}
 
 	/**
+	 * Add meta to a note.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key   Metadata key.
+	 * @param mixed  $meta_value Metadata value.
+	 * @param bool   $unique     Optional, default is false. Whether the same key should not be added.
+	 *
+	 * @return bool True on success, false otherwise.
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->note_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Retrieve meta for a note.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key Metadata key.
+	 * @param bool   $single   Whether to return as an array or single value.
+	 *
+	 * @return mixed string|array Array if $single is false, or value of meta key.
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->note_meta->get_meta( $this->id, $meta_key, $single );
+	}
+
+	/**
+	 * Update an existing meta field for a note.
+	 *
+	 * @param string $meta_key   Metadata key.
+	 * @param mixed  $meta_value New metadata value.
+	 * @param string $prev_value Optional. Previous metadata value.
+	 *
+	 * @return bool True on success, false otherwise.
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->note_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Remove meta from a note.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key   Metadata key.
+	 * @param string $meta_value Optional. Metadata value.
+	 *
+	 * @return bool
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->note_meta->delete_meta( $this->id, $meta_key, $meta_value );
+	}
+
+	/**
 	 * Sanitize the data for update/create.
 	 *
 	 * @access public
