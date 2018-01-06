@@ -67,13 +67,16 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * @return mixed Results of the method call (if any).
 	 */
 	public function __call( $name, $arguments ) {
+
+		$endpoint_id = isset( $arguments[0] ) ? $arguments[0] : '';
+
 		switch( $name ) {
 			case 'get_endpoint':
-				return parent::get_item( $arguments[0] );
+				return parent::get_item( $endpoint_id );
 				break;
 
 			case 'unregister_endpoint':
-				parent::remove_item( $arguments[0] );
+				parent::remove_item( $endpoint_id );
 				break;
 
 			case 'get_endpoints':
