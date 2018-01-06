@@ -74,8 +74,14 @@ final class Reports {
 		// Test code: The 'core' report doesn't exist, so exception(s) should bubble up and be caught.
 		try {
 
-			$reports->add_report( 'core_test', array(
-				'label' => __( 'Test', 'easy-digital-downloads' )
+			$reports->add_report( 'products', array(
+				'label'    => __( 'Products', 'easy-digital-downloads' ),
+				'priority' => 10,
+			) );
+
+			$reports->add_report( 'earnings', array(
+				'label'    => __( 'Earnings', 'easy-digital-downloads' ),
+				'priority' => 5,
 			) );
 
 		} catch( \EDD_Exception $exception ) {
