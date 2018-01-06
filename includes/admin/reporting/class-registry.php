@@ -1,6 +1,6 @@
 <?php
 /**
- * Reports API - Tabs Registry
+ * Reports API - Reports Registry
  *
  * @package     EDD
  * @subpackage  Admin/Reports
@@ -67,13 +67,16 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * @return mixed Results of the method call (if any).
 	 */
 	public function __call( $name, $arguments ) {
+
+		$report_id = isset( $arguments[0] ) ? $arguments[0] : '';
+
 		switch( $name ) {
 			case 'get_report':
-				return parent::get_item( $arguments[0] );
+				return parent::get_item( $report_id );
 				break;
 
 			case 'remove_report':
-				parent::remove_item( $arguments[0] );
+				parent::remove_item( $report_id );
 				break;
 
 			case 'get_reports':
@@ -88,7 +91,7 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $report_id   Reports ID.
+	 * @param string $report_id   Report ID.
 	 * @param array  $attributes {
 	 *     Attributes of the report.
 	 *
