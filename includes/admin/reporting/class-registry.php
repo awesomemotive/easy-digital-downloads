@@ -13,18 +13,18 @@ namespace EDD\Admin\Reports;
 use EDD\Utils;
 
 /**
- * Implements a singleton registry for registering reports tabs.
+ * Implements a singleton registry for registering reports.
  *
  * @since 3.0
  *
  * @see \EDD\Utils\Registry
  * @see \EDD\Utils\Static_Registry
  *
- * @method array get_tab( string $tab_id )
- * @method void  remove_tab( string $tab_id )
- * @method array get_tabs()
+ * @method array get_report( string $report_id )
+ * @method void  remove_report( string $report_id )
+ * @method array get_reports()
  */
-class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
+class Registry extends Utils\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.
@@ -32,33 +32,33 @@ class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'reports tab';
+	public $item_error_label = 'report';
 
 	/**
-	 * The one true EDD_Reports_Tabs_Registry instance.
+	 * The one true Reports registry instance.
 	 *
 	 * @since 3.0
-	 * @var   \EDD\Admin\Reports\Tabs_Registry
+	 * @var   \EDD\Admin\Reports\Registry
 	 */
 	private static $instance;
 
 	/**
-	 * Retrieves the one true Reports Tabs Registry instance.
+	 * Retrieves the one true Reports registry instance.
 	 *
 	 * @since 3.0
 	 *
-	 * @return \EDD\Admin\Reports\Tabs_Registry Reports tabs registry instance.
+	 * @return \EDD\Admin\Reports\Registry Reports registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new Tabs_Registry();
+			self::$instance = new Registry();
 		}
 
 		return self::$instance;
 	}
 
 	/**
-	 * Handles magic method calls for tab manipulation.
+	 * Handles magic method calls for report manipulation.
 	 *
 	 * @since 3.0
 	 *
@@ -68,15 +68,15 @@ class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 	 */
 	public function __call( $name, $arguments ) {
 		switch( $name ) {
-			case 'get_tab':
+			case 'get_report':
 				return parent::get_item( $arguments[0] );
 				break;
 
-			case 'remote_tab':
+			case 'remove_report':
 				parent::remove_item( $arguments[0] );
 				break;
 
-			case 'get_tabs':
+			case 'get_reports':
 				return parent::get_items();
 				break;
 
@@ -84,23 +84,23 @@ class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 	}
 
 	/**
-	 * Adds a new reports tab to the master registry.
+	 * Adds a new report to the master registry.
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $tab_id     Reports tab ID.
+	 * @param string $report_id   Reports ID.
 	 * @param array  $attributes {
-	 *     Attributes of the reports tab.
+	 *     Attributes of the report.
 	 *
-	 *     @type string $label    Tab label.
-	 *     @type int    $priority Priority by which to register the tab.
-	 *     @type array  $filters  Registered filters to expose for the tab.
+	 *     @type string $label    Report label.
+	 *     @type int    $priority Priority by which to register the report.
+	 *     @type array  $filters  Registered filters to expose for the report.
 	 *     @type string $graph    Class to instantiate for building the graph.
 	 * }
-	 * @return bool True if the tab was successfully registered, otherwise false.
+	 * @return bool True if the report was successfully registered, otherwise false.
 	 */
-	public function add_tab( $tab_id, $attributes ) {
-		return parent::add_item( $tab_id, $attributes );
+	public function add_report( $report_id, $attributes ) {
+		return parent::add_item( $report_id, $attributes );
 	}
 
 }

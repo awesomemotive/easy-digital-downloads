@@ -55,17 +55,17 @@ class EDD_Utilities {
 	 */
 	public function get_registry( $name ) {
 		switch( $name ) {
-			case 'reports:tabs':
-				if ( class_exists( '\EDD\Admin\Reports\Tabs_Registry' ) ) {
-					$registry = \EDD\Admin\Reports\Tabs_Registry::instance();
+			case 'reports':
+				if ( class_exists( '\EDD\Admin\Reports\Registry' ) ) {
+					$registry = \EDD\Admin\Reports\Registry::instance();
 				}
 				break;
 
-			case 'reports:data':
-				if ( class_exists( '\EDD\Admin\Reports\Data_Points_Registry' ) ) {
-					$registry = \EDD\Admin\Reports\Data_Point_Registry::instance();
-				}
-				break;
+//			case 'reports:data':
+//				if ( class_exists( '\EDD\Admin\Reports\Data_Points_Registry' ) ) {
+//					$registry = \EDD\Admin\Reports\Data_Point_Registry::instance();
+//				}
+//				break;
 
 			default:
 				$registry = null;
