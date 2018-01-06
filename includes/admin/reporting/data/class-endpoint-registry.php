@@ -71,10 +71,6 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 		$endpoint_id = isset( $arguments[0] ) ? $arguments[0] : '';
 
 		switch( $name ) {
-			case 'get_endpoint':
-				return parent::get_item( $endpoint_id );
-				break;
-
 			case 'unregister_endpoint':
 				parent::remove_item( $endpoint_id );
 				break;
@@ -104,4 +100,33 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 		return parent::add_item( $endpoint_id, $attributes );
 	}
 
+	/**
+	 * Retrieves and endpoint from the registry and builds an Endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $endpoint_id Endpoint ID.
+	 * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object if it exists,
+	 *                                                    otherwise a WP_Error object.
+	 */
+	public function get_endpoint( $endpoint_id, $type = null ) {
+
+		try {
+
+			$endpoint = parent::get_item( $endpoint_id );
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			return new \WP_Error( 'invalid_endpoint_id', $exception->getMessage(), $exception->getTrace() );
+
+		}
+
+		$endpoint['id'] = $endpoint_id;
+
+		$endpoint = new Endpoint( $endpoint, $type );
+
+
+	}
 }
