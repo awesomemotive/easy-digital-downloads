@@ -53,6 +53,7 @@ final class Reports {
 
 		// Registries.
 		require_once $reports_dir . '/class-registry.php';
+		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
 	/**
