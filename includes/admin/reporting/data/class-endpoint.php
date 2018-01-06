@@ -65,6 +65,20 @@ class Endpoint {
 	 *                            retrieve from the corresponding endpoint registry entry.
 	 */
 	public function __construct( $endpoint_id, $type ) {
+		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+		try {
+
+			$endpoint = $registry->get_endpoint( $endpoint_id );
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			return new \WP_Error( 'invalid_endpoint_id', 'Invalid endpoint ID', $exception->getTraceAsString() );
+		}
+
+		
 		$this->set_type( $type );
 	}
 
