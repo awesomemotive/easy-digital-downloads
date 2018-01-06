@@ -31,7 +31,6 @@ function edd_reports_page() {
 			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
 				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'easy-digital-downloads' ); ?></a>
 			<?php } ?>
-			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Logs', 'easy-digital-downloads' ); ?></a>
 			<?php do_action( 'edd_reports_tabs' ); ?>
 		</h2>
 
@@ -483,28 +482,22 @@ function edd_reports_tab_export() {
 add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
 
 /**
- * Renders the Reports page
+ * Renders the Logs tab in the Reports screen.
  *
  * @since 1.3
+ * @deprecated 3.0 Use edd_tools_tab_logs() instead.
+ * @see edd_tools_tab_logs()
  * @return void
  */
 function edd_reports_tab_logs() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_tools_tab_logs' );
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
+	if ( ! function_exists( 'edd_tools_tab_logs' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
 	}
 
-	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
-
-	$current_view = 'file_downloads';
-	$log_views    = edd_log_default_views();
-
-	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) )
-		$current_view = $_GET['view'];
-
-	do_action( 'edd_logs_view_' . $current_view );
+	edd_tools_tab_logs();
 }
-add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
 
 /**
  * Retrieves estimated monthly earnings and sales
