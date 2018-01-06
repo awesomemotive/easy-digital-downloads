@@ -89,15 +89,46 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * @param array  $attributes {
 	 *     Attributes of the report.
 	 *
-	 *     @type string $label    Report label.
-	 *     @type int    $priority Priority by which to register the report.
-	 *     @type array  $filters  Registered filters to expose for the report.
-	 *     @type string $graph    Class to instantiate for building the graph.
+	 *     @type string $label     Report label.
+	 *     @type int    $priority  Priority by which to register the report.
+	 *     @type array  $filters   Filters available to the report.
+	 *     @type array  $endpoints Endpoints to associate with the report.
 	 * }
 	 * @return bool True if the report was successfully registered, otherwise false.
 	 */
 	public function add_report( $report_id, $attributes ) {
-		return parent::add_item( $report_id, $attributes );
+		$result = $error = false;
+
+		$defaults = array(
+			'label'     => '',
+			'priority'  => 10,
+			'filters'   => array(),
+			'endpoints' => array(),
+		);
+
+		$attributes = array_merge( $defaults, $attributes );
+
+		foreach ( $attributes as $attribute => $value ) {
+			if ( 'filters' === $attribute ) {
+				continue;
+			}
+
+			if ( empty( $value ) ) {
+				throw Exceptions\Invalid_Parameter::from( $attribute, __METHOD__, $report_id );
+
+				$error = true;
+			}
+		}
+
+		if ( true === $error ) {
+
+			return false;
+
+		} else {
+
+			return parent::add_item( $report_id, $attributes );
+
+		}
 	}
 
 	/**
