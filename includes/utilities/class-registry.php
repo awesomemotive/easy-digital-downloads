@@ -11,7 +11,9 @@
  * @since       3.0
  */
 namespace EDD\Utils;
+
 use EDD\Utils\Exceptions;
+
 /**
  * Defines the construct for building an item registry.
  *
@@ -44,19 +46,27 @@ abstract class Registry extends \ArrayObject {
 	 */
 	public function add_item( $item_id, $attributes ) {
 		$result = false;
+
 		if ( ! empty( $attributes ) ) {
+
 			$this->offsetSet( $item_id, $attributes );
+
 			$result = true;
+
 		} else {
+
 			$message = sprintf(
 				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
 				$item_id,
 				$this->item_error_label
 			);
+
 			throw new Exception( $message );
 		}
+
 		return $result;
 	}
+
 	/**
 	 * Removes an item from the registry by ID.
 	 *
@@ -69,6 +79,7 @@ abstract class Registry extends \ArrayObject {
 			$this->offsetUnset( $item_id );
 		}
 	}
+
 	/**
 	 * Retrieves an item and its associated attributes.
 	 *
@@ -81,19 +92,27 @@ abstract class Registry extends \ArrayObject {
 	 *               otherwise an empty array.
 	 */
 	public function get_item( $item_id ) {
+
 		$item = array();
+
 		if ( $this->offsetExists( $item_id ) ) {
+
 			$item = $this->offsetGet( $item_id );
+
 		} else {
+
 			$message = sprintf(
 				'The \'%1$s\' %2$s does not exist.',
 				$item_id,
 				$this->item_error_label
 			);
+
 			throw new Exception( $message );
 		}
+
 		return $item;
 	}
+
 	/**
 	 * Retrieves registered items.
 	 *
@@ -104,6 +123,7 @@ abstract class Registry extends \ArrayObject {
 	public function get_items() {
 		return $this->getArrayCopy();
 	}
+
 	/**
 	 * Retrieves the value of a given attribute for a given item.
 	 *
@@ -117,13 +137,23 @@ abstract class Registry extends \ArrayObject {
 	 * @return mixed|null The attribute value if set, otherwise null.
 	 */
 	public function get_attribute( $key, $item_id ) {
+
 		$attribute = $item = null;
+
 		$item = $this->get_item( $item_id );
+
 		if ( ! empty( $item[ $key ] ) ) {
+
 			$attribute = $item[ $key ];
+
 		} else {
+
 			throw Exceptions\Attribute_Not_Found::from_attr( $key, $item_id );
+
 		}
+
 		return $attribute;
+
 	}
+
 }
