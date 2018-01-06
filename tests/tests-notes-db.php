@@ -11,6 +11,29 @@
 class Tests_Notes_DB extends EDD_UnitTestCase {
 
 	/**
+	 * Notes fixture.
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected static $notes = array();
+
+	/**
+	 * Set up fixtures once.
+	 */
+	public static function wpSetUpBeforeClass() {
+		for ( $i = 0; $i < 3; $i++ ) {
+			$note_id = EDD()->notes->insert( array(
+				'object_id'   => '1234' . $i,
+				'object_type' => 'payment',
+				'note'        => 'Payment status changed',
+			) );
+
+			self::$notes[] = new EDD_Note( $note_id );
+		}
+	}
+
+	/**
 	 * @covers EDD_DB_Notes::get_columns()
 	 */
 	public function test_get_columns() {
@@ -78,5 +101,36 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 	 */
 	public function test_update_should_return_false_if_no_row_id_supplied() {
 		$this->assertFalse( EDD()->notes->update( 0 ) );
+	}
+
+	/**
+	 * @covers EDD_DB_Notes::update()
+	 */
+	public function test_update() {
+		$this->assertTrue( EDD()->notes->update( self::$notes[0]->id, array(
+			'note' => 'Note with updated body',
+		) ) );
+
+		$note = new EDD_Note( self::$notes[0]->id );
+
+		$this->assertEquals( 'Note with updated body', $note->note );
+	}
+
+	/**
+	 * @covers EDD_DB_Notes::delete()
+	 */
+	public function test_delete_should_return_false_if_no_row_id_supplied() {
+		$this->assertFalse( EDD()->notes->delete( 0 ) );
+	}
+
+	/**
+	 * @covers EDD_DB_Notes::delete()
+	 */
+	public function test_delete() {
+		$this->assertTrue( EDD()->notes->delete( self::$notes[0]->id ) );
+
+		$note = new EDD_Note( self::$notes[0]->id );
+
+		$this->assertNull( $note->id );
 	}
 }
