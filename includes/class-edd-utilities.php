@@ -39,6 +39,7 @@ class EDD_Utilities {
 
 		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
+		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
 
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
