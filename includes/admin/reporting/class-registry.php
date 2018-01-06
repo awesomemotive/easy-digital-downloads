@@ -97,7 +97,7 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * @return bool True if the report was successfully registered, otherwise false.
 	 */
 	public function add_report( $report_id, $attributes ) {
-		$result = $error = false;
+		$error = false;
 
 		$defaults = array(
 			'label'     => '',
