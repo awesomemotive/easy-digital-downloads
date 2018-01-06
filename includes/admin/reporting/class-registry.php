@@ -22,7 +22,6 @@ use EDD\Utils;
  *
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
- * @method array get_reports()
  */
 class Registry extends Utils\Registry implements Utils\Static_Registry {
 
@@ -78,11 +77,6 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 			case 'remove_report':
 				parent::remove_item( $report_id );
 				break;
-
-			case 'get_reports':
-				return parent::get_items();
-				break;
-
 		}
 	}
 
@@ -104,6 +98,38 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 */
 	public function add_report( $report_id, $attributes ) {
 		return parent::add_item( $report_id, $attributes );
+	}
+
+	/**
+	 * Retrieves all registered report with a given sorting scheme.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $sort Optional. How to sort the list of registered reports before retrieval.
+	 *                     Accepts 'priority' or 'ID' (alphabetized by report ID), or empty (none).
+	 *                     Default empty.
+	 */
+	public function get_reports( $sort = '' ) {
+		// If sorting, handle it before retrieval from the ArrayObject.
+		switch( $sort ) {
+			case 'ID':
+				$this->ksort();
+				break;
+
+			case 'priority':
+				$this->uasort( function( $a, $b ) {
+					if ( $a['priority'] == $b['priority'] ) {
+						return 0;
+					}
+
+					return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
+				} );
+				break;
+
+			default: break;
+		}
+
+		return parent::get_items();
 	}
 
 }
