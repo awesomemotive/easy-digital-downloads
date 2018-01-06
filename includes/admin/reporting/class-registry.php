@@ -101,7 +101,7 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	}
 
 	/**
-	 * Retrieves all registered report with a given sorting scheme.
+	 * Retrieves all registered reports with a given sorting scheme.
 	 *
 	 * @since 3.0
 	 *
@@ -113,11 +113,11 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 		// If sorting, handle it before retrieval from the ArrayObject.
 		switch( $sort ) {
 			case 'ID':
-				$this->ksort();
+				parent::ksort();
 				break;
 
 			case 'priority':
-				$this->uasort( function( $a, $b ) {
+				parent::uasort( function( $a, $b ) {
 					if ( $a['priority'] == $b['priority'] ) {
 						return 0;
 					}
