@@ -525,3 +525,34 @@ function edd_debug_log( $message = '' ) {
 
 	}
 }
+
+/**
+ * Logs an exception to the debug log file.
+ *
+ * @since 3.0
+ *
+ * @param \Exception $exception Exception object.
+ */
+function edd_debug_log_exception( $exception ) {
+
+	$label = get_class( $exception );
+
+	if ( $exception->getCode() ) {
+
+		$message = sprintf( '%1$s: %2$s - %3$s',
+			$label,
+			$exception->getCode(),
+			$exception->getMessage()
+		);
+
+	} else {
+
+		$message = sprintf( '%1$s: %2$s',
+			$label,
+			$exception->getMessage()
+		);
+
+	}
+
+	edd_debug_log( $message );
+}
