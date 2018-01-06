@@ -63,6 +63,12 @@ class EDD_Utilities {
 				}
 				break;
 
+			case 'reports:endpoints':
+				if ( class_exists( '\EDD\Admin\Reports\Data\Endpoint_Registry' ) ) {
+					$registry = \EDD\Admin\Reports\Data\Endpoint_Registry::instance();
+				}
+				break;
+
 			default:
 				$registry = null;
 				break;
