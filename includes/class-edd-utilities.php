@@ -40,6 +40,8 @@ class EDD_Utilities {
 		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
 		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
+		require_once $utils_dir . 'exceptions/class-invalid-argument.php';
+		require_once $utils_dir . 'exceptions/class-invalid-parameter.php';
 
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';

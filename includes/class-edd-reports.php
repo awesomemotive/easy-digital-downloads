@@ -48,6 +48,9 @@ final class Reports {
 	private function includes() {
 		$reports_dir = EDD_PLUGIN_DIR . 'includes/admin/reporting/';
 
+		// Exceptions.
+		require_once $reports_dir . 'exceptions/class-invalid-parameter.php';
+
 		// Registries.
 		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
