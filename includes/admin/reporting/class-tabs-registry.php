@@ -27,12 +27,12 @@ use EDD\Utils;
 class Tabs_Registry extends Utils\Registry implements Utils\Static_Registry {
 
 	/**
-	 * Registry type.
+	 * Item error label.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $type = 'reports tab';
+	public $item_error_label = 'reports tab';
 
 	/**
 	 * The one true EDD_Reports_Tabs_Registry instance.

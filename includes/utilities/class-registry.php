@@ -23,14 +23,14 @@ use EDD\Utils\Exceptions;
 abstract class Registry extends \ArrayObject {
 
 	/**
-	 * Singular registry type.
+	 * Item error label.
 	 *
-	 * Used for customizing exception messages. Default 'item'.
+	 * Used for customizing exception messages to the current registry instance. Default 'item'.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $type = 'item';
+	public $item_error_label = 'item';
 
 	/**
 	 * Adds an item to the registry.
@@ -58,7 +58,7 @@ abstract class Registry extends \ArrayObject {
 			$message = sprintf(
 				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
 				$item_id,
-				$this->type
+				$this->item_error_label
 			);
 
 			throw new Exception( $message );
@@ -104,7 +104,7 @@ abstract class Registry extends \ArrayObject {
 			$message = sprintf(
 				'The \'%1$s\' %2$s does not exist.',
 				$item_id,
-				$this->type
+				$this->item_error_label
 			);
 
 			throw new Exception( $message );

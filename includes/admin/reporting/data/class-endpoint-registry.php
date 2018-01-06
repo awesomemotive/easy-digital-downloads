@@ -27,12 +27,12 @@ use EDD\Utils;
 class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry {
 
 	/**
-	 * Registry type.
+	 * Registry item error label.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $type = 'reports endpoint';
+	public $item_error_label = 'reports endpoint';
 
 	/**
 	 * The one true Endpoint_Registry instance.
