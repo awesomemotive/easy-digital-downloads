@@ -20,7 +20,6 @@ use EDD\Utils;
  * @see \EDD\Utils\Registry
  * @see \EDD\Utils\Static_Registry
  *
- * @method array get_endpoint( string $endpoint_id )
  * @method void  unregister_endpoint( string $endpoint_id )
  * @method array get_endpoints()
  */
