@@ -78,8 +78,9 @@ final class Reports {
 		try {
 
 			$reports->add_report( 'products', array(
-				'label'    => __( 'Products', 'easy-digital-downloads' ),
-				'priority' => 10,
+				'label'     => __( 'Products', 'easy-digital-downloads' ),
+				'priority'  => 10,
+				'endpoints' => array( 'something' ),
 			) );
 
 			$reports->add_report( 'earnings', array(
