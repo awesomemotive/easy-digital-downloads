@@ -28,7 +28,7 @@ final class EDD_DB_Table_Logmeta extends WP_DB_Table {
 	protected $version = 201801060001;
 
 	/**
-	 * @var boolean This is a global table
+	 * @var boolean This is not a global table
 	 */
 	protected $global = false;
 
