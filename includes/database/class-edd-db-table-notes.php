@@ -42,7 +42,7 @@ final class EDD_DB_Table_Notes extends WP_DB_Table {
 			object_id bigint(20) unsigned NOT NULL default '0',
 			object_type varchar(20) NOT NULL default '',
 			author_id bigint(20) unsigned NOT NULL default '0',
-			author_ip varchar(60) unsigned NOT NULL default '',
+			author_ip varchar(60) NOT NULL default '',
 			content longtext NOT NULL default '',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
