@@ -138,18 +138,25 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 		} catch( \EDD_Exception $exception ) {
 
 			edd_debug_log_exception( $exception );
+
+			$endpoint = new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint_id );
+
 		}
 
-		if ( ! empty( $endpoint ) ) {
+		if ( ! is_wp_error( $endpoint ) ) {
+
+			// Build the Endpoint object.
 			$endpoint = new Endpoint( $endpoint, $type );
-		} else {
-			return new \WP_Error( 'invalid_endpoint', $endpoint_id );
+
+			// If any errors were logged during instantiation, return the resulting WP_Error object.
+			if ( $endpoint->has_errors() ) {
+
+				return $endpoint->get_errors();
+
+			}
+
 		}
 
-		if ( $endpoint->has_errors() ) {
-			return $endpoint->get_errors();
-		} else {
-			return $endpoint;
-		}
+		return $endpoint;
 	}
 }
