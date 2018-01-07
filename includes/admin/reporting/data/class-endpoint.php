@@ -295,7 +295,7 @@ class Endpoint {
 				$this->get_id()
 			);
 
-			$errors->add( 'invalid_endpoint_view_type', $message, array(
+			$errors->add( 'view_not_defined', $message, array(
 				'type'        => $this->get_type(),
 				'endpoint_id' => $this->get_id(),
 			) );
