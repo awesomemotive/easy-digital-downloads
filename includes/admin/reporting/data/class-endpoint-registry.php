@@ -20,6 +20,7 @@ use EDD\Utils;
  * @see \EDD\Utils\Registry
  * @see \EDD\Utils\Static_Registry
  *
+ * @method array get_endpoint( string $endpoint_id )
  * @method void  unregister_endpoint( string $endpoint_id )
  * @method array get_endpoints()
  */
@@ -70,6 +71,10 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 		$endpoint_id = isset( $arguments[0] ) ? $arguments[0] : '';
 
 		switch( $name ) {
+			case 'get_endpoint':
+				parent::get_item( $endpoint_id );
+				break;
+
 			case 'unregister_endpoint':
 				parent::remove_item( $endpoint_id );
 				break;
