@@ -38,7 +38,7 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * The one true Endpoint_Registry instance.
 	 *
 	 * @since 3.0
-	 * @var   \EDD\Admin\Reports\Data\Endpoint_Registry
+	 * @var   Endpoint_Registry
 	 */
 	private static $instance;
 
@@ -47,7 +47,7 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 *
 	 * @since 3.0
 	 *
-	 * @return \EDD\Admin\Reports\Data\Endpoint_Registry Registry instance.
+	 * @return Endpoint_Registry Registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -62,7 +62,7 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception If the endpoint doesn't exist for get_endpoint().
+	 * @throws \EDD_Exception If the endpoint doesn't exist for get_endpoint().
 	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments (if any)
@@ -93,7 +93,7 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception If the `$attributes` array is empty.
+	 * @throws \EDD_Exception If the `$attributes` array is empty.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
