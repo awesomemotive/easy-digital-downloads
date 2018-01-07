@@ -99,8 +99,20 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * @param array  $attributes  {
 	 *     Attributes of the reports data point.
 	 *
-	 *     @type string $model Model ID.
-	 *     @type string $view  View ID.
+	 *     @type string $label Endpoint label.
+	 *     @type array  $views {
+	 *         Array of view handlers by type.
+	 *
+	 *         @type array $view_type {
+	 *             View type slug, with array beneath it.
+	 *
+	 *             @type callable $data_callback    Callback used to retrieve data for the view.
+	 *             @type callable $display_callback Callback used to render the view.
+	 *             @type array    $display_args     Array of arguments to pass to the
+	 *                                              display_callback (if any).
+	 *             @type array    $filters          List of registered filters supported by the view.
+	 *         }
+	 *     }
 	 * }
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
