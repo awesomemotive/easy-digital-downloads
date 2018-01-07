@@ -17,13 +17,13 @@ use EDD\Utils;
  *
  * @since 3.0
  *
- * @see \EDD\Utils\Registry
+ * @see \EDD\Admin\Reports\Registry
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
  */
-class Reports_Registry extends Utils\Registry implements Utils\Static_Registry {
+class Reports_Registry extends Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.
@@ -113,16 +113,18 @@ class Reports_Registry extends Utils\Registry implements Utils\Static_Registry {
 
 		$attributes = array_merge( $defaults, $attributes );
 
-		foreach ( $attributes as $attribute => $value ) {
-			if ( 'filters' === $attribute ) {
-				continue;
-			}
+		try {
 
-			if ( empty( $value ) ) {
-				throw Exceptions\Invalid_Parameter::from( $attribute, __METHOD__, $report_id );
+			$this->validate_attributes( $attributes, $report_id, array( 'filters' ) );
 
-				$error = true;
-			}
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			throw $exception;
+
+			$error = true;
+
 		}
 
 		if ( true === $error ) {
