@@ -105,32 +105,35 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	}
 
 	/**
-	 * Retrieves and endpoint from the registry and builds an Endpoint object.
+	 * Builds an endpoint object from a registry entry.
 	 *
 	 * @since 3.0
 	 *
 	 * @param string $endpoint_id Endpoint ID.
-	 * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object if it exists,
-	 *                                                    otherwise a WP_Error object.
+	 * @param string $type        View type to use when building the object.
+	 * @return Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
 	 */
-	public function get_endpoint( $endpoint_id, $type = null ) {
+	public function build_endpoint( $endpoint_id, $type ) {
 
 		try {
 
-			$endpoint = parent::get_item( $endpoint_id );
+			$endpoint = $this->get_endpoint( $endpoint_id );
 
 		} catch( \EDD_Exception $exception ) {
 
 			edd_debug_log_exception( $exception );
-
-			return new \WP_Error( 'invalid_endpoint_id', $exception->getMessage(), $exception->getTrace() );
-
 		}
 
-		$endpoint['id'] = $endpoint_id;
+		if ( ! empty( $endpoint ) ) {
+			$endpoint = new Endpoint( $endpoint, $type );
+		} else {
+			return new \WP_Error( 'invalid_endpoint', $endpoint_id );
+		}
 
-		$endpoint = new Endpoint( $endpoint, $type );
-
-
+		if ( $endpoint->has_errors() ) {
+			return $endpoint->get_errors();
+		} else {
+			return $endpoint;
+		}
 	}
 }
