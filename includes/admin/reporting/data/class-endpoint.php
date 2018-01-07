@@ -75,6 +75,14 @@ class Endpoint {
 	private $display_args = array();
 
 	/**
+	 * Holds errors related to instantiating the endpoint object.
+	 *
+	 * @since 3.0
+	 * @var   \WP_Error
+	 */
+	private $errors;
+
+	/**
 	 * Constructs the endpoint object.
 	 *
 	 * @since 3.0
@@ -86,21 +94,29 @@ class Endpoint {
 	 *                         retrieve from the corresponding endpoint registry entry.
 	 */
 	public function __construct( $endpoint, $type ) {
+		$this->errors = new \WP_Error();
+
 		$this->set_type( $type );
 
 		if ( ! empty( $endpoint['id'] ) ) {
 			$this->endpoint_id = $endpoint['id'];
 		} else {
-			// TODO: Decide on error handling.
+			$this->errors->add( 'missing_endpoint_id', 'The endpoint_id is missing.' );
 		}
 
 		if ( ! empty( $endpoint['label'] ) ) {
 			$this->label = $endpoint['label'];
 		} else {
-			// TODO: Decide on error handling.
+			$this->errors->add( 'missing_label', 'The endpoint label is missing.' );
 		}
 
 		$this->set_display_props( $endpoint );
+
+		$error_messages = $this->errors->get_error_codes();
+
+		if ( ! empty( $error_messages ) ) {
+			return $errors;
+		}
 	}
 
 	/**
@@ -203,6 +219,8 @@ class Endpoint {
 
 		if ( in_array( $type, $types, true ) ) {
 			$this->type = $type;
+		} else {
+			$this->errors->add( 'invalid_type', 'Invalid endpoint type.', $type );
 		}
 	}
 
@@ -215,30 +233,73 @@ class Endpoint {
 	 */
 	protected function set_display_props( $endpoint ) {
 
-		if ( ! empty( $endpoint[ $this->type ] ) ) {
+		if ( ! empty( $endpoint[ $this->get_type() ] ) ) {
 
 			$view_atts = $endpoint[ $this->type ];
 
 			if ( isset( $view_atts['display_args'] ) ) {
+
 				$this->display_args = $view_atts['display_args'];
+
 			} else {
-				// TODO: Decide on error handling.
+
+				$message = sprintf( 'The display_args argument must be set for the %s endpoint view type.',
+					$this->get_type()
+				);
+
+				$this->errors->add( 'missing_display_args', $message, array(
+					'type'        => $this->get_type(),
+					'endpoint_id' => $this->get_id(),
+				) );
+
 			}
 
 			if ( isset( $view_atts['display_callback'] ) ) {
+
 				$this->display_callback = $view_atts['display_callback'];
+
 			} else {
-				// TODO: Decide on error handling.
+
+				$message = sprintf( 'The display_callback argument must be set for the %s endpoint view type.',
+					$this->get_type()
+				);
+
+				$this->errors->add( 'missing_display_callback', $message, array(
+					'type'        => $this->get_type(),
+					'endpoint_id' => $this->get_id(),
+				) );
+
 			}
 
 			if ( isset( $view_atts['data_callback'] ) ) {
+
 				$this->data_callback = $view_atts['data_callback'];
+
 			} else {
-				// TODO: Decide on error handling.
+
+				$message = sprintf( 'The data_callback argument must be set for the %s endpoint view type.',
+					$this->get_type()
+				);
+
+				$this->errors->add( 'missing_data_callback', $message, array(
+					'type'        => $this->get_type(),
+					'endpoint_id' => $this->get_id(),
+				) );
+
 			}
 
 		} else {
-			// TODO: Decide on error handling.
+
+			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%1$s\' endpoint.',
+				$this->get_type(),
+				$this->get_id()
+			);
+
+			$errors->add( 'invalid_endpoint_view_type', $message, array(
+				'type'        => $this->get_type(),
+				'endpoint_id' => $this->get_id(),
+			) );
+
 		}
 	}
 
