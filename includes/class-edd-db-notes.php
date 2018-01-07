@@ -78,7 +78,7 @@ class EDD_DB_Notes extends EDD_DB {
 			'object_id'    => 0,
 			'object_type'  => '',
 			'note'         => '',
-			'user_id'      => '',
+			'user_id'      => 0,
 			'date_created' => date( 'Y-m-d H:i:s' ),
 		);
 	}
