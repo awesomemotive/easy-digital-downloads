@@ -11,6 +11,7 @@
 namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
+use EDD\Admin\Reports\Exceptions;
 
 /**
  * Implements a singleton registry for registering reports data endpoints.
@@ -93,7 +94,9 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception If the `$attributes` array is empty.
+	 * @throws \EDD_Exception if the `$attributes` array is empty.
+	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
+	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
@@ -117,7 +120,51 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
 	public function register_endpoint( $endpoint_id, $attributes ) {
-		return parent::add_item( $endpoint_id, $attributes );
+		$error = false;
+
+		$defaults = array(
+			'label' => '',
+			'views' => array(),
+		);
+
+		$attributes = array_merge( $defaults, $attributes );
+
+		try {
+
+			$this->validate_attributes( $attributes, $endpoint_id );
+
+			try {
+
+				foreach( $attributes['views'] as $view_attributes ) {
+
+					$this->validate_attributes( $view_attributes, $endpoint_id, array( 'filters' ) );
+
+				}
+
+			} catch( \EDD_Exception $exception ) {
+
+				edd_debug_log_exception( $exception );
+
+				$error = true;
+
+			}
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			$error = true;
+		}
+
+		if ( true === $error ) {
+
+			return false;
+
+		} else {
+
+			return parent::add_item( $endpoint_id, $attributes );
+
+		}
 	}
 
 	/**
