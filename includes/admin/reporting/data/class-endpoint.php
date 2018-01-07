@@ -111,12 +111,28 @@ class Endpoint {
 		}
 
 		$this->set_display_props( $endpoint );
+	}
 
-		$error_messages = $this->errors->get_error_codes();
+	/**
+	 * Determines whether the endpoint has generated errors during instantiation.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if errors have been logged, otherwise false.
+	 */
+	public function has_errors() {
+		$errors = $this->errors->get_error_codes())
 
-		if ( ! empty( $error_messages ) ) {
-			return $errors;
-		}
+		return empty( $errors ) ? false : true;
+	}
+
+	/**
+	 * Retrieves any logged errors for the endpoint.
+	 *
+	 * @since 3.0
+	 */
+	public function get_errors() {
+		return $this->errors;
 	}
 
 	/**
@@ -142,72 +158,6 @@ class Endpoint {
 	}
 
 	/**
-	 * Retrieves the endpoint (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Endpoint type.
-	 */
-	public function get_type() {
-		return $this->type;
-	}
-
-	/**
-	 * Retrieves the data for the endpoint (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return mixed Endpoint data.
-	 */
-	public function get_data() {
-		if ( is_callable( $this->data_callback ) ) {
-			$data = call_user_func( $this->data_callback );
-		} else {
-			$data = '';
-		}
-
-		/**
-		 * Filters data for the current endpoint.
-		 *
-		 * @since 3.0
-		 *
-		 * @param mixed|string $data Endpoint data.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
-		 */
-		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
-	}
-
-	/**
-	 * Retrieves the display callback for the endpoint (view) type.
-	 *
-	 * @since 3.0
-	 *
- 	 * @return mixed|void
-	 */
-	public function get_display_callback() {
-		/**
-		 * Filters the display callback for the current endpoint.
-		 *
-		 * @since 3.0
-		 *
-		 * @param callable $display_callback Display callback.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
-		 */
-		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
-	}
-
-	/**
-	 * Retrieves the display arguments for the (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array Display arguments.
-	 */
-	public function get_display_args() {
-		return $this->display_args;
-	}
-
-	/**
 	 * Sets the endpoint type.
 	 *
 	 * @since 3.0
@@ -222,6 +172,17 @@ class Endpoint {
 		} else {
 			$this->errors->add( 'invalid_type', 'Invalid endpoint type.', $type );
 		}
+	}
+
+	/**
+	 * Retrieves the endpoint (view) type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Endpoint type.
+	 */
+	public function get_type() {
+		return $this->type;
 	}
 
 	/**
@@ -301,6 +262,61 @@ class Endpoint {
 			) );
 
 		}
+	}
+
+	/**
+	 * Retrieves the data for the endpoint (view) type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed Endpoint data.
+	 */
+	public function get_data() {
+		if ( is_callable( $this->data_callback ) ) {
+			$data = call_user_func( $this->data_callback );
+		} else {
+			$data = '';
+		}
+
+		/**
+		 * Filters data for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param mixed|string $data Endpoint data.
+		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
+	}
+
+	/**
+	 * Retrieves the display callback for the endpoint (view) type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed|void
+	 */
+	public function get_display_callback() {
+		/**
+		 * Filters the display callback for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param callable $display_callback Display callback.
+		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
+	}
+
+	/**
+	 * Retrieves the display arguments for the (view) type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Display arguments.
+	 */
+	public function get_display_args() {
+		return $this->display_args;
 	}
 
 	/**
