@@ -75,7 +75,7 @@ class EDD_DB_Notes extends EDD_DB {
 	public function get_column_defaults() {
 		return array(
 			'id'           => 0,
-			'object_id'    => '',
+			'object_id'    => 0,
 			'object_type'  => '',
 			'note'         => '',
 			'user_id'      => '',
