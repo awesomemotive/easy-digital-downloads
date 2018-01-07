@@ -121,7 +121,7 @@ class Endpoint {
 	 * @return bool True if errors have been logged, otherwise false.
 	 */
 	public function has_errors() {
-		$errors = $this->errors->get_error_codes())
+		$errors = $this->errors->get_error_codes();
 
 		return empty( $errors ) ? false : true;
 	}
