@@ -37,7 +37,7 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * The one true Reports registry instance.
 	 *
 	 * @since 3.0
-	 * @var   \EDD\Admin\Reports\Registry
+	 * @var   Registry
 	 */
 	private static $instance;
 
@@ -46,7 +46,7 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @return \EDD\Admin\Reports\Registry Reports registry instance.
+	 * @return Registry Reports registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -60,6 +60,8 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * Handles magic method calls for report manipulation.
 	 *
 	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception in get_report() if the item does not exist.
 	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments (if any)
@@ -84,6 +86,9 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * Adds a new report to the master registry.
 	 *
 	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if the `$attributes` array is empty.
+	 * @throws \EDD_Exception if the 'label' or 'endpoonts' attributes are empty.
 	 *
 	 * @param string $report_id   Report ID.
 	 * @param array  $attributes {
