@@ -266,7 +266,7 @@ class EDD_DB_Logs extends EDD_DB {
 		$sql = "
 		CREATE TABLE {$this->table_name} (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			object_id BIGINT(20) UNSIGNED NOT NULL,
+			object_id BIGINT(20) UNSIGNED DEFAULT 0,
 			object_type VARCHAR(200) NOT NULL,
 			type VARCHAR(30) NOT NULL,
 			title VARCHAR(200) NOT NULL,
