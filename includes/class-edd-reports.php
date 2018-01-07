@@ -35,7 +35,7 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Admin\Reports\Registry $reports Reports registry instance, passed by reference.
+		 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry instance, passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
@@ -52,7 +52,7 @@ final class Reports {
 		require_once $reports_dir . 'exceptions/class-invalid-parameter.php';
 
 		// Registries.
-		require_once $reports_dir . '/class-registry.php';
+		require_once $reports_dir . '/class-reports-registry.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
@@ -70,7 +70,7 @@ final class Reports {
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD\Admin\Reports\Registry $reports Reports registry.
+	 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry.
 	 */
 	public function register_core_reports( $reports ) {
 
