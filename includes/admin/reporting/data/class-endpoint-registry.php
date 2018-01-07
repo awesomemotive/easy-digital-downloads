@@ -11,6 +11,7 @@
 namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
+use EDD\Admin\Reports;
 use EDD\Admin\Reports\Exceptions;
 
 /**
@@ -18,14 +19,14 @@ use EDD\Admin\Reports\Exceptions;
  *
  * @since 3.0
  *
- * @see \EDD\Utils\Registry
+ * @see \EDD\Admin\Reports\Registry
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_endpoint( string $endpoint_id )
  * @method void  unregister_endpoint( string $endpoint_id )
  * @method array get_endpoints()
  */
-class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry {
+class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Registry item error label.
