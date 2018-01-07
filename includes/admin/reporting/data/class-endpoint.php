@@ -94,6 +94,12 @@ class Endpoint {
 			// TODO: Decide on error handling.
 		}
 
+		if ( ! empty( $endpoint['label'] ) ) {
+			$this->label = $endpoint['label'];
+		} else {
+			// TODO: Decide on error handling.
+		}
+
 		$this->set_display_props( $endpoint );
 	}
 
