@@ -17,13 +17,13 @@ use EDD\Utils;
  *
  * @since 3.0
  *
- * @see \EDD\Utils\Registry
+ * @see \EDD\Admin\Reports\Registry
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
  */
-class Reports_Registry extends Utils\Registry implements Utils\Static_Registry {
+class Reports_Registry extends Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.
