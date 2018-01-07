@@ -75,6 +75,29 @@ class Endpoint {
 	private $display_args = array();
 
 	/**
+	 * Constructs the endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @see set_display_props()
+	 *
+	 * @param array  $endpoint Endpoint record from the registry.
+	 * @param string $type     Endpoint view type. Determines which view attribute to
+	 *                         retrieve from the corresponding endpoint registry entry.
+	 */
+	public function __construct( $endpoint, $type ) {
+		$this->set_type( $type );
+
+		if ( ! empty( $endpoint['id'] ) ) {
+			$this->endpoint_id = $endpoint['id'];
+		} else {
+			// TODO: Decide on error handling.
+		}
+
+		$this->set_display_props( $endpoint );
+	}
+
+	/**
 	 * Retrieves the endpoint ID.
 	 *
 	 * @since 3.0
@@ -160,29 +183,6 @@ class Endpoint {
 	 */
 	public function get_display_args() {
 		return $this->display_args;
-	}
-
-	/**
-	 * Constructs the endpoint object.
-	 *
-	 * @since 3.0
-	 *
-	 * @see set_display_props()
-	 *
-	 * @param array  $endpoint Endpoint record from the registry.
-	 * @param string $type     Endpoint view type. Determines which view attribute to
-	 *                         retrieve from the corresponding endpoint registry entry.
-	 */
-	public function __construct( $endpoint, $type ) {
-		$this->set_type( $type );
-
-		if ( ! empty( $endpoint['id'] ) ) {
-			$this->endpoint_id = $endpoint['id'];
-		} else {
-			// TODO: Decide on error handling.
-		}
-
-		$this->set_display_props( $endpoint );
 	}
 
 	/**
