@@ -54,8 +54,8 @@ final class EDD_DB_Table_Discounts extends WP_DB_Table {
 			start_date datetime NOT NULL default '0000-00-00 00:00:00',
 			end_date datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
-			KEY code_status_type_scope (code(50),status(20),type(20),scope(20))
-			KEY date_created (date_created)
+			KEY code_status_type_scope (code(50),status(20),type(20),scope(20)),
+			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
 	}
 
