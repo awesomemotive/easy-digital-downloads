@@ -52,6 +52,7 @@ final class Reports {
 		require_once $reports_dir . 'exceptions/class-invalid-parameter.php';
 
 		// Registries.
+		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/class-reports-registry.php';
 	}
 
