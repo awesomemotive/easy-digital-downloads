@@ -62,6 +62,8 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 *
 	 * @since 3.0
 	 *
+	 * @throws \EDD\Utils\Exception If the endpoint doesn't exist for get_endpoint().
+	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments (if any)
 	 * @return mixed Results of the method call (if any).
@@ -90,6 +92,8 @@ class Endpoint_Registry extends Utils\Registry implements Utils\Static_Registry 
 	 * Adds a new reports data endpoint to the master registry.
 	 *
 	 * @since 3.0
+	 *
+	 * @throws \EDD\Utils\Exception If the `$attributes` array is empty.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
