@@ -453,7 +453,7 @@ class EDD_DB_Notes extends EDD_DB {
 				object_id bigint(20) unsigned DEFAULT 0,
 				object_type varchar(100) NOT NULL,
 				note longtext NOT NULL,
-				user_id bigint(20) unsigned NO 0,
+				user_id bigint(20) unsigned DEFAULT 0,
 				date_created datetime NOT NULL,
 				PRIMARY KEY (id),
 				KEY object_type (object_type)
