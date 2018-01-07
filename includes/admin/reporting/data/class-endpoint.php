@@ -51,20 +51,20 @@ class Endpoint {
 	public $filters = array();
 
 	/**
-	 * Represents the display callback based on the set view type.
-	 *
-	 * @since 3.0
-	 * @var   callable
-	 */
-	private $display_callback;
-
-	/**
 	 * Represents the callback used to retrieve data based on the set view type.
 	 *
 	 * @since 3.0
 	 * @var   callable
 	 */
 	private $data_callback;
+
+	/**
+	 * Represents the display callback based on the set view type.
+	 *
+	 * @since 3.0
+	 * @var   callable
+	 */
+	private $display_callback;
 
 	/**
 	 * Represents the display arguments (passed to the display callback) for the (view) type.
@@ -208,17 +208,29 @@ class Endpoint {
 	 * @param array $endpoint Endpoint record from the registry.
 	 */
 	protected function set_display_props( $endpoint ) {
-		if ( ! empty( $endpoint['label'] ) ) {
-			$this->label = $endpoint['label'];
-		} else {
-			// TODO: Decide on error handling.
-		}
 
 		if ( ! empty( $endpoint[ $this->type ] ) ) {
-			$view_attributes = $endpoint[ $this->type ];
 
-			$this->display_callback = $view_attributes['display_callback'];
-			$this->data_callback    = $view_attributes['data_callback'];
+			$view_atts = $endpoint[ $this->type ];
+
+			if ( isset( $view_atts['display_args'] ) ) {
+				$this->display_args = $view_atts['display_args'];
+			} else {
+				// TODO: Decide on error handling.
+			}
+
+			if ( isset( $view_atts['display_callback'] ) ) {
+				$this->display_callback = $view_atts['display_callback'];
+			} else {
+				// TODO: Decide on error handling.
+			}
+
+			if ( isset( $view_atts['data_callback'] ) ) {
+				$this->data_callback = $view_atts['data_callback'];
+			} else {
+				// TODO: Decide on error handling.
+			}
+
 		} else {
 			// TODO: Decide on error handling.
 		}
