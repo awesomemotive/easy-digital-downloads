@@ -67,6 +67,14 @@ class Endpoint {
 	private $data_callback;
 
 	/**
+	 * Represents the display arguments (passed to the display callback) for the (view) type.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $display_args = array();
+
+	/**
 	 * Retrieves the endpoint ID.
 	 *
 	 * @since 3.0
@@ -144,6 +152,17 @@ class Endpoint {
 	}
 
 	/**
+	 * Retrieves the display arguments for the (view) type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Display arguments.
+	 */
+	public function get_display_args() {
+		return $this->display_args;
+	}
+
+	/**
 	 * Constructs the endpoint object.
 	 *
 	 * @since 3.0
@@ -213,11 +232,13 @@ class Endpoint {
 	 * @return void
 	 */
 	public function display() {
-		$data     = $this->get_data();
 		$callback = $this->get_display_callback();
 
 		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array( $data ) );
+			call_user_func_array( $callback, array(
+				'data' => $this->get_data(),
+				'args' => $this->get_display_args(),
+			) );
 		}
 	}
 
