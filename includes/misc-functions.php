@@ -585,6 +585,59 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 	}
 }
 
+/**
+ * Marks an argument in a function deprecated and informs when it's been used
+ *
+ * There is a hook edd_deprecated_argument_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that has an argument being deprecated.
+ *
+ * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $file        The file that was included.
+ * @param string $version     The version of EDD that deprecated the file.
+ * @param string $replacement Optional. The file that should have been included based on EDD_PLUGIN_DIR.
+ *                            Default null.
+ * @param string $message     Optional. A message regarding the change. Default empty.
+ */
+function _edd_deprecated_file( $file, $version, $replacement = null, $message = '' ) {
+	/**
+	 * Fires immediately before a deprecated file notice is output.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $file        The file that was included.
+	 * @param string $replacement The file that should have been included based on EDD_PLUGIN_DIR.
+	 * @param string $version     The version of EDD that deprecated the file.
+	 */
+	do_action( 'edd_deprecated_file_run', $file, $replacement, $version );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	/**
+	 * Filters whether to trigger the error output for deprecated EDD files.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $show_errors Whether to trigger errors for deprecated files.
+	 */
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_file_trigger_error', $show_errors ) ) {
+		if ( ! is_null( $replacement ) ) {
+			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative file name */
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $file, $version, $replacement ) . $message );
+		} else {
+			/* translators: 1: PHP file name, 2: EDD version number */
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'easy-digital-downloads' ), $file, $version ) . $message );
+		}
+	}
+}
 
 /**
  * Checks whether function is disabled.
