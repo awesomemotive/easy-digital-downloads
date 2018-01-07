@@ -450,7 +450,7 @@ class EDD_DB_Notes extends EDD_DB {
 		$sql = "
 			CREATE TABLE {$this->table_name} (
 				id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-				object_id bigint(20) unsigned NO 0,
+				object_id bigint(20) unsigned DEFAULT 0,
 				object_type varchar(100) NOT NULL,
 				note longtext NOT NULL,
 				user_id bigint(20) unsigned NO 0,
