@@ -23,7 +23,7 @@ use EDD\Utils;
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
  */
-class Registry extends Utils\Registry implements Utils\Static_Registry {
+class Reports_Registry extends Utils\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.
@@ -37,7 +37,7 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * The one true Reports registry instance.
 	 *
 	 * @since 3.0
-	 * @var   Registry
+	 * @var   Reports_Registry
 	 */
 	private static $instance;
 
@@ -46,11 +46,11 @@ class Registry extends Utils\Registry implements Utils\Static_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @return Registry Reports registry instance.
+	 * @return Reports_Registry Reports registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new Registry();
+			self::$instance = new Reports_Registry();
 		}
 
 		return self::$instance;
