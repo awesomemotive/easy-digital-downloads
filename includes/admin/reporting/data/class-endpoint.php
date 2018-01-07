@@ -194,9 +194,9 @@ class Endpoint {
 	 */
 	protected function set_display_props( $endpoint ) {
 
-		if ( ! empty( $endpoint[ $this->get_type() ] ) ) {
+		if ( ! empty( $endpoint['views'][ $this->get_type() ] ) ) {
 
-			$view_atts = $endpoint[ $this->type ];
+			$view_atts = $endpoint['views'][ $this->type ];
 
 			if ( isset( $view_atts['display_args'] ) ) {
 
