@@ -419,7 +419,7 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 		$sql = "
 		CREATE TABLE {$this->table_name} (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			user_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+			user_id BIGINT(20) UNSIGNED DEFAULT 0,
 			api_key VARCHAR(32) NOT NULL DEFAULT 'public',
 			token VARCHAR(32) NOT NULL DEFAULT 'public',
 			version VARCHAR(30) NOT NULL,
