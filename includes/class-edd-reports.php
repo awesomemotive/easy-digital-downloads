@@ -80,7 +80,9 @@ final class Reports {
 			$reports->add_report( 'products', array(
 				'label'     => __( 'Products', 'easy-digital-downloads' ),
 				'priority'  => 10,
-				'endpoints' => array( 'something' ),
+				'endpoints' => array(
+					'tiles' => array( 'something' ),
+				),
 			) );
 
 			$reports->add_report( 'earnings', array(
