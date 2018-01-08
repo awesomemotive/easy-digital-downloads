@@ -11,7 +11,7 @@ if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
  * @group edd_registry
  * @group edd_reports
  */
-class Registry_Tests extends \EDD_UnitTestCase {
+class Reports_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Reports fixture.
