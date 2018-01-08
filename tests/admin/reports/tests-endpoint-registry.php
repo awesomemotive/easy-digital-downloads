@@ -6,7 +6,7 @@ if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
 }
 
 /**
- * Tests for the Reports registry API.
+ * Tests for the Endpoint registry API.
  *
  * @group edd_registry
  * @group edd_reports
