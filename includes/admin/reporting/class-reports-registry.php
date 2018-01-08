@@ -119,8 +119,6 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 
 		} catch( \EDD_Exception $exception ) {
 
-			edd_debug_log_exception( $exception );
-
 			throw $exception;
 
 			$error = true;
