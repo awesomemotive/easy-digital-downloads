@@ -87,7 +87,6 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if the `$attributes` array is empty.
 	 * @throws \EDD_Exception if the 'label' or 'endpoonts' attributes are empty.
 	 *
 	 * @param string $report_id   Report ID.
