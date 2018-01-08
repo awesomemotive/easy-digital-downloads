@@ -87,7 +87,6 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if the `$attributes` array is empty.
 	 * @throws \EDD_Exception if the 'label' or 'endpoints' attributes are empty.
 	 *
 	 * @param string $report_id   Report ID.
@@ -118,8 +117,6 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 			$this->validate_attributes( $attributes, $report_id, array( 'filters' ) );
 
 		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
 
 			throw $exception;
 
