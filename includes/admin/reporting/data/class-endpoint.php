@@ -194,9 +194,11 @@ class Endpoint {
 	 */
 	protected function set_display_props( $endpoint ) {
 
-		if ( ! empty( $endpoint['views'][ $this->get_type() ] ) ) {
+		$view_type = $this->get_view();
 
-			$view_atts = $endpoint['views'][ $this->type ];
+		if ( ! empty( $endpoint['views'][ $view_type ] ) ) {
+
+			$view_atts = $endpoint['views'][ $view_type ];
 
 			if ( isset( $view_atts['display_args'] ) ) {
 
@@ -205,11 +207,11 @@ class Endpoint {
 			} else {
 
 				$message = sprintf( 'The display_args argument must be set for the %s endpoint view type.',
-					$this->get_type()
+					$view_type
 				);
 
 				$this->errors->add( 'missing_display_args', $message, array(
-					'type'        => $this->get_type(),
+					'type'        => $view_type,
 					'endpoint_id' => $this->get_id(),
 				) );
 
@@ -222,11 +224,11 @@ class Endpoint {
 			} else {
 
 				$message = sprintf( 'The display_callback argument must be set for the %s endpoint view type.',
-					$this->get_type()
+					$view_type
 				);
 
 				$this->errors->add( 'missing_display_callback', $message, array(
-					'type'        => $this->get_type(),
+					'type'        => $view_type,
 					'endpoint_id' => $this->get_id(),
 				) );
 
@@ -239,11 +241,11 @@ class Endpoint {
 			} else {
 
 				$message = sprintf( 'The data_callback argument must be set for the %s endpoint view type.',
-					$this->get_type()
+					$view_type
 				);
 
 				$this->errors->add( 'missing_data_callback', $message, array(
-					'type'        => $this->get_type(),
+					'type'        => $view_type,
 					'endpoint_id' => $this->get_id(),
 				) );
 
@@ -252,12 +254,12 @@ class Endpoint {
 		} else {
 
 			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%1$s\' endpoint.',
-				$this->get_type(),
+				$view_type,
 				$this->get_id()
 			);
 
-			$errors->add( 'view_not_defined', $message, array(
-				'type'        => $this->get_type(),
+			$this->errors->add( 'view_not_defined', $message, array(
+				'type'        => $view_type,
 				'endpoint_id' => $this->get_id(),
 			) );
 
