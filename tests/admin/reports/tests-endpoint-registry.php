@@ -200,6 +200,119 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @expectedException \EDD_Exception
+	 */
+	public function test_register_endpoint_with_empty_attributes_should_return_false() {
+		$this->assertFalse( $this->registry->register_endpoint( 'foo', array() ) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_register_endpoint_with_empty_label_should_throw_exception() {
+		$this->setExpectedException(
+			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
+			"The 'label' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+		);
+
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => ''
+		) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_register_endpoint_with_empty_views_should_throw_exception() {
+		$this->setExpectedException(
+			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
+			"The 'views' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+		);
+
+		$added = $this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+		) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
+		$this->setExpectedException(
+			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
+			"The 'tile' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+		);
+
+		$added = $this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array()
+			)
+		) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_register_endpoint_with_no_priority_should_set_priority_10() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_callback' => 'some_callback'
+				)
+			),
+		) );
+
+		$report = $this->registry->get_endpoint( 'foo' );
+
+		$this->assertSame( 10, $report['priority'] );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_register_endpoint_with_priority_should_set_that_priority() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label'     => 'Foo',
+			'priority'  => 15,
+			'views' => array(
+				'tile' => array(
+					'display_callback' => 'some_callback'
+				)
+			),
+		) );
+
+		$report = $this->registry->get_endpoint( 'foo' );
+
+		$this->assertSame( 15, $report['priority'] );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_register_endpoint_with_empty_filters_should_succeed_and_return_true() {
+		// Add a test report.
+		$added = $this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_callback' => 'some_callback'
+				)
+			),
+		) );
+
+		$this->assertTrue( $added );
+	}
+
+	/**
 	 * Adds two test endpoints for use with get_endpoints() tests.
 	 *
 	 * @throws \EDD_Exception
