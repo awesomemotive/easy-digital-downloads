@@ -1,6 +1,6 @@
 <?php
 /**
- * Reports API Filters Registry
+ * Reports API - Filters Registry
  *
  * @package     EDD
  * @subpackage  Admin/Reports
