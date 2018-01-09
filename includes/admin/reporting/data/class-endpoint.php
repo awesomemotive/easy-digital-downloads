@@ -107,7 +107,7 @@ class Endpoint {
 		if ( ! empty( $endpoint['label'] ) ) {
 			$this->label = $endpoint['label'];
 		} else {
-			$this->errors->add( 'missing_label', 'The endpoint label is missing.' );
+			$this->errors->add( 'missing_endpoint_label', 'The endpoint label is missing.' );
 		}
 
 		$this->set_display_props( $endpoint );
