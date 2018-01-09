@@ -54,4 +54,35 @@ class Registry extends Utils\Registry {
 		}
 	}
 
+	/**
+	 * Retrieves all registered items with a given sorting scheme.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $sort Optional. How to sort the list of registered items before retrieval.
+	 *                     Accepts 'priority' or 'ID' (alphabetized by item ID), or empty (none).
+	 *                     Default empty.
+	 */
+	public function get_items_sorted( $sort = '' ) {
+		// If sorting, handle it before retrieval from the ArrayObject.
+		switch( $sort ) {
+			case 'ID':
+				parent::ksort();
+				break;
+
+			case 'priority':
+				parent::uasort( function( $a, $b ) {
+					if ( $a['priority'] == $b['priority'] ) {
+						return 0;
+					}
+
+					return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
+				} );
+				break;
+
+			default: break;
+		}
+
+		return parent::get_items();
+	}
 }
