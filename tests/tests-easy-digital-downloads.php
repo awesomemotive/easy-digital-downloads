@@ -117,6 +117,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/reporting/exceptions/class-invalid-parameter.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
