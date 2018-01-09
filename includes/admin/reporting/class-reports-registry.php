@@ -22,6 +22,7 @@ use EDD\Utils;
  *
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
+ * @method array get_reports( string $sort )
  */
 class Reports_Registry extends Registry implements Utils\Static_Registry {
 
@@ -69,15 +70,19 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 */
 	public function __call( $name, $arguments ) {
 
-		$report_id = isset( $arguments[0] ) ? $arguments[0] : '';
+		$report_id_or_sort = isset( $arguments[0] ) ? $arguments[0] : '';
 
 		switch( $name ) {
 			case 'get_report':
-				return parent::get_item( $report_id );
+				return parent::get_item( $report_id_or_sort );
 				break;
 
 			case 'remove_report':
-				parent::remove_item( $report_id );
+				parent::remove_item( $report_id_or_sort );
+				break;
+
+			case 'get_reports':
+				return $this->get_items_sorted( $report_id_or_sort );
 				break;
 		}
 	}
