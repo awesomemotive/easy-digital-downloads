@@ -148,6 +148,8 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 				edd_debug_log_exception( $exception );
 
+				throw $exception;
+
 				$error = true;
 
 			}
@@ -155,6 +157,8 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		} catch( \EDD_Exception $exception ) {
 
 			edd_debug_log_exception( $exception );
+
+			throw $exception;
 
 			$error = true;
 		}
