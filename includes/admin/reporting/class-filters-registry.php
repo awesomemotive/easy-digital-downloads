@@ -24,15 +24,15 @@ use EDD\Utils;
  * @method void  remove_filter( string $filter_id )
  * @method array get_filters()
  */
-class Filters_Registry extends Utils\Registry implements Utils\Static_Registry {
+class Filters_Registry extends Registry implements Utils\Static_Registry {
 
 	/**
-	 * Registry type.
+	 * Reports item error label.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $type = 'filter';
+	public $item_error_label = 'reports filter';
 
 	/**
 	 * The one true Filters_Registry instance.
@@ -62,6 +62,8 @@ class Filters_Registry extends Utils\Registry implements Utils\Static_Registry {
 	 *
 	 * @since 3.0
 	 *
+	 * @throws \EDD_Exception in get_filter() if the item does not exist.
+	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments (if any)
 	 * @return mixed Results of the method call (if any).
@@ -87,6 +89,8 @@ class Filters_Registry extends Utils\Registry implements Utils\Static_Registry {
 	 * Adds a new reports filter to the master registry.
 	 *
 	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if any attributes are empty.
 	 *
 	 * @param string $filter_id   Reports filter ID.
 	 * @param array  $attributes {
