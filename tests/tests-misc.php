@@ -765,5 +765,4 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$this->assertFalse( edd_get_option( 'test_setting' ) );
 	}
-
 }
