@@ -1,6 +1,8 @@
 <?php
 namespace EDD\Admin\Reports\Data;
 
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
+
 if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
 }
@@ -73,6 +75,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
@@ -84,6 +87,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
@@ -209,6 +213,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_label_should_throw_exception() {
@@ -224,6 +229,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_views_should_throw_exception() {
@@ -239,6 +245,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
@@ -282,7 +289,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		$this->registry->register_endpoint( 'foo', array(
 			'label'     => 'Foo',
 			'priority'  => 15,
-			'views' => array(
+			'views'     => array(
 				'tile' => array(
 					'display_callback' => 'some_callback'
 				)
