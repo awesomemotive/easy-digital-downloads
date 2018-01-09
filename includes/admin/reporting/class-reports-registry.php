@@ -140,4 +140,42 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 		}
 	}
 
+	/**
+	 * Registers a new data endpoint to the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
+	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 *
+	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 *
+	 * @param string $endpoint_id Reports data endpoint ID.
+	 * @param array  $attributes  Attributes of the endpoint. See Endpoint_Registry::register_endpoint()
+	 *                            for more information on expected arguments.
+	 * @return bool True if the endpoint was successfully registered, otherwise false.
+	 */
+	public function register_endpoint( $endpoint_id, $attributes ) {
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry $endpoints */
+		$endpoints = EDD()->utils->get_registry( 'reports:endpoints' );
+
+		return $endpoints->register_endpoint( $endpoint_id, $attributes );
+	}
+
+	/**
+	 * Unregisters a data endpoint from the master registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 *
+	 * @param string $endpoint_id Endpoint ID.
+	 */
+	public function unregister_endpoint( $endpoint_id ) {
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry $endpoints */
+		$endpoints = EDD()->utils->get_registry( 'reports:endpoints' );
+
+		$endpoints->unregister_endpoint( $endpoint_id );
+	}
+
 }
