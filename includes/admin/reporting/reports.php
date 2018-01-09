@@ -541,3 +541,27 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 
 	return maybe_unserialize( $estimated );
 }
+
+/**
+ * Retrieves the list of supported endpoint view types and their attributes.
+ *
+ * @since 3.0
+ *
+ * @return array List of supported endpoint types.
+ */
+function edd_get_reports_endpoint_views() {
+	return array(
+		'tile' => array(
+			'signal_key' => 'tiles',
+		),
+		'chart' => array(
+			'signal_key' => 'charts',
+		),
+		'table' => array(
+			'signal_key' => 'tables',
+		),
+		'graph' => array(
+			'signal_key' => 'graphs',
+		),
+	);
+}
