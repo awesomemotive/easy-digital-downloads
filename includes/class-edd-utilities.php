@@ -47,4 +47,28 @@ class EDD_Utilities {
 		require_once $utils_dir . 'class-registry.php';
 	}
 
+	/**
+	 * Retrieves a given registry instance by name.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $name Registry name.
+	 * @return \EDD\Utils\Registry|null Null if the registry doesn't exist, otherwise the object instance.
+	 */
+	public function get_registry( $name ) {
+		switch( $name ) {
+			case 'reports':
+				if ( class_exists( '\EDD\Admin\Reports\Reports_Registry' ) ) {
+					$registry = \EDD\Admin\Reports\Reports_Registry::instance();
+				}
+				break;
+
+			default:
+				$registry = null;
+				break;
+		}
+
+		return $registry;
+	}
+
 }
