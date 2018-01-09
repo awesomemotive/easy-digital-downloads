@@ -220,42 +220,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_reports_with_no_sort_should_return_reports_in_order_of_registration() {
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 10,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$this->add_test_reports_for_sort();
 
-		$this->registry->add_report( 'bar', array(
-			'label'     => 'Bar',
-			'priority'  => 5,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$result = array_keys( $this->registry->get_reports() );
 
-		$expected = array(
-			'foo' => array(
-				'label'     => 'Foo',
-				'filters'   => array(),
-				'priority'  => 10,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			),
-			'bar' => array(
-				'label'     => 'Bar',
-				'filters'   => array(),
-				'priority'  => 5,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			)
-		);
-
-		$this->assertEqualSetsWithIndex( $expected, $this->registry->get_reports() );
+		$this->assertEqualSets( array( 'foo', 'bar' ), $result );
 	}
 
 	/**
@@ -264,42 +233,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_reports_with_invalid_sort_should_return_reports_in_order_of_registration() {
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 10,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$this->add_test_reports_for_sort();
 
-		$this->registry->add_report( 'bar', array(
-			'label'     => 'Bar',
-			'priority'  => 5,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$result = array_keys( $this->registry->get_reports( 'fake_sort' ) );
 
-		$expected = array(
-			'foo' => array(
-				'label'     => 'Foo',
-				'filters'   => array(),
-				'priority'  => 10,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			),
-			'bar' => array(
-				'label'     => 'Bar',
-				'filters'   => array(),
-				'priority'  => 5,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			)
-		);
-
-		$this->assertEqualSetsWithIndex( $expected, $this->registry->get_reports( 'fake_sort' ) );
+		$this->assertEqualSets( array( 'foo', 'bar' ), $result );
 	}
 
 	/**
@@ -308,42 +246,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_reports_with_ID_sort_should_return_reports_in_alphabetical_order_by_ID() {
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 10,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$this->add_test_reports_for_sort();
 
-		$this->registry->add_report( 'bar', array(
-			'label'     => 'Bar',
-			'priority'  => 5,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$result = array_keys( $this->registry->get_reports( 'ID' ) );
 
-		$expected = array(
-			'bar' => array(
-				'label'     => 'Bar',
-				'filters'   => array(),
-				'priority'  => 5,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			),
-			'foo' => array(
-				'label'     => 'Foo',
-				'filters'   => array(),
-				'priority'  => 10,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			),
-		);
-
-		$this->assertEqualSetsWithIndex( $expected, $this->registry->get_reports( 'ID' ) );
+		$this->assertEqualSets( array( 'bar', 'foo' ), $result );
 	}
 
 	/**
@@ -352,42 +259,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_reports_with_priority_sort_should_return_reports_in_order_of_priority() {
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 10,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$this->add_test_reports_for_sort();
 
-		$this->registry->add_report( 'bar', array(
-			'label'     => 'Bar',
-			'priority'  => 5,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-		) );
+		$result = array_keys( $this->registry->get_reports( 'priority' ) );
 
-		$expected = array(
-			'bar' => array(
-				'label'     => 'Bar',
-				'filters'   => array(),
-				'priority'  => 5,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			),
-			'foo' => array(
-				'label'     => 'Foo',
-				'filters'   => array(),
-				'priority'  => 10,
-				'endpoints' => array(
-					'tiles' => array()
-				),
-			),
-		);
-
-		$this->assertEqualSetsWithIndex( $expected, $this->registry->get_reports( 'priority' ) );
+		$this->assertEqualSets( array( 'bar', 'foo' ), $result );
 	}
 
 	/**
@@ -447,5 +323,28 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		}
 
 		return $expected;
+	}
+
+	/**
+	 * Adds two test reports for use when comparing sorting results.
+	 *
+	 * @throws \EDD_Exception
+	 */
+	protected function add_test_reports_for_sort() {
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'priority'  => 10,
+			'endpoints' => array(
+				'tiles' => array()
+			),
+		) );
+
+		$this->registry->add_report( 'bar', array(
+			'label'     => 'Bar',
+			'priority'  => 5,
+			'endpoints' => array(
+				'tiles' => array()
+			),
+		) );
 	}
 }
