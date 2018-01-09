@@ -22,6 +22,7 @@ use EDD\Utils;
  *
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
+ * @method array get_reports( string $sort )
  */
 class Reports_Registry extends Registry implements Utils\Static_Registry {
 
@@ -69,15 +70,19 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 */
 	public function __call( $name, $arguments ) {
 
-		$report_id = isset( $arguments[0] ) ? $arguments[0] : '';
+		$report_id_or_sort = isset( $arguments[0] ) ? $arguments[0] : '';
 
 		switch( $name ) {
 			case 'get_report':
-				return parent::get_item( $report_id );
+				return parent::get_item( $report_id_or_sort );
 				break;
 
 			case 'remove_report':
-				parent::remove_item( $report_id );
+				parent::remove_item( $report_id_or_sort );
+				break;
+
+			case 'get_reports':
+				return $this->get_items_sorted( $report_id_or_sort );
 				break;
 		}
 	}
@@ -133,38 +138,6 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 			return parent::add_item( $report_id, $attributes );
 
 		}
-	}
-
-	/**
-	 * Retrieves all registered reports with a given sorting scheme.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $sort Optional. How to sort the list of registered reports before retrieval.
-	 *                     Accepts 'priority' or 'ID' (alphabetized by report ID), or empty (none).
-	 *                     Default empty.
-	 */
-	public function get_reports( $sort = '' ) {
-		// If sorting, handle it before retrieval from the ArrayObject.
-		switch( $sort ) {
-			case 'ID':
-				parent::ksort();
-				break;
-
-			case 'priority':
-				parent::uasort( function( $a, $b ) {
-					if ( $a['priority'] == $b['priority'] ) {
-						return 0;
-					}
-
-					return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
-				} );
-				break;
-
-			default: break;
-		}
-
-		return parent::get_items();
 	}
 
 }
