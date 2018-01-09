@@ -36,12 +36,12 @@ class Endpoint {
 	private $label;
 
 	/**
-	 * Endpoint type.
+	 * Endpoint view (type).
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $type;
+	private $view;
 
 	/**
 	 * Represents filters available to the endpoint.
@@ -90,13 +90,13 @@ class Endpoint {
 	 * @see set_display_props()
 	 *
 	 * @param array  $endpoint Endpoint record from the registry.
-	 * @param string $type     Endpoint view type. Determines which view attribute to
+	 * @param string $view     Endpoint view type. Determines which view attribute to
 	 *                         retrieve from the corresponding endpoint registry entry.
 	 */
-	public function __construct( $endpoint, $type ) {
+	public function __construct( $endpoint, $view ) {
 		$this->errors = new \WP_Error();
 
-		$this->set_type( $type );
+		$this->set_view( $view );
 
 		if ( ! empty( $endpoint['id'] ) ) {
 			$this->endpoint_id = $endpoint['id'];
@@ -158,31 +158,31 @@ class Endpoint {
 	}
 
 	/**
-	 * Sets the endpoint type.
+	 * Sets the endpoint view (type).
 	 *
 	 * @since 3.0
 	 *
 	 * @param string $type Endpoint type.
 	 */
-	private function set_type( $type ) {
-		$types = edd_get_reports_endpoint_views();
+	private function set_view( $view ) {
+		$views = \edd_get_reports_endpoint_views();
 
-		if ( in_array( $type, $types, true ) ) {
-			$this->type = $type;
+		if ( array_key_exists( $view, $views ) ) {
+			$this->view = $view;
 		} else {
-			$this->errors->add( 'invalid_type', 'Invalid endpoint type.', $type );
+			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view );
 		}
 	}
 
 	/**
-	 * Retrieves the endpoint (view) type.
+	 * Retrieves the endpoint view (type).
 	 *
 	 * @since 3.0
 	 *
-	 * @return string Endpoint type.
+	 * @return string Endpoint view.
 	 */
-	public function get_type() {
-		return $this->type;
+	public function get_view() {
+		return $this->view;
 	}
 
 	/**
