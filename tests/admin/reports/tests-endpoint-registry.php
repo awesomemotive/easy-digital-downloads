@@ -320,6 +320,117 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
+		$result = $this->registry->build_endpoint( 'fake', '' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'fake', '' );
+
+		$this->assertSame( 'invalid_endpoint', $result->get_error_code() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_invalid_type_should_return_WP_Error() {
+		$this->add_test_endpoints();
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'fake' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_invalid_type_should_return_WP_Error_code_invalid_view() {
+		$this->add_test_endpoints();
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'fake' );
+
+		$this->assertSame( 'invalid_view', $result->get_error_code() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_missing_endpoint_id_should_return_WP_Error() {
+		$this->add_test_endpoints();
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_missing_endpoint_id_should_return_WP_Error_including_code_missing_endpoint_id() {
+		$this->registry->add_item( 'foo', array(
+			'label' => 'Foo'
+		) );
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'missing_endpoint_id', $result->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_missing_endpoint_label_should_return_WP_Error() {
+		$this->registry->add_item( 'foo', array(
+			'label' => ''
+		) );
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_missing_endpoint_label_should_return_WP_Error_including_code_missing_endpoint_label() {
+		$this->registry->add_item( 'foo', array(
+			'label' => ''
+		) );
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'missing_endpoint_label', $result->get_error_codes() );
+	}
+
+	/**
 	 * Adds two test endpoints for use with get_endpoints() tests.
 	 *
 	 * @throws \EDD_Exception
