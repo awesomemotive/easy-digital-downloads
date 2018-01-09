@@ -2029,10 +2029,11 @@ function edd_tax_rates_callback($args) {
 				<th scope="col"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>
+		<tbody>
 		<?php if( ! empty( $rates ) ) : ?>
 			<?php foreach( $rates as $key => $rate ) : ?>
 			<tr>
-				<td class="edd_tax_country">
+				<td class="edd_tax_country" data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
 					<?php
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
@@ -2046,7 +2047,7 @@ function edd_tax_rates_callback($args) {
 					) );
 					?>
 				</td>
-				<td class="edd_tax_state">
+				<td class="edd_tax_state" data-colname="<?php esc_attr_e( 'State / Province', 'easy-digital-downloads' ); ?>">
 					<?php
 					$states = edd_get_shop_states( $rate['country'] );
 					if( ! empty( $states ) ) {
@@ -2067,17 +2068,17 @@ function edd_tax_rates_callback($args) {
 					}
 					?>
 				</td>
-				<td class="edd_tax_global">
+				<td class="edd_tax_global" data-colname="<?php esc_attr_e( 'Country Wide', 'easy-digital-downloads' ); ?>">
 					<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
 					<label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_html( $rate['rate'] ); ?>"/></td>
-				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span></td>
+				<td class="edd_tax_rate" data-colname="<?php esc_attr_e( 'Rate', 'easy-digital-downloads' ); ?>"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_html( $rate['rate'] ); ?>"/></td>
+				<td data-colname="<?php esc_attr_e( 'Remove', 'easy-digital-downloads' ); ?>"><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span></td>
 			</tr>
 			<?php endforeach; ?>
 		<?php else : ?>
 			<tr>
-				<td class="edd_tax_country">
+				<td class="edd_tax_country" data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
 					<?php
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
@@ -2088,21 +2089,23 @@ function edd_tax_rates_callback($args) {
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
 						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' )
-					) ); ?>
+					) );
+					?>
 				</td>
-				<td class="edd_tax_state">
+				<td class="edd_tax_state" data-colname="<?php esc_attr_e( 'State / Province', 'easy-digital-downloads' ); ?>">
 					<?php echo EDD()->html->text( array(
 						'name' => 'tax_rates[0][state]'
 					) ); ?>
 				</td>
-				<td class="edd_tax_global">
+				<td class="edd_tax_global" data-colname="<?php esc_attr_e( 'Country Wide', 'easy-digital-downloads' ); ?>">
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
 					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/></td>
-				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span></td>
+				<td class="edd_tax_rate" data-colname="<?php esc_attr_e( 'Rate', 'easy-digital-downloads' ); ?>"><input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/></td>
+				<td data-colname="<?php esc_attr_e( 'Remove', 'easy-digital-downloads' ); ?>"><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span></td>
 			</tr>
 		<?php endif; ?>
+		</tbody>
 	</table>
 	<p>
 		<span class="button-secondary" id="edd_add_tax_rate"><?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?></span>
