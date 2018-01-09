@@ -76,6 +76,9 @@ class Report {
 				$this->errors->add( 'missing_label', 'The report label is missing.' );
 			}
 
+			if ( ! empty( $report['filters'] ) ) {
+				$this->filters = $report['filters'];
+			}
 		}
 	}
 
