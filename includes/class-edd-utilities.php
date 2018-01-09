@@ -40,6 +40,8 @@ class EDD_Utilities {
 		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
 		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
+		require_once $utils_dir . 'exceptions/class-invalid-argument.php';
+		require_once $utils_dir . 'exceptions/class-invalid-parameter.php';
 
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
@@ -55,15 +57,9 @@ class EDD_Utilities {
 	 */
 	public function get_registry( $name ) {
 		switch( $name ) {
-			case 'reports:tabs':
-				if ( class_exists( '\EDD\Admin\Reports\Tabs_Registry' ) ) {
-					$registry = \EDD\Admin\Reports\Tabs_Registry::instance();
-				}
-				break;
-
-			case 'reports:data':
-				if ( class_exists( '\EDD\Admin\Reports\Data_Points_Registry' ) ) {
-					$registry = \EDD\Admin\Reports\Data_Point_Registry::instance();
+			case 'reports':
+				if ( class_exists( '\EDD\Admin\Reports\Reports_Registry' ) ) {
+					$registry = \EDD\Admin\Reports\Reports_Registry::instance();
 				}
 				break;
 
@@ -74,4 +70,5 @@ class EDD_Utilities {
 
 		return $registry;
 	}
+
 }

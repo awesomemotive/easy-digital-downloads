@@ -23,21 +23,21 @@ use EDD\Utils\Exceptions;
 abstract class Registry extends \ArrayObject {
 
 	/**
-	 * Singular registry type.
+	 * Item error label.
 	 *
-	 * Used for customizing exception messages. Default 'item'.
+	 * Used for customizing exception messages to the current registry instance. Default 'item'.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $type = 'item';
+	public $item_error_label = 'item';
 
 	/**
 	 * Adds an item to the registry.
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception If the `$attributes` array is empty.
+	 * @throws \EDD_Exception If the `$attributes` array is empty.
 	 *
 	 * @param string $item_id    Item ID.
 	 * @param array  $attributes Array of item attributes. Each extending registry will
@@ -56,9 +56,9 @@ abstract class Registry extends \ArrayObject {
 		} else {
 
 			$message = sprintf(
-				'The attributes were missing when attempting to add the \'%1$s\' registry %2$s.',
+				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
 				$item_id,
-				$this->type
+				$this->item_error_label
 			);
 
 			throw new Exception( $message );
@@ -85,7 +85,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception if the item does not exist.
+	 * @throws \EDD_Exception if the item does not exist.
 	 *
 	 * @param string $item_id Item ID.
 	 * @return array Array of attributes for the item if the item is set,
@@ -102,9 +102,9 @@ abstract class Registry extends \ArrayObject {
 		} else {
 
 			$message = sprintf(
-				'The \'%1$s\' registry %2$s does not exist.',
+				'The \'%1$s\' %2$s does not exist.',
 				$item_id,
-				$this->type
+				$this->item_error_label
 			);
 
 			throw new Exception( $message );
@@ -129,8 +129,8 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exceptions\Attribute_Not_Found if the attribute and/or item
-	 *                                                   does not exist.
+	 * @throws \EDD_Exception if the item does not exist.
+	 * @throws \EDD_Exception if the attribute and/or item does not exist.
 	 *
 	 * @param string $key           Key of the attribute to retrieve.
 	 * @param string $collection_id Collection to retrieve the attribute from.

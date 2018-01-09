@@ -13,10 +13,6 @@ namespace EDD\Admin;
 /**
  * Core class that implements the Reports API.
  *
- * The reports API is intentionally initialized outside of the admin-only constraint
- * to provide greater accessibility to core and extensions. As such, the potential
- * footprint for report tab and tile registrations is intentionally kept minimal.
- *
  * @since 3.0
  */
 final class Reports {
@@ -30,18 +26,18 @@ final class Reports {
 		$this->includes();
 		$this->hooks();
 
-		$tabs = EDD()->utils->get_registry( 'reports:tabs' );
+		$reports = EDD()->utils->get_registry( 'reports' );
 
 		/**
-		 * Fires when the reports tab registry is initialized.
+		 * Fires when the reports registry is initialized.
 		 *
-		 * Use this hook to register new reports tabs.
+		 * Use this hook to register new reports.
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Admin\Reports\Tabs_Registry $tabs Report tabs registry instance, passed by reference.
+		 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry instance, passed by reference.
 		 */
-		do_action_ref_array( 'edd_reports_tabs_init', array( &$tabs ) );
+		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
 
 	/**
@@ -52,10 +48,12 @@ final class Reports {
 	private function includes() {
 		$reports_dir = EDD_PLUGIN_DIR . 'includes/admin/reporting/';
 
+		// Exceptions.
+		require_once $reports_dir . 'exceptions/class-invalid-parameter.php';
+
 		// Registries.
-		require_once $reports_dir . '/registries/class-tabs-registry.php';
-		require_once $reports_dir . '/registries/class-tiles-registry.php';
-		require_once $reports_dir . '/registries/class-data-points-registry.php';
+		require_once $reports_dir . '/class-registry.php';
+		require_once $reports_dir . '/class-reports-registry.php';
 		require_once $reports_dir . '/registries/class-filters-registry.php';
 	}
 
@@ -65,27 +63,32 @@ final class Reports {
 	 * @since 3.0
 	 */
 	private function hooks() {
-		add_action( 'edd_reports_tabs_init', array( $this, 'register_core_tabs' ) );
+		add_action( 'edd_reports_init', array( $this, 'register_core_reports' ) );
 	}
 
 	/**
-	 * Registers core tabs for the Reports API.
+	 * Registers core reports for the Reports API.
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD\Admin\Reports\Tabs_Registry $tabs Reports tabs registry.
+	 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry.
 	 */
-	public function register_core_tabs( $tabs ) {
+	public function register_core_reports( $reports ) {
 
-		// Test code: The 'core' tab doesn't exist, so exception(s) should bubble up and be caught.
+		// Test code: The 'core' report doesn't exist, so exception(s) should bubble up and be caught.
 		try {
 
-			$tabs->add_tab( 'core_test', array(
-				'label' => __( 'Test', 'easy-digital-downloads' )
+			$reports->add_report( 'products', array(
+				'label'     => __( 'Products', 'easy-digital-downloads' ),
+				'priority'  => 10,
+				'endpoints' => array(
+					'tiles' => array( 'something' ),
+				),
 			) );
 
-			$tabs->add_tile( 'test_tile', 'core', array(
-				'label' => __( 'Test Tile' )
+			$reports->add_report( 'earnings', array(
+				'label'    => __( 'Earnings', 'easy-digital-downloads' ),
+				'priority' => 5,
 			) );
 
 		} catch( \EDD_Exception $exception ) {
