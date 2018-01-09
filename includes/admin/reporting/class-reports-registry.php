@@ -135,36 +135,4 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 		}
 	}
 
-	/**
-	 * Retrieves all registered reports with a given sorting scheme.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $sort Optional. How to sort the list of registered reports before retrieval.
-	 *                     Accepts 'priority' or 'ID' (alphabetized by report ID), or empty (none).
-	 *                     Default empty.
-	 */
-	public function get_reports( $sort = '' ) {
-		// If sorting, handle it before retrieval from the ArrayObject.
-		switch( $sort ) {
-			case 'ID':
-				parent::ksort();
-				break;
-
-			case 'priority':
-				parent::uasort( function( $a, $b ) {
-					if ( $a['priority'] == $b['priority'] ) {
-						return 0;
-					}
-
-					return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
-				} );
-				break;
-
-			default: break;
-		}
-
-		return parent::get_items();
-	}
-
 }
