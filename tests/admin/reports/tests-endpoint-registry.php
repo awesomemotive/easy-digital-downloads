@@ -58,17 +58,168 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Reports_Registry::$item_error_label
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::$item_error_label
 	 */
-	public function test_item_error_label_should_be_report() {
+	public function test_item_error_label_should_be_reports_endpoint() {
 		$this->assertSame( 'reports endpoint', $this->registry->item_error_label );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Reports_Registry::instance()
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::instance()
 	 */
 	public function test_static_registry_should_have_instance_method() {
 		$this->assertTrue( method_exists( $this->registry, 'instance' ) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 */
+	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
+		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
+
+		$result = $this->registry->get_endpoint( 'foo' );
+
+		$this->assertEqualSets( array(), $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 */
+	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
+		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
+
+		$this->registry->get_endpoint( 'foo' );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_get_endpoint_with_valid_endpoint_id_should_return_that_endpoint() {
+		$expected = array(
+			'label'    => 'Foo',
+			'priority' => 10,
+			'views'    => array(
+				'tile' => array( 'bar' )
+			)
+		);
+
+		// Add a test endpoint.
+		$this->registry->register_endpoint( 'foo', $expected );
+
+		$this->assertEqualSetsWithIndex( $expected, $this->registry->get_endpoint( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_unregister_endpoint_with_invalid_endpoint_id_should_affect_no_change() {
+		// Add a test endpoint.
+		$this->registry->register_endpoint( 'foo', array(
+			'label'    => 'Foo',
+			'priority' => 10,
+			'views'    => array(
+				'tile' => array( 'bar' )
+			),
+		) );
+
+		$this->registry->unregister_endpoint( 'bar' );
+
+		$this->assertEqualSets( array( 'foo' ), array_keys( $this->registry->get_endpoints() ) );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_unregister_endpoint_with_valid_endpoint_id_should_unregister_that_endpoint() {
+		// Add a test endpoint.
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array( 'bar' )
+			)
+		) );
+
+		$this->registry->unregister_endpoint( 'foo' );
+
+		$this->assertEqualSets( array(), $this->registry->get_endpoints() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @throws \EDD_Exception
+	 */
+	public function test_get_endpoints_with_no_sort_should_return_endpoints_in_order_of_registration() {
+
+		$this->add_test_endpoints();
+
+		$endpoint_ids = array_keys( $this->registry->get_endpoints() );
+
+		$this->assertEqualSets( array( 'foo', 'bar' ), $endpoint_ids );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @throws \EDD_Exception
+	 */
+	public function test_get_endpoints_with_invalid_sort_should_return_endpoints_in_order_of_registration() {
+
+		$this->add_test_endpoints();
+
+		$endpoint_ids = array_keys( $this->registry->get_endpoints( 'fake_sort' ) );
+
+		$this->assertEqualSets( array( 'foo', 'bar' ), $endpoint_ids );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @throws \EDD_Exception
+	 */
+	public function test_get_endpoints_with_ID_sort_should_return_endpoints_in_alphabetical_order_by_ID() {
+
+		$this->add_test_endpoints();
+
+		$endpoint_ids = array_keys( $this->registry->get_endpoints( 'ID' ) );
+
+		$this->assertEqualSets( array( 'bar', 'foo' ), $endpoint_ids );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @throws \EDD_Exception
+	 */
+	public function test_get_endpoints_with_priority_sort_should_return_endpoints_in_order_of_priority() {
+
+		$this->add_test_endpoints();
+
+		$endpoint_ids = array_keys( $this->registry->get_endpoints( 'priority' ) );
+
+		$this->assertEqualSets( array( 'bar', 'foo' ), $endpoint_ids );
+	}
+
+	/**
+	 * Adds two test endpoints for use with get_endpoints() tests.
+	 *
+	 * @throws \EDD_Exception
+	 */
+	protected function add_test_endpoints() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label'    => 'Foo',
+			'priority' => 10,
+			'views'    => array(
+				'tile' => array( 'foo' )
+			)
+		) );
+
+		$this->registry->register_endpoint( 'bar', array(
+			'label'    => 'Bar',
+			'priority' => 5,
+			'views'    => array(
+				'tile' => array( 'bar' )
+			)
+		) );
 	}
 
 }
