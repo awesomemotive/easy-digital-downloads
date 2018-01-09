@@ -24,7 +24,7 @@ use EDD\Admin\Reports\Exceptions;
  *
  * @method array get_endpoint( string $endpoint_id )
  * @method void  unregister_endpoint( string $endpoint_id )
- * @method array get_endpoints()
+ * @method array get_endpoints( string $sort )
  */
 class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registry {
 
@@ -72,19 +72,19 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 */
 	public function __call( $name, $arguments ) {
 
-		$endpoint_id = isset( $arguments[0] ) ? $arguments[0] : '';
+		$endpoint_id_or_sort = isset( $arguments[0] ) ? $arguments[0] : '';
 
 		switch( $name ) {
 			case 'get_endpoint':
-				parent::get_item( $endpoint_id );
+				return parent::get_item( $endpoint_id_or_sort );
 				break;
 
 			case 'unregister_endpoint':
-				parent::remove_item( $endpoint_id );
+				parent::remove_item( $endpoint_id_or_sort );
 				break;
 
 			case 'get_endpoints':
-				return parent::get_items();
+				return $this->get_items_sorted( $endpoint_id_or_sort );
 				break;
 
 		}
@@ -207,4 +207,5 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		return $endpoint;
 	}
+
 }
