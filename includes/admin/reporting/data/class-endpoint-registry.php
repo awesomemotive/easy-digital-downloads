@@ -91,17 +91,16 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	}
 
 	/**
-	 * Adds a new reports data endpoint to the master registry.
+	 * Registers a new data endpoint to the master registry.
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if the `$attributes` array is empty.
 	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
 	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
-	 *     Attributes of the reports data point.
+	 *     Attributes of the reports endpoint.
 	 *
 	 *     @type string $label    Endpoint label.
 	 *     @type int    $priority Priority by which to retrieve the endpoint.
