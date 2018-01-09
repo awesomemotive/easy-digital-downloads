@@ -54,7 +54,7 @@ final class Reports {
 		// Registries.
 		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/class-reports-registry.php';
-		require_once $reports_dir . '/registries/class-filters-registry.php';
+		require_once $reports_dir . '/class-filters-registry.php';
 	}
 
 	/**
