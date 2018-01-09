@@ -37,7 +37,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception If the `$attributes` array is empty.
+	 * @throws \EDD_Exception If the `$attributes` array is empty.
 	 *
 	 * @param string $item_id    Item ID.
 	 * @param array  $attributes Array of item attributes. Each extending registry will
@@ -85,7 +85,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exception if the item does not exist.
+	 * @throws \EDD_Exception if the item does not exist.
 	 *
 	 * @param string $item_id Item ID.
 	 * @return array Array of attributes for the item if the item is set,
@@ -129,8 +129,8 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD\Utils\Exceptions\Attribute_Not_Found if the attribute and/or item
-	 *                                                   does not exist.
+	 * @throws \EDD_Exception if the item does not exist.
+	 * @throws \EDD_Exception if the attribute and/or item does not exist.
 	 *
 	 * @param string $key           Key of the attribute to retrieve.
 	 * @param string $collection_id Collection to retrieve the attribute from.
