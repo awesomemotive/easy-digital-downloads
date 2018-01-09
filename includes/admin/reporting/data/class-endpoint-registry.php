@@ -138,11 +138,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			try {
 
-				foreach( $attributes['views'] as $view_attributes ) {
-
-					$this->validate_attributes( $view_attributes, $endpoint_id, array( 'filters' ) );
-
-				}
+				$this->validate_attributes( $attributes['views'], $endpoint_id, array( 'filters' ) );
 
 			} catch( \EDD_Exception $exception ) {
 
