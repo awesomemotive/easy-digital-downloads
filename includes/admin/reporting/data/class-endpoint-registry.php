@@ -126,7 +126,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$defaults = array(
 			'label'    => '',
-			'priority' => 5,
+			'priority' => 10,
 			'views'    => array(),
 		);
 
