@@ -103,7 +103,8 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @param array  $attributes  {
 	 *     Attributes of the reports data point.
 	 *
-	 *     @type string $label Endpoint label.
+	 *     @type string $label    Endpoint label.
+	 *     @type int    $priority Priority by which to retrieve the endpoint.
 	 *     @type array  $views {
 	 *         Array of view handlers by type.
 	 *
@@ -124,8 +125,9 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		$error = false;
 
 		$defaults = array(
-			'label' => '',
-			'views' => array(),
+			'label'    => '',
+			'priority' => 5,
+			'views'    => array(),
 		);
 
 		$attributes = array_merge( $defaults, $attributes );
