@@ -343,10 +343,31 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'some_value' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertInstanceOf( 'EDD\Admin\Reports\Data\Endpoint', $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_invalid_type_should_return_WP_Error() {
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error() {
 		$this->add_test_endpoints();
 
 		/** @var \WP_Error $result */
@@ -360,7 +381,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_invalid_type_should_return_WP_Error_code_invalid_view() {
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_code_invalid_view() {
 		$this->add_test_endpoints();
 
 		/** @var \WP_Error $result */
