@@ -131,6 +131,8 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$attributes = array_merge( $defaults, $attributes );
 
+		$attributes['id'] = $endpoint_id;
+
 		try {
 
 			$this->validate_attributes( $attributes, $endpoint_id );
