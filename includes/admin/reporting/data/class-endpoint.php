@@ -202,17 +202,7 @@ class Endpoint {
 
 			if ( ! empty( $view_atts['display_args'] ) ) {
 
-				$display_args = $view_atts['display_args'];
-
-				if ( is_array( $display_args ) ) {
-
-					$this->display_args = $view_atts['display_args'];
-
-				} else {
-
-					$this->flag_invalid_view_arg_type( 'display_args', 'array' );
-
-				}
+				$this->set_display_args( $view_atts['display_args'] );
 
 			} else {
 
@@ -222,17 +212,7 @@ class Endpoint {
 
 			if ( ! empty( $view_atts['display_callback'] ) ) {
 
-				$display_callback = $view_atts['display_callback'];
-
-				if ( is_callable( $display_callback ) ) {
-
-					$this->display_callback = $display_callback;
-
-				} else {
-
-					$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
-
-				}
+				$this->set_display_callback( $view_atts['display_callback'] );
 
 			} else {
 
@@ -242,17 +222,7 @@ class Endpoint {
 
 			if ( ! empty( $view_atts['data_callback'] ) ) {
 
-				$data_callback = $view_atts['data_callback'];
-
-				if ( is_callable( $data_callback ) ) {
-
-					$this->data_callback = $data_callback;
-
-				} else {
-
-					$this->flag_invalid_view_arg_type( 'data_callback', 'callable' );
-
-				}
+				$this->set_data_callback( $view_atts['data_callback'] );
 
 			} else {
 
