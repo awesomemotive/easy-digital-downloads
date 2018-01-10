@@ -202,18 +202,21 @@ class Endpoint {
 
 			if ( ! empty( $view_atts['display_args'] ) ) {
 
-				$this->display_args = $view_atts['display_args'];
+				$display_args = $view_atts['display_args'];
+
+				if ( is_array( $display_args ) ) {
+
+					$this->display_args = $view_atts['display_args'];
+
+				} else {
+
+					$this->flag_invalid_view_arg_type( 'display_args', 'array' );
+
+				}
 
 			} else {
 
-				$message = sprintf( 'The display_args argument must be set for the %s endpoint view type.',
-					$view_type
-				);
-
-				$this->errors->add( 'missing_display_args', $message, array(
-					'type'        => $view_type,
-					'endpoint_id' => $this->get_id(),
-				) );
+				$this->flag_missing_view_arg( 'display_args' );
 
 			}
 
