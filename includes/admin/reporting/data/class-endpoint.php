@@ -140,6 +140,31 @@ class Endpoint {
 	}
 
 	/**
+	 * Retrieves the data for the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed Endpoint data.
+	 */
+	public function get_data() {
+		if ( is_callable( $this->data_callback ) ) {
+			$data = call_user_func( $this->data_callback );
+		} else {
+			$data = '';
+		}
+
+		/**
+		 * Filters data for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param mixed|string $data Endpoint data.
+		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
+	}
+
+	/**
 	 * Retrieves the endpoint view (type).
 	 *
 	 * @since 3.0
@@ -271,31 +296,6 @@ class Endpoint {
 			) );
 
 		}
-	}
-
-	/**
-	 * Retrieves the data for the endpoint view (type).
-	 *
-	 * @since 3.0
-	 *
-	 * @return mixed Endpoint data.
-	 */
-	public function get_data() {
-		if ( is_callable( $this->data_callback ) ) {
-			$data = call_user_func( $this->data_callback );
-		} else {
-			$data = '';
-		}
-
-		/**
-		 * Filters data for the current endpoint.
-		 *
-		 * @since 3.0
-		 *
-		 * @param mixed|string $data Endpoint data.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
-		 */
-		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
 	}
 
 	/**
