@@ -262,7 +262,7 @@ class Endpoint {
 
 		} else {
 
-			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%1$s\' endpoint.',
+			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%2$s\' endpoint.',
 				$view_type,
 				$this->get_id()
 			);
