@@ -122,25 +122,21 @@ class Endpoint {
 	}
 
 	/**
-	 * Determines whether the endpoint has generated errors during instantiation.
+	 * Displays the endpoint based on the view (type).
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool True if errors have been logged, otherwise false.
+	 * @return void
 	 */
-	public function has_errors() {
-		$errors = $this->errors->get_error_codes();
+	public function display() {
+		$callback = $this->get_display_callback();
 
-		return empty( $errors ) ? false : true;
-	}
-
-	/**
-	 * Retrieves any logged errors for the endpoint.
-	 *
-	 * @since 3.0
-	 */
-	public function get_errors() {
-		return $this->errors;
+		if ( is_callable( $callback ) ) {
+			call_user_func_array( $callback, array(
+				'data' => $this->get_data(),
+				'args' => $this->get_display_args(),
+			) );
+		}
 	}
 
 	/**
@@ -420,21 +416,25 @@ class Endpoint {
 	}
 
 	/**
-	 * Displays the endpoint based on the view (type).
+	 * Determines whether the endpoint has generated errors during instantiation.
 	 *
 	 * @since 3.0
 	 *
-	 * @return void
+	 * @return bool True if errors have been logged, otherwise false.
 	 */
-	public function display() {
-		$callback = $this->get_display_callback();
+	public function has_errors() {
+		$errors = $this->errors->get_error_codes();
 
-		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array(
-				'data' => $this->get_data(),
-				'args' => $this->get_display_args(),
-			) );
-		}
+		return empty( $errors ) ? false : true;
+	}
+
+	/**
+	 * Retrieves any logged errors for the endpoint.
+	 *
+	 * @since 3.0
+	 */
+	public function get_errors() {
+		return $this->errors;
 	}
 
 	/**
