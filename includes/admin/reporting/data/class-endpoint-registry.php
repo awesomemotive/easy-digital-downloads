@@ -190,21 +190,17 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			edd_debug_log_exception( $exception );
 
-			$endpoint = new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint_id );
+			return new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint_id );
 
 		}
 
-		if ( ! is_wp_error( $endpoint ) ) {
+		// Build the Endpoint object.
+		$endpoint = new Endpoint( $endpoint, $type );
 
-			// Build the Endpoint object.
-			$endpoint = new Endpoint( $endpoint, $type );
+		// If any errors were logged during instantiation, return the resulting WP_Error object.
+		if ( $endpoint->has_errors() ) {
 
-			// If any errors were logged during instantiation, return the resulting WP_Error object.
-			if ( $endpoint->has_errors() ) {
-
-				return $endpoint->get_errors();
-
-			}
+			return $endpoint->get_errors();
 
 		}
 
