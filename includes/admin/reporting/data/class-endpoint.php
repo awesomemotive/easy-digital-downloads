@@ -144,6 +144,34 @@ class Endpoint {
 	}
 
 	/**
+	 * Retrieves the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Endpoint view.
+	 */
+	public function get_view() {
+		return $this->view;
+	}
+
+	/**
+	 * Sets the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type Endpoint type.
+	 */
+	private function set_view( $view ) {
+		$views = \edd_get_reports_endpoint_views();
+
+		if ( array_key_exists( $view, $views ) ) {
+			$this->view = $view;
+		} else {
+			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view );
+		}
+	}
+
+	/**
 	 * Retrieves the endpoint ID.
 	 *
 	 * @since 3.0
@@ -187,34 +215,6 @@ class Endpoint {
 	 */
 	public function set_label( $label ) {
 		$this->label = $label;
-	}
-
-	/**
-	 * Sets the endpoint view (type).
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $type Endpoint type.
-	 */
-	private function set_view( $view ) {
-		$views = \edd_get_reports_endpoint_views();
-
-		if ( array_key_exists( $view, $views ) ) {
-			$this->view = $view;
-		} else {
-			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view );
-		}
-	}
-
-	/**
-	 * Retrieves the endpoint view (type).
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Endpoint view.
-	 */
-	public function get_view() {
-		return $this->view;
 	}
 
 	/**
