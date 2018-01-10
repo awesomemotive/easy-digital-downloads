@@ -99,15 +99,23 @@ class Endpoint {
 		$this->set_view( $view );
 
 		if ( ! empty( $endpoint['id'] ) ) {
-			$this->endpoint_id = $endpoint['id'];
+
+			$this->set_id( $endpoint['id'] );
+
 		} else {
+
 			$this->errors->add( 'missing_endpoint_id', 'The endpoint_id is missing.' );
+
 		}
 
 		if ( ! empty( $endpoint['label'] ) ) {
-			$this->label = $endpoint['label'];
+
+			$this->set_label( $endpoint['label'] );
+
 		} else {
+
 			$this->errors->add( 'missing_endpoint_label', 'The endpoint label is missing.' );
+
 		}
 
 		$this->set_display_props( $endpoint );
@@ -147,6 +155,18 @@ class Endpoint {
 	}
 
 	/**
+	 * Sets the endpoint ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $endpoint_id Endpoint ID
+	 * @return void
+	 */
+	public function set_id( $endpoint_id ) {
+		$this->endpoint_id = $endpoint_id;
+	}
+
+	/**
 	 * Retrieves the global label for the current endpoint.
 	 *
 	 * @since 3.0
@@ -155,6 +175,18 @@ class Endpoint {
 	 */
 	public function get_label() {
 		return $this->label;
+	}
+
+	/**
+	 * Sets the endpoint label.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $label Endpoint label.
+	 * @return void
+	 */
+	public function set_label( $label ) {
+		$this->label = $label;
 	}
 
 	/**
