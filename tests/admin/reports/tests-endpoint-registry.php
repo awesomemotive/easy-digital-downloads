@@ -101,6 +101,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_should_return_that_endpoint() {
 		$expected = array(
+			'id'       => 'foo',
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
