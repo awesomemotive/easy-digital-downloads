@@ -268,7 +268,7 @@ class Endpoint {
 			);
 
 			$this->errors->add( 'view_not_defined', $message, array(
-				'type'        => $view_type,
+				'view_type'   => $view_type,
 				'endpoint_id' => $this->get_id(),
 			) );
 
