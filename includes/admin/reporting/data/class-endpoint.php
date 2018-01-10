@@ -297,7 +297,15 @@ class Endpoint {
 	 * @return array Display arguments.
 	 */
 	public function get_display_args() {
-		return $this->display_args;
+		/**
+		 * Filters the display arguments for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $display_args Display arguments.
+		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_display_args', $this->display_args, $this );
 	}
 
 	/**
