@@ -222,18 +222,21 @@ class Endpoint {
 
 			if ( ! empty( $view_atts['display_callback'] ) ) {
 
-				$this->display_callback = $view_atts['display_callback'];
+				$display_callback = $view_atts['display_callback'];
+
+				if ( is_callable( $display_callback ) ) {
+
+					$this->display_callback = $display_callback;
+
+				} else {
+
+					$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
+
+				}
 
 			} else {
 
-				$message = sprintf( 'The display_callback argument must be set for the %s endpoint view type.',
-					$view_type
-				);
-
-				$this->errors->add( 'missing_display_callback', $message, array(
-					'type'        => $view_type,
-					'endpoint_id' => $this->get_id(),
-				) );
+				$this->flag_missing_view_arg( 'display_callback' );
 
 			}
 
