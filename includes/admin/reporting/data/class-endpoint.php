@@ -319,7 +319,7 @@ class Endpoint {
 	public function set_display_args( $display_args ) {
 		if ( is_array( $display_args ) ) {
 
-			$this->display_args = $view_atts['display_args'];
+			$this->display_args = $display_args;
 
 		} else {
 
