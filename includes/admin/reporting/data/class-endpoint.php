@@ -301,7 +301,86 @@ class Endpoint {
 	}
 
 	/**
-	 * Displays the endpoint based on the (view) type.
+	 * Validates and sets the display_args prop.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array|mixed $display_args Display arguments.
+	 * @return void
+	 */
+	public function set_display_args( $display_args ) {
+		if ( is_array( $display_args ) ) {
+
+			$this->display_args = $view_atts['display_args'];
+
+		} else {
+
+			$this->flag_invalid_view_arg_type( 'display_args', 'array' );
+
+		}
+	}
+
+	/**
+	 * Validates and sets the display_args prop.
+	 *
+	 * @since 3.0
+	 *
+	 * @param callable|mixed $display_callback Display callback.
+	 * @return void
+	 */
+	public function set_display_callback( $display_callback ) {
+		if ( is_callable( $display_callback ) ) {
+
+			$this->display_callback = $display_callback;
+
+		} else {
+
+			$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
+
+		}
+	}
+
+	/**
+	 * Retrieves the data callback for the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return callable Data callback.
+	 */
+	public function get_data_callback() {
+		/**
+		 * Filters the data callback for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param callable $data_callback Data callback.
+		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_data_callback', $this->data_callback, $this );
+	}
+
+	/**
+	 * Validates and sets the display_args prop.
+	 *
+	 * @since 3.0
+	 *
+	 * @param callable|mixed $data_callback Data callback.
+	 * @return void
+	 */
+	public function set_data_callback( $data_callback ) {
+		if ( is_callable( $data_callback ) ) {
+
+			$this->data_callback = $data_callback;
+
+		} else {
+
+			$this->flag_invalid_view_arg_type( 'data_callback', 'callable' );
+
+		}
+	}
+
+	/**
+	 * Displays the endpoint based on the view (type).
 	 *
 	 * @since 3.0
 	 *
