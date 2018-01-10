@@ -339,4 +339,46 @@ class Endpoint {
 		}
 	}
 
+	/**
+	 * Flags an error for an invalid view argument type.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $argument Argument name.
+	 * @return void
+	 */
+	private function flag_invalid_view_arg_type( $argument, $expected_type ) {
+		$message = sprintf( 'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' endpoint \'%4$s\' view.',
+			$argument,
+			$expected_type,
+			$this->get_view(),
+			$this->get_id()
+		);
+
+		$this->errors->add( 'invalid_view_arg_type', $message, array(
+			'view_type'   => $this->get_view(),
+			'endpoint_id' => $this->get_id(),
+		) );
+	}
+
+	/**
+	 * Flags an error for a missing required view argument.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $argument Argument name.
+	 * @return void
+	 */
+	private function flag_missing_view_arg( $argument ) {
+		$message = sprintf( 'The \'%1$s\' argument must be set for the \'%2$s\' endpoint \'%3$s\' view.',
+			$argument,
+			$this->get_id(),
+			$this->get_view()
+		);
+
+		$this->errors->add( "missing_{$argument}", $message, array(
+			'view_type'   => $this->get_view(),
+			'endpoint_id' => $this->get_id(),
+		) );
+	}
 }
