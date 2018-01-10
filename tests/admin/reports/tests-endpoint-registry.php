@@ -505,6 +505,28 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
+	public function test_build_endpoint_with_non_array_display_args_should_return_WP_Error_including_code_invalid_view_arg_type() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => 'something',
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'invalid_view_arg_type', $result->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
 	public function test_build_endpoint_with_empty_view_display_callback_should_return_WP_Error() {
 		$this->registry->register_endpoint( 'foo', array(
 			'label' => 'Foo',
@@ -547,6 +569,28 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
+	public function test_build_endpoint_with_non_callable_display_callback_should_return_WP_Error_including_code_invalid_view_arg_type() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => 'something',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'invalid_view_arg_type', $result->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
 	public function test_build_endpoint_with_empty_view_data_callback_should_return_WP_Error() {
 		$this->registry->register_endpoint( 'foo', array(
 			'label' => 'Foo',
@@ -582,6 +626,28 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		$result = $this->registry->build_endpoint( 'foo', 'tile' );
 
 		$this->assertContains( 'missing_data_callback', $result->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_non_callable_data_callback_should_return_WP_Error_including_code_invalid_view_arg_type() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => 'something',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'invalid_view_arg_type', $result->get_error_codes() );
 	}
 
 	/**
