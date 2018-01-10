@@ -200,7 +200,7 @@ class Endpoint {
 
 			$view_atts = $endpoint['views'][ $view_type ];
 
-			if ( isset( $view_atts['display_args'] ) ) {
+			if ( ! empty( $view_atts['display_args'] ) ) {
 
 				$this->display_args = $view_atts['display_args'];
 
@@ -217,7 +217,7 @@ class Endpoint {
 
 			}
 
-			if ( isset( $view_atts['display_callback'] ) ) {
+			if ( ! empty( $view_atts['display_callback'] ) ) {
 
 				$this->display_callback = $view_atts['display_callback'];
 
@@ -234,7 +234,7 @@ class Endpoint {
 
 			}
 
-			if ( isset( $view_atts['data_callback'] ) ) {
+			if ( ! empty( $view_atts['data_callback'] ) ) {
 
 				$this->data_callback = $view_atts['data_callback'];
 
