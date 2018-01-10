@@ -392,6 +392,11 @@ class EDD_Logging {
 	 * @return void
 	 */
 	public function log_to_file( $message = '' ) {
+
+		if ( is_array( $message ) ) {
+			$message = json_encode( $message );
+		}
+
 		$message = date( 'Y-n-d H:i:s' ) . ' - ' . $message . "\r\n";
 		$this->write_to_log( $message );
 
