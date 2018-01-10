@@ -67,7 +67,7 @@ class Endpoint {
 	private $display_callback;
 
 	/**
-	 * Represents the display arguments (passed to the display callback) for the (view) type.
+	 * Represents the display arguments (passed to the display callback) for the view (type).
 	 *
 	 * @since 3.0
 	 * @var   array
@@ -276,7 +276,7 @@ class Endpoint {
 	}
 
 	/**
-	 * Retrieves the data for the endpoint (view) type.
+	 * Retrieves the data for the endpoint view (type).
 	 *
 	 * @since 3.0
 	 *
@@ -301,7 +301,7 @@ class Endpoint {
 	}
 
 	/**
-	 * Retrieves the display callback for the endpoint (view) type.
+	 * Retrieves the display callback for the endpoint view (type).
 	 *
 	 * @since 3.0
 	 *
