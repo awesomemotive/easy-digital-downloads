@@ -431,6 +431,159 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_invalid_view_should_return_WP_Error() {
+		$this->add_test_endpoints();
+
+		$result = $this->registry->build_endpoint( 'foo', 'fake' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_invalid_view_should_return_WP_Error_including_code_invalid_view() {
+		$this->add_test_endpoints();
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'fake' );
+
+		$this->assertSame( 'invalid_view', $result->get_error_code() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_empty_view_display_args_should_return_WP_Error() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args' => ''
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_empty_view_display_args_should_return_WP_Error_including_code_missing_display_args() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args' => ''
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'missing_display_args', $result->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_empty_view_display_callback_should_return_WP_Error() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => ''
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_empty_view_display_callback_should_return_WP_Error_including_code_missing_display_callback() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => ''
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'missing_display_callback', $result->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_empty_view_data_callback_should_return_WP_Error() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_empty_view_data_callback_should_return_WP_Error_including_code_missing_data_callback() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertContains( 'missing_data_callback', $result->get_error_codes() );
+	}
+
+	/**
 	 * Adds two test endpoints for use with get_endpoints() tests.
 	 *
 	 * @throws \EDD_Exception
