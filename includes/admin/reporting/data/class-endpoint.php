@@ -89,11 +89,11 @@ class Endpoint {
 	 *
 	 * @see set_display_props()
 	 *
-	 * @param array  $endpoint Endpoint record from the registry.
 	 * @param string $view     Endpoint view type. Determines which view attribute to
 	 *                         retrieve from the corresponding endpoint registry entry.
+	 * @param array  $endpoint Endpoint record from the registry.
 	 */
-	public function __construct( $endpoint, $view ) {
+	public function __construct( $view, $endpoint ) {
 		$this->errors = new \WP_Error();
 
 		$this->set_view( $view );
