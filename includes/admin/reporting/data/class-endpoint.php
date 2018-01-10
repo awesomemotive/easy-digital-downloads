@@ -275,7 +275,7 @@ class Endpoint {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed|void
+	 * @return callable Display callback.
 	 */
 	public function get_display_callback() {
 		/**
@@ -290,7 +290,7 @@ class Endpoint {
 	}
 
 	/**
-	 * Retrieves the display arguments for the (view) type.
+	 * Retrieves the display arguments for the view (type).
 	 *
 	 * @since 3.0
 	 *
