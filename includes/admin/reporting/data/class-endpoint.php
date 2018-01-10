@@ -97,7 +97,17 @@ class Endpoint {
 		$this->errors = new \WP_Error();
 
 		$this->set_view( $view );
+		$this->set_props( $endpoint );
+	}
 
+	/**
+	 * Sets props for the Endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $endpoint Endpoint record.
+	 */
+	public function set_props( $endpoint ) {
 		if ( ! empty( $endpoint['id'] ) ) {
 
 			$this->set_id( $endpoint['id'] );
