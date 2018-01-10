@@ -242,18 +242,21 @@ class Endpoint {
 
 			if ( ! empty( $view_atts['data_callback'] ) ) {
 
-				$this->data_callback = $view_atts['data_callback'];
+				$data_callback = $view_atts['data_callback'];
+
+				if ( is_callable( $data_callback ) ) {
+
+					$this->data_callback = $data_callback;
+
+				} else {
+
+					$this->flag_invalid_view_arg_type( 'data_callback', 'callable' );
+
+				}
 
 			} else {
 
-				$message = sprintf( 'The data_callback argument must be set for the %s endpoint view type.',
-					$view_type
-				);
-
-				$this->errors->add( 'missing_data_callback', $message, array(
-					'type'        => $view_type,
-					'endpoint_id' => $this->get_id(),
-				) );
+				$this->flag_missing_view_arg( 'data_callback' );
 
 			}
 
