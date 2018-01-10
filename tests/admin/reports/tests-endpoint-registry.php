@@ -468,7 +468,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_args' => ''
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
 				),
 			),
 		) );
@@ -488,7 +489,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_args' => ''
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
 				),
 			),
 		) );
@@ -508,8 +510,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => ''
+					'display_args'  => array( 'something' ),
+					'data_callback' => '__return_false',
 				),
 			),
 		) );
@@ -529,8 +531,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => ''
+					'display_args'  => array( 'something' ),
+					'data_callback' => '__return_false',
 				),
 			),
 		) );
@@ -552,7 +554,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 				'tile' => array(
 					'display_args'     => array( 'something' ),
 					'display_callback' => '__return_false',
-					'data_callback'    => '',
 				),
 			),
 		) );
@@ -574,7 +575,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 				'tile' => array(
 					'display_args'     => array( 'something' ),
 					'display_callback' => '__return_false',
-					'data_callback'    => '',
 				),
 			),
 		) );
