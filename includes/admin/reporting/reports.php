@@ -602,7 +602,17 @@ function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
 		return false;
 	}
 
-	return $registry->register_endpoint( $endpoint_id, $attributes );
+	try {
+
+		$added = $registry->register_endpoint( $endpoint_id, $attributes );
+
+	} catch ( \EDD_Exception $exception ) {
+
+		$added = false;
+
+	}
+
+	return $added;
 }
 
 /**
