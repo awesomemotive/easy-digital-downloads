@@ -151,7 +151,7 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 			$name     .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
 			$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
 
-			return '<a href="' . $view_url . '">' . $name . '</a>';
+			return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>';
 		}
 	}
 
