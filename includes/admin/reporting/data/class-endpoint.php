@@ -101,37 +101,6 @@ class Endpoint {
 	}
 
 	/**
-	 * Sets props for the Endpoint object.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $endpoint Endpoint record.
-	 */
-	public function set_props( $endpoint ) {
-		if ( ! empty( $endpoint['id'] ) ) {
-
-			$this->set_id( $endpoint['id'] );
-
-		} else {
-
-			$this->errors->add( 'missing_endpoint_id', 'The endpoint_id is missing.' );
-
-		}
-
-		if ( ! empty( $endpoint['label'] ) ) {
-
-			$this->set_label( $endpoint['label'] );
-
-		} else {
-
-			$this->errors->add( 'missing_endpoint_label', 'The endpoint label is missing.' );
-
-		}
-
-		$this->set_display_props( $endpoint );
-	}
-
-	/**
 	 * Displays the endpoint based on the view (type).
 	 *
 	 * @since 3.0
@@ -200,6 +169,37 @@ class Endpoint {
 		} else {
 			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view );
 		}
+	}
+
+	/**
+	 * Sets props for the Endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $endpoint Endpoint record.
+	 */
+	public function set_props( $endpoint ) {
+		if ( ! empty( $endpoint['id'] ) ) {
+
+			$this->set_id( $endpoint['id'] );
+
+		} else {
+
+			$this->errors->add( 'missing_endpoint_id', 'The endpoint_id is missing.' );
+
+		}
+
+		if ( ! empty( $endpoint['label'] ) ) {
+
+			$this->set_label( $endpoint['label'] );
+
+		} else {
+
+			$this->errors->add( 'missing_endpoint_label', 'The endpoint label is missing.' );
+
+		}
+
+		$this->set_display_props( $endpoint );
 	}
 
 	/**
