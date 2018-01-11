@@ -565,3 +565,64 @@ function edd_get_reports_endpoint_views() {
 		),
 	);
 }
+
+/**
+ * Registers a new data endpoint to the master registry.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+ *
+ * @param string $endpoint_id Reports data endpoint ID.
+ * @param array  $attributes  {
+ *     Attributes of the reports endpoint.
+ *
+ *     @type string $label    Endpoint label.
+ *     @type int    $priority Priority by which to retrieve the endpoint.
+ *     @type array  $views {
+ *         Array of view handlers by type.
+ *
+ *         @type array $view_type {
+ *             View type slug, with array beneath it.
+ *
+ *             @type callable $data_callback    Callback used to retrieve data for the view.
+ *             @type callable $display_callback Callback used to render the view.
+ *             @type array    $display_args     Array of arguments to pass to the
+ *                                              display_callback (if any).
+ *             @type array    $filters          List of registered filters supported by the view.
+ *         }
+ *     }
+ * }
+ * @return bool True if the endpoint was successfully registered, otherwise false.
+ */
+function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
+	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+	if ( is_wp_error( $registry ) ) {
+		return false;
+	}
+
+	return $registry->register_endpoint( $endpoint_id, $attributes );
+}
+
+/**
+ * Retrieves and builds an endpoint object.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+ *
+ * @param string $view_type   View type to use when building the object.
+ * @param string $endpoint_id Endpoint ID.
+ * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
+ */
+function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
+
+	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+	if ( is_wp_error( $registry ) ) {
+		return $registry;
+	}
+
+	return $registry->build_endpoint( $endpoint_id, $view_type );
+}
