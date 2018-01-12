@@ -59,6 +59,73 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
+	 * @group edd_errors
+	 */
+	public function test_set_view_with_invalid_view_should_flag_WP_Error() {
+		$invalid_view = 'fake';
+
+		// Execute the invisible method via the constructor.
+		$endpoint = new Endpoint( $invalid_view, array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$this->assertTrue( $endpoint->has_errors() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
+	 * @group edd_errors
+	 */
+	public function test_set_view_with_invalid_view_should_flag_WP_Error_including_code_invalid_view() {
+		$invalid_view = 'fake';
+
+		// Execute the invisible method via the constructor.
+		$endpoint = new Endpoint( $invalid_view, array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$errors = $endpoint->get_errors();
+
+		$this->assertContains( 'invalid_view', $errors->get_error_code() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
+	 */
+	public function test_set_view_with_valid_view_should_set_that_view() {
+		$endpoint = new Endpoint( 'tile', array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$this->assertSame( 'tile', $endpoint->get_view() );
+	}
+
+	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_props()
 	 * @group edd_errors
 	 */
@@ -136,73 +203,6 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		$errors = $endpoint->get_errors();
 
 		$this->assertContains( 'missing_endpoint_label', $errors->get_error_codes() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
-	 * @group edd_errors
-	 */
-	public function test_set_view_with_invalid_view_should_flag_WP_Error() {
-		$invalid_view = 'fake';
-
-		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( $invalid_view, array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
-				),
-			),
-		) );
-
-		$this->assertTrue( $endpoint->has_errors() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
-	 * @group edd_errors
-	 */
-	public function test_set_view_with_invalid_view_should_flag_WP_Error_including_code_invalid_view() {
-		$invalid_view = 'fake';
-
-		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( $invalid_view, array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
-				),
-			),
-		) );
-
-		$errors = $endpoint->get_errors();
-
-		$this->assertContains( 'invalid_view', $errors->get_error_code() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
-	 */
-	public function test_set_view_with_valid_view_should_set_that_view() {
-		$endpoint = new Endpoint( 'tile', array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
-				),
-			),
-		) );
-
-		$this->assertSame( 'tile', $endpoint->get_view() );
 	}
 
 	/**
