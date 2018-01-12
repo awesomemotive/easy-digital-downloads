@@ -162,7 +162,7 @@ class Endpoint {
 	 * @param string $view_type Endpoint type.
 	 */
 	private function set_view( $view_type ) {
-		$views = \edd_get_reports_endpoint_views();
+		$views = \edd_reports_get_endpoint_views();
 
 		if ( array_key_exists( $view_type, $views ) ) {
 			$this->view = $view_type;

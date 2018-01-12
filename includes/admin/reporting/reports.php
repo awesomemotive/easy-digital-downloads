@@ -549,7 +549,7 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
  *
  * @return array List of supported endpoint types.
  */
-function edd_get_reports_endpoint_views() {
+function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
 			'signal_key' => 'tiles',
