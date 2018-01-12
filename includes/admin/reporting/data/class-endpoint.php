@@ -10,8 +10,6 @@
  */
 namespace EDD\Admin\Reports\Data;
 
-use EDD\Utils;
-
 /**
  * Represents a data endpoint for the Reports API.
  *
