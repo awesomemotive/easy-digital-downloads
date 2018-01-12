@@ -89,14 +89,14 @@ class Endpoint {
 	 *
 	 * @see set_display_props()
 	 *
-	 * @param string $view     Endpoint view type. Determines which view attribute to
-	 *                         retrieve from the corresponding endpoint registry entry.
-	 * @param array  $endpoint Endpoint record from the registry.
+	 * @param string $view_type Endpoint view type. Determines which view attribute to
+	 *                          retrieve from the corresponding endpoint registry entry.
+	 * @param array  $endpoint  Endpoint record from the registry.
 	 */
-	public function __construct( $view, $endpoint ) {
+	public function __construct( $view_type, $endpoint ) {
 		$this->errors = new \WP_Error();
 
-		$this->set_view( $view );
+		$this->set_view( $view_type );
 		$this->set_props( $endpoint );
 	}
 
@@ -159,15 +159,15 @@ class Endpoint {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $type Endpoint type.
+	 * @param string $view_type Endpoint type.
 	 */
-	private function set_view( $view ) {
+	private function set_view( $view_type ) {
 		$views = \edd_get_reports_endpoint_views();
 
-		if ( array_key_exists( $view, $views ) ) {
-			$this->view = $view;
+		if ( array_key_exists( $view_type, $views ) ) {
+			$this->view = $view_type;
 		} else {
-			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view );
+			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view_type );
 		}
 	}
 
