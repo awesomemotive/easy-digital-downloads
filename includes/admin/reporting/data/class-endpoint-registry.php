@@ -12,7 +12,6 @@ namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
 use EDD\Admin\Reports;
-use EDD\Admin\Reports\Exceptions;
 
 /**
  * Implements a singleton registry for registering reports data endpoints.
