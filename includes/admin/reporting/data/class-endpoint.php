@@ -431,6 +431,8 @@ class Endpoint {
 	 * Retrieves any logged errors for the endpoint.
 	 *
 	 * @since 3.0
+	 *
+	 * @return \WP_Error WP_Error object for the endpoint.
 	 */
 	public function get_errors() {
 		return $this->errors;
