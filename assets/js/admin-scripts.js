@@ -1148,10 +1148,10 @@ jQuery(document).ready(function ($) {
 			// Remove tax row
 			$( document.body ).on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
 				if( confirm( edd_vars.delete_tax_rate ) ) {
-					var tax_rates = $('#edd_tax_rates tr:visible');
+					var tax_rates = $('#edd_tax_rates tbody tr:visible');
 					var count     = tax_rates.length;
 
-					if( count === 2 ) {
+					if( count === 1 ) {
 						$('#edd_tax_rates select').val('');
 						$('#edd_tax_rates input[type="text"]').val('');
 						$('#edd_tax_rates input[type="number"]').val('');

@@ -55,6 +55,8 @@ final class Reports {
 		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/class-reports-registry.php';
 		require_once $reports_dir . '/class-filters-registry.php';
+		require_once $reports_dir . '/data/class-endpoint.php';
+		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
 	/**
@@ -77,6 +79,15 @@ final class Reports {
 
 		// Test code: The 'core' report doesn't exist, so exception(s) should bubble up and be caught.
 		try {
+
+			$reports->register_endpoint( 'something', array(
+				'label' => 'Something',
+				'views' => array(
+					'tile' => array(
+						'display_callback' => '__return_false'
+					)
+				)
+			) );
 
 			$reports->add_report( 'products', array(
 				'label'     => __( 'Products', 'easy-digital-downloads' ),
