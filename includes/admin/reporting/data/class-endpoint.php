@@ -221,7 +221,7 @@ class Endpoint {
 	 * @param string $endpoint_id Endpoint ID
 	 * @return void
 	 */
-	public function set_id( $endpoint_id ) {
+	private function set_id( $endpoint_id ) {
 		$this->endpoint_id = $endpoint_id;
 	}
 
@@ -244,7 +244,7 @@ class Endpoint {
 	 * @param string $label Endpoint label.
 	 * @return void
 	 */
-	public function set_label( $label ) {
+	private function set_label( $label ) {
 		$this->label = $label;
 	}
 
@@ -343,7 +343,7 @@ class Endpoint {
 	 * @param array|mixed $display_args Display arguments.
 	 * @return void
 	 */
-	public function set_display_args( $display_args ) {
+	private function set_display_args( $display_args ) {
 		if ( is_array( $display_args ) ) {
 
 			$this->display_args = $display_args;
@@ -363,7 +363,7 @@ class Endpoint {
 	 * @param callable|mixed $display_callback Display callback.
 	 * @return void
 	 */
-	public function set_display_callback( $display_callback ) {
+	private function set_display_callback( $display_callback ) {
 		if ( is_callable( $display_callback ) ) {
 
 			$this->display_callback = $display_callback;
@@ -402,7 +402,7 @@ class Endpoint {
 	 * @param callable|mixed $data_callback Data callback.
 	 * @return void
 	 */
-	public function set_data_callback( $data_callback ) {
+	private function set_data_callback( $data_callback ) {
 		if ( is_callable( $data_callback ) ) {
 
 			$this->data_callback = $data_callback;
