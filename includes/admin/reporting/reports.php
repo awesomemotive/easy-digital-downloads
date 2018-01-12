@@ -541,3 +541,98 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 
 	return maybe_unserialize( $estimated );
 }
+
+/**
+ * Retrieves the list of supported endpoint view types and their attributes.
+ *
+ * @since 3.0
+ *
+ * @return array List of supported endpoint types.
+ */
+function edd_reports_get_endpoint_views() {
+	return array(
+		'tile' => array(
+			'signal_key' => 'tiles',
+		),
+		'chart' => array(
+			'signal_key' => 'charts',
+		),
+		'table' => array(
+			'signal_key' => 'tables',
+		),
+		'graph' => array(
+			'signal_key' => 'graphs',
+		),
+	);
+}
+
+/**
+ * Registers a new data endpoint to the master registry.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+ *
+ * @param string $endpoint_id Reports data endpoint ID.
+ * @param array  $attributes  {
+ *     Endpoint attributes. All arguments are required unless otherwise noted.
+ *
+ *     @type string $label    Endpoint label.
+ *     @type int    $priority Optional. Priority by which to retrieve the endpoint. Default 10.
+ *     @type array  $views {
+ *         Array of view handlers by type.
+ *
+ *         @type array $view_type {
+ *             View type slug, with array beneath it.
+ *
+ *             @type callable $data_callback    Callback used to retrieve data for the view.
+ *             @type callable $display_callback Callback used to render the view.
+ *             @type array    $display_args     Optional. Array of arguments to pass to the
+ *                                              display_callback (if any). Default empty array.
+ *         }
+ *     }
+ * }
+ * @return bool True if the endpoint was successfully registered, otherwise false.
+ */
+function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
+	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+	if ( is_wp_error( $registry ) ) {
+		return false;
+	}
+
+	try {
+
+		$added = $registry->register_endpoint( $endpoint_id, $attributes );
+
+	} catch ( \EDD_Exception $exception ) {
+
+		$added = false;
+
+	}
+
+	return $added;
+}
+
+/**
+ * Retrieves and builds an endpoint object.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+ *
+ * @param string $endpoint_id Endpoint ID.
+ * @param string $view_type   View type to use when building the object.
+ * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
+ */
+function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
+	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+	if ( is_wp_error( $registry ) ) {
+		return $registry;
+	}
+
+	return $registry->build_endpoint( $endpoint_id, $view_type );
+}

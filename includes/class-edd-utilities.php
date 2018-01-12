@@ -53,7 +53,7 @@ class EDD_Utilities {
 	 * @since 3.0
 	 *
 	 * @param string $name Registry name.
-	 * @return \EDD\Utils\Registry|null Null if the registry doesn't exist, otherwise the object instance.
+	 * @return \EDD\Utils\Registry|\WP_Error The registry instance if it exists, otherwise a WP_Error..
 	 */
 	public function get_registry( $name ) {
 		switch( $name ) {
@@ -63,8 +63,14 @@ class EDD_Utilities {
 				}
 				break;
 
+			case 'reports:endpoints':
+				if ( class_exists( '\EDD\Admin\Reports\Data\Endpoint_Registry' ) ) {
+					$registry = \EDD\Admin\Reports\Data\Endpoint_Registry::instance();
+				}
+				break;
+
 			default:
-				$registry = null;
+				$registry = new \WP_Error( 'invalid_registry', "The '{$name}' registry does not exist." );
 				break;
 		}
 

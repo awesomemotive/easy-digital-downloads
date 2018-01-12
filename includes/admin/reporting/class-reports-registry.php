@@ -32,7 +32,7 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'report';
+	public static $item_error_label = 'report';
 
 	/**
 	 * The one true Reports registry instance.
@@ -96,10 +96,10 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 *
 	 * @param string $report_id   Report ID.
 	 * @param array  $attributes {
-	 *     Attributes of the report.
+	 *     Reports attributes. All arguments are required unless otherwise noted.
 	 *
 	 *     @type string $label     Report label.
-	 *     @type int    $priority  Priority by which to register the report.
+	 *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
 	 *     @type array  $filters   Filters available to the report.
 	 *     @type array  $endpoints Endpoints to associate with the report.
 	 * }
@@ -137,6 +137,50 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 
 			return parent::add_item( $report_id, $attributes );
 
+		}
+	}
+
+	/**
+	 * Registers a new data endpoint to the master endpoints registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
+	 * @throws \EDD_Exception if any of the required `$views` sub-attributes are empty.
+	 *
+	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 *
+	 * @param string $endpoint_id Reports data endpoint ID.
+	 * @param array  $attributes  Attributes of the endpoint. See Endpoint_Registry::register_endpoint()
+	 *                            for more information on expected arguments.
+	 * @return bool True if the endpoint was successfully registered, otherwise false.
+	 */
+	public function register_endpoint( $endpoint_id, $attributes ) {
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+		if ( is_wp_error( $registry ) ) {
+			return false;
+		}
+
+		return $registry->register_endpoint( $endpoint_id, $attributes );
+	}
+
+	/**
+	 * Unregisters a data endpoint from the master endpoints registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 *
+	 * @param string $endpoint_id Endpoint ID.
+	 */
+	public function unregister_endpoint( $endpoint_id ) {
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+		if ( ! is_wp_error( $registry ) ) {
+			$registry->unregister_endpoint( $endpoint_id );
 		}
 	}
 
