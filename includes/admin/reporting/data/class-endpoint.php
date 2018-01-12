@@ -138,7 +138,7 @@ class Endpoint {
 		 * @since 3.0
 		 *
 		 * @param mixed|string $data Endpoint data.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 * @param Endpoint     $this Endpoint object.
 		 */
 		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
 	}
@@ -310,8 +310,8 @@ class Endpoint {
 		 *
 		 * @since 3.0
 		 *
-		 * @param array $display_args Display arguments.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 * @param array    $display_args Display arguments.
+		 * @param Endpoint $this         Endpoint object.
 		 */
 		return apply_filters( 'edd_reports_endpoint_display_args', $this->display_args, $this );
 	}
@@ -350,7 +350,7 @@ class Endpoint {
 		 * @since 3.0
 		 *
 		 * @param callable $display_callback Display callback.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 * @param Endpoint $this             Endpoint object.
 		 */
 		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
 	}
@@ -389,7 +389,7 @@ class Endpoint {
 		 * @since 3.0
 		 *
 		 * @param callable $data_callback Data callback.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 * @param Endpoint $this          Endpoint object.
 		 */
 		return apply_filters( 'edd_reports_endpoint_data_callback', $this->data_callback, $this );
 	}
