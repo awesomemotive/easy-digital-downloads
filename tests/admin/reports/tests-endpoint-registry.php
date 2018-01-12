@@ -1,6 +1,8 @@
 <?php
 namespace EDD\Admin\Reports\Data;
 
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
+
 if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
 }
@@ -61,7 +63,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::$item_error_label
 	 */
 	public function test_item_error_label_should_be_reports_endpoint() {
-		$this->assertSame( 'reports endpoint', $this->registry->item_error_label );
+		$this->assertSame( 'reports endpoint', $this->registry::$item_error_label );
 	}
 
 	/**
@@ -73,6 +75,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
@@ -84,6 +87,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
@@ -97,6 +101,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_should_return_that_endpoint() {
 		$expected = array(
+			'id'       => 'foo',
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
@@ -209,6 +214,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_label_should_throw_exception() {
@@ -224,6 +230,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_views_should_throw_exception() {
@@ -239,6 +246,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
@@ -282,7 +290,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		$this->registry->register_endpoint( 'foo', array(
 			'label'     => 'Foo',
 			'priority'  => 15,
-			'views' => array(
+			'views'     => array(
 				'tile' => array(
 					'display_callback' => 'some_callback'
 				)
@@ -310,6 +318,76 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertTrue( $added );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
+		$result = $this->registry->build_endpoint( 'fake', '' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'fake', '' );
+
+		$this->assertSame( 'invalid_endpoint', $result->get_error_code() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
+		$this->registry->register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'some_value' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$result = $this->registry->build_endpoint( 'foo', 'tile' );
+
+		$this->assertInstanceOf( 'EDD\Admin\Reports\Data\Endpoint', $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error() {
+		$this->add_test_endpoints();
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'fake' );
+
+		$this->assertWPError( $result );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @group edd_errors
+	 * @throws \EDD_Exception
+	 */
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_code_invalid_view() {
+		$this->add_test_endpoints();
+
+		/** @var \WP_Error $result */
+		$result = $this->registry->build_endpoint( 'foo', 'fake' );
+
+		$this->assertSame( 'invalid_view', $result->get_error_code() );
 	}
 
 	/**

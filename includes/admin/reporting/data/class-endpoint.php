@@ -10,8 +10,6 @@
  */
 namespace EDD\Admin\Reports\Data;
 
-use EDD\Utils;
-
 /**
  * Represents a data endpoint for the Reports API.
  *
@@ -36,12 +34,12 @@ class Endpoint {
 	private $label;
 
 	/**
-	 * Endpoint type.
+	 * Endpoint view (type).
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $type;
+	private $view;
 
 	/**
 	 * Represents filters available to the endpoint.
@@ -67,7 +65,7 @@ class Endpoint {
 	private $display_callback;
 
 	/**
-	 * Represents the display arguments (passed to the display callback) for the (view) type.
+	 * Represents the display arguments (passed to the display callback) for the view (type).
 	 *
 	 * @since 3.0
 	 * @var   array
@@ -89,28 +87,331 @@ class Endpoint {
 	 *
 	 * @see set_display_props()
 	 *
-	 * @param array  $endpoint Endpoint record from the registry.
-	 * @param string $type     Endpoint view type. Determines which view attribute to
-	 *                         retrieve from the corresponding endpoint registry entry.
+	 * @param string $view_type Endpoint view type. Determines which view attribute to
+	 *                          retrieve from the corresponding endpoint registry entry.
+	 * @param array  $endpoint  Endpoint record from the registry.
 	 */
-	public function __construct( $endpoint, $type ) {
+	public function __construct( $view_type, $endpoint ) {
 		$this->errors = new \WP_Error();
 
-		$this->set_type( $type );
+		$this->set_view( $view_type );
+		$this->set_props( $endpoint );
+	}
 
-		if ( ! empty( $endpoint['id'] ) ) {
-			$this->endpoint_id = $endpoint['id'];
+	/**
+	 * Displays the endpoint based on the view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return void
+	 */
+	public function display() {
+		$callback = $this->get_display_callback();
+
+		if ( is_callable( $callback ) ) {
+			call_user_func_array( $callback, array(
+				'data' => $this->get_data(),
+				'args' => $this->get_display_args(),
+			) );
+		}
+	}
+
+	/**
+	 * Retrieves the data for the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed Endpoint data.
+	 */
+	public function get_data() {
+		$data_callback = $this->get_data_callback();
+
+		if ( is_callable( $data_callback ) ) {
+			$data = call_user_func( $data_callback );
 		} else {
+			$data = '';
+		}
+
+		/**
+		 * Filters data for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param mixed|string $data Endpoint data.
+		 * @param Endpoint     $this Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
+	}
+
+	/**
+	 * Retrieves the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Endpoint view.
+	 */
+	public function get_view() {
+		return $this->view;
+	}
+
+	/**
+	 * Sets the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $view_type Endpoint type.
+	 */
+	private function set_view( $view_type ) {
+		$views = \edd_reports_get_endpoint_views();
+
+		if ( array_key_exists( $view_type, $views ) ) {
+			$this->view = $view_type;
+		} else {
+			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view_type );
+		}
+	}
+
+	/**
+	 * Sets props for the Endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $endpoint Endpoint record.
+	 */
+	public function set_props( $endpoint ) {
+		if ( ! empty( $endpoint['id'] ) ) {
+
+			$this->set_id( $endpoint['id'] );
+
+		} else {
+
 			$this->errors->add( 'missing_endpoint_id', 'The endpoint_id is missing.' );
+
 		}
 
 		if ( ! empty( $endpoint['label'] ) ) {
-			$this->label = $endpoint['label'];
+
+			$this->set_label( $endpoint['label'] );
+
 		} else {
-			$this->errors->add( 'missing_label', 'The endpoint label is missing.' );
+
+			$this->errors->add( 'missing_endpoint_label', 'The endpoint label is missing.' );
+
 		}
 
 		$this->set_display_props( $endpoint );
+	}
+
+	/**
+	 * Retrieves the endpoint ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Endpoint ID.
+	 */
+	public function get_id() {
+		return $this->endpoint_id;
+	}
+
+	/**
+	 * Sets the endpoint ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $endpoint_id Endpoint ID
+	 * @return void
+	 */
+	private function set_id( $endpoint_id ) {
+		$this->endpoint_id = $endpoint_id;
+	}
+
+	/**
+	 * Retrieves the global label for the current endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Endpoint string.
+	 */
+	public function get_label() {
+		return $this->label;
+	}
+
+	/**
+	 * Sets the endpoint label.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $label Endpoint label.
+	 * @return void
+	 */
+	private function set_label( $label ) {
+		$this->label = $label;
+	}
+
+	/**
+	 * Sets display-related properties for the Endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $endpoint Endpoint record from the registry.
+	 */
+	protected function set_display_props( $endpoint ) {
+
+		$view_type = $this->get_view();
+
+		if ( ! empty( $endpoint['views'][ $view_type ] ) ) {
+
+			$view_atts = $endpoint['views'][ $view_type ];
+
+			// display_args is optional.
+			if ( ! empty( $view_atts['display_args'] ) ) {
+				$this->set_display_args( $view_atts['display_args'] );
+			}
+
+			// display_callback
+			if ( ! empty( $view_atts['display_callback'] ) ) {
+				$this->set_display_callback( $view_atts['display_callback'] );
+			} else {
+				$this->flag_missing_view_arg( 'display_callback' );
+			}
+
+			// data_callback
+			if ( ! empty( $view_atts['data_callback'] ) ) {
+				$this->set_data_callback( $view_atts['data_callback'] );
+			} else {
+				$this->flag_missing_view_arg( 'data_callback' );
+			}
+
+		} else {
+
+			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%2$s\' endpoint.',
+				$view_type,
+				$this->get_id()
+			);
+
+			$this->errors->add( 'view_not_defined', $message, array(
+				'view_type'   => $view_type,
+				'endpoint_id' => $this->get_id(),
+			) );
+
+		}
+	}
+
+	/**
+	 * Retrieves the display arguments for the view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Display arguments.
+	 */
+	public function get_display_args() {
+		/**
+		 * Filters the display arguments for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array    $display_args Display arguments.
+		 * @param Endpoint $this         Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_display_args', $this->display_args, $this );
+	}
+
+	/**
+	 * Validates and sets the display_args prop.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array|mixed $display_args Display arguments.
+	 * @return void
+	 */
+	private function set_display_args( $display_args ) {
+		if ( is_array( $display_args ) ) {
+
+			$this->display_args = $display_args;
+
+		} else {
+
+			$this->flag_invalid_view_arg_type( 'display_args', 'array' );
+
+		}
+	}
+
+	/**
+	 * Retrieves the display callback for the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return callable Display callback.
+	 */
+	public function get_display_callback() {
+		/**
+		 * Filters the display callback for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param callable $display_callback Display callback.
+		 * @param Endpoint $this             Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
+	}
+
+	/**
+	 * Validates and sets the display_args prop.
+	 *
+	 * @since 3.0
+	 *
+	 * @param callable|mixed $display_callback Display callback.
+	 * @return void
+	 */
+	private function set_display_callback( $display_callback ) {
+		if ( is_callable( $display_callback ) ) {
+
+			$this->display_callback = $display_callback;
+
+		} else {
+
+			$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
+
+		}
+	}
+
+	/**
+	 * Retrieves the data callback for the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return callable Data callback.
+	 */
+	public function get_data_callback() {
+		/**
+		 * Filters the data callback for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param callable $data_callback Data callback.
+		 * @param Endpoint $this          Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_data_callback', $this->data_callback, $this );
+	}
+
+	/**
+	 * Validates and sets the display_args prop.
+	 *
+	 * @since 3.0
+	 *
+	 * @param callable|mixed $data_callback Data callback.
+	 * @return void
+	 */
+	private function set_data_callback( $data_callback ) {
+		if ( is_callable( $data_callback ) ) {
+
+			$this->data_callback = $data_callback;
+
+		} else {
+
+			$this->flag_invalid_view_arg_type( 'data_callback', 'callable' );
+
+		}
 	}
 
 	/**
@@ -130,211 +431,53 @@ class Endpoint {
 	 * Retrieves any logged errors for the endpoint.
 	 *
 	 * @since 3.0
+	 *
+	 * @return \WP_Error WP_Error object for the endpoint.
 	 */
 	public function get_errors() {
 		return $this->errors;
 	}
 
 	/**
-	 * Retrieves the endpoint ID.
+	 * Flags an error for an invalid view argument type.
 	 *
 	 * @since 3.0
 	 *
-	 * @return string Endpoint ID.
-	 */
-	public function get_id() {
-		return $this->endpoint_id;
-	}
-
-	/**
-	 * Retrieves the global label for the current endpoint.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Endpoint string.
-	 */
-	public function get_label() {
-		return $this->label;
-	}
-
-	/**
-	 * Sets the endpoint type.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $type Endpoint type.
-	 */
-	private function set_type( $type ) {
-		$types = edd_get_reports_endpoint_views();
-
-		if ( in_array( $type, $types, true ) ) {
-			$this->type = $type;
-		} else {
-			$this->errors->add( 'invalid_type', 'Invalid endpoint type.', $type );
-		}
-	}
-
-	/**
-	 * Retrieves the endpoint (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Endpoint type.
-	 */
-	public function get_type() {
-		return $this->type;
-	}
-
-	/**
-	 * Sets display-related properties for the Endpoint.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $endpoint Endpoint record from the registry.
-	 */
-	protected function set_display_props( $endpoint ) {
-
-		if ( ! empty( $endpoint['views'][ $this->get_type() ] ) ) {
-
-			$view_atts = $endpoint['views'][ $this->type ];
-
-			if ( isset( $view_atts['display_args'] ) ) {
-
-				$this->display_args = $view_atts['display_args'];
-
-			} else {
-
-				$message = sprintf( 'The display_args argument must be set for the %s endpoint view type.',
-					$this->get_type()
-				);
-
-				$this->errors->add( 'missing_display_args', $message, array(
-					'type'        => $this->get_type(),
-					'endpoint_id' => $this->get_id(),
-				) );
-
-			}
-
-			if ( isset( $view_atts['display_callback'] ) ) {
-
-				$this->display_callback = $view_atts['display_callback'];
-
-			} else {
-
-				$message = sprintf( 'The display_callback argument must be set for the %s endpoint view type.',
-					$this->get_type()
-				);
-
-				$this->errors->add( 'missing_display_callback', $message, array(
-					'type'        => $this->get_type(),
-					'endpoint_id' => $this->get_id(),
-				) );
-
-			}
-
-			if ( isset( $view_atts['data_callback'] ) ) {
-
-				$this->data_callback = $view_atts['data_callback'];
-
-			} else {
-
-				$message = sprintf( 'The data_callback argument must be set for the %s endpoint view type.',
-					$this->get_type()
-				);
-
-				$this->errors->add( 'missing_data_callback', $message, array(
-					'type'        => $this->get_type(),
-					'endpoint_id' => $this->get_id(),
-				) );
-
-			}
-
-		} else {
-
-			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%1$s\' endpoint.',
-				$this->get_type(),
-				$this->get_id()
-			);
-
-			$errors->add( 'view_not_defined', $message, array(
-				'type'        => $this->get_type(),
-				'endpoint_id' => $this->get_id(),
-			) );
-
-		}
-	}
-
-	/**
-	 * Retrieves the data for the endpoint (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return mixed Endpoint data.
-	 */
-	public function get_data() {
-		if ( is_callable( $this->data_callback ) ) {
-			$data = call_user_func( $this->data_callback );
-		} else {
-			$data = '';
-		}
-
-		/**
-		 * Filters data for the current endpoint.
-		 *
-		 * @since 3.0
-		 *
-		 * @param mixed|string $data Endpoint data.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
-		 */
-		return apply_filters( 'edd_reports_endpoint_data', $data, $this );
-	}
-
-	/**
-	 * Retrieves the display callback for the endpoint (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return mixed|void
-	 */
-	public function get_display_callback() {
-		/**
-		 * Filters the display callback for the current endpoint.
-		 *
-		 * @since 3.0
-		 *
-		 * @param callable $display_callback Display callback.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
-		 */
-		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
-	}
-
-	/**
-	 * Retrieves the display arguments for the (view) type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array Display arguments.
-	 */
-	public function get_display_args() {
-		return $this->display_args;
-	}
-
-	/**
-	 * Displays the endpoint based on the (view) type.
-	 *
-	 * @since 3.0
-	 *
+	 * @param string $argument Argument name.
 	 * @return void
 	 */
-	public function display() {
-		$callback = $this->get_display_callback();
+	private function flag_invalid_view_arg_type( $argument, $expected_type ) {
+		$message = sprintf( 'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' endpoint \'%4$s\' view.',
+			$argument,
+			$expected_type,
+			$this->get_view(),
+			$this->get_id()
+		);
 
-		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array(
-				'data' => $this->get_data(),
-				'args' => $this->get_display_args(),
-			) );
-		}
+		$this->errors->add( 'invalid_view_arg_type', $message, array(
+			'view_type'   => $this->get_view(),
+			'endpoint_id' => $this->get_id(),
+		) );
 	}
 
+	/**
+	 * Flags an error for a missing required view argument.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $argument Argument name.
+	 * @return void
+	 */
+	private function flag_missing_view_arg( $argument ) {
+		$message = sprintf( 'The \'%1$s\' argument must be set for the \'%2$s\' endpoint \'%3$s\' view.',
+			$argument,
+			$this->get_id(),
+			$this->get_view()
+		);
+
+		$this->errors->add( "missing_{$argument}", $message, array(
+			'view_type'   => $this->get_view(),
+			'endpoint_id' => $this->get_id(),
+		) );
+	}
 }
