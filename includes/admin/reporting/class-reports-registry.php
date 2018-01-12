@@ -96,10 +96,10 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 *
 	 * @param string $report_id   Report ID.
 	 * @param array  $attributes {
-	 *     Attributes of the report.
+	 *     Reports attributes. All arguments are required unless otherwise noted.
 	 *
 	 *     @type string $label     Report label.
-	 *     @type int    $priority  Priority by which to register the report.
+	 *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
 	 *     @type array  $filters   Filters available to the report.
 	 *     @type array  $endpoints Endpoints to associate with the report.
 	 * }
@@ -141,7 +141,7 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	}
 
 	/**
-	 * Registers a new data endpoint to the master registry.
+	 * Registers a new data endpoint to the master endpoints registry.
 	 *
 	 * @since 3.0
 	 *
@@ -167,7 +167,7 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	}
 
 	/**
-	 * Unregisters a data endpoint from the master registry.
+	 * Unregisters a data endpoint from the master endpoints registry.
 	 *
 	 * @since 3.0
 	 *
