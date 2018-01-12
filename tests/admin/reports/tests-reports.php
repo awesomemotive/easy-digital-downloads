@@ -8,7 +8,6 @@ if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
 /**
  * Tests for the Endpoint object.
  *
- * @group edd_registry
  * @group edd_reports
  * @group edd_reports_endpoints
  * @group edd_objects
