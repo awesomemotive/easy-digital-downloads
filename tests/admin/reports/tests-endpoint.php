@@ -59,6 +59,24 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_view()
+	 */
+	public function test_get_view_when_created_with_invalid_view_should_be_null() {
+		$endpoint = new Endpoint( 'fake', array() );
+
+		$this->assertNull( $endpoint->get_view() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_view()
+	 */
+	public function test_get_view_when_created_with_valid_view_should_be_that_view() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertSame( 'tile', $endpoint->get_view() );
+	}
+
+	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
 	 * @group edd_errors
 	 */
