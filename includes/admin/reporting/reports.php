@@ -627,7 +627,6 @@ function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
  * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
  */
 function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
-
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 	if ( is_wp_error( $registry ) ) {
