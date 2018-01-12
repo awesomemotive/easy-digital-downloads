@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Payment Item Meta Table: EDD_DB_Table_Payment_Itemmeta class
+ * Order Meta Table: EDD_DB_Table_Ordermeta class
  *
  * @package Plugins/EDD/Database/Object/Meta
  */
@@ -11,21 +11,21 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'WP_DB_Table' ) ) :
 /**
- * Setup the global "edd_payment_itemmeta" database table
+ * Setup the global "edd_ordermeta" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Payment_Itemeta extends WP_DB_Table {
+final class EDD_DB_Table_Ordermeta extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'edd_payment_itemmeta';
+	protected $name = 'edd_ordermeta';
 
 	/**
 	 * @var string Database version
 	 */
-	protected $version = 201801070001;
+	protected $version = 201801060001;
 
 	/**
 	 * @var boolean This is not a global table
@@ -40,10 +40,10 @@ final class EDD_DB_Table_Payment_Itemeta extends WP_DB_Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			payment_item_id bigint(20) unsigned NOT NULL default 0,
+			order_id bigint(20) unsigned NOT NULL default 0,
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY payment_item_id (payment_item_id),
+			PRIMARY KEY order_id (order_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 

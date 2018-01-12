@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Payment Items Table: EDD_DB_Table_Payment_Items class
+ * Order Items Table: EDD_DB_Table_Order_Items class
  *
  * @package Plugins/EDD/Database/Object
  */
@@ -11,16 +11,16 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'WP_DB_Table' ) ) :
 /**
- * Setup the global "edd_payment_items" database table
+ * Setup the global "edd_order_items" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Payment_Items extends WP_DB_Table {
+final class EDD_DB_Table_Order_Items extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'edd_payment_items';
+	protected $name = 'edd_order_items';
 
 	/**
 	 * @var string Database version
@@ -39,7 +39,7 @@ final class EDD_DB_Table_Payment_Items extends WP_DB_Table {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
-			payment_id bigint(20) unsigned NOT NULL default '0',
+			order_id bigint(20) unsigned NOT NULL default '0',
 			product_id bigint(20) unsigned NOT NULL default '0',
 			price_id bigint(20) unsigned NOT NULL default '0',
 			cart_index bigint(20) unsigned NOT NULL default '0',
@@ -52,7 +52,7 @@ final class EDD_DB_Table_Payment_Items extends WP_DB_Table {
 			tax double NOT NULL default '0',
 			total double NOT NULL default '0',
 			PRIMARY KEY (id),
-			KEY payment_product_price_id (payment_id,product_id,price_id),
+			KEY order_product_price_id (order_id,product_id,price_id),
 			KEY type_status (type(20),status(20))";
 	}
 
