@@ -596,7 +596,7 @@ function edd_get_reports_endpoint_views() {
  * @return bool True if the endpoint was successfully registered, otherwise false.
  */
 function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
-	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry $registry */
+	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -628,7 +628,7 @@ function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
  * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
  */
 function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
-	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry $registry */
+	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 	if ( is_wp_error( $registry ) ) {
