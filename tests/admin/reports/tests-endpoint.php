@@ -478,4 +478,41 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		$this->assertContains( 'invalid_view_arg_type', $errors->get_error_codes() );
 	}
 
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::has_errors()
+	 */
+	public function test_has_errors_if_no_errors_should_return_false() {
+		// Add a completely valid endpoint.
+		$endpoint = new Endpoint( 'tile', array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$this->assertFalse( $endpoint->has_errors() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::has_errors()
+	 */
+	public function test_has_errors_if_errors_should_return_true() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertTrue( $endpoint->has_errors() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_errors()
+	 */
+	public function test_get_errors_should_return_WP_Error_object() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertWPError( $endpoint->get_errors() );
+	}
+
 }
