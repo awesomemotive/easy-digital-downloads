@@ -110,6 +110,42 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_id()
+	 */
+	public function test_get_id_when_created_without_an_id_should_return_null() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertNull( $endpoint->get_id() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_id()
+	 */
+	public function test_get_id_when_created_with_an_id_should_return_that_id() {
+		$endpoint = new Endpoint( 'tile', array( 'id' => 'foo' ) );
+
+		$this->assertSame( 'foo', $endpoint->get_id() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_label()
+	 */
+	public function test_get_label_when_created_without_a_label_should_return_null() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertNull( $endpoint->get_label() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_label()
+	 */
+	public function test_get_label_when_created_with_a_label_should_return_that_label() {
+		$endpoint = new Endpoint( 'tile', array( 'label' => 'Foo' ) );
+
+		$this->assertSame( 'Foo', $endpoint->get_label() );
+	}
+
+	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_props()
 	 * @group edd_errors
 	 */
