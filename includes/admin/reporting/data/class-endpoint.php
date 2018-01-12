@@ -263,34 +263,23 @@ class Endpoint {
 
 			$view_atts = $endpoint['views'][ $view_type ];
 
+			// display_args is optional.
 			if ( ! empty( $view_atts['display_args'] ) ) {
-
 				$this->set_display_args( $view_atts['display_args'] );
-
-			} else {
-
-				$this->flag_missing_view_arg( 'display_args' );
-
 			}
 
+			// display_callback
 			if ( ! empty( $view_atts['display_callback'] ) ) {
-
 				$this->set_display_callback( $view_atts['display_callback'] );
-
 			} else {
-
 				$this->flag_missing_view_arg( 'display_callback' );
-
 			}
 
+			// data_callback
 			if ( ! empty( $view_atts['data_callback'] ) ) {
-
 				$this->set_data_callback( $view_atts['data_callback'] );
-
 			} else {
-
 				$this->flag_missing_view_arg( 'data_callback' );
-
 			}
 
 		} else {
