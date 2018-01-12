@@ -5,7 +5,7 @@
  *
  * @author  JJJ
  * @link    https://jjj.blog
- * @version 1.1.0
+ * @version 1.3.0
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
@@ -91,13 +91,13 @@ abstract class WP_DB_Table {
 	 */
 	public function __construct() {
 
-		// Bail if no database object or table name
-		if ( empty( $GLOBALS['wpdb'] ) || empty( $this->name ) ) {
-			return;
-		}
-
 		// Setup the database
 		$this->setup();
+
+		// Bail if setup failed
+		if ( empty( $this->name ) || empty( $this->db_version_key ) ) {
+			return;
+		}
 
 		// Get the version of he table currently in the database
 		$this->get_db_version();
@@ -190,8 +190,22 @@ abstract class WP_DB_Table {
 	private function setup() {
 
 		// Setup database
-		$this->db   = $GLOBALS['wpdb'];
-		$this->name = sanitize_key( $this->name );
+		$this->db = isset( $GLOBALS['wpdb'] )
+			? $GLOBALS['wpdb']
+			: false;
+
+		// Bail if no WordPress database interface is available
+		if ( false === $this->db ) {
+			return;
+		}
+
+		// Sanitize the database table name
+		$this->name = $this->sanitize_table_name( $this->name );
+
+		// Bail if database table name was garbage
+		if ( false === $this->name ) {
+			return;
+		}
 
 		// Maybe create database key
 		if ( empty( $this->db_version_key ) ) {
@@ -335,6 +349,48 @@ abstract class WP_DB_Table {
 
 		// Is the table global?
 		return ( true === $this->global );
+	}
+
+	/**
+	 * Sanitize a table name string
+	 *
+	 * Applies the following formatting to a string:
+	 * - No accents
+	 * - No special characters
+	 * - No hyphens
+	 * - No double underscores
+	 * - No trailing underscores
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param string $name The name of the database table
+	 *
+	 * @return string Sanitized database table name
+	 */
+	private function sanitize_table_name( $name = '' ) {
+
+		// Only non-accented table names (avoid truncation)
+		$accents = remove_accents( $name );
+
+		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
+		$lower   = sanitize_key( $accents );
+
+		// Replace hyphens with single underscores
+		$under   = str_replace( '-',  '_', $lower );
+
+		// Single underscores only
+		$single  = str_replace( '__', '_', $under );
+
+		// Remove trailing underscores
+		$clean   = trim( $single, '_' );
+
+		// Bail if table name was garbaged
+		if ( empty( $clean ) ) {
+			return false;
+		}
+
+		// Return the cleaned table name
+		return $clean;
 	}
 }
 endif;
