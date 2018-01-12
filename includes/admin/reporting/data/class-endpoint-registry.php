@@ -34,7 +34,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'reports endpoint';
+	public static $item_error_label = 'reports endpoint';
 
 	/**
 	 * The one true Endpoint_Registry instance.
