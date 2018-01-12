@@ -156,10 +156,14 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
 	public function register_endpoint( $endpoint_id, $attributes ) {
-		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry $endpoints */
-		$endpoints = EDD()->utils->get_registry( 'reports:endpoints' );
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
-		return $endpoints->register_endpoint( $endpoint_id, $attributes );
+		if ( is_wp_error( $registry ) ) {
+			return false;
+		}
+
+		return $registry->register_endpoint( $endpoint_id, $attributes );
 	}
 
 	/**
@@ -172,10 +176,12 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 * @param string $endpoint_id Endpoint ID.
 	 */
 	public function unregister_endpoint( $endpoint_id ) {
-		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry $endpoints */
-		$endpoints = EDD()->utils->get_registry( 'reports:endpoints' );
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
-		$endpoints->unregister_endpoint( $endpoint_id );
+		if ( ! is_wp_error( $registry ) ) {
+			$registry->unregister_endpoint( $endpoint_id );
+		}
 	}
 
 }
