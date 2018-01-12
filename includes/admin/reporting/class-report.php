@@ -62,6 +62,17 @@ class Report {
 	public function __construct( $report = array() ) {
 		$this->errors = new \WP_Error();
 
+		$this->set_props( $report );
+	}
+
+	/**
+	 * Sets a variety of properties needed to render the report.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $report Report record from the registry.
+	 */
+	public function set_props( $report ) {
 		if ( ! empty( $report ) ) {
 
 			if ( ! empty( $report['id'] ) ) {
