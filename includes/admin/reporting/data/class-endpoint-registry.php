@@ -114,7 +114,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *             @type callable $display_callback Callback used to render the view.
 	 *             @type array    $display_args     Array of arguments to pass to the
 	 *                                              display_callback (if any).
-	 *             @type array    $filters          List of registered filters supported by the view.
 	 *         }
 	 *     }
 	 * }
