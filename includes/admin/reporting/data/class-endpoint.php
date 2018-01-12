@@ -298,25 +298,6 @@ class Endpoint {
 	}
 
 	/**
-	 * Retrieves the display callback for the endpoint view (type).
-	 *
-	 * @since 3.0
-	 *
-	 * @return callable Display callback.
-	 */
-	public function get_display_callback() {
-		/**
-		 * Filters the display callback for the current endpoint.
-		 *
-		 * @since 3.0
-		 *
-		 * @param callable $display_callback Display callback.
-		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
-		 */
-		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
-	}
-
-	/**
 	 * Retrieves the display arguments for the view (type).
 	 *
 	 * @since 3.0
@@ -353,6 +334,25 @@ class Endpoint {
 			$this->flag_invalid_view_arg_type( 'display_args', 'array' );
 
 		}
+	}
+
+	/**
+	 * Retrieves the display callback for the endpoint view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return callable Display callback.
+	 */
+	public function get_display_callback() {
+		/**
+		 * Filters the display callback for the current endpoint.
+		 *
+		 * @since 3.0
+		 *
+		 * @param callable $display_callback Display callback.
+		 * @param \EDD\Admin\Reports\Data\Endpoint Endpoint object.
+		 */
+		return apply_filters( 'edd_reports_endpoint_display_callback', $this->display_callback, $this );
 	}
 
 	/**
