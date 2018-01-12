@@ -124,8 +124,10 @@ class Endpoint {
 	 * @return mixed Endpoint data.
 	 */
 	public function get_data() {
-		if ( is_callable( $this->data_callback ) ) {
-			$data = call_user_func( $this->data_callback );
+		$data_callback = $this->get_data_callback();
+
+		if ( is_callable( $data_callback ) ) {
+			$data = call_user_func( $data_callback );
 		} else {
 			$data = '';
 		}
