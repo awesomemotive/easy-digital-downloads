@@ -187,6 +187,25 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
+	 */
+	public function test_set_view_with_valid_view_should_set_that_view() {
+		$endpoint = new Endpoint( 'tile', array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'display_args'     => array( 'something' ),
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			),
+		) );
+
+		$this->assertSame( 'tile', $endpoint->get_view() );
+	}
+
+	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
