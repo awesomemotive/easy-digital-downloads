@@ -32,7 +32,7 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'report';
+	public static $item_error_label = 'report';
 
 	/**
 	 * The one true Reports registry instance.
