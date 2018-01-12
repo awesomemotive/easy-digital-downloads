@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Payments Table: EDD_DB_Table_Payments class
+ * Orders Table: EDD_DB_Table_Orders class
  *
  * @package Plugins/EDD/Database/Object
  */
@@ -11,16 +11,16 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'WP_DB_Table' ) ) :
 /**
- * Setup the global "edd_payments" database table
+ * Setup the global "edd_orders" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Payments extends WP_DB_Table {
+final class EDD_DB_Table_Orders extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'edd_payments';
+	protected $name = 'edd_orders';
 
 	/**
 	 * @var string Database version
@@ -60,7 +60,7 @@ final class EDD_DB_Table_Payments extends WP_DB_Table {
 			KEY customer_id (customer_id),
 			KEY email (email(100)),
 			KEY ip (ip(60)),
-			KEY payment_key (payment_key(64)),
+			KEY order_key (order_key(64)),
 			KEY date_created_completed (date_created,date_completed)";
 	}
 
