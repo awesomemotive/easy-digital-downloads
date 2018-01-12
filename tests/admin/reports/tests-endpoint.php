@@ -190,7 +190,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
-	public function test_set_display_props_with_empty_view_display_args_should_flag_WP_Error() {
+	public function test_set_display_props_with_empty_view_display_args_should_be_treated_as_optional() {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
@@ -204,30 +204,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		$this->assertTrue( $endpoint->has_errors() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
-	 * @group edd_errors
-	 */
-	public function test_set_display_props_with_empty_view_display_args_should_flag_WP_Error_including_code_missing_display_args() {
-		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( 'tile', array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array(),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
-				),
-			),
-		) );
-
-		$errors = $endpoint->get_errors();
-
-		$this->assertContains( 'missing_display_args', $errors->get_error_codes() );
+		$this->assertFalse( $endpoint->has_errors() );
 	}
 
 	/**
