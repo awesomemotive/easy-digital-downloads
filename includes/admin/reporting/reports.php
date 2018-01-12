@@ -622,8 +622,8 @@ function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
  *
  * @see \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
  *
- * @param string $view_type   View type to use when building the object.
  * @param string $endpoint_id Endpoint ID.
+ * @param string $view_type   View type to use when building the object.
  * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
  */
 function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
