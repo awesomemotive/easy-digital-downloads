@@ -30,7 +30,7 @@ abstract class Registry extends \ArrayObject {
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'item';
+	public static $item_error_label = 'item';
 
 	/**
 	 * Adds an item to the registry.
@@ -58,7 +58,7 @@ abstract class Registry extends \ArrayObject {
 			$message = sprintf(
 				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
 				$item_id,
-				$this->item_error_label
+				static::$item_error_label
 			);
 
 			throw new Exception( $message );
@@ -104,7 +104,7 @@ abstract class Registry extends \ArrayObject {
 			$message = sprintf(
 				'The \'%1$s\' %2$s does not exist.',
 				$item_id,
-				$this->item_error_label
+				static::$item_error_label
 			);
 
 			throw new Exception( $message );
