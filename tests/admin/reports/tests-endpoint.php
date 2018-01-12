@@ -148,6 +148,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( $invalid_view, array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array( 'something' ),
@@ -170,6 +171,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( $invalid_view, array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array( 'something' ),
@@ -192,6 +194,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array(),
@@ -212,6 +215,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array(),
@@ -234,6 +238,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => 'something',
@@ -256,6 +261,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'  => array( 'something' ),
@@ -275,6 +281,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'  => array( 'something' ),
@@ -296,6 +303,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array( 'something' ),
@@ -318,6 +326,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array( 'something' ),
@@ -337,6 +346,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array( 'something' ),
@@ -358,6 +368,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		// Execute the invisible method via the constructor.
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
+			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
 					'display_args'     => array( 'something' ),
