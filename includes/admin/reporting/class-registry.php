@@ -28,7 +28,7 @@ class Registry extends Utils\Registry {
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'reports item';
+	public static $item_error_label = 'reports item';
 
 	/**
 	 * Validates a list of report item attributes.
