@@ -146,7 +146,7 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 	 * @since 3.0
 	 *
 	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
-	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 * @throws \EDD_Exception if any of the required `$views` sub-attributes are empty.
 	 *
 	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
 	 *
