@@ -120,6 +120,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_id()
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_id()
 	 */
 	public function test_get_id_when_created_with_an_id_should_return_that_id() {
 		$endpoint = new Endpoint( 'tile', array( 'id' => 'foo' ) );
@@ -138,6 +139,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_label()
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_label()
 	 */
 	public function test_get_label_when_created_with_a_label_should_return_that_label() {
 		$endpoint = new Endpoint( 'tile', array( 'label' => 'Foo' ) );
@@ -244,6 +246,83 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertFalse( $endpoint->has_errors() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_args()
+	 */
+	public function test_get_display_args_when_created_without_display_args_should_return_an_empty_array() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertEqualSets( array(), $endpoint->get_display_args() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_args()
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_args()
+	 */
+	public function test_get_display_args_when_created_with_display_args_should_return_those_args() {
+		$expected = array( 'something', 'goes', 'here' );
+
+		$endpoint = new Endpoint( 'tile', array(
+			'views' => array(
+				'tile' => array(
+					'display_args' => $expected
+				)
+			)
+		) );
+
+		$this->assertEqualSets( $expected, $endpoint->get_display_args() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_callback()
+	 */
+	public function test_get_display_callback_when_created_without_display_callback_should_return_null() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertNull( $endpoint->get_display_callback() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_callback()
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_callback()
+	 */
+	public function test_get_display_callback_when_created_with_display_callback_should_return_that_callback() {
+		$endpoint = new Endpoint( 'tile', array(
+			'views' => array(
+				'tile' => array(
+					'display_callback' => '__return_false'
+				)
+			)
+		) );
+
+		$this->assertSame( '__return_false', $endpoint->get_display_callback() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_data_callback()
+	 */
+	public function test_get_data_callback_when_created_without_data_callback_should_return_null() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertNull( $endpoint->get_data_callback() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_data_callback()
+	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_data_callback()
+	 */
+	public function test_get_data_callback_when_created_with_data_callback_should_return_that_callback() {
+		$endpoint = new Endpoint( 'tile', array(
+			'views' => array(
+				'tile' => array(
+					'data_callback' => '__return_false'
+				)
+			)
+		) );
+
+		$this->assertSame( '__return_false', $endpoint->get_data_callback() );
 	}
 
 	/**
