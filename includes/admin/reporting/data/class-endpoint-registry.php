@@ -113,7 +113,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *             @type callable $data_callback    Callback used to retrieve data for the view.
 	 *             @type callable $display_callback Callback used to render the view.
 	 *             @type array    $display_args     Optional. Array of arguments to pass to the
-	 *                                              display_callback (if any).
+	 *                                              display_callback (if any). Default empty array.
 	 *         }
 	 *     }
 	 * }
@@ -176,10 +176,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @since 3.0
 	 *
 	 * @param string $endpoint_id Endpoint ID.
-	 * @param string $type        View type to use when building the object.
+	 * @param string $view_type   View type to use when building the object.
 	 * @return Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
 	 */
-	public function build_endpoint( $endpoint_id, $type ) {
+	public function build_endpoint( $endpoint_id, $view_type ) {
 
 		try {
 
@@ -194,7 +194,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		// Build the Endpoint object.
-		$endpoint = new Endpoint( $type, $endpoint );
+		$endpoint = new Endpoint( $view_type, $endpoint );
 
 		// If any errors were logged during instantiation, return the resulting WP_Error object.
 		if ( $endpoint->has_errors() ) {
