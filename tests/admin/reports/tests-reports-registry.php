@@ -60,7 +60,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Reports_Registry::$item_error_label
 	 */
 	public function test_item_error_label_should_be_report() {
-		$this->assertSame( 'report', $this->registry->item_error_label );
+		$this->assertSame( 'report', $this->registry::$item_error_label );
 	}
 
 	/**

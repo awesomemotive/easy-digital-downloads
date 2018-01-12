@@ -12,7 +12,6 @@ namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
 use EDD\Admin\Reports;
-use EDD\Admin\Reports\Exceptions;
 
 /**
  * Implements a singleton registry for registering reports data endpoints.
@@ -34,7 +33,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @since 3.0
 	 * @var   string
 	 */
-	public $item_error_label = 'reports endpoint';
+	public static $item_error_label = 'reports endpoint';
 
 	/**
 	 * The one true Endpoint_Registry instance.
@@ -100,10 +99,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
-	 *     Attributes of the reports endpoint.
+	 *     Endpoint attributes. All arguments are required unless otherwise noted.
 	 *
 	 *     @type string $label    Endpoint label.
-	 *     @type int    $priority Priority by which to retrieve the endpoint.
+	 *     @type int    $priority Optional. Priority by which to retrieve the endpoint. Default 10.
 	 *     @type array  $views {
 	 *         Array of view handlers by type.
 	 *
@@ -112,9 +111,8 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 *             @type callable $data_callback    Callback used to retrieve data for the view.
 	 *             @type callable $display_callback Callback used to render the view.
-	 *             @type array    $display_args     Array of arguments to pass to the
-	 *                                              display_callback (if any).
-	 *             @type array    $filters          List of registered filters supported by the view.
+	 *             @type array    $display_args     Optional. Array of arguments to pass to the
+	 *                                              display_callback (if any). Default empty array.
 	 *         }
 	 *     }
 	 * }
@@ -131,13 +129,15 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$attributes = array_merge( $defaults, $attributes );
 
+		$attributes['id'] = $endpoint_id;
+
 		try {
 
 			$this->validate_attributes( $attributes, $endpoint_id );
 
 			try {
 
-				$this->validate_attributes( $attributes['views'], $endpoint_id, array( 'filters' ) );
+				$this->validate_attributes( $attributes['views'], $endpoint_id, array( 'display_args' ) );
 
 			} catch( \EDD_Exception $exception ) {
 
@@ -175,10 +175,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @since 3.0
 	 *
 	 * @param string $endpoint_id Endpoint ID.
-	 * @param string $type        View type to use when building the object.
+	 * @param string $view_type   View type to use when building the object.
 	 * @return Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
 	 */
-	public function build_endpoint( $endpoint_id, $type ) {
+	public function build_endpoint( $endpoint_id, $view_type ) {
 
 		try {
 
@@ -188,21 +188,17 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			edd_debug_log_exception( $exception );
 
-			$endpoint = new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint_id );
+			return new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint_id );
 
 		}
 
-		if ( ! is_wp_error( $endpoint ) ) {
+		// Build the Endpoint object.
+		$endpoint = new Endpoint( $view_type, $endpoint );
 
-			// Build the Endpoint object.
-			$endpoint = new Endpoint( $endpoint, $type );
+		// If any errors were logged during instantiation, return the resulting WP_Error object.
+		if ( $endpoint->has_errors() ) {
 
-			// If any errors were logged during instantiation, return the resulting WP_Error object.
-			if ( $endpoint->has_errors() ) {
-
-				return $endpoint->get_errors();
-
-			}
+			return $endpoint->get_errors();
 
 		}
 
