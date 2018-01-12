@@ -100,10 +100,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
-	 *     Attributes of the reports endpoint.
+	 *     Endpoint attributes. All arguments are required unless otherwise noted.
 	 *
 	 *     @type string $label    Endpoint label.
-	 *     @type int    $priority Priority by which to retrieve the endpoint.
+	 *     @type int    $priority Optional. Priority by which to retrieve the endpoint. Default 10.
 	 *     @type array  $views {
 	 *         Array of view handlers by type.
 	 *
@@ -112,7 +112,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 *             @type callable $data_callback    Callback used to retrieve data for the view.
 	 *             @type callable $display_callback Callback used to render the view.
-	 *             @type array    $display_args     Array of arguments to pass to the
+	 *             @type array    $display_args     Optional. Array of arguments to pass to the
 	 *                                              display_callback (if any).
 	 *         }
 	 *     }
