@@ -65,7 +65,6 @@ class Tests_Templates extends EDD_UnitTestCase {
 	}
 
 	public function test_get_purchase_link() {
-		add_filter( 'edd_add_schema_microdata', '__return_true' );
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_', $link );
@@ -75,7 +74,7 @@ class Tests_Templates extends EDD_UnitTestCase {
 
 		// The product we created has variable pricing, so ensure the price options render
 		$this->assertContains( '<div class="edd_price_options', $link );
-		$this->assertContains( '<span class="edd_price_option_name" itemprop="description">', $link );
+		$this->assertContains( '<span class="edd_price_option_name">', $link );
 
 		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
