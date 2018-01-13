@@ -135,9 +135,10 @@ class EDD_Structured_Data {
 			'name'        => $download->post_title,
 			'description' => $download->post_excerpt,
 			'url'         => get_permalink( $download->ID ),
-			'brand'       => array(
-				'@type' => 'Thing',
+			'seller'       => array(
+				'@type' => 'Organization',
 				'name'  => get_bloginfo( 'name' ),
+				'url'   => get_bloginfo( 'url' ),
 			),
 			'image'       => wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) ),
 			'sku'         => $download->get_sku(),
