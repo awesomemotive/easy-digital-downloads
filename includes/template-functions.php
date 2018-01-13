@@ -269,7 +269,6 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
-	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	// Filter the class names for the edd_price_options div
 	$css_classes_array = apply_filters( 'edd_price_options_classes', array(
@@ -291,7 +290,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '"' . $schema . '>';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '">';
 						echo '<label for="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
 
@@ -306,11 +305,6 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 							// Output the filtered price output
 							echo $price_output;
 
-							if( edd_add_schema_microdata() ) {
-								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
-								echo '<meta itemprop="priceCurrency" content="' . esc_attr( edd_get_currency() ) .'" />';
-							}
-
 						echo '</label>';
 						do_action( 'edd_after_price_option', $key, $price, $download_id );
 					echo '</li>';
@@ -324,31 +318,6 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	do_action( 'edd_after_price_options', $download_id );
 }
 add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
-
-/**
- * Output schema markup for single price products.
- *
- * @since  2.6.14
- * @param  int $download_id The download being output.
- * @return void
- */
-function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
-
-	// Bail if the product has variable pricing, or if we aren't showing schema data.
-	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
-		return;
-	}
-
-	// Grab the information we need.
-	$download = new EDD_Download( $download_id );
-	?>
-	<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-		<meta itemprop="price" content="<?php esc_attr_e( $download->price ); ?>" />
-		<meta itemprop="priceCurrency" content="<?php esc_attr_e( edd_get_currency() ); ?>" />
-	</span>
-	<?php
-}
-add_action( 'edd_purchase_link_top', 'edd_purchase_link_single_pricing_schema', 10, 2 );
 
 /**
  * Display the quantity field for a variable price when multi-purchase mode is enabled
