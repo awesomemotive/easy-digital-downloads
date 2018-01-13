@@ -143,6 +143,32 @@ class EDD_Structured_Data {
 			'sku'         => $download->get_sku(),
 		);
 
+		if ( $download->has_variable_prices() ) {
+			$variable_prices = $download->get_prices();
+
+			$offers = array();
+
+			foreach ( $variable_prices as $price ) {
+				$offers[] = array(
+					'@type'           => 'Offer',
+					'price'           => $price['amount'],
+					'priceCurrency'   => edd_get_currency(),
+					'priceValidUntil' => null,
+					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
+					'url'             => $data['url'],
+					'availability'    => 'http://schema.org/InStock',
+				);
+			}
+
+			$data['offers'] = $offers;
+		} else {
+			$data['offers'] = array(
+				'@type'         => 'Offer',
+				'priceCurrency' => edd_get_currency(),
+				'price'         => $download->get_price(),
+			);
+		}
+
 		/**
 		 * Filter the structured data for a download.
 		 *
