@@ -100,16 +100,17 @@ class EDD_Structured_Data {
 	/**
 	 * Generate the structured data for a given context.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 3.0
 	 *
 	 * @param mixed string|false $context Default empty as the class figures out what the context is automatically.
+	 * @param mixed $args Arguments that can be passed to the generators.
 	 *
 	 * @return string
 	 */
-	private function generate_structured_data( $context = false ) {
+	public function generate_structured_data( $context = false, $args = null ) {
 		if ( is_singular( 'download' ) || 'download' === $context ) {
-			$this->generate_download_data();
+			$this->generate_download_data( $args );
 		}
 
 		/**
