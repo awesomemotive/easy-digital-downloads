@@ -222,6 +222,55 @@ final class Report {
 	}
 
 	/**
+	 * Validates an endpoint for rendering.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Admin\Reports\Report::$valid_endpoints
+	 *
+	 * @param string                           $signal_key Signal key corresponding to the endpoint view.
+	 * @param \EDD\Admin\Reports\Data\Endpoint $endpoint   Endpoint object.
+	 */
+	public function validate_endpoint( $signal_key, $endpoint ) {
+		$this->endpoints[ $signal_key ][ $endpoint->get_id() ][] = $endpoint;
+	}
+
+	/**
+	 * Invalidates an endpoint for rendering.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Admin\Reports\Report::$errors
+	 *
+	 * @param string                  $signal_key Signal key corresponding to the endpoint view.
+	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint or WP_Error object.
+	 */
+	public function invalidate_endpoint( $signal_key, $endpoint ) {
+		if ( is_wp_error( $endpoint ) ) {
+			$this->errors->add(
+				$endpoint->get_error_code(),
+				$endpoint->get_error_message(),
+				$endpoint->get_error_data()
+			);
+		} else {
+			$message = sprintf( 'The \'%1$s\' endpoint is invalid.', $endpoint->get_id() );
+
+			$this->errors->add( 'invalid_endpoint', $message, $endpoint->get_errors() );
+		}
+	}
+
+	/**
+	 * Retrieves the master list of validated endpoints for the current report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array List of validated endpoints by view signal key.
+	 */
+	public function get_valid_endpoints() {
+		return $this->endpoints;
+	}
+
+	/**
 	 * Determines whether the endpoint has generated errors during instantiation.
 	 *
 	 * @since 3.0
