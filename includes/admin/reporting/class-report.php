@@ -232,14 +232,20 @@ final class Report {
 	}
 
 	/**
-	 * Retrieves the master list of validated endpoints for the current report.
+	 * Retrieves a list of validated endpoints for the current report.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array List of validated endpoints by view signal key.
+	 * @param string $view_group Optional. View group for the type of endpoints to retrieve.
+	 *                           Default empty (all valid endpoints).
+	 * @return array List of validated endpoints by view view group.
 	 */
-	public function get_valid_endpoints() {
-		return $this->endpoints;
+	public function get_endpoints( $view_group = '' ) {
+		if ( ! empty( $view_group ) && ! empty( $this->endpoints[ $view_group ] ) ) {
+			return $this->endpoints[ $view_group ];
+		} else {
+			return $this->endpoints;
+		}
 	}
 
 	/**
