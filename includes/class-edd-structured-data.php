@@ -135,7 +135,7 @@ class EDD_Structured_Data {
 			'name'        => $download->post_title,
 			'description' => $download->post_excerpt,
 			'url'         => get_permalink( $download->ID ),
-			'seller'       => array(
+			'brand'       => array(
 				'@type' => 'Organization',
 				'name'  => get_bloginfo( 'name' ),
 				'url'   => get_bloginfo( 'url' ),
@@ -168,6 +168,12 @@ class EDD_Structured_Data {
 				'priceCurrency' => edd_get_currency(),
 				'price'         => $download->get_price(),
 			);
+		}
+
+		$download_categories = wp_get_post_terms( $download->ID, 'download_category' );
+		if ( is_array( $download_categories ) && ! empty( $download_categories ) ) {
+			$download_categories = wp_list_pluck( $download_categories, 'name' );
+			$data['category'] = implode( ', ', $download_categories );
 		}
 
 		/**
