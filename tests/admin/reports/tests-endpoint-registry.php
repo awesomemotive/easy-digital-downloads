@@ -322,6 +322,15 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 */
+	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
+		$endpoint = new Endpoint( 'tile', array() );
+
+		$this->assertInstanceOf( '\EDD\Admin\Reports\Data\Endpoint', $endpoint );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
