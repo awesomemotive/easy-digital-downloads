@@ -9,6 +9,7 @@
  * @since       3.0
  */
 namespace EDD\Admin;
+use EDD\Admin\Reports\Data\Endpoint;
 
 /**
  * Core class that implements the Reports API.
@@ -98,12 +99,23 @@ final class Reports {
 				),
 			) );
 
+			$endpoint = new Endpoint( 'tile', array(
+				'id' => 'on_the_fly',
+				'label' => 'On the Fly',
+				'views' => array(
+					'tile' => array(
+						'display_callback' => '__return_true',
+						'data_callback'    => '__return_true',
+					)
+				)
+			) );
+
 			try {
 				$built_report = new Reports\Report( array(
 					'id' => 'on_the_fly',
 					'label' => 'On the Fly',
 					'endpoints' => array(
-						'tiles' => array( 'something' )
+						'tiles' => array( 'something', 'else', $endpoint )
 					)
 				) );
 			} catch ( \EDD_Exception $exception ) {
