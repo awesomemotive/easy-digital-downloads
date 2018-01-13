@@ -80,6 +80,19 @@ final class Report {
 		$this->errors = new \WP_Error();
 
 		$this->set_props( $report );
+
+		if ( ! empty( $report['endpoints'] ) ) {
+			try {
+
+				$this->build_endpoints( $report['endpoints'] );
+
+			} catch ( \EDD_Exception $exception ) {
+
+				edd_debug_log_exception( $exception );
+
+			}
+		}
+
 	}
 
 	/**
@@ -108,6 +121,104 @@ final class Report {
 				$this->filters = $report['filters'];
 			}
 		}
+	}
+
+	/**
+	 * Builds Endpoint objects for each endpoint in the report.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception
+	 *
+	 * @param array $endpoints Endpoints, keyed by view type.
+	 */
+	public function build_endpoints( $report_endpoints ) {
+		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+		if ( is_wp_error( $registry ) ) {
+
+			throw new Utils\Exception( $registry->get_error_message() );
+
+			return;
+		}
+
+		$signal_keys = $this->parse_signal_keys();
+
+		// Strip any invalid views based on signal key.
+		foreach ( $report_endpoints as $signal => $endpoints ) {
+			if ( ! array_key_exists( $signal, $signal_keys ) ) {
+				throw new Utils\Exception( sprintf(
+					'The \'%1$s\' signal key does not correspond to a known endpooint view type.',
+					$signal
+				) );
+
+				unset( $report_endpoints[ $signal ] );
+			}
+		}
+
+		// Loop through all passed endpoints using signal keys.
+		foreach ( $report_endpoints as $signal => $endpoints ) {
+
+			// Loop through all endpoints for each signal key and build endpoint objects.
+			foreach ( $endpoints as $endpoint ) {
+
+				if ( $endpoint instanceof \EDD\Admin\Reports\Data\Endpoint ) {
+
+					if ( $endpoint->has_errors() ) {
+
+						$this->invalid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint->get_errors();
+
+					} else {
+
+						$this->valid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint;
+
+					}
+
+				} elseif ( is_string( $endpoint ) ) {
+
+					$endpoint = $registry->build_endpoint( $endpoint, $signal_keys[ $signal ] );
+
+					if ( is_wp_error( $endpoint ) ) {
+
+						$this->invalid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint->get_errors();
+
+					} else {
+
+						$this->valid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint;
+					}
+
+				} else {
+
+					$this->invalid_endpoints[ $signal ][] = $endpoint;
+
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Parses the views whitelist to retrieve corresponding signal keys.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array List of signal key and view slug pairs.
+	 */
+	public function parse_signal_keys() {
+		$views = edd_reports_get_endpoint_views();
+
+		$signal_keys = array();
+
+		foreach ( $views as $view_type => $atts ) {
+			if ( isset( $atts['signal_key'] ) ) {
+				$signal_key = $atts['signal_key'];
+
+				$signal_keys[ $signal_key ] = $view_type;
+			}
+		}
+
+		return $signal_keys;
 	}
 
 	/**
