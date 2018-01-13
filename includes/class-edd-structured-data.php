@@ -136,9 +136,8 @@ class EDD_Structured_Data {
 			'description' => $download->post_excerpt,
 			'url'         => get_permalink( $download->ID ),
 			'brand'       => array(
-				'@type' => 'Organization',
+				'@type' => 'Thing',
 				'name'  => get_bloginfo( 'name' ),
-				'url'   => get_bloginfo( 'url' ),
 			),
 			'image'       => wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) ),
 			'sku'         => $download->get_sku(),
@@ -158,15 +157,26 @@ class EDD_Structured_Data {
 					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
 					'url'             => $data['url'],
 					'availability'    => 'http://schema.org/InStock',
+					'seller' => array(
+						'@type' => 'Organization',
+						'name'  => get_bloginfo( 'name' ),
+					),
 				);
 			}
 
 			$data['offers'] = $offers;
 		} else {
 			$data['offers'] = array(
-				'@type'         => 'Offer',
-				'priceCurrency' => edd_get_currency(),
-				'price'         => $download->get_price(),
+				'@type'           => 'Offer',
+				'price'           => $download->get_price(),
+				'priceCurrency'   => edd_get_currency(),
+				'priceValidUntil' => null,
+				'url'             => $data['url'],
+				'availability'    => 'http://schema.org/InStock',
+				'seller'          => array(
+					'@type' => 'Organization',
+					'name'  => get_bloginfo( 'name' ),
+				),
 			);
 		}
 
