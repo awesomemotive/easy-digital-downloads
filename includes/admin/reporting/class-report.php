@@ -46,6 +46,22 @@ final class Report {
 	public $filters = array();
 
 	/**
+	 * Represents valid endpoints available for display.
+	 *
+	 * @since 3.0
+	 * @var array
+	 */
+	private $valid_endpoints = array();
+
+	/**
+	 * Represents invalid endpoints, unavailable for display.
+	 *
+	 * @since 3.0
+	 * @var array
+	 */
+	private $invalid_endpoints = array();
+
+	/**
 	 * Holds errors related to instantiating the report object.
 	 *
 	 * @since 3.0
