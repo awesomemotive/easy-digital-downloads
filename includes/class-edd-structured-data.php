@@ -10,7 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * EDD_Structured_Data Class.
@@ -40,11 +42,8 @@ class EDD_Structured_Data {
 	 *
 	 * @since 3.0
 	 */
-	public function hooks() {
-		// Actions
+	private function hooks() {
 		add_action( 'wp_footer', array( $this, 'output_structured_data' ) );
-
-		// Filters
 	}
 
 	/**
@@ -99,16 +98,29 @@ class EDD_Structured_Data {
 	}
 
 	/**
-	 * Get the structured data for a given context.
+	 * Generate the structured data for a given context.
 	 *
-	 * @access public
+	 * @access private
 	 * @since 3.0
 	 *
-	 * @param string $context Default empty as the class figures out what the context is automatically.
+	 * @param mixed string|false $context Default empty as the class figures out what the context is automatically.
+	 *
 	 * @return string
 	 */
-	public function get_structured_data( $context = false ) {
+	private function generate_structured_data( $context = false ) {
+		if ( is_singular( 'download' ) || 'download' === $context ) {
+			$this->generate_download_data();
+		}
 
+		/**
+		 * Allow actions to fire here to allow for different types of structured data.
+		 *
+		 * @since 3.0
+		 *
+		 * @param EDD_Structured_Data Instance of the object.
+		 * @param mixed string|bool $context Context.
+		 */
+		do_action( 'edd_generate_structured_data', $this, $context );
 	}
 
 	/**
@@ -118,6 +130,7 @@ class EDD_Structured_Data {
 	 * @since 3.0
 	 *
 	 * @param mixed int|EDD_Download Download ID or EDD_Download object to generate data for.
+	 *
 	 * @return bool
 	 */
 	public function generate_download_data( $download = false ) {
@@ -157,7 +170,7 @@ class EDD_Structured_Data {
 					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
 					'url'             => $data['url'],
 					'availability'    => 'http://schema.org/InStock',
-					'seller' => array(
+					'seller'          => array(
 						'@type' => 'Organization',
 						'name'  => get_bloginfo( 'name' ),
 					),
@@ -183,7 +196,7 @@ class EDD_Structured_Data {
 		$download_categories = wp_get_post_terms( $download->ID, 'download_category' );
 		if ( is_array( $download_categories ) && ! empty( $download_categories ) ) {
 			$download_categories = wp_list_pluck( $download_categories, 'name' );
-			$data['category'] = implode( ', ', $download_categories );
+			$data['category']    = implode( ', ', $download_categories );
 		}
 
 		/**
@@ -205,6 +218,7 @@ class EDD_Structured_Data {
 	 * @since 3.0
 	 *
 	 * @param array $data Data to be sanitized.
+	 *
 	 * @return array Sanitized data.
 	 */
 	private function sanitize_data( $data ) {
@@ -213,7 +227,7 @@ class EDD_Structured_Data {
 		}
 
 		foreach ( $data as $key => $value ) {
-			$key = sanitize_text_field( $key );
+			$key               = sanitize_text_field( $key );
 			$sanitized[ $key ] = is_array( $value ) ? $this->sanitize_data( $value ) : sanitize_text_field( $value );
 		}
 
@@ -227,6 +241,8 @@ class EDD_Structured_Data {
 	 * @since 3.0
 	 */
 	private function encoded_data() {
+		$this->generate_structured_data();
+
 		$structured_data = $this->get_data();
 
 		foreach ( $structured_data as $k => $v ) {
@@ -245,11 +261,8 @@ class EDD_Structured_Data {
 	 * @return bool True by default, false if structured data does not exist.
 	 */
 	public function output_structured_data() {
-		if ( is_singular( 'download' ) ) {
-			$this->generate_download_data();
-		}
-
 		$this->data = $this->sanitize_data( $this->data );
+
 		echo '<script type="application/ld+json">' . $this->encoded_data() . '</script>';
 
 		return true;
