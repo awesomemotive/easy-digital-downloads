@@ -174,35 +174,40 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $endpoint_id Endpoint ID.
-	 * @param string $view_type   View type to use when building the object.
+	 * @param string|Endpoint $endpoint  Endpoint ID or object.
+	 * @param string          $view_type View type to use when building the object.
 	 * @return Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
 	 */
-	public function build_endpoint( $endpoint_id, $view_type ) {
+	public function build_endpoint( $endpoint, $view_type ) {
+
+		// If an endpoint object was passed, just return it.
+		if ( $endpoint instanceof Endpoint ) {
+			return $endpoint;
+		}
 
 		try {
 
-			$endpoint = $this->get_endpoint( $endpoint_id );
+			$_endpoint = $this->get_endpoint( $endpoint );
 
 		} catch( \EDD_Exception $exception ) {
 
 			edd_debug_log_exception( $exception );
 
-			return new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint_id );
+			return new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint );
 
 		}
 
 		// Build the Endpoint object.
-		$endpoint = new Endpoint( $view_type, $endpoint );
+		$_endpoint = new Endpoint( $view_type, $_endpoint );
 
 		// If any errors were logged during instantiation, return the resulting WP_Error object.
-		if ( $endpoint->has_errors() ) {
+		if ( $_endpoint->has_errors() ) {
 
-			return $endpoint->get_errors();
+			return $_endpoint->get_errors();
 
 		}
 
-		return $endpoint;
+		return $_endpoint;
 	}
 
 }
