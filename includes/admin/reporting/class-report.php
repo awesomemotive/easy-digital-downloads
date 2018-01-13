@@ -149,7 +149,7 @@ final class Report {
 		foreach ( $report_endpoints as $signal => $endpoints ) {
 			if ( ! array_key_exists( $signal, $signal_keys ) ) {
 				throw new Utils\Exception( sprintf(
-					'The \'%1$s\' signal key does not correspond to a known endpooint view type.',
+					'The \'%1$s\' signal key does not correspond to a known endpoint view type.',
 					$signal
 				) );
 
