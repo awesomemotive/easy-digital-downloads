@@ -51,15 +51,7 @@ final class Report {
 	 * @since 3.0
 	 * @var array
 	 */
-	private $valid_endpoints = array();
-
-	/**
-	 * Represents invalid endpoints, unavailable for display.
-	 *
-	 * @since 3.0
-	 * @var array
-	 */
-	private $invalid_endpoints = array();
+	private $endpoints = array();
 
 	/**
 	 * Holds errors related to instantiating the report object.
@@ -145,54 +137,34 @@ final class Report {
 
 		$signal_keys = $this->parse_signal_keys();
 
-		// Strip any invalid views based on signal key.
+		// Loop through all passed endpoints using signal keys.
 		foreach ( $report_endpoints as $signal => $endpoints ) {
+
+			// Strip any invalid views based on signal key.
 			if ( ! array_key_exists( $signal, $signal_keys ) ) {
 				throw new Utils\Exception( sprintf(
 					'The \'%1$s\' signal key does not correspond to a known endpoint view type.',
 					$signal
 				) );
 
-				unset( $report_endpoints[ $signal ] );
+				continue;
 			}
-		}
-
-		// Loop through all passed endpoints using signal keys.
-		foreach ( $report_endpoints as $signal => $endpoints ) {
 
 			// Loop through all endpoints for each signal key and build endpoint objects.
 			foreach ( $endpoints as $endpoint ) {
 
-				if ( $endpoint instanceof \EDD\Admin\Reports\Data\Endpoint ) {
+				$endpoint = $registry->build_endpoint( $endpoint, $signal_keys[ $signal ] );
 
-					if ( $endpoint->has_errors() ) {
+				if ( is_wp_error( $endpoint ) || ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) ) {
 
-						$this->invalid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint->get_errors();
-
-					} else {
-
-						$this->valid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint;
-
-					}
-
-				} elseif ( is_string( $endpoint ) ) {
-
-					$endpoint = $registry->build_endpoint( $endpoint, $signal_keys[ $signal ] );
-
-					if ( is_wp_error( $endpoint ) ) {
-
-						$this->invalid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint->get_errors();
-
-					} else {
-
-						$this->valid_endpoints[ $signal ][ $endpoint->get_id() ] = $endpoint;
-					}
+					$this->invalidate_endpoint( $signal, $endpoint );
 
 				} else {
 
-					$this->invalid_endpoints[ $signal ][] = $endpoint;
+					$this->validate_endpoint( $signal, $endpoint );
 
 				}
+
 			}
 		}
 
