@@ -130,14 +130,14 @@ class Reports_Registry extends Registry implements Utils\Static_Registry {
 
 		}
 
-		foreach ( $attributes['endpoints'] as $signal_key => $endpoints ) {
+		foreach ( $attributes['endpoints'] as $view_group => $endpoints ) {
 
 			foreach ( $endpoints as $index => $endpoint ) {
 
 				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Admin\Reports\Data\Endpoint ) ) {
 					throw new Utils\Exception( sprintf( 'The \'%1$s\' report contains one or more invalidly defined endpoints.', $report_id ) );
 
-					unset( $attributes['endpoints'][ $signal_key][ $index ] );
+					unset( $attributes['endpoints'][ $view_group][ $index ] );
 				}
 
 			}

@@ -135,33 +135,33 @@ final class Report {
 			return;
 		}
 
-		$signal_keys = $this->parse_signal_keys();
+		$view_groups = $this->parse_view_groups();
 
-		// Loop through all passed endpoints using signal keys.
-		foreach ( $report_endpoints as $signal => $endpoints ) {
+		// Loop through all passed endpoints using view groups.
+		foreach ( $report_endpoints as $group => $endpoints ) {
 
-			// Strip any invalid views based on signal key.
-			if ( ! array_key_exists( $signal, $signal_keys ) ) {
+			// Strip any invalid views based on view group.
+			if ( ! array_key_exists( $group, $view_groups ) ) {
 				throw new Utils\Exception( sprintf(
-					'The \'%1$s\' signal key does not correspond to a known endpoint view type.',
-					$signal
+					'The \'%1$s\' view group does not correspond to a known endpoint view type.',
+					$group
 				) );
 
 				continue;
 			}
 
-			// Loop through all endpoints for each signal key and build endpoint objects.
+			// Loop through all endpoints for each view group and build endpoint objects.
 			foreach ( $endpoints as $endpoint ) {
 
-				$endpoint = $registry->build_endpoint( $endpoint, $signal_keys[ $signal ] );
+				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ] );
 
 				if ( is_wp_error( $endpoint ) || ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) ) {
 
-					$this->invalidate_endpoint( $signal, $endpoint );
+					$this->invalidate_endpoint( $group, $endpoint );
 
 				} else {
 
-					$this->validate_endpoint( $signal, $endpoint );
+					$this->validate_endpoint( $group, $endpoint );
 
 				}
 
@@ -171,26 +171,26 @@ final class Report {
 	}
 
 	/**
-	 * Parses the views whitelist to retrieve corresponding signal keys.
+	 * Parses the views whitelist to retrieve corresponding view groups.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array List of signal key and view slug pairs.
+	 * @return array List of view group and view slug pairs.
 	 */
-	public function parse_signal_keys() {
+	public function parse_view_groups() {
 		$views = edd_reports_get_endpoint_views();
 
-		$signal_keys = array();
+		$view_groups = array();
 
 		foreach ( $views as $view_type => $atts ) {
-			if ( isset( $atts['signal_key'] ) ) {
-				$signal_key = $atts['signal_key'];
+			if ( isset( $atts['view_group'] ) ) {
+				$view_group = $atts['view_group'];
 
-				$signal_keys[ $signal_key ] = $view_type;
+				$view_groups[ $view_group ] = $view_type;
 			}
 		}
 
-		return $signal_keys;
+		return $view_groups;
 	}
 
 	/**
@@ -200,11 +200,11 @@ final class Report {
 	 *
 	 * @see \EDD\Admin\Reports\Report::$valid_endpoints
 	 *
-	 * @param string                           $signal_key Signal key corresponding to the endpoint view.
+	 * @param string                           $view_group view group corresponding to the endpoint view.
 	 * @param \EDD\Admin\Reports\Data\Endpoint $endpoint   Endpoint object.
 	 */
-	public function validate_endpoint( $signal_key, $endpoint ) {
-		$this->endpoints[ $signal_key ][ $endpoint->get_id() ][] = $endpoint;
+	public function validate_endpoint( $view_group, $endpoint ) {
+		$this->endpoints[ $view_group ][ $endpoint->get_id() ][] = $endpoint;
 	}
 
 	/**
@@ -214,10 +214,10 @@ final class Report {
 	 *
 	 * @see \EDD\Admin\Reports\Report::$errors
 	 *
-	 * @param string                  $signal_key Signal key corresponding to the endpoint view.
+	 * @param string                  $view_group view group corresponding to the endpoint view.
 	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint or WP_Error object.
 	 */
-	public function invalidate_endpoint( $signal_key, $endpoint ) {
+	public function invalidate_endpoint( $view_group, $endpoint ) {
 		if ( is_wp_error( $endpoint ) ) {
 			$this->errors->add(
 				$endpoint->get_error_code(),
@@ -243,7 +243,7 @@ final class Report {
 	}
 
 	/**
-	 * Determines whether the endpoint has generated errors during instantiation.
+	 * Determines whether the report has generated errors during instantiation.
 	 *
 	 * @since 3.0
 	 *
@@ -256,7 +256,7 @@ final class Report {
 	}
 
 	/**
-	 * Retrieves any logged errors for the endpoint.
+	 * Retrieves any logged errors for the report.
 	 *
 	 * @since 3.0
 	 */
