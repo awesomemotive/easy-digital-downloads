@@ -77,14 +77,15 @@ final class Reports {
 	 */
 	public function register_core_reports( $reports ) {
 
-		// Test code: The 'core' report doesn't exist, so exception(s) should bubble up and be caught.
+		// Test code.
 		try {
 
 			$reports->register_endpoint( 'something', array(
 				'label' => 'Something',
 				'views' => array(
 					'tile' => array(
-						'display_callback' => '__return_false'
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
 					)
 				)
 			) );
@@ -97,10 +98,22 @@ final class Reports {
 				),
 			) );
 
-			$reports->add_report( 'earnings', array(
-				'label'    => __( 'Earnings', 'easy-digital-downloads' ),
-				'priority' => 5,
-			) );
+			try {
+				$built_report = new Reports\Report( array(
+					'id' => 'on_the_fly',
+					'label' => 'On the Fly',
+					'endpoints' => array(
+						'tiles' => array( 'something' )
+					)
+				) );
+			} catch ( \EDD_Exception $exception ) {
+
+				edd_debug_log_exception( $exception );
+
+				$built_report = 'fail';
+			}
+
+//			var_dump( $built_report );
 
 		} catch( \EDD_Exception $exception ) {
 
