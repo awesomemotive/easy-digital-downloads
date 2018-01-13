@@ -32,7 +32,19 @@ class EDD_Structured_Data {
 	 * @since 3.0
 	 */
 	public function __construct() {
+		$this->hooks();
+	}
 
+	/**
+	 * Register the hooks.
+	 *
+	 * @since 3.0
+	 */
+	public function hooks() {
+		// Actions
+		add_action( 'wp_footer', array( $this, 'output_structured_data' ) );
+
+		// Filters
 	}
 
 	/**
@@ -44,7 +56,14 @@ class EDD_Structured_Data {
 	 * @return array Raw data.
 	 */
 	public function get_data() {
-		return $this->data;
+		/**
+		 * Allow data to be filtered being returned.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $data Structured data.
+		 */
+		return apply_filters( 'edd_structured_data_get_data', $this->data );
 	}
 
 	/**
@@ -67,7 +86,128 @@ class EDD_Structured_Data {
 			return false;
 		}
 
-		$this->data[] = $data;
+		/**
+		 * Apply data to be filtered before being added.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $data Structured data to be added.
+		 */
+		$this->data[] = apply_filters( 'edd_structured_data_set_data', $data );
+
+		return true;
+	}
+
+	/**
+	 * Get the structured data for a given context.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $context Default empty as the class figures out what the context is automatically.
+	 * @return string
+	 */
+	public function get_structured_data( $context = false ) {
+
+	}
+
+	/**
+	 * Generate structured data for a download.
+	 *
+	 * @access private
+	 * @since 3.0
+	 *
+	 * @param mixed int|EDD_Download Download ID or EDD_Download object to generate data for.
+	 * @return bool
+	 */
+	public function generate_download_data( $download = false ) {
+		if ( false === $download ) {
+			global $post;
+			$download = new EDD_Download( $post->ID );
+		} elseif ( is_int( $download ) ) {
+			$download = new EDD_Download( $download );
+		} else {
+			return false;
+		}
+
+		$data = array(
+			'@type'       => 'Product',
+			'name'        => $download->post_title,
+			'description' => $download->post_excerpt,
+			'url'         => get_permalink( $download->ID ),
+			'brand'       => array(
+				'@type' => 'Thing',
+				'name'  => get_bloginfo( 'name' ),
+			),
+			'image'       => wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) ),
+			'sku'         => $download->get_sku(),
+		);
+
+		/**
+		 * Filter the structured data for a download.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $data Structured data for a download.
+		 */
+		$data = apply_filters( 'edd_generate_download_structured_data', $data );
+
+		$this->set_data( $data );
+	}
+
+	/**
+	 * Sanitize the structured data.
+	 *
+	 * @access private
+	 * @since 3.0
+	 *
+	 * @param array $data Data to be sanitized.
+	 * @return array Sanitized data.
+	 */
+	private function sanitize_data( $data ) {
+		if ( ! $data || ! is_array( $data ) ) {
+			return array();
+		}
+
+		foreach ( $data as $key => $value ) {
+			$key = sanitize_text_field( $key );
+			$sanitized[ $key ] = is_array( $value ) ? $this->sanitize_data( $value ) : sanitize_text_field( $value );
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Encode the data, ready for output.
+	 *
+	 * @access private
+	 * @since 3.0
+	 */
+	private function encoded_data() {
+		$structured_data = $this->get_data();
+
+		foreach ( $structured_data as $k => $v ) {
+			$structured_data[ $k ]['@context'] = 'http://schema.org/';
+		}
+
+		return wp_json_encode( $structured_data );
+	}
+
+	/**
+	 * Output the structured data.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @return bool True by default, false if structured data does not exist.
+	 */
+	public function output_structured_data() {
+		if ( is_singular( 'download' ) ) {
+			$this->generate_download_data();
+		}
+
+		$this->data = $this->sanitize_data( $this->data );
+		echo '<script type="application/ld+json">' . $this->encoded_data() . '</script>';
 
 		return true;
 	}
