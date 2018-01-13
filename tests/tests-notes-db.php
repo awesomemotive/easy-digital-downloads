@@ -55,10 +55,10 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 	public function test_get_column_defaults() {
 		$expected = array(
 			'id'           => 0,
-			'object_id'    => '',
+			'object_id'    => 0,
 			'object_type'  => '',
 			'note'         => '',
-			'user_id'      => '',
+			'user_id'      => 0,
 			'date_created' => date( 'Y-m-d H:i:s' ),
 		);
 
