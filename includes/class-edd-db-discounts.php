@@ -41,10 +41,6 @@ class EDD_DB_Discounts extends EDD_DB {
 		$this->table_name  = $wpdb->prefix . 'edd_discounts';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
-
-		if ( ! $this->table_exists( $this->table_name ) ) {
-			$this->create_table();
-		}
 	}
 
 	/**
@@ -542,42 +538,5 @@ class EDD_DB_Discounts extends EDD_DB {
 		}
 
 		return $last_changed;
-	}
-
-	/**
-	 * Create the table.
-	 *
-	 * @access public
-	 * @since 3.0
-	 */
-	public function create_table() {
-		global $wpdb;
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		$sql = "CREATE TABLE " . $this->table_name . " (
-		id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-		name varchar(200) NOT NULL,
-		code varchar(50) NOT NULL,
-		status varchar(20) NOT NULL,
-		type varchar(20) NOT NULL,
-		amount mediumtext NOT NULL,
-		description longtext NOT NULL,
-		max_uses bigint(20) NOT NULL,
-		use_count bigint(20) NOT NULL,
-		once_per_customer int(1) NOT NULL,
-		min_cart_price mediumtext NOT NULL,
-		product_condition varchar(3) NOT NULL DEFAULT 'all',
-		scope varchar(30) NOT NULL DEFAULT 'global',
-		date_created datetime NOT NULL,
-		start_date datetime NOT NULL,
-		end_date datetime NOT NULL,
-		PRIMARY KEY (id),
-		KEY code (code)
-		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
-
-		dbDelta( $sql );
-
-		update_option( $this->table_name . '_db_version', $this->version );
 	}
 }

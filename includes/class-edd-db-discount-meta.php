@@ -27,12 +27,6 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 		$this->table_name  = $wpdb->prefix . 'edd_discountmeta';
 		$this->primary_key = 'meta_id';
 		$this->version     = '1.0';
-
-		if ( ! $this->table_exists( $this->table_name ) ) {
-			$this->create_table();
-		}
-
-		add_action( 'plugins_loaded', array( $this, 'register_table' ), 11 );
 	}
 
 	/**
@@ -50,22 +44,6 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 			'meta_key'        => '%s',
 			'meta_value'      => '%s',
 		);
-	}
-
-	/**
-	 * Register the table with $wpdb so the metadata API can find it.
-	 *
-	 * @access public
-	 * @since 3.0
-	 */
-	public function register_table() {
-		global $wpdb;
-
-		if ( ! $this->table_exists( $this->table_name ) ) {
-			$this->create_table();
-		}
-
-		$wpdb->edd_discountmeta = $this->table_name;
 	}
 
 	/**
@@ -177,30 +155,6 @@ class EDD_DB_Discount_Meta extends EDD_DB {
 	 */
 	public function delete_meta( $discount_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value );
-	}
-
-	/**
-	 * Create the table
-	 *
-	 * @access public
-	 * @since 3.0
-	 */
-	public function create_table() {
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		$sql = "CREATE TABLE {$this->table_name} (
-			meta_id bigint(20) NOT NULL AUTO_INCREMENT,
-			edd_discount_id bigint(20) NOT NULL,
-			meta_key varchar(255) DEFAULT NULL,
-			meta_value longtext,
-			PRIMARY KEY (meta_id),
-			KEY edd_discount_id (edd_discount_id),
-			KEY meta_key (meta_key)
-			) CHARACTER SET utf8 COLLATE utf8_general_ci;";
-
-		dbDelta( $sql );
-
-		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
 	/**
