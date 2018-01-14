@@ -433,3 +433,27 @@ function  edd_download_row_actions( $actions, $post ) {
 	return $actions;
 }
 add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );
+
+/**
+ * Register rewrite rule for category support in permalinks.
+ *
+ * @since 3.0
+ *
+ * @param array $rules Rewrite rules.
+ * @return array $rules Updated rewrite rules.
+ */
+function edd_register_category_rewrite_rule( $rules ) {
+	$permalink = get_option( 'permalink_structure' );
+
+	// Only register the rewrite rule if %category% exists in the permalink structure.
+	if ( strpos( $permalink, '%category%' ) !== false ) {
+		$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+
+		$regex = $slug . '/(.+?)/([^/]+)/?$';
+
+		$rules[ $regex ] = 'index.php?download_category=$matches[1]&download=$matches[2]';
+	}
+
+	return $rules;
+}
+add_filter( 'rewrite_rules_array', 'edd_register_category_rewrite_rule' );
