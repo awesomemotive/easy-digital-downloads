@@ -196,10 +196,6 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the logs table
-	@EDD()->logs->create_table();
-	@EDD()->log_meta->create_table();
-
 	// Create the logs tables
 	@EDD()->api_request_logs->create_table();
 	@EDD()->file_download_logs->create_table();
@@ -301,15 +297,6 @@ function edd_after_install() {
 	$edd_table_check = get_option( '_edd_table_check', false );
 
 	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
-
-		if ( ! @EDD()->log_meta->installed() ) {
-			@EDD()->log_meta->create_table();
-		}
-
-		if ( ! @EDD()->logs->installed() ) {
-			@EDD()->logs->create_table();
-		}
-
 		if ( ! @EDD()->api_request_logs->installed() ) {
 			@EDD()->api_request_logs->create_table();
 		}
