@@ -449,11 +449,46 @@ function edd_register_category_rewrite_rule( $rules ) {
 	if ( strpos( $permalink, '%category%' ) !== false ) {
 		$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
 
-		$regex = $slug . '/(.+?)/([^/]+)/?$';
+		$regex = $slug . '/[^/]+/([^/]+)/?$';
 
-		$rules[ $regex ] = 'index.php?download_category=$matches[1]&download=$matches[2]';
+		$rules[ $regex ] = 'index.php?download=$matches[1]';
 	}
 
 	return $rules;
 }
-add_filter( 'rewrite_rules_array', 'edd_register_category_rewrite_rule' );
+add_filter( 'rewrite_rules_array', 'edd_register_category_rewrite_rule', -10, 1 );
+
+/**
+ * Adjust all permalinks to add category support.
+ *
+ * @since 3.0
+ *
+ * @param string $permalink Permalink.
+ * @param WP_Post $post Post object.
+ *
+ * @return string $permalink Updated permalink.
+ */
+function edd_change_post_link( $permalink, $post ) {
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return $permalink;
+	}
+
+	$should_modify_permalink = apply_filters( 'edd_should_change_post_link', __return_false() );
+
+	if ( $should_modify_permalink && is_object( $post ) && 'download' === $post->post_type ) {
+		$term_slug = '';
+
+		$terms = get_the_terms( $post, 'download_category' );
+		if ( ! empty( $terms ) ) {
+			$term_slug = $terms[0]->slug;
+		}
+
+		if ( ! empty( $term_slug ) ) {
+			$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+			$permalink = get_home_url() . '/' . $slug . '/' . $term_slug . '/' . $post->post_name;
+		}
+	}
+
+	return $permalink;
+}
+add_filter( 'post_type_link', 'edd_change_post_link', 10, 2 );
