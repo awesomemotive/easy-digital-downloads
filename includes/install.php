@@ -196,13 +196,9 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customer databases
+	// Create the customer tables
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
-
-	// Create the discounts databases
-	@EDD()->discounts->create_table();
-	@EDD()->discount_meta->create_table();
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
@@ -274,13 +270,6 @@ function edd_wpmu_drop_tables( $tables, $blog_id ) {
 		$tables[] = $customer_meta_db->table_name;
 	}
 
-	$discounts_db = new EDD_DB_Discounts();
-	$discount_meta_db = new EDD_DB_Discount_Meta();
-	if ( $discounts_db->installed() ) {
-		$tables[] = $discounts_db->table_name;
-		$tables[] = $discount_meta_db->table_name;
-	}
-
 	restore_current_blog();
 
 	return $tables;
@@ -309,12 +298,6 @@ function edd_after_install() {
 		if ( ! @EDD()->customers->installed() ) {
 			@EDD()->customers->create_table();
 			@EDD()->customer_meta->create_table();
-		}
-
-		// Create the discounts table (this ensures it creates it on multisite instances where it is network activated)
-		if ( ! @EDD()->discounts->installed() ) {
-			@EDD()->discounts->create_table();
-			@EDD()->discount_meta->create_table();
 		}
 
 		do_action( 'edd_after_install', $edd_options );
