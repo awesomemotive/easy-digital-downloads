@@ -144,15 +144,7 @@ final class Report {
 
 				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ] );
 
-				if ( is_wp_error( $endpoint ) || ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) ) {
-
-					$this->invalidate_endpoint( $group, $endpoint );
-
-				} else {
-
-					$this->validate_endpoint( $group, $endpoint );
-
-				}
+				$this->validate_endpoint( $group, $endpoint );
 
 			}
 		}
@@ -189,34 +181,23 @@ final class Report {
 	 *
 	 * @see \EDD\Admin\Reports\Report::$valid_endpoints
 	 *
-	 * @param string                           $view_group view group corresponding to the endpoint view.
-	 * @param \EDD\Admin\Reports\Data\Endpoint $endpoint   Endpoint object.
+	 * @param string                  $view_group view group corresponding to the endpoint view.
+	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint object.
 	 */
 	public function validate_endpoint( $view_group, $endpoint ) {
-		$this->endpoints[ $view_group ][ $endpoint->get_id() ][] = $endpoint;
-	}
-
-	/**
-	 * Invalidates an endpoint for rendering.
-	 *
-	 * @since 3.0
-	 *
-	 * @see \EDD\Admin\Reports\Report::$errors
-	 *
-	 * @param string                  $view_group view group corresponding to the endpoint view.
-	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint or WP_Error object.
-	 */
-	public function invalidate_endpoint( $view_group, $endpoint ) {
 		if ( is_wp_error( $endpoint ) ) {
 			$this->errors->add(
 				$endpoint->get_error_code(),
 				$endpoint->get_error_message(),
 				$endpoint->get_error_data()
 			);
-		} else {
+		} elseif ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) {
 			$message = sprintf( 'The \'%1$s\' endpoint is invalid.', $endpoint->get_id() );
 
 			$this->errors->add( 'invalid_endpoint', $message, $endpoint->get_errors() );
+		} else {
+			// Valid.
+			$this->endpoints[ $view_group ][ $endpoint->get_id() ] = $endpoint;
 		}
 	}
 
