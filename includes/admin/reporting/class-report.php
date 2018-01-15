@@ -75,6 +75,9 @@ final class Report {
 				edd_debug_log_exception( $exception );
 
 			}
+		} else{
+
+			$this->errors->add( 'missing_endpoints', 'No endpoints were defined for the report.', $report );
 		}
 
 	}
