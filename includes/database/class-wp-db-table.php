@@ -53,6 +53,11 @@ abstract class WP_DB_Table {
 	protected $global = false;
 
 	/**
+	 * @var string Passed directly into register_activation_hook()
+	 */
+	protected $file = __FILE__;
+
+	/**
 	 * @var string Database version key (saved in _options or _sitemeta)
 	 */
 	protected $db_version_key = '';
@@ -289,7 +294,7 @@ abstract class WP_DB_Table {
 	private function add_hooks() {
 
 		// Activation hook
-		register_activation_hook( __FILE__, array( $this, 'maybe_upgrade' ) );
+		register_activation_hook( $this->file, array( $this, 'maybe_upgrade' ) );
 
 		// Add table to the global database object
 		add_action( 'switch_blog', array( $this, 'switch_blog'   ) );
