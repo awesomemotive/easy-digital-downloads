@@ -15,7 +15,7 @@ if ( class_exists( 'WP_DB_Table' ) ) :
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Order_Itemeta extends WP_DB_Table {
+final class EDD_DB_Table_Order_Itemmeta extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
