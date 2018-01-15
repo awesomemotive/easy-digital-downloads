@@ -58,9 +58,9 @@ final class Report {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array  $report Optional. Report record from the registry. Default empty array.
+	 * @param array $report Report record from the registry.
 	 */
-	public function __construct( $report = array() ) {
+	public function __construct( $report ) {
 		$this->errors = new \WP_Error();
 
 		$this->set_props( $report );
