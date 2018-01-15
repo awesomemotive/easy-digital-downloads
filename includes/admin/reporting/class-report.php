@@ -234,7 +234,7 @@ final class Report {
 	 *
 	 * @see \EDD\Admin\Reports\Report::$valid_endpoints
 	 *
-	 * @param string                  $view_group view group corresponding to the endpoint view.
+	 * @param string                  $view_group View group corresponding to the endpoint view.
 	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint object.
 	 */
 	public function validate_endpoint( $view_group, $endpoint ) {
