@@ -11,7 +11,6 @@
 namespace EDD\Admin\Reports;
 
 use EDD\Utils;
-use EDD\Utils\Exceptions;
 
 /**
  * Represents an encapsulated report for the Reports API.
