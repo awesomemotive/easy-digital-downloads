@@ -25,7 +25,7 @@ final class EDD_DB_Table_Order_Items extends WP_DB_Table {
 	/**
 	 * @var string Database version
 	 */
-	protected $version = 201801070001;
+	protected $version = 201801150001;
 
 	/**
 	 * @var boolean This is not a global table
