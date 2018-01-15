@@ -204,7 +204,7 @@ final class Report {
 		$view_groups = array();
 
 		foreach ( $views as $view_type => $atts ) {
-			if ( isset( $atts['view_group'] ) ) {
+			if ( ! empty( $atts['view_group'] ) ) {
 				$view_group = $atts['view_group'];
 
 				$view_groups[ $view_group ] = $view_type;
@@ -275,6 +275,8 @@ final class Report {
 	 * Retrieves any logged errors for the report.
 	 *
 	 * @since 3.0
+	 *
+	 * @return \WP_Error Error object for the report.
 	 */
 	public function get_errors() {
 		return $this->errors;
