@@ -59,7 +59,6 @@ final class EDD_DB_Table_Orders extends WP_DB_Table {
 			KEY user_id (user_id),
 			KEY customer_id (customer_id),
 			KEY email (email(100)),
-			KEY ip (ip(60)),
 			KEY order_key (order_key(64)),
 			KEY date_created_completed (date_created,date_completed)";
 	}
