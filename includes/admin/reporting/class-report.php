@@ -88,13 +88,13 @@ final class Report {
 	 */
 	protected function set_props( $report ) {
 		if ( ! empty( $report['id'] ) ) {
-			$this->report_id = $report['id'];
+			$this->set_id( $report['id'] );
 		} else {
 			$this->errors->add( 'missing_report_id', 'The report_id is missing.' );
 		}
 
 		if ( ! empty( $report['label'] ) ) {
-			$this->label = $report['label'];
+			$this->set_label( $report['label'] );
 		} else {
 			$this->errors->add( 'missing_label', 'The report label is missing.' );
 		}
@@ -248,6 +248,17 @@ final class Report {
 	}
 
 	/**
+	 * Sets the report ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $report_id Report ID.
+	 */
+	private function set_id( $report_id ) {
+		$this->report_id = $report_id;
+	}
+
+	/**
 	 * Retrieves the global label for the report.
 	 *
 	 * @since 3.0
@@ -256,6 +267,17 @@ final class Report {
 	 */
 	public function get_label() {
 		return $this->label;
+	}
+
+	/**
+	 * Sets the global report label.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $label Report label.
+	 */
+	private function set_label( $label ) {
+		$this->label = $label;
 	}
 
 }
