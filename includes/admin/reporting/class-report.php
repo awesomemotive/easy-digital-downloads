@@ -101,6 +101,50 @@ final class Report {
 	}
 
 	/**
+	 * Retrieves the report ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Report ID.
+	 */
+	public function get_id() {
+		return $this->report_id;
+	}
+
+	/**
+	 * Sets the report ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $report_id Report ID.
+	 */
+	private function set_id( $report_id ) {
+		$this->report_id = $report_id;
+	}
+
+	/**
+	 * Retrieves the global label for the report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Report label.
+	 */
+	public function get_label() {
+		return $this->label;
+	}
+
+	/**
+	 * Sets the global report label.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $label Report label.
+	 */
+	private function set_label( $label ) {
+		$this->label = $label;
+	}
+
+	/**
 	 * Builds Endpoint objects for each endpoint in the report.
 	 *
 	 * @since 3.0
@@ -234,50 +278,6 @@ final class Report {
 	 */
 	public function get_errors() {
 		return $this->errors;
-	}
-
-	/**
-	 * Retrieves the report ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Report ID.
-	 */
-	public function get_id() {
-		return $this->report_id;
-	}
-
-	/**
-	 * Sets the report ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $report_id Report ID.
-	 */
-	private function set_id( $report_id ) {
-		$this->report_id = $report_id;
-	}
-
-	/**
-	 * Retrieves the global label for the report.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Report label.
-	 */
-	public function get_label() {
-		return $this->label;
-	}
-
-	/**
-	 * Sets the global report label.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $label Report label.
-	 */
-	private function set_label( $label ) {
-		$this->label = $label;
 	}
 
 }
