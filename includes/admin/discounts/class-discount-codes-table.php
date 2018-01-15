@@ -136,10 +136,10 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$expired_count =  '&nbsp;<span class="count">(' . $this->expired_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'easy-digital-downloads' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'easy-digital-downloads' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'easy-digital-downloads' ) . $inactive_count ),
-			'expired'  => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'expired', $base ), $current === 'expired' ? ' class="current"' : '', __( 'Expired', 'easy-digital-downloads' ) . $expired_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), 'all' === $current || '' === $current ? ' class="current"' : '', __( 'All', 'easy-digital-downloads' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), 'active' === $current ? ' class="current"' : '', __( 'Active', 'easy-digital-downloads' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), 'inactive' === $current ? ' class="current"' : '', __( 'Inactive', 'easy-digital-downloads' ) . $inactive_count ),
+			'expired'  => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'expired', $base ), 'expired' === $current ? ' class="current"' : '', __( 'Expired', 'easy-digital-downloads' ) . $expired_count ),
 		);
 
 		return $views;
@@ -280,15 +280,31 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function column_name( $item ) {
 		$row_actions  = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $item->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array(
+			'edd-action' => 'edit_discount',
+			'discount'   => $item->ID,
+		) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
-		if ( strtolower( $item->status ) == 'active' ) {
-			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
-		} elseif ( strtolower( $item->status ) == 'inactive' ) {
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
+		if ( 'active' === strtolower( $item->status ) ) {
+
+			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+				'edd-action' => 'deactivate_discount',
+				'discount'   => $item->ID,
+			) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
+
+		} elseif ( 'inactive' === strtolower( $item->status ) ) {
+
+			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+				'edd-action' => 'activate_discount',
+				'discount'   => $item->ID,
+			) ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
+
 		}
 
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $item->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+			'edd-action' => 'delete_discount',
+			'discount'   => $item->ID,
+		) ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $item );
 
@@ -300,8 +316,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-     *
+	 *
 	 * @param EDD_Discount $item Discount object.
+	 *
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $item ) {
