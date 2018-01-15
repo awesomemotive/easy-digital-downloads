@@ -91,15 +91,23 @@ final class Report {
 	 */
 	protected function set_props( $report ) {
 		if ( ! empty( $report['id'] ) ) {
+
 			$this->set_id( $report['id'] );
+
 		} else {
+
 			$this->errors->add( 'missing_report_id', 'The report_id is missing.' );
+
 		}
 
 		if ( ! empty( $report['label'] ) ) {
+
 			$this->set_label( $report['label'] );
+
 		} else {
+
 			$this->errors->add( 'missing_report_label', 'The report label is missing.' );
+
 		}
 	}
 
@@ -207,11 +215,13 @@ final class Report {
 		$view_groups = array();
 
 		foreach ( $views as $view_type => $atts ) {
+
 			if ( ! empty( $atts['view_group'] ) ) {
 				$view_group = $atts['view_group'];
 
 				$view_groups[ $view_group ] = $view_type;
 			}
+
 		}
 
 		return $view_groups;
@@ -229,18 +239,24 @@ final class Report {
 	 */
 	public function validate_endpoint( $view_group, $endpoint ) {
 		if ( is_wp_error( $endpoint ) ) {
+
 			$this->errors->add(
 				$endpoint->get_error_code(),
 				$endpoint->get_error_message(),
 				$endpoint->get_error_data()
 			);
+
 		} elseif ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) {
+
 			$message = sprintf( 'The \'%1$s\' endpoint is invalid.', $endpoint->get_id() );
 
 			$this->errors->add( 'invalid_endpoint', $message, $endpoint->get_errors() );
+
 		} else {
+
 			// Valid.
 			$this->endpoints[ $view_group ][ $endpoint->get_id() ] = $endpoint;
+
 		}
 	}
 
@@ -255,9 +271,13 @@ final class Report {
 	 */
 	public function get_endpoints( $view_group = '' ) {
 		if ( ! empty( $view_group ) && ! empty( $this->endpoints[ $view_group ] ) ) {
+
 			return $this->endpoints[ $view_group ];
+
 		} else {
+
 			return $this->endpoints;
+
 		}
 	}
 
