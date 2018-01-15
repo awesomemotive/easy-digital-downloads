@@ -238,7 +238,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$start_date = $item->get_start_date();
 
 		if ( $start_date ) {
-			$display = date( 'F j, Y', strtotime( $start_date ) );
+			$display = date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
 		} else {
 			$display = __( 'No start date', 'easy-digital-downloads' );
 		}
