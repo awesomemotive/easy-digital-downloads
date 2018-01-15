@@ -473,7 +473,7 @@ function edd_change_post_link( $permalink, $post ) {
 		return $permalink;
 	}
 
-	$should_modify_permalink = apply_filters( 'edd_should_change_post_link', __return_false() );
+	$should_modify_permalink = apply_filters( 'edd_should_change_post_link', false );
 
 	if ( $should_modify_permalink && is_object( $post ) && 'download' === $post->post_type ) {
 		$term_slug = '';
