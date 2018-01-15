@@ -93,7 +93,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
 	 *
-	 * @return svoid
+	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
@@ -123,6 +123,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
+     *
 	 * @return array $views All the views available
 	 */
 	public function get_views() {
@@ -149,7 +150,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-     *
+	 *
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
@@ -172,7 +173,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-     *
+	 *
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
@@ -208,7 +209,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @return string Column Name
 	 */
-	function column_default( $item, $column_name ) {
+	public function column_default( $item, $column_name ) {
 		return property_exists( $item, $column_name ) ? $item->$column_name : '';
 	}
 
@@ -223,7 +224,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function column_amount( $item ) {
 		return edd_format_discount_rate( $item->type, $item->amount );
-    }
+	}
 
 	/**
 	 * This function renders the start column.
@@ -234,7 +235,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param EDD_Discount $item Discount object.
 	 * @return string Start  date
 	 */
-	function column_start_date( $item ) {
+	public function column_start_date( $item ) {
 		$start_date = $item->get_start_date();
 
 		if ( $start_date ) {
@@ -255,7 +256,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param EDD_Discount $item Discount object.
 	 * @return string Expiration  date
 	 */
-	function column_end_date( $item ) {
+	public function column_end_date( $item ) {
 		$expiration = $item->get_expiration();
 
 		if ( $expiration ) {
@@ -276,7 +277,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param EDD_Discount $item Discount object.
 	 * @return string Data shown in the Name column
 	 */
-	function column_name( $item ) {
+	public function column_name( $item ) {
 		$row_actions  = array();
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $item->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
@@ -303,7 +304,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param EDD_Discount $item Discount object.
 	 * @return string Displays a checkbox
 	 */
-	function column_cb( $item ) {
+	public function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ 'discount',
@@ -316,11 +317,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.9.9
-     *
+	 *
 	 * @param EDD_Discount $item Discount object.
+	 *
 	 * @return string Displays the discount status
 	 */
-	function column_status( $item ) {
+	public function column_status( $item ) {
 		switch ( $item->status ) {
 			case 'expired':
 				$status = __( 'Expired', 'easy-digital-downloads' );
@@ -343,7 +345,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since 1.7.2
 	 * @access public
 	 */
-	function no_items() {
+	public function no_items() {
 		_e( 'No discounts found.', 'easy-digital-downloads' );
 	}
 
