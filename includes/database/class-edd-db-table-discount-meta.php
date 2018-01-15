@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Log Meta Table: EDD_DB_Table_Logmeta class
+ * Discount Meta Table: EDD_DB_Table_Discount_Meta class
  *
  * @package Plugins/EDD/Database/Object/Meta
  */
@@ -11,16 +11,16 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'WP_DB_Table' ) ) :
 /**
- * Setup the global "edd_logmeta" database table
+ * Setup the global "edd_discountmeta" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Logmeta extends WP_DB_Table {
+final class EDD_DB_Table_Discount_Meta extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'edd_logmeta';
+	protected $name = 'edd_discountmeta';
 
 	/**
 	 * @var string Database version
@@ -40,10 +40,10 @@ final class EDD_DB_Table_Logmeta extends WP_DB_Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_log_id bigint(20) unsigned NOT NULL default '0',
+			edd_discount_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY edd_log_id (edd_log_id),
+			PRIMARY KEY edd_discount_id (edd_discount_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 

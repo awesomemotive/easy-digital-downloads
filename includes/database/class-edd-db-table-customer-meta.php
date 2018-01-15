@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Customer Meta Table: EDD_DB_Table_Customermeta class
+ * Customer Meta Table: EDD_DB_Table_Customer_Meta class
  *
  * @package Plugins/EDD/Database/Object/Meta
  */
@@ -15,7 +15,7 @@ if ( class_exists( 'WP_DB_Table' ) ) :
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Customermeta extends WP_DB_Table {
+final class EDD_DB_Table_Customer_Meta extends WP_DB_Table {
 
 	/**
 	 * @var string Table name

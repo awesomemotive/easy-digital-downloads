@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Note Meta Table: EDD_DB_Table_Notemeta class
+ * Log Meta Table: EDD_DB_Table_Log_Meta class
  *
  * @package Plugins/EDD/Database/Object/Meta
  */
@@ -11,16 +11,16 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'WP_DB_Table' ) ) :
 /**
- * Setup the global "edd_notemeta" database table
+ * Setup the global "edd_logmeta" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Notemeta extends WP_DB_Table {
+final class EDD_DB_Table_Log_Meta extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'edd_notemeta';
+	protected $name = 'edd_logmeta';
 
 	/**
 	 * @var string Database version
@@ -40,10 +40,10 @@ final class EDD_DB_Table_Notemeta extends WP_DB_Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_note_id bigint(20) unsigned NOT NULL default '0',
+			edd_log_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY edd_note_id (edd_note_id),
+			PRIMARY KEY edd_log_id (edd_log_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 

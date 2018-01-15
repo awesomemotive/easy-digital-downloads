@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Order Meta Table: EDD_DB_Table_Ordermeta class
+ * Order Item Meta Table: EDD_DB_Table_Order_Item_Meta class
  *
  * @package Plugins/EDD/Database/Object/Meta
  */
@@ -11,16 +11,16 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'WP_DB_Table' ) ) :
 /**
- * Setup the global "edd_ordermeta" database table
+ * Setup the global "edd_order_itemmeta" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Ordermeta extends WP_DB_Table {
+final class EDD_DB_Table_Order_Item_Meta extends WP_DB_Table {
 
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'edd_ordermeta';
+	protected $name = 'edd_order_itemmeta';
 
 	/**
 	 * @var string Database version
@@ -40,10 +40,10 @@ final class EDD_DB_Table_Ordermeta extends WP_DB_Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_order_id bigint(20) unsigned NOT NULL default '0',
+			edd_order_item_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY edd_order_id (edd_order_id),
+			PRIMARY KEY edd_order_item_id (edd_order_item_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 
