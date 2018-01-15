@@ -96,7 +96,7 @@ final class Report {
 		if ( ! empty( $report['label'] ) ) {
 			$this->set_label( $report['label'] );
 		} else {
-			$this->errors->add( 'missing_label', 'The report label is missing.' );
+			$this->errors->add( 'missing_report_label', 'The report label is missing.' );
 		}
 	}
 
