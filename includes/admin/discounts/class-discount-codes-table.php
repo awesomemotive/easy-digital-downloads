@@ -111,9 +111,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		}
 		?>
 		<p class="search-box">
-            <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
-			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ) ?>"><?php echo sanitize_text_field( $text ); ?>:</label>
+            <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+			<?php submit_button( sanitize_text_field( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
 		</p>
 	<?php
 	}
