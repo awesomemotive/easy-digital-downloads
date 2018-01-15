@@ -169,7 +169,7 @@ final class Report {
 		// Loop through all passed endpoints using view groups.
 		foreach ( $report_endpoints as $group => $endpoints ) {
 
-			// Strip any invalid views based on view group.
+			// Skip any invalid views based on view group.
 			if ( ! array_key_exists( $group, $view_groups ) ) {
 				throw new Utils\Exception( sprintf(
 					'The \'%1$s\' view group does not correspond to a known endpoint view type.',
