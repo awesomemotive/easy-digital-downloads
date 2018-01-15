@@ -38,13 +38,6 @@ final class Report {
 	private $label;
 
 	/**
-	 * Represents filters available to the report.
-	 *
-	 * @since 3.0
-	 */
-	public $filters = array();
-
-	/**
 	 * Represents valid endpoints available for display.
 	 *
 	 * @since 3.0
@@ -108,9 +101,6 @@ final class Report {
 				$this->errors->add( 'missing_label', 'The report label is missing.' );
 			}
 
-			if ( ! empty( $report['filters'] ) ) {
-				$this->filters = $report['filters'];
-			}
 		}
 	}
 
