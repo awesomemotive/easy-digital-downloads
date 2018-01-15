@@ -86,21 +86,17 @@ final class Report {
 	 *
 	 * @param array $report Report record from the registry.
 	 */
-	public function set_props( $report ) {
-		if ( ! empty( $report ) ) {
+	protected function set_props( $report ) {
+		if ( ! empty( $report['id'] ) ) {
+			$this->report_id = $report['id'];
+		} else {
+			$this->errors->add( 'missing_report_id', 'The report_id is missing.' );
+		}
 
-			if ( ! empty( $report['id'] ) ) {
-				$this->report_id = $report['id'];
-			} else {
-				$this->errors->add( 'missing_report_id', 'The report_id is missing.' );
-			}
-
-			if ( ! empty( $report['label'] ) ) {
-				$this->label = $report['label'];
-			} else {
-				$this->errors->add( 'missing_label', 'The report label is missing.' );
-			}
-
+		if ( ! empty( $report['label'] ) ) {
+			$this->label = $report['label'];
+		} else {
+			$this->errors->add( 'missing_label', 'The report label is missing.' );
 		}
 	}
 
