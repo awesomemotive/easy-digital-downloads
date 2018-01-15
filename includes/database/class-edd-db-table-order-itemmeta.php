@@ -43,7 +43,7 @@ final class EDD_DB_Table_Order_Itemmeta extends WP_DB_Table {
 			edd_order_item_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY order_item_id (order_item_id),
+			PRIMARY KEY edd_order_item_id (edd_order_item_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 

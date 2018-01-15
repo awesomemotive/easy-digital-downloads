@@ -43,7 +43,7 @@ final class EDD_DB_Table_Logmeta extends WP_DB_Table {
 			edd_log_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY log_id (log_id),
+			PRIMARY KEY edd_log_id (edd_log_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 
