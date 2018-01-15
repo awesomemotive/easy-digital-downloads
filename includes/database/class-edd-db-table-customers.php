@@ -39,17 +39,17 @@ final class EDD_DB_Table_Customers extends WP_DB_Table {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) NOT NULL AUTO_INCREMENT,
-		user_id bigint(20) NOT NULL,
-		email varchar(50) NOT NULL,
-		name mediumtext NOT NULL,
-		purchase_value mediumtext NOT NULL,
-		purchase_count bigint(20) NOT NULL,
-		payment_ids longtext NOT NULL,
-		notes longtext NOT NULL,
-		date_created datetime NOT NULL,
-		PRIMARY KEY  (id),
-		UNIQUE KEY email (email),
-		KEY user (user_id)";
+			user_id bigint(20) NOT NULL,
+			email varchar(50) NOT NULL,
+			name mediumtext NOT NULL,
+			purchase_value mediumtext NOT NULL,
+			purchase_count bigint(20) NOT NULL,
+			payment_ids longtext NOT NULL,
+			notes longtext NOT NULL,
+			date_created datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY email (email),
+			KEY user (user_id)";
 	}
 
 	/**
