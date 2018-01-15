@@ -48,7 +48,7 @@ final class EDD_DB_Table_Orders extends WP_DB_Table {
 			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
 			gateway varchar(20) NOT NULL default '',
-			api_key varchar(64) NOT NULL default '',
+			payment_key varchar(64) NOT NULL default '',
 			subtotal double NOT NULL default '0',
 			tax double NOT NULL default '0',
 			discounts double NOT NULL default '0',
