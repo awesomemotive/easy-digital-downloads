@@ -401,9 +401,9 @@ class EDD_DB_Discounts extends EDD_DB {
 
 			if ( is_array( $args['start_date'] ) ) {
 
-				if ( ! empty( $args['start_date']['start_date'] ) ) {
+				if ( ! empty( $args['start_date']['start'] ) ) {
 
-					$start_date = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start_date'] ) );
+					$start_date = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start'] ) );
 
 					$where .= " AND `start_date` >= '{$start_date}'";
 
