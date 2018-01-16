@@ -1,12 +1,10 @@
 <?php
-namespace EDD;
-
 /**
  * Tests for EDD_Utilities.
  *
  * @group edd_utils
  */
-class Utilities_Tests extends \EDD_UnitTestCase {
+class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * EDD_Utilities fixture.
