@@ -105,7 +105,10 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
 			)
 		);
 
