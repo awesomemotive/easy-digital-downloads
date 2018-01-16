@@ -366,10 +366,10 @@ function edd_deliver_download( $file = '', $redirect = false ) {
  * @return bool                   If the file is hosted locally or not
  */
 function edd_is_local_file( $requested_file ) {
-	$home_url       = preg_replace('#^https?://#', '', home_url() );
+	$site_url       = preg_replace('#^https?://#', '', site_url() );
 	$requested_file = preg_replace('#^(https?|file)://#', '', $requested_file );
 
-	$is_local_url  = strpos( $requested_file, $home_url ) === 0;
+	$is_local_url  = strpos( $requested_file, $site_url ) === 0;
 	$is_local_path = strpos( $requested_file, '/' ) === 0;
 
 	return ( $is_local_url || $is_local_path );
