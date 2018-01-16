@@ -225,10 +225,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	public function validate_views( $views, $endpoint_id ) {
 		$valid_views = edd_reports_get_endpoint_views();
 
-		foreach ( $views as $view => $attributes ) {
-			$this->validate_attributes( $attributes, $endpoint_id, array( 'display_args' ) );
+		$this->validate_attributes( $views, $endpoint_id, array( 'display_args' ) );
 
-			if ( ! in_array( $view, $valid_views, true ) ) {
+		foreach ( $views as $view => $attributes ) {
+			if ( ! array_key_exists( $view, $valid_views ) ) {
 				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
 			}
 		}
