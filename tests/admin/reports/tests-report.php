@@ -267,6 +267,148 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Report::get_endpoints()
+	 */
+	public function test_get_endpoints_with_empty_view_group_should_return_all_endpoints() {
+		$report = new Report( array(
+			'id' => 'foo',
+			'label' => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(
+					new Data\Endpoint( 'tile', array(
+						'id'    => 'foo',
+						'label' => 'Foo',
+						'views' => array(
+							'tile' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
+						),
+					) ),
+				),
+				'tables' => array(
+					new Data\Endpoint( 'table', array(
+						'id'    => 'bar',
+						'label' => 'Bar',
+						'views' => array(
+							'table' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
+						),
+					) ),
+				),
+			)
+		) );
+
+		$all_endpoints = $report->get_endpoints();
+
+		$actual = array();
+
+		foreach ( $all_endpoints as $view_group => $endpoints ) {
+			foreach ( $endpoints as $endpoint_id => $endpoint ) {
+				$actual[] = $endpoint_id;
+			}
+		}
+
+		$this->assertEqualSets( array( 'foo', 'bar' ), $actual );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Report::get_endpoints()
+	 */
+	public function test_get_endpoints_with_invalid_view_group_should_return_all_endpoints() {
+		$report = new Report( array(
+			'id' => 'foo',
+			'label' => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(
+					new Data\Endpoint( 'tile', array(
+						'id'    => 'foo',
+						'label' => 'Foo',
+						'views' => array(
+							'tile' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
+						),
+					) ),
+				),
+				'tables' => array(
+					new Data\Endpoint( 'table', array(
+						'id'    => 'bar',
+						'label' => 'Bar',
+						'views' => array(
+							'table' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
+						),
+					) ),
+				),
+			)
+		) );
+
+		$all_endpoints = $report->get_endpoints( 'fake' );
+
+		$actual = array();
+
+		foreach ( $all_endpoints as $view_group => $endpoints ) {
+			foreach ( $endpoints as $endpoint_id => $endpoint ) {
+				$actual[] = $endpoint_id;
+			}
+		}
+
+		$this->assertEqualSets( array( 'foo', 'bar' ), $actual );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Report::get_endpoints()
+	 */
+	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
+		$report = new Report( array(
+			'id' => 'foo',
+			'label' => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(
+					new Data\Endpoint( 'tile', array(
+						'id'    => 'foo',
+						'label' => 'Foo',
+						'views' => array(
+							'tile' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
+						),
+					) ),
+				),
+				'tables' => array(
+					new Data\Endpoint( 'table', array(
+						'id'    => 'bar',
+						'label' => 'Bar',
+						'views' => array(
+							'table' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
+						),
+					) ),
+				),
+			)
+		) );
+
+		$tables = $report->get_endpoints( 'tables' );
+
+		$actual = array();
+
+		foreach ( $tables as $endpoint_id => $endpoint ) {
+			$actual[] = $endpoint_id;
+		}
+
+		$this->assertEqualSets( array( 'bar' ), $actual );
+	}
+
+	/**
 	 * @covers \EDD\Admin\Reports\Report::has_errors()
 	 */
 	public function test_Report_has_errors_if_no_errors_should_return_false() {
