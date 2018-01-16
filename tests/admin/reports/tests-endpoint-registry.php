@@ -403,6 +403,28 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::validate_views()
+	 * @throws \EDD_Exception
+	 */
+	public function test_validate_views_with_invalid_view_should_throw_exception() {
+		$this->setExpectedException(
+			'\EDD\Admin\Reports\Exceptions\Invalid_View',
+			"The 'fake' view for the 'foo' item is invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_views'"
+		);
+
+		$this->registry->register_endpoint( 'foo', array(
+			'label'    => 'Foo',
+			'views'    => array(
+				'fake' => array(
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			)
+		) );
+	}
+
+
+	/**
 	 * Adds two test endpoints for use with get_endpoints() tests.
 	 *
 	 * @throws \EDD_Exception
