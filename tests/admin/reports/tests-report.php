@@ -162,6 +162,34 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Report
+	 * @group edd_errors
+	 */
+	public function test_Report_with_empty_endpoints_should_flag_WP_Error() {
+		$report = new Report( array(
+			'id'        => 'foo',
+			'label'     => 'Foo',
+			'endpoints' => array(),
+		) );
+
+		$this->assertTrue( $report->has_errors() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Report
+	 * @group edd_errors
+	 */
+	public function test_Report_with_empty_endpoints_should_flag_WP_Error_including_code_missing_endpoints() {
+		$report = new Report( array(
+			'id'        => 'foo',
+			'label'     => 'Foo',
+			'endpoints' => array(),
+		) );
+
+		$this->assertContains( 'missing_endpoints', $report->get_errors()->get_error_codes() );
+	}
+
+	/**
 	 * @covers \EDD\Admin\Reports\Report::build_endpoints()
 	 * @throws \EDD_Exception
 	 */
