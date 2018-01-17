@@ -574,11 +574,11 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Create the table
 	 *
-	 * @access  public
-	 * @since   2.1
+	 * @deprecated 3.0.0
+	 * @access     public
+	 * @since      2.1
 	*/
 	public function create_table() {
-
 		global $wpdb;
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
