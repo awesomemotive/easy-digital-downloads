@@ -72,21 +72,39 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	/** Delete all the Plugin Options */
-	delete_option( 'edd_settings' );
-	delete_option( 'edd_version' );
-	delete_option( 'edd_use_php_sessions' );
-	delete_option( 'edd_default_api_version' );
-	delete_option( 'wp_edd_customers_db_version' );
-	delete_option( 'wp_edd_customermeta_db_version' );
 	delete_option( 'edd_completed_upgrades' );
+	delete_option( 'edd_default_api_version' );
+	delete_option( 'edd_earnings_total' );
+	delete_option( 'edd_settings' );
+	delete_option( 'edd_tracking_notice' );
+	delete_option( 'edd_tax_rates' );
+	delete_option( 'edd_use_php_sessions' );
+	delete_option( 'edd_version' );
+	delete_option( 'edd_version_upgraded_from' );
+
+	// Widgets
+	delete_option( 'widget_edd_product_details' );
 	delete_option( 'widget_edd_cart_widget' );
 	delete_option( 'widget_edd_categories_tags_widget' );
-	delete_option( 'widget_edd_product_details' );
+
+	// Database options
+	delete_option( 'wpdb_edd_customermeta_version' );
+	delete_option( 'wpdb_edd_customers_version' );
+	delete_option( 'wpdb_edd_discountmeta_version' );
+	delete_option( 'wpdb_edd_discounts_version' );
+	delete_option( 'wpdb_edd_logmeta_version' );
+	delete_option( 'wpdb_edd_logs_version' );
+	delete_option( 'wpdb_edd_notemeta_version' );
+	delete_option( 'wpdb_edd_notes_version' );
+	delete_option( 'wpdb_edd_order_itemmeta_version' );
+	delete_option( 'wpdb_edd_order_items_version' );
+	delete_option( 'wpdb_edd_ordermeta_version' );
+	delete_option( 'wpdb_edd_orders_version' );
+
+	// Deprecated 3.0.0
+	delete_option( 'wp_edd_customers_db_version' );
+	delete_option( 'wp_edd_customermeta_db_version' );
 	delete_option( '_edd_table_check' );
-	delete_option( 'edd_tracking_notice' );
-	delete_option( 'edd_earnings_total' );
-	delete_option( 'edd_tax_rates' );
-	delete_option( 'edd_version_upgraded_from' );
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();
@@ -98,8 +116,11 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	// Remove all database tables
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customers" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customermeta" );
+	$edd_db_tables = array( 'customers', 'customermeta', 'discounts', 'discountmeta', 'logs', 'logmeta', 'notes', 'notemeta', 'orders', 'ordermeta', 'order_items', 'order_itemmeta' );
+	foreach ( $edd_db_tables as $table ) {
+		$query = "DROP TABLE IF EXISTS {$wpdb->prefix}edd_{$table}";
+		$wpdb->query( $query );
+	}
 
 	/** Cleanup Cron Events */
 	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );
