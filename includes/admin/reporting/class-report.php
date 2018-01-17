@@ -216,8 +216,8 @@ final class Report {
 
 		foreach ( $views as $view_type => $atts ) {
 
-			if ( ! empty( $atts['view_group'] ) ) {
-				$view_group = $atts['view_group'];
+			if ( ! empty( $atts['group'] ) ) {
+				$view_group = $atts['group'];
 
 				$view_groups[ $view_group ] = $view_type;
 			}
