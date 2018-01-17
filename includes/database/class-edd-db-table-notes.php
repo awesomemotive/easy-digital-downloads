@@ -46,7 +46,7 @@ final class EDD_DB_Table_Notes extends WP_DB_Table {
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
 			KEY object_id_type (object_id,object_type(20)),
-			KEY author (author_id,author_ip(60)),
+			KEY user_id (user_id),
 			KEY date_created (date_created)";
 	}
 
