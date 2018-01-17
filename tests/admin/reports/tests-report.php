@@ -1,5 +1,5 @@
 <?php
-namespace EDD\Admin\Reports;
+namespace EDD\Admin\Reports\Data;
 
 if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
@@ -51,7 +51,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->reports_registry   = new \EDD\Admin\Reports\Reports_Registry();
+		$this->reports_registry   = new \EDD\Admin\Reports\Data\Reports_Registry();
 		$this->endpoints_registry = new \EDD\Admin\Reports\Data\Endpoint_Registry();
 	}
 
