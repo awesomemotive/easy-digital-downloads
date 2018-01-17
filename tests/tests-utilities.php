@@ -49,7 +49,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	public function test_get_registry_with_reports_should_retrieve_reports_registry_instance() {
 		$result = self::$utils->get_registry( 'reports' );
 
-		$this->assertInstanceOf( '\EDD\Admin\Reports\Reports_Registry', $result );
+		$this->assertInstanceOf( '\EDD\Admin\Reports\Data\Reports_Registry', $result );
 	}
 
 	/**
