@@ -196,10 +196,6 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customer databases
-	@EDD()->customers->create_table();
-	@EDD()->customer_meta->create_table();
-
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
 
@@ -289,36 +285,14 @@ function edd_after_install() {
 		return;
 	}
 
-	$edd_options     = get_transient( '_edd_installed' );
-	$edd_table_check = get_option( '_edd_table_check', false );
+	$edd_options = get_transient( '_edd_installed' );
 
-	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
-
-		if ( ! @EDD()->customer_meta->installed() ) {
-
-			// Create the customer meta database (this ensures it creates it on multisite instances where it is network activated)
-			@EDD()->customer_meta->create_table();
-
-		}
-
-		if ( ! @EDD()->customers->installed() ) {
-			// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
-			@EDD()->customers->create_table();
-			@EDD()->customer_meta->create_table();
-
-			do_action( 'edd_after_install', $edd_options );
-		}
-
-		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );
-
-	}
+	do_action( 'edd_after_install', $edd_options );
 
 	if ( false !== $edd_options ) {
 		// Delete the transient
 		delete_transient( '_edd_installed' );
 	}
-
-
 }
 add_action( 'admin_init', 'edd_after_install' );
 
