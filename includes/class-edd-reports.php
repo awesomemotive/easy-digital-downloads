@@ -10,6 +10,7 @@
  */
 namespace EDD\Admin;
 use EDD\Admin\Reports\Data\Endpoint;
+use EDD\Admin\Reports\Data\Report;
 
 /**
  * Core class that implements the Reports API.
@@ -36,7 +37,7 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry instance, passed by reference.
+		 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry instance, passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
@@ -55,8 +56,8 @@ final class Reports {
 
 		// Registries.
 		require_once $reports_dir . '/class-registry.php';
-		require_once $reports_dir . '/class-reports-registry.php';
-		require_once $reports_dir . '/class-report.php';
+		require_once $reports_dir . '/data/class-reports-registry.php';
+		require_once $reports_dir . '/data/class-report.php';
 		require_once $reports_dir . '/data/class-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
@@ -75,7 +76,7 @@ final class Reports {
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry.
+	 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry.
 	 */
 	public function register_core_reports( $reports ) {
 
@@ -112,9 +113,9 @@ final class Reports {
 			) );
 
 			try {
-				$built_report = new Reports\Report( array(
-					'id'        => 'on_the_fly',
-					'label'     => 'On the Fly',
+				$built_report = new Report( array(
+					'id' => 'on_the_fly',
+					'label' => 'On the Fly',
 					'endpoints' => array(
 						'tiles' => array( 'something', 'else', $endpoint )
 					)
