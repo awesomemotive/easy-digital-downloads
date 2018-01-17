@@ -20,7 +20,7 @@ final class EDD_DB_Table_Customers extends WP_DB_Table {
 	/**
 	 * @var string Table name
 	 */
-	protected $name = 'customers';
+	protected $name = 'edd_customers';
 
 	/**
 	 * @var string Database version
