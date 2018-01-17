@@ -42,7 +42,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->registry = new \EDD\Admin\Reports\Reports_Registry();
+		$this->registry = new \EDD\Admin\Reports\Data\Reports_Registry();
 	}
 
 	/**

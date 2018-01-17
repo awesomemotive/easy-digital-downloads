@@ -10,6 +10,7 @@
  */
 namespace EDD\Admin;
 use EDD\Admin\Reports\Data\Endpoint;
+use EDD\Admin\Reports\Data\Report;
 
 /**
  * Core class that implements the Reports API.
@@ -54,8 +55,8 @@ final class Reports {
 
 		// Registries.
 		require_once $reports_dir . '/class-registry.php';
-		require_once $reports_dir . '/class-reports-registry.php';
-		require_once $reports_dir . '/class-report.php';
+		require_once $reports_dir . '/data/class-reports-registry.php';
+		require_once $reports_dir . '/data/class-report.php';
 		require_once $reports_dir . '/data/class-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
