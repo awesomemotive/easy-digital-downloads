@@ -638,3 +638,52 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
 
 	return $registry->build_endpoint( $endpoint_id, $view_type );
 }
+
+/**
+ * Displays the default content for a tile endpoint.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Admin\Reports\Data\Endpoint $endpoint Endpoint object.
+ * @param mixed                            $data     Tile data.
+ * @param array                            $args     Display arguments.
+ * @return string Default tile endpoint markup.
+ */
+function edd_reports_display_tile( $endpoint, $data, $args ) {
+	ob_start();
+
+	if ( empty( $data ) ) {
+		echo '<span class="tile-no-data tile-value">' . __( 'No data for the current date range.', 'easy-digital-downloads' ) . '</span>';
+	} else {
+		switch( $type ) {
+			case 'number':
+				echo '<span class="tile-number tile-value">' . $data . '</span>';
+				break;
+
+			case 'split-number':
+				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+					$data['first_value'],
+					$data['second_value']
+				);
+				break;
+
+			case 'amount':
+				echo '<span class="tile-amount tile-value">' . $data . '</span>';
+				break;
+
+			case 'url':
+				echo '<span class="tile-url tile-value">' . $data . '</span>';
+				break;
+
+			default:
+				echo '<span class="tile-value">' . $data . '</span>';
+				break;
+		}
+	}
+
+	if ( ! empty( $tile['comparison_data'] ) ) {
+		echo '<span class="tile-compare">' . $tile['comparison_data'] . '</span>';
+	}
+
+	return ob_get_clean();
+}
