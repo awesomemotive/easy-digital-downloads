@@ -186,16 +186,16 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 				require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 			}
 			require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
+			//require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
 			require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/template-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 			require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
+			//require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
 			require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 			require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
+			//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 			//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 			//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
 			//require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
@@ -276,8 +276,8 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 				require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
 				require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 				require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
-				require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
-				require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
+				//require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
+				//require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 				require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 				require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 				require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
