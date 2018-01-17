@@ -72,39 +72,44 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	/** Delete all the Plugin Options */
-	delete_option( 'edd_completed_upgrades' );
-	delete_option( 'edd_default_api_version' );
-	delete_option( 'edd_earnings_total' );
-	delete_option( 'edd_settings' );
-	delete_option( 'edd_tracking_notice' );
-	delete_option( 'edd_tax_rates' );
-	delete_option( 'edd_use_php_sessions' );
-	delete_option( 'edd_version' );
-	delete_option( 'edd_version_upgraded_from' );
+	$edd_options = array(
+		'edd_completed_upgrades',
+		'edd_default_api_version',
+		'edd_earnings_total',
+		'edd_settings',
+		'edd_tracking_notice',
+		'edd_tax_rates',
+		'edd_use_php_sessions',
+		'edd_version',
+		'edd_version_upgraded_from',
 
-	// Widgets
-	delete_option( 'widget_edd_product_details' );
-	delete_option( 'widget_edd_cart_widget' );
-	delete_option( 'widget_edd_categories_tags_widget' );
+		// Widgets
+		'widget_edd_product_details',
+		'widget_edd_cart_widget',
+		'widget_edd_categories_tags_widget',
 
-	// Database options
-	delete_option( 'wpdb_edd_customermeta_version' );
-	delete_option( 'wpdb_edd_customers_version' );
-	delete_option( 'wpdb_edd_discountmeta_version' );
-	delete_option( 'wpdb_edd_discounts_version' );
-	delete_option( 'wpdb_edd_logmeta_version' );
-	delete_option( 'wpdb_edd_logs_version' );
-	delete_option( 'wpdb_edd_notemeta_version' );
-	delete_option( 'wpdb_edd_notes_version' );
-	delete_option( 'wpdb_edd_order_itemmeta_version' );
-	delete_option( 'wpdb_edd_order_items_version' );
-	delete_option( 'wpdb_edd_ordermeta_version' );
-	delete_option( 'wpdb_edd_orders_version' );
+		// Database options
+		'wpdb_edd_customermeta_version',
+		'wpdb_edd_customers_version',
+		'wpdb_edd_discountmeta_version',
+		'wpdb_edd_discounts_version',
+		'wpdb_edd_logmeta_version',
+		'wpdb_edd_logs_version',
+		'wpdb_edd_notemeta_version',
+		'wpdb_edd_notes_version',
+		'wpdb_edd_order_itemmeta_version',
+		'wpdb_edd_order_items_version',
+		'wpdb_edd_ordermeta_version',
+		'wpdb_edd_orders_version',
 
-	// Deprecated 3.0.0
-	delete_option( 'wp_edd_customers_db_version' );
-	delete_option( 'wp_edd_customermeta_db_version' );
-	delete_option( '_edd_table_check' );
+		// Deprecated 3.0.0
+		'wp_edd_customers_db_version',
+		'wp_edd_customermeta_db_version',
+		'_edd_table_check'
+	);
+	foreach ( $edd_options as $option ) {
+		delete_option( $option );
+	}
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();
