@@ -37,7 +37,7 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry instance, passed by reference.
+		 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry instance, passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
@@ -75,7 +75,7 @@ final class Reports {
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry.
+	 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry.
 	 */
 	public function register_core_reports( $reports ) {
 
@@ -112,7 +112,7 @@ final class Reports {
 			) );
 
 			try {
-				$built_report = new Reports\Report( array(
+				$built_report = new Report( array(
 					'id' => 'on_the_fly',
 					'label' => 'On the Fly',
 					'endpoints' => array(

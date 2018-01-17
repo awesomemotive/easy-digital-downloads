@@ -25,7 +25,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * Reports registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Admin\Reports\Reports_Registry
+	 * @var    \EDD\Admin\Reports\Data\Reports_Registry
 	 */
 	protected $registry;
 
