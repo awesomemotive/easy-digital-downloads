@@ -82,7 +82,7 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				// If the class doesn't belong to this namespace, move on to the next root.
 
 				// kludge until proper namespacing of files.
-				if ( false === strpos('$class', $namespace ) ){
+				if ( false === strpos( '$class', $namespace ) ) {
 					$class = 'EDD\\' . $class;
 				}
 				if ( 0 !== strpos( $class, $namespace ) ) {
@@ -90,8 +90,13 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				}
 
 				// Determine the possible path to the class, include all subdirectories.
-				$dirs = glob( $root_dir . '/*', GLOB_ONLYDIR );
-				array_unshift( $dirs, $root_dir );
+				$objects = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $root_dir ), \RecursiveIteratorIterator::SELF_FIRST );
+				foreach ( $objects as $name => $object ) {
+					if ( is_dir( $name ) ) {
+						$dirs[] = rtrim( $name, './' );
+					}
+				}
+				$dirs = array_unique( $dirs );
 
 				//$path = substr( $class, strlen( $namespace ) + 1 );
 				//$path = str_replace( '\\', DIRECTORY_SEPARATOR, $path );
