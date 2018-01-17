@@ -232,7 +232,7 @@ final class Report {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Admin\Reports\Report::$valid_endpoints
+	 * @see \EDD\Admin\Reports\Data\Report::$valid_endpoints
 	 *
 	 * @param string                  $view_group View group corresponding to the endpoint view.
 	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint object.
