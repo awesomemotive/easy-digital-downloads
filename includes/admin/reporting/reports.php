@@ -552,17 +552,17 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
-			'view_group' => 'tiles',
+			'group' => 'tiles',
 			'pre_fetch'  => '',
 		),
 		'chart' => array(
-			'view_group' => 'charts',
+			'group' => 'charts',
 		),
 		'table' => array(
-			'view_group' => 'tables',
+			'group' => 'tables',
 		),
 		'graph' => array(
-			'view_group' => 'graphs',
+			'group' => 'graphs',
 		),
 	);
 }
