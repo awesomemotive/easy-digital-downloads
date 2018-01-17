@@ -36,6 +36,14 @@ jQuery(document).ready(function ($) {
 				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 			});
 
+			/** manually uncheck any checkboxes */
+			clone.find( 'input[type="checkbox"]' ).each(function() {
+				var checked = $(this).is(':checked');
+				if ( checked ) {
+					$(this).prop('checked', false);
+				}
+			});
+
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.attr( 'data-key', key );
