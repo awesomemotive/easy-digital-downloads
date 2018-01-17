@@ -9,13 +9,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'WP_DB_Table' ) ) :
+if ( class_exists( 'EDD_DB_Table' ) ) :
 /**
  * Setup the global "edd_order_itemmeta" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Order_Item_Meta extends WP_DB_Table {
+final class EDD_DB_Table_Order_Item_Meta extends EDD_DB_Table {
 
 	/**
 	 * Table name
@@ -48,6 +48,7 @@ final class EDD_DB_Table_Order_Item_Meta extends WP_DB_Table {
 			edd_order_item_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
+			PRIMARY KEY (meta_id),
 			KEY edd_order_item_id (edd_order_item_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}

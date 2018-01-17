@@ -9,13 +9,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'WP_DB_Table' ) ) :
+if ( class_exists( 'EDD_DB_Table' ) ) :
 /**
  * Setup the global "edd_logs" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Logs extends WP_DB_Table {
+final class EDD_DB_Table_Logs extends EDD_DB_Table {
 
 	/**
 	 * Table name
