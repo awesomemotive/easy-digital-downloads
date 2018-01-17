@@ -245,6 +245,7 @@ final class Easy_Digital_Downloads {
 		$edd_options = edd_get_settings();
 
 		require_once EDD_PLUGIN_DIR . 'includes/database/class-wp-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-logs.php';
