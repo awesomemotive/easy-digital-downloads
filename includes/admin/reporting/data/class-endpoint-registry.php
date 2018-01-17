@@ -12,6 +12,7 @@ namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
 use EDD\Admin\Reports;
+use EDD\Admin\Reports\Exceptions as Reports_Exceptions;
 
 /**
  * Implements a singleton registry for registering reports data endpoints.
@@ -137,7 +138,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			try {
 
-				$this->validate_attributes( $attributes['views'], $endpoint_id, array( 'display_args' ) );
+				$this->validate_views( $attributes['views'], $endpoint_id );
 
 			} catch( \EDD_Exception $exception ) {
 
@@ -208,6 +209,29 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		return $_endpoint;
+	}
+
+	/**
+	 * Validates view properties for an incoming endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if a view's attributes is empty or it's not a valid view.
+	 *
+	 * @param array  $attributes List of attributes to check.
+	 * @param string $item_id    Endpoint ID.
+	 * @return void
+	 */
+	public function validate_views( $views, $endpoint_id ) {
+		$valid_views = edd_reports_get_endpoint_views();
+
+		$this->validate_attributes( $views, $endpoint_id, array( 'display_args' ) );
+
+		foreach ( $views as $view => $attributes ) {
+			if ( ! array_key_exists( $view, $valid_views ) ) {
+				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
+			}
+		}
 	}
 
 }
