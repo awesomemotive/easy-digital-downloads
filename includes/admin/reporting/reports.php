@@ -552,8 +552,9 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
-			'view_group' => 'tiles',
-			'pre_fetch'  => '',
+			'view_group'       => 'tiles',
+			'pre_fetch'        => '',
+			'display_callback' => 'edd_reports_display_tile',
 		),
 		'chart' => array(
 			'view_group' => 'charts',
