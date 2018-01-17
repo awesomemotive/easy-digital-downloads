@@ -101,7 +101,7 @@ final class Reports {
 			) );
 
 			$endpoint = new Endpoint( 'tile', array(
-				'id' => 'on_the_fly',
+				'id'    => 'on_the_fly',
 				'label' => 'On the Fly',
 				'views' => array(
 					'tile' => array(
@@ -113,8 +113,8 @@ final class Reports {
 
 			try {
 				$built_report = new Reports\Report( array(
-					'id' => 'on_the_fly',
-					'label' => 'On the Fly',
+					'id'        => 'on_the_fly',
+					'label'     => 'On the Fly',
 					'endpoints' => array(
 						'tiles' => array( 'something', 'else', $endpoint )
 					)
