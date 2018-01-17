@@ -21,22 +21,14 @@ use EDD\Utils\Exceptions;
  * @see \InvalidArgumentException
  * @see \EDD_Exception
  */
-class Invalid_View extends Exceptions\Invalid_Parameter implements \EDD_Exception {
+class Invalid_View extends Invalid_Parameter implements \EDD_Exception {
 
 	/**
-	 * Builds the Invalid_View exception message.
+	 * Type of value.
 	 *
 	 * @since 3.0
-	 *
-	 * @param string     $argument_name Argument or parameter resulting in the exception.
-	 * @param string     $method        Function or method name the argument or parameter was passed to.
-	 * @return string Informed Invalid_Argument message.
+	 * @var   string
 	 */
-	public static function build_message( $argument_name, $method, $context = null ) {
-		self::$error_message = sprintf( 'The \'%1$s\' view for the \'%2$s\' item is invalid in \'%3$s\'.',
-			$argument_name,
-			$context,
-			$method
-		);
-	}
+	public static $type = 'view';
+
 }
