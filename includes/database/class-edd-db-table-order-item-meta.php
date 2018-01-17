@@ -18,24 +18,29 @@ if ( class_exists( 'WP_DB_Table' ) ) :
 final class EDD_DB_Table_Order_Item_Meta extends WP_DB_Table {
 
 	/**
-	 * @var string Table name
+	 * Table name
+	 *
+	 * @access protected
+	 * @since 3.0.0
+	 * @var string
 	 */
 	protected $name = 'edd_order_itemmeta';
 
 	/**
-	 * @var string Database version
+	 * Database version
+	 *
+	 * @access protected
+	 * @since 3.0.0
+	 * @var int
 	 */
-	protected $version = 201801150001;
-
-	/**
-	 * @var boolean This is not a global table
-	 */
-	protected $global = false;
+	protected $version = 201801170001;
 
 	/**
 	 * Setup the database schema
 	 *
+	 * @access protected
 	 * @since 3.0.0
+	 * @return void
 	 */
 	protected function set_schema() {
 		$max_index_length = 191;
@@ -43,7 +48,6 @@ final class EDD_DB_Table_Order_Item_Meta extends WP_DB_Table {
 			edd_order_item_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY (meta_id),
 			KEY edd_order_item_id (edd_order_item_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
@@ -51,7 +55,9 @@ final class EDD_DB_Table_Order_Item_Meta extends WP_DB_Table {
 	/**
 	 * Handle schema changes
 	 *
+	 * @access protected
 	 * @since 3.0.0
+	 * @return void
 	 */
 	protected function upgrade() {
 

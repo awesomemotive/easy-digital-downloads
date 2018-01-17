@@ -18,24 +18,29 @@ if ( class_exists( 'WP_DB_Table' ) ) :
 final class EDD_DB_Table_Discounts extends WP_DB_Table {
 
 	/**
-	 * @var string Table name
+	 * Table name
+	 *
+	 * @access protected
+	 * @since 3.0.0
+	 * @var string
 	 */
 	protected $name = 'edd_discounts';
 
 	/**
-	 * @var string Database version
+	 * Database version
+	 *
+	 * @access protected
+	 * @since 3.0.0
+	 * @var int
 	 */
-	protected $version = 201801150001;
-
-	/**
-	 * @var boolean This is not a global table
-	 */
-	protected $global = false;
+	protected $version = 201801170001;
 
 	/**
 	 * Setup the database schema
 	 *
+	 * @access protected
 	 * @since 3.0.0
+	 * @return void
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
@@ -63,7 +68,9 @@ final class EDD_DB_Table_Discounts extends WP_DB_Table {
 	/**
 	 * Handle schema changes
 	 *
+	 * @access protected
 	 * @since 3.0.0
+	 * @return void
 	 */
 	protected function upgrade() {
 
