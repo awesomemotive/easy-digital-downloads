@@ -168,6 +168,7 @@ final class Easy_Digital_Downloads {
 			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
 
 			self::$instance->includes();
+			self::$instance->tables        = self::$instance->setup_database_tables();
 			self::$instance->roles         = new EDD_Roles();
 			self::$instance->fees          = new EDD_Fees();
 			self::$instance->api           = new EDD_API();
@@ -260,6 +261,21 @@ final class Easy_Digital_Downloads {
 
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
+
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-wp-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discounts.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-logs.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-notes.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-orders.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customer-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discount-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-log-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-note-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-item-meta.php';
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
@@ -377,6 +393,47 @@ final class Easy_Digital_Downloads {
 
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
+	}
+
+	/**
+	 * Setup all of the custom database tables
+	 *
+	 * This method invokes all of the classes for each custom database table,
+	 * and returns them in an array for easier testing.
+	 *
+	 * In a normal request, this method is called extremely early in EDD's load
+	 * order, to ensure these tables have been created & upgraded before any
+	 * other utility occurs on them (query, migration, etc...)
+	 *
+	 * @access public
+	 * @since 3.0.0
+	 * @return array
+	 */
+	private function setup_database_tables() {
+		return array(
+
+			// Customers
+			'customers'      => new EDD_DB_Table_Customers(),
+			'customermeta'   => new EDD_DB_Table_Customer_Meta(),
+
+			// Discounts
+			'discounts'      => new EDD_DB_Table_Discounts(),
+			'discountmeta'   => new EDD_DB_Table_Discount_Meta(),
+
+			// Logs
+			'logs'           => new EDD_DB_Table_Logs(),
+			'logmeta'        => new EDD_DB_Table_Log_Meta(),
+
+			// Notes
+			'notes'          => new EDD_DB_Table_Notes(),
+			'notemeta'       => new EDD_DB_Table_Note_Meta(),
+
+			// Orders
+			'orders'         => new EDD_DB_Table_Orders(),
+			'ordermeta'      => new EDD_DB_Table_Order_Meta(),
+			'order_items'    => new EDD_DB_Table_Order_Items(),
+			'order_itemmeta' => new EDD_DB_Table_Order_Item_Meta()
+		);
 	}
 
 	/**

@@ -213,11 +213,6 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 						$found = true;
 					}
 					break;
-				case 'logs':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'logs' === $view ) {
-						$found = true;
-					}
-					break;
 				default:
 					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page ) {
 						$found = true;
@@ -288,6 +283,11 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 					break;
 				case 'system_info':
 					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'system_info' === $tab ) {
+						$found = true;
+					}
+					break;
+				case 'logs':
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'logs' === $tab ) {
 						$found = true;
 					}
 					break;
