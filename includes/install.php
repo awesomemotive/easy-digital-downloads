@@ -196,10 +196,6 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customer tables
-	@EDD()->customers->create_table();
-	@EDD()->customer_meta->create_table();
-
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
 
@@ -253,26 +249,24 @@ add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
 /**
  * Drop our custom tables when a mu site is deleted
  *
- * @since 2.5
- * @since 3.0 - Updated to include additional custom tables.
- *
+ * @since  2.5
  * @param  array $tables  The tables to drop
  * @param  int   $blog_id The Blog ID being deleted
- * @return array The tables to drop
+ * @return array          The tables to drop
  */
 function edd_wpmu_drop_tables( $tables, $blog_id ) {
-	switch_to_blog( $blog_id );
 
+	switch_to_blog( $blog_id );
 	$customers_db     = new EDD_DB_Customers();
 	$customer_meta_db = new EDD_DB_Customer_Meta();
 	if ( $customers_db->installed() ) {
 		$tables[] = $customers_db->table_name;
 		$tables[] = $customer_meta_db->table_name;
 	}
-
 	restore_current_blog();
 
 	return $tables;
+
 }
 add_filter( 'wpmu_drop_tables', 'edd_wpmu_drop_tables', 10, 2 );
 
@@ -286,24 +280,14 @@ add_filter( 'wpmu_drop_tables', 'edd_wpmu_drop_tables', 10, 2 );
  * @return void
  */
 function edd_after_install() {
+
 	if ( ! is_admin() ) {
 		return;
 	}
 
-	$edd_options     = get_transient( '_edd_installed' );
-	$edd_table_check = get_option( '_edd_table_check', false );
+	$edd_options = get_transient( '_edd_installed' );
 
-	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
-		// Create the customers table (this ensures it creates it on multisite instances where it is network activated)
-		if ( ! @EDD()->customers->installed() ) {
-			@EDD()->customers->create_table();
-			@EDD()->customer_meta->create_table();
-		}
-
-		do_action( 'edd_after_install', $edd_options );
-
-		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );
-	}
+	do_action( 'edd_after_install', $edd_options );
 
 	if ( false !== $edd_options ) {
 		// Delete the transient

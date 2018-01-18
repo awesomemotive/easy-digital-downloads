@@ -34,7 +34,7 @@ class EDD_Email_Template_Tags {
 	 *
 	 * @since 1.9
 	 */
-	private $tags;
+	private $tags = array();
 
 	/**
 	 * Payment ID
