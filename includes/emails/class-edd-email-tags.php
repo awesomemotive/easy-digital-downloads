@@ -190,7 +190,7 @@ function edd_email_tag_exists( $tag ) {
  * @return array
  */
 function edd_get_email_tags() {
-	return EDD()->email_tags->get_tags();
+	return (array) EDD()->email_tags->get_tags();
 }
 
 /**
