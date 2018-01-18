@@ -93,10 +93,10 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				$objects = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $root_dir ), \RecursiveIteratorIterator::SELF_FIRST );
 				foreach ( $objects as $name => $object ) {
 					if ( is_dir( $name ) ) {
-						$dirs[] = rtrim( $name, './' );
+						$directories[] = rtrim( $name, './' );
 					}
 				}
-				$dirs = array_unique( $dirs );
+				$directories = array_unique( $directories );
 
 				//$path = substr( $class, strlen( $namespace ) + 1 );
 				//$path = str_replace( '\\', DIRECTORY_SEPARATOR, $path );
@@ -109,24 +109,13 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				$bases[] = 'class-edd-' . $path;
 
 				$misnamed = array(
-					'class-edd-payement-stats.php',
-					'class-edd-email-tags.php',
+					'class-edd-payement-stats',
+					'class-edd-email-tags',
 				);
 
-				foreach ( $misnamed as $mis ) {
-					$misnameds[] = array_map( function( $dir ) use ( $mis ) {
-						return $dir . DIRECTORY_SEPARATOR . $mis;
-					}, $dirs );
-				}
-				$misnameds = call_user_func_array( 'array_merge', $misnameds );
-
-				foreach ( $bases as $base ) {
-					$paths[] = array_map( function( $dir ) use ( $base ) {
-						return $dir . DIRECTORY_SEPARATOR . $base . '.php';
-					}, $dirs );
-				}
-				$paths = call_user_func_array( 'array_merge', $paths );
-				$paths = array_merge( $paths, $misnameds );
+				$paths     = $this->get_paths( $directories, $bases );
+				$misnameds = $this->get_paths( $directories, $misnamed );
+				$paths     = array_merge( $paths, $misnameds );
 
 				// Test for its existence and load if present.
 				foreach ( $paths as $path ) {
@@ -136,6 +125,24 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 					}
 				}
 			}
+		}
+
+		/**
+		 * Get and return an array of possible file paths.
+		 * 
+		 * @param array $dirs Array of plugin directories and subdirectories.
+		 * @param array $file_names Array of possible file names
+		 *
+		 * @return mixed
+		 */
+		private function get_paths( $dirs, $file_names ) {
+			foreach ( $file_names as $file_name ) {
+				$paths[] = array_map( function( $dir ) use ( $file_name ) {
+					return $dir . DIRECTORY_SEPARATOR . $file_name . '.php';
+				}, $dirs );
+			}
+
+			return call_user_func_array( 'array_merge', $paths );
 		}
 	}
 }
