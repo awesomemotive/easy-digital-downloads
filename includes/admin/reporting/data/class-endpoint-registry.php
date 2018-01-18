@@ -100,8 +100,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
-	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 * @throws \EDD_Exception if the endpoint could not be validated.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
@@ -137,6 +136,50 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$attributes['id'] = $endpoint_id;
 
+		// Bail i
+		if ( $this->offsetExists( $endpoint_id ) ) {
+			$message = sprintf( 'The \'%1$s\' endpoint already exists and cannont be registered.', $endpoint_id );
+
+			throw new Utils\Exception( $message );
+		}
+
+		try {
+
+			$valid = $this->validate_endpoint( $endpoint_id, $attributes );
+
+		} catch ( \EDD_Exception $exception ) {
+
+			throw $exception;
+
+		}
+
+		if ( false === $valid ) {
+
+			return false;
+
+		} else {
+
+			return parent::add_item( $endpoint_id, $attributes );
+
+		}
+	}
+
+	/**
+	 *
+	 * Validates an endpoint's attributes.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
+	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 *
+	 * @param string $endpoint_id Reports data endpoint ID.
+	 * @param array  $attributes  Endpoint attributes. See register_endpoint() for full accepted attributes.
+	 * @return bool True if the endpoint is considered 'valid', otherwise false.
+	 */
+	public function validate_endpoint( $endpoint_id, $attributes ) {
+		$is_valid = true;
+
 		try {
 
 			$this->validate_attributes( $attributes, $endpoint_id );
@@ -151,7 +194,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 				throw $exception;
 
-				$error = true;
+				$is_valid = false;
 
 			}
 
@@ -161,18 +204,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			throw $exception;
 
-			$error = true;
+			$is_valid = false;
 		}
 
-		if ( true === $error ) {
-
-			return false;
-
-		} else {
-
-			return parent::add_item( $endpoint_id, $attributes );
-
-		}
+		return $is_valid;
 	}
 
 	/**
