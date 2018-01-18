@@ -49,13 +49,13 @@ class EDD_Note {
 	protected $object_type;
 
 	/**
-	 * Note body.
+	 * Note content.
 	 *
 	 * @since 3.0
 	 * @access protected
 	 * @var string
 	 */
-	protected $note;
+	protected $content;
 
 	/**
 	 * User ID.

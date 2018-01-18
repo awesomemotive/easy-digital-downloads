@@ -25,7 +25,7 @@ class Tests_Note_Meta extends EDD_UnitTestCase {
 		$note_id = EDD()->notes->insert( array(
 			'object_id'   => '1234',
 			'object_type' => 'payment',
-			'note'        => 'Payment status changed',
+			'content'     => 'Payment status changed',
 		) );
 
 		self::$note = new EDD_Note( $note_id );
