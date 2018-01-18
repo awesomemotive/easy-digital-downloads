@@ -445,10 +445,10 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discounts::count_by_status()
+	 * @covers EDD_DB_Discounts::counts_by_status()
 	 */
-	public function test_count_by_status() {
-		$counts = self::$db->count_by_status();
+	public function test_counts_by_status() {
+		$counts = self::$db->counts_by_status();
 
 		$this->assertEquals( 1, $counts->active );
 		$this->assertEquals( 0, $counts->inactive );

@@ -480,7 +480,7 @@ class EDD_DB_Discounts extends EDD_DB {
 	 *
 	 * @return object Counts by status.
 	 */
-	public function count_by_status() {
+	public function counts_by_status() {
 		global $wpdb;
 
 		$counts = wp_cache_get( 'counts', $this->cache_group );
