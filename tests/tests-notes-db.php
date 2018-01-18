@@ -26,7 +26,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 			$note_id = EDD()->notes->insert( array(
 				'object_id'   => '1234' . $i,
 				'object_type' => 'payment',
-				'note'        => 'Payment status changed',
+				'content'     => 'Payment status changed',
 			) );
 
 			self::$notes[] = new EDD_Note( $note_id );
@@ -41,7 +41,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 			'id'           => '%d',
 			'object_id'    => '%s',
 			'object_type'  => '%s',
-			'note'         => '%s',
+			'content'      => '%s',
 			'user_id'      => '%s',
 			'date_created' => '%s',
 		);
@@ -57,7 +57,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 			'id'           => 0,
 			'object_id'    => 0,
 			'object_type'  => '',
-			'note'         => '',
+			'content'      => '',
 			'user_id'      => 0,
 			'date_created' => date( 'Y-m-d H:i:s' ),
 		);
@@ -71,7 +71,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 	public function test_insert_should_return_false_if_no_object_id_supplied() {
 		$this->assertFalse( EDD()->notes->insert( array(
 			'object_type' => 'payment',
-			'note'        => 'Payment status changed',
+			'content'     => 'Payment status changed',
 		) ) );
 	}
 
@@ -81,7 +81,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 	public function test_insert_should_return_false_if_no_object_type_supplied() {
 		$this->assertFalse( EDD()->notes->insert( array(
 			'object_id' => 6278,
-			'note'      => 'Payment status changed',
+			'content'   => 'Payment status changed',
 		) ) );
 	}
 
@@ -92,7 +92,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 		$this->assertGreaterThan( 0, EDD()->notes->insert( array(
 			'object_type' => 'payment',
 			'object_id'   => 6278,
-			'note'        => 'Payment status changed',
+			'content'     => 'Payment status changed',
 		) ) );
 	}
 
@@ -108,12 +108,12 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 	 */
 	public function test_update() {
 		$this->assertTrue( EDD()->notes->update( self::$notes[0]->id, array(
-			'note' => 'Note with updated body',
+			'content' => 'Note with updated body',
 		) ) );
 
 		$note = new EDD_Note( self::$notes[0]->id );
 
-		$this->assertEquals( 'Note with updated body', $note->note );
+		$this->assertEquals( 'Note with updated body', $note->content );
 	}
 
 	/**

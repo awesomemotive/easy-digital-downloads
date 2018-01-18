@@ -41,10 +41,6 @@ class EDD_DB_Notes extends EDD_DB {
 		$this->table_name  = $wpdb->prefix . 'edd_notes';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
-
-		if ( ! $this->table_exists( $this->table_name ) ) {
-			$this->create_table();
-		}
 	}
 	/**
 	 * Retrieve table columns and data types.
@@ -59,7 +55,7 @@ class EDD_DB_Notes extends EDD_DB {
 			'id'           => '%d',
 			'object_id'    => '%s',
 			'object_type'  => '%s',
-			'note'         => '%s',
+			'content'      => '%s',
 			'user_id'      => '%s',
 			'date_created' => '%s',
 		);
@@ -77,7 +73,7 @@ class EDD_DB_Notes extends EDD_DB {
 			'id'           => 0,
 			'object_id'    => 0,
 			'object_type'  => '',
-			'note'         => '',
+			'content'      => '',
 			'user_id'      => 0,
 			'date_created' => date( 'Y-m-d H:i:s' ),
 		);
@@ -106,7 +102,7 @@ class EDD_DB_Notes extends EDD_DB {
 		$data = wp_parse_args( $data, array(
 			'object_id'    => 0,
 			'object_type'  => '',
-			'note'         => '',
+			'content'      => '',
 			'user_id'      => 0,
 		) );
 
@@ -114,8 +110,8 @@ class EDD_DB_Notes extends EDD_DB {
 			return false;
 		}
 
-		if ( ! empty( $data['note'] ) ) {
-			$data['note'] = sanitize_text_field( $data['note'] );
+		if ( ! empty( $data['content'] ) ) {
+			$data['content'] = sanitize_text_field( $data['content'] );
 		}
 
 		$data['object_id'] = absint( $data['object_id'] );
@@ -436,32 +432,5 @@ class EDD_DB_Notes extends EDD_DB {
 		}
 
 		return $last_changed;
-	}
-
-	/**
-	 * Create the table.
-	 *
-	 * @access public
-	 * @since 3.0
-	 */
-	public function create_table() {
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		$sql = "
-			CREATE TABLE {$this->table_name} (
-				id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-				object_id bigint(20) unsigned DEFAULT 0,
-				object_type varchar(100) NOT NULL,
-				note longtext NOT NULL,
-				user_id bigint(20) unsigned DEFAULT 0,
-				date_created datetime NOT NULL,
-				PRIMARY KEY (id),
-				KEY object_type (object_type)
-			) CHARACTER SET utf8 COLLATE utf8_general_ci;
-		";
-
-		dbDelta( $sql );
-
-		update_option( $this->table_name . '_db_version', $this->version );
 	}
 }
