@@ -239,16 +239,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		// Build the Endpoint object.
-		$_endpoint = new Endpoint( $view_type, $_endpoint );
-
-		// If any errors were logged during instantiation, return the resulting WP_Error object.
-		if ( $_endpoint->has_errors() ) {
-
-			return $_endpoint->get_errors();
-
-		}
-
-		return $_endpoint;
+		return new Endpoint( $view_type, $_endpoint );
 	}
 
 	/**
