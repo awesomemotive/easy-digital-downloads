@@ -23,6 +23,7 @@ use EDD\Admin\Reports\Exceptions as Reports_Exceptions;
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_endpoint( string $endpoint_id )
+ * @method bool  endpoint_exists( string $endpoing_id )
  * @method void  unregister_endpoint( string $endpoint_id )
  * @method array get_endpoints( string $sort )
  */
@@ -77,6 +78,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		switch( $name ) {
 			case 'get_endpoint':
 				return parent::get_item( $endpoint_id_or_sort );
+				break;
+
+			case 'endpoint_exists':
+				return parent::offsetExists( $endpoint_id_or_sort );
 				break;
 
 			case 'unregister_endpoint':
