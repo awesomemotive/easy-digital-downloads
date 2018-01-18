@@ -48,7 +48,6 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'once_per_customer' => '%d',
 			'product_condition' => '%s',
 			'scope'             => '%s',
-			'notes'             => '%s',
 		);
 
 		$this->assertSame( $expected, self::$db->get_columns() );
@@ -75,7 +74,6 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'date_created'      => date( 'Y-m-d H:i:s' ),
 			'start_date'        => '0000-00-00 00:00:00',
 			'end_date'          => '0000-00-00 00:00:00',
-			'notes'             => '',
 		);
 
 		$this->assertSame( $expected, self::$db->get_column_defaults() );
