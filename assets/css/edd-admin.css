@@ -1089,6 +1089,20 @@ td.edd_order_price {
 #edd_tax_rates .edd_tax_state {
 	width: 180px;
 }
+@media screen and ( max-width: 782px ) {
+	#edd_tax_rates thead {
+		display: none;
+	}
+	#edd_tax_rates td {
+		padding: 8px 8px 8px 35%;
+	}
+	#edd_tax_rates td:before {
+		font-weight: 600;
+	}
+	#edd_tax_rates tbody tr:not(:first-child) .edd_tax_country {
+		border-top: 1px solid #e5e5e5;
+	}
+}
 #edd_tax_rates .edd_tax_rate {
 	width: 80px;
 }
