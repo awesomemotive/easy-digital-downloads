@@ -101,19 +101,19 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				//$path = substr( $class, strlen( $namespace ) + 1 );
 				//$path = str_replace( '\\', DIRECTORY_SEPARATOR, $path );
 
-				$path    = str_replace( 'EDD\\', '', $class );
-				$path    = str_replace( '_', '-', $path );
-				$path    = strtolower( $path );
-				$path    = str_replace( 'edd-', '', $path );
-				$bases[] = 'class-' . $path;
-				$bases[] = 'class-edd-' . $path;
+				$fname     = str_replace( 'EDD\\', '', $class );
+				$fname     = str_replace( '_', '-', $fname );
+				$fname     = strtolower( $fname );
+				$fname     = str_replace( 'edd-', '', $fname );
+				$fnames[] = 'class-' . $fname;
+				$fnames[] = 'class-edd-' . $fname;
 
 				$misnamed = array(
 					'class-edd-payement-stats',
 					'class-edd-email-tags',
 				);
 
-				$paths     = $this->get_paths( $directories, $bases );
+				$paths     = $this->get_paths( $directories, $fnames );
 				$misnameds = $this->get_paths( $directories, $misnamed );
 				$paths     = array_merge( $paths, $misnameds );
 
@@ -129,8 +129,8 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 
 		/**
 		 * Get and return an array of possible file paths.
-		 * 
-		 * @param array $dirs Array of plugin directories and subdirectories.
+		 *
+		 * @param array $dirs       Array of plugin directories and subdirectories.
 		 * @param array $file_names Array of possible file names
 		 *
 		 * @return mixed
