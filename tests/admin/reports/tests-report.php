@@ -260,7 +260,10 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 		) );
 
-		$endpoint = new Endpoint( 'tile', array() );
+		$endpoint = new Endpoint( array(
+			'view' => 'tile',
+			'atts' => array()
+		) );
 
 		$report->validate_endpoint( 'tiles', $endpoint );
 
@@ -271,13 +274,16 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Report::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_a_legitimate_endpoint_should_add_it_to_the_endpoints_array() {
-		$endpoint = new Endpoint( 'tile', array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
+		$endpoint = new Endpoint( array(
+			'view' => 'tile',
+			'atts' => array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
+					),
 				),
 			),
 		) );
@@ -303,25 +309,31 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(
-					new Endpoint( 'tile', array(
-						'id'    => 'foo',
-						'label' => 'Foo',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
+					new Endpoint( array(
+						'view' => 'tile',
+						'atts' => array(
+							'id'    => 'foo',
+							'label' => 'Foo',
+							'views' => array(
+								'tile' => array(
+									'display_callback' => '__return_false',
+									'data_callback'    => '__return_false',
+								),
 							),
 						),
 					) ),
 				),
 				'tables' => array(
-					new Endpoint( 'table', array(
-						'id'    => 'bar',
-						'label' => 'Bar',
-						'views' => array(
-							'table' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
+					new Endpoint( array(
+						'view' => 'table',
+						'atts' => array(
+							'id'    => 'bar',
+							'label' => 'Bar',
+							'views' => array(
+								'table' => array(
+									'display_callback' => '__return_false',
+									'data_callback'    => '__return_false',
+								),
 							),
 						),
 					) ),
@@ -351,25 +363,31 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(
-					new Endpoint( 'tile', array(
-						'id'    => 'foo',
-						'label' => 'Foo',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
+					new Endpoint( array(
+						'view' => 'tile',
+						'atts' => array(
+							'id'    => 'foo',
+							'label' => 'Foo',
+							'views' => array(
+								'tile' => array(
+									'display_callback' => '__return_false',
+									'data_callback'    => '__return_false',
+								),
 							),
 						),
 					) ),
 				),
 				'tables' => array(
-					new Endpoint( 'table', array(
-						'id'    => 'bar',
-						'label' => 'Bar',
-						'views' => array(
-							'table' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
+					new Endpoint( array(
+						'view' => 'table',
+						'atts' => array(
+							'id'    => 'bar',
+							'label' => 'Bar',
+							'views' => array(
+								'table' => array(
+									'display_callback' => '__return_false',
+									'data_callback'    => '__return_false',
+								),
 							),
 						),
 					) ),
@@ -399,25 +417,31 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(
-					new Endpoint( 'tile', array(
-						'id'    => 'foo',
-						'label' => 'Foo',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
+					new Endpoint( array(
+						'view' => 'tile',
+						'atts' => array(
+							'id'    => 'foo',
+							'label' => 'Foo',
+							'views' => array(
+								'tile' => array(
+									'display_callback' => '__return_false',
+									'data_callback'    => '__return_false',
+								),
 							),
 						),
 					) ),
 				),
 				'tables' => array(
-					new Endpoint( 'table', array(
-						'id'    => 'bar',
-						'label' => 'Bar',
-						'views' => array(
-							'table' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
+					new Endpoint( array(
+						'view' => 'table',
+						'atts' => array(
+							'id'    => 'bar',
+							'label' => 'Bar',
+							'views' => array(
+								'table' => array(
+									'display_callback' => '__return_false',
+									'data_callback'    => '__return_false',
+								),
 							),
 						),
 					) ),
@@ -445,13 +469,16 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'id'        => 'foo',
 			'label'     => 'Foo',
 			'endpoints' => array(
-				new Endpoint( 'tile', array(
-					'id'    => 'foo',
-					'label' => 'Foo',
-					'views' => array(
-						'tile' => array(
-							'display_callback' => '__return_false',
-							'data_callback'    => '__return_false',
+				new Endpoint( array(
+					'view' => 'tile',
+					'atts' => array(
+						'id'    => 'foo',
+						'label' => 'Foo',
+						'views' => array(
+							'tile' => array(
+								'display_callback' => '__return_false',
+								'data_callback'    => '__return_false',
+							),
 						),
 					),
 				) )
