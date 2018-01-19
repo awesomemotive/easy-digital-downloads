@@ -553,7 +553,6 @@ function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
 			'group' => 'tiles',
-			'pre_fetch'  => '',
 		),
 		'chart' => array(
 			'group' => 'charts',
