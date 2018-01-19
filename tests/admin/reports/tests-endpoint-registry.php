@@ -324,7 +324,10 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
-		$endpoint = new Endpoint( 'tile', array() );
+		$endpoint = new Endpoint( array(
+			'view' => 'tile',
+			'atts' => array()
+		) );
 
 		$this->assertInstanceOf( '\EDD\Admin\Reports\Data\Endpoint', $endpoint );
 	}
