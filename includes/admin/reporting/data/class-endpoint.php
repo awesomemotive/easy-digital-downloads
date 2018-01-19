@@ -52,9 +52,14 @@ class Endpoint extends Base_Object {
 	/**
 	 * Constructs the endpoint object.
 	 *
+	 * Note: The Endpoint object is intended for use in conjunction with entries coming
+	 * directly from the endpoint registry, which have already been validated. If the choice
+	 * is made to build an Endpoint object "on-the-fly", care should be taken to ensure all
+	 * expected values are passed to avoid errors that will prevent prop rendering.
+	 *
 	 * @since 3.0
 	 *
-	 * @param array $args Arguments for instantiating the endpoint.
+	 * @param array $args Arguments for instantiating the endpoint as retrieved from the endpoint registry.
 	 */
 	public function __construct( $args ) {
 		$this->errors = new \WP_Error();
