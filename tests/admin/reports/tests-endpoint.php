@@ -170,7 +170,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_props()
 	 * @group edd_errors
 	 */
-	public function test_set_props_with_missing_id_should_flag_WP_Error_including_code_missing_endpoint_id() {
+	public function test_set_props_with_missing_id_should_flag_WP_Error_including_code_missing_object_id() {
 		$endpoint = new Endpoint( 'tile', array(
 			'label' => 'Foo',
 			'views' => array(
@@ -184,14 +184,14 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'missing_endpoint_id', $errors->get_error_codes() );
+		$this->assertContains( 'missing_object_id', $errors->get_error_codes() );
 	}
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_props()
 	 * @group edd_errors
 	 */
-	public function test_set_props_with_missing_endpoint_label_should_flag_WP_Error() {
+	public function test_set_props_with_missing_object_label_should_flag_WP_Error() {
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
 			'views' => array(
@@ -210,7 +210,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_props()
 	 * @group edd_errors
 	 */
-	public function test_set_props_with_missing_endpoint_label_should_flag_WP_Error_including_code_missing_endpoint_label() {
+	public function test_set_props_with_missing_object_label_should_flag_WP_Error_including_code_missing_object_label() {
 		$endpoint = new Endpoint( 'tile', array(
 			'id'    => 'foo',
 			'views' => array(
@@ -224,7 +224,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'missing_endpoint_label', $errors->get_error_codes() );
+		$this->assertContains( 'missing_object_label', $errors->get_error_codes() );
 	}
 
 	/**
