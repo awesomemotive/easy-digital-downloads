@@ -39,7 +39,7 @@ abstract class Base_Object {
 	 * @since 3.0
 	 * @var   \WP_Error
 	 */
-	private $errors;
+	protected $errors;
 
 	/**
 	 * Constructs the object.
