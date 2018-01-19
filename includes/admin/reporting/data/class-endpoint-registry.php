@@ -239,7 +239,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		// Build the Endpoint object.
-		return new Endpoint( $view_type, $_endpoint );
+		return new Endpoint( array(
+			'view' => $view_type,
+			'atts' => $_endpoint
+		) );
 	}
 
 	/**
