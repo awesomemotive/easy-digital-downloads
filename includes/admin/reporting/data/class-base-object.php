@@ -72,9 +72,9 @@ abstract class Base_Object {
 
 		}
 
-		if ( ! empty( $endpoint['label'] ) ) {
+		if ( ! empty( $args['label'] ) ) {
 
-			$this->set_label( $endpoint['label'] );
+			$this->set_label( $args['label'] );
 
 		} else {
 
