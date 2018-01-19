@@ -264,6 +264,13 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		foreach ( $views as $view => $attributes ) {
 			if ( ! array_key_exists( $view, $valid_views ) ) {
 				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
+			} else {
+				if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
+					$args = wp_parse_args( $attributes, $valid_views[ $view ]['fields'] );
+
+					$this->validate_attributes( $args, $view );
+				}
+
 			}
 		}
 	}
