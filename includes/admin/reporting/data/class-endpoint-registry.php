@@ -23,6 +23,7 @@ use EDD\Admin\Reports\Exceptions as Reports_Exceptions;
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_endpoint( string $endpoint_id )
+ * @method bool  endpoint_exists( string $endpoing_id )
  * @method void  unregister_endpoint( string $endpoint_id )
  * @method array get_endpoints( string $sort )
  */
@@ -79,6 +80,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 				return parent::get_item( $endpoint_id_or_sort );
 				break;
 
+			case 'endpoint_exists':
+				return parent::offsetExists( $endpoint_id_or_sort );
+				break;
+
 			case 'unregister_endpoint':
 				parent::remove_item( $endpoint_id_or_sort );
 				break;
@@ -95,8 +100,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
-	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 * @throws \EDD_Exception if the endpoint could not be validated.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
@@ -132,6 +136,50 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$attributes['id'] = $endpoint_id;
 
+		// Bail i
+		if ( $this->offsetExists( $endpoint_id ) ) {
+			$message = sprintf( 'The \'%1$s\' endpoint already exists and cannont be registered.', $endpoint_id );
+
+			throw new Utils\Exception( $message );
+		}
+
+		try {
+
+			$valid = $this->validate_endpoint( $endpoint_id, $attributes );
+
+		} catch ( \EDD_Exception $exception ) {
+
+			throw $exception;
+
+		}
+
+		if ( false === $valid ) {
+
+			return false;
+
+		} else {
+
+			return parent::add_item( $endpoint_id, $attributes );
+
+		}
+	}
+
+	/**
+	 *
+	 * Validates an endpoint's attributes.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
+	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 *
+	 * @param string $endpoint_id Reports data endpoint ID.
+	 * @param array  $attributes  Endpoint attributes. See register_endpoint() for full accepted attributes.
+	 * @return bool True if the endpoint is considered 'valid', otherwise false.
+	 */
+	public function validate_endpoint( $endpoint_id, $attributes ) {
+		$is_valid = true;
+
 		try {
 
 			$this->validate_attributes( $attributes, $endpoint_id );
@@ -146,7 +194,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 				throw $exception;
 
-				$error = true;
+				$is_valid = false;
 
 			}
 
@@ -156,18 +204,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			throw $exception;
 
-			$error = true;
+			$is_valid = false;
 		}
 
-		if ( true === $error ) {
-
-			return false;
-
-		} else {
-
-			return parent::add_item( $endpoint_id, $attributes );
-
-		}
+		return $is_valid;
 	}
 
 	/**
@@ -199,16 +239,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		// Build the Endpoint object.
-		$_endpoint = new Endpoint( $view_type, $_endpoint );
-
-		// If any errors were logged during instantiation, return the resulting WP_Error object.
-		if ( $_endpoint->has_errors() ) {
-
-			return $_endpoint->get_errors();
-
-		}
-
-		return $_endpoint;
+		return new Endpoint( array(
+			'view' => $view_type,
+			'atts' => $_endpoint
+		) );
 	}
 
 	/**
@@ -230,6 +264,13 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		foreach ( $views as $view => $attributes ) {
 			if ( ! array_key_exists( $view, $valid_views ) ) {
 				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
+			} else {
+				if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
+					$args = wp_parse_args( $attributes, $valid_views[ $view ]['fields'] );
+
+					$this->validate_attributes( $args, $view );
+				}
+
 			}
 		}
 	}
