@@ -53,9 +53,10 @@ class Endpoint extends Base_Object {
 	 * Constructs the endpoint object.
 	 *
 	 * Note: The Endpoint object is intended for use in conjunction with entries coming
-	 * directly from the endpoint registry, which have already been validated. If the choice
-	 * is made to build an Endpoint object "on-the-fly", care should be taken to ensure all
-	 * expected values are passed to avoid errors that will prevent prop rendering.
+	 * directly from the endpoint registry, which have already been validated at the point
+	 * of registration. If the choice is made to build an Endpoint object "on-the-fly",
+	 * care should be taken to ensure all expected values are passed to avoid errors that
+	 * will prevent proper rendering.
 	 *
 	 * @since 3.0
 	 *
