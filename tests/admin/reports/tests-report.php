@@ -122,7 +122,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Report::set_props()
 	 * @group edd_errors
 	 */
-	public function test_set_props_with_missing_id_should_flag_WP_Error_including_code_missing_report_id() {
+	public function test_set_props_with_missing_id_should_flag_WP_Error_including_code_missing_object_id() {
 		$report = new Report( array(
 			'label'     => 'Foo',
 			'endpoints' => array(),
@@ -130,14 +130,14 @@ class Report_Tests extends \EDD_UnitTestCase {
 
 		$errors = $report->get_errors();
 
-		$this->assertContains( 'missing_report_id', $errors->get_error_codes() );
+		$this->assertContains( 'missing_object_id', $errors->get_error_codes() );
 	}
 
 	/**
 	 * @covers \EDD\Admin\Reports\Data\Report::set_props()
 	 * @group edd_errors
 	 */
-	public function test_set_props_with_missing_report_label_should_flag_WP_Error() {
+	public function test_set_props_with_missing_object_label_should_flag_WP_Error() {
 		$report = new Report( array(
 			'id'        => 'foo',
 			'endpoints' => array(),
@@ -150,7 +150,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Report::set_props()
 	 * @group edd_errors
 	 */
-	public function test_set_props_with_missing_report_label_should_flag_WP_Error_including_code_missing_endpoint_label() {
+	public function test_set_props_with_missing_object_label_should_flag_WP_Error_including_code_missing_object_label() {
 		$report = new Report( array(
 			'id'        => 'foo',
 			'endpoints' => array(),
@@ -158,7 +158,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 
 		$errors = $report->get_errors();
 
-		$this->assertContains( 'missing_report_label', $errors->get_error_codes() );
+		$this->assertContains( 'missing_object_label', $errors->get_error_codes() );
 	}
 
 	/**
