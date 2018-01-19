@@ -15,23 +15,7 @@ namespace EDD\Admin\Reports\Data;
  *
  * @since 3.0
  */
-class Endpoint {
-
-	/**
-	 * Endpoint ID.
-	 *
-	 * @since 3.0
-	 * @var   string
-	 */
-	private $endpoint_id;
-
-	/**
-	 * Endpoint label.
-	 *
-	 * @since 3.0
-	 * @var   string
-	 */
-	private $label;
+class Endpoint extends Base_Object {
 
 	/**
 	 * Endpoint view (type).
@@ -40,13 +24,6 @@ class Endpoint {
 	 * @var   string
 	 */
 	private $view;
-
-	/**
-	 * Represents filters available to the endpoint.
-	 *
-	 * @since 3.0
-	 */
-	public $filters = array();
 
 	/**
 	 * Represents the callback used to retrieve data based on the set view type.
@@ -73,29 +50,33 @@ class Endpoint {
 	private $display_args = array();
 
 	/**
-	 * Holds errors related to instantiating the endpoint object.
-	 *
-	 * @since 3.0
-	 * @var   \WP_Error
-	 */
-	private $errors;
-
-	/**
 	 * Constructs the endpoint object.
 	 *
+	 * Note: The Endpoint object is intended for use in conjunction with entries coming
+	 * directly from the endpoint registry, which have already been validated at the point
+	 * of registration. If the choice is made to build an Endpoint object "on-the-fly",
+	 * care should be taken to ensure all expected values are passed to avoid errors that
+	 * will prevent proper rendering.
+	 *
 	 * @since 3.0
 	 *
-	 * @see set_display_props()
-	 *
-	 * @param string $view_type Endpoint view type. Determines which view attribute to
-	 *                          retrieve from the corresponding endpoint registry entry.
-	 * @param array  $endpoint  Endpoint record from the registry.
+	 * @param array $args Arguments for instantiating the endpoint as retrieved from the endpoint registry.
 	 */
-	public function __construct( $view_type, $endpoint ) {
+	public function __construct( $args ) {
 		$this->errors = new \WP_Error();
 
-		$this->set_view( $view_type );
-		$this->set_props( $endpoint );
+		if ( empty( $args['view'] ) ) {
+			$this->errors->add( 'missing_endpoint_view', 'The view argument must be defined when instantiating an Endpoint object.', $args );
+		} else {
+			$this->set_view( $args['view'] );
+		}
+
+		if ( empty( $args['atts'] ) ) {
+			$this->errors->add( 'missing_endpoint_attributes', 'An array of attributes must be supplied when instantiating an Endpoint object.', $args );
+		} else {
+			$this->set_props( $args['atts'] );
+			$this->set_display_props( $args['atts'] );
+		}
 	}
 
 	/**
@@ -170,83 +151,6 @@ class Endpoint {
 		} else {
 			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view_type );
 		}
-	}
-
-	/**
-	 * Sets props for the Endpoint object.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $endpoint Endpoint record.
-	 */
-	public function set_props( $endpoint ) {
-		if ( ! empty( $endpoint['id'] ) ) {
-
-			$this->set_id( $endpoint['id'] );
-
-		} else {
-
-			$this->errors->add( 'missing_endpoint_id', 'The endpoint_id is missing.' );
-
-		}
-
-		if ( ! empty( $endpoint['label'] ) ) {
-
-			$this->set_label( $endpoint['label'] );
-
-		} else {
-
-			$this->errors->add( 'missing_endpoint_label', 'The endpoint label is missing.' );
-
-		}
-
-		$this->set_display_props( $endpoint );
-	}
-
-	/**
-	 * Retrieves the endpoint ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Endpoint ID.
-	 */
-	public function get_id() {
-		return $this->endpoint_id;
-	}
-
-	/**
-	 * Sets the endpoint ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $endpoint_id Endpoint ID
-	 * @return void
-	 */
-	private function set_id( $endpoint_id ) {
-		$this->endpoint_id = $endpoint_id;
-	}
-
-	/**
-	 * Retrieves the global label for the current endpoint.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Endpoint string.
-	 */
-	public function get_label() {
-		return $this->label;
-	}
-
-	/**
-	 * Sets the endpoint label.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $label Endpoint label.
-	 * @return void
-	 */
-	private function set_label( $label ) {
-		$this->label = $label;
 	}
 
 	/**
@@ -413,30 +317,6 @@ class Endpoint {
 			$this->flag_invalid_view_arg_type( 'data_callback', 'callable' );
 
 		}
-	}
-
-	/**
-	 * Determines whether the endpoint has generated errors during instantiation.
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool True if errors have been logged, otherwise false.
-	 */
-	public function has_errors() {
-		$errors = $this->errors->get_error_codes();
-
-		return empty( $errors ) ? false : true;
-	}
-
-	/**
-	 * Retrieves any logged errors for the endpoint.
-	 *
-	 * @since 3.0
-	 *
-	 * @return \WP_Error WP_Error object for the endpoint.
-	 */
-	public function get_errors() {
-		return $this->errors;
 	}
 
 	/**

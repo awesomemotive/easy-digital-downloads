@@ -327,19 +327,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
-		$endpoint = new Endpoint( 'tile', array() );
+		$endpoint = new Endpoint( array(
+			'view' => 'tile',
+			'atts' => array()
+		) );
 
 		$this->assertInstanceOf( '\EDD\Admin\Reports\Data\Endpoint', $endpoint );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
-	 * @group edd_errors
-	 */
-	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
-		$result = $this->registry->build_endpoint( 'fake', '' );
-
-		$this->assertWPError( $result );
 	}
 
 	/**
@@ -379,27 +372,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error() {
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_Endpoint_including_invalid_view_error_code() {
 		$this->add_test_endpoints();
 
-		/** @var \WP_Error $result */
 		$result = $this->registry->build_endpoint( 'foo', 'fake' );
 
-		$this->assertWPError( $result );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
-	 * @group edd_errors
-	 * @throws \EDD_Exception
-	 */
-	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_code_invalid_view() {
-		$this->add_test_endpoints();
-
-		/** @var \WP_Error $result */
-		$result = $this->registry->build_endpoint( 'foo', 'fake' );
-
-		$this->assertSame( 'invalid_view', $result->get_error_code() );
+		$this->assertContains( 'invalid_view', $result->get_errors()->get_error_codes() );
 	}
 
 	/**
