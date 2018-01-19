@@ -59,26 +59,26 @@ abstract class Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $args Object record.
+	 * @param array $attributes Object attributes.
 	 */
-	public function set_props( $args ) {
-		if ( ! empty( $args['id'] ) ) {
+	public function set_props( $attributes ) {
+		if ( ! empty( $attributes['id'] ) ) {
 
-			$this->set_id( $args['id'] );
+			$this->set_id( $attributes['id'] );
 
 		} else {
 
-			$this->errors->add( 'missing_object_id', 'The object ID is missing.' );
+			$this->errors->add( 'missing_object_id', 'The object ID is missing.', $attributes );
 
 		}
 
-		if ( ! empty( $args['label'] ) ) {
+		if ( ! empty( $attributes['label'] ) ) {
 
-			$this->set_label( $args['label'] );
+			$this->set_label( $attributes['label'] );
 
 		} else {
 
-			$this->errors->add( 'missing_object_label', 'The object label is missing.' );
+			$this->errors->add( 'missing_object_label', 'The object label is missing.', $attributes );
 
 		}
 	}
