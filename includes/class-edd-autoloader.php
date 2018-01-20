@@ -50,7 +50,6 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 		 */
 		protected $misnamed = array();
 
-
 		/**
 		 * Constructor.
 		 *

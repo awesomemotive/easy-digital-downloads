@@ -45,14 +45,7 @@ if ( version_compare( '5.3.0', PHP_VERSION, '>=' ) ) {
 
 /**
  * Setup plugin constants.
- *
- * @access private
- * @since 1.4
- * @return void
  */
-//private function setup_constants() {
-
-//}
 // Plugin version.
 if ( ! defined( 'EDD_VERSION' ) ) {
 	define( 'EDD_VERSION', '2.8.16' );
