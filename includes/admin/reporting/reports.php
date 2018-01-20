@@ -657,7 +657,7 @@ function edd_reports_parse_endpoint_views( $views ) {
 			// Merge the incoming args with the field defaults.
 			$view_args = wp_parse_args( $attributes, $fields );
 
-			// Overwrite the view attributes., keeping only the valid fields.
+			// Overwrite the view attributes, keeping only the valid fields.
 			$views[ $view ] = array_intersect_key( $view_args, $fields );
 		}
 	}
