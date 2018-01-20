@@ -134,9 +134,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$attributes = array_merge( $defaults, $attributes );
 
-		$attributes['id'] = $endpoint_id;
+		$attributes['id']    = $endpoint_id;
+		$attributes['views'] = $this->parse_views( $attributes['views'] );
 
-		// Bail i
+		// Bail if this endpoint ID is already registered.
 		if ( $this->offsetExists( $endpoint_id ) ) {
 			$message = sprintf( 'The \'%1$s\' endpoint already exists and cannont be registered.', $endpoint_id );
 
@@ -162,6 +163,34 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 			return parent::add_item( $endpoint_id, $attributes );
 
 		}
+	}
+
+	/**
+	 * Parses views for an incoming endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @see edd_reports_get_endpoint_views()
+	 *
+	 * @param array  $views View slugs and attributes as dictated by edd_reports_get_endpoint_views().
+	 * @return array (Maybe) adjusted views slugs and attributes array.
+	 */
+	public function parse_views( $views ) {
+		$valid_views = edd_reports_get_endpoint_views();
+
+		foreach ( $views as $view => $attributes ) {
+			if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
+				$fields = $valid_views[ $view ]['fields'];
+
+				// Merge the incoming args with the field defaults.
+				$view_args = wp_parse_args( $attributes, $fields );
+
+				// Overwrite the view attributes., keeping only the valid fields.
+				$views[ $view ] = array_intersect_key( $view_args, $fields );
+			}
+		}
+
+		return $views;
 	}
 
 	/**
@@ -263,26 +292,14 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		foreach ( $views as $view => $attributes ) {
 			if ( array_key_exists( $view, $valid_views ) ) {
-				$view_atts = $valid_views[ $view ];
-
-				if ( ! empty( $view_atts['fields'] ) ) {
-
-					$fields = $view_atts['fields'];
-
-					// Merge the args.
-					$args = wp_parse_args( $attributes, $fields );
-
-					// Keep only the whitelisted args.
-					$args = array_intersect_key( $args, $fields );
-
-					if ( ! empty( $view_atts['allow_empty'] ) ) {
-						$skip = $view_atts['allow_empty'];
-					} else {
-						$skip = array();
-					}
-
-					$this->validate_view_attributes( $args, $view, $skip );
+				if ( ! empty( $valid_views[ $view ]['allow_empty'] ) ) {
+					$skip = $valid_views[ $view ]['allow_empty'];
+				} else {
+					$skip = array();
 				}
+
+				// View atts have already been parsed at this point, just validate them.
+				$this->validate_view_attributes( $attributes, $view, $skip );
 			} else {
 				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
 			}
