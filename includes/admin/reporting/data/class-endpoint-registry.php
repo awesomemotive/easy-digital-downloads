@@ -259,20 +259,62 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	public function validate_views( $views, $endpoint_id ) {
 		$valid_views = edd_reports_get_endpoint_views();
 
-		$this->validate_attributes( $views, $endpoint_id, array( 'display_args' ) );
+		$this->validate_attributes( $views, $endpoint_id );
 
 		foreach ( $views as $view => $attributes ) {
-			if ( ! array_key_exists( $view, $valid_views ) ) {
-				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
-			} else {
-				if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
-					$args = wp_parse_args( $attributes, $valid_views[ $view ]['fields'] );
+			if ( array_key_exists( $view, $valid_views ) ) {
+				$view_atts = $valid_views[ $view ];
 
-					$this->validate_attributes( $args, $view );
+				if ( ! empty( $view_atts['fields'] ) ) {
+
+					$fields = $view_atts['fields'];
+
+					// Merge the args.
+					$args = wp_parse_args( $attributes, $fields );
+
+					// Keep only the whitelisted args.
+					$args = array_intersect_key( $args, $fields );
+
+					if ( ! empty( $view_atts['allow_empty'] ) ) {
+						$skip = $view_atts['allow_empty'];
+					} else {
+						$skip = array();
+					}
+
+					$this->validate_view_attributes( $args, $view, $skip );
 				}
-
+			} else {
+				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
 			}
 		}
 	}
 
+	/**
+	 * Validates a list of endpoint view attributes.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if a required view attribute is empty.
+	 *
+	 * @param array  $attributes List of view attributes to check for emptiness.
+	 * @param string $view       View slug.
+	 * @param array  $skip       Optional. List of view attributes to skip validating.
+	 *                           Default empty array.
+	 * @return void
+	 */
+	public function validate_view_attributes( $attributes, $view, $skip = array() ) {
+		foreach ( $attributes as $attribute => $value ) {
+			if ( in_array( $attribute, $skip, true ) ) {
+				continue;
+			}
+
+			if ( empty( $value ) ) {
+				throw Reports_Exceptions\Invalid_View_Parameter::from( $attribute, __METHOD__, $view );
+			}
+		}
+	}
+
+
+
 }
+
