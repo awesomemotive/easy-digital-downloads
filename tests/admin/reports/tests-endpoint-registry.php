@@ -147,7 +147,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		$this->registry->register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 
@@ -276,7 +278,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -296,7 +298,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'priority'  => 15,
 			'views'     => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -316,7 +318,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -413,7 +415,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
-				'tile' => array( 'foo' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 
@@ -421,7 +425,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Bar',
 			'priority' => 5,
 			'views'    => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 	}
