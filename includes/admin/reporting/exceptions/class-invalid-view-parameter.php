@@ -1,6 +1,6 @@
 <?php
 /**
- * Invalid_Parameter exception class
+ * Invalid_View_Parameter exception class
  *
  * @package     EDD
  * @subpackage  Classes/Utilities
@@ -21,10 +21,10 @@ use EDD\Utils\Exceptions;
  * @see \InvalidArgumentException
  * @see \EDD_Exception
  */
-class Invalid_Parameter extends Exceptions\Invalid_Parameter implements \EDD_Exception {
+class Invalid_View_Parameter extends Invalid_Parameter implements \EDD_Exception {
 
 	/**
-	 * Builds the Invalid_Parameter exception message.
+	 * Builds the Invalid_View_Parameter exception message.
 	 *
 	 * @since 3.0
 	 *
@@ -33,7 +33,7 @@ class Invalid_Parameter extends Exceptions\Invalid_Parameter implements \EDD_Exc
 	 * @return string Informed Invalid_Argument message.
 	 */
 	public static function build_message( $argument_name, $method, $context = null ) {
-		self::$error_message = sprintf( 'The \'%1$s\' %2$s for the \'%3$s\' item is missing or invalid in \'%4$s\'.',
+		self::$error_message = sprintf( 'The \'%1$s\' %2$s for the \'%3$s\' view is missing or invalid in \'%4$s\'.',
 			$argument_name,
 			static::$type,
 			$context,
