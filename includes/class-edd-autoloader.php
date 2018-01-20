@@ -100,8 +100,8 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 					continue;
 				}
 
-				$psr4_path = substr( $class, strlen( $namespace ) + 1 );
-				$psr4_path = str_replace( '\\', DIRECTORY_SEPARATOR, $psr4_path );
+				$psr4_fname = substr( $class, strlen( $namespace ) + 1 );
+				$psr4_fname = str_replace( '\\', DIRECTORY_SEPARATOR, $psr4_fname );
 
 				// Determine the possible path to the class, include all subdirectories.
 				$objects = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $root_dir ), \RecursiveIteratorIterator::SELF_FIRST );
@@ -114,7 +114,7 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 
 				$fnames = array();
 				$fnames = $this->get_possible_edd_filenames( $class );
-				$fnames = array_merge( array( $psr4_path ), $fnames, $this->misnamed );
+				$fnames = array_merge( array( $psr4_fname ), $fnames, $this->misnamed );
 
 				$paths = $this->get_paths( $directories, $fnames );
 
