@@ -242,30 +242,6 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_props()
-	 * @group edd_errors
-	 */
-	public function test_set_props_with_missing_object_label_should_flag_WP_Error_including_code_missing_object_label() {
-		$endpoint = new Endpoint( array(
-			'view' => 'tile',
-			'atts' => array(
-				'id'    => 'foo',
-				'views' => array(
-					'tile' => array(
-						'display_args'     => array( 'something' ),
-						'display_callback' => '__return_false',
-						'data_callback'    => '__return_false',
-					),
-				),
-			),
-		) );
-
-		$errors = $endpoint->get_errors();
-
-		$this->assertContains( 'missing_object_label', $errors->get_error_codes() );
-	}
-
-	/**
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
@@ -556,52 +532,6 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		$errors = $endpoint->get_errors();
 
 		$this->assertContains( 'invalid_view_arg_type', $errors->get_error_codes() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::has_errors()
-	 */
-	public function test_has_errors_if_no_errors_should_return_false() {
-		// Add a completely valid endpoint.
-		$endpoint = new Endpoint( array(
-			'view' => 'tile',
-			'atts' => array(
-				'id'    => 'foo',
-				'label' => 'Foo',
-				'views' => array(
-					'tile' => array(
-						'display_callback' => '__return_false',
-						'data_callback'    => '__return_false',
-					),
-				),
-			),
-		) );
-
-		$this->assertFalse( $endpoint->has_errors() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::has_errors()
-	 */
-	public function test_has_errors_if_errors_should_return_true() {
-		$endpoint = new Endpoint( array(
-			'view' => 'tile',
-			'atts' => array()
-		) );
-
-		$this->assertTrue( $endpoint->has_errors() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_errors()
-	 */
-	public function test_get_errors_should_return_WP_Error_object() {
-		$endpoint = new Endpoint( array(
-			'view' => 'tile',
-			'atts' => array()
-		) );
-
-		$this->assertWPError( $endpoint->get_errors() );
 	}
 
 }

@@ -70,7 +70,7 @@ final class Reports {
 	 * @since 3.0
 	 */
 	private function hooks() {
-		add_action( 'edd_reports_init', array( $this, 'register_core_reports' ) );
+//		add_action( 'edd_reports_init', array( $this, 'register_core_reports' ) );
 	}
 
 	/**
