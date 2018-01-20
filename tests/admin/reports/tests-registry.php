@@ -70,7 +70,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	public function test_validate_attributes_should_throw_exception_if_attribute_is_empty_and_not_filtered() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'foo' parameter for the 'some_item_id' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'foo' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		$this->registry->validate_attributes( array( 'foo' => '' ), 'some_item_id' );
@@ -90,7 +90,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'baz' parameter for the 'some_item_id' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'baz' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		/*

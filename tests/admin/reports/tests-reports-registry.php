@@ -143,7 +143,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_label_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'." );
+		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'." );
 
 		$this->registry->add_report( 'foo', array(
 			'label' => ''
@@ -155,7 +155,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_endpoints_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'." );
+		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'." );
 
 		$added = $this->registry->add_report( 'foo', array(
 			'label' => 'Foo',
