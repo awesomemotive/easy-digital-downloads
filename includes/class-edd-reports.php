@@ -103,20 +103,22 @@ final class Reports {
 				),
 			) );
 
-			$endpoint = new Endpoint( 'tile', array(
-				'id' => 'on_the_fly',
-				'label' => 'On the Fly',
-				'views' => array(
-					'tile' => array(
-						'display_callback' => '__return_true',
-						'data_callback'    => '__return_true',
-					)
+			$endpoint = new Endpoint( array(
+				'view' => 'tile',
+				'atts' => array(
+					'id'    => 'on_the_fly',
+					'label' => 'On the Fly',
+					'views' => edd_reports_parse_endpoint_views( array(
+						'tile' => array(
+							'data_callback' => '__return_true',
+						)
+					) ),
 				)
 			) );
 
 			try {
 				$built_report = new Report( array(
-					'id' => 'on_the_fly',
+					'id'    => 'on_the_fly',
 					'label' => 'On the Fly',
 					'endpoints' => array(
 						'tiles' => array( 'something', 'else', $endpoint )
