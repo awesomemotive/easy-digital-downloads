@@ -555,11 +555,11 @@ function edd_reports_get_endpoint_views() {
 			'group'  => 'tiles',
 			'fields' => array(
 				'type'             => '',
-				'data'             => '',
-				'comparison_data'  => '',
 				'data_callback'    => '',
+				'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
 				'display_callback' => 'edd_reports_display_tile',
-			)
+			),
+			'allow_empty' => array( 'type' ),
 		),
 		'chart' => array(
 			'group' => 'charts',
