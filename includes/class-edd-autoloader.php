@@ -92,15 +92,17 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 
 			// Else scan the namespace roots.
 			foreach ( $this->roots as $namespace => $root_dir ) {
-				// If the class doesn't belong to this namespace, move on to the next root.
-
 				// kludge until proper namespacing of files.
 				if ( false === strpos( '$class', $namespace ) ) {
 					$class = 'EDD\\' . $class;
 				}
+				// If the class doesn't belong to this namespace, move on to the next root.
 				if ( 0 !== strpos( $class, $namespace ) ) {
 					continue;
 				}
+
+				$psr4_path = substr( $class, strlen( $namespace ) + 1 );
+				$psr4_path = str_replace( '\\', DIRECTORY_SEPARATOR, $psr4_path );
 
 				// Determine the possible path to the class, include all subdirectories.
 				$objects = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $root_dir ), \RecursiveIteratorIterator::SELF_FIRST );
@@ -111,8 +113,8 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				}
 				$directories = array_unique( $directories );
 
-				//$path = substr( $class, strlen( $namespace ) + 1 );
-				//$path = str_replace( '\\', DIRECTORY_SEPARATOR, $path );
+				$fnames = array();
+				$fnames = array_merge( array( $psr4_path ), $fnames, $this->misnamed );
 
 				$fname     = str_replace( 'EDD\\', '', $class );
 				$fname     = str_replace( '_', '-', $fname );
@@ -126,9 +128,7 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 					'class-edd-email-tags',
 				);
 
-				$paths     = $this->get_paths( $directories, $fnames );
-				$misnameds = $this->get_paths( $directories, $misnamed );
-				$paths     = array_merge( $paths, $misnameds );
+				$paths = $this->get_paths( $directories, $fnames );
 
 				// Test for its existence and load if present.
 				foreach ( $paths as $path ) {
