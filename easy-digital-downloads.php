@@ -79,12 +79,16 @@ if ( ! defined( 'CAL_GREGORIAN' ) ) {
 }
 
 // Plugin namespace root.
-$edd['root'] = array( 'EDD' => __DIR__ . '/includes' );
-$edd['extra_classes'] = array();
+$edd['root']             = array( 'EDD' => __DIR__ . '/includes' );
+$edd['extra_classes']    = array();
+$edd['misnamed_classes'] = array(
+	'class-edd-payement-stats',
+	'class-edd-email-tags',
+);
 
 require_once __DIR__ . '/includes/class-edd-autoloader.php';
 $edd['loader'] = 'EDD\\Autoloader';
-new $edd['loader']( $edd['root'], $edd['extra_classes'] );
+new $edd['loader']( $edd['root'], $edd['extra_classes'], $edd['misnamed_classes'] );
 
 /**
  * The main function for that returns Easy_Digital_Downloads
@@ -98,7 +102,7 @@ new $edd['loader']( $edd['root'], $edd['extra_classes'] );
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
-* @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
+ * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
  */
 function EDD() {
 	return Easy_Digital_Downloads::instance();
