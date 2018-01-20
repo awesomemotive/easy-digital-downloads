@@ -220,7 +220,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_register_endpoint_with_empty_label_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'label' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		$this->registry->register_endpoint( 'foo', array(
@@ -236,7 +236,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_register_endpoint_with_empty_views_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'views' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -252,7 +252,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'tile' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'tile' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(

@@ -33,7 +33,7 @@ class Invalid_Parameter extends Exceptions\Invalid_Parameter implements \EDD_Exc
 	 * @return string Informed Invalid_Argument message.
 	 */
 	public static function build_message( $argument_name, $method, $context = null ) {
-		self::$error_message = sprintf( 'The \'%1$s\' %2$s for the \'%3$s\' item is invalid in \'%4$s\'.',
+		self::$error_message = sprintf( 'The \'%1$s\' %2$s for the \'%3$s\' item is missing or invalid in \'%4$s\'.',
 			$argument_name,
 			static::$type,
 			$context,
