@@ -43,19 +43,32 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 		 */
 		protected $map = array();
 
+		/**
+		 * Array of class file names that don't correspond to class names.
+		 *
+		 * @var array
+		 */
+		protected $misnamed = array();
+
 
 		/**
 		 * Constructor.
 		 *
 		 * @access public
 		 *
-		 * @param array      $roots      Roots to scan when autoloading.
-		 * @param array|null $static_map List of classes that deviate from convention. Defaults to null.
+		 * @param array      $roots            Roots to scan when autoloading.
+		 * @param array|null $static_map       Array of classes that deviate from convention.
+		 *                                     Defaults to null.
+		 * @param array|null $misnamed_classes Array of classes whose file names deviate from convention.
+		 *                                     Defaults to null.
 		 */
-		public function __construct( array $roots, array $static_map = null ) {
+		public function __construct( array $roots, array $static_map = null, array $misnamed_classes = null ) {
 			$this->roots = $roots;
 			if ( null !== $static_map ) {
 				$this->map = $static_map;
+			}
+			if ( null !== $misnamed_classes ) {
+				$this->misnamed = $misnamed_classes;
 			}
 			spl_autoload_register( array( $this, 'autoload' ) );
 		}
