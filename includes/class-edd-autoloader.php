@@ -114,19 +114,8 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				$directories = array_unique( $directories );
 
 				$fnames = array();
+				$fnames = $this->get_possible_edd_filenames( $class );
 				$fnames = array_merge( array( $psr4_path ), $fnames, $this->misnamed );
-
-				$fname     = str_replace( 'EDD\\', '', $class );
-				$fname     = str_replace( '_', '-', $fname );
-				$fname     = strtolower( $fname );
-				$fname     = str_replace( 'edd-', '', $fname );
-				$fnames[] = 'class-' . $fname;
-				$fnames[] = 'class-edd-' . $fname;
-
-				$misnamed = array(
-					'class-edd-payement-stats',
-					'class-edd-email-tags',
-				);
 
 				$paths = $this->get_paths( $directories, $fnames );
 
@@ -156,6 +145,24 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 			}
 
 			return call_user_func_array( 'array_merge', $paths );
+		}
+
+		/**
+		 * Create an array of potential class file names for Easy Digital Downloads.
+		 *
+		 * @param string $class Class name.
+		 *
+		 * @return array Array of potential file names for the class.
+		 */
+		private function get_possible_edd_filenames( $class ) {
+			$fname    = str_replace( 'EDD\\', '', $class );
+			$fname    = str_replace( '_', '-', $fname );
+			$fname    = strtolower( $fname );
+			$fname    = str_replace( 'edd-', '', $fname );
+			$fnames[] = 'class-' . $fname;
+			$fnames[] = 'class-edd-' . $fname;
+
+			return array_merge( $fnames );
 		}
 	}
 }
