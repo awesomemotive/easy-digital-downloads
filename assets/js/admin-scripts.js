@@ -64,9 +64,13 @@ jQuery(document).ready(function ($) {
 			/** manually uncheck any checkboxes */
 			clone.find( 'input[type="checkbox"]' ).each(function() {
 				var checked = $(this).is(':checked');
+
+				// Make sure checkboxes are unchecked when cloned
 				if ( checked ) {
 					$(this).prop('checked', false);
 				}
+
+				// reset the value attribute to 1 in order to properly save the new checked state
 				$(this).val(1);
 			});
 
