@@ -147,7 +147,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		$this->registry->register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 
@@ -276,7 +278,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -296,7 +298,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'priority'  => 15,
 			'views'     => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -316,7 +318,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -382,6 +384,28 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::validate_views()
+	 * @throws \EDD_Exception
+	 */
+	public function test_validate_views_with_invalid_view_should_throw_exception() {
+		$this->setExpectedException(
+			'\EDD\Admin\Reports\Exceptions\Invalid_View',
+			"The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_views'"
+		);
+
+		$this->registry->register_endpoint( 'foo', array(
+			'label'    => 'Foo',
+			'views'    => array(
+				'fake' => array(
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			)
+		) );
+	}
+
+
+	/**
 	 * Adds two test endpoints for use with get_endpoints() tests.
 	 *
 	 * @throws \EDD_Exception
@@ -391,7 +415,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
-				'tile' => array( 'foo' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 
@@ -399,7 +425,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Bar',
 			'priority' => 5,
 			'views'    => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 	}
