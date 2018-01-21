@@ -75,8 +75,10 @@ if ( ! defined( 'CAL_GREGORIAN' ) ) {
 $edd['root']             = array( 'EDD' => __DIR__ . '/includes' );
 $edd['extra_classes']    = array();
 $edd['misnamed_classes'] = array(
-	'class-edd-payement-stats',
-	'class-edd-email-tags',
+	'EDD\\EDD_Payment_History_Table' => 'class-payments-table',
+	'EDD\\EDD_Payment_Stats'         => 'class-payment-stats',
+	'EDD\\EDD_Email_Template_Tags'   => 'class-edd-email-tags',
+	'EDD\\EDD_License'               => 'class-edd-license-handler',
 );
 
 require_once __DIR__ . '/includes/class-edd-autoloader.php';

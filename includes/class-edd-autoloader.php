@@ -92,7 +92,7 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 			// Else scan the namespace roots.
 			foreach ( $this->roots as $namespace => $root_dir ) {
 				// kludge until proper namespacing of files.
-				if ( false === strpos( '$class', $namespace ) ) {
+				if ( false === strpos( '$class', $namespace . '\\' ) ) {
 					$class = 'EDD\\' . $class;
 				}
 				// If the class doesn't belong to this namespace, move on to the next root.
@@ -113,8 +113,8 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 				$directories = array_unique( $directories );
 
 				$fnames = array();
-				$fnames = $this->get_possible_edd_filenames( $class );
-				$fnames = array_merge( array( $psr4_fname ), $fnames, $this->misnamed );
+				$fnames = $this->get_possible_edd_filenames( $class, $this->misnamed );
+				$fnames = array_merge( array( $psr4_fname ), $fnames );
 
 				$paths = $this->get_paths( $directories, $fnames );
 
@@ -153,7 +153,12 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 		 *
 		 * @return array Array of potential file names for the class.
 		 */
-		private function get_possible_edd_filenames( $class ) {
+		private function get_possible_edd_filenames( $class, $misnamed ) {
+			foreach ( $misnamed as $class_name => $file_name ) {
+				if ( $class === $class_name ) {
+					return (array) $file_name;
+				}
+			}
 			$fname    = str_replace( 'EDD\\', '', $class );
 			$fname    = str_replace( '_', '-', $fname );
 			$fname    = strtolower( $fname );
@@ -161,7 +166,7 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 			$fnames[] = 'class-' . $fname;
 			$fnames[] = 'class-edd-' . $fname;
 
-			return array_merge( $fnames );
+			return (array) $fnames;
 		}
 	}
 }
