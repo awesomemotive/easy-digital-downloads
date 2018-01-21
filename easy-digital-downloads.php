@@ -72,7 +72,7 @@ if ( ! defined( 'CAL_GREGORIAN' ) ) {
 }
 
 // Plugin namespace root.
-$edd['root']             = array( 'EDD' => __DIR__ . '/includes' );
+$edd['root']             = array( 'EDD' => EDD_PLUGIN_DIR . 'includes' );
 $edd['extra_classes']    = array();
 $edd['misnamed_classes'] = array(
 	'EDD\\EDD_Payment_History_Table' => 'class-payments-table',
@@ -80,6 +80,11 @@ $edd['misnamed_classes'] = array(
 	'EDD\\EDD_Email_Template_Tags'   => 'class-edd-email-tags',
 	'EDD\\EDD_License'               => 'class-edd-license-handler',
 );
+if ( defined( 'EDD_SL_PLUGIN_DIR' ) ) {
+	$edd['root']['EDD\\Software_Licensing']                                 = EDD_SL_PLUGIN_DIR . 'includes';
+	$edd['extra_classes']['WordPressdotorg\Plugin_Directory\Readme\Parser'] = EDD_SL_PLUGIN_DIR . '/includes/class-parser.php';
+	$edd['extra_classes']['Parsedown']                                      = EDD_SL_PLUGIN_DIR . '/includes/Parsedown.php';
+}
 
 require_once __DIR__ . '/includes/class-edd-autoloader.php';
 $edd['loader'] = 'EDD\\Autoloader';

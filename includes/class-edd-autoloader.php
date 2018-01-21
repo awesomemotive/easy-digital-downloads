@@ -92,8 +92,10 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 			// Else scan the namespace roots.
 			foreach ( $this->roots as $namespace => $root_dir ) {
 				// kludge until proper namespacing of files.
-				if ( false === strpos( '$class', $namespace . '\\' ) ) {
-					$class = 'EDD\\' . $class;
+				if ( false === strpos( $class, $namespace . '\\' ) ) {
+					$namespaces = array( 'EDD\\', 'Software_Licensing\\' );
+					$class      = str_replace( $namespaces, '', $class );
+					$class      = $namespace . '\\' . $class;
 				}
 				// If the class doesn't belong to this namespace, move on to the next root.
 				if ( 0 !== strpos( $class, $namespace ) ) {
@@ -157,12 +159,15 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 			if ( array_key_exists( $class, $misnamed ) ) {
 				return (array) $misnamed[ $class ];
 			}
-			$fname    = str_replace( 'EDD\\', '', $class );
-			$fname    = str_replace( '_', '-', $fname );
-			$fname    = strtolower( $fname );
-			$fname    = str_replace( 'edd-', '', $fname );
-			$fnames[] = 'class-' . $fname;
-			$fnames[] = 'class-edd-' . $fname;
+			$namespaces    = array( 'EDD\\', 'Software_Licensing\\' );
+			$class_headers = array( 'edd-', 'sl-' );
+			$fname         = str_replace( $namespaces, '', $class );
+			$fname         = str_replace( '_', '-', $fname );
+			$fname         = strtolower( $fname );
+			$fname         = str_replace( $class_headers, '', $fname );
+			$fnames[]      = 'class-' . $fname;
+			$fnames[]      = 'class-edd-' . $fname;
+			$fnames[]      = 'class-sl-' . $fname;
 
 			return (array) $fnames;
 		}
