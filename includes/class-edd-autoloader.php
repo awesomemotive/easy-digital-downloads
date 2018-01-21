@@ -154,10 +154,8 @@ if ( ! class_exists( 'EDD\\Autoloader' ) ) {
 		 * @return array Array of potential file names for the class.
 		 */
 		private function get_possible_edd_filenames( $class, $misnamed ) {
-			foreach ( $misnamed as $class_name => $file_name ) {
-				if ( $class === $class_name ) {
-					return (array) $file_name;
-				}
+			if ( array_key_exists( $class, $misnamed ) ) {
+				return (array) $misnamed[ $class ];
 			}
 			$fname    = str_replace( 'EDD\\', '', $class );
 			$fname    = str_replace( '_', '-', $fname );
