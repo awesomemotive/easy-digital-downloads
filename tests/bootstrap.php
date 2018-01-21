@@ -26,6 +26,19 @@ echo "Installing Easy Digital Downloads...\n";
 // Install Easy Digital Downloads
 edd_install();
 
+new EDD_DB_Table_Customers();
+new EDD_DB_Table_Customer_Meta();
+new EDD_DB_Table_Discounts();
+new EDD_DB_Table_Discount_Meta();
+new EDD_DB_Table_Logs();
+new EDD_DB_Table_Log_Meta();
+new EDD_DB_Table_Notes();
+new EDD_DB_Table_Note_Meta();
+new EDD_DB_Table_Orders();
+new EDD_DB_Table_Order_Meta();
+new EDD_DB_Table_Order_Items();
+new EDD_DB_Table_Order_Item_Meta();
+
 global $current_user, $edd_options;
 
 $edd_options = get_option( 'edd_settings' );
