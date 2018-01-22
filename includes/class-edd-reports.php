@@ -110,7 +110,15 @@ final class Reports {
 					'label' => 'On the Fly',
 					'views' => edd_reports_parse_endpoint_views( array(
 						'tile' => array(
-							'data_callback' => '__return_true',
+							'data_callback'    => function() {
+								return 'Hello, World! (data)';
+							},
+							'display_args'     => array( 'Hello (display_args)', 'World', 'Again!' ),
+							'display_callback' => function( $data, $args ) {
+								echo '<pre>';
+									var_dump( $args );
+								echo '</pre>';
+							},
 						)
 					) ),
 				)
@@ -131,7 +139,11 @@ final class Reports {
 				$built_report = 'fail';
 			}
 
-//			var_dump( $built_report );
+			$endpoints = $built_report->get_endpoints( 'tiles' );
+
+			$endpoints['on_the_fly']->display();
+
+//			var_dump( $endpoints );
 
 		} catch( \EDD_Exception $exception ) {
 
