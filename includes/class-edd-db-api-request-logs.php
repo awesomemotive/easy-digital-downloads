@@ -41,10 +41,6 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 		$this->table_name  = $wpdb->prefix . 'edd_api_request_logs';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
-
-		if ( ! $this->table_exists( $this->table_name ) ) {
-			$this->create_table();
-		}
 	}
 
 	/**
@@ -403,38 +399,5 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
 		return $last_changed;
-	}
-
-	/**
-	 * Create the table.
-	 *
-	 * @access public
-	 * @since 3.0
-	 */
-	public function create_table() {
-		global $wpdb;
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		$sql = "
-		CREATE TABLE {$this->table_name} (
-			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			user_id BIGINT(20) UNSIGNED DEFAULT 0,
-			api_key VARCHAR(32) NOT NULL DEFAULT 'public',
-			token VARCHAR(32) NOT NULL DEFAULT 'public',
-			version VARCHAR(30) NOT NULL,
-			request LONGTEXT NOT NULL,
-			error LONGTEXT,
-			ip VARCHAR(100) NOT NULL,
-			time VARCHAR(60) NOT NULL,
-			date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-			PRIMARY KEY (id),
-			KEY user_id (user_id)
-		) CHARACTER SET utf8 COLLATE utf8_general_ci;
-		";
-
-		dbDelta( $sql );
-
-		update_option( $this->table_name . '_db_version', $this->version );
 	}
 }
