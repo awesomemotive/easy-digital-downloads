@@ -13,25 +13,25 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Sets up and stores a new discount code
+ * Sets up and stores a new discount code.
  *
  * @since 1.0
- * @param array $data Discount code data
- * @uses edd_store_discount()
- * @return void
+ * @since 3.0 - Added backwards compatibility for pre-3.0 discount data.
+ *
+ * @param array $data Discount code data.
  */
 function edd_add_discount( $data ) {
-
 	if ( ! isset( $data['edd-discount-nonce'] ) || ! wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
 		return;
 	}
 
-	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	if( edd_get_discount_by_code( $data['code'] ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
+	if ( edd_get_discount_by_code( $data['code'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) );
+		edd_die();
 	}
 
 	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
@@ -40,17 +40,17 @@ function edd_add_discount( $data ) {
 	}
 
 	// Verify only accepted characters
-	$sanitized = preg_replace('/[^a-zA-Z0-9-_]+/', '', $data['code'] );
+	$sanitized = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $data['code'] );
 	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
 		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 		edd_die();
 	}
 
-	$discount = new EDD_Discount;
+	$discount = new EDD_Discount();
 	$to_add   = array();
 	$to_add['status'] = 'active'; // Default status of active
 
-	foreach( $discount->db->get_columns() as $column => $value ) {
+	foreach ( $discount->db->get_columns() as $column => $value ) {
 
 		// Each column gets passed through a generic sanitization method during the update() call
 
@@ -59,18 +59,19 @@ function edd_add_discount( $data ) {
 			switch ( $column ) {
 
 				case 'start_date':
-					$to_add[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+				case 'start':
+					$to_add['start_date'] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
 					break;
 
 				case 'end_date':
 					$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
 					break;
 
-				case 'product_reqs' :
+				case 'product_reqs':
 					$to_add[ $column ] = $data[ $column ];
 					break;
 
-				default :
+				default:
 					$to_add[ $column ] = sanitize_text_field( $data[ $column ] );
 					break;
 
