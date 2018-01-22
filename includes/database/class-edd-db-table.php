@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Notes Table: EDD_DB_Table_Notes class
+ * EDD_DB_Table class
  *
  * @package Plugins/EDD/Database/Object
  */
