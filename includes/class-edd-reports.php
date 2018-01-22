@@ -114,7 +114,7 @@ final class Reports {
 								return 'Hello, World! (data)';
 							},
 							'display_args'     => array( 'Hello (display_args)', 'World', 'Again!' ),
-							'display_callback' => function( $data, $args ) {
+							'display_callback' => function( $endpoint, $data, $args ) {
 								echo '<pre>';
 									var_dump( $args );
 								echo '</pre>';
