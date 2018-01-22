@@ -5,7 +5,7 @@
  *
  * @author  JJJ
  * @link    https://jjj.blog
- * @version 1.3.0
+ * @version 1.4.0
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
@@ -115,6 +115,11 @@ abstract class WP_DB_Table {
 
 		// Add hooks to WordPress actions
 		$this->add_hooks();
+
+		// Maybe force upgrade if testing
+		if ( $this->is_testing() ) {
+			$this->maybe_upgrade();
+		}
 	}
 
 	/** Abstract **************************************************************/
@@ -164,8 +169,11 @@ abstract class WP_DB_Table {
 	 */
 	public function maybe_upgrade() {
 
+		// Is an upgrade needed?
+		$needs_upgrade = version_compare( (int) $this->db_version, (int) $this->version, '>=' );
+
 		// Bail if no upgrade needed
-		if ( version_compare( (int) $this->db_version, (int) $this->version, '>=' ) ) {
+		if ( true === $needs_upgrade ) {
 			return;
 		}
 
@@ -299,6 +307,25 @@ abstract class WP_DB_Table {
 		// Add table to the global database object
 		add_action( 'switch_blog', array( $this, 'switch_blog'   ) );
 		add_action( 'admin_init',  array( $this, 'maybe_upgrade' ) );
+	}
+
+	/**
+	 * Check if the current request is from some kind of test.
+	 *
+	 * This is primarily used to skip 'admin_init' and force-install tables.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return bool
+	 */
+	private function is_testing() {
+		return (bool)
+
+			// Tests constant is being used
+			( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR )
+
+			// Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
+			|| function_exists( '_manually_load_plugin' );
 	}
 
 	/**
