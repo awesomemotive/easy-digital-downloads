@@ -194,7 +194,7 @@ function edd_show_upgrade_notices() {
 				printf(
 					'<div class="updated">' .
 					'<p>' .
-					__( 'Easy Digital Downloads needs to upgrade the discounts records database, click <a href="%s">here</a> to start the upgrade. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
+					__( 'Easy Digital Downloads needs to upgrade the discounts records database, click <a href="%1$s">here</a> to start the upgrade. <a href="#" onClick="%2$s">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
 					'</p>' .
 					'<p style="display: none;">' .
 					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all discounts records and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
@@ -204,7 +204,8 @@ function edd_show_upgrade_notices() {
 					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_discounts</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discounts_migration' ) )
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discounts_migration' ) ),
+					"jQuery(this).parent().next('p').slideToggle()"
 				);
 			}
 		}
@@ -213,7 +214,7 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="updated">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%s">remove the legacy data</a>. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%1%s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
 				__( '<strong>Removing legacy data:</strong><br />All discountss records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
@@ -221,7 +222,8 @@ function edd_show_upgrade_notices() {
 				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_discounts' ) )
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_discounts' ) ),
+				"jQuery(this).parent().next('p').slideToggle()"
 			);
 		}
 
