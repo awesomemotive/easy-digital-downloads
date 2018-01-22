@@ -95,7 +95,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				break;
 
 			case 'customer' :
-				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . absint( $item['customer']->id ) ) . '">' . $item['customer']->name . '</a>';
+				$name = ! empty( $item['customer']->name ) ? $item['customer']->name : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
+				$return = '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['customer']->id ) ) . '">#' . $item['customer']->id . ' ' . $name . '</a>';
 				break;
 
 			case 'item_price' :

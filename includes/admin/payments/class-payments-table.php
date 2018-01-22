@@ -420,12 +420,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Data shown in the User column
 	 */
 	public function column_customer( $payment ) {
-
 		$customer_id = edd_get_payment_customer_id( $payment->ID );
 
-		if( ! empty( $customer_id ) ) {
-			$customer    = new EDD_Customer( $customer_id );
-			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">' . $customer->name . '</a>';
+		if ( ! empty( $customer_id ) ) {
+			$customer = new EDD_Customer( $customer_id );
+			$name = ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
+			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">#' . $customer->id . ' ' . $name . '</a>';
 		} else {
 			$email = edd_get_payment_user_email( $payment->ID );
 			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-payment-history&s=$email" ) ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
