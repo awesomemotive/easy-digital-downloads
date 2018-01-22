@@ -446,8 +446,10 @@ final class Easy_Digital_Downloads {
 			'logs'               => new EDD_DB_Table_Logs(),
 			'logmeta'            => new EDD_DB_Table_Log_Meta(),
 
-			// API Request Log
+			// API Request Logs
 			'api_request_logs'   => new EDD_DB_Table_API_Request_Logs(),
+
+			// File Download Logs
 			'file_download_logs' => new EDD_DB_Table_File_Download_Logs(),
 
 			// Notes
