@@ -41,10 +41,6 @@ class EDD_DB_File_Download_Logs extends EDD_DB {
 		$this->table_name  = $wpdb->prefix . 'edd_file_download_logs';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
-
-		if ( ! $this->table_exists( $this->table_name ) ) {
-			$this->create_table();
-		}
 	}
 
 	/**
@@ -380,37 +376,5 @@ class EDD_DB_File_Download_Logs extends EDD_DB {
 			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
 		return $last_changed;
-	}
-
-	/**
-	 * Create the table.
-	 *
-	 * @access public
-	 * @since 3.0
-	 */
-	public function create_table() {
-		global $wpdb;
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		$sql = "
-		CREATE TABLE {$this->table_name} (
-			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			download_id BIGINT(20) UNSIGNED DEFAULT 0,
-			file_id BIGINT(20) UNSIGNED DEFAULT 0,
-			payment_id BIGINT(20) UNSIGNED DEFAULT 0,
-			price_id BIGINT(20) UNSIGNED DEFAULT 0,
-			user_id BIGINT(20) UNSIGNED DEFAULT 0,
-			ip VARCHAR(100) NOT NULL,
-			date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-			PRIMARY KEY (id),
-			KEY download_id (download_id),
-			KEY user_id (user_id)
-		) CHARACTER SET utf8 COLLATE utf8_general_ci;
-		";
-
-		dbDelta( $sql );
-
-		update_option( $this->table_name . '_db_version', $this->version );
 	}
 }
