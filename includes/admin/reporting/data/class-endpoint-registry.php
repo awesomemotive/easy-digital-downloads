@@ -135,7 +135,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		$attributes = array_merge( $defaults, $attributes );
 
 		$attributes['id']    = $endpoint_id;
-		$attributes['views'] = $this->parse_views( $attributes['views'] );
+		$attributes['views'] = edd_reports_parse_endpoint_views( $attributes['views'] );
 
 		// Bail if this endpoint ID is already registered.
 		if ( $this->offsetExists( $endpoint_id ) ) {
@@ -163,34 +163,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 			return parent::add_item( $endpoint_id, $attributes );
 
 		}
-	}
-
-	/**
-	 * Parses views for an incoming endpoint.
-	 *
-	 * @since 3.0
-	 *
-	 * @see edd_reports_get_endpoint_views()
-	 *
-	 * @param array  $views View slugs and attributes as dictated by edd_reports_get_endpoint_views().
-	 * @return array (Maybe) adjusted views slugs and attributes array.
-	 */
-	public function parse_views( $views ) {
-		$valid_views = edd_reports_get_endpoint_views();
-
-		foreach ( $views as $view => $attributes ) {
-			if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
-				$fields = $valid_views[ $view ]['fields'];
-
-				// Merge the incoming args with the field defaults.
-				$view_args = wp_parse_args( $attributes, $fields );
-
-				// Overwrite the view attributes., keeping only the valid fields.
-				$views[ $view ] = array_intersect_key( $view_args, $fields );
-			}
-		}
-
-		return $views;
 	}
 
 	/**

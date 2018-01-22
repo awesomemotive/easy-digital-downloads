@@ -645,6 +645,34 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
 }
 
 /**
+ * Parses views for an incoming endpoint.
+ *
+ * @since 3.0
+ *
+ * @see edd_reports_get_endpoint_views()
+ *
+ * @param array  $views View slugs and attributes as dictated by edd_reports_get_endpoint_views().
+ * @return array (Maybe) adjusted views slugs and attributes array.
+ */
+function edd_reports_parse_endpoint_views( $views ) {
+	$valid_views = edd_reports_get_endpoint_views();
+
+	foreach ( $views as $view => $attributes ) {
+		if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
+			$fields = $valid_views[ $view ]['fields'];
+
+			// Merge the incoming args with the field defaults.
+			$view_args = wp_parse_args( $attributes, $fields );
+
+			// Overwrite the view attributes, keeping only the valid fields.
+			$views[ $view ] = array_intersect_key( $view_args, $fields );
+		}
+	}
+
+	return $views;
+}
+
+/**
  * Displays the default content for a tile endpoint.
  *
  * @since 3.0
