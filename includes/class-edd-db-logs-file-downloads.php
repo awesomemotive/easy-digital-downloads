@@ -28,7 +28,7 @@ class EDD_DB_File_Download_Logs extends EDD_DB {
 	 * @access public
 	 * @var    string
 	 */
-	public $cache_group = 'file_download_logs';
+	public $cache_group = 'logs_file_downloads';
 
 	/**
 	 * Initialise object variables and register table.
@@ -38,7 +38,7 @@ class EDD_DB_File_Download_Logs extends EDD_DB {
 	public function __construct() {
 		global $wpdb;
 
-		$this->table_name  = $wpdb->prefix . 'edd_file_download_logs';
+		$this->table_name  = $wpdb->prefix . 'edd_logs_file_downloads';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 	}
