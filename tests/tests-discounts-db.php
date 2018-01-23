@@ -424,7 +424,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers EDD_DB_Discounts::count()
 	 */
 	public function test_count_with_start_date() {
-		$discounts = self::$db->count( array(
+		$discounts = (array) self::$db->count( array(
 			'start_date' => '2010-12-12 23:59:59',
 		) );
 
@@ -435,7 +435,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers EDD_DB_Discounts::count()
 	 */
 	public function test_count_with_end_date() {
-		$discounts = self::$db->count( array(
+		$discounts = (array) self::$db->count( array(
 			'end_date' => '2050-12-31 23:59:59',
 		) );
 
