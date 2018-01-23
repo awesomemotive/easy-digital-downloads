@@ -1,13 +1,16 @@
 <?php
-
 /**
- * API Request Logs Table: EDD_DB_Table_API_Request_Logs class
+ * API Request Logs Table: EDD_DB_Table_Logs_API_Requests class
  *
- * @package Plugins/EDD/Database/Object
+ * @package     EDD
+ * @subpackage  Database
+ * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0
  */
 
 // Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( class_exists( 'EDD_DB_Table' ) ) :
 	/**
@@ -15,7 +18,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 	 *
 	 * @since 3.0.0
 	 */
-	final class EDD_DB_Table_API_Request_Logs extends EDD_DB_Table {
+	final class EDD_DB_Table_Logs_API_Requests extends EDD_DB_Table {
 
 		/**
 		 * Table name
@@ -24,7 +27,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var string
 		 */
-		protected $name = 'edd_api_request_logs';
+		protected $name = 'edd_logs_api_requests';
 
 		/**
 		 * Database version
