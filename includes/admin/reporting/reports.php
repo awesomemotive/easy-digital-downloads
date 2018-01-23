@@ -552,14 +552,15 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
-			'group'  => 'tiles',
-			'fields' => array(
+			'group'       => 'tiles',
+			'fields'      => array(
 				'type'             => '',
 				'data_callback'    => '',
 				'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
 				'display_args'     => array(),
 				'display_callback' => 'edd_reports_display_tile',
 			),
+			'handler'     => 'EDD\Admin\Reports\Data\Endpoints\Tile',
 			'allow_empty' => array( 'type', 'display_args' ),
 		),
 		'chart' => array(
