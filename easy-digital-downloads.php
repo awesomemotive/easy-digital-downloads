@@ -148,7 +148,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD API Request Logs DB Object.
 	 *
-	 * @var object|EDD_DB_API_Request_Logs
+	 * @var object|EDD_DB_Logs_API_Requests
 	 * @since 3.0
 	 */
 	public $api_request_logs;
@@ -156,7 +156,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD File Download Logs DB Object.
 	 *
-	 * @var object|EDD_DB_File_Download_Logs
+	 * @var object|EDD_DB_Logs_File_Downloads
 	 * @since 3.0
 	 */
 	public $file_download_logs;
@@ -198,8 +198,8 @@ final class Easy_Digital_Downloads {
 			self::$instance->cart               = new EDD_Cart();
 			self::$instance->logs               = new EDD_DB_Logs();
 			self::$instance->log_meta           = new EDD_DB_Log_Meta();
-			self::$instance->api_request_logs   = new EDD_DB_API_Request_Logs();
-			self::$instance->file_download_logs = new EDD_DB_File_Download_Logs();
+			self::$instance->api_request_logs   = new EDD_DB_Logs_API_Requests();
+			self::$instance->file_download_logs = new EDD_DB_Logs_File_Downloads();
 		}
 
 		return self::$instance;
