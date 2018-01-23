@@ -722,3 +722,23 @@ function edd_reports_display_tile( $endpoint, $data, $args ) {
 
 	return ob_get_clean();
 }
+
+/**
+ * Retrieves the name of the handler class for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Handler class name if set and the view exists, otherwise an empty string.
+ */
+function edd_reports_get_endpoint_handler( $view ) {
+	$handler = '';
+
+	$views = edd_reports_get_endpoint_views();
+
+	if ( isset( $views[ $view ]['handler'] ) ) {
+		$handler = $views[ $view ]['handler'];
+	}
+
+	return $handler;
+}
