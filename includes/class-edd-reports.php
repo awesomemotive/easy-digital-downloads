@@ -55,12 +55,17 @@ final class Reports {
 		require_once $reports_dir . 'exceptions/class-invalid-view.php';
 		require_once $reports_dir . 'exceptions/class-invalid-view-parameter.php';
 
-		// Registries.
+		// Dependencies.
 		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/data/class-base-object.php';
+
+		// Reports.
 		require_once $reports_dir . '/data/class-reports-registry.php';
 		require_once $reports_dir . '/data/class-report.php';
+
+		// Endpoints.
 		require_once $reports_dir . '/data/class-endpoint.php';
+		require_once $reports_dir . '/data/endpoints/class-tile.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
