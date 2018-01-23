@@ -10,6 +10,7 @@
  */
 namespace EDD\Admin;
 use EDD\Admin\Reports\Data\Endpoint;
+use EDD\Admin\Reports\Data\Endpoints;
 use EDD\Admin\Reports\Data\Report;
 
 /**
@@ -94,8 +95,9 @@ final class Reports {
 				'label' => 'Something',
 				'views' => array(
 					'tile' => array(
-						'display_callback' => '__return_false',
-						'data_callback'    => '__return_false',
+						'data_callback' => function() {
+							return 'Something Endpoint';
+						}
 					)
 				)
 			) );
@@ -108,25 +110,17 @@ final class Reports {
 				),
 			) );
 
-			$endpoint = new Endpoint( array(
-				'view' => 'tile',
-				'atts' => array(
-					'id'    => 'on_the_fly',
-					'label' => 'On the Fly',
-					'views' => edd_reports_parse_endpoint_views( array(
-						'tile' => array(
-							'data_callback'    => function() {
-								return 'Hello, World! (data)';
-							},
-							'display_args'     => array( 'Hello (display_args)', 'World', 'Again!' ),
-							'display_callback' => function( $endpoint, $data, $args ) {
-								echo '<pre>';
-									var_dump( $args );
-								echo '</pre>';
-							},
-						)
-					) ),
-				)
+			$endpoint = new Endpoints\Tile( array(
+				'id'    => 'on_the_fly',
+				'label' => 'On the Fly',
+				'views' => edd_reports_parse_endpoint_views( array(
+					'tile' => array(
+						'data_callback'    => function() {
+							return 'Hello, World! (data)';
+						},
+						'display_args'     => array( 'Hello (display_args)', 'World', 'Again!' ),
+					)
+				) ),
 			) );
 
 			try {
@@ -146,7 +140,9 @@ final class Reports {
 
 			$endpoints = $built_report->get_endpoints( 'tiles' );
 
-			$endpoints['on_the_fly']->display();
+			foreach ( $endpoints as $endpoint ) {
+				$endpoint->display();
+			}
 
 //			var_dump( $endpoints );
 
