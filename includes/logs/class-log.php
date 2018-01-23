@@ -3,12 +3,12 @@
  * Logs API - Log Object
  *
  * @package     EDD
- * @subpackage  Admin/Logs
+ * @subpackage  Logs
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Logs;
+namespace EDD\Logs;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
