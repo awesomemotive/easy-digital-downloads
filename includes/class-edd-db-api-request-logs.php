@@ -28,7 +28,7 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 	 * @access public
 	 * @var    string
 	 */
-	public $cache_group = 'api_request_logs';
+	public $cache_group = 'logs_api_requests';
 
 	/**
 	 * Initialise object variables and register table.
@@ -38,7 +38,7 @@ class EDD_DB_API_Request_Logs extends EDD_DB {
 	public function __construct() {
 		global $wpdb;
 
-		$this->table_name  = $wpdb->prefix . 'edd_api_request_logs';
+		$this->table_name  = $wpdb->prefix . 'edd_logs_api_requests';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 	}
