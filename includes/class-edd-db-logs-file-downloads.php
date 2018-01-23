@@ -223,7 +223,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 			if ( ! empty( $logs ) ) {
 				foreach ( $logs as $key => $log ) {
-					$logs[ $key ] = new EDD_File_Download_Log( $log );
+					$logs[ $key ] = new EDD\Logs\File_Download_Log( $log );
 				}
 
 				wp_cache_set( $cache_key, $logs, 'file_download_logs', 3600 );
