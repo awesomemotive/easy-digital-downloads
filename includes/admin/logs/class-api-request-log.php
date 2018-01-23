@@ -1,23 +1,24 @@
 <?php
 /**
- * File Download Log Object.
+ * Logs API - API Request Log Object.
  *
  * @package     EDD
- * @subpackage  Classes/Logs
+ * @subpackage  Admin/Logs
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Admin\Logs;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * EDD_File_Download_Log Class.
+ * API_Request_Log Class.
  *
  * @since 3.0
  */
-class EDD_File_Download_Log {
+class API_Request_Log {
 
 	/**
 	 * API request log ID.
@@ -29,42 +30,6 @@ class EDD_File_Download_Log {
 	protected $id;
 
 	/**
-	 * Download ID.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    int
-	 */
-	protected $download_id;
-
-	/**
-	 * File ID.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    int
-	 */
-	protected $file_id;
-
-	/**
-	 * Payment ID.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    int
-	 */
-	protected $payment_id;
-
-	/**
-	 * Price ID.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    int
-	 */
-	protected $price_id;
-
-	/**
 	 * User ID of the user making the API request.
 	 *
 	 * @since  3.0
@@ -74,6 +39,42 @@ class EDD_File_Download_Log {
 	protected $user_id;
 
 	/**
+	 * API key.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $api_key;
+
+	/**
+	 * API token.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $token;
+
+	/**
+	 * API version.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $version;
+
+	/**
+	 * API request.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $request;
+
+	/**
 	 * IP address of the client making the API request.
 	 *
 	 * @since  3.0
@@ -81,6 +82,15 @@ class EDD_File_Download_Log {
 	 * @var    string
 	 */
 	protected $ip;
+
+	/**
+	 * Speed of the API request.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    float
+	 */
+	protected $time;
 
 	/**
 	 * Date log was created.
@@ -96,7 +106,7 @@ class EDD_File_Download_Log {
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    EDD_DB_Logs
+	 * @var    \EDD_DB_Logs
 	 */
 	protected $db;
 
@@ -114,8 +124,8 @@ class EDD_File_Download_Log {
 	protected $post_title = '';
 	protected $post_excerpt = '';
 	protected $post_status = 'publish';
-	protected $comment_status = 'closed';
-	protected $ping_status = 'closed';
+	protected $comment_status = 'open';
+	protected $ping_status = 'open';
 	protected $post_password = '';
 	protected $post_name = '';
 	protected $to_ping = '';
@@ -140,7 +150,7 @@ class EDD_File_Download_Log {
 	 * @param int $log_id Log ID.
 	 */
 	public function __construct( $log_id ) {
-		$this->db = EDD()->file_download_logs;
+		$this->db = EDD()->api_request_logs;
 
 		$log = $this->db->get( $log_id );
 
@@ -149,10 +159,12 @@ class EDD_File_Download_Log {
 				$this->{$key} = $value;
 			}
 
-			$this->post_parent = $this->download_id;
-			$this->post_type = 'edd_log';
+			$this->post_author = $this->user_id;
 			$this->post_date = $this->date_created;
 			$this->post_date_gmt = $this->date_created;
+			$this->post_excerpt = $this->request;
+			$this->post_content = $this->error;
+			$this->post_type = 'edd_log';
 		}
 	}
 
@@ -171,7 +183,7 @@ class EDD_File_Download_Log {
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
 		} elseif ( property_exists( $this, $key ) ) {
-			return apply_filters( 'edd_file_download_log_' . $key, $this->{$key}, $this->id );
+			return apply_filters( 'edd_api_request_log_' . $key, $this->{$key}, $this->id );
 		}
 	}
 
@@ -253,7 +265,7 @@ class EDD_File_Download_Log {
 		 *
 		 * @param array $args Discount args.
 		 */
-		$args = apply_filters( 'edd_insert_file_download_log', $args );
+		$args = apply_filters( 'edd_insert_api_request_log', $args );
 
 		$args = $this->sanitize_columns( $args );
 
@@ -264,7 +276,7 @@ class EDD_File_Download_Log {
 		 *
 		 * @param array $args Discount args.
 		 */
-		do_action( 'edd_pre_insert_file_download_log', $args );
+		do_action( 'edd_pre_insert_api_request_log', $args );
 
 		$id = $this->db->insert( $args );
 
@@ -284,7 +296,9 @@ class EDD_File_Download_Log {
 		 * @param array $args Log args.
 		 * @param int   $id   Log ID.
 		 */
-		do_action( 'edd_post_insert_file_download_log', $args, $this->id );
+		do_action( 'edd_post_insert_api_request_log', $args, $this->id );
+
+		return $id;
 	}
 
 	/**
