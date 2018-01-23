@@ -1,23 +1,25 @@
 <?php
 /**
- * Log Object
+ * Logs API - Log Object
  *
  * @package     EDD
- * @subpackage  Classes/Logs
+ * @subpackage  Admin/Logs
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
 
+namespace EDD\Admin\Logs;
+
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * EDD Log Class.
+ * Log Class.
  *
  * @since 3.0
  */
-class EDD_Log {
+class Log {
 
 	/**
 	 * Log ID.
@@ -87,7 +89,7 @@ class EDD_Log {
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    EDD_DB_Logs
+	 * @var    \EDD_DB_Logs
 	 */
 	protected $db;
 
@@ -116,6 +118,7 @@ class EDD_Log {
 	 * @access public
 	 *
 	 * @param mixed $key
+	 *
 	 * @return mixed
 	 */
 	public function __get( $key ) {
@@ -134,8 +137,8 @@ class EDD_Log {
 	 * @since 3.0
 	 * @access public
 	 *
-	 * @param string $key   Property name.
-	 * @param mixed  $value Property value.
+	 * @param string $key Property name.
+	 * @param mixed $value Property value.
 	 *
 	 * @return mixed False if property doesn't exist, or returns the value from the dispatched method.
 	 */
@@ -164,6 +167,7 @@ class EDD_Log {
 	 * @access public
 	 *
 	 * @param string $key The attribute to get
+	 *
 	 * @return boolean If the item is set or not
 	 */
 	public function __isset( $key ) {
@@ -193,6 +197,7 @@ class EDD_Log {
 	 * @access private
 	 *
 	 * @param object $log Log data.
+	 *
 	 * @return bool Object var initialisation successful or not.
 	 */
 	private function setup_log( $log ) {
@@ -248,9 +253,11 @@ class EDD_Log {
 		 * @since 3.0
 		 *
 		 * @param array $args Log args.
-		 * @param int   $id   Log ID.
+		 * @param int $id Log ID.
 		 */
 		do_action( 'edd_post_insert_log', $args, $this->id );
+
+		return $id;
 	}
 
 	/**
@@ -263,7 +270,7 @@ class EDD_Log {
 	 *      Log attributes.
 	 * }
 	 *
-	 * * @return bool True on success, false otherwise.
+	 * @return bool True on success, false otherwise.
 	 */
 	public function update( $args = array() ) {
 		return EDD()->logs->update( $this->id, $args );
