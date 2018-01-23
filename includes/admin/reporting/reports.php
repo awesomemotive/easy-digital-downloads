@@ -689,7 +689,7 @@ function edd_reports_display_tile( $endpoint, $data, $args ) {
 	if ( empty( $data ) ) {
 		echo '<span class="tile-no-data tile-value">' . __( 'No data for the current date range.', 'easy-digital-downloads' ) . '</span>';
 	} else {
-		switch( $type ) {
+		switch( $args['type'] ) {
 			case 'number':
 				echo '<span class="tile-number tile-value">' . $data . '</span>';
 				break;
@@ -715,8 +715,8 @@ function edd_reports_display_tile( $endpoint, $data, $args ) {
 		}
 	}
 
-	if ( ! empty( $tile['comparison_data'] ) ) {
-		echo '<span class="tile-compare">' . $tile['comparison_data'] . '</span>';
+	if ( ! empty( $args['comparison_label'] ) ) {
+		echo '<span class="tile-compare">' . $args['comparison_label'] . '</span>';
 	}
 
 	return ob_get_clean();
