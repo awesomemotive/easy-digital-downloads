@@ -200,7 +200,47 @@ class Log {
 	 * @return bool Object var initialisation successful or not.
 	 */
 	private function setup_log( $log ) {
+		if ( null === $log ) {
+			return false;
+		}
 
+		if ( ! is_object( $log ) ) {
+			return false;
+		}
+
+		if ( is_wp_error( $log ) ) {
+			return false;
+		}
+
+		/**
+		 * Fires before the instance of the Log object is set up.
+		 *
+		 * @since 3.0
+		 *
+		 * @param object EDD\Logs\Log      Instance of the log object.
+		 * @param object              $log Log object returned from the database.
+		 */
+		do_action( 'edd_pre_setup_log', $this, $log );
+
+		foreach ( get_object_vars( $log ) as $key => $value ) {
+			$this->$key = $value;
+		}
+
+		/**
+		 * Fires after the instance of the Log object is set up. Allows extensions to add items to this object via hook.
+		 *
+		 * @since 3.0
+		 *
+		 * @param object EDD\Logs\Log      Instance of the log object.
+		 * @param object              $log Log object returned from the database.
+		 */
+		do_action( 'edd_post_setup_log', $this, $log );
+
+		if ( ! empty( $this->id ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -210,7 +250,13 @@ class Log {
 	 * @access public
 	 *
 	 * @param array $args {
-	 *      Log attributed.
+	 *      Log attributes.
+	 *
+	 *      @type int    $object_id   Object ID.
+	 *      @type string $object_type Object type.
+	 *      @type string $type        Log type.
+	 *      @type string $title       Log title.
+	 *      @type string $message     Log content.
 	 * }
 	 *
 	 * @return int Newly created log ID.
