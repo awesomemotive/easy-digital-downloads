@@ -949,12 +949,12 @@ add_action( 'init', 'edd_apply_preset_discount', 999 );
 /**
  * Backwards compatibility filters for get_post_meta() calls on discount codes.
  *
- * @since  3.4
- * @param  mixed  $value       The value get_post_meta would return if we don't filter.
- * @param  int    $object_id   The object ID post meta was requested for.
- * @param  string $meta_key    The meta key requested.
- * @param  bool   $single      If the person wants the single value or an array of the value
- * @return mixed               The value to return
+ * @since  3.0
+ *
+ * @param int    $object_id The object ID post meta was requested for.
+ * @param string $meta_key  The meta key requested.
+ * @param bool   $single    If the person wants the single value or an array of the value.
+ * @return mixed The value to return.
  */
 function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $single ) {
 	global $wpdb;
