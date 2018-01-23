@@ -101,7 +101,7 @@ class Log {
 	 * @param int $log_id Log ID.
 	 */
 	public function __construct( $log_id = 0 ) {
-		$this->db = EDD()->api_request_logs;
+		$this->db = EDD()->logs;
 
 		$log = $this->db->get( $log_id );
 
