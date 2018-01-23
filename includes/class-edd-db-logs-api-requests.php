@@ -165,7 +165,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	}
 
 	/**
-	 * Retrieve log from the database
+	 * Retrieve an API request log from the database.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -174,7 +174,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 *      Query arguments.
 	 * }
 	 *
-	 * @return array $logs Array of `EDD_Log` objects.
+	 * @return array $logs Array of EDD\Logs\API_Request_Log objects.
 	 */
 	public function get_logs( $args = array() ) {
 		global $wpdb;

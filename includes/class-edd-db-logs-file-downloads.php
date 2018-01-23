@@ -161,7 +161,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	}
 
 	/**
-	 * Retrieve log from the database
+	 * Retrieve a file download log from the database.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -170,7 +170,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 *      Query arguments.
 	 * }
 	 *
-	 * @return array $logs Array of `EDD_Log` objects.
+	 * @return array $logs Array of EDD\Logs\File_Download_Log objects.
 	 */
 	public function get_logs( $args = array() ) {
 		global $wpdb;
