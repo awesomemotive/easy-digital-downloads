@@ -294,6 +294,66 @@ class Log {
 	}
 
 	/**
+	 * Retrieve log meta field for a log.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key The meta key to retrieve.
+	 * @param bool   $single   Whether to return a single value.
+	 *
+	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->log_meta->get_meta( $this->id, $meta_key, $single );
+	}
+	/**
+	 * Add meta data field to a log.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key   Metadata name.
+	 * @param mixed  $meta_value Metadata value.
+	 * @param bool   $unique     Optional, default is false. Whether the same key should not be added.
+	 *
+	 * @return bool True on success, false otherwise.
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->log_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Update discount meta field based on log ID.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key   Metadata key.
+	 * @param mixed  $meta_value Metadata value.
+	 * @param mixed  $prev_value Optional. Previous value to check before removing.
+	 *
+	 * @return bool True on success, false otherwise.
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->log_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+	/**
+	 * Remove metadata matching criteria from a log.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $meta_key   Metadata key.
+	 * @param mixed  $meta_value Optional. Metadata value.
+	 *
+	 * @return bool True on success, false otherwise.
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->log_meta->delete_meta( $this->id, $meta_key, $meta_value );
+	}
+
+	/**
 	 * Sanitize the data for update/create.
 	 *
 	 * @access public
