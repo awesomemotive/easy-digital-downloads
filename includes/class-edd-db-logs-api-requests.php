@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 3.0
  */
-class EDD_DB_API_Request_Logs extends EDD_DB {
+class EDD_DB_Logs_API_Requests extends EDD_DB {
 
 	/**
 	 * The name of the cache group.

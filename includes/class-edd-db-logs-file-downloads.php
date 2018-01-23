@@ -15,11 +15,11 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * EDD_DB_File_Download_Logs Class.
+ * EDD_DB_Logs_File_Downloads Class.
  *
  * @since 3.0
  */
-class EDD_DB_File_Download_Logs extends EDD_DB {
+class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 	/**
 	 * The name of the cache group.
