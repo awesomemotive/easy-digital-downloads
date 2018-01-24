@@ -244,20 +244,20 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
 
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-wp-db-table.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customers.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discounts.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-logs.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-notes.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-orders.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-items.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customer-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discount-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-log-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-note-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-item-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-wp-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discounts.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-notes.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-orders.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customer-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discount-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-log-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-note-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-item-meta.php';
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
