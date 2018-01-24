@@ -10,8 +10,8 @@
  */
 namespace EDD\Admin;
 use EDD\Admin\Reports\Data\Endpoint;
-use EDD\Admin\Reports\Data\Endpoints;
 use EDD\Admin\Reports\Data\Report;
+use EDD\Admin\Reports\Data\Tile_Endpoint;
 
 /**
  * Core class that implements the Reports API.
@@ -66,7 +66,7 @@ final class Reports {
 
 		// Endpoints.
 		require_once $reports_dir . '/data/class-endpoint.php';
-		require_once $reports_dir . '/data/endpoints/class-tile.php';
+		require_once $reports_dir . '/data/class-tile-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
@@ -110,7 +110,7 @@ final class Reports {
 				),
 			) );
 
-			$endpoint = new Endpoints\Tile( array(
+			$endpoint = new Tile_Endpoint( array(
 				'id'    => 'on_the_fly',
 				'label' => 'On the Fly',
 				'views' => edd_reports_parse_endpoint_views( array(
