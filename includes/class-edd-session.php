@@ -361,6 +361,10 @@ class EDD_Session {
 				$start_session = false;
 			}
 
+			if( is_admin() && false === strpos( $uri, 'wp-admin/admin-ajax.php' ) ) {
+				$start_session = false;
+			}
+
 		}
 
 		return apply_filters( 'edd_start_session', $start_session );
