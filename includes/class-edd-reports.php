@@ -118,6 +118,9 @@ final class Reports {
 						'data_callback'    => function() {
 							return 'Hello, World! (data)';
 						},
+						'display_callback' => function( $endpoint, $data, $args ) {
+							echo implode( ', ', $args );
+						},
 						'display_args'     => array( 'Hello (display_args)', 'World', 'Again!' ),
 					)
 				) ),
