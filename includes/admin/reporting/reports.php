@@ -553,15 +553,16 @@ function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
 			'group'       => 'tiles',
+			'handler'     => 'EDD\Admin\Reports\Data\Tile_Endpoint',
+			'allow_empty' => array( 'display_args' ),
 			'fields'      => array(
-				'type'             => '',
 				'data_callback'    => '',
-				'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
-				'display_args'     => array(),
 				'display_callback' => 'edd_reports_display_tile',
+				'display_args'     => array(
+					'type'             => '' ,
+					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+				),
 			),
-			'handler'     => 'EDD\Admin\Reports\Data\Endpoints\Tile',
-			'allow_empty' => array( 'type', 'display_args' ),
 		),
 		'chart' => array(
 			'group' => 'charts',
