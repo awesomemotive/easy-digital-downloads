@@ -218,9 +218,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @param string|Endpoint $endpoint  Endpoint ID or object.
 	 * @param string          $view_type View type to use when building the object.
+	 * @param string          $report    Optional. Report ID. Default null.
 	 * @return Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
 	 */
-	public function build_endpoint( $endpoint, $view_type ) {
+	public function build_endpoint( $endpoint, $view_type, $report = null ) {
 
 		// If an endpoint object was passed, just return it.
 		if ( $endpoint instanceof Endpoint ) {
@@ -240,6 +241,8 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		if ( ! is_wp_error( $_endpoint ) ) {
+			$_endpoint['report'] = $report;
+
 			$handler = \edd_reports_get_endpoint_handler( $view_type );
 
 			if ( ! empty( $handler ) && class_exists( $handler ) ) {

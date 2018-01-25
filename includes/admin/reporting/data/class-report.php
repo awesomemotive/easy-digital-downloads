@@ -93,7 +93,7 @@ final class Report extends Base_Object {
 			// Loop through all endpoints for each view group and build endpoint objects.
 			foreach ( $endpoints as $endpoint ) {
 
-				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ] );
+				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ], $this->get_id() );
 
 				$this->validate_endpoint( $group, $endpoint );
 
