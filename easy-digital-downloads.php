@@ -470,7 +470,7 @@ endif; // End if class_exists check.
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
-* @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
+ * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
  */
 function EDD() {
 	return Easy_Digital_Downloads::instance();
