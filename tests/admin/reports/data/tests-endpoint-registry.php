@@ -106,7 +106,13 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'priority' => 10,
 			'views'    => array(
 				'tile' => array(
-					'data_callback' => '__return_false'
+					'data_callback'    => '__return_false',
+					'display_callback' => 'edd_reports_display_tile',
+					'display_args'     => array(
+						'type'             => '' ,
+						'context'          => 'primary',
+						'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+					)
 				),
 			)
 		);
@@ -255,10 +261,10 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
+	public function test_register_endpoint_with_missing_required_view_sub_attribute_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'tile' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'data_callback' parameter for the 'tile' view is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_view_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -330,7 +336,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -375,12 +381,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_Endpoint_including_invalid_view_error_code() {
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
 		$this->add_test_endpoints();
 
 		$result = $this->registry->build_endpoint( 'foo', 'fake' );
 
-		$this->assertContains( 'invalid_view', $result->get_errors()->get_error_codes() );
+		$this->assertContains( 'invalid_view', $result->get_error_codes() );
 	}
 
 	/**
@@ -430,6 +436,16 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 				),
 			)
 		) );
+	}
+
+	/**
+	 * Mocks a copy of the Endpoint abstract class.
+	 *
+	 * @param array $args
+	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 */
+	protected function mock_Endpoint( $args ) {
+		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }

@@ -11,6 +11,7 @@
 namespace EDD\Admin;
 use EDD\Admin\Reports\Data\Endpoint;
 use EDD\Admin\Reports\Data\Report;
+use EDD\Admin\Reports\Data\Tile_Endpoint;
 
 /**
  * Core class that implements the Reports API.
@@ -55,12 +56,17 @@ final class Reports {
 		require_once $reports_dir . 'exceptions/class-invalid-view.php';
 		require_once $reports_dir . 'exceptions/class-invalid-view-parameter.php';
 
-		// Registries.
+		// Dependencies.
 		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/data/class-base-object.php';
+
+		// Reports.
 		require_once $reports_dir . '/data/class-reports-registry.php';
 		require_once $reports_dir . '/data/class-report.php';
+
+		// Endpoints.
 		require_once $reports_dir . '/data/class-endpoint.php';
+		require_once $reports_dir . '/data/class-tile-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
@@ -89,8 +95,9 @@ final class Reports {
 				'label' => 'Something',
 				'views' => array(
 					'tile' => array(
-						'display_callback' => '__return_false',
-						'data_callback'    => '__return_false',
+						'data_callback' => function() {
+							return 'Some Data';
+						}
 					)
 				)
 			) );
@@ -103,25 +110,19 @@ final class Reports {
 				),
 			) );
 
-			$endpoint = new Endpoint( array(
-				'view' => 'tile',
-				'atts' => array(
-					'id'    => 'on_the_fly',
-					'label' => 'On the Fly',
-					'views' => edd_reports_parse_endpoint_views( array(
-						'tile' => array(
-							'data_callback'    => function() {
-								return 'Hello, World! (data)';
-							},
-							'display_args'     => array( 'Hello (display_args)', 'World', 'Again!' ),
-							'display_callback' => function( $endpoint, $data, $args ) {
-								echo '<pre>';
-									var_dump( $args );
-								echo '</pre>';
-							},
-						)
-					) ),
-				)
+			$endpoint = new Tile_Endpoint( array(
+				'id'    => 'on_the_fly',
+				'label' => 'On the Fly',
+				'views' => edd_reports_parse_endpoint_views( array(
+					'tile' => array(
+						'data_callback'    => function() {
+							return 'Hello, World! (data)';
+						},
+						'display_args' => array(
+							'context' => 'secondary',
+						),
+					)
+				) ),
 			) );
 
 			try {
@@ -140,8 +141,6 @@ final class Reports {
 			}
 
 			$endpoints = $built_report->get_endpoints( 'tiles' );
-
-			$endpoints['on_the_fly']->display();
 
 //			var_dump( $endpoints );
 
