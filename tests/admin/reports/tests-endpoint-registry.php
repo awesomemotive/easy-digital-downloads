@@ -336,7 +336,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -436,6 +436,16 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 				),
 			)
 		) );
+	}
+
+	/**
+	 * Mocks a copy of the Endpoint abstract class.
+	 *
+	 * @param array $args
+	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 */
+	protected function mock_Endpoint( $args ) {
+		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
