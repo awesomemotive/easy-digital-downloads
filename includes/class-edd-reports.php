@@ -143,10 +143,6 @@ final class Reports {
 
 			$endpoints = $built_report->get_endpoints( 'tiles' );
 
-			foreach ( $endpoints as $endpoint ) {
-				$endpoint->display();
-			}
-
 //			var_dump( $endpoints );
 
 		} catch( \EDD_Exception $exception ) {
