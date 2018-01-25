@@ -96,7 +96,7 @@ final class Reports {
 				'views' => array(
 					'tile' => array(
 						'data_callback' => function() {
-							return 'Something Endpoint';
+							return 'Some Data';
 						}
 					)
 				)
