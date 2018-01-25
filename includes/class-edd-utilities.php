@@ -58,8 +58,8 @@ class EDD_Utilities {
 	public function get_registry( $name ) {
 		switch( $name ) {
 			case 'reports':
-				if ( class_exists( '\EDD\Admin\Reports\Reports_Registry' ) ) {
-					$registry = \EDD\Admin\Reports\Reports_Registry::instance();
+				if ( class_exists( '\EDD\Admin\Reports\Data\Reports_Registry' ) ) {
+					$registry = \EDD\Admin\Reports\Data\Reports_Registry::instance();
 				}
 				break;
 

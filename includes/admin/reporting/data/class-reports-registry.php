@@ -8,9 +8,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports;
+namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
+use EDD\Admin\Reports;
 
 /**
  * Implements a singleton registry for registering reports.
@@ -24,7 +25,7 @@ use EDD\Utils;
  * @method void  remove_report( string $report_id )
  * @method array get_reports( string $sort )
  */
-class Reports_Registry extends Registry implements Utils\Static_Registry {
+class Reports_Registry extends Reports\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.

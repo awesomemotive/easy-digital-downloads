@@ -12,6 +12,7 @@ namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
 use EDD\Admin\Reports;
+use EDD\Admin\Reports\Exceptions as Reports_Exceptions;
 
 /**
  * Implements a singleton registry for registering reports data endpoints.
@@ -22,6 +23,7 @@ use EDD\Admin\Reports;
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_endpoint( string $endpoint_id )
+ * @method bool  endpoint_exists( string $endpoing_id )
  * @method void  unregister_endpoint( string $endpoint_id )
  * @method array get_endpoints( string $sort )
  */
@@ -78,6 +80,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 				return parent::get_item( $endpoint_id_or_sort );
 				break;
 
+			case 'endpoint_exists':
+				return parent::offsetExists( $endpoint_id_or_sort );
+				break;
+
 			case 'unregister_endpoint':
 				parent::remove_item( $endpoint_id_or_sort );
 				break;
@@ -94,8 +100,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
-	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 * @throws \EDD_Exception if the endpoint could not be validated.
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  {
@@ -129,36 +134,27 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		$attributes = array_merge( $defaults, $attributes );
 
-		$attributes['id'] = $endpoint_id;
+		$attributes['id']    = $endpoint_id;
+		$attributes['views'] = edd_reports_parse_endpoint_views( $attributes['views'] );
+
+		// Bail if this endpoint ID is already registered.
+		if ( $this->offsetExists( $endpoint_id ) ) {
+			$message = sprintf( 'The \'%1$s\' endpoint already exists and cannont be registered.', $endpoint_id );
+
+			throw new Utils\Exception( $message );
+		}
 
 		try {
 
-			$this->validate_attributes( $attributes, $endpoint_id );
+			$valid = $this->validate_endpoint( $endpoint_id, $attributes );
 
-			try {
-
-				$this->validate_attributes( $attributes['views'], $endpoint_id, array( 'display_args' ) );
-
-			} catch( \EDD_Exception $exception ) {
-
-				edd_debug_log_exception( $exception );
-
-				throw $exception;
-
-				$error = true;
-
-			}
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
+		} catch ( \EDD_Exception $exception ) {
 
 			throw $exception;
 
-			$error = true;
 		}
 
-		if ( true === $error ) {
+		if ( false === $valid ) {
 
 			return false;
 
@@ -170,15 +166,62 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	}
 
 	/**
+	 *
+	 * Validates an endpoint's attributes.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
+	 * @throws \EDD_Exception if any of the `$views` sub-attributes are empty, except `$filters`.
+	 *
+	 * @param string $endpoint_id Reports data endpoint ID.
+	 * @param array  $attributes  Endpoint attributes. See register_endpoint() for full accepted attributes.
+	 * @return bool True if the endpoint is considered 'valid', otherwise false.
+	 */
+	public function validate_endpoint( $endpoint_id, $attributes ) {
+		$is_valid = true;
+
+		try {
+
+			$this->validate_attributes( $attributes, $endpoint_id );
+
+			try {
+
+				$this->validate_views( $attributes['views'], $endpoint_id );
+
+			} catch( \EDD_Exception $exception ) {
+
+				edd_debug_log_exception( $exception );
+
+				throw $exception;
+
+				$is_valid = false;
+
+			}
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			throw $exception;
+
+			$is_valid = false;
+		}
+
+		return $is_valid;
+	}
+
+	/**
 	 * Builds an endpoint object from a registry entry.
 	 *
 	 * @since 3.0
 	 *
 	 * @param string|Endpoint $endpoint  Endpoint ID or object.
 	 * @param string          $view_type View type to use when building the object.
+	 * @param string          $report    Optional. Report ID. Default null.
 	 * @return Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
 	 */
-	public function build_endpoint( $endpoint, $view_type ) {
+	public function build_endpoint( $endpoint, $view_type, $report = null ) {
 
 		// If an endpoint object was passed, just return it.
 		if ( $endpoint instanceof Endpoint ) {
@@ -197,17 +240,95 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		}
 
-		// Build the Endpoint object.
-		$_endpoint = new Endpoint( $view_type, $_endpoint );
+		if ( ! empty( $_endpoint ) ) {
 
-		// If any errors were logged during instantiation, return the resulting WP_Error object.
-		if ( $_endpoint->has_errors() ) {
+			if ( edd_reports_is_view_valid( $view_type ) ) {
+				$_endpoint['report'] = $report;
 
-			return $_endpoint->get_errors();
+				$handler = \edd_reports_get_endpoint_handler( $view_type );
 
+				if ( ! empty( $handler ) && class_exists( $handler ) ) {
+
+					$_endpoint = new $handler( $_endpoint );
+
+				} else {
+
+					$_endpoint = new \WP_Error(
+						'invalid_handler',
+						sprintf( 'The handler for the \'%1$s\' view is invalid.', $view_type ),
+						$handler
+					);
+
+				}
+			} else {
+				$_endpoint = new \WP_Error(
+					'invalid_view',
+					sprintf( 'The \'%1$s\' view is invalid.', $view_type )
+				);
+			}
 		}
 
 		return $_endpoint;
 	}
 
+	/**
+	 * Validates view properties for an incoming endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if a view's attributes is empty or it's not a valid view.
+	 *
+	 * @param array  $attributes List of attributes to check.
+	 * @param string $item_id    Endpoint ID.
+	 * @return void
+	 */
+	public function validate_views( $views, $endpoint_id ) {
+		$valid_views = edd_reports_get_endpoint_views();
+
+		$this->validate_attributes( $views, $endpoint_id );
+
+		foreach ( $views as $view => $attributes ) {
+			if ( array_key_exists( $view, $valid_views ) ) {
+				if ( ! empty( $valid_views[ $view ]['allow_empty'] ) ) {
+					$skip = $valid_views[ $view ]['allow_empty'];
+				} else {
+					$skip = array();
+				}
+
+				// View atts have already been parsed at this point, just validate them.
+				$this->validate_view_attributes( $attributes, $view, $skip );
+			} else {
+				throw Reports_Exceptions\Invalid_View::from( $view, __METHOD__, $endpoint_id );
+			}
+		}
+	}
+
+	/**
+	 * Validates a list of endpoint view attributes.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if a required view attribute is empty.
+	 *
+	 * @param array  $attributes List of view attributes to check for emptiness.
+	 * @param string $view       View slug.
+	 * @param array  $skip       Optional. List of view attributes to skip validating.
+	 *                           Default empty array.
+	 * @return void
+	 */
+	public function validate_view_attributes( $attributes, $view, $skip = array() ) {
+		foreach ( $attributes as $attribute => $value ) {
+			if ( in_array( $attribute, $skip, true ) ) {
+				continue;
+			}
+
+			if ( empty( $value ) ) {
+				throw Reports_Exceptions\Invalid_View_Parameter::from( $attribute, __METHOD__, $view );
+			}
+		}
+	}
+
+
+
 }
+

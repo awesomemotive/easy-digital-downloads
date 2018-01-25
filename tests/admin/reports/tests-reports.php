@@ -77,29 +77,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error() {
-		\edd_reports_register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'some_value' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
-				),
-			),
-		) );
-
-		$result = \edd_reports_get_endpoint( 'foo', 'fake' );
-
-		$this->assertWPError( $result );
-	}
-
-	/**
-	 * @covers ::edd_reports_get_endpoint()
-	 * @group edd_errors
-	 * @throws \EDD_Exception
-	 */
-	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_code_invalid_view() {
+	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
 		\edd_reports_register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
@@ -114,6 +92,112 @@ class Reports_Tests extends \EDD_UnitTestCase {
 		$result = \edd_reports_get_endpoint( 'foo', 'fake' );
 
 		$this->assertSame( 'invalid_view', $result->get_error_code() );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_reports_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
+		$expected = array(
+			'fake' => array(
+				'display_callback' => '__return_false'
+			),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, edd_reports_parse_endpoint_views( $expected ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_reports_parse_endpoint_views_with_valid_view_should_inject_defaults() {
+		$expected = array(
+			'tile' => array(
+				'data_callback'    => '__return_zero',
+				'display_callback' => 'edd_reports_display_tile',
+				'display_args'     => array(
+					'type'             => '' ,
+					'context'          => 'primary',
+					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+				),
+			),
+		);
+
+		$views = array(
+			'tile' => array(
+				'data_callback' => '__return_zero',
+			),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, edd_reports_parse_endpoint_views( $views ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_reports_parse_endpoint_views_should_strip_invalid_fields() {
+		$views = array(
+			'tile' => array(
+				'fake_field' => 'foo',
+			),
+		);
+
+		$result = edd_reports_parse_endpoint_views( $views );
+
+		$this->assertArrayNotHasKey( 'fake_field', $result['tile'] );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_Reports_parse_endpoint_views_should_inject_default_display_args() {
+		$expected = array(
+			'type'             => 'number',
+			'context'          => 'primary',
+			'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+		);
+
+		$views = array(
+			'tile' => array(
+				'display_args' => array(
+					'type' => 'number',
+				)
+			)
+		);
+
+		$result = edd_reports_parse_endpoint_views( $views );
+
+		$this->assertEqualSetsWithIndex( $expected, $result['tile']['display_args'] );
+	}
+
+	/**
+	 * @covers ::edd_reports_is_view_valid()
+	 */
+	public function test_reports_is_view_valid_with_valid_view_should_return_true() {
+		$this->assertTrue( edd_reports_is_view_valid( 'tile' ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_is_view_valid()
+	 */
+	public function test_reports_is_view_valid_with_invalid_view_should_return_false() {
+		$this->assertFalse( edd_reports_is_view_valid( 'fake' ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_get_endpoint_handler()
+	 */
+	public function test_reports_get_endpoint_handler_with_valid_view_should_return_the_handler() {
+		$expected = 'EDD\Admin\Reports\Data\Tile_Endpoint';
+
+		$this->assertSame( $expected, edd_reports_get_endpoint_handler( 'tile' ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_get_endpoint_handler()
+	 */
+	public function test_reports_get_endpoint_handler_with_invalid_view_should_return_empty() {
+		$this->assertSame( '', edd_reports_get_endpoint_handler( 'fake' ) );
 	}
 
 }

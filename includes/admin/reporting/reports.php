@@ -23,6 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_reports_page() {
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 
+	wp_enqueue_script( 'postbox' );
+
 	// Start the Reports API.
 	new EDD\Admin\Reports();
 
@@ -43,6 +45,21 @@ function edd_reports_page() {
 		do_action( 'edd_reports_tab_' . $active_tab );
 		do_action( 'edd_reports_page_bottom' );
 		?>
+
+		<div id="edd-reports-tiles-wrap">
+			<div id="dashboard-widgets" class="metabox-holder">
+
+				<div class="postbox-container">
+					<?php //do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php //do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
+				</div>
+
+			</div>
+		</div>
+
 	</div><!-- .wrap -->
 	<?php
 }
@@ -552,17 +569,26 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
-			'view_group' => 'tiles',
-			'pre_fetch'  => '',
+			'group'       => 'tiles',
+			'handler'     => 'EDD\Admin\Reports\Data\Tile_Endpoint',
+			'fields'      => array(
+				'data_callback'    => '',
+				'display_callback' => 'edd_reports_display_tile',
+				'display_args'     => array(
+					'type'             => '' ,
+					'context'          => 'primary',
+					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+				),
+			),
 		),
 		'chart' => array(
-			'view_group' => 'charts',
+			'group' => 'charts',
 		),
 		'table' => array(
-			'view_group' => 'tables',
+			'group' => 'tables',
 		),
 		'graph' => array(
-			'view_group' => 'graphs',
+			'group' => 'graphs',
 		),
 	);
 }
@@ -637,3 +663,129 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
 
 	return $registry->build_endpoint( $endpoint_id, $view_type );
 }
+
+/**
+ * Parses views for an incoming endpoint.
+ *
+ * @since 3.0
+ *
+ * @see edd_reports_get_endpoint_views()
+ *
+ * @param array  $views View slugs and attributes as dictated by edd_reports_get_endpoint_views().
+ * @return array (Maybe) adjusted views slugs and attributes array.
+ */
+function edd_reports_parse_endpoint_views( $views ) {
+	$valid_views = edd_reports_get_endpoint_views();
+
+	foreach ( $views as $view => $attributes ) {
+		if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
+			$fields = $valid_views[ $view ]['fields'];
+
+			// Merge the incoming args with the field defaults.
+			$view_args = wp_parse_args( $attributes, $fields );
+
+			// Overwrite the view attributes, keeping only the valid fields.
+			$views[ $view ] = array_intersect_key( $view_args, $fields );
+
+			if ( $views[ $view ]['display_callback'] === $fields['display_callback'] ) {
+				$views[ $view ]['display_args'] = wp_parse_args( $views[ $view ]['display_args'], $fields['display_args'] );
+			}
+		}
+	}
+
+	return $views;
+}
+
+/**
+ * Determines whether an endpoint view is valid.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view slug.
+ * @return bool True if the view is valid, otherwise false.
+ */
+function edd_reports_is_view_valid( $view ) {
+	return array_key_exists( $view, edd_reports_get_endpoint_views() );
+}
+
+/**
+ * Displays the default content for a tile endpoint.
+ *
+ * @since 3.0
+ *
+ * @param string $report ID of the report the tile endpoint is being rendered in. Not always set.
+ * @param array  $args   Tile display arguments.
+ * @return void Meta box display callbacks only echo output.
+ */
+function edd_reports_display_tile( $object, $tile ) {
+	if ( ! isset( $tile['args'] ) ) {
+		return;
+	}
+
+	if ( empty( $tile['args']['data'] ) ) {
+		echo '<span class="tile-no-data tile-value">' . __( 'No data for the current date range.', 'easy-digital-downloads' ) . '</span>';
+	} else {
+		switch( $tile['args']['display_args']['type'] ) {
+			case 'number':
+				echo '<span class="tile-number tile-value">' . $tile['args']['data'] . '</span>';
+				break;
+
+			case 'split-number':
+				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+					$tile['args']['data']['first_value'],
+					$tile['args']['data']['second_value']
+				);
+				break;
+
+			case 'amount':
+				echo '<span class="tile-amount tile-value">' . $tile['args']['data'] . '</span>';
+				break;
+
+			case 'url':
+				echo '<span class="tile-url tile-value">' . $tile['args']['data'] . '</span>';
+				break;
+
+			default:
+				echo '<span class="tile-value">' . $tile['args']['data'] . '</span>';
+				break;
+		}
+	}
+
+	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
+		echo '<span class="tile-compare">' . $tile['args']['display_args']['comparison_label'] . '</span>';
+	}
+}
+
+/**
+ * Retrieves the name of the handler class for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Handler class name if set and the view exists, otherwise an empty string.
+ */
+function edd_reports_get_endpoint_handler( $view ) {
+	$handler = '';
+
+	$views = edd_reports_get_endpoint_views();
+
+	if ( isset( $views[ $view ]['handler'] ) ) {
+		$handler = $views[ $view ]['handler'];
+	}
+
+	return $handler;
+}
+
+/**
+ * Adds AffiliateWP postbox nonces, which are used
+ * to save the position of AffiliateWP meta boxes.
+ *
+ * @since  1.9
+ *
+ * @return void
+ */
+function edd_add_screen_options_nonces() {
+	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce' , false );
+	wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce' , false );
+}
+add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
