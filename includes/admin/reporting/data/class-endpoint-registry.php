@@ -240,23 +240,31 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		}
 
-		if ( ! is_wp_error( $_endpoint ) ) {
-			$_endpoint['report'] = $report;
+		if ( ! empty( $_endpoint ) ) {
 
-			$handler = \edd_reports_get_endpoint_handler( $view_type );
+			if ( edd_reports_is_view_valid( $view_type ) ) {
+				$_endpoint['report'] = $report;
 
-			if ( ! empty( $handler ) && class_exists( $handler ) ) {
+				$handler = \edd_reports_get_endpoint_handler( $view_type );
 
-				$_endpoint = new $handler( $_endpoint );
+				if ( ! empty( $handler ) && class_exists( $handler ) ) {
 
+					$_endpoint = new $handler( $_endpoint );
+
+				} else {
+
+					$_endpoint = new \WP_Error(
+						'invalid_handler',
+						sprintf( 'The handler for the \'%1$s\' view is invalid.', $view_type ),
+						$handler
+					);
+
+				}
 			} else {
-
 				$_endpoint = new \WP_Error(
-					'invalid_handler',
-					sprintf( 'The handler for the \'%1$s\' view is invalid.', $view_type ),
-					$handler
+					'invalid_view',
+					sprintf( 'The \'%1$s\' view is invalid.', $view_type )
 				);
-
 			}
 		}
 
