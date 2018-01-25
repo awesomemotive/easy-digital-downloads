@@ -362,6 +362,12 @@ class EDD_Session {
 			}
 
 			if( is_admin() && false === strpos( $uri, 'wp-admin/admin-ajax.php' ) ) {
+				// We do not want to start sessions in the admin unless we're processing an ajax request
+				$start_session = false;
+			}
+
+			if( is_admin() && false !== strpos( $uri, 'wp_scrape_key' ) ) {
+				// Starting sessions while saving the file editor can break the save process, so don't start
 				$start_session = false;
 			}
 
