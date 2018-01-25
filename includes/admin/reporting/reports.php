@@ -40,9 +40,24 @@ function edd_reports_page() {
 
 		<?php
 		do_action( 'edd_reports_page_top' );
-		do_action( 'edd_reports_tab_' . $active_tab );
+//		do_action( 'edd_reports_tab_' . $active_tab );
 		do_action( 'edd_reports_page_bottom' );
 		?>
+
+		<div id="edd-report-tiles-wrap">
+			<div id="dashboard-widgets" class="metabox-holder">
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
+				</div>
+
+			</div>
+		</div>
+
 	</div><!-- .wrap -->
 	<?php
 }
