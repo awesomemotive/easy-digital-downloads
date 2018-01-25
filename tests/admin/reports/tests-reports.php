@@ -95,6 +95,82 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_reports_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
+		$expected = array(
+			'fake' => array(
+				'display_callback' => '__return_false'
+			),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, edd_reports_parse_endpoint_views( $expected ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_reports_parse_endpoint_views_with_valid_view_should_inject_defaults() {
+		$expected = array(
+			'tile' => array(
+				'data_callback'    => '__return_zero',
+				'display_callback' => 'edd_reports_display_tile',
+				'display_args'     => array(
+					'type'             => '' ,
+					'context'          => 'primary',
+					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+				),
+			),
+		);
+
+		$views = array(
+			'tile' => array(
+				'data_callback' => '__return_zero',
+			),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, edd_reports_parse_endpoint_views( $views ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_reports_parse_endpoint_views_should_strip_invalid_fields() {
+		$views = array(
+			'tile' => array(
+				'fake_field' => 'foo',
+			),
+		);
+
+		$result = edd_reports_parse_endpoint_views( $views );
+
+		$this->assertArrayNotHasKey( 'fake_field', $result['tile'] );
+	}
+
+	/**
+	 * @covers ::edd_reports_parse_endpoint_views()
+	 */
+	public function test_Reports_parse_endpoint_views_should_inject_default_display_args() {
+		$expected = array(
+			'type'             => 'number',
+			'context'          => 'primary',
+			'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+		);
+
+		$views = array(
+			'tile' => array(
+				'display_args' => array(
+					'type' => 'number',
+				)
+			)
+		);
+
+		$result = edd_reports_parse_endpoint_views( $views );
+
+		$this->assertEqualSetsWithIndex( $expected, $result['tile']['display_args'] );
+	}
+
+	/**
 	 * @covers ::edd_reports_is_view_valid()
 	 */
 	public function test_reports_is_view_valid_with_valid_view_should_return_true() {
