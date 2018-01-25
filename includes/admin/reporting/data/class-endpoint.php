@@ -26,6 +26,14 @@ abstract class Endpoint extends Base_Object {
 	protected $view;
 
 	/**
+	 * ID of the report the endpoint is being built against (if provided).
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $report;
+
+	/**
 	 * Represents the callback used to retrieve data based on the set view type.
 	 *
 	 * @since 3.0
@@ -60,6 +68,11 @@ abstract class Endpoint extends Base_Object {
 		parent::__construct( $args );
 
 		$this->check_view();
+
+		if ( ! empty( $args['report'] ) ) {
+			$this->set_report( $args['report'] );
+		}
+
 		$this->set_display_props( $args );
 	}
 
@@ -137,6 +150,28 @@ abstract class Endpoint extends Base_Object {
 				$this->view
 			);
 		}
+	}
+
+	/**
+	 * Retrieves the ID of the report currently associated with the endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string|null Report ID if set, otherwise null.
+	 */
+	public function get_report() {
+		return $this->report;
+	}
+
+	/**
+	 * Sets the ID for the report currently associated with the endpoint at the point of render.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $report Report ID.
+	 */
+	private function set_report( $report ) {
+		$this->report = $report;
 	}
 
 	/**
