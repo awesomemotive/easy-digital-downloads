@@ -94,4 +94,18 @@ class Reports_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 'invalid_view', $result->get_error_code() );
 	}
 
+	/**
+	 * @covers ::edd_reports_is_view_valid()
+	 */
+	public function test_reports_is_view_valid_with_valid_view_should_return_true() {
+		$this->assertTrue( edd_reports_is_view_valid( 'tile' ) );
+	}
+
+	/**
+	 * @covers ::edd_reports_is_view_valid()
+	 */
+	public function test_reports_is_view_valid_with_invalid_view_should_return_false() {
+		$this->assertFalse( edd_reports_is_view_valid( 'fake' ) );
+	}
+
 }
