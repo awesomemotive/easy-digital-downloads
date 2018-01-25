@@ -77,7 +77,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_Endpoint_including_invalid_view_error_code() {
+	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
 		\edd_reports_register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
@@ -91,7 +91,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 
 		$result = \edd_reports_get_endpoint( 'foo', 'fake' );
 
-		$this->assertSame( 'invalid_view', $result->get_errors()->get_error_code() );
+		$this->assertSame( 'invalid_view', $result->get_error_code() );
 	}
 
 }
