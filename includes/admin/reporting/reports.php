@@ -698,48 +698,47 @@ function edd_reports_parse_endpoint_views( $views ) {
  *
  * @since 3.0
  *
- * @param \EDD\Admin\Reports\Data\Endpoint $endpoint Endpoint object.
- * @param mixed                            $data     Tile data.
- * @param array                            $args     Display arguments.
- * @return string Default tile endpoint markup.
+ * @param string $report ID of the report the tile endpoint is being rendered in. Not always set.
+ * @param array  $args   Tile display arguments.
+ * @return void Meta box display callbacks only echo output.
  */
-function edd_reports_display_tile( $endpoint, $data, $args ) {
-	ob_start();
+function edd_reports_display_tile( $object, $tile ) {
+	if ( ! isset( $tile['args'] ) ) {
+		return;
+	}
 
-	if ( empty( $data ) ) {
+	if ( empty( $tile['args']['data'] ) ) {
 		echo '<span class="tile-no-data tile-value">' . __( 'No data for the current date range.', 'easy-digital-downloads' ) . '</span>';
 	} else {
-		switch( $args['type'] ) {
+		switch( $tile['args']['display_args']['type'] ) {
 			case 'number':
-				echo '<span class="tile-number tile-value">' . $data . '</span>';
+				echo '<span class="tile-number tile-value">' . $tile['args']['data'] . '</span>';
 				break;
 
 			case 'split-number':
 				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					$data['first_value'],
-					$data['second_value']
+					$tile['args']['data']['first_value'],
+					$tile['args']['data']['second_value']
 				);
 				break;
 
 			case 'amount':
-				echo '<span class="tile-amount tile-value">' . $data . '</span>';
+				echo '<span class="tile-amount tile-value">' . $tile['args']['data'] . '</span>';
 				break;
 
 			case 'url':
-				echo '<span class="tile-url tile-value">' . $data . '</span>';
+				echo '<span class="tile-url tile-value">' . $tile['args']['data'] . '</span>';
 				break;
 
 			default:
-				echo '<span class="tile-value">' . $data . '</span>';
+				echo '<span class="tile-value">' . $tile['args']['data'] . '</span>';
 				break;
 		}
 	}
 
-	if ( ! empty( $args['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . $args['comparison_label'] . '</span>';
+	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
+		echo '<span class="tile-compare">' . $tile['args']['display_args']['comparison_label'] . '</span>';
 	}
-
-	return ob_get_clean();
 }
 
 /**
