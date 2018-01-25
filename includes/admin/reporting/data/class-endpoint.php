@@ -15,7 +15,7 @@ namespace EDD\Admin\Reports\Data;
  *
  * @since 3.0
  */
-class Endpoint extends Base_Object {
+abstract class Endpoint extends Base_Object {
 
 	/**
 	 * Endpoint view (type).
@@ -23,7 +23,15 @@ class Endpoint extends Base_Object {
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $view;
+	protected $view;
+
+	/**
+	 * ID of the report the endpoint is being built against (if provided).
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $report;
 
 	/**
 	 * Represents the callback used to retrieve data based on the set view type.
@@ -50,33 +58,22 @@ class Endpoint extends Base_Object {
 	private $display_args = array();
 
 	/**
-	 * Constructs the endpoint object.
-	 *
-	 * Note: The Endpoint object is intended for use in conjunction with entries coming
-	 * directly from the endpoint registry, which have already been validated at the point
-	 * of registration. If the choice is made to build an Endpoint object "on-the-fly",
-	 * care should be taken to ensure all expected values are passed to avoid errors that
-	 * will prevent proper rendering.
+	 * Constructs the tile endpoint object.
 	 *
 	 * @since 3.0
 	 *
 	 * @param array $args Arguments for instantiating the endpoint as retrieved from the endpoint registry.
 	 */
 	public function __construct( $args ) {
-		$this->errors = new \WP_Error();
+		parent::__construct( $args );
 
-		if ( empty( $args['view'] ) ) {
-			$this->errors->add( 'missing_endpoint_view', 'The view argument must be defined when instantiating an Endpoint object.', $args );
-		} else {
-			$this->set_view( $args['view'] );
+		$this->check_view();
+
+		if ( ! empty( $args['report'] ) ) {
+			$this->set_report( $args['report'] );
 		}
 
-		if ( empty( $args['atts'] ) ) {
-			$this->errors->add( 'missing_endpoint_attributes', 'An array of attributes must be supplied when instantiating an Endpoint object.', $args );
-		} else {
-			$this->set_props( $args['atts'] );
-			$this->set_display_props( $args['atts'] );
-		}
+		$this->set_display_props( $args );
 	}
 
 	/**
@@ -137,20 +134,44 @@ class Endpoint extends Base_Object {
 	}
 
 	/**
-	 * Sets the endpoint view (type).
+	 * Checks the endpoint view (type) against the list of available views..
 	 *
 	 * @since 3.0
 	 *
 	 * @param string $view_type Endpoint type.
 	 */
-	private function set_view( $view_type ) {
+	private function check_view() {
 		$views = \edd_reports_get_endpoint_views();
 
-		if ( array_key_exists( $view_type, $views ) ) {
-			$this->view = $view_type;
-		} else {
-			$this->errors->add( 'invalid_view', 'Invalid endpoint view.', $view_type );
+		if ( ! array_key_exists( $this->get_view(), $views ) ) {
+			$this->errors->add(
+				'invalid_view',
+				sprintf( 'The \'%1$s\' view is invalid.', $this->get_view() ),
+				$this
+			);
 		}
+	}
+
+	/**
+	 * Retrieves the ID of the report currently associated with the endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string|null Report ID if set, otherwise null.
+	 */
+	public function get_report() {
+		return $this->report;
+	}
+
+	/**
+	 * Sets the ID for the report currently associated with the endpoint at the point of render.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $report Report ID.
+	 */
+	private function set_report( $report ) {
+		$this->report = $report;
 	}
 
 	/**
@@ -229,7 +250,7 @@ class Endpoint extends Base_Object {
 	 * @param array|mixed $display_args Display arguments.
 	 * @return void
 	 */
-	private function set_display_args( $display_args ) {
+	protected function set_display_args( $display_args ) {
 		if ( is_array( $display_args ) ) {
 
 			$this->display_args = $display_args;
@@ -327,7 +348,7 @@ class Endpoint extends Base_Object {
 	 * @param string $argument Argument name.
 	 * @return void
 	 */
-	private function flag_invalid_view_arg_type( $argument, $expected_type ) {
+	protected function flag_invalid_view_arg_type( $argument, $expected_type ) {
 		$message = sprintf( 'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' endpoint \'%4$s\' view.',
 			$argument,
 			$expected_type,
@@ -349,7 +370,7 @@ class Endpoint extends Base_Object {
 	 * @param string $argument Argument name.
 	 * @return void
 	 */
-	private function flag_missing_view_arg( $argument ) {
+	protected function flag_missing_view_arg( $argument ) {
 		$message = sprintf( 'The \'%1$s\' argument must be set for the \'%2$s\' endpoint \'%3$s\' view.',
 			$argument,
 			$this->get_id(),

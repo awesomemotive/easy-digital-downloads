@@ -2054,6 +2054,11 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	// Enable reports meta box toggle states.
+	if ( typeof postboxes !== 'undefined' && /edd-reports/.test( pagenow ) ) {
+		postboxes.add_postbox_toggles( pagenow );
+	}
+
 });
 
 // Graphing Helper Functions
