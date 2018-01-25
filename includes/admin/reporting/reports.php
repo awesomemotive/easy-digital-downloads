@@ -571,7 +571,6 @@ function edd_reports_get_endpoint_views() {
 		'tile' => array(
 			'group'       => 'tiles',
 			'handler'     => 'EDD\Admin\Reports\Data\Tile_Endpoint',
-			'allow_empty' => array( 'display_args' ),
 			'fields'      => array(
 				'data_callback'    => '',
 				'display_callback' => 'edd_reports_display_tile',
