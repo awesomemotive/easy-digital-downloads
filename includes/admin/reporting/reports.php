@@ -577,6 +577,7 @@ function edd_reports_get_endpoint_views() {
 				'display_callback' => 'edd_reports_display_tile',
 				'display_args'     => array(
 					'type'             => '' ,
+					'context'          => 'primary',
 					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
 				),
 			),
