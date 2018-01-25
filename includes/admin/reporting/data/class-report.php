@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports;
+namespace EDD\Admin\Reports\Data;
 
 use EDD\Utils;
 
@@ -17,25 +17,7 @@ use EDD\Utils;
  *
  * @since 3.0
  */
-final class Report {
-
-	/**
-	 * Report ID.
-	 *
-	 * Will only be set if built using a reports registry entry.
-	 *
-	 * @since 3.0
-	 * @var   string
-	 */
-	private $report_id;
-
-	/**
-	 * Endpoint label.
-	 *
-	 * @since 3.0
-	 * @var   string
-	 */
-	private $label;
+final class Report extends Base_Object {
 
 	/**
 	 * Represents valid endpoints available for display.
@@ -46,29 +28,20 @@ final class Report {
 	private $endpoints = array();
 
 	/**
-	 * Holds errors related to instantiating the report object.
-	 *
-	 * @since 3.0
-	 * @var   \WP_Error
-	 */
-	private $errors;
-
-	/**
 	 * Constructs the report object.
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $report Report record from the registry.
+	 * @param array $args Arguments for building the report (usually taking
+	 *                    the form of a report record from the registry).
 	 */
-	public function __construct( $report ) {
-		$this->errors = new \WP_Error();
+	public function __construct( $args ) {
+		parent::__construct( $args );
 
-		$this->set_props( $report );
-
-		if ( ! empty( $report['endpoints'] ) ) {
+		if ( ! empty( $args['endpoints'] ) ) {
 			try {
 
-				$this->build_endpoints( $report['endpoints'] );
+				$this->build_endpoints( $args['endpoints'] );
 
 			} catch ( \EDD_Exception $exception ) {
 
@@ -77,82 +50,9 @@ final class Report {
 			}
 		} else{
 
-			$this->errors->add( 'missing_endpoints', 'No endpoints were defined for the report.', $report );
+			$this->errors->add( 'missing_endpoints', 'No endpoints were defined for the report.', $args );
 		}
 
-	}
-
-	/**
-	 * Sets a variety of properties needed to render the report.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $report Report record from the registry.
-	 */
-	protected function set_props( $report ) {
-		if ( ! empty( $report['id'] ) ) {
-
-			$this->set_id( $report['id'] );
-
-		} else {
-
-			$this->errors->add( 'missing_report_id', 'The report_id is missing.' );
-
-		}
-
-		if ( ! empty( $report['label'] ) ) {
-
-			$this->set_label( $report['label'] );
-
-		} else {
-
-			$this->errors->add( 'missing_report_label', 'The report label is missing.' );
-
-		}
-	}
-
-	/**
-	 * Retrieves the report ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Report ID.
-	 */
-	public function get_id() {
-		return $this->report_id;
-	}
-
-	/**
-	 * Sets the report ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $report_id Report ID.
-	 */
-	private function set_id( $report_id ) {
-		$this->report_id = $report_id;
-	}
-
-	/**
-	 * Retrieves the global label for the report.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Report label.
-	 */
-	public function get_label() {
-		return $this->label;
-	}
-
-	/**
-	 * Sets the global report label.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $label Report label.
-	 */
-	private function set_label( $label ) {
-		$this->label = $label;
 	}
 
 	/**
@@ -193,7 +93,7 @@ final class Report {
 			// Loop through all endpoints for each view group and build endpoint objects.
 			foreach ( $endpoints as $endpoint ) {
 
-				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ] );
+				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ], $this->get_id() );
 
 				$this->validate_endpoint( $group, $endpoint );
 
@@ -216,8 +116,8 @@ final class Report {
 
 		foreach ( $views as $view_type => $atts ) {
 
-			if ( ! empty( $atts['view_group'] ) ) {
-				$view_group = $atts['view_group'];
+			if ( ! empty( $atts['group'] ) ) {
+				$view_group = $atts['group'];
 
 				$view_groups[ $view_group ] = $view_type;
 			}
@@ -232,7 +132,7 @@ final class Report {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Admin\Reports\Report::$valid_endpoints
+	 * @see \EDD\Admin\Reports\Data\Report::$valid_endpoints
 	 *
 	 * @param string                  $view_group View group corresponding to the endpoint view.
 	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint object.
@@ -279,30 +179,6 @@ final class Report {
 			return $this->endpoints;
 
 		}
-	}
-
-	/**
-	 * Determines whether the report has generated errors during instantiation.
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool True if errors have been logged, otherwise false.
-	 */
-	public function has_errors() {
-		$errors = $this->errors->get_error_codes();
-
-		return empty( $errors ) ? false : true;
-	}
-
-	/**
-	 * Retrieves any logged errors for the report.
-	 *
-	 * @since 3.0
-	 *
-	 * @return \WP_Error Error object for the report.
-	 */
-	public function get_errors() {
-		return $this->errors;
 	}
 
 }

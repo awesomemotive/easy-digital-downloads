@@ -39,7 +39,8 @@ class Registry extends Utils\Registry {
 	 *
 	 * @param array  $attributes List of attributes to check for emptiness.
 	 * @param string $item_id    Item ID.
-	 * @param array  $skip       Optional. List of attributes to skip validating.
+	 * @param array  $skip       Optional. List of view attributes to skip validating.
+	 *                           Default empty array.
 	 * @return void
 	 */
 	public function validate_attributes( $attributes, $item_id, $skip = array() ) {

@@ -10,6 +10,8 @@
  */
 namespace EDD\Admin;
 use EDD\Admin\Reports\Data\Endpoint;
+use EDD\Admin\Reports\Data\Report;
+use EDD\Admin\Reports\Data\Tile_Endpoint;
 
 /**
  * Core class that implements the Reports API.
@@ -36,7 +38,7 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry instance, passed by reference.
+		 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry instance, passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
@@ -51,12 +53,20 @@ final class Reports {
 
 		// Exceptions.
 		require_once $reports_dir . 'exceptions/class-invalid-parameter.php';
+		require_once $reports_dir . 'exceptions/class-invalid-view.php';
+		require_once $reports_dir . 'exceptions/class-invalid-view-parameter.php';
 
-		// Registries.
+		// Dependencies.
 		require_once $reports_dir . '/class-registry.php';
-		require_once $reports_dir . '/class-reports-registry.php';
-		require_once $reports_dir . '/class-report.php';
+		require_once $reports_dir . '/data/class-base-object.php';
+
+		// Reports.
+		require_once $reports_dir . '/data/class-reports-registry.php';
+		require_once $reports_dir . '/data/class-report.php';
+
+		// Endpoints.
 		require_once $reports_dir . '/data/class-endpoint.php';
+		require_once $reports_dir . '/data/class-tile-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
@@ -66,7 +76,7 @@ final class Reports {
 	 * @since 3.0
 	 */
 	private function hooks() {
-		add_action( 'edd_reports_init', array( $this, 'register_core_reports' ) );
+//		add_action( 'edd_reports_init', array( $this, 'register_core_reports' ) );
 	}
 
 	/**
@@ -74,7 +84,7 @@ final class Reports {
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD\Admin\Reports\Reports_Registry $reports Reports registry.
+	 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry.
 	 */
 	public function register_core_reports( $reports ) {
 
@@ -85,8 +95,9 @@ final class Reports {
 				'label' => 'Something',
 				'views' => array(
 					'tile' => array(
-						'display_callback' => '__return_false',
-						'data_callback'    => '__return_false',
+						'data_callback' => function() {
+							return 'Some Data';
+						}
 					)
 				)
 			) );
@@ -99,20 +110,24 @@ final class Reports {
 				),
 			) );
 
-			$endpoint = new Endpoint( 'tile', array(
-				'id' => 'on_the_fly',
+			$endpoint = new Tile_Endpoint( array(
+				'id'    => 'on_the_fly',
 				'label' => 'On the Fly',
-				'views' => array(
+				'views' => edd_reports_parse_endpoint_views( array(
 					'tile' => array(
-						'display_callback' => '__return_true',
-						'data_callback'    => '__return_true',
+						'data_callback'    => function() {
+							return 'Hello, World! (data)';
+						},
+						'display_args' => array(
+							'context' => 'secondary',
+						),
 					)
-				)
+				) ),
 			) );
 
 			try {
-				$built_report = new Reports\Report( array(
-					'id' => 'on_the_fly',
+				$built_report = new Report( array(
+					'id'    => 'on_the_fly',
 					'label' => 'On the Fly',
 					'endpoints' => array(
 						'tiles' => array( 'something', 'else', $endpoint )
@@ -125,7 +140,9 @@ final class Reports {
 				$built_report = 'fail';
 			}
 
-//			var_dump( $built_report );
+			$endpoints = $built_report->get_endpoints( 'tiles' );
+
+//			var_dump( $endpoints );
 
 		} catch( \EDD_Exception $exception ) {
 

@@ -73,11 +73,11 @@ class Invalid_Argument extends \InvalidArgumentException implements \EDD_Excepti
 	public static function build_message( $argument_name, $method, $context = null ) {
 		if ( ! isset( static::$error_message ) ) {
 
-			if ( ! in_array( self::$type, array( 'argument', 'parameter' ), true ) ) {
+			if ( ! isset( self::$type ) ) {
 				self::$type = 'argument';
 			}
 
-			self::$error_message = sprintf( 'The \'%1$s\' %2$s is invalid for \'%3$s\'.',
+			self::$error_message = sprintf( 'The \'%1$s\' %2$s is missing or invalid for \'%3$s\'.',
 				$argument_name,
 				static::$type,
 				$method

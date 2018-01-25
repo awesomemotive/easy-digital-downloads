@@ -105,7 +105,15 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback'    => '__return_false',
+					'display_callback' => 'edd_reports_display_tile',
+					'display_args'     => array(
+						'type'             => '' ,
+						'context'          => 'primary',
+						'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+					)
+				),
 			)
 		);
 
@@ -125,7 +133,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			),
 		) );
 
@@ -143,7 +153,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 		$this->registry->register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 
@@ -220,7 +232,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_register_endpoint_with_empty_label_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'label' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		$this->registry->register_endpoint( 'foo', array(
@@ -236,7 +248,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_register_endpoint_with_empty_views_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'views' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -249,10 +261,10 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
+	public function test_register_endpoint_with_missing_required_view_sub_attribute_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'tile' parameter for the 'foo' item is invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'data_callback' parameter for the 'tile' view is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_view_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -272,7 +284,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -292,7 +304,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'priority'  => 15,
 			'views'     => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -312,7 +324,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'display_callback' => 'some_callback'
+					'data_callback' => '__return_empty_array'
 				)
 			),
 		) );
@@ -324,19 +336,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
-		$endpoint = new Endpoint( 'tile', array() );
+		$endpoint = $this->mock_Endpoint( array(
+			'view' => 'tile',
+			'atts' => array()
+		) );
 
 		$this->assertInstanceOf( '\EDD\Admin\Reports\Data\Endpoint', $endpoint );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
-	 * @group edd_errors
-	 */
-	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
-		$result = $this->registry->build_endpoint( 'fake', '' );
-
-		$this->assertWPError( $result );
 	}
 
 	/**
@@ -376,28 +381,35 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error() {
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
 		$this->add_test_endpoints();
 
-		/** @var \WP_Error $result */
 		$result = $this->registry->build_endpoint( 'foo', 'fake' );
 
-		$this->assertWPError( $result );
+		$this->assertContains( 'invalid_view', $result->get_error_codes() );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
-	 * @group edd_errors
+	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::validate_views()
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_code_invalid_view() {
-		$this->add_test_endpoints();
+	public function test_validate_views_with_invalid_view_should_throw_exception() {
+		$this->setExpectedException(
+			'\EDD\Admin\Reports\Exceptions\Invalid_View',
+			"The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_views'"
+		);
 
-		/** @var \WP_Error $result */
-		$result = $this->registry->build_endpoint( 'foo', 'fake' );
-
-		$this->assertSame( 'invalid_view', $result->get_error_code() );
+		$this->registry->register_endpoint( 'foo', array(
+			'label'    => 'Foo',
+			'views'    => array(
+				'fake' => array(
+					'display_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+				),
+			)
+		) );
 	}
+
 
 	/**
 	 * Adds two test endpoints for use with get_endpoints() tests.
@@ -409,7 +421,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Foo',
 			'priority' => 10,
 			'views'    => array(
-				'tile' => array( 'foo' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
 
@@ -417,9 +431,21 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'label'    => 'Bar',
 			'priority' => 5,
 			'views'    => array(
-				'tile' => array( 'bar' )
+				'tile' => array(
+					'data_callback' => '__return_empty_array'
+				),
 			)
 		) );
+	}
+
+	/**
+	 * Mocks a copy of the Endpoint abstract class.
+	 *
+	 * @param array $args
+	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 */
+	protected function mock_Endpoint( $args ) {
+		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
