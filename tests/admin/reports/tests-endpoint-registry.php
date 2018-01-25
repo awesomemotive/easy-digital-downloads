@@ -106,7 +106,13 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'priority' => 10,
 			'views'    => array(
 				'tile' => array(
-					'data_callback' => '__return_false'
+					'data_callback'    => '__return_false',
+					'display_callback' => 'edd_reports_display_tile',
+					'display_args'     => array(
+						'type'             => '' ,
+						'context'          => 'primary',
+						'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+					)
 				),
 			)
 		);
