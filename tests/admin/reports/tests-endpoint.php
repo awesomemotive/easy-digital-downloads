@@ -62,21 +62,9 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_view()
 	 */
 	public function test_get_view_when_created_with_invalid_view_should_be_null() {
-		$endpoint = new Endpoint( 'fake', array() );
+		$endpoint = $this->mock_Endpoint( array() );
 
 		$this->assertNull( $endpoint->get_view() );
-	}
-
-	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_view()
-	 */
-	public function test_get_view_when_created_with_valid_view_should_be_that_view() {
-		$endpoint = new Endpoint( array(
-			'view' => 'tile',
-			'atts' => array()
-		) );
-
-		$this->assertSame( 'tile', $endpoint->get_view() );
 	}
 
 	/**
@@ -85,7 +73,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_view_with_invalid_view_should_flag_WP_Error() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'fake',
 			'atts' => array()
 		) );
@@ -99,7 +87,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_view_with_invalid_view_should_flag_WP_Error_including_code_invalid_view() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'fake',
 			'atts' => array()
 		) );
@@ -113,7 +101,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
 	 */
 	public function test_set_view_with_valid_view_should_set_that_view() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -125,7 +113,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_id()
 	 */
 	public function test_get_id_when_created_without_an_id_should_return_null() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -138,7 +126,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_id()
 	 */
 	public function test_get_id_when_created_with_an_id_should_return_that_id() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array( 'id' => 'foo' )
 		) );
@@ -150,7 +138,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_label()
 	 */
 	public function test_get_label_when_created_without_a_label_should_return_null() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -163,7 +151,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_label()
 	 */
 	public function test_get_label_when_created_with_a_label_should_return_that_label() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'label' => 'Foo',
@@ -178,7 +166,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_id_should_flag_WP_Error() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'label' => 'Foo',
@@ -200,7 +188,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_id_should_flag_WP_Error_including_code_missing_object_id() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'label' => 'Foo',
@@ -224,7 +212,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_object_label_should_flag_WP_Error() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -247,7 +235,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_display_args_should_be_treated_as_optional() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -269,7 +257,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_args()
 	 */
 	public function test_get_display_args_when_created_without_display_args_should_return_an_empty_array() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -284,7 +272,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	public function test_get_display_args_when_created_with_display_args_should_return_those_args() {
 		$expected = array( 'something', 'goes', 'here' );
 
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'views' => array(
@@ -302,7 +290,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_callback()
 	 */
 	public function test_get_display_callback_when_created_without_display_callback_should_return_null() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -315,7 +303,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_callback()
 	 */
 	public function test_get_display_callback_when_created_with_display_callback_should_return_that_callback() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'views' => array(
@@ -333,7 +321,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_data_callback()
 	 */
 	public function test_get_data_callback_when_created_without_data_callback_should_return_null() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -346,7 +334,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_data_callback()
 	 */
 	public function test_get_data_callback_when_created_with_data_callback_should_return_that_callback() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'views' => array(
@@ -366,7 +354,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_args_with_non_array_display_args_should_flag_WP_Error_including_code_invalid_view_arg_type() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -392,7 +380,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_display_callback_should_flag_WP_Error() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -415,7 +403,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_display_callback_should_flag_WP_Error_including_code_missing_display_callback() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -440,7 +428,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_callback_with_non_callable_display_callback_should_flag_WP_Error_including_code_invalid_view_arg_type() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -466,7 +454,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_data_callback_should_flag_WP_Error() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -489,7 +477,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_data_callback_should_flag_WP_Error_including_code_missing_data_callback() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -514,7 +502,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_data_callback_with_non_callable_data_callback_should_flag_WP_Error_including_code_invalid_view_arg_type() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Endpoint( array(
+		$endpoint = $this->mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -532,6 +520,16 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 		$errors = $endpoint->get_errors();
 
 		$this->assertContains( 'invalid_view_arg_type', $errors->get_error_codes() );
+	}
+
+	/**
+	 * Mocks a copy of the Endpoint abstract class.
+	 *
+	 * @param array $args
+	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 */
+	protected function mock_Endpoint( $args ) {
+		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
