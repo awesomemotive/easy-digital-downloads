@@ -697,6 +697,18 @@ function edd_reports_parse_endpoint_views( $views ) {
 }
 
 /**
+ * Determines whether an endpoint view is valid.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view slug.
+ * @return bool True if the view is valid, otherwise false.
+ */
+function edd_reports_is_view_valid( $view ) {
+	return array_key_exists( $view, edd_reports_get_endpoint_views() );
+}
+
+/**
  * Displays the default content for a tile endpoint.
  *
  * @since 3.0
