@@ -46,7 +46,7 @@ function edd_reports_page() {
 		do_action( 'edd_reports_page_bottom' );
 		?>
 
-		<div id="edd-report-tiles-wrap">
+		<div id="affwp-reports-widgets-wrap">
 			<div id="dashboard-widgets" class="metabox-holder">
 
 				<div class="postbox-container">
