@@ -261,10 +261,10 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_register_endpoint_with_empty_views_sub_attribute_should_throw_exception() {
+	public function test_register_endpoint_with_missing_required_view_sub_attribute_should_throw_exception() {
 		$this->setExpectedException(
 			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'tile' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			"The 'data_callback' parameter for the 'tile' view is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_view_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -381,12 +381,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_Endpoint_including_invalid_view_error_code() {
+	public function test_build_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
 		$this->add_test_endpoints();
 
 		$result = $this->registry->build_endpoint( 'foo', 'fake' );
 
-		$this->assertContains( 'invalid_view', $result->get_errors()->get_error_codes() );
+		$this->assertContains( 'invalid_view', $result->get_error_codes() );
 	}
 
 	/**
