@@ -156,8 +156,9 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Create the table
 	 *
-	 * @access  public
-	 * @since   2.6
+	 * @deprecated 3.0.0
+	 * @access     public
+	 * @since      2.6
 	*/
 	public function create_table() {
 
