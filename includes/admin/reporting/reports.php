@@ -23,6 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_reports_page() {
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 
+	wp_enqueue_script( 'postbox' );
+
 	// Start the Reports API.
 	new EDD\Admin\Reports();
 
