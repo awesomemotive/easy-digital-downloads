@@ -143,11 +143,11 @@ abstract class Endpoint extends Base_Object {
 	private function check_view() {
 		$views = \edd_reports_get_endpoint_views();
 
-		if ( ! array_key_exists( $this->view, $views ) ) {
+		if ( ! array_key_exists( $this->get_view(), $views ) ) {
 			$this->errors->add(
 				'invalid_view',
-				sprintf( 'The \'%1$s\' view is invalid.', $this->view ),
-				$this->view
+				sprintf( 'The \'%1$s\' view is invalid.', $this->get_view() ),
+				$this
 			);
 		}
 	}
