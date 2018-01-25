@@ -686,6 +686,10 @@ function edd_reports_parse_endpoint_views( $views ) {
 
 			// Overwrite the view attributes, keeping only the valid fields.
 			$views[ $view ] = array_intersect_key( $view_args, $fields );
+
+			if ( $views[ $view ]['display_callback'] === $fields['display_callback'] ) {
+				$views[ $view ]['display_args'] = wp_parse_args( $views[ $view ]['display_args'], $fields['display_args'] );
+			}
 		}
 	}
 
