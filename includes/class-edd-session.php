@@ -366,7 +366,7 @@ class EDD_Session {
 				$start_session = false;
 			}
 
-			if( is_admin() && false !== strpos( $uri, 'wp_scrape_key' ) ) {
+			if( false !== strpos( $uri, 'wp_scrape_key' ) ) {
 				// Starting sessions while saving the file editor can break the save process, so don't start
 				$start_session = false;
 			}
