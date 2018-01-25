@@ -166,7 +166,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 		) );
 
-		$endpoint = new Endpoint( array(
+		$endpoint = $this-mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array()
 		) );
@@ -180,7 +180,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Admin\Reports\Data\Report::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_a_legitimate_endpoint_should_add_it_to_the_endpoints_array() {
-		$endpoint = new Endpoint( array(
+		$endpoint = $this-mock_Endpoint( array(
 			'view' => 'tile',
 			'atts' => array(
 				'id'    => 'foo',
@@ -215,7 +215,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(
-					new Endpoint( array(
+					$this-mock_Endpoint( array(
 						'view' => 'tile',
 						'atts' => array(
 							'id'    => 'foo',
@@ -230,7 +230,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 					) ),
 				),
 				'tables' => array(
-					new Endpoint( array(
+					$this-mock_Endpoint( array(
 						'view' => 'table',
 						'atts' => array(
 							'id'    => 'bar',
@@ -269,7 +269,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(
-					new Endpoint( array(
+					$this-mock_Endpoint( array(
 						'view' => 'tile',
 						'atts' => array(
 							'id'    => 'foo',
@@ -284,7 +284,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 					) ),
 				),
 				'tables' => array(
-					new Endpoint( array(
+					$this-mock_Endpoint( array(
 						'view' => 'table',
 						'atts' => array(
 							'id'    => 'bar',
@@ -323,7 +323,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(
-					new Endpoint( array(
+					$this-mock_Endpoint( array(
 						'view' => 'tile',
 						'atts' => array(
 							'id'    => 'foo',
@@ -338,7 +338,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 					) ),
 				),
 				'tables' => array(
-					new Endpoint( array(
+					$this-mock_Endpoint( array(
 						'view' => 'table',
 						'atts' => array(
 							'id'    => 'bar',
@@ -364,6 +364,16 @@ class Report_Tests extends \EDD_UnitTestCase {
 		}
 
 		$this->assertEqualSets( array( 'bar' ), $actual );
+	}
+
+	/**
+	 * Mocks a copy of the Endpoint abstract class.
+	 *
+	 * @param array $args
+	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 */
+	protected function mock_Endpoint( $args ) {
+		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
