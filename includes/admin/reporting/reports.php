@@ -760,3 +760,17 @@ function edd_reports_get_endpoint_handler( $view ) {
 
 	return $handler;
 }
+
+/**
+ * Adds AffiliateWP postbox nonces, which are used
+ * to save the position of AffiliateWP meta boxes.
+ *
+ * @since  1.9
+ *
+ * @return void
+ */
+function edd_add_screen_options_nonces() {
+	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce' , false );
+	wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce' , false );
+}
+add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
