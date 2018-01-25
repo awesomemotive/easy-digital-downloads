@@ -1809,3 +1809,76 @@ td.edd_order_price {
 #edd-debug-log .edd-inline-button {
 	margin-left: 5px;
 }
+
+/* Reports Styles
+-------------------------------------------------------------- */
+
+#edd-reports-tiles-wrap #dashboard-widgets {
+	overflow: auto;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container {
+	width: 33.3%;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container {
+	margin-top: 1px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
+	margin-left: 0;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #tertiary-sortables {
+	margin-right: 0;
+}
+
+#edd-reports-tiles-wrap .metabox-holder .empty-container {
+	height: 127px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox,
+#edd-reports-tiles-wrap #dashboard-widgets .meta-box-sortables {
+	min-height: 127px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
+	min-height: 0;
+}
+
+#edd-reports-tiles-wrap h2.hndle {
+	margin-left: 25px;
+	text-align: center;
+	font-weight: normal;
+	color: #999;
+}
+
+#edd-reports-tiles-wrap .postbox .inside {
+	text-align: center;
+}
+
+#edd-reports-tiles-wrap .inside span {
+	display: block;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value {
+	color: #21759b;
+	font-size: 3em;
+	line-height: 1;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value.tile-no-data {
+	color: #888;
+	font-size: 1.5em;
+	line-height: 1;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value.tile-url {
+	font-size: 1.5em;
+}
+
+#edd-reports-tiles-wrap .inside .tile-compare {
+	color: #333;
+	padding-top: 10px;
+	font-size: 1.1em;
+}
