@@ -665,6 +665,27 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
 }
 
 /**
+ * Retrieves and builds a report object.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Admin\Reports\Data\Reports_Registry::build_report()
+ *
+ * @param string $report_id Report ID.
+ * @return \EDD\Admin\Reports\Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
+ */
+function edd_reports_get_report( $report_id ) {
+	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports' );
+
+	if ( is_wp_error( $registry ) ) {
+		return $registry;
+	}
+
+	return $registry->build_report( $report_id );
+}
+
+/**
  * Parses views for an incoming endpoint.
  *
  * @since 3.0
