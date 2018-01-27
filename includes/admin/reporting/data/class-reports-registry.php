@@ -113,7 +113,6 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		$defaults = array(
 			'label'     => '',
 			'priority'  => 10,
-			'filters'   => array(),
 			'endpoints' => array(),
 		);
 
@@ -121,7 +120,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 
 		try {
 
-			$this->validate_attributes( $attributes, $report_id, array( 'filters' ) );
+			$this->validate_attributes( $attributes, $report_id );
 
 		} catch( \EDD_Exception $exception ) {
 
