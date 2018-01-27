@@ -159,7 +159,7 @@ abstract class Endpoint extends Base_Object {
 	 *
 	 * @return string|null Report ID if set, otherwise null.
 	 */
-	public function get_report() {
+	public function get_report_id() {
 		return $this->report;
 	}
 
