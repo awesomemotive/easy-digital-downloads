@@ -64,7 +64,7 @@ final class Tile_Endpoint extends Endpoint {
 	 */
 	public function add_meta_box() {
 		$id     = $this->get_id();
-		$report = $this->get_report();
+		$report = $this->get_report_id();
 
 		add_meta_box(
 			empty( $report ) ? "report-{$id}" : "{$report}-{$id}",
