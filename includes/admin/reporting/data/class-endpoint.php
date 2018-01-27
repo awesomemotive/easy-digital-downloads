@@ -31,7 +31,7 @@ abstract class Endpoint extends Base_Object {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $report;
+	protected $report_id;
 
 	/**
 	 * Represents the callback used to retrieve data based on the set view type.
@@ -160,7 +160,7 @@ abstract class Endpoint extends Base_Object {
 	 * @return string|null Report ID if set, otherwise null.
 	 */
 	public function get_report_id() {
-		return $this->report;
+		return $this->report_id;
 	}
 
 	/**
