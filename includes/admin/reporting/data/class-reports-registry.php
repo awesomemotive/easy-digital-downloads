@@ -199,4 +199,36 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		}
 	}
 
+	/**
+	 * Builds and retrieves a Report object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string|Report $report Report ID or object.
+	 * @return Report|\WP_Error Report object on success, otherwise a WP_Error object.
+	 */
+	public function build_report( $report ) {
+		// If a report object was passed, just return it.
+		if ( $report instanceof Endpoint ) {
+			return $report;
+		}
+
+		try {
+
+			$_report = $this->get_report( $report );
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			return new \WP_Error( 'invalid_report', $exception->getMessage(), $report );
+
+		}
+
+		if ( ! empty( $_report ) ) {
+			$_report = new Report( $_report );
+		}
+
+		return $_report;
+	}
 }
