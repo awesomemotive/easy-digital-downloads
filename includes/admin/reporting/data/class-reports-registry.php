@@ -209,7 +209,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	 */
 	public function build_report( $report ) {
 		// If a report object was passed, just return it.
-		if ( $report instanceof Endpoint ) {
+		if ( $report instanceof Report ) {
 			return $report;
 		}
 
