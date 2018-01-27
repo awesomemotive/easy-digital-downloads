@@ -116,6 +116,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 			'endpoints' => array(),
 		);
 
+		$attributes['id'] = $report_id;
 		$attributes = array_merge( $defaults, $attributes );
 
 		try {
