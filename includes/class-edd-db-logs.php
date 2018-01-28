@@ -268,6 +268,12 @@ class EDD_DB_Logs extends EDD_DB {
 			$where .= $clauses['where'];
 		}
 
+		// Build date query.
+		if ( ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
+			$date_query = new WP_Date_Query( $args['date_query'], EDD()->logs->table_name . '.date_created' );
+			$where .= $date_query->get_sql();
+		}
+
 		// Download ID.
 		if ( array_key_exists( 'post_parent', $args ) ) {
 			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.object_id = ' . absint( $args['post_parent'] ) );
