@@ -37,7 +37,6 @@ function edd_reports_page() {
 			<?php foreach ( edd_get_report_tabs() as $slug => $label ) :
 				$link = add_query_arg( array(
 					'tab'              => $slug,
-					'view'             => $slug,
 					'settings-updated' => false ),
 				$current_page );
 
