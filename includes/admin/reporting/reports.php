@@ -30,10 +30,7 @@ function edd_reports_page() {
 	// Start the Reports API.
 	new EDD\Admin\Reports();
 
-	$tabs = edd_get_report_tabs();
-
-	// If not set, default the active tab to the first one.
-	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : key( $tabs );
+	$active_tab = edd_get_active_report_tab();
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
@@ -213,25 +210,18 @@ function edd_get_report_tabs() {
 }
 
 /**
- * Default Report Views
+ * Retrieves the slug for the active report tab.
  *
- * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
+ * @since 3.0
  *
- * @param string $default Default view to use.
- *
- * @since 1.9.6
- * @return string $view Report View
- *
+ * @return string The active report tab, or the first tab if the 'tab' var is not defined.
  */
-function edd_get_report_tab( $default = 'earnings' ) {
+function edd_get_active_report_tab() {
 
-	if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], array_keys( edd_get_report_tabs() ) ) ) {
-		$tab = $default;
-	} else {
-		$tab = $_GET['tab'];
-	}
+	$tabs = edd_get_report_tabs();
 
-	return apply_filters( 'edd_get_report_tab', $tab );
+	// If not set, default the active tab to the first one.
+	return isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : key( $tabs );
 }
 
 /**
