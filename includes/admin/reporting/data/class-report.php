@@ -28,12 +28,12 @@ final class Report extends Base_Object {
 	private $endpoints = array();
 
 	/**
-	 * Represents attributes passed to the Report constructor.
+	 * Represents the raw endpoints passed to the Report constructor.
 	 *
 	 * @since 3.0
 	 * @var   array
 	 */
-	private $atts = array();
+	private $raw_endpoints = array();
 
 	/**
 	 * Represents the capability needed to view the rendered report.
@@ -53,6 +53,15 @@ final class Report extends Base_Object {
 	 */
 	public function __construct( $args ) {
 		parent::__construct( $args );
+
+		if ( ! empty( $args['endpoints'] ) ) {
+
+			$this->raw_endpoints = $args['endpoints'];
+
+		} else{
+
+			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $args );
+		}
 
 		if ( ! empty( $args['capability'] ) ) {
 
