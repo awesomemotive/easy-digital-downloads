@@ -197,7 +197,7 @@ function edd_get_report_tabs() {
 		 *
 		 * @param array $views 'Reports' tab views.
 		 */
-		$legacy_views = apply_filters_deprecated( 'edd_report_views', array(), '3.0', 'edd_report_tabs' );
+		$legacy_views = apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_report_tabs' );
 
 		$reports = array_merge( $reports, $legacy_views );
 	}
