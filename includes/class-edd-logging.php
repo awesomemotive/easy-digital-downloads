@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Logging
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
@@ -18,12 +18,30 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * A general use class for logging events and errors.
  *
  * @since 1.3.1
+ * @since 3.0 - Updated to work with the new tables and classes as part of the migration to custom tables.
  */
 class EDD_Logging {
 
+	/**
+	 * Whether the debug log file is writable or not.
+	 *
+	 * @var bool
+	 */
 	public $is_writable = true;
-	private $filename   = '';
-	private $file       = '';
+
+	/**
+	 * Filename of the debug log.
+	 *
+	 * @var string
+	 */
+	private $filename = '';
+
+	/**
+	 * File path to the debug log.
+	 *
+	 * @var string
+	 */
+	private $file = '';
 
 	/**
 	 * Set up the EDD Logging Class
@@ -62,15 +80,13 @@ class EDD_Logging {
 	 * @return void
 	 */
 	public function setup_log_file() {
-
-		$upload_dir       = wp_upload_dir();
-		$this->filename   = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
-		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$upload_dir     = wp_upload_dir();
+		$this->filename = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
+		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
 
 		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
-
 	}
 
 	/**
@@ -112,13 +128,12 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Log types
-	 *
-	 * Sets up the default log types and allows for new ones to be created
+	 * Get log types.
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @return  array $terms
+	 *
+	 * @return array $terms Log types.
 	 */
 	public function log_types() {
 		$terms = array(
@@ -135,11 +150,11 @@ class EDD_Logging {
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @uses EDD_Logging::log_types()
-	 * @param string $type Log type
-	 * @return bool Whether log type is valid
+	 *
+	 * @param string $type Log type.
+	 * @return bool True if valid log type, false otherwise.
 	 */
-	function valid_type( $type ) {
+	public function valid_type( $type ) {
 		return in_array( $type, $this->log_types() );
 	}
 
@@ -151,12 +166,13 @@ class EDD_Logging {
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @uses EDD_Logging::insert_log()
-	 * @param string $title Log entry title
-	 * @param string $message Log entry message
-	 * @param int $parent Log entry parent
-	 * @param string $type Log type (default: null)
-	 * @return int Log ID
+	 *
+	 * @param string $title   Log entry title.
+	 * @param string $message Log entry message.
+	 * @param int    $parent  Download ID.
+	 * @param string $type    Log type (default: null).
+	 *
+	 * @return int ID of the newly created log item.
 	 */
 	public function add( $title = '', $message = '', $parent = 0, $type = null ) {
 		$log_data = array(
@@ -170,31 +186,33 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Easily retrieves log items for a particular object ID
+	 * Easily retrieves log items for a particular object ID.
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @uses EDD_Logging::get_connected_logs()
-	 * @param int $object_id (default: 0)
-	 * @param string $type Log type (default: null)
-	 * @param int $paged Page number (default: null)
-	 * @return array Array of the connected logs
+	 *
+	 * @param int    $object_id Object ID (default: 0).
+	 * @param string $type      Log type (default: null).
+	 * @param int    $paged     Page number (default: null).
+	 *
+	 * @return array Array of the connected logs.
 	*/
 	public function get_logs( $object_id = 0, $type = null, $paged = null ) {
 		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
 	}
 
 	/**
-	 * Stores a log entry
+	 * Stores a log entry.
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @uses EDD_Logging::valid_type()
-	 * @param array $log_data Log entry data
-	 * @param array $log_meta Log entry meta
-	 * @return int The ID of the newly created log item
+	 *
+	 * @param array $log_data Log entry data.
+	 * @param array $log_meta Log entry meta.
+	 *
+	 * @return int The ID of the newly created log item.
 	 */
-	function insert_log( $log_data = array(), $log_meta = array() ) {
+	public function insert_log( $log_data = array(), $log_meta = array() ) {
 		$defaults = array(
 			'post_type'    => 'edd_log',
 			'post_status'  => 'publish',
@@ -270,12 +288,11 @@ class EDD_Logging {
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @param array $log_data Log entry data
-	 * @param array $log_meta Log entry meta
-	 * @return bool True if successful, false otherwise
+	 *
+	 * @param array $log_data Log entry data.
+	 * @param array $log_meta Log entry meta.
 	 */
 	public function update_log( $log_data = array(), $log_meta = array() ) {
-
 		do_action( 'edd_pre_update_log', $log_data, $log_meta );
 
 		$defaults = array(
@@ -300,14 +317,15 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Retrieve all connected logs
+	 * Retrieve all connected logs.
 	 *
 	 * Used for retrieving logs related to particular items, such as a specific purchase.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.3.1
-	 * @param array $args Query arguments
-	 * @return mixed array if logs were found, false otherwise
+	 *
+	 * @param array $args Query arguments.
+	 * @return mixed array Logs fetched, false otherwise.
 	 */
 	public function get_connected_logs( $args = array() ) {
 		$defaults = array(
@@ -378,15 +396,18 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Retrieves number of log entries connected to particular object ID
+	 * Retrieves number of log entries connected to particular object ID.
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @param int $object_id (default: 0)
-	 * @param string $type Log type (default: null)
-	 * @param array $meta_query Log meta query (default: null)
-	 * @param array $date_query Log data query (default: null) (since 1.9)
-	 * @return int Log count
+	 * @since 1.9 - Added date query support.
+	 *
+	 * @param int    $object_id  Object ID (default: 0).
+	 * @param string $type       Log type (default: null).
+	 * @param array  $meta_query Log meta query (default: null).
+	 * @param array  $date_query Log date query (default: null) [since 1.9].
+	 *
+	 * @return int Log count.
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
 
@@ -422,15 +443,14 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Delete a log
+	 * Delete logs based on parameters passed.
 	 *
 	 * @access public
 	 * @since 1.3.1
-	 * @uses EDD_Logging::valid_type
-	 * @param int $object_id (default: 0)
-	 * @param string $type Log type (default: null)
-	 * @param array $meta_query Log meta query (default: null)
-	 * @return void
+	 *
+	 * @param int    $object_id  Object ID (default: 0).
+	 * @param string $type       Log type (default: null).
+	 * @param array  $meta_query Log meta query (default: null).
 	 */
 	public function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
 		$query_args = array(
@@ -465,35 +485,39 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Retrieve the log data
+	 * Retrieve the log data.
 	 *
+	 * @access public
 	 * @since 2.8.7
-	 * @return string
+	 *
+	 * @return string Log data.
 	 */
 	public function get_file_contents() {
 		return $this->get_file();
 	}
 
 	/**
-	 * Log message to file
+	 * Log message to file.
 	 *
+	 * @access public
 	 * @since 2.8.7
-	 * @return void
+	 *
+	 * @param string $message Message to insert in the log.
 	 */
 	public function log_to_file( $message = '' ) {
 		$message = date( 'Y-n-d H:i:s' ) . ' - ' . $message . "\r\n";
 		$this->write_to_log( $message );
-
 	}
 
 	/**
 	 * Retrieve the file data is written to
 	 *
+	 * @access protected
 	 * @since 2.8.7
-	 * @return string
+	 *
+	 * @return string File data.
 	 */
 	protected function get_file() {
-
 		$file = '';
 
 		if ( @file_exists( $this->file ) ) {
@@ -515,10 +539,10 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Write the log message
+	 * Write the log message.
 	 *
+	 * @access protected
 	 * @since 2.8.7
-	 * @return void
 	 */
 	protected function write_to_log( $message = '' ) {
 		$file = $this->get_file();
@@ -527,34 +551,30 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Delete the log file or removes all contents in the log file if we cannot delete it
+	 * Delete the log file or removes all contents in the log file if we cannot delete it.
 	 *
+	 * @access public
 	 * @since 2.8.7
-	 * @return void
+	 *
+	 * @return bool True if the log was cleared, false otherwise.
 	 */
 	public function clear_log_file() {
 		@unlink( $this->file );
 
 		if ( file_exists( $this->file ) ) {
 
-			// it's still there, so maybe server doesn't have delete rights
+			// It's still there, so maybe server doesn't have delete rights
 			chmod( $this->file, 0664 ); // Try to give the server delete rights
 			@unlink( $this->file );
 
-			// See if it's still there
+			// See if it's still there...
 			if ( @file_exists( $this->file ) ) {
 
-				/*
-				 * Remove all contents of the log file if we cannot delete it
-				 */
+				// Remove all contents of the log file if we cannot delete it
 				if ( is_writeable( $this->file ) ) {
-
 					file_put_contents( $this->file, '' );
-
 				} else {
-
 					return false;
-
 				}
 
 			}
@@ -563,7 +583,6 @@ class EDD_Logging {
 
 		$this->file = '';
 		return true;
-
 	}
 
 	/**
