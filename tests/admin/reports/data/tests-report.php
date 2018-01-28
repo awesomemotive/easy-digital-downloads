@@ -82,7 +82,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report
+	 * @covers \EDD\Admin\Reports\Data\Report::$endpoints
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error_including_code_missing_endpoints() {
@@ -93,6 +93,21 @@ class Report_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertContains( 'missing_endpoints', $report->get_errors()->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Reports\Data\Report::$capability
+	 * @group edd_errors
+	 */
+	public function test_Report_with_empty_capability_should_flag_WP_Error_including_code_missing_capability() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => '',
+		) );
+
+		$this->assertContains( 'missing_capability', $report->get_errors()->get_error_codes() );
 	}
 
 	/**

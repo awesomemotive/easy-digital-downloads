@@ -28,6 +28,14 @@ final class Report extends Base_Object {
 	private $endpoints = array();
 
 	/**
+	 * Represents the capability needed to view the rendered report.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $capability;
+
+	/**
 	 * Constructs the report object.
 	 *
 	 * @since 3.0
@@ -50,9 +58,18 @@ final class Report extends Base_Object {
 			}
 		} else{
 
-			$this->errors->add( 'missing_endpoints', 'No endpoints were defined for the report.', $args );
+			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $args );
 		}
 
+		if ( ! empty( $args['capability'] ) ) {
+
+			$this->set_capability( $args['capability'] );
+
+		} else {
+
+			$this->errors->add( 'missing_capability', 'No capability is defined for the report.', $args );
+
+		}
 	}
 
 	/**
@@ -179,6 +196,28 @@ final class Report extends Base_Object {
 			return $this->endpoints;
 
 		}
+	}
+
+	/**
+	 * Retrieves the capability needed to view the rendered report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Report capability.
+	 */
+	public function get_capability() {
+		return $this->capability;
+	}
+
+	/**
+	 * Sets the capability needed for the current user to view the report.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $capability Capability.
+	 */
+	private function set_capability( $capability ) {
+		$this->capability = sanitize_key( $capability );
 	}
 
 }
