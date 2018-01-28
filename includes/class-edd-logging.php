@@ -200,30 +200,29 @@ class EDD_Logging {
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		do_action( 'edd_pre_insert_log', $log_data, $log_meta );
+		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
-		if ( 'api_request' === $log_data['log_type'] ) {
+		$db_object = 'logs';
+		$data = array();
+
+		if ( 'api_request' === $args['log_type'] ) {
 			$data = array(
 				'user_id' => $log_meta['user'],
 				'api_key' => $log_meta['key'],
 				'token'   => null === $log_meta['token'] ? 'public' : $log_meta['token'],
 				'version' => $log_meta['version'],
-				'request' => $log_data['post_excerpt'],
-				'error'   => $log_data['post_content'],
+				'request' => $args['post_excerpt'],
+				'error'   => $args['post_content'],
 				'ip'      => $log_meta['request_ip'],
 				'time'    => $log_meta['time'],
 			);
 
-			$log_id = EDD()->api_request_logs->insert( $data );
-
-			do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
-
-			return $log_id;
+			$db_object = 'api_request_logs';
 		}
 
-		if ( 'file_download' === $log_data['log_type'] ) {
+		if ( 'file_download' === $args['log_type'] ) {
 			$data = array(
-				'download_id' => $log_data['post_parent'],
+				'download_id' => $args['post_parent'],
 				'file_id'     => $log_meta['file_id'],
 				'payment_id'  => $log_meta['payment_id'],
 				'price_id'    => $log_meta['price_id'],
@@ -232,20 +231,10 @@ class EDD_Logging {
 				'ip'          => $log_meta['ip'],
 			);
 
-			$log_id = EDD()->file_download_logs->insert( $data );
-
-			do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
-
-			return $log_id;
+			$db_object = 'file_download_logs';
 		}
 
-		// Store the log entry
-		$log_id = wp_insert_post( $args );
-
-		// Set the log type, if any
-		if ( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
-			wp_set_object_terms( $log_id, $log_data['log_type'], 'edd_log_type', false );
-		}
+		$log_id = EDD()->{$db_object}->insert( $data );
 
 		// Set log meta, if any
 		if ( $log_id && ! empty( $log_meta ) ) {
@@ -254,7 +243,7 @@ class EDD_Logging {
 			}
 		}
 
-		do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
+		do_action( 'edd_post_insert_log', $log_id, $args, $log_meta );
 
 		return $log_id;
 	}
