@@ -385,7 +385,16 @@ class EDD_Logging {
 			$query_args['date_query'] = $date_query;
 		}
 
-		$count = EDD()->logs->count( $query_args );
+		// Used to dynamically dispatch the call to the correct class.
+		$db_object = 'logs';
+
+		if ( 'api_request' === $type ) {
+			$db_object = 'api_request_logs';
+		} else if ( 'file_download' === $type ) {
+			$db_object = 'file_download_logs';
+		}
+
+		$count = EDD()->{$db_object}->count( $query_args );
 
 		return $count;
 	}
