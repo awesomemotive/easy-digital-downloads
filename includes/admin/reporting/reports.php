@@ -834,12 +834,9 @@ function edd_reports_get_endpoint_handler( $view ) {
 }
 
 /**
- * Adds AffiliateWP postbox nonces, which are used
- * to save the position of AffiliateWP meta boxes.
+ * Adds postbox nonces, which are used to save the position of tile endpoint meta boxes.
  *
- * @since  1.9
- *
- * @return void
+ * @since 3.0
  */
 function edd_add_screen_options_nonces() {
 	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce' , false );
