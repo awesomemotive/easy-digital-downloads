@@ -77,7 +77,8 @@ final class Report extends Base_Object {
 	}
 
 	/**
-	 * Triggers building the report's endpoints.
+	 * Triggers building the report's endpoints if defined and the current user
+	 * has the ability to view them.
 	 *
 	 * This is abstracted away from instantiation to allow for building Report objects
 	 * without always registering meta boxes and other endpoint dependencies for display.
@@ -85,21 +86,22 @@ final class Report extends Base_Object {
 	 * @since 3.0
 	 */
 	public function build_endpoints() {
-		if ( ! empty( $this->atts['endpoints'] ) ) {
+		if ( ! empty( $this->raw_endpoints ) && current_user_can( $this->get_capability() ) ) {
 			try {
 
-				$this->parse_endpoints( $this->atts['endpoints'] );
+				$this->parse_endpoints( $this->raw_endpoints );
 
 			} catch ( \EDD_Exception $exception ) {
 
 				edd_debug_log_exception( $exception );
 
 			}
-		} else{
 
-			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $this->atts );
+		} else {
+
+			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.' );
+
 		}
-
 	}
 
 	/**
