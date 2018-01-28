@@ -57,30 +57,44 @@ function edd_reports_page() {
 		</h2>
 
 		<?php
-		do_action( 'edd_reports_page_top' );
+		$report = edd_reports_get_report( $active_tab );
 
-		if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-			do_action( "edd_reports_tab_{$active_tab}" );
-		} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-			do_action( "edd_reports_view_{$active_tab}" );
-		}
+		if ( ! is_wp_error( $report ) ) :
 
-		do_action( 'edd_reports_page_bottom' );
+			do_action( 'edd_reports_page_top' );
+
+			if ( $report->has_endpoints( 'tiles' ) ) : ?>
+
+				<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
+
+				<div id="edd-reports-tiles-wrap">
+					<div id="dashboard-widgets" class="metabox-holder">
+
+						<div class="postbox-container">
+							<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
+						</div>
+
+						<div class="postbox-container">
+							<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
+						</div>
+
+						<div class="postbox-container">
+							<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', null ); ?>
+						</div>
+
+					</div>
+				</div>
+			<?php endif; // Has endpoints.
+
+			if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
+				do_action( "edd_reports_tab_{$active_tab}" );
+			} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
+				do_action( "edd_reports_view_{$active_tab}" );
+			}
+
+			do_action( 'edd_reports_page_bottom' );
+		endif; // Not WP_Error.
 		?>
-
-		<div id="edd-reports-tiles-wrap">
-			<div id="dashboard-widgets" class="metabox-holder">
-
-				<div class="postbox-container">
-					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
-				</div>
-
-				<div class="postbox-container">
-					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
-				</div>
-
-			</div>
-		</div>
 
 	</div><!-- .wrap -->
 	<?php
