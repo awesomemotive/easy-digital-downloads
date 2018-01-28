@@ -208,20 +208,12 @@ class EDD_DB_Logs extends EDD_DB {
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		$cache_key = md5( 'edd_logs_file_downloads_' . serialize( $args ) );
+		$cache_key = md5( 'edd_logs_' . serialize( $args ) );
 
 		$logs = wp_cache_get( $cache_key, $this->cache_group );
 
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
-
-		// Build meta query.
-		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
-			$meta_query = new WP_Meta_Query( $args['meta_query'] );
-			$clauses = $meta_query->get_sql( 'edd_log', EDD()->logs->table_name, 'id', $this );
-			$clauses['where'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
-			$clauses['where'] = preg_replace( '/\'_edd_log_/', '\'', $clauses['where'] );
-		}
 
 		if ( false === $logs ) {
 			$logs = $wpdb->get_col( $wpdb->prepare(
@@ -259,6 +251,14 @@ class EDD_DB_Logs extends EDD_DB {
 	 */
 	private function parse_where( $args ) {
 		$where = '';
+
+		// Build meta query.
+		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
+			$meta_query = new WP_Meta_Query( $args['meta_query'] );
+			$clauses = $meta_query->get_sql( 'edd_log', EDD()->logs->table_name, 'id', $this );
+			$clauses['where'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
+			$clauses['where'] = preg_replace( '/\'_edd_log_/', '\'', $clauses['where'] );
+		}
 
 		return $where;
 	}

@@ -306,6 +306,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return array $logs_data Array of all the Log entires
 	 */
 	public function get_logs() {
+		/** @var EDD_Logging $edd_logs */
 		global $edd_logs;
 
 		// Prevent the queries from getting cached. Without this there are occasional memory issues for some installs
