@@ -62,7 +62,12 @@ class EDD_Logging {
 		add_filter( 'update_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
 		add_filter( 'add_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
 
-		// Backwards compatibility for file download logs and other logs
+		// Backwards compatibility for file download logs
+		add_filter( 'get_post_metadata', array( $this, '_file_download_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
+
+		// Backwards compatibility for global logs
 		add_filter( 'get_post_metadata', array( $this, '_log_get_meta_backcompat' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_log_update_meta_backcompat' ), 99, 5 );
 		add_filter( 'add_post_metadata', array( $this, '_log_update_meta_backcompat' ), 99, 5 );
@@ -267,9 +272,10 @@ class EDD_Logging {
 		$log_id = EDD()->{$db_object}->insert( $data );
 
 		// Set log meta, if any
-		if ( $log_id && ! empty( $log_meta ) ) {
+		if ( $log_id && 'logs' === $db_object && ! empty( $log_meta ) ) {
 			foreach ( (array) $log_meta as $key => $meta ) {
-				update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
+				$log = new EDD\Logs\Log( $log_id );
+				$log->add_meta( sanitize_key( $key ), $meta );
 			}
 		}
 
@@ -765,7 +771,7 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Backwards compatibility filters for get_post_meta() calls on logs other than API request logs.
+	 * Backwards compatibility filters for get_post_meta() calls on file download logs.
 	 *
 	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
@@ -778,7 +784,7 @@ class EDD_Logging {
 	 * @param  bool   $single      If the person wants the single value or an array of the value
 	 * @return mixed               The value to return
 	 */
-	public function _log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
+	public function _file_download_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
 		global $wpdb;
 
 		$meta_keys = apply_filters( 'edd_post_meta_log_backwards_compat_keys', array(
@@ -850,7 +856,9 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Listen for calls to update_post_meta and see if we need to filter them.
+	 * Listen for calls to update_post_meta for file download logs and see if we need to filter them.
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
 	 * @since 3.0
 	 *
@@ -862,7 +870,7 @@ class EDD_Logging {
 	 *
 	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta
 	 */
-	public function _log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+	public function _file_download_log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		global $wpdb;
 
 		$meta_keys = apply_filters( 'edd_post_meta_log_backwards_compat_keys', array(
