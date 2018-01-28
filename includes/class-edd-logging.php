@@ -661,14 +661,14 @@ class EDD_Logging {
 		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
 		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
 
-		$api_request_log = new EDD_File_Download_Log( $object_id );
+		$api_request_log = new EDD\Logs\API_Request_Log( $object_id );
 
 		if ( ! $api_request_log || ! $api_request_log->id > 0 ) {
 			// We didn't find an API request log record with this ID... so let's check and see if it was a migrated one
 			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
 
 			if ( ! empty( $object_id ) ) {
-				$api_request_log = new EDD_File_Download_Log( $object_id );
+				$api_request_log = new EDD\Logs\API_Request_Log( $object_id );
 			} else {
 				return $check;
 			}
@@ -753,14 +753,14 @@ class EDD_Logging {
 		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
 		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
 
-		$file_download_log = new EDD_File_Download_Log( $object_id );
+		$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
 
 		if ( ! $file_download_log || ! $file_download_log->id > 0 ) {
 			// We didn't find a API request log record with this ID... so let's check and see if it was a migrated one
 			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
 
 			if ( ! empty( $object_id ) ) {
-				$file_download_log = new EDD_File_Download_Log( $object_id );
+				$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
 			} else {
 				return $value;
 			}
@@ -837,14 +837,14 @@ class EDD_Logging {
 		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
 		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
 
-		$file_download_log = new EDD_File_Download_Log( $object_id );
+		$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
 
 		if ( ! $file_download_log || ! $file_download_log->id > 0 ) {
 			// We didn't find an API request log record with this ID... so let's check and see if it was a migrated one
 			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
 
 			if ( ! empty( $object_id ) ) {
-				$file_download_log = new EDD_File_Download_Log( $object_id );
+				$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
 			} else {
 				return $check;
 			}
