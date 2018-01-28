@@ -260,7 +260,7 @@ class EDD_DB_Logs extends EDD_DB {
 		$table_name = EDD()->logs->table_name;
 
 		// Build meta query.
-		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
+		if ( array_key_exists( 'meta_query', $args ) && ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
 			$meta_query = new WP_Meta_Query( $args['meta_query'] );
 			$clauses = $meta_query->get_sql( 'edd_log', EDD()->logs->table_name, 'id', $this );
 			$clauses['where'] = preg_replace( '/\'_edd_log_/', '\'', $clauses['where'] );
@@ -268,19 +268,23 @@ class EDD_DB_Logs extends EDD_DB {
 		}
 
 		// Build date query.
-		if ( ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
+		if ( array_key_exists( 'date_query', $args ) && ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
 			$date_query = new WP_Date_Query( $args['date_query'], EDD()->logs->table_name . '.date_created' );
 			$where .= $date_query->get_sql();
 		}
 
 		// Legacy post parent argument.
-		if ( array_key_exists( 'post_parent', $args ) ) {
-			$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['post_parent'] ) );
+		if ( array_key_exists( 'post_parent', $args ) && ! empty( $args['post_parent'] ) ) {
+			if ( false !== $args['post_parent'] ) {
+				$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['post_parent'] ) );
+			}
 		}
 
 		// Object ID.
-		if ( array_key_exists( 'object_id', $args ) ) {
-			$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['object_id'] ) );
+		if ( array_key_exists( 'object_id', $args ) && ! empty( $args['object_id'] ) ) {
+			if ( false !== $args['object_id'] ) {
+				$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['object_id'] ) );
+			}
 		}
 
 		// Object type(s).
