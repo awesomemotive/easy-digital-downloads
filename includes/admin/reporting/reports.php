@@ -29,7 +29,7 @@ function edd_reports_page() {
 	new EDD\Admin\Reports();
 
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
-	$view       = edd_get_reporting_view();
+	$view       = edd_get_report_tab();
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
@@ -126,6 +126,28 @@ function edd_get_reporting_view( $default = 'earnings' ) {
 	}
 
 	return apply_filters( 'edd_get_reporting_view', $view );
+}
+
+/**
+ * Default Report Views
+ *
+ * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
+ *
+ * @param string $default Default view to use.
+ *
+ * @since 1.9.6
+ * @return string $view Report View
+ *
+ */
+function edd_get_report_tab( $default = 'earnings' ) {
+
+	if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], array_keys( edd_get_report_tabs() ) ) ) {
+		$tab = $default;
+	} else {
+		$tab = $_GET['tab'];
+	}
+
+	return apply_filters( 'edd_get_report_tab', $tab );
 }
 
 /**
