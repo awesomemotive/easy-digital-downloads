@@ -30,8 +30,10 @@ function edd_reports_page() {
 	// Start the Reports API.
 	new EDD\Admin\Reports();
 
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
-	$view       = edd_get_report_tab();
+	$tabs = edd_get_report_tabs();
+
+	// If not set, default the active tab to the first one.
+	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : key( $tabs );
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
