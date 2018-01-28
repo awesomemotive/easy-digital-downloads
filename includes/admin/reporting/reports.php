@@ -117,6 +117,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'earnings', array(
 			'label'     => __( 'Earnings', 'easy-digital-downloads' ),
+			'priority'  => 5,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
@@ -124,6 +125,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'categories', array(
 			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
+			'priority'  => 10,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
@@ -131,6 +133,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'downloads', array(
 			'label'     => edd_get_label_plural(),
+			'priority'  => 15,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
@@ -138,6 +141,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'gateways', array(
 			'label'     => __( 'Payment Methods', 'easy-digital-downloads' ),
+			'priority'  => 20,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
@@ -145,6 +149,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
+			'priority'  => 25,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
