@@ -261,16 +261,7 @@ function edd_reports_download_details() {
 
 	if( ! isset( $_GET['download-id'] ) )
 		return;
-?>
-	<div class="tablenav top">
-		<div class="actions bulkactions">
-			<div class="alignleft">
-				<?php edd_report_views(); ?>
-			</div>&nbsp;
-			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'easy-digital-downloads' ); ?></button>
-		</div>
-	</div>
-<?php
+
 	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
 }
 add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
@@ -310,11 +301,7 @@ function edd_reports_earnings() {
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
-	?>
-	<div class="tablenav top">
-		<div class="alignleft actions"><?php edd_report_views(); ?></div>
-	</div>
-	<?php
+
 	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
@@ -383,10 +370,6 @@ function edd_reports_taxes() {
 
 	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
 	?>
-	<div class="tablenav top">
-		<div class="alignleft actions"><?php edd_report_views(); ?></div>
-	</div>
-
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php _e('Tax Report','easy-digital-downloads' ); ?></span></h3>
