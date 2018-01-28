@@ -206,7 +206,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		$cache_key = md5( 'logs_file_downloads' . serialize( $args ) );
+		$cache_key = md5( 'edd_logs_file_downloads_' . serialize( $args ) );
 
 		$logs = wp_cache_get( $cache_key, $this->cache_group );
 
