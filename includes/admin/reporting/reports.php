@@ -777,26 +777,33 @@ function edd_reports_display_tile( $object, $tile ) {
 	} else {
 		switch( $tile['args']['display_args']['type'] ) {
 			case 'number':
-				echo '<span class="tile-number tile-value">' . $tile['args']['data'] . '</span>';
+				echo '<span class="tile-number tile-value">' . edd_format_amount( $tile['args']['data'] ) . '</span>';
 				break;
 
 			case 'split-number':
 				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					$tile['args']['data']['first_value'],
-					$tile['args']['data']['second_value']
+					edd_format_amount( $tile['args']['data']['first_value'] ),
+					edd_format_amount( $tile['args']['data']['second_value'] )
+				);
+				break;
+
+			case 'split-amount':
+				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+					edd_currency_filter( edd_format_amount( $tile['args']['data']['first_value'] ) ),
+					edd_currency_filter( edd_format_amount( $tile['args']['data']['second_value'] ) )
 				);
 				break;
 
 			case 'amount':
-				echo '<span class="tile-amount tile-value">' . $tile['args']['data'] . '</span>';
+				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $tile['args']['data'] ) ) . '</span>';
 				break;
 
 			case 'url':
-				echo '<span class="tile-url tile-value">' . $tile['args']['data'] . '</span>';
+				echo '<span class="tile-url tile-value">' . esc_url( $tile['args']['data'] ) . '</span>';
 				break;
 
 			default:
-				echo '<span class="tile-value">' . $tile['args']['data'] . '</span>';
+				echo '<span class="tile-value">' . esc_html( $tile['args']['data'] ) . '</span>';
 				break;
 		}
 	}
