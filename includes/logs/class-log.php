@@ -353,6 +353,7 @@ class Log {
 	public function get_meta( $meta_key = '', $single = true ) {
 		return EDD()->log_meta->get_meta( $this->id, $meta_key, $single );
 	}
+
 	/**
 	 * Add meta data field to a log.
 	 *
@@ -384,6 +385,7 @@ class Log {
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
 		return EDD()->log_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
 	}
+
 	/**
 	 * Remove metadata matching criteria from a log.
 	 *
@@ -450,5 +452,4 @@ class Log {
 
 		return $data;
 	}
-
 }
