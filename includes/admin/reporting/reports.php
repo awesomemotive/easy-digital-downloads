@@ -35,13 +35,13 @@ function edd_reports_page() {
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
-			<?php foreach ( $tabs as $slug => $label ) :
+			<?php foreach ( edd_get_report_tabs() as $slug => $label ) :
 				$link = add_query_arg( array(
 					'tab'              => $slug,
 					'settings-updated' => false ),
 				$current_page );
 
-				$class = $active_tab == $slug ? 'nav-tab nav-tab-active' : 'nav-tab';
+				$class = $slug === $active_tab ? 'nav-tab nav-tab-active' : 'nav-tab';
 				?>
 
 				<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $class ); ?>">
