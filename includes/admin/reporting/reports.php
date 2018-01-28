@@ -762,8 +762,9 @@ function edd_reports_is_view_valid( $view ) {
  *
  * @since 3.0
  *
- * @param string $report ID of the report the tile endpoint is being rendered in. Not always set.
- * @param array  $args   Tile display arguments.
+ * @param \EDD\Admin\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
+ *                                               Not always set.
+ * @param array                          $args   Tile display arguments.
  * @return void Meta box display callbacks only echo output.
  */
 function edd_reports_display_tile( $object, $tile ) {
