@@ -38,7 +38,7 @@ function edd_reports_page() {
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
-			<?php foreach ( edd_get_report_tabs() as $slug => $label ) :
+			<?php foreach ( $tabs as $slug => $label ) :
 				$link = add_query_arg( array(
 					'tab'              => $slug,
 					'settings-updated' => false ),
@@ -60,6 +60,8 @@ function edd_reports_page() {
 		</h2>
 
 		<?php
+		$view = edd_get_report_tab();
+
 		do_action( 'edd_reports_page_top' );
 
 		if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
