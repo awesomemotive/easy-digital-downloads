@@ -29,14 +29,29 @@ function edd_reports_page() {
 	new EDD\Admin\Reports();
 
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
+	$view       = edd_get_reporting_view();
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
-			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'easy-digital-downloads' ); ?></a>
-			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
+			<?php foreach ( edd_reports_default_views() as $slug => $label ) :
+				$link = add_query_arg( array(
+					'tab'              => $slug,
+					'settings-updated' => false ),
+				$current_page );
+
+				$class = $active_tab == $slug ? 'nav-tab nav-tab-active' : 'nav-tab';
+				?>
+
+				<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $class ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</a>
+			<?php endforeach; ?>
+
+			<?php if ( current_user_can( 'export_shop_reports' ) ) : ?>
 				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'easy-digital-downloads' ); ?></a>
-			<?php } ?>
+			<?php endif; ?>
+
 			<?php do_action( 'edd_reports_tabs' ); ?>
 		</h2>
 
