@@ -59,6 +59,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 			'payment_id'   => '%d',
 			'price_id'     => '%d',
 			'user_id'      => '%d',
+			'email'        => '%s',
 			'ip'           => '%s',
 			'date_created' => '%s',
 		);
@@ -80,6 +81,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 			'payment_id'   => 0,
 			'price_id'     => 0,
 			'user_id'      => 0,
+			'email'        => '',
 			'ip'           => '',
 			'date_created' => date( 'Y-m-d H:i:s' ),
 		);
