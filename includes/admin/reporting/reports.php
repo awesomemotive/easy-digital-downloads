@@ -34,7 +34,7 @@ function edd_reports_page() {
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
 		<h2 class="nav-tab-wrapper">
-			<?php foreach ( edd_reports_default_views() as $slug => $label ) :
+			<?php foreach ( edd_get_report_tabs() as $slug => $label ) :
 				$link = add_query_arg( array(
 					'tab'              => $slug,
 					'view'             => $slug,
@@ -87,23 +87,125 @@ function edd_reports_page() {
 }
 
 /**
- * Default Report Views
+ * Placeholder code to re-register former reports views as report tabs.
+ *
+ * This code will be replaced before release with individual tab registration logic.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry.
+ */
+function edd_register_core_reports( $reports ) {
+
+	try {
+
+		$reports->register_endpoint( 'test_tile', array(
+			'label' => 'Test Tile',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function() {
+						return 'Some Tile Data';
+					}
+				)
+			)
+		) );
+
+		$reports->add_report( 'earnings', array(
+			'label'     => __( 'Earnings', 'easy-digital-downloads' ),
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'categories', array(
+			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'downloads', array(
+			'label'     => edd_get_label_plural(),
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'gateways', array(
+			'label'     => __( 'Payment Methods', 'easy-digital-downloads' ),
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'taxes', array(
+			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+
+	} catch ( \EDD_Exception $exception ) {
+
+		edd_debug_log_exception( $exception );
+
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_core_reports' );
+
+/**
+ * Defines views for the legacy 'Reports' tab.
  *
  * @since 1.4
+ * @deprecated 3.0
+ *
  * @return array $views Report Views
  */
 function edd_reports_default_views() {
-	$views = array(
-		'earnings'   => __( 'Earnings', 'easy-digital-downloads' ),
-		'categories' => __( 'Earnings by Category', 'easy-digital-downloads' ),
-		'downloads'  => edd_get_label_plural(),
-		'gateways'   => __( 'Payment Methods', 'easy-digital-downloads' ),
-		'taxes'      => __( 'Taxes', 'easy-digital-downloads' ),
-	);
+	/**
+	 * Filters legacy 'Reports' tab views.
+	 *
+	 * @since 1.4
+	 * @deprecated 3.0 Use {@see 'edd_report_tabs'}
+	 * @see 'edd_report_tabs'
+	 *
+	 * @param array $views 'Reports' tab views.
+	 */
+	return apply_filters_deprecated( 'edd_report_views', array(), '3.0', 'edd_report_tabs' );
+}
 
-	$views = apply_filters( 'edd_report_views', $views );
+/**
+ * Retrieves the list of slug/label report tab pairs.
+ *
+ * @since 3.0
+ *
+ * @return array List of report tabs, otherwise an empty array.
+ */
+function edd_get_report_tabs() {
+	$reports = array();
 
-	return $views;
+	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports' );
+
+	if ( is_wp_error( $registry ) ) {
+		return array();
+	} else {
+		$registered_reports = $registry->get_reports( 'priority' );
+	}
+
+	foreach ( $registered_reports as $report_id => $attributes ) {
+		$reports[ $report_id ] = $attributes['label'];
+	}
+
+	/**
+	 * Filters the list of report tab slug/label pairs.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $reports List of slug/label pairs as representative of report tabs.
+	 */
+	return apply_filters( 'edd_report_tabs', $reports );
 }
 
 /**
