@@ -352,6 +352,10 @@ class EDD_Logging {
 			$args['meta_query'] = $query_args['meta_query'];
 		}
 
+		if ( isset( $query_args['date_query'] ) && is_array( $query_args['date_query'] ) ) {
+			$args['date_query'] = $query_args['date_query'];
+		}
+
 		$logs = EDD()->{$db_object}->get_logs( $args );
 
 		if ( $logs ) {
