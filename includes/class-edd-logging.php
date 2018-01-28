@@ -228,7 +228,8 @@ class EDD_Logging {
 				'payment_id'  => $log_meta['payment_id'],
 				'price_id'    => $log_meta['price_id'],
 				'user_id'     => $log_meta['user_id'],
-				'ip'          => $log_meta['ip']
+				'email'       => $log_meta['user_info']['email'],
+				'ip'          => $log_meta['ip'],
 			);
 
 			$log_id = EDD()->file_download_logs->insert( $data );
