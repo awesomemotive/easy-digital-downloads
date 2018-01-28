@@ -913,45 +913,41 @@ class EDD_Logging {
 $GLOBALS['edd_logs'] = new EDD_Logging();
 
 /**
- * Record a log entry
- *
- * This is just a simple wrapper function for the log class add() function
+ * Helper method to insert a new log into the database.
  *
  * @since 1.3.3
  *
- * @param string $title
- * @param string $message
- * @param int    $parent
- * @param null   $type
+ * @see EDD_Logging::add()
  *
- * @global $edd_logs EDD Logs Object
+ * @param string $title   Log title.
+ * @param string $message Log message.
+ * @param int    $parent  Download ID.
+ * @param null   $type    Log type.
  *
- * @uses EDD_Logging::add()
- *
- * @return mixed ID of the new log entry
+ * @return int ID of the new log.
  */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
+	/** @var EDD_Logging $edd_logs */
 	global $edd_logs;
+
 	$log = $edd_logs->add( $title, $message, $parent, $type );
+
 	return $log;
 }
 
 
 /**
- * Logs a message to the debug log file
+ * Logs a message to the debug log file.
  *
  * @since 2.8.7
  *
- * @param string $message
- * @global $edd_logs EDD Logs Object
- * @return void
+ * @param string $message Log message.
  */
 function edd_debug_log( $message = '' ) {
+	/** @var EDD_Logging $edd_logs */
 	global $edd_logs;
 
-	if( edd_is_debug_mode() ) {
-
+	if ( edd_is_debug_mode() ) {
 		$edd_logs->log_to_file( $message );
-
 	}
 }
