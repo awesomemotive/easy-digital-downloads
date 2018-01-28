@@ -196,6 +196,8 @@ class EDD_DB_Logs extends EDD_DB {
 
 		$args = wp_parse_args( $args, $defaults );
 
+
+
 		if ( $args['number'] < 1 ) {
 			$args['number'] = 999999999999;
 		}
@@ -215,11 +217,17 @@ class EDD_DB_Logs extends EDD_DB {
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
+		$join = '';
+		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
+			$join = 'INNER JOIN ' . EDD()->log_meta->table_name . ' ON ( ' . EDD()->logs->table_name . '.id = ' . EDD()->log_meta->table_name . '.edd_log_id )';
+		}
+
 		if ( false === $logs ) {
 			$logs = $wpdb->get_col( $wpdb->prepare(
 				"
 					SELECT id
 					FROM {$this->table_name}
+					{$join}
 					{$where}
 					ORDER BY {$args['orderby']} {$args['order']}
 					LIMIT %d,%d;
@@ -256,8 +264,17 @@ class EDD_DB_Logs extends EDD_DB {
 		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
 			$meta_query = new WP_Meta_Query( $args['meta_query'] );
 			$clauses = $meta_query->get_sql( 'edd_log', EDD()->logs->table_name, 'id', $this );
-			$clauses['where'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
 			$clauses['where'] = preg_replace( '/\'_edd_log_/', '\'', $clauses['where'] );
+			$where .= $clauses['where'];
+		}
+
+		// Download ID.
+		if ( array_key_exists( 'post_parent', $args ) ) {
+			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.object_id = ' . absint( $args['post_parent'] ) );
+		}
+
+		if ( ! empty( $where ) ) {
+			$where = ' WHERE 1=1 ' . $where;
 		}
 
 		return $where;
