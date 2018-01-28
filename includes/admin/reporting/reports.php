@@ -223,28 +223,6 @@ function edd_get_report_tabs() {
  * @return string $view Report View
  *
  */
-function edd_get_reporting_view( $default = 'earnings' ) {
-
-	if ( ! isset( $_GET['view'] ) || ! in_array( $_GET['view'], array_keys( edd_reports_default_views() ) ) ) {
-		$view = $default;
-	} else {
-		$view = $_GET['view'];
-	}
-
-	return apply_filters( 'edd_get_reporting_view', $view );
-}
-
-/**
- * Default Report Views
- *
- * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
- *
- * @param string $default Default view to use.
- *
- * @since 1.9.6
- * @return string $view Report View
- *
- */
 function edd_get_report_tab( $default = 'earnings' ) {
 
 	if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], array_keys( edd_get_report_tabs() ) ) ) {
@@ -254,62 +232,6 @@ function edd_get_report_tab( $default = 'earnings' ) {
 	}
 
 	return apply_filters( 'edd_get_report_tab', $tab );
-}
-
-/**
- * Renders the Reports page
- *
- * @since 1.3
- * @return void
- */
-function edd_reports_tab_reports() {
-
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		wp_die( __( 'You do not have permission to access this report', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	}
-
-	$current_view = 'earnings';
-	$views        = edd_reports_default_views();
-
-	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) )
-		$current_view = $_GET['view'];
-
-	do_action( 'edd_reports_view_' . $current_view );
-
-}
-//add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
-
-/**
- * Renders the Reports Page Views Drop Downs
- *
- * @since 1.3
- * @return void
- */
-function edd_report_views() {
-
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
-
-	$views        = edd_reports_default_views();
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
-	?>
-	<form id="edd-reports-filter" method="get">
-		<select id="edd-reports-view" name="view">
-			<option value="-1"><?php _e( 'Report Type', 'easy-digital-downloads' ); ?></option>
-			<?php foreach ( $views as $view_id => $label ) : ?>
-				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
-			<?php endforeach; ?>
-		</select>
-
-		<?php do_action( 'edd_report_view_actions' ); ?>
-
-		<input type="hidden" name="post_type" value="download"/>
-		<input type="hidden" name="page" value="edd-reports"/>
-		<?php submit_button( __( 'Show', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-	</form>
-	<?php
-	do_action( 'edd_report_view_actions_after' );
 }
 
 /**
@@ -972,4 +894,86 @@ function edd_reports_tab_logs() {
  */
 function edd_reports_default_views() {
 	return edd_get_report_tabs();
+}
+
+/**
+ * Renders the Reports page
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused
+ *
+ * @return void
+ */
+function edd_reports_tab_reports() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		wp_die( __( 'You do not have permission to access this report', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$current_view = 'earnings';
+	$views        = edd_reports_default_views();
+
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) )
+		$current_view = $_GET['view'];
+
+	do_action( 'edd_reports_view_' . $current_view );
+
+}
+
+/**
+ * Default Report Views
+ *
+ * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
+ *
+ * @param string $default Default view to use.
+ *
+ * @since 1.9.6
+ * @deprecated 3.0 Unused
+ *
+ * @return string $view Report View
+ */
+function edd_get_reporting_view( $default = 'earnings' ) {
+
+	if ( ! isset( $_GET['view'] ) || ! in_array( $_GET['view'], array_keys( edd_reports_default_views() ) ) ) {
+		$view = $default;
+	} else {
+		$view = $_GET['view'];
+	}
+
+	return apply_filters( 'edd_get_reporting_view', $view );
+}
+
+/**
+ * Renders the Reports Page Views Drop Downs
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused
+ *
+ * @return void
+ */
+function edd_report_views() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
+	$views        = edd_reports_default_views();
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
+	?>
+	<form id="edd-reports-filter" method="get">
+		<select id="edd-reports-view" name="view">
+			<option value="-1"><?php _e( 'Report Type', 'easy-digital-downloads' ); ?></option>
+			<?php foreach ( $views as $view_id => $label ) : ?>
+				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
+			<?php endforeach; ?>
+		</select>
+
+		<?php do_action( 'edd_report_view_actions' ); ?>
+
+		<input type="hidden" name="post_type" value="download"/>
+		<input type="hidden" name="page" value="edd-reports"/>
+		<?php submit_button( __( 'Show', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
+	</form>
+	<?php
+	do_action( 'edd_report_view_actions_after' );
 }
