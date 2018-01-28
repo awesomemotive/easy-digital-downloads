@@ -111,9 +111,10 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		$error = false;
 
 		$defaults = array(
-			'label'     => '',
-			'priority'  => 10,
-			'endpoints' => array(),
+			'label'      => '',
+			'priority'   => 10,
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(),
 		);
 
 		$attributes['id'] = $report_id;
