@@ -276,14 +276,14 @@ class EDD_DB_Logs extends EDD_DB {
 		// Legacy post parent argument.
 		if ( array_key_exists( 'post_parent', $args ) && ! empty( $args['post_parent'] ) ) {
 			if ( false !== $args['post_parent'] ) {
-				$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['post_parent'] ) );
+				$where .= " AND {$table_name}.object_id = " . absint( $args['post_parent'] );
 			}
 		}
 
 		// Object ID.
 		if ( array_key_exists( 'object_id', $args ) && ! empty( $args['object_id'] ) ) {
 			if ( false !== $args['object_id'] ) {
-				$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['object_id'] ) );
+				$where .= " AND {$table_name}.object_id = " . absint( $args['object_id'] );
 			}
 		}
 
@@ -296,7 +296,7 @@ class EDD_DB_Logs extends EDD_DB {
 				$types = sanitize_text_field( $args['object_type'] );
 			}
 
-			$where .= esc_sql( " AND {$table_name}.object_type IN (' {$types} ')" );
+			$where .= " AND {$table_name}.object_type IN (' {$types} ')";
 		}
 
 		// Log type(s).
@@ -308,17 +308,17 @@ class EDD_DB_Logs extends EDD_DB {
 				$types = sanitize_text_field( $args['type'] );
 			}
 
-			$where .= esc_sql( " AND {$table_name}.type IN (' {$types} ')" );
+			$where .= " AND {$table_name}.type IN ( '{$types}' )";
 		}
 
 		// Log title.
 		if ( array_key_exists( 'title', $args ) && ! empty( $args['title'] ) ) {
-			$where .= esc_sql( " AND {$table_name}.title = " . sanitize_text_field( $args['title'] ) );
+			$where .= " AND {$table_name}.title = " . sanitize_text_field( $args['title'] );
 		}
 
 		// Log message.
 		if ( array_key_exists( 'message', $args ) && ! empty( $args['message'] ) ) {
-			$where .= esc_sql( " AND {$table_name}.message = " . sanitize_text_field( $args['message'] ) );
+			$where .= " AND {$table_name}.message = " . sanitize_text_field( $args['message'] );
 		}
 
 		// Created for a specific date or in a date range.
@@ -326,17 +326,17 @@ class EDD_DB_Logs extends EDD_DB {
 			if ( is_array( $args['date_created'] ) ) {
 				if ( ! empty( $args['date_created']['start'] ) ) {
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['start'] ) );
-					$where .= esc_sql( " AND {$table_name}.date_created >= '{$start}'" );
+					$where .= " AND {$table_name}.date_created >= '{$start}'";
 				}
 				if ( ! empty( $args['date_created']['end'] ) ) {
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['end'] ) );
-					$where .= esc_sql( " AND {$table_name}.date_created <= '{$end}'" );
+					$where .= " AND {$table_name}.date_created <= '{$end}'";
 				}
 			} else {
 				$year  = date( 'Y', strtotime( $args['date_created'] ) );
 				$month = date( 'm', strtotime( $args['date_created'] ) );
 				$day   = date( 'd', strtotime( $args['date_created'] ) );
-				$where .= esc_sql( " AND $year = YEAR ( {$table_name}.date_created ) AND $month = MONTH ( {$table_name}.date_created ) AND $day = DAY ( {$table_name}.date_created )" );
+				$where .= " AND $year = YEAR ( {$table_name}.date_created ) AND $month = MONTH ( {$table_name}.date_created ) AND $day = DAY ( {$table_name}.date_created )";
 			}
 		}
 
@@ -361,9 +361,11 @@ class EDD_DB_Logs extends EDD_DB {
 	 */
 	public function count( $args = array() ) {
 		global $wpdb;
+
 		$where = $this->parse_where( $args );
 		$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
 		$count = $wpdb->get_var( $sql );
+
 		return absint( $count );
 	}
 

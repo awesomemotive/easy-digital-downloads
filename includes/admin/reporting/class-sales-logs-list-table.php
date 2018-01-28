@@ -396,6 +396,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
+		/** @var EDD_Logging $edd_logs */
 		global $edd_logs;
 
 		$columns               = $this->get_columns();
