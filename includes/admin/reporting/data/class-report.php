@@ -231,6 +231,26 @@ final class Report extends Base_Object {
 	}
 
 	/**
+	 * Determines whether the report has any valid endpoints.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $view_group View group for the type of endpoints to check the existence of.
+	 * @return bool True if there is at least one valid endpoint, otherwise false.
+	 */
+	public function has_endpoints( $view_group ) {
+		$groups = $this->parse_view_groups();
+
+		if ( array_key_exists( $view_group, $groups ) ) {
+			$endpoints = $this->get_endpoints( $view_group );
+		} else {
+			$endpoints = array();
+		}
+
+		return ! empty( $endpoints );
+	}
+
+	/**
 	 * Retrieves the capability needed to view the rendered report.
 	 *
 	 * @since 3.0
