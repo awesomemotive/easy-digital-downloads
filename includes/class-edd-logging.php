@@ -221,6 +221,23 @@ class EDD_Logging {
 			return $log_id;
 		}
 
+		if ( 'file_download' === $log_data['log_type'] ) {
+			$data = array(
+				'download_id' => $log_data['post_parent'],
+				'file_id'     => $log_meta['file_id'],
+				'payment_id'  => $log_meta['payment_id'],
+				'price_id'    => $log_meta['price_id'],
+				'user_id'     => $log_meta['user_id'],
+				'ip'          => $log_meta['ip']
+			);
+
+			$log_id = EDD()->file_download_logs->insert( $data );
+
+			do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
+
+			return $log_id;
+		}
+
 		// Store the log entry
 		$log_id = wp_insert_post( $args );
 
