@@ -411,32 +411,31 @@ class EDD_Logging {
 	 */
 	public function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
 		$query_args = array(
-			'post_parent'    => $object_id,
-			'post_type'      => 'edd_log',
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
+			'post_parent' => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy'  => 'edd_log_type',
-					'field'     => 'slug',
-					'terms'     => $type,
-				)
-			);
+			$query_args['type'] = $type;
 		}
 
 		if ( ! empty( $meta_query ) ) {
 			$query_args['meta_query'] = $meta_query;
 		}
 
-		$logs = get_posts( $query_args );
+		// Used to dynamically dispatch the call to the correct class.
+		$db_object = 'logs';
+
+		if ( 'api_request' === $type ) {
+			$db_object = 'api_request_logs';
+		} else if ( 'file_download' === $type ) {
+			$db_object = 'file_download_logs';
+		}
+
+		$logs = EDD()->{$db_object}->get_logs( $query_args );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				wp_delete_post( $log, true );
+				EDD()->{$db_object}->delete( $log->ID );
 			}
 		}
 	}
