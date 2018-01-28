@@ -206,9 +206,9 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		$cache_key = md5( 'edd_file_download_logs_' . serialize( $args ) );
+		$cache_key = md5( 'logs_file_downloads' . serialize( $args ) );
 
-		$logs = wp_cache_get( $cache_key, 'file_download_logs' );
+		$logs = wp_cache_get( $cache_key, $this->cache_group );
 
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
@@ -228,7 +228,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 					$logs[ $key ] = new EDD\Logs\File_Download_Log( $log );
 				}
 
-				wp_cache_set( $cache_key, $logs, 'file_download_logs', 3600 );
+				wp_cache_set( $cache_key, $logs, $this->cache_group, 3600 );
 			}
 		}
 
@@ -361,22 +361,25 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	}
 
 	/**
-	 * Retrieves the value of the last_changed cache key for API request logs.
+	 * Retrieves the value of the last_changed cache key for file download logs.
 	 *
 	 * @since 3.0
 	 * @access public
 	 *
-	 * @return string Value of the last_changed cache key for API request logs.
+	 * @return string Value of the last_changed cache key for file download logs.
 	 */
 	public function get_last_changed() {
 		if ( function_exists( 'wp_cache_get_last_changed' ) ) {
 			return wp_cache_get_last_changed( $this->cache_group );
 		}
+
 		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
+
 		if ( ! $last_changed ) {
 			$last_changed = microtime();
 			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
+
 		return $last_changed;
 	}
 }
