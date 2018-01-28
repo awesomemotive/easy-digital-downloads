@@ -28,6 +28,14 @@ final class Report extends Base_Object {
 	private $endpoints = array();
 
 	/**
+	 * Represents attributes passed to the Report constructor.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $atts = array();
+
+	/**
 	 * Represents the capability needed to view the rendered report.
 	 *
 	 * @since 3.0
@@ -46,21 +54,6 @@ final class Report extends Base_Object {
 	public function __construct( $args ) {
 		parent::__construct( $args );
 
-		if ( ! empty( $args['endpoints'] ) ) {
-			try {
-
-				$this->build_endpoints( $args['endpoints'] );
-
-			} catch ( \EDD_Exception $exception ) {
-
-				edd_debug_log_exception( $exception );
-
-			}
-		} else{
-
-			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $args );
-		}
-
 		if ( ! empty( $args['capability'] ) ) {
 
 			$this->set_capability( $args['capability'] );
@@ -70,10 +63,38 @@ final class Report extends Base_Object {
 			$this->errors->add( 'missing_capability', 'No capability is defined for the report.', $args );
 
 		}
+
+		$this->atts = $args;
 	}
 
 	/**
-	 * Builds Endpoint objects for each endpoint in the report.
+	 * Triggers building the report's endpoints.
+	 *
+	 * This is abstracted away from instantiation to allow for building Report objects
+	 * without always registering meta boxes and other endpoint dependencies for display.
+	 *
+	 * @since 3.0
+	 */
+	public function build_endpoints() {
+		if ( ! empty( $this->atts['endpoints'] ) ) {
+			try {
+
+				$this->parse_endpoints( $this->atts['endpoints'] );
+
+			} catch ( \EDD_Exception $exception ) {
+
+				edd_debug_log_exception( $exception );
+
+			}
+		} else{
+
+			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $this->atts );
+		}
+
+	}
+
+	/**
+	 * Parses Endpoint objects for each endpoint in the report.
 	 *
 	 * @since 3.0
 	 *
@@ -81,7 +102,7 @@ final class Report extends Base_Object {
 	 *
 	 * @param array $endpoints Endpoints, keyed by view type.
 	 */
-	public function build_endpoints( $report_endpoints ) {
+	public function parse_endpoints( $report_endpoints ) {
 		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 

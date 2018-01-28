@@ -111,22 +111,22 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::build_endpoints()
+	 * @covers \EDD\Admin\Reports\Data\Report::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoints_with_empty_array_should_add_no_new_endpoints() {
+	public function test_parse_endpoints_with_empty_array_should_add_no_new_endpoints() {
 		$report = new Report( array() );
 
-		$report->build_endpoints( array() );
+		$report->parse_endpoints( array() );
 
 		$this->assertEqualSets( array(), $report->get_endpoints() );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::build_endpoints()
+	 * @covers \EDD\Admin\Reports\Data\Report::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
-	public function test_build_endpoints_with_invalid_view_group_should_throw_exception() {
+	public function test_parse_endpoints_with_invalid_view_group_should_throw_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'fake' view group does not correspond to a known endpoint view type." );
 
 		$report = new Report( array(
@@ -134,7 +134,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 		) );
 
-		$report->build_endpoints( array( 'fake' => array() ) );
+		$report->parse_endpoints( array( 'fake' => array() ) );
 	}
 
 	/**
