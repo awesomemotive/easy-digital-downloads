@@ -273,9 +273,14 @@ class EDD_DB_Logs extends EDD_DB {
 			$where .= $date_query->get_sql();
 		}
 
-		// Object ID (most likely download ID).
-		if ( array_key_exists( 'post_parent', $args ) || array_key_exists( 'object_id', $args ) ) {
+		// Legacy post parent argument.
+		if ( array_key_exists( 'post_parent', $args ) ) {
 			$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['post_parent'] ) );
+		}
+
+		// Object ID.
+		if ( array_key_exists( 'object_id', $args ) ) {
+			$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['object_id'] ) );
 		}
 
 		// Object type(s).
