@@ -366,7 +366,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
-							'date'       => get_post_field( 'post_date', $payment_id ),
+							'date'       => $payment->date,
 							'quantity'   => $item['quantity'],
 							// Keep track of the currency. Vital to produce the correct report
 							'currency'   => $payment->currency,
