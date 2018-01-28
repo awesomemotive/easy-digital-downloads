@@ -272,9 +272,31 @@ class EDD_DB_Logs extends EDD_DB {
 			$where .= $date_query->get_sql();
 		}
 
-		// Download ID.
-		if ( array_key_exists( 'post_parent', $args ) ) {
+		// Object ID (most likely download ID).
+		if ( array_key_exists( 'post_parent', $args ) || array_key_exists( 'object_id', $args ) ) {
 			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.object_id = ' . absint( $args['post_parent'] ) );
+		}
+
+		// Object type(s).
+		if ( array_key_exists( 'object_type', $args ) && ! empty( $args['object_type'] ) ) {
+			// Allow for an array of types to be passed
+			if ( is_array( $args['object_type'] ) ) {
+				$types = implode( "','", array_map( 'sanitize_text_field', $args['object_type'] ) );
+			} else {
+				$types = sanitize_text_field( $args['object_type'] );
+			}
+
+			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.object_type IN (' . $types . ')' );
+		}
+
+		// Log title.
+		if ( array_key_exists( 'title', $args ) && ! empty( $args['title'] ) ) {
+			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.title = ' . sanitize_text_field( $args['title'] ) );
+		}
+
+		// Log message.
+		if ( array_key_exists( 'message', $args ) && ! empty( $args['message'] ) ) {
+			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.message = ' . sanitize_text_field( $args['message'] ) );
 		}
 
 		if ( ! empty( $where ) ) {
