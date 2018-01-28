@@ -157,21 +157,13 @@ add_action( 'edd_reports_init', 'edd_register_core_reports' );
  * Defines views for the legacy 'Reports' tab.
  *
  * @since 1.4
- * @deprecated 3.0
+ * @deprecated 3.0 Use edd_get_report_tabs()
+ * @see edd_get_report_tabs
  *
  * @return array $views Report Views
  */
 function edd_reports_default_views() {
-	/**
-	 * Filters legacy 'Reports' tab views.
-	 *
-	 * @since 1.4
-	 * @deprecated 3.0 Use {@see 'edd_report_tabs'}
-	 * @see 'edd_report_tabs'
-	 *
-	 * @param array $views 'Reports' tab views.
-	 */
-	return apply_filters_deprecated( 'edd_report_views', array(), '3.0', 'edd_report_tabs' );
+	return edd_get_report_tabs();
 }
 
 /**
@@ -195,6 +187,21 @@ function edd_get_report_tabs() {
 
 	foreach ( $registered_reports as $report_id => $attributes ) {
 		$reports[ $report_id ] = $attributes['label'];
+	}
+
+	if ( has_filter( 'edd_report_views' ) ) {
+		/**
+		 * Filters legacy 'Reports' tab views.
+		 *
+		 * @since 1.4
+		 * @deprecated 3.0 Use {@see 'edd_report_tabs'}
+		 * @see 'edd_report_tabs'
+		 *
+		 * @param array $views 'Reports' tab views.
+		 */
+		$legacy_views = apply_filters_deprecated( 'edd_report_views', array(), '3.0', 'edd_report_tabs' );
+
+		$reports = array_merge( $reports, $legacy_views );
 	}
 
 	/**
