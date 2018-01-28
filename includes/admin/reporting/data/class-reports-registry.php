@@ -205,10 +205,13 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	 *
 	 * @since 3.0
 	 *
-	 * @param string|Report $report Report ID or object.
+	 * @param string|Report $report          Report ID or object.
+	 * @param bool          $build_endpoints Optional. Whether to build the endpoints (includes
+	 *                                       registering any endpoint dependencies, such as
+	 *                                       registering meta boxes). Default true.
 	 * @return Report|\WP_Error Report object on success, otherwise a WP_Error object.
 	 */
-	public function build_report( $report ) {
+	public function build_report( $report, $build_endpoints = true ) {
 		// If a report object was passed, just return it.
 		if ( $report instanceof Report ) {
 			return $report;
@@ -228,6 +231,10 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 
 		if ( ! empty( $_report ) ) {
 			$_report = new Report( $_report );
+
+			if ( true === $build_endpoints ) {
+				$_report->build_endpoints();
+			}
 		}
 
 		return $_report;

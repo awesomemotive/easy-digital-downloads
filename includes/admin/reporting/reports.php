@@ -696,10 +696,13 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
  *
  * @see \EDD\Admin\Reports\Data\Reports_Registry::build_report()
  *
- * @param string $report_id Report ID.
+ * @param string $report_id       Report ID.
+ * @param bool   $build_endpoints Optional. Whether to build the endpoints (includes registering
+ *                                any endpoint dependencies, such as registering meta boxes).
+ *                                Default true.
  * @return \EDD\Admin\Reports\Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
-function edd_reports_get_report( $report_id ) {
+function edd_reports_get_report( $report_id, $build_endpoints = true ) {
 	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
@@ -707,7 +710,7 @@ function edd_reports_get_report( $report_id ) {
 		return $registry;
 	}
 
-	return $registry->build_report( $report_id );
+	return $registry->build_report( $report_id, $build_endpoints );
 }
 
 /**
