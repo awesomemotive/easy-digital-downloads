@@ -957,7 +957,7 @@ function edd_parse_report_dates( $data ) {
 
 	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
 }
-add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
+//add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
 
 /**
  * EDD Reports Refresh Button

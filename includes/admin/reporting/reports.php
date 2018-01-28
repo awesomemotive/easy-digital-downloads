@@ -167,8 +167,6 @@ add_action( 'edd_reports_init', 'edd_register_core_reports' );
  * @return array List of report tabs, otherwise an empty array.
  */
 function edd_get_report_tabs() {
-	$reports = array();
-
 	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
@@ -177,6 +175,8 @@ function edd_get_report_tabs() {
 	} else {
 		$registered_reports = $registry->get_reports( 'priority' );
 	}
+
+	$reports = array();
 
 	foreach ( $registered_reports as $report_id => $attributes ) {
 		$reports[ $report_id ] = $attributes['label'];
