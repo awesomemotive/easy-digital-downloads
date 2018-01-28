@@ -295,6 +295,18 @@ class EDD_DB_Logs extends EDD_DB {
 			$where .= esc_sql( " AND {$table_name}.object_type IN (' {$types} ')" );
 		}
 
+		// Log type(s).
+		if ( array_key_exists( 'type', $args ) && ! empty( $args['type'] ) ) {
+			// Allow for an array of types to be passed
+			if ( is_array( $args['type'] ) ) {
+				$types = implode( "','", array_map( 'sanitize_text_field', $args['type'] ) );
+			} else {
+				$types = sanitize_text_field( $args['type'] );
+			}
+
+			$where .= esc_sql( " AND {$table_name}.type IN (' {$types} ')" );
+		}
+
 		// Log title.
 		if ( array_key_exists( 'title', $args ) && ! empty( $args['title'] ) ) {
 			$where .= esc_sql( " AND {$table_name}.title = " . sanitize_text_field( $args['title'] ) );
