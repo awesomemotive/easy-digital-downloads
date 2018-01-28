@@ -48,6 +48,11 @@ class EDD_Logging {
 		add_filter( 'get_post_metadata', array( $this, '_file_download_log_get_meta_backcompat' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
 		add_filter( 'add_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
+
+		// Backwards compatibility for global logs
+		add_filter( 'get_post_metadata', array( $this, '_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'update_post_metadata', array( $this, '_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, '_log_update_meta_backcompat' ), 99, 5 );
 	}
 
 	/**
@@ -630,7 +635,7 @@ class EDD_Logging {
 
 				if ( $show_notice ) {
 					// Throw deprecated notice if WP_DEBUG is defined and on
-					trigger_error( __( 'The EDD API request log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\API_Request_Log object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+					trigger_error( __( 'The EDD API request log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\API_Request_Log object to get the relevant data, instead.', 'easy-digital-downloads' ) );
 					$backtrace = debug_backtrace();
 					trigger_error( print_r( $backtrace, 1 ) );
 				}
