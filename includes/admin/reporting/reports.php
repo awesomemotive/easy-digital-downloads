@@ -57,14 +57,12 @@ function edd_reports_page() {
 		</h2>
 
 		<?php
-		$view = edd_get_report_tab();
-
 		do_action( 'edd_reports_page_top' );
 
 		if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
 			do_action( "edd_reports_tab_{$active_tab}" );
-		} elseif ( has_action( "edd_reports_view_{$view}" ) ) {
-			do_action( "edd_reports_view_{$view}" );
+		} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
+			do_action( "edd_reports_view_{$active_tab}" );
 		}
 
 		do_action( 'edd_reports_page_bottom' );
