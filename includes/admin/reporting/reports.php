@@ -194,8 +194,8 @@ function edd_get_report_tabs() {
 		 * Filters legacy 'Reports' tab views.
 		 *
 		 * @since 1.4
-		 * @deprecated 3.0 Use {@see 'edd_report_tabs'}
-		 * @see 'edd_report_tabs'
+		 * @deprecated 3.0 Use {@see 'edd_get_report_tabs'}
+		 * @see 'edd_get_report_tabs'
 		 *
 		 * @param array $views 'Reports' tab views.
 		 */
@@ -211,7 +211,7 @@ function edd_get_report_tabs() {
 	 *
 	 * @param array $reports List of slug/label pairs as representative of report tabs.
 	 */
-	return apply_filters( 'edd_report_tabs', $reports );
+	return apply_filters( 'edd_get_report_tabs', $reports );
 }
 
 /**
