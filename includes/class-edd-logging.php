@@ -369,23 +369,12 @@ class EDD_Logging {
 	 * @return int Log count.
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
-
 		$query_args = array(
-			'post_parent'      => $object_id,
-			'post_type'        => 'edd_log',
-			'posts_per_page'   => -1,
-			'post_status'      => 'publish',
-			'fields'           => 'ids',
+			'object_id' => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy'  => 'edd_log_type',
-					'field'     => 'slug',
-					'terms'     => $type,
-				)
-			);
+			$query_args['type'] = $type;
 		}
 
 		if ( ! empty( $meta_query ) ) {
@@ -396,9 +385,9 @@ class EDD_Logging {
 			$query_args['date_query'] = $date_query;
 		}
 
-		$logs = new WP_Query( $query_args );
+		$count = EDD()->logs->count( $query_args );
 
-		return (int) $logs->post_count;
+		return $count;
 	}
 
 	/**
