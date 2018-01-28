@@ -66,11 +66,6 @@ class EDD_Logging {
 		add_filter( 'get_post_metadata', array( $this, '_file_download_log_get_meta_backcompat' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
 		add_filter( 'add_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
-
-		// Backwards compatibility for global logs
-		add_filter( 'get_post_metadata', array( $this, '_log_get_meta_backcompat' ), 99, 4 );
-		add_filter( 'update_post_metadata', array( $this, '_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata', array( $this, '_log_update_meta_backcompat' ), 99, 5 );
 	}
 
 	/**
@@ -339,61 +334,31 @@ class EDD_Logging {
 
 		$query_args = wp_parse_args( $args, $defaults );
 
-		if ( $query_args['log_type'] && $this->valid_type( $query_args['log_type'] ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy'  => 'edd_log_type',
-					'field'     => 'slug',
-					'terms'     => $query_args['log_type'],
-				)
-			);
-		}
+		// Used to dynamically dispatch the call to the correct class.
+		$db_object = 'logs';
 
 		if ( 'api_request' === $query_args['log_type'] ) {
-			$args = array(
-				'number' => $query_args['posts_per_page'],
-				'paged'  => $query_args['paged'],
-			);
-
-			if ( isset( $query_args['meta_query'] ) && is_array( $query_args['meta_query'] ) ) {
-				$args['meta_query'] = $query_args['meta_query'];
-			}
-
-			$logs = EDD()->api_request_logs->get_logs( $args );
-
-			if ( $logs ) {
-				return $logs;
-			} else {
-				return false;
-			}
+			$db_object = 'api_request_logs';
+		} else if ( 'file_download' === $query_args['log_type'] ) {
+			$db_object = 'file_download_logs';
 		}
 
-		if ( 'file_download' === $query_args['log_type'] ) {
-			$args = array(
-				'number' => $query_args['posts_per_page'],
-				'paged'  => $query_args['paged'],
-			);
+		$args = array(
+			'number' => $query_args['posts_per_page'],
+			'paged'  => $query_args['paged'],
+		);
 
-			if ( isset( $query_args['meta_query'] ) && is_array( $query_args['meta_query'] ) ) {
-				$args['meta_query'] = $query_args['meta_query'];
-			}
-
-			$logs = EDD()->file_download_logs->get_logs( $args );
-
-			if ( $logs ) {
-				return $logs;
-			} else {
-				return false;
-			}
+		if ( isset( $query_args['meta_query'] ) && is_array( $query_args['meta_query'] ) ) {
+			$args['meta_query'] = $query_args['meta_query'];
 		}
 
-		$logs = get_posts( $query_args );
+		$logs = EDD()->{$db_object}->get_logs( $args );
 
-		if ( $logs )
+		if ( $logs ) {
 			return $logs;
-
-		// No logs found
-		return false;
+		} else {
+			return false;
+		}
 	}
 
 	/**
