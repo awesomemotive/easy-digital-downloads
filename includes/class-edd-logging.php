@@ -202,10 +202,26 @@ class EDD_Logging {
 
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
+		// Set up variables to hold data to go into the logs table by default
 		$db_object = 'logs';
-		$data = array();
+		$data = array (
+			'message'     => $args['post_content'],
+			'object_id'   => $args['post_parent'],
+			'object_type' => isset( $args['object_type'] ) ? $args['object_type'] : 'download',
+		);
 
+		if ( $type = $args['log_type'] ) {
+			$data['type'] = $type;
+		}
+
+		if ( array_key_exists( 'post_title', $args ) ) {
+			$data['title'] = $args['post_title'];
+		}
+
+		// Override $data and $db_object based on the log type.
 		if ( 'api_request' === $args['log_type'] ) {
+			$db_object = 'api_request_logs';
+
 			$data = array(
 				'user_id' => $log_meta['user'],
 				'api_key' => $log_meta['key'],
@@ -216,11 +232,9 @@ class EDD_Logging {
 				'ip'      => $log_meta['request_ip'],
 				'time'    => $log_meta['time'],
 			);
+		} else if ( 'file_download' === $args['log_type'] ) {
+			$db_object = 'file_download_logs';
 
-			$db_object = 'api_request_logs';
-		}
-
-		if ( 'file_download' === $args['log_type'] ) {
 			$data = array(
 				'download_id' => $args['post_parent'],
 				'file_id'     => $log_meta['file_id'],
@@ -230,8 +244,6 @@ class EDD_Logging {
 				'email'       => $log_meta['user_info']['email'],
 				'ip'          => $log_meta['ip'],
 			);
-
-			$db_object = 'file_download_logs';
 		}
 
 		$log_id = EDD()->{$db_object}->insert( $data );
