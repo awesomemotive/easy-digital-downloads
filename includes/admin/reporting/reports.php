@@ -881,6 +881,8 @@ function edd_reports_tab_logs() {
  * @return array $views Report Views
  */
 function edd_reports_default_views() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_get_report_tabs' );
+
 	return edd_get_report_tabs();
 }
 
@@ -893,6 +895,8 @@ function edd_reports_default_views() {
  * @return void
  */
 function edd_reports_tab_reports() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
 
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		wp_die( __( 'You do not have permission to access this report', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
@@ -922,6 +926,8 @@ function edd_reports_tab_reports() {
  */
 function edd_get_reporting_view( $default = 'earnings' ) {
 
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
 	if ( ! isset( $_GET['view'] ) || ! in_array( $_GET['view'], array_keys( edd_reports_default_views() ) ) ) {
 		$view = $default;
 	} else {
@@ -940,6 +946,8 @@ function edd_get_reporting_view( $default = 'earnings' ) {
  * @return void
  */
 function edd_report_views() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
 
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
