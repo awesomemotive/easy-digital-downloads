@@ -196,8 +196,6 @@ class EDD_DB_Logs extends EDD_DB {
 
 		$args = wp_parse_args( $args, $defaults );
 
-
-
 		if ( $args['number'] < 1 ) {
 			$args['number'] = 999999999999;
 		}
