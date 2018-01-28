@@ -113,9 +113,9 @@ class API_Request_Log {
 	/**
 	 * Declare the default properties in WP_Post as we can't extend it.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var mixed
+	 * @var    mixed
 	 */
 	protected $post_author = 0;
 	protected $post_date = '0000-00-00 00:00:00';
@@ -159,12 +159,12 @@ class API_Request_Log {
 				$this->{$key} = $value;
 			}
 
-			$this->post_author = $this->user_id;
-			$this->post_date = $this->date_created;
+			$this->post_author   = $this->user_id;
+			$this->post_date     = $this->date_created;
 			$this->post_date_gmt = $this->date_created;
-			$this->post_excerpt = $this->request;
-			$this->post_content = $this->error;
-			$this->post_type = 'edd_log';
+			$this->post_excerpt  = $this->request;
+			$this->post_content  = $this->error;
+			$this->post_type     = 'edd_log';
 		}
 	}
 
