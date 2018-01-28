@@ -57,7 +57,13 @@ function edd_reports_page() {
 
 		<?php
 		do_action( 'edd_reports_page_top' );
-		do_action( 'edd_reports_tab_' . $active_tab );
+
+		if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
+			do_action( "edd_reports_tab_{$active_tab}" );
+		} elseif ( has_action( "edd_reports_view_{$view}" ) ) {
+			do_action( "edd_reports_view_{$view}" );
+		}
+
 		do_action( 'edd_reports_page_bottom' );
 		?>
 
