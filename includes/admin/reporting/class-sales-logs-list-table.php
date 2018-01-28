@@ -328,13 +328,12 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-
-				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+				/** @var EDD\Logs\Log $log */
+				$payment_id = $log->get_meta( 'payment_id' );
 				$payment    = new EDD_Payment( $payment_id );
 
 				// Make sure this payment hasn't been deleted
 				if ( ! empty( $payment->ID ) ) {
-
 					$customer   = new EDD_Customer( $payment->customer_id );
 					$cart_items = $payment->cart_details;
 					$amount     = 0;
@@ -344,9 +343,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 						foreach ( $cart_items as $item ) {
 
 							// If the item has variable pricing, make sure it's the right variation
-							if ( $item['id'] == $log->post_parent ) {
+							if ( $item['id'] == $log->object_id ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
-									$log_price_id = get_post_meta( $log->ID, '_edd_log_price_id', true );
+									$log_price_id = $log->get_meta( 'price_id' );
 
 									if ( (int) $item['item_number']['options']['price_id'] !== (int) $log_price_id ) {
 										continue;
@@ -363,7 +362,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'ID'         => $log->ID,
 							'payment_id' => $payment->ID,
 							'customer'   => $customer,
-							'download'   => $log->post_parent,
+							'download'   => $log->object_id,
 							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
