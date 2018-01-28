@@ -154,19 +154,6 @@ function edd_register_core_reports( $reports ) {
 add_action( 'edd_reports_init', 'edd_register_core_reports' );
 
 /**
- * Defines views for the legacy 'Reports' tab.
- *
- * @since 1.4
- * @deprecated 3.0 Use edd_get_report_tabs()
- * @see edd_get_report_tabs
- *
- * @return array $views Report Views
- */
-function edd_reports_default_views() {
-	return edd_get_report_tabs();
-}
-
-/**
  * Retrieves the list of slug/label report tab pairs.
  *
  * @since 3.0
@@ -655,24 +642,6 @@ function edd_reports_tab_export() {
 add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
 
 /**
- * Renders the Logs tab in the Reports screen.
- *
- * @since 1.3
- * @deprecated 3.0 Use edd_tools_tab_logs() instead.
- * @see edd_tools_tab_logs()
- * @return void
- */
-function edd_reports_tab_logs() {
-	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_tools_tab_logs' );
-
-	if ( ! function_exists( 'edd_tools_tab_logs' ) ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
-	}
-
-	edd_tools_tab_logs();
-}
-
-/**
  * Retrieves estimated monthly earnings and sales
  *
  * @since 1.5
@@ -962,3 +931,34 @@ function edd_add_screen_options_nonces() {
 	wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce' , false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
+
+/**
+ * Renders the Logs tab in the Reports screen.
+ *
+ * @since 1.3
+ * @deprecated 3.0 Use edd_tools_tab_logs() instead.
+ * @see edd_tools_tab_logs()
+ * @return void
+ */
+function edd_reports_tab_logs() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_tools_tab_logs' );
+
+	if ( ! function_exists( 'edd_tools_tab_logs' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
+	}
+
+	edd_tools_tab_logs();
+}
+
+/**
+ * Defines views for the legacy 'Reports' tab.
+ *
+ * @since 1.4
+ * @deprecated 3.0 Use edd_get_report_tabs()
+ * @see edd_get_report_tabs
+ *
+ * @return array $views Report Views
+ */
+function edd_reports_default_views() {
+	return edd_get_report_tabs();
+}
