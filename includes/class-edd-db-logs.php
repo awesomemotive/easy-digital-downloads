@@ -257,6 +257,7 @@ class EDD_DB_Logs extends EDD_DB {
 	 */
 	private function parse_where( $args ) {
 		$where = '';
+		$table_name = EDD()->logs->table_name;
 
 		// Build meta query.
 		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
@@ -274,7 +275,7 @@ class EDD_DB_Logs extends EDD_DB {
 
 		// Object ID (most likely download ID).
 		if ( array_key_exists( 'post_parent', $args ) || array_key_exists( 'object_id', $args ) ) {
-			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.object_id = ' . absint( $args['post_parent'] ) );
+			$where .= esc_sql( " AND {$table_name}.object_id = " . absint( $args['post_parent'] ) );
 		}
 
 		// Object type(s).
@@ -286,17 +287,36 @@ class EDD_DB_Logs extends EDD_DB {
 				$types = sanitize_text_field( $args['object_type'] );
 			}
 
-			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.object_type IN (' . $types . ')' );
+			$where .= esc_sql( " AND {$table_name}.object_type IN (' {$types} ')" );
 		}
 
 		// Log title.
 		if ( array_key_exists( 'title', $args ) && ! empty( $args['title'] ) ) {
-			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.title = ' . sanitize_text_field( $args['title'] ) );
+			$where .= esc_sql( " AND {$table_name}.title = " . sanitize_text_field( $args['title'] ) );
 		}
 
 		// Log message.
 		if ( array_key_exists( 'message', $args ) && ! empty( $args['message'] ) ) {
-			$where .= esc_sql( ' AND ' . EDD()->logs->table_name . '.message = ' . sanitize_text_field( $args['message'] ) );
+			$where .= esc_sql( " AND {$table_name}.message = " . sanitize_text_field( $args['message'] ) );
+		}
+
+		// Created for a specific date or in a date range.
+		if ( array_key_exists( 'date_created', $args ) && ! empty( $args['date_created'] ) ) {
+			if ( is_array( $args['date_created'] ) ) {
+				if ( ! empty( $args['date_created']['start'] ) ) {
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['start'] ) );
+					$where .= esc_sql( " AND {$table_name}.date_created >= '{$start}'" );
+				}
+				if ( ! empty( $args['date_created']['end'] ) ) {
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['end'] ) );
+					$where .= esc_sql( " AND {$table_name}.date_created <= '{$end}'" );
+				}
+			} else {
+				$year  = date( 'Y', strtotime( $args['date_created'] ) );
+				$month = date( 'm', strtotime( $args['date_created'] ) );
+				$day   = date( 'd', strtotime( $args['date_created'] ) );
+				$where .= esc_sql( " AND $year = YEAR ( {$table_name}.date_created ) AND $month = MONTH ( {$table_name}.date_created ) AND $day = DAY ( {$table_name}.date_created )" );
+			}
 		}
 
 		if ( ! empty( $where ) ) {
