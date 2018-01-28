@@ -343,20 +343,9 @@ class EDD_Logging {
 			$db_object = 'file_download_logs';
 		}
 
-		$args = array(
-			'number' => $query_args['posts_per_page'],
-			'paged'  => $query_args['paged'],
-		);
+		$query_args['number'] = $query_args['posts_per_page'];
 
-		if ( isset( $query_args['meta_query'] ) && is_array( $query_args['meta_query'] ) ) {
-			$args['meta_query'] = $query_args['meta_query'];
-		}
-
-		if ( isset( $query_args['date_query'] ) && is_array( $query_args['date_query'] ) ) {
-			$args['date_query'] = $query_args['date_query'];
-		}
-
-		$logs = EDD()->{$db_object}->get_logs( $args );
+		$logs = EDD()->{$db_object}->get_logs( $query_args );
 
 		if ( $logs ) {
 			return $logs;
