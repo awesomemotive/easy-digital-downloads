@@ -72,11 +72,11 @@ function edd_reports_page() {
 			<div id="dashboard-widgets" class="metabox-holder">
 
 				<div class="postbox-container">
-					<?php //do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
+					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
 				</div>
 
 				<div class="postbox-container">
-					<?php //do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
+					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
 				</div>
 
 			</div>
