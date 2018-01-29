@@ -193,7 +193,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_endpoints_with_empty_view_group_should_return_all_endpoints() {
 
-		edd_reports_register_endpoint( 'foo', array(
+		register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
@@ -202,7 +202,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		edd_reports_register_endpoint( 'bar', array(
+		register_endpoint( 'bar', array(
 			'label' => 'Bar',
 			'views' => array(
 				'tile' => array(
@@ -240,7 +240,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @group drew
 	 */
 	public function test_get_endpoints_with_invalid_view_group_should_return_all_endpoints() {
-		edd_reports_register_endpoint( 'foo', array(
+		register_endpoint( 'foo', array(
 			'id'    => 'foo',
 			'label' => 'Foo',
 			'views' => array(
@@ -250,7 +250,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		edd_reports_register_endpoint( 'bar', array(
+		register_endpoint( 'bar', array(
 			'id'    => 'bar',
 			'label' => 'Bar',
 			'views' => array(
@@ -288,7 +288,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @group drew
 	 */
 	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
-		edd_reports_register_endpoint( 'foo', array(
+		register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(

@@ -98,7 +98,7 @@ final class Reports_Init {
 		 *
 		 *         edd_reports_add_report( 'test', array( ... ) );
 		 *
-		 *         edd_reports_register_endpoint( 'test_endpoint', array( ... ) );
+		 *         \EDD\Reports\register_endpoint( 'test_endpoint', array( ... ) );
 		 *
 		 *     } );
 		 *

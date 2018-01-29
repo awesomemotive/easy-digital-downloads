@@ -135,7 +135,7 @@ function get_endpoint_views() {
  * }
  * @return bool True if the endpoint was successfully registered, otherwise false.
  */
-function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
+function register_endpoint( $endpoint_id, $attributes ) {
 	/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
