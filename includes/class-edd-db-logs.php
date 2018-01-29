@@ -122,12 +122,14 @@ class EDD_DB_Logs extends EDD_DB {
 	 *
 	 * @param int   $row_id Log ID.
 	 * @param array $data {
-	 *      @type string $object_id    ID of the object the log is for.
-	 *      @type string $object_type  Type of the object the log is for.
-	 *      @type string $type         Log type.
-	 *      @type string $title        Log title.
-	 *      @type string $message      Log message.
-	 *      @type float  $date_created Date log was created.
+	 *     Optional. Array of data to update the log with. Default empty.
+	 *
+	 *     @type int    $object_id    ID of the object the log is for.
+	 *     @type string $object_type  Type of the object the log is for.
+	 *     @type string $type         Log type.
+	 *     @type string $title        Log title.
+	 *     @type string $message      Log message.
+	 *     @type float  $date_created Date log was created.
 	 * }
 	 * @param mixed string|array $where Where clause to filter update.
 	 *
@@ -157,10 +159,13 @@ class EDD_DB_Logs extends EDD_DB {
 		if ( empty( $row_id ) ) {
 			return false;
 		}
+
 		$result = parent::delete( $row_id );
+
 		if ( $result ) {
 			$this->set_last_changed();
 		}
+
 		return $result;
 	}
 
@@ -171,7 +176,19 @@ class EDD_DB_Logs extends EDD_DB {
 	 * @access public
 	 *
 	 * @param array $args {
-	 *      Query arguments.
+	 *     Optional. Array of log query parameters. Default empty.
+	 *
+	 *     @type int    $number       Number of logs to retrieve. Default 20.
+	 *     @type int    $offset       Number of logs to offset the query. Used to build LIMIT clause. Default 0.
+	 *     @type string $search       Search term(s) to retrieve matching logs for. Default empty.
+	 *     @type string $orderby      Order by a specific column. Default 'id'.
+	 *     @type string $order        How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type int    $object_id    ID of the object the log is for. Default empty.
+	 *     @type string $object_type  Type of the object the log is for. Default empty.
+	 *     @type string $type         Log type. Default empty.
+	 *     @type string $title        Log title. Default empty.
+	 *     @type string $message      Log message. Default empty.
+	 *     @type array  $date_created Date query clauses to limit the logs by. Default null.
 	 * }
 	 *
 	 * @return array $logs Array of `EDD_Log` objects.
