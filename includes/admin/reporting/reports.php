@@ -32,69 +32,112 @@ function edd_reports_page() {
 
 	$active_tab = edd_get_active_report_tab();
 	?>
+	<style>
+		#edd-item-wrapper {
+			max-width: 100%;
+		}
+		#edd-item-tab-wrapper {
+			width: 15%;
+			z-index: 1;
+		}
+		.edd-item-has-tabs #edd-item-card-wrapper {
+			border-width: 0 0 0 1px;
+			width: 85%;
+		}
+		#edd-item-card-wrapper h3 {
+			margin-top: 0;
+		}
+	</style>
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
-		<h2 class="nav-tab-wrapper">
-			<?php foreach ( edd_get_report_tabs() as $slug => $label ) :
-				$link = add_query_arg( array(
-					'tab'              => $slug,
-					'settings-updated' => false ),
-				$current_page );
 
-				$class = $slug === $active_tab ? 'nav-tab nav-tab-active' : 'nav-tab';
+		<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
+			<div id="edd-item-tab-wrapper" class="report-tab-wrapper">
+				<ul id="edd-item-tab-wrapper-list" class="report-tab-wrapper-list">
+					<?php
+					$tabs = edd_get_report_tabs();
+
+					if ( current_user_can( 'export_shop_reports' ) ) :
+						$tabs['export'] = __( 'Export', 'easy-digital-downloads' );
+					endif;
+
+					foreach ( $tabs as $slug => $label ) :
+						$active = $slug === $active_tab ? true : false;
+						$class  = $active ? 'active' : 'inactive';
+						?>
+
+						<li class="<?php echo sanitize_html_class( $class ); ?>">
+
+							<?php
+							$link = add_query_arg( array(
+								'tab'              => $slug,
+								'settings-updated' => false ),
+							$current_page );
+							?>
+
+							<?php if ( ! $active ) : ?>
+								<a href="<?php echo esc_url( $link ); ?>">
+							<?php endif; ?>
+
+								<span class="edd-item-tab-label-wrap">
+									<span class="edd-item-tab-label"><?php echo esc_attr( $label ); ?></span>
+								</span>
+
+							<?php if ( ! $active ) : ?>
+								</a>
+							<?php endif; ?>
+						</li>
+
+					<?php endforeach; ?>
+				</ul>
+			</div>
+
+			<div id="edd-item-card-wrapper" class="edd-report-card-wrapper" style="float: left">
+				<?php do_action( 'edd_reports_tabs' ); ?>
+
+				<?php
+				$report = edd_reports_get_report( $active_tab );
+
+				if ( ! is_wp_error( $report ) ) :
+
+					do_action( 'edd_reports_page_top' );
+
+					if ( $report->has_endpoints( 'tiles' ) ) : ?>
+
+						<div>
+							<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
+						</div>
+
+						<div id="edd-reports-tiles-wrap">
+							<div id="dashboard-widgets" class="metabox-holder">
+
+								<div class="postbox-container">
+									<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
+								</div>
+
+								<div class="postbox-container">
+									<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
+								</div>
+
+								<div class="postbox-container">
+									<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', null ); ?>
+								</div>
+
+							</div>
+						</div>
+					<?php endif; // Has endpoints.
+
+					if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
+						do_action( "edd_reports_tab_{$active_tab}" );
+					} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
+						do_action( "edd_reports_view_{$active_tab}" );
+					}
+
+					do_action( 'edd_reports_page_bottom' );
+				endif; // Not WP_Error.
 				?>
-
-				<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $class ); ?>">
-					<?php echo esc_html( $label ); ?>
-				</a>
-			<?php endforeach; ?>
-
-			<?php if ( current_user_can( 'export_shop_reports' ) ) : ?>
-				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'easy-digital-downloads' ); ?></a>
-			<?php endif; ?>
-
-			<?php do_action( 'edd_reports_tabs' ); ?>
-		</h2>
-
-		<?php
-		$report = edd_reports_get_report( $active_tab );
-
-		if ( ! is_wp_error( $report ) ) :
-
-			do_action( 'edd_reports_page_top' );
-
-			if ( $report->has_endpoints( 'tiles' ) ) : ?>
-
-				<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
-
-				<div id="edd-reports-tiles-wrap">
-					<div id="dashboard-widgets" class="metabox-holder">
-
-						<div class="postbox-container">
-							<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
-						</div>
-
-						<div class="postbox-container">
-							<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
-						</div>
-
-						<div class="postbox-container">
-							<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', null ); ?>
-						</div>
-
-					</div>
-				</div>
-			<?php endif; // Has endpoints.
-
-			if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-				do_action( "edd_reports_tab_{$active_tab}" );
-			} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-				do_action( "edd_reports_view_{$active_tab}" );
-			}
-
-			do_action( 'edd_reports_page_bottom' );
-		endif; // Not WP_Error.
-		?>
+			</div>
+		</div>
 
 	</div><!-- .wrap -->
 	<?php
