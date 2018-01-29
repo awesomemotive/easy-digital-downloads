@@ -32,9 +32,9 @@ function edd_reports_page() {
 	wp_enqueue_script( 'postbox' );
 
 	// Start the Reports API.
-	new EDD\Reports\Reports_Init();
+	new Reports\Reports_Init();
 
-	$active_tab = edd_get_active_report_tab();
+	$active_tab = Reports\get_active_tab();
 	?>
 	<style>
 		#edd-item-wrapper {
