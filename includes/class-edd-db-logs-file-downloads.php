@@ -95,10 +95,18 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 *
 	 * @see EDD_DB::insert()
 	 *
-	 * @param array  $data {
-	 *      API request log attributes.
+	 * @param array $data {
+	 *     File download log attributes.
+	 *
+	 *     @type int $download_id Download ID. Default 0.
+	 *     @type int $file_id     File ID. Default 0.
+	 *     @type int $payment_id  Payment ID. Default 0.
+	 *     @type int $price_id    Price ID. Default 0.
+	 *     @type int $user_id     User ID. Default 0.
+	 *     @type string $email    User email address. This is for unauthenticated and guests users. Default empty.
+	 *     @type string $ip       IP address of the client. Default empty.
 	 * }
-	 * @param string $type Data type to insert (forced to 'file_download_log'.
+	 * @param string $type Data type to insert (forced to 'file_download_log').
 	 *
 	 * @return int ID of the inserted log.
 	 */
@@ -125,7 +133,15 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 *
 	 * @param int   $row_id File download log ID.
 	 * @param array $data {
-	 *      API request log attributes.
+	 *      File download log attributes.
+	 *
+	 *     @type int $download_id Download ID. Default 0.
+	 *     @type int $file_id     File ID. Default 0.
+	 *     @type int $payment_id  Payment ID. Default 0.
+	 *     @type int $price_id    Price ID. Default 0.
+	 *     @type int $user_id     User ID. Default 0.
+	 *     @type string $email    User email address. This is for unauthenticated and guests users. Default empty.
+	 *     @type string $ip       IP address of the client. Default empty.
 	 * }
 	 * @param mixed string|array $where Where clause to filter update.
 	 *
@@ -172,7 +188,20 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 * @access public
 	 *
 	 * @param array $args {
-	 *      Query arguments.
+	 *     Optional. Array of log query parameters. Default empty.
+	 *
+	 *     @type int          $number      Number of logs to retrieve. Default 20.
+	 *     @type int          $offset      Number of logs to offset the query. Used to build LIMIT clause. Default 0.
+	 *     @type string       $search      Search term(s) to retrieve matching logs for. Default empty.
+	 *     @type string       $orderby     Order by a specific column. Default 'id'.
+	 *     @type string       $order       How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type int|array    $download_id ID of the download the log is for or array of IDs. Default empty.
+	 *     @type int|array    $file_id     ID of the file downloaded or array of IDs. Default empty.
+	 *     @type int|array    $payment_id  ID of the payment or array of IDs. Default empty.
+	 *     @type int|array    $price_id    ID of the price at the time of purchase or array of IDs. Default empty.
+	 *     @type int|array    $user_id     ID of the user or array of IDs. Default empty.
+	 *     @type string|array $user_email  Email address of the user or array of email addresses. Default empty.
+	 *     @type array        $date_created Date query clauses to limit the logs by. Default null.
 	 * }
 	 *
 	 * @return array $logs Array of EDD\Logs\File_Download_Log objects.
