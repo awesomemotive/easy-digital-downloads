@@ -23,22 +23,6 @@ class Report_Tests extends \EDD_UnitTestCase {
 	protected static $reports;
 
 	/**
-	 * Reports registry fixture.
-	 *
-	 * @access protected
-	 * @var    Reports_Registry
-	 */
-	protected $reports_registry;
-
-	/**
-	 * Reports registry fixture.
-	 *
-	 * @access protected
-	 * @var    Data\Report_Registry
-	 */
-	protected $endpoints_registry;
-
-	/**
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
@@ -165,7 +149,11 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'capability' => 'view_shop_reports',
 		) );
 
-		$endpoint = $this->mock_Endpoint( array() );
+		$endpoint = new Tile_Endpoint( array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array()
+		) );
 
 		$report->validate_endpoint( 'tiles', $endpoint );
 
@@ -204,35 +192,35 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @group drew
 	 */
 	public function test_get_endpoints_with_empty_view_group_should_return_all_endpoints() {
-		$report = new Report( array(
+
+		edd_reports_register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => '__return_false',
+				),
+			),
+		) );
+
+		edd_reports_register_endpoint( 'bar', array(
+			'label' => 'Bar',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => '__return_false',
+				),
+			),
+		) );
+
+		edd_reports_add_report( 'foo', array(
 			'id'         => 'foo',
 			'label'      => 'Foo',
-			'capability' => 'view_shop_reports',
+			'capability' => 'exist',
 			'endpoints'  => array(
-				'tiles' => array(
-					new Tile_Endpoint( array(
-						'id'    => 'foo',
-						'label' => 'Foo',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
-							),
-						),
-					) ),
-					new Tile_Endpoint( array(
-						'id'    => 'bar',
-						'label' => 'Bar',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
-							),
-						),
-					) ),
-				),
+				'tiles' => array( 'foo', 'bar' ),
 			)
 		) );
+
+		$report = edd_reports_get_report( 'foo' );
 
 		$all_endpoints = $report->get_endpoints();
 
@@ -252,35 +240,35 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @group drew
 	 */
 	public function test_get_endpoints_with_invalid_view_group_should_return_all_endpoints() {
-		$report = new Report( array(
-			'id'         => 'foo',
-			'label'      => 'Foo',
-			'capability' => 'view_shop_reports',
-			'endpoints'  => array(
-				'tiles' => array(
-					new Tile_Endpoint( array(
-						'id'    => 'foo',
-						'label' => 'Foo',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
-							),
-						),
-					) ),
-					new Tile_Endpoint( array(
-						'id'    => 'bar',
-						'label' => 'Bar',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
-							),
-						),
-					) ),
+		edd_reports_register_endpoint( 'foo', array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => '__return_false',
 				),
+			),
+		) );
+
+		edd_reports_register_endpoint( 'bar', array(
+			'id'    => 'bar',
+			'label' => 'Bar',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => '__return_false',
+				),
+			),
+		) );
+
+		edd_reports_add_report( 'foo', array(
+			'label'      => 'Foo',
+			'capability' => 'exist',
+			'endpoints'  => array(
+				'tiles' => array( 'foo', 'bar' ),
 			)
 		) );
+
+		$report = edd_reports_get_report( 'foo' );
 
 		$all_endpoints = $report->get_endpoints( 'fake' );
 
@@ -300,57 +288,34 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @group drew
 	 */
 	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
-		$report = new Report( array(
-			'id'         => 'foo',
+		edd_reports_register_endpoint( 'foo', array(
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => '__return_false',
+				),
+			),
+		) );
+
+		edd_reports_add_report( 'foo', array(
 			'label'      => 'Foo',
-			'capability' => 'view_shop_reports',
+			'capability' => 'exist',
 			'endpoints'  => array(
-				'tiles' => array(
-					new Tile_Endpoint( array(
-						'id'    => 'foo',
-						'label' => 'Foo',
-						'views' => array(
-							'tile' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
-							),
-						),
-					) ),
-				),
-				'tables' => array(
-					$this->mock_Endpoint( array(
-						'id'    => 'bar',
-						'label' => 'Bar',
-						'views' => array(
-							'table' => array(
-								'display_callback' => '__return_false',
-								'data_callback'    => '__return_false',
-							),
-						),
-					) ),
-				),
+				'tiles' => array( 'foo' ),
 			)
 		) );
 
-		$tables = $report->get_endpoints( 'tiles' );
+		$report = edd_reports_get_report( 'foo' );
+
+		$tiles = $report->get_endpoints( 'tiles' );
 
 		$actual = array();
 
-		foreach ( $tables as $endpoint_id => $endpoint ) {
+		foreach ( $tiles as $endpoint_id => $endpoint ) {
 			$actual[] = $endpoint_id;
 		}
 
 		$this->assertEqualSets( array( 'foo' ), $actual );
-	}
-
-	/**
-	 * Mocks a copy of the Endpoint abstract class.
-	 *
-	 * @param array $args
-	 * @return \EDD\Reports\Data\Endpoint Mocked Endpoint instance.
-	 */
-	protected function mock_Endpoint( $args ) {
-		return $this->getMockForAbstractClass( '\EDD\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
