@@ -28,6 +28,22 @@ final class Report extends Base_Object {
 	private $endpoints = array();
 
 	/**
+	 * Represents the raw endpoints passed to the Report constructor.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $raw_endpoints = array();
+
+	/**
+	 * Represents the capability needed to view the rendered report.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $capability;
+
+	/**
 	 * Constructs the report object.
 	 *
 	 * @since 3.0
@@ -39,24 +55,57 @@ final class Report extends Base_Object {
 		parent::__construct( $args );
 
 		if ( ! empty( $args['endpoints'] ) ) {
+
+			$this->raw_endpoints = $args['endpoints'];
+
+		} else{
+
+			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $args );
+		}
+
+		if ( ! empty( $args['capability'] ) ) {
+
+			$this->set_capability( $args['capability'] );
+
+		} else {
+
+			$this->errors->add( 'missing_capability', 'No capability is defined for the report.', $args );
+
+		}
+
+		$this->atts = $args;
+	}
+
+	/**
+	 * Triggers building the report's endpoints if defined and the current user
+	 * has the ability to view them.
+	 *
+	 * This is abstracted away from instantiation to allow for building Report objects
+	 * without always registering meta boxes and other endpoint dependencies for display.
+	 *
+	 * @since 3.0
+	 */
+	public function build_endpoints() {
+		if ( ! empty( $this->raw_endpoints ) && current_user_can( $this->get_capability() ) ) {
 			try {
 
-				$this->build_endpoints( $args['endpoints'] );
+				$this->parse_endpoints( $this->raw_endpoints );
 
 			} catch ( \EDD_Exception $exception ) {
 
 				edd_debug_log_exception( $exception );
 
 			}
-		} else{
 
-			$this->errors->add( 'missing_endpoints', 'No endpoints were defined for the report.', $args );
+		} else {
+
+			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.' );
+
 		}
-
 	}
 
 	/**
-	 * Builds Endpoint objects for each endpoint in the report.
+	 * Parses Endpoint objects for each endpoint in the report.
 	 *
 	 * @since 3.0
 	 *
@@ -64,7 +113,7 @@ final class Report extends Base_Object {
 	 *
 	 * @param array $endpoints Endpoints, keyed by view type.
 	 */
-	public function build_endpoints( $report_endpoints ) {
+	public function parse_endpoints( $report_endpoints ) {
 		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
@@ -179,6 +228,48 @@ final class Report extends Base_Object {
 			return $this->endpoints;
 
 		}
+	}
+
+	/**
+	 * Determines whether the report has any valid endpoints.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $view_group View group for the type of endpoints to check the existence of.
+	 * @return bool True if there is at least one valid endpoint, otherwise false.
+	 */
+	public function has_endpoints( $view_group ) {
+		$groups = $this->parse_view_groups();
+
+		if ( array_key_exists( $view_group, $groups ) ) {
+			$endpoints = $this->get_endpoints( $view_group );
+		} else {
+			$endpoints = array();
+		}
+
+		return ! empty( $endpoints );
+	}
+
+	/**
+	 * Retrieves the capability needed to view the rendered report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Report capability.
+	 */
+	public function get_capability() {
+		return $this->capability;
+	}
+
+	/**
+	 * Sets the capability needed for the current user to view the report.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $capability Capability.
+	 */
+	private function set_capability( $capability ) {
+		$this->capability = sanitize_key( $capability );
 	}
 
 }

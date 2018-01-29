@@ -125,6 +125,13 @@ final class Reports {
 				) ),
 			) );
 
+			$reports->add_report( 'test_report', array(
+				'label' => 'Foo Report',
+				'endpoints' => array(
+					'tiles' => array( 'something', $endpoint ),
+				),
+			) );
+
 			try {
 				$built_report = new Report( array(
 					'id'    => 'on_the_fly',
@@ -143,6 +150,10 @@ final class Reports {
 			$endpoints = $built_report->get_endpoints( 'tiles' );
 
 //			var_dump( $endpoints );
+
+			$registered_report = \edd_reports_get_report( 'test_report' );
+
+//			var_dump( $registered_report );
 
 		} catch( \EDD_Exception $exception ) {
 

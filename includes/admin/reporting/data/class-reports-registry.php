@@ -111,17 +111,18 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		$error = false;
 
 		$defaults = array(
-			'label'     => '',
-			'priority'  => 10,
-			'filters'   => array(),
-			'endpoints' => array(),
+			'label'      => '',
+			'priority'   => 10,
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(),
 		);
 
+		$attributes['id'] = $report_id;
 		$attributes = array_merge( $defaults, $attributes );
 
 		try {
 
-			$this->validate_attributes( $attributes, $report_id, array( 'filters' ) );
+			$this->validate_attributes( $attributes, $report_id );
 
 		} catch( \EDD_Exception $exception ) {
 
@@ -199,4 +200,43 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		}
 	}
 
+	/**
+	 * Builds and retrieves a Report object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string|Report $report          Report ID or object.
+	 * @param bool          $build_endpoints Optional. Whether to build the endpoints (includes
+	 *                                       registering any endpoint dependencies, such as
+	 *                                       registering meta boxes). Default true.
+	 * @return Report|\WP_Error Report object on success, otherwise a WP_Error object.
+	 */
+	public function build_report( $report, $build_endpoints = true ) {
+		// If a report object was passed, just return it.
+		if ( $report instanceof Report ) {
+			return $report;
+		}
+
+		try {
+
+			$_report = $this->get_report( $report );
+
+		} catch( \EDD_Exception $exception ) {
+
+			edd_debug_log_exception( $exception );
+
+			return new \WP_Error( 'invalid_report', $exception->getMessage(), $report );
+
+		}
+
+		if ( ! empty( $_report ) ) {
+			$_report = new Report( $_report );
+
+			if ( true === $build_endpoints ) {
+				$_report->build_endpoints();
+			}
+		}
+
+		return $_report;
+	}
 }
