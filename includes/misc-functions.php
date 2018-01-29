@@ -642,6 +642,124 @@ function _edd_deprecated_file( $file, $version, $replacement = null, $message = 
 }
 
 /**
+ * Marks an argument in a function deprecated and informs when it's been used
+ *
+ * There is a hook edd_deprecated_argument_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that has an argument being deprecated.
+ *
+ * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $tag         The name of the filter hook.
+ * @param array  $args        Array of additional function arguments to be passed to apply_filters().
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used. Default false.
+ * @param string $message     Optional. A message regarding the change. Default null.
+ */
+function edd_apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+	if ( ! has_filter( $tag ) ) {
+		return $args[0];
+	}
+
+	_edd_deprecated_hook( $tag, $version, $replacement, $message );
+
+	return apply_filters_ref_array( $tag, $args );
+}
+
+/**
+ * Marks an argument in a function deprecated and informs when it's been used
+ *
+ * There is a hook edd_deprecated_argument_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that has an argument being deprecated.
+ *
+ * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $tag         The name of the action hook.
+ * @param array  $args        Array of additional function arguments to be passed to do_action().
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used.
+ * @param string $message     Optional. A message regarding the change.
+ */
+function edd_do_action_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+	if ( ! has_action( $tag ) ) {
+		return;
+	}
+
+	_edd_deprecated_hook( $tag, $version, $replacement, $message );
+
+	do_action_ref_array( $tag, $args );
+}
+
+/**
+ * Marks a deprecated EDD action or filter hook as deprecated and throws a notice.
+ *
+ * Use the {@see 'edd_deprecated_hook_run'} action to get the backtrace describing where
+ * the deprecated hook was called.
+ *
+ * Default behavior is to trigger a user error if `WP_DEBUG` is true.
+ *
+ * This function is called by the _edd_do_action_deprecated() and _edd_apply_filters_deprecated()
+ * functions, and so generally does not need to be called directly.
+ *
+ * @since 3.0
+ *
+ * @param string $hook        The hook that was used.
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used.
+ * @param string $message     Optional. A message regarding the change.
+ */
+function _edd_deprecated_hook( $hook, $version, $replacement = null, $message = null ) {
+	/**
+	 * Fires when a deprecated EDD hook is called.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $hook        The hook that was called.
+	 * @param string $replacement The hook that should be used as a replacement.
+	 * @param string $version     The version of WordPress that deprecated the argument used.
+	 * @param string $message     A message regarding the change.
+	 */
+	do_action( 'edd_deprecated_hook_run', $hook, $replacement, $version, $message );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	/**
+	 * Filters whether to trigger deprecated EDD hook errors.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $trigger Whether to trigger deprecated hook errors. Requires
+	 *                      `WP_DEBUG` to be defined true.
+	 */
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_hook_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
+		if ( ! is_null( $replacement ) ) {
+			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative hook name */
+			trigger_error( sprintf( __( 'The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use the %3$s hook instead.', 'easy-digital-downloads' ), $hook, $version, $replacement ) . $message );
+		} else {
+			/* translators: 1: PHP file name, 2: EDD version number */
+			trigger_error( sprintf( __( 'The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $hook, $version ) . $message );
+		}
+	}
+}
+
+/**
  * Checks whether function is disabled.
  *
  * @since 1.3.5
