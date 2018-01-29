@@ -88,7 +88,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	}
 
 	/**
-	 * Insert a new API request log.
+	 * Insert a new file download log.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -98,7 +98,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 * @param array  $data {
 	 *      API request log attributes.
 	 * }
-	 * @param string $type Data type to insert (forced to 'api_request_log'.
+	 * @param string $type Data type to insert (forced to 'file_download_log'.
 	 *
 	 * @return int ID of the inserted log.
 	 */
@@ -116,14 +116,14 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	}
 
 	/**
-	 * Update an API request log.
+	 * Update an existing file download log.
 	 *
 	 * @since 3.0
 	 * @access public
 	 *
 	 * @see EDD_DB::update()
 	 *
-	 * @param int   $row_id API request log ID.
+	 * @param int   $row_id File download log ID.
 	 * @param array $data {
 	 *      API request log attributes.
 	 * }
@@ -147,7 +147,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 * @since 3.0
 	 * @access public
 	 *
-	 * @param int $row_id ID of the API request log to delete.
+	 * @param int $row_id ID of the file download log to delete.
 	 *
 	 * @return bool True if deletion was successful, false otherwise.
 	 */
@@ -334,7 +334,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	}
 
 	/**
-	 * Count the total number of API request logs in the database.
+	 * Count the total number of file download logs in the database.
 	 *
 	 * @access public
 	 * @since 3.0
@@ -356,7 +356,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	}
 
 	/**
-	 * Sets the last_changed cache key for API request logs.
+	 * Sets the last_changed cache key for file download logs.
 	 *
 	 * @since 3.0
 	 * @access public
