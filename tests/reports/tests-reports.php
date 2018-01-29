@@ -33,7 +33,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
-	public function test_reports_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
+	public function test_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
 		$result = get_endpoint( 'fake', 'tile' );
 
 		$this->assertWPError( $result );
@@ -43,7 +43,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
-	public function test_reports_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
+	public function test_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
 		$result = get_endpoint( 'fake', 'tile' );
 
 		$this->assertSame( 'invalid_endpoint', $result->get_error_code() );
@@ -53,7 +53,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @throws \EDD_Exception
 	 */
-	public function test_reports_get_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
+	public function test_get_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
 		register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
@@ -77,7 +77,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
-	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
+	public function test_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
 		register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
@@ -173,7 +173,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::\EDD\Reports\is_view_valid()
 	 */
-	public function test_reports_is_view_valid_with_valid_view_should_return_true() {
+	public function test_is_view_valid_with_valid_view_should_return_true() {
 		$this->assertTrue( is_view_valid( 'tile' ) );
 	}
 
