@@ -350,7 +350,7 @@ function default_display_tile( $object, $tile ) {
  * @param string $view Endpoint view.
  * @return string Handler class name if set and the view exists, otherwise an empty string.
  */
-function edd_reports_get_endpoint_handler( $view ) {
+function get_endpoint_handler( $view ) {
 	$handler = '';
 
 	$views = get_endpoint_views();
