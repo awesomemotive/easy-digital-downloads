@@ -81,8 +81,6 @@ final class Reports {
 		 *                 // Possible to register a single endpoint for multiple view groups.
 		 *                 'tile' => array(
 		 *                     'data_callback' => '__return_true',
-		 *
-		 *                     // Display args are view group specific.
 		 *                     'display_args'  => array(
 		 *                         'context'          => 'secondary',
 		 *                         'comparison_label' => 'Filtered by ...',
