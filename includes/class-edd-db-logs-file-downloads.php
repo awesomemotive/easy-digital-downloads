@@ -418,9 +418,12 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		// IP.
 		if ( array_key_exists( 'ip', $args ) && ! empty( $args['ip'] ) ) {
-			if ( false !== $args['ip'] ) {
-				$where .= " AND {$table_name}.ip = " . absint( $args['ip'] );
+			if ( is_array( $args['ip'] ) ) {
+				$ips = implode( "','", array_map( 'sanitize_text_field', $args['ip'] ) );
+			} else {
+				$ips = sanitize_text_field( $args['ip'] );
 			}
+			$where .= " AND {$table_name}.ip IN ( '{$ips}' )";
 		}
 
 		// Created for a specific date or in a date range.
