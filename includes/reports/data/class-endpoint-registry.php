@@ -135,7 +135,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		$attributes = array_merge( $defaults, $attributes );
 
 		$attributes['id']    = $endpoint_id;
-		$attributes['views'] = edd_reports_parse_endpoint_views( $attributes['views'] );
+		$attributes['views'] = Reports\parse_endpoint_views( $attributes['views'] );
 
 		// Bail if this endpoint ID is already registered.
 		if ( $this->offsetExists( $endpoint_id ) ) {

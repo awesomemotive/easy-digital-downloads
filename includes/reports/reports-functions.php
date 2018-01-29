@@ -252,7 +252,7 @@ function get_report( $report_id, $build_endpoints = true ) {
  *
  * @return array (Maybe) adjusted views slugs and attributes array.
  */
-function edd_reports_parse_endpoint_views( $views ) {
+function parse_endpoint_views( $views ) {
 	$valid_views = get_endpoint_views();
 
 	foreach ( $views as $view => $attributes ) {
