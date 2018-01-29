@@ -642,20 +642,11 @@ function _edd_deprecated_file( $file, $version, $replacement = null, $message = 
 }
 
 /**
- * Marks an argument in a function deprecated and informs when it's been used
+ * Fires functions attached to a deprecated EDD filter hook.
  *
- * There is a hook edd_deprecated_argument_run that will be called that can be used
- * to get the backtrace up to what file and function called the deprecated
- * function.
- *
- * The current behavior is to trigger a user error if WP_DEBUG is true.
- *
- * This function is to be used in every function that has an argument being deprecated.
- *
- * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
- *   and the version the function was deprecated in.
- * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
- *   trigger or false to not trigger error.
+ * When a filter hook is deprecated, the apply_filters() call is replaced with
+ * edd_apply_filters_deprecated(), which triggers a deprecation notice and then fires
+ * the original filter hook.
  *
  * @param string $tag         The name of the filter hook.
  * @param array  $args        Array of additional function arguments to be passed to apply_filters().
@@ -674,20 +665,11 @@ function edd_apply_filters_deprecated( $tag, $args, $version, $replacement = fal
 }
 
 /**
- * Marks an argument in a function deprecated and informs when it's been used
+ * Fires functions attached to a deprecated EDD action hook.
  *
- * There is a hook edd_deprecated_argument_run that will be called that can be used
- * to get the backtrace up to what file and function called the deprecated
- * function.
- *
- * The current behavior is to trigger a user error if WP_DEBUG is true.
- *
- * This function is to be used in every function that has an argument being deprecated.
- *
- * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
- *   and the version the function was deprecated in.
- * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
- *   trigger or false to not trigger error.
+ * When an action hook is deprecated, the do_action() call is replaced with
+ * edd_do_action_deprecated(), which triggers a deprecation notice and then fires
+ * the original hook.
  *
  * @param string $tag         The name of the action hook.
  * @param array  $args        Array of additional function arguments to be passed to do_action().
