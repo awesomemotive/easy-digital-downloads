@@ -271,7 +271,18 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 					if ( array_key_exists( 'key', $clause ) ) {
 						// Convert $key to new correct column names
 						switch ( $clause['key'] ) {
+							case '_edd_log_user_id':
+							case '_edd_log_file_id':
+							case '_edd_key_ip':
+							case '_edd_log_payment_id':
+							case '_edd_log_price_id':
+								$clause['key'] = str_replace( '_edd_log_', '', $clause['key'] );
+								break;
 
+							case '_edd_log_user_info':
+								// Assume that the argument passed was an email address.
+								$clause['key'] = 'email';
+								break;
 						}
 
 						$where .= ' AND ' . trim( $clause['key'] ) . ' = ';
