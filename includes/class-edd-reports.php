@@ -11,34 +11,11 @@
 namespace EDD\Admin;
 
 /**
- * Core class that implements the Reports API.
+ * Core class that initializes the Reports API.
  *
  * @since 3.0
  */
 final class Reports {
-
-	/**
-	 * Sets up the Reports API.
-	 *
-	 * @since 3.0
-	 */
-	public function __construct() {
-		$this->includes();
-
-		$reports = \EDD\Admin\Reports\Data\Reports_Registry::instance();
-
-		/**
-		 * Fires when the reports registry is initialized.
-		 *
-		 * Use this hook to register new reports.
-		 *
-		 * @since 3.0
-		 *
-		 * @param Reports\Data\Reports_Registry $reports Reports registry instance,
-		 *                                               passed by reference.
-		 */
-		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
-	}
 
 	/**
 	 * Handles including or requiring files central to the reports API.
@@ -65,6 +42,29 @@ final class Reports {
 		require_once $reports_dir . '/data/class-endpoint.php';
 		require_once $reports_dir . '/data/class-tile-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
+	}
+
+	/**
+	 * Sets up the Reports API.
+	 *
+	 * @since 3.0
+	 */
+	public function __construct() {
+		$this->includes();
+
+		$reports = Reports\Data\Reports_Registry::instance();
+
+		/**
+		 * Fires when the reports registry is initialized.
+		 *
+		 * Use this hook to register new reports.
+		 *
+		 * @since 3.0
+		 *
+		 * @param Reports\Data\Reports_Registry $reports Reports registry instance,
+		 *                                               passed by reference.
+		 */
+		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
 
 }
