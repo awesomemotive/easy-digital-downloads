@@ -31,7 +31,7 @@ abstract class Endpoint extends Base_Object {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $report;
+	protected $report_id;
 
 	/**
 	 * Represents the callback used to retrieve data based on the set view type.
@@ -70,7 +70,7 @@ abstract class Endpoint extends Base_Object {
 		$this->check_view();
 
 		if ( ! empty( $args['report'] ) ) {
-			$this->set_report( $args['report'] );
+			$this->set_report_id( $args['report'] );
 		}
 
 		$this->set_display_props( $args );
@@ -159,8 +159,8 @@ abstract class Endpoint extends Base_Object {
 	 *
 	 * @return string|null Report ID if set, otherwise null.
 	 */
-	public function get_report() {
-		return $this->report;
+	public function get_report_id() {
+		return $this->report_id;
 	}
 
 	/**
@@ -170,8 +170,8 @@ abstract class Endpoint extends Base_Object {
 	 *
 	 * @param string $report Report ID.
 	 */
-	private function set_report( $report ) {
-		$this->report = $report;
+	private function set_report_id( $report ) {
+		$this->report_id = $report;
 	}
 
 	/**
