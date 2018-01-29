@@ -155,10 +155,13 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 		if ( empty( $row_id ) ) {
 			return false;
 		}
+
 		$result = parent::delete( $row_id );
+
 		if ( $result ) {
 			$this->set_last_changed();
 		}
+
 		return $result;
 	}
 
@@ -344,9 +347,11 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 */
 	public function count( $args = array() ) {
 		global $wpdb;
+
 		$where = $this->parse_where( $args );
 		$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
 		$count = $wpdb->get_var( $sql );
+
 		return absint( $count );
 	}
 
