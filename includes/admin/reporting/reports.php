@@ -38,10 +38,8 @@ function edd_reports_page() {
 		}
 		#edd-item-tab-wrapper {
 			width: 15%;
-			z-index: 1;
 		}
 		.edd-item-has-tabs #edd-item-card-wrapper {
-			border-width: 0 0 0 1px;
 			width: 85%;
 		}
 		#edd-item-card-wrapper h3 {
