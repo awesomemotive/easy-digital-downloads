@@ -180,24 +180,24 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::\EDD\Reports\is_view_valid()
 	 */
-	public function test_reports_is_view_valid_with_invalid_view_should_return_false() {
+	public function test_is_view_valid_with_invalid_view_should_return_false() {
 		$this->assertFalse( is_view_valid( 'fake' ) );
 	}
 
 	/**
-	 * @covers ::edd_reports_get_endpoint_handler()
+	 * @covers ::\EDD\Reports\get_endpoint_handler()
 	 */
-	public function test_reports_get_endpoint_handler_with_valid_view_should_return_the_handler() {
+	public function test_get_endpoint_handler_with_valid_view_should_return_the_handler() {
 		$expected = 'EDD\Reports\Data\Tile_Endpoint';
 
-		$this->assertSame( $expected, edd_reports_get_endpoint_handler( 'tile' ) );
+		$this->assertSame( $expected, get_endpoint_handler( 'tile' ) );
 	}
 
 	/**
-	 * @covers ::edd_reports_get_endpoint_handler()
+	 * @covers ::\EDD\Reports\get_endpoint_handler()
 	 */
-	public function test_reports_get_endpoint_handler_with_invalid_view_should_return_empty() {
-		$this->assertSame( '', edd_reports_get_endpoint_handler( 'fake' ) );
+	public function test_get_endpoint_handler_with_invalid_view_should_return_empty() {
+		$this->assertSame( '', get_endpoint_handler( 'fake' ) );
 	}
 
 }
