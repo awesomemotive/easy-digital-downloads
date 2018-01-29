@@ -9,9 +9,6 @@
  * @since       3.0
  */
 namespace EDD\Admin;
-use EDD\Admin\Reports\Data\Endpoint;
-use EDD\Admin\Reports\Data\Report;
-use EDD\Admin\Reports\Data\Tile_Endpoint;
 
 /**
  * Core class that implements the Reports API.
