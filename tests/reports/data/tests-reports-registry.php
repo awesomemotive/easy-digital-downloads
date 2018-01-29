@@ -1,8 +1,8 @@
 <?php
-namespace EDD\Admin\Reports;
+namespace EDD\Reports;
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -16,7 +16,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -25,7 +25,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * Reports registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Admin\Reports\Data\Reports_Registry
+	 * @var    \EDD\Reports\Data\Reports_Registry
 	 */
 	protected $registry;
 
@@ -33,7 +33,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->registry = new \EDD\Admin\Reports\Data\Reports_Registry();
+		$this->registry = new \EDD\Reports\Data\Reports_Registry();
 	}
 
 	/**
@@ -57,21 +57,21 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::$item_error_label
+	 * @covers \EDD\Reports\Data\Reports_Registry::$item_error_label
 	 */
 	public function test_item_error_label_should_be_report() {
 		$this->assertSame( 'report', $this->registry::$item_error_label );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::instance()
+	 * @covers \EDD\Reports\Data\Reports_Registry::instance()
 	 */
 	public function test_static_registry_should_have_instance_method() {
 		$this->assertTrue( method_exists( $this->registry, 'instance' ) );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_report()
 	 */
 	public function test_get_report_with_invalid_report_id_should_return_an_empty_array() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' report does not exist." );
@@ -82,7 +82,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_report()
 	 */
 	public function test_get_report_with_invalid_report_id_should_throw_an_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' report does not exist." );
@@ -91,7 +91,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_report()
 	 */
 	public function test_get_report_with_valid_report_id_should_return_that_report() {
 		// Add a test report.
@@ -103,7 +103,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::remove_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::remove_report()
 	 */
 	public function test_remove_report_with_invalid_report_should_affect_no_change() {
 		// Add a report.
@@ -118,7 +118,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::remove_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::remove_report()
 	 */
 	public function test_remove_report_with_valid_report_should_remove_that_report() {
 		// Add a report.
@@ -131,7 +131,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
 	 * @expectedException \EDD_Exception
 	 */
 	public function test_add_report_with_empty_attributes_should_return_false() {
@@ -139,11 +139,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_label_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'." );
+		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$this->registry->add_report( 'foo', array(
 			'label' => ''
@@ -151,11 +151,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_endpoints_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'." );
+		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$added = $this->registry->add_report( 'foo', array(
 			'label' => 'Foo',
@@ -163,7 +163,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_no_priority_should_set_priority_10() {
@@ -180,7 +180,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_priority_should_set_that_priority() {
@@ -198,7 +198,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_filters_should_succeed_and_return_true() {
@@ -215,7 +215,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_reports()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_reports()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_no_sort_should_return_reports_in_order_of_registration() {
@@ -228,7 +228,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_reports()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_reports()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_invalid_sort_should_return_reports_in_order_of_registration() {
@@ -241,7 +241,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_reports()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_reports()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_ID_sort_should_return_reports_in_alphabetical_order_by_ID() {
@@ -254,7 +254,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Reports_Registry::get_reports()
+	 * @covers \EDD\Reports\Data\Reports_Registry::get_reports()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_priority_sort_should_return_reports_in_order_of_priority() {

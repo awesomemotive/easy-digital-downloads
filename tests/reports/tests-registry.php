@@ -1,8 +1,8 @@
 <?php
-namespace EDD\Admin\Reports;
+namespace EDD\Reports;
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -16,7 +16,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -25,7 +25,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * Reports registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Admin\Reports\Data\Reports_Registry
+	 * @var    \EDD\Reports\Data\Reports_Registry
 	 */
 	protected $registry;
 
@@ -33,7 +33,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->registry = new \EDD\Admin\Reports\Registry();
+		$this->registry = new \EDD\Reports\Registry();
 	}
 
 	/**
@@ -57,27 +57,27 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Registry::$item_error_label
+	 * @covers \EDD\Reports\Registry::$item_error_label
 	 */
 	public function test_item_error_label_should_be_report() {
 		$this->assertSame( 'reports item', $this->registry::$item_error_label );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Registry::validate_attributes()
+	 * @covers \EDD\Reports\Registry::validate_attributes()
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_attributes_should_throw_exception_if_attribute_is_empty_and_not_filtered() {
 		$this->setExpectedException(
-			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'foo' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			'\EDD\Reports\Exceptions\Invalid_Parameter',
+			"The 'foo' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
 		);
 
 		$this->registry->validate_attributes( array( 'foo' => '' ), 'some_item_id' );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Registry::validate_attributes()
+	 * @covers \EDD\Reports\Registry::validate_attributes()
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_attributes_should_not_throw_exception_if_attribute_is_empty_and_filtered() {
@@ -89,8 +89,8 @@ class Registry_Tests extends \EDD_UnitTestCase {
 		$filter = array( 'foo' );
 
 		$this->setExpectedException(
-			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'baz' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			'\EDD\Reports\Exceptions\Invalid_Parameter',
+			"The 'baz' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
 		);
 
 		/*

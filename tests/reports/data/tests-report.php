@@ -1,8 +1,8 @@
 <?php
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -17,7 +17,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -42,7 +42,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
@@ -51,8 +51,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->reports_registry   = new \EDD\Admin\Reports\Data\Reports_Registry();
-		$this->endpoints_registry = new \EDD\Admin\Reports\Data\Endpoint_Registry();
+		$this->reports_registry   = new \EDD\Reports\Data\Reports_Registry();
+		$this->endpoints_registry = new \EDD\Reports\Data\Endpoint_Registry();
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report
+	 * @covers \EDD\Reports\Data\Report
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error() {
@@ -82,7 +82,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::$endpoints
+	 * @covers \EDD\Reports\Data\Report::$endpoints
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error_including_code_missing_endpoints() {
@@ -96,7 +96,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::$capability
+	 * @covers \EDD\Reports\Data\Report::$capability
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_capability_should_flag_WP_Error_including_code_missing_capability() {
@@ -111,7 +111,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::parse_endpoints()
+	 * @covers \EDD\Reports\Data\Report::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_parse_endpoints_with_empty_array_should_add_no_new_endpoints() {
@@ -123,7 +123,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::parse_endpoints()
+	 * @covers \EDD\Reports\Data\Report::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_parse_endpoints_with_invalid_view_group_should_throw_exception() {
@@ -138,7 +138,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::parse_view_groups()
+	 * @covers \EDD\Reports\Data\Report::parse_view_groups()
 	 */
 	public function test_parse_view_groups_should_return_group_view_key_value_pairs() {
 		$report = new Report( array(
@@ -157,7 +157,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::validate_endpoint()
+	 * @covers \EDD\Reports\Data\Report::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_a_WP_Error_object_should_add_a_new_error_to_errors() {
 		$report = new Report( array(
@@ -173,7 +173,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::validate_endpoint()
+	 * @covers \EDD\Reports\Data\Report::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_an_endpoint_with_errors_should_add_that_error() {
 		$report = new Report( array(
@@ -192,7 +192,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::validate_endpoint()
+	 * @covers \EDD\Reports\Data\Report::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_a_legitimate_endpoint_should_add_it_to_the_endpoints_array() {
 		$endpoint = new Tile_Endpoint( array(
@@ -219,7 +219,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::get_endpoints()
+	 * @covers \EDD\Reports\Data\Report::get_endpoints()
 	 */
 	public function test_get_endpoints_with_empty_view_group_should_return_all_endpoints() {
 		$report = new Report( array(
@@ -265,7 +265,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::get_endpoints()
+	 * @covers \EDD\Reports\Data\Report::get_endpoints()
 	 */
 	public function test_get_endpoints_with_invalid_view_group_should_return_all_endpoints() {
 		$report = new Report( array(
@@ -311,7 +311,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Report::get_endpoints()
+	 * @covers \EDD\Reports\Data\Report::get_endpoints()
 	 */
 	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
 		$report = new Report( array(
@@ -360,10 +360,10 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * Mocks a copy of the Endpoint abstract class.
 	 *
 	 * @param array $args
-	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 * @return \EDD\Reports\Data\Endpoint Mocked Endpoint instance.
 	 */
 	protected function mock_Endpoint( $args ) {
-		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
+		return $this->getMockForAbstractClass( '\EDD\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
