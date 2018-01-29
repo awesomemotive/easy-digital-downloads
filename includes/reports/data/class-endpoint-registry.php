@@ -3,7 +3,7 @@
  * Reports API - Data Endpoints Registry
  *
  * @package     EDD
- * @subpackage  Admin/Reports/Data
+ * @subpackage  Reports/Data
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0

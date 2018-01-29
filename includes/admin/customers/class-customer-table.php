@@ -3,7 +3,7 @@
  * Customer Reports Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Reports
+ * @subpackage  Reports
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
