@@ -408,9 +408,12 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		// User email.
 		if ( array_key_exists( 'user_email', $args ) && ! empty( $args['user_email'] ) ) {
-			if ( false !== $args['user_email'] ) {
-				$where .= " AND {$table_name}.user_email = " . absint( $args['user_email'] );
+			if ( is_array( $args['user_email'] ) ) {
+				$user_emails = implode( "','", array_map( 'sanitize_text_field', $args['user_email'] ) );
+			} else {
+				$user_emails = sanitize_text_field( $args['user_email'] );
 			}
+			$where .= " AND {$table_name}.user_email IN ( '{$user_emails}' )";
 		}
 
 		// IP.
