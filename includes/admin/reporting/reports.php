@@ -120,15 +120,15 @@ function edd_reports_page() {
 							</div>
 						</div>
 					<?php endif; // Has endpoints.
+				endif; // WP_Error.
 
-					if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-						do_action( "edd_reports_tab_{$active_tab}" );
-					} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-						do_action( "edd_reports_view_{$active_tab}" );
-					}
+				if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
+					do_action( "edd_reports_tab_{$active_tab}" );
+				} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
+					do_action( "edd_reports_view_{$active_tab}" );
+				}
 
-					do_action( 'edd_reports_page_bottom' );
-				endif; // Not WP_Error.
+				do_action( 'edd_reports_page_bottom' );
 				?>
 			</div>
 		</div>
