@@ -167,7 +167,7 @@ function register_endpoint( $endpoint_id, $attributes ) {
  * @param string $view_type   View type to use when building the object.
  * @return \EDD\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
  */
-function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
+function get_endpoint( $endpoint_id, $view_type ) {
 	/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
