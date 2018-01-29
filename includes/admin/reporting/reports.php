@@ -962,7 +962,16 @@ function edd_reports_tab_reports() {
 	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) )
 		$current_view = $_GET['view'];
 
-	do_action( 'edd_reports_view_' . $current_view );
+	/**
+	 * Legacy: fired inside the old global 'Reports' tab.
+	 *
+	 * The dynamic portion of the hook name, `$current_view`, represented the parsed value of
+	 * the 'view' query variable.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	do_action_deprecated( 'edd_reports_view_' . $current_view, array(), '3.0' );
 
 }
 
