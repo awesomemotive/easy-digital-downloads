@@ -755,6 +755,45 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
 }
 
 /**
+ * Registers a new report.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+ *
+ * @param string $report_id   Report ID.
+ * @param array  $attributes {
+ *     Reports attributes. All arguments are required unless otherwise noted.
+ *
+ *     @type string $label     Report label.
+ *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
+ *     @type array  $filters   Filters available to the report.
+ *     @type array  $endpoints Endpoints to associate with the report.
+ * }
+ * @return bool True if the report was successfully registered, otherwise false.
+ */
+function edd_reports_add_report( $report_id, $attributes ) {
+	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports' );
+
+	if ( is_wp_error( $registry ) ) {
+		return false;
+	}
+
+	try {
+
+		$added = $registry->add_report( $report_id, $attributes );
+
+	} catch ( \EDD_Exception $exception ) {
+
+		$added = false;
+
+	}
+
+	return $added;
+}
+
+/**
  * Retrieves and builds a report object.
  *
  * @since 3.0
