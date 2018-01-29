@@ -23,7 +23,7 @@ final class Reports_Init {
 	 * @since 3.0
 	 */
 	private function includes() {
-		$reports_dir = EDD_PLUGIN_DIR . 'includes/admin/reporting/';
+		$reports_dir = EDD_PLUGIN_DIR . 'includes/reports/';
 
 		// Exceptions.
 		require_once $reports_dir . 'exceptions/class-invalid-parameter.php';

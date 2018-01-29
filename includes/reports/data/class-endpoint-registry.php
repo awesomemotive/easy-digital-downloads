@@ -8,18 +8,18 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
 use EDD\Utils;
-use EDD\Admin\Reports;
-use EDD\Admin\Reports\Exceptions as Reports_Exceptions;
+use EDD\Reports;
+use EDD\Reports\Exceptions as Reports_Exceptions;
 
 /**
  * Implements a singleton registry for registering reports data endpoints.
  *
  * @since 3.0
  *
- * @see \EDD\Admin\Reports\Registry
+ * @see \EDD\Reports\Registry
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_endpoint( string $endpoint_id )

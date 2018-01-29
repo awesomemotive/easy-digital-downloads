@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
 /**
  * Handler for building a tile endpoint in the Reports API.

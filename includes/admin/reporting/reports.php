@@ -28,7 +28,7 @@ function edd_reports_page() {
 	wp_enqueue_script( 'postbox' );
 
 	// Start the Reports API.
-	new EDD\Admin\Reports();
+	new EDD\Reports\Reports_Init();
 
 	$active_tab = edd_get_active_report_tab();
 	?>
@@ -144,7 +144,7 @@ function edd_reports_page() {
  *
  * @since 3.0
  *
- * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry.
+ * @param \EDD\Reports\Data\Reports_Registry $reports Reports registry.
  */
 function edd_register_core_reports( $reports ) {
 
@@ -232,7 +232,7 @@ add_action( 'edd_reports_init', 'edd_register_core_reports' );
  * @return array List of report tabs, otherwise an empty array.
  */
 function edd_get_report_tabs() {
-	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
+	/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -660,7 +660,7 @@ function edd_reports_get_endpoint_views() {
 	return array(
 		'tile' => array(
 			'group'       => 'tiles',
-			'handler'     => 'EDD\Admin\Reports\Data\Tile_Endpoint',
+			'handler'     => 'EDD\Reports\Data\Tile_Endpoint',
 			'fields'      => array(
 				'data_callback'    => '',
 				'display_callback' => 'edd_reports_display_tile',
@@ -688,7 +688,7 @@ function edd_reports_get_endpoint_views() {
  *
  * @since 3.0
  *
- * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+ * @see \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
  *
  * @param string $endpoint_id Reports data endpoint ID.
  * @param array  $attributes  {
@@ -712,7 +712,7 @@ function edd_reports_get_endpoint_views() {
  * @return bool True if the endpoint was successfully registered, otherwise false.
  */
 function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
-	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+	/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -737,14 +737,14 @@ function edd_reports_register_endpoint( $endpoint_id, $attributes ) {
  *
  * @since 3.0
  *
- * @see \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+ * @see \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
  *
  * @param string $endpoint_id Endpoint ID.
  * @param string $view_type   View type to use when building the object.
- * @return \EDD\Admin\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
+ * @return \EDD\Reports\Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
  */
 function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
-	/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+	/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -759,7 +759,7 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
  *
  * @since 3.0
  *
- * @see \EDD\Admin\Reports\Data\Reports_Registry::add_report()
+ * @see \EDD\Reports\Data\Reports_Registry::add_report()
  *
  * @param string $report_id   Report ID.
  * @param array  $attributes {
@@ -773,7 +773,7 @@ function edd_reports_get_endpoint( $endpoint_id, $view_type ) {
  * @return bool True if the report was successfully registered, otherwise false.
  */
 function edd_reports_add_report( $report_id, $attributes ) {
-	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
+	/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -798,16 +798,16 @@ function edd_reports_add_report( $report_id, $attributes ) {
  *
  * @since 3.0
  *
- * @see \EDD\Admin\Reports\Data\Reports_Registry::build_report()
+ * @see \EDD\Reports\Data\Reports_Registry::build_report()
  *
  * @param string $report_id       Report ID.
  * @param bool   $build_endpoints Optional. Whether to build the endpoints (includes registering
  *                                any endpoint dependencies, such as registering meta boxes).
  *                                Default true.
- * @return \EDD\Admin\Reports\Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
+ * @return \EDD\Reports\Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
 function edd_reports_get_report( $report_id, $build_endpoints = true ) {
-	/** @var \EDD\Admin\Reports\Data\Reports_Registry|\WP_Error $registry */
+	/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -866,7 +866,7 @@ function edd_reports_is_view_valid( $view ) {
  *
  * @since 3.0
  *
- * @param \EDD\Admin\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
+ * @param \EDD\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
  *                                               Not always set.
  * @param array                          $args   Tile display arguments.
  * @return void Meta box display callbacks only echo output.
