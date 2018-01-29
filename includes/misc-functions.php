@@ -713,7 +713,7 @@ function edd_do_action_deprecated( $tag, $args, $version, $replacement = false, 
  *
  * Default behavior is to trigger a user error if `WP_DEBUG` is true.
  *
- * This function is called by the _edd_do_action_deprecated() and _edd_apply_filters_deprecated()
+ * This function is called by the edd_do_action_deprecated() and edd_apply_filters_deprecated()
  * functions, and so generally does not need to be called directly.
  *
  * @since 3.0
