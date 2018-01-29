@@ -58,7 +58,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-utilities.php' );
@@ -87,6 +86,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/tax-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-purchase.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/login-register.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/reports/class-reports-init.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/class-edd-exception.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/class-registry.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/interface-edd-exception.php' );
