@@ -3,8 +3,8 @@ namespace EDD\Reports\Data;
 
 use EDD\Reports;
 
-if ( ! class_exists( '\EDD\Reports\Reports_Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-reports-init.php' );
+if ( ! class_exists( '\EDD\Reports\Init' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -19,7 +19,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Reports\Reports_init
+	 * @var \EDD\Reports\Init
 	 * @static
 	 */
 	protected static $reports;
@@ -28,7 +28,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Reports\Reports_init();
+		self::$reports = new \EDD\Reports\Init();
 	}
 
 	/**

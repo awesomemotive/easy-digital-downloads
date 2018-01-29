@@ -30,7 +30,7 @@ function edd_reports_page() {
 	wp_enqueue_script( 'postbox' );
 
 	// Start the Reports API.
-	new Reports\Reports_Init();
+	new Reports\Init();
 
 	$active_tab = Reports\get_active_tab();
 	?>

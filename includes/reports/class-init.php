@@ -15,7 +15,7 @@ namespace EDD\Reports;
  *
  * @since 3.0
  */
-final class Reports_Init {
+final class Init {
 
 	/**
 	 * Handles including or requiring files central to the reports API.
