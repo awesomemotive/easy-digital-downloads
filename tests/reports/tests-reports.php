@@ -95,22 +95,22 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_reports_parse_endpoint_views()
+	 * @covers ::\EDD\Reports\parse_endpoint_views()
 	 */
-	public function test_reports_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
+	public function test_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
 		$expected = array(
 			'fake' => array(
 				'display_callback' => '__return_false'
 			),
 		);
 
-		$this->assertEqualSetsWithIndex( $expected, edd_reports_parse_endpoint_views( $expected ) );
+		$this->assertEqualSetsWithIndex( $expected, parse_endpoint_views( $expected ) );
 	}
 
 	/**
-	 * @covers ::edd_reports_parse_endpoint_views()
+	 * @covers ::\EDD\Reports\parse_endpoint_views()
 	 */
-	public function test_reports_parse_endpoint_views_with_valid_view_should_inject_defaults() {
+	public function test_parse_endpoint_views_with_valid_view_should_inject_defaults() {
 		$expected = array(
 			'tile' => array(
 				'data_callback'    => '__return_zero',
@@ -129,28 +129,28 @@ class Reports_Tests extends \EDD_UnitTestCase {
 			),
 		);
 
-		$this->assertEqualSetsWithIndex( $expected, edd_reports_parse_endpoint_views( $views ) );
+		$this->assertEqualSetsWithIndex( $expected, parse_endpoint_views( $views ) );
 	}
 
 	/**
-	 * @covers ::edd_reports_parse_endpoint_views()
+	 * @covers ::\EDD\Reports\parse_endpoint_views()
 	 */
-	public function test_reports_parse_endpoint_views_should_strip_invalid_fields() {
+	public function test_parse_endpoint_views_should_strip_invalid_fields() {
 		$views = array(
 			'tile' => array(
 				'fake_field' => 'foo',
 			),
 		);
 
-		$result = edd_reports_parse_endpoint_views( $views );
+		$result = parse_endpoint_views( $views );
 
 		$this->assertArrayNotHasKey( 'fake_field', $result['tile'] );
 	}
 
 	/**
-	 * @covers ::edd_reports_parse_endpoint_views()
+	 * @covers ::\EDD\Reports\parse_endpoint_views()
 	 */
-	public function test_Reports_parse_endpoint_views_should_inject_default_display_args() {
+	public function test_parse_endpoint_views_should_inject_default_display_args() {
 		$expected = array(
 			'type'             => 'number',
 			'context'          => 'primary',
@@ -165,7 +165,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 			)
 		);
 
-		$result = edd_reports_parse_endpoint_views( $views );
+		$result = parse_endpoint_views( $views );
 
 		$this->assertEqualSetsWithIndex( $expected, $result['tile']['display_args'] );
 	}
