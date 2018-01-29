@@ -54,7 +54,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_reports_get_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
-		\edd_reports_register_endpoint( 'foo', array(
+		register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
@@ -78,7 +78,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_reports_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
-		\edd_reports_register_endpoint( 'foo', array(
+		register_endpoint( 'foo', array(
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
