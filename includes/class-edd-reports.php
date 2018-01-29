@@ -55,9 +55,9 @@ final class Reports {
 		$reports = Reports\Data\Reports_Registry::instance();
 
 		/**
-		 * Fires when the reports registry is initialized.
+		 * Fires when the Reports API is initialized.
 		 *
-		 * Use this hook to register new reports.
+		 * Use this hook to register new reports and endpoints.
 		 *
 		 * @since 3.0
 		 *
