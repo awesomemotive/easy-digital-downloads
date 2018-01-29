@@ -102,10 +102,6 @@ function edd_reports_page() {
 
 					if ( $report->has_endpoints( 'tiles' ) ) : ?>
 
-						<div>
-							<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
-						</div>
-
 						<div id="edd-reports-tiles-wrap">
 							<div id="dashboard-widgets" class="metabox-holder">
 
