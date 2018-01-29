@@ -416,11 +416,14 @@ class EDD_DB_Logs extends EDD_DB {
 		if ( function_exists( 'wp_cache_get_last_changed' ) ) {
 			return wp_cache_get_last_changed( $this->cache_group );
 		}
+
 		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
+
 		if ( ! $last_changed ) {
 			$last_changed = microtime();
 			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
+
 		return $last_changed;
 	}
 }
