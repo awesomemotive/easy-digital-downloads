@@ -386,9 +386,13 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		// Price ID.
 		if ( array_key_exists( 'price_id', $args ) && ! empty( $args['price_id'] ) ) {
-			if ( false !== $args['price_id'] ) {
-				$where .= " AND {$table_name}.price_id = " . absint( $args['price_id'] );
+			if ( is_array( $args['price_id'] ) ) {
+				$args['price_id'] = wp_parse_id_list( $args['price_id'] );
+				$price_ids = implode( "','", array_map( 'sanitize_text_field', $args['price_id'] ) );
+			} else {
+				$price_ids = sanitize_text_field( absint( $args['price_id'] ) );
 			}
+			$where .= " AND {$table_name}.price_id IN ( '{$price_ids}' )";
 		}
 
 		// User ID.
