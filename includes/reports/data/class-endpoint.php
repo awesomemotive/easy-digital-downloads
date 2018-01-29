@@ -10,6 +10,8 @@
  */
 namespace EDD\Reports\Data;
 
+use EDD\Reports;
+
 /**
  * Represents a data endpoint for the Reports API.
  *
@@ -141,7 +143,7 @@ abstract class Endpoint extends Base_Object {
 	 * @param string $view_type Endpoint type.
 	 */
 	private function check_view() {
-		$views = \edd_reports_get_endpoint_views();
+		$views = Reports\get_endpoint_views();
 
 		if ( ! array_key_exists( $this->get_view(), $views ) ) {
 			$this->errors->add(
