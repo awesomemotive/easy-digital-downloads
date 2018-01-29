@@ -161,11 +161,25 @@ function edd_register_core_reports( $reports ) {
 			)
 		) );
 
+		$reports->register_endpoint( 'another_test_tile', array(
+			'label'   => 'Another Test Tile',
+			'views'   => array(
+				'tile' => array(
+					'data_callback' => function() {
+						return 'Some Tile Data';
+					},
+					'display_args' => array(
+						'context' => 'tertiary',
+					),
+				),
+			),
+		) );
+
 		$reports->add_report( 'earnings', array(
 			'label'     => __( 'Earnings', 'easy-digital-downloads' ),
 			'priority'  => 5,
 			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
+				'tiles' => array( 'test_tile', 'another_test_tile' )
 			),
 		) );
 
