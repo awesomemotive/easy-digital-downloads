@@ -352,7 +352,13 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 		// Legacy post parent argument.
 		if ( array_key_exists( 'post_parent', $args ) && ! empty( $args['post_parent'] ) ) {
 			if ( false !== $args['post_parent'] ) {
-				$where .= " AND {$table_name}.download_id = " . absint( $args['post_parent'] );
+				if ( is_array( $args['post_parent'] ) ) {
+					$args['post_parent'] = wp_parse_id_list( $args['post_parent'] );
+					$download_ids = implode( "','", array_map( 'sanitize_text_field', $args['post_parent'] ) );
+				} else {
+					$download_ids = sanitize_text_field( absint( $args['post_parent'] ) );
+				}
+				$where .= " AND {$table_name}.download_id IN ( '{$download_ids}' )";
 			}
 		}
 
