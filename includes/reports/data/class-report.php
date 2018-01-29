@@ -72,8 +72,6 @@ final class Report extends Base_Object {
 			$this->errors->add( 'missing_capability', 'No capability is defined for the report.', $args );
 
 		}
-
-		$this->atts = $args;
 	}
 
 	/**

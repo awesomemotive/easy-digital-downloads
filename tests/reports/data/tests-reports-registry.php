@@ -278,9 +278,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		switch( $as ) {
 			case 'entry':
 				$expected = array(
-					'label'     => 'Foo',
-					'priority'  => 10,
-					'endpoints' => array(
+					'id'         => 'foo',
+					'label'      => 'Foo',
+					'priority'   => 10,
+					'capability' => 'view_shop_reports',
+					'endpoints'  => array(
 						'tiles' => array()
 					),
 				);
@@ -289,9 +291,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			case 'all_reports':
 				$expected = array(
 					'foo' => array(
-						'label'     => 'Foo',
-						'priority'  => 10,
-						'endpoints' => array(
+						'id'         => 'foo',
+						'label'      => 'Foo',
+						'priority'   => 10,
+						'capability' => 'view_shop_reports',
+						'endpoints'  => array(
 							'tiles' => array()
 						),
 					)

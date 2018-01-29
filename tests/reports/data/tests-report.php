@@ -46,36 +46,15 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * Set up fixtures once.
-	 */
-	public function setUp() {
-		parent::setUp();
-
-		$this->reports_registry   = new \EDD\Reports\Data\Reports_Registry();
-		$this->endpoints_registry = new \EDD\Reports\Data\Endpoint_Registry();
-	}
-
-	/**
-	 * Runs after each test to reset the items array.
-	 *
-	 * @access public
-	 */
-	public function tearDown() {
-		$this->reports_registry->exchangeArray( array() );
-		$this->endpoints_registry->exchangeArray( array() );
-
-		parent::tearDown();
-	}
-
-	/**
 	 * @covers \EDD\Reports\Data\Report
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error() {
 		$report = new Report( array(
-			'id'        => 'foo',
-			'label'     => 'Foo',
-			'endpoints' => array(),
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(),
 		) );
 
 		$this->assertTrue( $report->has_errors() );
@@ -87,9 +66,10 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error_including_code_missing_endpoints() {
 		$report = new Report( array(
-			'id'        => 'foo',
-			'label'     => 'Foo',
-			'endpoints' => array(),
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(),
 		) );
 
 		$this->assertContains( 'missing_endpoints', $report->get_errors()->get_error_codes() );
@@ -130,8 +110,9 @@ class Report_Tests extends \EDD_UnitTestCase {
 		$this->setExpectedException( '\EDD_Exception', "The 'fake' view group does not correspond to a known endpoint view type." );
 
 		$report = new Report( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
 		) );
 
 		$report->parse_endpoints( array( 'fake' => array() ) );
@@ -142,8 +123,9 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_view_groups_should_return_group_view_key_value_pairs() {
 		$report = new Report( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
 		) );
 
 		$expected = array(
@@ -161,8 +143,9 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_validate_endpoint_passed_a_WP_Error_object_should_add_a_new_error_to_errors() {
 		$report = new Report( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
 		) );
 
 		$report->validate_endpoint( 'tiles', new \WP_Error( 'foo' ) );
@@ -177,14 +160,12 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_validate_endpoint_passed_an_endpoint_with_errors_should_add_that_error() {
 		$report = new Report( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
 		) );
 
-		$endpoint = $this->mock_Endpoint( array(
-			'view' => 'tile',
-			'atts' => array()
-		) );
+		$endpoint = $this->mock_Endpoint( array() );
 
 		$report->validate_endpoint( 'tiles', $endpoint );
 
@@ -220,12 +201,14 @@ class Report_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Reports\Data\Report::get_endpoints()
+	 * @group drew
 	 */
 	public function test_get_endpoints_with_empty_view_group_should_return_all_endpoints() {
 		$report = new Report( array(
-			'id' => 'foo',
-			'label' => 'Foo',
-			'endpoints' => array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(
 				'tiles' => array(
 					new Tile_Endpoint( array(
 						'id'    => 'foo',
@@ -266,12 +249,14 @@ class Report_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Reports\Data\Report::get_endpoints()
+	 * @group drew
 	 */
 	public function test_get_endpoints_with_invalid_view_group_should_return_all_endpoints() {
 		$report = new Report( array(
-			'id' => 'foo',
-			'label' => 'Foo',
-			'endpoints' => array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(
 				'tiles' => array(
 					new Tile_Endpoint( array(
 						'id'    => 'foo',
@@ -312,12 +297,14 @@ class Report_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Reports\Data\Report::get_endpoints()
+	 * @group drew
 	 */
 	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
 		$report = new Report( array(
-			'id' => 'foo',
-			'label' => 'Foo',
-			'endpoints' => array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'capability' => 'view_shop_reports',
+			'endpoints'  => array(
 				'tiles' => array(
 					new Tile_Endpoint( array(
 						'id'    => 'foo',
