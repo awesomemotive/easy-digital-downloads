@@ -282,7 +282,7 @@ function parse_endpoint_views( $views ) {
  * @param string $view Endpoint view slug.
  * @return bool True if the view is valid, otherwise false.
  */
-function edd_reports_is_view_valid( $view ) {
+function is_view_valid( $view ) {
 	return array_key_exists( $view, get_endpoint_views() );
 }
 

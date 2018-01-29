@@ -242,7 +242,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		if ( ! empty( $_endpoint ) ) {
 
-			if ( edd_reports_is_view_valid( $view_type ) ) {
+			if ( Reports\is_view_valid( $view_type ) ) {
 				$_endpoint['report'] = $report;
 
 				$handler = \edd_reports_get_endpoint_handler( $view_type );
