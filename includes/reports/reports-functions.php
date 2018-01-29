@@ -230,7 +230,7 @@ function add_report( $report_id, $attributes ) {
  *                                Default true.
  * @return \EDD\Reports\Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
-function edd_reports_get_report( $report_id, $build_endpoints = true ) {
+function get_report( $report_id, $build_endpoints = true ) {
 	/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
