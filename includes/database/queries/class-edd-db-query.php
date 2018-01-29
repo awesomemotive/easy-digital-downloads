@@ -891,10 +891,16 @@ class EDD_DB_Query {
 		if ( ! empty( $meta_query ) && is_array( $meta_query ) ) {
 			$this->meta_query = new WP_Meta_Query( $meta_query );
 			$clauses          = $this->meta_query->get_sql( $this->item_name, $this->table_alias, $this->primary_column->name, $this );
-			$join             = $clauses['join'];
 
-			// Add meta_query query clause
-			$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+			// Not all objects have meta, so make sure this one exists
+			if ( false !== $clauses ) {
+
+				// Set join
+				$join = $clauses['join'];
+
+				// Remove " AND " from meta_query query where clause
+				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+			}
 		}
 
 		// Set where and join clauses
