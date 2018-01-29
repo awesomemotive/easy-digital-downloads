@@ -946,9 +946,7 @@ function edd_reports_default_views() {
  * Renders the Reports page
  *
  * @since 1.3
- * @deprecated 3.0 Unused
- *
- * @return void
+ * @deprecated 3.0 Unused.
  */
 function edd_reports_tab_reports() {
 
@@ -976,7 +974,7 @@ function edd_reports_tab_reports() {
  * @param string $default Default view to use.
  *
  * @since 1.9.6
- * @deprecated 3.0 Unused
+ * @deprecated 3.0 Unused.
  *
  * @return string $view Report View
  */
@@ -990,14 +988,22 @@ function edd_get_reporting_view( $default = 'earnings' ) {
 		$view = $_GET['view'];
 	}
 
-	return apply_filters( 'edd_get_reporting_view', $view );
+	/**
+	 * Legacy: filters the current reporting view (now implemented solely via the 'tab' var).
+	 *
+	 * @since 1.9.6
+	 * @deprecated 3.0 Unused.
+	 *
+	 * @param string $view View slug.
+	 */
+	return apply_filters_deprecated( 'edd_get_reporting_view', array( $view ), '3.0' );
 }
 
 /**
  * Renders the Reports Page Views Drop Downs
  *
  * @since 1.3
- * @deprecated 3.0 Unused
+ * @deprecated 3.0 Unused.
  *
  * @return void
  */
