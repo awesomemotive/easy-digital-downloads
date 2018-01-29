@@ -1,6 +1,8 @@
 <?php
 namespace EDD\Reports\Data;
 
+use EDD\Reports;
+
 if ( ! class_exists( '\EDD\Reports\Reports_Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-reports-init.php' );
 }
@@ -211,7 +213,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		edd_reports_add_report( 'foo', array(
+		Reports\add_report( 'foo', array(
 			'id'         => 'foo',
 			'label'      => 'Foo',
 			'capability' => 'exist',
@@ -260,7 +262,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		edd_reports_add_report( 'foo', array(
+		Reports\add_report( 'foo', array(
 			'label'      => 'Foo',
 			'capability' => 'exist',
 			'endpoints'  => array(
@@ -297,7 +299,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		edd_reports_add_report( 'foo', array(
+		Reports\add_report( 'foo', array(
 			'label'      => 'Foo',
 			'capability' => 'exist',
 			'endpoints'  => array(
