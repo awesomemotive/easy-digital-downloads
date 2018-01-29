@@ -30,27 +30,27 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_reports_get_endpoint()
+	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_reports_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
-		$result = \edd_reports_get_endpoint( 'fake', 'tile' );
+		$result = get_endpoint( 'fake', 'tile' );
 
 		$this->assertWPError( $result );
 	}
 
 	/**
-	 * @covers ::edd_reports_get_endpoint()
+	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_reports_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
-		$result = \edd_reports_get_endpoint( 'fake', 'tile' );
+		$result = get_endpoint( 'fake', 'tile' );
 
 		$this->assertSame( 'invalid_endpoint', $result->get_error_code() );
 	}
 
 	/**
-	 * @covers ::edd_reports_get_endpoint()
+	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_reports_get_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
@@ -67,13 +67,13 @@ class Reports_Tests extends \EDD_UnitTestCase {
 
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
-		$result = \edd_reports_get_endpoint( 'foo', 'tile' );
+		$result = get_endpoint( 'foo', 'tile' );
 
 		$this->assertInstanceOf( 'EDD\Reports\Data\Endpoint', $result );
 	}
 
 	/**
-	 * @covers ::edd_reports_get_endpoint()
+	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -89,7 +89,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		$result = \edd_reports_get_endpoint( 'foo', 'fake' );
+		$result = get_endpoint( 'foo', 'fake' );
 
 		$this->assertSame( 'invalid_view', $result->get_error_code() );
 	}
