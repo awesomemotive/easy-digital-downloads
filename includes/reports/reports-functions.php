@@ -65,7 +65,7 @@ function get_tabs() {
  *
  * @return string The active report tab, or the first tab if the 'tab' var is not defined.
  */
-function edd_get_active_report_tab() {
+function get_active_tab() {
 
 	$tabs = get_tabs();
 
