@@ -56,16 +56,29 @@ class EDD_Utilities {
 	 * @return \EDD\Utils\Registry|\WP_Error The registry instance if it exists, otherwise a WP_Error..
 	 */
 	public function get_registry( $name ) {
+
 		switch( $name ) {
 			case 'reports':
-				if ( class_exists( '\EDD\Admin\Reports\Data\Reports_Registry' ) ) {
+				if ( ! did_action( 'edd_reports_init' ) ) {
+
+					_doing_it_wrong( __FUNCTION__, 'The Reports registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+
+				} elseif ( class_exists( '\EDD\Admin\Reports\Data\Reports_Registry' ) ) {
+
 					$registry = \EDD\Admin\Reports\Data\Reports_Registry::instance();
+
 				}
 				break;
 
 			case 'reports:endpoints':
-				if ( class_exists( '\EDD\Admin\Reports\Data\Endpoint_Registry' ) ) {
+				if ( ! did_action( 'edd_reports_init' ) ) {
+
+					_doing_it_wrong( __FUNCTION__, 'The Endpoints registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+
+				} elseif ( class_exists( '\EDD\Admin\Reports\Data\Endpoint_Registry' ) ) {
+
 					$registry = \EDD\Admin\Reports\Data\Endpoint_Registry::instance();
+
 				}
 				break;
 
