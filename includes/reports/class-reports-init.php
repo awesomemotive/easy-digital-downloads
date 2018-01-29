@@ -3,19 +3,19 @@
  * Reports API
  *
  * @package     EDD
- * @subpackage  Admin/Reports
+ * @subpackage  Reports
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin;
+namespace EDD\Reports;
 
 /**
  * Core class that initializes the Reports API.
  *
  * @since 3.0
  */
-final class Reports {
+final class Reports_Init {
 
 	/**
 	 * Handles including or requiring files central to the reports API.
@@ -52,7 +52,7 @@ final class Reports {
 	public function __construct() {
 		$this->includes();
 
-		$reports = Reports\Data\Reports_Registry::instance();
+		$reports = Data\Reports_Registry::instance();
 
 		/**
 		 * Fires when the Reports API is initialized.
@@ -104,8 +104,8 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param Reports\Data\Reports_Registry $reports Reports registry instance,
-		 *                                               passed by reference.
+		 * @param Data\Reports_Registry $reports Reports registry instance,
+		 *                                       passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
