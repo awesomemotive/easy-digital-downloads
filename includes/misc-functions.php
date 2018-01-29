@@ -629,12 +629,14 @@ function _edd_deprecated_file( $file, $version, $replacement = null, $message = 
 	 * @param bool $show_errors Whether to trigger errors for deprecated files.
 	 */
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_file_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
 		if ( ! is_null( $replacement ) ) {
 			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative file name */
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $file, $version, $replacement ) . $message );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $file, $version, $replacement ) . $message );
 		} else {
 			/* translators: 1: PHP file name, 2: EDD version number */
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'easy-digital-downloads' ), $file, $version ) . $message );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $file, $version ) . $message );
 		}
 	}
 }
