@@ -1,8 +1,8 @@
 <?php
-namespace EDD\Admin\Reports;
+namespace EDD\Reports;
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -17,7 +17,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -26,7 +26,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 
 		$result = \edd_reports_get_endpoint( 'foo', 'tile' );
 
-		$this->assertInstanceOf( 'EDD\Admin\Reports\Data\Endpoint', $result );
+		$this->assertInstanceOf( 'EDD\Reports\Data\Endpoint', $result );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_reports_get_endpoint_handler()
 	 */
 	public function test_reports_get_endpoint_handler_with_valid_view_should_return_the_handler() {
-		$expected = 'EDD\Admin\Reports\Data\Tile_Endpoint';
+		$expected = 'EDD\Reports\Data\Tile_Endpoint';
 
 		$this->assertSame( $expected, edd_reports_get_endpoint_handler( 'tile' ) );
 	}

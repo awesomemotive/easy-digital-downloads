@@ -1,8 +1,8 @@
 <?php
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -17,7 +17,7 @@ class Tile_Endpoint_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -26,11 +26,11 @@ class Tile_Endpoint_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_view()
+	 * @covers \EDD\Reports\Data\Endpoint::set_view()
 	 */
 	public function test_set_view_with_valid_view_should_set_that_view() {
 		$endpoint = new Tile_Endpoint( array() );

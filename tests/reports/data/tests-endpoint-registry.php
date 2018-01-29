@@ -1,10 +1,10 @@
 <?php
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -19,7 +19,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -28,7 +28,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * Endpoint registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Admin\Reports\Data\Endpoint_Registry
+	 * @var    \EDD\Reports\Data\Endpoint_Registry
 	 */
 	protected $registry;
 
@@ -36,7 +36,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->registry = new \EDD\Admin\Reports\Data\Endpoint_Registry();
+		$this->registry = new \EDD\Reports\Data\Endpoint_Registry();
 	}
 
 	/**
@@ -60,21 +60,21 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::$item_error_label
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::$item_error_label
 	 */
 	public function test_item_error_label_should_be_reports_endpoint() {
 		$this->assertSame( 'reports endpoint', $this->registry::$item_error_label );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::instance()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::instance()
 	 */
 	public function test_static_registry_should_have_instance_method() {
 		$this->assertTrue( method_exists( $this->registry, 'instance' ) );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
@@ -86,7 +86,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
@@ -96,7 +96,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_should_return_that_endpoint() {
@@ -124,7 +124,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::unregister_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_unregister_endpoint_with_invalid_endpoint_id_should_affect_no_change() {
@@ -145,7 +145,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::unregister_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_unregister_endpoint_with_valid_endpoint_id_should_unregister_that_endpoint() {
@@ -165,7 +165,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_no_sort_should_return_endpoints_in_order_of_registration() {
@@ -178,7 +178,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_invalid_sort_should_return_endpoints_in_order_of_registration() {
@@ -191,7 +191,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_ID_sort_should_return_endpoints_in_alphabetical_order_by_ID() {
@@ -204,7 +204,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_priority_sort_should_return_endpoints_in_order_of_priority() {
@@ -217,7 +217,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @expectedException \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_attributes_should_return_false() {
@@ -225,14 +225,14 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_label_should_throw_exception() {
 		$this->setExpectedException(
-			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			'\EDD\Reports\Exceptions\Invalid_Parameter',
+			"The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
 		);
 
 		$this->registry->register_endpoint( 'foo', array(
@@ -241,14 +241,14 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_views_should_throw_exception() {
 		$this->setExpectedException(
-			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Registry::validate_attributes'."
+			'\EDD\Reports\Exceptions\Invalid_Parameter',
+			"The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -257,14 +257,14 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_missing_required_view_sub_attribute_should_throw_exception() {
 		$this->setExpectedException(
-			'\EDD\Admin\Reports\Exceptions\Invalid_Parameter',
-			"The 'data_callback' parameter for the 'tile' view is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_view_attributes'."
+			'\EDD\Reports\Exceptions\Invalid_Parameter',
+			"The 'data_callback' parameter for the 'tile' view is missing or invalid in 'EDD\Reports\Data\Endpoint_Registry::validate_view_attributes'."
 		);
 
 		$added = $this->registry->register_endpoint( 'foo', array(
@@ -276,7 +276,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_no_priority_should_set_priority_10() {
@@ -295,7 +295,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_priority_should_set_that_priority() {
@@ -315,7 +315,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_filters_should_succeed_and_return_true() {
@@ -333,7 +333,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
 		$endpoint = $this->mock_Endpoint( array(
@@ -341,11 +341,11 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'atts' => array()
 		) );
 
-		$this->assertInstanceOf( '\EDD\Admin\Reports\Data\Endpoint', $endpoint );
+		$this->assertInstanceOf( '\EDD\Reports\Data\Endpoint', $endpoint );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
@@ -356,7 +356,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_build_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
@@ -373,11 +373,11 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 		$result = $this->registry->build_endpoint( 'foo', 'tile' );
 
-		$this->assertInstanceOf( 'EDD\Admin\Reports\Data\Endpoint', $result );
+		$this->assertInstanceOf( 'EDD\Reports\Data\Endpoint', $result );
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -390,13 +390,13 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint_Registry::validate_views()
+	 * @covers \EDD\Reports\Data\Endpoint_Registry::validate_views()
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_views_with_invalid_view_should_throw_exception() {
 		$this->setExpectedException(
-			'\EDD\Admin\Reports\Exceptions\Invalid_View',
-			"The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Admin\Reports\Data\Endpoint_Registry::validate_views'"
+			'\EDD\Reports\Exceptions\Invalid_View',
+			"The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Reports\Data\Endpoint_Registry::validate_views'"
 		);
 
 		$this->registry->register_endpoint( 'foo', array(
@@ -442,10 +442,10 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * Mocks a copy of the Endpoint abstract class.
 	 *
 	 * @param array $args
-	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 * @return \EDD\Reports\Data\Endpoint Mocked Endpoint instance.
 	 */
 	protected function mock_Endpoint( $args ) {
-		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
+		return $this->getMockForAbstractClass( '\EDD\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }

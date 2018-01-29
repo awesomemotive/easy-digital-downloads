@@ -1,8 +1,8 @@
 <?php
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
-if ( ! class_exists( '\EDD\Admin\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/class-edd-reports.php' );
+if ( ! class_exists( '\EDD\Reports' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
 /**
@@ -18,7 +18,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Reports fixture.
 	 *
-	 * @var \EDD\Admin\Reports
+	 * @var \EDD\Reports
 	 * @static
 	 */
 	protected static $reports;
@@ -27,7 +27,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * Endpoint registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Admin\Reports\Data\Endpoint_Registry
+	 * @var    \EDD\Reports\Data\Endpoint_Registry
 	 */
 	protected $registry;
 
@@ -35,7 +35,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Admin\Reports();
+		self::$reports = new \EDD\Reports();
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->registry = new \EDD\Admin\Reports\Data\Endpoint_Registry();
+		$this->registry = new \EDD\Reports\Data\Endpoint_Registry();
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_view()
+	 * @covers \EDD\Reports\Data\Endpoint::get_view()
 	 */
 	public function test_get_view_when_created_with_invalid_view_should_be_null() {
 		$endpoint = $this->mock_Endpoint( array() );
@@ -68,7 +68,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::check_view()
+	 * @covers \EDD\Reports\Data\Endpoint::check_view()
 	 * @group edd_errors
 	 */
 	public function test_check_view_with_invalid_view_should_flag_WP_Error() {
@@ -79,7 +79,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::check_view()
+	 * @covers \EDD\Reports\Data\Endpoint::check_view()
 	 * @group edd_errors
 	 */
 	public function test_check_view_with_invalid_view_should_flag_WP_Error_including_code_invalid_view() {
@@ -95,7 +95,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_args()
+	 * @covers \EDD\Reports\Data\Endpoint::get_display_args()
 	 */
 	public function test_get_display_args_when_created_without_display_args_should_return_an_empty_array() {
 		$endpoint = $this->mock_Endpoint( array() );
@@ -104,8 +104,8 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_args()
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_args()
+	 * @covers \EDD\Reports\Data\Endpoint::get_display_args()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_args()
 	 */
 	public function test_get_display_args_when_created_with_display_args_should_return_those_args() {
 		$expected = array( 'something', 'goes', 'here' );
@@ -127,7 +127,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::get_display_callback()
 	 */
 	public function test_get_display_callback_when_created_without_display_callback_should_return_null() {
 		$endpoint = $this->mock_Endpoint( array() );
@@ -136,8 +136,8 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_display_callback()
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::get_display_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_callback()
 	 */
 	public function test_get_display_callback_when_created_with_display_callback_should_return_that_callback() {
 		$endpoint = new Tile_Endpoint( array(
@@ -152,7 +152,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_data_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::get_data_callback()
 	 */
 	public function test_get_data_callback_when_created_without_data_callback_should_return_null() {
 		$endpoint = $this->mock_Endpoint( array() );
@@ -161,8 +161,8 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::get_data_callback()
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_data_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::get_data_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::set_data_callback()
 	 */
 	public function test_get_data_callback_when_created_with_data_callback_should_return_that_callback() {
 		$endpoint = new Tile_Endpoint( array(
@@ -177,7 +177,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_args()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_args()
 	 * @group edd_errors
 	 */
 	public function test_set_display_args_with_non_array_display_args_should_flag_WP_Error_including_code_invalid_view_arg_type() {
@@ -200,7 +200,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
 	public function test_set_display_props_with_empty_view_display_callback_should_flag_WP_Error() {
@@ -220,7 +220,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
 	public function test_set_display_props_with_empty_view_display_callback_should_flag_WP_Error_including_code_missing_display_callback() {
@@ -242,7 +242,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_callback()
 	 * @group edd_errors
 	 */
 	public function test_set_display_callback_with_non_callable_display_callback_should_flag_WP_Error_including_code_invalid_view_arg_type() {
@@ -265,7 +265,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
 	public function test_set_display_props_with_empty_view_data_callback_should_flag_WP_Error() {
@@ -285,7 +285,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_display_props()
+	 * @covers \EDD\Reports\Data\Endpoint::set_display_props()
 	 * @group edd_errors
 	 */
 	public function test_set_display_props_with_empty_view_data_callback_should_flag_WP_Error_including_code_missing_data_callback() {
@@ -307,7 +307,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Admin\Reports\Data\Endpoint::set_data_callback()
+	 * @covers \EDD\Reports\Data\Endpoint::set_data_callback()
 	 * @group edd_errors
 	 */
 	public function test_set_data_callback_with_non_callable_data_callback_should_flag_WP_Error_including_code_invalid_view_arg_type() {
@@ -333,10 +333,10 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * Mocks a copy of the Endpoint abstract class.
 	 *
 	 * @param array $args
-	 * @return \EDD\Admin\Reports\Data\Endpoint Mocked Endpoint instance.
+	 * @return \EDD\Reports\Data\Endpoint Mocked Endpoint instance.
 	 */
 	protected function mock_Endpoint( $args ) {
-		return $this->getMockForAbstractClass( '\EDD\Admin\Reports\Data\Endpoint', array( $args ) );
+		return $this->getMockForAbstractClass( '\EDD\Reports\Data\Endpoint', array( $args ) );
 	}
 
 }
