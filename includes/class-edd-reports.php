@@ -27,7 +27,6 @@ final class Reports {
 	 */
 	public function __construct() {
 		$this->includes();
-		$this->hooks();
 
 		$reports = \EDD\Admin\Reports\Data\Reports_Registry::instance();
 
@@ -69,99 +68,6 @@ final class Reports {
 		require_once $reports_dir . '/data/class-endpoint.php';
 		require_once $reports_dir . '/data/class-tile-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
-	}
-
-	/**
-	 * Handles registering hook callbacks for a variety of reports API purposes.
-	 *
-	 * @since 3.0
-	 */
-	private function hooks() {
-//		add_action( 'edd_reports_init', array( $this, 'register_core_reports' ) );
-	}
-
-	/**
-	 * Registers core reports for the Reports API.
-	 *
-	 * @since 3.0
-	 *
-	 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry.
-	 */
-	public function register_core_reports( $reports ) {
-
-		// Test code.
-		try {
-
-			$reports->register_endpoint( 'something', array(
-				'label' => 'Something',
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function() {
-							return 'Some Data';
-						}
-					)
-				)
-			) );
-
-			$reports->add_report( 'products', array(
-				'label'     => __( 'Products', 'easy-digital-downloads' ),
-				'priority'  => 10,
-				'endpoints' => array(
-					'tiles' => array( 'something' ),
-				),
-			) );
-
-			$endpoint = new Tile_Endpoint( array(
-				'id'    => 'on_the_fly',
-				'label' => 'On the Fly',
-				'views' => edd_reports_parse_endpoint_views( array(
-					'tile' => array(
-						'data_callback'    => function() {
-							return 'Hello, World! (data)';
-						},
-						'display_args' => array(
-							'context' => 'secondary',
-						),
-					)
-				) ),
-			) );
-
-			$reports->add_report( 'test_report', array(
-				'label' => 'Foo Report',
-				'endpoints' => array(
-					'tiles' => array( 'something', $endpoint ),
-				),
-			) );
-
-			try {
-				$built_report = new Report( array(
-					'id'    => 'on_the_fly',
-					'label' => 'On the Fly',
-					'endpoints' => array(
-						'tiles' => array( 'something', 'else', $endpoint )
-					)
-				) );
-			} catch ( \EDD_Exception $exception ) {
-
-				edd_debug_log_exception( $exception );
-
-				$built_report = 'fail';
-			}
-
-			$endpoints = $built_report->get_endpoints( 'tiles' );
-
-//			var_dump( $endpoints );
-
-			$registered_report = \edd_reports_get_report( 'test_report' );
-
-//			var_dump( $registered_report );
-
-		} catch( \EDD_Exception $exception ) {
-
-			edd_debug_log_exception( $exception );
-
-		}
-
 	}
 
 }
