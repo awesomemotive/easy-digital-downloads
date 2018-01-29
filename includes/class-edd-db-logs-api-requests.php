@@ -210,7 +210,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 
 		$cache_key = md5( 'edd_api_request_logs_' . serialize( $args ) );
 
-		$logs = wp_cache_get( $cache_key, 'api_request_logs' );
+		$logs = wp_cache_get( $cache_key, $this->cache_group );
 
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
@@ -230,7 +230,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 					$logs[ $key ] = new EDD\Logs\API_Request_Log( $log );
 				}
 
-				wp_cache_set( $cache_key, $logs, 'api_request_logs', 3600 );
+				wp_cache_set( $cache_key, $logs, $this->cache_group, 3600 );
 			}
 		}
 
