@@ -32,6 +32,10 @@ class EDD_DB_Query {
 	/**
 	 * String used to alias the database table in MySQL statement.
 	 *
+	 * Keep this short, but descriptive. I.E. "oi" for order items.
+	 *
+	 * This is used to avoid collisions with JOINs.
+	 *
 	 * @since 3.0.0
 	 * @access public
 	 * @var string
@@ -43,7 +47,9 @@ class EDD_DB_Query {
 	/**
 	 * Name for a single item
 	 *
-	 * I.E. "order"
+	 * Use underscores between words. I.E. "order_item"
+	 *
+	 * This is used to automatically generate action hooks.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -53,8 +59,10 @@ class EDD_DB_Query {
 
 	/**
 	 * Plural version for a group of items.
-	 * 
-	 * I.E. "orders"
+	 *
+	 * Use underscores between words. I.E. "order_item"
+	 *
+	 * This is used to automatically generate action hooks.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -65,7 +73,9 @@ class EDD_DB_Query {
 	/**
 	 * Callback function for turning IDs into objects.
 	 *
-	 * I.E. "edd_get_order()"
+	 * I.E. `edd_get_order_item()` or `array( 'Class', 'method' )`
+	 *
+	 * This is used when looping through return values to guarantee their shape.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -78,7 +88,9 @@ class EDD_DB_Query {
 	/**
 	 * Group to cache queries and queried items in.
 	 *
-	 * I.E. "edd_orders"
+	 * Use underscores between words. I.E. "edd_order_items"
+	 *
+	 * Do not use colons: ":". These are reserved for internal use only.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -97,7 +109,7 @@ class EDD_DB_Query {
 	 * @access public
 	 * @var WP_DB_Column
 	 */
-	public $primary_column = false;
+	protected $primary_column = false;
 
 	/**
 	 * Array of database column objects
@@ -106,7 +118,7 @@ class EDD_DB_Query {
 	 * @access public
 	 * @var array
 	 */
-	public $columns = array();
+	protected $columns = array();
 
 	/** Clauses ***************************************************************/
 
@@ -266,43 +278,6 @@ class EDD_DB_Query {
 	}
 
 	/**
-	 * Set columns objects
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 */
-	private function set_columns() {
-
-		// Default array
-		$new_columns = array();
-
-		// Loop through columns array
-		foreach ( $this->columns as $column ) {
-			if ( is_array( $column ) ) {
-				$new_columns[] = new EDD_DB_Column( $column );
-			} elseif ( $column instanceof EDD_DB_Column ) {
-				$new_columns[] = $column;
-			}
-		}
-
-		// Set columns
-		$this->columns = $new_columns;
-	}
-
-	/**
-	 * Return the global database interface
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return wpdb
-	 */
-	public function get_db() {
-		return isset( $GLOBALS['wpdb'] )
-			? $GLOBALS['wpdb']
-			: new stdClass();
-	}
-
-	/**
 	 * Parses arguments passed to the item query with default query parameters.
 	 *
 	 * @since 3.0.0
@@ -397,12 +372,12 @@ class EDD_DB_Query {
 		}
 
 		// Pagination
-		if ( $this->found_items && $this->query_vars['limit'] ) {
+		if ( ! empty( $this->found_items ) && ! empty( $this->query_vars['limit'] ) ) {
 			$this->max_num_pages = ceil( $this->found_items / $this->query_vars['limit'] );
 		}
 
 		// Return an int of the count
-		if ( $this->query_vars['count'] ) {
+		if ( ! empty( $this->query_vars['count'] ) ) {
 			return intval( $item_ids );
 		}
 
@@ -424,6 +399,32 @@ class EDD_DB_Query {
 
 		// Return array of items
 		return $this->items;
+	}
+
+	/** Private Setters *******************************************************/
+
+	/**
+	 * Set columns objects
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 */
+	private function set_columns() {
+
+		// Default array
+		$new_columns = array();
+
+		// Loop through columns array
+		foreach ( $this->columns as $column ) {
+			if ( is_array( $column ) ) {
+				$new_columns[] = new EDD_DB_Column( $column );
+			} elseif ( $column instanceof EDD_DB_Column ) {
+				$new_columns[] = $column;
+			}
+		}
+
+		// Set columns
+		$this->columns = $new_columns;
 	}
 
 	/**
@@ -457,103 +458,15 @@ class EDD_DB_Query {
 	}
 
 	/**
-	 * Maybe prime caches for item IDs
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $item_ids
-	 */
-	private function maybe_prime_caches( $item_ids = array() ) {
-		if ( $this->query_vars['update_cache'] ) {
-
-		}
-
-		if ( $this->query_vars['update_meta_cache'] ) {
-
-		}
-	}
-
-	/**
-	 * Used internally to get a list of item IDs matching the query vars.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 *
-	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
-	 */
-	private function get_item_ids() {
-
-		// Setup primary column, and parse the where clause
-		$this->set_primary_column();
-		$this->parse_where();
-
-		// Order & Order By
-		$order   = $this->parse_order( $this->query_vars['order'] );
-		$orderby = $this->get_order_by( $order );
-
-		// Limit & Offset
-		$limit   = absint( $this->query_vars['limit']  );
-		$offset  = absint( $this->query_vars['offset'] );
-
-		// Limits
-		if ( ! empty( $limit ) && ( '-1' != $limit ) ) {
-			$limits = ! empty( $offset )
-				? "LIMIT {$offset}, {$limit}"
-				: "LIMIT {$limit}";
-		} else {
-			$limits = '';
-		}
-
-		// Where & Join
-		$where = implode( ' AND ', $this->query_clauses['where'] );
-		$join  = $this->query_clauses['join'];
-
-		// Fields
-		$fields = ! empty( $this->query_vars['count'] )
-			? 'COUNT(*)'
-			: "{$this->table_alias}.{$this->primary_column->name}";
-
-		/**
-		 * Filters the item query clauses.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param array  $pieces A compacted array of item query clauses.
-		 * @param object &$this  Current instance passed by reference.
-		 */
-		$clauses = apply_filters_ref_array( 'item_clauses', array( compact( array( 'fields', 'join', 'where', 'orderby', 'limits', 'groupby' ) ), &$this ) );
-
-		// Setup request
-		$this->set_request_clauses( $clauses );
-		$this->set_request();
-
-		// Return count
-		if ( ! empty( $this->query_vars['count'] ) ) {
-			return intval( $this->get_db()->get_var( $this->request ) );
-		}
-
-		// Get IDs
-		$item_ids = $this->get_db()->get_col( $this->request );
-
-		// Return parsed IDs
-		return wp_parse_id_list( $item_ids );
-	}
-
-	/**
 	 * Set the primary column
 	 *
 	 * @since 3.0.0
 	 * @access private
 	 */
 	private function set_primary_column() {
-
-		// Filter columns
-		$filter = wp_filter_object_list( $this->columns, array(
+		$this->primary_column = $this->get_column_by( array(
 			'primary' => true
 		) );
-
-		// Set primary
-		$this->primary_column = reset( $filter );
 	}
 
 	/**
@@ -623,6 +536,227 @@ class EDD_DB_Query {
 	private function set_request() {
 		$this->request = "{$this->request_clauses['select']} {$this->request_clauses['from']} {$this->request_clauses['where']} {$this->request_clauses['groupby']} {$this->request_clauses['orderby']} {$this->request_clauses['limits']}";
 	}
+
+	/**
+	 * Populates found_items and max_num_pages properties for the current query
+	 * if the limit clause was used.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 *
+	 * @param  array $item_ids Optional array of item IDs
+	 */
+	private function set_found_items( $item_ids = array() ) {
+		if ( ! empty( $this->query_vars['limit'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
+			/**
+			 * Filters the query used to retrieve found item count.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
+			 * @param object $item_query        The object instance.
+			 */
+			$found_items_query = apply_filters( "found_{$this->item_name_plural}_query", 'SELECT FOUND_ROWS()', $this );
+			$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
+		} elseif ( ! empty( $item_ids ) ) {
+			$this->found_items = count( $item_ids );
+		}
+	}
+
+	/** Private Getters *******************************************************/
+
+	/**
+	 * Return the global database interface
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return wpdb
+	 */
+	private function get_db() {
+		return isset( $GLOBALS['wpdb'] )
+			? $GLOBALS['wpdb']
+			: new stdClass();
+	}
+
+	/**
+	 * Set the primary column
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 */
+	private function get_column_by( $args = array() ) {
+
+		// Filter columns
+		$filter = wp_filter_object_list( $this->columns, $args );
+
+		// Return column or false
+		return ! empty( $filter )
+			? reset( $filter )
+			: false;
+	}
+
+	/**
+	 * Used internally to get a list of item IDs matching the query vars.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 *
+	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
+	 */
+	private function get_item_ids() {
+
+		// Setup primary column, and parse the where clause
+		$this->set_primary_column();
+		$this->parse_where();
+
+		// Order & Order By
+		$order   = $this->parse_order( $this->query_vars['order'] );
+		$orderby = $this->get_order_by( $order );
+
+		// Limit & Offset
+		$limit   = absint( $this->query_vars['limit']  );
+		$offset  = absint( $this->query_vars['offset'] );
+
+		// Limits
+		if ( ! empty( $limit ) && ( '-1' != $limit ) ) {
+			$limits = ! empty( $offset )
+				? "LIMIT {$offset}, {$limit}"
+				: "LIMIT {$limit}";
+		} else {
+			$limits = '';
+		}
+
+		// Where & Join
+		$where = implode( ' AND ', $this->query_clauses['where'] );
+		$join  = $this->query_clauses['join'];
+
+		// Fields
+		$fields = ! empty( $this->query_vars['count'] )
+			? 'COUNT(*)'
+			: "{$this->table_alias}.{$this->primary_column->name}";
+
+		/**
+		 * Filters the item query clauses.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array  $pieces A compacted array of item query clauses.
+		 * @param object &$this  Current instance passed by reference.
+		 */
+		$clauses = apply_filters_ref_array( 'item_clauses', array( compact( array( 'fields', 'join', 'where', 'orderby', 'limits', 'groupby' ) ), &$this ) );
+
+		// Setup request
+		$this->set_request_clauses( $clauses );
+		$this->set_request();
+
+		// Return count
+		if ( ! empty( $this->query_vars['count'] ) ) {
+			return intval( $this->get_db()->get_var( $this->request ) );
+		}
+
+		// Get IDs
+		$item_ids = $this->get_db()->get_col( $this->request );
+
+		// Return parsed IDs
+		return wp_parse_id_list( $item_ids );
+	}
+
+	/**
+	 * Get the ORDERBY clause.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 * @param string $order
+	 * @return string
+	 */
+	private function get_order_by( $order = '' ) {
+
+		// Disable ORDER BY with 'none', an empty array, or boolean false.
+		if ( in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
+			$orderby = '';
+
+		// Ordering by something, so figure it out
+		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
+			$ordersby = is_array( $this->query_vars['orderby'] )
+				? $this->query_vars['orderby']
+				: preg_split( '/[,\s]/', $this->query_vars['orderby'] );
+
+			$orderby_array = array();
+			$possible_ins  = wp_filter_object_list( $this->columns, array( 'in' => true ), 'and', 'name' );
+
+			// Loop through possible order by's
+			foreach ( $ordersby as $_key => $_value ) {
+
+				// Skip if empty
+				if ( empty( $_value ) ) {
+					continue;
+				}
+
+				// Key is numeric
+				if ( is_int( $_key ) ) {
+					$_orderby = $_value;
+					$_item    = $order;
+
+				// Key is string
+				} else {
+					$_orderby = $_key;
+					$_item    = $_value;
+				}
+
+				$parsed = $this->parse_orderby( $_orderby );
+
+				// Skip if empty
+				if ( empty( $parsed ) ) {
+					continue;
+				}
+
+				// Set if __in
+				if ( in_array( $_orderby, $possible_ins, true ) ) {
+					$orderby_array[] = $parsed;
+					continue;
+				}
+
+				$orderby_array[] = $parsed . ' ' . $this->parse_order( $_item );
+			}
+
+			$orderby = implode( ', ', $orderby_array );
+		} else {
+			$orderby = "{$this->table_alias}.{$this->primary_column->name} {$order}";
+		}
+
+		return $orderby;
+	}
+
+	/**
+	 * Used internally to generate an SQL string for searching across multiple columns.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 *
+	 * @param string $string  Search string.
+	 * @param array  $columns Columns to search.
+	 * @return string Search SQL.
+	 */
+	private function get_search_sql( $string = '', $columns = array() ) {
+
+		// Array or String
+		$like = ( false !== strpos( $string, '*' ) )
+			? '%' . implode( '%', array_map( array( $this->get_db(), 'esc_like' ), explode( '*', $string ) ) ) . '%'
+			: '%' . $this->get_db()->esc_like( $string ) . '%';
+
+		// Default array
+		$searches = array();
+
+		// Build search SQL
+		foreach ( $columns as $column ) {
+			$searches[] = $this->get_db()->prepare( "{$column} LIKE %s", $like );
+		}
+
+		// Return the clause
+		return '(' . implode( ' OR ', $searches ) . ')';
+	}
+
+	/** Private Parsers *******************************************************/
 
 	/**
 	 * Parse the where clauses for all known columns
@@ -769,132 +903,12 @@ class EDD_DB_Query {
 	}
 
 	/**
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @param string $order
-	 * @return string
-	 */
-	private function get_order_by( $order = '' ) {
-
-		// Disable ORDER BY with 'none', an empty array, or boolean false.
-		if ( in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
-			$orderby = '';
-
-		// Ordering by something, so figure it out
-		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
-			$ordersby = is_array( $this->query_vars['orderby'] )
-				? $this->query_vars['orderby']
-				: preg_split( '/[,\s]/', $this->query_vars['orderby'] );
-
-			$orderby_array = array();
-			$possible_ins  = wp_filter_object_list( $this->columns, array( 'in' => true ), 'and', 'name' );
-
-			// Loop through possible order by's
-			foreach ( $ordersby as $_key => $_value ) {
-
-				// Skip if empty
-				if ( empty( $_value ) ) {
-					continue;
-				}
-
-				// Key is numeric
-				if ( is_int( $_key ) ) {
-					$_orderby = $_value;
-					$_item    = $order;
-
-				// Key is string
-				} else {
-					$_orderby = $_key;
-					$_item    = $_value;
-				}
-
-				$parsed = $this->parse_orderby( $_orderby );
-
-				// Skip if empty
-				if ( empty( $parsed ) ) {
-					continue;
-				}
-
-				// Set if __in
-				if ( in_array( $_orderby, $possible_ins, true ) ) {
-					$orderby_array[] = $parsed;
-					continue;
-				}
-
-				$orderby_array[] = $parsed . ' ' . $this->parse_item( $_item );
-			}
-
-			$orderby = implode( ', ', $orderby_array );
-		} else {
-			$orderby = "{$this->table_alias}.{$this->primary_column->name} {$order}";
-		}
-
-		return $orderby;
-	}
-
-	/**
-	 * Populates found_items and max_num_pages properties for the current query
-	 * if the limit clause was used.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 *
-	 * @param  array $item_ids Optional array of item IDs
-	 */
-	private function set_found_items( $item_ids = array() ) {
-		if ( ! empty( $this->query_vars['limit'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
-			/**
-			 * Filters the query used to retrieve found item count.
-			 *
-			 * @since 3.0.0
-			 *
-			 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
-			 * @param object $item_query        The object instance.
-			 */
-			$found_items_query = apply_filters( "found_{$this->item_name_plural}_query", 'SELECT FOUND_ROWS()', $this );
-			$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
-		} elseif ( ! empty( $item_ids ) ) {
-			$this->found_items = count( $item_ids );
-		}
-	}
-
-	/**
-	 * Used internally to generate an SQL string for searching across multiple columns.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 *
-	 * @param string $string  Search string.
-	 * @param array  $columns Columns to search.
-	 * @return string Search SQL.
-	 */
-	private function get_search_sql( $string = '', $columns = array() ) {
-
-		// Array or String
-		$like = ( false !== strpos( $string, '*' ) )
-			? '%' . implode( '%', array_map( array( $this->get_db(), 'esc_like' ), explode( '*', $string ) ) ) . '%'
-			: '%' . $this->get_db()->esc_like( $string ) . '%';
-
-		// Default array
-		$searches = array();
-
-		// Build search SQL
-		foreach ( $columns as $column ) {
-			$searches[] = $this->get_db()->prepare( "{$column} LIKE %s", $like );
-		}
-
-		// Return the clause
-		return '(' . implode( ' OR ', $searches ) . ')';
-	}
-
-	/**
 	 * Parses and sanitizes 'orderby' keys passed to the item query.
 	 *
 	 * @since 3.0.0
 	 * @access private
 	 *
-	 * @param string $orderby Field for the items to be itemed by.
+	 * @param string $orderby Field for the items to be ordered by.
 	 * @return string|false Value to used in the ORDER clause. False otherwise.
 	 */
 	private function parse_orderby( $orderby = 'id' ) {
@@ -905,8 +919,8 @@ class EDD_DB_Query {
 		// __in
 		if ( false !== strstr( $orderby, '__in' ) ) {
 			$column_name = str_replace( '__in', '', $orderby );
-			$column      = wp_filter_object_list( $this->column, array( 'name' => $column_name ) );
-			$item_in     = ( true === $column->unsigned )
+			$column      = $this->get_column_by( array( 'name' => $column_name ) );
+			$item_in     = $column->is_numeric()
 				? implode( ',', array_map( 'absint', $this->query_vars[ $orderby ] ) )
 				: implode( ',', $this->query_vars[ $orderby ] );
 
@@ -914,24 +928,15 @@ class EDD_DB_Query {
 
 		// Specific column
 		} else {
-			switch ( $orderby ) {
-				case 'id' :
-				case 'number' :
-				case 'status' :
-				case 'date_created' :
-				case 'date_completed' :
-				case 'user_id' :
-				case 'customer_id' :
-				case 'email' :
-				case 'gateway' :
-				case 'payment_key' :
-				case 'subtotal' :
-				case 'tax' :
-				case 'discounts' :
-				case 'total' :
-				default :
-					$parsed = "{$this->table_alias}.{$orderby}";
-					break;
+
+			// Orderby is a literal column name
+			$columns = wp_list_pluck( $this->columns, 'name' );
+			if ( in_array( $orderby, $columns, true ) ) {
+				$parsed = "{$this->table_alias}.{$orderby}";
+
+			// Orderby invalid, so default to primary column
+			} else {
+				$parsed = "{$this->table_alias}.{$this->primary_column->name}";
 			}
 		}
 
@@ -947,7 +952,7 @@ class EDD_DB_Query {
 	 * @param string $order The 'order' query variable.
 	 * @return string The sanitized 'order' query variable.
 	 */
-	private function parse_order( $order  = '') {
+	private function parse_order( $order  = '' ) {
 
 		// Bail if malformed
 		if ( ! is_string( $order ) || empty( $order ) ) {
@@ -958,5 +963,24 @@ class EDD_DB_Query {
 		return ( 'ASC' === strtoupper( $order ) )
 			? 'ASC'
 			: 'DESC';
+	}
+
+	/** Cache *****************************************************************/
+
+	/**
+	 * Maybe prime caches for item IDs
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $item_ids
+	 */
+	private function maybe_prime_caches( $item_ids = array() ) {
+		if ( $this->query_vars['update_cache'] ) {
+
+		}
+
+		if ( $this->query_vars['update_meta_cache'] ) {
+
+		}
 	}
 }
