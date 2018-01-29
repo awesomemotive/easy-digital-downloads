@@ -29,7 +29,7 @@ final class Reports {
 		$this->includes();
 		$this->hooks();
 
-		$reports = EDD()->utils->get_registry( 'reports' );
+		$reports = \EDD\Admin\Reports\Data\Reports_Registry::instance();
 
 		/**
 		 * Fires when the reports registry is initialized.
@@ -38,7 +38,8 @@ final class Reports {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Admin\Reports\Data\Reports_Registry $reports Reports registry instance, passed by reference.
+		 * @param Reports\Data\Reports_Registry $reports Reports registry instance,
+		 *                                               passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
