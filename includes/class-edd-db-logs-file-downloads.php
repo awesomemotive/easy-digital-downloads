@@ -256,7 +256,12 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 		$where = '';
 		$table_name = EDD()->file_download_logs->table_name;
 
-		// Adapted from WP_Meta_Query
+		/**
+		 * Meta query parsing.
+		 *
+		 * Although this strictly is not allowed, it's here for backwards compatibility purposes due to the migration
+		 * to custom tables in EDD 3.0.
+		 */
 		if ( isset( $args['meta_query'] ) ) {
 			foreach ( $args['meta_query'] as $key => $clause ) {
 				if ( 'relation' === $key ) {
