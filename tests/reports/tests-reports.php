@@ -114,7 +114,7 @@ class Reports_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'tile' => array(
 				'data_callback'    => '__return_zero',
-				'display_callback' => 'edd_reports_display_tile',
+				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
 					'type'             => '' ,
 					'context'          => 'primary',

@@ -87,7 +87,7 @@ function get_endpoint_views() {
 			'handler'     => 'EDD\Reports\Data\Tile_Endpoint',
 			'fields'      => array(
 				'data_callback'    => '',
-				'display_callback' => 'edd_reports_display_tile',
+				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
 					'type'             => '' ,
 					'context'          => 'primary',
@@ -296,7 +296,7 @@ function is_view_valid( $view ) {
  * @param array                          $args   Tile display arguments.
  * @return void Meta box display callbacks only echo output.
  */
-function edd_reports_display_tile( $object, $tile ) {
+function default_display_tile( $object, $tile ) {
 	if ( ! isset( $tile['args'] ) ) {
 		return;
 	}

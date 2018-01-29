@@ -107,7 +107,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			'views'    => array(
 				'tile' => array(
 					'data_callback'    => '__return_false',
-					'display_callback' => 'edd_reports_display_tile',
+					'display_callback' => '\\EDD\\Reports\\default_display_tile',
 					'display_args'     => array(
 						'type'             => '' ,
 						'context'          => 'primary',
