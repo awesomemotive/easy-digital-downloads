@@ -397,9 +397,13 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		// User ID.
 		if ( array_key_exists( 'user_id', $args ) && ! empty( $args['user_id'] ) ) {
-			if ( false !== $args['user_id'] ) {
-				$where .= " AND {$table_name}.user_id = " . absint( $args['user_id'] );
+			if ( is_array( $args['user_id'] ) ) {
+				$args['user_id'] = wp_parse_id_list( $args['user_id'] );
+				$user_ids = implode( "','", array_map( 'sanitize_text_field', $args['user_id'] ) );
+			} else {
+				$user_ids = sanitize_text_field( absint( $args['user_id'] ) );
 			}
+			$where .= " AND {$table_name}.user_id IN ( '{$user_ids}' )";
 		}
 
 		// User email.
