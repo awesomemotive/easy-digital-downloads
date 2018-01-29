@@ -284,28 +284,53 @@ class EDD_Logging {
 	 *
 	 * @access public
 	 * @since 1.3.1
+	 * @since 3.0 - Added $log_id parameter and boolean return type.
 	 *
 	 * @param array $log_data Log entry data.
 	 * @param array $log_meta Log entry meta.
+	 * @param int   $log_id   Log ID.
+	 *
+	 * @return bool True on success, false otherwise.
 	 */
-	public function update_log( $log_data = array(), $log_meta = array() ) {
-		do_action( 'edd_pre_update_log', $log_data, $log_meta );
+	public function update_log( $log_data = array(), $log_meta = array(), $log_id = 0 ) {
+		// $log_id is at the end because it was introduced in 3.0
+		do_action( 'edd_pre_update_log', $log_data, $log_meta, $log_id );
 
 		$defaults = array(
-			'post_type'   => 'edd_log',
-			'post_status' => 'publish',
-			'post_parent' => 0,
+			'post_content' => '',
+			'post_title'   => '',
+			'object_id'    => 0,
+			'object_type'  => '',
 		);
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		// Store the log entry
-		$log_id = wp_update_post( $args );
+		if ( isset( $log_data['ID'] ) && empty( $log_id ) ) {
+			$log_id = $log_data['ID'];
+		}
 
-		if ( $log_id && ! empty( $log_meta ) ) {
+		// Bail if the log ID is still empty.
+		if ( empty ( $log_id ) ) {
+			return false;
+		}
+
+		// Set up variables to hold data to go into the logs table by default
+		$db_object = 'logs';
+		$data = array (
+			'type'        => $args['type'],
+			'object_id'   => $args['object_id'],
+			'object_type' => $args['object_type'],
+			'title'       => $args['title'],
+			'message'     => $args['message'],
+		);
+
+		$result = EDD()->{$db_object}->update( $log_id, $data );
+
+		// Set log meta, if any
+		if ( $log_id && 'logs' === $db_object && ! empty( $log_meta ) ) {
 			foreach ( (array) $log_meta as $key => $meta ) {
-				if ( ! empty( $meta ) )
-					update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
+				$log = new EDD\Logs\Log( $log_id );
+				$log->update_meta( sanitize_key( $key ), $meta );
 			}
 		}
 
