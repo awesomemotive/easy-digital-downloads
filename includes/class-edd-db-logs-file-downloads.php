@@ -375,9 +375,13 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 
 		// File ID.
 		if ( array_key_exists( 'file_id', $args ) && ! empty( $args['file_id'] ) ) {
-			if ( false !== $args['file_id'] ) {
-				$where .= " AND {$table_name}.file_id = " . absint( $args['file_id'] );
+			if ( is_array( $args['file_id'] ) ) {
+				$args['file_id'] = wp_parse_id_list( $args['file_id'] );
+				$file_ids = implode( "','", array_map( 'sanitize_text_field', $args['file_id'] ) );
+			} else {
+				$file_ids = sanitize_text_field( absint( $args['file_id'] ) );
 			}
+			$where .= " AND {$table_name}.file_id IN ( '{$file_ids}' )";
 		}
 
 		// Download ID.
