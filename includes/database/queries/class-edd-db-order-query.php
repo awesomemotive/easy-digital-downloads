@@ -36,7 +36,7 @@ class EDD_Order_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'e';
+	public $table_alias = 'o';
 
 	/** Item ******************************************************************/
 
@@ -87,7 +87,7 @@ class EDD_Order_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var array
 	 */
-	public $columns = array(
+	protected $columns = array(
 
 		// id
 		array(
