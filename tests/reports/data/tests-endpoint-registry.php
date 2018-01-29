@@ -315,24 +315,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
-	 * @throws \EDD_Exception
-	 */
-	public function test_register_endpoint_with_empty_filters_should_succeed_and_return_true() {
-		// Add a test report.
-		$added = $this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
-				)
-			),
-		) );
-
-		$this->assertTrue( $added );
-	}
-
-	/**
 	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {

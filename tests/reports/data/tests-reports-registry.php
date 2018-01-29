@@ -198,23 +198,6 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Reports_Registry::add_report()
-	 * @throws \EDD_Exception
-	 */
-	public function test_add_report_with_empty_filters_should_succeed_and_return_true() {
-		// Add a test report.
-		$added = $this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(
-				'tiles' => array()
-			),
-			'filters'   => array()
-		) );
-
-		$this->assertTrue( $added );
-	}
-
-	/**
 	 * @covers \EDD\Reports\Data\Reports_Registry::get_reports()
 	 * @throws \EDD_Exception
 	 */
@@ -296,7 +279,6 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			case 'entry':
 				$expected = array(
 					'label'     => 'Foo',
-					'filters'   => array(),
 					'priority'  => 10,
 					'endpoints' => array(
 						'tiles' => array()
@@ -308,7 +290,6 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 				$expected = array(
 					'foo' => array(
 						'label'     => 'Foo',
-						'filters'   => array(),
 						'priority'  => 10,
 						'endpoints' => array(
 							'tiles' => array()
