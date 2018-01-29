@@ -16,8 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once EDD_PLUGIN_DIR . 'includes/reports/reports-functions.php';
-
 /**
  * Reports Page
  *
