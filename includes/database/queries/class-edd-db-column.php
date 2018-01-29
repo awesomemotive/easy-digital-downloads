@@ -37,6 +37,150 @@ class EDD_DB_Column {
 	public $type = '';
 
 	/**
+	 * Length of database column
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $length = false;
+
+	/**
+	 * Is integer unsigned?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $unsigned = true;
+
+	/**
+	 * Is integer filled with zeroes?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $zerofill = false;
+
+	/**
+	 * Is data in a binary format?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $binary = false;
+
+	/**
+	 * Is null an allowed value?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $allow_null = false;
+
+	/**
+	 * Typically empty/null, or date value
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $default = '';
+
+	/**
+	 * auto_increment, etc...
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $extra = '';
+
+	/**
+	 * Typically inherited from wpdb.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $encoding = '';
+
+	/**
+	 * Typically inherited from wpdb
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $collation = '';
+
+	/**
+	 * Typically empty; probably ignore.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $comment = '';
+
+	/**
+	 * Is this the primary column?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $primary = false;
+
+	/**
+	 * Is this column searchable?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $searchable = false;
+
+	/**
+	 * Is this column a date (that uses WP_Date_Query?)
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $date_query = false;
+
+	/**
+	 * Is this column used in orderby?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $sortable = false;
+
+	/**
+	 * Is __in supported?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $in = true;
+
+	/**
+	 * Is __not_in supported?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $not_in = true;
+
+	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
 	 * @since 3.0.0
@@ -60,6 +204,7 @@ class EDD_DB_Column {
 	 *     @type boolean  $primary     Is this the primary column?
 	 *     @type boolean  $searchable  Is this column searchable?
 	 *     @type boolean  $sortable    Is this column used in orderby?
+	 *     @type boolean  $date_query  Is this column a datetime?
 	 *     @type boolean  $in          Is __in supported?
 	 *     @type boolean  $not_in      Is __not_in supported?
 	 * }
@@ -83,7 +228,7 @@ class EDD_DB_Column {
 	 * @param array $args
 	 * @return array
 	 */
-	public function parse_args( $args = array() ) {
+	private function parse_args( $args = array() ) {
 
 		// Parse arguments
 		$r = wp_parse_args( $args, array(
@@ -107,79 +252,60 @@ class EDD_DB_Column {
 			'not_in'     => true
 		) );
 
-		// Sanitize values
-		$r['name'] = sanitize_key( $r['name'] );
+		// Return array
+		return $this->sanitize_args( $r );
+	}
 
-		// Smart types intelligently set all parameters
-		if ( $this->is_smart_type( $r['type'] ) ) {
-			$this->set_smart_type( $r['type'] );
+	/**
+	 * Sanitize arguments after they are parsed.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 * @param array $args
+	 * @return array
+	 */
+	private function sanitize_args( $args = array() ) {
 
-		// Check allowed types
-		} elseif ( in_array( strtolower( $r['type'] ), $this->get_allowed_types(), true ) ) {
-			$r['type'] = strtoupper( $r['type'] );
+		// Sanitization callbacks
+		$callbacks = array(
+			'name'       => 'sanitize_key',
+			'type'       => 'strtoupper',
+			'length'     => 'intval',
+			'unsigned'   => 'wp_validate_boolean',
+			'zerofill'   => 'wp_validate_boolean',
+			'binary'     => 'wp_validate_boolean',
+			'allow_null' => 'wp_validate_boolean',
+			'default'    => 'wp_kses_data',
+			'extra'      => 'wp_kses_data',
+			'encoding'   => 'wp_kses_data',
+			'collation'  => 'wp_kses_data',
+			'comment'    => 'wp_kses_data',
+			'primary'    => 'wp_validate_boolean',
+			'searchable' => 'wp_validate_boolean',
+			'sortable'   => 'wp_validate_boolean',
+			'date_query' => 'wp_validate_boolean',
+			'in'         => 'wp_validate_boolean',
+			'not_in'     => 'wp_validate_boolean'
+		);
+
+		// Default args array
+		$r = array();
+
+		// Loop through and try to execute callbacks
+		foreach ( $args as $key => $value ) {
+
+			// Callback is callable
+			if ( isset( $callbacks[ $key ] ) && is_callable( $callbacks[ $key ] ) ) {
+				$r[ $key ] = $callbacks[ $key ]( $value );
+
+			// Callback is malformed so just let it through to avoid breakage
+			} else {
+				$r[ $key ] = $value;
+			}
 		}
 
-		// Return array
+		// Return sanitized arguments
 		return $r;
-	}
-
-	/**
-	 * Return array of allowed column types.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @return array
-	 */
-	private function get_allowed_types() {
-		return (array) apply_filters( 'get_allowed_types', array(
-			'int',
-			'bigint',
-			'varchar',
-			'longtext',
-			'mediumtext',
-			'datetime',
-			'double'
-		) );
-	}
-
-	/**
-	 * Return array of smart column types.
-	 *
-	 * Not implemented yet.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @return array
-	 */
-	private function get_smart_types() {
-		return (array) apply_filters( 'get_smart_types', array(
-			'wp_type_primary',
-			'wp_type_key',
-			'wp_type_bigint',
-			'wp_type_varchar',
-		) );
-	}
-
-	/**
-	 * Is this column type smart?
-	 *
-	 * Smart types apply typical WordPress properties to as many column
-	 * attributes as possible. For example, BIGINTs are always length(20) and
-	 * unsigned, so we can avoid doing some extra work.
-	 *
-	 * Not implemented yet.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @param string $type
-	 * @return boolean
-	 */
-	private function is_smart_type( $type = '' ) {
-		$type  = strtolower( $type );
-		$pos   = strpos( $type, 'wp_type_', 0 );
-		$smart = ( 0 === $pos );
-
-		return (bool) $smart;
 	}
 
 	/**
