@@ -365,9 +365,11 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 */
 	public function count( $args = array() ) {
 		global $wpdb;
+
 		$where = $this->parse_where( $args );
 		$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
 		$count = $wpdb->get_var( $sql );
+
 		return absint( $count );
 	}
 
@@ -393,11 +395,14 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 		if ( function_exists( 'wp_cache_get_last_changed' ) ) {
 			return wp_cache_get_last_changed( $this->cache_group );
 		}
+
 		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
+
 		if ( ! $last_changed ) {
 			$last_changed = microtime();
 			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
-		return $last_changed;
+
+git		return $last_changed;
 	}
 }
