@@ -1020,27 +1020,21 @@ function edd_report_views() {
 
 	_edd_deprecated_function( __FUNCTION__, '3.0' );
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
+	/**
+	 * Legacy: fired before the view actions drop-down was output.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	do_action_deprecated( 'edd_report_view_actions', array(), '3.0' );
 
-	$views        = edd_reports_default_views();
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
-	?>
-	<form id="edd-reports-filter" method="get">
-		<select id="edd-reports-view" name="view">
-			<option value="-1"><?php _e( 'Report Type', 'easy-digital-downloads' ); ?></option>
-			<?php foreach ( $views as $view_id => $label ) : ?>
-				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
-			<?php endforeach; ?>
-		</select>
+	/**
+	 * Legacy: fired after the view actions drop-down was output.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	do_action_deprecated( 'edd_report_view_actions_after', array(), '3.0' );
 
-		<?php do_action( 'edd_report_view_actions' ); ?>
-
-		<input type="hidden" name="post_type" value="download"/>
-		<input type="hidden" name="page" value="edd-reports"/>
-		<?php submit_button( __( 'Show', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-	</form>
-	<?php
-	do_action( 'edd_report_view_actions_after' );
+	return;
 }
