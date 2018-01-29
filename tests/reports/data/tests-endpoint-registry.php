@@ -4,7 +4,7 @@ namespace EDD\Reports\Data;
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 
 if ( ! class_exists( '\EDD\Reports' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-reports-init.php' );
 }
 
 /**
