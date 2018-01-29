@@ -387,28 +387,37 @@ class EDD_DB_Logs extends EDD_DB {
 	}
 
 	/**
-	 * Count the total number of logs (based on the type of log passed) in the database.
+	 * Count the total number of logs in the database.
 	 *
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param string $type Log type.
-	 *
-	 * @return int $count Number of logs in the database based on the type.
+	 * @return array $count Number of logs in the database based on the type.
 	 */
-	public function counts_by_type( $type = null ) {
+	public function counts_by_type() {
 		global $wpdb;
 
-		if ( is_null( $type ) || empty( $type ) ) {
-			return 0;
+		$counts = wp_cache_get( 'counts', $this->cache_group );
+
+		if ( false === $counts ) {
+			$sql = "SELECT type, COUNT( * ) AS num_logs
+					FROM {$this->table_name}
+					GROUP BY type";
+
+			$results = (array) $wpdb->get_results( $sql, ARRAY_A );
+
+			foreach ( $results as $row ) {
+				$counts[ $row['type'] ] = $row['num_logs'];
+			}
+
+			$counts = (object) $counts;
+
+			wp_cache_set( 'counts', $counts, $this->cache_group );
+
+			return $counts;
+		} else {
+			return $counts;
 		}
-
-		$where = " WHERE type = " . sanitize_text_field( $type );
-
-		$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
-		$count = $wpdb->get_var( $sql );
-
-		return absint( $count );
 	}
 
 	/**
