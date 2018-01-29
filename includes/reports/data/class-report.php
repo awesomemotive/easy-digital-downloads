@@ -10,6 +10,7 @@
  */
 namespace EDD\Reports\Data;
 
+use EDD\Reports;
 use EDD\Utils;
 
 /**
@@ -157,7 +158,7 @@ final class Report extends Base_Object {
 	 * @return array List of view group and view slug pairs.
 	 */
 	public function parse_view_groups() {
-		$views = edd_reports_get_endpoint_views();
+		$views = Reports\get_endpoint_views();
 
 		$view_groups = array();
 

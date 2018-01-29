@@ -80,7 +80,7 @@ function get_active_tab() {
  *
  * @return array List of supported endpoint types.
  */
-function edd_reports_get_endpoint_views() {
+function get_endpoint_views() {
 	return array(
 		'tile' => array(
 			'group'       => 'tiles',
@@ -246,13 +246,14 @@ function edd_reports_get_report( $report_id, $build_endpoints = true ) {
  *
  * @since 3.0
  *
- * @see edd_reports_get_endpoint_views()
+ * @see get_endpoint_views()
  *
- * @param array  $views View slugs and attributes as dictated by edd_reports_get_endpoint_views().
+ * @param array  $views View slugs and attributes as dictated by get_endpoint_views().
+ *
  * @return array (Maybe) adjusted views slugs and attributes array.
  */
 function edd_reports_parse_endpoint_views( $views ) {
-	$valid_views = edd_reports_get_endpoint_views();
+	$valid_views = get_endpoint_views();
 
 	foreach ( $views as $view => $attributes ) {
 		if ( ! empty( $valid_views[ $view ]['fields'] ) ) {
@@ -282,7 +283,7 @@ function edd_reports_parse_endpoint_views( $views ) {
  * @return bool True if the view is valid, otherwise false.
  */
 function edd_reports_is_view_valid( $view ) {
-	return array_key_exists( $view, edd_reports_get_endpoint_views() );
+	return array_key_exists( $view, get_endpoint_views() );
 }
 
 /**
@@ -352,7 +353,7 @@ function edd_reports_display_tile( $object, $tile ) {
 function edd_reports_get_endpoint_handler( $view ) {
 	$handler = '';
 
-	$views = edd_reports_get_endpoint_views();
+	$views = get_endpoint_views();
 
 	if ( isset( $views[ $view ]['handler'] ) ) {
 		$handler = $views[ $view ]['handler'];

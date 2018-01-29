@@ -283,7 +283,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @return void
 	 */
 	public function validate_views( $views, $endpoint_id ) {
-		$valid_views = edd_reports_get_endpoint_views();
+		$valid_views = Reports\get_endpoint_views();
 
 		$this->validate_attributes( $views, $endpoint_id );
 
