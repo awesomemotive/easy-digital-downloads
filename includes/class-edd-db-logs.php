@@ -370,6 +370,31 @@ class EDD_DB_Logs extends EDD_DB {
 	}
 
 	/**
+	 * Count the total number of logs (based on the type of log passed) in the database.
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param string $type Log type.
+	 *
+	 * @return int $count Number of logs in the database based on the type.
+	 */
+	public function counts_by_type( $type = null ) {
+		global $wpdb;
+
+		if ( is_null( $type ) || empty( $type ) ) {
+			return 0;
+		}
+
+		$where = " WHERE type = " . sanitize_text_field( $type );
+
+		$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
+		$count = $wpdb->get_var( $sql );
+
+		return absint( $count );
+	}
+
+	/**
 	 * Sets the last_changed cache key for logs.
 	 *
 	 * @since 3.0
