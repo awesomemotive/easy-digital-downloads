@@ -96,7 +96,7 @@ final class Reports_Init {
 		 *
 		 *     add_action( 'edd_reports_init', function() {
 		 *
-		 *         edd_reports_add_report( 'test', array( ... ) );
+		 *         \EDD\Reports\add_report( 'test', array( ... ) );
 		 *
 		 *         \EDD\Reports\register_endpoint( 'test_endpoint', array( ... ) );
 		 *

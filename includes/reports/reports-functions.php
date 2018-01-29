@@ -196,7 +196,7 @@ function get_endpoint( $endpoint_id, $view_type ) {
  * }
  * @return bool True if the report was successfully registered, otherwise false.
  */
-function edd_reports_add_report( $report_id, $attributes ) {
+function add_report( $report_id, $attributes ) {
 	/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
