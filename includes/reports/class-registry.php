@@ -8,10 +8,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports;
+namespace EDD\Reports;
 
 use EDD\Utils;
-use EDD\Admin\Reports\Exceptions as Reports_Exceptions;
+use EDD\Reports\Exceptions as Reports_Exceptions;
 
 /**
  * Defines the construct for building a reports item registry.

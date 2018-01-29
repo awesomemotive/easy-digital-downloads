@@ -8,17 +8,17 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
 use EDD\Utils;
-use EDD\Admin\Reports;
+use EDD\Reports;
 
 /**
  * Implements a singleton registry for registering reports.
  *
  * @since 3.0
  *
- * @see \EDD\Admin\Reports\Registry
+ * @see \EDD\Reports\Registry
  * @see \EDD\Utils\Static_Registry
  *
  * @method array get_report( string $report_id )
@@ -136,7 +136,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 
 			foreach ( $endpoints as $index => $endpoint ) {
 
-				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Admin\Reports\Data\Endpoint ) ) {
+				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Reports\Data\Endpoint ) ) {
 					throw new Utils\Exception( sprintf( 'The \'%1$s\' report contains one or more invalidly defined endpoints.', $report_id ) );
 
 					unset( $attributes['endpoints'][ $view_group][ $index ] );
@@ -164,7 +164,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	 * @throws \EDD_Exception if the `$label` or `$views` attributes are empty.
 	 * @throws \EDD_Exception if any of the required `$views` sub-attributes are empty.
 	 *
-	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @see \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
 	 *
 	 * @param string $endpoint_id Reports data endpoint ID.
 	 * @param array  $attributes  Attributes of the endpoint. See Endpoint_Registry::register_endpoint()
@@ -172,7 +172,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
 	public function register_endpoint( $endpoint_id, $attributes ) {
-		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 		if ( is_wp_error( $registry ) ) {
@@ -187,12 +187,12 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Admin\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @see \EDD\Reports\Data\Endpoint_Registry::unregister_endpoint()
 	 *
 	 * @param string $endpoint_id Endpoint ID.
 	 */
 	public function unregister_endpoint( $endpoint_id ) {
-		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 		if ( ! is_wp_error( $registry ) ) {

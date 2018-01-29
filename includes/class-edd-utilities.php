@@ -63,9 +63,9 @@ class EDD_Utilities {
 
 					_doing_it_wrong( __FUNCTION__, 'The Reports registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
 
-				} elseif ( class_exists( '\EDD\Admin\Reports\Data\Reports_Registry' ) ) {
+				} elseif ( class_exists( '\EDD\Reports\Data\Reports_Registry' ) ) {
 
-					$registry = \EDD\Admin\Reports\Data\Reports_Registry::instance();
+					$registry = \EDD\Reports\Data\Reports_Registry::instance();
 
 				}
 				break;
@@ -75,9 +75,9 @@ class EDD_Utilities {
 
 					_doing_it_wrong( __FUNCTION__, 'The Endpoints registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
 
-				} elseif ( class_exists( '\EDD\Admin\Reports\Data\Endpoint_Registry' ) ) {
+				} elseif ( class_exists( '\EDD\Reports\Data\Endpoint_Registry' ) ) {
 
-					$registry = \EDD\Admin\Reports\Data\Endpoint_Registry::instance();
+					$registry = \EDD\Reports\Data\Endpoint_Registry::instance();
 
 				}
 				break;

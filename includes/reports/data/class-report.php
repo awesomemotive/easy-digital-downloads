@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Admin\Reports\Data;
+namespace EDD\Reports\Data;
 
 use EDD\Utils;
 
@@ -114,7 +114,7 @@ final class Report extends Base_Object {
 	 * @param array $endpoints Endpoints, keyed by view type.
 	 */
 	public function parse_endpoints( $report_endpoints ) {
-		/** @var \EDD\Admin\Reports\Data\Endpoint_Registry|\WP_Error $registry */
+		/** @var \EDD\Reports\Data\Endpoint_Registry|\WP_Error $registry */
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 		if ( is_wp_error( $registry ) ) {
@@ -181,7 +181,7 @@ final class Report extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Admin\Reports\Data\Report::$valid_endpoints
+	 * @see \EDD\Reports\Data\Report::$valid_endpoints
 	 *
 	 * @param string                  $view_group View group corresponding to the endpoint view.
 	 * @param Data\Endpoint|\WP_Error $endpoint   Endpoint object.
