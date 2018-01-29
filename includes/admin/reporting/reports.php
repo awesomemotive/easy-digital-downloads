@@ -98,7 +98,7 @@ function edd_reports_page() {
 				<?php do_action( 'edd_reports_tabs' ); ?>
 
 				<?php
-				$report = edd_reports_get_report( $active_tab );
+				$report = Reports\get_report( $active_tab );
 
 				if ( ! is_wp_error( $report ) ) :
 

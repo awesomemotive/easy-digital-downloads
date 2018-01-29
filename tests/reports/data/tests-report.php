@@ -222,7 +222,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			)
 		) );
 
-		$report = edd_reports_get_report( 'foo' );
+		$report = Reports\get_report( 'foo' );
 
 		$all_endpoints = $report->get_endpoints();
 
@@ -270,7 +270,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			)
 		) );
 
-		$report = edd_reports_get_report( 'foo' );
+		$report = Reports\get_report( 'foo' );
 
 		$all_endpoints = $report->get_endpoints( 'fake' );
 
@@ -307,7 +307,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			)
 		) );
 
-		$report = edd_reports_get_report( 'foo' );
+		$report = Reports\get_report( 'foo' );
 
 		$tiles = $report->get_endpoints( 'tiles' );
 
