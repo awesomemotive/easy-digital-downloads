@@ -384,13 +384,6 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 			$where .= " AND {$table_name}.file_id IN ( '{$file_ids}' )";
 		}
 
-		// Download ID.
-		if ( array_key_exists( 'download_id', $args ) && ! empty( $args['download_id'] ) ) {
-			if ( false !== $args['download_id'] ) {
-				$where .= " AND {$table_name}.download_id = " . absint( $args['download_id'] );
-			}
-		}
-
 		// Price ID.
 		if ( array_key_exists( 'price_id', $args ) && ! empty( $args['price_id'] ) ) {
 			if ( false !== $args['price_id'] ) {
