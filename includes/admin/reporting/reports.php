@@ -9,10 +9,14 @@
  * @since       1.0
  */
 
+use EDD\Reports;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+require_once EDD_PLUGIN_DIR . 'includes/reports/reports-functions.php';
 
 /**
  * Reports Page
@@ -53,7 +57,7 @@ function edd_reports_page() {
 			<div id="edd-item-tab-wrapper" class="report-tab-wrapper">
 				<ul id="edd-item-tab-wrapper-list" class="report-tab-wrapper-list">
 					<?php
-					$tabs = edd_get_report_tabs();
+					$tabs = Reports\get_tabs();
 
 					if ( current_user_can( 'export_shop_reports' ) ) :
 						$tabs['export'] = __( 'Export', 'easy-digital-downloads' );
@@ -619,15 +623,15 @@ function edd_reports_tab_logs() {
  * Defines views for the legacy 'Reports' tab.
  *
  * @since 1.4
- * @deprecated 3.0 Use edd_get_report_tabs()
- * @see edd_get_report_tabs
+ * @deprecated 3.0 Use \EDD\Reports\get_tabs()
+ * @see \EDD\Reports\get_tabs()
  *
  * @return array $views Report Views
  */
 function edd_reports_default_views() {
-	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_get_report_tabs' );
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_tabs' );
 
-	return edd_get_report_tabs();
+	return Reports\get_tabs();
 }
 
 /**
