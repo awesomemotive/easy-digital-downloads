@@ -254,6 +254,7 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 		global $wpdb;
 
 		$where = '';
+		$table_name = EDD()->file_download_logs->table_name;
 
 		// Adapted from WP_Meta_Query
 		if ( isset( $args['meta_query'] ) ) {
@@ -330,6 +331,81 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 		if ( array_key_exists( 'date_query', $args ) && ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
 			$date_query = new WP_Date_Query( $args['date_query'], EDD()->file_download_logs->table_name . '.date_created' );
 			$where .= $date_query->get_sql();
+		}
+
+		// Legacy post parent argument.
+		if ( array_key_exists( 'post_parent', $args ) && ! empty( $args['post_parent'] ) ) {
+			if ( false !== $args['post_parent'] ) {
+				$where .= " AND {$table_name}.download_id = " . absint( $args['post_parent'] );
+			}
+		}
+
+		// Download ID.
+		if ( array_key_exists( 'download_id', $args ) && ! empty( $args['download_id'] ) ) {
+			if ( false !== $args['download_id'] ) {
+				$where .= " AND {$table_name}.download_id = " . absint( $args['download_id'] );
+			}
+		}
+
+		// File ID.
+		if ( array_key_exists( 'file_id', $args ) && ! empty( $args['file_id'] ) ) {
+			if ( false !== $args['file_id'] ) {
+				$where .= " AND {$table_name}.file_id = " . absint( $args['file_id'] );
+			}
+		}
+
+		// Download ID.
+		if ( array_key_exists( 'download_id', $args ) && ! empty( $args['download_id'] ) ) {
+			if ( false !== $args['download_id'] ) {
+				$where .= " AND {$table_name}.download_id = " . absint( $args['download_id'] );
+			}
+		}
+
+		// Price ID.
+		if ( array_key_exists( 'price_id', $args ) && ! empty( $args['price_id'] ) ) {
+			if ( false !== $args['price_id'] ) {
+				$where .= " AND {$table_name}.price_id = " . absint( $args['price_id'] );
+			}
+		}
+
+		// User ID.
+		if ( array_key_exists( 'user_id', $args ) && ! empty( $args['user_id'] ) ) {
+			if ( false !== $args['user_id'] ) {
+				$where .= " AND {$table_name}.user_id = " . absint( $args['user_id'] );
+			}
+		}
+
+		// User email.
+		if ( array_key_exists( 'user_email', $args ) && ! empty( $args['user_email'] ) ) {
+			if ( false !== $args['user_email'] ) {
+				$where .= " AND {$table_name}.user_email = " . absint( $args['user_email'] );
+			}
+		}
+
+		// IP.
+		if ( array_key_exists( 'ip', $args ) && ! empty( $args['ip'] ) ) {
+			if ( false !== $args['ip'] ) {
+				$where .= " AND {$table_name}.ip = " . absint( $args['ip'] );
+			}
+		}
+
+		// Created for a specific date or in a date range.
+		if ( array_key_exists( 'date_created', $args ) && ! empty( $args['date_created'] ) ) {
+			if ( is_array( $args['date_created'] ) ) {
+				if ( ! empty( $args['date_created']['start'] ) ) {
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['start'] ) );
+					$where .= " AND {$table_name}.date_created >= '{$start}'";
+				}
+				if ( ! empty( $args['date_created']['end'] ) ) {
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['end'] ) );
+					$where .= " AND {$table_name}.date_created <= '{$end}'";
+				}
+			} else {
+				$year  = date( 'Y', strtotime( $args['date_created'] ) );
+				$month = date( 'm', strtotime( $args['date_created'] ) );
+				$day   = date( 'd', strtotime( $args['date_created'] ) );
+				$where .= " AND $year = YEAR ( {$table_name}.date_created ) AND $month = MONTH ( {$table_name}.date_created ) AND $day = DAY ( {$table_name}.date_created )";
+			}
 		}
 
 		if ( ! empty( $where ) ) {
