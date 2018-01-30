@@ -263,6 +263,7 @@ final class Easy_Digital_Downloads {
 		// Database Table Query Interfaces
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-column.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-note-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-item-query.php';
 
