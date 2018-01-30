@@ -113,6 +113,8 @@ function edd_reports_page() {
 
 					$report->display_endpoint_group( 'tiles' );
 
+					$report->display_endpoint_group( 'tables' );
+
 				endif; // WP_Error.
 
 				if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
