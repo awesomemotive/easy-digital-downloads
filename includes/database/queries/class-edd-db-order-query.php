@@ -184,28 +184,32 @@ class EDD_Order_Query extends EDD_DB_Query {
 		// subtotal
 		array(
 			'name'       => 'subtotal',
-			'type'       => 'double',
+			'type'       => 'decimal',
+			'length'     => '18,9',
 			'default'    => '0'
 		),
 
 		// tax
 		array(
 			'name'       => 'tax',
-			'type'       => 'double',
+			'type'       => 'decimal',
+			'length'     => '18,9',
 			'default'    => '0'
 		),
 
 		// discounts
 		array(
 			'name'       => 'discounts',
-			'type'       => 'double',
+			'type'       => 'decimal',
+			'length'     => '18,9',
 			'default'    => '0'
 		),
 
 		// total
 		array(
 			'name'       => 'total',
-			'type'       => 'double',
+			'type'       => 'decimal',
+			'length'     => '18,9',
 			'default'    => '0'
 		)
 	);
