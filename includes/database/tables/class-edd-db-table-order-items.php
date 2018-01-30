@@ -33,7 +33,7 @@ final class EDD_DB_Table_Order_Items extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801170001;
+	protected $version = 201801300001;
 
 	/**
 	 * Setup the database schema
@@ -51,11 +51,11 @@ final class EDD_DB_Table_Order_Items extends EDD_DB_Table {
 			type varchar(20) NOT NULL default 'download',
 			status varchar(20) NOT NULL default '',
 			quantity bigint(20) unsigned NOT NULL default '0',
-			amount double NOT NULL default '0',
-			subtotal double NOT NULL default '0',
-			discount double NOT NULL default '0',
-			tax double NOT NULL default '0',
-			total double NOT NULL default '0',
+			amount decimal(18,9) NOT NULL default '0',
+			subtotal decimal(18,9) NOT NULL default '0',
+			discount decimal(18,9) NOT NULL default '0',
+			tax decimal(18,9) NOT NULL default '0',
+			total decimal(18,9) NOT NULL default '0',
 			PRIMARY KEY (id),
 			KEY order_product_price_id (order_id,product_id,price_id),
 			KEY type_status (type(20),status(20))";

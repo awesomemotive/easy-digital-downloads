@@ -33,7 +33,7 @@ final class EDD_DB_Table_Discounts extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801170001;
+	protected $version = 201801300001;
 
 	/**
 	 * Setup the database schema
@@ -49,12 +49,12 @@ final class EDD_DB_Table_Discounts extends EDD_DB_Table {
 			status varchar(20) NOT NULL default '',
 			type varchar(20) NOT NULL default '',
 			scope varchar(20) NOT NULL default 'all',
-			amount mediumtext NOT NULL default '',
+			amount decimal(18,9) NOT NULL default '',
 			description longtext NOT NULL default '',
 			max_uses bigint(20) unsigned NOT NULL default '0',
 			use_count bigint(20) unsigned NOT NULL default '0',
 			once_per_customer int(1) NOT NULL default '0',
-			min_cart_price mediumtext NOT NULL default '',
+			min_cart_price decimal(18,9) NOT NULL default '',
 			product_condition varchar(20) NOT NULL DEFAULT 'all',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			start_date datetime NOT NULL default '0000-00-00 00:00:00',
