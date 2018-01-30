@@ -119,6 +119,58 @@ function get_endpoint_views() {
 }
 
 /**
+ * Retrieves the name of the handler class for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Handler class name if set and the view exists, otherwise an empty string.
+ */
+function get_endpoint_handler( $view ) {
+	$handler = '';
+
+	$views = get_endpoint_views();
+
+	if ( isset( $views[ $view ]['handler'] ) ) {
+		$handler = $views[ $view ]['handler'];
+	}
+
+	return $handler;
+}
+
+/**
+ * Retrieves the group display callback for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Group callback if set, otherwise an empty string.
+ */
+function get_endpoint_group_callback( $view ) {
+	$callback = '';
+
+	$views = get_endpoint_views();
+
+	if ( isset( $views[ $view ]['group_callback'] ) ) {
+		$callback = $views[ $view ]['group_callback'];
+	}
+
+	return $callback;
+}
+
+/**
+ * Determines whether an endpoint view is valid.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view slug.
+ * @return bool True if the view is valid, otherwise false.
+ */
+function is_view_valid( $view ) {
+	return array_key_exists( $view, get_endpoint_views() );
+}
+
+/**
  * Registers a new endpoint to the master registry.
  *
  * @since 3.0
@@ -290,18 +342,6 @@ function parse_endpoint_views( $views ) {
 }
 
 /**
- * Determines whether an endpoint view is valid.
- *
- * @since 3.0
- *
- * @param string $view Endpoint view slug.
- * @return bool True if the view is valid, otherwise false.
- */
-function is_view_valid( $view ) {
-	return array_key_exists( $view, get_endpoint_views() );
-}
-
-/**
  * Displays the default content for a tile endpoint.
  *
  * @since 3.0
@@ -387,44 +427,4 @@ function default_display_tiles_group( $report ) {
 			</div>
 		</div>
 	<?php endif; // Has endpoints.
-}
-
-/**
- * Retrieves the name of the handler class for a given endpoint view.
- *
- * @since 3.0
- *
- * @param string $view Endpoint view.
- * @return string Handler class name if set and the view exists, otherwise an empty string.
- */
-function get_endpoint_handler( $view ) {
-	$handler = '';
-
-	$views = get_endpoint_views();
-
-	if ( isset( $views[ $view ]['handler'] ) ) {
-		$handler = $views[ $view ]['handler'];
-	}
-
-	return $handler;
-}
-
-/**
- * Retrieves the group display callback for a given endpoint view.
- *
- * @since 3.0
- *
- * @param string $view Endpoint view.
- * @return string Group callback if set, otherwise an empty string.
- */
-function get_endpoint_group_callback( $view ) {
-	$callback = '';
-
-	$views = get_endpoint_views();
-
-	if ( isset( $views[ $view ]['group_callback'] ) ) {
-		$callback = $views[ $view ]['group_callback'];
-	}
-
-	return $callback;
 }
