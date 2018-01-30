@@ -253,9 +253,11 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 	 *     @type int          $offset               Number of orders to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Site status or array of statuses. Accepts 'id', 'user_id', 'customer_id',
-	 *                                              'date_created', 'date_completed', 'user__in', 'customer__in'. Also accepts false,
-	 *                                              an empty array, or 'none' to disable `ORDER BY` clause.
+	 *     @type string|array $orderby              Accepts 'id', 'order_id', 'product_id', 'price_id', 'cart_index', 'type'
+	 *                                              'status', 'quantity', 'amount', 'subtotal', 'total', 'id__in', 'product_id__in',
+	 *                                              'price_id__in', 'card_index__in', 'type__in', 'status__in', 'quantity__in',
+	 *                                              'amount__in', 'subtotal__in', 'discount__in', 'tax__in', 'total__in'.
+	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'ASC'.
 	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
