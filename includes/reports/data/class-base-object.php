@@ -49,7 +49,9 @@ abstract class Base_Object {
 	 * @param array $args Arguments for instantiating the object.
 	 */
 	public function __construct( $args ) {
-		$this->errors = new \WP_Error();
+		if ( ! isset( $this->errors ) ) {
+			$this->errors = new \WP_Error();
+		}
 
 		$this->set_props( $args );
 	}
