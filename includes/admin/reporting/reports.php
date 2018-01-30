@@ -127,9 +127,9 @@ function edd_reports_page() {
 				endif; // WP_Error.
 
 				if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-					do_action( "edd_reports_tab_{$active_tab}" );
+					do_action( "edd_reports_tab_{$active_tab}", $report );
 				} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-					do_action( "edd_reports_view_{$active_tab}" );
+					do_action( "edd_reports_view_{$active_tab}", $report );
 				}
 
 				do_action( 'edd_reports_page_bottom' );
