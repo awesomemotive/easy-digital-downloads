@@ -83,9 +83,10 @@ function get_active_tab() {
 function get_endpoint_views() {
 	return array(
 		'tile' => array(
-			'group'       => 'tiles',
-			'handler'     => 'EDD\Reports\Data\Tile_Endpoint',
-			'fields'      => array(
+			'group'          => 'tiles',
+			'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
+			'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
+			'fields'         => array(
 				'data_callback'    => '',
 				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
@@ -99,9 +100,10 @@ function get_endpoint_views() {
 			'group' => 'charts',
 		),
 		'table' => array(
-			'group'   => 'tables',
-			'handler' => 'EDD\Reports\Data\Table_Endpoint',
-			'fields'  => array(
+			'group'          => 'tables',
+			'group_callback' => '',
+			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
+			'fields'         => array(
 				'display_callback' => 'display',
 				'data_callback'    => 'prepare_items',
 				'display_args'     => array(
