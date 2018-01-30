@@ -50,7 +50,7 @@ function edd_reports_page() {
 		}
 	</style>
 	<div class="wrap">
-		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
+		<h1><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h1>
 
 		<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
 			<div id="edd-item-tab-wrapper" class="report-tab-wrapper">
