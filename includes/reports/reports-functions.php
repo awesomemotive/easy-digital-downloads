@@ -409,3 +409,22 @@ function get_endpoint_handler( $view ) {
 	return $handler;
 }
 
+/**
+ * Retrieves the group display callback for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Group callback if set, otherwise an empty string.
+ */
+function get_endpoint_group_callback( $view ) {
+	$callback = '';
+
+	$views = get_endpoint_views();
+
+	if ( isset( $views[ $view ]['group_callback'] ) ) {
+		$callback = $views[ $view ]['group_callback'];
+	}
+
+	return $callback;
+}
