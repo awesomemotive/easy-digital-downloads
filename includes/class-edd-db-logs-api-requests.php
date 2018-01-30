@@ -211,8 +211,8 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 *     @type array|string $error        Errors with the API request. Default empty.
 	 *     @type array|string $ip           IP address of the client making the API request. Default empty.
 	 *     @type array|float  $time         Time taken for the request to execute. Default empty.
-	 *     @type array|string $date_created Optional. Time and date of the API request. If left empty, it will
-	 *                                      automatically be set upon insertion.
+	 *     @type array|string $date_created Date query clauses to limit the logs by. Default null.
+	 *     @type array        $date_query   WP_Date_Query clauses.
 	 * }
 	 *
 	 * @return array $logs Array of EDD\Logs\API_Request_Log objects.
@@ -249,7 +249,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		$cache_key = md5( 'edd_api_request_logs_' . serialize( $args ) );
+		$cache_key = md5( 'edd_logs_api_requests_' . serialize( $args ) );
 
 		$logs = wp_cache_get( $cache_key, $this->cache_group );
 

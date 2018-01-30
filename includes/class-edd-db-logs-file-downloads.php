@@ -190,18 +190,19 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 	 * @param array $args {
 	 *     Optional. Array of log query parameters. Default empty.
 	 *
-	 *     @type int          $number      Number of logs to retrieve. Default 20.
-	 *     @type int          $offset      Number of logs to offset the query. Used to build LIMIT clause. Default 0.
-	 *     @type string       $search      Search term(s) to retrieve matching logs for. Default empty.
-	 *     @type string       $orderby     Order by a specific column. Default 'id'.
-	 *     @type string       $order       How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
-	 *     @type int|array    $download_id ID of the download the log is for or array of IDs. Default empty.
-	 *     @type int|array    $file_id     ID of the file downloaded or array of IDs. Default empty.
-	 *     @type int|array    $payment_id  ID of the payment or array of IDs. Default empty.
-	 *     @type int|array    $price_id    ID of the price at the time of purchase or array of IDs. Default empty.
-	 *     @type int|array    $user_id     ID of the user or array of IDs. Default empty.
-	 *     @type string|array $user_email  Email address of the user or array of email addresses. Default empty.
+	 *     @type int          $number       Number of logs to retrieve. Default 20.
+	 *     @type int          $offset       Number of logs to offset the query. Used to build LIMIT clause. Default 0.
+	 *     @type string       $search       Search term(s) to retrieve matching logs for. Default empty.
+	 *     @type string       $orderby      Order by a specific column. Default 'id'.
+	 *     @type string       $order        How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type int|array    $download_id  ID of the download the log is for or array of IDs. Default empty.
+	 *     @type int|array    $file_id      ID of the file downloaded or array of IDs. Default empty.
+	 *     @type int|array    $payment_id   ID of the payment or array of IDs. Default empty.
+	 *     @type int|array    $price_id     ID of the price at the time of purchase or array of IDs. Default empty.
+	 *     @type int|array    $user_id      ID of the user or array of IDs. Default empty.
+	 *     @type string|array $user_email   Email address of the user or array of email addresses. Default empty.
 	 *     @type array        $date_created Date query clauses to limit the logs by. Default null.
+	 *     @type array        $date_query   WP_Date_Query clauses.
 	 * }
 	 *
 	 * @return array $logs Array of EDD\Logs\File_Download_Log objects.
