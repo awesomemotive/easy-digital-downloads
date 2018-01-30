@@ -208,7 +208,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'data_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+					'display_callback' => '__return_false',
 				),
 			),
 		) );
@@ -217,7 +218,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Bar',
 			'views' => array(
 				'tile' => array(
-					'data_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+					'display_callback' => '__return_false',
 				),
 			),
 		) );
@@ -255,7 +257,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'data_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+					'display_callback' => '__return_false',
 				),
 			),
 		) );
@@ -265,7 +268,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Bar',
 			'views' => array(
 				'tile' => array(
-					'data_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+					'display_callback' => '__return_false',
 				),
 			),
 		) );
@@ -297,7 +301,28 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\Data\Report::get_endpoints()
 	 */
 	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
-		$tiles = self::$report->get_endpoints( 'tiles' );
+		Reports\register_endpoint( 'foo', array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+			'views' => array(
+				'tile' => array(
+					'data_callback'    => '__return_false',
+					'display_callback' => '__return_false',
+				),
+			),
+		) );
+
+		Reports\add_report( 'foo', array(
+			'label'      => 'Foo',
+			'capability' => 'exist',
+			'endpoints'  => array(
+				'tiles' => array( 'foo' ),
+			)
+		) );
+
+		$report = Reports\get_report( 'foo' );
+
+		$tiles = $report->get_endpoints( 'tiles' );
 
 		$actual = array();
 
