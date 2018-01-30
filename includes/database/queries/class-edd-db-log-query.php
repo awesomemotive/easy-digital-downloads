@@ -171,7 +171,7 @@ class EDD_Log_Query extends EDD_DB_Query {
 	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
 	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
 	 *     @type array        $title                Title to search by. Default empty.
-	 *     @type array        $message              Message to search by. Default empty.
+	 *     @type array        $content              Content to search by. Default empty.
 	 *     @type bool         $count                Whether to return a count (true) or array of objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of IDs)
