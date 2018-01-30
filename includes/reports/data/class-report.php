@@ -250,6 +250,37 @@ final class Report extends Base_Object {
 	}
 
 	/**
+	 * Retrieves a given endpoint by view group.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $endpoint_id Endpoint ID.
+	 * @param string $view_group  Endpoint view group.
+	 * @return Endpoint|\WP_Error Endpoint object if it exists, otherwise a WP_Error object.
+	 */
+	public function get_endpoint( $endpoint_id, $view_group ) {
+		$endpoints = $this->get_endpoints( $view_group );
+
+		if ( isset( $endpoints[ $endpoint_id ] ) ) {
+
+			$endpoint = $endpoints[ $endpoint_id ];
+
+		} else {
+
+			$message = sprintf( 'The \'%1$s\' endpoint does not exist for the \'%2$s\' view group in the \'%3$s\' report.',
+				$endpoint_id,
+				$view_group,
+				$this->get_id()
+			);
+
+			$endpoint = new \WP_Error( 'invalid_report_endpoint', $message );
+
+		}
+
+		return $endpoint;
+	}
+
+	/**
 	 * Retrieves the capability needed to view the rendered report.
 	 *
 	 * @since 3.0
@@ -269,6 +300,26 @@ final class Report extends Base_Object {
 	 */
 	private function set_capability( $capability ) {
 		$this->capability = sanitize_key( $capability );
+	}
+
+	/**
+	 * Displays an entire group of an endpoints view.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $view_group Endpoints view group.
+	 * @return void
+	 */
+	public function display_endpoint_group( $view_group ) {
+		$groups = $this->parse_view_groups();
+
+		if ( array_key_exists( $view_group, $groups ) ) {
+			$callback = Reports\get_endpoint_group_callback( $groups[ $view_group ] );
+
+			if ( is_callable( $callback ) ) {
+				call_user_func( $callback, $this );
+			}
+		}
 	}
 
 }

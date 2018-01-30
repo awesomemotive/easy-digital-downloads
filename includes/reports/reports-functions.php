@@ -83,9 +83,10 @@ function get_active_tab() {
 function get_endpoint_views() {
 	return array(
 		'tile' => array(
-			'group'       => 'tiles',
-			'handler'     => 'EDD\Reports\Data\Tile_Endpoint',
-			'fields'      => array(
+			'group'          => 'tiles',
+			'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
+			'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
+			'fields'         => array(
 				'data_callback'    => '',
 				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
@@ -99,7 +100,17 @@ function get_endpoint_views() {
 			'group' => 'charts',
 		),
 		'table' => array(
-			'group' => 'tables',
+			'group'          => 'tables',
+			'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
+			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
+			'fields'         => array(
+				'display_callback' => 'display',
+				'data_callback'    => 'prepare_items',
+				'display_args'     => array(
+					'class_name' => '',
+					'class_file' => '',
+				),
+			),
 		),
 		'graph' => array(
 			'group' => 'graphs',
@@ -108,7 +119,59 @@ function get_endpoint_views() {
 }
 
 /**
- * Registers a new data endpoint to the master registry.
+ * Retrieves the name of the handler class for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Handler class name if set and the view exists, otherwise an empty string.
+ */
+function get_endpoint_handler( $view ) {
+	$handler = '';
+
+	$views = get_endpoint_views();
+
+	if ( isset( $views[ $view ]['handler'] ) ) {
+		$handler = $views[ $view ]['handler'];
+	}
+
+	return $handler;
+}
+
+/**
+ * Retrieves the group display callback for a given endpoint view.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view.
+ * @return string Group callback if set, otherwise an empty string.
+ */
+function get_endpoint_group_callback( $view ) {
+	$callback = '';
+
+	$views = get_endpoint_views();
+
+	if ( isset( $views[ $view ]['group_callback'] ) ) {
+		$callback = $views[ $view ]['group_callback'];
+	}
+
+	return $callback;
+}
+
+/**
+ * Determines whether an endpoint view is valid.
+ *
+ * @since 3.0
+ *
+ * @param string $view Endpoint view slug.
+ * @return bool True if the view is valid, otherwise false.
+ */
+function is_view_valid( $view ) {
+	return array_key_exists( $view, get_endpoint_views() );
+}
+
+/**
+ * Registers a new endpoint to the master registry.
  *
  * @since 3.0
  *
@@ -148,6 +211,8 @@ function register_endpoint( $endpoint_id, $attributes ) {
 		$added = $registry->register_endpoint( $endpoint_id, $attributes );
 
 	} catch ( \EDD_Exception $exception ) {
+
+		edd_debug_log_exception( $exception );
 
 		$added = false;
 
@@ -209,6 +274,8 @@ function add_report( $report_id, $attributes ) {
 		$added = $registry->add_report( $report_id, $attributes );
 
 	} catch ( \EDD_Exception $exception ) {
+
+		edd_debug_log_exception( $exception );
 
 		$added = false;
 
@@ -275,18 +342,6 @@ function parse_endpoint_views( $views ) {
 }
 
 /**
- * Determines whether an endpoint view is valid.
- *
- * @since 3.0
- *
- * @param string $view Endpoint view slug.
- * @return bool True if the view is valid, otherwise false.
- */
-function is_view_valid( $view ) {
-	return array_key_exists( $view, get_endpoint_views() );
-}
-
-/**
  * Displays the default content for a tile endpoint.
  *
  * @since 3.0
@@ -343,22 +398,56 @@ function default_display_tile( $object, $tile ) {
 }
 
 /**
- * Retrieves the name of the handler class for a given endpoint view.
+ * Handles default display of all tile endpoints registered against a report.
  *
  * @since 3.0
  *
- * @param string $view Endpoint view.
- * @return string Handler class name if set and the view exists, otherwise an empty string.
+ * @param \EDD\Reports\Data\Report $report Report object.
  */
-function get_endpoint_handler( $view ) {
-	$handler = '';
+function default_display_tiles_group( $report ) {
+	if ( $report->has_endpoints( 'tiles' ) ) : ?>
 
-	$views = get_endpoint_views();
+		<div id="edd-reports-tiles-wrap">
+			<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
 
-	if ( isset( $views[ $view ]['handler'] ) ) {
-		$handler = $views[ $view ]['handler'];
-	}
+			<div id="dashboard-widgets" class="metabox-holder">
 
-	return $handler;
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
+				</div>
+
+			</div>
+		</div>
+	<?php endif; // Has endpoints.
 }
 
+/**
+ * Handles default display of all table endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report $report Report object.
+ */
+function default_display_tables_group( $report ) {
+	if ( $report->has_endpoints( 'tables' ) ) :
+		$tables = $report->get_endpoints( 'tables' );
+		?>
+		<div id="edd-reports-tables-wrap">
+
+			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
+				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
+
+				<?php $table->display(); ?>
+			<?php endforeach; ?>
+
+		</div>
+	<?php endif; // Has endpoints.
+}

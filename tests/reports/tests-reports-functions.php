@@ -10,9 +10,10 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  *
  * @group edd_reports
  * @group edd_reports_endpoints
+ * @group edd_reports_functions
  * @group edd_objects
  */
-class Reports_Tests extends \EDD_UnitTestCase {
+class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Reports fixture.
@@ -200,4 +201,28 @@ class Reports_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( '', get_endpoint_handler( 'fake' ) );
 	}
 
+	/**
+	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 */
+	public function test_get_endpoint_group_callback_with_tile_view_should_return_that_group_callback() {
+		$expected = 'EDD\Reports\default_display_tiles_group';
+
+		$this->assertSame( $expected, get_endpoint_group_callback( 'tile' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 */
+	public function test_get_endpoint_group_callback_with_table_view_should_return_that_group_callback() {
+		$expected = 'EDD\Reports\default_display_tables_group';
+
+		$this->assertSame( $expected, get_endpoint_group_callback( 'table' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 */
+	public function test_get_endpoint_group_callback_with_invalid_view_should_return_an_empty_string() {
+		$this->assertSame( '', get_endpoint_group_callback( 'fake' ) );
+	}
 }
