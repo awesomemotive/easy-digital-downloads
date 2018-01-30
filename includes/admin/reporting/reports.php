@@ -44,6 +44,10 @@ function edd_reports_page() {
 		.edd-item-has-tabs #edd-item-card-wrapper {
 			width: 85%;
 		}
+		#edd-item-card-wrapper h2 {
+			font-size: 1.5em;
+			text-align: center;
+		}
 		#edd-item-card-wrapper h3 {
 			margin-top; 0;
 			margin-bottom: 0;
@@ -94,10 +98,14 @@ function edd_reports_page() {
 			</div>
 
 			<div id="edd-item-card-wrapper" class="edd-report-card-wrapper" style="float: left">
-				<?php do_action( 'edd_reports_tabs' ); ?>
+				<?php $report = Reports\get_report( $active_tab ); ?>
+
+				<div id="edd-reports-card-header">
+					<h2><?php echo esc_html( $report->get_label() ); ?></h2>
+				</div>
 
 				<?php
-				$report = Reports\get_report( $active_tab );
+				do_action( 'edd_reports_tabs' );
 
 				if ( ! is_wp_error( $report ) ) :
 
