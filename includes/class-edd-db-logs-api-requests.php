@@ -492,6 +492,12 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 			}
 		}
 
+		// Search
+		if ( array_key_exists( 'search', $args ) && ! empty( $args['search'] ) ) {
+			$search = esc_sql( sanitize_text_field( $args['search'] ) );
+			$where .= " AND request LIKE '%%" . $search . "%%'";
+		}
+
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE 1=1 ' . $where;
 		}
