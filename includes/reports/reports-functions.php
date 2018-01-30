@@ -158,6 +158,8 @@ function register_endpoint( $endpoint_id, $attributes ) {
 
 	} catch ( \EDD_Exception $exception ) {
 
+		edd_debug_log_exception( $exception );
+
 		$added = false;
 
 	}
@@ -218,6 +220,8 @@ function add_report( $report_id, $attributes ) {
 		$added = $registry->add_report( $report_id, $attributes );
 
 	} catch ( \EDD_Exception $exception ) {
+
+		edd_debug_log_exception( $exception );
 
 		$added = false;
 
