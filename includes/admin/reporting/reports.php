@@ -47,7 +47,6 @@ function edd_reports_page() {
 		#edd-item-card-wrapper h3 {
 			margin-top; 0;
 			margin-bottom: 0;
-			padding: 0 20px;
 		}
 	</style>
 	<div class="wrap">
