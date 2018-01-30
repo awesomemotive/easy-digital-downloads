@@ -197,11 +197,22 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 * @param array $args {
 	 *     Optional. Array of log query parameters. Default empty.
 	 *
-	 *     @type int          $number      Number of logs to retrieve. Default 20.
-	 *     @type int          $offset      Number of logs to offset the query. Used to build LIMIT clause. Default 0.
-	 *     @type string       $search      Search term(s) to retrieve matching logs for. Default empty.
-	 *     @type string       $orderby     Order by a specific column. Default 'id'.
-	 *     @type string       $order       How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type int          $number       Number of logs to retrieve. Default 20.
+	 *     @type int          $offset       Number of logs to offset the query. Used to build LIMIT clause. Default 0.
+	 *     @type string       $search       Search term(s) to retrieve matching logs for. Default empty.
+	 *     @type string       $orderby      Order by a specific column. Default 'id'.
+	 *     @type string       $order        How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type array|int    $user_id      ID of the user making the API request. Default empty.
+	 *     @type array|string $api_key      API key being used to make the request. Default empty.
+	 *     @type array|string $token        Token being used in conjunction with the API key to make the request.
+	 *                                      Default empty.
+	 *     @type array|string $version      API version being used. Default empty.
+	 *     @type array|string $request      Request path with parameters. Default empty.
+	 *     @type array|string $error        Errors with the API request. Default empty.
+	 *     @type array|string $ip           IP address of the client making the API request. Default empty.
+	 *     @type array|float  $time         Time taken for the request to execute. Default empty.
+	 *     @type array|string $date_created Optional. Time and date of the API request. If left empty, it will
+	 *                                      automatically be set upon insertion.
 	 * }
 	 *
 	 * @return array $logs Array of EDD\Logs\API_Request_Log objects.
