@@ -358,6 +358,38 @@ function default_display_tile( $object, $tile ) {
 }
 
 /**
+ * Handles default display of all tile endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report $report Report object.
+ */
+function default_display_tiles_group( $report ) {
+	if ( $report->has_endpoints( 'tiles' ) ) : ?>
+
+		<div id="edd-reports-tiles-wrap">
+			<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
+
+			<div id="dashboard-widgets" class="metabox-holder">
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
+				</div>
+
+			</div>
+		</div>
+	<?php endif; // Has endpoints.
+}
+
+/**
  * Retrieves the name of the handler class for a given endpoint view.
  *
  * @since 3.0

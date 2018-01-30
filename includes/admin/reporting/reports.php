@@ -103,26 +103,8 @@ function edd_reports_page() {
 
 					do_action( 'edd_reports_page_top' );
 
-					if ( $report->has_endpoints( 'tiles' ) ) : ?>
+					$report->display_endpoint_group( 'tiles' );
 
-						<div id="edd-reports-tiles-wrap">
-							<div id="dashboard-widgets" class="metabox-holder">
-
-								<div class="postbox-container">
-									<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
-								</div>
-
-								<div class="postbox-container">
-									<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
-								</div>
-
-								<div class="postbox-container">
-									<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', null ); ?>
-								</div>
-
-							</div>
-						</div>
-					<?php endif; // Has endpoints.
 				endif; // WP_Error.
 
 				if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
