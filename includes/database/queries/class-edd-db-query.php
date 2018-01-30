@@ -228,24 +228,29 @@ class EDD_DB_Query {
 	 * @access public
 	 *
 	 * @param string|array $query {
-	 *     Optional. Array or query string of item query parameters. Default empty.
+	 *     Optional. Array or query string of item query parameters.
+	 *     Default empty.
 	 *
 	 *     @type string       $fields         Site fields to return. Accepts 'ids' (returns an array of item IDs)
 	 *                                        or empty (returns an array of complete item objects). Default empty.
 	 *     @type boolean      $count          Whether to return a item count (true) or array of item objects.
 	 *                                        Default false.
-	 *     @type integer      $limit          Limit number of items to retrieve. Default null (no limit).
+	 *     @type integer      $limit          Limit number of items to retrieve.
+	 *                                        Default null (no limit).
 	 *     @type integer      $offset         Number of items to offset the query. Used to build LIMIT clause.
 	 *                                        Default 0.
-	 *     @type boolean      $no_found_rows  Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby        Site status or array of statuses. Accepts false, an empty array,
-	 *                                        or 'none' to disable `ORDER BY` clause. Default 'id'.
-	 *     @type string       $item           How to item retrieved items. Accepts 'ASC', 'DESC'. Default 'ASC'.
-	 *     @type string       $search         Search term(s) to retrieve matching items for. Default empty.
+	 *     @type boolean      $no_found_rows  Whether to disable the `SQL_CALC_FOUND_ROWS` query.
+	 *                                        Default true.
+	 *     @type string|array $orderby        Accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
+	 *                                        Default 'id'.
+	 *     @type string       $item           How to item retrieved items. Accepts 'ASC', 'DESC'.
+	 *                                        Default 'ASC'.
+	 *     @type string       $search         Search term(s) to retrieve matching items for.
+	 *                                        Default empty.
 	 *     @type array        $search_columns Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
 	 *                                        Default empty array.
-	 *
-	 *     @type boolean      $update_cache   Whether to prime the cache for found items. Default false.
+	 *     @type boolean      $update_cache   Whether to prime the cache for found items.
+	 *                                        Default false.
 	 * }
 	 */
 	public function __construct( $query = '' ) {
