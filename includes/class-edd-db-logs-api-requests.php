@@ -385,6 +385,12 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 			}
 		}
 
+		// Build date query.
+		if ( array_key_exists( 'date_query', $args ) && ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
+			$date_query = new WP_Date_Query( $args['date_query'], EDD()->api_request_logs->table_name . '.date_created' );
+			$where .= $date_query->get_sql();
+		}
+
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE 1=1 ' . $where;
 		}
