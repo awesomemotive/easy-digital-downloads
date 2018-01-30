@@ -44,6 +44,7 @@ final class Init {
 		// Endpoints.
 		require_once $reports_dir . '/data/class-endpoint.php';
 		require_once $reports_dir . '/data/class-tile-endpoint.php';
+		require_once $reports_dir . '/data/class-table-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 	}
 
