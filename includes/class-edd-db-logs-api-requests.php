@@ -473,6 +473,25 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 			$where .= " AND {$table_name}.time IN ( '{$times}' )";
 		}
 
+		// Created for a specific date or in a date range.
+		if ( array_key_exists( 'date_created', $args ) && ! empty( $args['date_created'] ) ) {
+			if ( is_array( $args['date_created'] ) ) {
+				if ( ! empty( $args['date_created']['start'] ) ) {
+					$start = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['start'] ) );
+					$where .= " AND {$table_name}.date_created >= '{$start}'";
+				}
+				if ( ! empty( $args['date_created']['end'] ) ) {
+					$end = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['end'] ) );
+					$where .= " AND {$table_name}.date_created <= '{$end}'";
+				}
+			} else {
+				$year  = date( 'Y', strtotime( $args['date_created'] ) );
+				$month = date( 'm', strtotime( $args['date_created'] ) );
+				$day   = date( 'd', strtotime( $args['date_created'] ) );
+				$where .= " AND $year = YEAR ( {$table_name}.date_created ) AND $month = MONTH ( {$table_name}.date_created ) AND $day = DAY ( {$table_name}.date_created )";
+			}
+		}
+
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE 1=1 ' . $where;
 		}
