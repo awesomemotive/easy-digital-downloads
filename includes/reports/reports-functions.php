@@ -99,7 +99,16 @@ function get_endpoint_views() {
 			'group' => 'charts',
 		),
 		'table' => array(
-			'group' => 'tables',
+			'group'   => 'tables',
+			'handler' => 'EDD\Reports\Data\Table_Endpoint',
+			'fields'  => array(
+				'display_callback' => 'display',
+				'data_callback'    => 'prepare_items',
+				'display_args'     => array(
+					'class_name' => '',
+					'class_file' => '',
+				),
+			),
 		),
 		'graph' => array(
 			'group' => 'graphs',
