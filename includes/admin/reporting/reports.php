@@ -44,12 +44,17 @@ function edd_reports_page() {
 		.edd-item-has-tabs #edd-item-card-wrapper {
 			width: 85%;
 		}
+		#edd-item-card-wrapper h2 {
+			font-size: 1.5em;
+			text-align: center;
+		}
 		#edd-item-card-wrapper h3 {
-			margin-top: 0;
+			margin-top; 0;
+			margin-bottom: 0;
 		}
 	</style>
 	<div class="wrap">
-		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
+		<h1><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h1>
 
 		<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
 			<div id="edd-item-tab-wrapper" class="report-tab-wrapper">
@@ -93,41 +98,29 @@ function edd_reports_page() {
 			</div>
 
 			<div id="edd-item-card-wrapper" class="edd-report-card-wrapper" style="float: left">
-				<?php do_action( 'edd_reports_tabs' ); ?>
+				<?php $report = Reports\get_report( $active_tab ); ?>
+
+				<div id="edd-reports-card-header">
+					<h2><?php echo esc_html( $report->get_label() ); ?></h2>
+				</div>
 
 				<?php
-				$report = Reports\get_report( $active_tab );
+				do_action( 'edd_reports_tabs' );
 
 				if ( ! is_wp_error( $report ) ) :
 
 					do_action( 'edd_reports_page_top' );
 
-					if ( $report->has_endpoints( 'tiles' ) ) : ?>
+					$report->display_endpoint_group( 'tiles' );
 
-						<div id="edd-reports-tiles-wrap">
-							<div id="dashboard-widgets" class="metabox-holder">
+					$report->display_endpoint_group( 'tables' );
 
-								<div class="postbox-container">
-									<?php do_meta_boxes( 'download_page_edd-reports', 'primary', null ); ?>
-								</div>
-
-								<div class="postbox-container">
-									<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', null ); ?>
-								</div>
-
-								<div class="postbox-container">
-									<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', null ); ?>
-								</div>
-
-							</div>
-						</div>
-					<?php endif; // Has endpoints.
 				endif; // WP_Error.
 
 				if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-					do_action( "edd_reports_tab_{$active_tab}" );
+					do_action( "edd_reports_tab_{$active_tab}", $report );
 				} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-					do_action( "edd_reports_view_{$active_tab}" );
+					do_action( "edd_reports_view_{$active_tab}", $report );
 				}
 
 				do_action( 'edd_reports_page_bottom' );
