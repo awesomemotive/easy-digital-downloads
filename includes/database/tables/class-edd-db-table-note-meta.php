@@ -33,7 +33,7 @@ final class EDD_DB_Table_Note_Meta extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801170001;
+	protected $version = 201801300001;
 
 	/**
 	 * Setup the database schema
