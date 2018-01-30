@@ -302,4 +302,29 @@ final class Report extends Base_Object {
 		$this->capability = sanitize_key( $capability );
 	}
 
+	/**
+	 * Displays an entire group of an endpoints view.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $view_group Endpoints view group.
+	 * @return void
+	 */
+	public function display_endpoint_group( $view_group ) {
+		$groups = $this->parse_view_groups();
+
+		if ( array_key_exists( $view_group, $groups ) ) {
+			$views = Reports\get_endpoint_views();
+
+			if ( ! empty( $views[ $groups[ $view_group ] ]['group_callback'] ) ) {
+				$callback = $views[ $groups[ $view_group ] ]['group_callback'];
+
+				log_it( $callback );
+				if ( is_callable( $callback ) ) {
+					call_user_func( $callback, $this );
+				}
+			}
+		}
+	}
+
 }
