@@ -48,7 +48,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label' => 'Foo',
 			'views' => array(
 				'tile' => array(
-					'data_callback' => '__return_false',
+					'data_callback'    => '__return_false',
+					'display_callback' => '__return_false',
 				),
 			),
 		) );
