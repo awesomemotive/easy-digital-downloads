@@ -294,6 +294,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 		global $wpdb;
 
 		$where = '';
+		$table_name = EDD()->api_request_logs->table_name;
 
 		// Adapted from WP_Meta_Query
 		if ( isset( $args['meta_query'] ) ) {
@@ -389,6 +390,87 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 		if ( array_key_exists( 'date_query', $args ) && ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
 			$date_query = new WP_Date_Query( $args['date_query'], EDD()->api_request_logs->table_name . '.date_created' );
 			$where .= $date_query->get_sql();
+		}
+
+		// User ID.
+		if ( array_key_exists( 'user_id', $args ) && ! empty( $args['user_id'] ) ) {
+			if ( is_array( $args['user_id'] ) ) {
+				$args['user_id'] = wp_parse_id_list( $args['user_id'] );
+				$user_ids = implode( "','", array_map( 'sanitize_text_field', $args['user_id'] ) );
+			} else {
+				$user_ids = sanitize_text_field( absint( $args['user_id'] ) );
+			}
+			$where .= " AND {$table_name}.user_id IN ( '{$user_ids}' )";
+		}
+
+		// API Key.
+		if ( array_key_exists( 'api_key', $args ) && ! empty( $args['api_key'] ) ) {
+			if ( is_array( $args['api_key'] ) ) {
+				$api_keys = implode( "','", array_map( 'sanitize_text_field', $args['api_key'] ) );
+			} else {
+				$api_keys = sanitize_text_field( $args['api_key'] );
+			}
+			$where .= " AND {$table_name}.api_key IN ( '{$api_keys}' )";
+		}
+
+		// Token.
+		if ( array_key_exists( 'token', $args ) && ! empty( $args['token'] ) ) {
+			if ( is_array( $args['token'] ) ) {
+				$tokens = implode( "','", array_map( 'sanitize_text_field', $args['token'] ) );
+			} else {
+				$tokens = sanitize_text_field( $args['token'] );
+			}
+			$where .= " AND {$table_name}.token IN ( '{$tokens}' )";
+		}
+
+		// Version.
+		if ( array_key_exists( 'version', $args ) && ! empty( $args['version'] ) ) {
+			if ( is_array( $args['version'] ) ) {
+				$versions = implode( "','", array_map( 'sanitize_text_field', $args['version'] ) );
+			} else {
+				$versions = sanitize_text_field( $args['version'] );
+			}
+			$where .= " AND {$table_name}.version IN ( '{$versions}' )";
+		}
+
+		// Request.
+		if ( array_key_exists( 'request', $args ) && ! empty( $args['request'] ) ) {
+			if ( is_array( $args['request'] ) ) {
+				$requests = implode( "','", array_map( 'sanitize_text_field', $args['request'] ) );
+			} else {
+				$requests = sanitize_text_field( $args['request'] );
+			}
+			$where .= " AND {$table_name}.request IN ( '{$requests}' )";
+		}
+
+		// Error.
+		if ( array_key_exists( 'error', $args ) && ! empty( $args['error'] ) ) {
+			if ( is_array( $args['error'] ) ) {
+				$errors = implode( "','", array_map( 'sanitize_text_field', $args['error'] ) );
+			} else {
+				$errors = sanitize_text_field( $args['error'] );
+			}
+			$where .= " AND {$table_name}.error IN ( '{$errors}' )";
+		}
+
+		// IP.
+		if ( array_key_exists( 'ip', $args ) && ! empty( $args['ip'] ) ) {
+			if ( is_array( $args['ip'] ) ) {
+				$ips = implode( "','", array_map( 'sanitize_text_field', $args['ip'] ) );
+			} else {
+				$ips = sanitize_text_field( $args['ip'] );
+			}
+			$where .= " AND {$table_name}.ip IN ( '{$ips}' )";
+		}
+
+		// Time.
+		if ( array_key_exists( 'time', $args ) && ! empty( $args['time'] ) ) {
+			if ( is_array( $args['time'] ) ) {
+				$times = implode( "','", array_map( 'sanitize_text_field', $args['time'] ) );
+			} else {
+				$times = sanitize_text_field( $args['time'] );
+			}
+			$where .= " AND {$table_name}.time IN ( '{$times}' )";
 		}
 
 		if ( ! empty( $where ) ) {
