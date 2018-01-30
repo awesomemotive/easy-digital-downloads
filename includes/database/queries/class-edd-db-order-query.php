@@ -97,7 +97,7 @@ class EDD_Order_Query extends EDD_DB_Query {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'searchable' => false
+			'sortable'   => true
 		),
 
 		// number
