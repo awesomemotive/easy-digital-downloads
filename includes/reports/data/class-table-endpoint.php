@@ -49,6 +49,8 @@ final class Table_Endpoint extends Endpoint {
 	 * @param array $args Table endpoint attributes.
 	 */
 	public function __construct( array $args ) {
+		$this->errors = new \WP_Error();
+
 		// ID and Label.
 		$this->set_props( $args );
 
