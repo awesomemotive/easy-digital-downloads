@@ -97,10 +97,22 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 *
 	 * @see EDD_DB::insert()
 	 *
-	 * @param array  $data {
-	 *      API request log attributes.
+	 * @param array $data {
+	 *     API request log attributes.
+	 *
+	 *     @type int    $user_id      ID of the user making the API request. Default 0.
+	 *     @type string $api_key      API key being used to make the request. Default public.
+	 *     @type string $token        Token being used in conjunction with the API key to make the request.
+	 *                                Default public.
+	 *     @type string $version      API version being used. Default empty.
+	 *     @type string $request      Request path with parameters. Default empty.
+	 *     @type string $error        Errors with the API request. Default empty.
+	 *     @type string $ip           IP address of the client making the API request. Default empty.
+	 *     @type float  $time         Time taken for the request to execute. Default empty.
+	 *     @type string $date_created Optional. Time and date of the API request. If left empty, it will automatically
+	 *                                be set upon insertion.
 	 * }
-	 * @param string $type Data type to insert (forced to 'api_request_log'.
+	 * @param string $type Data type to insert (forced to 'api_request_log').
 	 *
 	 * @return int ID of the inserted log.
 	 */
@@ -127,7 +139,19 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 *
 	 * @param int   $row_id API request log ID.
 	 * @param array $data {
-	 *      API request log attributes.
+	 *     API request log attributes.
+	 *
+	 *     @type int    $user_id      ID of the user making the API request. Default 0.
+	 *     @type string $api_key      API key being used to make the request. Default public.
+	 *     @type string $token        Token being used in conjunction with the API key to make the request.
+	 *                                Default public.
+	 *     @type string $version      API version being used. Default empty.
+	 *     @type string $request      Request path with parameters. Default empty.
+	 *     @type string $error        Errors with the API request. Default empty.
+	 *     @type string $ip           IP address of the client making the API request. Default empty.
+	 *     @type float  $time         Time taken for the request to execute. Default empty.
+	 *     @type string $date_created Optional. Time and date of the API request. If left empty, it will automatically
+	 *                                be set upon insertion.
 	 * }
 	 * @param mixed string|array $where Where clause to filter update.
 	 *
@@ -171,7 +195,13 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 	 * @access public
 	 *
 	 * @param array $args {
-	 *      Query arguments.
+	 *     Optional. Array of log query parameters. Default empty.
+	 *
+	 *     @type int          $number      Number of logs to retrieve. Default 20.
+	 *     @type int          $offset      Number of logs to offset the query. Used to build LIMIT clause. Default 0.
+	 *     @type string       $search      Search term(s) to retrieve matching logs for. Default empty.
+	 *     @type string       $orderby     Order by a specific column. Default 'id'.
+	 *     @type string       $order       How to order retrieved logs. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 * }
 	 *
 	 * @return array $logs Array of EDD\Logs\API_Request_Log objects.
@@ -403,6 +433,6 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
 		}
 
-git		return $last_changed;
+		return $last_changed;
 	}
 }
