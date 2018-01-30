@@ -213,6 +213,15 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
 	 */
+	public function test_get_endpoint_group_callback_with_table_view_should_return_that_group_callback() {
+		$expected = 'EDD\Reports\default_display_tables_group';
+
+		$this->assertSame( $expected, get_endpoint_group_callback( 'table' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 */
 	public function test_get_endpoint_group_callback_with_invalid_view_should_return_an_empty_string() {
 		$this->assertSame( '', get_endpoint_group_callback( 'fake' ) );
 	}

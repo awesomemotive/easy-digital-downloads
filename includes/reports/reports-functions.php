@@ -101,7 +101,7 @@ function get_endpoint_views() {
 		),
 		'table' => array(
 			'group'          => 'tables',
-			'group_callback' => '',
+			'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
 			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
 			'fields'         => array(
 				'display_callback' => 'display',
@@ -425,6 +425,29 @@ function default_display_tiles_group( $report ) {
 				</div>
 
 			</div>
+		</div>
+	<?php endif; // Has endpoints.
+}
+
+/**
+ * Handles default display of all table endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report $report Report object.
+ */
+function default_display_tables_group( $report ) {
+	if ( $report->has_endpoints( 'tables' ) ) :
+		$tables = $report->get_endpoints( 'tables' );
+		?>
+		<div id="edd-reports-tables-wrap">
+
+			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
+				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
+
+				<?php $table->display(); ?>
+			<?php endforeach; ?>
+
 		</div>
 	<?php endif; // Has endpoints.
 }
