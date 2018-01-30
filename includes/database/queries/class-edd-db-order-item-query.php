@@ -96,7 +96,8 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 			'length'     => '20',
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
-			'primary'    => true
+			'primary'    => true,
+			'sortable'   => true
 		),
 
 		// order_id
@@ -105,7 +106,8 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// product_id
@@ -114,7 +116,8 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// price_id
@@ -123,7 +126,8 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// cart_index
