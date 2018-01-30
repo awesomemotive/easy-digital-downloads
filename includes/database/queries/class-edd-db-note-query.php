@@ -179,11 +179,11 @@ class EDD_Note_Query extends EDD_DB_Query {
 	 *     @type int          $offset               Number of orders to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Site status or array of statuses. Accepts 'id', 'user_id', 'customer_id',
-	 *                                              'date_created', 'date_completed', 'user__in', 'customer__in'. Also accepts false,
-	 *                                              an empty array, or 'none' to disable `ORDER BY` clause.
+	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'user_id', 'date_created',
+	 *                                              'user_id__in', 'object_id__in', 'object_type__in'.
+	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $               How to retrieved orders. Accepts 'ASC', 'DESC'. Default 'ASC'.
+	 *     @type string       $order                How to retrieved orders. Accepts 'ASC', 'DESC'. Default 'ASC'.
 	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
 	 * }
