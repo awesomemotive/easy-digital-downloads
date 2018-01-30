@@ -475,6 +475,12 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 			}
 		}
 
+		// Search. If a search parameter is passed, we assume that we are searching in the email column.
+		if ( array_key_exists( 'search', $args ) && ! empty( $args['search'] ) ) {
+			$search = esc_sql( sanitize_text_field( $args['search'] ) );
+			$where .= " AND email LIKE '%%" . $search . "%%'";
+		}
+
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE 1=1 ' . $where;
 		}
