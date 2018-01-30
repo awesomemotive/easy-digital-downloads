@@ -192,7 +192,11 @@ final class Table_Endpoint extends Endpoint {
 	 */
 	private function set_list_table( $class ) {
 		if ( ! class_exists( $class ) ) {
-			require_once $this->get_class_file();
+			$path_to_file = $this->get_class_file();
+
+			if ( file_exists( $path_to_file ) ) {
+				require_once $path_to_file;
+			}
 		}
 		$this->list_table = new $class;
 	}
