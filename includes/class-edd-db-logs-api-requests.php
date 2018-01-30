@@ -492,7 +492,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 			}
 		}
 
-		// Search
+		// Search. If a search parameter is passed, we assume that we are searching in the request column.
 		if ( array_key_exists( 'search', $args ) && ! empty( $args['search'] ) ) {
 			$search = esc_sql( sanitize_text_field( $args['search'] ) );
 			$where .= " AND request LIKE '%%" . $search . "%%'";
