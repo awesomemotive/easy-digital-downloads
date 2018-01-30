@@ -314,15 +314,10 @@ final class Report extends Base_Object {
 		$groups = $this->parse_view_groups();
 
 		if ( array_key_exists( $view_group, $groups ) ) {
-			$views = Reports\get_endpoint_views();
+			$callback = Reports\get_endpoint_group_callback( $groups[ $view_group ] );
 
-			if ( ! empty( $views[ $groups[ $view_group ] ]['group_callback'] ) ) {
-				$callback = $views[ $groups[ $view_group ] ]['group_callback'];
-
-				log_it( $callback );
-				if ( is_callable( $callback ) ) {
-					call_user_func( $callback, $this );
-				}
+			if ( is_callable( $callback ) ) {
+				call_user_func( $callback, $this );
 			}
 		}
 	}
