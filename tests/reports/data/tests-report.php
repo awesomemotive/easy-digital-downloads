@@ -308,4 +308,73 @@ class Report_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSets( array( 'foo' ), $actual );
 	}
 
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 */
+	public function test_get_endpoint_with_valid_endpoint_valid_view_group_should_return_that_endpoint() {
+		$endpoint = self::$report->get_endpoint( 'foo', 'tiles' );
+
+		$this->assertSame( 'foo', $endpoint->get_id() );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_get_endpoint_with_valid_endpoint_invalid_view_group_should_return_WP_Error() {
+		$endpoint_or_error = self::$report->get_endpoint( 'foo', 'fake' );
+
+		$this->assertWPError( $endpoint_or_error );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_get_endpoint_with_valid_endpoint_invalid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
+		$endpoint_or_error = self::$report->get_endpoint( 'foo', 'fake' );
+
+		$this->assertContains( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_get_endpoint_with_invalid_endpoint_valid_view_group_should_return_WP_Error() {
+		$endpoint_or_error = self::$report->get_endpoint( 'fake', 'tiles' );
+
+		$this->assertWPError( $endpoint_or_error );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_get_endpoint_with_invalid_endpoint_valid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
+		$endpoint_or_error = self::$report->get_endpoint( 'fake', 'tiles' );
+
+		$this->assertContains( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_get_endpoint_with_invalid_endpoint_invalid_view_group_should_return_WP_Error() {
+		$endpoint_or_error = self::$report->get_endpoint( 'fake', 'fake' );
+
+		$this->assertWPError( $endpoint_or_error );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @group edd_errors
+	 */
+	public function test_get_endpoint_with_invalid_endpoint_invalid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
+		$endpoint_or_error = self::$report->get_endpoint( 'fake', 'fake' );
+
+		$this->assertContains( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() );
+	}
+
 }
