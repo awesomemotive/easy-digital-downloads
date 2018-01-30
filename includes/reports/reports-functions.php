@@ -117,7 +117,7 @@ function get_endpoint_views() {
 }
 
 /**
- * Registers a new data endpoint to the master registry.
+ * Registers a new endpoint to the master registry.
  *
  * @since 3.0
  *
