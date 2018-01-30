@@ -142,7 +142,7 @@ abstract class Endpoint extends Base_Object {
 	 *
 	 * @param string $view_type Endpoint type.
 	 */
-	private function check_view() {
+	protected function check_view() {
 		$views = Reports\get_endpoint_views();
 
 		if ( ! array_key_exists( $this->get_view(), $views ) ) {
