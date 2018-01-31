@@ -1217,28 +1217,32 @@ function edd_logs_migration() {
 		}
 	}
 
-	$discounts = $wpdb->get_results(
+	$logs = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
-			$offset,
-			$number
+			"
+			SELECT *
+			FROM $wpdb->posts
+			WHERE post_type = 'edd_log'
+			ORDER BY ID ASC
+			LIMIT %d,%d;
+			",
+			$offset, $number
 		)
 	);
 
-	if ( ! empty( $discounts ) ) {
-		// Discounts found so migrate them
-		foreach ( $discounts as $old_discount ) {
-			$discount = new EDD_Discount;
-			$id = $discount->migrate( $old_discount->ID );
-			edd_debug_log( $old_discount->ID . ' successfully migrated to ' . $id );
+	if ( ! empty( $logs ) ) {
+		foreach ( $logs as $old_log ) {
+			$log = new EDD\Logs\Log();
+			$id = $log->migrate( $old_log->ID );
+			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $id );
 		}
 
-		edd_debug_log( 'Step ' . $step . ' of discounts migration complete' );
+		edd_debug_log( 'Step ' . $step . ' of logs migration complete' );
 
 		$step++;
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'discounts_migration',
+			'edd-upgrade' => 'logs_migration',
 			'step'        => $step,
 			'number'      => $number,
 			'total'       => $total
@@ -1247,7 +1251,6 @@ function edd_logs_migration() {
 		wp_safe_redirect( $redirect );
 		exit;
 	} else {
-		// No more logs found, finish up
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'migrate_logs' );
 		delete_option( 'edd_doing_upgrade' );
