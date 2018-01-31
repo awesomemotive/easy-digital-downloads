@@ -238,15 +238,7 @@ final class Report extends Base_Object {
 	 * @return bool True if there is at least one valid endpoint, otherwise false.
 	 */
 	public function has_endpoints( $view_group ) {
-		$groups = $this->parse_view_groups();
-
-		if ( array_key_exists( $view_group, $groups ) ) {
-			$endpoints = $this->get_endpoints( $view_group );
-		} else {
-			$endpoints = array();
-		}
-
-		return ! empty( $endpoints );
+		return ! empty( $this->endpoints[ $view_group ] );
 	}
 
 	/**
