@@ -1236,14 +1236,41 @@ function edd_logs_migration() {
 	if ( ! empty( $logs ) ) {
 		foreach ( $logs as $old_log ) {
 			if ( 'file_download' === $old_log->slug ) {
-				$log = new EDD\Logs\File_Download_Log( $old_log->ID );
+				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $old_log->ID" );
+
+				if ( ! empty( $migrated ) ) {
+					continue;
+				}
+
+				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
+
+				$post_meta = array();
+
+				foreach ( $meta as $meta_item ) {
+					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+				}
+
+				$log_data = array(
+					'download_id'  => $old_log->post_parent,
+					'file_id'      => $post_meta['_edd_log_file_id'],
+					'payment_id'   => $post_meta['_edd_log_payment_id'],
+					'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+					'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+					'ip'           => $post_meta['_edd_log_ip'],
+					'date_created' => $old_log->post_date,
+				);
+
+				$new_log_id = EDD()->file_download_logs->insert( $log_data );
+
+				if ( ! empty( $new_log_id ) ) {
+					add_post_meta( $old_log->ID, '_edd_log_migrated_id', $new_log_id );
+				}
 			} else if ( 'api_request' === $old_log->slug ) {
 				$log = new EDD\Logs\API_Request_Log( $old_log->ID );
 			} else {
 				$log = new EDD\Logs\Log( $old_log->ID );
 			}
 
-			$id = $log->migrate( $old_log->ID );
 			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $id );
 		}
 
