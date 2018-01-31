@@ -139,7 +139,7 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		// Bail if this endpoint ID is already registered.
 		if ( $this->offsetExists( $endpoint_id ) ) {
-			$message = sprintf( 'The \'%1$s\' endpoint already exists and cannont be registered.', $endpoint_id );
+			$message = sprintf( 'The \'%1$s\' endpoint already exists and cannot be registered.', $endpoint_id );
 
 			throw new Utils\Exception( $message );
 		}
