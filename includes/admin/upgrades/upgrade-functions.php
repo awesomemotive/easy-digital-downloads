@@ -57,6 +57,8 @@ add_action( 'admin_init', 'edd_do_automatic_upgrades' );
  * @return void
 */
 function edd_show_upgrade_notices() {
+	global $wpdb;
+
 	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' )
 		return; // Don't show notices on the upgrades page
 
@@ -173,6 +175,50 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
+			);
+		}
+
+		if ( ! edd_has_upgrade_completed( 'migrate_discounts' ) ) {
+			// Check to see if we have discounts in the Database
+			$results  = $wpdb->get_row( "SELECT count(ID) as has_logs FROM $wpdb->posts WHERE post_type = 'edd_log' LIMIT 0, 1" );
+			$has_logs = ! empty( $results->has_logs ) ? true : false;
+			if ( ! $has_logs ) {
+				edd_set_upgrade_complete( 'migrate_logs' );
+				edd_set_upgrade_complete( 'remove_legacy_logs' );
+			} else {
+				printf(
+					'<div class="updated">' .
+					'<p>' .
+					__( 'Easy Digital Downloads needs to upgrade the logs database, click <a href="%1$s">here</a> to start the upgrade. <a href="#" onClick="%2$s">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
+					'</p>' .
+					'<p style="display: none;">' .
+					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all logs and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_logs</code>', 'easy-digital-downloads' ) .
+					'</p>' .
+					'</div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=logs_migration' ) ),
+					"jQuery(this).parent().next('p').slideToggle()"
+				);
+			}
+		}
+
+		if ( edd_has_upgrade_completed( 'migrate_logs' ) && ! edd_has_upgrade_completed( 'remove_legacy_logs' ) ) {
+			printf(
+				'<div class="updated">' .
+				'<p>' .
+				__( 'Easy Digital Downloads has <strong>finished migrating log</strong> records, next step is to <a href="%1%s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				'</p>' .
+				'<p style="display: none;">' .
+				__( '<strong>Removing legacy data:</strong><br />All log records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
+				'<br /><br />' .
+				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				'</p>' .
+				'</div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_logs' ) ),
+				"jQuery(this).parent().next('p').slideToggle()"
 			);
 		}
 
