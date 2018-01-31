@@ -234,11 +234,18 @@ final class Report extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $view_group View group for the type of endpoints to check the existence of.
+	 * @param string $view_group Optional. View group for the type of endpoints
+	 *                           to check the existence of. Default empty.
 	 * @return bool True if there is at least one valid endpoint, otherwise false.
 	 */
-	public function has_endpoints( $view_group ) {
-		return ! empty( $this->endpoints[ $view_group ] );
+	public function has_endpoints( $view_group = '' ) {
+		if ( ! empty( $view_group ) ) {
+			$has_endpoints = ! empty( $this->endpoints[ $view_group ] );
+		} else {
+			$has_endpoints = ! empty( $this->endpoints );
+		}
+
+		return $has_endpoints;
 	}
 
 	/**
