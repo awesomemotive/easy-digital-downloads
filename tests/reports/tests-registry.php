@@ -59,13 +59,6 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$item_error_label
-	 */
-	public function test_item_error_label_should_be_report() {
-		$this->assertSame( 'reports item', $this->registry::$item_error_label );
-	}
-
-	/**
 	 * @covers ::validate_attributes()
 	 * @throws \EDD_Exception
 	 */

@@ -62,13 +62,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$item_error_label
-	 */
-	public function test_item_error_label_should_be_reports_endpoint() {
-		$this->assertSame( 'reports endpoint', $this->registry::$item_error_label );
-	}
-
-	/**
 	 * @covers ::instance()
 	 */
 	public function test_static_registry_should_have_instance_method() {
