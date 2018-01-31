@@ -11,6 +11,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  * @group edd_reports
  * @group edd_reports_endpoints
  * @group edd_objects
+ *
+ * @coversDefaultClass \EDD\Reports\Data\Base_Object
  */
 class Base_Object_Tests extends \EDD_UnitTestCase {
 
@@ -29,7 +31,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::get_id()
+	 * @covers ::get_id()
 	 */
 	public function test_get_id_when_created_without_an_id_should_return_null() {
 		$object = $this->mock_Base_Object( array(
@@ -40,8 +42,8 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::get_id()
-	 * @covers \EDD\Reports\Data\Base_Object::set_id()
+	 * @covers ::get_id()
+	 * @covers ::set_id()
 	 */
 	public function test_get_id_when_created_with_an_id_should_return_that_id() {
 		$object = $this->mock_Base_Object( array(
@@ -53,7 +55,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::get_label()
+	 * @covers ::get_label()
 	 */
 	public function test_get_label_when_created_without_a_label_should_return_null() {
 		$object = $this->mock_Base_Object( array(
@@ -64,8 +66,8 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::get_label()
-	 * @covers \EDD\Reports\Data\Base_Object::set_label()
+	 * @covers ::get_label()
+	 * @covers ::set_label()
 	 */
 	public function test_get_label_when_created_with_a_label_should_return_that_label() {
 		$object = $this->mock_Base_Object( array(
@@ -77,7 +79,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::set_props()
+	 * @covers ::set_props()
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_id_should_flag_WP_Error() {
@@ -96,7 +98,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::set_props()
+	 * @covers ::set_props()
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_id_should_flag_WP_Error_including_code_missing_object_id() {
@@ -108,7 +110,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::set_props()
+	 * @covers ::set_props()
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_object_label_should_flag_WP_Error() {
@@ -120,7 +122,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::set_props()
+	 * @covers ::set_props()
 	 * @group edd_errors
 	 */
 	public function test_set_props_with_missing_object_label_should_flag_WP_Error_including_code_missing_object_label() {
@@ -132,7 +134,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::has_errors()
+	 * @covers ::has_errors()
 	 */
 	public function test_has_errors_if_no_errors_should_return_false() {
 		// Add a completely valid endpoint.
@@ -145,7 +147,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::has_errors()
+	 * @covers ::has_errors()
 	 */
 	public function test_has_errors_if_errors_should_return_true() {
 		$object = $this->mock_Base_Object( array( 'bar' ) );
@@ -154,7 +156,7 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Base_Object::get_errors()
+	 * @covers ::get_errors()
 	 */
 	public function test_get_errors_should_return_WP_Error_object() {
 		$object = $this->mock_Base_Object( array( 'bar' ) );
