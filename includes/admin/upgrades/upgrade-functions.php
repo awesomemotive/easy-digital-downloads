@@ -1266,7 +1266,37 @@ function edd_logs_migration() {
 					add_post_meta( $old_log->ID, '_edd_log_migrated_id', $new_log_id );
 				}
 			} else if ( 'api_request' === $old_log->slug ) {
-				$log = new EDD\Logs\API_Request_Log( $old_log->ID );
+				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $old_log->ID" );
+
+				if ( ! empty( $migrated ) ) {
+					continue;
+				}
+
+				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
+
+				$post_meta = array();
+
+				foreach ( $meta as $meta_item ) {
+					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+				}
+
+				$log_data = array(
+					'ip'           => $post_meta['_edd_log_request_ip'],
+					'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
+					'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
+					'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+					'version'      => $post_meta['_edd_log_version'],
+					'time'         => $post_meta['_edd_log_time'],
+					'request'      => $old_log->post_excerpt,
+					'error'        => $old_log->post_content,
+					'date_created' => $old_log->post_date,
+				);
+
+				$new_log_id = EDD()->api_request_logs->insert( $log_data );
+
+				if ( ! empty( $new_log_id ) ) {
+					add_post_meta( $old_log->ID, '_edd_log_migrated_id', $new_log_id );
+				}
 			} else {
 				$log = new EDD\Logs\Log( $old_log->ID );
 			}
