@@ -335,6 +335,27 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Reports\Data\Report::has_endpoints()
+	 */
+	public function test_has_endpoints_with_empty_group_and_endpoints_should_return_true() {
+		$this->assertTrue( self::$report->has_endpoints() );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::has_endpoints()
+	 */
+	public function test_has_endpoints_with_group_and_matching_endpoints_should_return_true() {
+		$this->assertTrue( self::$report->has_endpoints( 'tiles' ) );
+	}
+
+	/**
+	 * @covers \EDD\Reports\Data\Report::has_endpoints()
+	 */
+	public function test_has_endpoints_with_group_and_no_matching_endpoints_should_return_false() {
+		$this->assertFalse( self::$report->has_endpoints( 'fake' ) );
+	}
+
+	/**
 	 * @covers \EDD\Reports\Data\Report::get_endpoint()
 	 */
 	public function test_get_endpoint_with_valid_endpoint_valid_view_group_should_return_that_endpoint() {
