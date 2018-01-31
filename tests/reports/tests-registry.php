@@ -10,6 +10,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  *
  * @group edd_registry
  * @group edd_reports
+ *
+ * @coversDefaultClass \EDD\Reports\Registry
  */
 class Registry_Tests extends \EDD_UnitTestCase {
 
@@ -57,14 +59,14 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Registry::$item_error_label
+	 * @covers ::$item_error_label
 	 */
 	public function test_item_error_label_should_be_report() {
 		$this->assertSame( 'reports item', $this->registry::$item_error_label );
 	}
 
 	/**
-	 * @covers \EDD\Reports\Registry::validate_attributes()
+	 * @covers ::validate_attributes()
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_attributes_should_throw_exception_if_attribute_is_empty_and_not_filtered() {
@@ -77,7 +79,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Registry::validate_attributes()
+	 * @covers ::validate_attributes()
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_attributes_should_not_throw_exception_if_attribute_is_empty_and_filtered() {
