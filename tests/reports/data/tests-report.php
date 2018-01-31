@@ -93,7 +93,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::$endpoints
+	 * @covers ::$endpoints
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error_including_code_missing_endpoints() {
@@ -108,7 +108,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::$capability
+	 * @covers ::$capability
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_capability_should_flag_WP_Error_including_code_missing_capability() {
@@ -123,7 +123,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::parse_endpoints()
+	 * @covers ::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_parse_endpoints_with_empty_array_should_add_no_new_endpoints() {
@@ -135,7 +135,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::parse_endpoints()
+	 * @covers ::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_parse_endpoints_with_invalid_view_group_should_throw_exception() {
@@ -145,7 +145,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::parse_view_groups()
+	 * @covers ::parse_view_groups()
 	 */
 	public function test_parse_view_groups_should_return_group_view_key_value_pairs() {
 		$expected = array(
@@ -159,7 +159,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::validate_endpoint()
+	 * @covers ::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_a_WP_Error_object_should_add_a_new_error_to_errors() {
 		self::$report->validate_endpoint( 'tiles', new \WP_Error( 'foo' ) );
@@ -168,7 +168,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::validate_endpoint()
+	 * @covers ::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_an_endpoint_with_errors_should_add_that_error() {
 		$endpoint = new Tile_Endpoint( array(
@@ -183,7 +183,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::validate_endpoint()
+	 * @covers ::validate_endpoint()
 	 */
 	public function test_validate_endpoint_passed_a_legitimate_endpoint_should_add_it_to_the_endpoints_array() {
 		$endpoint = new Tile_Endpoint( array(
@@ -203,7 +203,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoints()
+	 * @covers ::get_endpoints()
 	 */
 	public function test_get_endpoints_with_empty_view_group_should_return_all_endpoints() {
 
@@ -252,7 +252,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoints()
+	 * @covers ::get_endpoints()
 	 */
 	public function test_get_endpoints_with_invalid_view_group_should_return_all_endpoints() {
 		Reports\register_endpoint( 'foo', array(
@@ -301,7 +301,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoints()
+	 * @covers ::get_endpoints()
 	 */
 	public function test_get_endpoints_with_valid_view_group_should_return_all_endpoints() {
 		Reports\register_endpoint( 'foo', array(
@@ -337,28 +337,28 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::has_endpoints()
+	 * @covers ::has_endpoints()
 	 */
 	public function test_has_endpoints_with_empty_group_and_endpoints_should_return_true() {
 		$this->assertTrue( self::$report->has_endpoints() );
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::has_endpoints()
+	 * @covers ::has_endpoints()
 	 */
 	public function test_has_endpoints_with_group_and_matching_endpoints_should_return_true() {
 		$this->assertTrue( self::$report->has_endpoints( 'tiles' ) );
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::has_endpoints()
+	 * @covers ::has_endpoints()
 	 */
 	public function test_has_endpoints_with_group_and_no_matching_endpoints_should_return_false() {
 		$this->assertFalse( self::$report->has_endpoints( 'fake' ) );
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 */
 	public function test_get_endpoint_with_valid_endpoint_valid_view_group_should_return_that_endpoint() {
 		$endpoint = self::$report->get_endpoint( 'foo', 'tiles' );
@@ -367,7 +367,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_valid_endpoint_invalid_view_group_should_return_WP_Error() {
@@ -377,7 +377,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_valid_endpoint_invalid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
@@ -387,7 +387,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_valid_view_group_should_return_WP_Error() {
@@ -397,7 +397,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_valid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
@@ -407,7 +407,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_invalid_view_group_should_return_WP_Error() {
@@ -417,7 +417,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Report::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_invalid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
