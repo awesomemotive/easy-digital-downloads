@@ -3,6 +3,8 @@
  * Tests for EDD_Utilities.
  *
  * @group edd_utils
+ *
+ * @coversDefaultClass \EDD_Utilities
  */
 class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
@@ -21,7 +23,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Utilities::get_registry()
+	 * @covers ::get_registry()
 	 * @group edd_registry
 	 * @group edd_errors
 	 */
@@ -32,7 +34,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Utilities::get_registry()
+	 * @covers ::get_registry()
 	 * @group edd_registry
 	 * @group edd_errors
 	 */
@@ -43,7 +45,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Utilities::get_registry()
+	 * @covers ::get_registry()
 	 * @group edd_registry
 	 */
 	public function test_get_registry_with_reports_should_retrieve_reports_registry_instance() {
@@ -53,7 +55,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_Utilities::get_registry()
+	 * @covers ::get_registry()
 	 * @group edd_registry
 	 */
 	public function test_get_registry_with_reports_endpoints_should_retrieve_endpoints_registry_instance() {
