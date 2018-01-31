@@ -13,6 +13,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  * @group edd_reports
  * @group edd_reports_endpoints
  * @group edd_objects
+ *
+ * @coversDefaultClass \EDD\Reports\Data\Report
  */
 class Report_Tests extends \EDD_UnitTestCase {
 
