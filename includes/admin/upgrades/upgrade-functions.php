@@ -1220,10 +1220,13 @@ function edd_logs_migration() {
 	$logs = $wpdb->get_results(
 		$wpdb->prepare(
 			"
-			SELECT *
-			FROM $wpdb->posts
-			WHERE post_type = 'edd_log'
-			ORDER BY ID ASC
+			SELECT p.ID, t.slug
+			FROM {$wpdb->posts} AS p
+			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+			GROUP BY p.ID
 			LIMIT %d,%d;
 			",
 			$offset, $number
@@ -1232,7 +1235,14 @@ function edd_logs_migration() {
 
 	if ( ! empty( $logs ) ) {
 		foreach ( $logs as $old_log ) {
-			$log = new EDD\Logs\Log();
+			if ( 'file_download' === $old_log->slug ) {
+				$log = new EDD\Logs\File_Download_Log( $old_log->ID );
+			} else if ( 'api_request' === $old_log->slug ) {
+				$log = new EDD\Logs\API_Request_Log( $old_log->ID );
+			} else {
+				$log = new EDD\Logs\Log( $old_log->ID );
+			}
+
 			$id = $log->migrate( $old_log->ID );
 			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $id );
 		}
