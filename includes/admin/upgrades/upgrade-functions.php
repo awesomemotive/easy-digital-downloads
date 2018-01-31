@@ -1220,7 +1220,7 @@ function edd_logs_migration() {
 	$logs = $wpdb->get_results(
 		$wpdb->prepare(
 			"
-			SELECT p.ID, t.slug
+			SELECT p.*, t.slug
 			FROM {$wpdb->posts} AS p
 			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
@@ -1298,10 +1298,27 @@ function edd_logs_migration() {
 					add_post_meta( $old_log->ID, '_edd_log_migrated_id', $new_log_id );
 				}
 			} else {
-				$log = new EDD\Logs\Log( $old_log->ID );
+				$post = new WP_Post( $old_log->ID );
+
+				$log_data = array(
+					'object_id'   => $post->post_parent,
+					'object_type' => 'download',
+					'type'        => $old_log->slug,
+					'title'       => $old_log->post_title,
+					'message'     => $old_log->post_content
+				);
+
+				$meta = get_post_custom( $old_log->ID );
+				$meta_to_migrate = array();
+
+				foreach ( $meta as $key => $value ) {
+					$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+				}
+
+				$new_log_id = EDD()->logs->insert( $log_data );
 			}
 
-			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $id );
+			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $new_log_id );
 		}
 
 		edd_debug_log( 'Step ' . $step . ' of logs migration complete' );
