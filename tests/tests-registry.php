@@ -6,6 +6,8 @@ namespace EDD\Utils;
  *
  * @group edd_registry
  * @group edd_utils
+ *
+ * @coversDefaultClass \EDD\Utils\Registry
  */
 class Registry_Tests extends \EDD_UnitTestCase {
 
@@ -38,7 +40,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::add_item()
+	 * @covers ::add_item()
 	 * @expectedException \EDD_Exception
 	 */
 	public function test_add_item_with_empty_attributes_should_return_false() {
@@ -46,7 +48,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::add_item()
+	 * @covers ::add_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_item_with_empty_attributes_should_throw_exception() {
@@ -56,7 +58,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::add_item()
+	 * @covers ::add_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_item_with_non_empty_attributes_should_return_true() {
@@ -66,7 +68,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::add_item()
+	 * @covers ::add_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_item_should_register_the_item() {
@@ -79,7 +81,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::remove_item()
+	 * @covers ::remove_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_remove_item_with_invalid_item_id_should_effect_no_change() {
@@ -91,7 +93,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::remove_item()
+	 * @covers ::remove_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_remove_item_with_valid_item_id_should_remove_that_item() {
@@ -103,7 +105,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::get_item()
+	 * @covers ::get_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_item_with_invalid_item_id_should_return_an_empty_array() {
@@ -115,7 +117,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::get_item()
+	 * @covers ::get_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_item_with_invalid_item_id_should_throw_an_exception() {
@@ -125,7 +127,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::get_item()
+	 * @covers ::get_item()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_item_with_valid_item_id_should_return_that_item() {
@@ -139,14 +141,14 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::get_items()
+	 * @covers ::get_items()
 	 */
 	public function test_get_items_should_be_empty_with_no_registered_items() {
 		$this->assertEqualSets( array(), $this->mockRegistry->get_items() );
 	}
 
 	/**
-	 * @covers \EDD\Utils\Registry::get_items()
+	 * @covers ::get_items()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_items_should_return_registered_items() {
