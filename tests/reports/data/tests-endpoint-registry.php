@@ -13,6 +13,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  * @group edd_registry
  * @group edd_reports
  * @group edd_reports_endpoints
+ *
+ * @coversDefaultClass \EDD\Reports\Data\Endpoint_Registry
  */
 class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
@@ -60,21 +62,21 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::$item_error_label
+	 * @covers ::$item_error_label
 	 */
 	public function test_item_error_label_should_be_reports_endpoint() {
 		$this->assertSame( 'reports endpoint', $this->registry::$item_error_label );
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::instance()
+	 * @covers ::instance()
 	 */
 	public function test_static_registry_should_have_instance_method() {
 		$this->assertTrue( method_exists( $this->registry, 'instance' ) );
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
@@ -86,7 +88,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
@@ -96,7 +98,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoint()
+	 * @covers ::get_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_should_return_that_endpoint() {
@@ -124,7 +126,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @covers ::unregister_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_unregister_endpoint_with_invalid_endpoint_id_should_affect_no_change() {
@@ -145,7 +147,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::unregister_endpoint()
+	 * @covers ::unregister_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_unregister_endpoint_with_valid_endpoint_id_should_unregister_that_endpoint() {
@@ -165,7 +167,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers ::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_no_sort_should_return_endpoints_in_order_of_registration() {
@@ -178,7 +180,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers ::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_invalid_sort_should_return_endpoints_in_order_of_registration() {
@@ -191,7 +193,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers ::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_ID_sort_should_return_endpoints_in_alphabetical_order_by_ID() {
@@ -204,7 +206,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::get_endpoints()
+	 * @covers ::get_endpoints()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_priority_sort_should_return_endpoints_in_order_of_priority() {
@@ -217,7 +219,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers ::register_endpoint()
 	 * @expectedException \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_attributes_should_return_false() {
@@ -225,7 +227,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers ::register_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -241,7 +243,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers ::register_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -257,7 +259,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers ::register_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -276,7 +278,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers ::register_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_no_priority_should_set_priority_10() {
@@ -295,7 +297,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+	 * @covers ::register_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_priority_should_set_that_priority() {
@@ -315,7 +317,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers ::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
 		$endpoint = $this->mock_Endpoint( array(
@@ -327,7 +329,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers ::build_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_build_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
@@ -338,7 +340,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers ::build_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_build_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
@@ -359,7 +361,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
+	 * @covers ::build_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -372,7 +374,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\Data\Endpoint_Registry::validate_views()
+	 * @covers ::validate_views()
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_views_with_invalid_view_should_throw_exception() {
