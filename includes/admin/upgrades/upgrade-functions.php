@@ -1163,3 +1163,138 @@ function edd_v26_upgrades() {
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
 }
+
+/**
+ * Migrates all logs and log meta to the new custom tables.
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_logs_migration() {
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+	set_time_limit( 0 );
+
+	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	edd_debug_log( 'Beginning step ' . $step . ' of logs migration' );
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
+		$results   = $wpdb->get_row( $total_sql, 0 );
+		$total     = $results->total_discounts;
+		edd_debug_log( $total . ' to migrate' );
+	}
+
+	if ( 1 === $step ) {
+		if ( ! EDD()->logs->table_exists( EDD()->logs->table_name ) ) {
+			EDD()->logs->create_table();
+			edd_debug_log( EDD()->logs->table_name . ' created successfully' );
+		}
+
+		if ( ! EDD()->log_meta->table_exists( EDD()->log_meta->table_name ) ) {
+			EDD()->log_meta->create_table();
+			edd_debug_log( EDD()->log_meta->table_name . ' created successfully' );
+		}
+
+		if ( ! EDD()->api_request_logs->table_exists( EDD()->api_request_logs->table_name ) ) {
+			EDD()->api_request_logs->create_table();
+			edd_debug_log( EDD()->api_request_logs->table_name . ' created successfully' );
+		}
+
+		if ( ! EDD()->file_download_logs->table_exists( EDD()->file_download_logs->table_name ) ) {
+			EDD()->file_download_logs->create_table();
+			edd_debug_log( EDD()->file_download_logs->table_name . ' created successfully' );
+		}
+	}
+
+	$discounts = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
+			$offset,
+			$number
+		)
+	);
+
+	if ( ! empty( $discounts ) ) {
+		// Discounts found so migrate them
+		foreach ( $discounts as $old_discount ) {
+			$discount = new EDD_Discount;
+			$id = $discount->migrate( $old_discount->ID );
+			edd_debug_log( $old_discount->ID . ' successfully migrated to ' . $id );
+		}
+
+		edd_debug_log( 'Step ' . $step . ' of discounts migration complete' );
+
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'discounts_migration',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_safe_redirect( $redirect );
+		exit;
+	} else {
+		// No more logs found, finish up
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'migrate_logs' );
+		delete_option( 'edd_doing_upgrade' );
+
+		edd_debug_log( 'All old logs migrated, upgrade complete.' );
+
+		wp_redirect( admin_url() );
+		exit;
+	}
+}
+add_action( 'edd_logs_migration', 'edd_logs_migration' );
+
+/**
+ * Removes legacy logs data.
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_remove_legacy_discounts() {
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+	set_time_limit( 0 );
+
+	$log_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_log'" );
+	$log_ids = wp_list_pluck( $log_ids, 'ID' );
+	$log_ids = implode( ', ', $log_ids );
+
+	edd_debug_log( 'Beginning removal of legacy logs' );
+
+	if ( ! empty( $log_ids ) ) {
+		$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$log_ids})";
+		$wpdb->query( $delete_posts_query );
+		$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$log_ids})";
+		$wpdb->query( $delete_postmeta_query );
+	}
+
+	// No more logs found, finish up.
+	edd_set_upgrade_complete( 'remove_legacy_logs' );
+	delete_option( 'edd_doing_upgrade' );
+	edd_debug_log( 'Legacy logs removed, upgrade complete.' );
+
+	wp_redirect( admin_url() );
+	exit;
+}
+add_action( 'edd_remove_legacy_logs', 'edd_remove_legacy_logs' );
