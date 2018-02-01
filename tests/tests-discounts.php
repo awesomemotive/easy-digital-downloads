@@ -105,7 +105,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_discount_instantiated() {
 		$this->assertGreaterThan( 0, self::$discount->id );
-		$this->assertInstanceOf( 'EDD_Discount', self::$discount );
 	}
 
 	/**
@@ -770,7 +769,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		);
 
 		$updated_id = edd_store_discount( $post, self::$discount_id );
-		$this->assertInternalType( 'int', $updated_id );
+		$this->assertEquals( $updated_id, self::$discount_id );
 	}
 
 	/**
@@ -792,6 +791,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_discounts_exists() {
 		edd_update_discount_status( self::$discount_id, 'active' );
+
 		$this->assertTrue( edd_has_active_discounts() );
 	}
 
