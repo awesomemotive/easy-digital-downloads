@@ -69,7 +69,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoint()
+	 * @covers ::__call()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
@@ -81,7 +81,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoint()
+	 * @covers ::__call()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
@@ -91,7 +91,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoint()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_should_return_that_endpoint() {
@@ -119,7 +119,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::unregister_endpoint()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_unregister_endpoint_with_invalid_endpoint_id_should_affect_no_change() {
@@ -140,7 +140,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::unregister_endpoint()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_unregister_endpoint_with_valid_endpoint_id_should_unregister_that_endpoint() {
@@ -160,7 +160,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoints()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_no_sort_should_return_endpoints_in_order_of_registration() {
@@ -173,7 +173,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoints()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_invalid_sort_should_return_endpoints_in_order_of_registration() {
@@ -186,7 +186,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoints()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_ID_sort_should_return_endpoints_in_alphabetical_order_by_ID() {
@@ -199,7 +199,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_endpoints()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_priority_sort_should_return_endpoints_in_order_of_priority() {

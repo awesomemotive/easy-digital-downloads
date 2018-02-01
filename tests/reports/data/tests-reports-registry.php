@@ -66,7 +66,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_report()
+	 * @covers ::__call()
 	 */
 	public function test_get_report_with_invalid_report_id_should_return_an_empty_array() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' report does not exist." );
@@ -77,7 +77,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_report()
+	 * @covers ::__call()
 	 */
 	public function test_get_report_with_invalid_report_id_should_throw_an_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' report does not exist." );
@@ -86,7 +86,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_report()
+	 * @covers ::__call()
 	 */
 	public function test_get_report_with_valid_report_id_should_return_that_report() {
 		// Add a test report.
@@ -98,7 +98,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::remove_report()
+	 * @covers ::__call()
 	 */
 	public function test_remove_report_with_invalid_report_should_affect_no_change() {
 		// Add a report.
@@ -113,7 +113,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::remove_report()
+	 * @covers ::__call()
 	 */
 	public function test_remove_report_with_valid_report_should_remove_that_report() {
 		// Add a report.
@@ -193,7 +193,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_reports()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_no_sort_should_return_reports_in_order_of_registration() {
@@ -206,7 +206,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_reports()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_invalid_sort_should_return_reports_in_order_of_registration() {
@@ -219,7 +219,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_reports()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_ID_sort_should_return_reports_in_alphabetical_order_by_ID() {
@@ -232,7 +232,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_reports()
+	 * @covers ::__call()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_priority_sort_should_return_reports_in_order_of_priority() {
