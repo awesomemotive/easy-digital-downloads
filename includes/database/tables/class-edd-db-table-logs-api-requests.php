@@ -1,7 +1,7 @@
 <?php
 
 /**
- * API Request Logs Table: EDD_DB_Table_Log_API_Requests class
+ * API Request Logs Table: EDD_DB_Table_Logs_API_Requests class
  *
  * @package Plugins/EDD/Database/Object
  */
@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'EDD_DB_Table' ) ) :
 	/**
-	 * Setup the global "edd_log_api_requests" database table
+	 * Setup the global "edd_logs_api_requests" database table
 	 *
 	 * @since 3.0.0
 	 */
-	final class EDD_DB_Table_Log_API_Requests extends EDD_DB_Table {
+	final class EDD_DB_Table_Logs_API_Requests extends EDD_DB_Table {
 
 		/**
 		 * Table name
@@ -24,7 +24,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var string
 		 */
-		protected $name = 'edd_log_api_requests';
+		protected $name = 'edd_logs_api_requests';
 
 		/**
 		 * Database version
