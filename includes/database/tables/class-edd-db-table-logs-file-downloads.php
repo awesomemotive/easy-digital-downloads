@@ -33,7 +33,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var int
 		 */
-		protected $version = 201802010001;
+		protected $version = 201802010002;
 
 		/**
 		 * Setup the database schema
@@ -43,17 +43,18 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @return void
 		 */
 		protected function set_schema() {
-			$this->schema = "id bigint(20) UNSIGNED NOT NULL auto_increment,
+			$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 			download_id bigint(20) unsigned NOT NULL default '0',
 			file_id bigint(20) unsigned NOT NULL default '0',
 			payment_id bigint(20) unsigned NOT NULL default '0',
 			price_id bigint(20) unsigned NOT NULL default '0',
 			user_id bigint(20) unsigned NOT NULL default '0',
-			ip varchar(60) DEFAULT NULL,
+			ip varchar(60) NOT NULL default '',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
-			KEY download_id (download_id)";
+			KEY download_id (download_id),
+			KEY date_created (date_created)";
 		}
 
 		/**
