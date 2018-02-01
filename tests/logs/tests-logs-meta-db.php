@@ -8,7 +8,7 @@ namespace EDD\Logs;
  * @group database
  * @group edd_logs
  *
- * @coversDefaultClass \EDD_DB_Logs
+ * @coversDefaultClass \EDD_DB_Log_Meta
  */
 class Logs_Meta_DB_Tests extends \EDD_UnitTestCase {
 
