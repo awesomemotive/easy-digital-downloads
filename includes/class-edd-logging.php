@@ -85,7 +85,7 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Registers the edd_log Post Type
+	 * Registers the edd_log post type.
 	 *
 	 * @since 1.3.1
 	 * @since 3.0.0 Deprecated due to migration to custom tables.
@@ -95,13 +95,10 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Registers the Type Taxonomy
+	 * Register the log type taxonomy.
 	 *
-	 * The "Type" taxonomy is used to determine the type of log entry
-	 *
-	 * @access public
 	 * @since 1.3.1
-	 * @return void
+	 * @since 3.0.0 Deprecated due to migration to custom tables.
 	*/
 	public function register_taxonomy() {
 		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
