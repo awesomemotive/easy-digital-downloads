@@ -1,20 +1,17 @@
 <?php
+
 /**
- * File Download Logs Table: EDD_DB_Table_Logs_File_Downloads class.
+ * File Download Logs Table: EDD_DB_Table_Logs_File_Downloads class
  *
- * @package     EDD
- * @subpackage  Database
- * @copyright   Copyright (c) 2018, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @package Plugins/EDD/Database/Object
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'EDD_DB_Table' ) ) :
 	/**
-	 * Setup the global "edd_logs_file_downloads" database table.
+	 * Setup the global "edd_logs_file_downloads" database table
 	 *
 	 * @since 3.0.0
 	 */
@@ -36,7 +33,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var int
 		 */
-		protected $version = 201801170001;
+		protected $version = 201802010001;
 
 		/**
 		 * Setup the database schema
@@ -52,7 +49,6 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 			payment_id bigint(20) unsigned NOT NULL default '0',
 			price_id bigint(20) unsigned NOT NULL default '0',
 			user_id bigint(20) unsigned NOT NULL default '0',
-			email varchar(100) DEFAULT NULL,
 			ip varchar(60) DEFAULT NULL,
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
