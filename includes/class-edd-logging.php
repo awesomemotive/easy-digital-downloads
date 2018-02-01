@@ -181,12 +181,11 @@ class EDD_Logging {
 	/**
 	 * Stores a log entry.
 	 *
-	 * @access public
 	 * @since 1.3.1
+	 * @since 3.0.0 Updated to use the new database classes as part of the migration to custom tables.
 	 *
 	 * @param array $log_data Log entry data.
 	 * @param array $log_meta Log entry meta.
-	 *
 	 * @return int The ID of the newly created log item.
 	 */
 	public function insert_log( $log_data = array(), $log_meta = array() ) {
@@ -202,8 +201,10 @@ class EDD_Logging {
 
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
-		// Set up variables to hold data to go into the logs table by default
+		// Used to dynamically dispatch the method call to insert() to the correct class.
 		$db_object = 'logs';
+
+		// Set up variables to hold data to go into the logs table by default
 		$data = array (
 			'message'     => $args['post_content'],
 			'object_id'   => $args['post_parent'],
@@ -264,14 +265,12 @@ class EDD_Logging {
 	/**
 	 * Update and existing log item
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @since 3.0 - Added $log_id parameter and boolean return type.
 	 *
 	 * @param array $log_data Log entry data.
 	 * @param array $log_meta Log entry meta.
 	 * @param int   $log_id   Log ID.
-	 *
 	 * @return bool True on success, false otherwise.
 	 */
 	public function update_log( $log_data = array(), $log_meta = array(), $log_id = 0 ) {
@@ -553,14 +552,13 @@ class EDD_Logging {
 	 *
 	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
-	 * @param  mixed  $value       The value get_post_meta would return if we don't filter.
-	 * @param  int    $object_id   The object ID post meta was requested for.
-	 * @param  string $meta_key    The meta key requested.
-	 * @param  bool   $single      If the person wants the single value or an array of the value
-	 * @return mixed               The value to return
+	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
+	 * @param  int    $object_id The object ID post meta was requested for.
+	 * @param  string $meta_key  The meta key requested.
+	 * @param  bool   $single    If the person wants the single value or an array of the value.
+	 * @return mixed  The meta value to return.
 	 */
 	public function _api_request_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
 		global $wpdb;
@@ -644,13 +642,13 @@ class EDD_Logging {
 	 *
 	 * @since 3.0
 	 *
-	 * @param mixed   $check     Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table
+	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with the
+	 *                           postmeta table.
 	 * @param int    $object_id  The object ID post meta was requested for.
 	 * @param string $meta_key   The meta key requested.
 	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
-	 * @param mixed  $prev_value The previous value of the meta
-	 *
-	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta
+	 * @param mixed  $prev_value The previous value of the meta.
+	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
 	 */
 	public function _api_request_log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		global $wpdb;
@@ -737,14 +735,13 @@ class EDD_Logging {
 	 *
 	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
-	 * @param  mixed  $value       The value get_post_meta would return if we don't filter.
-	 * @param  int    $object_id   The object ID post meta was requested for.
-	 * @param  string $meta_key    The meta key requested.
-	 * @param  bool   $single      If the person wants the single value or an array of the value
-	 * @return mixed               The value to return
+	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
+	 * @param  int    $object_id The object ID post meta was requested for.
+	 * @param  string $meta_key  The meta key requested.
+	 * @param  bool   $single    If the person wants the single value or an array of the value.
+	 * @return mixed The meta value to return.
 	 */
 	public function _file_download_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
 		global $wpdb;
@@ -824,7 +821,8 @@ class EDD_Logging {
 	 *
 	 * @since 3.0
 	 *
-	 * @param mixed   $check     Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table
+	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with
+	 *                           the postmeta table.
 	 * @param int    $object_id  The object ID post meta was requested for.
 	 * @param string $meta_key   The meta key requested.
 	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
