@@ -87,26 +87,11 @@ class EDD_Logging {
 	/**
 	 * Registers the edd_log Post Type
 	 *
-	 * @access public
 	 * @since 1.3.1
-	 * @return void
+	 * @since 3.0.0 Deprecated due to migration to custom tables.
 	 */
 	public function register_post_type() {
-		/* Logs post type */
-		$log_args = array(
-			'labels'              => array( 'name' => __( 'Logs', 'easy-digital-downloads' ) ),
-			'public'              => false,
-			'exclude_from_search' => true,
-			'publicly_queryable'  => false,
-			'show_ui'             => false,
-			'query_var'           => false,
-			'rewrite'             => false,
-			'capability_type'     => 'post',
-			'supports'            => array( 'title', 'editor' ),
-			'can_export'          => true,
-		);
-
-		register_post_type( 'edd_log', $log_args );
+		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
 
 	/**
@@ -119,7 +104,7 @@ class EDD_Logging {
 	 * @return void
 	*/
 	public function register_taxonomy() {
-		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
+		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
 
 	/**
