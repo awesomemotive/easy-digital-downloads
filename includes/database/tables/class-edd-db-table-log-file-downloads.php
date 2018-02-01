@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File Download Logs Table: EDD_DB_Table_File_Download_Logs class
+ * File Download Logs Table: EDD_DB_Table_Log_File_Downloads class
  *
  * @package Plugins/EDD/Database/Object
  */
@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'EDD_DB_Table' ) ) :
 	/**
-	 * Setup the global "edd_file_download_logs" database table
+	 * Setup the global "edd_log_file_downloads" database table
 	 *
 	 * @since 3.0.0
 	 */
-	final class EDD_DB_Table_File_Download_Logs extends EDD_DB_Table {
+	final class EDD_DB_Table_Log_File_Downloads extends EDD_DB_Table {
 
 		/**
 		 * Table name
@@ -24,7 +24,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var string
 		 */
-		protected $name = 'edd_file_download_logs';
+		protected $name = 'edd_log_file_downloads';
 
 		/**
 		 * Database version
@@ -33,7 +33,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var int
 		 */
-		protected $version = 201801170001;
+		protected $version = 201802010001;
 
 		/**
 		 * Setup the database schema
