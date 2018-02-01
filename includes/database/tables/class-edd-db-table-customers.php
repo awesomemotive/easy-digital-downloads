@@ -33,7 +33,7 @@ final class EDD_DB_Table_Customers extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801300001;
+	protected $version = 201802010001;
 
 	/**
 	 * Setup the database schema
@@ -52,9 +52,10 @@ final class EDD_DB_Table_Customers extends EDD_DB_Table {
 			payment_ids longtext NOT NULL,
 			notes longtext NOT NULL,
 			date_created datetime NOT NULL,
-			PRIMARY KEY  (id),
+			PRIMARY KEY (id),
 			UNIQUE KEY email (email),
-			KEY user (user_id)";
+			KEY user (user_id),
+			KEY date_created (date_created)";
 	}
 
 	/**
