@@ -496,7 +496,7 @@ class EDD_DB_Discounts extends EDD_DB {
 			$counts = array_fill_keys( array( 'active', 'inactive', 'expired' ), 0 );
 
 			foreach ( $results as $row ) {
-				$counts[ $row['status'] ] = $row['num_discounts'];
+				$counts[ $row['status'] ] = (int) $row['num_discounts'];
 			}
 
 			$counts = (object) $counts;

@@ -137,7 +137,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public function test_get_discounts() {
 		$discounts = EDD()->discounts->get_discounts();
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -157,7 +157,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'number' => 10,
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -168,7 +168,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'offset' => 1,
 		) );
 
-		$this->assertEquals( 1, count( $discounts ) );
+		$this->assertCount( 1, $discounts );
 	}
 
 	/**
@@ -180,7 +180,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'order' => 'asc',
 		) );
 
-		$this->assertEquals( 1, count( $discounts ) );
+		$this->assertCount( 1, $discounts );
 	}
 
 	/**
@@ -247,13 +247,13 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'type' => 'percent',
 		) );
 
-		$this->assertTrue( 1 === count( $discounts ) );
+		$this->assertCount( 1, $discounts );
 
 		$discounts = EDD()->discounts->get_discounts( array(
 			'type' => 'flat',
 		) );
 
-		$this->assertEquals( 1, count( $discounts ) );
+		$this->assertCount( 1, $discounts );
 
 		$discounts = EDD()->discounts->get_discounts( array(
 			'type' => array(
@@ -262,7 +262,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			),
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -273,7 +273,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'status' => 'active',
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -284,7 +284,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -295,7 +295,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -306,7 +306,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -317,7 +317,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'end_date' => '2050-12-31 23:59:59',
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -328,7 +328,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 			'start_date' => '2010-12-12 23:59:59',
 		) );
 
-		$this->assertEquals( 2, count( $discounts ) );
+		$this->assertCount( 2, $discounts );
 	}
 
 	/**
@@ -370,7 +370,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public function test_count_with_expired_status() {
 		$discount_id = EDD_Helper_Discount::created_expired_flat_discount();
 
-		$this->assertEquals( 1, EDD()->discounts->count( array(
+		$this->assertSame( 1, EDD()->discounts->count( array(
 			'status' => 'expired',
 		) ) );
 
@@ -381,7 +381,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count_with_type() {
-		$this->assertEquals( 1, EDD()->discounts->count( array(
+		$this->assertSame( 1, EDD()->discounts->count( array(
 			'type' => 'percent',
 		) ) );
 	}
@@ -390,7 +390,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count_with_date_created() {
-		$this->assertEquals( 2, EDD()->discounts->count( array(
+		$this->assertSame( 2, EDD()->discounts->count( array(
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) ) );
 	}
@@ -399,7 +399,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count_with_start_date() {
-		$this->assertEquals( 2, EDD()->discounts->count( array(
+		$this->assertSame( 2, EDD()->discounts->count( array(
 			'start_date' => '2010-12-12 23:59:59',
 		) ) );
 	}
@@ -408,7 +408,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count_with_end_date() {
-		$this->assertEquals( 2, EDD()->discounts->count( array(
+		$this->assertSame( 2, EDD()->discounts->count( array(
 			'end_date' => '2050-12-31 23:59:59',
 		) ) );
 	}
@@ -419,7 +419,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public function test_counts_by_status_active_discounts() {
 		$counts = EDD()->discounts->counts_by_status();
 
-		$this->assertEquals( 2, $counts->active );
+		$this->assertSame( 2, $counts->active );
 	}
 
 	/**
@@ -428,7 +428,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public function test_counts_by_status_inactive_discounts() {
 		$counts = EDD()->discounts->counts_by_status();
 
-		$this->assertEquals( 0, $counts->inactive );
+		$this->assertSame( 0, $counts->inactive );
 	}
 
 	/**
@@ -437,7 +437,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public function test_counts_by_status_expired_discounts() {
 		$counts = EDD()->discounts->counts_by_status();
 
-		$this->assertEquals( 0, $counts->expired );
+		$this->assertSame( 0, $counts->expired );
 	}
 
 }
