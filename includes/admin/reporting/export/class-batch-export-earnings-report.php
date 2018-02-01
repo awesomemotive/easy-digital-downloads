@@ -51,6 +51,67 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	}
 
 	/**
+	 * Get the column headers for the Earnings Report
+	 *
+	 * @since 2.8.18
+	 * @return array
+	 */
+	public function get_csv_cols() {
+
+		// Always start with the date column.
+		$pre_status_columns = array(
+			__( 'Monthly Sales Activity', 'easy-digital-downloads' ),
+			__( 'Gross Activity', 'easy-digital-downloads' ),
+		);
+
+		$status_cols = $this->get_status_cols();
+
+		// Append the arrays together so it starts with the date, then include the status list.
+		$cols = array_merge( $pre_status_columns, $status_cols );
+
+		// Include the 'net' after all other columns.
+		$cols[] = __( 'Net Activity', 'easy-digital-downloads' );
+
+		return $cols;
+
+	}
+
+	/**
+	 * Specifically retrieve the headers for supported order statuses.
+	 *
+	 * @since 2.8.18
+	 * @return array
+	 */
+	public function get_status_cols() {
+		$status_cols        = edd_get_payment_statuses();
+		$supported_statuses = $this->get_supported_statuses();
+
+		foreach ( $status_cols as $id => $label ) {
+			if ( ! in_array( $id, $supported_statuses ) ) {
+				unset( $status_cols[ $id ] );
+			}
+		}
+
+		return array_values( $status_cols );
+	}
+
+	/**
+	 * Get a list of the statuses supported in this report.
+	 *
+	 * @since 2.8.18
+	 * @return array The status keys supported (not Labels)
+	 */
+	public function get_supported_statuses() {
+		$statuses = edd_get_payment_statuses();
+
+		// Unset a few statuses we don't need in the report:
+		unset( $statuses['pending'], $statuses['processing'], $statuses['preapproval'] );
+		$supported_statuses = array_keys( $statuses );
+
+		return apply_filters( 'edd_export_earnings_supported_statuses', $supported_statuses );
+	}
+
+	/**
 	 * Output the CSV columns.
 	 *
 	 * We make use of this function to set up the header of the earnings report.
@@ -61,17 +122,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * @return array $cols CSV header.
 	 */
 	public function print_csv_cols() {
-		$cols = array(
-			__( 'Monthly Sales Activity', 'easy-digital-downloads' ),
-			__( 'Sales', 'easy-digital-downloads' ),
-			__( 'Refunds', 'easy-digital-downloads' ),
-			__( 'Revoked', 'easy-digital-downloads' ),
-			__( 'Abandoned', 'easy-digital-downloads' ),
-			__( 'Failed', 'easy-digital-downloads' ),
-			__( 'Cancelled', 'easy-digital-downloads' ),
-			__( 'Net Activity', 'easy-digital-downloads' )
-		);
-
+		$cols     = $this->get_csv_cols();
 		$col_data = '';
 
 		for ( $i = 0; $i < count( $cols ); $i++ ) {
@@ -90,19 +141,19 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			}
 		}
 
-		// Subtract 2 for `Net Activity` and `Monthly Sales Activity` column
-		$statuses = count( $cols ) - 2;
+		$statuses    = $this->get_supported_statuses();
+		$number_cols = count( $statuses ) + 2;
 
 		$col_data .= ',';
-		for ( $i = 0; $i < $statuses; $i++ ) {
-			$col_data .= __( 'Count', 'easy-digital-downloads' ) . ',' . __( 'Gross Amount', 'easy-digital-downloads' );
+		for ( $i = 1; $i <= $number_cols; $i++ ) {
+			$col_data .= __( 'Order Count', 'easy-digital-downloads' ) . ',';
+			$col_data .= __( 'Gross Amount', 'easy-digital-downloads' );
 
-			if ( $i == ( $statuses - 1 ) ) {
-				$col_data .= "\r\n";
-			} else {
-				$col_data .= ",";
+			if ( $number_cols !== $i ) {
+				$col_data .= ',';
 			}
 		}
+		$col_data .= "\r\n";
 
 		$this->stash_step_data( $col_data );
 
@@ -144,30 +195,40 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 				}
 			}
 
-			$row_data .= isset( $data['publish']['count'] ) ? $data['publish']['count'] . ',' : 0 . ',';
+			$supported_statuses = $this->get_supported_statuses();
 
-			$publish_total   = isset( $data['publish']['amount']   ) ? $data['publish']['amount'] : 0;
-			$refunded_total  = isset( $data['refunded']['amount']  ) ? $data['refunded']['amount'] : 0;
-			$cancelled_total = isset( $data['cancelled']['amount'] ) ? $data['cancelled']['amount'] : 0;
+			$gross_count  = 0;
+			$gross_amount = 0;
+			foreach ( $supported_statuses as $status ) {
+				$gross_count  += absint( $data[ $status ]['count'] );
+				$gross_amount += $data[ $status ]['amount'];
+			}
 
-			$row_data .= '"' . edd_format_amount( $publish_total + $refunded_total + $cancelled_total ) . '",';
+			$row_data .= $gross_count . ',';
+			$row_data .= '"' . edd_format_amount( $gross_amount ) . '",';
 
-			$row_data .= isset( $data['refunded']['count'] ) ? $data['refunded']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['refunded']['amount'] ) ? '"-' . edd_format_amount( $data['refunded']['amount'] ) . '"' . ',' : 0 . ',';
+			foreach ( $data as $status => $status_data ) {
+				$row_data .= isset( $data[ $status ]['count'] ) ? $data[ $status ]['count'] . ',' : 0 . ',';
 
-			$row_data .= isset( $data['revoked']['count'] ) ? $data['revoked']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['revoked']['amount'] ) ? '"' . edd_format_amount( $data['revoked']['amount'] ) . '"' . ',' : 0 . ',';
+				$column_amount = isset( $data[ $status ]['amount'] ) ? edd_format_amount( $data[ $status ]['amount'] ) : 0;
+				if ( ! empty( $column_amount ) && 'refunded' == $status ) {
+					$column_amount = '-' . $column_amount;
+				}
 
-			$row_data .= isset( $data['abandoned']['count'] ) ? $data['abandoned']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['abandoned']['amount'] ) ? '"' . edd_format_amount( $data['abandoned']['amount'] ) . '"' . ',' : 0 . ',';
+				$row_data .= isset( $data[ $status ]['amount'] ) ? '"' . $column_amount . '"' . ',' : 0 . ',';
+			}
 
-			$row_data .= isset( $data['failed']['count'] ) ? $data['failed']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['failed']['amount'] ) ? '"' . edd_format_amount( $data['failed']['amount'] ) . '"' . ',' : 0 . ',';
+			// Allows extensions with other 'completed' statuses to alter net earnings, like recurring.
+			$completed_statuses = apply_filters( 'edd_export_earnings_completed_statuses', array( 'publish', 'revoked' ) );
 
-			$row_data .= isset( $data['cancelled']['count'] ) ? $data['cancelled']['count'] . ',' : 0 . ',';
-			$row_data .= isset( $data['cancelled']['amount'] ) ? '"' . edd_format_amount( $data['cancelled']['amount'] ) . '"' . ',' : 0 . ',';
-
-			$row_data .= isset( $data['publish']['amount'] ) ? '"' . edd_format_amount( $data['publish']['amount'] ) . '"' . ',' : 0;
+			$net_count  = 0;
+			$net_amount = 0;
+			foreach ( $completed_statuses as $status ) {
+				$net_count  += absint( $data[ $status ]['count'] );
+				$net_amount += floatval( $data[ $status ]['amount'] );
+			}
+			$row_data .= $net_count . ',';
+			$row_data .= '"' . edd_format_amount( $net_amount ) . '"';
 
 			$row_data .= "\r\n";
 
@@ -192,22 +253,21 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 		$data = array();
 
-		$start_date = date( 'Y-m-d', strtotime( $this->start ) );
-		$maybe_end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
+		$start_date = date( 'Y-m-d 00:00:00', strtotime( $this->start ) );
 
 		if ( $this->count() == 0 ) {
-			$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+			$end_date = date( 'Y-m-d 23:59:59', strtotime( $this->end ) );
 		} else {
-			$end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
+			$end_date = date( 'Y-m-d 23:59:59', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
 		}
 
 		if ( $this->step > 1 ) {
-			$start_date = date( 'Y-m-d', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
+			$start_date = date( 'Y-m-d 00:00:00', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
 
 			if ( date( 'Y-m', strtotime( $start_date ) ) == date( 'Y-m', strtotime( $this->end ) ) ) {
-				$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+				$end_date = date( 'Y-m-d 23:59:59', strtotime( $this->end ) );
 			} else {
-				$end_date = date( 'Y-m-d', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
+				$end_date = date( 'Y-m-d 23:59:59', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
 			}
 		}
 
@@ -215,8 +275,9 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			return false;
 		}
 
-		$totals = $wpdb->get_results( $wpdb->prepare(
-			"SELECT SUM(meta_value) AS total, DATE_FORMAT(posts.post_date, '%%m') AS m, YEAR(posts.post_date) AS y, COUNT(DISTINCT posts.ID) AS count, posts.post_status AS status
+		$statuses = $this->get_supported_statuses();
+		$totals   = $wpdb->get_results( $wpdb->prepare(
+			"SELECT SUM(meta_value) AS total, COUNT(DISTINCT posts.ID) AS count, posts.post_status AS status
 			 FROM {$wpdb->posts} AS posts
 			 INNER JOIN {$wpdb->postmeta} ON posts.ID = {$wpdb->postmeta}.post_ID
 			 WHERE posts.post_type IN ('edd_payment')
@@ -226,36 +287,32 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
 			 ORDER by posts.post_date ASC", $start_date, $end_date ), ARRAY_A );
 
-		foreach ( $totals as $total ) {
-			$data[ $total['status'] ] = array(
-				'count' => $total['count'],
-				'amount' => $total['total']
+		$total_data = array();
+		foreach ( $totals as $row ) {
+			$total_data[ $row['status'] ] = array(
+				'count'  => $row['count'],
+				'amount' => $row['total']
 			);
 		}
 
-		if ( empty( $data ) ) {
-			$data = array(
-				'publish' => array(
-					'count' => 0,
-					'amount' => 0
-				),
-				'refunded' => array(
-					'count' => 0,
-					'amount' => 0
-				),
-				'cancelled' => array(
-					'count' => 0,
-					'amount' => 0
-				),
-				'revoked' => array(
-					'count' => 0,
-					'amount' => 0
-				),
-			);
+		foreach ( $statuses as $status ) {
+
+			if ( ! isset( $total_data[ $status ] ) ) {
+				$data[ $status ] = array(
+					'count'  => 0,
+					'amount' => 0,
+				);
+			} else {
+				$data[ $status ] = array(
+					'count'  => $total_data[ $status ]['count'],
+					'amount' => $total_data[ $status ]['amount'],
+				);
+			}
+
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
-		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data, $start_date, $end_date );
 
 		return $data;
 	}
