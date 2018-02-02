@@ -263,10 +263,14 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-item-meta.php';
 
 		// Database Table Query Interfaces
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-wp-db-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-column.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-customer-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-discount-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-log-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-log-api-request-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-log-file-download-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-note-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-item-query.php';
@@ -288,7 +292,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
