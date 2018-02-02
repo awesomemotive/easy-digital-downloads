@@ -211,6 +211,12 @@ class EDD_DB_Logs extends EDD_DB {
 			unset( $args['paged'] );
 		}
 
+		// Account for 'log_type' in legacy args
+		if ( isset( $args['log_type'] ) ) {
+			$args['type'] = $args['log_type'];
+			unset( $args['log_type'] );
+		}
+
 		$args = wp_parse_args( $args, $defaults );
 
 		if ( $args['number'] < 1 ) {
