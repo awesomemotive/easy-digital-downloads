@@ -258,6 +258,10 @@ class EDD_DB_Logs extends EDD_DB {
 					LIMIT %d,%d;
 				", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
 
+			if ( array_key_exists( 'fields', $args ) && 'ids' === $args['fields'] ) {
+				return $logs;
+			}
+
 			if ( ! empty( $logs ) ) {
 				foreach ( $logs as $key => $log ) {
 					$logs[ $key ] = new EDD\Logs\Log( $log );
