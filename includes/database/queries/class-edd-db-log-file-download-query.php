@@ -27,7 +27,7 @@ class EDD_Log_File_Download_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'edd_logs_file_downloads';
+	public $table_name = 'logs_file_downloads';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -65,7 +65,7 @@ class EDD_Log_File_Download_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = 'edd_get_log_file_download';
+	public $single_item_callback = 'get_log_file_download';
 
 	/** Cache *****************************************************************/
 
