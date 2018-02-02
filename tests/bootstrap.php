@@ -45,4 +45,4 @@ require_once 'helpers/shims.php';
 require_once 'helpers/class-helper-download.php';
 require_once 'helpers/class-helper-payment.php';
 require_once 'helpers/class-helper-discount.php';
-require_once 'helpers/class-edd-unittestcase.php';
+require_once 'phpunit/class-edd-unittestcase.php';
