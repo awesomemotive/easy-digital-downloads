@@ -239,8 +239,12 @@ class EDD_DB_Logs extends EDD_DB {
 		$args['order']   = esc_sql( $args['order'] );
 
 		$join = '';
-		if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
-			$join = 'INNER JOIN ' . EDD()->log_meta->table_name . ' ON ( ' . EDD()->logs->table_name . '.id = ' . EDD()->log_meta->table_name . '.edd_log_id )';
+
+		// Join meta tables if meta query exists.
+		if ( array_key_exists( 'meta_query', $args ) && ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
+			$meta_query = new WP_Meta_Query( $args['meta_query'] );
+			$clauses = $meta_query->get_sql( 'edd_log', EDD()->logs->table_name, 'id', $this );
+			$join = $clauses['join'];
 		}
 
 		if ( false === $logs ) {
