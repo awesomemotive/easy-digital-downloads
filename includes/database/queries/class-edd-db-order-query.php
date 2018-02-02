@@ -27,7 +27,7 @@ class EDD_Order_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'edd_orders';
+	public $table_name = 'orders';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -65,7 +65,7 @@ class EDD_Order_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = 'edd_get_order';
+	public $single_item_callback = '';
 
 	/** Cache *****************************************************************/
 

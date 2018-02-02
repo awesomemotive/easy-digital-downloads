@@ -27,7 +27,7 @@ class EDD_Note_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'edd_notes';
+	public $table_name = 'notes';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -65,7 +65,7 @@ class EDD_Note_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = 'edd_get_note';
+	public $single_item_callback = '';
 
 	/** Cache *****************************************************************/
 
