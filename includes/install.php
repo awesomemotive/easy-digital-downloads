@@ -249,10 +249,11 @@ add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
 /**
  * Drop our custom tables when a mu site is deleted
  *
- * @since  2.5
- * @param  array $tables  The tables to drop
- * @param  int   $blog_id The Blog ID being deleted
- * @return array          The tables to drop
+ * @deprecated 3.0   Handled by WP_DB_Table
+ * @since      2.5
+ * @param      array $tables  The tables to drop
+ * @param      int   $blog_id The Blog ID being deleted
+ * @return     array          The tables to drop
  */
 function edd_wpmu_drop_tables( $tables, $blog_id ) {
 
@@ -266,9 +267,7 @@ function edd_wpmu_drop_tables( $tables, $blog_id ) {
 	restore_current_blog();
 
 	return $tables;
-
 }
-add_filter( 'wpmu_drop_tables', 'edd_wpmu_drop_tables', 10, 2 );
 
 /**
  * Post-installation
