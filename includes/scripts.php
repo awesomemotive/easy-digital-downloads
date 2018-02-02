@@ -190,6 +190,12 @@ function edd_load_admin_scripts( $hook ) {
 		$admin_deps = array( 'jquery', 'jquery-form' );
 	}
 
+	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $suffix . '.js', array(), EDD_VERSION, false );
+
+	if ( edd_is_admin_page( $hook, 'reports' ) ) {
+		$admin_deps[] = 'edd-chart-js';
+	}
+
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
 
 	wp_enqueue_script( 'edd-admin-scripts' );
@@ -261,7 +267,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_media();
 
 	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
-	wp_enqueue_script( 'jquery-flot' );
+//	wp_enqueue_script( 'jquery-flot' );
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
