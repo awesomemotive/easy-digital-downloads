@@ -16,6 +16,6 @@ class Factory extends \WP_UnitTest_Factory {
 	public function __construct() {
 		parent::__construct();
 
-		$this->discount = Factory\Discount( $this );
+		$this->discount = new Factory\Discount( $this );
 	}
 }
