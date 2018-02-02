@@ -227,6 +227,31 @@ class EDD_DB_Discounts extends EDD_DB {
 			'order'   => 'DESC',
 		);
 
+		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
+		$old = array(
+			'uses'               => 'use_count',
+			'max'                => 'max_uses',
+			'start'              => 'start_date',
+			'expiration'         => 'end_date',
+			'min_price'          => 'min_cart_price',
+			'excluded-products'  => 'excluded_products',
+			'is_not_global'      => 'scope',
+			'is_single_use'      => 'once_per_customer',
+		);
+
+		// Convert legacy arguments
+		foreach ( $old as $old_key => $new_key ) {
+			if ( isset( $args[ $old_key ] ) ) {
+				if ( $old_key == 'is_not_global' ) {
+					$args[ $new_key ] = $args[ $old_key ] ? 'not_global' : 'global';
+				} else {
+					$args[ $new_key ] = $args[ $old_key ];
+				}
+
+				unset( $args[ $old_key ] );
+			}
+		}
+
 		// Account for 'paged' in legacy $args
 		if ( isset( $args['paged'] ) && $args['paged'] > 1 ) {
 			$number         = isset( $args['number'] ) ? $args['number'] : $defaults['number'];
@@ -269,6 +294,11 @@ class EDD_DB_Discounts extends EDD_DB {
 					LIMIT %d,%d;
 				", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
 
+			echo "SELECT id
+					FROM $this->table_name
+					$where
+					ORDER BY {$args['orderby']} {$args['order']}";
+
 			if ( ! empty( $discounts ) ) {
 				foreach ( $discounts as $key => $discount ) {
 					$discounts[ $key ] = new EDD_Discount( $discount );
@@ -308,7 +338,6 @@ class EDD_DB_Discounts extends EDD_DB {
 
 		// Specific types
 		if ( ! empty( $args['type'] ) ) {
-
 			if ( is_array( $args['type'] ) ) {
 				$types = implode( "','", array_map( 'sanitize_text_field', $args['type'] ) );
 			} else {
@@ -316,12 +345,10 @@ class EDD_DB_Discounts extends EDD_DB {
 			}
 
 			$where .= " AND `type` IN( '{$types}' ) ";
-
 		}
 
 		// Specific statuses
 		if ( ! empty( $args['status'] ) ) {
-
 			if ( is_array( $args['status'] ) ) {
 				$statuses = implode( "','", array_map( 'sanitize_text_field', $args['status'] ) );
 			} else {
@@ -329,64 +356,42 @@ class EDD_DB_Discounts extends EDD_DB {
 			}
 
 			$where .= " AND `status` IN( '{$statuses}' ) ";
-
 		}
 
 		// Created for a specific date or in a date range
 		if ( ! empty( $args['date_created'] ) ) {
-
 			if ( is_array( $args['date_created'] ) ) {
-
 				if ( ! empty( $args['date_created']['start'] ) ) {
-
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['start'] ) );
-
 					$where .= " AND `date_created` >= '{$start}'";
-
 				}
 
 				if ( ! empty( $args['date_created']['end'] ) ) {
-
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['date_created']['end'] ) );
-
 					$where .= " AND `date_created` <= '{$end}'";
-
 				}
-
 			} else {
-
 				$year  = date( 'Y', strtotime( $args['date_created'] ) );
 				$month = date( 'm', strtotime( $args['date_created'] ) );
 				$day   = date( 'd', strtotime( $args['date_created'] ) );
 
 				$where .= " AND $year = YEAR ( date_created ) AND $month = MONTH ( date_created ) AND $day = DAY ( date_created )";
 			}
-
 		}
 
-		// Specific pend_date date
+		// Specific end_date date
 		if ( ! empty( $args['end_date'] ) ) {
-
 			if ( is_array( $args['end_date'] ) ) {
-
 				if ( ! empty( $args['end_date']['start'] ) ) {
-
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['end_date']['start'] ) );
-
 					$where .= " AND `end_date` >= '{$start}'";
-
 				}
 
 				if ( ! empty( $args['end_date']['end'] ) ) {
-
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['end_date']['end'] ) );
-
 					$where .= " AND `end_date` <= '{$end}'";
-
 				}
-
 			} else {
-
 				$year  = date( 'Y', strtotime( $args['end_date'] ) );
 				$month = date( 'm', strtotime( $args['end_date'] ) );
 				$day   = date( 'd', strtotime( $args['end_date'] ) );
@@ -398,34 +403,23 @@ class EDD_DB_Discounts extends EDD_DB {
 
 		// Specific paid date or in a paid date range
 		if ( ! empty( $args['start_date'] ) ) {
-
 			if ( is_array( $args['start_date'] ) ) {
-
 				if ( ! empty( $args['start_date']['start'] ) ) {
-
 					$start_date = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['start'] ) );
-
 					$where .= " AND `start_date` >= '{$start_date}'";
-
 				}
 
 				if ( ! empty( $args['start_date']['end'] ) ) {
-
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['start_date']['end'] ) );
-
 					$where .= " AND `start_date` <= '{$end}'";
-
 				}
-
 			} else {
-
 				$year  = date( 'Y', strtotime( $args['start_date'] ) );
 				$month = date( 'm', strtotime( $args['start_date'] ) );
 				$day   = date( 'd', strtotime( $args['start_date'] ) );
 
 				$where .= " AND $year = YEAR ( start_date ) AND $month = MONTH ( start_date ) AND $day = DAY ( start_date )";
 			}
-
 		}
 
 		// Specific search query

@@ -20,11 +20,38 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	protected static $discounts;
 
 	public static function wpSetUpBeforeClass() {
-		$discount_id       = EDD_Helper_Discount::create_simple_flat_discount();
-		self::$discounts[] = new EDD_Discount( $discount_id );
+		$args = array(
+			array(
+				'code'              => '10FLAT',
+				'uses'              => 0,
+				'max'               => 10,
+				'name'              => '$10 Off',
+				'type'              => 'flat',
+				'amount'            => '10',
+				'start'             => '12/12/2010 00:00:00',
+				'expiration'        => '12/31/2050 23:59:59',
+				'min_price'         => 128,
+				'status'            => 'active',
+				'product_condition' => 'all'
+			),
+			array(
+				'code'              => '20OFF',
+				'uses'              => 54,
+				'max'               => 10,
+				'name'              => '20 Percent Off',
+				'type'              => 'percent',
+				'amount'            => '20',
+				'start'             => '12/12/2010 00:00:00',
+				'expiration'        => '12/31/2050 23:59:59',
+				'min_price'         => 128,
+				'status'            => 'active',
+				'product_condition' => 'all'
+			)
+		);
 
-		$discount_id = EDD_Helper_Discount::create_simple_percent_discount();
-		self::$discounts[] = new EDD_Discount( $discount_id );
+		foreach ( $args as $arg ) {
+			self::$discounts[] = parent::edd()->discount->create( $arg );
+		}
 	}
 
 	/**
@@ -95,7 +122,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::update()
 	 */
 	public function test_update() {
-		$success = EDD()->discounts->update( self::$discounts[0]->code, array(
+		$success = EDD()->discounts->update( self::$discounts[0], array(
 			'code' => 'NEWCODE',
 		) );
 
@@ -117,7 +144,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::delete()
 	 */
 	public function test_delete_should_return_true() {
-		$success = EDD()->discounts->delete( self::$discounts[0]->code );
+		$success = EDD()->discounts->delete( self::$discounts[0] );
 
 		$this->assertTrue( $success );
 	}
@@ -324,6 +351,8 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_start_date() {
+		global $wpdb;
+
 		$discounts = EDD()->discounts->get_discounts( array(
 			'start_date' => '2010-12-12 23:59:59',
 		) );
