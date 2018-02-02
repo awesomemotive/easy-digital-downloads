@@ -113,7 +113,8 @@ function get_endpoint_views() {
 			),
 		),
 		'graph' => array(
-			'group' => 'graphs',
+			'group'   => 'graphs',
+			'handler' => 'EDD\Reports\Data\Graph_Endpoint',
 		),
 	);
 }
