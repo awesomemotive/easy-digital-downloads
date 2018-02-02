@@ -28,6 +28,22 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * Delete all data once tests have completed.
+	 */
+	public static function wpTearDownAfterClass() {
+		global $wpdb;
+
+		foreach ( array(
+			EDD()->logs->table_name,
+			EDD()->log_meta->table_name,
+			EDD()->file_download_logs->table_name,
+			EDD()->api_request_logs->table_name,
+		) as $table ) {
+			$wpdb->query( "DELETE FROM {$table}" );
+		}
+	}
+
+	/**
 	 * @covers \EDD_DB_Logs::get_columns()
 	 */
 	public function test_get_columns_should_return_all_columns() {

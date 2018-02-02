@@ -22,8 +22,6 @@ class Logs_Meta_DB_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Set up fixtures.
-	 *
-	 * @access public
 	 */
 	public static function wpSetUpBeforeClass() {
 		$log_id = EDD()->logs->insert( array(
@@ -34,6 +32,22 @@ class Logs_Meta_DB_Tests extends \EDD_UnitTestCase {
 		) );
 
 		self::$log = new Log( $log_id );
+	}
+
+	/**
+	 * Delete all data once tests have completed.
+	 */
+	public static function wpTearDownAfterClass() {
+		global $wpdb;
+
+		foreach ( array(
+			EDD()->logs->table_name,
+			EDD()->log_meta->table_name,
+			EDD()->file_download_logs->table_name,
+			EDD()->api_request_logs->table_name,
+		) as $table ) {
+			$wpdb->query( "DELETE FROM {$table}" );
+		}
 	}
 
 	/**
