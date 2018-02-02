@@ -150,6 +150,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			}
 		} else {
 			// Download specific earning stats
+			/** @var EDD_Logging $edd_logs */
 			global $edd_logs, $wpdb;
 
 			$args = array(
