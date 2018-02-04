@@ -953,6 +953,20 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 
  * @return void
  */
 function edd_render_dowwn_tax_options( $post_id = 0 ) {
+	edd_render_down_tax_options( $post_id );
+}
+
+/**
+ * Product tax settings
+ *
+ * Outputs the option to mark whether a product is exclusive of tax
+ *
+ * @since 1.9
+ * @since 2.8.12 Fixed miss-spelling in function name. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5101
+ * @param int $post_id Download (Post) ID
+ * @return void
+ */
+function edd_render_down_tax_options( $post_id = 0 ) {
 	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() ) {
 		return;
 	}
@@ -969,7 +983,7 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 	</label>
 <?php
 }
-add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 );
+add_action( 'edd_meta_box_settings_fields', 'edd_render_down_tax_options', 30 );
 
 /**
  * Product quantity settings

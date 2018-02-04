@@ -23,10 +23,10 @@ function edd_reports_graph() {
 	$dates = edd_get_report_dates();
 
 	// Determine graph options
-	switch ( $dates['range'] ) :
+	switch ( $dates['range'] ) {
 		case 'today' :
 		case 'yesterday' :
-			$day_by_day	= true;
+			$day_by_day = true;
 			break;
 		case 'last_year' :
 		case 'this_year' :
@@ -48,7 +48,7 @@ function edd_reports_graph() {
 		default:
 			$day_by_day = true;
 			break;
-	endswitch;
+	}
 
 	$earnings_totals = 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;    // Total sales for time period shown
@@ -415,25 +415,23 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	$dates = edd_get_report_dates();
 
 	// Determine graph options
-	switch ( $dates['range'] ) :
+	switch ( $dates['range'] ) {
 		case 'today' :
 		case 'yesterday' :
-			$day_by_day	= true;
+			$day_by_day = true;
 			break;
 		case 'last_year' :
-			$day_by_day	= false;
-			break;
 		case 'this_year' :
-			$day_by_day	= false;
+			$day_by_day = false;
 			break;
 		case 'last_quarter' :
-			$day_by_day = false;
-			break;
 		case 'this_quarter' :
-			$day_by_day = false;
+			$day_by_day = true;
 			break;
 		case 'other' :
-			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
+			if ( $dates['m_start'] == 12 && $dates['m_end'] == 1 ) {
+				$day_by_day = true;
+			} elseif ( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -442,7 +440,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 		default:
 			$day_by_day = true;
 			break;
-	endswitch;
+	}
 
 	$earnings_totals = (float) 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;            // Total sales for time period shown
@@ -544,6 +542,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					if ( $month_start < $month_end ) {
 						$d = 1;
 					}
+				} elseif ( $i > $month_start && $i < $month_end ) {
+					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
+					$d = 1;
 				} else {
 					$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 				}

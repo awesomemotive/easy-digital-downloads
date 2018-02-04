@@ -145,7 +145,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$gateways[ $slug ] = $admin_label['admin_label'];
 			}
 		}
-?>
+
+		/**
+		 * Allow gateways that aren't registered the standard way to be displayed in the dropdown.
+		 *
+		 * @since 2.8.11
+		 */
+		$gateways = apply_filters( 'edd_payments_table_gateways', $gateways );
+		?>
 		<div id="edd-payment-filters">
 			<span id="edd-payment-date-filters">
 				<span>
@@ -598,6 +605,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 		$gateway    = isset( $_GET['gateway'] )     ? sanitize_text_field( $_GET['gateway'] )    : null;
+
+		/**
+		 * Introduced as part of #6063. Allow a gateway to specified based on the context.
+		 *
+		 * @see   https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6063
+		 * @since 2.8.11
+		 *
+		 * @param string $gateway
+		 */
+		$gateway = apply_filters( 'edd_payments_table_search_gateway', $gateway );
 
 		if( ! empty( $search ) ) {
 			$status = 'any'; // Force all payment statuses when searching

@@ -262,9 +262,13 @@ function edd_process_download() {
 
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 
-					// We need a path relative to the domain
-					$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
-					header( "X-Accel-Redirect: /$file_path" );
+					$ignore_x_accel_redirect_header = apply_filters( 'edd_ignore_x_accel_redirect', false );
+
+					if ( ! $ignore_x_accel_redirect_header ) {
+						// We need a path relative to the domain
+						$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
+						header( "X-Accel-Redirect: /$file_path" );
+					}
 
 				}
 
