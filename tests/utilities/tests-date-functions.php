@@ -22,7 +22,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_date_i18n()
-	 * @group dates
 	 */
 	public function test_date_i18n_with_timestamp_and_no_format_should_return_localized_date_in_date_format() {
 		$expected = gmdate( get_option( 'date_format', '' ), strtotime( '01/02/2003' ) );
@@ -33,7 +32,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_date_i18n()
-	 * @group dates
 	 */
 	public function test_date_i18n_with_empty_format_should_return_localized_date_in_date_format() {
 		$expected = gmdate( get_option( 'date_format', '' ), strtotime( '01/02/2003' ) );
@@ -44,7 +42,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_date_i18n()
-	 * @group dates
 	 */
 	public function test_date_i18n_with_invalid_timestamp_and_no_format_should_return_1970() {
 		$this->assertSame( 'January 1, 1970', edd_date_i18n( 'foo' ) );
@@ -52,7 +49,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_date_i18n()
-	 * @group dates
 	 */
 	public function test_date_i18n_invalid_timestamp_and_format_should_return_1970_and_respect_format() {
 		$this->assertSame( 'January 1, 1970 12:00 am', edd_date_i18n( 'foo', 'datetime' ) );
@@ -60,7 +56,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_timezone()
-	 * @group dates
 	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {
 		$this->assertSame( 'America/New_York', edd_get_timezone() );
@@ -68,7 +63,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_date_format()
-	 * @group dates
 	 */
 	public function test_get_date_format_empty_format_should_default_to_date_format() {
 		$this->assertSame( get_option( 'date_format', '' ), edd_get_date_format( '' ) );
@@ -76,7 +70,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_date_format()
-	 * @group dates
 	 */
 	public function test_get_date_format_date_should_return_date_format_value() {
 		$this->assertSame( get_option( 'date_format', '' ), edd_get_date_format( 'date' ) );
@@ -84,7 +77,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_date_format()
-	 * @group dates
 	 */
 	public function test_get_date_format_time_should_return_time_format_value() {
 		$this->assertSame( get_option( 'time_format', '' ), edd_get_date_format( 'time' ) );
@@ -92,7 +84,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_date_format()
-	 * @group dates
 	 */
 	public function test_get_date_format_datetime_should_return_date_and_time_format_values() {
 		$expected = get_option( 'date_format', '' ) . ' ' . get_option( 'time_format', '' );
@@ -102,7 +93,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_date_format()
-	 * @group dates
 	 */
 	public function test_get_date_format_mysql_should_return_mysql_format() {
 		$this->assertSame( 'Y-m-d H:i:s', edd_get_date_format( 'mysql' ) );
@@ -110,7 +100,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_date_format()
-	 * @group dates
 	 */
 	public function test_get_date_format_non_shorthand_format_should_return_that_format() {
 		$this->assertSame( 'm/d/Y', edd_get_date_format( 'm/d/Y' ) );
