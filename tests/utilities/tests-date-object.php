@@ -30,7 +30,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::__construct()
-	 * @group dates
 	 */
 	public function test_Date_should_extend_DateTime() {
 		$this->assertInstanceOf( 'DateTime', $this->get_date_instance() );
@@ -38,7 +37,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::__construct()
-	 * @group dates
 	 */
 	public function test_Date_should_always_convert_date_to_WordPress_time() {
 		$date     = $this->get_date_instance();
@@ -49,7 +47,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_empty_format_should_use_datetime_shorthand_format() {
 		$date     = $this->get_date_instance();
@@ -60,7 +57,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_true_format_should_use_datetime_shorthand_format() {
 		$date     = $this->get_date_instance();
@@ -71,7 +67,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_date_should_use_date_shorthand_format() {
 		$date     = $this->get_date_instance();
@@ -82,7 +77,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_time_should_use_time_shorthand_format() {
 		$date     = $this->get_date_instance();
@@ -93,7 +87,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_mysql_should_use_mysql_shorthand_format() {
 		$date     = $this->get_date_instance();
@@ -104,7 +97,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_object_should_return_Date_object() {
 		$date = $this->get_date_instance();
@@ -114,7 +106,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_timestamp_should_return_original_timestamp() {
 		$date = $this->get_date_instance();
@@ -124,7 +115,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_wp_timestamp_should_return_WP_timestamp() {
 		$date     = $this->get_date_instance();
@@ -135,7 +125,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::format()
-	 * @group dates
 	 */
 	public function test_format_generic_date_format_should_format_with_that_scheme() {
 		$date     = $this->get_date_instance();
@@ -146,7 +135,6 @@ class Date_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::getWPTimestamp()
-	 * @group dates
 	 */
 	public function test_getWPTimestamp_should_return_timestamp_with_offset_applied() {
 		$date     = $this->get_date_instance();
