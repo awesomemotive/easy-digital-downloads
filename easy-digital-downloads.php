@@ -258,6 +258,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-file-downloads.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-items.php';
@@ -403,26 +405,28 @@ final class Easy_Digital_Downloads {
 		return array(
 
 			// Customers
-			'customers'      => new EDD_DB_Table_Customers(),
-			'customermeta'   => new EDD_DB_Table_Customer_Meta(),
+			'customers'           => new EDD_DB_Table_Customers(),
+			'customermeta'        => new EDD_DB_Table_Customer_Meta(),
 
 			// Discounts
-			'discounts'      => new EDD_DB_Table_Discounts(),
-			'discountmeta'   => new EDD_DB_Table_Discount_Meta(),
+			'discounts'           => new EDD_DB_Table_Discounts(),
+			'discountmeta'        => new EDD_DB_Table_Discount_Meta(),
 
 			// Logs
-			'logs'           => new EDD_DB_Table_Logs(),
-			'logmeta'        => new EDD_DB_Table_Log_Meta(),
+			'logs'                => new EDD_DB_Table_Logs(),
+			'logmeta'             => new EDD_DB_Table_Log_Meta(),
+			'logs_api_requests'   => new EDD_DB_Table_Logs_API_Requests(),
+			'logs_file_downloads' => new EDD_DB_Table_Logs_File_Downloads(),
 
 			// Notes
-			'notes'          => new EDD_DB_Table_Notes(),
-			'notemeta'       => new EDD_DB_Table_Note_Meta(),
+			'notes'               => new EDD_DB_Table_Notes(),
+			'notemeta'            => new EDD_DB_Table_Note_Meta(),
 
 			// Orders
-			'orders'         => new EDD_DB_Table_Orders(),
-			'ordermeta'      => new EDD_DB_Table_Order_Meta(),
-			'order_items'    => new EDD_DB_Table_Order_Items(),
-			'order_itemmeta' => new EDD_DB_Table_Order_Item_Meta()
+			'orders'              => new EDD_DB_Table_Orders(),
+			'ordermeta'           => new EDD_DB_Table_Order_Meta(),
+			'order_items'         => new EDD_DB_Table_Order_Items(),
+			'order_itemmeta'      => new EDD_DB_Table_Order_Item_Meta()
 		);
 	}
 
