@@ -42,7 +42,6 @@ class EDD_Utilities {
 		$utils_dir = EDD_PLUGIN_DIR . 'includes/utilities/';
 
 		// Date management.
-		require_once EDD_PLUGIN_DIR . 'includes/libraries/Carbon.php';
 		require_once $utils_dir . 'class-date.php';
 
 		// Interfaces.

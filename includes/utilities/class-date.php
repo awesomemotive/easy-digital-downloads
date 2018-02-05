@@ -10,6 +10,10 @@
  */
 namespace EDD\Utils;
 
+if ( ! class_exists( '\\Carbon\\Carbon' ) ) {
+	require_once EDD_PLUGIN_DIR . 'includes/libraries/Carbon.php';
+}
+
 /**
  * Implements date formatting helpers for EDD.
  *
