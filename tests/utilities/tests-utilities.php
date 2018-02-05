@@ -53,6 +53,8 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	 * @group edd_registry
 	 */
 	public function test_get_registry_with_reports_should_retrieve_reports_registry_instance() {
+		new \EDD\Reports\Init();
+
 		$result = self::$utils->get_registry( 'reports' );
 
 		$this->assertInstanceOf( '\EDD\Reports\Data\Reports_Registry', $result );
@@ -63,6 +65,8 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	 * @group edd_registry
 	 */
 	public function test_get_registry_with_reports_endpoints_should_retrieve_endpoints_registry_instance() {
+		new \EDD\Reports\Init();
+
 		$result = self::$utils->get_registry( 'reports:endpoints' );
 
 		$this->assertInstanceOf( '\EDD\Reports\Data\Endpoint_Registry', $result );
@@ -70,6 +74,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::date()
+	 * @group edd_dates
 	 */
 	public function test_date_default_date_string_and_timeszone_should_return_a_Carbon_instance() {
 		$this->assertInstanceOf( '\Carbon\Carbon', self::$utils->date() );
@@ -77,6 +82,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::date()
+	 * @group edd_dates
 	 */
 	public function test_date_with_now_date_string_should_use_now() {
 		$format = self::$utils->get_date_format_string( 'date' );
