@@ -710,38 +710,17 @@ function edd_reports_graph_controls() {
 				</select>
 
 				<div id="edd-date-range-options" <?php echo $display; ?>>
-					<span><?php _e( 'From', 'easy-digital-downloads' ); ?>&nbsp;</span>
-					<select id="edd-graphs-month-start" name="m_start">
-						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-						<?php endfor; ?>
-					</select>
-					<select id="edd-graphs-day-start" name="day">
-						<?php for ( $i = 1; $i <= 31; $i++ ) : ?>
-							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['day'] ); ?>><?php echo $i; ?></option>
-						<?php endfor; ?>
-					</select>
-					<select id="edd-graphs-year-start" name="year">
-						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
-							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
-						<?php endfor; ?>
-					</select>
-					<span><?php _e( 'To', 'easy-digital-downloads' ); ?>&nbsp;</span>
-					<select id="edd-graphs-month-end" name="m_end">
-						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-						<?php endfor; ?>
-					</select>
-					<select id="edd-graphs-day-end" name="day_end">
-						<?php for ( $i = 1; $i <= 31; $i++ ) : ?>
-							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['day_end'] ); ?>><?php echo $i; ?></option>
-						<?php endfor; ?>
-					</select>
-					<select id="edd-graphs-year-end" name="year_end">
-						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
-						<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
-						<?php endfor; ?>
-					</select>
+					<?php
+					$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
+					$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
+					?>
+					<span class="affwp-search-date">
+						<span><?php _ex( 'From', 'date filter', 'affiliate-wp' ); ?></span>
+						<?php echo EDD()->html->date_field( array( 'name' => 'filter_from', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $from ) ); ?>
+
+						<span><?php _ex( 'To', 'date filter', 'affiliate-wp' ); ?></span>
+						<?php echo EDD()->html->date_field( array( 'name' => 'filter_to', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $to ) ); ?>
+					</span>
 				</div>
 
 				<div class="edd-graph-filter-options graph-option-section">
