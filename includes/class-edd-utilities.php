@@ -41,9 +41,6 @@ class EDD_Utilities {
 	private function includes() {
 		$utils_dir = EDD_PLUGIN_DIR . 'includes/utilities/';
 
-		// Date management.
-		require_once $utils_dir . 'class-date.php';
-
 		// Interfaces.
 		require_once $utils_dir . 'interface-edd-exception.php';
 		require_once $utils_dir . 'interface-static-registry.php';
@@ -53,6 +50,9 @@ class EDD_Utilities {
 		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
 		require_once $utils_dir . 'exceptions/class-invalid-argument.php';
 		require_once $utils_dir . 'exceptions/class-invalid-parameter.php';
+
+		// Date management.
+		require_once $utils_dir . 'class-date.php';
 
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
