@@ -64,4 +64,33 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 		$this->assertInstanceOf( '\EDD\Reports\Data\Endpoint_Registry', $result );
 	}
 
+	/**
+	 * @covers ::date()
+	 */
+	public function test_date_default_date_string_and_timeszone_should_return_a_Carbon_instance() {
+		$this->assertInstanceOf( '\Carbon\Carbon', self::$utils->date() );
+	}
+
+	/**
+	 * @covers ::date()
+	 */
+	public function test_date_with_now_date_string_should_use_now() {
+		$format = self::$utils->get_date_format_string( 'date' );
+
+		$this->assertSame( self::$utils->date()->format( $format ), current_time( $format ) );
+	}
+
+	/**
+	 * @covers ::date()
+	 */
+	public function test_date_with_date_string_and_default_timezone_should_use_WP_timezone() {
+		$date_string = '3/30/2015';
+		$format      = self::$utils->get_date_format_string( 'date' );
+
+		$expected = date( $format, strtotime( $date_string ) );
+		$result   = self::$utils->date( $date_string );
+
+		$this->assertSame( $expected, $result->format( $format ) );
+	}
+
 }
