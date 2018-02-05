@@ -172,17 +172,14 @@ class EDD_Utilities {
 	}
 
 	/**
-	 * Refreshes the wp_offset property for the benefit of PHPUnit.
+	 * Refreshes the wp_offset property.
+	 *
+	 * Useful if the gmt_offset has been updated or changed after the class has already loaded.
 	 *
 	 * @since 3.0
 	 */
-	public function _refresh_wp_offset() {
-		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
-			_doing_it_wrong( 'This method is only intended for use in phpunit tests', '3.0' );
-		} else {
-			$this->wp_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
-		}
-
+	public function refresh_wp_offset() {
+		$this->wp_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
 	}
 
 }
