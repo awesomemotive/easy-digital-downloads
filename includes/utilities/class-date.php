@@ -101,7 +101,7 @@ final class Date extends \Carbon\Carbon {
 	 * @return int WordPress "local" timestamp.
 	 */
 	public function getWPTimestamp() {
-		return $this->getTimestamp() + EDD()->utils->wp_offset;
+		return $this->getTimestamp() + EDD()->utils->get_wp_offset();
 	}
 
 }

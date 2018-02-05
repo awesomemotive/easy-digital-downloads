@@ -41,7 +41,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_Date_should_always_convert_date_to_WordPress_time() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( 'Y-m-d H:i:s', strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( 'Y-m-d H:i:s', strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( 'mysql' ) );
 	}
@@ -51,7 +51,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_empty_format_should_use_datetime_shorthand_format() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( edd_get_date_format( 'datetime' ), strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( edd_get_date_format( 'datetime' ), strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( '' ) );
 	}
@@ -61,7 +61,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_true_format_should_use_datetime_shorthand_format() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( edd_get_date_format( 'datetime' ), strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( edd_get_date_format( 'datetime' ), strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( true ) );
 	}
@@ -71,7 +71,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_date_should_use_date_shorthand_format() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( edd_get_date_format( 'date' ), strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( edd_get_date_format( 'date' ), strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( 'date' ) );
 	}
@@ -81,7 +81,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_time_should_use_time_shorthand_format() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( edd_get_date_format( 'time' ), strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( edd_get_date_format( 'time' ), strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( 'time' ) );
 	}
@@ -91,7 +91,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_mysql_should_use_mysql_shorthand_format() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( edd_get_date_format( 'mysql' ), strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( edd_get_date_format( 'mysql' ), strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( 'mysql' ) );
 	}
@@ -119,7 +119,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_wp_timestamp_should_return_WP_timestamp() {
 		$date     = $this->get_date_instance();
-		$expected = strtotime( self::$date_string ) + EDD()->utils->wp_offset;
+		$expected = strtotime( self::$date_string ) + EDD()->utils->get_wp_offset();
 
 		$this->assertSame( $expected, $date->format( 'wp_timestamp' ) );
 	}
@@ -129,7 +129,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_format_generic_date_format_should_format_with_that_scheme() {
 		$date     = $this->get_date_instance();
-		$expected = gmdate( 'm/d/Y', strtotime( self::$date_string ) + EDD()->utils->wp_offset );
+		$expected = gmdate( 'm/d/Y', strtotime( self::$date_string ) + EDD()->utils->get_wp_offset() );
 
 		$this->assertSame( $expected, $date->format( 'm/d/Y' ) );
 	}
@@ -139,7 +139,7 @@ class Date_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_getWPTimestamp_should_return_timestamp_with_offset_applied() {
 		$date     = $this->get_date_instance();
-		$expected = strtotime( self::$date_string ) + EDD()->utils->wp_offset;
+		$expected = strtotime( self::$date_string ) + EDD()->utils->get_wp_offset();
 
 		$this->assertSame( $expected, $date->getWPTimestamp() );
 	}

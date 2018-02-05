@@ -146,11 +146,11 @@ class EDD_Utilities {
 
 		switch( $format ) {
 			case 'time':
-				$format = $this->time_format;
+				$format = $this->get_time_format();
 				break;
 
 			case 'datetime':
-				$format = $this->date_format . ' ' . $this->time_format;
+				$format = $this->get_date_format() . ' ' . $this->get_time_format();
 				break;
 
 			case 'mysql':
@@ -159,7 +159,7 @@ class EDD_Utilities {
 
 			case 'date':
 			default:
-				$format = $this->date_format;
+				$format = $this->get_date_format();
 				break;
 		}
 
