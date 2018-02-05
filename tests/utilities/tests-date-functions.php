@@ -13,7 +13,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		update_option( 'gmt_offset', -5 );
 
-		EDD()->utils->_refresh_wp_offset();
+		EDD()->utils->refresh_wp_offset();
 	}
 
 	//
