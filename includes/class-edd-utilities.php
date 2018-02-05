@@ -13,12 +13,32 @@
  * Class that bootstraps various utilities leveraged in EDD core.
  *
  * @since 3.0
- *
- * @property-read int    $wp_offset   The calculated WordPress gmt_offset in seconds.
- * @property-read string $date_format The current WordPress date format.
- * @property-read string $time_format The current WordPress time format.
  */
 class EDD_Utilities {
+
+	/**
+	 * Represents the WordPress gmt offset in seconds.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	private $wp_offset;
+
+	/**
+	 * Represents the value of the WordPress 'date_format' option at run-time.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $date_format;
+
+	/**
+	 * Represents the value of the WordPress 'time_format' option at run-time.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $time_format;
 
 	/**
 	 * Sets up instantiating core utilities.
@@ -172,14 +192,42 @@ class EDD_Utilities {
 	}
 
 	/**
-	 * Refreshes the wp_offset property.
-	 *
-	 * Useful if the gmt_offset has been updated or changed after the class has already loaded.
+	 * Retrieves the value of the wp_offset property.
 	 *
 	 * @since 3.0
+	 *
+	 * @param bool $refresh Optional. Whether to refresh the `$wp_offset` value before retrieval.
+	 *                      Default false.
+	 * @return int Value of the wp_offset property.
 	 */
-	public function refresh_wp_offset() {
-		$this->wp_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
+	public function get_wp_offset( $refresh = false ) {
+		if ( true === $refresh ) {
+			$this->wp_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
+		}
+
+		return $this->wp_offset;
+	}
+
+	/**
+	 * Retrieves the WordPress date_format, as cached at run-time.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Value of the `$date_format` property.
+	 */
+	public function get_date_format() {
+		return $this->date_format;
+	}
+
+	/**
+	 * Retrieves the WordPress time_format, as cached at run-time.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Value of the `$time_format` property.
+	 */
+	public function get_time_format() {
+		return $this->time_format;
 	}
 
 }
