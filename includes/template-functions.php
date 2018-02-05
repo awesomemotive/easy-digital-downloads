@@ -263,7 +263,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 
 	// If the price_id passed is found in the variable prices, do not display all variable prices.
-	if ( false !== $args['price_id'] && isset( $prices[ $args['price_id'] ] ) ) {
+	if ( isset( $prices[ $args['price_id'] ] && false !== $args['price_id'] ) ) {
 		return;
 	}
 
