@@ -71,16 +71,17 @@ function edd_get_timezone() {
  *
  * @since 3.0
  *
- * @see \EDD_Utilities::get_date_format()
+ * @see \EDD_Utilities::get_date_format_string()
  *
  * @param string $format Shorthand date format string. Accepts 'date', 'time', 'mysql', or
  *                       'datetime'. If none of the accepted values, the original value will
  *                       simply be returned. Default is the value of the `$date_format` property,
  *                       derived from the core 'date_format' option.
+ *
  * @return string date_format()-compatible date format string.
  */
 function edd_get_date_format( $format ) {
-	return EDD()->utils->get_date_format( $format );
+	return EDD()->utils->get_date_format_string( $format );
 }
 
 /**

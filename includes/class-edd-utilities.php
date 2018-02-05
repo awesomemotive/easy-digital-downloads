@@ -134,7 +134,7 @@ class EDD_Utilities {
 	 *                       derived from the core 'date_format' option.
 	 * @return string date_format()-compatible date format string.
 	 */
-	public function get_date_format( $format ) {
+	public function get_date_format_string( $format ) {
 
 		if ( empty( $format ) ) {
 			$format = 'date';
