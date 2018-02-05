@@ -91,16 +91,50 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::date()
+	 * @covers ::get_wp_offset()
+	 * @group edd_dates
 	 */
-	public function test_date_with_date_string_and_default_timezone_should_use_WP_timezone() {
-		$date_string = '3/30/2015';
-		$format      = self::$utils->get_date_format_string( 'date' );
+	public function test_get_wp_offset_should_return_wp_offset() {
+		$expected = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
 
-		$expected = date( $format, strtotime( $date_string ) );
-		$result   = self::$utils->date( $date_string );
+		$this->assertSame( $expected, self::$utils->get_wp_offset() );
+	}
 
-		$this->assertSame( $expected, $result->format( $format ) );
+	/**
+	 * @covers ::get_wp_offset()
+	 * @group edd_dates
+	 */
+	public function test_get_wp_offset_refresh_true_should_refresh_the_stored_offset() {
+		$current_gmt = get_option( 'gmt_offset', 0 );
+
+		update_option( 'gmt_offset', -6 );
+
+		$expected = get_option( 'gmt_offset', -6 ) * HOUR_IN_SECONDS;
+
+		$this->assertSame( $expected, self::$utils->get_wp_offset( true ) );
+
+		// Clean up.
+		update_option( 'gmt_offset', $current_gmt );
+	}
+
+	/**
+	 * @covers ::get_date_format()
+	 * @group edd_dates
+	 */
+	public function test_get_date_format_should_retrieve_the_WordPress_date_format() {
+		$expected = get_option( 'date_format', '' );
+
+		$this->assertSame( $expected, self::$utils->get_date_format() );
+	}
+
+	/**
+	 * @covers ::get_time_format()
+	 * @group edd_dates
+	 */
+	public function test_get_time_format_should_retrieve_the_WordPress_time_format() {
+		$expected = get_option( 'time_format', '' );
+
+		$this->assertSame( $expected, self::$utils->get_time_format() );
 	}
 
 }
