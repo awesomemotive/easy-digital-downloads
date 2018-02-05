@@ -715,10 +715,10 @@ function edd_reports_graph_controls() {
 					$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
 					?>
 					<span class="affwp-search-date">
-						<span><?php _ex( 'From', 'date filter', 'affiliate-wp' ); ?></span>
+						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
 						<?php echo EDD()->html->date_field( array( 'name' => 'filter_from', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $from ) ); ?>
 
-						<span><?php _ex( 'To', 'date filter', 'affiliate-wp' ); ?></span>
+						<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
 						<?php echo EDD()->html->date_field( array( 'name' => 'filter_to', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $to ) ); ?>
 					</span>
 				</div>
