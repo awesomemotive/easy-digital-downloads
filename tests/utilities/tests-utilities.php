@@ -19,6 +19,10 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
+		update_option( 'gmt_offset', -5 );
+
+		EDD()->utils->get_wp_offset( true );
+
 		self::$utils = new \EDD_Utilities;
 	}
 
