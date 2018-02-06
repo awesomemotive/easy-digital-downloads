@@ -157,7 +157,7 @@ function edd_get_filter_dates( $values = 'strings', $timezone = '' ) {
 		case 'last_30_days':
 			$dates = array(
 				'start' => $date->copy()->subDay( 30 )->startOfDay(),
-				'end'   => $date->copy()->subDay( 30 )->endOfDay(),
+				'end'   => $date->copy()->endOfDay(),
 			);
 			break;
 
