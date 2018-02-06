@@ -119,6 +119,27 @@ function get_endpoint_views() {
 }
 
 /**
+ * Retrieves the list of supported endpoint filters and their attributes.
+ *
+ * @since 3.0
+ *
+ * @return array List of supported endpoint filters.
+ */
+function get_endpoint_filters() {
+	return array(
+		'date'     => array(
+			'session_var' => 'reports:date'
+		),
+		'products' => array(
+			'session_var' => 'reports:products',
+		),
+		'taxes'    => array(
+			'session_var' => 'reports:taxes',
+		),
+	);
+}
+
+/**
  * Retrieves the name of the handler class for a given endpoint view.
  *
  * @since 3.0
