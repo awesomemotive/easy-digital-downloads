@@ -734,6 +734,136 @@ function edd_get_paypal_page_style() {
 }
 
 /**
+ * Renders the Logs tab in the Reports screen.
+ *
+ * @since 1.3
+ * @deprecated 3.0 Use edd_tools_tab_logs() instead.
+ * @see edd_tools_tab_logs()
+ * @return void
+ */
+function edd_reports_tab_logs() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_tools_tab_logs' );
+
+	if ( ! function_exists( 'edd_tools_tab_logs' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
+	}
+
+	edd_tools_tab_logs();
+}
+
+/**
+ * Defines views for the legacy 'Reports' tab.
+ *
+ * @since 1.4
+ * @deprecated 3.0 Use \EDD\Reports\get_tabs()
+ * @see \EDD\Reports\get_tabs()
+ *
+ * @return array $views Report Views
+ */
+function edd_reports_default_views() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_tabs' );
+
+	return Reports\get_tabs();
+}
+
+/**
+ * Renders the Reports page
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused.
+ */
+function edd_reports_tab_reports() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		wp_die( __( 'You do not have permission to access this report', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$current_view = 'earnings';
+	$views        = edd_reports_default_views();
+
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) )
+		$current_view = $_GET['view'];
+
+	/**
+	 * Legacy: fired inside the old global 'Reports' tab.
+	 *
+	 * The dynamic portion of the hook name, `$current_view`, represented the parsed value of
+	 * the 'view' query variable.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	edd_do_action_deprecated( 'edd_reports_view_' . $current_view, array(), '3.0' );
+
+}
+
+/**
+ * Default Report Views
+ *
+ * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
+ *
+ * @param string $default Default view to use.
+ *
+ * @since 1.9.6
+ * @deprecated 3.0 Unused.
+ *
+ * @return string $view Report View
+ */
+function edd_get_reporting_view( $default = 'earnings' ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	if ( ! isset( $_GET['view'] ) || ! in_array( $_GET['view'], array_keys( edd_reports_default_views() ) ) ) {
+		$view = $default;
+	} else {
+		$view = $_GET['view'];
+	}
+
+	/**
+	 * Legacy: filters the current reporting view (now implemented solely via the 'tab' var).
+	 *
+	 * @since 1.9.6
+	 * @deprecated 3.0 Unused.
+	 *
+	 * @param string $view View slug.
+	 */
+	return edd_apply_filters_deprecated( 'edd_get_reporting_view', array( $view ), '3.0' );
+}
+
+/**
+ * Renders the Reports Page Views Drop Downs
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused.
+ *
+ * @return void
+ */
+function edd_report_views() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	/**
+	 * Legacy: fired before the view actions drop-down was output.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	edd_do_action_deprecated( 'edd_report_view_actions', array(), '3.0' );
+
+	/**
+	 * Legacy: fired after the view actions drop-down was output.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	edd_do_action_deprecated( 'edd_report_view_actions_after', array(), '3.0' );
+
+	return;
+}
+
+/**
  * Sets up the dates used to filter graph data
  *
  * Date sent via $_GET is read first and then modified (if needed) to match the
