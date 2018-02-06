@@ -17,6 +17,34 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 		edd_install();
 	}
 
+	/**
+	 * Runs before each test method.
+	 */
+	public function setUp() {
+		parent::setUp();
+
+		$this->expectDeprecatedEDD();
+	}
+
+	/**
+	 * Sets up logic for the @expectedDeprecatedEDD annotation for deprecated elements in EDD.
+	 */
+	function expectDeprecatedEDD() {
+		$annotations = $this->getAnnotations();
+		foreach ( array( 'class', 'method' ) as $depth ) {
+			if ( ! empty( $annotations[ $depth ]['expectedDeprecatedEDD'] ) ) {
+				$this->expected_deprecated = array_merge( $this->expected_deprecated, $annotations[ $depth ]['expectedDeprecatedEDD'] );
+			}
+		}
+		add_action( 'edd_deprecated_function_run', array( $this, 'deprecated_function_run' ) );
+		add_action( 'edd_deprecated_argument_run', array( $this, 'deprecated_function_run' ) );
+		add_action( 'edd_deprecated_hook_run', array( $this, 'deprecated_function_run' ) );
+		add_action( 'edd_deprecated_function_trigger_error', '__return_false' );
+		add_action( 'edd_deprecated_argument_trigger_error', '__return_false' );
+		add_action( 'edd_deprecated_hook_trigger_error', '__return_false' );
+	}
+
+
 	protected static function edd() {
 		static $factory = null;
 		if ( ! $factory ) {
