@@ -3,6 +3,7 @@
 
 /**
  * @group edd_mime
+ * @group edd_functions
  */
 class Tests_Templates extends EDD_UnitTestCase {
 
