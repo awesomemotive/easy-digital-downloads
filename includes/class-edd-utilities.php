@@ -62,7 +62,6 @@ class EDD_Utilities {
 		$utils_dir = EDD_PLUGIN_DIR . 'includes/utils/';
 
 		// Interfaces.
-		require_once $utils_dir . 'interface-edd-exception.php';
 		require_once $utils_dir . 'interface-static-registry.php';
 
 		// Exceptions.

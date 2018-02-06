@@ -253,6 +253,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
 
+		require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-wp-db-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
