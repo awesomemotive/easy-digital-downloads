@@ -27,13 +27,13 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Sets up logic for the @expectedDeprecatedEDD annotation for deprecated elements in EDD.
+	 * Sets up logic for the @expectEDDeprecated annotation for deprecated elements in EDD.
 	 */
 	function expectDeprecatedEDD() {
 		$annotations = $this->getAnnotations();
 		foreach ( array( 'class', 'method' ) as $depth ) {
-			if ( ! empty( $annotations[ $depth ]['expectedDeprecatedEDD'] ) ) {
-				$this->expected_deprecated = array_merge( $this->expected_deprecated, $annotations[ $depth ]['expectedDeprecatedEDD'] );
+			if ( ! empty( $annotations[ $depth ]['expectEDDeprecated'] ) ) {
+				$this->expected_deprecated = array_merge( $this->expected_deprecated, $annotations[ $depth ]['expectEDDeprecated'] );
 			}
 		}
 		add_action( 'edd_deprecated_function_run', array( $this, 'deprecated_function_run' ) );
