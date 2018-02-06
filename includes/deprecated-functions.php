@@ -732,3 +732,45 @@ function edd_get_paypal_page_style() {
 	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
+
+/**
+ * Sets up the dates used to filter graph data
+ *
+ * Date sent via $_GET is read first and then modified (if needed) to match the
+ * selected date-range (if any)
+ *
+ * @since 1.3
+ * @deprecated 3.0 Use edd_get_filter_dates() instead
+ * @see edd_get_filter_dates()
+ *
+ * @param string $timezone Optional. Timezone to force for report filter dates calculations.
+ *                         Default empty.
+ * @return array Array of report filter dates.
+ */
+function edd_get_report_dates( $timezone = '' ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_get_filter_dates' );
+
+	/** @var \Carbon\Carbon[] $filter_dates */
+	$filter_dates = edd_get_filter_dates( 'objects', $timezone );
+
+	$dates = array(
+		'range'    => edd_get_filter_date_range(),
+		'day'      => $filter_dates['start']->format( 'd' ),
+		'day_end'  => $filter_dates['end']->format( 'd' ),
+		'm_start'  => $filter_dates['start']->month,
+		'm_end'    => $filter_dates['end']->month,
+		'year'     => $filter_dates['start']->year,
+		'year_end' => $filter_dates['end']->year,
+	);
+
+	/**
+	 * Filters the legacy list of parsed report dates for use in the Reports API.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0
+	 *
+	 * @param array $dates Array of legacy date parts.
+	 */
+	return edd_apply_filters_deprecated( 'edd_report_dates', array( $dates ), '3.0' );
+}
