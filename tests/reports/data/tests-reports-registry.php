@@ -167,12 +167,45 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::add_report()
 	 * @throws \EDD_Exception
 	 */
-	public function test_add_report_with_no_priority_should_set_priority_10() {
+	public function test_add_report_with_invalid_filter_should_throw_exception() {
+		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
+
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+			'filters'   => array( 'bar' ),
+		) );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_with_non_string_filter_should_throw_exception() {
+		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
+
 		$this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 123 ),
+		) );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_with_no_priority_should_set_priority_10() {
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+			'filters'   => array( 'date' ),
 		) );
 
 		$report = $this->registry->get_report( 'foo' );
