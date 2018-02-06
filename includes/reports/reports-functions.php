@@ -482,5 +482,12 @@ function default_display_tables_group( $report ) {
  * @return mixed Value of the filter if it exists, otherwise an empty string.
  */
 function get_filter( $filter ) {
-	return '';
+	$value = '';
+
+	if ( ! array_key_exists( $filter, get_endpoint_filters() ) ) {
+		return $value;
+	} else {
+		// TODO retrieval of filter value from session API.
+		$value = true;
+	}
 }
