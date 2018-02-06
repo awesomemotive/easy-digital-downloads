@@ -1,14 +1,14 @@
-# Copyright (C) 2017 Easy Digital Downloads
+# Copyright (C) 2018 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.16\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.17\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-12-21 21:34:32+00:00\n"
+"POT-Creation-Date: 2018-02-06 18:16:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
 "Language: en_US\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
-#: includes/process-download.php:289 includes/process-download.php:822
+#: includes/process-download.php:293 includes/process-download.php:826
 #: includes/query-filters.php:48 includes/user-functions.php:880
 #: includes/user-functions.php:905 includes/user-functions.php:958
 msgid "Error"
@@ -915,7 +915,6 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:35
 #: includes/admin/reporting/class-download-reports-table.php:111
 #: includes/admin/reporting/export/class-batch-export-downloads.php:58
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:66
 #: includes/admin/reporting/graphing.php:334
 #: includes/admin/reporting/graphing.php:635
 #: includes/admin/reporting/logs.php:145
@@ -1920,19 +1919,16 @@ msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:254
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:68
 #: includes/payments/functions.php:754
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:255
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:70
 #: includes/payments/functions.php:752
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:256
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:69
 #: includes/payments/functions.php:753
 msgid "Abandoned"
 msgstr ""
@@ -2787,27 +2783,23 @@ msgstr ""
 msgid "SKU"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:65
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:63
 msgid "Monthly Sales Activity"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:67
-msgid "Refunds"
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:64
+msgid "Gross Activity"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:71
-msgid "Cancelled"
-msgstr ""
-
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:72
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:73
 msgid "Net Activity"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:98
-msgid "Count"
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:149
+msgid "Order Count"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:98
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:150
 msgid "Gross Amount"
 msgstr ""
 
@@ -4728,7 +4720,7 @@ msgstr ""
 msgid "Copy Entire Log"
 msgstr ""
 
-#: includes/admin/tracking.php:267
+#: includes/admin/tracking.php:268
 msgid ""
 "Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
 "our newsletter and immediately be emailed a discount to the EDD shop, valid "
@@ -4736,11 +4728,11 @@ msgid ""
 "sensitive data is tracked."
 msgstr ""
 
-#: includes/admin/tracking.php:268
+#: includes/admin/tracking.php:269
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/tracking.php:269
+#: includes/admin/tracking.php:270
 msgid "Do not allow"
 msgstr ""
 
@@ -6063,7 +6055,7 @@ msgid ""
 "of a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
-#: includes/deprecated-functions.php:517 includes/process-download.php:822
+#: includes/deprecated-functions.php:517 includes/process-download.php:826
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -7121,23 +7113,23 @@ msgstr ""
 msgid "File download error"
 msgstr ""
 
-#: includes/process-download.php:288
+#: includes/process-download.php:292
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:289
+#: includes/process-download.php:293
 msgid "Purchase Verification Failed"
 msgstr ""
 
-#: includes/process-download.php:898
+#: includes/process-download.php:902
 msgid "Invalid file"
 msgstr ""
 
-#: includes/process-download.php:905
+#: includes/process-download.php:909
 msgid "The requested file could not be found. Error 404."
 msgstr ""
 
-#: includes/process-download.php:906
+#: includes/process-download.php:910
 msgid "File not found"
 msgstr ""
 
@@ -7425,6 +7417,14 @@ msgstr ""
 
 #: includes/shortcodes.php:939
 msgid "Error removing email address from profile. Please try again later."
+msgstr ""
+
+#: includes/template-actions.php:19
+msgid "You need to log in to edit your profile."
+msgstr ""
+
+#: includes/template-actions.php:32
+msgid "You are already logged in"
 msgstr ""
 
 #: includes/template-functions.php:143
