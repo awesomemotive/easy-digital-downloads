@@ -1,8 +1,6 @@
 <?php
 namespace EDD\Utils;
 
-use EDD\Utils\Date;
-
 /**
  * Tests for EDD\Utils\Date
  *
