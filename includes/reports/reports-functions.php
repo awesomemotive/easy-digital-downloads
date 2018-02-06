@@ -472,3 +472,15 @@ function default_display_tables_group( $report ) {
 		</div>
 	<?php endif; // Has endpoints.
 }
+
+/**
+ * Retrieves the value of an endpoint filter for the current session and tab.
+ *
+ * @since 3.0
+ *
+ * @param string $filter Filter key.
+ * @return mixed Value of the filter if it exists, otherwise an empty string.
+ */
+function get_filter( $filter ) {
+	return '';
+}
