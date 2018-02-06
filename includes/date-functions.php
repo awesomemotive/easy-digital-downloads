@@ -324,5 +324,5 @@ function edd_get_report_dates( $timezone = '' ) {
 	 *
 	 * @param array $dates Array of legacy date parts.
 	 */
-	return edd_apply_filters_deprecated( 'edd_report_dates', $dates );
+	return edd_apply_filters_deprecated( 'edd_report_dates', array( $dates ), '3.0' );
 }
