@@ -141,7 +141,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$this->registry->add_report( 'foo', array(
-			'label' => ''
+			'label'     => '',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+			'filters'   => array( 'date' ),
 		) );
 	}
 
@@ -153,7 +157,9 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$added = $this->registry->add_report( 'foo', array(
-			'label' => 'Foo',
+			'label'     => 'Foo',
+			'endpoints' => array(),
+			'filters'   => array( 'date' ),
 		) );
 	}
 
@@ -185,6 +191,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 'date' ),
 		) );
 
 		$report = $this->registry->get_report( 'foo' );
@@ -253,7 +260,8 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 				'label' => 'Foo',
 				'endpoints' => array(
 					'tiles' => array()
-				)
+				),
+				'filters'   => array( 'date' ),
 			) );
 		} catch ( \EDD_Exception $exception ) {}
 	}
@@ -280,6 +288,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 					'endpoints'  => array(
 						'tiles' => array()
 					),
+					'filters'    => array( 'date' ),
 				);
 				break;
 
@@ -293,6 +302,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 						'endpoints'  => array(
 							'tiles' => array()
 						),
+						'filters'    => array( 'date' ),
 					)
 				);
 				break;
@@ -317,6 +327,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 'date' ),
 		) );
 
 		$this->registry->add_report( 'bar', array(
@@ -325,6 +336,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 'date' ),
 		) );
 	}
 }
