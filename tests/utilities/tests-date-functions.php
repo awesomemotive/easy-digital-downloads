@@ -16,6 +16,11 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		EDD()->utils->get_wp_offset( true );
 	}
 
+	public function tearDown() {
+		$_REQUEST['range'] = '';
+
+		parent::tearDown();
+	}
 	//
 	// Tests
 	//
@@ -105,4 +110,89 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertSame( 'm/d/Y', edd_get_date_format( 'm/d/Y' ) );
 	}
 
+	/**
+	 * @covers ::edd_get_report_dates()
+	 * @expectedDeprecatedEDD edd_get_report_dates
+	 */
+	public function test_get_report_dates_correct_this_month_at_the_end_of_the_month_utc() {
+		$_REQUEST['range'] = 'this_month';
+
+		$dates = edd_get_report_dates( 'UTC' );
+
+		$this->assertEquals( $dates['day'], 1 );
+		$this->assertEquals( $dates['m_start'], date( 'n' ) );
+		$this->assertEquals( $dates['year'], date( 'Y' ) );
+		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
+		$this->assertEquals( $dates['m_end'], date( 'n' ) );
+		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+	}
+
+	/**
+	 * @covers ::edd_get_report_dates()
+	 * @expectedDeprecatedEDD edd_get_report_dates
+	 */
+	public function test_get_report_dates_correct_this_month_at_the_end_of_the_month_nz() {
+		$_REQUEST['range'] = 'this_month';
+
+		$dates = edd_get_report_dates( 'Pacific/Auckland' );
+
+		$this->assertEquals( $dates['day'], 1 );
+		$this->assertEquals( $dates['m_start'], date( 'n' ) );
+		$this->assertEquals( $dates['year'], date( 'Y' ) );
+		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
+		$this->assertEquals( $dates['m_end'], date( 'n' ) );
+		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+	}
+
+	/**
+	 * @covers ::edd_get_report_dates()
+	 * @expectedDeprecatedEDD edd_get_report_dates
+	 */
+	public function test_get_report_dates_correct_this_month_at_the_beginning_of_the_month_utc() {
+		$_REQUEST['range'] = 'this_month';
+
+		$dates = edd_get_report_dates( 'UTC' );
+
+		$this->assertEquals( $dates['day'], 1 );
+		$this->assertEquals( $dates['m_start'], date( 'n' ) );
+		$this->assertEquals( $dates['year'], date( 'Y' ) );
+		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
+		$this->assertEquals( $dates['m_end'], date( 'n' ) );
+		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+	}
+
+	/**
+	 * @covers ::edd_get_report_dates()
+	 * @expectedDeprecatedEDD edd_get_report_dates
+	 */
+	public function test_get_report_dates_correct_this_month_at_the_beginning_of_the_month_pdt() {
+		$_REQUEST['range'] = 'this_month';
+
+		$dates = edd_get_report_dates( 'America/Los_Angeles' );
+
+		$this->assertEquals( $dates['day'], 1 );
+		$this->assertEquals( $dates['m_start'], date( 'n' ) );
+		$this->assertEquals( $dates['year'], date( 'Y' ) );
+		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
+		$this->assertEquals( $dates['m_end'], date( 'n' ) );
+		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+	}
+
+	/**
+	 * @covers ::edd_get_report_dates()
+	 * @expectedDeprecatedEDD edd_get_report_dates
+	 */
+	public function test_get_report_dates_correct_this_moment_utc() {
+		$_REQUEST['range'] = 'this_month';
+
+		$current_time = current_time( 'timestamp' );
+		$dates = edd_get_report_dates( 'UTC' );
+
+		$this->assertEquals( $dates['day'], 1 );
+		$this->assertEquals( $dates['m_start'], date( 'n', $current_time ) );
+		$this->assertEquals( $dates['year'], date( 'Y', $current_time ) );
+		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
+		$this->assertEquals( $dates['m_end'], date( 'n', $current_time ) );
+		$this->assertEquals( $dates['year_end'], date( 'Y', $current_time ) );
+	}
 }
