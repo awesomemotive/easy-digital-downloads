@@ -714,7 +714,7 @@ function edd_reports_graph_controls() {
 					$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
 					$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
 					?>
-					<span class="affwp-search-date">
+					<span class="edd-search-date">
 						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
 						<?php echo EDD()->html->date_field( array( 'name' => 'filter_from', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $from ) ); ?>
 
