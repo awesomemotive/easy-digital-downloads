@@ -267,6 +267,13 @@ function edd_get_filter_date_values( $now = false ) {
 	return apply_filters( 'edd_get_filter_date_values', $values, $default );
 }
 
+/**
+ * Retrieves the date filter range.
+ *
+ * @since 3.0
+ *
+ * @return string Date filter range.
+ */
 function edd_get_filter_date_range() {
 	if ( isset( $_REQUEST['range'] ) ) {
 		$range = sanitize_key( $_REQUEST['range'] );
