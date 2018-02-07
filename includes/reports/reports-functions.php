@@ -480,6 +480,18 @@ function get_endpoint_filters() {
 }
 
 /**
+ * Determines whether the given filter is valid.
+ *
+ * @since 3.0
+ *
+ * @param string $filter Filter key.
+ * @return bool True if the filter is valid, otherwise false.
+ */
+function is_filter_valid( $filter ) {
+	return array_key_exists( $filter, get_endpoint_filters() );
+}
+
+/**
  * Retrieves the value of an endpoint filter for the current session and tab.
  *
  * @since 3.0
