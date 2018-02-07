@@ -62,7 +62,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'endpoints'  => array(
 				'tiles' => array( 'foo' ),
 			),
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		self::$_original_report = self::$report = Reports\get_report( 'foo' );
@@ -88,7 +88,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label'      => 'Foo',
 			'capability' => 'view_shop_reports',
 			'endpoints'  => array(),
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$this->assertTrue( $report->has_errors() );
@@ -104,7 +104,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label'      => 'Foo',
 			'capability' => 'view_shop_reports',
 			'endpoints'  => array(),
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$this->assertContains( 'missing_endpoints', $report->get_errors()->get_error_codes() );
@@ -120,7 +120,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label'      => 'Foo',
 			'endpoints'  => array(),
 			'capability' => '',
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$this->assertContains( 'missing_capability', $report->get_errors()->get_error_codes() );
@@ -238,7 +238,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'endpoints'  => array(
 				'tiles' => array( 'foo', 'bar' ),
 			),
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$report = Reports\get_report( 'foo' );
@@ -288,7 +288,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'endpoints'  => array(
 				'tiles' => array( 'foo', 'bar' ),
 			),
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$report = Reports\get_report( 'foo' );
@@ -327,7 +327,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'endpoints'  => array(
 				'tiles' => array( 'foo' ),
 			),
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$report = Reports\get_report( 'foo' );
