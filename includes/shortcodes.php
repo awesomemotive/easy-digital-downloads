@@ -579,16 +579,16 @@ function edd_downloads_query( $atts, $content = null ) {
 		$wrapper_class = 'edd_download_columns_' . $atts['columns'];
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
-			
-			<?php do_action( 'edd_download_shortcode_item_before', $atts, $i ); ?>
-			
+
+			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
+
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<?php do_action( 'edd_download_shortcode_item', $atts, $i ); ?>
 			<?php $i++; endwhile; ?>
 
 			<?php wp_reset_postdata(); ?>
-			
-			<?php do_action( 'edd_download_shortcode_item_after', $atts, $i ); ?>
+
+			<?php do_action( 'edd_downloads_list_bottom', $atts ); ?>
 
 			<?php if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 
