@@ -462,13 +462,19 @@ function default_display_tables_group( $report ) {
 function get_endpoint_filters() {
 	return array(
 		'date'     => array(
-			'session_var' => 'reports:date'
+			'labe'             => __( 'Date', 'easy-digital-downloads' ),
+			'session_var'      => 'reports:date',
+			'display_callback' => __NAMESPACE__ . '\\display_date_filter',
 		),
 		'products' => array(
-			'session_var' => 'reports:products',
+			'label'            => __( 'Products', 'easy-digital-downloads' ),
+			'session_var'      => 'reports:products',
+			'display_callback' => __NAMESPACE__ . '\\display_products_filter',
 		),
 		'taxes'    => array(
-			'session_var' => 'reports:taxes',
+			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
+			'session_var'      => 'reports:taxes',
+			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter',
 		),
 	);
 }
