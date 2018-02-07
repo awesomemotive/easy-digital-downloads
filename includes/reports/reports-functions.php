@@ -502,10 +502,46 @@ function is_filter_valid( $filter ) {
 function get_filter( $filter ) {
 	$value = '';
 
-	if ( array_key_exists( $filter, get_endpoint_filters() ) ) {
+	if ( is_filter_valid( $filter ) ) {
 		// TODO retrieval of filter value from session API.
 		$value = true;
 	}
 
 	return $value;
+}
+
+/**
+ * Handles display of the 'Date' filter for reports.
+ *
+ * @since 3.0
+ *
+ * @param string|Data\Report $report Report ID or object.
+ * @return void
+ */
+function display_date_filter( $report ) {
+
+}
+
+/**
+ * Handles display of the 'Products' filter for reports.
+ *
+ * @since 3.0
+ *
+ * @param string|Data\Report $report Report ID or object.
+ * @return void
+ */
+function display_products_filter( $report ) {
+
+}
+
+/**
+ * Handles display of the 'Exclude Taxes' filter for reports.
+ *
+ * @since 3.0
+ *
+ * @param string|Data\Report $report Report ID or object.
+ * @return void
+ */
+function display_taxes_filter( $report ) {
+
 }
