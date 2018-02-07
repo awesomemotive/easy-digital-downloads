@@ -484,10 +484,10 @@ function default_display_tables_group( $report ) {
 function get_filter( $filter ) {
 	$value = '';
 
-	if ( ! array_key_exists( $filter, get_endpoint_filters() ) ) {
-		return $value;
-	} else {
+	if ( array_key_exists( $filter, get_endpoint_filters() ) ) {
 		// TODO retrieval of filter value from session API.
 		$value = true;
 	}
+
+	return $value;
 }
