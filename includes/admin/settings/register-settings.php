@@ -750,6 +750,13 @@ function edd_get_registered_settings() {
 						'type' => 'text',
 						'std'  => __( 'Add to Cart', 'easy-digital-downloads' ),
 					),
+					'checkout_button_text' => array(
+						'id'   => 'checkout_button_text',
+						'name' => __( 'Checkout Button Text', 'easy-digital-downloads' ),
+						'desc' => __( 'Text shown on the Add to Cart Button when the product is already in the cart.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ),
+					),
 					'buy_now_text' => array(
 						'id'   => 'buy_now_text',
 						'name' => __( 'Buy Now Text', 'easy-digital-downloads' ),
