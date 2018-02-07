@@ -199,13 +199,44 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::add_report()
 	 * @throws \EDD_Exception
 	 */
+	public function test_add_report_with_valid_filter_should_return_true() {
+		$added = $this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+		) );
+
+		$this->assertTrue( $added );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_without_filters_should_default_to_date_filter() {
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+		) );
+
+		$report = $this->registry->get_report( 'foo' );
+
+		$this->assertEqualSets( array( 'date' ), $report['filters'] );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
 	public function test_add_report_with_no_priority_should_set_priority_10() {
 		$this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',
 			'endpoints' => array(
 				'tiles' => array(),
 			),
-			'filters'   => array( 'date' ),
 		) );
 
 		$report = $this->registry->get_report( 'foo' );
