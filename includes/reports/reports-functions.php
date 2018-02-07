@@ -519,7 +519,22 @@ function get_filter( $filter ) {
  * @return void
  */
 function display_date_filter( $report ) {
+	// TODO: Hook this up to sesssions storage instead of query vars.
+	?>
+	<div id="edd-date-range-options" <?php echo $display; ?>>
+		<?php
+		$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
+		$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
+		?>
+		<span class="edd-search-date">
+						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
+			<?php echo EDD()->html->date_field( array( 'name' => 'filter_from', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $from ) ); ?>
 
+			<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
+			<?php echo EDD()->html->date_field( array( 'name' => 'filter_to', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $to ) ); ?>
+					</span>
+	</div>
+	<?php
 }
 
 /**
