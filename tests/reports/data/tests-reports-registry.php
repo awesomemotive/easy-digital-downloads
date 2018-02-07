@@ -145,7 +145,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array(),
 			),
-			'filters'   => array( 'date' ),
+			'filters'   => array( 'dates' ),
 		) );
 	}
 
@@ -159,7 +159,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		$added = $this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',
 			'endpoints' => array(),
-			'filters'   => array( 'date' ),
+			'filters'   => array( 'dates' ),
 		) );
 	}
 
@@ -224,7 +224,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 
 		$report = $this->registry->get_report( 'foo' );
 
-		$this->assertEqualSets( array( 'date' ), $report['filters'] );
+		$this->assertEqualSets( array( 'dates' ), $report['filters'] );
 	}
 
 	/**
@@ -255,7 +255,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
-			'filters'   => array( 'date' ),
+			'filters'   => array( 'dates' ),
 		) );
 
 		$report = $this->registry->get_report( 'foo' );
@@ -325,7 +325,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 				'endpoints' => array(
 					'tiles' => array()
 				),
-				'filters'   => array( 'date' ),
+				'filters'   => array( 'dates' ),
 			) );
 		} catch ( \EDD_Exception $exception ) {}
 	}
@@ -352,7 +352,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 					'endpoints'  => array(
 						'tiles' => array()
 					),
-					'filters'    => array( 'date' ),
+					'filters'    => array( 'dates' ),
 				);
 				break;
 
@@ -366,7 +366,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 						'endpoints'  => array(
 							'tiles' => array()
 						),
-						'filters'    => array( 'date' ),
+						'filters'    => array( 'dates' ),
 					)
 				);
 				break;
@@ -391,7 +391,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
-			'filters'   => array( 'date' ),
+			'filters'   => array( 'dates' ),
 		) );
 
 		$this->registry->add_report( 'bar', array(
@@ -400,7 +400,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
-			'filters'   => array( 'date' ),
+			'filters'   => array( 'dates' ),
 		) );
 	}
 }

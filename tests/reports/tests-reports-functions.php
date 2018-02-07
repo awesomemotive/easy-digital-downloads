@@ -230,7 +230,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_endpoint_filters()
 	 */
 	public function test_get_endpoint_filters_should_return_records_for_all_official_filters() {
-		$expected = array( 'date', 'products', 'taxes' );
+		$expected = array( 'dates', 'products', 'taxes' );
 
 		$this->assertEqualSets( $expected, array_keys( get_endpoint_filters() ) );
 	}
@@ -239,7 +239,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\is_filter_valid()
 	 */
 	public function test_is_filter_valid_with_valid_filter_should_return_true() {
-		$this->assertTrue( is_filter_valid( 'date' ) );
+		$this->assertTrue( is_filter_valid( 'dates' ) );
 	}
 
 	/**
@@ -260,7 +260,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_filter()
 	 */
 	public function test_get_filter_With_a_valid_filter_should_retrieve_that_filters_value() {
-		$this->assertTrue( get_filter( 'date' ) );
+		$this->assertTrue( get_filter( 'dates' ) );
 	}
 
 }

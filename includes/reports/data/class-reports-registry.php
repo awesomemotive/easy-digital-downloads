@@ -114,7 +114,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 			'label'      => '',
 			'priority'   => 10,
 			'capability' => 'view_shop_reports',
-			'filters'    => array( 'date' ),
+			'filters'    => array( 'dates' ),
 			'endpoints'  => array(),
 		);
 
