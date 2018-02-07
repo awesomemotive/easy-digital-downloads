@@ -519,7 +519,7 @@ function get_filter( $filter ) {
  * @return void
  */
 function display_date_filter( $report ) {
-	// TODO: Hook this up to sesssions storage instead of query vars.
+	// TODO: Hook this up to sessions storage instead of query vars.
 	?>
 	<div id="edd-date-range-options" <?php echo $display; ?>>
 		<?php
