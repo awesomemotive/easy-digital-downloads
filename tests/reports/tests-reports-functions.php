@@ -225,4 +225,28 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_get_endpoint_group_callback_with_invalid_view_should_return_an_empty_string() {
 		$this->assertSame( '', get_endpoint_group_callback( 'fake' ) );
 	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_endpoint_filters()
+	 */
+	public function test_get_endpoint_filters_should_return_records_for_all_official_filters() {
+		$expected = array( 'date', 'products', 'taxes' );
+
+		$this->assertEqualSets( $expected, array_keys( get_endpoint_filters() ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_filter()
+	 */
+	public function test_get_filter_with_invalid_filter_should_return_and_empty_string() {
+		$this->assertSame( '', get_filter( 'fake' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_filter()
+	 */
+	public function test_get_filter_With_a_valid_filter_should_retrieve_that_filters_value() {
+		$this->assertTrue( get_filter( 'date' ) );
+	}
+
 }
