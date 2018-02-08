@@ -520,23 +520,19 @@ function get_filter_value( $filter, $report_id ) {
  *
  * @since 3.0
  *
- * @param string|Data\Report $report Report ID or object.
+ * @param Data\Report $report Report object.
  * @return void
  */
 function display_date_filter( $report ) {
-	// TODO: Hook this up to sessions storage instead of query vars.
+	$dates = get_filter_value( 'dates', $report->get_id() );
 	?>
 	<div id="edd-date-range-options">
-		<?php
-		$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
-		$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
-		?>
 		<span class="edd-search-date">
 			<?php
 			// From.
 			echo EDD()->html->date_field( array(
 				'name'        => 'filter_from',
-				'value'       => $from,
+				'value'       => empty( $dates['from'] ) ? '' : $dates['from'],
 				'label'       => _ex( 'From', 'date filter', 'easy-digital-downloads' ),
 				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
 			) );
@@ -544,7 +540,7 @@ function display_date_filter( $report ) {
 			// To.
 			echo EDD()->html->date_field( array(
 				'name'        => 'filter_to',
-				'value'       => $to,
+				'value'       => empty( $dates['to'] ) ? '' : $dates['to'],
 				'label'       => _ex( 'To', 'date filter', 'easy-digital-downloads' ),
 				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
 			) );
