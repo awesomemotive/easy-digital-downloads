@@ -527,12 +527,23 @@ function display_date_filter( $report ) {
 		$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
 		?>
 		<span class="edd-search-date">
-						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
-			<?php echo EDD()->html->date_field( array( 'name' => 'filter_from', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $from ) ); ?>
+			<?php
+			// From.
+			echo EDD()->html->date_field( array(
+				'name'        => 'filter_from',
+				'value'       => $from,
+				'label'       => _ex( 'From', 'date filter', 'easy-digital-downloads' ),
+				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
+			) );
 
-			<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
-			<?php echo EDD()->html->date_field( array( 'name' => 'filter_to', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $to ) ); ?>
-					</span>
+			// To.
+			echo EDD()->html->date_field( array(
+				'name'        => 'filter_to',
+				'value'       => $to,
+				'label'       => _ex( 'To', 'date filter', 'easy-digital-downloads' ),
+				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
+			) );
+			?>
 	</div>
 	<?php
 }
