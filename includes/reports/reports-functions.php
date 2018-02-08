@@ -496,15 +496,20 @@ function is_filter_valid( $filter ) {
  *
  * @since 3.0
  *
- * @param string $filter Filter key.
- * @return mixed Value of the filter if it exists, otherwise an empty string.
+ * @param string $filter    Filter key to retrieve the value for.
+ * @param string $report_id Report ID to retrieve the filter value for.
+ * @return mixed|string Value of the filter if it exists, otherwise an empty string.
  */
-function get_filter( $filter ) {
+function get_filter_value( $filter, $report_id ) {
 	$value = '';
 
 	if ( is_filter_valid( $filter ) ) {
-		// TODO retrieval of filter value from session API.
-		$value = true;
+
+		$filter_value = EDD()->session->get( "{$report_id}:{$filter}" );
+
+		if ( false !== $filter_value ) {
+			$value = $filter_value;
+		}
 	}
 
 	return $value;
