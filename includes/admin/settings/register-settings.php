@@ -2357,3 +2357,35 @@ function edd_add_setting_tooltip( $html, $args ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
+
+/**
+ * Save permalinks to save permalink only gueries in the future.
+ *
+ * @since 2.9.0
+ *
+ * @param mixed $value Current option value.
+ * @param mixed $old_value Old option value.
+ * @return mixed Updated option value.
+ */
+function edd_update_page_permalinks( $value, $old_value ) {
+
+	if ( ! isset( $old_value['purchase_page_permalink'] ) || $old_value['purchase_page'] !== $value['purchase_page'] ) {
+		$value['purchase_page_permalink'] = get_permalink( $value['purchase_page'] );
+	}
+
+	if ( ! isset( $old_value['success_page_permalink'] ) || $old_value['success_page'] !== $value['success_page'] ) {
+		$value['success_page_permalink'] = get_permalink( $value['success_page'] );
+	}
+
+	if ( ! isset( $old_value['failure_page_permalink'] ) || $old_value['failure_page'] !== $value['failure_page'] ) {
+		$value['failure_page_permalink'] = get_permalink( $value['failure_page'] );
+	}
+
+	if ( ! isset( $old_value['purchase_history_page_permalink'] ) || $old_value['purchase_history_page'] !== $value['purchase_history_page'] ) {
+		$value['purchase_history_page_permalink'] = get_permalink( $value['purchase_history_page'] );
+	}
+
+	return $value;
+
+}
+add_filter( 'pre_update_option_edd_settings', 'edd_update_page_permalinks', 10, 2 );

@@ -61,10 +61,7 @@ function edd_can_checkout() {
  * @return      string
 */
 function edd_get_success_page_uri( $query_string = null ) {
-	$page_id = edd_get_option( 'success_page', 0 );
-	$page_id = absint( $page_id );
-
-	$success_page = get_permalink( $page_id );
+	$success_page = edd_get_option( 'success_page_permalink', get_permalink( edd_get_option( 'success_page', 0 ) ) );
 
 	if ( $query_string ) {
 		$success_page .= $query_string;
@@ -116,7 +113,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
  */
 function edd_get_checkout_uri( $args = array() ) {
-	$uri = edd_get_option( 'purchase_page', false );
+	$uri = edd_get_option( 'purchase_page_permalink', false );
 	$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
 
 	if ( ! empty( $args ) ) {
@@ -180,8 +177,8 @@ function edd_send_back_to_checkout( $args = array() ) {
  * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
  */
 function edd_get_failed_transaction_uri( $extras = false ) {
-	$uri = edd_get_option( 'failure_page', '' );
-	$uri = ! empty( $uri ) ? trailingslashit( get_permalink( $uri ) ) : home_url();
+	$uri = edd_get_option( 'failure_page_permalink', get_permalink( edd_get_option( 'failure_page', '' ) ) );
+	$uri = ! empty( $uri ) ? trailingslashit( $uri ) : home_url();
 
 	if ( $extras )
 		$uri .= $extras;
