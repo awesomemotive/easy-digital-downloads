@@ -534,7 +534,7 @@ function display_date_filter( $report ) {
 				'id'          => 'filter_from',
 				'name'        => 'filter_from',
 				'value'       => empty( $dates['from'] ) ? '' : $dates['from'],
-				'label'       => _ex( 'From', 'date filter', 'easy-digital-downloads' ),
+				'label'       => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
 			) );
 
@@ -543,7 +543,7 @@ function display_date_filter( $report ) {
 				'id'          => 'filter_to',
 				'name'        => 'filter_to',
 				'value'       => empty( $dates['to'] ) ? '' : $dates['to'],
-				'label'       => _ex( 'To', 'date filter', 'easy-digital-downloads' ),
+				'label'       => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
 			) );
 			?>
