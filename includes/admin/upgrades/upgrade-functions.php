@@ -30,6 +30,12 @@ function edd_do_automatic_upgrades() {
 
 	}
 
+	if( version_compare( $edd_version, '2.9', '<' ) ) {
+
+		edd_v29_upgrades();
+
+	}
+
 	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
 
 		// Let us know that an upgrade has happened
