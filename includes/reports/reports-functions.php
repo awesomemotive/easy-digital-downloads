@@ -554,7 +554,7 @@ function display_date_filter( $report ) {
  *
  * @since 3.0
  *
- * @param string|Data\Report $report Report ID or object.
+ * @param Data\Report $report Report object.
  * @return void
  */
 function display_products_filter( $report ) {
@@ -566,7 +566,7 @@ function display_products_filter( $report ) {
  *
  * @since 3.0
  *
- * @param string|Data\Report $report Report ID or object.
+ * @param Data\Report $report Report object.
  * @return void
  */
 function display_taxes_filter( $report ) {
