@@ -531,6 +531,7 @@ function display_date_filter( $report ) {
 			<?php
 			// From.
 			echo EDD()->html->date_field( array(
+				'id'          => 'filter_from',
 				'name'        => 'filter_from',
 				'value'       => empty( $dates['from'] ) ? '' : $dates['from'],
 				'label'       => _ex( 'From', 'date filter', 'easy-digital-downloads' ),
@@ -539,6 +540,7 @@ function display_date_filter( $report ) {
 
 			// To.
 			echo EDD()->html->date_field( array(
+				'id'          => 'filter_to',
 				'name'        => 'filter_to',
 				'value'       => empty( $dates['to'] ) ? '' : $dates['to'],
 				'label'       => _ex( 'To', 'date filter', 'easy-digital-downloads' ),
