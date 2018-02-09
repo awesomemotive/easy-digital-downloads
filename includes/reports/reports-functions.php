@@ -473,9 +473,32 @@ function default_display_report( $report ) {
 	$active_tab = get_active_tab();
 
 	if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-		do_action( "edd_reports_tab_{$active_tab}", $report );
+		/**
+		 * Legacy: Fires inside the content area of the currently active Reports tab.
+		 *
+		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
+		 * the current reports tab.
+		 *
+		 * @since 1.0
+		 * @deprecated 3.0 Use the new Reports API to register new tabs.
+		 *
+		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 */
+		edd_do_action_deprecated( "edd_reports_tab_{$active_tab}", array( $report ) );
 	} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-		do_action( "edd_reports_view_{$active_tab}", $report );
+		/**
+		 * Legacy: Fires inside the content area of the currently active Reports tab
+		 * (formerly reviewed to as a 'view' inside the global 'Reports' tab).
+		 *
+		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
+		 * the current reports tab.
+		 *
+		 * @since 1.0
+		 * @deprecated 3.0 Use the new Reports API to register new tabs.
+		 *
+		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 */
+		edd_do_action_deprecated( "edd_reports_view_{$active_tab}", array( $report ) );
 	}
 
 }
