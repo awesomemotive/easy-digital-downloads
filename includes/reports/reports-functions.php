@@ -451,3 +451,14 @@ function default_display_tables_group( $report ) {
 		</div>
 	<?php endif; // Has endpoints.
 }
+
+/**
+ * Handles display of a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function default_display_report( $report ) {
+
+}
