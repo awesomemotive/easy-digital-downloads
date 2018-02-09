@@ -763,7 +763,7 @@ function edd_reports_tab_logs() {
 function edd_reports_default_views() {
 	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_tabs' );
 
-	return Reports\get_tabs();
+	return \EDD\Reports\get_tabs();
 }
 
 /**
