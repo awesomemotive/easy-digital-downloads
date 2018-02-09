@@ -748,15 +748,18 @@ function edd_reports_graph_controls() {
  * @param $data
  */
 function edd_parse_report_dates( $data ) {
-	$dates = edd_get_report_dates();
+	$dates = edd_get_filter_dates();
 
-	$view          = edd_get_reporting_view();
-	$id            = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
-	$exclude_taxes = isset( $_GET['exclude_taxes'] ) ? $_GET['exclude_taxes'] : null;
+	if ( ! empty( $data['report_id'] ) ) {
+		$report_id = sanitize_key( $data['report_id'] );
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
+		EDD()->session->set( "{$report_id}:dates", array(
+			'from' => $dates['start'],
+			'to'   => $dates['end'],
+		) );
+	}
 }
-//add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
+add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
 
 /**
  * EDD Reports Refresh Button
