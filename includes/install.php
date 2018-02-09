@@ -99,6 +99,7 @@ function edd_run_install() {
 		);
 
 		$options['purchase_page'] = $checkout;
+		$options['purchase_page_permalink'] = get_permalink( $checkout );
 	}
 
 	$checkout = isset( $checkout ) ? $checkout : $current_options['purchase_page'];
@@ -119,6 +120,7 @@ function edd_run_install() {
 		);
 
 		$options['success_page'] = $success;
+		$options['success_page_permalink'] = get_permalink( $success );
 	}
 
 	$failure_page = array_key_exists( 'failure_page', $current_options ) ? get_post( $current_options['failure_page'] ) : false;
@@ -137,6 +139,7 @@ function edd_run_install() {
 		);
 
 		$options['failure_page'] = $failed;
+		$options['failure_page_permalink'] = get_permalink( $failed );
 	}
 
 	$history_page = array_key_exists( 'purchase_history_page', $current_options ) ? get_post( $current_options['purchase_history_page'] ) : false;
@@ -155,6 +158,7 @@ function edd_run_install() {
 		);
 
 		$options['purchase_history_page'] = $history;
+		$options['purchase_history_page_permalink'] = get_permalink( $history );
 	}
 
 	// Populate some default values

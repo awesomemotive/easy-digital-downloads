@@ -30,6 +30,12 @@ function edd_do_automatic_upgrades() {
 
 	}
 
+	if( version_compare( $edd_version, '2.9', '<' ) ) {
+
+		edd_v29_upgrades();
+
+	}
+
 	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
 
 		// Let us know that an upgrade has happened
@@ -1162,4 +1168,17 @@ add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );
 function edd_v26_upgrades() {
 	@EDD()->customers->create_table();
 	@EDD()->customer_meta->create_table();
+}
+
+/**
+ * 2.9 Upgrade routine to prevent additional queries in the future.
+ *
+ * @since  2.9
+ * @return void
+ */
+function edd_v29_upgrades() {
+	edd_update_option( 'purchase_page_permalink', get_permalink( 'purchase_page' ) );
+	edd_update_option( 'purchase_history_page_permalink', get_permalink( 'purchase_history_page' ) );
+	edd_update_option( 'failure_page_permalink', get_permalink( 'failure_page' ) );
+	edd_update_option( 'success_page_permalink', get_permalink( 'success_page' ) );
 }

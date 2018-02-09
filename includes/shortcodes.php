@@ -189,15 +189,7 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	}
 
 	if ( empty( $redirect ) ) {
-		$purchase_history = edd_get_option( 'purchase_history_page', 0 );
-
-		if ( ! empty( $purchase_history ) ) {
-			$redirect = get_permalink( $purchase_history );
-		}
-	}
-
-	if ( empty( $redirect ) ) {
-		$redirect = home_url();
+		$redirect = edd_get_option( 'purchase_history_page_permalink', edd_get_option( 'purchase_history_page', home_url() ) );
 	}
 
 	return edd_login_form( $redirect );
