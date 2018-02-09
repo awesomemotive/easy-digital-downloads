@@ -320,6 +320,21 @@ final class Report extends Base_Object {
 	}
 
 	/**
+	 * Displays the endpoint based on the view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return void
+	 */
+	public function display() {
+		$callback = $this->get_display_callback();
+
+		if ( is_callable( $callback ) ) {
+			call_user_func( $callback, $this );
+		}
+	}
+
+	/**
 	 * Retrieves the current report's display callback.
 	 *
 	 * @since 3.0
