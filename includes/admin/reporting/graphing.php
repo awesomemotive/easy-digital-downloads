@@ -711,8 +711,10 @@ function edd_reports_graph_controls() {
 
 				<div id="edd-date-range-options" <?php echo $display; ?>>
 					<?php
-					$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
-					$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
+					$dates_values = \EDD\Reports\get_filter_value( 'dates', '' );
+
+					$from = empty( $dates_values['from'] ) ? '' : $dates_values['from'];
+					$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
 					?>
 					<span class="edd-search-date">
 						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
