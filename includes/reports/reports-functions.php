@@ -461,8 +461,6 @@ function default_display_tables_group( $report ) {
  */
 function default_display_report( $report ) {
 
-	do_action( 'edd_reports_page_top', $report );
-
 	if ( ! is_wp_error( $report ) ) :
 
 		$report->display_endpoint_group( 'tiles' );
@@ -480,5 +478,4 @@ function default_display_report( $report ) {
 		do_action( "edd_reports_view_{$active_tab}", $report );
 	}
 
-	do_action( 'edd_reports_page_bottom', $report );
 }
