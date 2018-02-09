@@ -107,7 +107,25 @@ function edd_reports_page() {
 				<?php
 				do_action( 'edd_reports_tabs' );
 
+				/**
+				 * Fires at the top of the content area of a Reports tab.
+				 *
+				 * @since 3.0
+				 *
+				 * @param \EDD\Reports\Data\Report $report The current report object.
+				 */
+				do_action( 'edd_reports_page_top', $report );
+
 				$report->display();
+
+				/**
+				 * Fires at the bottom of the content area of a Reports tab.
+				 *
+				 * @since 3.0
+				 *
+				 * @param \EDD\Reports\Data\Report $report The current report object.
+				 */
+				do_action( 'edd_reports_page_bottom', $report );
 				?>
 			</div>
 		</div>
