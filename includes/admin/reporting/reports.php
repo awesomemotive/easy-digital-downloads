@@ -107,23 +107,27 @@ function edd_reports_page() {
 				<?php
 				do_action( 'edd_reports_tabs' );
 
-				if ( ! is_wp_error( $report ) ) :
+				/**
+				 * Fires at the top of the content area of a Reports tab.
+				 *
+				 * @since 1.0
+				 * @since 3.0 Added the `$report` parameter.
+				 *
+				 * @param \EDD\Reports\Data\Report $report The current report object.
+				 */
+				do_action( 'edd_reports_page_top', $report );
 
-					do_action( 'edd_reports_page_top' );
+				$report->display();
 
-					$report->display_endpoint_group( 'tiles' );
-
-					$report->display_endpoint_group( 'tables' );
-
-				endif; // WP_Error.
-
-				if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-					do_action( "edd_reports_tab_{$active_tab}", $report );
-				} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-					do_action( "edd_reports_view_{$active_tab}", $report );
-				}
-
-				do_action( 'edd_reports_page_bottom' );
+				/**
+				 * Fires at the bottom of the content area of a Reports tab.
+				 *
+				 * @since 1.0
+				 * @since 3.0 Added the `$report` parameter.
+				 *
+				 * @param \EDD\Reports\Data\Report $report The current report object.
+				 */
+				do_action( 'edd_reports_page_bottom', $report );
 				?>
 			</div>
 		</div>

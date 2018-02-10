@@ -31,6 +31,18 @@ class Base_Object_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::display()
+	 */
+	public function test_class_should_have_abstract_display_method() {
+		$object = $this->mock_Base_Object( array(
+			'id'    => 'foo',
+			'label' => 'Foo',
+		) );
+
+		$this->assertTrue( method_exists( $object, 'display' ) );
+	}
+
+	/**
 	 * @covers ::get_id()
 	 */
 	public function test_get_id_when_created_without_an_id_should_return_null() {

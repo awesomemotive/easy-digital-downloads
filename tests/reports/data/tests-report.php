@@ -127,6 +127,53 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::$display_callback
+	 * @covers ::get_display_callback()
+	 */
+	public function test_Report_with_empty_display_callback_should_set_the_default() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+		) );
+
+		$this->assertSame( '\EDD\Reports\default_display_report', $report->get_display_callback() );
+	}
+
+	/**
+	 * @covers ::$display_callback
+	 * @covers ::get_display_callback()
+	 */
+	public function test_Report_with_non_empty_callable_display_callback_should_set_that_callback() {
+		$report = new Report( array(
+			'id'               => 'foo',
+			'label'            => 'Foo',
+			'endpoints'        => array(),
+			'capability'       => 'exist',
+			'display_callback' => '__return_false',
+		) );
+
+		$this->assertSame( '__return_false', $report->get_display_callback() );
+	}
+
+	/**
+	 * @covers ::$display_callback
+	 * @group edd_errors
+	 */
+	public function test_Report_with_non_callable_display_callback_should_flag_WP_Error_including_code_invalid_report_arg_type() {
+		$report = new Report( array(
+			'id'               => 'foo',
+			'label'            => 'Foo',
+			'endpoints'        => array(),
+			'capability'       => 'exist',
+			'display_callback' => 'fake',
+		) );
+
+		$this->assertContains( 'invalid_report_arg_type', $report->get_errors()->get_error_codes() );
+	}
+
+	/**
 	 * @covers ::parse_endpoints()
 	 * @throws \EDD_Exception
 	 */
