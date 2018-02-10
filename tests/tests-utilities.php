@@ -81,16 +81,6 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::date()
-	 * @group edd_dates
-	 */
-	public function test_date_with_now_date_string_should_use_now() {
-		$format = self::$utils->get_date_format_string( 'date' );
-
-		$this->assertSame( self::$utils->date()->format( $format ), current_time( $format ) );
-	}
-
-	/**
 	 * @covers ::get_wp_offset()
 	 * @group edd_dates
 	 */
