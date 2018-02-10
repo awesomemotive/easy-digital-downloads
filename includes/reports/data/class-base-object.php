@@ -132,6 +132,15 @@ abstract class Base_Object {
 	}
 
 	/**
+	 * Renders the object via its display callback.
+	 *
+	 * Each sub-class must define its own display() method.
+	 *
+	 * @since 3.0
+	 */
+	abstract public function display();
+
+	/**
 	 * Determines whether the object has generated errors during instantiation.
 	 *
 	 * @since 3.0
