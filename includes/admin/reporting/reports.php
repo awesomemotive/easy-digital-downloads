@@ -110,7 +110,8 @@ function edd_reports_page() {
 				/**
 				 * Fires at the top of the content area of a Reports tab.
 				 *
-				 * @since 3.0
+				 * @since 1.0
+				 * @since 3.0 Added the `$report` parameter.
 				 *
 				 * @param \EDD\Reports\Data\Report $report The current report object.
 				 */
@@ -121,7 +122,8 @@ function edd_reports_page() {
 				/**
 				 * Fires at the bottom of the content area of a Reports tab.
 				 *
-				 * @since 3.0
+				 * @since 1.0
+				 * @since 3.0 Added the `$report` parameter.
 				 *
 				 * @param \EDD\Reports\Data\Report $report The current report object.
 				 */
