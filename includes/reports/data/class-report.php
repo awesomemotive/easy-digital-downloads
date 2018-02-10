@@ -50,7 +50,7 @@ final class Report extends Base_Object {
 	 * @since 3.0
 	 * @var   callable
 	 */
-	private $display_callback;
+	private $display_callback = '\EDD\Reports\default_display_report';
 
 	/**
 	 * Constructs the report object.
@@ -85,10 +85,6 @@ final class Report extends Base_Object {
 		if ( ! empty( $args['display_callback'] ) ) {
 
 			$this->set_display_callback( $args['display_callback'] );
-
-		} else {
-
-			$this->set_display_callback( '\EDD\Reports\default_display_report' );
 
 		}
 	}
