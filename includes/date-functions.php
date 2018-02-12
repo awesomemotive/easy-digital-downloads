@@ -83,28 +83,3 @@ function edd_get_timezone() {
 function edd_get_date_format( $format ) {
 	return EDD()->utils->get_date_format_string( $format );
 }
-
-/**
- * Retrieves the date filter range.
- *
- * @since 3.0
- *
- * @return string Date filter range.
- */
-function edd_get_date_filter_range() {
-	if ( isset( $_REQUEST['range'] ) ) {
-		$range = sanitize_key( $_REQUEST['range'] );
-	} else {
-		$range = 'last_30_days';
-	}
-
-	/**
-	 * Filters the report dates default range.
-	 *
-	 * @since 1.3
-	 *
-	 * @param string $range Date range as derived from the 'range' request var.
-	 *                      Default 'last_30_days'
-	 */
-	return apply_filters( 'edd_get_report_dates_default_range', $range );
-}
