@@ -34,6 +34,11 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
+		// Remove all core report registrations to maintain a "vanilla state".
+		add_action( 'edd_reports_init', function( $reports ) {
+			$reports->exchangeArray( array() );
+		}, 999999 );
+
 		self::$reports = new \EDD\Reports\Init();
 
 		self::$date = EDD()->utils->date();
@@ -46,6 +51,10 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		unset( $_REQUEST['filter_from'] );
 		unset( $_REQUEST['filter_to'] );
 		unset( $_REQUEST['range'] );
+
+		/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports' );
+		$registry->exchangeArray( array() );
 
 		parent::tearDown();
 	}
