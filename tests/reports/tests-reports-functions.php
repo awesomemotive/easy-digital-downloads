@@ -283,6 +283,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\get_dates_filter_options()
+	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_options_should_match_defaults() {
 		$expected = array(
@@ -305,6 +306,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\get_dates_filter()
+	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_should_return_strings() {
 		$expected = array(
@@ -323,6 +325,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\get_dates_filter()
+	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_values_objects_should_return_objects() {
 		$expected = array(
@@ -338,6 +341,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_month_range_should_return_those_dates() {
 		$expected = array(
@@ -356,6 +360,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
 		$expected = array(
@@ -374,6 +379,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_today_range_should_return_those_dates() {
 		$expected = array(
@@ -392,6 +398,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_yesterday_range_should_return_those_dates() {
 		$expected = array(
@@ -410,6 +417,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_week_range_should_return_those_dates() {
 		$expected = array(
@@ -428,6 +436,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_week_range_should_return_those_dates() {
 		$expected = array(
@@ -446,6 +455,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_30_days_range_should_return_those_dates() {
 		$expected = array(
@@ -464,6 +474,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_quarter_range_should_return_those_dates() {
 		$expected = array(
@@ -482,6 +493,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates() {
 		$expected = array(
@@ -500,6 +512,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_year_range_should_return_those_dates() {
 		$expected = array(
@@ -518,6 +531,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_year_range_should_return_those_dates() {
 		$expected = array(
@@ -536,6 +550,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
 		$_REQUEST['filter_from'] = self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString();
@@ -561,6 +576,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_invalid_range_should_use_request_dates() {
 		$expected = array(
