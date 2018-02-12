@@ -127,12 +127,12 @@ function get_endpoint_views() {
  * @return string Handler class name if set and the view exists, otherwise an empty string.
  */
 function get_endpoint_handler( $view ) {
-	$handler = '';
-
 	$views = get_endpoint_views();
 
 	if ( isset( $views[ $view ]['handler'] ) ) {
 		$handler = $views[ $view ]['handler'];
+	} else {
+		$handler = '';
 	}
 
 	return $handler;
@@ -147,12 +147,12 @@ function get_endpoint_handler( $view ) {
  * @return string Group callback if set, otherwise an empty string.
  */
 function get_endpoint_group_callback( $view ) {
-	$callback = '';
-
 	$views = get_endpoint_views();
 
 	if ( isset( $views[ $view ]['group_callback'] ) ) {
 		$callback = $views[ $view ]['group_callback'];
+	} else {
+		$callback = '';
 	}
 
 	return $callback;
