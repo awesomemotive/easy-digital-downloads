@@ -569,7 +569,7 @@ function get_date_filter_options() {
  */
 function get_dates_filter( $values = 'strings', $timezone = '' ) {
 	$date       = EDD()->utils->date( 'now', $timezone );
-	$date_range = edd_get_date_filter_range();
+	$date_range = get_dates_filter_range();
 
 	/** @var \EDD\Utils\Date[] $dates */
 	$dates = array();
@@ -729,6 +729,31 @@ function get_dates_filter_values( $now = false ) {
 	 *                        values are empty. If `$now` is true, will be 'now', otherwise empty.
 	 */
 	return apply_filters( 'edd_get_dates_filter_values', $values, $default );
+}
+
+/**
+ * Retrieves the date filter range.
+ *
+ * @since 3.0
+ *
+ * @return string Date filter range.
+ */
+function get_dates_filter_range() {
+	if ( isset( $_REQUEST['range'] ) ) {
+		$range = sanitize_key( $_REQUEST['range'] );
+	} else {
+		$range = 'last_30_days';
+	}
+
+	/**
+	 * Filters the report dates default range.
+	 *
+	 * @since 1.3
+	 *
+	 * @param string $range Date range as derived from the 'range' request var.
+	 *                      Default 'last_30_days'
+	 */
+	return apply_filters( 'edd_get_report_dates_default_range', $range );
 }
 
 /**

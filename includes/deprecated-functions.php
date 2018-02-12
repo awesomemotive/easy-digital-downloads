@@ -886,7 +886,7 @@ function edd_get_report_dates( $timezone = '' ) {
 	$filter_dates = Reports\get_dates_filter( 'objects', $timezone );
 
 	$dates = array(
-		'range'    => edd_get_date_filter_range(),
+		'range'    => Reports\get_dates_filter_range(),
 		'day'      => $filter_dates['start']->format( 'd' ),
 		'day_end'  => $filter_dates['end']->format( 'd' ),
 		'm_start'  => $filter_dates['start']->month,
