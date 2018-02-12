@@ -9,6 +9,8 @@
  * @since       1.0
 */
 
+use EDD\Reports;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -666,20 +668,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
  * @return void
 */
 function edd_reports_graph_controls() {
-	$date_options = apply_filters( 'edd_report_date_options', array(
-		'today'        => __( 'Today', 'easy-digital-downloads' ),
-		'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
-		'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
-		'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
-		'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-		'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
-		'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
-		'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-		'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-		'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
-		'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
-		'other'        => __( 'Custom', 'easy-digital-downloads' )
-	) );
+	$date_options = Reports\get_date_filter_options();
 
 	$dates   = edd_get_report_dates();
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';

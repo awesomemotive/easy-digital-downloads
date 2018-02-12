@@ -516,6 +516,39 @@ function get_filter_value( $filter, $report_id ) {
 }
 
 /**
+ * Retrieves key/label pairs of date filter options for use in a drop-down.
+ *
+ * @since 3.0
+ *
+ * @return array Key/label pairs of date filter options.
+ */
+function get_date_filter_options() {
+	$date_options = array(
+		'today'        => __( 'Today', 'easy-digital-downloads' ),
+		'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+		'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+		'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+		'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
+		'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+		'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+		'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+		'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+		'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+		'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
+		'other'        => __( 'Custom', 'easy-digital-downloads' )
+	);
+
+	/**
+	 * Filters the list of key/label pairs of date filter options.
+	 *
+	 * @since 1.3
+	 *
+	 * @param array $date_options Date filter options.
+	 */
+	return apply_filters( 'edd_report_date_options', $date_options );
+}
+
+/**
  * Handles display of the 'Date' filter for reports.
  *
  * @since 3.0
