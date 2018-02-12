@@ -413,6 +413,8 @@ final class Report extends Base_Object {
 
 			}
 		}
+
+		$this->filters = array_unique( $this->filters );
 	}
 
 	/**
