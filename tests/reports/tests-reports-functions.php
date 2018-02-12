@@ -45,6 +45,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function tearDown() {
 		unset( $_REQUEST['filter_from'] );
 		unset( $_REQUEST['filter_to'] );
+		unset( $_REQUEST['range'] );
 
 		parent::tearDown();
 	}
