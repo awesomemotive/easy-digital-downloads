@@ -127,6 +127,50 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_filters()
+	 */
+	public function test_get_filters_with_empty_filters_from_registry_should_return_dates_filter_only() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+		) );
+
+		$this->assertEqualSets( array( 'dates' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::get_filters()
+	 */
+	public function test_get_filters_with_non_empty_valid_filters_should_return_those_filters() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'dates', 'products' ),
+		) );
+
+		$this->assertEqualSets( array( 'dates', 'products' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::get_filters()
+	 */
+	public function test_get_filters_with_a_valid_non_dates_filter_should_still_include_dates() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'products' ),
+		) );
+
+		$this->assertContains( 'dates', $report->get_filters() );
+	}
+
+	/**
 	 * @covers ::$display_callback
 	 * @covers ::get_display_callback()
 	 */
