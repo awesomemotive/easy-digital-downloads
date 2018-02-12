@@ -161,6 +161,15 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::\EDD\Reports\parse_endpoint_views()
 	 */
+	public function test_get_endpoint_views_should_return_the_defaults() {
+		$views = get_endpoint_views();
+
+		$this->assertEqualSets( array( 'tile', 'chart', 'table', 'graph' ), array_keys( $views ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_endpoint_views()
+	 */
 	public function test_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
 		$expected = array(
 			'fake' => array(
