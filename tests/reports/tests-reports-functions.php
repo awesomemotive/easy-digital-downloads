@@ -252,15 +252,24 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::\EDD\Reports\get_filter_value()
 	 */
-//	public function test_get_filter_with_invalid_filter_should_return_and_empty_string() {
-//		$this->assertSame( '', get_filter_value( 'fake' ) );
-//	}
+	public function test_get_filter_value_with_invalid_filter_should_return_an_empty_string() {
+		$this->assertSame( '', get_filter_value( 'fake', 'some_report_id' ) );
+	}
 
 	/**
 	 * @covers ::\EDD\Reports\get_filter_value()
 	 */
-//	public function test_get_filter_With_a_valid_filter_should_retrieve_that_filters_value() {
-//		$this->assertTrue( get_filter_value( 'dates' ) );
-//	}
+	public function test_get_filter_value_with_a_valid_filter_should_retrieve_that_filters_value() {
+		$report_id = rand_str( 10 );
+
+		$expected = array(
+			'from' => date( 'Y-m-d H:i:s' ),
+			'to'   => date( 'Y-m-d H:i:s' ),
+		);
+
+		EDD()->session->set( "{$report_id}:dates", $expected );
+
+		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates', $report_id ) );
+	}
 
 }
