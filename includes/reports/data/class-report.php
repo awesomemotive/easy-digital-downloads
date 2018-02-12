@@ -397,7 +397,7 @@ final class Report extends Base_Object {
 	private function set_filters( $filters ) {
 		$valid_filters = Reports\get_endpoint_filters();
 
-		foreach ( $filters as $index => $filter ) {
+		foreach ( $filters as $filter ) {
 			if ( Reports\validate_filter( $filter ) ) {
 
 				$this->filters[] = $filter;
@@ -410,8 +410,6 @@ final class Report extends Base_Object {
 				);
 
 				$this->errors->add( 'invalid_report_filter', $message, $this );
-
-				unset( $filters[ $index ] );
 
 			}
 		}
