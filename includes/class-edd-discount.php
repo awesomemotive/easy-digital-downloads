@@ -276,9 +276,12 @@ class EDD_Discount {
 				case 'post_mime_type' :
 				case 'comment_count' :
 				case 'filter' :
-				case 'post_type' :
 
 					return '';
+					break;
+
+				case 'post_type' :
+					return 'edd_discount';
 					break;
 
 				case 'expiration' :
