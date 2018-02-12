@@ -272,4 +272,26 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates', $report_id ) );
 	}
 
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_options()
+	 */
+	public function test_get_dates_filter_options_should_match_defaults() {
+		$expected = array(
+			'today'        => __( 'Today', 'easy-digital-downloads' ),
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
+			'other'        => __( 'Custom', 'easy-digital-downloads' )
+		);
+		
+		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
+	}
+
 }
