@@ -464,7 +464,7 @@ function get_endpoint_filters() {
 		'dates'    => array(
 			'labe'             => __( 'Date', 'easy-digital-downloads' ),
 			'session_var'      => 'reports:date',
-			'display_callback' => __NAMESPACE__ . '\\display_date_filter',
+			'display_callback' => __NAMESPACE__ . '\\display_dates_filter',
 		),
 		'products' => array(
 			'label'            => __( 'Products', 'easy-digital-downloads' ),
@@ -764,7 +764,7 @@ function get_dates_filter_range() {
  * @param Data\Report $report Report object.
  * @return void
  */
-function display_date_filter( $report ) {
+function display_dates_filter( $report ) {
 	$options = get_date_filter_options();
 	$dates   = get_filter_value( 'dates', $report->get_id() );
 	$range   = get_dates_filter_range();
