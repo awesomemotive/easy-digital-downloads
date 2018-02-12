@@ -688,7 +688,7 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
 	 *                                         is 'objects', a Carbon object, otherwise a date time string.
 	 * }
 	 */
-	return apply_filters( 'edd_get_filter_dates', $dates );
+	return apply_filters( 'edd_get_dates_filter', $dates );
 }
 
 /**
