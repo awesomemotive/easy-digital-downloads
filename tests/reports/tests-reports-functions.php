@@ -594,6 +594,46 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_default_to_empty_if_filter_from_var_not_set() {
+		$result = get_dates_filter_values();
+
+		$this->assertSame( '', $result['start'] );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_default_to_empty_if_filter_to_var_not_set() {
+		$result = get_dates_filter_values();
+
+		$this->assertSame( '', $result['end'] );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_default_to_now_if_now_is_true_and_filter_from_var_not_set() {
+		$result = get_dates_filter_values( true );
+
+		$this->assertSame( 'now', $result['start'] );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_defualt_to_now_if_now_is_true_and_filter_to_var_not_set() {
+		$result = get_dates_filter_values( true );
+
+		$this->assertSame( 'now', $result['end'] );
+	}
+
+	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
 	 * @param array $dates Start/end dates array.
