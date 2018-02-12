@@ -332,6 +332,34 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_invalid_range_should_use_request__dates() {
+		$date = EDD()->utils->date();
+
+		// Set request vars for the benefit of get_dates_filter_values().
+		$_REQUEST['filter_from'] = $date->copy()->startOfDay();
+		$_REQUEST['filter_to']   = $date->copy()->startOfDay();
+
+		$expected = array(
+			'start' => EDD()->utils->date()->startOfDay()->toDateTimeString(),
+			'end'   => EDD()->utils->date()->endOfDay()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( $date, 'fake' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+
+		// Clean up.
+		unset( $_REQUEST['filter_from'] );
+		unset( $_REQUEST['filter_to'] );
+	}
+
+	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
 	 * @param array $dates Start/end dates array.
