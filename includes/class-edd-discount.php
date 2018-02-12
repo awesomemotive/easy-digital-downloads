@@ -345,7 +345,6 @@ class EDD_Discount {
 			'start',
 			'min_price',
 			'use_once',
-			'is_single_use',
 			'is_not_global',
 		);
 
