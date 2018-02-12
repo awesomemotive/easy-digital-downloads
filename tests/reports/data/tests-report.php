@@ -171,6 +171,51 @@ class Report_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::$filters
+	 */
+	public function test_Report_with_empty_filters_should_set_dates_filter_by_default() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+		) );
+
+		$this->assertEqualSets( array( 'dates' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::$filters
+	 */
+	public function test_Report_with_non_empty_valid_filters_should_set_those_filters() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'dates', 'products' ),
+		) );
+
+		$this->assertEqualSets( array( 'dates', 'products' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::$filters
+	 * @group edd_errors
+	 */
+	public function test_Report_with_an_invalid_filter_should_flag_WP_Error_including_code_invalid_report_filter() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'fake' ),
+		) );
+
+		$this->assertContains( 'invalid_report_filter', $report->get_errors()->get_error_codes() );
+	}
+
+	/**
 	 * @covers ::$display_callback
 	 * @covers ::get_display_callback()
 	 */
