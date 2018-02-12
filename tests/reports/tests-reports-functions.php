@@ -294,4 +294,54 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
 	}
 
+	/**
+	 * @covers ::get_dates_filter()
+	 */
+	public function test_get_dates_filter_should_return_strings() {
+		$date = EDD()->utils->date();
+
+		$expected = array(
+			'start' => $date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
+			'end'   => $date->copy()->endOfDay()->toDateTimeString(),
+		);
+
+		$result = get_dates_filter();
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $result );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::get_dates_filter()
+	 */
+	public function test_get_dates_filter_values_objects_should_return_objects() {
+		$date = EDD()->utils->date();
+
+		$expected = array(
+			'start' => $date->copy()->subDay( 30 )->startOfDay(),
+			'end'   => $date->copy()->endOfDay(),
+		);
+
+		$result = get_dates_filter( 'objects' );
+
+		$this->assertInstanceOf( '\EDD\Utils\Date', $result['start'] );
+		$this->assertInstanceOf( '\EDD\Utils\Date', $result['end'] );
+	}
+
+	/**
+	 * Strips the seconds from start and end datetime strings to guard against slow tests.
+	 *
+	 * @param array $dates Start/end dates array.
+	 * @return array Start/end dates minus their seconds.
+	 */
+	protected function strip_seconds( $dates ) {
+		$dates['start'] = date( 'Y-m-d H:i', strtotime( $dates['start'] ) );
+		$dates['end']   = date( 'Y-m-d H:i', strtotime( $dates['end'] ) );
+
+		return $dates;
+	}
+
 }
