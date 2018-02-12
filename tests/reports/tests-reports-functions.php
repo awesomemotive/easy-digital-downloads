@@ -40,6 +40,16 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * Runs after every test method.
+	 */
+	public function tearDown() {
+		unset( $_REQUEST['filter_from'] );
+		unset( $_REQUEST['filter_to'] );
+
+		parent::tearDown();
+	}
+
+	/**
 	 * @covers ::\EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
@@ -568,10 +578,6 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
-
-		// Clean up.
-		unset( $_REQUEST['filter_from'] );
-		unset( $_REQUEST['filter_to'] );
 	}
 
 	/**
