@@ -70,7 +70,7 @@ function get_active_tab() {
 	$tabs = get_tabs();
 
 	// If not set, default the active tab to the first one.
-	return isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : key( $tabs );
+	return isset( $_REQUEST['tab'] ) ? sanitize_key( $_REQUEST['tab'] ) : key( $tabs );
 }
 
 /**
