@@ -522,7 +522,7 @@ function get_filter_value( $filter, $report_id ) {
  *
  * @return array Key/label pairs of date filter options.
  */
-function get_date_filter_options() {
+function get_dates_filter_options() {
 	$date_options = array(
 		'today'        => __( 'Today', 'easy-digital-downloads' ),
 		'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
@@ -765,7 +765,7 @@ function get_dates_filter_range() {
  * @return void
  */
 function display_dates_filter( $report ) {
-	$options = get_date_filter_options();
+	$options = get_dates_filter_options();
 	$dates   = get_filter_value( 'dates', $report->get_id() );
 	$range   = get_dates_filter_range();
 	$class   = $range === 'other' ? '' : 'screen-reader-text';
