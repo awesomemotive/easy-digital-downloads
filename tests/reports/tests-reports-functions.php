@@ -24,10 +24,19 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	protected static $reports;
 
 	/**
+	 * Date fixture.
+	 *
+	 * @var \EDD\Utils\Date
+	 */
+	protected static $date;
+
+	/**
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
 		self::$reports = new \EDD\Reports\Init();
+
+		self::$date = EDD()->utils->date();
 	}
 
 	/**
