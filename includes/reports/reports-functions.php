@@ -567,7 +567,7 @@ function get_date_filter_options() {
  *                                         is 'objects', a Carbon object, otherwise a date time string.
  * }
  */
-function get_filter_dates( $values = 'strings', $timezone = '' ) {
+function get_dates_filter( $values = 'strings', $timezone = '' ) {
 	$date       = EDD()->utils->date( 'now', $timezone );
 	$date_range = edd_get_date_filter_range();
 
