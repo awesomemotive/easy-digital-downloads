@@ -693,6 +693,34 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_range()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_range_should_default_to_last_30_days() {
+		$this->assertSame( 'last_30_days', get_dates_filter_range() );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_range()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_range_with_range_var_set_should_return_that_var() {
+		$_REQUEST['range'] = 'last_month';
+
+		$this->assertSame( 'last_month', get_dates_filter_range() );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_range()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_range_with_range_var_set_should_return_the_sanitized_version_of_that_var() {
+		$_REQUEST['range'] = '1/2/3/4';
+
+		$this->assertSame( '1234', get_dates_filter_range() );
+	}
+
+	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
 	 * @param array $dates Start/end dates array.
