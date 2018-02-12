@@ -191,7 +191,7 @@ function edd_get_filter_dates( $values = 'strings', $timezone = '' ) {
 
 		case 'other':
 		default:
-			$filter_dates = edd_get_filter_date_values( true );
+			$filter_dates = edd_get_date_filter_values( true );
 
 			$dates = array(
 				'start' => EDD()->utils->date( $filter_dates['start'] )->startOfDay(),
@@ -240,7 +240,7 @@ function edd_get_filter_dates( $values = 'strings', $timezone = '' ) {
  *     @type string $end   End day and time string based on the WP timezone.
  * }
  */
-function edd_get_filter_date_values( $now = false ) {
+function edd_get_date_filter_values( $now = false ) {
 	if ( true === $now ) {
 		$default = 'now';
 	} else {
@@ -253,7 +253,7 @@ function edd_get_filter_date_values( $now = false ) {
 	/**
 	 * Filters the start and end filter date values for a Graph API request.
 	 *
-	 * @since 2.2
+	 * @since 3.0
 	 *
 	 * @param array {
 	 *     Query date range for the current date filter request.
@@ -264,7 +264,7 @@ function edd_get_filter_date_values( $now = false ) {
 	 * @param string $default The fallback value if 'filter_from' and/or 'filter_to' `$_REQUEST`
 	 *                        values are empty. If `$now` is true, will be 'now', otherwise empty.
 	 */
-	return apply_filters( 'edd_get_filter_date_values', $values, $default );
+	return apply_filters( 'edd_get_date_filter_values', $values, $default );
 }
 
 /**
