@@ -33,7 +33,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 		 * @since 3.0.0
 		 * @var int
 		 */
-		protected $version = 201802010002;
+		protected $version = 201802120001;
 
 		/**
 		 * Setup the database schema
