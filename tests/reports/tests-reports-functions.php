@@ -344,4 +344,16 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		return $dates;
 	}
 
+	/**
+	 * Converts start and end date objects to strings.
+	 *
+	 * @param array $dates Start/end date objects array.
+	 * @return array Start/end date strings array.
+	 */
+	protected function objects_to_date_strings( $dates ) {
+		$dates['start'] = $dates['start']->toDateTimeString();
+		$dates['end']   = $dates['end']->toDateTimeString();
+
+		return $dates;
+	}
 }
