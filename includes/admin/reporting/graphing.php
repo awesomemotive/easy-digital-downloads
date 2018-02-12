@@ -737,7 +737,7 @@ function edd_reports_graph_controls() {
  * @param $data
  */
 function edd_parse_report_dates( $data ) {
-	$dates = edd_get_filter_dates();
+	$dates = Reports\get_filter_dates();
 
 	if ( ! empty( $data['report_id'] ) ) {
 		$report_id = sanitize_key( $data['report_id'] );
