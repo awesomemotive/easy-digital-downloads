@@ -95,6 +95,13 @@ final class Report extends Base_Object {
 			$this->set_display_callback( $args['display_callback'] );
 
 		}
+
+		if ( ! empty( $args['filters'] ) ) {
+
+			$this->set_filters( $args['filters'] );
+
+		}
+
 	}
 
 	/**
@@ -366,6 +373,47 @@ final class Report extends Base_Object {
 
 			$this->flag_invalid_report_arg_type( 'display_callback', 'callable' );
 
+		}
+	}
+
+	/**
+	 * Retrieves the list of filters registered for use with this report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array List of support filters.
+	 */
+	public function get_filters() {
+		return $this->filters;
+	}
+
+	/**
+	 * Sets the endpoint filters supported by the current report's endpoints.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $filters Filters to set for this report.
+	 */
+	private function set_filters( $filters ) {
+		$valid_filters = Reports\get_endpoint_filters();
+
+		foreach ( $filters as $index => $filter ) {
+			if ( Reports\validate_filter( $filter ) ) {
+
+				$this->filters[] = $filter;
+
+			} else {
+
+				$message = sprintf( 'The \'%1$s\' filter for the \'%2$s\' report is invalid.',
+					$filter,
+					$this->get_id()
+				);
+
+				$this->errors->add( 'invalid_report_filter', $message, $this );
+
+				unset( $filters[ $index ] );
+
+			}
 		}
 	}
 
