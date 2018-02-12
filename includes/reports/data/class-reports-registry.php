@@ -147,7 +147,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		}
 
 		foreach ( $attributes['filters'] as $index => $filter ) {
-			if ( ! Reports\is_filter_valid( $filter ) ) {
+			if ( ! Reports\validate_filter( $filter ) ) {
 				$message = sprintf( 'The \'%1$s\' report contains one or more invalid filters.', $report_id );
 
 				throw new Utils\Exception( $message );
