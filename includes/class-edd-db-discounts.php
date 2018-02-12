@@ -294,11 +294,6 @@ class EDD_DB_Discounts extends EDD_DB {
 					LIMIT %d,%d;
 				", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
 
-			echo "SELECT id
-					FROM $this->table_name
-					$where
-					ORDER BY {$args['orderby']} {$args['order']}";
-
 			if ( ! empty( $discounts ) ) {
 				foreach ( $discounts as $key => $discount ) {
 					$discounts[ $key ] = new EDD_Discount( $discount );
