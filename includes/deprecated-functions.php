@@ -870,19 +870,20 @@ function edd_report_views() {
  * selected date-range (if any)
  *
  * @since 1.3
- * @deprecated 3.0 Use edd_get_filter_dates() instead
- * @see edd_get_filter_dates()
+ * @deprecated 3.0 Use \EDD\Reports\get_filter_dates() instead
+ * @see \EDD\Reports\get_filter_dates()
  *
  * @param string $timezone Optional. Timezone to force for report filter dates calculations.
  *                         Default empty.
+ *
  * @return array Array of report filter dates.
  */
 function edd_get_report_dates( $timezone = '' ) {
 
-	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_get_filter_dates' );
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_filter_dates' );
 
 	/** @var \Carbon\Carbon[] $filter_dates */
-	$filter_dates = edd_get_filter_dates( 'objects', $timezone );
+	$filter_dates = Reports\get_filter_dates( 'objects', $timezone );
 
 	$dates = array(
 		'range'    => edd_get_date_filter_range(),

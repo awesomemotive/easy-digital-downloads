@@ -549,6 +549,149 @@ function get_date_filter_options() {
 }
 
 /**
+ * Retrieves the start and end date filters for use with the Reports API.
+ *
+ * @since 3.0
+ *
+ * @param string $values   Optional. What format to retrieve dates in the resulting array in.
+ *                         Accepts 'strings' or 'objects'. Default 'strings'.
+ * @param string $timezone Optional. Timezone to force for filter dates. Primarily used for
+ *                         legacy testing purposes. Default empty.
+ * @return array|\EDD\Utils\Date[] {
+ *     Query date range for the current graph filter request.
+ *
+ *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
+ *                                         If `$values` is 'objects', a Carbon object, otherwise a date
+ *                                         time string.
+ *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
+ *                                         is 'objects', a Carbon object, otherwise a date time string.
+ * }
+ */
+function get_filter_dates( $values = 'strings', $timezone = '' ) {
+	$date       = EDD()->utils->date( 'now', $timezone );
+	$date_range = edd_get_date_filter_range();
+
+	/** @var \EDD\Utils\Date[] $dates */
+	$dates = array();
+
+	switch( $date_range ) {
+
+		case 'this_month':
+			$dates = array(
+				'start' => $date->copy()->startOfMonth(),
+				'end'   => $date->copy()->endOfMonth(),
+			);
+			break;
+
+		case 'last_month':
+			$dates = array(
+				'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
+				'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
+			);
+			break;
+
+		case 'today':
+			$dates = array(
+				'start' => $date->copy()->startOfDay(),
+				'end'   => $date->copy()->endOfDay(),
+			);
+			break;
+
+		case 'yesterday':
+			$dates = array(
+				'start' => $date->copy()->subDay( 1 )->startOfDay(),
+				'end'   => $date->copy()->subDay( 1 )->endOfDay(),
+			);
+			break;
+
+		case 'this_week':
+			$dates = array(
+				'start' => $date->copy()->startOfWeek(),
+				'end'   => $date->copy()->endOfWeek(),
+			);
+			break;
+
+		case 'last_week':
+			$dates = array(
+				'start' => $date->copy()->subWeek( 1 )->startOfWeek(),
+				'end'   => $date->copy()->subWeek( 1 )->endOfWeek(),
+			);
+			break;
+
+		case 'last_30_days':
+			$dates = array(
+				'start' => $date->copy()->subDay( 30 )->startOfDay(),
+				'end'   => $date->copy()->endOfDay(),
+			);
+			break;
+
+		case 'this_quarter':
+			$dates = array(
+				'start' => $date->copy()->startOfQuarter(),
+				'end'   => $date->copy()->endOfQuarter(),
+			);
+			break;
+
+		case 'last_quarter':
+			$dates = array(
+				'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+				'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
+			);
+			break;
+
+		case 'this_year':
+			$dates = array(
+				'start' => $date->copy()->startOfYear(),
+				'end'   => $date->copy()->endOfYear(),
+			);
+			break;
+
+		case 'last_year':
+			$dates = array(
+				'start' => $date->copy()->subYear( 1 )->startOfYear(),
+				'end'   => $date->copy()->subYear( 1 )->endOfYear(),
+			);
+			break;
+
+		case 'other':
+		default:
+			$filter_dates = edd_get_date_filter_values( true );
+
+			$dates = array(
+				'start' => EDD()->utils->date( $filter_dates['start'] )->startOfDay(),
+				'end'   => EDD()->utils->date( $filter_dates['end'] )->endOfDay(),
+			);
+			break;
+	}
+
+	if ( 'strings' === $values ) {
+		if ( ! empty( $dates['start'] ) ) {
+			$dates['start'] = $dates['start']->toDateTimeString();
+		}
+		if ( ! empty( $dates['end'] ) ) {
+			$dates['end'] = $dates['end']->toDateTimeString();
+		}
+	}
+
+	/**
+	 * Filters the start and end date filters for use with the Graphs API.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array|\EDD\Utils\Date[] $dates {
+	 *     Query date range for the current graph filter request.
+	 *
+	 *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
+	 *                                         If `$values` is 'objects', a Carbon object, otherwise a date
+	 *                                         time string.
+	 *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
+	 *                                         is 'objects', a Carbon object, otherwise a date time string.
+	 * }
+	 */
+	return apply_filters( 'edd_get_filter_dates', $dates );
+}
+
+/**
  * Handles display of the 'Date' filter for reports.
  *
  * @since 3.0
