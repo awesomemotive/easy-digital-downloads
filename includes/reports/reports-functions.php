@@ -765,9 +765,18 @@ function get_dates_filter_range() {
  * @return void
  */
 function display_date_filter( $report ) {
-	$dates = get_filter_value( 'dates', $report->get_id() );
+	$options = get_date_filter_options();
+	$dates   = get_filter_value( 'dates', $report->get_id() );
+	$range   = get_dates_filter_range();
+	$class   = $range === 'other' ? '' : 'screen-reader-text';
 	?>
-	<div id="edd-date-range-options">
+	<select id="edd-graphs-date-options" name="range">
+		<?php foreach ( $options as $key => $label ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $range ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php endforeach; ?>
+	</select>
+
+	<div id="edd-date-range-options" class="<?php echo esc_attr( $class ); ?>">
 		<span class="edd-search-date">
 			<?php
 			// From.
