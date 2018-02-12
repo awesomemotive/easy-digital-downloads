@@ -334,12 +334,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::parse_dates_for_range()
 	 */
-	public function test_parse_dates_for_range_with_invalid_range_should_use_request__dates() {
+	public function test_parse_dates_for_range_with_invalid_range_should_use_request_dates() {
 		$date = EDD()->utils->date();
-
-		// Set request vars for the benefit of get_dates_filter_values().
-		$_REQUEST['filter_from'] = $date->copy()->startOfDay();
-		$_REQUEST['filter_to']   = $date->copy()->startOfDay();
 
 		$expected = array(
 			'start' => EDD()->utils->date()->startOfDay()->toDateTimeString(),
@@ -353,10 +349,6 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
-
-		// Clean up.
-		unset( $_REQUEST['filter_from'] );
-		unset( $_REQUEST['filter_to'] );
 	}
 
 	/**
