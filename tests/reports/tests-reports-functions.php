@@ -304,14 +304,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_dates_filter()
+	 * @covers ::\EDD\Reports\get_dates_filter()
 	 */
 	public function test_get_dates_filter_should_return_strings() {
-		$date = EDD()->utils->date();
-
 		$expected = array(
-			'start' => $date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
-			'end'   => $date->copy()->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 		);
 
 		$result = get_dates_filter();
@@ -324,14 +322,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_dates_filter()
+	 * @covers ::\EDD\Reports\get_dates_filter()
 	 */
 	public function test_get_dates_filter_values_objects_should_return_objects() {
-		$date = EDD()->utils->date();
-
 		$expected = array(
-			'start' => $date->copy()->subDay( 30 )->startOfDay(),
-			'end'   => $date->copy()->endOfDay(),
+			'start' => self::$date->copy()->subDay( 30 )->startOfDay(),
+			'end'   => self::$date->copy()->endOfDay(),
 		);
 
 		$result = get_dates_filter( 'objects' );
