@@ -33,7 +33,7 @@ final class EDD_DB_Table_Orders extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801300001;
+	protected $version = 201802120001;
 
 	/**
 	 * Setup the database schema
