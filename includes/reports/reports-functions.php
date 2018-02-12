@@ -568,13 +568,53 @@ function get_dates_filter_options() {
  * }
  */
 function get_dates_filter( $values = 'strings', $timezone = '' ) {
-	$date       = EDD()->utils->date( 'now', $timezone );
-	$date_range = get_dates_filter_range();
+	$date  = EDD()->utils->date( 'now', $timezone );
+	$dates = parse_dates_for_range( $date );
 
-	/** @var \EDD\Utils\Date[] $dates */
-	$dates = array();
+	if ( 'strings' === $values ) {
+		if ( ! empty( $dates['start'] ) ) {
+			$dates['start'] = $dates['start']->toDateTimeString();
+		}
+		if ( ! empty( $dates['end'] ) ) {
+			$dates['end'] = $dates['end']->toDateTimeString();
+		}
+	}
 
-	switch( $date_range ) {
+	/**
+	 * Filters the start and end date filters for use with the Graphs API.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array|\EDD\Utils\Date[] $dates {
+	 *     Query date range for the current graph filter request.
+	 *
+	 *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
+	 *                                         If `$values` is 'objects', a Carbon object, otherwise a date
+	 *                                         time string.
+	 *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
+	 *                                         is 'objects', a Carbon object, otherwise a date time string.
+	 * }
+	 */
+	return apply_filters( 'edd_get_dates_filter', $dates );
+}
+
+/**
+ * Parses start and end dates for the given range.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Utils\Date $date  Date object.
+ * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
+ *                               Default is the current range as derived from the session.
+ * @return \EDD\Utils\Date[] Array of start and end date objects.
+ */
+function parse_dates_for_range( $date, $range = null ) {
+
+	if ( null === $range ) {
+		$range = get_dates_filter_range();
+	}
+
+	switch( $range ) {
 
 		case 'this_month':
 			$dates = array(
@@ -664,31 +704,7 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
 			break;
 	}
 
-	if ( 'strings' === $values ) {
-		if ( ! empty( $dates['start'] ) ) {
-			$dates['start'] = $dates['start']->toDateTimeString();
-		}
-		if ( ! empty( $dates['end'] ) ) {
-			$dates['end'] = $dates['end']->toDateTimeString();
-		}
-	}
-
-	/**
-	 * Filters the start and end date filters for use with the Graphs API.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array|\EDD\Utils\Date[] $dates {
-	 *     Query date range for the current graph filter request.
-	 *
-	 *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
-	 *                                         If `$values` is 'objects', a Carbon object, otherwise a date
-	 *                                         time string.
-	 *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
-	 *                                         is 'objects', a Carbon object, otherwise a date time string.
-	 * }
-	 */
-	return apply_filters( 'edd_get_dates_filter', $dates );
+	return $dates;
 }
 
 /**
