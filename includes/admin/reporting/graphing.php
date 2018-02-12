@@ -668,7 +668,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
  * @return void
 */
 function edd_reports_graph_controls() {
-	$date_options = Reports\get_date_filter_options();
+	$date_options = Reports\get_dates_filter_options();
 
 	$dates   = edd_get_report_dates();
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
