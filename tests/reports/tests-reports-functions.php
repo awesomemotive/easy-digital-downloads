@@ -640,6 +640,58 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_pull_filter_from_and_to_values_if_both_set() {
+		$expected = array(
+			'start' => self::$date->copy()->subWeekdays( 2 )->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->addWeekdays( 2 )->endOfDay()->toDateTimeString(),
+		);
+
+		$_REQUEST['filter_from'] = $expected['start'];
+		$_REQUEST['filter_to']   = $expected['end'];
+
+		$result = get_dates_filter_values();
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_match_start_value_with_filter_from_value() {
+		$expected = array(
+			'start' => self::$date->copy()->subWeekdays( 2 )->startOfDay()->toDateTimeString(),
+			'end'   => '',
+		);
+
+		$_REQUEST['filter_from'] = $expected['start'];
+
+		$result = get_dates_filter_values();
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_values()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_values_should_match_end_value_with_filter_to_value() {
+		$expected = array(
+			'start' => '',
+			'end'   => self::$date->copy()->addWeekdays( 2 )->endOfDay()->toDateTimeString(),
+		);
+
+		$_REQUEST['filter_to'] = $expected['end'];
+
+		$result = get_dates_filter_values();
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
 	 * @param array $dates Start/end dates array.
