@@ -172,17 +172,17 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\is_view_valid()
+	 * @covers ::\EDD\Reports\validate_view()
 	 */
-	public function test_is_view_valid_with_valid_view_should_return_true() {
-		$this->assertTrue( is_view_valid( 'tile' ) );
+	public function test_validate_view_with_valid_view_should_return_true() {
+		$this->assertTrue( validate_view( 'tile' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\is_view_valid()
+	 * @covers ::\EDD\Reports\validate_view()
 	 */
-	public function test_is_view_valid_with_invalid_view_should_return_false() {
-		$this->assertFalse( is_view_valid( 'fake' ) );
+	public function test_validate_view_with_invalid_view_should_return_false() {
+		$this->assertFalse( validate_view( 'fake' ) );
 	}
 
 	/**
