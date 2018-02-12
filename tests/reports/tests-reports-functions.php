@@ -337,17 +337,238 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::parse_dates_for_range()
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
 	 */
-	public function test_parse_dates_for_range_with_invalid_range_should_use_request_dates() {
-		$date = EDD()->utils->date();
-
+	public function test_parse_dates_for_range_with_this_month_range_should_return_those_dates() {
 		$expected = array(
-			'start' => EDD()->utils->date()->startOfDay()->toDateTimeString(),
-			'end'   => EDD()->utils->date()->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
 		);
 
-		$result = parse_dates_for_range( $date, 'fake' );
+		$result = parse_dates_for_range( self::$date, 'this_month' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'last_month' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_today_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'today' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_yesterday_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->subDay( 1 )->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->subDay( 1 )->endOfDay()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'yesterday' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_this_week_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->startOfWeek()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfWeek()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'this_week' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_last_week_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->subWeek( 1 )->startOfWeek()->toDateTimeString(),
+			'end'   => self::$date->copy()->subWeek( 1 )->endOfWeek()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'last_week' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_last_30_days_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'last_30_days' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_this_quarter_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->startOfQuarter()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfQuarter()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'this_quarter' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->subQuarter( 1 )->startOfQuarter()->toDateTimeString(),
+			'end'   => self::$date->copy()->subQuarter( 1 )->endOfQuarter()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'last_quarter' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_this_year_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->startOfYear()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfYear()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'this_year' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_last_year_range_should_return_those_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->subYear( 1 )->startOfYear()->toDateTimeString(),
+			'end'   => self::$date->copy()->subYear( 1 )->endOfYear()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'last_year' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
+		$_REQUEST['filter_from'] = self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString();
+		$_REQUEST['filter_to']   = self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString();
+
+		$expected = array(
+			'start' => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'other' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+
+		// Clean up.
+		unset( $_REQUEST['filter_from'] );
+		unset( $_REQUEST['filter_to'] );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 */
+	public function test_parse_dates_for_range_with_invalid_range_should_use_request_dates() {
+		$expected = array(
+			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'fake' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
