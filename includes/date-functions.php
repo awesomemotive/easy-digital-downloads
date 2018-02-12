@@ -105,7 +105,7 @@ function edd_get_date_format( $format ) {
  */
 function edd_get_filter_dates( $values = 'strings', $timezone = '' ) {
 	$date       = EDD()->utils->date( 'now', $timezone );
-	$date_range = edd_get_filter_date_range();
+	$date_range = edd_get_date_filter_range();
 
 	/** @var \EDD\Utils\Date[] $dates */
 	$dates = array();
@@ -274,7 +274,7 @@ function edd_get_filter_date_values( $now = false ) {
  *
  * @return string Date filter range.
  */
-function edd_get_filter_date_range() {
+function edd_get_date_filter_range() {
 	if ( isset( $_REQUEST['range'] ) ) {
 		$range = sanitize_key( $_REQUEST['range'] );
 	} else {
