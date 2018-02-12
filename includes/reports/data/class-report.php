@@ -53,6 +53,14 @@ final class Report extends Base_Object {
 	private $display_callback = '\EDD\Reports\default_display_report';
 
 	/**
+	 * Represents filters the report has opted into.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $filters = array( 'dates' );
+
+	/**
 	 * Constructs the report object.
 	 *
 	 * @since 3.0
