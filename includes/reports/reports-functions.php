@@ -487,7 +487,7 @@ function get_endpoint_filters() {
  * @param string $filter Filter key.
  * @return bool True if the filter is valid, otherwise false.
  */
-function is_filter_valid( $filter ) {
+function validate_filter( $filter ) {
 	return array_key_exists( $filter, get_endpoint_filters() );
 }
 
@@ -503,7 +503,7 @@ function is_filter_valid( $filter ) {
 function get_filter_value( $filter, $report_id ) {
 	$value = '';
 
-	if ( is_filter_valid( $filter ) ) {
+	if ( validate_filter( $filter ) ) {
 
 		$filter_value = EDD()->session->get( "{$report_id}:{$filter}" );
 

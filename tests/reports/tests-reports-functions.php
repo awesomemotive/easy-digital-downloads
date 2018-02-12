@@ -236,17 +236,17 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\is_filter_valid()
+	 * @covers ::\EDD\Reports\validate_filter()
 	 */
-	public function test_is_filter_valid_with_valid_filter_should_return_true() {
-		$this->assertTrue( is_filter_valid( 'dates' ) );
+	public function test_validate_filter_with_valid_filter_should_return_true() {
+		$this->assertTrue( validate_filter( 'dates' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\is_filter_valid()
+	 * @covers ::\EDD\Reports\validate_filter()
 	 */
-	public function test_is_filter_valid_with_invalid_filter_should_return_false() {
-		$this->assertFalse( is_filter_valid( 'fake' ) );
+	public function test_validate_filter_with_invalid_filter_should_return_false() {
+		$this->assertFalse( validate_filter( 'fake' ) );
 	}
 
 	/**
