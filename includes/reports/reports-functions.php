@@ -453,13 +453,13 @@ function default_display_tables_group( $report ) {
 }
 
 /**
- * Retrieves the list of supported endpoint filters and their attributes.
+ * Retrieves the list of registered reports filters and their attributes.
  *
  * @since 3.0
  *
  * @return array List of supported endpoint filters.
  */
-function get_endpoint_filters() {
+function get_registered_filters() {
 	return array(
 		'dates'    => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
@@ -488,7 +488,7 @@ function get_endpoint_filters() {
  * @return bool True if the filter is valid, otherwise false.
  */
 function validate_filter( $filter ) {
-	return array_key_exists( $filter, get_endpoint_filters() );
+	return array_key_exists( $filter, get_registered_filters() );
 }
 
 /**
@@ -914,7 +914,7 @@ function default_display_report( $report ) {
  */
 function display_filters( $report ) {
 	$filters  = $report->get_filters();
-	$manifest = get_endpoint_filters();
+	$manifest = get_registered_filters();
 
 	if ( ! empty( $filters ) ) : ?>
 		<style type="text/css">
