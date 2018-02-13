@@ -308,7 +308,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		$category_label    = $category_count > 1 ? $category_labels['name'] : $category_labels['singular_name'];
 
 		$tag_list     = $tags ? get_the_term_list( $download_id, 'download_tag', '', ', ' ) : '';
-		$tag_count    = count( get_the_terms( $download_id, 'download_tag' ) );
+		$tag_count    = $tags ? count( get_the_terms( $download_id, 'download_tag' ) ) : 0;
 		$tag_taxonomy = edd_get_taxonomy_labels( 'download_tag' );
 		$tag_label    = $tag_count > 1 ? $tag_taxonomy['name'] : $tag_taxonomy['singular_name'];
 
