@@ -926,17 +926,25 @@ function display_filters( $report ) {
 		<div id="edd-reports-filters-wrap">
 			<h3><?php _e( 'Filters', 'easy-digital-downloads' ); ?></h3>
 
-			<?php foreach ( $filters as $filter ) : ?>
-				<?php
-				if ( ! empty( $manifest[ $filter ]['display_callback'] ) ) :
-					$callback = $manifest[ $filter ]['display_callback'];
+			<form id="edd-graphs-filter" method="get">
+				<?php foreach ( $filters as $filter ) : ?>
+					<?php
+					if ( ! empty( $manifest[ $filter ]['display_callback'] ) ) :
+						$callback = $manifest[ $filter ]['display_callback'];
 
-					if ( is_callable( $callback ) ) :
-						call_user_func( $callback, $report );
+						if ( is_callable( $callback ) ) :
+							call_user_func( $callback, $report );
+						endif;
 					endif;
-				endif;
-				?>
-			<?php endforeach; ?>
+					?>
+				<?php endforeach; ?>
+
+				<div class="edd-graph-filter-submit graph-option-section">
+					<input type="hidden" name="edd_action" value="filter_reports" />
+					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+				</div>
+
+			</form>
 		</div>
 	<?php endif;
 }
