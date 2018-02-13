@@ -896,3 +896,39 @@ function default_display_report( $report ) {
 
 	}
 }
+
+/**
+ * Displays the filters UI for a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function display_filters( $report ) {
+	$filters  = $report->get_filters();
+	$manifest = get_endpoint_filters();
+
+	if ( ! empty( $filters ) ) : ?>
+		<style type="text/css">
+			#edd-item-card-wrapper > div {
+				overflow: auto;
+				margin-bottom: 20px;
+			}
+		</style>
+		<div id="edd-reports-filters-wrap">
+			<h3><?php _e( 'Filters', 'easy-digital-downloads' ); ?></h3>
+
+			<?php foreach ( $filters as $filter ) : ?>
+				<?php
+				if ( ! empty( $manifest[ $filter ]['display_callback'] ) ) :
+					$callback = $manifest[ $filter ]['display_callback'];
+
+					if ( is_callable( $callback ) ) :
+						call_user_func( $callback, $report );
+					endif;
+				endif;
+				?>
+			<?php endforeach; ?>
+		</div>
+	<?php endif;
+}
