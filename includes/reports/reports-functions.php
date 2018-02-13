@@ -462,7 +462,7 @@ function default_display_tables_group( $report ) {
 function get_endpoint_filters() {
 	return array(
 		'dates'    => array(
-			'labe'             => __( 'Date', 'easy-digital-downloads' ),
+			'label'            => __( 'Date', 'easy-digital-downloads' ),
 			'session_var'      => 'reports:date',
 			'display_callback' => __NAMESPACE__ . '\\display_dates_filter',
 		),
