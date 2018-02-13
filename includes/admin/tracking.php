@@ -138,7 +138,7 @@ class EDD_Tracking {
 
 		wp_remote_post( 'https://easydigitaldownloads.com/?edd_action=checkin', array(
 			'method'      => 'POST',
-			'timeout'     => 20,
+			'timeout'     => 8,
 			'redirection' => 5,
 			'httpversion' => '1.1',
 			'blocking'    => false,
