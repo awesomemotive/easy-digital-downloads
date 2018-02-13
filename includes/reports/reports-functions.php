@@ -852,6 +852,8 @@ function default_display_report( $report ) {
 
 	if ( ! is_wp_error( $report ) ) :
 
+		display_filters( $report );
+
 		$report->display_endpoint_group( 'tiles' );
 
 		$report->display_endpoint_group( 'tables' );
