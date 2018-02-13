@@ -578,6 +578,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$i = 1;
 		$wrapper_class = 'edd_download_columns_' . $atts['columns'];
 		ob_start(); ?>
+		<?php do_action( 'edd_downloads_list_before', $atts ); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 
 			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
