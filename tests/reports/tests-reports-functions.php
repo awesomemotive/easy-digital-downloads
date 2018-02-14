@@ -325,15 +325,13 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_filter_value()
 	 */
 	public function test_get_filter_value_with_invalid_filter_should_return_an_empty_string() {
-		$this->assertSame( '', get_filter_value( 'fake', 'some_report_id' ) );
+		$this->assertSame( '', get_filter_value( 'fake' ) );
 	}
 
 	/**
 	 * @covers ::\EDD\Reports\get_filter_value()
 	 */
 	public function test_get_filter_value_with_a_valid_filter_should_retrieve_that_filters_value() {
-		$report_id = rand_str( 10 );
-
 		$expected = array(
 			'from' => date( 'Y-m-d H:i:s' ),
 			'to'   => date( 'Y-m-d H:i:s' ),
@@ -341,7 +339,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 		EDD()->session->set( "{$report_id}:dates", $expected );
 
-		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates', $report_id ) );
+		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
 
 	/**
@@ -629,7 +627,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'end'   => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 		);
 
-		$result = parse_dates_for_range( self::$date, 'other', $report_id );
+		$result = parse_dates_for_range( self::$date, 'other' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -679,7 +677,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_quarter',
 		) );
 
-		$this->assertSame( 'last_quarter', get_dates_filter_range( $report_id ) );
+		$this->assertSame( 'last_quarter', get_dates_filter_range() );
 
 		// Clean up.
 		EDD()->session->set( "{$report_id}:dates", false );

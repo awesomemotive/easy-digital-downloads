@@ -700,7 +700,7 @@ function edd_reports_graph_controls() {
 
 				<div id="edd-date-range-options" <?php echo $display; ?>>
 					<?php
-					$dates_values = \EDD\Reports\get_filter_value( 'dates', '' );
+					$dates_values = \EDD\Reports\get_filter_value( 'dates' );
 
 					$from = empty( $dates_values['from'] ) ? '' : $dates_values['from'];
 					$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
