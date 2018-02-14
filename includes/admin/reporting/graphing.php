@@ -759,9 +759,21 @@ function edd_parse_report_dates( $data ) {
 
 				if ( 'other' === $range ) {
 					$session_data = array(
-						'from' => empty( $data['filter_from'] ) ? '' : sanitize_text_field( $data['filter_from'] ),
-						'to'   => empty( $data['filter_to'] ) ? '' : sanitize_text_field( $data['filter_to'] ),
+						'from'  => empty( $data['filter_from'] ) ? '' : sanitize_text_field( $data['filter_from'] ),
+						'to'    => empty( $data['filter_to'] ) ? '' : sanitize_text_field( $data['filter_to'] ),
+						'range' => 'other',
 					);
+
+				} else {
+
+					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range, $report_id );
+
+					$session_data = array(
+						'from'  => $dates['start']->format( 'm/d/Y' ),
+						'to'    => $dates['end']->format( 'm/d/Y' ),
+						'range' => $range,
+					);
+
 				}
 
 			} elseif ( 'taxes' === $filter ) {
