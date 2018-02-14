@@ -11,6 +11,144 @@
 namespace EDD\Reports;
 
 /**
+ * Registers a new endpoint to the master registry.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
+ *
+ * @param string $endpoint_id Reports data endpoint ID.
+ * @param array  $attributes  {
+ *     Endpoint attributes. All arguments are required unless otherwise noted.
+ *
+ *     @type string $label    Endpoint label.
+ *     @type int    $priority Optional. Priority by which to retrieve the endpoint. Default 10.
+ *     @type array  $views {
+ *         Array of view handlers by type.
+ *
+ *         @type array $view_type {
+ *             View type slug, with array beneath it.
+ *
+ *             @type callable $data_callback    Callback used to retrieve data for the view.
+ *             @type callable $display_callback Callback used to render the view.
+ *             @type array    $display_args     Optional. Array of arguments to pass to the
+ *                                              display_callback (if any). Default empty array.
+ *         }
+ *     }
+ * }
+ * @return bool True if the endpoint was successfully registered, otherwise false.
+ */
+function register_endpoint( $endpoint_id, $attributes ) {
+	/** @var Data\Endpoint_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+	if ( is_wp_error( $registry ) ) {
+		return false;
+	}
+
+	try {
+
+		$added = $registry->register_endpoint( $endpoint_id, $attributes );
+
+	} catch ( \EDD_Exception $exception ) {
+
+		edd_debug_log_exception( $exception );
+
+		$added = false;
+
+	}
+
+	return $added;
+}
+
+/**
+ * Retrieves and builds an endpoint object.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
+ *
+ * @param string $endpoint_id Endpoint ID.
+ * @param string $view_type   View type to use when building the object.
+ * @return Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
+ */
+function get_endpoint( $endpoint_id, $view_type ) {
+	/** @var Data\Endpoint_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
+
+	if ( is_wp_error( $registry ) ) {
+		return $registry;
+	}
+
+	return $registry->build_endpoint( $endpoint_id, $view_type );
+}
+
+/**
+ * Registers a new report.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Reports\Data\Reports_Registry::add_report()
+ *
+ * @param string $report_id   Report ID.
+ * @param array  $attributes {
+ *     Reports attributes. All arguments are required unless otherwise noted.
+ *
+ *     @type string $label     Report label.
+ *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
+ *     @type array  $filters   Filters available to the report.
+ *     @type array  $endpoints Endpoints to associate with the report.
+ * }
+ * @return bool True if the report was successfully registered, otherwise false.
+ */
+function add_report( $report_id, $attributes ) {
+	/** @var Data\Reports_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports' );
+
+	if ( is_wp_error( $registry ) ) {
+		return false;
+	}
+
+	try {
+
+		$added = $registry->add_report( $report_id, $attributes );
+
+	} catch ( \EDD_Exception $exception ) {
+
+		edd_debug_log_exception( $exception );
+
+		$added = false;
+
+	}
+
+	return $added;
+}
+
+/**
+ * Retrieves and builds a report object.
+ *
+ * @since 3.0
+ *
+ * @see \EDD\Reports\Data\Reports_Registry::build_report()
+ *
+ * @param string $report_id       Report ID.
+ * @param bool   $build_endpoints Optional. Whether to build the endpoints (includes registering
+ *                                any endpoint dependencies, such as registering meta boxes).
+ *                                Default true.
+ * @return Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
+ */
+function get_report( $report_id, $build_endpoints = true ) {
+	/** @var Data\Reports_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports' );
+
+	if ( is_wp_error( $registry ) ) {
+		return $registry;
+	}
+
+	return $registry->build_report( $report_id, $build_endpoints );
+}
+
+/**
  * Retrieves the list of slug/label report tab pairs.
  *
  * @since 3.0
@@ -171,144 +309,6 @@ function validate_view( $view ) {
 }
 
 /**
- * Registers a new endpoint to the master registry.
- *
- * @since 3.0
- *
- * @see \EDD\Reports\Data\Endpoint_Registry::register_endpoint()
- *
- * @param string $endpoint_id Reports data endpoint ID.
- * @param array  $attributes  {
- *     Endpoint attributes. All arguments are required unless otherwise noted.
- *
- *     @type string $label    Endpoint label.
- *     @type int    $priority Optional. Priority by which to retrieve the endpoint. Default 10.
- *     @type array  $views {
- *         Array of view handlers by type.
- *
- *         @type array $view_type {
- *             View type slug, with array beneath it.
- *
- *             @type callable $data_callback    Callback used to retrieve data for the view.
- *             @type callable $display_callback Callback used to render the view.
- *             @type array    $display_args     Optional. Array of arguments to pass to the
- *                                              display_callback (if any). Default empty array.
- *         }
- *     }
- * }
- * @return bool True if the endpoint was successfully registered, otherwise false.
- */
-function register_endpoint( $endpoint_id, $attributes ) {
-	/** @var Data\Endpoint_Registry|\WP_Error $registry */
-	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
-
-	if ( is_wp_error( $registry ) ) {
-		return false;
-	}
-
-	try {
-
-		$added = $registry->register_endpoint( $endpoint_id, $attributes );
-
-	} catch ( \EDD_Exception $exception ) {
-
-		edd_debug_log_exception( $exception );
-
-		$added = false;
-
-	}
-
-	return $added;
-}
-
-/**
- * Retrieves and builds an endpoint object.
- *
- * @since 3.0
- *
- * @see \EDD\Reports\Data\Endpoint_Registry::build_endpoint()
- *
- * @param string $endpoint_id Endpoint ID.
- * @param string $view_type   View type to use when building the object.
- * @return Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
- */
-function get_endpoint( $endpoint_id, $view_type ) {
-	/** @var Data\Endpoint_Registry|\WP_Error $registry */
-	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
-
-	if ( is_wp_error( $registry ) ) {
-		return $registry;
-	}
-
-	return $registry->build_endpoint( $endpoint_id, $view_type );
-}
-
-/**
- * Registers a new report.
- *
- * @since 3.0
- *
- * @see \EDD\Reports\Data\Reports_Registry::add_report()
- *
- * @param string $report_id   Report ID.
- * @param array  $attributes {
- *     Reports attributes. All arguments are required unless otherwise noted.
- *
- *     @type string $label     Report label.
- *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
- *     @type array  $filters   Filters available to the report.
- *     @type array  $endpoints Endpoints to associate with the report.
- * }
- * @return bool True if the report was successfully registered, otherwise false.
- */
-function add_report( $report_id, $attributes ) {
-	/** @var Data\Reports_Registry|\WP_Error $registry */
-	$registry = EDD()->utils->get_registry( 'reports' );
-
-	if ( is_wp_error( $registry ) ) {
-		return false;
-	}
-
-	try {
-
-		$added = $registry->add_report( $report_id, $attributes );
-
-	} catch ( \EDD_Exception $exception ) {
-
-		edd_debug_log_exception( $exception );
-
-		$added = false;
-
-	}
-
-	return $added;
-}
-
-/**
- * Retrieves and builds a report object.
- *
- * @since 3.0
- *
- * @see \EDD\Reports\Data\Reports_Registry::build_report()
- *
- * @param string $report_id       Report ID.
- * @param bool   $build_endpoints Optional. Whether to build the endpoints (includes registering
- *                                any endpoint dependencies, such as registering meta boxes).
- *                                Default true.
- * @return Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
- */
-function get_report( $report_id, $build_endpoints = true ) {
-	/** @var Data\Reports_Registry|\WP_Error $registry */
-	$registry = EDD()->utils->get_registry( 'reports' );
-
-	if ( is_wp_error( $registry ) ) {
-		return $registry;
-	}
-
-	return $registry->build_report( $report_id, $build_endpoints );
-}
-
-/**
  * Parses views for an incoming endpoint.
  *
  * @since 3.0
@@ -339,117 +339,6 @@ function parse_endpoint_views( $views ) {
 	}
 
 	return $views;
-}
-
-/**
- * Displays the default content for a tile endpoint.
- *
- * @since 3.0
- *
- * @param \EDD\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
- *                                               Not always set.
- * @param array                          $args   Tile display arguments.
- * @return void Meta box display callbacks only echo output.
- */
-function default_display_tile( $object, $tile ) {
-	if ( ! isset( $tile['args'] ) ) {
-		return;
-	}
-
-	if ( empty( $tile['args']['data'] ) ) {
-		echo '<span class="tile-no-data tile-value">' . __( 'No data for the current date range.', 'easy-digital-downloads' ) . '</span>';
-	} else {
-		switch( $tile['args']['display_args']['type'] ) {
-			case 'number':
-				echo '<span class="tile-number tile-value">' . edd_format_amount( $tile['args']['data'] ) . '</span>';
-				break;
-
-			case 'split-number':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					edd_format_amount( $tile['args']['data']['first_value'] ),
-					edd_format_amount( $tile['args']['data']['second_value'] )
-				);
-				break;
-
-			case 'split-amount':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					edd_currency_filter( edd_format_amount( $tile['args']['data']['first_value'] ) ),
-					edd_currency_filter( edd_format_amount( $tile['args']['data']['second_value'] ) )
-				);
-				break;
-
-			case 'amount':
-				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $tile['args']['data'] ) ) . '</span>';
-				break;
-
-			case 'url':
-				echo '<span class="tile-url tile-value">' . esc_url( $tile['args']['data'] ) . '</span>';
-				break;
-
-			default:
-				echo '<span class="tile-value">' . esc_html( $tile['args']['data'] ) . '</span>';
-				break;
-		}
-	}
-
-	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . $tile['args']['display_args']['comparison_label'] . '</span>';
-	}
-}
-
-/**
- * Handles default display of all tile endpoints registered against a report.
- *
- * @since 3.0
- *
- * @param Data\Report $report Report object.
- */
-function default_display_tiles_group( $report ) {
-	if ( $report->has_endpoints( 'tiles' ) ) : ?>
-
-		<div id="edd-reports-tiles-wrap">
-			<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
-
-			<div id="dashboard-widgets" class="metabox-holder">
-
-				<div class="postbox-container">
-					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
-				</div>
-
-				<div class="postbox-container">
-					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
-				</div>
-
-				<div class="postbox-container">
-					<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
-				</div>
-
-			</div>
-		</div>
-	<?php endif; // Has endpoints.
-}
-
-/**
- * Handles default display of all table endpoints registered against a report.
- *
- * @since 3.0
- *
- * @param Data\Report $report Report object.
- */
-function default_display_tables_group( $report ) {
-	if ( $report->has_endpoints( 'tables' ) ) :
-		$tables = $report->get_endpoints( 'tables' );
-		?>
-		<div id="edd-reports-tables-wrap">
-
-			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
-				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
-
-				<?php $table->display(); ?>
-			<?php endforeach; ?>
-
-		</div>
-	<?php endif; // Has endpoints.
 }
 
 /**
@@ -770,6 +659,117 @@ function get_dates_filter_range() {
 	 *                      Default 'last_30_days'
 	 */
 	return apply_filters( 'edd_get_report_dates_default_range', $range );
+}
+
+/**
+ * Displays the default content for a tile endpoint.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
+ *                                               Not always set.
+ * @param array                          $args   Tile display arguments.
+ * @return void Meta box display callbacks only echo output.
+ */
+function default_display_tile( $object, $tile ) {
+	if ( ! isset( $tile['args'] ) ) {
+		return;
+	}
+
+	if ( empty( $tile['args']['data'] ) ) {
+		echo '<span class="tile-no-data tile-value">' . __( 'No data for the current date range.', 'easy-digital-downloads' ) . '</span>';
+	} else {
+		switch( $tile['args']['display_args']['type'] ) {
+			case 'number':
+				echo '<span class="tile-number tile-value">' . edd_format_amount( $tile['args']['data'] ) . '</span>';
+				break;
+
+			case 'split-number':
+				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+					edd_format_amount( $tile['args']['data']['first_value'] ),
+					edd_format_amount( $tile['args']['data']['second_value'] )
+				);
+				break;
+
+			case 'split-amount':
+				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+					edd_currency_filter( edd_format_amount( $tile['args']['data']['first_value'] ) ),
+					edd_currency_filter( edd_format_amount( $tile['args']['data']['second_value'] ) )
+				);
+				break;
+
+			case 'amount':
+				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $tile['args']['data'] ) ) . '</span>';
+				break;
+
+			case 'url':
+				echo '<span class="tile-url tile-value">' . esc_url( $tile['args']['data'] ) . '</span>';
+				break;
+
+			default:
+				echo '<span class="tile-value">' . esc_html( $tile['args']['data'] ) . '</span>';
+				break;
+		}
+	}
+
+	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
+		echo '<span class="tile-compare">' . $tile['args']['display_args']['comparison_label'] . '</span>';
+	}
+}
+
+/**
+ * Handles default display of all tile endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function default_display_tiles_group( $report ) {
+	if ( $report->has_endpoints( 'tiles' ) ) : ?>
+
+		<div id="edd-reports-tiles-wrap">
+			<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
+
+			<div id="dashboard-widgets" class="metabox-holder">
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
+				</div>
+
+				<div class="postbox-container">
+					<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
+				</div>
+
+			</div>
+		</div>
+	<?php endif; // Has endpoints.
+}
+
+/**
+ * Handles default display of all table endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function default_display_tables_group( $report ) {
+	if ( $report->has_endpoints( 'tables' ) ) :
+		$tables = $report->get_endpoints( 'tables' );
+		?>
+		<div id="edd-reports-tables-wrap">
+
+			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
+				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
+
+				<?php $table->display(); ?>
+			<?php endforeach; ?>
+
+		</div>
+	<?php endif; // Has endpoints.
 }
 
 /**
