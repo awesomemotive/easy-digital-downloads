@@ -405,7 +405,7 @@ function validate_filter( $filter ) {
 function get_filter_value( $filter, $report_id ) {
 	$value = '';
 
-	if ( validate_filter( $filter ) ) {
+	if ( validate_filter( $filter ) && null !== $report_id ) {
 
 		$filter_value = EDD()->session->get( "{$report_id}:{$filter}" );
 
