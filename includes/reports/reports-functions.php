@@ -10,6 +10,10 @@
  */
 namespace EDD\Reports;
 
+//
+// Endpoint and report helpers.
+//
+
 /**
  * Registers a new endpoint to the master registry.
  *
@@ -148,6 +152,10 @@ function get_report( $report_id, $build_endpoints = true ) {
 	return $registry->build_report( $report_id, $build_endpoints );
 }
 
+//
+// Tabs.
+//
+
 /**
  * Retrieves the list of slug/label report tab pairs.
  *
@@ -210,6 +218,10 @@ function get_active_tab() {
 	// If not set, default the active tab to the first one.
 	return isset( $_REQUEST['tab'] ) ? sanitize_key( $_REQUEST['tab'] ) : key( $tabs );
 }
+
+//
+// Endpoints.
+//
 
 /**
  * Retrieves the list of supported endpoint view types and their attributes.
@@ -340,6 +352,10 @@ function parse_endpoint_views( $views ) {
 
 	return $views;
 }
+
+//
+// Filters.
+//
 
 /**
  * Retrieves the list of registered reports filters and their attributes.
@@ -661,6 +677,68 @@ function get_dates_filter_range() {
 	return apply_filters( 'edd_get_report_dates_default_range', $range );
 }
 
+//
+// Display callbacks.
+//
+
+/**
+ * Handles display of a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function default_display_report( $report ) {
+
+	if ( ! is_wp_error( $report ) ) :
+
+		display_filters( $report );
+
+		$report->display_endpoint_group( 'tiles' );
+
+		$report->display_endpoint_group( 'tables' );
+
+	endif; // WP_Error.
+
+	// Back-compat.
+	$active_tab = get_active_tab();
+
+	if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
+
+		/**
+		 * Legacy: Fires inside the content area of the currently active Reports tab.
+		 *
+		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
+		 * the current reports tab.
+		 *
+		 * @since 1.0
+		 * @deprecated 3.0 Use the new Reports API to register new tabs.
+		 * @see \EDD\Reports\add_report()
+		 *
+		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 */
+		edd_do_action_deprecated( "edd_reports_tab_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
+
+	} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
+
+		/**
+		 * Legacy: Fires inside the content area of the currently active Reports tab
+		 * (formerly reviewed to as a 'view' inside the global 'Reports' tab).
+		 *
+		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
+		 * the current reports tab.
+		 *
+		 * @since 1.0
+		 * @deprecated 3.0 Use the new Reports API to register new tabs.
+		 * @see \EDD\Reports\add_report()
+		 *
+		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 */
+		edd_do_action_deprecated( "edd_reports_view_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
+
+	}
+}
+
 /**
  * Displays the default content for a tile endpoint.
  *
@@ -845,64 +923,6 @@ function display_taxes_filter( $report ) {
 		<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
 	</div>
 	<?php
-}
-
-/**
- * Handles display of a report.
- *
- * @since 3.0
- *
- * @param Data\Report $report Report object.
- */
-function default_display_report( $report ) {
-
-	if ( ! is_wp_error( $report ) ) :
-
-		display_filters( $report );
-
-		$report->display_endpoint_group( 'tiles' );
-
-		$report->display_endpoint_group( 'tables' );
-
-	endif; // WP_Error.
-
-	// Back-compat.
-	$active_tab = get_active_tab();
-
-	if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-
-		/**
-		 * Legacy: Fires inside the content area of the currently active Reports tab.
-		 *
-		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
-		 * the current reports tab.
-		 *
-		 * @since 1.0
-		 * @deprecated 3.0 Use the new Reports API to register new tabs.
-		 * @see \EDD\Reports\add_report()
-		 *
-		 * @param \EDD\Reports\Data\Report $report Current report object.
-		 */
-		edd_do_action_deprecated( "edd_reports_tab_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
-
-	} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-
-		/**
-		 * Legacy: Fires inside the content area of the currently active Reports tab
-		 * (formerly reviewed to as a 'view' inside the global 'Reports' tab).
-		 *
-		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
-		 * the current reports tab.
-		 *
-		 * @since 1.0
-		 * @deprecated 3.0 Use the new Reports API to register new tabs.
-		 * @see \EDD\Reports\add_report()
-		 *
-		 * @param \EDD\Reports\Data\Report $report Current report object.
-		 */
-		edd_do_action_deprecated( "edd_reports_view_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
-
-	}
 }
 
 /**
