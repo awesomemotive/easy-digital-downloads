@@ -775,7 +775,13 @@ function edd_parse_report_dates( $data ) {
 
 	if ( ! empty( $data['edd_redirect'] ) ) {
 
-		wp_redirect( $data['edd_redirect'] );
+		if ( ! empty( $data['range'] ) ) {
+			$redirect = add_query_arg( array( 'range' => $data['range'] ), $data['edd_redirect'] );
+		} else {
+			$redirect = $data['edd_redirect'];
+		}
+
+		wp_redirect( $redirect );
 
 		edd_die();
 
