@@ -920,7 +920,7 @@ function display_taxes_filter( $report ) {
 	$taxes = get_filter_value( 'taxes', $report->get_id() );
 	?>
 	<div class="edd-graph-filter-options graph-option-section">
-		<input type="checkbox" id="exclude_taxes" <?php checked( false, $taxes, true ); ?> value="1" name="exclude_taxes" />
+		<input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes" />
 		<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
 	</div>
 	<?php
