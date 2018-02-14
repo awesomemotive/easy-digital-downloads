@@ -734,7 +734,7 @@ function edd_reports_graph_controls() {
  *
  * @since 1.3
  *
- * @param $data
+ * @param array $data POSTed data from the filters form.
  */
 function edd_parse_report_dates( $data ) {
 	Reports\Init::bootstrap();
