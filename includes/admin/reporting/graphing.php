@@ -754,7 +754,7 @@ function edd_parse_report_dates( $data ) {
 				if ( ! empty( $data['range'] ) ) {
 					$range = sanitize_key( $data['range'] );
 				} else {
-					$range = Reports\get_dates_filter_range();
+					$range = Reports\get_dates_filter_range( $report_id );
 				}
 
 				if ( 'other' === $range ) {
