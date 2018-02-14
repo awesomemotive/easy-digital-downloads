@@ -337,7 +337,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'to'   => date( 'Y-m-d H:i:s' ),
 		);
 
-		EDD()->session->set( "{$report_id}:dates", $expected );
+		EDD()->session->set( 'reports:dates', $expected );
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
@@ -614,9 +614,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
-		$report_id = rand_str( 10 );
-
-		EDD()->session->set( "{$report_id}:dates", array(
+		EDD()->session->set( 'reports:dates', array(
 			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 			'range' => 'other',
@@ -636,7 +634,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, $result );
 
 		// Clean up.
-		EDD()->session->set( "{$report_id}:dates", array() );
+		EDD()->session->set( 'reports:dates', array() );
 	}
 
 	/**
@@ -671,16 +669,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_report_id_should_return_that_reports_range() {
-		$report_id = rand_str( 10 );
-
-		EDD()->session->set( "{$report_id}:dates", array(
+		EDD()->session->set( 'reports:dates', array(
 			'range' => 'last_quarter',
 		) );
 
 		$this->assertSame( 'last_quarter', get_dates_filter_range() );
 
 		// Clean up.
-		EDD()->session->set( "{$report_id}:dates", false );
+		EDD()->session->set( 'reports:dates', false );
 	}
 
 	/**
