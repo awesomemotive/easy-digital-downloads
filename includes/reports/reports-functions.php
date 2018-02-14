@@ -599,11 +599,26 @@ function parse_dates_for_range( $date, $range = null, $report_id = null ) {
 
 		case 'other':
 		default:
-			$filter_dates = get_dates_filter_values( true );
+
+			$dates_from_report = get_filter_value( 'dates', $report_id );
+
+			if ( ! empty( $dates_from_report ) ) {
+
+				$start = $dates_from_report['from'];
+				$end   = $dates_from_report['to'];
+
+			} else {
+
+				$dates_from_vars = get_dates_filter_values( true );
+
+				$start = $dates_from_vars['start'];
+				$end   = $dates_from_vars['end'];
+
+			}
 
 			$dates = array(
-				'start' => EDD()->utils->date( $filter_dates['start'] )->startOfDay(),
-				'end'   => EDD()->utils->date( $filter_dates['end'] )->endOfDay(),
+				'start' => EDD()->utils->date( $start )->startOfDay(),
+				'end'   => EDD()->utils->date( $end )->endOfDay(),
 			);
 			break;
 	}
