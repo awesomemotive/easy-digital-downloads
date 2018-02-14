@@ -654,13 +654,26 @@ function get_dates_filter_values( $now = false ) {
  *
  * @since 3.0
  *
+ * @param string $report_id Optional. Specific report to retrieve the dates filter range for.
+ *                          If omitted, the active tab slug will be used.
  * @return string Date filter range.
  */
-function get_dates_filter_range() {
-	if ( isset( $_REQUEST['range'] ) ) {
+function get_dates_filter_range( $report_id = null ) {
+
+	$dates = get_filter_value( 'dates', $report_id );
+
+	if ( null !== $report_id && isset( $dates['range'] ) ) {
+
+		$range = $dates['range'];
+
+	} elseif ( isset( $_REQUEST['range'] ) ) {
+
 		$range = sanitize_key( $_REQUEST['range'] );
+
 	} else {
+
 		$range = 'last_30_days';
+
 	}
 
 	/**
