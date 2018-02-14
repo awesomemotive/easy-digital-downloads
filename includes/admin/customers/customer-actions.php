@@ -11,6 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array $output Response messages
  */
 function edd_edit_customer( $args ) {
+	/**
+	 * Filters the user role required to edit customers.
+	 *
+	 * @param string edit_shop_payments The role. Defaults to edit_shop_payments.
+	 */
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
@@ -48,12 +53,12 @@ function edd_edit_customer( $args ) {
 
 	if ( (int) $customer_info['user_id'] != (int) $customer->user_id ) {
 
-		// Make sure we don't already have this user attached to a customer
+		// Make sure we don't already have this user attached to a customer.
 		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
 			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
-		// Make sure it's actually a user
+		// Make sure it's actually a user.
 		$user = get_user_by( 'id', $customer_info['user_id'] );
 		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
@@ -61,7 +66,7 @@ function edd_edit_customer( $args ) {
 
 	}
 
-	// Record this for later
+	// Record this for later.
 	$previous_user_id  = $customer->user_id;
 
 	if ( edd_get_errors() ) {
@@ -70,7 +75,7 @@ function edd_edit_customer( $args ) {
 
 	$user_id = intval( $customer_info['user_id'] );
 	if ( empty( $user_id ) && ! empty( $customer_info['user_login'] ) ) {
-		// See if they gave an email, otherwise we'll assume login
+		// See if they gave an email, otherwise we'll assume login.
 		$user_by_field = 'login';
 		if ( is_email( $customer_info['user_login'] ) ) {
 			$user_by_field = 'email';
@@ -84,7 +89,7 @@ function edd_edit_customer( $args ) {
 		}
 	}
 
-	// Setup the customer address, if present
+	// Setup the customer address, if present.
 	$address = array();
 	if ( ! empty( $user_id ) ) {
 
@@ -109,18 +114,37 @@ function edd_edit_customer( $args ) {
 
 	}
 
-	// Sanitize the inputs
+	// Sanitize the inputs.
 	$customer_data            = array();
 	$customer_data['name']    = strip_tags( stripslashes( $customer_info['name'] ) );
 	$customer_data['email']   = $customer_info['email'];
 	$customer_data['user_id'] = $user_id;
 
+	/**
+	 * Modifies the customer data before customer details are edited.
+	 *
+	 * @param array $customer_data The data for the customer being edited.
+	 * @param int   $customer_id   The ID of the customer being edited.
+	 */
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
+	/**
+	 * Modifies the customer address before customer details are edited.
+	 *
+	 * @param array $address     The customer address details.
+	 * @param int   $customer_id The ID of the customer being edited.
+	 */
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
 
 	$customer_data = array_map( 'sanitize_text_field', $customer_data );
 	$address       = array_map( 'sanitize_text_field', $address );
 
+	/**
+	 * Runs actions before a customer is edited.
+	 *
+	 * @param int   $customer_id   The customer ID.
+	 * @param array $customer_data The customer data.
+	 * @param array $address       The customer's address.
+	 */
 	do_action( 'edd_pre_edit_customer', $customer_id, $customer_data, $address );
 
 	$output         = array();
@@ -132,7 +156,7 @@ function edd_edit_customer( $args ) {
 			update_user_meta( $customer->user_id, '_edd_user_address', $address );
 		}
 
-		// Update some payment meta if we need to
+		// Update some payment meta if we need to.
 		$payments_array = explode( ',', $customer->payment_ids );
 
 		if ( $customer->email != $previous_email ) {
@@ -157,6 +181,12 @@ function edd_edit_customer( $args ) {
 
 	}
 
+	/**
+	 * Runs actions after a customer is edited.
+	 *
+	 * @param int   $customer_id   The ID of the customer thast was edited.
+	 * @param array $customer_data Details for the customer that was edited.
+	 */
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -175,11 +205,16 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  * Add an email address to the customer from within the admin and log a customer note
  *
  * @since  2.6
- * @param  array $args  Array of arguments: nonce, customer id, and email address
+ * @param  array $args  Array of arguments: nonce, customer id, and email address.
  * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
  */
 function edd_add_customer_email( $args ) {
 
+	/**
+	 * Filters the user role required to edit customers.
+	 *
+	 * @param string edit_shop_payments The role. Defaults to edit_shop_payments.
+	 */
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
@@ -263,6 +298,12 @@ function edd_add_customer_email( $args ) {
 
 	}
 
+	/**
+	 * Fires after a customer's email is added.
+	 *
+	 * @param int   $customer_id The ID of the customer that was updated.
+	 * @param array $args        The customer details.
+	 */
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -368,11 +409,16 @@ add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 )
  * Save a customer note being added
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
+ * @param  array $args The $_POST array being passeed.
  * @return int         The Note ID that was saved, or 0 if nothing was saved
  */
 function edd_customer_save_note( $args ) {
 
+	/**
+	 * Filters the user role required to view customers.
+	 *
+	 * @param string view_shop_reports The role. Defaults to view_shop_reports.
+	 */
 	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_view_role ) ) {
@@ -402,6 +448,12 @@ function edd_customer_save_note( $args ) {
 	$customer = new EDD_Customer( $customer_id );
 	$new_note = $customer->add_note( $customer_note );
 
+	/**
+	 * Fires before a customer note is inserted.
+	 *
+	 * @param int    $customer_id The customer ID.
+	 * @param string $new_note    The note.
+	 */
 	do_action( 'edd_pre_insert_customer_note', $customer_id, $new_note );
 
 	if ( ! empty( $new_note ) && ! empty( $customer->id ) ) {
@@ -435,11 +487,16 @@ add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
  * Delete a customer
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
- * @return int         Wether it was a successful deletion
+ * @param  array $args The $_POST array being passeed.
+ * @return int         Wether it was a successful deletion.
  */
 function edd_customer_delete( $args ) {
 
+	/**
+	 * Filters the role required to edit customers.
+	 *
+	 * @param string edit_shop_payments The role. Defaults to edit_shop_payments.
+	 */
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
@@ -470,6 +527,13 @@ function edd_customer_delete( $args ) {
 
 	$customer = new EDD_Customer( $customer_id );
 
+	/**
+	 * Fires before a customer is deleted.
+	 *
+	 * @param int  $customer_id The ID of the customer that will be deleted.
+	 * @param bool $confirm     If the deletion has been confirmed.
+	 * @param bool $remove_data If the customer data will be removed.
+	 */
 	do_action( 'edd_pre_delete_customer', $customer_id, $confirm, $remove_data );
 
 	$success = false;
@@ -483,14 +547,14 @@ function edd_customer_delete( $args ) {
 
 			if ( $remove_data ) {
 
-				// Remove all payments, logs, etc
+				// Remove all payments, logs, etc.
 				foreach ( $payments_array as $payment_id ) {
 					edd_delete_purchase( $payment_id, false, true );
 				}
 
 			} else {
 
-				// Just set the payments to customer_id of 0
+				// Just set the payments to customer_id of 0.
 				foreach ( $payments_array as $payment_id ) {
 					edd_update_payment_meta( $payment_id, '_edd_payment_customer_id', 0 );
 				}
@@ -523,8 +587,8 @@ add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
  * Disconnect a user ID from a customer
  *
  * @since  2.3
- * @param  array $args Array of arguments
- * @return bool        If the disconnect was sucessful
+ * @param  array $args Array of arguments.
+ * @return bool        If the disconnect was sucessful.
  */
 function edd_disconnect_customer_user_id( $args ) {
 
@@ -550,6 +614,12 @@ function edd_disconnect_customer_user_id( $args ) {
 		return false;
 	}
 
+	/**
+	 * Fires before a user ID is disconnected from a customer.
+	 *
+	 * @param int $customer_id       The customer ID.
+	 * @param int $customer->user_id The user ID associated with the customer.
+	 */
 	do_action( 'edd_pre_customer_disconnect_user_id', $customer_id, $customer->user_id );
 
 	$customer_args = array( 'user_id' => 0 );
@@ -569,6 +639,11 @@ function edd_disconnect_customer_user_id( $args ) {
 		edd_set_error( 'edd-disconnect-user-fail', __( 'Failed to disconnect user from customer', 'easy-digital-downloads' ) );
 	}
 
+	/**
+	 * Fires after a customer is disconnected from a user ID.
+	 *
+	 * @param int $customer_id The ID of the customer that was disconnected.
+	 */
 	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -616,6 +691,7 @@ add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
 
 /**
  * Register the reset single customer stats batch processor
+ *
  * @since  2.5
  */
 function edd_register_batch_single_customer_recount_tool() {
@@ -627,7 +703,7 @@ add_action( 'edd_register_batch_exporter', 'edd_register_batch_single_customer_r
  * Loads the tools batch processing class for recounding stats for a single customer
  *
  * @since  2.5
- * @param  string $class The class being requested to run for the batch export
+ * @param  string $class The class being requested to run for the batch export.
  * @return void
  */
 function edd_include_single_customer_recount_tool_batch_processer( $class ) {

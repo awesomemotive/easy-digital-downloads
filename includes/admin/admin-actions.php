@@ -21,10 +21,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_process_actions() {
 	if ( isset( $_POST['edd-action'] ) ) {
+		/**
+		 * Processes EDD actions passed in $_POST variables.
+		 *
+		 * @param string $_POST The $_POST superglobal passed.
+		 */
 		do_action( 'edd_' . $_POST['edd-action'], $_POST );
 	}
 
 	if ( isset( $_GET['edd-action'] ) ) {
+		/**
+		 * Processes EDD actions passed in query strings.
+		 *
+		 * @param string $_GET The $_GET superglobal passed.
+		 */
 		do_action( 'edd_' . $_GET['edd-action'], $_GET );
 	}
 }
