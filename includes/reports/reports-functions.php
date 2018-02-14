@@ -628,37 +628,42 @@ function parse_dates_for_range( $date, $range = null, $report_id = null ) {
  *
  * @since 3.0
  *
- * @param string $report_id Optional. Specific report to retrieve the dates filter range for.
- *                          If omitted, the active tab slug will be used.
+ * @param string $report_id Specific report to retrieve the dates filter range for.
+ *                          If omitted, the range will default to 'last_30_days'.
  * @return string Date filter range.
  */
-function get_dates_filter_range( $report_id = null ) {
+function get_dates_filter_range( $report_id ) {
 
 	$dates = get_filter_value( 'dates', $report_id );
 
-	if ( null !== $report_id && isset( $dates['range'] ) ) {
+	if ( isset( $dates['range'] ) ) {
 
-		$range = $dates['range'];
-
-	} elseif ( isset( $_REQUEST['range'] ) ) {
-
-		$range = sanitize_key( $_REQUEST['range'] );
+		$range = sanitize_key( $dates['range'] );
 
 	} else {
 
-		$range = 'last_30_days';
+		/**
+		 * Filters the report dates default range.
+		 *
+		 * @since 1.3
+		 *
+		 * @param string $range Date range as derived from the 'range' request var.
+		 *                      Default 'last_30_days'
+		 */
+		$range = apply_filters( 'edd_get_report_dates_default_range', 'last_30_days' );
 
 	}
 
 	/**
-	 * Filters the report dates default range.
+	 * Filters the dates filter range.
 	 *
-	 * @since 1.3
+	 * @since 3.0
 	 *
-	 * @param string $range Date range as derived from the 'range' request var.
-	 *                      Default 'last_30_days'
+	 * @param string $range     Dates filter range.
+	 * @param string $report_id Report ID.
+	 * @param array  $dates     Filter dates array.
 	 */
-	return apply_filters( 'edd_get_report_dates_default_range', $range );
+	return apply_filters( 'edd_get_dates_filter_range', $range, $report_id, $dates );
 }
 
 //
