@@ -787,7 +787,7 @@ function edd_parse_report_dates( $form_data ) {
 
 			}
 
-			EDD()->session->set( "{$report_id}:{$filter}", $session_data );
+			EDD()->session->set( "reports:{$filter}", $session_data );
 
 		}
 
