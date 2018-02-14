@@ -368,17 +368,14 @@ function get_filters() {
 	return array(
 		'dates'    => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
-			'session_var'      => 'reports:date',
 			'display_callback' => __NAMESPACE__ . '\\display_dates_filter',
 		),
 		'products' => array(
 			'label'            => __( 'Products', 'easy-digital-downloads' ),
-			'session_var'      => 'reports:products',
 			'display_callback' => __NAMESPACE__ . '\\display_products_filter',
 		),
 		'taxes'    => array(
 			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
-			'session_var'      => 'reports:taxes',
 			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter',
 		),
 	);
