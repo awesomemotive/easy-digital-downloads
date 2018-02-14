@@ -734,16 +734,17 @@ function edd_reports_graph_controls() {
  *
  * @since 1.3
  *
- * @param array $data POSTed data from the filters form.
+ * @param array $form_data POSTed data from the filters form.
  */
-function edd_parse_report_dates( $data ) {
+function edd_parse_report_dates( $form_data ) {
+	// Load the Reports API dependencies.
 	Reports\Init::bootstrap();
 
 	$dates   = Reports\get_dates_filter();
 	$filters = Reports\get_filters();
 
-	if ( ! empty( $data['report_id'] ) ) {
-		$report_id = sanitize_key( $data['report_id'] );
+	if ( ! empty( $form_data['report_id'] ) ) {
+		$report_id = sanitize_key( $form_data['report_id'] );
 
 		$filters = Reports\get_filters();
 
@@ -751,16 +752,16 @@ function edd_parse_report_dates( $data ) {
 			$session_data = array();
 
 			if ( 'dates' === $filter ) {
-				if ( ! empty( $data['range'] ) ) {
-					$range = sanitize_key( $data['range'] );
+				if ( ! empty( $form_data['range'] ) ) {
+					$range = sanitize_key( $form_data['range'] );
 				} else {
 					$range = Reports\get_dates_filter_range( $report_id );
 				}
 
 				if ( 'other' === $range ) {
 					$session_data = array(
-						'from'  => empty( $data['filter_from'] ) ? '' : sanitize_text_field( $data['filter_from'] ),
-						'to'    => empty( $data['filter_to'] ) ? '' : sanitize_text_field( $data['filter_to'] ),
+						'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
+						'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
 						'range' => 'other',
 					);
 
@@ -778,11 +779,11 @@ function edd_parse_report_dates( $data ) {
 
 			} elseif ( 'taxes' === $filter ) {
 
-				$session_data = isset( $data['exclude_taxes'] );
+				$session_data = isset( $form_data['exclude_taxes'] );
 
-			} elseif ( ! empty( $data[ $filter ] ) ) {
+			} elseif ( ! empty( $form_data[ $filter ] ) ) {
 
-				$session_data = $data[ $filter ];
+				$session_data = $form_data[ $filter ];
 
 			}
 
@@ -792,9 +793,9 @@ function edd_parse_report_dates( $data ) {
 
 	}
 
-	if ( ! empty( $data['edd_redirect'] ) ) {
+	if ( ! empty( $form_data['edd_redirect'] ) ) {
 
-		wp_redirect( $data['edd_redirect'] );
+		wp_redirect( $form_data['edd_redirect'] );
 
 		edd_die();
 
