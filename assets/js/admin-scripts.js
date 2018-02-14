@@ -910,9 +910,9 @@ jQuery(document).ready(function ($) {
 					date_range_options = $( '#edd-date-range-options' );
 
 				if ( 'other' === $this.val() ) {
-					date_range_options.show();
+					date_range_options.removeClass( 'screen-reader-text' );
 				} else {
-					date_range_options.hide();
+					date_range_options.addClass( 'screen-reader-text' );
 				}
 			});
 
