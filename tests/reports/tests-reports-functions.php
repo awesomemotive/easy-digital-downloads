@@ -299,12 +299,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_registered_filters()
+	 * @covers ::\EDD\Reports\get_filters()
 	 */
-	public function test_get_registered_filters_should_return_records_for_all_official_filters() {
+	public function test_get_filters_should_return_records_for_all_official_filters() {
 		$expected = array( 'dates', 'products', 'taxes' );
 
-		$this->assertEqualSets( $expected, array_keys( get_registered_filters() ) );
+		$this->assertEqualSets( $expected, array_keys( get_filters() ) );
 	}
 
 	/**

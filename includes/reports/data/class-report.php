@@ -395,7 +395,7 @@ final class Report extends Base_Object {
 	 * @param array $filters Filters to set for this report.
 	 */
 	private function set_filters( $filters ) {
-		$valid_filters = Reports\get_registered_filters();
+		$valid_filters = Reports\get_filters();
 
 		foreach ( $filters as $filter ) {
 			if ( Reports\validate_filter( $filter ) ) {
