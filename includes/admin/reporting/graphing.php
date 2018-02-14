@@ -743,53 +743,48 @@ function edd_parse_report_dates( $form_data ) {
 	$dates   = Reports\get_dates_filter();
 	$filters = Reports\get_filters();
 
-	if ( ! empty( $form_data['report_id'] ) ) {
-		$report_id = sanitize_key( $form_data['report_id'] );
+	$filters = Reports\get_filters();
 
-		$filters = Reports\get_filters();
+	foreach ( $filters as $filter => $attributes ) {
+		$session_data = array();
 
-		foreach ( $filters as $filter => $attributes ) {
-			$session_data = array();
+		if ( 'dates' === $filter ) {
+			if ( ! empty( $form_data['range'] ) ) {
+				$range = sanitize_key( $form_data['range'] );
+			} else {
+				$range = Reports\get_dates_filter_range();
+			}
 
-			if ( 'dates' === $filter ) {
-				if ( ! empty( $form_data['range'] ) ) {
-					$range = sanitize_key( $form_data['range'] );
-				} else {
-					$range = Reports\get_dates_filter_range();
-				}
+			if ( 'other' === $range ) {
+				$session_data = array(
+					'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
+					'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
+					'range' => 'other',
+				);
 
-				if ( 'other' === $range ) {
-					$session_data = array(
-						'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
-						'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
-						'range' => 'other',
-					);
+			} else {
 
-				} else {
+				$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
 
-					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
-
-					$session_data = array(
-						'from'  => $dates['start']->format( 'm/d/Y' ),
-						'to'    => $dates['end']->format( 'm/d/Y' ),
-						'range' => $range,
-					);
-
-				}
-
-			} elseif ( 'taxes' === $filter ) {
-
-				$session_data = isset( $form_data['exclude_taxes'] );
-
-			} elseif ( ! empty( $form_data[ $filter ] ) ) {
-
-				$session_data = $form_data[ $filter ];
+				$session_data = array(
+					'from'  => $dates['start']->format( 'm/d/Y' ),
+					'to'    => $dates['end']->format( 'm/d/Y' ),
+					'range' => $range,
+				);
 
 			}
 
-			EDD()->session->set( "reports:{$filter}", $session_data );
+		} elseif ( 'taxes' === $filter ) {
+
+			$session_data = isset( $form_data['exclude_taxes'] );
+
+		} elseif ( ! empty( $form_data[ $filter ] ) ) {
+
+			$session_data = $form_data[ $filter ];
 
 		}
+
+		EDD()->session->set( "reports:{$filter}", $session_data );
 
 	}
 
