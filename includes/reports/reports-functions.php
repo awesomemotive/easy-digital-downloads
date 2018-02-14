@@ -920,7 +920,12 @@ function display_products_filter( $report ) {
 	$products = get_filter_value( 'products', $report->get_id() );
 	?>
 	<div class="edd-graph-filter-options graph-option-section">
-
+		<?php
+		echo EDD()->html->product_dropdown( array(
+			'chosen'   => true,
+			'selected' => empty( $products ) ? 0 : $products,
+		) );
+		?>
 	</div>
 	<?php
 }
