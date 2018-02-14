@@ -661,7 +661,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_no_report_id_should_fallback_to_last_30_days_if_range_var_not_set() {
-		$this->assertSame( 'last_30_days', get_dates_filter_range( null ) );
+		$this->assertSame( 'last_30_days', get_dates_filter_range() );
 	}
 
 	/**

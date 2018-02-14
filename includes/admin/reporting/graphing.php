@@ -755,7 +755,7 @@ function edd_parse_report_dates( $form_data ) {
 				if ( ! empty( $form_data['range'] ) ) {
 					$range = sanitize_key( $form_data['range'] );
 				} else {
-					$range = Reports\get_dates_filter_range( $report_id );
+					$range = Reports\get_dates_filter_range();
 				}
 
 				if ( 'other' === $range ) {
@@ -767,7 +767,7 @@ function edd_parse_report_dates( $form_data ) {
 
 				} else {
 
-					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range, $report_id );
+					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
 
 					$session_data = array(
 						'from'  => $dates['start']->format( 'm/d/Y' ),
