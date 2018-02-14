@@ -749,6 +749,12 @@ function edd_parse_report_dates( $data ) {
 			'to'   => $dates['end'],
 		) );
 	}
+
+	if ( ! empty( $data['edd_redirect'] ) ) {
+		wp_redirect( $data['edd_redirect'] );
+
+		edd_die();
+	}
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
 

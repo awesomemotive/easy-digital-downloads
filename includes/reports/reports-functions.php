@@ -936,6 +936,12 @@ function display_filters( $report ) {
 	$filters  = $report->get_filters();
 	$manifest = get_filters();
 
+	$action = admin_url( add_query_arg( array(
+		'post_type' => 'download',
+		'page'      => 'edd-reports',
+		'tab'       => get_active_tab(),
+	), 'edit.php' ) );
+
 	if ( ! empty( $filters ) ) : ?>
 		<style type="text/css">
 			#edd-item-card-wrapper > div {
@@ -961,6 +967,7 @@ function display_filters( $report ) {
 
 				<div class="edd-graph-filter-submit graph-option-section">
 					<input type="hidden" name="edd_action" value="filter_reports" />
+					<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $action ); ?>">
 					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 				</div>
 
