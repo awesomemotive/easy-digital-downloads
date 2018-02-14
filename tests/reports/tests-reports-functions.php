@@ -637,9 +637,30 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
-	public function test_parse_dates_for_range_with_invalid_range_should_use_request_dates() {
+	public function test_parse_dates_for_range_with_invalid_range_no_report_id_should_use_range_var() {
+		$_REQUEST['range'] = 'last_month';
+
 		$expected = array(
-			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+		);
+
+		$result = parse_dates_for_range( self::$date, 'fake' );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_last_30_days() {
+		$expected = array(
+			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 		);
 
