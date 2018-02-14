@@ -891,6 +891,7 @@ function display_dates_filter( $report ) {
 				'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
 			) );
 			?>
+		</span>
 	</div>
 	<?php
 }
