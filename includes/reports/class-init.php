@@ -22,7 +22,7 @@ final class Init {
 	 *
 	 * @since 3.0
 	 */
-	private function includes() {
+	public static function bootstrap() {
 		$reports_dir = EDD_PLUGIN_DIR . 'includes/reports/';
 
 		// Functions.
@@ -54,7 +54,7 @@ final class Init {
 	 * @since 3.0
 	 */
 	public function __construct() {
-		$this->includes();
+		self::bootstrap();
 
 		$reports = Data\Reports_Registry::instance();
 

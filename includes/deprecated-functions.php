@@ -11,6 +11,8 @@
  * @since       1.0
  */
 
+use EDD\Reports;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -763,7 +765,7 @@ function edd_reports_tab_logs() {
 function edd_reports_default_views() {
 	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_tabs' );
 
-	return \EDD\Reports\get_tabs();
+	return Reports\get_tabs();
 }
 
 /**
@@ -870,22 +872,29 @@ function edd_report_views() {
  * selected date-range (if any)
  *
  * @since 1.3
- * @deprecated 3.0 Use edd_get_filter_dates() instead
- * @see edd_get_filter_dates()
+ * @deprecated 3.0 Use \EDD\Reports\get_dates_filter() instead
+ * @see \EDD\Reports\get_dates_filter()
  *
  * @param string $timezone Optional. Timezone to force for report filter dates calculations.
  *                         Default empty.
+ *
  * @return array Array of report filter dates.
  */
 function edd_get_report_dates( $timezone = '' ) {
 
-	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_get_filter_dates' );
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_dates_filter' );
 
-	/** @var \Carbon\Carbon[] $filter_dates */
-	$filter_dates = edd_get_filter_dates( 'objects', $timezone );
+	Reports\Init::bootstrap();
+
+	add_filter( 'edd_get_dates_filter_range', '\EDD\Reports\compat_filter_date_range' );
+
+	$filter_dates = Reports\get_dates_filter( 'objects', $timezone );
+	$range        = Reports\get_dates_filter_range();
+
+	remove_filter( 'edd_get_report_dates_default_range', '\EDD\Reports\compat_filter_date_range' );
 
 	$dates = array(
-		'range'    => edd_get_filter_date_range(),
+		'range'    => $range,
 		'day'      => $filter_dates['start']->format( 'd' ),
 		'day_end'  => $filter_dates['end']->format( 'd' ),
 		'm_start'  => $filter_dates['start']->month,
