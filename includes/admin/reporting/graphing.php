@@ -9,6 +9,8 @@
  * @since       1.0
 */
 
+use EDD\Reports;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -666,20 +668,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
  * @return void
 */
 function edd_reports_graph_controls() {
-	$date_options = apply_filters( 'edd_report_date_options', array(
-		'today'        => __( 'Today', 'easy-digital-downloads' ),
-		'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
-		'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
-		'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
-		'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-		'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
-		'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
-		'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-		'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-		'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
-		'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
-		'other'        => __( 'Custom', 'easy-digital-downloads' )
-	) );
+	$date_options = Reports\get_dates_filter_options();
 
 	$dates   = edd_get_report_dates();
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
@@ -711,8 +700,10 @@ function edd_reports_graph_controls() {
 
 				<div id="edd-date-range-options" <?php echo $display; ?>>
 					<?php
-					$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
-					$to   = empty( $_REQUEST['filter_to'] )   ? '' : $_REQUEST['filter_to'];
+					$dates_values = \EDD\Reports\get_filter_value( 'dates' );
+
+					$from = empty( $dates_values['from'] ) ? '' : $dates_values['from'];
+					$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
 					?>
 					<span class="edd-search-date">
 						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
@@ -743,18 +734,71 @@ function edd_reports_graph_controls() {
  *
  * @since 1.3
  *
- * @param $data
+ * @param array $form_data POSTed data from the filters form.
  */
-function edd_parse_report_dates( $data ) {
-	$dates = edd_get_report_dates();
+function edd_parse_report_dates( $form_data ) {
+	// Load the Reports API dependencies.
+	Reports\Init::bootstrap();
 
-	$view          = edd_get_reporting_view();
-	$id            = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
-	$exclude_taxes = isset( $_GET['exclude_taxes'] ) ? $_GET['exclude_taxes'] : null;
+	$dates   = Reports\get_dates_filter();
+	$filters = Reports\get_filters();
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
+	foreach ( $filters as $filter => $attributes ) {
+		$session_data = array();
+
+		switch ( $filter ) {
+
+			case 'dates':
+				if ( ! empty( $form_data['range'] ) ) {
+					$range = sanitize_key( $form_data['range'] );
+				} else {
+					$range = Reports\get_dates_filter_range();
+				}
+
+				if ( 'other' === $range ) {
+					$session_data = array(
+						'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
+						'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
+						'range' => 'other',
+					);
+
+				} else {
+
+					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
+
+					$session_data = array(
+						'from'  => $dates['start']->format( 'm/d/Y' ),
+						'to'    => $dates['end']->format( 'm/d/Y' ),
+						'range' => $range,
+					);
+
+				}
+				break;
+
+			case 'taxes':
+				$session_data = isset( $form_data['exclude_taxes'] );
+
+				break;
+
+			default:
+				$session_data = $form_data[ $filter ];
+
+				break;
+		}
+
+		EDD()->session->set( "reports:{$filter}", $session_data );
+
+	}
+
+	if ( ! empty( $form_data['edd_redirect'] ) ) {
+
+		wp_redirect( $form_data['edd_redirect'] );
+
+		edd_die();
+
+	}
 }
-//add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
+add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
 
 /**
  * EDD Reports Refresh Button
