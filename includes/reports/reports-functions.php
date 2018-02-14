@@ -969,6 +969,7 @@ function display_filters( $report ) {
 				<div class="edd-graph-filter-submit graph-option-section">
 					<input type="hidden" name="edd_action" value="filter_reports" />
 					<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $action ); ?>">
+					<input type="hidden" name="report_id" value="<?php echo esc_attr( $report->get_id() ); ?>">
 					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 				</div>
 
