@@ -509,8 +509,7 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
  * @param \EDD\Utils\Date $date      Date object.
  * @param string          $range     Optional. Range value to generate start and end dates for against `$date`.
  *                                   Default is the current range as derived from the session.
- * @param string          $report_id Optional. Specific report ID to retrieve the range for, if set. Used only
- *                                   if `$range` is also not set.
+ * @param string          $report_id Optional. Specific report ID to retrieve the range for, if set.
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
 function parse_dates_for_range( $date, $range = null, $report_id = null ) {
