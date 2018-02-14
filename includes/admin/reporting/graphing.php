@@ -737,6 +737,8 @@ function edd_reports_graph_controls() {
  * @param $data
  */
 function edd_parse_report_dates( $data ) {
+	Reports\Init::bootstrap();
+
 	$dates = Reports\get_dates_filter();
 
 	if ( ! empty( $data['report_id'] ) ) {
