@@ -398,14 +398,13 @@ function validate_filter( $filter ) {
  *
  * @since 3.0
  *
- * @param string $filter    Filter key to retrieve the value for.
- * @param string $report_id Report ID to retrieve the filter value for.
+ * @param string $filter Filter key to retrieve the value for.
  * @return mixed|string Value of the filter if it exists, otherwise an empty string.
  */
-function get_filter_value( $filter, $report_id ) {
+function get_filter_value( $filter ) {
 	$value = '';
 
-	if ( validate_filter( $filter ) && null !== $report_id ) {
+	if ( validate_filter( $filter ) ) {
 
 		$filter_value = EDD()->session->get( "{$report_id}:{$filter}" );
 
@@ -506,16 +505,15 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
  *
  * @since 3.0
  *
- * @param \EDD\Utils\Date $date      Date object.
- * @param string          $range     Optional. Range value to generate start and end dates for against `$date`.
- *                                   Default is the current range as derived from the session.
- * @param string          $report_id Optional. Specific report ID to retrieve the range for, if set.
+ * @param \EDD\Utils\Date $date  Date object.
+ * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
+ *                               Default is the current range as derived from the session.
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $date, $range = null, $report_id = null ) {
+function parse_dates_for_range( $date, $range = null ) {
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
-		$range = get_dates_filter_range( $report_id );
+		$range = get_dates_filter_range();
 	}
 
 	switch( $range ) {
@@ -600,7 +598,7 @@ function parse_dates_for_range( $date, $range = null, $report_id = null ) {
 		case 'other':
 		default:
 
-			$dates_from_report = get_filter_value( 'dates', $report_id );
+			$dates_from_report = get_filter_value( 'dates' );
 
 			if ( ! empty( $dates_from_report ) ) {
 
@@ -628,13 +626,11 @@ function parse_dates_for_range( $date, $range = null, $report_id = null ) {
  *
  * @since 3.0
  *
- * @param string $report_id Specific report to retrieve the dates filter range for.
- *                          If omitted, the range will default to 'last_30_days'.
  * @return string Date filter range.
  */
-function get_dates_filter_range( $report_id ) {
+function get_dates_filter_range() {
 
-	$dates = get_filter_value( 'dates', $report_id );
+	$dates = get_filter_value( 'dates' );
 
 	if ( isset( $dates['range'] ) ) {
 
@@ -647,10 +643,10 @@ function get_dates_filter_range( $report_id ) {
 		 *
 		 * @since 1.3
 		 *
-		 * @param string $range Date range as derived from the 'range' request var.
-		 *                      Default 'last_30_days'
+		 * @param string $range Date range as derived from the session. Default 'last_30_days'
+		 * @param array  $dates Dates filter data array.
 		 */
-		$range = apply_filters( 'edd_get_report_dates_default_range', 'last_30_days' );
+		$range = apply_filters( 'edd_get_report_dates_default_range', 'last_30_days', $dates );
 
 	}
 
@@ -659,11 +655,10 @@ function get_dates_filter_range( $report_id ) {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $range     Dates filter range.
-	 * @param string $report_id Report ID.
-	 * @param array  $dates     Filter dates array.
+	 * @param string $range Dates filter range.
+	 * @param array  $dates Dates filter data array.
 	 */
-	return apply_filters( 'edd_get_dates_filter_range', $range, $report_id, $dates );
+	return apply_filters( 'edd_get_dates_filter_range', $range, $dates );
 }
 
 //
@@ -849,7 +844,7 @@ function default_display_tables_group( $report ) {
  */
 function display_dates_filter( $report ) {
 	$options = get_dates_filter_options();
-	$dates   = get_filter_value( 'dates', $report->get_id() );
+	$dates   = get_filter_value( 'dates' );
 	$class   = $dates['range'] === 'other' ? '' : 'screen-reader-text';
 	?>
 	<select id="edd-graphs-date-options" name="range">
@@ -893,7 +888,7 @@ function display_dates_filter( $report ) {
  * @return void
  */
 function display_products_filter( $report ) {
-	$products = get_filter_value( 'products', $report->get_id() );
+	$products = get_filter_value( 'products' );
 	?>
 	<div class="edd-graph-filter-options graph-option-section">
 		<?php
@@ -915,7 +910,7 @@ function display_products_filter( $report ) {
  * @return void
  */
 function display_taxes_filter( $report ) {
-	$taxes = get_filter_value( 'taxes', $report->get_id() );
+	$taxes = get_filter_value( 'taxes' );
 	?>
 	<div class="edd-graph-filter-options graph-option-section">
 		<input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes" />
