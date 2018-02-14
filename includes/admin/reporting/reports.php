@@ -49,8 +49,12 @@ function edd_reports_page() {
 			text-align: center;
 		}
 		#edd-item-card-wrapper h3 {
-			margin-top; 0;
-			margin-bottom: 0;
+			margin-bottom: 6px;
+		}
+		#edd-item-card-wrapper > div {
+			margin-bottom: 10px;
+			min-height: 50px;
+			clear: both;
 		}
 	</style>
 	<div class="wrap">
