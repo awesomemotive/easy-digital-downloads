@@ -961,12 +961,6 @@ function display_filters( $report ) {
 	), 'edit.php' ) );
 
 	if ( ! empty( $filters ) ) : ?>
-		<style type="text/css">
-			#edd-item-card-wrapper > div {
-				overflow: auto;
-				margin-bottom: 20px;
-			}
-		</style>
 		<div id="edd-reports-filters-wrap">
 			<h3><?php _e( 'Filters', 'easy-digital-downloads' ); ?></h3>
 
