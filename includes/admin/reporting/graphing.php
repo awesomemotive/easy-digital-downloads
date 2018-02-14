@@ -760,9 +760,13 @@ function edd_parse_report_dates( $data ) {
 				if ( 'other' === $range ) {
 					$session_data = array(
 						'from' => empty( $data['filter_from'] ) ? '' : sanitize_text_field( $data['filter_from'] ),
-						'to'   => empty( $data['filter_to'] )   ? '' : sanitize_text_field( $data['filter_to']   ),
+						'to'   => empty( $data['filter_to'] ) ? '' : sanitize_text_field( $data['filter_to'] ),
 					);
 				}
+
+			} elseif ( 'taxes' === $filter ) {
+
+				$session_data = isset( $data['exclude_taxes'] );
 
 			} elseif ( ! empty( $data[ $filter ] ) ) {
 
