@@ -244,17 +244,17 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\validate_view()
+	 * @covers ::\EDD\Reports\validate_endpoint_view()
 	 */
-	public function test_validate_view_with_valid_view_should_return_true() {
-		$this->assertTrue( validate_view( 'tile' ) );
+	public function test_validate_endpoint_view_with_valid_view_should_return_true() {
+		$this->assertTrue( validate_endpoint_view( 'tile' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\validate_view()
+	 * @covers ::\EDD\Reports\validate_endpoint_view()
 	 */
-	public function test_validate_view_with_invalid_view_should_return_false() {
-		$this->assertFalse( validate_view( 'fake' ) );
+	public function test_validate_endpoint_view_with_invalid_view_should_return_false() {
+		$this->assertFalse( validate_endpoint_view( 'fake' ) );
 	}
 
 	/**

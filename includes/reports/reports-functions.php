@@ -316,7 +316,7 @@ function get_endpoint_group_callback( $view ) {
  * @param string $view Endpoint view slug.
  * @return bool True if the view is valid, otherwise false.
  */
-function validate_view( $view ) {
+function validate_endpoint_view( $view ) {
 	return array_key_exists( $view, get_endpoint_views() );
 }
 
