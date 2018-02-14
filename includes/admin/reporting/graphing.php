@@ -748,29 +748,32 @@ function edd_parse_report_dates( $data ) {
 		$filters = Reports\get_filters();
 
 		foreach ( $filters as $filter => $attributes ) {
+			$session_data = array();
 
-			if ( ! empty( $data[ $filter ] ) ) {
-
-				if ( 'dates' === $filter ) {
-
-					$dates = Reports\get_dates_filter();
-
-					$session_data = array(
-						'from' => $dates['start'],
-						'to'   => $dates['end'],
-					);
-
+			if ( 'dates' === $filter ) {
+				if ( ! empty( $data['range'] ) ) {
+					$range = sanitize_key( $data['range'] );
 				} else {
-
-					$session_data = $data[ $filter ];
-
+					$range = Reports\get_dates_filter_range();
 				}
+
+				if ( 'other' === $range ) {
+					$session_data = array(
+						'from' => empty( $data['filter_from'] ) ? '' : sanitize_text_field( $data['filter_from'] ),
+						'to'   => empty( $data['filter_to'] )   ? '' : sanitize_text_field( $data['filter_to']   ),
+					);
+				}
+
+			} elseif ( ! empty( $data[ $filter ] ) ) {
+
+				$session_data = $data[ $filter ];
 
 			}
 
 			EDD()->session->set( "{$report_id}:{$filter}", $session_data );
 
 		}
+
 	}
 
 	if ( ! empty( $data['edd_redirect'] ) ) {
