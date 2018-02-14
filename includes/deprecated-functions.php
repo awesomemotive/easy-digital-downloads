@@ -884,8 +884,13 @@ function edd_get_report_dates( $timezone = '' ) {
 
 	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_dates_filter' );
 
-	/** @var \Carbon\Carbon[] $filter_dates */
+	Reports\Init::bootstrap();
+
+	add_filter( 'edd_get_dates_filter_range', '\EDD\Reports\compat_filter_date_range' );
+
 	$filter_dates = Reports\get_dates_filter( 'objects', $timezone );
+
+	remove_filter( 'edd_get_report_dates_default_range', '\EDD\Reports\compat_filter_date_range' );
 
 	$dates = array(
 		'range'    => isset( $_REQUEST['range'] ) ? sanitize_key( $_REQUEST['range'] ) : 'last_30_days',

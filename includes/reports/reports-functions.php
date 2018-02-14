@@ -969,3 +969,22 @@ function display_filters( $report ) {
 		</div>
 	<?php endif;
 }
+
+//
+// Compat.
+//
+
+/**
+ * Private: Injects the value of $_REQUEST['range'] into the Reports\get_dates_filter_range() if set.
+ *
+ * To be used only for backward-compatibility with anything relying on the `$_REQUEST['range']` value.
+ *
+ * @since 3.0
+ * @access private
+ *
+ * @param string $range Currently resolved dates range.
+ * @return string (Maybe) modified range based on the value of `$_REQUEST['range']`.
+ */
+function compat_filter_date_range( $range ) {
+	return isset( $_REQUEST['range'] ) ? sanitize_key( $_REQUEST['range'] ) : $range;
+}
