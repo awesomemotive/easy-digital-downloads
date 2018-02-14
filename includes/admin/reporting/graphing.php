@@ -742,7 +742,7 @@ function edd_parse_report_dates( $data ) {
 	$dates   = Reports\get_dates_filter();
 	$filters = Reports\get_filters();
 
-	if ( ! empty( $data['report_id'] ) {
+	if ( ! empty( $data['report_id'] ) ) {
 		$report_id = sanitize_key( $data['report_id'] );
 
 		$filters = Reports\get_filters();
