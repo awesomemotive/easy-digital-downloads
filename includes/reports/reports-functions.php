@@ -514,7 +514,7 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
  */
 function parse_dates_for_range( $date, $range = null, $report_id = null ) {
 
-	if ( null === $range ) {
+	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range( $report_id );
 	}
 
