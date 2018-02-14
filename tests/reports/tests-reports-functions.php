@@ -390,7 +390,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_dates_filter()
 	 * @group edd_dates
 	 */
-	public function test_get_dates_filter_values_objects_should_return_objects() {
+	public function test_get_dates_filter_objects_as_values_should_return_objects() {
 		$expected = array(
 			'start' => self::$date->copy()->subDay( 30 )->startOfDay(),
 			'end'   => self::$date->copy()->endOfDay(),
@@ -616,42 +616,29 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
-		$_REQUEST['filter_from'] = self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString();
-		$_REQUEST['filter_to']   = self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString();
+		$report_id = rand_str( 10 );
+
+		EDD()->session->set( "{$report_id}:dates", array(
+			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
+			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
+			'range' => 'other',
+		) );
 
 		$expected = array(
 			'start' => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 		);
 
-		$result = parse_dates_for_range( self::$date, 'other' );
+		$result = parse_dates_for_range( self::$date, 'other', $report_id );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
-	}
 
-	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
-	 * @group edd_dates
-	 */
-	public function test_parse_dates_for_range_with_invalid_range_no_report_id_should_use_range_var() {
-		$_REQUEST['range'] = 'last_month';
-
-		$expected = array(
-			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
-		);
-
-		$result = parse_dates_for_range( self::$date, 'fake' );
-
-		// Explicitly strip seconds in case the test is slow.
-		$expected = $this->strip_seconds( $expected );
-		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
-
-		$this->assertEqualSetsWithIndex( $expected, $result );
+		// Clean up.
+		EDD()->session->set( "{$report_id}:dates", array() );
 	}
 
 	/**
@@ -674,123 +661,11 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_default_to_empty_if_filter_from_var_not_set() {
-		$result = get_dates_filter_values();
-
-		$this->assertSame( '', $result['start'] );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_default_to_empty_if_filter_to_var_not_set() {
-		$result = get_dates_filter_values();
-
-		$this->assertSame( '', $result['end'] );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_default_to_now_if_now_is_true_and_filter_from_var_not_set() {
-		$result = get_dates_filter_values( true );
-
-		$this->assertSame( 'now', $result['start'] );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_defualt_to_now_if_now_is_true_and_filter_to_var_not_set() {
-		$result = get_dates_filter_values( true );
-
-		$this->assertSame( 'now', $result['end'] );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_pull_filter_from_and_to_values_if_both_set() {
-		$expected = array(
-			'start' => self::$date->copy()->subWeekdays( 2 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->addWeekdays( 2 )->endOfDay()->toDateTimeString(),
-		);
-
-		$_REQUEST['filter_from'] = $expected['start'];
-		$_REQUEST['filter_to']   = $expected['end'];
-
-		$result = get_dates_filter_values();
-
-		$this->assertEqualSetsWithIndex( $expected, $result );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_match_start_value_with_filter_from_value() {
-		$expected = array(
-			'start' => self::$date->copy()->subWeekdays( 2 )->startOfDay()->toDateTimeString(),
-			'end'   => '',
-		);
-
-		$_REQUEST['filter_from'] = $expected['start'];
-
-		$result = get_dates_filter_values();
-
-		$this->assertEqualSetsWithIndex( $expected, $result );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_values()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_values_should_match_end_value_with_filter_to_value() {
-		$expected = array(
-			'start' => '',
-			'end'   => self::$date->copy()->addWeekdays( 2 )->endOfDay()->toDateTimeString(),
-		);
-
-		$_REQUEST['filter_to'] = $expected['end'];
-
-		$result = get_dates_filter_values();
-
-		$this->assertEqualSetsWithIndex( $expected, $result );
-	}
-
-	/**
 	 * @covers ::\EDD\Reports\get_dates_filter_range()
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_no_report_id_should_fallback_to_last_30_days_if_range_var_not_set() {
-		$this->assertSame( 'last_30_days', get_dates_filter_range() );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_range()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_range_with_range_var_set_should_return_that_var() {
-		$_REQUEST['range'] = 'last_month';
-
-		$this->assertSame( 'last_month', get_dates_filter_range() );
-	}
-
-	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_range()
-	 * @group edd_dates
-	 */
-	public function test_get_dates_filter_range_with_no_report_id_should_fallback_to_range_var_if_set() {
-		$_REQUEST['range'] = '1/2/3/4';
-
-		$this->assertSame( '1234', get_dates_filter_range() );
+		$this->assertSame( 'last_30_days', get_dates_filter_range( null ) );
 	}
 
 	/**
