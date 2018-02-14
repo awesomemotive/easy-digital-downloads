@@ -773,6 +773,23 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::\EDD\Reports\get_dates_filter_range()
+	 * @group edd_dates
+	 */
+	public function test_get_dates_filter_range_with_report_id_should_return_that_reports_range() {
+		$report_id = rand_str( 10 );
+
+		EDD()->session->set( "{$report_id}:dates", array(
+			'range' => 'last_quarter',
+		) );
+
+		$this->assertSame( 'last_quarter', get_dates_filter_range( $report_id ) );
+
+		// Clean up.
+		EDD()->session->set( "{$report_id}:dates", false );
+	}
+
+	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
 	 * @param array $dates Start/end dates array.
