@@ -743,8 +743,6 @@ function edd_parse_report_dates( $form_data ) {
 	$dates   = Reports\get_dates_filter();
 	$filters = Reports\get_filters();
 
-	$filters = Reports\get_filters();
-
 	foreach ( $filters as $filter => $attributes ) {
 		$session_data = array();
 
