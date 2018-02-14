@@ -746,40 +746,44 @@ function edd_parse_report_dates( $form_data ) {
 	foreach ( $filters as $filter => $attributes ) {
 		$session_data = array();
 
-		if ( 'dates' === $filter ) {
-			if ( ! empty( $form_data['range'] ) ) {
-				$range = sanitize_key( $form_data['range'] );
-			} else {
-				$range = Reports\get_dates_filter_range();
-			}
+		switch ( $filter ) {
 
-			if ( 'other' === $range ) {
-				$session_data = array(
-					'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
-					'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
-					'range' => 'other',
-				);
+			case 'dates':
+				if ( ! empty( $form_data['range'] ) ) {
+					$range = sanitize_key( $form_data['range'] );
+				} else {
+					$range = Reports\get_dates_filter_range();
+				}
 
-			} else {
+				if ( 'other' === $range ) {
+					$session_data = array(
+						'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
+						'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
+						'range' => 'other',
+					);
 
-				$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
+				} else {
 
-				$session_data = array(
-					'from'  => $dates['start']->format( 'm/d/Y' ),
-					'to'    => $dates['end']->format( 'm/d/Y' ),
-					'range' => $range,
-				);
+					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
 
-			}
+					$session_data = array(
+						'from'  => $dates['start']->format( 'm/d/Y' ),
+						'to'    => $dates['end']->format( 'm/d/Y' ),
+						'range' => $range,
+					);
 
-		} elseif ( 'taxes' === $filter ) {
+				}
+				break;
 
-			$session_data = isset( $form_data['exclude_taxes'] );
+			case 'taxes':
+				$session_data = isset( $form_data['exclude_taxes'] );
 
-		} elseif ( ! empty( $form_data[ $filter ] ) ) {
+				break;
 
-			$session_data = $form_data[ $filter ];
+			default:
+				$session_data = $form_data[ $filter ];
 
+				break;
 		}
 
 		EDD()->session->set( "reports:{$filter}", $session_data );
