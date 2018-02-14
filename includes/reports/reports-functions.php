@@ -905,7 +905,12 @@ function display_dates_filter( $report ) {
  * @return void
  */
 function display_products_filter( $report ) {
+	$products = get_filter_value( 'products', $report->get_id() );
+	?>
+	<div class="edd-graph-filter-options graph-option-section">
 
+	</div>
+	<?php
 }
 
 /**
