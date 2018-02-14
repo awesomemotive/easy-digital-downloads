@@ -364,7 +364,7 @@ function parse_endpoint_views( $views ) {
  *
  * @return array List of supported endpoint filters.
  */
-function get_registered_filters() {
+function get_filters() {
 	return array(
 		'dates'    => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
@@ -393,7 +393,7 @@ function get_registered_filters() {
  * @return bool True if the filter is valid, otherwise false.
  */
 function validate_filter( $filter ) {
-	return array_key_exists( $filter, get_registered_filters() );
+	return array_key_exists( $filter, get_filters() );
 }
 
 /**
@@ -934,7 +934,7 @@ function display_taxes_filter( $report ) {
  */
 function display_filters( $report ) {
 	$filters  = $report->get_filters();
-	$manifest = get_registered_filters();
+	$manifest = get_filters();
 
 	if ( ! empty( $filters ) ) : ?>
 		<style type="text/css">
