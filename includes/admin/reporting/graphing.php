@@ -739,21 +739,46 @@ function edd_reports_graph_controls() {
 function edd_parse_report_dates( $data ) {
 	Reports\Init::bootstrap();
 
-	$dates = Reports\get_dates_filter();
+	$dates   = Reports\get_dates_filter();
+	$filters = Reports\get_filters();
 
-	if ( ! empty( $data['report_id'] ) ) {
+	if ( ! empty( $data['report_id'] ) {
 		$report_id = sanitize_key( $data['report_id'] );
 
-		EDD()->session->set( "{$report_id}:dates", array(
-			'from' => $dates['start'],
-			'to'   => $dates['end'],
-		) );
+		$filters = Reports\get_filters();
+
+		foreach ( $filters as $filter => $attributes ) {
+
+			if ( ! empty( $data[ $filter ] ) ) {
+
+				if ( 'dates' === $filter ) {
+
+					$dates = Reports\get_dates_filter();
+
+					$session_data = array(
+						'from' => $dates['start'],
+						'to'   => $dates['end'],
+					);
+
+				} else {
+
+					$session_data = $data[ $filter ];
+
+				}
+
+			}
+
+			EDD()->session->set( "{$report_id}:{$filter}", $session_data );
+
+		}
 	}
 
 	if ( ! empty( $data['edd_redirect'] ) ) {
+
 		wp_redirect( $data['edd_redirect'] );
 
 		edd_die();
+
 	}
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
