@@ -24,7 +24,7 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-
+		self::$logs = parent::edd()->log->create_many( 5 );
 	}
 
 	/**
