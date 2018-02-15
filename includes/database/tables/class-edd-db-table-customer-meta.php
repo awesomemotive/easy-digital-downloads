@@ -45,7 +45,7 @@ final class EDD_DB_Table_Customer_Meta extends EDD_DB_Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			customer_id bigint(20) unsigned NOT NULL default '0',
+			edd_customer_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
