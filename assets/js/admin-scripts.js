@@ -874,7 +874,7 @@ jQuery(document).ready(function ($) {
 
 		product_requirements : function() {
 
-			$('#edd_products').change(function() {
+			$('#edd-products').change(function() {
 
 				var product_conditions = $( '#edd-discount-product-conditions' );
 
