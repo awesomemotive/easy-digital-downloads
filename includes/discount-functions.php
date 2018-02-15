@@ -24,41 +24,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_discounts( $args = array() ) {
 	$defaults = array(
-		'post_type'      => 'edd_discount',
-		'posts_per_page' => 30,
-		'paged'          => null,
-		'post_status'    => array( 'active', 'inactive', 'expired' )
+		'number' => 30,
+		'status' => array( 'active', 'inactive', 'expired' )
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$discounts_hash = md5( json_encode( $args ) );
-	$discounts      = edd_get_discounts_cache( $discounts_hash );
-
-	if ( false === $discounts ) {
-		$discounts = get_posts( $args );
-		edd_set_discounts_cache( $discounts_hash, $discounts );
+	if( isset( $args['posts_per_page'] ) ) {
+		$args['number'] = $args['posts_per_page'];
 	}
 
-	if ( $discounts ) {
-		return $discounts;
-	}
-
-	// If no discounts are found and we are searching, re-query with a meta key to find discounts by code
-	if( ! $discounts && ! empty( $args['s'] ) ) {
-		$args['meta_key']     = '_edd_discount_code';
-		$args['meta_value']   = $args['s'];
-		$args['meta_compare'] = 'LIKE';
-		unset( $args['s'] );
-
-		$discounts_hash = md5( json_encode( $args ) );
-		$discounts      = edd_get_discounts_cache( $discounts_hash );
-
-		if ( false === $discounts ) {
-			$discounts = get_posts( $args );
-			edd_set_discounts_cache( $discounts_hash, $discounts );
-		}
-	}
+	$discounts = EDD()->discounts->get_discounts( $args );
 
 	if( $discounts ) {
 		return $discounts;
@@ -76,13 +52,10 @@ function edd_get_discounts( $args = array() ) {
  * @return bool
  */
 function edd_has_active_discounts() {
-	$discounts = edd_get_discounts(
-		array(
-			'post_status'    => 'active',
-			'posts_per_page' => 100,
-			'fields'         => 'ids'
-		)
-	);
+	$discounts = edd_get_discounts( array(
+		'number' => 1,
+		'status' => 'active',
+	) );
 
 	// When there are no discounts found anymore there are no active ones.
 	if ( ! is_array( $discounts ) || array() === $discounts ) {
@@ -134,11 +107,10 @@ function edd_get_discount( $discount_id = 0 ) {
 function edd_get_discount_by_code( $code = '' ) {
 	$discount = new EDD_Discount( $code, true );
 
-	if ( ! $discount->ID > 0 ) {
-		return false;
+	if ( $discount->exists() ) {
+		return $discount;
 	}
-
-	return $discount;
+	return false;
 }
 
 /**
@@ -200,21 +172,11 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	if ( null == $discount_id ) {
 		$discount = new EDD_Discount;
-		$discount->add( $details );
-
-		if ( ! empty( $discount->ID ) ) {
-			$return = $discount->ID;
-		}
+		$return = (int) $discount->add( $details );
 	} else {
 		$discount = new EDD_Discount( $discount_id );
 		$discount->update( $details );
-		$return = $discount->ID;
-	}
-
-	// If we stored a discount, we need to clear the edd_get_discounts_cache global.
-	if ( false !== $return ) {
-		global $edd_get_discounts_cache;
-		$edd_get_discounts_cache = array();
+		$return = (int) $discount->id;
 	}
 
 	return $return;
@@ -231,7 +193,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 function edd_remove_discount( $discount_id = 0 ) {
 	do_action( 'edd_pre_delete_discount', $discount_id );
 
-	wp_delete_post( $discount_id, true );
+	EDD()->discounts->delete( $discount_id );
 
 	do_action( 'edd_post_delete_discount', $discount_id );
 }
@@ -341,7 +303,7 @@ function edd_get_discount_expiration( $code_id = null ) {
  */
 function edd_get_discount_max_uses( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->max_uses;
+	return (int) $discount->max_uses;
 }
 
 /**
@@ -355,7 +317,7 @@ function edd_get_discount_max_uses( $code_id = null ) {
  */
 function edd_get_discount_uses( $code_id = null ) {
 	$discount = new EDD_Discount( $code_id );
-	return $discount->uses;
+	return (int) $discount->uses;
 }
 
 /**
@@ -450,13 +412,29 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
  *
  * @since 1.5
  * @since 2.7 Updated to use EDD_Discount object.
- *
+ * @since 3.0 Please use edd_get_discount_scope() instead.
  * @param int $code_id Discount ID.
  * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
 	$discount = new EDD_Discount( $code_id );
 	return $discount->is_not_global;
+}
+
+/**
+ * Retrieve the discount scope.
+ *
+ * By default this will return "global" as discounts are applied to all products in the cart. Non global discounts are
+ * applied only to the products selected as requirements.
+ *
+ * @since 3.0
+ *
+ * @param int $code_id Discount ID.
+ * @return string global or not_global.
+ */
+function edd_get_discount_scope( $code_id = 0 ) {
+	$discount = new EDD_Discount( $code_id );
+	return $discount->scope;
 }
 
 /**
@@ -630,7 +608,7 @@ function edd_increase_discount_usage( $code ) {
 	$discount = new EDD_Discount( $code, true );
 
 	if ( $discount && $discount->ID > 0 ) {
-		return $discount->increase_usage();
+		return (int) $discount->increase_usage();
 	} else {
 		return false;
 	}
@@ -649,7 +627,7 @@ function edd_decrease_discount_usage( $code ) {
 	$discount = new EDD_Discount( $code, true );
 
 	if ( $discount && $discount->ID > 0 ) {
-		return $discount->decrease_usage();
+		return (int) $discount->decrease_usage();
 	} else {
 		return false;
 	}
@@ -967,170 +945,558 @@ function edd_apply_preset_discount() {
 }
 add_action( 'init', 'edd_apply_preset_discount', 999 );
 
+
 /**
- * Updates discounts that are expired or at max use (that are not already marked as so) as inactive or expired
+ * Backwards compatibility filters for get_post_meta() calls on discount codes.
  *
- * @since 2.6
- * @return void
-*/
-function edd_discount_status_cleanup() {
+ * @since  3.0
+ *
+ * @param int    $object_id The object ID post meta was requested for.
+ * @param string $meta_key  The meta key requested.
+ * @param bool   $single    If the person wants the single value or an array of the value.
+ * @return mixed The value to return.
+ */
+function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $single ) {
 	global $wpdb;
 
-	// We only want to get 25 active discounts to check their status per step here
-	$cron_discount_number   = apply_filters( 'edd_discount_status_cleanup_count', 25 );
-	$discount_ids_to_update = array();
-	$needs_inactive_meta    = array();
-	$needs_expired_meta     = array();
+	$meta_keys = apply_filters( 'edd_post_meta_discount_backwards_compat_keys', array(
+		'_edd_discount_status',
+		'_edd_discount_amount',
+		'_edd_discount_uses',
+		'_edd_discount_name',
+		'_edd_discount_code',
+		'_edd_discount_expiration',
+		'_edd_discount_start',
+		'_edd_discount_is_single_use',
+		'_edd_discount_is_not_global',
+		'_edd_discount_product_condition',
+		'_edd_discount_min_price',
+		'_edd_discount_max_uses'
+	) );
 
-	// start by getting the last 25 that hit their maximum usage
-	$args = array(
-		'suppress_filters' => false,
-		'post_status'      => array( 'active' ),
-		'posts_per_page'   => $cron_discount_number,
-		'order'            => 'ASC',
-		'meta_query'       => array(
-			'relation' => 'AND',
-			array(
-				'key'     => '_edd_discount_uses',
-				'value'   => 'mt1.meta_value',
-				'compare' => '>=',
-				'type'    => 'NUMERIC',
-			),
-			array(
-				'key'     => '_edd_discount_max_uses',
-				'value'   => array( '', 0 ),
-				'compare' => 'NOT IN',
-			),
-			array(
-				'key'     => '_edd_discount_max_uses',
-				'compare' => 'EXISTS',
-			),
-		),
-	);
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return $value;
+	}
 
-	add_filter( 'posts_request', 'edd_filter_discount_code_cleanup' );
-	$discounts = edd_get_discounts( $args );
-	remove_filter( 'posts_request', 'edd_filter_discount_code_cleanup' );
+	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+	$discount        = new EDD_Discount( $object_id );
 
-	if ( $discounts ) {
-		foreach ( $discounts as $discount ) {
+	if( ! $discount || ! $discount->id > 0 ) {
 
-			$discount_ids_to_update[] = (int) $discount->ID;
-			$needs_inactive_meta[] = (int) $discount->ID;
+		// We didn't find a discount record with this ID...so let's check and see if it was a migrated one
+		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
 
+		if ( ! empty( $object_id ) ) {
+			$discount = new EDD_Discount( $object_id );
+		} else {
+			return $value;
 		}
 	}
 
-	// Now lets look at the last 25 that hit their expiration without hitting their limit
-	$args = array(
-		'post_status'    => array( 'active' ),
-		'posts_per_page' => $cron_discount_number,
-		'order'          => 'ASC',
-		'meta_query'     => array(
-			'relation' => 'AND',
-			array(
-				'key'     => '_edd_discount_expiration',
-				'value'   => '',
-				'compare' => '!=',
-			),
-			array(
-				'key'     => '_edd_discount_expiration',
-				'value'   => date( 'm/d/Y H:i:s', current_time( 'timestamp' ) ),
-				'compare' => '<',
-			),
-		),
-	);
+	if( ! $discount || ! $discount->id > 0 ) {
+		return $value;
+	}
 
-	$discounts = edd_get_discounts( $args );
+	switch( $meta_key ) {
+		case '_edd_discount_name':
+		case '_edd_discount_status':
+		case '_edd_discount_amount':
+		case '_edd_discount_uses':
+		case '_edd_discount_code':
+		case '_edd_discount_expiration':
+		case '_edd_discount_start':
+		case '_edd_discount_product_condition':
+		case '_edd_discount_min_price':
+		case '_edd_discount_max_uses':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
 
-	if ( $discounts ) {
-		foreach ( $discounts as $discount ) {
+			$value = $discount->$key;
 
-			$discount_ids_to_update[] = (int) $discount->ID;
-			if ( ! in_array( $discount->ID, $needs_inactive_meta ) ) {
-				$needs_expired_meta[] = (int) $discount->ID;
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
 			}
 
+			break;
+
+		case '_edd_discount_is_single_use':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$value = $discount->get_once_per_customer();
+
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+
+		case '_edd_discount_is_not_global':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$value = $discount->get_scope();
+
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+		default:
+			/*
+			 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
+			 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
+			 */
+			$value = apply_filters( 'edd_get_post_meta_discount_backwards_compat-' . $meta_key, $value, $object_id );
+			break;
+	}
+
+	return $value;
+
+}
+add_filter( 'get_post_metadata', '_edd_discount_post_meta_bc_filter', 99, 4 );
+
+
+/**
+ * Listen for calls to update_post_meta and see if we need to filter them.
+ *
+ * @since 3.0
+ *
+ * @param mixed   $check     Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table
+ * @param int    $object_id  The object ID post meta was requested for.
+ * @param string $meta_key   The meta key requested.
+ * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
+ * @param mixed  $prev_value The previous value of the meta
+ *
+ * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta
+ */
+function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+	global $wpdb;
+
+	$meta_keys = apply_filters( 'edd_update_post_meta_discount_backwards_compat_keys', array(
+		'_edd_discount_status',
+		'_edd_discount_amount',
+		'_edd_discount_uses',
+		'_edd_discount_name',
+		'_edd_discount_code',
+		'_edd_discount_expiration',
+		'_edd_discount_start',
+		'_edd_discount_is_single_use',
+		'_edd_discount_is_not_global',
+		'_edd_discount_product_condition',
+		'_edd_discount_min_price',
+		'_edd_discount_max_uses'
+	) );
+
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return $check;
+	}
+
+	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+
+	$discount = new EDD_Discount( $object_id );
+
+	if ( ! $discount || ! $discount->id > 0 ) {
+		// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
+		$table_name = EDD()->discount_meta->table_name;
+
+		$object_id = $wpdb->get_var( $wpdb->prepare(
+			"
+				SELECT edd_discount_id
+				FROM $table_name
+				WHERE meta_key = %s AND meta_value = %d
+			", 'legacy_id', $object_id
+		) );
+
+		if ( ! empty( $object_id ) ) {
+			$discount = new EDD_Discount( $object_id );
+		} else {
+			return $check;
 		}
 	}
 
-	$discount_ids_to_update = array_unique( $discount_ids_to_update );
-	if ( ! empty ( $discount_ids_to_update ) ) {
-		$discount_ids_string = "'" . implode( "','", $discount_ids_to_update ) . "'";
-		$sql                 = "UPDATE $wpdb->posts SET post_status = 'inactive' WHERE ID IN ($discount_ids_string)";
-		$wpdb->query( $sql );
+	if ( ! $discount || ! $discount->id > 0 ) {
+		return $check;
 	}
 
-	$needs_inactive_meta = array_unique( $needs_inactive_meta );
-	if ( ! empty( $needs_inactive_meta ) ) {
-		$inactive_ids = "'" . implode( "','", $needs_inactive_meta ) . "'";
-		$sql          = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($inactive_ids)";
-		$wpdb->query( $sql );
+	switch ( $meta_key ) {
+		case '_edd_discount_name':
+		case '_edd_discount_status':
+		case '_edd_discount_amount':
+		case '_edd_discount_uses':
+		case '_edd_discount_code':
+		case '_edd_discount_expiration':
+		case '_edd_discount_start':
+		case '_edd_discount_product_condition':
+		case '_edd_discount_min_price':
+		case '_edd_discount_max_uses':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$discount->$key = $meta_value;
+			$check = $discount->save();
+
+			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'Discount data is no longer stored in post meta. Please use the new custom database tables to insert a discount record.', 'easy-digital-downloads' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+		case '_edd_discount_is_single_use':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$discount->once_per_customer = $meta_value;
+			$check = $discount->save();
+
+			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'Discount data is no longer stored in post meta. Please use the new custom database tables to insert a discount record.', 'easy-digital-downloads' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+		case '_edd_discount_is_not_global':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$discount->scope = $meta_value;
+			$check = $discount->save();
+
+			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'Discount data is no longer stored in post meta. Please use the new custom database tables to insert a discount record.', 'easy-digital-downloads' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+		default:
+			/*
+			 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
+			 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
+			 */
+			$check = apply_filters( 'edd_update_post_meta_discount_backwards_compat-' . $meta_key, $check, $object_id, $meta_value, $prev_value );
+			break;
 	}
 
-	$needs_expired_meta = array_unique( $needs_expired_meta );
-	if ( ! empty( $needs_expired_meta ) ) {
-		$expired_ids = "'" . implode( "','", $needs_expired_meta ) . "'";
-		$sql         = "UPDATE $wpdb->postmeta SET meta_value = 'inactive' WHERE meta_key = '_edd_discount_status' AND post_id IN ($expired_ids)";
-		$wpdb->query( $sql );
-	}
+	return $check;
 
 }
+add_filter( 'update_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
 
 /**
- * Check to see if this set of discounts has been queried for already.
+ * Add a message for anyone to trying to get discounts via get_post/get_posts/WP_Query.
  *
- * @since 2.8.7
- * @param $hash string The hash of the edd_get_discount args.
+ * @since 3.0
  *
- * @return bool|mixed  Found discounts if already queried, or false if it has not been queried yet.
+ * @param WP_Query $query
  */
-function edd_get_discounts_cache( $hash ) {
-	global $edd_get_discounts_cache;
+function _edd_discount_get_post_doing_it_wrong( $query ) {
+	global $wpdb;
 
-	if ( ! is_array( $edd_get_discounts_cache ) ) {
-		$edd_get_discounts_cache = array();
+	if ( 'edd_discount' !== $query->get( 'post_type' ) ) {
+		return;
 	}
 
-	if ( ! isset( $edd_get_discounts_cache[ $hash ] ) ) {
-		return false;
+	$message = sprintf(
+		__( 'As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information.', 'easy-digital-downloads' ),
+		'<code>' . $wpdb->posts . '</code>',
+		'<code>' . EDD()->discounts->table_name . '</code>',
+		'<code>edd_get_discounts()</code>',
+		'<code>edd_get_discount()</code>',
+		'<code>EDD_Discount</code>',
+		'https://easydigitaldownloads.com/development/'
+	);
+
+	$stack = print_r( debug_backtrace(), true );
+
+//	edd_debug_log( 'Discounts not queried correctly and not using edd_get_discounts(), edd_get_discount(), or instantiating EDD_Discount object. ' . $stack );
+
+	_doing_it_wrong( 'get_posts()/get_post()', $message, '3.0' );
+}
+add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
+
+/**
+ * Force filters to run for all queries that have `edd_discount` as the post type.
+ *
+ * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+ *
+ * @since 3.0
+ *
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ */
+function _edd_discounts_bc_force_filters( $query ) {
+	if ( 'pre_get_posts' !== current_filter() ) {
+		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
 	}
 
-	return $edd_get_discounts_cache[ $hash ];
+	if ( 'edd_discount' === $query->get( 'post_type' ) ) {
+		$query->set( 'suppress_filters', false );
+	}
 }
+add_action( 'pre_get_posts', '_edd_discounts_bc_force_filters', 10, 1 );
 
 /**
- * Store found discounts with the hash.
- * This is a non-persistent cache and uses a PHP global.
+ * Hijack the SQL query and rewrite it to fetch data from the discounts table.
  *
- * @since 2.8.7
- * @param $hash string The hash of the arguments from edd_get_discounts.
- * @param $data array  The data to store for this hash.
+ * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+ *
+ * @since 3.0
+ *
+ * @param string $request SQL request.
+ * @param WP_Query $query Instance of WP_Query.
+ *
+ * @return string $request Rewritten SQL query.
  */
-function edd_set_discounts_cache( $hash, $data ) {
-	global $edd_get_discounts_cache;
+function _edd_discounts_bc_posts_request( $request, $query ) {
+	global $wpdb;
 
-	if ( ! is_array( $edd_get_discounts_cache ) ) {
-		$edd_get_discounts_cache = array();
+	if ( 'posts_request' !== current_filter() ) {
+		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
 	}
 
-	$edd_get_discounts_cache[ $hash ] = $data;
+	if ( 'edd_discount' === $query->get( 'post_type' ) ) {
+		$defaults = array(
+			'number'  => 30,
+			'status'  => array( 'active', 'inactive', 'expired' ),
+			'order'   => 'DESC',
+			'orderby' => 'date_created',
+		);
+
+		$args = array(
+			'number' => $query->get( 'posts_per_page' ),
+			'status' => $query->get( 'post_status', array( 'active', 'inactive' ) ),
+		);
+
+		$orderby = $query->get( 'orderby', false );
+		if ( $orderby ) {
+			switch ( $orderby ) {
+				case 'none':
+				case 'ID':
+				case 'author':
+				case 'post__in':
+				case 'type':
+				case 'post_type':
+					$args['orderby'] = 'id';
+					break;
+				case 'title':
+					$args['orderby'] = 'name';
+					break;
+				case 'date':
+				case 'post_date':
+				case 'modified':
+				case 'post_modified':
+					$args['orderby'] = 'date_created';
+					break;
+				default:
+					$args['orderby'] = 'id';
+					break;
+			}
+		}
+
+		$offset = $query->get( 'offset', false );
+		if ( $offset ) {
+			$args['offset'] = absint( $offset );
+		} else {
+			$args['offset'] = 0;
+		}
+
+		if ( 'any' === $args['status'] ) {
+			$args['status'] = $defaults['status'];
+		}
+
+		$args = wp_parse_args( $args, $defaults );
+
+		if ( array_key_exists( 'number', $args ) ) {
+			$args['number'] = absint( $args['number'] );
+		}
+
+		$table_name = EDD()->discounts->table_name;
+
+		$meta_query = $query->get( 'meta_query' );
+
+		$clauses = array();
+		$sql_where = 'WHERE 1=1';
+
+		$meta_key = $query->get( 'meta_key', false );
+		$meta_value = $query->get( 'meta_value', false );
+
+		// 'meta_key' and 'meta_value' passed as arguments
+		if ( $meta_key && $meta_value ) {
+			/**
+			 * Check that the key exists as a column in the table.
+			 * Note: there is no backwards compatibility support for product requirements and excluded
+			 * products as these would be serialised under the old schema.
+			 */
+			if ( in_array( $meta_key, array_keys( EDD()->discounts->get_columns() ) ) ) {
+				$sql_where .= ' ' . $wpdb->prepare( $meta_key . ' = %s', $meta_value );
+			}
+		}
+
+		if ( ! empty( $meta_query ) ) {
+			foreach ( $meta_query as $key => $query ) {
+				$relation = 'AND'; // Default relation
+
+				if ( is_string( $query ) && 'relation' === $key ) {
+					$relation = $query;
+				}
+
+				if ( is_array( $query ) ) {
+					if ( array_key_exists( 'key', $query ) ) {
+						$query['key'] = str_replace( '_edd_discount_', '', $query['key'] );
+
+						/**
+						 * Check that the key exists as a column in the table.
+						 * Note: there is no backwards compatibility support for product requirements and excluded
+						 * products as these would be serialised under the old schema.
+						 */
+				 		if ( in_array( $query['key'], array_keys( EDD()->discounts->get_columns() ) ) && array_key_exists( 'value', $query ) ) {
+							$meta_compare = $query['compare'];
+							$meta_compare = strtoupper( $meta_compare );
+
+							$meta_value = $query['value'];
+
+							$where = null;
+
+							switch ( $meta_compare ) {
+								case 'IN':
+								case 'NOT IN':
+									$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
+									$where = $wpdb->prepare( $meta_compare_string, $meta_value );
+									break;
+
+								case 'BETWEEN':
+								case 'NOT BETWEEN':
+									$meta_value = array_slice( $meta_value, 0, 2 );
+									$where      = $wpdb->prepare( '%s AND %s', $meta_value );
+									break;
+
+								case 'LIKE':
+								case 'NOT LIKE':
+									$meta_value = '%' . $wpdb->esc_like( $meta_value ) . '%';
+									$where      = $wpdb->prepare( '%s', $meta_value );
+									break;
+
+								// EXISTS with a value is interpreted as '='.
+								case 'EXISTS':
+									$where = $wpdb->prepare( '%s', $meta_value );
+									break;
+
+								// 'value' is ignored for NOT EXISTS.
+								case 'NOT EXISTS':
+									$where = $query['key'] . ' IS NULL';
+									break;
+
+								default:
+									$where = $wpdb->prepare( '%s', $meta_value );
+									break;
+							}
+
+							if ( ! is_null( $where ) ) {
+								$clauses['where'][] = $query['key'] . ' ' . $meta_compare . ' ' . $where;
+							}
+						}
+					}
+
+					if ( 0 < count( $clauses['where'] ) ) {
+						$sql_where .= ' AND ( ' . implode( ' ' . $relation . ' ', $clauses['where'] ) . ' )';
+					}
+				}
+			}
+		}
+
+		$request = "SELECT id FROM {$table_name} $sql_where ORDER BY {$args['orderby']} {$args['order']} LIMIT {$args['offset']}, {$args['number']};";
+	}
+
+	return $request;
 }
+add_filter( 'posts_request', '_edd_discounts_bc_posts_request', 10, 2 );
 
 /**
- * Disabled until https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5619 is completed
- * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5631
+ * Fill the returned WP_Post objects with the data from the discounts table.
  *
-add_action( 'edd_daily_scheduled_events', 'edd_discount_status_cleanup' );
+ * @since 3.0
+ *
+ * @param array $posts Posts returned from the SQL query.
+ * @param WP_Query $query Instance of WP_Query.
+ *
+ * @return array New WP_Post objects.
  */
+function _edd_discounts_bc_posts_results( $posts, $query ) {
+	if ( 'posts_results' !== current_filter() ) {
+		$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+		_doing_it_wrong( __FUNCTION__, $message, '3.0' );
+	}
+
+	if ( 'edd_discount' === $query->get( 'post_type' ) ) {
+		$new_posts = array();
+
+		foreach ( $posts as $post ) {
+			$discount = edd_get_discount( $post->id );
+
+			$object_vars = array(
+				'ID'            => $discount->id,
+				'post_title'    => $discount->name,
+				'post_status'   => $discount->status,
+				'post_type'     => 'edd_discount',
+				'post_date'     => $discount->date_created,
+				'post_date_gmt' => $discount->date_created,
+			);
+
+			foreach ( $object_vars as $object_var => $value ) {
+				$post->{$object_var} = $value;
+			}
+
+			$post = new WP_Post( $post );
+
+			$new_posts[] = $post;
+		}
+
+		return $new_posts;
+	}
+
+	return $posts;
+}
+add_filter( 'posts_results', '_edd_discounts_bc_posts_results', 10, 2 );
 
 /**
- * Used during edd_discount_status_cleanup to filter out a meta query properly
+ * Backwards compatibility layer for wp_count_posts().
  *
- * @since  2.6.6
- * @param  string  $sql The unmodified SQL statement.
- * @return string      The sql statement with removed quotes from the column.
+ * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+ *
+ * @since 3.0
+ *
+ * @param string $request SQL request.
+ * @param WP_Query $query Instance of WP_Query.
+ *
+ * @return string $request Rewritten SQL query.
  */
-function edd_filter_discount_code_cleanup( $sql ) {
-	return str_replace( "'mt1.meta_value'", "mt1.meta_value", $sql );
+function _edd_discounts_bc_wp_count_posts( $query ) {
+	global $wpdb;
+
+	$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
+
+	if ( $expected === $query ) {
+		$discounts_table = EDD()->discounts->table_name;
+		$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$discounts_table} GROUP BY post_status";
+	}
+
+	return $query;
 }
+add_filter( 'query', '_edd_discounts_bc_wp_count_posts', 10, 1 );
