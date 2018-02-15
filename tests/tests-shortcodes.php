@@ -210,25 +210,8 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 	}
 
 	public function test_discounts_shortcode() {
-		$post_id = $this->factory->post->create( array( 'post_type' => 'edd_discount', 'post_status' => 'active' ) );
 
-		$meta = array(
-			'type' => 'percent',
-			'amount' => '20',
-			'code' => '20OFF',
-			'product_condition' => 'all',
-			'start' => '12/12/2000 00:00:00',
-			'expiration' => '12/31/2050 23:59:59',
-			'max_uses' => 10,
-			'uses' => 54,
-			'min_price' => 128,
-			'is_not_global' => true,
-			'is_single_use' => true
-		);
-
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, '_edd_discount_' . $key, $value );
-		}
+		EDD_Helper_Discount::create_simple_percent_discount();
 
 		$this->assertInternalType( 'string', edd_discounts_shortcode( array() ) );
 		$this->assertEquals( '<ul id="edd_discounts_list"><li class="edd_discount"><span class="edd_discount_name">20OFF</span><span class="edd_discount_separator"> - </span><span class="edd_discount_amount">20%</span></li></ul>', edd_discounts_shortcode( array() ) );

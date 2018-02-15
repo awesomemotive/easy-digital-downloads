@@ -5,11 +5,11 @@
  * This class provides an integration point with the WP-CLI plugin allowing
  * access to EDD from the command line.
  *
- * @package		EDD
- * @subpackage	Classes/CLI
- * @copyright	Copyright (c) 2015, Pippin Williamson
- * @license		http://opensource.org/license/gpl-2.0.php GNU Public License
- * @since		2.0
+ * @package    EDD
+ * @subpackage Classes/CLI
+ * @copyright  Copyright (c) 2018, Pippin Williamson
+ * @license    http://opensource.org/license/gpl-2.0.php GNU Public License
+ * @since      2.0
  */
 
 // Exit if accessed directly
@@ -436,21 +436,22 @@ class EDD_CLI extends WP_CLI_Command {
 
 		$discounts = $this->api->get_discounts( $discount_id );
 
-		if( isset( $discounts['error'] ) ) {
+		if ( isset( $discounts['error'] ) ) {
 			WP_CLI::error( $discounts['error'] );
 		}
 
-		if( empty( $discounts ) ) {
+		if ( empty( $discounts ) ) {
 			WP_CLI::error( __( 'No discounts found', 'easy-digital-downloads' ) );
+
 			return;
 		}
 
-		foreach( $discounts['discounts'] as $discount ) {
+		foreach ( $discounts['discounts'] as $discount ) {
 			WP_CLI::line( WP_CLI::colorize( '%G' . $discount['ID'] . '%N' ) );
 			WP_CLI::line( sprintf( __( 'Name: %s', 'easy-digital-downloads' ), $discount['name'] ) );
 			WP_CLI::line( sprintf( __( 'Code: %s', 'easy-digital-downloads' ), $discount['code'] ) );
 
-			if( $discount['type'] == 'percent' ) {
+			if ( $discount['type'] == 'percent' ) {
 				$amount = $discount['amount'] . '%';
 			} else {
 				$amount = edd_format_amount( $discount['amount'] ) . ' ' . edd_get_currency();
@@ -465,10 +466,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( '' );
 
-			if( array_key_exists( 0, $discount['product_requirements'] ) ) {
+			if ( array_key_exists( 0, $discount['product_requirements'] ) ) {
 				WP_CLI::line( __( 'Product Requirements:', 'easy-digital-downloads' ) );
 
-				foreach( $discount['product_requirements'] as $req => $req_id ) {
+				foreach ( $discount['product_requirements'] as $req => $req_id ) {
 					WP_CLI::line( sprintf( __( '  Product: %s', 'easy-digital-downloads' ), $req_id ) );
 				}
 			}
@@ -481,7 +482,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( '' );
 		}
 	}
-
 
 	/**
 	 * Create sample purchase data for your EDD site
@@ -745,6 +745,192 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Create discount codes for your EDD site
+	 *
+	 * ## OPTIONS
+	 *
+	 * --legacy: Create legacy discount codes using pre-3.0 schema
+	 * --number: The number of discounts to create
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd create_discounts --number=100
+	 * wp edd create_discounts --number=50 --legacy
+	 */
+	public function create_discounts( $args, $assoc_args ) {
+		$number = array_key_exists( 'number', $assoc_args ) ? absint( $assoc_args['number'] ) : 1;
+		$legacy = array_key_exists( 'legacy', $assoc_args ) ? true : false;
+
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Discount Codes', $number );
+
+		for ( $i = 0; $i < $number; $i++ ) {
+			if ( $legacy ) {
+				$discount_id = wp_insert_post( array(
+					'post_type'   => 'edd_discount',
+					'post_title'  => 'Auto-Generated Legacy Discount #' . $i,
+					'post_status' => 'active',
+				) );
+
+				$download_ids = get_posts( array(
+					'post_type'      => 'download',
+					'posts_per_page' => 2,
+					'fields'         => 'ids',
+					'orderby'        => 'rand',
+				) );
+
+				$meta = array(
+					'code'              => 'LEGACY' . $i,
+					'status'            => 'active',
+					'uses'              => 10,
+					'max_uses'          => 20,
+					'name'              => 'Auto-Generated Legacy Discount #' . $i,
+					'amount'            => 20,
+					'start'             => '01/01/2000 00:00:00',
+					'expiration'        => '12/31/2050 23:59:59',
+					'type'              => 'percent',
+					'min_price'         => '10.50',
+					'product_reqs'      => array( $download_ids[0] ),
+					'product_condition' => 'all',
+					'excluded_products' => array( $download_ids[1] ),
+					'is_not_global'     => true,
+					'is_single_use'     => true,
+				);
+
+				remove_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
+				remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
+
+				foreach ( $meta as $key => $value ) {
+					add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+				}
+
+				add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+				add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
+			} else {
+				$type = array( 'flat', 'percent' );
+				$status = array( 'active', 'inactive' );
+				$product_condition = array( 'any', 'all' );
+
+				$type_index = array_rand( $type, 1 );
+				$status_index = array_rand( $status, 1 );
+				$product_condition_index = array_rand( $product_condition, 1 );
+
+				$post = array(
+					'code'              => md5( time() ),
+					'uses'              => mt_rand( 0, 100 ),
+					'max'               => mt_rand( 0, 100 ),
+					'name'              => 'Auto-Generated Discount #' . $i,
+					'type'              => $type[ $type_index ],
+					'amount'            => mt_rand( 10, 95 ),
+					'start'             => '12/12/2010 00:00:00',
+					'expiration'        => '12/31/2050 23:59:59',
+					'min_price'         => mt_rand( 30, 255 ),
+					'status'            => $status[ $status_index ],
+					'product_condition' => $product_condition[ $product_condition_index ],
+				);
+
+				edd_store_discount( $post );
+
+				$progress->tick();
+			}
+		}
+
+		$progress->finish();
+
+		WP_CLI::success( sprintf( __( 'Created %s discounts', 'easy-digital-downloads' ), $number ) );
+		return;
+	}
+
+	/**
+	 * Migrate Discounts to the custom tables
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_discounts
+	 * wp edd migrate_discounts --force
+	 */
+	public function migrate_discounts( $args, $assoc_args ) {
+		global $wpdb;
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_discounts' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'eddc' ) );
+		}
+
+		$discounts_db = EDD()->discounts;
+		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
+			@$discounts_db->create_table();
+		}
+
+		$discount_meta = EDD()->discount_meta;
+		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
+			@$discount_meta->create_table();
+		}
+
+		$sql = "SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount'";
+		$results = $wpdb->get_results( $sql );
+		$total = count( $results );
+
+		if ( ! empty( $total ) ) {
+
+			$progress = new \cli\progress\Bar( 'Migrating Discounts', $total );
+
+			foreach ( $results as $old_discount ) {
+				$discount = new EDD_Discount;
+				$discount->migrate( $old_discount->ID );
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			$new_count = EDD()->discounts->count( array( 'number' => - 1 ) );
+			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts WHERE post_type ='edd_discount'", 0 );
+			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
+
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_set_upgrade_complete( 'migrate_discounts' );
+
+			WP_CLI::confirm( __( 'Remove legacy discount records?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::line( __( 'Removing old discount data.', 'easy-digital-downloads' ) );
+
+			$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
+			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
+			$discount_ids = implode( ', ', $discount_ids );
+
+			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
+			$wpdb->query( $delete_posts_query );
+
+			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
+			$wpdb->query( $delete_postmeta_query );
+
+			edd_set_upgrade_complete( 'remove_legacy_discounts' );
+
+		} else {
+
+			WP_CLI::line( __( 'No discount records found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_discounts' );
+			edd_set_upgrade_complete( 'remove_legacy_discounts' );
+
+		}
+	}
+
+	protected function get_fname() {
+		$names = array(
+			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
+			'Marisa','Maybelle','Onie','Donnette','Henry','Sheryll','Leighann','Wilson',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	/**
 	 * Migrate the API requests to the custom table.
 	 *
 	 * ## OPTIONS
@@ -967,15 +1153,6 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_set_upgrade_complete( 'migrate_file_download_logs' );
 			edd_set_upgrade_complete( 'remove_legacy_file_download_logs' );
 		}
-	}
-
-	protected function get_fname() {
-		$names = array(
-			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
-			'Marisa','Maybelle','Onie','Donnette','Henry','Sheryll','Leighann','Wilson',
-		);
-
-		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
 	}
 
 	protected function get_lname() {
