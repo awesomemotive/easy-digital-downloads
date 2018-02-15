@@ -1,0 +1,182 @@
+<?php
+/**
+ * Customer Functions
+ *
+ * This file contains all of the first class functions for interacting with a
+ * customer or it's related meta data.
+ *
+ * @package     EDD
+ * @subpackage  Functions
+ * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
+ */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+function edd_add_customer( $data = array() ) {
+	$customers = new EDD_Customer_Query();
+
+	return $customers->add_item( $data );
+}
+
+function edd_delete_customer( $customer_id = 0 ) {
+	$customers = new EDD_Customer_Query();
+
+	return $customers->delete_item( $customer_id );
+}
+
+function edd_get_customer( $customer_id = 0 ) {
+	return edd_get_customer_by( 'id', $customer_id );
+}
+
+function edd_update_customer( $customer_id = 0, $data = array() ) {
+	$customers = new EDD_Customer_Query();
+
+	return $customers->update_item( $customer_id, $data );
+}
+
+/**
+ * Query for customers
+ *
+ * @since 3.0.0
+ * @param array $args
+ *
+ * @return array
+ */
+function edd_get_customers( $args = array() ) {
+
+	// Query for customers
+	$customers = new EDD_Customer_Query( $args );
+
+	// Return customers
+	return $customers->items;
+}
+
+/**
+ * Query for customers
+ *
+ * @since 3.0.0
+ * @param array $args
+ *
+ * @return object
+ */
+function edd_get_customer_by( $field = '', $value = '' ) {
+
+	// Query for customer
+	$customers = new EDD_Customer_Query( array(
+		'number' => 1,
+		$field   => $value
+	) );
+
+	// Return customer
+	return reset( $customers->items );
+}
+
+function edd_get_customer_count() {
+
+	// Get a count
+	$customers = new EDD_Customer_Query( array(
+		'number' => 0,
+		'count'  => true,
+
+		'update_cache'      => false,
+		'update_meta_cache' => false
+	) );
+
+	// Return count
+	return absint( $customers->items );
+}
+
+/**
+ * Add meta data field to a customer.
+ *
+ * @since 3.0.0
+ *
+ * @param int     $customer_id  Customer ID.
+ * @param string  $meta_key     Meta data name.
+ * @param mixed   $meta_value   Meta data value. Must be serializable if non-scalar.
+ * @param bool    $unique       Optional. Whether the same key should not be added.
+ *                              Default false.
+ *
+ * @return int|false Meta ID on success, false on failure.
+ */
+function edd_add_customer_meta( $customer_id, $meta_key, $meta_value, $unique = false ) {
+	return add_metadata( 'edd_customer', $customer_id, $meta_key, $meta_value, $unique );
+}
+
+/**
+ * Remove meta data matching criteria from a customer.
+ *
+ * You can match based on the key, or key and value. Removing based on key and
+ * value, will keep from removing duplicate meta data with the same key. It also
+ * allows removing all meta data matching key, if needed.
+ *
+ * @since 3.0.0
+ *
+ * @param int     $customer_id  Customer ID.
+ * @param string  $meta_key     Meta data name.
+ * @param mixed   $meta_value   Optional. Meta data value. Must be serializable if
+ *                              non-scalar. Default empty.
+ *
+ * @return bool True on success, false on failure.
+ */
+function edd_delete_customer_meta( $customer_id, $meta_key, $meta_value = '' ) {
+	return delete_metadata( 'edd_customer', $customer_id, $meta_key, $meta_value );
+}
+
+/**
+ * Retrieve customer meta field for a customer.
+ *
+ * @since 3.0.0
+ *
+ * @param int     $customer_id  Customer ID.
+ * @param string  $key          Optional. The meta key to retrieve. By default, returns
+ *                              data for all keys. Default empty.
+ * @param bool    $single       Optional, default is false.
+ *                              If true, return only the first value of the specified meta_key.
+ *                              This parameter has no effect if meta_key is not specified.
+ *
+ * @return mixed Will be an array if $single is false. Will be value of meta data
+ *               field if $single is true.
+ */
+function edd_get_customer_meta( $customer_id, $key = '', $single = false ) {
+	return get_metadata( 'edd_customer', $customer_id, $key, $single );
+}
+
+/**
+ * Update customer meta field based on customer ID.
+ *
+ * Use the $prev_value parameter to differentiate between meta fields with the
+ * same key and customer ID.
+ *
+ * If the meta field for the customer does not exist, it will be added.
+ *
+ * @since 3.0.0
+ *
+ * @param int     $customer_id  Customer ID.
+ * @param string  $meta_key     Meta data key.
+ * @param mixed   $meta_value   Meta data value. Must be serializable if non-scalar.
+ * @param mixed   $prev_value   Optional. Previous value to check before removing.
+ *                              Default empty.
+ *
+ * @return int|bool Meta ID if the key didn't exist, true on successful update,
+ *                  false on failure.
+ */
+function edd_update_customer_meta( $customer_id, $meta_key, $meta_value, $prev_value = '' ) {
+	return update_metadata( 'edd_customer', $customer_id, $meta_key, $meta_value, $prev_value );
+}
+
+/**
+ * Delete everything from customer meta matching meta key.
+ *
+ * @since 3.0.0
+ *
+ * @param string $customer_meta_key Key to search for when deleting.
+ *
+ * @return bool Whether the customer meta key was deleted from the database.
+ */
+function delete_customer_meta_by_key( $customer_meta_key ) {
+	return delete_metadata( 'edd_customer', null, $customer_meta_key, '', true );
+}
