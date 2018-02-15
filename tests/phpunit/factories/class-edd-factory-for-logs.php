@@ -5,6 +5,14 @@ class Log extends \WP_UnitTest_Factory_For_Thing {
 
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
+
+		$this->default_generation_definitions = array(
+			'object_id'   => new \WP_UnitTest_Generator_Sequence( '%f' ),
+			'object_type' => 'download',
+			'type'        => 'sale',
+			'title'       => new \WP_UnitTest_Generator_Sequence( 'Log title %s' ),
+			'message'     => new \WP_UnitTest_Generator_Sequence( 'Log message %s' ),
+		);
 	}
 
 	/**
