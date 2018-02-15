@@ -69,8 +69,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<td>
 					<p>
 						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'products[]',
-							'id'          => 'products',
+							'name'        => 'product_reqs[]',
+							'id'          => 'edd-products',
 							'multiple'    => true,
 							'chosen'      => true,
 							'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -85,11 +85,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 						</p>
 						<p>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="0" checked="checked"/>
+								<input type="radio" class="tog" name="applies_globally" value="1" checked="checked"/>
 								<?php _e( 'Apply discount to entire purchase.', 'easy-digital-downloads' ); ?>
 							</label><br/>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="1"/>
+								<input type="radio" class="tog" name="applies_globally" value="0"/>
 								<?php printf( __( 'Apply discount only to selected %s.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>
 							</label>
 						</p>
@@ -100,12 +100,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			<?php do_action( 'edd_add_discount_form_before_excluded_products' ); ?>
 			<tr>
 				<th scope="row" valign="top">
-					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
+					<label for="excluded_products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
-						'name'        => 'excluded-products[]',
-						'id'          => 'excluded-products',
+						'name'        => 'excluded_products[]',
+						'id'          => 'excluded_products',
 						'selected'    => array(),
 						'multiple'    => true,
 						'chosen'      => true,
@@ -120,7 +120,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="" class="edd_datepicker"/>
+					<input name="start_date" id="edd-start" type="text" value="" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -130,7 +130,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" class="edd_datepicker"/>
+					<input name="end_date" id="edd-expiration" type="text" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -140,7 +140,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-min-cart-amount" name="min_price" value="" />
+					<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="" />
 					<p class="description"><?php _e( 'The minimum dollar amount that must be in the cart before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -150,7 +150,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="edd-max-uses" name="max" value="" />
+					<input type="text" id="edd-max-uses" name="max_uses" value="" />
 					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -160,7 +160,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="checkbox" id="edd-use-once" name="use_once" value="1"/>
+					<input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"/>
 					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'easy-digital-downloads' ); ?></span>
 				</td>
 			</tr>
