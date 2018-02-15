@@ -967,6 +967,11 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		'_edd_discount_code',
 		'_edd_discount_expiration',
 		'_edd_discount_start',
+		'_edd_discount_is_single_use',
+		'_edd_discount_is_not_global',
+		'_edd_discount_product_condition',
+		'_edd_discount_min_price',
+		'_edd_discount_max_uses'
 	) );
 
 	if ( ! in_array( $meta_key, $meta_keys ) ) {
@@ -994,7 +999,6 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 	}
 
 	switch( $meta_key ) {
-
 		case '_edd_discount_name':
 		case '_edd_discount_status':
 		case '_edd_discount_amount':
@@ -1002,7 +1006,9 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		case '_edd_discount_code':
 		case '_edd_discount_expiration':
 		case '_edd_discount_start':
-
+		case '_edd_discount_product_condition':
+		case '_edd_discount_min_price':
+		case '_edd_discount_max_uses':
 			$key = str_replace( '_edd_discount_', '', $meta_key );
 
 			$value = $discount->$key;
@@ -1017,6 +1023,33 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 			break;
 
+		case '_edd_discount_is_single_use':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$value = $discount->get_once_per_customer();
+
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+
+		case '_edd_discount_is_not_global':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$value = $discount->get_scope();
+
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
 		default:
 			/*
 			 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
@@ -1056,6 +1089,11 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 		'_edd_discount_code',
 		'_edd_discount_expiration',
 		'_edd_discount_start',
+		'_edd_discount_is_single_use',
+		'_edd_discount_is_not_global',
+		'_edd_discount_product_condition',
+		'_edd_discount_min_price',
+		'_edd_discount_max_uses'
 	) );
 
 	if ( ! in_array( $meta_key, $meta_keys ) ) {
@@ -1098,8 +1136,10 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 		case '_edd_discount_code':
 		case '_edd_discount_expiration':
 		case '_edd_discount_start':
+		case '_edd_discount_product_condition':
+		case '_edd_discount_min_price':
+		case '_edd_discount_max_uses':
 			$key = str_replace( '_edd_discount_', '', $meta_key );
-
 			$discount->$key = $meta_value;
 			$check = $discount->save();
 
@@ -1113,7 +1153,36 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 			}
 
 			break;
+		case '_edd_discount_is_single_use':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$discount->once_per_customer = $meta_value;
+			$check = $discount->save();
 
+			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'Discount data is no longer stored in post meta. Please use the new custom database tables to insert a discount record.', 'easy-digital-downloads' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
+		case '_edd_discount_is_not_global':
+			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$discount->scope = $meta_value;
+			$check = $discount->save();
+
+			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
+			if ( $show_notice ) {
+				// Throw deprecated notice if WP_DEBUG is defined and on
+				trigger_error( __( 'Discount data is no longer stored in post meta. Please use the new custom database tables to insert a discount record.', 'easy-digital-downloads' ) );
+
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+
+			break;
 		default:
 			/*
 			 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
