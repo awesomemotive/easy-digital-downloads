@@ -247,8 +247,8 @@ class WP_DB_Query {
 	 *                                        or empty (returns an array of complete item objects). Default empty.
 	 *     @type boolean      $count          Whether to return a item count (true) or array of item objects.
 	 *                                        Default false.
-	 *     @type integer      $limit          Limit number of items to retrieve.
-	 *                                        Default null (no limit).
+	 *     @type integer      $number         Limit number of items to retrieve. Use 0 for no limit.
+	 *                                        Default 100.
 	 *     @type integer      $offset         Number of items to offset the query. Used to build LIMIT clause.
 	 *                                        Default 0.
 	 *     @type boolean      $no_found_rows  Whether to disable the `SQL_CALC_FOUND_ROWS` query.
@@ -270,7 +270,7 @@ class WP_DB_Query {
 		// Default query variables
 		$this->query_var_defaults = array(
 			'fields'            => '',
-			'limit'             => 100,
+			'number'            => 100,
 			'offset'            => '',
 			'orderby'           => 'id',
 			'order'             => 'ASC',
@@ -392,8 +392,8 @@ class WP_DB_Query {
 		}
 
 		// Pagination
-		if ( ! empty( $this->found_items ) && ! empty( $this->query_vars['limit'] ) ) {
-			$this->max_num_pages = ceil( $this->found_items / $this->query_vars['limit'] );
+		if ( ! empty( $this->found_items ) && ! empty( $this->query_vars['number'] ) ) {
+			$this->max_num_pages = ceil( $this->found_items / $this->query_vars['number'] );
 		}
 
 		// Return an int of the count
@@ -569,7 +569,7 @@ class WP_DB_Query {
 			: '';
 
 		// Select & From
-		$table  = $this->get_db()->{$this->table_name};
+		$table  = $this->get_table_name();
 		$select = "SELECT {$found_rows} {$fields}";
 		$from   = "FROM {$table} {$this->table_alias} {$join}";
 
@@ -602,7 +602,7 @@ class WP_DB_Query {
 	 * @param  array $item_ids Optional array of item IDs
 	 */
 	private function set_found_items( $item_ids = array() ) {
-		if ( ! empty( $this->query_vars['limit'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
+		if ( ! empty( $this->query_vars['number'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
 			/**
 			 * Filters the query used to retrieve found item count.
 			 *
@@ -627,10 +627,21 @@ class WP_DB_Query {
 	 *
 	 * @return wpdb
 	 */
-	private function get_db() {
+	private static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
 			? $GLOBALS['wpdb']
 			: new stdClass();
+	}
+
+	/**
+	 * Return the literal table name (with prefix) from $wpdb
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	private function get_table_name() {
+		return $this->get_db()->{$this->table_name};
 	}
 
 	/**
@@ -668,7 +679,7 @@ class WP_DB_Query {
 		$orderby = $this->get_order_by( $order );
 
 		// Limit & Offset
-		$limit   = absint( $this->query_vars['limit']  );
+		$limit   = absint( $this->query_vars['number'] );
 		$offset  = absint( $this->query_vars['offset'] );
 
 		// Limits
@@ -855,7 +866,7 @@ class WP_DB_Query {
 			if ( true === $column->in ) {
 				$where_id = "{$column->name}__in";
 
-				// Parse item email for an IN clause.
+				// Parse item for an IN clause.
 				if ( isset( $this->query_vars[ $where_id ] ) && is_array( $this->query_vars[ $where_id ] ) ) {
 
 					// Convert single item arrays to literal column comparisons
@@ -876,7 +887,7 @@ class WP_DB_Query {
 			if ( true === $column->not_in ) {
 				$where_id = "{$column->name}__not_in";
 
-				// Parse item email for an IN clause.
+				// Parse item for a NOT IN clause.
 				if ( isset( $this->query_vars[ $where_id ] ) && is_array( $this->query_vars[ $where_id ] ) ) {
 
 					// Convert single item arrays to literal column comparisons
@@ -1095,7 +1106,7 @@ class WP_DB_Query {
 		}
 
 		// Table
-		$table   = $this->get_db()->{$this->table_name};
+		$table   = $this->get_table_name();
 		$primary = $this->primary_column->name;
 
 		// Item ID
@@ -1141,21 +1152,44 @@ class WP_DB_Query {
 	}
 
 	/**
+	 * Add an item to the database
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data
+	 *
+	 * @return boolean
+	 */
+	public function add_item( $data = array() ) {
+		$table  = $this->get_table_name();
+		$result = $this->get_db()->insert( $table, $data );
+
+		// Return result
+		return $result;
+	}
+
+	/**
 	 * Update an item in the database
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param int $item_id
 	 * @param array $data
+	 *
+	 * @return boolean
 	 */
 	public function update_item( $item_id = 0, $data = array() ) {
 		$where  = array( $this->primary_column->name => $item_id );
-		$update = $this->get_db()->update( $this->table_name, $data, $where );
+		$table  = $this->get_table_name();
+		$result = $this->get_db()->update( $table, $data, $where );
 
 		// Maybe clean caches on successful update
-		if ( ! empty( $update ) && ! is_wp_error( $update ) ) {
+		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
 			$this->clean_item_cache( $item_id );
 		}
+
+		// Return result
+		return $result;
 	}
 
 	/**
@@ -1164,15 +1198,21 @@ class WP_DB_Query {
 	 * @since 3.0.0
 	 *
 	 * @param int $item_id
+	 *
+	 * @return boolean
 	 */
 	public function delete_item( $item_id = 0 ) {
 		$where  = array( $this->primary_column->name => $item_id );
-		$update = $this->get_db()->delete( $this->table_name, $where );
+		$table  = $this->get_table_name();
+		$result = $this->get_db()->delete( $table, $where );
 
-		// Maybe clean caches on successful update
-		if ( ! empty( $update ) && ! is_wp_error( $update ) ) {
+		// Maybe clean caches on successful delete
+		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
 			$this->clean_item_cache( $item_id );
 		}
+
+		// Return result
+		return $result;
 	}
 
 	/** Cache *****************************************************************/
@@ -1195,18 +1235,26 @@ class WP_DB_Query {
 			return false;
 		}
 
-		// Make sure items is an array
+		// Accepts single values, so cast to array
 		$items = (array) $items;
 
 		// Update item caches
 		if ( ! empty( $this->query_vars['update_cache'] ) ) {
 
 			// Look for non-cached IDs
-			$ids     = _get_non_cached_ids( $items, $this->cache_group );
-			$table   = $this->get_db()->{$this->table_name};
+			$ids = _get_non_cached_ids( $items, $this->cache_group );
+
+			// Bail if IDs are cached
+			if ( empty( $ids ) ) {
+				return;
+			}
+
+			// Query
+			$table   = $this->get_table_name();
 			$primary = $this->primary_column->name;
 			$query   = "SELECT * FROM {$table} WHERE {$primary} IN (%s)";
-			$prepare = sprintf( $query , join( ',', array_map( 'absint', $ids ) ) );
+			$ids    = join( ',', array_map( 'absint', $ids ) );
+			$prepare = sprintf( $query , $ids );
 			$results = $this->get_db()->get_results( $prepare );
 
 			// Update item caches
@@ -1268,8 +1316,11 @@ class WP_DB_Query {
 			return false;
 		}
 
+		// Accepts single values, so cast to array
+		$items = (array) $items;
+
 		// Make sure items is an array
-		$items = wp_list_pluck( $items, $this->primary_column->name );
+		$items = wp_parse_id_list( $items );
 
 		// Loop through all items and cache them
 		foreach ( $items as $item_id ) {
