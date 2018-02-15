@@ -1,4 +1,4 @@
-<?php
+]<?php
 /**
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
@@ -120,6 +120,22 @@ final class Easy_Digital_Downloads {
 	 * @since 2.6
 	 */
 	public $customer_meta;
+
+	/**
+	 * EDD Discounts DB Object.
+	 *
+	 * @var object|EDD_DB_Discounts
+	 * @since 3.0
+	 */
+	public $discounts;
+
+	/**
+	 * EDD Discount meta DB Object.
+	 *
+	 * @var object|EDD_DB_Discount_Meta
+	 * @since 3.0
+	 */
+	public $discount_meta;
 
 	/**
 	 * EDD Cart Object
@@ -323,6 +339,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-log-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discounts.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discount-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
