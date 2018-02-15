@@ -45,7 +45,7 @@ final class EDD_DB_Table_Orders extends EDD_DB_Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "id bigint(20) unsigned NOT NULL auto_increment,
-			number varchar(255) NOT NULL default '',
+			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
@@ -60,7 +60,7 @@ final class EDD_DB_Table_Orders extends EDD_DB_Table {
 			discounts decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
 			PRIMARY KEY (id),
-			KEY number (number({$max_index_length})),
+			KEY order_number (order_number({$max_index_length})),
 			KEY status (status(20)),
 			KEY user_id (user_id),
 			KEY customer_id (customer_id),

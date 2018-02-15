@@ -100,9 +100,9 @@ class EDD_Order_Query extends EDD_DB_Query {
 			'sortable'   => true
 		),
 
-		// number
+		// order_number
 		array(
-			'name'       => 'number',
+			'name'       => 'order_number',
 			'type'       => 'varchar',
 			'length'     => '255',
 			'searchable' => true,
@@ -228,9 +228,9 @@ class EDD_Order_Query extends EDD_DB_Query {
 	 *     @type int          $id                   An order ID to only return that order. Default empty.
 	 *     @type array        $id__in               Array of order IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of order IDs to exclude. Default empty.
-	 *     @type string       $number               An order number to only return that order. Default empty.
-	 *     @type array        $number__in           Array of order numbers to include. Default empty.
-	 *     @type array        $number__not_in       Array of order numbers to exclude. Default empty.
+	 *     @type string       $order_number         An order number to only return that order. Default empty.
+	 *     @type array        $order_number__in     Array of order numbers to include. Default empty.
+	 *     @type array        $order_number__not_in Array of order numbers to exclude. Default empty.
 	 *     @type string       $status               An order statuses to only return that order. Default empty.
 	 *     @type array        $status__in           Array of order statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of order statuses to exclude. Default empty.
