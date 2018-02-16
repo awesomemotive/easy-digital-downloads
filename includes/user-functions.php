@@ -543,11 +543,12 @@ function edd_get_customer_address( $user_id = 0 ) {
 /**
  * Sends the new user notification email when a user registers during checkout
  *
- * @access 		public
- * @since 		1.8.8
+ * @access      public
+ * @since       1.8.8
  * @param int   $user_id
  * @param array $user_data
- * @return 		void
+ *
+ * @return      void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
@@ -559,21 +560,25 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
+	// Setup and send the new user email for Admins.
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 
-	$admin_subject  = sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name );
-	$admin_heading  = __( 'New user registration', 'easy-digital-downloads' );
+	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$admin_heading  = apply_filters( 'edd_user_registration_admin_email_heading', __( 'New user registration', 'easy-digital-downloads' ), $user_data );
 	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
 	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads'), $user_data['user_email'] ) . "\r\n";
+
+	$admin_message = apply_filters( 'edd_user_registration_admin_email_message', $admin_message, $user_data );
 
 	$emails->__set( 'heading', $admin_heading );
 
 	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
 
-	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
-	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
-	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
+	// Setup and send the new user email for the end user.
+	$user_subject  = apply_filters( 'edd_user_registration_email_subject', sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$user_heading  = apply_filters( 'edd_user_registration_email_heading', __( 'Your account info', 'easy-digital-downloads' ), $user_data );
+	$user_message  = apply_filters( 'edd_user_registration_email_username', sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n", $user_data );
 
 	if ( did_action( 'edd_pre_process_purchase' ) ) {
 		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
@@ -581,17 +586,20 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
 	}
 
-	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
+	$user_message .= apply_filters( 'edd_user_registration_email_password', sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n" );
 
+	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
 	if( $emails->html ) {
 
-		$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+		$user_message .= '<a href="' . $login_url . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	} else {
 
-		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), wp_login_url() ) . "\r\n";
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), $login_url ) . "\r\n";
 
 	}
+
+	$user_message = apply_filters( 'edd_user_registration_email_message', $user_message, $user_data );
 
 	$emails->__set( 'heading', $user_heading );
 
