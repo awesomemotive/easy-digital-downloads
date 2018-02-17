@@ -124,10 +124,176 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_number_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'number' => 10,
+		) );
+
+		$this->assertCount( 5, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_offset_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'number' => 10,
+			'offset' => 4,
+		) );
+
+		$this->assertCount( 1, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_search_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'search' => 'Log title',
+		) );
+
+		$this->assertCount( 5, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_orderby_title_and_order_asc_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'orderby' => 'title',
+			'order'   => 'asc'
+		) );
+
+		$this->assertTrue( $logs[0]->title < $logs[1]->title );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_orderby_title_and_order_desc_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'orderby' => 'title',
+			'order'   => 'desc'
+		) );
+
+		$this->assertTrue( $logs[0]->title > $logs[1]->title );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_orderby_message_and_order_asc_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'orderby' => 'message',
+			'order'   => 'asc'
+		) );
+
+		$this->assertTrue( $logs[0]->message < $logs[1]->message );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_orderby_message_and_order_desc_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'orderby' => 'message',
+			'order'   => 'desc'
+		) );
+
+		$this->assertTrue( $logs[0]->message > $logs[1]->message );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_order_asc_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'order' => 'asc',
+		) );
+
+		$this->assertTrue( $logs[0]->id < $logs[1]->id );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_order_desc_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'order' => 'desc',
+		) );
+
+		$this->assertTrue( $logs[0]->id > $logs[1]->id );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_by_object_id_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'object_id' => 40
+		) );
+
+		$this->assertCount( 1, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_by_invalid_object_id_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'object_id' => 99999,
+		) );
+
+		$this->assertCount( 0, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_by_object_type_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'object_type' => 'download',
+		) );
+
+		$this->assertCount( 5, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_by_title_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'title' => 'Log title 40',
+		) );
+
+		$this->assertCount( 1, $logs );
+	}
+
+	/**
+	 * @covers ::get_logs()
+	 */
+	public function test_get_logs_with_invalid_title_should_return_true() {
+		$logs = EDD()->logs->get_logs( array(
+			'title' => 'Log title 99999',
+		) );
+
+		$this->assertCount( 0, $logs );
+	}
+
+	/**
 	 * @covers ::count()
 	 */
 	public function test_count() {
 		$this->assertEquals( 5, EDD()->logs->count() );
 	}
 
+	/**
+	 * @covers ::counts_by_type()
+	 */
+	public function test_counts_by_type() {
+		$counts = EDD()->logs->counts_by_type();
+		$this->assertEquals( 5, $counts->sale );
+	}
 }
