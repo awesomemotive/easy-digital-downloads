@@ -101,7 +101,7 @@ class EDD_Tracking {
 		$data['active_gateways']  = array_keys( edd_get_enabled_payment_gateways() );
 		$data['products']         = wp_count_posts( 'download' )->publish;
 		$data['download_label']   = edd_get_label_singular( true );
-		$data['locale']           = ( $data['wp_version'] >= 4.7 ) ? get_user_locale() : get_locale();
+		$data['locale']           = get_locale();
 
 		$this->data = $data;
 	}
