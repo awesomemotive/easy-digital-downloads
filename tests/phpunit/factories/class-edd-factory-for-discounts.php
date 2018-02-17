@@ -45,6 +45,6 @@ class Discount extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD_Discount|false
 	 */
 	function get_object_by_id( $discount_id ) {
-		return edd_get_discount( $discount_id );
+		return new \EDD_Discount( $discount_id );
 	}
 }
