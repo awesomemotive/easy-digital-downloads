@@ -212,6 +212,8 @@ final class Easy_Digital_Downloads {
 			self::$instance->customer_meta      = new EDD_DB_Customer_Meta();
 			self::$instance->payment_stats      = new EDD_Payment_Stats();
 			self::$instance->cart               = new EDD_Cart();
+			self::$instance->discounts          = new EDD_DB_Discounts();
+			self::$instance->discount_meta      = new EDD_DB_Discount_Meta();
 			self::$instance->logs               = new EDD_DB_Logs();
 			self::$instance->log_meta           = new EDD_DB_Log_Meta();
 			self::$instance->api_request_logs   = new EDD_DB_Logs_API_Requests();

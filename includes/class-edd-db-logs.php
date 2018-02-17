@@ -327,7 +327,7 @@ class EDD_DB_Logs extends EDD_DB {
 				$types = sanitize_text_field( $args['object_type'] );
 			}
 
-			$where .= " AND {$table_name}.object_type IN (' {$types} ')";
+			$where .= " AND {$table_name}.object_type IN ( '{$types}' )";
 		}
 
 		// Log type(s).
@@ -344,12 +344,12 @@ class EDD_DB_Logs extends EDD_DB {
 
 		// Log title.
 		if ( array_key_exists( 'title', $args ) && ! empty( $args['title'] ) ) {
-			$where .= " AND {$table_name}.title = " . sanitize_text_field( $args['title'] );
+			$where .= " AND {$table_name}.title = '" . sanitize_text_field( $args['title'] ) . "'";
 		}
 
 		// Log message.
 		if ( array_key_exists( 'message', $args ) && ! empty( $args['message'] ) ) {
-			$where .= " AND {$table_name}.message = " . sanitize_text_field( $args['message'] );
+			$where .= " AND {$table_name}.message = '" . sanitize_text_field( $args['message'] ) . "'";
 		}
 
 		// Created for a specific date or in a date range.
