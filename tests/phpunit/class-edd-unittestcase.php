@@ -27,7 +27,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	public static function tearDownAfterClass() {
-		self::_delete_all_data();
+		self::_delete_all_edd_data();
 
 		parent::tearDownAfterClass();
 	}
@@ -40,7 +40,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 		return $factory;
 	}
 
-	protected static function _delete_all_data() {
+	protected static function _delete_all_edd_data() {
 		global $wpdb;
 
 		foreach ( array(
