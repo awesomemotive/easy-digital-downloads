@@ -13,7 +13,20 @@ require_once dirname( __FILE__ ) . '/factory.php';
  */
 class EDD_UnitTestCase extends WP_UnitTestCase {
 
-	public static function wpSetUpBeforeClass() {}
+	public static function wpSetUpBeforeClass() {
+		edd_install();
+
+		global $current_user;
+
+		$current_user = new WP_User(1);
+		$current_user->set_role('administrator');
+		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
+		add_filter( 'edd_log_email_errors', '__return_false' );
+	}
+
+	public static function wpTearDownAfterClass() {
+		self::_delete_all_data();
+	}
 
 	protected static function edd() {
 		static $factory = null;
@@ -21,12 +34,6 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 			$factory = new EDD\Tests\Factory();
 		}
 		return $factory;
-	}
-
-	public static function tearDownAfterClass() {
-		self::_delete_all_data();
-
-		return parent::tearDownAfterClass();
 	}
 
 	protected static function _delete_all_data() {
