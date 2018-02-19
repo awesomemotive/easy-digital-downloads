@@ -6,6 +6,18 @@
  */
 class Test_Misc extends EDD_UnitTestCase {
 
+	/**
+	 * Download fixture.
+	 */
+	protected static $download;
+
+	/**
+	 * Set up fixtures once.
+	 */
+	public static function wpSetUpBeforeClass() {
+		self::$download = EDD_Helper_Download::create_simple_download();
+	}
+
 	public function setUp() {
 		parent::setUp();
 	}
