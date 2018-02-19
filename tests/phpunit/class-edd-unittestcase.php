@@ -13,7 +13,9 @@ require_once dirname( __FILE__ ) . '/factory.php';
  */
 class EDD_UnitTestCase extends WP_UnitTestCase {
 
-	public static function wpSetUpBeforeClass() {
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+
 		edd_install();
 
 		global $current_user;
@@ -24,8 +26,10 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 		add_filter( 'edd_log_email_errors', '__return_false' );
 	}
 
-	public static function wpTearDownAfterClass() {
+	public static function tearDownAfterClass() {
 		self::_delete_all_data();
+
+		parent::tearDownAfterClass();
 	}
 
 	protected static function edd() {
