@@ -617,7 +617,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 			$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
 
-			$this->assertEquals( 'http://' . WP_TESTS_DOMAIN . '/' . edd_get_checkout_uri(), edd_get_current_page_url( true ) );
+			$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url( true ) );
 
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 	}
