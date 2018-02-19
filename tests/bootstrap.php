@@ -22,17 +22,7 @@ require $_tests_dir . '/includes/bootstrap.php';
 
 activate_plugin( 'easy-digital-downloads/easy-digital-downloads.php' );
 
-echo "Installing Easy Digital Downloads...\n";
-
-// Install Easy Digital Downloads
-edd_install();
-
-global $current_user;
-
-$current_user = new WP_User(1);
-$current_user->set_role('administrator');
-wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
-add_filter( 'edd_log_email_errors', '__return_false' );
+echo "Setting up Easy Digital Downloads...\n";
 
 function _disable_reqs( $status = false, $args = array(), $url = '') {
 	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disbaled for unit tests', 'edd' ) );
