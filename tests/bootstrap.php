@@ -27,9 +27,7 @@ echo "Installing Easy Digital Downloads...\n";
 // Install Easy Digital Downloads
 edd_install();
 
-global $current_user, $edd_options;
-
-$edd_options = get_option( 'edd_settings' );
+global $current_user;
 
 $current_user = new WP_User(1);
 $current_user->set_role('administrator');
