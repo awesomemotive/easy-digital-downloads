@@ -94,7 +94,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		EDD()->discount_meta->delete_meta( self::$discount_id, 'legacy_id', self::$discount_id );
 		EDD()->discount_meta->delete_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
 
-		self::_delete_all_data();
 		edd_empty_cart();
 
 		parent::tearDown();
