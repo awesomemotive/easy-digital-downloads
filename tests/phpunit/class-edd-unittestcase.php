@@ -13,10 +13,8 @@ require_once dirname( __FILE__ ) . '/factory.php';
  */
 class EDD_UnitTestCase extends WP_UnitTestCase {
 
-	public static function wpSetUpBeforeClass() {
-//		edd_install();
-	}
-	
+	public static function wpSetUpBeforeClass() {}
+
 	protected static function edd() {
 		static $factory = null;
 		if ( ! $factory ) {
