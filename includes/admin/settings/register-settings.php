@@ -340,7 +340,7 @@ function edd_get_registered_settings() {
 						'id'   => 'allow_tracking',
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
-							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
+							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
@@ -520,6 +520,13 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Enter the subject line for the sale notification email.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => 'New download purchase - Order #{payment_id}',
+					),
+					'sale_notification_heading' => array(
+						'id'   => 'sale_notification_heading',
+						'name' => __( 'Sale Notification Heading', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the heading for the sale notification email.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'New Sale!', 'easy-digital-downloads' ),
 					),
 					'sale_notification' => array(
 						'id'   => 'sale_notification',
@@ -749,6 +756,13 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Text shown on the Add to Cart Buttons.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Add to Cart', 'easy-digital-downloads' ),
+					),
+					'checkout_button_text' => array(
+						'id'   => 'checkout_button_text',
+						'name' => __( 'Checkout Button Text', 'easy-digital-downloads' ),
+						'desc' => __( 'Text shown on the Add to Cart Button when the product is already in the cart.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ),
 					),
 					'buy_now_text' => array(
 						'id'   => 'buy_now_text',
@@ -1914,7 +1928,7 @@ function edd_upload_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" clas="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 

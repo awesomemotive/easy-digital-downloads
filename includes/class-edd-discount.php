@@ -767,6 +767,40 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Retrieves the status label of the discount.
+	 *
+	 * @since 2.9
+	 *
+	 * @return string Status label for the current discount.
+	 */
+	public function get_status_label() {
+
+		switch( $this->status ) {
+			case 'expired' :
+				$label = __( 'Expired', 'easy-digital-downloads' );
+				break;
+			case 'inactive' :
+				$label = __( 'Inactive', 'easy-digital-downloads' );
+				break;
+			case 'active' :
+			default :
+				$label = __( 'Active', 'easy-digital-downloads' );
+				break;
+		}
+
+		/**
+		 * Filters the discount status.
+		 *
+		 * @since 2.9
+		 *
+		 * @param string $label  Discount status label.
+		 * @param string $status Discount status (active or inactive).
+		 * @param int    $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_status_label', $label, $this->status, $this->ID );
+	}
+
+	/**
 	 * Retrieve the type of discount.
 	 *
 	 * @since 2.7
@@ -1756,7 +1790,7 @@ class EDD_Discount {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed' ) ) ) {
+					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ) ) ) {
 						continue;
 					}
 
@@ -1810,8 +1844,8 @@ class EDD_Discount {
 				$this->is_started( $set_error ) &&
 				! $this->is_maxed_out( $set_error ) &&
 				! $this->is_used( $user, $set_error ) &&
-				$this->is_min_price_met( $set_error ) &&
-				$this->is_product_requirements_met( $set_error )
+				$this->is_product_requirements_met( $set_error ) &&
+				$this->is_min_price_met( $set_error )
 			) {
 				$return = true;
 			}

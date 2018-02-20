@@ -142,7 +142,7 @@ function edd_process_download() {
 		$schemes      = array( 'http', 'https' ); // Direct URL schemes
 
 		$supported_streams = stream_get_wrappers();
-		if ( isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
+		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' && isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
 			wp_die( __( 'Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
 		}
 
@@ -262,9 +262,13 @@ function edd_process_download() {
 
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 
-					// We need a path relative to the domain
-					$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
-					header( "X-Accel-Redirect: /$file_path" );
+					$ignore_x_accel_redirect_header = apply_filters( 'edd_ignore_x_accel_redirect', false );
+
+					if ( ! $ignore_x_accel_redirect_header ) {
+						// We need a path relative to the domain
+						$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
+						header( "X-Accel-Redirect: /$file_path" );
+					}
 
 				}
 
