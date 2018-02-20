@@ -250,19 +250,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Displays the discount status
 	 */
 	function column_status( $item ) {
-		switch( $item['status'] ){
-			case 'expired' :
-				$status = __( 'Expired', 'easy-digital-downloads' );
-				break;
-			case 'inactive' :
-				$status = __( 'Inactive', 'easy-digital-downloads' );
-				break;
-			case 'active' :
-			default :
-				$status = __( 'Active', 'easy-digital-downloads' );
-				break;
-		}
-		return $status;
+		return edd_get_discount_status_label( $item['ID'] );
 	}
 
 	/**

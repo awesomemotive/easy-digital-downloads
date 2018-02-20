@@ -1236,7 +1236,7 @@ jQuery(document).ready(function ($) {
 	});
 
 
-	$('#the-list').on('click', '.editinline', function() {
+	$('body').on('click', '#the-list .editinline', function() {
 
 		var post_id = $(this).closest('tr').attr('id');
 
