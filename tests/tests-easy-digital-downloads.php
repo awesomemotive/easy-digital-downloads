@@ -67,6 +67,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/gateways/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/gateways/manual.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/actions.php' );
@@ -88,13 +89,12 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-purchase.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/login-register.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/class-edd-exception.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/class-registry.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/interface-edd-exception.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/interface-static-registry.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/exceptions/class-attribute-not-found.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/exceptions/class-invalid-argument.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utilities/exceptions/class-invalid-parameter.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utils/class-edd-exception.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utils/class-registry.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utils/interface-static-registry.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-attribute-not-found.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-invalid-argument.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-invalid-parameter.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/add-ons.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php' );

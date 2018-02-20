@@ -7,6 +7,18 @@
  */
 class Test_Misc extends EDD_UnitTestCase {
 
+	/**
+	 * Download fixture.
+	 */
+	protected static $download;
+
+	/**
+	 * Set up fixtures once.
+	 */
+	public static function wpSetUpBeforeClass() {
+		self::$download = EDD_Helper_Download::create_simple_download();
+	}
+
 	public function setUp() {
 		parent::setUp();
 	}
@@ -565,29 +577,50 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( 'http://example.org/', edd_add_cache_busting( home_url( '/' ) ) );
 	}
 
-	public function test_get_current_page_url() {
-		global $edd_options;
+	/**
+	 * @covers ::edd_get_current_page_url()
+	 */
+	public function test_get_current_page_url_if_home_should_return_home_url() {
 		$this->go_to( home_url( '/' ) );
 		$this->assertEquals( 'http://example.org/', edd_get_current_page_url() );
+	}
 
-		$post = EDD_Helper_Download::create_simple_download();
-		$this->go_to( get_permalink( $post->ID ) );
-		$this->assertEquals( 'http://example.org/?download=test-download-product', edd_get_current_page_url() );
+	/**
+	 * @covers ::edd_get_current_page_url()
+	 */
+	public function test_get_current_page_url_if_a_download_page_should_return_that_url() {
+		$this->go_to( get_permalink( self::$download->ID ) );
+		$this->assertEquals( 'http://' . WP_TESTS_DOMAIN . '/?download=test-download-product', edd_get_current_page_url() );
+	}
+
+	/**
+	 * @covers ::edd_get_current_page_url()
+	 */
+	public function test_get_current_page_url_if_no_caching_should_return_url_with_nocache_true() {
+		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
+
+			$this->go_to( get_permalink( self::$download->ID ) );
+
+			$this->assertEquals( 'http://' . WP_TESTS_DOMAIN . '/?download=test-download-product&nocache=true', edd_get_current_page_url( true ) );
+
+		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
+	}
+
+	/**
+	 * @covers ::edd_get_current_page_url()
+	 */
+	public function test_get_current_page_url_if_no_cache_checkout_then_current_url_should_match() {
+		global $edd_options;
 
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
-		$this->go_to( get_permalink( $post->ID ) );
-		$this->assertEquals( 'http://example.org/?download=test-download-product&nocache=true', edd_get_current_page_url( true ) );
-		EDD_Helper_Download::delete_download( $post->ID );
+
+			$edd_options['no_cache_checkout'] = true;
+
+			$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
+
+			$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url( true ) );
+
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
-
-		$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
-		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url() );
-
-		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
-		$edd_options['no_cache_checkout'] = true;
-		$this->assertEquals( edd_get_checkout_uri(), edd_get_current_page_url( true ) );
-		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
-
 	}
 
 	public function test_cart_url_formats() {

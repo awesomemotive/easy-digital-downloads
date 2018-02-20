@@ -59,10 +59,9 @@ class EDD_Utilities {
 	 * @since 3.0
 	 */
 	private function includes() {
-		$utils_dir = EDD_PLUGIN_DIR . 'includes/utilities/';
+		$utils_dir = EDD_PLUGIN_DIR . 'includes/utils/';
 
 		// Interfaces.
-		require_once $utils_dir . 'interface-edd-exception.php';
 		require_once $utils_dir . 'interface-static-registry.php';
 
 		// Exceptions.

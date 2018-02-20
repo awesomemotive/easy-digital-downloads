@@ -45,6 +45,22 @@ final class Report extends Base_Object {
 	private $capability;
 
 	/**
+	 * Represents the display callback used to output the report.
+	 *
+	 * @since 3.0
+	 * @var   callable
+	 */
+	private $display_callback = '\EDD\Reports\default_display_report';
+
+	/**
+	 * Represents filters the report has opted into.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $filters = array( 'dates' );
+
+	/**
 	 * Constructs the report object.
 	 *
 	 * @since 3.0
@@ -73,6 +89,19 @@ final class Report extends Base_Object {
 			$this->errors->add( 'missing_capability', 'No capability is defined for the report.', $args );
 
 		}
+
+		if ( ! empty( $args['display_callback'] ) ) {
+
+			$this->set_display_callback( $args['display_callback'] );
+
+		}
+
+		if ( ! empty( $args['filters'] ) ) {
+
+			$this->set_filters( $args['filters'] );
+
+		}
+
 	}
 
 	/**
@@ -302,6 +331,93 @@ final class Report extends Base_Object {
 	}
 
 	/**
+	 * Displays the endpoint based on the view (type).
+	 *
+	 * @since 3.0
+	 *
+	 * @return void
+	 */
+	public function display() {
+		$callback = $this->get_display_callback();
+
+		if ( is_callable( $callback ) ) {
+			call_user_func( $callback, $this );
+		}
+	}
+
+	/**
+	 * Retrieves the current report's display callback.
+	 *
+	 * @since 3.0
+	 *
+	 * @return callable Display callback.
+	 */
+	public function get_display_callback() {
+		return $this->display_callback;
+	}
+
+	/**
+	 * Sets the display callback used to render the report.
+	 *
+	 * @since 3.0
+	 *
+	 * @param callable $callback Display callback.
+	 */
+	private function set_display_callback( $callback ) {
+
+		if ( is_callable( $callback ) ) {
+
+			$this->display_callback = $callback;
+
+		} else {
+
+			$this->flag_invalid_report_arg_type( 'display_callback', 'callable' );
+
+		}
+	}
+
+	/**
+	 * Retrieves the list of filters registered for use with this report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array List of support filters.
+	 */
+	public function get_filters() {
+		return $this->filters;
+	}
+
+	/**
+	 * Sets the endpoint filters supported by the current report's endpoints.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $filters Filters to set for this report.
+	 */
+	private function set_filters( $filters ) {
+		$valid_filters = Reports\get_filters();
+
+		foreach ( $filters as $filter ) {
+			if ( Reports\validate_filter( $filter ) ) {
+
+				$this->filters[] = $filter;
+
+			} else {
+
+				$message = sprintf( 'The \'%1$s\' filter for the \'%2$s\' report is invalid.',
+					$filter,
+					$this->get_id()
+				);
+
+				$this->errors->add( 'invalid_report_filter', $message, $this );
+
+			}
+		}
+
+		$this->filters = array_unique( $this->filters );
+	}
+
+	/**
 	 * Displays an entire group of an endpoints view.
 	 *
 	 * @since 3.0
@@ -320,5 +436,25 @@ final class Report extends Base_Object {
 			}
 		}
 	}
+
+	/**
+	 * Flags an error for an invalid report argument type.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $argument Argument name.
+	 */
+	protected function flag_invalid_report_arg_type( $argument, $expected_type ) {
+		$message = sprintf( 'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' report.',
+			$argument,
+			$expected_type,
+			$this->get_id()
+		);
+
+		$this->errors->add( 'invalid_report_arg_type', $message, array(
+			'report_id' => $this->get_id(),
+		) );
+	}
+
 
 }

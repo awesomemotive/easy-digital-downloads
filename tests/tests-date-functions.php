@@ -112,7 +112,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_report_dates()
-	 * @expectedDeprecatedEDD edd_get_report_dates
+	 * @expectEDDeprecated edd_get_report_dates
 	 */
 	public function test_get_report_dates_correct_this_month_at_the_end_of_the_month_utc() {
 		$_REQUEST['range'] = 'this_month';
@@ -129,7 +129,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_report_dates()
-	 * @expectedDeprecatedEDD edd_get_report_dates
+	 * @expectEDDeprecated edd_get_report_dates
 	 */
 	public function test_get_report_dates_correct_this_month_at_the_end_of_the_month_nz() {
 		$_REQUEST['range'] = 'this_month';
@@ -146,7 +146,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_report_dates()
-	 * @expectedDeprecatedEDD edd_get_report_dates
+	 * @expectEDDeprecated edd_get_report_dates
 	 */
 	public function test_get_report_dates_correct_this_month_at_the_beginning_of_the_month_utc() {
 		$_REQUEST['range'] = 'this_month';
@@ -163,7 +163,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_report_dates()
-	 * @expectedDeprecatedEDD edd_get_report_dates
+	 * @expectEDDeprecated edd_get_report_dates
 	 */
 	public function test_get_report_dates_correct_this_month_at_the_beginning_of_the_month_pdt() {
 		$_REQUEST['range'] = 'this_month';
@@ -180,7 +180,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::edd_get_report_dates()
-	 * @expectedDeprecatedEDD edd_get_report_dates
+	 * @expectEDDeprecated edd_get_report_dates
 	 */
 	public function test_get_report_dates_correct_this_moment_utc() {
 		$_REQUEST['range'] = 'this_month';
