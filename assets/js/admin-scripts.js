@@ -366,7 +366,7 @@ jQuery(document).ready(function ($) {
 	// Date picker
 	var edd_datepicker = $( '.edd_datepicker' );
 	if ( edd_datepicker.length > 0 ) {
-		var dateFormat = 'mm/dd/yy';
+		var dateFormat = 'yy-mm-dd';
 		edd_datepicker.datepicker( {
 			dateFormat: dateFormat
 		} );
@@ -874,7 +874,7 @@ jQuery(document).ready(function ($) {
 
 		product_requirements : function() {
 
-			$('#products').change(function() {
+			$('#edd-products').change(function() {
 
 				var product_conditions = $( '#edd-discount-product-conditions' );
 
@@ -910,9 +910,9 @@ jQuery(document).ready(function ($) {
 					date_range_options = $( '#edd-date-range-options' );
 
 				if ( 'other' === $this.val() ) {
-					date_range_options.show();
+					date_range_options.removeClass( 'screen-reader-text' );
 				} else {
-					date_range_options.hide();
+					date_range_options.addClass( 'screen-reader-text' );
 				}
 			});
 

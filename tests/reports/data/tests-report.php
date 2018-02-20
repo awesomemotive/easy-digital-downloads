@@ -61,7 +61,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'capability' => 'exist',
 			'endpoints'  => array(
 				'tiles' => array( 'foo' ),
-			)
+			),
+			'filters'    => array( 'dates' ),
 		) );
 
 		self::$_original_report = self::$report = Reports\get_report( 'foo' );
@@ -87,6 +88,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label'      => 'Foo',
 			'capability' => 'view_shop_reports',
 			'endpoints'  => array(),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$this->assertTrue( $report->has_errors() );
@@ -102,6 +104,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label'      => 'Foo',
 			'capability' => 'view_shop_reports',
 			'endpoints'  => array(),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$this->assertContains( 'missing_endpoints', $report->get_errors()->get_error_codes() );
@@ -117,9 +120,146 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'label'      => 'Foo',
 			'endpoints'  => array(),
 			'capability' => '',
+			'filters'    => array( 'dates' ),
 		) );
 
 		$this->assertContains( 'missing_capability', $report->get_errors()->get_error_codes() );
+	}
+
+	/**
+	 * @covers ::get_filters()
+	 */
+	public function test_get_filters_with_empty_filters_from_registry_should_return_dates_filter_only() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+		) );
+
+		$this->assertEqualSets( array( 'dates' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::get_filters()
+	 */
+	public function test_get_filters_with_non_empty_valid_filters_should_return_those_filters() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'dates', 'products' ),
+		) );
+
+		$this->assertEqualSets( array( 'dates', 'products' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::get_filters()
+	 */
+	public function test_get_filters_with_a_valid_non_dates_filter_should_still_include_dates() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'products' ),
+		) );
+
+		$this->assertContains( 'dates', $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::$filters
+	 */
+	public function test_Report_with_empty_filters_should_set_dates_filter_by_default() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+		) );
+
+		$this->assertEqualSets( array( 'dates' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::$filters
+	 */
+	public function test_Report_with_non_empty_valid_filters_should_set_those_filters() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'dates', 'products' ),
+		) );
+
+		$this->assertEqualSets( array( 'dates', 'products' ), $report->get_filters() );
+	}
+
+	/**
+	 * @covers ::$filters
+	 * @group edd_errors
+	 */
+	public function test_Report_with_an_invalid_filter_should_flag_WP_Error_including_code_invalid_report_filter() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+			'filters'    => array( 'fake' ),
+		) );
+
+		$this->assertContains( 'invalid_report_filter', $report->get_errors()->get_error_codes() );
+	}
+
+	/**
+	 * @covers ::$display_callback
+	 * @covers ::get_display_callback()
+	 */
+	public function test_Report_with_empty_display_callback_should_set_the_default() {
+		$report = new Report( array(
+			'id'         => 'foo',
+			'label'      => 'Foo',
+			'endpoints'  => array(),
+			'capability' => 'exist',
+		) );
+
+		$this->assertSame( '\EDD\Reports\default_display_report', $report->get_display_callback() );
+	}
+
+	/**
+	 * @covers ::$display_callback
+	 * @covers ::get_display_callback()
+	 */
+	public function test_Report_with_non_empty_callable_display_callback_should_set_that_callback() {
+		$report = new Report( array(
+			'id'               => 'foo',
+			'label'            => 'Foo',
+			'endpoints'        => array(),
+			'capability'       => 'exist',
+			'display_callback' => '__return_false',
+		) );
+
+		$this->assertSame( '__return_false', $report->get_display_callback() );
+	}
+
+	/**
+	 * @covers ::$display_callback
+	 * @group edd_errors
+	 */
+	public function test_Report_with_non_callable_display_callback_should_flag_WP_Error_including_code_invalid_report_arg_type() {
+		$report = new Report( array(
+			'id'               => 'foo',
+			'label'            => 'Foo',
+			'endpoints'        => array(),
+			'capability'       => 'exist',
+			'display_callback' => 'fake',
+		) );
+
+		$this->assertContains( 'invalid_report_arg_type', $report->get_errors()->get_error_codes() );
 	}
 
 	/**
@@ -233,7 +373,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'capability' => 'exist',
 			'endpoints'  => array(
 				'tiles' => array( 'foo', 'bar' ),
-			)
+			),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$report = Reports\get_report( 'foo' );
@@ -282,7 +423,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'capability' => 'exist',
 			'endpoints'  => array(
 				'tiles' => array( 'foo', 'bar' ),
-			)
+			),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$report = Reports\get_report( 'foo' );
@@ -320,7 +462,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'capability' => 'exist',
 			'endpoints'  => array(
 				'tiles' => array( 'foo' ),
-			)
+			),
+			'filters'    => array( 'dates' ),
 		) );
 
 		$report = Reports\get_report( 'foo' );

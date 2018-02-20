@@ -141,7 +141,11 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$this->registry->add_report( 'foo', array(
-			'label' => ''
+			'label'     => '',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+			'filters'   => array( 'dates' ),
 		) );
 	}
 
@@ -153,8 +157,74 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$added = $this->registry->add_report( 'foo', array(
-			'label' => 'Foo',
+			'label'     => 'Foo',
+			'endpoints' => array(),
+			'filters'   => array( 'dates' ),
 		) );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_with_invalid_filter_should_throw_exception() {
+		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
+
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+			'filters'   => array( 'bar' ),
+		) );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_with_non_string_filter_should_throw_exception() {
+		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
+
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array()
+			),
+			'filters'   => array( 123 ),
+		) );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_with_valid_filter_should_return_true() {
+		$added = $this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+		) );
+
+		$this->assertTrue( $added );
+	}
+
+	/**
+	 * @covers ::add_report()
+	 * @throws \EDD_Exception
+	 */
+	public function test_add_report_without_filters_should_default_to_date_filter() {
+		$this->registry->add_report( 'foo', array(
+			'label'     => 'Foo',
+			'endpoints' => array(
+				'tiles' => array(),
+			),
+		) );
+
+		$report = $this->registry->get_report( 'foo' );
+
+		$this->assertEqualSets( array( 'dates' ), $report['filters'] );
 	}
 
 	/**
@@ -165,7 +235,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 		$this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',
 			'endpoints' => array(
-				'tiles' => array()
+				'tiles' => array(),
 			),
 		) );
 
@@ -185,6 +255,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 'dates' ),
 		) );
 
 		$report = $this->registry->get_report( 'foo' );
@@ -253,7 +324,8 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 				'label' => 'Foo',
 				'endpoints' => array(
 					'tiles' => array()
-				)
+				),
+				'filters'   => array( 'dates' ),
 			) );
 		} catch ( \EDD_Exception $exception ) {}
 	}
@@ -280,6 +352,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 					'endpoints'  => array(
 						'tiles' => array()
 					),
+					'filters'    => array( 'dates' ),
 				);
 				break;
 
@@ -293,6 +366,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 						'endpoints'  => array(
 							'tiles' => array()
 						),
+						'filters'    => array( 'dates' ),
 					)
 				);
 				break;
@@ -317,6 +391,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 'dates' ),
 		) );
 
 		$this->registry->add_report( 'bar', array(
@@ -325,6 +400,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 			'endpoints' => array(
 				'tiles' => array()
 			),
+			'filters'   => array( 'dates' ),
 		) );
 	}
 }
