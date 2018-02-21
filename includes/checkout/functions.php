@@ -28,7 +28,7 @@ function edd_is_checkout() {
 
 	if( ! $is_object_set ) {
 		unset( $wp_query->queried_object );
-	} else if ( is_singular( apply_filters( 'edd_checkout_post_types', array( 'page' ) ) ) ) {
+	} else if ( is_singular() ) {
 		$content = $wp_query->queried_object->post_content;
 	}
 
