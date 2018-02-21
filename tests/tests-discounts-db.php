@@ -23,27 +23,27 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 		$args = array(
 			array(
 				'code'              => '10FLAT',
-				'uses'              => 0,
-				'max'               => 10,
+				'use_count'         => 54,
+				'max_uses'          => 10,
 				'name'              => '$10 Off',
 				'type'              => 'flat',
 				'amount'            => '10',
-				'start'             => '12/12/2010 00:00:00',
-				'expiration'        => '12/31/2050 23:59:59',
-				'min_price'         => 128,
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+				'min_cart_price'    => 128,
 				'status'            => 'active',
 				'product_condition' => 'all'
 			),
 			array(
 				'code'              => '20OFF',
-				'uses'              => 54,
-				'max'               => 10,
+				'use_count'         => 54,
+				'max_uses'          => 10,
 				'name'              => '20 Percent Off',
 				'type'              => 'percent',
 				'amount'            => '20',
-				'start'             => '12/12/2010 00:00:00',
-				'expiration'        => '12/31/2050 23:59:59',
-				'min_price'         => 128,
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+				'min_cart_price'    => 128,
 				'status'            => 'active',
 				'product_condition' => 'all'
 			)
@@ -330,7 +330,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_get_discounts_with_created_end_date() {
 		$discounts = EDD()->discounts->get_discounts( array(
-			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created' => date( 'Y-m-d', strtotime( 'now' ) ),
 		) );
 
 		$this->assertCount( 2, $discounts );
@@ -351,10 +351,8 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_start_date() {
-		global $wpdb;
-
 		$discounts = EDD()->discounts->get_discounts( array(
-			'start_date' => '2010-12-12 23:59:59',
+			'start_date' => '2010-12-12 00:00:00',
 		) );
 
 		$this->assertCount( 2, $discounts );
