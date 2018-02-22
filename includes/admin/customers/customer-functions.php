@@ -11,16 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array        The altered list of views
  */
 function edd_register_default_customer_views( $views ) {
-
-	$default_views = array(
-		'overview'  => 'edd_customers_view',
-		'delete'    => 'edd_customers_delete_view',
-		'notes'     => 'edd_customer_notes_view',
-		'tools'      => 'edd_customer_tools_view',
-	);
-
-	return array_merge( $views, $default_views );
-
+	return array_merge( $views, array(
+		'overview' => 'edd_customers_view',
+		'delete'   => 'edd_customers_delete_view',
+		'notes'    => 'edd_customer_notes_view',
+		'tools'    => 'edd_customer_tools_view'
+	) );
 }
 add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
 
@@ -32,14 +28,11 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
  * @return array       The altered list of tabs
  */
 function edd_register_default_customer_tabs( $tabs ) {
-
-	$default_tabs = array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ) ),
-	);
-
-	return array_merge( $tabs, $default_tabs );
+	return array_merge( $tabs, array(
+		'overview' => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
+		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
+		'tools'    => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
+	) );
 }
 add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
 
@@ -52,7 +45,10 @@ add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
  */
 function edd_register_delete_customer_tab( $tabs ) {
 
-	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ) );
+	$tabs['delete'] = array(
+		'dashicon' => 'dashicons-trash',
+		'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' )
+	);
 
 	return $tabs;
 }
@@ -71,12 +67,9 @@ function edd_maybe_remove_adminbar_profile_link() {
 	}
 
 	if ( edd_user_pending_verification() ) {
-
 		global $wp_admin_bar;
-		$wp_admin_bar->remove_menu('edit-profile', 'user-actions');
-
+		$wp_admin_bar->remove_menu( 'edit-profile', 'user-actions' );
 	}
-
 }
 add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_link' );
 
@@ -88,7 +81,7 @@ add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_lin
  */
 function edd_maybe_remove_menu_profile_links() {
 
-	if( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		return;
 	}
 
@@ -110,9 +103,7 @@ function edd_maybe_remove_menu_profile_links() {
 
 		remove_menu_page( 'profile.php' );
 		remove_submenu_page( 'users.php', 'profile.php' );
-
 	}
-
 }
 add_action( 'admin_init', 'edd_maybe_remove_menu_profile_links' );
 

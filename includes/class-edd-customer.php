@@ -97,20 +97,11 @@ class EDD_Customer {
 	private $raw_notes = null;
 
 	/**
-	 * The Database Abstraction
-	 *
-	 * @since  2.3
-	 */
-	protected $db;
-
-	/**
 	 * Get things going
 	 *
 	 * @since 2.3
 	 */
 	public function __construct( $_id_or_email = false, $by_user_id = false ) {
-
-		$this->db = new EDD_DB_Customers;
 
 		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
 			return false;
@@ -124,7 +115,7 @@ class EDD_Customer {
 			$field = 'email';
 		}
 
-		$customer = $this->db->get_customer_by( $field, $_id_or_email );
+		$customer = edd_get_customer_by( $field, $_id_or_email );
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
 			return false;
@@ -242,10 +233,10 @@ class EDD_Customer {
 		$created = false;
 
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
-		if ( $this->db->add( $data ) ) {
+		if ( edd_add_customer( $data ) ) {
 
 			// We've successfully added/updated the customer, reset the class vars with the new data
-			$customer = $this->db->get_customer_by( 'email', $args['email'] );
+			$customer = edd_get_customer_by( 'email', $args['email'] );
 
 			// Setup the customer data with the values from DB
 			$this->setup_customer( $customer );
@@ -284,9 +275,8 @@ class EDD_Customer {
 
 		$updated = false;
 
-		if ( $this->db->update( $this->id, $data ) ) {
-
-			$customer = $this->db->get_customer_by( 'id', $this->id );
+		if ( edd_update_customer( $this->id, $data ) ) {
+			$customer = edd_get_customer( $this->id );
 			$this->setup_customer( $customer);
 
 			$updated = true;
@@ -763,7 +753,9 @@ class EDD_Customer {
 
 		do_action( 'edd_customer_pre_add_note', $new_note, $this->id, $this );
 
-		$updated = $this->update( array( 'notes' => $notes ) );
+		$updated = $this->update( array(
+			'notes' => $notes
+		) );
 
 		if ( $updated ) {
 			$this->raw_notes = $notes;
@@ -789,7 +781,7 @@ class EDD_Customer {
 			return $this->raw_notes;
 		}
 
-		$this->raw_notes = $this->db->get_column( 'notes', $this->id );
+		$this->raw_notes = '';
 
 		return (string) $this->raw_notes;
 
@@ -806,7 +798,7 @@ class EDD_Customer {
 	 * @since   2.6
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
-		return EDD()->customer_meta->get_meta( $this->id, $meta_key, $single );
+		return get_metadata( $this->id, $meta_key, $single );
 	}
 
 	/**
@@ -860,12 +852,11 @@ class EDD_Customer {
 	 * @param  array $data The data to sanitize
 	 * @return array       The sanitized data, based off column defaults
 	 */
-	private function sanitize_columns( $data ) {
+	private function sanitize_columns( $data = array() ) {
 
-		$columns        = $this->db->get_columns();
-		$default_values = $this->db->get_column_defaults();
+		$default_values = array();
 
-		foreach ( $columns as $key => $type ) {
+		foreach ( $data as $key => $type ) {
 
 			// Only sanitize data that we were provided
 			if ( ! array_key_exists( $key, $data ) ) {

@@ -256,7 +256,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
 
 		$args    = array(
-			'number'  => $this->per_page,
+			'limit'   => $this->per_page,
 			'offset'  => $offset,
 			'order'   => $order,
 			'orderby' => $orderby
@@ -273,7 +273,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		}
 
 		$this->args = $args;
-		$customers  = EDD()->customers->get_customers( $args );
+		$customers  = edd_get_customers( $args );
 
 		if ( $customers ) {
 

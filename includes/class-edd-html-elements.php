@@ -250,7 +250,7 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$customers = EDD()->customers->get_customers( array(
+		$customers = edd_get_customers( array(
 			'number' => $args['number']
 		) );
 
