@@ -397,7 +397,7 @@ class EDD_HTML_Elements {
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
-				$options[ absint( $discount->ID ) ] = esc_html( get_the_title( $discount->ID ) );
+				$options[ absint( $discount->ID ) ] = esc_html( $discount->name );
 			}
 		} else {
 			$options[0] = __( 'No discounts found', 'easy-digital-downloads' );

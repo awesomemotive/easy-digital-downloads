@@ -74,21 +74,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		$this->_post = get_post( $post_id );
 
-		$discount = array(
-			'code' => '20OFF',
-			'uses' => 54,
-			'max' => 10,
-			'name' => '20 Percent Off',
-			'type' => 'percent',
-			'amount' => '20',
-			'start' => '12/12/2010 00:00:00',
-			'expiration' => '12/31/2050 00:00:00',
-			'min_price' => 128,
-			'status' => 'active',
-			'product_condition' => 'all'
-		);
-
-		$this->_discount = edd_store_discount( $discount );
+		$this->_discount = EDD_Helper_Discount::create_simple_percent_discount();
 	}
 
 	public function tearDown() {

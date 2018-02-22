@@ -144,6 +144,10 @@ final class Easy_Digital_Downloads {
 			self::$instance->html          = new EDD_HTML_Elements();
 			self::$instance->emails        = new EDD_Emails();
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
+			//self::$instance->customers     = new EDD_DB_Customers();
+			//self::$instance->customer_meta = new EDD_DB_Customer_Meta();
+			//self::$instance->discounts     = new EDD_DB_Discounts();
+			//self::$instance->discount_meta = new EDD_DB_Discount_Meta();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
 		}
@@ -272,6 +276,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
+		//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discounts.php';
+		//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discount-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
