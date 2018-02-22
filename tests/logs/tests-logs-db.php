@@ -28,7 +28,21 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Logs::get_columns()
+	 * @covers ::$cache_group
+	 */
+	public function test_cache_group_should_be_logs() {
+		$this->assertSame( 'logs', EDD()->logs->cache_group );
+	}
+
+	/**
+	 * @covers ::$primary_key
+	 */
+	public function test_primary_key_should_be_id() {
+		$this->assertSame( 'id', EDD()->logs->primary_key );
+	}
+
+	/**
+	 * @covers ::get_columns()
 	 */
 	public function test_get_columns_should_return_all_columns() {
 		$expected = array(
@@ -80,7 +94,7 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 			'title' => 'Log title 45',
 		) );
 
-		$log = new \EDD\Logs\Log( self::$logs[0] );
+		$log = new Log( self::$logs[0] );
 
 		$this->assertEquals( 'Log title 45', $log->title );
 	}
