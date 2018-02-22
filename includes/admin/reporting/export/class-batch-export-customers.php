@@ -106,7 +106,10 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 
 			// Export all customers
 			$offset    = 30 * ( $this->step - 1 );
-			$customers = EDD()->customers->get_customers( array( 'number' => 30, 'offset' => $offset ) );
+			$customers = edd_get_customers( array(
+				'number' => 30,
+				'offset' => $offset
+			) );
 
 			$i = 0;
 
@@ -141,7 +144,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 		// We can't count the number when getting them for a specific download
 		if( empty( $this->download ) ) {
 
-			$total = EDD()->customers->count();
+			$total = edd_get_customer_count();
 
 			if( $total > 0 ) {
 

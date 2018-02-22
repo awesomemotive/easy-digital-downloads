@@ -255,7 +255,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		unset( $args['startdate'], $args['enddate'] );
 
-		$customer_query = EDD()->customers->get_customers( $args );
+		$customer_query = edd_get_customers( $args );
 		$customer_count = 0;
 
 		if( $customer_query ) {

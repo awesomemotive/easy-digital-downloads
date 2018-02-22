@@ -106,22 +106,6 @@ final class Easy_Digital_Downloads {
 	public $email_tags;
 
 	/**
-	 * EDD Customers DB Object.
-	 *
-	 * @var object|EDD_DB_Customers
-	 * @since 2.1
-	 */
-	public $customers;
-
-	/**
-	 * EDD Customer meta DB Object.
-	 *
-	 * @var object|EDD_DB_Customer_Meta
-	 * @since 2.6
-	 */
-	public $customer_meta;
-
-	/**
 	 * EDD Cart Object
 	 *
 	 * @var object|EDD_Cart
@@ -160,8 +144,6 @@ final class Easy_Digital_Downloads {
 			self::$instance->html          = new EDD_HTML_Elements();
 			self::$instance->emails        = new EDD_Emails();
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
-			self::$instance->customers     = new EDD_DB_Customers();
-			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
 		}
@@ -289,9 +271,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
@@ -335,6 +314,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/error-tracking.php';
+		require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';

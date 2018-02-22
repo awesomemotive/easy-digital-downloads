@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Processes a custom edit
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
+ * @param  array $args The $_POST array being passed
  * @return array $output Response messages
  */
 function edd_edit_customer( $args ) {
@@ -49,7 +49,7 @@ function edd_edit_customer( $args ) {
 	if ( (int) $customer_info['user_id'] != (int) $customer->user_id ) {
 
 		// Make sure we don't already have this user attached to a customer
-		if ( ! empty( $customer_info['user_id'] ) && false !== EDD()->customers->get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
+		if ( ! empty( $customer_info['user_id'] ) && false !== edd_get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
 			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
@@ -368,7 +368,7 @@ add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 )
  * Save a customer note being added
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
+ * @param  array $args The $_POST array being passed
  * @return int         The Note ID that was saved, or 0 if nothing was saved
  */
 function edd_customer_save_note( $args ) {
@@ -423,11 +423,9 @@ function edd_customer_save_note( $args ) {
 		}
 
 		return $new_note;
-
 	}
 
 	return false;
-
 }
 add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
 
@@ -435,8 +433,8 @@ add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
  * Delete a customer
  *
  * @since  2.3
- * @param  array $args The $_POST array being passeed
- * @return int         Wether it was a successful deletion
+ * @param  array $args The $_POST array being passed
+ * @return int         Whether it was a successful deletion
  */
 function edd_customer_delete( $args ) {
 
@@ -477,7 +475,7 @@ function edd_customer_delete( $args ) {
 	if ( $customer->id > 0 ) {
 
 		$payments_array = explode( ',', $customer->payment_ids );
-		$success        = EDD()->customers->delete( $customer->id );
+		$success        = edd_delete_customer( $customer->id );
 
 		if ( $success ) {
 
@@ -646,8 +644,8 @@ function edd_include_single_customer_recount_tool_batch_processer( $class ) {
  * @return void
  */
 function edd_customer_action_calls() {
-	add_action( 'added_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+	add_action( 'added_customer_meta',   array( EDD()->customers, 'set_last_changed' ) );
 	add_action( 'updated_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
 	add_action( 'deleted_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
 }
-add_action( 'init', 'edd_customer_action_calls' );
+//add_action( 'init', 'edd_customer_action_calls' );

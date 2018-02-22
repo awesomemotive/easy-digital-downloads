@@ -676,7 +676,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( array( 'foo', 'bar', 'baz' ), edd_object_to_array( array( 'foo', 'bar', 'baz' ) ) );
 
 		// Test sending in an array of objects
-		$customers = EDD()->customers->get_customers();
+		$customers = edd_get_customers();
 		$converted = edd_object_to_array( $customers );
 		$this->assertInternalType( 'array', $converted[0] );
 

@@ -28,10 +28,7 @@ function edd_customers_page() {
  * @return array Array of views and their callbacks
  */
 function edd_customer_views() {
-
-	$views = array();
-	return apply_filters( 'edd_customer_views', $views );
-
+	return apply_filters( 'edd_customer_views', array() );
 }
 
 /**
@@ -41,10 +38,7 @@ function edd_customer_views() {
  * @return array Array of tabs for the customer
  */
 function edd_customer_tabs() {
-
-	$tabs = array();
-	return apply_filters( 'edd_customer_tabs', $tabs );
-
+	return apply_filters( 'edd_customer_tabs', array() );
 }
 
 /**
@@ -54,7 +48,7 @@ function edd_customer_tabs() {
  * @return void
  */
 function edd_customers_list() {
-	include( dirname( __FILE__ ) . '/class-customer-table.php' );
+	include_once dirname( __FILE__ ) . '/class-customer-table.php';
 
 	$customers_table = new EDD_Customer_Reports_Table();
 	$customers_table->prepare_items();
@@ -187,9 +181,7 @@ function edd_customers_view( $customer ) {
 
 	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
-	?>
-
-	<?php do_action( 'edd_customer_card_top', $customer ); ?>
+	do_action( 'edd_customer_card_top', $customer ); ?>
 
 	<div class="info-wrapper customer-section">
 
@@ -507,13 +499,13 @@ function edd_customers_view( $customer ) {
  */
 function edd_customer_notes_view( $customer ) {
 
-	$paged       = isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) ? $_GET['paged'] : 1;
-	$paged       = absint( $paged );
-	$note_count  = $customer->get_notes_count();
-	$per_page    = apply_filters( 'edd_customer_notes_per_page', 20 );
-	$total_pages = ceil( $note_count / $per_page );
-
+	$paged          = isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) ? $_GET['paged'] : 1;
+	$paged          = absint( $paged );
+	$note_count     = $customer->get_notes_count();
+	$per_page       = apply_filters( 'edd_customer_notes_per_page', 20 );
+	$total_pages    = ceil( $note_count / $per_page );
 	$customer_notes = $customer->get_notes( $per_page, $paged );
+
 	?>
 
 	<div id="edd-item-notes-wrapper">

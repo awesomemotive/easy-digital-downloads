@@ -307,7 +307,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	}
 
 	$stats    = array();
-	$customer = EDD()->customers->get_customer_by( $field, $user );
+	$customer = edd_get_customer_by( $field, $user );
 
 	if( $customer ) {
 
@@ -506,7 +506,7 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
  * @return 		int - The total number of customers.
  */
 function edd_count_total_customers( $args = array() ) {
-	return EDD()->customers->count( $args );
+	return edd_get_customer_count();
 }
 
 

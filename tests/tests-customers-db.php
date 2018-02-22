@@ -154,7 +154,7 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	public function test_get_by() {
 
-		$customer = EDD()->customers->get_customer_by( 'email', 'testadmin@domain.com' );
+		$customer = edd_get_customer_by( 'email', 'testadmin@domain.com' );
 
 		$this->assertInternalType( 'object', $customer );
 		$this->assertObjectHasAttribute( 'email', $customer );
@@ -242,7 +242,7 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	public function test_get_customers() {
 
-		$customers = EDD()->customers->get_customers();
+		$customers = edd_get_customers();
 
 		$this->assertEquals( 1, count( $customers ) );
 

@@ -915,7 +915,7 @@ function edd_v23_upgrade_customer_purchases() {
 		$total = EDD()->customers->count();
 	}
 
-	$customers = EDD()->customers->get_customers( array( 'number' => $number, 'offset' => $offset ) );
+	$customers = edd_get_customers( array( 'number' => $number, 'offset' => $offset ) );
 
 	if( ! empty( $customers ) ) {
 

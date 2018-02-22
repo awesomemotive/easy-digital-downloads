@@ -18,7 +18,7 @@
 // Exit if accessed directly
 if ( ! defined( 'EDD_PLUGIN_DIR' ) ) exit;
 
-// Thes
+// These are here for backwards compatibility
 require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-wp-db-query.php';
 require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-query.php';
 require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-column.php';

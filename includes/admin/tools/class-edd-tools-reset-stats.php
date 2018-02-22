@@ -255,7 +255,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			}
 
 			$customer_args = array( 'number' => -1 );
-			$customers     = EDD()->customers->get_customers( $customer_args );
+			$customers     = edd_get_customers( $customer_args );
 			foreach ( $customers as $customer ) {
 				$items[] = array(
 					'id'   => (int) $customer->id,
