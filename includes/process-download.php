@@ -743,6 +743,11 @@ function edd_get_file_ctype( $extension ) {
  */
 function edd_readfile_chunked( $file, $retbytes = true ) {
 
+	// If output buffers exist, make sure they are closed. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6387
+	if ( ob_get_length() ) {
+		ob_clean();
+	}
+
 	$chunksize = 1024 * 1024;
 	$buffer    = '';
 	$cnt       = 0;
