@@ -231,7 +231,6 @@ final class Easy_Digital_Downloads {
 		$edd_options = edd_get_settings();
 
 		// Database Tables
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-wp-db-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discounts.php';
@@ -249,7 +248,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-item-meta.php';
 
 		// Database Table Query Interfaces
-		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-wp-db-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-column.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-customer-query.php';
