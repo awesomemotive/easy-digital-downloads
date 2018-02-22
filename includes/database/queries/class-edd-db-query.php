@@ -54,6 +54,13 @@ class EDD_DB_Query {
 	 */
 	public $table_alias = '';
 
+	/**
+	 * @since 3.0.0
+	 * @access
+	 * @var
+	 */
+	public $schema = 'EDD_DB_Schema';
+
 	/** Item ******************************************************************/
 
 	/**
@@ -645,6 +652,19 @@ class EDD_DB_Query {
 	}
 
 	/**
+	 * Return the primary database column name
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string Default "id", Primary column name if not empty
+	 */
+	private function get_primary_column_name() {
+		return ! empty( $this->primary_column->name )
+			? $this->primary_column->name
+			: 'id';
+	}
+
+	/**
 	 * Set the primary column
 	 *
 	 * @since 3.0.0
@@ -698,7 +718,7 @@ class EDD_DB_Query {
 		// Fields
 		$fields = ! empty( $this->query_vars['count'] )
 			? 'COUNT(*)'
-			: "{$this->table_alias}.{$this->primary_column->name}";
+			: "{$this->table_alias}.{$this->get_primary_column_name()}";
 
 		/**
 		 * Filters the item query clauses.
@@ -786,7 +806,7 @@ class EDD_DB_Query {
 
 			$orderby = implode( ', ', $orderby_array );
 		} else {
-			$orderby = "{$this->table_alias}.{$this->primary_column->name} {$order}";
+			$orderby = "{$this->table_alias}.{$this->get_primary_column_name()} {$order}";
 		}
 
 		return $orderby;
@@ -955,7 +975,7 @@ class EDD_DB_Query {
 		$meta_query = $this->query_vars['meta_query'];
 		if ( ! empty( $meta_query ) && is_array( $meta_query ) ) {
 			$this->meta_query = new WP_Meta_Query( $meta_query );
-			$clauses          = $this->meta_query->get_sql( $this->item_name, $this->table_alias, $this->primary_column->name, $this );
+			$clauses          = $this->meta_query->get_sql( $this->item_name, $this->table_alias, $this->get_primary_column_name(), $this );
 
 			// Not all objects have meta, so make sure this one exists
 			if ( false !== $clauses ) {
@@ -1007,7 +1027,7 @@ class EDD_DB_Query {
 
 			// Orderby invalid, so default to primary column
 			} else {
-				$parsed = "{$this->table_alias}.{$this->primary_column->name}";
+				$parsed = "{$this->table_alias}.{$this->get_primary_column_name()}";
 			}
 		}
 
@@ -1107,7 +1127,7 @@ class EDD_DB_Query {
 
 		// Table
 		$table   = $this->get_table_name();
-		$primary = $this->primary_column->name;
+		$primary = $this->get_primary_column_name();
 
 		// Item ID
 		if ( is_numeric( $item_id ) ) {
@@ -1179,7 +1199,7 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function update_item( $item_id = 0, $data = array() ) {
-		$where  = array( $this->primary_column->name => $item_id );
+		$where  = array( $this->get_primary_column_name() => $item_id );
 		$table  = $this->get_table_name();
 		$result = $this->get_db()->update( $table, $data, $where );
 
@@ -1202,7 +1222,7 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function delete_item( $item_id = 0 ) {
-		$where  = array( $this->primary_column->name => $item_id );
+		$where  = array( $this->get_primary_column_name() => $item_id );
 		$table  = $this->get_table_name();
 		$result = $this->get_db()->delete( $table, $where );
 
@@ -1251,7 +1271,7 @@ class EDD_DB_Query {
 
 			// Query
 			$table   = $this->get_table_name();
-			$primary = $this->primary_column->name;
+			$primary = $this->get_primary_column_name();
 			$query   = "SELECT * FROM {$table} WHERE {$primary} IN (%s)";
 			$ids    = join( ',', array_map( 'absint', $ids ) );
 			$prepare = sprintf( $query , $ids );
@@ -1290,7 +1310,7 @@ class EDD_DB_Query {
 		// Loop through all items and cache them
 		foreach ( $items as $item ) {
 			if ( is_object( $item ) ) {
-				wp_cache_set( $item->{$this->primary_column->name}, $item, $this->cache_group );
+				wp_cache_set( $item->{$this->get_primary_column_name()}, $item, $this->cache_group );
 			}
 		}
 
