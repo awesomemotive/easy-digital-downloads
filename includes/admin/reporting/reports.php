@@ -120,7 +120,8 @@ function edd_reports_page() {
 				 * @since 1.0
 				 * @since 3.0 Added the `$report` parameter.
 				 *
-				 * @param \EDD\Reports\Data\Report $report The current report object.
+				 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+				 *                                                   or WP_Error if invalid.
 				 */
 				do_action( 'edd_reports_page_top', $report );
 
@@ -136,7 +137,8 @@ function edd_reports_page() {
 				 * @since 1.0
 				 * @since 3.0 Added the `$report` parameter.
 				 *
-				 * @param \EDD\Reports\Data\Report $report The current report object.
+				 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+				 *                                                   or WP_Error if invalid.
 				 */
 				do_action( 'edd_reports_page_bottom', $report );
 				?>
