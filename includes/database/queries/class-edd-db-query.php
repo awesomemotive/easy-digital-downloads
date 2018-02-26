@@ -281,6 +281,7 @@ class EDD_DB_Query {
 			'offset'            => '',
 			'orderby'           => 'id',
 			'order'             => 'ASC',
+			'groupby'           => '',
 			'search'            => '',
 			'search_columns'    => array(),
 			'count'             => false,
@@ -378,10 +379,8 @@ class EDD_DB_Query {
 		if ( false === $cache_value ) {
 			$item_ids = $this->get_item_ids();
 
-			// Set the number of found items (make sure it's not a count)
-			if ( ! empty( $item_ids ) && is_array( $item_ids ) ) {
-				$this->set_found_items( $item_ids );
-			}
+			// Set the number of found items
+			$this->set_found_items( $item_ids );
 
 			// Format the cached value
 			$cache_value = array(
@@ -609,19 +608,35 @@ class EDD_DB_Query {
 	 * @param  array $item_ids Optional array of item IDs
 	 */
 	private function set_found_items( $item_ids = array() ) {
-		if ( ! empty( $this->query_vars['number'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
-			/**
-			 * Filters the query used to retrieve found item count.
-			 *
-			 * @since 3.0.0
-			 *
-			 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
-			 * @param object $item_query        The object instance.
-			 */
-			$found_items_query = apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
-			$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
-		} elseif ( ! empty( $item_ids ) ) {
-			$this->found_items = count( $item_ids );
+
+		// Items were found
+		if ( ! empty( $item_ids ) ) {
+
+			// Not a count query
+			if ( is_array( $item_ids ) ) {
+				if ( ! empty( $this->query_vars['number'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
+					/**
+					 * Filters the query used to retrieve found item count.
+					 *
+					 * @since 3.0.0
+					 *
+					 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
+					 * @param object $item_query        The object instance.
+					 */
+					$found_items_query = apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
+					$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
+				} elseif ( ! empty( $item_ids ) ) {
+					$this->found_items = count( $item_ids );
+				}
+
+			// Count query
+			} elseif ( ! empty( $this->query_vars['count'] ) ) {
+				if ( is_numeric( $item_ids ) && ! empty( $this->query_vars['groupby'] ) ) {
+					$this->found_items = intval( $item_ids );
+				} else {
+					$this->found_items = $item_ids;
+				}
+			}
 		}
 	}
 
@@ -649,6 +664,17 @@ class EDD_DB_Query {
 	 */
 	private function get_table_name() {
 		return $this->get_db()->{$this->table_name};
+	}
+
+	/**
+	 * Return array of column names
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_column_names() {
+		return wp_list_pluck( $this->columns, 'name' );
 	}
 
 	/**
@@ -715,6 +741,9 @@ class EDD_DB_Query {
 		$where = implode( ' AND ', $this->query_clauses['where'] );
 		$join  = $this->query_clauses['join'];
 
+		// Group by
+		$groupby = $this->parse_groupby( $this->query_vars['groupby'] );
+
 		// Fields
 		$fields = ! empty( $this->query_vars['count'] )
 			? 'COUNT(*)'
@@ -756,8 +785,8 @@ class EDD_DB_Query {
 	 */
 	private function get_order_by( $order = '' ) {
 
-		// Disable ORDER BY with 'none', an empty array, or boolean false.
-		if ( in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
+		// Disable ORDER BY if counting, or with 'none', an empty array, or boolean false.
+		if ( ! empty( $this->query_vars['count'] ) || in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
 			$orderby = '';
 
 		// Ordering by something, so figure it out
@@ -994,6 +1023,45 @@ class EDD_DB_Query {
 	}
 
 	/**
+	 * Parses and sanitizes the 'groupby' keys passed into the item query
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $groupby
+	 * @return string
+	 */
+	private function parse_groupby( $groupby = '' ) {
+
+		// Bail if empty
+		if ( empty( $groupby ) ) {
+			return '';
+		}
+
+		// Sanitize keys
+		$groupby = (array) array_map( 'sanitize_key', (array) $groupby );
+
+		// Orderby is a literal column name
+		$columns   = $this->get_column_names();
+		$intersect = array_intersect( $columns, $groupby );
+
+		// Bail if invalid column
+		if ( empty( $intersect ) ) {
+			return '';
+		}
+
+		// Default return value
+		$retval = array();
+
+		// Prepend table alias to key
+		foreach ( $intersect as $key ) {
+			$retval[] = "{$this->table_alias}.{$key}";
+		}
+
+		// Separate sanitized columns
+		return implode( ',', array_values( $retval ) );
+	}
+
+	/**
 	 * Parses and sanitizes 'orderby' keys passed to the item query.
 	 *
 	 * @since 3.0.0
@@ -1005,7 +1073,7 @@ class EDD_DB_Query {
 	private function parse_orderby( $orderby = 'id' ) {
 
 		// Default value
-		$parsed = false;
+		$parsed = "{$this->table_alias}.{$this->get_primary_column_name()}";
 
 		// __in
 		if ( false !== strstr( $orderby, '__in' ) ) {
@@ -1021,13 +1089,9 @@ class EDD_DB_Query {
 		} else {
 
 			// Orderby is a literal column name
-			$columns = wp_list_pluck( $this->columns, 'name' );
+			$columns = $this->get_column_names();
 			if ( in_array( $orderby, $columns, true ) ) {
 				$parsed = "{$this->table_alias}.{$orderby}";
-
-			// Orderby invalid, so default to primary column
-			} else {
-				$parsed = "{$this->table_alias}.{$this->get_primary_column_name()}";
 			}
 		}
 
