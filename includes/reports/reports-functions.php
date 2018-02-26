@@ -700,7 +700,8 @@ function default_display_report( $report ) {
 		 * @deprecated 3.0 Use the new Reports API to register new tabs.
 		 * @see \EDD\Reports\add_report()
 		 *
-		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+		 *                                                   or WP_Error if invalid.
 		 */
 		edd_do_action_deprecated( "edd_reports_tab_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
 
@@ -717,7 +718,8 @@ function default_display_report( $report ) {
 		 * @deprecated 3.0 Use the new Reports API to register new tabs.
 		 * @see \EDD\Reports\add_report()
 		 *
-		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+		 *                                                   or WP_Error if invalid.
 		 */
 		edd_do_action_deprecated( "edd_reports_view_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
 
