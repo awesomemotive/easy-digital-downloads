@@ -102,10 +102,13 @@ function edd_reports_page() {
 			</div>
 
 			<div id="edd-item-card-wrapper" class="edd-report-card-wrapper" style="float: left">
-				<?php $report = Reports\get_report( $active_tab ); ?>
+				<?php
+				$report = Reports\get_report( $active_tab );
+				$label  = is_wp_error( $report ) ? $tabs[ $active_tab ] : $report->get_label();
+				?>
 
 				<div id="edd-reports-card-header">
-					<h2><?php echo esc_html( $report->get_label() ); ?></h2>
+					<h2><?php echo esc_html( $label ); ?></h2>
 				</div>
 
 				<?php
