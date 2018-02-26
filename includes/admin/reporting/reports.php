@@ -124,7 +124,11 @@ function edd_reports_page() {
 				 */
 				do_action( 'edd_reports_page_top', $report );
 
-				$report->display();
+				if ( ! is_wp_error( $report ) ) :
+					$report->display();
+				else :
+					Reports\default_display_report( $report );
+				endif;
 
 				/**
 				 * Fires at the bottom of the content area of a Reports tab.
