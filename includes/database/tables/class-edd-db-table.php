@@ -196,19 +196,27 @@ abstract class EDD_DB_Table {
 	/** Private ***************************************************************/
 
 	/**
+	 * Return the global database interface
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return wpdb
+	 */
+	private static function get_db() {
+		return isset( $GLOBALS['wpdb'] )
+			? $GLOBALS['wpdb']
+			: new stdClass();
+	}
+
+	/**
 	 * Setup the necessary table variables
 	 *
 	 * @since 1.1.0
 	 */
 	private function setup() {
 
-		// Setup database
-		$this->db = isset( $GLOBALS['wpdb'] )
-			? $GLOBALS['wpdb']
-			: false;
-
 		// Bail if no WordPress database interface is available
-		if ( false === $this->db ) {
+		if ( ! $this->get_db() ) {
 			return;
 		}
 
@@ -238,28 +246,28 @@ abstract class EDD_DB_Table {
 
 		// Global
 		if ( $this->is_global() ) {
-			$prefix                       = $this->db->get_blog_prefix( 0 );
-			$this->db->{$this->name}      = "{$prefix}{$this->name}";
-			$this->db->ms_global_tables[] = $this->name;
+			$prefix                             = $this->get_db()->get_blog_prefix( 0 );
+			$this->get_db()->{$this->name}      = "{$prefix}{$this->name}";
+			$this->get_db()->ms_global_tables[] = $this->name;
 
 		// Site
 		} else {
-			$prefix                  = $this->db->get_blog_prefix( null );
-			$this->db->{$this->name} = "{$prefix}{$this->name}";
-			$this->db->tables[]      = $this->name;
+			$prefix                        = $this->get_db()->get_blog_prefix( null );
+			$this->get_db()->{$this->name} = "{$prefix}{$this->name}";
+			$this->get_db()->tables[]      = $this->name;
 		}
 
 		// Set the table name locally
-		$this->table_name = $this->db->{$this->name};
+		$this->table_name = $this->get_db()->{$this->name};
 
 		// Charset
-		if ( ! empty( $this->db->charset ) ) {
-			$this->charset_collation = "DEFAULT CHARACTER SET {$this->db->charset}";
+		if ( ! empty( $this->get_db()->charset ) ) {
+			$this->charset_collation = "DEFAULT CHARACTER SET {$this->get_db()->charset}";
 		}
 
 		// Collation
-		if ( ! empty( $this->db->collate ) ) {
-			$this->charset_collation .= " COLLATE {$this->db->collate}";
+		if ( ! empty( $this->get_db()->collate ) ) {
+			$this->charset_collation .= " COLLATE {$this->get_db()->collate}";
 		}
 	}
 
@@ -362,9 +370,9 @@ abstract class EDD_DB_Table {
 	 */
 	private function exists() {
 		$query       = "SHOW TABLES LIKE %s";
-		$like        = $this->db->esc_like( $this->table_name );
-		$prepared    = $this->db->prepare( $query, $like );
-		$table_exist = $this->db->get_var( $prepared );
+		$like        = $this->get_db()->esc_like( $this->table_name );
+		$prepared    = $this->get_db()->prepare( $query, $like );
+		$table_exist = $this->get_db()->get_var( $prepared );
 
 		// Does the table exist?
 		return ! empty( $table_exist );
