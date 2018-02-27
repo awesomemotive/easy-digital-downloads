@@ -15,7 +15,7 @@ namespace EDD\Reports\Data;
  *
  * @since 3.0
  */
-final class Graph_Endpoint extends Endpoint {
+final class Graph_Endpoint extends Chart_Endpoint {
 
 	/**
 	 * Endpoint view (type).
