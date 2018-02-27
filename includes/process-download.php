@@ -753,7 +753,7 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 	$cnt       = 0;
 	$handle    = @fopen( $file, 'rb' );
 
-	if ( $size = @filesize( $file ) ) {
+	if ( $size = intval(sprintf("%u", @filesize($file))) ) {
 		header("Content-Length: " . $size );
 	}
 
@@ -763,7 +763,9 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 
 	while ( ! @feof( $handle ) ) {
 		$buffer = @fread( $handle, $chunksize );
-		echo $buffer;
+		print($buffer);
+		ob_flush();
+		flush();
 
 		if ( $retbytes ) {
 			$cnt += strlen( $buffer );
