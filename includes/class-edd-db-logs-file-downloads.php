@@ -414,6 +414,17 @@ class EDD_DB_Logs_File_Downloads extends EDD_DB {
 			$where .= " AND {$table_name}.file_id IN ( '{$file_ids}' )";
 		}
 
+		// Payment ID.
+		if ( array_key_exists( 'payment_id', $args ) && ! empty( $args['payment_id'] ) ) {
+			if ( is_array( $args['payment_id'] ) ) {
+				$args['payment_id'] = wp_parse_id_list( $args['payment_id'] );
+				$payment_ids = implode( "','", array_map( 'sanitize_text_field', $args['payment_id'] ) );
+			} else {
+				$payment_ids = sanitize_text_field( absint( $args['payment_id'] ) );
+			}
+			$where .= " AND {$table_name}.payment_id IN ( '{$payment_ids}' )";
+		}
+
 		// Price ID.
 		if ( array_key_exists( 'price_id', $args ) && ! empty( $args['price_id'] ) ) {
 			if ( is_array( $args['price_id'] ) ) {

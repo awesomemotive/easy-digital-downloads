@@ -5,6 +5,15 @@ class File_Download_Log extends \WP_UnitTest_Factory_For_Thing {
 
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
+
+		$this->default_generation_definitions = array(
+			'download_id' => new \WP_UnitTest_Generator_Sequence( '%f' ),
+			'file_id'     => new \WP_UnitTest_Generator_Sequence( '%f' ),
+			'payment_id'  => new \WP_UnitTest_Generator_Sequence( '%f' ),
+			'price_id'    => '1',
+			'email'       => new \WP_UnitTest_Generator_Sequence( 'admin_%s@edd.test' ),
+			'ip'          => '10.1.1.1',
+		);
 	}
 
 	/**

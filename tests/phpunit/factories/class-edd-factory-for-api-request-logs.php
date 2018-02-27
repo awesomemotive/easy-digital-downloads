@@ -5,6 +5,16 @@ class API_Request_Log extends \WP_UnitTest_Factory_For_Thing {
 
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
+
+		$this->default_generation_definitions = array(
+			'user_id' => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'api_key' => new \WP_UnitTest_Generator_Sequence( 'b8062c469b938352k3bg4656999ed%d' ),
+			'token'   => new \WP_UnitTest_Generator_Sequence( 'b8062c469b938352k3bg4656999ed%d' ),
+			'request' => new \WP_UnitTest_Generator_Sequence( 'edd-api=sales&key=b8062c469b938352k3bg4656999ed%1$d&token=b8062c469b938352k3bg4656999ed%1$d' ),
+			'version' => 'v2',
+			'ip'       => '10.1.1.1',
+			'time'     => new \WP_UnitTest_Generator_Sequence( '0.0%d' ),
+		);
 	}
 
 	/**

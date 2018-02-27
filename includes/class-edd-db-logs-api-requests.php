@@ -79,7 +79,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 			'id'           => 0,
 			'user_id'      => 0,
 			'api_key'      => 'public',
-			'token'        => 'public',
+			'token'        => '',
 			'version'      => '',
 			'request'      => '',
 			'error'        => '',
