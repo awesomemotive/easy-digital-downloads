@@ -246,7 +246,7 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_logs_by_object_id_should_return_true() {
 		$logs = EDD()->logs->get_logs( array(
-			'object_id' => 40
+			'object_id' => \WP_UnitTest_Generator_Sequence::$incr
 		) );
 
 		$this->assertCount( 1, $logs );
@@ -279,7 +279,7 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_logs_by_title_should_return_true() {
 		$logs = EDD()->logs->get_logs( array(
-			'title' => 'Log title 40',
+			'title' => 'Log title ' . \WP_UnitTest_Generator_Sequence::$incr,
 		) );
 
 		$this->assertCount( 1, $logs );

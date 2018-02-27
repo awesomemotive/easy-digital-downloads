@@ -66,7 +66,7 @@ class File_Download_Log {
 	protected $price_id;
 
 	/**
-	 * User ID of the user making the API request.
+	 * User ID of the user who downloaded the file.
 	 *
 	 * @since  3.0
 	 * @access protected
@@ -75,7 +75,16 @@ class File_Download_Log {
 	protected $user_id;
 
 	/**
-	 * IP address of the client making the API request.
+	 * Email address of the user who downloaded the file.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $email;
+
+	/**
+	 * IP address of the client that downloaded the file.
 	 *
 	 * @since  3.0
 	 * @access protected
