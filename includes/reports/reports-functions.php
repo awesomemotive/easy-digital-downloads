@@ -247,7 +247,8 @@ function get_endpoint_views() {
 			),
 		),
 		'chart' => array(
-			'group' => 'charts',
+			'group'   => 'charts',
+			'handler' => 'EDD\Reports\Data\Chart_Endpoint',
 		),
 		'table' => array(
 			'group'          => 'tables',
