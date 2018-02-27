@@ -849,11 +849,12 @@ function default_display_tables_group( $report ) {
 function display_dates_filter( $report ) {
 	$options = get_dates_filter_options();
 	$dates   = get_filter_value( 'dates' );
-	$class   = $dates['range'] === 'other' ? '' : 'screen-reader-text';
+	$range   = isset( $dates['range'] ) ? $dates['range'] : get_dates_filter_range();
+	$class   = $range === 'other' ? '' : 'screen-reader-text';
 	?>
 	<select id="edd-graphs-date-options" name="range">
 		<?php foreach ( $options as $key => $label ) : ?>
-			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $label ); ?></option>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $range ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 	</select>
 
