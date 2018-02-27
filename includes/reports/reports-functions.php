@@ -255,8 +255,8 @@ function get_endpoint_views() {
 			'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
 			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
 			'fields'         => array(
-				'display_callback' => 'display',
 				'data_callback'    => 'prepare_items',
+				'display_callback' => 'display',
 				'display_args'     => array(
 					'class_name' => '',
 					'class_file' => '',
@@ -493,10 +493,10 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
 	 *     Query date range for the current graph filter request.
 	 *
 	 *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
-	 *                                         If `$values` is 'objects', a Carbon object, otherwise a date
+	 *                                         If `$values` is 'objects', a Date object, otherwise a date
 	 *                                         time string.
 	 *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
-	 *                                         is 'objects', a Carbon object, otherwise a date time string.
+	 *                                         is 'objects', a Date object, otherwise a date time string.
 	 * }
 	 */
 	return apply_filters( 'edd_get_dates_filter', $dates );
