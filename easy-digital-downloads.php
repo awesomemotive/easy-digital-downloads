@@ -106,6 +106,14 @@ final class Easy_Digital_Downloads {
 	public $email_tags;
 
 	/**
+	 * EDD Cart Object
+	 *
+	 * @var object|EDD_Cart
+	 * @since 2.7
+	 */
+	public $cart;
+
+	/**
 	 * EDD Customers DB Object.
 	 *
 	 * @var object|EDD_DB_Customers
@@ -138,12 +146,20 @@ final class Easy_Digital_Downloads {
 	public $note_meta;
 
 	/**
-	 * EDD Cart Object
+	 * EDD Discounts DB Object.
 	 *
-	 * @var object|EDD_Cart
-	 * @since 2.7
+	 * @var object|EDD_DB_Discounts
+	 * @since 3.0
 	 */
-	public $cart;
+	public $discounts;
+
+	/**
+	 * EDD Discount meta DB Object.
+	 *
+	 * @var object|EDD_DB_Discount_Meta
+	 * @since 3.0
+	 */
+	public $discount_meta;
 
 	/**
 	 * Main Easy_Digital_Downloads Instance.
@@ -176,12 +192,14 @@ final class Easy_Digital_Downloads {
 			self::$instance->html          = new EDD_HTML_Elements();
 			self::$instance->emails        = new EDD_Emails();
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
+			self::$instance->payment_stats = new EDD_Payment_Stats();
+			self::$instance->cart          = new EDD_Cart();
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
 			self::$instance->notes         = new EDD_DB_Notes();
 			self::$instance->note_meta     = new EDD_DB_Note_Meta();
-			self::$instance->payment_stats = new EDD_Payment_Stats();
-			self::$instance->cart          = new EDD_Cart();
+			self::$instance->discounts     = new EDD_DB_Discounts();
+			self::$instance->discount_meta = new EDD_DB_Discount_Meta();
 		}
 
 		return self::$instance;
@@ -262,20 +280,22 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
 
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-wp-db-table.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customers.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discounts.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-logs.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-notes.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-orders.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-items.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-customer-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-discount-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-log-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-note-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-table-order-item-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-wp-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discounts.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-file-downloads.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-notes.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-orders.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customer-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discount-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-log-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-note-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-item-meta.php';
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
@@ -298,6 +318,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-note-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discounts.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discount-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
@@ -413,26 +435,28 @@ final class Easy_Digital_Downloads {
 		return array(
 
 			// Customers
-			'customers'      => new EDD_DB_Table_Customers(),
-			'customermeta'   => new EDD_DB_Table_Customer_Meta(),
+			'customers'           => new EDD_DB_Table_Customers(),
+			'customermeta'        => new EDD_DB_Table_Customer_Meta(),
 
 			// Discounts
-			'discounts'      => new EDD_DB_Table_Discounts(),
-			'discountmeta'   => new EDD_DB_Table_Discount_Meta(),
+			'discounts'           => new EDD_DB_Table_Discounts(),
+			'discountmeta'        => new EDD_DB_Table_Discount_Meta(),
 
 			// Logs
-			'logs'           => new EDD_DB_Table_Logs(),
-			'logmeta'        => new EDD_DB_Table_Log_Meta(),
+			'logs'                => new EDD_DB_Table_Logs(),
+			'logmeta'             => new EDD_DB_Table_Log_Meta(),
+			'logs_api_requests'   => new EDD_DB_Table_Logs_API_Requests(),
+			'logs_file_downloads' => new EDD_DB_Table_Logs_File_Downloads(),
 
 			// Notes
-			'notes'          => new EDD_DB_Table_Notes(),
-			'notemeta'       => new EDD_DB_Table_Note_Meta(),
+			'notes'               => new EDD_DB_Table_Notes(),
+			'notemeta'            => new EDD_DB_Table_Note_Meta(),
 
 			// Orders
-			'orders'         => new EDD_DB_Table_Orders(),
-			'ordermeta'      => new EDD_DB_Table_Order_Meta(),
-			'order_items'    => new EDD_DB_Table_Order_Items(),
-			'order_itemmeta' => new EDD_DB_Table_Order_Item_Meta()
+			'orders'              => new EDD_DB_Table_Orders(),
+			'ordermeta'           => new EDD_DB_Table_Order_Meta(),
+			'order_items'         => new EDD_DB_Table_Order_Items(),
+			'order_itemmeta'      => new EDD_DB_Table_Order_Item_Meta()
 		);
 	}
 
