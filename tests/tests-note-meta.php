@@ -1,4 +1,5 @@
 <?php
+namespace EDD\Notes;
 
 /**
  * Note Meta DB Tests
@@ -8,13 +9,13 @@
  * @group database
  * @group edd_notes
  */
-class Tests_Note_Meta extends EDD_UnitTestCase {
+class Tests_Note_Meta extends \EDD_UnitTestCase {
 
 	/**
 	 * Note fixture.
 	 *
 	 * @access protected
-	 * @var    EDD_Note
+	 * @var    Note
 	 */
 	protected static $note = null;
 
@@ -28,7 +29,7 @@ class Tests_Note_Meta extends EDD_UnitTestCase {
 			'content'     => 'Payment status changed',
 		) );
 
-		self::$note = new EDD_Note( $note_id );
+		self::$note = new Note( $note_id );
 	}
 
 	/**

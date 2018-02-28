@@ -1,4 +1,5 @@
 <?php
+namespace EDD\Notes;
 
 /**
  * Notes DB Tests
@@ -8,7 +9,7 @@
  * @group database
  * @group edd_notes
  */
-class Tests_Notes_DB extends EDD_UnitTestCase {
+class Tests_Notes_DB extends \EDD_UnitTestCase {
 
 	/**
 	 * Notes fixture.
@@ -29,7 +30,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 				'content'     => 'Payment status changed',
 			) );
 
-			self::$notes[] = new EDD_Note( $note_id );
+			self::$notes[] = new Note( $note_id );
 		}
 	}
 
@@ -129,7 +130,7 @@ class Tests_Notes_DB extends EDD_UnitTestCase {
 	public function test_delete() {
 		$this->assertTrue( EDD()->notes->delete( self::$notes[0]->id ) );
 
-		$note = new EDD_Note( self::$notes[0]->id );
+		$note = new Note( self::$notes[0]->id );
 
 		$this->assertNull( $note->id );
 	}
