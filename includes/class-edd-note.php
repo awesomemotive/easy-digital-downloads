@@ -8,6 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Notes;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * EDD_Note Class.
+ * Note Class.
  *
  * @since 3.0
  */
-class EDD_Note {
+class Note {
 
 	/**
 	 * Note ID.
@@ -80,7 +81,7 @@ class EDD_Note {
 	 *
 	 * @since 3.0
 	 * @access protected
-	 * @var EDD_DB_Notes
+	 * @var \EDD_DB_Notes
 	 */
 	protected $db;
 
