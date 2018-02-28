@@ -65,7 +65,7 @@ class EDD_Log_API_Request_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = '';
+	public $item_shape = '';
 
 	/** Cache *****************************************************************/
 
@@ -77,111 +77,6 @@ class EDD_Log_API_Request_Query extends EDD_DB_Query {
 	 * @var string
 	 */
 	public $cache_group = 'logs_api_requests';
-
-	/** Columns ***************************************************************/
-
-	/**
-	 * Array of database column objects
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
-	 */
-	public $columns = array(
-
-		// id
-		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
-		),
-
-		// user_id
-		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// api_key
-		array(
-			'name'       => 'api_key',
-			'type'       => 'varchar',
-			'length'     => '32',
-			'default'    => 'public',
-			'sortable'   => true
-		),
-
-		// token
-		array(
-			'name'       => 'token',
-			'type'       => 'varchar',
-			'length'     => '32',
-			'default'    => '',
-			'sortable'   => true
-		),
-
-		// version
-		array(
-			'name'       => 'version',
-			'type'       => 'varchar',
-			'length'     => '32',
-			'default'    => '',
-			'sortable'   => true
-		),
-
-		// request
-		array(
-			'name'       => 'request',
-			'type'       => 'longtext',
-			'default'    => '',
-			'searchable' => true,
-			'in'         => false,
-			'not_in'     => false
-		),
-
-		// error
-		array(
-			'name'       => 'error',
-			'type'       => 'longtext',
-			'default'    => '',
-			'searchable' => true,
-			'in'         => false,
-			'not_in'     => false
-		),
-
-		// ip
-		array(
-			'name'       => 'ip',
-			'type'       => 'varchar',
-			'length'     => '60',
-			'default'    => '',
-			'sortable'   => true
-		),
-
-		// time
-		array(
-			'name'       => 'time',
-			'type'       => 'varchar',
-			'length'     => '60',
-			'default'    => '',
-			'sortable'   => true
-		),
-
-		// date_created
-		array(
-			'name'       => 'date_created',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'sortable'   => true
-		)
-	);
 
 	/** Methods ***************************************************************/
 

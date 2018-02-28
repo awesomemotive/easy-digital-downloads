@@ -65,7 +65,7 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = '';
+	public $item_shape = '';
 
 	/** Cache *****************************************************************/
 
@@ -77,135 +77,6 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 	 * @var string
 	 */
 	public $cache_group = 'order_items';
-
-	/** Columns ***************************************************************/
-
-	/**
-	 * Array of database column objects
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
-	 */
-	public $columns = array(
-
-		// id
-		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
-		),
-
-		// order_id
-		array(
-			'name'       => 'order_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
-		),
-
-		// product_id
-		array(
-			'name'       => 'product_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
-		),
-
-		// price_id
-		array(
-			'name'       => 'price_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
-		),
-
-		// cart_index
-		array(
-			'name'       => 'cart_index',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// type
-		array(
-			'name'       => 'type',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => 'download',
-			'sortable'   => true
-		),
-
-		// status
-		array(
-			'name'       => 'status',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
-			'sortable'   => true
-		),
-
-		// quantity
-		array(
-			'name'       => 'quantity',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// amount
-		array(
-			'name'       => 'amount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
-		),
-
-		// subtotal
-		array(
-			'name'       => 'subtotal',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
-		),
-
-		// discount
-		array(
-			'name'       => 'discount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
-		),
-
-		// tax
-		array(
-			'name'       => 'tax',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
-		),
-
-		// total
-		array(
-			'name'       => 'total',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
-		)
-	);
 
 	/** Methods ***************************************************************/
 
