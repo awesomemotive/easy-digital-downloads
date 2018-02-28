@@ -620,6 +620,8 @@ function parse_dates_for_range( $date, $range = null ) {
 			break;
 	}
 
+	$dates['range'] = $range;
+
 	return $dates;
 }
 
