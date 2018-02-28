@@ -70,7 +70,7 @@ function edd_reports_graph() {
 		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start, $end, $include_taxes );
 
 		while ( $hour <= 23 ) {
-			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
+			$date = mktime( $hour, 0, 0, $month, $dates['start']->day, $dates['start']->year ) * 1000;
 
 			if ( isset( $earnings[ $i ] ) && $earnings[ $i ]['h'] == $hour ) {
 				$earnings_data[] = array( $date, $earnings[ $i ]['total'] );
@@ -94,17 +94,17 @@ function edd_reports_graph() {
 		$report_dates = array();
 		$i = 0;
 		while ( $i <= 6 ) {
-			if ( ( $dates['day'] + $i ) <= $dates['day_end'] ) {
+			if ( ( $dates['start']->day + $i ) <= $dates['end']->day ) {
 				$report_dates[ $i ] = array(
-					'day'   => (string) $dates['day'] + $i,
-					'month' => $dates['m_start'],
-					'year'  => $dates['year'],
+					'day'   => (string) $dates['start']->day + $i,
+					'month' => $dates['start']->month,
+					'year'  => $dates['start']->year,
 				);
 			} else {
 				$report_dates[ $i ] = array(
 					'day'   => (string) $i,
-					'month' => $dates['m_end'],
-					'year'  => $dates['year_end'],
+					'month' => $dates['end']->month,
+					'year'  => $dates['end']->year,
 				);
 			}
 
