@@ -259,6 +259,7 @@ class EDD_DB_Logs extends EDD_DB {
 				", absint( $args['offset'] ), absint( $args['number'] ) ), 0 );
 
 			if ( array_key_exists( 'fields', $args ) && 'ids' === $args['fields'] ) {
+				$logs = array_map( 'intval', $logs );
 				return $logs;
 			}
 
