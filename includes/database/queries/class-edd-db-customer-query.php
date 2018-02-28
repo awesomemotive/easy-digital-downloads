@@ -65,7 +65,7 @@ class EDD_Customer_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = '';
+	public $item_shape = '';
 
 	/** Cache *****************************************************************/
 
@@ -77,101 +77,6 @@ class EDD_Customer_Query extends EDD_DB_Query {
 	 * @var string
 	 */
 	public $cache_group = 'customers';
-
-	/** Columns ***************************************************************/
-
-	/**
-	 * Array of database column objects
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
-	 */
-	protected $columns = array(
-
-		// id
-		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
-		),
-
-		// user_id
-		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// email
-		array(
-			'name'       => 'email',
-			'type'       => 'varchar',
-			'length'     => '100',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// name
-		array(
-			'name'       => 'name',
-			'type'       => 'mediumtext',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// purchase_value
-		array(
-			'name'       => 'purchase_value',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
-		),
-
-		// purchase_count
-		array(
-			'name'       => 'purchase_count',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// payment_ids
-		array(
-			'name'       => 'payment_ids',
-			'type'       => 'longtext',
-			'searchable' => false,
-			'sortable'   => false,
-			'in'         => false,
-			'not_in'     => false
-		),
-
-		// notes
-		array(
-			'name'       => 'notes',
-			'type'       => 'longtext',
-			'default'    => '',
-			'searchable' => false,
-			'sortable'   => false,
-			'in'         => false,
-			'not_in'     => false
-		),
-
-		// date_created
-		array(
-			'name'       => 'date_created',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'sortable'   => true
-		)
-	);
 
 	/** Methods ***************************************************************/
 

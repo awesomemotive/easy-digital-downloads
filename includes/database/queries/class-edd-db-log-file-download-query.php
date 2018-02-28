@@ -65,7 +65,7 @@ class EDD_Log_File_Download_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = 'get_log_file_download';
+	public $item_shape = 'get_log_file_download';
 
 	/** Cache *****************************************************************/
 
@@ -77,92 +77,6 @@ class EDD_Log_File_Download_Query extends EDD_DB_Query {
 	 * @var string
 	 */
 	public $cache_group = 'logs_file_downloads';
-
-	/** Columns ***************************************************************/
-
-	/**
-	 * Array of database column objects
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
-	 */
-	public $columns = array(
-
-		// id
-		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
-		),
-
-		// download_id
-		array(
-			'name'       => 'download_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// file_id
-		array(
-			'name'       => 'file_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-
-		// payment_id
-		array(
-			'name'       => 'payment_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// price_id
-		array(
-			'name'       => 'price_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// user_id
-		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// ip
-		array(
-			'name'       => 'ip',
-			'type'       => 'varchar',
-			'length'     => '60',
-			'default'    => '',
-			'sortable'   => true
-		),
-
-		// date_created
-		array(
-			'name'       => 'date_created',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'sortable'   => true
-		)
-	);
 
 	/** Methods ***************************************************************/
 
