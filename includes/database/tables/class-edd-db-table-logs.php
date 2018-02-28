@@ -33,7 +33,7 @@ final class EDD_DB_Table_Logs extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201802120001;
+	protected $version = 201802280001;
 
 	/**
 	 * Setup the database schema
