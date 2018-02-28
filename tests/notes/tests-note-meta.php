@@ -23,13 +23,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		$note_id = EDD()->notes->insert( array(
-			'object_id'   => '1234',
-			'object_type' => 'payment',
-			'content'     => 'Payment status changed',
-		) );
-
-		self::$note = new Note( $note_id );
+		self::$note = parent::edd()->note->create_and_get();
 	}
 
 	/**
