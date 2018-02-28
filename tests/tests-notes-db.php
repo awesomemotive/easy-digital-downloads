@@ -2,12 +2,13 @@
 namespace EDD\Notes;
 
 /**
- * Notes DB Tests
+ * Notes DB Tests.
  *
- * @covers EDD_DB_Notes
  * @group edd_notes_db
  * @group database
  * @group edd_notes
+ *
+ * @coversDefaultClass \EDD_DB_Notes
  */
 class Tests_Notes_DB extends \EDD_UnitTestCase {
 
@@ -23,19 +24,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		for ( $i = 0; $i < 3; $i++ ) {
-			$note_id = EDD()->notes->insert( array(
-				'object_id'   => '1234' . $i,
-				'object_type' => 'payment',
-				'content'     => 'Payment status changed',
-			) );
-
-			self::$notes[] = new Note( $note_id );
-		}
+		self::$notes = parent::edd()->note->create_many( 5 );
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::get_columns()
+	 * @covers ::get_columns()
 	 */
 	public function test_get_columns() {
 		$expected = array(
@@ -47,11 +40,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'date_created' => '%s',
 		);
 
-		$this->assertSame( $expected, EDD()->notes->get_columns() );
+		$this->assertEqualSets( $expected, EDD()->notes->get_columns() );
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::get_column_defaults()
+	 * @covers ::get_column_defaults()
 	 */
 	public function test_get_column_defaults() {
 		$expected = array(
@@ -63,11 +56,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'date_created' => date( 'Y-m-d H:i:s' ),
 		);
 
-		$this->assertSame( $expected, EDD()->notes->get_column_defaults() );
+		$this->assertEqualSets( $expected, EDD()->notes->get_column_defaults() );
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::insert()
+	 * @covers ::insert()
 	 */
 	public function test_insert_should_return_false_if_no_object_id_supplied() {
 		$this->assertFalse( EDD()->notes->insert( array(
@@ -77,7 +70,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::insert()
+	 * @covers ::insert()
 	 */
 	public function test_insert_should_return_false_if_no_object_type_supplied() {
 		$this->assertFalse( EDD()->notes->insert( array(
@@ -87,7 +80,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::insert()
+	 * @covers ::insert()
 	 */
 	public function test_insert_with_valid_date() {
 		$this->assertGreaterThan( 0, EDD()->notes->insert( array(
@@ -98,39 +91,39 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::update()
+	 * @covers ::update()
 	 */
 	public function test_update_should_return_false_if_no_row_id_supplied() {
 		$this->assertFalse( EDD()->notes->update( 0 ) );
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::update()
+	 * @covers ::update()
 	 */
 	public function test_update() {
-		$this->assertTrue( EDD()->notes->update( self::$notes[0]->id, array(
+		$this->assertTrue( EDD()->notes->update( self::$notes[0], array(
 			'content' => 'Note with updated body',
 		) ) );
 
-		$note = new EDD_Note( self::$notes[0]->id );
+		$note = new Note( self::$notes[0] );
 
 		$this->assertEquals( 'Note with updated body', $note->content );
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::delete()
+	 * @covers ::delete()
 	 */
 	public function test_delete_should_return_false_if_no_row_id_supplied() {
 		$this->assertFalse( EDD()->notes->delete( 0 ) );
 	}
 
 	/**
-	 * @covers EDD_DB_Notes::delete()
+	 * @covers ::delete()
 	 */
 	public function test_delete() {
-		$this->assertTrue( EDD()->notes->delete( self::$notes[0]->id ) );
+		$this->assertTrue( EDD()->notes->delete( self::$notes[0] ) );
 
-		$note = new Note( self::$notes[0]->id );
+		$note = new Note( self::$notes[0] );
 
 		$this->assertNull( $note->id );
 	}
