@@ -118,7 +118,7 @@ class EDD_Notices {
 						$notices['updated']['edd-discount-added'] = __( 'Discount code added.', 'easy-digital-downloads' );
 						break;
 					case 'discount_add_failed' :
-						$notices['error']['edd-discount-add-fail'] = __( 'There was a problem adding your discount code, please try again.', 'easy-digital-downloads' );
+						$notices['error']['edd-discount-add-fail'] = __( 'There was a problem adding that discount code, please try again.', 'easy-digital-downloads' );
 						break;
 					case 'discount_exists' :
 						$notices['error']['edd-discount-exists'] = __( 'A discount with that code already exists, please use a different code.', 'easy-digital-downloads' );
@@ -127,13 +127,32 @@ class EDD_Notices {
 						$notices['updated']['edd-discount-updated'] = __( 'Discount code updated.', 'easy-digital-downloads' );
 						break;
 					case 'discount_update_failed' :
-						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating your discount code, please try again.', 'easy-digital-downloads' );
+						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating that discount code, please try again.', 'easy-digital-downloads' );
 						break;
 					case 'discount_validation_failed' :
 						$notices['error']['edd-discount-validation-fail'] = __( 'The discount code could not be added because one or more of the required fields was empty, please try again.', 'easy-digital-downloads' );
 						break;
 					case 'discount_invalid_code':
 						$notices['error']['edd-discount-invalid-code'] = __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_deleted':
+						$notices['updated']['edd-discount-deleted'] = __( 'Discount code deleted.', 'easy-digital-downloads' );
+						break;
+					case 'discount_delete_failed':
+						$notices['error']['edd-discount-delete-fail'] = __( 'There was a problem deleting that discount code, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_activated':
+						$notices['updated']['edd-discount-activated'] = __( 'Discount code activated.', 'easy-digital-downloads' );
+						break;
+					case 'discount_activation_failed':
+						$notices['error']['edd-discount-activation-fail'] = __( 'There was a problem activating that discount code, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_deactivated':
+						$notices['updated']['edd-discount-deactivated'] = __( 'Discount code deactivated.', 'easy-digital-downloads' );
+						break;
+					case 'discount_deactivation_failed':
+						$notices['error']['edd-discount-deactivation-fail'] = __( 'There was a problem deactivating that discount code, please try again.', 'easy-digital-downloads' );
+						break;
 				}
 			}
 
