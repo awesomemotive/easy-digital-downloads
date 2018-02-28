@@ -5,6 +5,12 @@ class Note extends \WP_UnitTest_Factory_For_Thing {
 
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
+
+		$this->default_generation_definitions = array(
+			'object_id'   => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'object_type' => 'payment',
+			'content'     => new \WP_UnitTest_Generator_Sequence( 'Payment status changed for object with ID: %d' ),
+		);
 	}
 
 	/**
