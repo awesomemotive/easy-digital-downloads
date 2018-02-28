@@ -56,6 +56,7 @@ final class EDD_DB_Table_Customers extends EDD_DB_Table {
 			PRIMARY KEY (id),
 			UNIQUE KEY email (email),
 			KEY user (user_id),
+			KEY status (status(20)),
 			KEY date_created (date_created)";
 	}
 
