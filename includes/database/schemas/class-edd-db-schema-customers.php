@@ -57,6 +57,16 @@ class EDD_DB_Schema_Customers extends EDD_DB_Schema {
 			'sortable'   => true
 		),
 
+		// status
+		array(
+			'name'       => 'status',
+			'type'       => 'varchar',
+			'length'     => '20',
+			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// purchase_value
 		array(
 			'name'       => 'purchase_value',
