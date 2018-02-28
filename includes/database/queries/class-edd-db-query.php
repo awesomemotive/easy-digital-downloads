@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Orders: WP_DB_Query class
+ * Orders: EDD_DB_Query class
  *
  * @package Plugins/EDD/Database/Queries
  */
@@ -15,7 +15,7 @@ if ( ! class_exists( 'EDD_DB_Query' ) ) :
  *
  * @since 3.0.0
  *
- * @see WP_DB_Query::__construct() for accepted arguments.
+ * @see EDD_DB_Query::__construct() for accepted arguments.
  */
 class EDD_DB_Query {
 
@@ -55,11 +55,13 @@ class EDD_DB_Query {
 	public $table_alias = '';
 
 	/**
+	 * Name of class used to setup the database schema
+	 *
 	 * @since 3.0.0
-	 * @access
-	 * @var
+	 * @access public
+	 * @var string
 	 */
-	public $schema = 'EDD_DB_Schema';
+	public $table_schema = 'EDD_DB_Schema';
 
 	/** Item ******************************************************************/
 
@@ -90,9 +92,9 @@ class EDD_DB_Query {
 	public $item_name_plural = '';
 
 	/**
-	 * Callback function for turning IDs into objects.
+	 * Name of class used to turn IDs into first-class objects.
 	 *
-	 * I.E. `get_some_item()` or `array( 'Class', 'method' )`
+	 * I.E. `EDD_DB_Object` or `EDD_Customer`
 	 *
 	 * This is used when looping through return values to guarantee their shape.
 	 *
@@ -100,7 +102,7 @@ class EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $single_item_callback = '';
+	public $item_shape = 'EDD_DB_Object';
 
 	/** Cache *****************************************************************/
 
@@ -274,30 +276,11 @@ class EDD_DB_Query {
 	 */
 	public function __construct( $query = '' ) {
 
-		// Default query variables
-		$this->query_var_defaults = array(
-			'fields'            => '',
-			'number'            => 100,
-			'offset'            => '',
-			'orderby'           => 'id',
-			'order'             => 'ASC',
-			'groupby'           => '',
-			'search'            => '',
-			'search_columns'    => array(),
-			'count'             => false,
-			'meta_query'        => null, // See WP_Meta_Query
-			'no_found_rows'     => true,
-
-			// Caching
-			'update_cache'      => true,
-			'update_meta_cache' => true
-		);
-
 		// Setup
 		$this->set_prefix();
 		$this->set_columns();
 		$this->set_primary_column();
-		$this->set_single_item_callback();
+		$this->set_query_var_defaults();
 
 		// Maybe query
 		if ( ! empty( $query ) ) {
@@ -311,11 +294,13 @@ class EDD_DB_Query {
 	 * @since 3.0.0
 	 * @access public
 	 *
-	 * @see WP_DB_Query::__construct()
+	 * @see EDD_DB_Query::__construct()
 	 *
-	 * @param string|array $query Array or string of WP_DB_Query arguments. See WP_DB_Query::__construct().
+	 * @param string|array $query Array or string of EDD_DB_Query arguments. See EDD_DB_Query::__construct().
 	 */
 	public function parse_query( $query = '' ) {
+
+		// Fallback query vars
 		if ( empty( $query ) ) {
 			$query = $this->query_vars;
 		}
@@ -327,7 +312,7 @@ class EDD_DB_Query {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param WP_DB_Query &$this The WP_DB_Query instance (passed by reference).
+		 * @param EDD_DB_Query &$this The EDD_DB_Query instance (passed by reference).
 		 */
 		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
@@ -363,12 +348,13 @@ class EDD_DB_Query {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param WP_DB_Query &$this Current instance of WP_DB_Query, passed by reference.
+		 * @param EDD_DB_Query &$this Current instance of EDD_DB_Query, passed by reference.
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
 		// $args can include anything. Only use the args defined in the query_var_defaults to compute the key.
-		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
+		$slice        = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
+		$key          = md5( serialize( $slice ) );
 		$last_changed = wp_cache_get_last_changed( $this->cache_group );
 
 		// Check the cache
@@ -432,8 +418,8 @@ class EDD_DB_Query {
 		}
 
 		// Add prefixes to class properties
-		$this->table_name  = $this->apply_prefix( $this->table_name  );
-		$this->table_alias = $this->apply_prefix( $this->table_alias );
+		$this->table_name  = $this->apply_prefix( $this->table_name       );
+		$this->table_alias = $this->apply_prefix( $this->table_alias      );
 		$this->cache_group = $this->apply_prefix( $this->cache_group, ':' );
 	}
 
@@ -445,11 +431,22 @@ class EDD_DB_Query {
 	 */
 	private function set_columns() {
 
+		// Bail if no table schema
+		if ( ! class_exists( $this->table_schema ) ) {
+			return;
+		}
+
+		// Invoke a new table schema class
+		$schema  = new $this->table_schema;
+		$columns = ! empty( $schema->columns )
+			? $schema->columns
+			: $this->columns;
+
 		// Default array
 		$new_columns = array();
 
 		// Loop through columns array
-		foreach ( $this->columns as $column ) {
+		foreach ( $columns as $column ) {
 			if ( is_array( $column ) ) {
 				$new_columns[] = new EDD_DB_Column( $column );
 			} elseif ( $column instanceof EDD_DB_Column ) {
@@ -462,63 +459,6 @@ class EDD_DB_Query {
 	}
 
 	/**
-	 * Support for when no functional getter exists.
-	 *
-	 * It's possible there is no functional equivalent to get a single object
-	 * instance. We can predict that condition, and still make sure the
-	 * application proceeds normally
-	 *
-	 * @since 3.0.0
-	 */
-	private function set_single_item_callback() {
-		if ( empty( $this->single_item_callback ) || ! is_callable( $this->single_item_callback ) ) {
-			$this->single_item_callback = array( $this, 'get_item' );
-		}
-	}
-
-	/**
-	 * Set items by mapping them through the single item callback.
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @param array $item_ids
-	 */
-	private function set_items( $item_ids = array() ) {
-
-		// Cast to integers
-		$item_ids = array_map( 'intval', $item_ids );
-
-		// Prime item caches.
-		$this->prime_item_caches( $item_ids );
-
-		// Return the IDs
-		if ( 'ids' === $this->query_vars['fields'] ) {
-			$this->items = $item_ids;
-
-			return $this->items;
-		}
-
-		// Get item instances from IDs.
-		$_items = $this->shape_items( $item_ids );
-
-		/**
-		 * Filters the object query results.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param array        $results An array of items.
-		 * @param WP_DB_Query &$this   Current instance of WP_DB_Query, passed by reference.
-		 */
-		$_items = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $_items, &$this ) );
-
-		// Make sure items are still item instances.
-		$this->items = $this->shape_items( $_items );
-
-		// Force lean up these items
-		unset( $_items );
-	}
-
-	/**
 	 * Set the primary column
 	 *
 	 * @since 3.0.0
@@ -528,6 +468,59 @@ class EDD_DB_Query {
 		$this->primary_column = $this->get_column_by( array(
 			'primary' => true
 		) );
+	}
+
+	/**
+	 * Set default query vars based on columns
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 */
+	private function set_query_var_defaults() {
+
+		// Default query variables
+		$this->query_var_defaults = array(
+			'fields'            => '',
+			'number'            => 100,
+			'offset'            => '',
+			'orderby'           => 'id',
+			'order'             => 'ASC',
+			'groupby'           => '',
+			'search'            => '',
+			'search_columns'    => array(),
+			'count'             => false,
+			'meta_query'        => null, // See WP_Meta_Query
+			'no_found_rows'     => true,
+
+			// Caching
+			'update_cache'      => true,
+			'update_meta_cache' => true
+		);
+
+		// Bail if no columns
+		if ( empty( $this->columns ) ) {
+			return;
+		}
+
+		// Direct column names
+		$names = wp_list_pluck( $this->columns, 'name' );
+		foreach ( $names as $name ) {
+			$this->query_var_defaults[ $name ] = '';
+		}
+
+		// Possible ins
+		$possible_ins = wp_filter_object_list( $this->columns, array( 'in'     => true ), 'and', 'name' );
+		foreach ( $possible_ins as $in ) {
+			$key = "{$in}__in";
+			$this->query_var_defaults[ $key ] = false;
+		}
+
+		// Possible not ins
+		$possible_not_ins = wp_filter_object_list( $this->columns, array( 'not_in' => true ), 'and', 'name' );
+		foreach ( $possible_not_ins as $in ) {
+			$key = "{$in}__not_in";
+			$this->query_var_defaults[ $key ] = false;
+		}
 	}
 
 	/**
@@ -596,6 +589,48 @@ class EDD_DB_Query {
 	 */
 	private function set_request() {
 		$this->request = "{$this->request_clauses['select']} {$this->request_clauses['from']} {$this->request_clauses['where']} {$this->request_clauses['groupby']} {$this->request_clauses['orderby']} {$this->request_clauses['limits']}";
+	}
+
+	/**
+	 * Set items by mapping them through the single item callback.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 * @param array $item_ids
+	 */
+	private function set_items( $item_ids = array() ) {
+
+		// Cast to integers
+		$item_ids = array_map( 'intval', $item_ids );
+
+		// Prime item caches.
+		$this->prime_item_caches( $item_ids );
+
+		// Return the IDs
+		if ( 'ids' === $this->query_vars['fields'] ) {
+			$this->items = $item_ids;
+
+			return $this->items;
+		}
+
+		// Get item instances from IDs.
+		$_items = $this->shape_items( $item_ids );
+
+		/**
+		 * Filters the object query results.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array        $results An array of items.
+		 * @param EDD_DB_Query &$this   Current instance of EDD_DB_Query, passed by reference.
+		 */
+		$_items = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $_items, &$this ) );
+
+		// Make sure items are still item instances.
+		$this->items = $this->shape_items( $_items );
+
+		// Force lean up these items
+		unset( $_items );
 	}
 
 	/**
@@ -901,6 +936,11 @@ class EDD_DB_Query {
 					$statement = "{$this->table_alias}.{$column->name} = %d";
 					$where_id  = absint( $this->query_vars[ $column->name ] );
 
+				// Array
+				} elseif ( is_array( $this->query_vars[ $column->name ] ) ) {
+					$statement = "{$this->table_alias}.{$column->name} IN ( %s )";
+					$where_id  = "'" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $column->name ] ) ) . "'";
+
 				// String
 				} else {
 					$statement = "{$this->table_alias}.{$column->name} = %s";
@@ -984,7 +1024,7 @@ class EDD_DB_Query {
 			}
 
 			/**
-			 * Filters the columns to search in a WP_DB_Query search.
+			 * Filters the columns to search in a EDD_DB_Query search.
 			 *
 			 * The default columns include 'email' and 'path.
 			 *
@@ -992,7 +1032,7 @@ class EDD_DB_Query {
 			 *
 			 * @param array        $search_columns Array of column names to be searched.
 			 * @param string       $search         Text being searched.
-			 * @param WP_DB_Query $this           The current WP_DB_Query instance.
+			 * @param EDD_DB_Query $this           The current EDD_DB_Query instance.
 			 */
 			$search_columns = apply_filters( $this->apply_prefix( 'item_search_columns' ), $search_columns, $this->query_vars['search'], $this );
 
@@ -1004,7 +1044,8 @@ class EDD_DB_Query {
 		$meta_query = $this->query_vars['meta_query'];
 		if ( ! empty( $meta_query ) && is_array( $meta_query ) ) {
 			$this->meta_query = new WP_Meta_Query( $meta_query );
-			$clauses          = $this->meta_query->get_sql( $this->item_name, $this->table_alias, $this->get_primary_column_name(), $this );
+			$table            = $this->apply_prefix( $this->item_name );
+			$clauses          = $this->meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
 
 			// Not all objects have meta, so make sure this one exists
 			if ( false !== $clauses ) {
@@ -1141,7 +1182,7 @@ class EDD_DB_Query {
 	/**
 	 * Shape items into their most relevant objects.
 	 *
-	 * This will try to use single_item_callback, but will fallback to a private
+	 * This will try to use item_shape, but will fallback to a private
 	 * method for querying and caching items.
 	 *
 	 * @since 3.0.0
@@ -1154,17 +1195,9 @@ class EDD_DB_Query {
 		// Default var
 		$results = array();
 
-		// Callback exists
-		if ( ! empty( $this->single_item_callback ) && is_callable( $this->single_item_callback ) ) {
-			$results = array_map( $this->single_item_callback, $items );
-
-		// Callback does not exist
-		} else {
-
-			// Use foreach because it's faster locally than array_map()
-			foreach ( $items as $item ) {
-				$results[] = $this->get_item( $item );
-			}
+		// Use foreach because it's faster locally than array_map()
+		foreach ( $items as $item ) {
+			$results[] = $this->shape_item( $item );
 		}
 
 		// Return shaped results
@@ -1245,8 +1278,37 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function add_item( $data = array() ) {
-		$table  = $this->get_table_name();
+		$primary = $this->get_primary_column_name();
+		$table   = $this->get_table_name();
+		$columns = $this->get_column_names();
+
+		// Bail if trying to update an existing item
+		if ( isset( $data[ $primary ] ) ) {
+			return $this->update_item( $data[ $primary ], $data );
+		}
+
+		// Cut out non-keys for meta
+		$columns = array_flip( $columns );
+		$meta    = array_diff_key( $data, $columns );
+		$data    = array_intersect_key( $data, $columns );
+
+		// Attempt to add
 		$result = $this->get_db()->insert( $table, $data );
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		// Bail if no insert occurred
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		// Maybe save meta keys
+		if ( ! empty( $meta ) ) {
+			$this->save_extra_item_meta( $result, $meta );
+		}
 
 		// Return result
 		return $result;
@@ -1263,14 +1325,47 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function update_item( $item_id = 0, $data = array() ) {
-		$where  = array( $this->get_primary_column_name() => $item_id );
-		$table  = $this->get_table_name();
+		$where   = array( $this->get_primary_column_name() => $item_id );
+		$table   = $this->get_table_name();
+		$columns = $this->get_column_names();
+
+		// Get item to update
+		$item = (array) $this->get_item( $item_id );
+
+		// Item does not exist to update, so try to add instead
+		if ( empty( $item ) ) {
+			return $this->add_item( $data );
+		}
+
+		// Splice new data into item, and cut out non-keys for meta
+		$data    = array_merge( $item, $data );
+		$columns = array_flip( $columns );
+		$meta    = array_diff_key( $data, $columns );
+		$data    = array_intersect_key( $data, $columns );
+
+		// Never update the primary key value
+		unset( $data[ $this->get_primary_column_name() ] );
+
+		// Attempt to update
 		$result = $this->get_db()->update( $table, $data, $where );
 
-		// Maybe clean caches on successful update
-		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
-			$this->clean_item_cache( $item_id );
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
+
+		// Bail if no update occurred
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		// Maybe save meta keys
+		if ( ! empty( $meta ) ) {
+			$this->save_extra_item_meta( $item_id, $meta );
+		}
+
+		// Clean the item cache
+		$this->clean_item_cache( $item_id );
 
 		// Return result
 		return $result;
@@ -1292,11 +1387,254 @@ class EDD_DB_Query {
 
 		// Maybe clean caches on successful delete
 		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
+			$this->delete_all_item_meta( $item_id );
 			$this->clean_item_cache( $item_id );
 		}
 
 		// Return result
 		return $result;
+	}
+
+	/**
+	 * Shape an item from the database into the type of object it always wanted
+	 * to be when it grew up (EDD_Customer, EDD_Discount, EDD_Payment, etc...)
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed ID of item, or row from database
+	 *
+	 * @return mixed False on error, Object of single-object class type on success
+	 */
+	private function shape_item( $item = 0 ) {
+
+		// Callback exists
+		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
+			$this->item_shape = 'EDD_DB_Object';
+		}
+
+		// Bail early if item is already an object of the correct shape
+		if ( $item instanceof $this->item_shape ) {
+			return $item;
+		}
+
+		// Get the item from an ID
+		if ( is_numeric( $item ) ) {
+			$item = $this->get_item( $item );
+		}
+
+		// Return the newly shaped item
+		return new $this->item_shape( $item );
+	}
+
+	/** Meta ******************************************************************/
+
+	/**
+	 * Add meta data to an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $item_id
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @param string $unique
+	 *
+	 * @return mixed
+	 */
+	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
+
+		// Bail if no meta was returned
+		if ( empty( $item_id ) || empty( $meta_key ) ) {
+			return false;
+		}
+
+		// Get meta table name
+		$table = $this->get_meta_table_name();
+
+		// Bail if no meta table exists
+		if ( empty( $table ) ) {
+			return false;
+		}
+
+		// Return results of get meta data
+		return add_metadata( $table, $item_id, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Get meta data for an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int     $item_id
+	 * @param string  $meta_key
+	 * @param boolean $single
+	 *
+	 * @return mixed
+	 */
+	protected function get_item_meta( $item_id = 0, $meta_key = '', $single = false ) {
+
+		// Bail if no meta was returned
+		if ( empty( $item_id ) || empty( $meta_key ) ) {
+			return false;
+		}
+
+		// Get meta table name
+		$table = $this->get_meta_table_name();
+
+		// Bail if no meta table exists
+		if ( empty( $table ) ) {
+			return false;
+		}
+
+		// Return results of get meta data
+		return get_metadata( $table, $item_id, $meta_key, $single );
+	}
+
+	/**
+	 * Update meta data for an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $item_id
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @param string $prev_value
+	 *
+	 * @return mixed
+	 */
+	protected function update_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
+
+		// Bail if no meta was returned
+		if ( empty( $item_id ) || empty( $meta_key ) ) {
+			return false;
+		}
+
+		// Get meta table name
+		$table = $this->get_meta_table_name();
+
+		// Bail if no meta table exists
+		if ( empty( $table ) ) {
+			return false;
+		}
+
+		// Return results of get meta data
+		return update_metadata( $table, $item_id, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Delete meta data for an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $item_id
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @param string $delete_all
+	 *
+	 * @return mixed
+	 */
+	protected function delete_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $delete_all = false ) {
+
+		// Bail if no meta was returned
+		if ( empty( $item_id ) || empty( $meta_key ) ) {
+			return false;
+		}
+
+		// Get meta table name
+		$table = $this->get_meta_table_name();
+
+		// Bail if no meta table exists
+		if ( empty( $table ) ) {
+			return false;
+		}
+
+		// Return results of get meta data
+		return delete_metadata( $table, $item_id, $meta_key, $meta_value, $delete_all );
+	}
+
+	/**
+	 * Maybe update meta values on item update/save
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $meta
+	 */
+	private function save_extra_item_meta( $item_id = 0, $meta = array() ) {
+
+		// Bail if there is no bulk meta to save
+		if ( empty( $item_id ) || empty( $meta ) ) {
+			return;
+		}
+
+		// Get meta table name
+		$table = $this->get_meta_table_name();
+
+		// Bail if no meta table exists
+		if ( empty( $table ) ) {
+			return;
+		}
+
+		// Save or delete meta data
+		foreach ( $meta as $key => $value ) {
+			! empty( $value )
+				? $this->update_item_meta( $item_id, $key, $value )
+				: $this->delete_item_meta( $item_id, $key );
+		}
+	}
+
+	/**
+	 * Delete all meta data for an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $item_id
+	 *
+	 * @return type
+	 */
+	private function delete_all_item_meta( $item_id = 0 ) {
+
+		// Bail if no meta was returned
+		if ( empty( $item_id ) ) {
+			return;
+		}
+
+		// Get meta table name
+		$table = $this->get_meta_table_name();
+
+		// Bail if no meta table exists
+		if ( empty( $table ) ) {
+			return;
+		}
+
+		// Add the site prefix to meta table name
+		$table = "{$this->get_db()->prefix}{$table}";
+
+		// Get meta IDs
+		$sql      = "SELECT meta_id FROM {$table} WHERE {$this->get_primary_column_name()} = %d";
+		$prepared = $this->get_db()->prepare( $sql, $item_id );
+		$meta_ids = $this->get_db()->get_col( $prepared );
+
+		// Delete all meta data for this item ID
+		foreach ( $meta_ids as $mid ) {
+			delete_metadata_by_mid( $table, $mid );
+		}
+	}
+
+	/**
+	 * Return meta table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return mixed Table name if exists, False if not
+	 */
+	private function get_meta_table_name() {
+
+		// Maybe apply table prefix
+		$table = $this->apply_prefix( $this->item_name );
+
+		// Return table if exists, or false if not
+		return _get_meta_table( $table )
+			? $table
+			: false;
 	}
 
 	/** Cache *****************************************************************/
@@ -1408,7 +1746,7 @@ class EDD_DB_Query {
 
 		// Loop through all items and cache them
 		foreach ( $items as $item_id ) {
-			wp_cache_delete( $item_id );
+			wp_cache_delete( $item_id, $this->cache_group );
 		}
 
 		// Update last changed
