@@ -47,6 +47,7 @@ final class EDD_DB_Table_Customers extends EDD_DB_Table {
 			user_id bigint(20) NOT NULL,
 			email varchar(50) NOT NULL,
 			name mediumtext NOT NULL,
+			status varchar(20) NOT NULL default '',
 			purchase_value mediumtext NOT NULL,
 			purchase_count bigint(20) NOT NULL,
 			payment_ids longtext NOT NULL,
