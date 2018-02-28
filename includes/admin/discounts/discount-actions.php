@@ -13,25 +13,26 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Sets up and stores a new discount code
+ * Sets up and stores a new discount code.
  *
  * @since 1.0
- * @param array $data Discount code data
- * @uses edd_store_discount()
- * @return void
+ * @since 3.0 - Added backwards compatibility for pre-3.0 discount data.
+ *
+ * @param array $data Discount code data.
  */
 function edd_add_discount( $data ) {
-
 	if ( ! isset( $data['edd-discount-nonce'] ) || ! wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
 		return;
 	}
 
-	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	// Setup the discount code details
-	$posted = array();
+	if ( edd_get_discount_by_code( $data['code'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) );
+		edd_die();
+	}
 
 	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
 		wp_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
@@ -39,59 +40,59 @@ function edd_add_discount( $data ) {
 	}
 
 	// Verify only accepted characters
-	$sanitized = preg_replace('/[^a-zA-Z0-9-_]+/', '', $data['code'] );
+	$sanitized = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $data['code'] );
 	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
 		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 		edd_die();
 	}
 
-	foreach ( $data as $key => $value ) {
+	$discount = new EDD_Discount();
+	$to_add   = array();
+	$to_add['status'] = 'active'; // Default status of active
 
-		if ( $key === 'products' || $key === 'excluded-products' ) {
+	foreach ( $discount->db->get_columns() as $column => $value ) {
 
-			foreach ( $value as $product_key => $product_value ) {
-				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+		// Each column gets passed through a generic sanitization method during the update() call
+
+		if ( isset( $data[ $column ] ) && ! empty( $data[ $column ] ) ) {
+
+			switch ( $column ) {
+
+				case 'start_date':
+				case 'start':
+					$to_add['start_date'] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				case 'end_date':
+					$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				case 'product_reqs':
+					$to_add[ $column ] = $data[ $column ];
+					break;
+
+				default:
+					$to_add[ $column ] = sanitize_text_field( $data[ $column ] );
+					break;
+
 			}
 
-			$posted[ $key ] = $value;
-
-		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'edd-redirect' ) {
-
-			if ( is_string( $value ) || is_int( $value ) ) {
-
-				$posted[ $key ] = strip_tags( addslashes( $value ) );
-
-			} elseif ( is_array( $value ) ) {
-
-				$posted[ $key ] = array_map( 'absint', $value );
-
-			}
 		}
-
 	}
 
-	// Ensure this discount doesn't already exist
-	if ( ! edd_get_discount_by_code( $posted['code'] ) ) {
+	// Meta values
+	$to_add['product_reqs'] = isset( $data['product_reqs'] ) ? $data['product_reqs'] : '';
+	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
 
-		// Set the discount code's default status to active
-		$posted['status'] = 'active';
+	$created = $discount->add( $to_add );
 
-		if ( edd_store_discount( $posted ) ) {
-
-			wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
-
-		} else {
-
-			wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
-
-		}
-
+	if ( $created ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) );
+		edd_die();
 	} else {
-
-		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
-
+		wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) );
+		edd_die();
 	}
-
 }
 add_action( 'edd_add_discount', 'edd_add_discount' );
 
@@ -108,52 +109,72 @@ function edd_edit_discount( $data ) {
 		return;
 	}
 
-	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	// Setup the discount code details
-	$discount = array();
+	if ( empty( $data['discount-id'] ) ) {
+		wp_die( __( 'No discount ID supplied', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
 
-	foreach ( $data as $key => $value ) {
+	$discount = new EDD_Discount( absint( $data['discount-id'] ) );
 
-		if ( $key === 'products' || $key === 'excluded-products' ) {
+	if ( ! $discount || ! $discount->ID > 0 ) {
+		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
 
-			foreach ( $value as $product_key => $product_value ) {
-				$value[ $product_key ] = preg_replace("/[^0-9_]/", '', $product_value );
+	$to_update  = array();
+
+	foreach ( $discount->db->get_columns() as $column => $value ) {
+
+		// Each column gets passed through a generic sanitization method during the update() call
+
+		if ( isset( $data[ $column ] ) ) {
+
+			switch ( $column ) {
+
+				case 'start_date':
+					$to_add[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				case 'end_date':
+					$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $data[ $column ] ), current_time( 'timestamp' ) ) );
+					break;
+
+				default :
+					$to_update[ $column ] = sanitize_text_field( $data[ $column ] );
+					break;
+
 			}
 
-			$discount[ $key ] = $value;
+		} else {
 
-		} else if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
+			// Certain fields need to be nulled out if not set
 
-			if ( is_string( $value ) || is_int( $value ) ) {
+			switch( $column ) {
 
-				$discount[ $key ] = strip_tags( addslashes( $value ) );
+				case 'once_per_customer' :
 
-			} elseif ( is_array( $value ) ) {
-
-				$discount[ $key ] = array_map( 'absint', $value );
+					$to_update[ $column ] = 0;
+					break;
 
 			}
 
 		}
-
 	}
 
-	$old_discount     = edd_get_discount_by( 'code', $data['code'] );
-	$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
+	$to_update['product_reqs'] = isset( $data['product_reqs'] ) ? $data['product_reqs'] : '';
+	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
 
-	if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
+	$updated = $discount->update( $to_update );
 
-		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
-
+	if ( $updated ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) );
+		edd_die();
 	} else {
-
-		wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ); edd_die();
-
+		wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) );
+		edd_die();
 	}
-
 }
 add_action( 'edd_edit_discount', 'edd_edit_discount' );
 
