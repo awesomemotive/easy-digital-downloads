@@ -781,7 +781,7 @@ function edd_parse_report_dates( $form_data ) {
 				break;
 
 			default:
-				$session_data = $form_data[ $filter ];
+				$session_data = isset( $form_data[ $filter ] ) ? $form_data[ $filter ] : array();
 
 				break;
 		}
