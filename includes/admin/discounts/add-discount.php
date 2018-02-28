@@ -92,11 +92,11 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 							</p>
 							<p>
 								<label>
-									<input type="radio" class="tog" name="applies_globally" value="1" checked="checked"/>
+									<input type="radio" class="tog" name="scope" value="1" checked="checked" />
 									<?php _e( 'Apply discount to entire purchase.', 'easy-digital-downloads' ); ?>
 								</label><br/>
 								<label>
-									<input type="radio" class="tog" name="applies_globally" value="0"/>
+									<input type="radio" class="tog" name="scope" value="0" />
 									<?php printf( __( 'Apply discount only to selected %s.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>
 								</label>
 							</p>
@@ -175,10 +175,10 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 		</table>
 		<?php do_action( 'edd_add_discount_form_bottom' ); ?>
 		<p class="submit">
-			<input type="hidden" name="edd-action" value="add_discount"/>
-			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
-			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>
-			<input type="submit" value="<?php _e( 'Add Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+			<input type="hidden" name="edd-action" value="add_discount" />
+			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>" />
+			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>" />
+			<input type="submit" value="<?php _e( 'Add Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary" />
 		</p>
 	</form>
 </div>
