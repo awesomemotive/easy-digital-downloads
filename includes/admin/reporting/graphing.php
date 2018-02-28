@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 function edd_reports_graph() {
 	// Retrieve the queried dates
-	$dates = edd_get_report_dates();
+	$dates = Reports\get_dates_filter( 'objects' );
 
 	// Determine graph options
 	switch ( $dates['range'] ) {
@@ -30,18 +30,16 @@ function edd_reports_graph() {
 		case 'yesterday' :
 			$day_by_day = true;
 			break;
-		case 'last_year' :
-		case 'this_year' :
-			$day_by_day = false;
-			break;
 		case 'last_quarter' :
 		case 'this_quarter' :
 			$day_by_day = true;
 			break;
 		case 'other' :
-			if ( $dates['m_start'] == 12 && $dates['m_end'] == 1 ) {
-				$day_by_day = true;
-			} elseif ( $dates['m_end'] - $dates['m_start'] >= 3 || ( $dates['year_end'] > $dates['year'] && ( $dates['m_start'] - $dates['m_end'] ) != 10 ) ) {
+			$difference = ( strtotime( $dates['start'] ) - $dates['end'] );
+
+			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
+			     || $difference >= YEAR_IN_SECONDS
+			) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
