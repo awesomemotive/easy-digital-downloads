@@ -220,7 +220,7 @@ class Note {
 		 * We fill object vars which have the same name as the object vars in WP_Comment for backwards compatibility
 		 * purposes.
 		 */
-		$this->comment_ID       = $note_id;
+		$this->comment_ID       = absint( $this->id );
 		$this->comment_post_ID  = $this->object_id;
 		$this->comment_type     = $this->object_type;
 		$this->comment_date     = $this->date_created;
@@ -239,7 +239,9 @@ class Note {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		$key = sanitize_key( $key );
+		if ( ! in_array( $key, array( 'comment_ID', 'comment_post_ID' ), true ) ) {
+			$key = sanitize_key( $key );
+		}
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
