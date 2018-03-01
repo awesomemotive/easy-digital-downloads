@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Retrieves an instance of EDD_Payment for a specified ID.
@@ -1583,9 +1583,8 @@ function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
  * @return string
  */
 function edd_get_payment_note_html( $note, $payment_id = 0 ) {
-
-	if( is_numeric( $note ) ) {
-		$note = get_comment( $note );
+	if ( is_numeric( $note ) ) {
+		$note = new EDD\Notes\Note( $note );
 	}
 
 	if ( ! empty( $note->user_id ) ) {
@@ -1612,7 +1611,6 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 	$note_html .= '</div>';
 
 	return $note_html;
-
 }
 
 /**
@@ -1626,9 +1624,9 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 function edd_hide_payment_notes( $query ) {
 	global $wp_version;
 
-	if( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
+	if ( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
 		$types = isset( $query->query_vars['type__not_in'] ) ? $query->query_vars['type__not_in'] : array();
-		if( ! is_array( $types ) ) {
+		if ( ! is_array( $types ) ) {
 			$types = array( $types );
 		}
 		$types[] = 'edd_payment_note';
