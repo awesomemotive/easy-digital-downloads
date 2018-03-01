@@ -48,6 +48,8 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 			EDD()->customer_meta->table_name,
 			EDD()->discounts->table_name,
 			EDD()->discount_meta->table_name,
+			EDD()->notes->table_name,
+			EDD()->note_meta->table_name,
 		) as $table ) {
 			$wpdb->query( "DELETE FROM {$table}" );
 		}
