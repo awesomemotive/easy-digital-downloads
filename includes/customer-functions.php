@@ -15,12 +15,30 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Add a customer to the database
+ *
+ * @since 3.0.0
+ *
+ * @param array $data
+ *
+ * @return mixed False on failure. ID of new EDD_Customer object on success.
+ */
 function edd_add_customer( $data = array() ) {
 	$customers = new EDD_Customer_Query();
 
 	return $customers->add_item( $data );
 }
 
+/**
+ * Delete a customer from the database
+ *
+ * @since 3.0.0
+ *
+ * @param int ID of customer to delete
+ *
+ * @return mixed False on failure. ID of new EDD_Customer object on success.
+ */
 function edd_delete_customer( $customer_id = 0 ) {
 	$customers = new EDD_Customer_Query();
 
@@ -74,9 +92,16 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 	return reset( $customers->items );
 }
 
+/**
+ * Get total number of customers
+ *
+ * @since 3.0.0
+ *
+ * @return int
+ */
 function edd_get_customer_count() {
 
-	// Get a count
+	// Query for count
 	$customers = new EDD_Customer_Query( array(
 		'number' => 0,
 		'count'  => true,
@@ -86,7 +111,18 @@ function edd_get_customer_count() {
 	) );
 
 	// Return count
-	return absint( $customers->items );
+	return absint( $customers->found_items );
+}
+
+/**
+ * Return the role used to edit customers
+ *
+ * @since 3.0.0
+ *
+ * @return string
+ */
+function edd_get_edit_customers_role() {
+	return apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 }
 
 /**
@@ -173,10 +209,10 @@ function edd_update_customer_meta( $customer_id, $meta_key, $meta_value, $prev_v
  *
  * @since 3.0.0
  *
- * @param string $customer_meta_key Key to search for when deleting.
+ * @param string $meta_key Key to search for when deleting.
  *
  * @return bool Whether the customer meta key was deleted from the database.
  */
-function delete_customer_meta_by_key( $customer_meta_key ) {
-	return delete_metadata( 'edd_customer', null, $customer_meta_key, '', true );
+function edd_delete_customer_meta_by_key( $meta_key ) {
+	return delete_metadata( 'edd_customer', null, $meta_key, '', true );
 }

@@ -94,7 +94,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 		$render = false;
 	}
 
-	$customer_id = (int)$_GET['id'];
+	$customer_id = absint( $_GET['id'] );
 	$customer    = new EDD_Customer( $customer_id );
 
 	if ( empty( $customer->id ) ) {
@@ -128,6 +128,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 							<li class="<?php echo sanitize_html_class( $class ); ?>">
 
 								<?php
+
 								// prevent double "Customer" output from extensions
 								$tab['title'] = preg_replace("(^Customer )","",$tab['title']);
 
@@ -139,7 +140,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 								?>
 
 								<?php if ( ! $active ) : ?>
-									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id . '#wpbody-content' ) ); ?>"<?php echo $aria_label; ?>>
+									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ) ); ?>"<?php echo $aria_label; ?>>
 								<?php endif; ?>
 
 									<span class="edd-item-tab-label-wrap"<?php echo $active ? $aria_label : ''; ?>>
@@ -177,9 +178,8 @@ function edd_render_customer_view( $view, $callbacks ) {
  * @param  $customer The Customer object being displayed
  * @return void
  */
-function edd_customers_view( $customer ) {
-
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+function edd_customers_view( $customer = '' ) {
+	$customer_edit_role = edd_get_edit_customers_role();
 
 	do_action( 'edd_customer_card_top', $customer ); ?>
 
@@ -563,23 +563,18 @@ function edd_customer_notes_view( $customer ) {
 }
 
 function edd_customers_delete_view( $customer ) {
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
-	?>
-
-	<?php do_action( 'edd_customer_delete_top', $customer ); ?>
+	do_action( 'edd_customer_delete_top', $customer ); ?>
 
 	<div class="info-wrapper customer-section">
 
 		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
 
-				<div class="edd-item-notes-header">
+			<div class="edd-item-notes-header">
 				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 			</div>
 
-
 			<div class="customer-info delete-customer">
-
 				<span class="delete-customer-options">
 					<p>
 						<?php echo EDD()->html->checkbox( array( 'name' => 'edd-customer-delete-confirm' ) ); ?>
@@ -601,9 +596,7 @@ function edd_customers_delete_view( $customer ) {
 					<input type="submit" disabled="disabled" id="edd-delete-customer" class="button-primary" value="<?php _e( 'Delete Customer', 'easy-digital-downloads' ); ?>" />
 					<a id="edd-delete-customer-cancel" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>" class="delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 				</span>
-
 			</div>
-
 		</form>
 	</div>
 
@@ -613,17 +606,14 @@ function edd_customers_delete_view( $customer ) {
 }
 
 function edd_customer_tools_view( $customer ) {
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 
-	?>
-
-	<?php do_action( 'edd_customer_tools_top', $customer ); ?>
+	do_action( 'edd_customer_tools_top', $customer ); ?>
 
 	<div class="info-wrapper customer-section">
-
 		<div class="customer-notes-header">
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 		</div>
+
 		<h3><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h3>
 
 		<div class="edd-item-info customer-info">
@@ -637,12 +627,9 @@ function edd_customer_tools_view( $customer ) {
 					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
 					<input type="submit" id="recount-stats-submit" value="<?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 					<span class="spinner"></span>
-
 				</span>
 			</form>
-
 		</div>
-
 	</div>
 
 	<?php
