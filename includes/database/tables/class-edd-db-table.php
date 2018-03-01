@@ -193,6 +193,22 @@ abstract class EDD_DB_Table {
 		}
 	}
 
+	/**
+	 * Truncate the database table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function truncate() {
+		$query     = "TRUNCATE %s";
+		$prepared  = $this->get_db()->prepare( $query, $this->table_name );
+		$truncated = $this->get_db()->query( $prepared );
+
+		// Query success/fail
+		return $truncated;
+	}
+
 	/** Private ***************************************************************/
 
 	/**
