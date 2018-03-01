@@ -82,22 +82,22 @@ function edd_sanitize_amount( $amount ) {
  */
 function edd_format_amount( $amount, $decimals = true ) {
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
 
 	// Format the amount
-	if ( $decimal_sep == ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
-		$whole = substr( $amount, 0, $sep_found );
-		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
+	if ( $decimal_sep === ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
+		$whole  = substr( $amount, 0, $sep_found );
+		$part   = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
 		$amount = $whole . '.' . $part;
 	}
 
 	// Strip , from the amount (if set as the thousands separator)
-	if ( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	if ( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( ',', '', $amount );
 	}
 
 	// Strip ' ' from the amount (if set as the thousands separator)
-	if ( $thousands_sep == ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	if ( $thousands_sep === ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( ' ', '', $amount );
 	}
 
@@ -110,7 +110,6 @@ function edd_format_amount( $amount, $decimals = true ) {
 
 	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
 }
-
 
 /**
  * Formats the currency display
@@ -201,7 +200,6 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 		case 'JPY' :
 		case 'TWD' :
 		case 'HUF' :
-
 			$decimals = 0;
 			break;
 	}
@@ -209,20 +207,24 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
 
 /**
  * Sanitizes a string key for EDD Settings
  *
- * Keys are used as internal identifiers. Alphanumeric characters, dashes, underscores, stops, colons and slashes are allowed
+ * Keys are used as internal identifiers. Alphanumeric characters, dashes,
+ * underscores, stops, colons and slashes are allowed.
+ *
+ * This differs from `sanitize_key()` in that it allows uppercase letters,
+ * stops, colons, and slashes.
  *
  * @since  2.5.8
  * @param  string $key String key
  * @return string Sanitized key
  */
-function edd_sanitize_key( $key ) {
+function edd_sanitize_key( $key = '' ) {
 	$raw_key = $key;
-	$key = preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
+	$key     = preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
 
 	/**
 	 * Filter a sanitized key string.
