@@ -130,7 +130,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 													}
 
 													foreach ( $discounts as $discount ) {
-														$discount_obj = edd_get_discount_by_code( $discount );
+														$discount_obj = edd_get_discount_by( 'code', $discount );
 
 														if ( false === $discount_obj ) {
 															$found_discounts[] = $discount;
