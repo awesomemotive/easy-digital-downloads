@@ -9,7 +9,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema_Log_File_Downloads extends EDD_DB_Schema {
+class EDD_DB_Schema_Logs_File_Downloads extends EDD_DB_Schema {
 
 	/**
 	 * Array of database column objects
