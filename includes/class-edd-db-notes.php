@@ -293,6 +293,17 @@ class EDD_DB_Notes extends EDD_DB {
 	private function parse_where( $args ) {
 		$where = '';
 
+		// Specific object ID
+		if ( ! empty( $args['object_id'] ) ) {
+			if ( is_array( $args['object_id'] ) ) {
+				$types = implode( "','", array_map( 'sanitize_text_field', $args['object_id'] ) );
+			} else {
+				$types = sanitize_text_field( $args['object_id'] );
+			}
+
+			$where .= " AND `object_id` IN( '{$types}' ) ";
+		}
+
 		// Specific object types
 		if ( ! empty( $args['object_type'] ) ) {
 			if ( is_array( $args['object_type'] ) ) {
@@ -374,7 +385,7 @@ class EDD_DB_Notes extends EDD_DB {
 
 		// Specific search query
 		if ( ! empty( $args['search'] ) ) {
-			$where .= " AND ( note LIKE '%%" . $args['search'] . "%%' )";
+			$where .= " AND ( content LIKE '%%" . $args['search'] . "%%' )";
 		}
 
 		if ( ! empty( $where ) ) {
