@@ -258,7 +258,7 @@ class EDD_DB_Notes extends EDD_DB {
 
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $key => $note_id ) {
-					$notes[ $key ] = new EDD\Note( $note_id );
+					$notes[ $key ] = new EDD\Notes\Note( $note_id );
 				}
 
 				wp_cache_set( $cache_key, $notes, 'notes', 3600 );
