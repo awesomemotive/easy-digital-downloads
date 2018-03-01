@@ -294,8 +294,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-api-requests.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-file-downloads.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-log-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-log-file-downloads.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-items.php';
