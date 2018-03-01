@@ -82,7 +82,8 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'searchable' => true
 		),
 
 		// description
