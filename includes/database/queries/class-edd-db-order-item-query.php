@@ -38,6 +38,15 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 	 */
 	public $table_alias = 'oi';
 
+	/**
+	 * Name of class used to setup the database schema
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $table_schema = 'EDD_DB_Schema_Order_Items';
+
 	/** Item ******************************************************************/
 
 	/**
