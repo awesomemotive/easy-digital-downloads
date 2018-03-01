@@ -1551,20 +1551,25 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 }
 
 /**
- * Deletes a payment note
+ * Deletes a payment note.
  *
  * @since 1.6
- * @param int $comment_id The comment ID to delete
- * @param int $payment_id The payment ID the note is connected to
- * @return bool True on success, false otherwise
+ * @since 3.0 Updated to use the edd_notes custom table to store notes.
+ *
+ * @param int $note_id The Note ID to delete.
+ * @param int $payment_id The payment ID the note is connected to.
+ * @return bool True on success, false otherwise.
  */
-function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
-	if( empty( $comment_id ) )
+function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
+	if ( empty( $note_id ) ) {
 		return false;
+	}
 
-	do_action( 'edd_pre_delete_payment_note', $comment_id, $payment_id );
-	$ret = wp_delete_comment( $comment_id, true );
-	do_action( 'edd_post_delete_payment_note', $comment_id, $payment_id );
+	do_action( 'edd_pre_delete_payment_note', $note_id, $payment_id );
+
+	$ret = EDD()->notes->delete( $note_id );
+
+	do_action( 'edd_post_delete_payment_note', $note_id, $payment_id );
 
 	return $ret;
 }
