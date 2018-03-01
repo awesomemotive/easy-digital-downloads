@@ -10,6 +10,7 @@ class Note extends \WP_UnitTest_Factory_For_Thing {
 			'object_id'   => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'object_type' => 'payment',
 			'content'     => new \WP_UnitTest_Generator_Sequence( 'Payment status changed for object with ID: %d' ),
+			'user_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
 		);
 	}
 
