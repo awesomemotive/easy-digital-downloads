@@ -21,13 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param string $amount Price amount to format
  * @return string $amount Newly sanitized amount
  */
-function edd_sanitize_amount( $amount ) {
+function edd_sanitize_amount( $amount = '' ) {
 	$is_negative   = false;
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
 
 	// Sanitize the amount
-	if ( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
+	if ( $decimal_sep === ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 		if ( ( $thousands_sep == '.' || $thousands_sep == ' ' ) && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
 		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
@@ -35,15 +35,17 @@ function edd_sanitize_amount( $amount ) {
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
-	} elseif( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	} elseif( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
-	if( $amount < 0 ) {
+	// Negative
+	if ( $amount < 0 ) {
 		$is_negative = true;
 	}
 
-	$amount   = preg_replace( '/[^0-9\.]/', '', $amount );
+	// Only numbers
+	$amount = preg_replace( '/[^0-9\.]/', '', $amount );
 
 	/**
 	 * Filter number of decimals to use for prices
@@ -54,9 +56,9 @@ function edd_sanitize_amount( $amount ) {
 	 * @param int|string $amount Price
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
-	$amount   = number_format( (double) $amount, $decimals, '.', '' );
+	$amount   = number_format( $amount, $decimals, '.', '' );
 
-	if( $is_negative ) {
+	if ( true === $is_negative ) {
 		$amount *= -1;
 	}
 
@@ -119,35 +121,36 @@ function edd_format_amount( $amount, $decimals = true ) {
  * @return array $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
-	if( empty( $currency ) ) {
 
+	// Fallback to default currency
+	if ( empty( $currency ) ) {
 		$currency = edd_get_currency();
-
 	}
 
+	// Default vars
 	$position = edd_get_option( 'currency_position', 'before' );
-
 	$negative = $price < 0;
 
-	if( $negative ) {
-		$price = substr( $price, 1 ); // Remove proceeding "-" -
+	// Remove proceeding "-" -
+	if ( true === $negative ) {
+		$price = substr( $price, 1 );
 	}
 
 	$symbol = edd_currency_symbol( $currency );
 
-	if ( $position == 'before' ):
+	if ( 'before' === $position ):
 		switch ( $currency ):
-			case "GBP" :
-			case "BRL" :
-			case "EUR" :
-			case "USD" :
-			case "AUD" :
-			case "CAD" :
-			case "HKD" :
-			case "MXN" :
-			case "NZD" :
-			case "SGD" :
-			case "JPY" :
+			case 'GBP' :
+			case 'BRL' :
+			case 'EUR' :
+			case 'USD' :
+			case 'AUD' :
+			case 'CAD' :
+			case 'HKD' :
+			case 'MXN' :
+			case 'NZD' :
+			case 'SGD' :
+			case 'JPY' :
 				$formatted = $symbol . $price;
 				break;
 			default :
@@ -157,16 +160,16 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case "GBP" :
-			case "BRL" :
-			case "EUR" :
-			case "USD" :
-			case "AUD" :
-			case "CAD" :
-			case "HKD" :
-			case "MXN" :
-			case "SGD" :
-			case "JPY" :
+			case 'GBP' :
+			case 'BRL' :
+			case 'EUR' :
+			case 'USD' :
+			case 'AUD' :
+			case 'CAD' :
+			case 'HKD' :
+			case 'MXN' :
+			case 'SGD' :
+			case 'JPY' :
 				$formatted = $price . $symbol;
 				break;
 			default :
@@ -176,8 +179,8 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	endif;
 
-	if( $negative ) {
-		// Prepend the mins sign before the currency sign
+	// Prepend the mins sign before the currency sign
+	if ( true === $negative ) {
 		$formatted = '-' . $formatted;
 	}
 
