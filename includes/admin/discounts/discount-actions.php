@@ -188,7 +188,7 @@ function edd_admin_edit_discount( $data = array() ) {
 	$updated = edd_update_discount( $discount_id, $to_update );
 	$arg     = ! empty( $updated )
 		? 'discount_updated'
-		: 'discount_update_failed';
+		: 'discount_not_changed';
 
 	// Redirect
 	wp_redirect( add_query_arg( 'edd-message', $arg, $data['edd-redirect'] ) );
