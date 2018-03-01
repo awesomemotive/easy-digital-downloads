@@ -81,7 +81,7 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( $discount->amount ); ?>" />
+						<input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo edd_sanitize_amount( $discount->amount ); ?>" />
 						<p class="description edd-amount-description flat"<?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
 						<p class="description edd-amount-description percent"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 					</td>
