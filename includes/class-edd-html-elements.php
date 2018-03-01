@@ -389,15 +389,16 @@ class EDD_HTML_Elements {
 	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
 		$args = array( 'nopaging' => true );
 
-		if ( ! empty( $status ) )
+		if ( ! empty( $status ) ) {
 			$args['post_status'] = $status;
+		}
 
 		$discounts = edd_get_discounts( $args );
 		$options   = array();
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
-				$options[ absint( $discount->ID ) ] = esc_html( $discount->name );
+				$options[ absint( $discount->id ) ] = esc_html( $discount->name );
 			}
 		} else {
 			$options[0] = __( 'No discounts found', 'easy-digital-downloads' );
@@ -805,5 +806,4 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
-
 }
