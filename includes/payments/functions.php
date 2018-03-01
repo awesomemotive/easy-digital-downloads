@@ -1597,15 +1597,15 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
-		'note_id'    => $note->comment_ID,
+		'note_id'    => $note->id,
 		'payment_id' => $payment_id
-	) ), 'edd_delete_payment_note_' . $note->comment_ID );
+	) ), 'edd_delete_payment_note_' . $note->id );
 
-	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
+	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->id . '">';
 		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
-			$note_html .= make_clickable( $note->comment_content );
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '<br/>';
+			$note_html .= make_clickable( $note->content );
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->id ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';
 	$note_html .= '</div>';
 
