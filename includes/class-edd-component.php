@@ -49,6 +49,15 @@ class EDD_Component {
 	public $object = false;
 
 	/**
+	 * Array of interface objects instantiated during init
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $interfaces = array();
+
+	/**
 	 * Construct an EDD component
 	 *
 	 * @since 3.0.0
@@ -88,9 +97,9 @@ class EDD_Component {
 		// Loop through keys and setup
 		foreach ( $args as $key => $value ) {
 			if ( in_array( $key, $class_keys, true ) && class_exists( $value ) ) {
-				$this->{$key} = new $value;
+				$this->interfaces[ $key ] = new $value;
 			} else {
-				$this->{$key} = $value;
+				$this->interfaces[ $key ] = $value;
 			}
 		}
 
@@ -112,5 +121,19 @@ class EDD_Component {
 
 		// Setup the meta data table
 		$this->meta = new $this->meta;
+	}
+
+	/**
+	 * Return an interface object
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $name
+	 * @return object
+	 */
+	public function get_interface( $name = '' ) {
+		return isset( $this->interfaces[ $name ] )
+			? $this->interfaces[ $name ]
+			: false;
 	}
 }
