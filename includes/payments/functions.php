@@ -1511,17 +1511,24 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
  * Add a note to a payment
  *
  * @since 1.4
- * @param int $payment_id The payment ID to store a note for
- * @param string $note The note to store
- * @return int The new note ID
+ * @since 3.0 Updated to use the edd_notes custom table to store notes.
+ *
+ * @param int    $payment_id The payment ID to store a note for.
+ * @param string $note       The content of the note.
+ * @return int|false The new note ID, false otherwise.
  */
 function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
-	if ( empty( $payment_id ) )
+	if ( empty( $payment_id ) ) {
 		return false;
+	}
 
 	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
 
-	$note_id = wp_insert_comment( wp_filter_comment( array(
+	/**
+	 * For backwards compatibility purposes, we need to pass the data to wp_filter_comment in the event that the note
+	 * data is filtered using the WordPress Core filters prior to be inserted into the database.
+	 */
+	$filtered_data = wp_filter_comment( array(
 		'comment_post_ID'      => $payment_id,
 		'comment_content'      => $note,
 		'user_id'              => is_admin() ? get_current_user_id() : 0,
@@ -1534,8 +1541,9 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'comment_author_url'   => '',
 		'comment_author_email' => '',
 		'comment_type'         => 'edd_payment_note'
+	) );
 
-	) ) );
+	$note_id = EDD()->notes->insert( $filtered_data );
 
 	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
 
