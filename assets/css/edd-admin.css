@@ -152,6 +152,21 @@ a.edd-delete:hover {
 	width: 125px;
 }
 
+/* List Tables
+-------------------------------------------------------------- */
+
+.wp-list-table.discounts .column-amount,
+.wp-list-table.discounts .column-status,
+.wp-list-table.discounts .column-use_count {
+	width: 10%;
+}
+
+.wp-list-table.discounts .column-code,
+.wp-list-table.discounts .column-start-date,
+.wp-list-table.discounts .column-end-date {
+	width: 15%;
+}
+
 /* Payment History Styles
 -------------------------------------------------------------- */
 .edit-php.post-type-download .wrap .wp-heading-inline,
