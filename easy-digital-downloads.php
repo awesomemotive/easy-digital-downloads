@@ -271,8 +271,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-logs.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-log-api-requests.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-log-file-downloads.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-logs-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-logs-file-downloads.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-schema-order-items.php';
@@ -294,8 +294,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-log-api-requests.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-log-file-downloads.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-logs-file-downloads.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-edd-db-table-order-items.php';
@@ -503,18 +503,18 @@ final class Easy_Digital_Downloads {
 
 		// Register log api request
 		edd_register_component( 'log_api_request', array(
-			'schema' => 'EDD_DB_Schema_Log_Api_Requests',
-			'table'  => 'EDD_DB_Table_Log_Api_Requests',
-			'query'  => 'EDD_DB_Query_Log_Api_Requests',
+			'schema' => 'EDD_DB_Schema_Logs_Api_Requests',
+			'table'  => 'EDD_DB_Table_Logs_Api_Requests',
+			'query'  => 'EDD_DB_Query_Logs_Api_Requests',
 			'object' => 'EDD_Log_Api_Request',
 			'meta'   => false
 		) );
 
 		// Register log api request
 		edd_register_component( 'log_file_download', array(
-			'schema' => 'EDD_DB_Schema_Log_File_Downloads',
-			'table'  => 'EDD_DB_Table_Log_File_Downloads',
-			'query'  => 'EDD_DB_Query_Log_File_Downloads',
+			'schema' => 'EDD_DB_Schema_Logs_File_Downloads',
+			'table'  => 'EDD_DB_Table_Logs_File_Downloads',
+			'query'  => 'EDD_DB_Query_Logs_File_Downloads',
 			'object' => 'EDD_Log_File_Download',
 			'meta'   => false
 		) );
