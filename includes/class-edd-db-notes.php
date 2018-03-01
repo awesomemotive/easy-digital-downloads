@@ -383,6 +383,11 @@ class EDD_DB_Notes extends EDD_DB {
 			}
 		}
 
+		// Specific note content
+		if ( ! empty( $args['content'] ) ) {
+			$where .= " AND ( content = '" . $args['content'] . "' )";
+		}
+
 		// Specific search query
 		if ( ! empty( $args['search'] ) ) {
 			$where .= " AND ( content LIKE '%%" . $args['search'] . "%%' )";
