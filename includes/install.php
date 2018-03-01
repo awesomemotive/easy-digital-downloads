@@ -31,21 +31,15 @@ function edd_install( $network_wide = false ) {
 	global $wpdb;
 
 	if ( is_multisite() && $network_wide ) {
-
 		foreach ( $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs LIMIT 100" ) as $blog_id ) {
-
 			switch_to_blog( $blog_id );
 			edd_run_install();
 			restore_current_blog();
-
 		}
 
 	} else {
-
 		edd_run_install();
-
 	}
-
 }
 register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 
@@ -56,9 +50,9 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  * @return void
  */
 function edd_run_install() {
-	global $wpdb, $edd_options;
+	global $edd_options;
 
-	if( ! function_exists( 'edd_create_protection_files' ) ) {
+	if ( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 	}
 
@@ -233,41 +227,13 @@ function edd_run_install() {
  * @return void
  */
 function edd_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-
 	if ( is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
-
 		switch_to_blog( $blog_id );
 		edd_install();
 		restore_current_blog();
-
 	}
-
 }
 add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
-
-
-/**
- * Drop our custom tables when a mu site is deleted
- *
- * @deprecated 3.0   Handled by WP_DB_Table
- * @since      2.5
- * @param      array $tables  The tables to drop
- * @param      int   $blog_id The Blog ID being deleted
- * @return     array          The tables to drop
- */
-function edd_wpmu_drop_tables( $tables, $blog_id ) {
-
-	switch_to_blog( $blog_id );
-	$customers_db     = new EDD_DB_Customers();
-	$customer_meta_db = new EDD_DB_Customer_Meta();
-	if ( $customers_db->installed() ) {
-		$tables[] = $customers_db->table_name;
-		$tables[] = $customer_meta_db->table_name;
-	}
-	restore_current_blog();
-
-	return $tables;
-}
 
 /**
  * Post-installation
