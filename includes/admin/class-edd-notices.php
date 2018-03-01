@@ -126,6 +126,9 @@ class EDD_Notices {
 					case 'discount_updated' :
 						$notices['updated']['edd-discount-updated'] = __( 'Discount code updated.', 'easy-digital-downloads' );
 						break;
+					case 'discount_not_changed' :
+						$notices['updated']['edd-discount-not-changed'] = __( 'No changes were made to that discount code.', 'easy-digital-downloads' );
+						break;
 					case 'discount_update_failed' :
 						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating that discount code, please try again.', 'easy-digital-downloads' );
 						break;
