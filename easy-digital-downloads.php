@@ -178,7 +178,7 @@ final class Easy_Digital_Downloads {
 	}
 
 	/**
-	 * Disable unserializing of the class.
+	 * Disable un-serializing of the class.
 	 *
 	 * @since 1.6
 	 * @access protected
@@ -188,7 +188,17 @@ final class Easy_Digital_Downloads {
 		// Unserializing instances of the class is forbidden.
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
 	}
-	
+
+	/**
+	 * Backwards compatibility for some database properties
+	 *
+	 * This is probably still not working right, so don't count on it yet.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
 	public function __get( $key = '' ) {
 		switch ( $key  ) {
 			case 'customers' :
