@@ -670,7 +670,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
 	if ( $type == 'flat' ) {
 		return edd_currency_filter( edd_format_amount( $amount ) );
 	} else {
-		return $amount . '%';
+		return edd_format_amount( $amount ) . '%';
 	}
 }
 
