@@ -274,8 +274,8 @@ function edd_ajax_apply_discount() {
 		}
 
 		if ( edd_is_discount_valid( $discount_code, $user ) ) {
-			$discount  = edd_get_discount_by_code( $discount_code );
-			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
+			$discount  = edd_get_discount_by( 'code', $discount_code );
+			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->id ), edd_get_discount_amount( $discount->id ) );
 			$discounts = edd_set_cart_discount( $discount_code );
 			$total     = edd_get_cart_total( $discounts );
 
@@ -650,7 +650,6 @@ add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
  * @return void
  */
 function edd_ajax_user_search() {
-	global $wpdb;
 
 	$search         = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results        = array();
