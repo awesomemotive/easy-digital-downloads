@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array $output Response messages
  */
 function edd_edit_customer( $args ) {
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+	$customer_edit_role = edd_get_edit_customers_role();
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
@@ -58,7 +58,6 @@ function edd_edit_customer( $args ) {
 		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
-
 	}
 
 	// Record this for later
@@ -106,7 +105,6 @@ function edd_edit_customer( $args ) {
 			$address['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
 			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
 		}
-
 	}
 
 	// Sanitize the inputs
@@ -152,9 +150,7 @@ function edd_edit_customer( $args ) {
 		$output['customer_info'] = $customer_data;
 
 	} else {
-
 		$output['success'] = false;
-
 	}
 
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
@@ -166,10 +162,8 @@ function edd_edit_customer( $args ) {
 	}
 
 	return $output;
-
 }
 add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
-
 
 /**
  * Add an email address to the customer from within the admin and log a customer note
@@ -178,9 +172,8 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  * @param  array $args  Array of arguments: nonce, customer id, and email address
  * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
  */
-function edd_add_customer_email( $args ) {
-
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+function edd_add_customer_email( $args = array() ) {
+	$customer_edit_role = edd_get_edit_customers_role();
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
@@ -236,7 +229,6 @@ function edd_add_customer_email( $args ) {
 					'success' => false,
 					'message' => __( 'Email address is already associated with another customer.', 'easy-digital-downloads' ),
 				);
-
 			}
 
 		} else {
@@ -257,10 +249,7 @@ function edd_add_customer_email( $args ) {
 				$customer_note =  sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), $email, $user_login );
 				$customer->add_note( $customer_note );
 			}
-
-
 		}
-
 	}
 
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
@@ -272,7 +261,6 @@ function edd_add_customer_email( $args ) {
 	}
 
 	return $output;
-
 }
 add_action( 'edd_customer-add-email', 'edd_add_customer_email', 10, 1 );
 
@@ -303,9 +291,7 @@ function edd_remove_customer_email() {
 
 	$customer = new EDD_Customer( $_GET['id'] );
 	if ( $customer->remove_email( $_GET['email'] ) ) {
-
-		$url = add_query_arg( 'edd-message', 'email-removed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
-
+		$url           = add_query_arg( 'edd-message', 'email-removed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
 		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
@@ -347,9 +333,7 @@ function edd_set_customer_primary_email() {
 
 	$customer = new EDD_Customer( $_GET['id'] );
 	if ( $customer->set_primary_email( $_GET['email'] ) ) {
-
-		$url = add_query_arg( 'edd-message', 'primary-email-updated', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
-
+		$url           = add_query_arg( 'edd-message', 'primary-email-updated', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
 		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
@@ -406,14 +390,16 @@ function edd_customer_save_note( $args ) {
 
 	if ( ! empty( $new_note ) && ! empty( $customer->id ) ) {
 
-		ob_start();
-		?>
+		ob_start(); ?>
+
 		<div class="customer-note-wrapper dashboard-comment-wrap comment-item">
 			<span class="note-content-wrap">
 				<?php echo stripslashes( $new_note ); ?>
 			</span>
 		</div>
+
 		<?php
+
 		$output = ob_get_contents();
 		ob_end_clean();
 
@@ -436,9 +422,8 @@ add_action( 'edd_add-customer-note', 'edd_customer_save_note', 10, 1 );
  * @param  array $args The $_POST array being passed
  * @return int         Whether it was a successful deletion
  */
-function edd_customer_delete( $args ) {
-
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+function edd_customer_delete( $args = array() ) {
+	$customer_edit_role = edd_get_edit_customers_role();
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to delete this customer.', 'easy-digital-downloads' ) );
@@ -492,28 +477,22 @@ function edd_customer_delete( $args ) {
 				foreach ( $payments_array as $payment_id ) {
 					edd_update_payment_meta( $payment_id, '_edd_payment_customer_id', 0 );
 				}
-
 			}
 
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&edd-message=customer-deleted' );
 
 		} else {
-
 			edd_set_error( 'edd-customer-delete-failed', __( 'Error deleting customer', 'easy-digital-downloads' ) );
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer_id );
-
 		}
 
 	} else {
-
 		edd_set_error( 'edd-customer-delete-invalid-id', __( 'Invalid Customer ID', 'easy-digital-downloads' ) );
 		$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers' );
-
 	}
 
 	wp_redirect( $redirect );
 	exit;
-
 }
 add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
 
@@ -522,11 +501,10 @@ add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
  *
  * @since  2.3
  * @param  array $args Array of arguments
- * @return bool        If the disconnect was sucessful
+ * @return bool        If the disconnect was successful
  */
-function edd_disconnect_customer_user_id( $args ) {
-
-	$customer_edit_role = apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
+function edd_disconnect_customer_user_id( $args = array() ) {
+	$customer_edit_role = edd_get_edit_customers_role();
 
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
@@ -576,7 +554,6 @@ function edd_disconnect_customer_user_id( $args ) {
 	}
 
 	return $output;
-
 }
 add_action( 'edd_disconnect-userid', 'edd_disconnect_customer_user_id', 10, 1 );
 
@@ -608,7 +585,6 @@ function edd_process_admin_user_verification() {
 
 	wp_safe_redirect( $url );
 	exit;
-
 }
 add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
 
@@ -622,30 +598,14 @@ function edd_register_batch_single_customer_recount_tool() {
 add_action( 'edd_register_batch_exporter', 'edd_register_batch_single_customer_recount_tool', 10 );
 
 /**
- * Loads the tools batch processing class for recounding stats for a single customer
+ * Loads the tools batch processing class for recounting stats for a single customer
  *
  * @since  2.5
  * @param  string $class The class being requested to run for the batch export
  * @return void
  */
 function edd_include_single_customer_recount_tool_batch_processer( $class ) {
-
 	if ( 'EDD_Tools_Recount_Single_Customer_Stats' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/class-edd-tools-recount-single-customer-stats.php';
 	}
-
 }
-
-/**
- * Sets up additional action calls for the set_last_changed method in the EDD_DB_Customers class.
- *
- * @since  2.8.7
- * @param  void
- * @return void
- */
-function edd_customer_action_calls() {
-	add_action( 'added_customer_meta',   array( EDD()->customers, 'set_last_changed' ) );
-	add_action( 'updated_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
-	add_action( 'deleted_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
-}
-//add_action( 'init', 'edd_customer_action_calls' );
