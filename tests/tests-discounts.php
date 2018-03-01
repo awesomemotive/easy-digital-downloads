@@ -1144,14 +1144,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_remove_discount()
+	 * @covers edd_delete_discount()
 	 * @covers edd_get_discount()
 	 */
 	public function test_deletion_of_discount() {
-		edd_remove_discount( self::$discount_id );
+		edd_delete_discount( self::$discount_id );
 		$this->assertFalse( edd_get_discount( self::$discount_id ) );
 
-		edd_remove_discount( self::$negativediscount_id );
+		edd_delete_discount( self::$negativediscount_id );
 		$this->assertFalse( edd_get_discount( self::$negativediscount_id ) );
 	}
 
