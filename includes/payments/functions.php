@@ -1485,23 +1485,22 @@ function edd_get_purchase_id_by_transaction_id( $key ) {
  * Retrieve all notes attached to a purchase
  *
  * @since 1.4
- * @param int $payment_id The payment ID to retrieve notes for
- * @param string $search Search for notes that contain a search term
- * @return array $notes Payment Notes
+ * @since 3.0 Updated to use the edd_notes custom table to store notes.
+ *
+ * @param int    $payment_id The payment ID to retrieve notes for.
+ * @param string $search     Search for notes that contain a search term.
+ * @return array|bool $notes Payment Notes, false otherwise.
  */
 function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
-
 	if ( empty( $payment_id ) && empty( $search ) ) {
 		return false;
 	}
 
-	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10 );
-
-	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
-
-	add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
+	$notes = EDD()->notes->get_notes( array(
+		'object_id' => $payment_id,
+		'order'     => 'ASC',
+		'search'    => '',
+	) );
 
 	return $notes;
 }
