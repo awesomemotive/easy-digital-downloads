@@ -390,7 +390,9 @@ class EDD_DB_Query {
 
 		// Return an int of the count
 		if ( ! empty( $this->query_vars['count'] ) ) {
-			return intval( $item_ids );
+			if ( empty( $this->query_vars['groupby'] ) ) {
+				$item_ids = intval( $item_ids );
+			}
 		}
 
 		// Set items from IDs
@@ -600,6 +602,12 @@ class EDD_DB_Query {
 	 */
 	private function set_items( $item_ids = array() ) {
 
+		// Bail if counting, to avoid shaping items
+		if ( ! empty( $this->query_vars['count'] ) ) {
+			$this->items = $item_ids;
+			return;
+		}
+
 		// Cast to integers
 		$item_ids = array_map( 'intval', $item_ids );
 
@@ -780,9 +788,7 @@ class EDD_DB_Query {
 		$groupby = $this->parse_groupby( $this->query_vars['groupby'] );
 
 		// Fields
-		$fields = ! empty( $this->query_vars['count'] )
-			? 'COUNT(*)'
-			: "{$this->table_alias}.{$this->get_primary_column_name()}";
+		$fields  = $this->parse_fields( $this->query_vars['fields'] );
 
 		/**
 		 * Filters the item query clauses.
@@ -800,7 +806,9 @@ class EDD_DB_Query {
 
 		// Return count
 		if ( ! empty( $this->query_vars['count'] ) ) {
-			return intval( $this->get_db()->get_var( $this->request ) );
+			return empty( $this->query_vars['groupby'] )
+				? $this->get_db()->get_var( $this->request )
+				: $this->get_db()->get_results( $this->request, ARRAY_A );
 		}
 
 		// Get IDs
@@ -1064,6 +1072,63 @@ class EDD_DB_Query {
 	}
 
 	/**
+	 * Parse which fields to query for
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string  $fields
+	 * @param boolean $alias
+	 *
+	 * @return string
+	 */
+	private function parse_fields( $fields = '', $alias = true ) {
+
+		// No fields
+		if ( empty( $fields ) ) {
+
+			// Doing count?
+			if ( ! empty( $this->query_vars['count'] ) ) {
+
+				// Possible fields to group by
+				$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], false );
+				$groupby_names = ! empty( $groupby_names )
+					? "{$groupby_names}"
+					: '';
+
+				// Group by or total count
+				$fields = ! empty( $groupby_names )
+					? "{$groupby_names}, COUNT(*) as count"
+					: 'COUNT(*)';
+
+			// Not doing a count, so use primary column
+			} else {
+				$primary = $this->get_primary_column_name();
+				$fields  = ( true === $alias )
+					? "{$this->table_alias}.{$primary}"
+					: $primary;
+			}
+
+		// Specific fields are being requested
+		} else {
+			$fields  = (array) $this->query_vars['fields'];
+			$results = array();
+
+			// Maybe alias keys
+			foreach ( $fields as $field ) {
+				$results[] = ( true === $alias )
+					? "{$this->table_alias}.{$field}"
+					: $field;
+			}
+
+			// Implode
+			$fields = implode( ', ', $fields );
+		}
+
+		// Return string of fields
+		return $fields;
+	}
+
+	/**
 	 * Parses and sanitizes the 'groupby' keys passed into the item query
 	 *
 	 * @since 3.0.0
@@ -1071,7 +1136,7 @@ class EDD_DB_Query {
 	 * @param string $groupby
 	 * @return string
 	 */
-	private function parse_groupby( $groupby = '' ) {
+	private function parse_groupby( $groupby = '', $alias = true ) {
 
 		// Bail if empty
 		if ( empty( $groupby ) ) {
@@ -1095,7 +1160,9 @@ class EDD_DB_Query {
 
 		// Prepend table alias to key
 		foreach ( $intersect as $key ) {
-			$retval[] = "{$this->table_alias}.{$key}";
+			$retval[] = ( true === $alias )
+				? "{$this->table_alias}.{$key}"
+				: $key;
 		}
 
 		// Separate sanitized columns

@@ -88,7 +88,22 @@ function edd_get_discounts( $args = array() ) {
 	return $discounts->items;
 }
 
+/**
+ * Query for and return array of discount counts, keyed by status
+ *
+ * @since 3.0.0
+ *
+ * @return array
+ */
 function edd_get_discount_counts() {
+
+	// Default statuses
+	$defaults = array(
+		'active'   => 0,
+		'inactive' => 0,
+		'expired'  => 0,
+		'total'    => 0
+	);
 
 	// Query for count
 	$counts = new EDD_Discount_Query( array(
@@ -100,8 +115,23 @@ function edd_get_discount_counts() {
 		'update_meta_cache' => false
 	) );
 
-	// Return count
-	return $counts->items;
+	// Default array
+	$r = array();
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts->items ) ) {
+
+		// Loop through statuses
+		foreach ( $counts->items as $status ) {
+			$r[ $status['status'] ] = absint( $status['count'] );
+		}
+
+		// Total
+		$r['total'] = array_sum( $r );
+	}
+
+	// Return counts
+	return array_merge( $defaults, $r );
 }
 
 /**
