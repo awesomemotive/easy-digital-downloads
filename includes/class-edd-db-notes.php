@@ -106,6 +106,19 @@ class EDD_DB_Notes extends EDD_DB {
 			'user_id'      => 0,
 		) );
 
+		$legacy_args_mapping = array(
+			'comment_post_ID' => 'object_id',
+			'comment_content' => 'content',
+			'comment_type'    => 'object_type',
+		);
+
+		foreach ( $legacy_args_mapping as $key => $value ) {
+			if ( array_key_exists( $key, $data ) ) {
+				$data[ $value ] = $data[ $key ];
+				unset( $data[ $key ] );
+			}
+		}
+
 		if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
 			return false;
 		}
