@@ -58,7 +58,7 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( $discount->code ); ?>" pattern="[a-zA-Z0-9-_]+" />
+						<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( $discount->code ); ?>" pattern="[a-zA-Z0-9-_]+" class="code" />
 						<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
