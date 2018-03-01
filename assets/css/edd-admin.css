@@ -149,7 +149,7 @@ a.edd-delete:hover {
 #edd-add-discount input.edd-price-field,
 #edd-edit-discount input.edd-price-field {
 	padding: 3px 5px;
-	width: 75px;
+	width: 125px;
 }
 
 /* Payment History Styles
@@ -482,7 +482,7 @@ textarea#edd-payment-note {
 }
 input[class*="edd-price-field"] {
 	padding: 3px 5px;
-	width: 75px;
+	width: 125px;
 }
 [class*="item_"] [class*="edd-payment-details-download-"][type="number"].small-text,
 #edd-order-download-quantity[type="number"].small-text,
@@ -495,7 +495,7 @@ input[class*="edd-price-field"] {
 }
 .item_tax .edd-payment-details-download-item-tax[type="number"].small-text,
 #edd-order-download-tax[type="text"].small-text {
-	width: 75px;
+	width: 125px;
 }
 .edd_repeatable_upload_wrapper .pricing select,
 .edd_repeatable_product_wrapper .edd-select {
