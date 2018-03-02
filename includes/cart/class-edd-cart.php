@@ -216,7 +216,7 @@ class EDD_Cart {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 		if ( empty( $this->contents ) ) {
-			return false;
+			return array();
 		}
 
 		$details = array();
