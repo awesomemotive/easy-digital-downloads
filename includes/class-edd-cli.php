@@ -364,18 +364,18 @@ class EDD_CLI extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 * 	 --email=<customer_email>: The email address of the customer to retrieve
-	 * 
+	 *
 	 * ## EXAMPLES
-	 * 
+	 *
 	 * wp edd sales
 	 * wp edd sales --email=john@test.com
 	 */
 	public function sales( $args, $assoc_args ) {
-		
+
 		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )  ? $assoc_args['email'] : '';
-		
-		global $wp_query;	
-	
+
+		global $wp_query;
+
 		$wp_query->query_vars['email'] = $email;
 
 		$sales = $this->api->get_recent_sales();
@@ -528,11 +528,13 @@ class EDD_CLI extends WP_CLI_Command {
 		$id         = false;
 		$price_id   = false;
 		$tax        = 0;
-		$email      = 'guest@local.dev';
+		$email      = 'guest@edd.local';
 		$fname      = 'Pippin';
 		$lname      = 'Williamson';
 		$date       = false;
 		$range      = 30;
+
+		$generate_users = false;
 
 		if( count( $assoc_args ) > 0 ) {
 			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] )             : $number;
@@ -544,6 +546,8 @@ class EDD_CLI extends WP_CLI_Command {
 			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : $lname;
 			$date       = ( array_key_exists( 'date', $assoc_args ) )     ? sanitize_text_field( $assoc_args['date'] )  : $date;
 			$range      = ( array_key_exists( 'range', $assoc_args ) )    ? absint( $assoc_args['range'] )              : $range;
+
+			$generate_users = ( array_key_exists( 'generate_users', $assoc_args ) ) ? (bool) absint( $assoc_args['generate_users'] ) : $generate_users;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -683,6 +687,23 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			if ( $generate_users ) {
+				$fname  = $this->get_fname();
+				$lname  = $this->get_lname();
+				$domain = $this->get_domain();
+				$tld    = $this->get_tld();
+
+				$email  = $fname . '.' . $lname . '@' . $domain . '.' . $tld;
+
+				$user_info = array(
+					'id'            => 0,
+					'email'         => $email,
+					'first_name'    => $fname,
+					'last_name'     => $lname,
+					'discount'      => 'none'
+				);
+			}
+
 			$purchase_data = array(
 				'price'	        => edd_sanitize_amount( $total ),
 				'tax'           => 0,
@@ -721,5 +742,39 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;
+	}
+
+	protected function get_fname() {
+		$names = array(
+			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
+			'Marisa','Maybelle','Onie','Donnette','Henry','Sheryll','Leighann','Wilson',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	protected function get_lname() {
+		$names = array(
+			'Warner','Roush','Lenahan','Theiss','Sack','Troutt','Vanderburg','Lisi','Lemons','Christon','Kogut',
+			'Broad','Wernick','Horstmann','Schoenfeld','Dolloff','Murph','Shipp','Hursey','Jacobi',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	protected function get_domain() {
+		$domains = array(
+			'example', 'edd', 'rcp', 'affwp',
+		);
+
+		return $domains[ rand( 0, ( count( $domains ) - 1 ) ) ];
+	}
+
+	protected function get_tld() {
+		$tlds = array(
+			'local', 'test', 'example', 'localhost', 'invalid',
+		);
+
+		return $tlds[ rand( 0, ( count( $tlds ) - 1 ) ) ];
 	}
 }

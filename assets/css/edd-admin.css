@@ -136,6 +136,37 @@ a.edd-delete:hover {
 
 /* Discount Code Styles
 -------------------------------------------------------------- */
+table.discounts th,
+table.discounts td {
+	box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1);
+}
+
+table.discounts .active th.check-column {
+	border-left: 4px solid #00a0d2;
+}
+
+table.discounts .active th,
+table.discounts .active td {
+	background-color: #f7fcfe;
+}
+
+table.discounts .expired th.check-column {
+	border-left: 4px solid #a00;
+}
+
+table.discounts .expired th,
+table.discounts .expired td {
+	background-color: #ffeeee;
+}
+
+table.discounts .inactive th.check-column {
+	border-left: 4px solid #777777;
+}
+
+table.discounts .inactive th,
+table.discounts .inactive td {
+	background-color: #eeeeee;
+}
 
 #edd-products {
 	height: 100px;

@@ -51,6 +51,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$heading      = edd_do_email_tags( $heading, $payment_id );
 
 	$attachments  = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
+
 	$message      = edd_do_email_tags( edd_get_email_body_content( $payment_id, $payment_data ), $payment_id );
 
 	$emails = EDD()->emails;
@@ -58,7 +59,6 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 	$emails->__set( 'heading', $heading );
-
 
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
@@ -135,23 +135,24 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
 	$subject     = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'easy-digital-downloads' ), $payment_id ) );
 	$subject     = apply_filters( 'edd_admin_sale_notification_subject', wp_strip_all_tags( $subject ), $payment_id );
-	$subject     = edd_do_email_tags( $subject, $payment_id );
+	$subject     = wp_specialchars_decode( edd_do_email_tags( $subject, $payment_id ) );
 
-	$headers     = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
-	$headers    .= "Reply-To: ". $from_email . "\r\n";
-	//$headers  .= "MIME-Version: 1.0\r\n";
-	$headers    .= "Content-Type: text/html; charset=utf-8\r\n";
-	$headers     = apply_filters( 'edd_admin_sale_notification_headers', $headers, $payment_id, $payment_data );
+	$heading     = edd_get_option( 'sale_notification_heading', __( 'New Sale!', 'easy-digital-downloads' ) );
+	$heading     = apply_filters( 'edd_admin_sale_notification_heading', $heading, $payment_id, $payment_data );
+	$heading     = edd_do_email_tags( $heading, $payment_id );
 
 	$attachments = apply_filters( 'edd_admin_sale_notification_attachments', array(), $payment_id, $payment_data );
 
 	$message     = edd_get_sale_notification_body_content( $payment_id, $payment_data );
 
 	$emails = EDD()->emails;
+
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
+	$emails->__set( 'heading', $heading );
+
+	$headers = apply_filters( 'edd_admin_sale_notification_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
-	$emails->__set( 'heading', __( 'New Sale!', 'easy-digital-downloads' ) );
 
 	$emails->send( edd_get_admin_notice_emails(), $subject, $message, $attachments );
 

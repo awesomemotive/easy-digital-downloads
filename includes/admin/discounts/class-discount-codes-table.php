@@ -148,7 +148,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'uses'       => __( 'Uses', 'easy-digital-downloads' ),
 			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
 			'expiration' => __( 'Expiration', 'easy-digital-downloads' ),
-			'status'     => __( 'Status', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -278,6 +277,21 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		);
 
 		return $actions;
+	}
+
+	/**
+	 * Generates content for a single row of the table.
+	 *
+	 * @since 2.9
+	 *
+	 * @param object $item The current item
+	 */
+	public function single_row( $item ) {
+		$class = esc_attr( $item['status'] );
+
+		echo '<tr class="' . $class . '">';
+		$this->single_row_columns( $item );
+		echo '</tr>';
 	}
 
 	/**
