@@ -285,7 +285,8 @@ function edd_ajax_apply_discount() {
 				'total_plain' => $total,
 				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
 				'code'        => $discount_code,
-				'html'        => edd_get_cart_discounts_html( $discounts )
+				'html'        => edd_get_cart_discounts_html( $discounts ),
+				'require_payment_info'  => edd_is_payment_info_required()
 			);
 		} else {
 			$errors = edd_get_errors();

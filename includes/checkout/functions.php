@@ -601,3 +601,15 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
 	return $expiration >= time();
 
 }
+
+
+/**
+ * Is credit card required?
+ *
+ * @since 2.8
+ * @access public
+ * @return bool
+ */
+function edd_is_payment_info_required() {
+	return apply_filters( 'edd_require_payment_info', false );
+}
