@@ -1509,7 +1509,7 @@ function edd_logs_migration() {
 					'message'     => $old_log->post_content
 				);
 
-				$meta = get_post_custom( $old_log->ID );
+				$meta            = get_post_custom( $old_log->ID );
 				$meta_to_migrate = array();
 
 				foreach ( $meta as $key => $value ) {
@@ -1517,6 +1517,14 @@ function edd_logs_migration() {
 				}
 
 				$new_log_id = EDD()->logs->insert( $log_data );
+				$new_log = new EDD\Logs\Log( $new_log_id );
+				$new_log->add_meta( 'legacy_id', $old_log->ID );
+
+				if ( ! empty( $meta_to_migrate ) ) {
+					foreach ( $meta_to_migrate as $key => $value ) {
+						$new_log->add_meta( $key, $value );
+					}
+				}
 			}
 
 			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $new_log_id );
