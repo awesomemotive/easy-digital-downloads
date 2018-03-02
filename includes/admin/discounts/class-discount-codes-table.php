@@ -241,6 +241,18 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render the status column
+	 *
+	 * @access public
+	 * @since 1.9.9
+	 * @param array $item Contains all the data for the checkbox column
+	 * @return string Displays the discount status
+	 */
+	function column_status( $item ) {
+		return edd_get_discount_status_label( $item['ID'] );
+	}
+
+	/**
 	 * Message to be displayed when there are no items
 	 *
 	 * @since 1.7.2
@@ -275,7 +287,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	public function single_row( $item ) {
-		$class = 'active' === $item['status'] ? 'active' : 'inactive';
+		$class = esc_attr( $item['status'] );
 
 		echo '<tr class="' . $class . '">';
 		$this->single_row_columns( $item );

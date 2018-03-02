@@ -1,14 +1,14 @@
-# Copyright (C) 2017 Easy Digital Downloads
+# Copyright (C) 2018 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.8.11\n"
+"Project-Id-Version: Easy Digital Downloads 2.8.17\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2017-11-10 18:06:43+00:00\n"
+"POT-Creation-Date: 2018-02-06 18:16:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
 "Language: en_US\n"
@@ -89,16 +89,16 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1098
 #: includes/api/class-edd-api.php:1990 includes/api/class-edd-api.php:1995
 #: includes/api/class-edd-api.php:2007 includes/api/class-edd-api.php:2009
-#: includes/cart/class-edd-cart.php:1468 includes/cart/class-edd-cart.php:1482
-#: includes/class-edd-license-handler.php:307
+#: includes/cart/class-edd-cart.php:1470 includes/cart/class-edd-cart.php:1484
+#: includes/class-edd-license-handler.php:309
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1248
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
-#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
-#: includes/process-download.php:289 includes/process-download.php:822
-#: includes/query-filters.php:48 includes/user-functions.php:878
-#: includes/user-functions.php:903 includes/user-functions.php:956
+#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
+#: includes/process-download.php:293 includes/process-download.php:826
+#: includes/query-filters.php:48 includes/user-functions.php:880
+#: includes/user-functions.php:905 includes/user-functions.php:958
 msgid "Error"
 msgstr ""
 
@@ -114,21 +114,21 @@ msgstr ""
 msgid "View all Integrations"
 msgstr ""
 
-#: includes/admin/add-ons.php:34
+#: includes/admin/add-ons.php:37
 msgid "Apps and Integrations for Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/add-ons.php:36 includes/admin/add-ons.php:85
+#: includes/admin/add-ons.php:39 includes/admin/add-ons.php:88
 msgid "Browse All Integrations"
 msgstr ""
 
-#: includes/admin/add-ons.php:39
+#: includes/admin/add-ons.php:42
 msgid ""
 "These <em><strong>add functionality</strong></em> to your Easy Digital "
 "Downloads powered store."
 msgstr ""
 
-#: includes/admin/add-ons.php:119
+#: includes/admin/add-ons.php:122
 msgid ""
 "There was an error retrieving the extensions list from the server. Please "
 "try again later."
@@ -429,7 +429,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:289
 #: includes/admin/payments/class-payments-table.php:373
 #: includes/admin/payments/class-payments-table.php:445
-#: includes/payments/functions.php:1595
+#: includes/payments/functions.php:1597
 msgid "Delete"
 msgstr ""
 
@@ -510,7 +510,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:207
-#: includes/user-functions.php:903
+#: includes/user-functions.php:905
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -530,6 +530,15 @@ msgstr ""
 msgid "Email successfully added to customer."
 msgstr ""
 
+#: includes/admin/customers/customer-actions.php:253
+msgid "Email address %s added by %s"
+msgstr ""
+
+#: includes/admin/customers/customer-actions.php:257
+#: includes/admin/customers/customer-actions.php:355
+msgid "Email address %s set as primary by %s"
+msgstr ""
+
 #: includes/admin/customers/customer-actions.php:301
 #: includes/admin/customers/customer-actions.php:345
 #: includes/admin/customers/customer-actions.php:603
@@ -537,8 +546,13 @@ msgstr ""
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/api/class-edd-api.php:1990
-#: includes/class-edd-license-handler.php:307
+#: includes/class-edd-license-handler.php:309
 msgid "Nonce verification failed"
+msgstr ""
+
+#: includes/admin/customers/customer-actions.php:311
+#: includes/shortcodes.php:935
+msgid "Email address %s removed by %s"
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:395
@@ -901,7 +915,6 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:35
 #: includes/admin/reporting/class-download-reports-table.php:111
 #: includes/admin/reporting/export/class-batch-export-downloads.php:58
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:66
 #: includes/admin/reporting/graphing.php:334
 #: includes/admin/reporting/graphing.php:635
 #: includes/admin/reporting/logs.php:145
@@ -1906,19 +1919,16 @@ msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:254
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:68
 #: includes/payments/functions.php:754
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:255
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:70
 #: includes/payments/functions.php:752
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:256
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:69
 #: includes/payments/functions.php:753
 msgid "Abandoned"
 msgstr ""
@@ -2612,7 +2622,7 @@ msgid "Payment ID"
 msgstr ""
 
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:79
-#: includes/gateways/manual.php:73 includes/gateways/paypal-standard.php:178
+#: includes/gateways/manual.php:73 includes/gateways/paypal-standard.php:191
 msgid "Payment Error"
 msgstr ""
 
@@ -2773,27 +2783,23 @@ msgstr ""
 msgid "SKU"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:65
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:63
 msgid "Monthly Sales Activity"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:67
-msgid "Refunds"
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:64
+msgid "Gross Activity"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:71
-msgid "Cancelled"
-msgstr ""
-
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:72
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:73
 msgid "Net Activity"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:98
-msgid "Count"
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:149
+msgid "Order Count"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-earnings-report.php:98
+#: includes/admin/reporting/export/class-batch-export-earnings-report.php:150
 msgid "Gross Amount"
 msgstr ""
 
@@ -4714,7 +4720,7 @@ msgstr ""
 msgid "Copy Entire Log"
 msgstr ""
 
-#: includes/admin/tracking.php:256
+#: includes/admin/tracking.php:268
 msgid ""
 "Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
 "our newsletter and immediately be emailed a discount to the EDD shop, valid "
@@ -4722,11 +4728,11 @@ msgid ""
 "sensitive data is tracked."
 msgstr ""
 
-#: includes/admin/tracking.php:257
+#: includes/admin/tracking.php:269
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/tracking.php:258
+#: includes/admin/tracking.php:270
 msgid "Do not allow"
 msgstr ""
 
@@ -4901,27 +4907,27 @@ msgstr ""
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1954 includes/user-functions.php:1038
+#: includes/api/class-edd-api.php:1954 includes/user-functions.php:1040
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1963 includes/user-functions.php:1043
+#: includes/api/class-edd-api.php:1963 includes/user-functions.php:1045
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1965 includes/user-functions.php:1045
+#: includes/api/class-edd-api.php:1965 includes/user-functions.php:1047
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1966 includes/user-functions.php:1046
+#: includes/api/class-edd-api.php:1966 includes/user-functions.php:1048
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1967 includes/user-functions.php:1047
+#: includes/api/class-edd-api.php:1967 includes/user-functions.php:1049
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1969 includes/user-functions.php:1049
+#: includes/api/class-edd-api.php:1969 includes/user-functions.php:1051
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -4933,32 +4939,32 @@ msgstr ""
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:909
+#: includes/cart/class-edd-cart.php:911
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:911
+#: includes/cart/class-edd-cart.php:913
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1431 includes/cart/class-edd-cart.php:1494
+#: includes/cart/class-edd-cart.php:1433 includes/cart/class-edd-cart.php:1496
 #: templates/shortcode-profile-editor.php:22
 msgid "Success"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1432
+#: includes/cart/class-edd-cart.php:1434
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1468 includes/cart/class-edd-cart.php:1482
+#: includes/cart/class-edd-cart.php:1470 includes/cart/class-edd-cart.php:1484
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1476 includes/cart/class-edd-cart.php:1485
+#: includes/cart/class-edd-cart.php:1478 includes/cart/class-edd-cart.php:1487
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1494
+#: includes/cart/class-edd-cart.php:1496
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -5389,8 +5395,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:335 includes/user-functions.php:565
-#: includes/user-functions.php:574
+#: includes/class-edd-cli.php:335 includes/user-functions.php:567
+#: includes/user-functions.php:576
 msgid "Username: %s"
 msgstr ""
 
@@ -5535,15 +5541,15 @@ msgstr ""
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:566
+#: includes/class-edd-cli.php:570
 msgid "Invalid status '%s', defaulting to 'complete'"
 msgstr ""
 
-#: includes/class-edd-cli.php:604
+#: includes/class-edd-cli.php:608
 msgid "Specified ID is not a product"
 msgstr ""
 
-#: includes/class-edd-cli.php:722
+#: includes/class-edd-cli.php:743
 msgid "Created %s payments"
 msgstr ""
 
@@ -5620,24 +5626,24 @@ msgstr ""
 msgid "Enter username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:166
+#: includes/class-edd-license-handler.php:168
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:199
+#: includes/class-edd-license-handler.php:201
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:424
+#: includes/class-edd-license-handler.php:426
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. Please "
 "go to the <a href=\"%s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:463
+#: includes/class-edd-license-handler.php:465
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -6049,7 +6055,7 @@ msgid ""
 "of a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
-#: includes/deprecated-functions.php:517 includes/process-download.php:822
+#: includes/deprecated-functions.php:517 includes/process-download.php:826
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -6288,12 +6294,12 @@ msgstr ""
 
 #: includes/gateways/amazon-payments.php:1113
 #: includes/gateways/amazon-payments.php:1167
-#: includes/gateways/paypal-standard.php:404
-#: includes/gateways/paypal-standard.php:410
-#: includes/gateways/paypal-standard.php:484
-#: includes/gateways/paypal-standard.php:493
-#: includes/gateways/paypal-standard.php:552
-#: includes/gateways/paypal-standard.php:559
+#: includes/gateways/paypal-standard.php:439
+#: includes/gateways/paypal-standard.php:446
+#: includes/gateways/paypal-standard.php:535
+#: includes/gateways/paypal-standard.php:545
+#: includes/gateways/paypal-standard.php:605
+#: includes/gateways/paypal-standard.php:614
 msgid "IPN Error"
 msgstr ""
 
@@ -6334,7 +6340,7 @@ msgstr ""
 msgid "The requested price ID does not exist."
 msgstr ""
 
-#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:155
+#: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
 msgid "Nonce verification has failed"
 msgstr ""
 
@@ -6366,117 +6372,129 @@ msgstr ""
 
 #: includes/gateways/paypal-standard.php:71
 msgid ""
-"If payments are not getting marked as complete, then check this box. This "
-"forces the site to use a slightly less secure method of verifying "
-"purchases. See our <a href=\"%s\" target=\"_blank\">FAQ</a> for further "
+"Enter your PayPal Identity Token in order to enable Payment Data Transfer "
+"(PDT). This allows payments to be verified without relying on the PayPal "
+"IPN. See our <a href=\"%s\" target=\"_blank\">documentation</a> for further "
 "information."
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:77
+msgid "PayPal Identity Token"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:84
+msgid ""
+"If you are unable to use Payment Data Transfer and payments are not getting "
+"marked as complete, then check this box. This forces the site to use a "
+"slightly less secure method of verifying purchases. See our <a href=\"%s\" "
+"target=\"_blank\">FAQ</a> for further information."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:90
 msgid "Disable PayPal IPN Verification"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:85
+#: includes/gateways/paypal-standard.php:98
 msgid "API Credentials"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:88
+#: includes/gateways/paypal-standard.php:101
 msgid ""
 "API credentials are necessary to process PayPal refunds from inside "
 "WordPress. These can be obtained from <a href=\"%s\" target=\"_blank\">your "
 "PayPal account</a>."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:94
+#: includes/gateways/paypal-standard.php:107
 msgid "Live API Username"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:95
+#: includes/gateways/paypal-standard.php:108
 msgid "Your PayPal live API username. "
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:101
+#: includes/gateways/paypal-standard.php:114
 msgid "Live API Password"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:102
+#: includes/gateways/paypal-standard.php:115
 msgid "Your PayPal live API password."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:108
+#: includes/gateways/paypal-standard.php:121
 msgid "Live API Signature"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:109
+#: includes/gateways/paypal-standard.php:122
 msgid "Your PayPal live API signature."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:115
+#: includes/gateways/paypal-standard.php:128
 msgid "Test API Username"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:116
+#: includes/gateways/paypal-standard.php:129
 msgid "Your PayPal test API username."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:122
+#: includes/gateways/paypal-standard.php:135
 msgid "Test API Password"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:123
+#: includes/gateways/paypal-standard.php:136
 msgid "Your PayPal test API password."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:129
+#: includes/gateways/paypal-standard.php:142
 msgid "Test API Signature"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:130
+#: includes/gateways/paypal-standard.php:143
 msgid "Your PayPal test API signature."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:178
+#: includes/gateways/paypal-standard.php:191
 msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:404
-#: includes/gateways/paypal-standard.php:410
+#: includes/gateways/paypal-standard.php:439
+#: includes/gateways/paypal-standard.php:446
 msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:484
+#: includes/gateways/paypal-standard.php:535
 msgid "Invalid business email in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:486
+#: includes/gateways/paypal-standard.php:538
 msgid "Payment failed due to invalid PayPal business email."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:493
+#: includes/gateways/paypal-standard.php:545
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:495
+#: includes/gateways/paypal-standard.php:548
 msgid "Payment failed due to invalid currency in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:552
+#: includes/gateways/paypal-standard.php:605
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:554
+#: includes/gateways/paypal-standard.php:608
 msgid "Payment failed due to invalid amount in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:559
+#: includes/gateways/paypal-standard.php:614
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:561
+#: includes/gateways/paypal-standard.php:616
 msgid "Payment failed due to invalid purchase key in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:567
+#: includes/gateways/paypal-standard.php:622
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
 #: tests/helpers/class-helper-payment.php:342
@@ -6487,79 +6505,79 @@ msgstr ""
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:581
+#: includes/gateways/paypal-standard.php:636
 msgid "Payment made via eCheck and will clear automatically in 5-8 days"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:588
+#: includes/gateways/paypal-standard.php:643
 msgid ""
 "Payment requires a confirmed customer address and must be accepted manually "
 "through PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:594
+#: includes/gateways/paypal-standard.php:649
 msgid ""
 "Payment must be accepted manually through PayPal due to international "
 "account regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:600
+#: includes/gateways/paypal-standard.php:655
 msgid ""
 "Payment received in non-shop currency and must be accepted manually through "
 "PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:607
+#: includes/gateways/paypal-standard.php:662
 msgid ""
 "Payment is being reviewed by PayPal staff as high-risk or in possible "
 "violation of government regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:613
+#: includes/gateways/paypal-standard.php:668
 msgid "Payment was sent to non-confirmed or non-registered email address."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:619
+#: includes/gateways/paypal-standard.php:674
 msgid "PayPal account must be upgraded before this payment can be accepted"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:625
+#: includes/gateways/paypal-standard.php:680
 msgid ""
 "PayPal account is not verified. Verify account in order to accept this "
 "payment"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:631
+#: includes/gateways/paypal-standard.php:686
 msgid ""
 "Payment is pending for unknown reasons. Contact PayPal support for "
 "assistance"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:672
+#: includes/gateways/paypal-standard.php:739
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:677
+#: includes/gateways/paypal-standard.php:744
 msgid "PayPal Payment #%s Refunded for reason: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:678
+#: includes/gateways/paypal-standard.php:745
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:853
+#: includes/gateways/paypal-standard.php:1004
 msgid "Refund Payment in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1002
+#: includes/gateways/paypal-standard.php:1153
 msgid "PayPal refund failed for unknown reason."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1012
+#: includes/gateways/paypal-standard.php:1163
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1016
+#: includes/gateways/paypal-standard.php:1167
 msgid "PayPal refund failed: %s"
 msgstr ""
 
@@ -6757,23 +6775,23 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/actions.php:443 includes/payments/actions.php:503
+#: includes/payments/actions.php:460 includes/payments/actions.php:520
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:447
+#: includes/payments/actions.php:464
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:525 includes/payments/actions.php:559
+#: includes/payments/actions.php:542 includes/payments/actions.php:576
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:527
+#: includes/payments/actions.php:544
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:528 templates/shortcode-login.php:33
+#: includes/payments/actions.php:545 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -6785,7 +6803,7 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1580
+#: includes/payments/functions.php:1582
 msgid "EDD Bot"
 msgstr ""
 
@@ -7095,23 +7113,23 @@ msgstr ""
 msgid "File download error"
 msgstr ""
 
-#: includes/process-download.php:288
+#: includes/process-download.php:292
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:289
+#: includes/process-download.php:293
 msgid "Purchase Verification Failed"
 msgstr ""
 
-#: includes/process-download.php:898
+#: includes/process-download.php:902
 msgid "Invalid file"
 msgstr ""
 
-#: includes/process-download.php:905
+#: includes/process-download.php:909
 msgid "The requested file could not be found. Error 404."
 msgstr ""
 
-#: includes/process-download.php:906
+#: includes/process-download.php:910
 msgid "File not found"
 msgstr ""
 
@@ -7194,7 +7212,7 @@ msgid "Enter the password confirmation"
 msgstr ""
 
 #: includes/process-purchase.php:624
-msgid "You must login or register to complete your purchase"
+msgid "You must log in or register to complete your purchase"
 msgstr ""
 
 #: includes/process-purchase.php:651
@@ -7401,6 +7419,14 @@ msgstr ""
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
+#: includes/template-actions.php:19
+msgid "You need to log in to edit your profile."
+msgstr ""
+
+#: includes/template-actions.php:32
+msgid "You are already logged in"
+msgstr ""
+
 #: includes/template-functions.php:143
 msgid "Free"
 msgstr ""
@@ -7461,51 +7487,51 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:563
+#: includes/user-functions.php:565
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:564
+#: includes/user-functions.php:566
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:566
+#: includes/user-functions.php:568
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:572
+#: includes/user-functions.php:574
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:573
+#: includes/user-functions.php:575
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:577
+#: includes/user-functions.php:579
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:579
+#: includes/user-functions.php:581
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:582
+#: includes/user-functions.php:584
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:586
+#: includes/user-functions.php:588
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:590
+#: includes/user-functions.php:592
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:746 includes/user-functions.php:747
+#: includes/user-functions.php:748 includes/user-functions.php:749
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:749
+#: includes/user-functions.php:751
 msgid ""
 "Hello %s,\n"
 "\n"
@@ -7515,33 +7541,33 @@ msgid ""
 "Link missing? Visit the following URL: %s"
 msgstr ""
 
-#: includes/user-functions.php:874
+#: includes/user-functions.php:876
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"%s\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:907
+#: includes/user-functions.php:909
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:907 includes/user-functions.php:911
+#: includes/user-functions.php:909 includes/user-functions.php:913
 msgid "Notice"
 msgstr ""
 
-#: includes/user-functions.php:911
+#: includes/user-functions.php:913
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:956
+#: includes/user-functions.php:958
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1061
+#: includes/user-functions.php:1063
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1068
+#: includes/user-functions.php:1070
 msgid "Add to iOS App"
 msgstr ""
 
