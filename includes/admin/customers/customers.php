@@ -352,12 +352,11 @@ function edd_customers_view( $customer = '' ) {
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ); ?>"></span>
 		</h3>
 		<?php
-			$primary_email     = $customer->email;
-			$additional_emails = $customer->emails;
 
-			$all_emails = array( 'primary' => $primary_email );
-			foreach ( $additional_emails as $key => $email ) {
-				if ( $primary_email === $email ) {
+			// Setup customer emails view
+			$all_emails = array( 'primary' => $customer->email );
+			foreach ( $customer->emails as $key => $email ) {
+				if ( $customer->email === $email ) {
 					continue;
 				}
 
@@ -367,16 +366,18 @@ function edd_customers_view( $customer = '' ) {
 		<table class="wp-list-table widefat striped emails">
 			<thead>
 				<tr>
-					<th><?php _e( 'Email', 'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Email',   'easy-digital-downloads' ); ?></th>
 					<th><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if ( ! empty( $all_emails ) ) : ?>
+
 					<?php foreach ( $all_emails as $key => $email ) : ?>
-						<tr data-key="<?php echo $key; ?>">
+
+						<tr data-key="<?php echo esc_attr( $key ); ?>">
 							<td>
-								<?php echo $email; ?>
+								<?php echo esc_html( $email ); ?>
 								<?php if ( 'primary' === $key ) : ?>
 									<span class="dashicons dashicons-star-filled primary-email-icon"></span>
 								<?php endif; ?>
@@ -385,16 +386,18 @@ function edd_customers_view( $customer = '' ) {
 								<?php if ( 'primary' !== $key ) : ?>
 									<?php
 										$base_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
-										$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-primary-email'), $base_url ), 'edd-set-customer-primary-email' );
-										$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-remove-email'), $base_url ), 'edd-remove-customer-email' );
+										$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-primary-email' ), $base_url ), 'edd-set-customer-primary-email' );
+										$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-remove-email'  ), $base_url ), 'edd-remove-customer-email'      );
 									?>
-									<a href="<?php echo $promote_url; ?>"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></a>
+									<a href="<?php echo esc_url( $promote_url ); ?>"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></a>
 									&nbsp;|&nbsp;
-									<a href="<?php echo $remove_url; ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+									<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
 								<?php endif; ?>
 							</td>
 						</tr>
+
 					<?php endforeach; ?>
+
 					<tr class="add-customer-email-row">
 						<td colspan="2" class="add-customer-email-td">
 							<div class="add-customer-email-wrapper">
@@ -408,8 +411,11 @@ function edd_customers_view( $customer = '' ) {
 							<div class="notice-wrap"></div>
 						</td>
 					</tr>
+
 				<?php else: ?>
+
 					<tr><td colspan="2"><?php _e( 'No Emails Found', 'easy-digital-downloads' ); ?></td></tr>
+
 				<?php endif; ?>
 			</tbody>
 		</table>
@@ -423,10 +429,10 @@ function edd_customers_view( $customer = '' ) {
 		<table class="wp-list-table widefat striped payments">
 			<thead>
 				<tr>
-					<th><?php _e( 'ID', 'easy-digital-downloads' ); ?></th>
-					<th><?php _e( 'Amount', 'easy-digital-downloads' ); ?></th>
-					<th><?php _e( 'Date', 'easy-digital-downloads' ); ?></th>
-					<th><?php _e( 'Status', 'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'ID',      'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Amount',  'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Date',    'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Status',  'easy-digital-downloads' ); ?></th>
 					<th><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
 				</tr>
 			</thead>
@@ -434,7 +440,7 @@ function edd_customers_view( $customer = '' ) {
 				<?php if ( ! empty( $payments ) ) : ?>
 					<?php foreach ( $payments as $payment ) : ?>
 						<tr>
-							<td><?php echo $payment->ID; ?></td>
+							<td><?php echo esc_html( $payment->ID ); ?></td>
 							<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
 							<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?></td>
 							<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
@@ -465,18 +471,24 @@ function edd_customers_view( $customer = '' ) {
 			</thead>
 			<tbody>
 				<?php if ( ! empty( $downloads ) ) : ?>
+
 					<?php foreach ( $downloads as $download ) : ?>
+
 						<tr>
-							<td><?php echo $download->post_title; ?></td>
+							<td><?php echo esc_html( $download->post_title ); ?></td>
 							<td>
 								<a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>">
 									<?php printf( __( 'View %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 								</a>
 							</td>
 						</tr>
+
 					<?php endforeach; ?>
+
 				<?php else: ?>
+
 					<tr><td colspan="2"><?php printf( __( 'No %s Found', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></td></tr>
+
 				<?php endif; ?>
 			</tbody>
 		</table>
