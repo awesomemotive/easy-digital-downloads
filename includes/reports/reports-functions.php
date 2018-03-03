@@ -249,6 +249,11 @@ function get_endpoint_views() {
 		'chart' => array(
 			'group'   => 'charts',
 			'handler' => 'EDD\Reports\Data\Chart_Endpoint',
+			'fields'  => array(
+				'data_callback'    => '',
+				'display_callback' => 'display',
+				'display_args'     => array()
+			),
 		),
 		'table' => array(
 			'group'          => 'tables',
