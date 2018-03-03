@@ -190,7 +190,8 @@ function edd_load_admin_scripts( $hook ) {
 		$admin_deps = array( 'jquery', 'jquery-form' );
 	}
 
-	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $suffix . '.js', array(), EDD_VERSION, false );
+	wp_register_script( 'edd-moment-js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js', array(), '2.20.1' );
+	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $suffix . '.js', array( 'edd-moment-js' ), EDD_VERSION, false );
 
 	if ( edd_is_admin_page( $hook, 'reports' ) ) {
 		$admin_deps[] = 'edd-chart-js';
