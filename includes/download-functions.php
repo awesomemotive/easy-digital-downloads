@@ -84,34 +84,40 @@ function edd_get_download_by( $field = '', $value = '' ) {
  * @since 1.0
  * @since 2.9 - Return an EDD_Download object.
  *
- * @param int $download Download ID.
+ * @param int $download_id Download ID.
  *
  * @return EDD_Download $download Entire download data.
  */
-function edd_get_download( $download = 0 ) {
-	if ( is_numeric( $download ) ) {
-		$download = new EDD_Download( $download );
+function edd_get_download( $download_id = 0 ) {
+	$download = null;
 
-		return $download;
+	if ( is_numeric( $download_id ) ) {
+
+		$found_download = new EDD_Download( $download_id );
+
+		if ( ! empty( $found_download->ID ) ) {
+			$download = $found_download;
+		}
+
+	} else { // Support getting a download by name.
+		$args = array(
+			'post_type'     => 'download',
+			'name'          => $download_id,
+			'post_per_page' => 1,
+			'fields'        => 'ids',
+		);
+
+		$downloads = new WP_Query( $args );
+		if ( is_array( $downloads->posts ) && ! empty( $downloads->posts ) ) {
+
+			$download_id = $downloads->posts[0];
+
+			$download = new EDD_Download( $download_id );
+
+		}
 	}
 
-	$args = array(
-		'post_type'     => 'download',
-		'name'          => $download,
-		'post_per_page' => 1,
-		'fields'        => 'ids',
-	);
-
-	$download = new WP_Query( $args );
-	if ( is_array( $download->posts ) ) {
-		$download_id = $download->posts[0];
-
-		$download = new EDD_Download( $download_id );
-
-		return $download;
-	}
-
-	return null;
+	return $download;
 }
 
 /**
