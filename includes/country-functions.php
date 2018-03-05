@@ -887,7 +887,7 @@ function edd_get_chinese_states_list() {
 /**
  * Get United Kingdom States
  *
- * @since 2.8.11
+ * @since 2.9
  * @return array $states A list of states
  */
 function edd_get_united_kingdom_states_list() {
@@ -1910,7 +1910,7 @@ function edd_get_country_name( $country_code = '' ) {
 /**
  * Given a country and state code, return the state name
  *
- * @since 2.8.11
+ * @since 2.9
  * @param string $country_code The ISO Code for the country
  * @param string $state_code The ISO Code for the state
  *
