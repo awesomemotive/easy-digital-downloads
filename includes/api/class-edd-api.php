@@ -205,6 +205,7 @@ class EDD_API {
 		$vars[] = 'purchasekey';
 		$vars[] = 'email';
 		$vars[] = 'info';
+		$vars[] = 'include_tax';
 
 		return $vars;
 	}
@@ -564,13 +565,13 @@ class EDD_API {
 		switch( $this->endpoint ) :
 
 			case 'stats' :
-
 				$data = $this->routes->get_stats( array(
 					'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
 					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
 					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
 					'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
 					'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null,
+					'include_tax' => isset( $wp_query->query_vars['include_tax'] ) ? filter_var( $wp_query->query_vars['include_tax'], FILTER_VALIDATE_BOOLEAN ) : true,
 				) );
 
 				break;
@@ -1137,7 +1138,8 @@ class EDD_API {
 			'product'   => null,
 			'date'      => null,
 			'startdate' => null,
-			'enddate'   => null
+			'enddate'   => null,
+			'include_tax' => true,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -1256,7 +1258,7 @@ class EDD_API {
 		} elseif ( $args['type'] == 'earnings' ) {
 			if ( $args['product'] == null ) {
 				if ( $args['date'] == null ) {
-					$earnings = $this->get_default_earnings_stats();
+					$earnings = $this->get_default_earnings_stats( $args );
 				} elseif ( $args['date'] === 'range' ) {
 					// Return sales for a date range
 
@@ -1293,7 +1295,7 @@ class EDD_API {
 						$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 					}
 
-					$earnings = EDD()->payment_stats->get_earnings_by_range( 'other', true, $date_start, $date_end );
+					$earnings = EDD()->payment_stats->get_earnings_by_range( 'other', true, $date_start, $date_end, $args['include_tax'] );
 
 					$total = 0;
 
@@ -1391,7 +1393,7 @@ class EDD_API {
 							$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 						}
 
-						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
+						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end, $args['include_tax'] );
 
 						$total = (float) 0.00;
 
@@ -1404,7 +1406,7 @@ class EDD_API {
 						$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
 						$date_end = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
 
-						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
+						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end, $args['include_tax'] );
 						if ($args['date'] == 'yesterday' || $args['date'] == 'today') {
 							foreach ($results as $result) {
 								$earnings['earnings'][ $args['date'] ] += $result['total'];
@@ -2195,13 +2197,13 @@ class EDD_API {
 	 * @since 1.5.3
 	 * @return array default earnings statistics
 	 */
-	private function get_default_earnings_stats() {
+	private function get_default_earnings_stats( $args ) {
 
 		// Default earnings return
 		$earnings = array();
-		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today' );
-		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
-		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
+		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today', null, $args['include_tax'] );
+		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month', null, $args['include_tax'] );
+		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month', null, $args['include_tax'] );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
