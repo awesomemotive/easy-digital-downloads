@@ -1582,7 +1582,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		edd_insert_payment_note( $this->ID, $note );
+		edd_insert_payment_note( $this->ID, esc_html( $note ) );
 	}
 
 	/**
@@ -2326,7 +2326,7 @@ class EDD_Payment {
 		$user_id  = $this->get_meta( '_edd_payment_user_id', true );
 		$customer = new EDD_Customer( $this->customer_id );
 
-		// Make sure it exists, and that it matches that of the associted customer record
+		// Make sure it exists, and that it matches that of the associated customer record
 		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && (int) $user_id !== (int) $customer->user_id ) ) {
 
 			$user_id = $customer->user_id;
@@ -2585,7 +2585,7 @@ class EDD_Payment {
 		$fees  = $this->fees_total;
 		$tax   = $this->tax;
 
-		return floatval( apply_filter( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
+		return floatval( apply_filters( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
 	}
 
 	/**
@@ -2756,7 +2756,15 @@ class EDD_Payment {
 
 		if ( empty( $customer->id ) ) {
 
-			$name = ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) ? $this->first_name . ' ' . $this->last_name : $this->email;
+			if( empty( $this->first_name ) && empty( $this->last_name ) ) {
+
+				$name = $this->email;
+
+			} else {
+
+				$name = $this->first_name . ' ' . $this->last_name;
+
+			}
 
 			$customer_data = array(
 				'name'        => $name,

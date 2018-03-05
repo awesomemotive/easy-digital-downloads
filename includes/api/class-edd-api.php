@@ -1899,9 +1899,11 @@ class EDD_API {
 
 			case 'xml' :
 
-				require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
-				$xml = Array2XML::createXML( 'edd', $this->data );
-				echo $xml->saveXML();
+				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-ArrayToXML.php';
+				$arraytoxml = new ArrayToXML();
+				$xml        = $arraytoxml->buildXML( $this->data, 'edd' );
+
+				echo $xml;
 
 				break;
 

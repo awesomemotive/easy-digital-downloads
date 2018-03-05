@@ -241,6 +241,9 @@ function edd_get_registered_settings() {
 	 * 'Whitelisted' EDD settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
 	 */
+
+	$shop_states = edd_get_shop_states( edd_get_shop_country() );
+
 	$edd_settings = array(
 		/** General Settings */
 		'general' => apply_filters( 'edd_settings_general',
@@ -325,6 +328,7 @@ function edd_get_registered_settings() {
 						'type'        => 'shop_states',
 						'chosen'      => true,
 						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+						'class'       => ( empty( $shop_states ) ) ? 'hidden' : '',
 					),
 					'tracking_settings' => array(
 						'id'   => 'tracking_settings',
@@ -336,7 +340,7 @@ function edd_get_registered_settings() {
 						'id'   => 'allow_tracking',
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
-							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
+							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
@@ -517,6 +521,13 @@ function edd_get_registered_settings() {
 						'type' => 'text',
 						'std'  => 'New download purchase - Order #{payment_id}',
 					),
+					'sale_notification_heading' => array(
+						'id'   => 'sale_notification_heading',
+						'name' => __( 'Sale Notification Heading', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the heading for the sale notification email.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'New Sale!', 'easy-digital-downloads' ),
+					),
 					'sale_notification' => array(
 						'id'   => 'sale_notification',
 						'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
@@ -550,7 +561,7 @@ function edd_get_registered_settings() {
 						'desc'          => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
 						'type'          => 'checkbox',
 						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless your sure your theme has a complete custom CSS.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
 					),
 					'button_header' => array(
 						'id'   => 'button_header',
@@ -668,6 +679,12 @@ function edd_get_registered_settings() {
 						'desc' => sprintf(__('Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.','easy-digital-downloads' ), edd_get_label_plural( true ) ),
 						'type' => 'checkbox',
 					),
+					'debug_mode' => array(
+						'id'   => 'debug_mode',
+						'name' => __( 'Debug Mode', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable debug mode. When enabled, debug messages will be logged and shown in Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
 					'uninstall_on_delete' => array(
 						'id'   => 'uninstall_on_delete',
 						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
@@ -739,6 +756,13 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Text shown on the Add to Cart Buttons.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Add to Cart', 'easy-digital-downloads' ),
+					),
+					'checkout_button_text' => array(
+						'id'   => 'checkout_button_text',
+						'name' => __( 'Checkout Button Text', 'easy-digital-downloads' ),
+						'desc' => __( 'Text shown on the Add to Cart Button when the product is already in the cart.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ),
 					),
 					'buy_now_text' => array(
 						'id'   => 'buy_now_text',
@@ -1414,7 +1438,7 @@ function edd_payment_icons_callback( $args ) {
 				$enabled = NULL;
 			}
 
-			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" style="margin-right:10px;line-height:16px;height:16px;display:inline-block;">';
+			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="edd-settings-payment-icon-wrapper">';
 
 				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 
@@ -1904,7 +1928,7 @@ function edd_upload_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" clas="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 

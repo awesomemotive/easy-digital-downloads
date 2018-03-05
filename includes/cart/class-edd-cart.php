@@ -216,7 +216,7 @@ class EDD_Cart {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 		if ( empty( $this->contents ) ) {
-			return false;
+			return array();
 		}
 
 		$details = array();
@@ -228,6 +228,7 @@ class EDD_Cart {
 			}
 
 			$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
+			$item['quantity'] = max( 1, $item['quantity'] ); // Force quantity to 1
 
 			$options = isset( $item['options'] ) ? $item['options'] : array();
 
@@ -244,6 +245,7 @@ class EDD_Cart {
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
+
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 

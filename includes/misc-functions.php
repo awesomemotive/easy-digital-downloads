@@ -24,6 +24,20 @@ function edd_is_test_mode() {
 }
 
 /**
+ * Is Debug Mode
+ *
+ * @since 2.8.7
+ * @return bool $ret True if debug mode is enabled, false otherwise
+ */
+function edd_is_debug_mode() {
+	$ret = edd_get_option( 'debug_mode', false );
+	if( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
+		$ret = true;
+	}
+	return (bool) apply_filters( 'edd_is_debug_mode', $ret );
+}
+
+/**
  * Checks if Guest checkout is enabled
  *
  * @since 1.0
@@ -662,11 +676,19 @@ function edd_get_upload_dir() {
 /**
  * Delete symbolic links after they have been used
  *
+ * This function is only intended to be used by WordPress cron.
+ *
  * @access public
  * @since  1.5
  * @return void
  */
 function edd_cleanup_file_symlinks() {
+
+	// Bail if not in WordPress cron
+	if ( ! edd_doing_cron() ) {
+		return;
+	}
+
 	$path = edd_get_symlink_dir();
 	$dir = opendir( $path );
 
@@ -935,4 +957,47 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	}
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}
+
+/**
+ * Given a Payment ID, generate a link to IP address provider (ipinfo.io)
+ *
+ * @since  2.8.15
+ * @param  int		$payment_id The Payment ID
+ * @return string	A link to the IP details provider
+ */
+function edd_payment_get_ip_address_url( $payment_id ) {
+	
+	$payment = new EDD_Payment( $payment_id );
+  
+	$base_url = 'https://ipinfo.io/';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->ip ) . '" target="_blank">' . esc_attr( $payment->ip ) . '</a>';
+
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->ip, $payment_id );
+
+}
+  
+/**
+ * Abstraction for WordPress cron checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific cron related jobs. You probably won't want to use it until then.
+ *
+ * @since 2.8.16
+ *
+ * @return boolean
+ */
+function edd_doing_cron() {
+
+	// Bail if not doing WordPress cron (>4.8.0)
+	if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
+		return true;
+
+	// Bail if not doing WordPress cron (<4.8.0)
+	} elseif ( defined( 'DOING_CRON' ) && ( true === DOING_CRON ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
 }

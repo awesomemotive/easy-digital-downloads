@@ -87,7 +87,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 		<?php if( edd_use_taxes() ) : ?>
 			<tr>
-				<td><strong><?php _e( 'Tax', 'easy-digital-downloads' ); ?></strong></td>
+				<td><strong><?php _e( 'Tax', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
 			</tr>
 		<?php endif; ?>
@@ -95,7 +95,7 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 
 			<tr>
-				<td><strong><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></strong></td>
+				<td><strong><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td>
 					<?php echo edd_payment_subtotal( $payment->ID ); ?>
 				</td>
@@ -153,8 +153,10 @@ $status    = edd_get_payment_status( $payment, true );
 							<?php endif; ?>
 						</div>
 
-						<?php if ( $edd_receipt_args['notes'] ) : ?>
-							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( edd_get_product_notes( $item['id'] ) ) ); ?></div>
+						<?php
+						$notes = edd_get_product_notes( $item['id'] );
+						if ( $edd_receipt_args['notes'] && ! empty( $notes ) ) : ?>
+							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 						<?php endif; ?>
 
 						<?php
@@ -209,7 +211,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 						<?php
 						// Allow extensions to extend the product cell
-						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta );
+						do_action( 'edd_purchase_receipt_after_files', $item['id'], $payment->ID, $meta, $price_id );
 						?>
 					</td>
 					<?php if ( edd_use_skus() ) : ?>
