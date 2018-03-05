@@ -12,7 +12,16 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
-<h2><?php _e( 'Add New Discount', 'easy-digital-downloads' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'easy-digital-downloads' ); ?></a></h2>
+<h2><?php _e( 'Add New Discount', 'easy-digital-downloads' ); ?></h2>
+
+<?php if ( isset( $_GET['edd_discount_added'] ) ) : ?>
+	<div id="message" class="updated">
+		<p><strong><?php _e( 'Discount code created.', 'easy-digital-downloads' ); ?></strong></p>
+
+		<p><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"><?php _e( '&larr; Back to Discounts' ); ?></a></p>
+	</div>
+<?php endif; ?>
+
 <form id="edd-add-discount" action="" method="POST">
 	<?php do_action( 'edd_add_discount_form_top' ); ?>
 	<table class="form-table">
