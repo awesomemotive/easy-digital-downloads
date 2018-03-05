@@ -136,7 +136,7 @@ class EDD_Stats {
 		$month           = date( 'n', current_time( 'timestamp' ) );
 		$year            = date( 'Y', current_time( 'timestamp' ) );
 
-		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
+		if ( ( is_string( $date ) || is_int( $date ) ) && array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
 			// This is a predefined date rate, such as last_week
 			switch( $date ) {

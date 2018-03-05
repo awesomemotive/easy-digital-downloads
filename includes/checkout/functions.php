@@ -27,15 +27,18 @@ function edd_is_checkout() {
 	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
 
 	if( ! $is_object_set ) {
-
 		unset( $wp_query->queried_object );
-
+	} else if ( is_singular() ) {
+		$content = $wp_query->queried_object->post_content;
 	}
 
 	if( ! $is_object_id_set ) {
-
 		unset( $wp_query->queried_object_id );
+	}
 
+	// If we know this isn't the primary checkout page, check other methods.
+	if ( ! $is_checkout && isset( $content ) && has_shortcode( $content, 'download_checkout' ) ) {
+		$is_checkout = true;
 	}
 
 	return apply_filters( 'edd_is_checkout', $is_checkout );

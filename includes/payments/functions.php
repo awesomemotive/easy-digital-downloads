@@ -980,7 +980,9 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 				if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
 					continue;
 
-				$products = edd_get_bundled_products( $cart_item['id'] );
+				$price_id = edd_get_cart_item_price_id( $cart_item );
+				$products = edd_get_bundled_products( $cart_item['id'], $price_id );
+
 				if ( empty( $products ) )
 					continue;
 
@@ -1591,7 +1593,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
 		$note_html .='<p>';
 			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
-			$note_html .= make_clickable( $note->comment_content );
+			$note_html .= make_clickable( wp_kses_post( $note->comment_content ) );
 			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';
 	$note_html .= '</div>';

@@ -1582,7 +1582,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		edd_insert_payment_note( $this->ID, $note );
+		edd_insert_payment_note( $this->ID, esc_html( $note ) );
 	}
 
 	/**
