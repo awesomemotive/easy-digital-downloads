@@ -2003,10 +2003,6 @@ jQuery(document).ready(function ($) {
 				exclude = $(this).data('exclude');
 			}
 
-			if ( ! user_search ) {
-				$(this).blur()
-			}
-
 			$('.edd_user_search_wrap').addClass('loading');
 
 			var data = {
