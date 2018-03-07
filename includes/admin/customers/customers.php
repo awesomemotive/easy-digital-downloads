@@ -12,9 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_customers_page() {
-	$default_views = edd_customer_views();
+	$default_views  = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
-	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[$requested_view] ) ) {
+
+	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[ $requested_view ] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
 	} else {
 		edd_customers_list();
@@ -51,11 +52,13 @@ function edd_customers_list() {
 	include_once dirname( __FILE__ ) . '/class-customer-table.php';
 
 	$customers_table = new EDD_Customer_Reports_Table();
-	$customers_table->prepare_items();
-	?>
+	$customers_table->prepare_items(); ?>
+
 	<div class="wrap">
 		<h1><?php _e( 'Customers', 'easy-digital-downloads' ); ?></h1>
+
 		<?php do_action( 'edd_customers_table_top' ); ?>
+
 		<form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
 			<?php
 			$customers_table->search_box( __( 'Search Customers', 'easy-digital-downloads' ), 'edd-customers' );
@@ -65,7 +68,9 @@ function edd_customers_list() {
 			<input type="hidden" name="page" value="edd-customers" />
 			<input type="hidden" name="view" value="customers" />
 		</form>
+
 		<?php do_action( 'edd_customers_table_bottom' ); ?>
+
 	</div>
 	<?php
 }
@@ -102,14 +107,14 @@ function edd_render_customer_view( $view, $callbacks ) {
 		$render = false;
 	}
 
-	$customer_tabs = edd_customer_tabs();
-	?>
+	$customer_tabs = edd_customer_tabs(); ?>
 
 	<div class='wrap'>
 		<h2>
 			<?php _e( 'Customer Details', 'easy-digital-downloads' ); ?>
 			<?php do_action( 'edd_after_customer_details_header', $customer ); ?>
 		</h2>
+
 		<?php if ( edd_get_errors() ) :?>
 			<div class="error settings-error">
 				<?php edd_print_errors(); ?>
@@ -130,7 +135,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 								<?php
 
 								// prevent double "Customer" output from extensions
-								$tab['title'] = preg_replace("(^Customer )","",$tab['title']);
+								$tab['title'] = preg_replace( "(^Customer )","", $tab['title'] );
 
 								// edd item tab full title
 								$tab_title = sprintf( _x( 'Customer %s', 'Customer Details page tab title', 'easy-digital-downloads' ), esc_attr( $tab[ 'title' ] ) );
@@ -140,7 +145,9 @@ function edd_render_customer_view( $view, $callbacks ) {
 								?>
 
 								<?php if ( ! $active ) : ?>
+
 									<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ) ); ?>"<?php echo $aria_label; ?>>
+
 								<?php endif; ?>
 
 									<span class="edd-item-tab-label-wrap"<?php echo $active ? $aria_label : ''; ?>>
@@ -158,7 +165,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 					</ul>
 				</div>
 
-				<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
+				<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper">
 					<?php call_user_func( $callbacks[ $view ], $customer ); ?>
 				</div>
 			</div>
@@ -170,9 +177,8 @@ function edd_render_customer_view( $view, $callbacks ) {
 
 }
 
-
 /**
- * View a customer
+ * View a customer profile
  *
  * @since  2.3
  * @param  $customer The Customer object being displayed
@@ -184,94 +190,104 @@ function edd_customers_view( $customer = '' ) {
 	do_action( 'edd_customer_card_top', $customer ); ?>
 
 	<div class="info-wrapper customer-section">
-
 		<form id="edit-customer-info" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>">
-
 			<div class="edd-item-info customer-info">
-
 				<div class="avatar-wrap left" id="customer-avatar">
 					<?php echo get_avatar( $customer->email ); ?><br />
 					<?php if ( current_user_can( $customer_edit_role ) ): ?>
-						<span class="info-item editable customer-edit-link"><a href="#" id="edit-customer"><?php _e( 'Edit Customer', 'easy-digital-downloads' ); ?></a></span>
+						<span class="info-item editable customer-edit-link">
+							<a href="#" id="edit-customer"><?php _e( 'Edit Customer', 'easy-digital-downloads' ); ?></a>
+						</span>
 						<?php do_action( 'edd_after_customer_edit_link', $customer ); ?>
 					<?php endif; ?>
 				</div>
 
 				<div class="customer-id right">
-					#<?php echo $customer->id; ?>
+					#<?php echo esc_html( $customer->id ); ?>
 				</div>
 
 				<div class="customer-address-wrapper right">
-				<?php if ( isset( $customer->user_id ) && $customer->user_id > 0 ) : ?>
+					<?php if ( ! empty( $customer->user_id ) ) :
 
-					<?php
 						$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
-						$defaults = array(
+						$address = wp_parse_args( $address, array(
 							'line1'   => '',
 							'line2'   => '',
 							'city'    => '',
 							'state'   => '',
 							'country' => '',
 							'zip'     => ''
-						);
-
-						$address = wp_parse_args( $address, $defaults );
+						) );
 					?>
 
-					<strong><?php _e( 'Customer Address', 'easy-digital-downloads' ); ?></strong>
-					<span class="customer-address info-item editable">
-						<span class="info-item" data-key="line1"><?php echo $address['line1']; ?></span>
-						<span class="info-item" data-key="line2"><?php echo $address['line2']; ?></span>
-						<span class="info-item" data-key="city"><?php echo $address['city']; ?></span>
-						<span class="info-item" data-key="state"><?php echo $address['state']; ?></span>
-						<span class="info-item" data-key="country"><?php echo $address['country']; ?></span>
-						<span class="info-item" data-key="zip"><?php echo $address['zip']; ?></span>
-					</span>
+					<fieldset>
+						<legend class="screen-reader-text"><?php _e( 'Customer Address', 'easy-digital-downloads' ); ?></legend>
 
-					<span class="customer-address info-item edit-item">
-						<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo $address['line1']; ?>" />
-						<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo $address['line2']; ?>" />
-						<input class="info-item" type="text" data-key="city" name="customerinfo[city]" placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo $address['city']; ?>" />
-						<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
-							<?php
+						<span class="customer-address info-item editable">
+							<span class="info-item" data-key="line1"><?php echo esc_html( $address['line1'] ); ?></span>
+							<span class="info-item" data-key="line2"><?php echo esc_html( $address['line2'] ); ?></span>
+							<span class="info-item" data-key="city"><?php echo esc_html( $address['city'] ); ?></span>
+							<span class="info-item" data-key="state"><?php echo esc_html( $address['state'] ); ?></span>
+							<span class="info-item" data-key="country"><?php echo esc_html( $address['country'] ); ?></span>
+							<span class="info-item" data-key="zip"><?php echo esc_html( $address['zip'] ); ?></span>
+						</span>
 
-							$selected_country = $address['country'];
+						<span class="customer-address info-item edit-item">
+							<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line1'] ); ?>" />
+							<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line2'] ); ?>" />
+							<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
+							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
+								<?php
 
-							$countries = edd_get_country_list();
-							foreach( $countries as $country_code => $country ) {
-								echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . $country . '</option>';
-							}
-							?>
-						</select>
-						<?php
-						$selected_state = edd_get_shop_state();
-						$states         = edd_get_shop_states( $selected_country );
+								$selected_country = $address['country'];
+								$countries        = edd_get_country_list();
 
-						$selected_state = isset( $address['state'] ) ? $address['state'] : $selected_state;
-
-						if( ! empty( $states ) ) : ?>
-						<select data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-select info-item">
-							<?php
-								foreach( $states as $state_code => $state ) {
-									echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
+								foreach ( $countries as $country_code => $country ) {
+									echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
 								}
-							?>
-						</select>
-						<?php else : ?>
-						<input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
-						<?php endif; ?>
-						<input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo $address['zip']; ?>" />
-					</span>
-				<?php endif; ?>
+								?>
+							</select>
+							<?php
+							$selected_state = edd_get_shop_state();
+							$states         = edd_get_shop_states( $selected_country );
+
+							$selected_state = isset( $address['state'] ) ? $address['state'] : $selected_state;
+
+							if( ! empty( $states ) ) : ?>
+								<select data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-select info-item">
+									<?php
+										foreach( $states as $state_code => $state ) {
+											echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . esc_html( $state ) . '</option>';
+										}
+									?>
+								</select>
+							<?php else : ?>
+								<input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+							<?php endif; ?>
+							<input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['zip'] ); ?>" />
+						</span>
+					</fieldset>
+					<?php endif; ?>
 				</div>
 
 				<div class="customer-main-wrapper left">
+					<span class="customer-name info-item edit-item">
+						<input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo esc_attr( $customer->name ); ?>" placeholder="<?php _e( 'Customer Name', 'easy-digital-downloads' ); ?>" />
+					</span>
+					<span class="customer-name info-item editable" data-key="name">
+						<?php echo esc_html( $customer->name ); ?>
+					</span>
 
-					<span class="customer-name info-item edit-item"><input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo esc_attr( $customer->name ); ?>" placeholder="<?php _e( 'Customer Name', 'easy-digital-downloads' ); ?>" /></span>
-					<span class="customer-name info-item editable"><span data-key="name"><?php echo $customer->name; ?></span></span>
-					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'easy-digital-downloads' ); ?>" /></span>
-					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
-					<span class="customer-since info-item">
+					<span class="customer-email info-item edit-item">
+						<input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo esc_attr( $customer->email ); ?>" placeholder="<?php _e( 'Customer Email', 'easy-digital-downloads' ); ?>" />
+					</span>
+					<span class="customer-email info-item editable" data-key="email">
+						<?php echo esc_html( $customer->email ); ?>
+					</span>
+					<span class="customer-date-created info-item edit-item">
+						<input size="" data-key="date_created" name="customerinfo[date_created]" type="text" value="<?php echo esc_attr( $customer->date_created ); ?>" placeholder="<?php _e( 'Customer Since', 'easy-digital-downloads' ); ?>" class="edd_datepicker" />
+					</span>
+					<span class="customer-since info-item editable">
 						<?php _e( 'Customer since', 'easy-digital-downloads' ); ?>
 						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
 					</span>
@@ -286,40 +302,42 @@ function edd_customers_view( $customer = '' ) {
 							'data'  => $data_atts,
 						);
 
-						if( ! empty( $user_id ) ) {
+						if ( ! empty( $user_id ) ) {
 							$userdata = get_userdata( $user_id );
 							$user_args['value'] = $userdata->user_login;
 						}
 
 						echo EDD()->html->ajax_user_search( $user_args );
 						?>
-						<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo $customer->user_id; ?>" />
+						<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $customer->user_id ); ?>" />
 					</span>
-
 					<span class="customer-user-id info-item editable">
-						<?php _e( 'User ID', 'easy-digital-downloads' ); ?>:&nbsp;
-						<?php if( intval( $customer->user_id ) > 0 ) : ?>
-							<span data-key="user_id"><a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo $customer->user_id; ?></a></span>
+						<?php if ( intval( $customer->user_id ) > 0 ) : ?>
+							<span data-key="user_id">
+								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo esc_html( $userdata->user_login ); ?></a>
+							</span>
 						<?php else : ?>
-							<span data-key="user_id"><?php _e( 'none', 'easy-digital-downloads' ); ?></span>
+							<span data-key="user_id">
+								<?php _e( 'Not a registered user', 'easy-digital-downloads' ); ?>
+							</span>
 						<?php endif; ?>
+
 						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ) : ?>
-							<span class="disconnect-user"> - <a id="disconnect-customer" href="#disconnect"><?php _e( 'Disconnect User', 'easy-digital-downloads' ); ?></a></span>
+							<span class="disconnect-user">
+								<a id="disconnect-customer" href="#disconnect" class="dashicons dashicons-editor-unlink"></a>
+							</span>
 						<?php endif; ?>
 					</span>
-
 				</div>
-
 			</div>
 
 			<span id="customer-edit-actions" class="edit-item">
-				<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo $customer->id; ?>" />
+				<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo esc_html( $customer->id ); ?>" />
 				<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
 				<input type="hidden" name="edd_action" value="edit-customer" />
-				<input type="submit" id="edd-edit-customer-save" class="button-secondary" value="<?php _e( 'Update Customer', 'easy-digital-downloads' ); ?>" />
-				<a id="edd-edit-customer-cancel" href="" class="delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+				<button id="edd-edit-customer-save" class="button button-secondary"><?php _e( 'Update Customer', 'easy-digital-downloads' ); ?></button>
+				<a id="edd-edit-customer-cancel" href="" class="cancel"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 			</span>
-
 		</form>
 	</div>
 
@@ -401,7 +419,7 @@ function edd_customers_view( $customer = '' ) {
 					<tr class="add-customer-email-row">
 						<td colspan="2" class="add-customer-email-td">
 							<div class="add-customer-email-wrapper">
-								<input type="hidden" name="customer-id" value="<?php echo $customer->id; ?>" />
+								<input type="hidden" name="customer-id" value="<?php echo esc_attr( $customer->id ); ?>" />
 								<?php wp_nonce_field( 'edd-add-customer-email', 'add_email_nonce', false, true ); ?>
 								<input type="email" name="additional-email" value="" placeholder="<?php _e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
 								<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />&nbsp;<label for="make-additional-primary"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
@@ -503,7 +521,7 @@ function edd_customers_view( $customer = '' ) {
 }
 
 /**
- * View the notes of a customer
+ * View the notes section of a customer
  *
  * @since  2.3
  * @param  $customer The Customer being displayed
@@ -521,7 +539,7 @@ function edd_customer_notes_view( $customer ) {
 	?>
 
 	<div id="edd-item-notes-wrapper">
-		<div class="edd-item-notes-header">
+		<div class="edd-item-header-small">
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 		</div>
 		<h3><?php _e( 'Notes', 'easy-digital-downloads' ); ?></h3>
@@ -574,6 +592,13 @@ function edd_customer_notes_view( $customer ) {
 	<?php
 }
 
+/**
+ * View the delete section of a customer
+ *
+ * @since  2.3
+ * @param  $customer The Customer being displayed
+ * @return void
+ */
 function edd_customers_delete_view( $customer ) {
 
 	do_action( 'edd_customer_delete_top', $customer ); ?>
@@ -582,9 +607,11 @@ function edd_customers_delete_view( $customer ) {
 
 		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
 
-			<div class="edd-item-notes-header">
+			<div class="edd-item-header-small">
 				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 			</div>
+
+			<h3><?php _e( 'Delete', 'easy-digital-downloads' ); ?></h3>
 
 			<div class="customer-info delete-customer">
 				<span class="delete-customer-options">
@@ -617,12 +644,19 @@ function edd_customers_delete_view( $customer ) {
 	do_action( 'edd_customer_delete_bottom', $customer );
 }
 
+/**
+ * View the tools section of a customer
+ *
+ * @since  2.3
+ * @param  $customer The Customer being displayed
+ * @return void
+ */
 function edd_customer_tools_view( $customer ) {
 
 	do_action( 'edd_customer_tools_top', $customer ); ?>
 
-	<div class="info-wrapper customer-section">
-		<div class="customer-notes-header">
+	<div id="edd-item-tools-wrapper">
+		<div class="edd-item-header-small">
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 		</div>
 

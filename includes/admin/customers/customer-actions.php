@@ -10,43 +10,48 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param  array $args The $_POST array being passed
  * @return array $output Response messages
  */
-function edd_edit_customer( $args ) {
+function edd_edit_customer( $args = array() ) {
+
+	// Bail if nothing new to edit
+	if ( empty( $args ) || empty( $args['customerinfo'] ) || empty( $args['_wpnonce'] ) ) {
+		return;
+	}
+
 	$customer_edit_role = edd_get_edit_customers_role();
 
+	// Bail if user cannot edit customers
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
-	if ( empty( $args ) ) {
-		return;
-	}
-
 	$customer_info = $args['customerinfo'];
-	$customer_id   = (int)$args['customerinfo']['id'];
+	$customer_id   = (int) $customer_info['id'];
 	$nonce         = $args['_wpnonce'];
 
+	// Bail if nonce check fails
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
 	}
 
+	// Bail if customer does not exist
 	$customer = new EDD_Customer( $customer_id );
 	if ( empty( $customer->id ) ) {
 		return false;
 	}
 
-	$defaults = array(
-		'name'    => '',
-		'email'   => '',
-		'user_id' => 0
-	);
-
-	$customer_info = wp_parse_args( $customer_info, $defaults );
+	// Parse customer info with defaults
+	$customer_info = wp_parse_args( $customer_info, array(
+		'name'         => '',
+		'email'        => '',
+		'date_created' => '',
+		'user_id'      => 0
+	) );
 
 	if ( ! is_email( $customer_info['email'] ) ) {
 		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'easy-digital-downloads' ) );
 	}
 
-	if ( (int) $customer_info['user_id'] != (int) $customer->user_id ) {
+	if ( (int) $customer_info['user_id'] !== (int) $customer->user_id ) {
 
 		// Make sure we don't already have this user attached to a customer
 		if ( ! empty( $customer_info['user_id'] ) && false !== edd_get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
@@ -63,17 +68,18 @@ function edd_edit_customer( $args ) {
 	// Record this for later
 	$previous_user_id  = $customer->user_id;
 
+	// Bail if errored
 	if ( edd_get_errors() ) {
 		return;
 	}
 
 	$user_id = intval( $customer_info['user_id'] );
 	if ( empty( $user_id ) && ! empty( $customer_info['user_login'] ) ) {
+
 		// See if they gave an email, otherwise we'll assume login
-		$user_by_field = 'login';
-		if ( is_email( $customer_info['user_login'] ) ) {
-			$user_by_field = 'email';
-		}
+		$user_by_field = is_email( $customer_info['user_login'] )
+			? 'email'
+			: 'login';
 
 		$user = get_user_by( $user_by_field, $customer_info['user_login'] );
 		if ( $user ) {
@@ -108,10 +114,11 @@ function edd_edit_customer( $args ) {
 	}
 
 	// Sanitize the inputs
-	$customer_data            = array();
-	$customer_data['name']    = strip_tags( stripslashes( $customer_info['name'] ) );
-	$customer_data['email']   = $customer_info['email'];
-	$customer_data['user_id'] = $user_id;
+	$customer_data                 = array();
+	$customer_data['name']         = strip_tags( stripslashes( $customer_info['name'] ) );
+	$customer_data['email']        = $customer_info['email'];
+	$customer_data['user_id']      = $user_id;
+	$customer_data['date_created'] = gmdate( 'Y-m-d H:i:s', strtotime( $customer_info['date_created'] ) );
 
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );
