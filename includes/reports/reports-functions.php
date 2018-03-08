@@ -250,7 +250,7 @@ function get_endpoint_views() {
 			'group'   => 'charts',
 			'handler' => 'EDD\Reports\Data\Chart_Endpoint',
 			'fields'  => array(
-				'data_callback'    => '',
+				'data_callback'    => 'get_data',
 				'display_callback' => 'display',
 				'display_args'     => array()
 			),
@@ -272,7 +272,7 @@ function get_endpoint_views() {
 			'group'   => 'graphs',
 			'handler' => 'EDD\Reports\Data\Graph_Endpoint',
 			'fields'  => array(
-				'data_callback'    => '',
+				'data_callback'    => 'get_data',
 				'display_callback' => 'display',
 				'display_args'     => array()
 			),
