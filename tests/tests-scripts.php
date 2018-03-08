@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group scripts
+ * @group edd_scripts
  */
 class Tests_Scripts extends EDD_UnitTestCase {
 
