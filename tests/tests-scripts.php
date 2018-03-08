@@ -117,35 +117,70 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * Test that the edd_load_admin_scripts() function will enqueue the proper styles.
+	 * @dataProvider _admin_scripts_dp
+	 * @covers ::edd_load_admin_scripts()
 	 *
-	 * @since 2.3.6
+	 * @param string $script    Registered script handle.
+	 * @param string $script_is Status of the script to check.
 	 */
-	public function test_load_admin_scripts() {
+	public function test_load_admin_scripts_should_enqueue_expected_scripts( $script, $script_is ) {
+		$this->load_admin_scripts();
 
+		$this->assertTrue( wp_script_is( $script, $script_is ) );
+	}
+
+	/**
+	 * Data provider for test_load_admin_scripts_should_enqueue_expected_scripts().
+	 */
+	public function _admin_scripts_dp() {
+		return array(
+			array( 'jquery-chosen', 'enqueued' ),
+			array( 'edd-admin-scripts', 'enqueued' ),
+			array( 'colorbox', 'enqueued' ),
+			array( 'jquery-ui-datepicker', 'enqueued' ),
+			array( 'jquery-ui-dialog', 'enqueued' ),
+//			array( 'jquery-flot', 'enqueued' ),
+			array( 'media-upload', 'enqueued' ),
+			array( 'thickbox', 'enqueued' ),
+		);
+	}
+
+	/**
+	 * @dataProvider _admin_styles_dp
+	 * @covers ::edd_load_admin_scripts()
+	 *
+	 * @param string $style    Registered stylesheet handle.
+	 * @param string $style_is Status of the stylesheet to check.
+	 */
+	public function test_load_admin_scripts_should_enqueue_expected_stylesheets( $style, $style_is ) {
+		$this->load_admin_scripts();
+
+		$this->assertTrue( wp_style_is( $style, $style_is ) );
+	}
+
+	/**
+	 * Data provider for test_load_admin_scripts_should_enqueue_expected_stylesheets().
+	 */
+	public function _admin_styles_dp() {
+		return array(
+			array( 'jquery-chosen', 'enqueued' ),
+			array( 'wp-color-picker', 'enqueued' ),
+			array( 'colorbox', 'enqueued' ),
+			array( 'jquery-ui-css', 'enqueued' ),
+			array( 'thickbox', 'enqueued' ),
+			array( 'edd-admin', 'enqueued' ),
+		);
+	}
+
+	/**
+	 * Helper to load admin scripts.
+	 */
+	protected function load_admin_scripts() {
 		if ( ! function_exists( 'edd_is_admin_page' ) ) {
 			include EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 		}
 
 		edd_load_admin_scripts( 'settings.php' );
-
-		$this->assertTrue( wp_style_is( 'jquery-chosen', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'wp-color-picker', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'colorbox', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'jquery-ui-css', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'thickbox', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'edd-admin', 'enqueued' ) );
-
-		$this->assertTrue( wp_script_is( 'jquery-chosen', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'edd-admin-scripts', 'enqueued' ) );
-// 		$this->assertTrue( wp_script_is( 'wp-color-picker', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'colorbox', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'jquery-ui-datepicker', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'jquery-ui-dialog', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'jquery-flot', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'media-upload', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'thickbox', 'enqueued' ) );
-
 	}
 
 }
