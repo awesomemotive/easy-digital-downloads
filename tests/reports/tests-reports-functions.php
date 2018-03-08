@@ -373,6 +373,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'range' => 'last_30_days',
 		);
 
 		$result = get_dates_filter();
@@ -408,6 +409,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'range' => 'this_month',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'this_month' );
@@ -427,6 +429,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
 			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+			'range' => 'last_month',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'last_month' );
@@ -446,6 +449,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'range' => 'today',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'today' );
@@ -465,6 +469,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subDay( 1 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->subDay( 1 )->endOfDay()->toDateTimeString(),
+			'range' => 'yesterday',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'yesterday' );
@@ -484,6 +489,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->startOfWeek()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfWeek()->toDateTimeString(),
+			'range' => 'this_week',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'this_week' );
@@ -503,6 +509,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subWeek( 1 )->startOfWeek()->toDateTimeString(),
 			'end'   => self::$date->copy()->subWeek( 1 )->endOfWeek()->toDateTimeString(),
+			'range' => 'last_week',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'last_week' );
@@ -522,6 +529,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'range' => 'last_30_days',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'last_30_days' );
@@ -541,6 +549,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->startOfQuarter()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfQuarter()->toDateTimeString(),
+			'range' => 'this_quarter',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'this_quarter' );
@@ -560,6 +569,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subQuarter( 1 )->startOfQuarter()->toDateTimeString(),
 			'end'   => self::$date->copy()->subQuarter( 1 )->endOfQuarter()->toDateTimeString(),
+			'range' => 'last_quarter',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'last_quarter' );
@@ -579,6 +589,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->startOfYear()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfYear()->toDateTimeString(),
+			'range' => 'this_year',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'this_year' );
@@ -598,6 +609,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subYear( 1 )->startOfYear()->toDateTimeString(),
 			'end'   => self::$date->copy()->subYear( 1 )->endOfYear()->toDateTimeString(),
+			'range' => 'last_year',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'last_year' );
@@ -623,6 +635,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
+			'range' => 'other',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'other' );
@@ -645,6 +658,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = array(
 			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
 			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'range' => 'last_30_days',
 		);
 
 		$result = parse_dates_for_range( self::$date, 'fake' );
