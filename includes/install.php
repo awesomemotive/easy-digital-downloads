@@ -56,6 +56,9 @@ function edd_run_install() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 	}
 
+	// Setup the components (customers, discounts, logs, etc...)
+	edd_setup_components();
+
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
 
