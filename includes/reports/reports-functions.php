@@ -252,7 +252,25 @@ function get_endpoint_views() {
 			'fields'  => array(
 				'data_callback'    => 'get_data',
 				'display_callback' => 'display',
-				'display_args'     => array()
+				'display_args'     => array(
+					'y_mode'             => null,
+					'x_mode'             => null,
+					'y_decimals'         => 0,
+					'x_decimals'         => 0,
+					'y_position'         => 'right',
+					'time_format'        => '%d/%b',
+					'ticksize_unit'      => 'day',
+					'ticksize_num'       => 1,
+					'multiple_y_axes'    => false,
+					'bgcolor'            => '#f9f9f9',
+					'bordercolor'        => '#ccc',
+					'color'              => '#bbb',
+					'borderwidth'        => 2,
+					'bars'               => false,
+					'lines'              => true,
+					'points'             => true,
+					'additional_options' => '',
+				),
 			),
 		),
 		'table' => array(
@@ -274,7 +292,25 @@ function get_endpoint_views() {
 			'fields'  => array(
 				'data_callback'    => 'get_data',
 				'display_callback' => 'display',
-				'display_args'     => array()
+				'display_args'     => array(
+					'y_mode'             => null,
+					'x_mode'             => null,
+					'y_decimals'         => 0,
+					'x_decimals'         => 0,
+					'y_position'         => 'right',
+					'time_format'        => '%d/%b',
+					'ticksize_unit'      => 'day',
+					'ticksize_num'       => 1,
+					'multiple_y_axes'    => false,
+					'bgcolor'            => '#f9f9f9',
+					'bordercolor'        => '#ccc',
+					'color'              => '#bbb',
+					'borderwidth'        => 2,
+					'bars'               => false,
+					'lines'              => true,
+					'points'             => true,
+					'additional_options' => '',
+				),
 			),
 		),
 	);
