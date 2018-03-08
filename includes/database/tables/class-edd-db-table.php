@@ -122,6 +122,30 @@ abstract class EDD_DB_Table {
 		}
 	}
 
+	/**
+	 * Magic getter for immutability.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get( $name = '' ) {
+
+		// Return property if exists
+		if ( isset( $this->{$name} ) ) {
+			return $this->{$name};
+
+		// Return get method results if exists
+		} elseif ( method_exists( $this, "get_{$name}" ) ) {
+			return call_user_func( array( $this, "get_{$name}" ) );
+
+		// Return null if not exists
+		} else {
+			return null;
+		}
+	}
+
 	/** Abstract **************************************************************/
 
 	/**
