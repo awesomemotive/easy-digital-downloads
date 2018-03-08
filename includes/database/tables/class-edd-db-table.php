@@ -201,9 +201,8 @@ abstract class EDD_DB_Table {
 	 * @return mixed
 	 */
 	public function truncate() {
-		$query     = "TRUNCATE %s";
-		$prepared  = $this->get_db()->prepare( $query, $this->table_name );
-		$truncated = $this->get_db()->query( $prepared );
+		$query     = "TRUNCATE TABLE {$this->table_name}";
+		$truncated = $this->get_db()->query( $query );
 
 		// Query success/fail
 		return $truncated;
