@@ -156,7 +156,7 @@ class EDD_Graph {
 	 * @since 1.9
 	 * @return string
 	 */
-	public function build_graph() {
+	public function build_graph_compat() {
 
 		$yaxis_count = 1;
 
@@ -279,7 +279,7 @@ class EDD_Graph {
 	 */
 	public function display() {
 		do_action( 'edd_before_graph', $this );
-		echo $this->build_graph();
+		echo $this->build_graph_compat();
 		do_action( 'edd_after_graph', $this );
 	}
 
