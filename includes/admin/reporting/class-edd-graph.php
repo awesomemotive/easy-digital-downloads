@@ -140,8 +140,9 @@ class EDD_Graph {
 	 * Load the graphing library script
 	 *
 	 * @since 1.9
+	 * @since 3.0 Renamed to load_scripts_compat()
 	 */
-	public function load_scripts() {
+	public function load_scripts_compat() {
 		// Use minified libraries if SCRIPT_DEBUG is turned off
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
@@ -154,6 +155,7 @@ class EDD_Graph {
 	 *
 	 * @var array
 	 * @since 1.9
+	 * @since 3.0 Renamed to build_graph_compat()
 	 * @return string
 	 */
 	public function build_graph_compat() {
