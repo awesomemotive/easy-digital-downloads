@@ -147,6 +147,11 @@ class EDD_Graph {
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
 
+		/**
+		 * Fires immediately after the legacy Flot JS graphing framework is enqueued.
+		 *
+		 * @since 1.9
+		 */
 		do_action( 'edd_graph_load_scripts' );
 	}
 
