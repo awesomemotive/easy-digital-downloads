@@ -35,7 +35,7 @@ function edd_reports_graph() {
 			$day_by_day = true;
 			break;
 		case 'other' :
-			$difference = ( strtotime( $dates['start'] ) - $dates['end'] );
+			$difference = ( $dates['start']->getTimestamp() - $dates['end']->getTimestamp() );
 
 			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
 			     || $difference >= YEAR_IN_SECONDS
