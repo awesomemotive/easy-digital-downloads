@@ -216,3 +216,42 @@ function edd_update_customer_meta( $customer_id, $meta_key, $meta_value, $prev_v
 function edd_delete_customer_meta_by_key( $meta_key ) {
 	return delete_metadata( 'edd_customer', null, $meta_key, '', true );
 }
+
+/** Back Compat ***************************************************************/
+
+/**
+ * Backwards compatibility layer for old `customer_id` column.
+ *
+ * @since 3.0.0
+ *
+ * @param string  $query   SQL query.
+ * @return string $request SQL query with column replaced.
+ */
+function _edd_filter_customer_meta_id_column( $query = '' ) {
+
+	// Get customer meta
+	$customer_meta = edd_get_component_interface( 'customer', 'meta' );
+
+	// Bail if no customer meta
+	if ( empty( $customer_meta ) ) {
+		return $query;
+	}
+
+	// Bail if not a customer meta query
+	if ( ! strpos( $query, $customer_meta->table_name ) ) {
+		return $query;
+	}
+
+	// Bail if not a customer ID query
+	if ( ! strpos( $query, 'customer_id' ) ) {
+		return $query;
+	}
+
+	// Replace, but also avoid double replacements
+	$replaced = str_replace( 'customer_id',         'edd_customer_id', $query );
+	$replaced = str_replace( 'edd_edd_customer_id', 'edd_customer_id', $query );
+
+	// Return
+	return $replaced;
+}
+add_filter( 'query', '_edd_filter_customer_meta_id_column', 10 );
