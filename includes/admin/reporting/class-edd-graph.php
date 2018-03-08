@@ -140,9 +140,8 @@ class EDD_Graph {
 	 * Load the graphing library script
 	 *
 	 * @since 1.9
-	 * @since 3.0 Renamed to load_scripts_compat()
 	 */
-	public function load_scripts_compat() {
+	public function load_scripts() {
 		// Use minified libraries if SCRIPT_DEBUG is turned off
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
@@ -160,14 +159,13 @@ class EDD_Graph {
 	 *
 	 * @var array
 	 * @since 1.9
-	 * @since 3.0 Renamed to build_graph_compat()
 	 * @return string
 	 */
-	public function build_graph_compat() {
+	public function build_graph() {
 
 		$yaxis_count = 1;
 
-		$this->load_scripts_compat();
+		$this->load_scripts();
 		ob_start();
 ?>
 		<script type="text/javascript">
@@ -286,7 +284,7 @@ class EDD_Graph {
 	 */
 	public function display() {
 		do_action( 'edd_before_graph', $this );
-		echo $this->build_graph_compat();
+		echo $this->build_graph();
 		do_action( 'edd_after_graph', $this );
 	}
 
