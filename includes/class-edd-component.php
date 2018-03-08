@@ -91,7 +91,8 @@ class EDD_Component {
 			'schema',
 			'table',
 			'query',
-			'object'
+			'object',
+			'meta'
 		);
 
 		// Loop through keys and setup
@@ -102,25 +103,6 @@ class EDD_Component {
 				$this->interfaces[ $key ] = $value;
 			}
 		}
-
-		// Perform anything extra
-		$this->init_meta();
-	}
-
-	/**
-	 * Maybe init the meta data table
-	 *
-	 * @since 3.0.0
-	 */
-	private function init_meta() {
-
-		// Bail if no meta to init
-		if ( empty( $this->meta ) ) {
-			return;
-		}
-
-		// Setup the meta data table
-		$this->meta = new $this->meta;
 	}
 
 	/**
