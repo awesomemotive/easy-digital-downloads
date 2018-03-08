@@ -939,24 +939,31 @@ class EDD_DB_Query {
 			// Literal column comparison
 			if ( ! empty( $this->query_vars[ $column->name ] ) ) {
 
-				// Numeric
-				if ( $column->is_numeric() ) {
-					$statement = "{$this->table_alias}.{$column->name} = %d";
-					$where_id  = absint( $this->query_vars[ $column->name ] );
-
-				// Array
-				} elseif ( is_array( $this->query_vars[ $column->name ] ) ) {
-					$statement = "{$this->table_alias}.{$column->name} IN ( %s )";
+				// Array (unprepared)
+				if ( is_array( $this->query_vars[ $column->name ] ) ) {
 					$where_id  = "'" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $column->name ] ) ) . "'";
+					$statement = "{$this->table_alias}.{$column->name} IN ({$where_id})";
 
-				// String
+					// Add to where array
+					$where[ $column->name ] = $statement;
+
+				// Numeric/String (prepared)
 				} else {
-					$statement = "{$this->table_alias}.{$column->name} = %s";
-					$where_id  = $this->query_vars[ $column->name ];
-				}
 
-				// Add to where array
-				$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
+					// Numeric
+					if ( $column->is_numeric() ) {
+						$statement = "{$this->table_alias}.{$column->name} = %d";
+						$where_id  = absint( $this->query_vars[ $column->name ] );
+
+					// String
+					} else {
+						$statement = "{$this->table_alias}.{$column->name} = %s";
+						$where_id  = $this->query_vars[ $column->name ];
+					}
+
+					// Add to where array
+					$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
+				}
 			}
 
 			// __in
@@ -1828,5 +1835,53 @@ class EDD_DB_Query {
 	private function update_last_changed() {
 		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
 	}
+
+	/** Back Compat ***********************************************************/
+
+	/**
+	 * Return a single column from an item, or null
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $name
+	 * @param int    $item_id
+	 *
+	 * @return mixed
+	 */
+	public function get_column( $name = '', $item_id = 0 ) {
+		$item = $this->get_item( $item_id );
+
+		// Return a single column from an item, or null
+		return isset( $item->{$name} )
+			? $item->{$name}
+			: null;
+	}
+
+	public function insert( $data = array() ) {
+		return $this->add_item( $data );
+	}
+
+	public function add( $data = array() ) {
+		return $this->add_item( $data );
+	}
+
+	public function update( $item_id, $data = array(), $where = '' ) {
+		return $this->update_item( $item_id, $data );
+	}
+
+	public function delete( $item_id = 0 ) {
+		return $this->delete_item( $item_id );
+	}
+
+	public function add_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
+		return $this->add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false );
+	}
+
+    public function __call( $method = '', $args = array() ) {
+		switch ( $method ) {
+			case 'add_meta' :
+				die;
+		}
+    }
 }
 endif;
