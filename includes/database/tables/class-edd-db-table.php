@@ -133,11 +133,11 @@ abstract class EDD_DB_Table {
 	public function __get( $name = '' ) {
 
 		// Return property if exists
-		if ( isset( $this->{$name} ) ) {
+		if ( method_exists( $this, "get_{$name}" ) ) {
 			return $this->{$name};
 
 		// Return get method results if exists
-		} elseif ( method_exists( $this, "get_{$name}" ) ) {
+		} elseif ( isset( $this->{$name} ) ) {
 			return call_user_func( array( $this, "get_{$name}" ) );
 
 		// Return null if not exists
