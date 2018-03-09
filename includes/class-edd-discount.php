@@ -1783,11 +1783,11 @@ class EDD_Discount {
 					break;
 
 				default:
-					$data[$key] = sanitize_text_field( $data[$key] );
+					$data[$key] = ! is_array( $data[$key] )
+						? sanitize_text_field( $data[$key] )
+						: maybe_serialize( array_map( 'sanitize_text_field', $data[$key] ) );
 					break;
-
 			}
-
 		}
 
 		return $data;
@@ -1842,6 +1842,8 @@ class EDD_Discount {
 
 		// Create new discount
 		$discount_id = edd_add_discount( $args );
+		$discount    = edd_get_discount( $discount_id );
+
 		edd_add_discount_meta( $discount_id, 'legacy_id', $old_discount->ID );
 
 		unset( $value );
