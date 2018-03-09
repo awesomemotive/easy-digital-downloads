@@ -751,6 +751,19 @@ class EDD_DB_Query {
 	}
 
 	/**
+	 * Return array of column aliases for a specific column
+	 *
+	 * @since 3.0.0
+	 * @param string $column
+	 * @return array
+	 */
+	private function get_column_aliases( $column = '' ) {
+		return wp_list_pluck( $this->get_column_by( array(
+			'name' => $column
+		) ), 'aliases' );
+	}
+
+	/**
 	 * Used internally to get a list of item IDs matching the query vars.
 	 *
 	 * @since 3.0.0
@@ -790,6 +803,16 @@ class EDD_DB_Query {
 		// Fields
 		$fields  = $this->parse_fields( $this->query_vars['fields'] );
 
+		// Setup the query array (compact() is too opaque here)
+		$query = array(
+			'fields'  => $fields,
+			'join'    => $join,
+			'where'   => $where,
+			'orderby' => $orderby,
+			'limits'  => $limits,
+			'groupby' => $groupby
+		);
+
 		/**
 		 * Filters the item query clauses.
 		 *
@@ -798,7 +821,7 @@ class EDD_DB_Query {
 		 * @param array  $pieces A compacted array of item query clauses.
 		 * @param object &$this  Current instance passed by reference.
 		 */
-		$clauses = apply_filters_ref_array( $this->apply_prefix( 'item_clauses' ), array( compact( array( 'fields', 'join', 'where', 'orderby', 'limits', 'groupby' ) ), &$this ) );
+		$clauses = apply_filters_ref_array( $this->apply_prefix( 'item_clauses' ), array( $query, &$this ) );
 
 		// Setup request
 		$this->set_request_clauses( $clauses );
