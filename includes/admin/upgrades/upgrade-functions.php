@@ -1229,15 +1229,15 @@ function edd_discounts_migration() {
 	}
 
 	if ( 1 === $step ) {
-		$discounts_db = EDD()->discounts;
-		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
-			@$discounts_db->create_table();
-			edd_debug_log( $discounts_db->table_name . ' created successfully' );
+		$discounts = edd_get_component_interface( 'discount', 'table' );
+		if ( ! $discounts->exists() ) {
+			$discounts->create();
+			edd_debug_log( $discounts->table_name . ' created successfully' );
 		}
 
-		$discount_meta = EDD()->discount_meta;
-		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
-			@$discount_meta->create_table();
+		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
+		if ( ! $discount_meta->exists() ) {
+			$discount_meta->create();
 			edd_debug_log( $discount_meta->table_name . ' created successfully' );
 		}
 	}
