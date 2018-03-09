@@ -24,7 +24,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_percent_discount() {
-		return edd_store_discount( array(
+		return edd_add_discount( array(
 			'code'              => '20OFF',
 			'uses'              => 54,
 			'max'               => 10,
@@ -45,7 +45,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_flat_discount() {
-		return edd_store_discount( array(
+		return edd_add_discount( array(
 			'code'              => '10FLAT',
 			'uses'              => 0,
 			'max'               => 10,
@@ -66,7 +66,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 3.0
 	 */
 	public static function created_expired_flat_discount() {
-		return edd_store_discount( array(
+		return edd_add_discount( array(
 			'code'              => '20FLAT',
 			'uses'              => 0,
 			'max'               => 20,
