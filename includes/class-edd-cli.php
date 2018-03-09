@@ -281,7 +281,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'user_id' => $user_id
 				);
 
-				$customer_id = EDD()->customers->add( $args );
+				$customer_id = edd_add_customer( $args );
 
 				if( $customer_id ) {
 					WP_CLI::line( sprintf( __( 'Customer %d created successfully', 'easy-digital-downloads' ), $customer_id ) );
@@ -862,14 +862,14 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'eddc' ) );
 		}
 
-		$discounts_db = EDD()->discounts;
-		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
-			@$discounts_db->create_table();
+		$discounts_db = edd_get_component_interface( 'discount', 'table' );
+		if ( ! $discounts_db->exists() ) {
+			@$discounts_db->create();
 		}
 
-		$discount_meta = EDD()->discount_meta;
-		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
-			@$discount_meta->create_table();
+		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
+		if ( ! $discount_meta->exists() ) {
+			@$discount_meta->create();
 		}
 
 		$sql = "SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount'";
@@ -889,7 +889,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = EDD()->discounts->count( array( 'number' => - 1 ) );
+			$new_count = count( edd_get_discounts( array( 'number' => -1 ) ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts WHERE post_type ='edd_discount'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
