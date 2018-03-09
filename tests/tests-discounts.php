@@ -76,8 +76,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		parent::setUp();
 
 		// Create legacy data records for backwards compatibility
-		EDD()->discount_meta->add_meta( self::$discount_id, 'legacy_id', self::$discount_id );
-		EDD()->discount_meta->add_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
+		edd_add_discount_meta( self::$discount_id, 'legacy_id', self::$discount_id );
+		edd_add_discount_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
 
 		// Update meta via old method. If these work properly, it helps show backwards compatibility is working
 		update_post_meta( self::$negativediscount_id, '_edd_discount_name', 'Double Double' );
@@ -91,8 +91,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @access public
 	 */
 	public function tearDown() {
-		EDD()->discount_meta->delete_meta( self::$discount_id, 'legacy_id', self::$discount_id );
-		EDD()->discount_meta->delete_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
+		edd_delete_discount_meta( self::$discount_id, 'legacy_id', self::$discount_id );
+		edd_delete_discount_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
 
 		edd_empty_cart();
 
