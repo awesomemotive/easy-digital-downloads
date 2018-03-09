@@ -89,6 +89,28 @@ function edd_get_discounts( $args = array() ) {
 }
 
 /**
+ * Return total number of discounts
+ *
+ * @since 3.0.0
+ *
+ * @return int
+ */
+function edd_get_discount_count() {
+
+	// Query for count
+	$discounts = new EDD_Discount_Query( array(
+		'number' => 0,
+		'count'  => true,
+
+		'update_cache'      => false,
+		'update_meta_cache' => false
+	) );
+
+	// Return count
+	return absint( $discounts->found_items );
+}
+
+/**
  * Query for and return array of discount counts, keyed by status
  *
  * @since 3.0.0
@@ -231,12 +253,9 @@ function edd_store_discount( $details, $discount_id = null ) {
 	$return = false;
 
 	if ( null == $discount_id ) {
-		$discount = new EDD_Discount;
-		$return   = (int) $discount->add( $details );
+		$return = (int) edd_add_discount( $details );
 	} else {
-		$discount = new EDD_Discount( $discount_id );
-		$discount->update( $details );
-		$return   = (int) $discount->id;
+		$return = (int) edd_update_discount( $discount_id );
 	}
 
 	return $return;
@@ -1259,7 +1278,7 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 	if ( empty( $discount->id ) ) {
 
 		// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
-		$table_name = EDD()->discount_meta->table_name;
+		$table_name = edd_get_component_interface( 'discount', 'meta' )->table_name;
 
 		$object_id = $wpdb->get_var( $wpdb->prepare(
 			"
@@ -1369,7 +1388,7 @@ function _edd_discount_get_post_doing_it_wrong( $query ) {
 	$message = sprintf(
 		__( 'As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information.', 'easy-digital-downloads' ),
 		'<code>' . $wpdb->posts . '</code>',
-		'<code>' . EDD()->discounts->table_name . '</code>',
+		'<code>' . edd_get_component_interface( 'discount', 'table' )->table_name . '</code>',
 		'<code>edd_get_discounts()</code>',
 		'<code>edd_get_discount()</code>',
 		'<code>EDD_Discount</code>',
@@ -1477,14 +1496,14 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 			$args['number'] = absint( $args['number'] );
 		}
 
-		$table_name = EDD()->discounts->table_name;
+		$table_name = edd_get_component_interface( 'discount', 'table' )->table_name;
 
 		$meta_query = $query->get( 'meta_query' );
 
 		$clauses = array();
 		$sql_where = 'WHERE 1=1';
 
-		$meta_key = $query->get( 'meta_key', false );
+		$meta_key   = $query->get( 'meta_key',   false );
 		$meta_value = $query->get( 'meta_value', false );
 
 		// 'meta_key' and 'meta_value' passed as arguments
@@ -1492,7 +1511,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 			/**
 			 * Check that the key exists as a column in the table.
 			 * Note: there is no backwards compatibility support for product requirements and excluded
-			 * products as these would be serialised under the old schema.
+			 * products as these would be serialized under the old schema.
 			 */
 			if ( in_array( $meta_key, array_keys( EDD()->discounts->get_columns() ) ) ) {
 				$sql_where .= ' ' . $wpdb->prepare( $meta_key . ' = %s', $meta_value );
@@ -1643,8 +1662,8 @@ function _edd_discounts_bc_wp_count_posts( $query ) {
 	$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
 
 	if ( $expected === $query ) {
-		$discounts_table = EDD()->discounts->table_name;
-		$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$discounts_table} GROUP BY post_status";
+		$discounts_table = edd_get_component_interface( 'discount', 'table' )->table_name;
+		$query           = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$discounts_table} GROUP BY post_status";
 	}
 
 	return $query;
