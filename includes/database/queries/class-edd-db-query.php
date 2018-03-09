@@ -265,7 +265,7 @@ class EDD_DB_Query {
 	 *     @type string|array $orderby        Accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                        Default 'id'.
 	 *     @type string       $item           How to item retrieved items. Accepts 'ASC', 'DESC'.
-	 *                                        Default 'ASC'.
+	 *                                        Default 'DESC'.
 	 *     @type string       $search         Search term(s) to retrieve matching items for.
 	 *                                        Default empty.
 	 *     @type array        $search_columns Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
@@ -486,7 +486,7 @@ class EDD_DB_Query {
 			'number'            => 100,
 			'offset'            => '',
 			'orderby'           => 'id',
-			'order'             => 'ASC',
+			'order'             => 'DESC',
 			'groupby'           => '',
 			'search'            => '',
 			'search_columns'    => array(),
@@ -869,7 +869,7 @@ class EDD_DB_Query {
 
 				// Set if __in
 				if ( in_array( $_orderby, $possible_ins, true ) ) {
-					$orderby_array[] = $parsed;
+					$orderby_array[] = "{$parsed} {$order}";
 					continue;
 				}
 
@@ -1226,7 +1226,7 @@ class EDD_DB_Query {
 
 		// Bail if malformed
 		if ( ! is_string( $order ) || empty( $order ) ) {
-			return 'ASC';
+			return 'DESC';
 		}
 
 		// Ascending or Descending
