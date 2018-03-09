@@ -185,6 +185,15 @@ class EDD_DB_Query {
 	protected $meta_query = false;
 
 	/**
+	 * Date query container.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var object WP_Date_Query
+	 */
+	protected $date_query = false;
+
+	/**
 	 * Query vars set by the user.
 	 *
 	 * @since 3.0.0
@@ -492,6 +501,7 @@ class EDD_DB_Query {
 			'search_columns'    => array(),
 			'count'             => false,
 			'meta_query'        => null, // See WP_Meta_Query
+			'date_query'        => null, // See WP_Date_Query
 			'no_found_rows'     => true,
 
 			// Caching
@@ -521,6 +531,13 @@ class EDD_DB_Query {
 		$possible_not_ins = wp_filter_object_list( $this->columns, array( 'not_in' => true ), 'and', 'name' );
 		foreach ( $possible_not_ins as $in ) {
 			$key = "{$in}__not_in";
+			$this->query_var_defaults[ $key ] = false;
+		}
+
+		// Possible dates
+		$possible_dates = wp_filter_object_list( $this->columns, array( 'date_query' => true ), 'and', 'name' );
+		foreach ( $possible_dates as $date ) {
+			$key = "{$date}_query";
 			$this->query_var_defaults[ $key ] = false;
 		}
 	}
@@ -947,7 +964,7 @@ class EDD_DB_Query {
 	private function parse_where() {
 
 		// Defaults
-		$where = $searchable = array();
+		$where = $searchable = $date_query = array();
 		$join  = '';
 		$and   = '/^\s*AND\s*/';
 
@@ -1033,15 +1050,32 @@ class EDD_DB_Query {
 
 			// date_query
 			if ( true === $column->date_query ) {
-				$where_id   = "{$column->name}_query";
-				$date_query = isset( $this->query_vars[ $where_id ] )
-					? $this->query_vars[ $where_id ]
-					: $this->query_vars[ $column->name ];
+				$where_id    = "{$column->name}_query";
+				$column_date = $this->query_vars[ $where_id ];
 
-				// Setup date query where clause
-				if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-					$this->{$where_id}  = new WP_Date_Query( $date_query, "{$this->table_alias}.{$column->name}" );
-					$where[ $where_id ] = preg_replace( $and, '', $this->{$where_id}->get_sql() );
+				// Parse item
+				if ( ! empty( $column_date ) ) {
+
+					// Default arguments
+					$defaults = array(
+						'column'    => "{$this->table_alias}.{$column->name}",
+						'before'    => $column_date,
+						'inclusive' => true
+					);
+
+					// Default date query
+					if ( is_string( $column_date ) ) {
+						$date_query[] = $defaults;
+					} elseif ( is_array( $column_date ) ) {
+
+						// Maybe auto-fill column
+						if ( ! isset( $column_date['column'] ) ) {
+							$column_date['column'] = $defaults['column'];
+						}
+
+						// Add clause to date query
+						$date_query[] = $column_date;
+					}
 				}
 			}
 		}
@@ -1096,6 +1130,16 @@ class EDD_DB_Query {
 				// Remove " AND " from meta_query query where clause
 				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
 			}
+		}
+
+		// Only do a date query with an array
+		$date_query = ! empty( $date_query )
+			? $date_query
+			: $this->query_vars['date_query'];
+
+		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
+			$this->date_query    = new WP_Date_Query( $date_query, '.' );
+			$where['date_query'] = preg_replace( $and, '', $this->date_query->get_sql() );
 		}
 
 		// Set where and join clauses
@@ -1927,7 +1971,7 @@ class EDD_DB_Query {
 	}
 
 	public function add_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
-		return $this->add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false );
+		return $this->add_item_meta( $item_id, $meta_key, $meta_value, $unique );
 	}
 
     public function __call( $method = '', $args = array() ) {
