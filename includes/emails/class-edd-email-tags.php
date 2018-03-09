@@ -398,7 +398,9 @@ function edd_email_tag_download_list( $payment_id ) {
 				$quantity = $item['quantity'];
 			}
 
-			$price_id = edd_get_cart_item_price_id( $item );
+			$item_price = edd_get_cart_item_price( $item['id'] );
+			$price_id   = edd_get_cart_item_price_id( $item );
+
 			if ( $show_names ) {
 
 				$title = '<strong>' . get_the_title( $item['id'] ) . '</strong>';
@@ -411,8 +413,12 @@ function edd_email_tag_download_list( $payment_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
-				if( ! empty( $price_id ) && 0 !== $price_id ){
+				if ( ! empty( $price_id ) && 0 !== $price_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id, $payment_id );
+				}
+
+				if ( ! empty( $item_price ) ) {
+					$title .= "&nbsp;&ndash;&nbsp;" . edd_currency_filter( edd_format_amount( $item['subtotal'] ), $payment_data['currency'] );
 				}
 
 				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id ) . '<br/>';
