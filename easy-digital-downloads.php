@@ -202,9 +202,14 @@ final class Easy_Digital_Downloads {
 	public function __get( $key = '' ) {
 		switch ( $key  ) {
 			case 'customers' :
-				return isset( $this->component['customer']->table )
-					? $this->component['customer']->table
-					: null;
+			case 'customermeta' :
+			case 'customer_meta' :
+				return edd_get_component_interface( 'customer', 'query' );
+
+			case 'discounts' :
+			case 'discountmeta' :
+			case 'discount_meta' :
+				return edd_get_component_interface( 'discount', 'query' );
 
 			default :
 				return isset( $this->{$key} )
