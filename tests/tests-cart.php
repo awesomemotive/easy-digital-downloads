@@ -10,20 +10,20 @@ class Test_Cart extends EDD_UnitTestCase {
 	protected $_discount = null;
 
 	public function setUp() {
+		global $wp_rewrite, $current_user;
+
 		parent::setUp();
 
 		$this->_user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $this->_user_id );
-
-		global $wp_rewrite;
+		
 		$GLOBALS['wp_rewrite']->init();
+
 		flush_rewrite_rules( false );
 
 		edd_add_rewrite_endpoints($wp_rewrite);
 
 		$this->_rewrite = $wp_rewrite;
-
-		global $current_user;
 
 		$current_user = new WP_User(1);
 		$current_user->set_role('administrator');
@@ -83,8 +83,8 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_endpoints() {
-		$this->assertEquals('edd-add', $this->_rewrite->endpoints[0][1]);
-		$this->assertEquals('edd-remove', $this->_rewrite->endpoints[1][1]);
+		$this->assertEquals('edd-add',    $this->_rewrite->endpoints[0][1] );
+		$this->assertEquals('edd-remove', $this->_rewrite->endpoints[1][1] );
 	}
 
 	public function test_add_to_cart() {
@@ -102,12 +102,10 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_add_to_cart_multiple_price_ids_array() {
-
-		$options = array(
+		edd_add_to_cart( $this->_post->ID, array(
 			'price_id' => array( 0, 1 )
-		);
+		) );
 
-		edd_add_to_cart( $this->_post->ID, $options );
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
 	}
 
@@ -123,23 +121,23 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
 		$this->assertEquals( 2, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 0 ) ) );
 		$this->assertEquals( 3, edd_get_cart_item_quantity( $this->_post->ID, array( 'price_id' => 1 ) ) );
+
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 
 	public function test_add_to_cart_multiple_price_ids_string() {
-		$options = array(
+		edd_add_to_cart( $this->_post->ID, array(
 			'price_id' => '0,1'
-		);
-		edd_add_to_cart( $this->_post->ID, $options );
+		) );
+
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
 	}
 
 	public function test_get_cart_contents() {
 
-		$options = array(
+		edd_add_to_cart( $this->_post->ID, array(
 			'price_id' => 0
-		);
-		edd_add_to_cart( $this->_post->ID, $options );
+		) );
 
 		$expected = array(
 			'0' => array(
@@ -156,29 +154,28 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_get_cart_content_details() {
 
-		$options = array(
+		edd_add_to_cart( $this->_post->ID, array(
 			'price_id' => 0
-		);
-		edd_add_to_cart( $this->_post->ID, $options );
+		) );
 
 		$expected = array(
 			'0' => array(
 				'name' => 'Test Download',
-				'id' => $this->_post->ID,
+				'id'   => $this->_post->ID,
 				'item_number' => array(
 					'options' => array(
 						'price_id' => '0'
 					),
-					'id' => $this->_post->ID,
+					'id'       => $this->_post->ID,
 					'quantity' => 1,
 				),
-				'item_price' => '20.0',
-				'quantity' => 1,
-				'discount' => '0.0',
-				'subtotal' => '20.0',
-				'tax' => 0,
-				'fees' => array(),
-				'price' => '20.0'
+				'item_price' => 20.0,
+				'quantity'   => 1,
+				'discount'   => 0.0,
+				'subtotal'   => 20.0,
+				'tax'        => 0.0,
+				'fees'       => array(),
+				'price'      => 20.0
 			)
 		);
 
@@ -190,21 +187,21 @@ class Test_Cart extends EDD_UnitTestCase {
 		$expected = array(
 			'0' => array(
 				'name' => 'Test Download',
-				'id' => $this->_post->ID,
+				'id'   => $this->_post->ID,
 				'item_number' => array(
 					'options' => array(
 						'price_id' => '0'
 					),
-					'id' => $this->_post->ID,
+					'id'       => $this->_post->ID,
 					'quantity' => 1,
 				),
-				'item_price' => '20.0',
-				'quantity' => 1,
-				'discount' => '4.0',
-				'subtotal' => '20.0',
-				'tax' => 0,
-				'fees' => array(),
-				'price' => '16.0'
+				'item_price' => 20.0,
+				'quantity'   => 1,
+				'discount'   => 4.0,
+				'subtotal'   => 20.0,
+				'tax'        => 0.0,
+				'fees'       => array(),
+				'price'      => 16.0
 			)
 		);
 
@@ -224,16 +221,16 @@ class Test_Cart extends EDD_UnitTestCase {
 					'options' => array(
 						'price_id' => '0'
 					),
-					'id' => $this->_post->ID,
+					'id'       => $this->_post->ID,
 					'quantity' => 1,
 				),
-				'item_price' => '20.0',
-				'quantity' => 1,
-				'discount' => '4.0',
-				'subtotal' => '20.0',
-				'tax' => '3.2',
-				'fees' => array(),
-				'price' => '19.2'
+				'item_price' => 20.0,
+				'quantity'   => 1,
+				'discount'   => 4.0,
+				'subtotal'   => 20.0,
+				'tax'        => 3.2,
+				'fees'       => array(),
+				'price'      => 19.2
 			)
 		);
 
@@ -250,16 +247,16 @@ class Test_Cart extends EDD_UnitTestCase {
 					'options' => array(
 						'price_id' => '0'
 					),
-					'id' => $this->_post->ID,
+					'id'       => $this->_post->ID,
 					'quantity' => 1,
 				),
-				'item_price' => '20.0',
-				'quantity' => 1,
-				'discount' => '0.0',
-				'subtotal' => '20.0',
-				'tax' => '4.0',
-				'fees' => array(),
-				'price' => '24.0'
+				'item_price' => 20.0,
+				'quantity'   => 1,
+				'discount'   => 0.0,
+				'subtotal'   => 20.0,
+				'tax'        => 4.0,
+				'fees'       => array(),
+				'price'      => 24.0
 			)
 		);
 
@@ -299,7 +296,6 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 4, edd_get_cart_item_discount_amount( $cart_item_args ) );
 
 		edd_unset_cart_discount( '20OFF' );
-
 	}
 
 	public function test_cart_quantity() {
