@@ -181,6 +181,16 @@ class EDD_DB_Column {
 	public $not_in = true;
 
 	/**
+	 * Array of possible aliases this column can be referred to as.
+	 *
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var array
+	 */
+	public $aliases = array();
+
+	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
 	 * @since 3.0.0
@@ -249,7 +259,8 @@ class EDD_DB_Column {
 			'sortable'   => false,
 			'date_query' => false,
 			'in'         => true,
-			'not_in'     => true
+			'not_in'     => true,
+			'aliases'    => array()
 		) );
 
 		// Return array
@@ -285,7 +296,8 @@ class EDD_DB_Column {
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
 			'in'         => 'wp_validate_boolean',
-			'not_in'     => 'wp_validate_boolean'
+			'not_in'     => 'wp_validate_boolean',
+			'aliases'    => array( $this, 'sanitize_aliases' )
 		);
 
 		// Default args array
@@ -322,5 +334,16 @@ class EDD_DB_Column {
 			'mediumint',
 			'bigint'
 		), true );
+	}
+
+	/**
+	 * Sanitize aliases array using `sanitize_key()`
+	 *
+	 * @since 3.0.0
+	 * @param array $aliases
+	 * @return array
+	 */
+	private function sanitize_aliases( $aliases = array() ) {
+		return array_map( 'sanitize_key', $aliases );
 	}
 }
