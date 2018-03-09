@@ -180,7 +180,7 @@ class EDD_DB_Query {
 	 *
 	 * @since 3.0.0
 	 * @access public
-	 * @var object WP_Date_Query
+	 * @var object WP_Meta_Query
 	 */
 	protected $meta_query = false;
 
@@ -1034,7 +1034,9 @@ class EDD_DB_Query {
 			// date_query
 			if ( true === $column->date_query ) {
 				$where_id   = "{$column->name}_query";
-				$date_query = $this->query_vars[ $where_id ];
+				$date_query = isset( $this->query_vars[ $where_id ] )
+					? $this->query_vars[ $where_id ]
+					: $this->query_vars[ $column->name ];
 
 				// Setup date query where clause
 				if ( ! empty( $date_query ) && is_array( $date_query ) ) {
@@ -1301,6 +1303,31 @@ class EDD_DB_Query {
 		return $results;
 	}
 
+	/**
+	 * Shape an item ID from an object, array, or numeric value
+	 *
+	 * @since 3.0.0
+	 * @param  mixed $item
+	 *
+	 * @return int
+	 */
+	private function shape_item_id( $item = 0 ) {
+		$retval  = 0;
+		$primary = $this->get_primary_column_name();
+
+		// Item ID
+		if ( is_numeric( $item ) ) {
+			$retval = $item;
+		} elseif ( is_object( $item ) && isset( $item->{$primary} ) ) {
+			$retval = $item->{$primary};
+		} elseif ( is_array( $item ) && isset( $item[ $primary ] ) ) {
+			$retval = $item[ $primary ];
+		}
+
+		// Return the item ID
+		return absint( $retval );
+	}
+
 	/** Queries ***************************************************************/
 
 	/**
@@ -1315,6 +1342,7 @@ class EDD_DB_Query {
 	public function get_item( $item_id = 0 ) {
 
 		// Bail if no item to get by
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) ) {
 			return false;
 		}
@@ -1322,27 +1350,6 @@ class EDD_DB_Query {
 		// Table
 		$table   = $this->get_table_name();
 		$primary = $this->get_primary_column_name();
-
-		// Item ID
-		if ( is_numeric( $item_id ) ) {
-			$item_id = $item_id;
-		} elseif ( is_object( $item_id ) && isset( $item_id->{$primary} ) ) {
-			$item_id = $item_id->{$primary};
-		} elseif ( is_array( $item_id ) && isset( $item_id[ $primary ] ) ) {
-			$item_id = $item_id[ $primary ];
-
-		// Bail if no item to get by
-		} else {
-			return false;
-		}
-
-		// Prevent negatives
-		$item_id = absint( $item_id );
-
-		// Bail if no item to get by
-		if ( empty( $item_id ) ) {
-			return false;
-		}
 
 		// Check cache
 		$result = wp_cache_get( $item_id, $this->cache_group );
@@ -1422,17 +1429,27 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function update_item( $item_id = 0, $data = array() ) {
+
+		// Bail if no item ID
+		$item_id = $this->shape_item_id( $item_id );
+		if ( empty( $item_id ) ) {
+			return false;
+		}
+
 		$where   = array( $this->get_primary_column_name() => $item_id );
 		$table   = $this->get_table_name();
 		$columns = $this->get_column_names();
 
 		// Get item to update
-		$item = (array) $this->get_item( $item_id );
+		$item = $this->get_item( $item_id );
 
 		// Item does not exist to update, so try to add instead
 		if ( empty( $item ) ) {
 			return $this->add_item( $data );
 		}
+
+		// Cast as an array for easier manipulation
+		$item = (array) $item;
 
 		// Splice new data into item, and cut out non-keys for meta
 		$data    = array_merge( $item, $data );
@@ -1478,6 +1495,13 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function delete_item( $item_id = 0 ) {
+
+		// Bail if no item ID
+		$item_id = $this->shape_item_id( $item_id );
+		if ( empty( $item_id ) ) {
+			return false;
+		}
+
 		$where  = array( $this->get_primary_column_name() => $item_id );
 		$table  = $this->get_table_name();
 		$result = $this->get_db()->delete( $table, $where );
@@ -1540,6 +1564,7 @@ class EDD_DB_Query {
 	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1570,6 +1595,7 @@ class EDD_DB_Query {
 	protected function get_item_meta( $item_id = 0, $meta_key = '', $single = false ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1601,6 +1627,7 @@ class EDD_DB_Query {
 	protected function update_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1632,6 +1659,7 @@ class EDD_DB_Query {
 	protected function delete_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1658,6 +1686,7 @@ class EDD_DB_Query {
 	private function save_extra_item_meta( $item_id = 0, $meta = array() ) {
 
 		// Bail if there is no bulk meta to save
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta ) ) {
 			return;
 		}
@@ -1690,6 +1719,7 @@ class EDD_DB_Query {
 	private function delete_all_item_meta( $item_id = 0 ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) ) {
 			return;
 		}
@@ -1772,7 +1802,7 @@ class EDD_DB_Query {
 			$table   = $this->get_table_name();
 			$primary = $this->get_primary_column_name();
 			$query   = "SELECT * FROM {$table} WHERE {$primary} IN (%s)";
-			$ids    = join( ',', array_map( 'absint', $ids ) );
+			$ids     = join( ',', array_map( 'absint', $ids ) );
 			$prepare = sprintf( $query , $ids );
 			$results = $this->get_db()->get_results( $prepare );
 
