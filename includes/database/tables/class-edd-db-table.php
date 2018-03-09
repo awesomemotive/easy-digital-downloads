@@ -221,8 +221,9 @@ abstract class EDD_DB_Table {
 	 */
 	public function exists() {
 		$query       = "SHOW TABLES LIKE %s";
-		$query       = $this->get_db()->esc_like( $this->table_name );
-		$table_exist = $this->get_db()->get_var( $query );
+		$like        = $this->get_db()->esc_like( $this->table_name );
+		$prepared    = $this->get_db()->prepare( $query, $like );
+		$table_exist = $this->get_db()->get_var( $prepared );
 
 		// Does the table exist?
 		return ! empty( $table_exist );
