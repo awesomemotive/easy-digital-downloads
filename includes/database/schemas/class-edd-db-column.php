@@ -181,6 +181,15 @@ class EDD_DB_Column {
 	public $not_in = true;
 
 	/**
+	 * Does this column have its own cache key?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $cache_key = false;
+
+	/**
 	 * Array of possible aliases this column can be referred to as.
 	 *
 	 *
@@ -260,8 +269,14 @@ class EDD_DB_Column {
 			'date_query' => false,
 			'in'         => true,
 			'not_in'     => true,
+			'cache_key'  => false,
 			'aliases'    => array()
 		) );
+
+		// Primary key columns are always cached
+		if ( true === $r['primary'] ) {
+			$r['cache_key'] = true;
+		}
 
 		// Return array
 		return $this->sanitize_args( $r );
@@ -297,6 +312,7 @@ class EDD_DB_Column {
 			'date_query' => 'wp_validate_boolean',
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
+			'cache_key'  => 'wp_validate_boolean',
 			'aliases'    => array( $this, 'sanitize_aliases' )
 		);
 
