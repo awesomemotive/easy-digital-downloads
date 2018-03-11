@@ -251,6 +251,8 @@ class EDD_DB_Column {
 
 		// Parse arguments
 		$r = wp_parse_args( $args, array(
+
+			// Table
 			'name'       => '',
 			'type'       => '',
 			'length'     => '',
@@ -263,13 +265,19 @@ class EDD_DB_Column {
 			'encoding'   => $GLOBALS['wpdb']->charset,
 			'collation'  => $GLOBALS['wpdb']->collate,
 			'comment'    => '',
+
+			// Query
 			'primary'    => false,
 			'searchable' => false,
 			'sortable'   => false,
 			'date_query' => false,
 			'in'         => true,
 			'not_in'     => true,
+
+			// Cache
 			'cache_key'  => false,
+
+			// Backwards Compatibility
 			'aliases'    => array()
 		) );
 
