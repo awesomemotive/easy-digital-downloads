@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9
-Stable Tag: 2.8.14
+Tested up to: 4.9.4
+Stable Tag: 2.8.18
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,29 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.8.18, February 6, 2018 =
+
+* Fix: Earnings report was incomplete and did not allow adding additional statuses.
+* Fix: Incorrect HTML attribute on the upload modal.
+* Fix: WordPress file editor was not working when Easy Digital Downloads was not active.
+* Fix: Forced file data to be sanitized as an array.
+* New: Added new filter to allow disabling X-Accel-Redirect when downloading files.
+* New: Enabled gateways are now included in the opt-in telemetry data.
+
+= 2.8.17, January 1, 2018 =
+
+* Fix: Reverted Schema microdata change from SPAN to DIV tag as it broke some layouts
+* Tweak: IP addresses on payment View Order Details screens now links to ipinfo
+
+= 2.8.16, December 21, 2017 =
+* Fix: Hardened EDD actions for use with WP Cron.
+* Fix: Changed span elements to div elements for the schema markup.
+* Dev: Added the ability to randomly generate customer data when creating payments with WP-CLI.
+
+= 2.8.15, December 13, 2017 =
+* Fix: Getting files of variable priced bundles products did not always respect variable price ID.
+* Tweak: Added found payments to the hooks before and after the purchase history shortcode.
 
 = 2.8.14, November 28, 2017 =
 * Fix: Sales exports did not always include all payments from the last day of the range selected.

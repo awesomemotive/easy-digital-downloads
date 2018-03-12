@@ -262,9 +262,13 @@ function edd_process_download() {
 
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 
-					// We need a path relative to the domain
-					$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
-					header( "X-Accel-Redirect: /$file_path" );
+					$ignore_x_accel_redirect_header = apply_filters( 'edd_ignore_x_accel_redirect', false );
+
+					if ( ! $ignore_x_accel_redirect_header ) {
+						// We need a path relative to the domain
+						$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
+						header( "X-Accel-Redirect: /$file_path" );
+					}
 
 				}
 
@@ -738,6 +742,11 @@ function edd_get_file_ctype( $extension ) {
  * @return   bool|string        If string, $status || $cnt
  */
 function edd_readfile_chunked( $file, $retbytes = true ) {
+
+	// If output buffers exist, make sure they are closed. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6387
+	if ( ob_get_length() ) {
+		ob_clean();
+	}
 
 	$chunksize = 1024 * 1024;
 	$buffer    = '';
