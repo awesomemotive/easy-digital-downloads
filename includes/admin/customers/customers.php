@@ -151,6 +151,10 @@ function edd_render_customer_view( $view, $callbacks ) {
 									<span class="edd-item-tab-label-wrap"<?php echo $active ? $aria_label : ''; ?>>
 										<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
 										<span class="edd-item-tab-label"><?php echo esc_attr( $tab['title'] ); ?></span>
+										<?php
+											$tab_info = apply_filters( 'edd_customer_' . $key . '_tab_info', false );
+											echo ! empty( $tab_info ) ? '(' . $tab_info . ')' : '' ;
+										?>
 									</span>
 
 								<?php if ( ! $active ) : ?>
@@ -174,6 +178,22 @@ function edd_render_customer_view( $view, $callbacks ) {
 	<?php
 
 }
+
+
+/**
+ * Add count to Customer's Notes tab
+ *
+ * @since  2.9
+ * @return customer's Notes count 
+ */
+function edd_show_customer_notes_count() {
+	$customer_id = (int)$_GET['id'];
+	$customer    = new EDD_Customer( $customer_id );
+	$notes_count = $customer->get_notes_count();
+	
+	return $notes_count ? $notes_count : false ;
+}
+add_filter( 'edd_customer_notes_tab_info', 'edd_show_customer_notes_count' );
 
 
 /**
