@@ -101,4 +101,22 @@ class Chart_Endpoint extends Endpoint {
 		return $value;
 	}
 
+	/**
+	 * Displays a chart.
+	 *
+	 * @since 3.0.0
+	 */
+	public function display() {
+
+	}
+
+	/**
+	 * Builds and outputs the graph JS to the page.
+	 *
+	 * @since 3.0.0
+	 */
+	public function build_graph() {
+
+	}
+
 }
