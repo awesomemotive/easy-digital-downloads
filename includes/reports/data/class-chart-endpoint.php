@@ -83,4 +83,22 @@ class Chart_Endpoint extends Endpoint {
 		$this->options = wp_parse_args( $args, $options );
 	}
 
+	/**
+	 * Retrieves the value of a graph option if set.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $key Option key to retrieve a value for.
+	 * @return mixed Value of the option key if set, otherwise an empty string.
+	 */
+	public function get( $key ) {
+		if ( isset( $this->options[ $key ] ) ) {
+			$value = $this->options[ $key ];
+		} else {
+			$value = '';
+		}
+
+		return $value;
+	}
+
 }
