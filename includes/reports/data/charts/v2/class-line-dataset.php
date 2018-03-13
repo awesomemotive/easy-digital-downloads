@@ -8,6 +8,12 @@ namespace EDD\Reports\Data\Charts\v2;
  */
 class Line_Dataset extends Dataset {
 
+	/**
+	 * Represents the list of fields for a given dataset.
+	 *
+	 * @since 3.0.0
+	 * @var   array
+	 */
 	protected $fields = array(
 		'borderDash', 'borderDashOffset', 'borderCapStyle', 'borderJoinStyle',
 		'cubicInterpolationMode', 'fill', 'lineTension', 'pointBackgroundColor',
