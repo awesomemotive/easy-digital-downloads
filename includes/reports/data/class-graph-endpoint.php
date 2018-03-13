@@ -104,7 +104,7 @@ final class Graph_Endpoint extends Chart_Endpoint {
 					};
 			};
 
-			myLine = Chart.Line( $( '#edd-reports-graph' ), {
+			myLine = Chart.Line( $( '#<?php echo esc_js( $canvas_id ); ?>' ), {
 				data: lineChartData,
 				options: {
 					responsive: true,
