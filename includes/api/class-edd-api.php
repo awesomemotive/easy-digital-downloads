@@ -1451,7 +1451,7 @@ class EDD_API {
 			}
 		} elseif ( empty( $args['type'] ) ) {
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
-			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
+			$stats = array_merge ( $stats, $this->get_default_earnings_stats( $args ) );
 
 			return apply_filters( 'edd_api_stats', array( 'stats' => $stats, $this ) );
 		}
