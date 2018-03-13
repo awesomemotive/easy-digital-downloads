@@ -115,8 +115,6 @@ class Chart_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0.0
 	 */
-	public function build_graph() {
-
-	}
+	public function build_graph() {}
 
 }
