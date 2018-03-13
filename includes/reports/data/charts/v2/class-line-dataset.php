@@ -2,7 +2,7 @@
 namespace EDD\Reports\Data\Charts\v2;
 
 /**
- * Represents a manifestation of a ChartJS line chart dataset in PHP form.
+ * Represents a manifestation of a ChartJS v2 line chart dataset in PHP form.
  *
  * @since 3.0.0
  */

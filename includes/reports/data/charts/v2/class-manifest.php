@@ -2,7 +2,7 @@
 namespace EDD\Reports\Data\Charts\v2;
 
 /**
- * Represents a manifestation of a ChartJS object's attributes in PHP form.
+ * Represents a manifestation of a ChartJS v2 object's attributes in PHP form.
  *
  * Primarily used to simplify translating server-side arguments into client-side ones.
  *
