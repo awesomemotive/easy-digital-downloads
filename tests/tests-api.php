@@ -11,7 +11,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 	protected $_post = null;
 
-	/**
+	/**kk
 	 * @var EDD_API
 	 */
 	protected $_api = null;
