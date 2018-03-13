@@ -226,6 +226,28 @@ abstract class Endpoint extends Base_Object {
 	}
 
 	/**
+	 * Retrieves the value of a given display argument if set.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $key     Display argument key.
+	 * @param string $default Optional. Default value to return in the event the argument isn't set.
+	 *                        Default empty string.
+	 * @return mixed|string Value of the display argument if set, otherwise an empty string.
+	 */
+	public function get_display_arg( $key, $default = '' ) {
+		$display_args = $this->get_display_args();
+
+		if ( isset( $display_args[ $key ] ) ) {
+			$value = $display_args[ $key ];
+		} else {
+			$value = $default;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Retrieves the display arguments for the view (type).
 	 *
 	 * @since 3.0
