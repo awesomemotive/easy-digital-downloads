@@ -62,9 +62,9 @@ final class Graph_Endpoint extends Chart_Endpoint {
 
 		$dataset_count = count( $data );
 		$current       = 0;
-		$canvas_id     = $this->get_display_arg( 'target', 'edd-reports-graph' );
+		$target_el     = $this->get_display_arg( 'target', 'edd-reports-graph' );
 		?>
-		<canvas id="<?php echo esc_attr( $canvas_id ); ?>"></canvas>
+		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
 
 		<script type="application/javascript">
 
@@ -104,7 +104,7 @@ final class Graph_Endpoint extends Chart_Endpoint {
 					};
 			};
 
-			myLine = Chart.Line( $( '#<?php echo esc_js( $canvas_id ); ?>' ), {
+			myLine = Chart.Line( $( '#<?php echo esc_js( $target_el ); ?>' ), {
 				data: lineChartData,
 				options: {
 					responsive: true,
