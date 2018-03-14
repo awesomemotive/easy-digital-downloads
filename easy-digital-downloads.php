@@ -269,6 +269,7 @@ final class Easy_Digital_Downloads {
 		// Component helpers are loaded before everything
 		require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-component.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-base.php';
 
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-column.php';
