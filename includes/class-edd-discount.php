@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.7
  */
-class EDD_Discount {
+class EDD_Discount extends EDD_DB_Discount {
 	/**
 	 * Discount ID.
 	 *
@@ -1270,10 +1270,10 @@ class EDD_Discount {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
-		if ( (float) $cart_amount >= (float) $this->min_price ) {
+		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
 			$return = true;
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_price ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
 		}
 
 		/**
