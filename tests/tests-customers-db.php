@@ -161,12 +161,6 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$this->assertObjectHasAttribute( 'email', $customer );
 	}
 
-	public function test_get_column_by() {
-		$customer_id = EDD()->customers->get_column_by( 'id', 'email', 'testadmin@domain.com' );
-
-		$this->assertGreaterThan( 0, $customer_id );
-	}
-
 	public function test_exists() {
 		$this->assertTrue( EDD()->customers->exists( 'testadmin@domain.com' ) );
 	}
