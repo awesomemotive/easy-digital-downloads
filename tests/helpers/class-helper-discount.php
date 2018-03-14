@@ -25,17 +25,38 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 */
 	public static function create_simple_percent_discount() {
 		return edd_add_discount( array(
-			'code'              => '20OFF',
-			'uses'              => 54,
-			'max'               => 10,
 			'name'              => '20 Percent Off',
+			'code'              => '20OFF',
+			'status'            => 'active',
 			'type'              => 'percent',
 			'amount'            => '20',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2050 23:59:59',
-			'min_price'         => 128,
+			'use_count'         => 54,
+			'max_uses'          => 10,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2050 23:59:59'
+		) );
+	}
+
+	/**
+	 * Create a simple negative percentage discount.
+	 *
+	 * @since 2.3
+	 */
+	public static function create_simple_negative_percent_discount() {
+		return edd_add_discount( array(
+			'name'              => 'Double Double',
+			'code'              => 'DOUBLE',
 			'status'            => 'active',
-			'product_condition' => 'all'
+			'type'              => 'percent',
+			'amount'            => '-100',
+			'use_count'         => 54,
+			'max_uses'          => 10,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2050 23:59:59'
 		) );
 	}
 
@@ -46,17 +67,17 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 */
 	public static function create_simple_flat_discount() {
 		return edd_add_discount( array(
-			'code'              => '10FLAT',
-			'uses'              => 0,
-			'max'               => 10,
 			'name'              => '$10 Off',
+			'code'              => '10FLAT',
 			'type'              => 'flat',
-			'amount'            => '10',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2050 23:59:59',
-			'min_price'         => 128,
 			'status'            => 'active',
-			'product_condition' => 'all'
+			'amount'            => '10',
+			'max_uses'          => 10,
+			'use_count'         => 0,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2050 23:59:59'
 		) );
 	}
 
@@ -67,17 +88,17 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 */
 	public static function created_expired_flat_discount() {
 		return edd_add_discount( array(
-			'code'              => '20FLAT',
-			'uses'              => 0,
-			'max'               => 20,
 			'name'              => '$20 Off',
+			'code'              => '20FLAT',
 			'type'              => 'flat',
-			'amount'            => '20',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2012 23:59:59',
-			'min_price'         => 128,
 			'status'            => 'expired',
-			'product_condition' => 'all'
+			'amount'            => '20',
+			'max_uses'          => 20,
+			'use_count'         => 0,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2012 23:59:59'
 		) );
 	}
 
