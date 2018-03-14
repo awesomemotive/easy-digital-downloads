@@ -100,8 +100,12 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_field( $discount_id, $field = '' ) {
-	$discounts = edd_get_discount( $discount_id );
-	return $discount->{$field};
+	$discount = edd_get_discount( $discount_id );
+
+	// Check that field exists
+	return isset( $discount->{$field} )
+		? $discount->{$field}
+		: null;
 }
 
 /**
@@ -348,8 +352,7 @@ function edd_is_discount_active( $discount_id = null, $update = true, $set_error
  * @return string $code Discount Code.
  */
 function edd_get_discount_code( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->code;
+	return edd_get_discount_field( $discount_id, 'code' );
 }
 
 /**
@@ -362,8 +365,7 @@ function edd_get_discount_code( $discount_id = null ) {
  * @return string $start Discount start date.
  */
 function edd_get_discount_start_date( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->start_date;
+	return edd_get_discount_field( $discount_id, 'start_date' );
 }
 
 /**
@@ -376,8 +378,7 @@ function edd_get_discount_start_date( $discount_id = null ) {
  * @return string $expiration Discount expiration.
  */
 function edd_get_discount_expiration( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->end_date;
+	return edd_get_discount_field( $discount_id, 'end_date' );
 }
 
 /**
@@ -390,8 +391,7 @@ function edd_get_discount_expiration( $discount_id = null ) {
  * @return int $max_uses Maximum number of uses for the discount code.
  */
 function edd_get_discount_max_uses( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return (int) $discount->max_uses;
+	return edd_get_discount_field( $discount_id, 'max_uses' );
 }
 
 /**
@@ -404,8 +404,7 @@ function edd_get_discount_max_uses( $discount_id = null ) {
  * @return int $uses Number of times a discount has been used.
  */
 function edd_get_discount_uses( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return (int) $discount->use_count;
+	return edd_get_discount_field( $discount_id, 'use_count' );
 }
 
 /**
@@ -418,8 +417,7 @@ function edd_get_discount_uses( $discount_id = null ) {
  * @return float $min_price Minimum purchase amount.
  */
 function edd_get_discount_min_price( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return edd_format_amount( $discount->min_cart_price );
+	return edd_get_discount_field( $discount_id, 'min_cart_price' );
 }
 
 /**
@@ -446,8 +444,7 @@ function edd_get_discount_amount( $discount_id = null ) {
  * @return string $type Discount type
  */
 function edd_get_discount_type( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->type;
+	return edd_get_discount_field( $discount_id, 'type' );
 }
 
 /**
@@ -460,8 +457,7 @@ function edd_get_discount_type( $discount_id = null ) {
  * @return array $excluded_products IDs of the required products.
  */
 function edd_get_discount_excluded_products( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->excluded_products;
+	return edd_get_discount_field( $discount_id, 'excluded_products' );
 }
 
 /**
@@ -474,8 +470,7 @@ function edd_get_discount_excluded_products( $discount_id = null ) {
  * @return array $product_reqs IDs of the required products.
  */
 function edd_get_discount_product_reqs( $discount_id = null ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->product_reqs;
+	return edd_get_discount_field( $discount_id, 'product_reqs' );
 }
 
 /**
@@ -489,8 +484,7 @@ function edd_get_discount_product_reqs( $discount_id = null ) {
  * @return string Product condition.
  */
 function edd_get_discount_product_condition( $discount_id = 0 ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->product_condition;
+	return edd_get_discount_field( $discount_id, 'product_condition' );
 }
 
 /**
@@ -508,8 +502,7 @@ function edd_get_discount_product_condition( $discount_id = 0 ) {
  * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $discount_id = 0 ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->is_not_global;
+	return ( 'global' === edd_get_discount_field( $discount_id, 'scope' ) );
 }
 
 /**
@@ -525,8 +518,7 @@ function edd_is_discount_not_global( $discount_id = 0 ) {
  * @return string global or not_global.
  */
 function edd_get_discount_scope( $discount_id = 0 ) {
-	$discount = edd_get_discount( $discount_id );
-	return $discount->scope;
+	return edd_get_discount_field( $discount_id, 'scope' );
 }
 
 /**
@@ -847,17 +839,21 @@ function delete_discount_meta_by_key( $discount_meta_key ) {
  */
 function edd_set_cart_discount( $code = '' ) {
 
-	if( edd_multiple_discounts_allowed() ) {
-		// Get all active cart discounts
+	// Get all active cart discounts
+	if ( edd_multiple_discounts_allowed() ) {
 		$discounts = edd_get_cart_discounts();
+
+	// Only one discount allowed per purchase, so override any existing
 	} else {
-		$discounts = false; // Only one discount allowed per purchase, so override any existing
+		$discounts = false;
 	}
 
 	if ( $discounts ) {
 		$key = array_search( strtolower( $code ), array_map( 'strtolower', $discounts ) );
-		if( false !== $key ) {
-			unset( $discounts[ $key ] ); // Can't set the same discount more than once
+
+		// Can't set the same discount more than once
+		if ( false !== $key ) {
+			unset( $discounts[ $key ] );
 		}
 		$discounts[] = $code;
 	} else {
