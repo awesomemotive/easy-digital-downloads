@@ -210,7 +210,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::get_min_price()
 	 */
 	public function test_get_discount_min_price_by_property() {
-		$this->assertEquals( 128, self::$discount->min_price );
+		$this->assertEquals( 128, self::$discount->min_cart_price );
 	}
 
 	/**
@@ -1094,7 +1094,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_formatted_discount_amount() {
 		$rate = get_post_meta( self::$discount_id, '_edd_discount_amount', true );
-		$this->assertSame( '20%', edd_format_discount_rate( 'percent', $rate ) );
+		$this->assertSame( '20.00%', edd_format_discount_rate( 'percent', $rate ) );
 	}
 
 	/**
@@ -1115,7 +1115,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_formatted_discount_amount_negative() {
 		$amount = edd_get_discount_amount( self::$negativediscount_id );
-		$this->assertSame( '-100%', edd_format_discount_rate( 'percent', $amount ) );
+		$this->assertSame( '-100.00%', edd_format_discount_rate( 'percent', $amount ) );
 	}
 
 	/**
