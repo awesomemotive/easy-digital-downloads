@@ -194,7 +194,7 @@ class EDD_Discount extends EDD_DB_Discount {
 		}
 
 		// Already an object
-		if ( is_a( $_id_or_code_or_name, 'EDD_Discount' ) ) {
+		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
 
 		// Code
