@@ -1469,7 +1469,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 		}
 
 		// Return result
-		return $retval;
+		return $this->shape_item( $retval );
 	}
 
 	/**
