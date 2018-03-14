@@ -1394,7 +1394,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 	/** Queries ***************************************************************/
 
 	/**
-	 * Get a single database row by the primary colum ID
+	 * Get a single database row by the primary column ID, possibly from cache
 	 *
 	 * @since 3.0.0
 	 *
@@ -1415,7 +1415,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 	}
 
 	/**
-	 * Get a single database row by the primary colum ID
+	 * Get a single database row by any column and value, possibly from cache.
 	 *
 	 * @since 3.0.0
 	 *
@@ -1452,12 +1452,9 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 		// Item not cached
 		if ( false === $retval ) {
-			$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
-				? '%d'
-				: '%s';
-			$table  = $this->get_table_name();
-			$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
-			$retval = $this->get_db()->get_row( $select );
+
+			// Try to get item directly from DB
+			$retval = $this->get_item_raw( $column_name, $column_value );
 
 			// Bail because item does not exist
 			if ( empty( $retval ) || is_wp_error( $retval ) ) {
@@ -1470,6 +1467,42 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 		// Return result
 		return $this->shape_item( $retval );
+	}
+
+	/**
+	 * Get a single database row by any column and value, skipping cache.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $column_name  Name of database column
+	 * @param string $column_value Value to query for
+	 *
+	 * @return mixed False if empty/error, Object if successful
+	 */
+	private function get_item_raw( $column_name = '', $column_value = '' ) {
+
+		// @todo get from EDD_DB_Column
+		$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
+			? '%d'
+			: '%s';
+
+		// Query database for row
+		$table  = $this->get_table_name();
+		$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
+		$result = $this->get_db()->get_row( $select );
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		// Return row
+		return $result;
 	}
 
 	/**
@@ -1553,13 +1586,13 @@ class EDD_DB_Query extends EDD_DB_Base {
 		// Splice new data into item, and cut out non-keys for meta
 		$data = array_merge( $item, $data );
 		$meta = array_diff_key( $data, $columns );
-		$data = array_intersect_key( $data, $columns );
+		$save = array_intersect_key( $data, $columns );
 
 		// Never update the primary key value
-		unset( $data[ $this->get_primary_column_name() ] );
+		unset( $save[ $this->get_primary_column_name() ] );
 
 		// Attempt to update
-		$result = $this->get_db()->update( $table, $data, $where );
+		$result = $this->get_db()->update( $table, $save, $where );
 
 		// Bail if an error occurred
 		if ( is_wp_error( $result ) ) {
@@ -1576,8 +1609,11 @@ class EDD_DB_Query extends EDD_DB_Base {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
+		// Cast to stdClass for caching
+		$save = (object) $save;
+
 		// Prime the item cache
-		$this->get_item( $item_id );
+		$this->update_item_cache( $save );
 
 		// Return result
 		return $result;
