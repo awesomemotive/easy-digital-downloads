@@ -9,7 +9,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema {
+class EDD_DB_Schema extends EDD_DB_Base {
 
 	/**
 	 * Array of database column objects to turn into EDD_DB_Column
