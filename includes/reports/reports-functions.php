@@ -750,12 +750,19 @@ function default_display_report( $report ) {
  *
  * @since 3.0
  *
- * @param \EDD\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
- *                                               Not always set.
- * @param array                          $args   Tile display arguments.
+ * @param Data\Report $report Report object the tile endpoint is being rendered in.
+ *                            Not always set.
+ * @param array       $args   {
+ *     Tile display arguments.
+ *
+ *     @type Data\Tile_Endpoint $endpoint     Endpoint object.
+ *     @type mixed|array        $data         Date for display. By default, will be an array,
+ *                                            but can be of other types.
+ *     @type array              $display_args Array of any display arguments.
+ * }
  * @return void Meta box display callbacks only echo output.
  */
-function default_display_tile( $object, $tile ) {
+function default_display_tile( $report, $tile ) {
 	if ( ! isset( $tile['args'] ) ) {
 		return;
 	}
