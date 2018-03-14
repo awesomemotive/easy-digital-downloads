@@ -1103,10 +1103,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_edd_get_discount_by() {
 		$discount = edd_get_discount_by( 'id', self::$discount_id );
 
-		$this->assertEquals( $discount->ID, self::$discount_id );
-		$this->assertEquals( '20 Percent Off', edd_get_discount_by( 'code', '20OFF' )->post_title );
-		$this->assertEquals( $discount->ID, edd_get_discount_by( 'code', '20OFF' )->ID );
-		$this->assertEquals( $discount->ID, edd_get_discount_by( 'name', '20 Percent Off' )->ID );
+		$this->assertEquals( $discount->id,    self::$discount_id );
+		$this->assertEquals( '20 Percent Off', edd_get_discount_by( 'code', '20OFF'          )->post_title );
+		$this->assertEquals( $discount->id,    edd_get_discount_by( 'code', '20OFF'          )->id         );
+		$this->assertEquals( $discount->id,    edd_get_discount_by( 'name', '20 Percent Off' )->id         );
 	}
 
 	/**
