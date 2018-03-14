@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.3
  */
-class EDD_Customer {
+class EDD_Customer extends EDD_DB_Customer {
 
 	/**
 	 * The customer ID

@@ -74,7 +74,7 @@ class EDD_Discount_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD_DB_Discount';
+	public $item_shape = 'EDD_Discount';
 
 	/** Cache *****************************************************************/
 
