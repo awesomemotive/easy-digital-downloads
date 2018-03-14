@@ -1846,17 +1846,12 @@ class EDD_Discount {
 
 		edd_add_discount_meta( $discount_id, 'legacy_id', $old_discount->ID );
 
-		unset( $value );
-		unset( $key );
+		unset( $key, $value );
 
-		if( ! empty( $meta_to_migrate ) ) {
-
+		if ( ! empty( $meta_to_migrate ) ) {
 			foreach( $meta_to_migrate as $key => $value ) {
-
-				$discount->add_meta( $key, $value );
-
+				edd_add_discount_meta( $discount_id, $key, $value );
 			}
-
 		}
 
 		do_action( 'edd_migrate_discount_record', $old_discount->ID, $discount );
