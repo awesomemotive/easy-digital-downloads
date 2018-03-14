@@ -785,6 +785,42 @@ class EDD_DB_Query extends EDD_DB_Base {
 	}
 
 	/**
+	 * Get a single database row by any column and value, skipping cache.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $column_name  Name of database column
+	 * @param string $column_value Value to query for
+	 *
+	 * @return mixed False if empty/error, Object if successful
+	 */
+	private function get_item_raw( $column_name = '', $column_value = '' ) {
+
+		// @todo get from EDD_DB_Column
+		$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
+			? '%d'
+			: '%s';
+
+		// Query database for row
+		$table  = $this->get_table_name();
+		$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
+		$result = $this->get_db()->get_row( $select );
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		// Return row
+		return $result;
+	}
+
+	/**
 	 * Used internally to get a list of item IDs matching the query vars.
 	 *
 	 * @since 3.0.0
@@ -1467,42 +1503,6 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 		// Return result
 		return $this->shape_item( $retval );
-	}
-
-	/**
-	 * Get a single database row by any column and value, skipping cache.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $column_name  Name of database column
-	 * @param string $column_value Value to query for
-	 *
-	 * @return mixed False if empty/error, Object if successful
-	 */
-	private function get_item_raw( $column_name = '', $column_value = '' ) {
-
-		// @todo get from EDD_DB_Column
-		$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
-			? '%d'
-			: '%s';
-
-		// Query database for row
-		$table  = $this->get_table_name();
-		$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
-		$result = $this->get_db()->get_row( $select );
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		// Bail if no row exists
-		if ( empty( $result ) ) {
-			return false;
-		}
-
-		// Return row
-		return $result;
 	}
 
 	/**
