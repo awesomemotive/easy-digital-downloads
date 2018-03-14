@@ -17,7 +17,7 @@ if ( ! class_exists( 'EDD_DB_Query' ) ) :
  *
  * @see EDD_DB_Query::__construct() for accepted arguments.
  */
-class EDD_DB_Query {
+class EDD_DB_Query extends EDD_DB_Base {
 
 	/** Global Properties *****************************************************/
 
@@ -1452,9 +1452,11 @@ class EDD_DB_Query {
 
 		// Item not cached
 		if ( false === $retval ) {
+			$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
+				? '%d'
+				: '%s';
 			$table  = $this->get_table_name();
-			//$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = %d", $column_value );
-			$select = "SELECT * FROM {$table} WHERE {$column_name} = {$column_value}";
+			$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
 			$retval = $this->get_db()->get_row( $select );
 
 			// Bail because item does not exist
@@ -1512,7 +1514,7 @@ class EDD_DB_Query {
 		}
 
 		// Return result
-		return $result;
+		return $this->get_db()->insert_id;
 	}
 
 	/**
