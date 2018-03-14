@@ -1576,8 +1576,8 @@ class EDD_DB_Query extends EDD_DB_Base {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
-		// Clean the item cache
-		$this->clean_item_cache( $item_id );
+		// Prime the item cache
+		$this->get_item( $item_id );
 
 		// Return result
 		return $result;
@@ -1602,12 +1602,13 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 		$where  = array( $this->get_primary_column_name() => $item_id );
 		$table  = $this->get_table_name();
+		$item   = $this->get_item( $item_id );
 		$result = $this->get_db()->delete( $table, $where );
 
 		// Maybe clean caches on successful delete
 		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
 			$this->delete_all_item_meta( $item_id );
-			$this->clean_item_cache( $item_id );
+			$this->clean_item_cache( $item );
 		}
 
 		// Return result
@@ -1889,35 +1890,40 @@ class EDD_DB_Query extends EDD_DB_Base {
 	}
 
 	/**
-	 * Prime item & meta caches for items
+	 * Maybe prime item & item-meta caches by querying 1 time for all un-cached
+	 * items.
 	 *
-	 * Accepts an object, or an array of objects.
+	 * Accepts a single ID, or an array of IDs.
+	 *
+	 * The reason this accepts only IDs is because it gets called immediately
+	 * after an item is inserted in the database, but before items have been
+	 * "shaped" into proper objects, so object properties may not be set yet.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $items
+	 * @param array $item_ids
 	 *
 	 * @return boolean False if empty
 	 */
-	private function prime_item_caches( $items = false ) {
+	private function prime_item_caches( $item_ids = array() ) {
 
 		// Bail if no items to cache
-		if ( empty( $items ) ) {
+		if ( empty( $item_ids ) ) {
 			return false;
 		}
 
 		// Accepts single values, so cast to array
-		$items = (array) $items;
+		$item_ids = (array) $item_ids;
 
 		// Update item caches
-		if ( ! empty( $this->query_vars['update_cache'] ) ) {
+		if ( empty( $this->query_vars['update_cache'] ) ) {
 
 			// Look for non-cached IDs
-			$ids = _get_non_cached_ids( $items, $this->cache_group );
+			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
 
 			// Bail if IDs are cached
 			if ( empty( $ids ) ) {
-				return;
+				return false;
 			}
 
 			// Query
@@ -1935,20 +1941,24 @@ class EDD_DB_Query extends EDD_DB_Base {
 		// Update meta data caches
 		if ( ! empty( $this->query_vars['update_meta_cache'] ) ) {
 			$singular = rtrim( $this->table_name, 's' ); // sic
-			update_meta_cache( $singular, $items );
+			update_meta_cache( $singular, $item_ids );
 		}
 	}
 
 	/**
-	 * Update the cache for an item.
+	 * Update the cache for an item. Does not update item-meta cache.
 	 *
-	 * Accepts an object, or an array of objects.
+	 * Accepts a single object, or an array of objects.
+	 *
+	 * The reason this does not accept ID's is because this gets called
+	 * after an item is already updated in the database, so we want to avoid
+	 * querying for it again. It's just safer this way.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param array $items
 	 */
-	private function update_item_cache( $items = false ) {
+	private function update_item_cache( $items = array() ) {
 
 		// Bail if no items to cache
 		if ( empty( $items ) ) {
@@ -1973,9 +1983,13 @@ class EDD_DB_Query extends EDD_DB_Base {
 	}
 
 	/**
-	 * Clean the cache for an item
+	 * Clean the cache for an item. Does not clean item-meta.
 	 *
-	 * Accepts an object, or an array of objects.
+	 * Accepts a single object, or an array of objects.
+	 *
+	 * The reason this does not accept ID's is because this gets called
+	 * after an item is already deleted from the database, so it cannot be
+	 * queried and may not exist in the cache. It's just safer this way.
 	 *
 	 * @since 3.0.0
 	 *
@@ -1983,25 +1997,23 @@ class EDD_DB_Query extends EDD_DB_Base {
 	 *
 	 * @return boolean
 	 */
-	private function clean_item_cache( $items = false ) {
+	private function clean_item_cache( $items = array() ) {
 
 		// Bail if no items to cache
 		if ( empty( $items ) ) {
 			return false;
 		}
 
-		// Accepts single values, so cast to array
-		$items = (array) $items;
-
 		// Make sure items is an array
-		$items  = wp_parse_id_list( $items );
-		$caches = $this->get_cache_groups();
+		$items = (array) $items;
+		$groups = $this->get_cache_groups();
 
 		// Loop through all items and cache them
 		foreach ( $items as $item ) {
-			$item = $this->get_item( $item );
-			foreach ( $caches as $key => $group ) {
-				wp_cache_delete( $item->{$key}, $group );
+			if ( is_object( $item ) ) {
+				foreach ( $groups as $key => $group ) {
+					wp_cache_delete( $item->{$key}, $group );
+				}
 			}
 		}
 
