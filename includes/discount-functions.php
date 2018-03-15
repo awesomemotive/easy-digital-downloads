@@ -300,13 +300,20 @@ function edd_remove_discount( $discount_id = 0 ) {
  * @return bool Whether the status has been updated or not.
  */
 function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) {
-	$updated  = false;
-	$discount = new EDD_Discount( $discount_id );
 
+	// Defaults
+	$updated    = false;
+	$new_status = sanitize_key( $new_status );
+	$discount   = edd_get_discount( $discount_id );
+
+	// Try to update status
 	if ( ! empty( $discount->id ) ) {
-		$updated = $discount->update_status( $new_status );
+		$updated = edd_update_discount( $discount, array(
+			'status' => $new_status
+		) );
 	}
 
+	// Return
 	return $updated;
 }
 
@@ -417,7 +424,7 @@ function edd_get_discount_uses( $discount_id = null ) {
  * @return float $min_price Minimum purchase amount.
  */
 function edd_get_discount_min_price( $discount_id = null ) {
-	return edd_get_discount_field( $discount_id, 'min_cart_price' );
+	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_cart_price' ) );
 }
 
 /**
