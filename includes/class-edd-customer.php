@@ -176,19 +176,6 @@ class EDD_Customer extends EDD_DB_Customer {
 	}
 
 	/**
-	 * Magic __get function to dispatch a call to retrieve a private property
-	 *
-	 * @since 2.3
-	 */
-	public function __get( $key ) {
-		if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
-		} else {
-			return new WP_Error( 'edd-customer-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
-		}
-	}
-
-	/**
 	 * Creates a customer
 	 *
 	 * @since  2.3
