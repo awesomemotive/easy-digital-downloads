@@ -28,27 +28,27 @@ class EDD_DB_Base {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param string $name
+	 * @param string $key
 	 * @return mixed
 	 */
-	public function __get( $name = '' ) {
+	public function __get( $key = '' ) {
 
 		// No more uppercase ID properties ever
-		if ( 'ID' === $name ) {
-			$name = 'id';
-		};
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
 
 		// Return property if exists
-		if ( method_exists( $this, "get_{$name}" ) ) {
-			return call_user_func( array( $this, "get_{$name}" ) );
+		if ( method_exists( $this, "get_{$key}" ) ) {
+			return call_user_func( array( $this, "get_{$key}" ) );
 
 		// Return get method results if exists
-		} elseif ( isset( $this->{$name} ) ) {
-			return $this->{$name};
+		} elseif ( isset( $this->{$key} ) ) {
+			return $this->{$key};
 
 		// Return null if not exists
 		} else {
-			return null;
+			return new WP_Error(  'edd-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
 	}
 }
