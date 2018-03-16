@@ -245,6 +245,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add cart items
 		$i = 1;
+		$paypal_sum = 0;
 		if( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
 			foreach ( $purchase_data['cart_details'] as $item ) {
 
@@ -261,6 +262,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				if ( edd_use_skus() ) {
 					$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 				}
+
+				$paypal_sum += ( $item_amount * $item['quantity'] );
 
 				$i++;
 
@@ -288,6 +291,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		if ( $discounted_amount > '0' ) {
 			$paypal_args['discount_amount_cart'] = edd_sanitize_amount( $discounted_amount );
+		}
+
+		if( $paypal_sum > $purchase_data['price'] ) {
+			$difference = round( $paypal_sum - $purchase_data['price'], 2 );
+			if( ! isset( $paypal_args['discount_amount_cart'] ) ) {
+				$paypal_args['discount_amount_cart'] = 0;
+			}
+			$paypal_args['discount_amount_cart'] += $difference;
 		}
 
 		// Add taxes to the cart

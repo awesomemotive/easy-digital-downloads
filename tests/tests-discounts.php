@@ -166,6 +166,28 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertSame( 'all', edd_get_discount_product_condition( $this->_post_id ) );
 	}
 
+	public function test_discount_status_label_expired_should_return_Expired() {
+		update_post_meta( $this->_post_id, '_edd_discount_status', 'expired' );
+
+		$this->assertSame( 'Expired', edd_get_discount_status_label( $this->_post_id ) );
+	}
+
+	public function test_discount_status_label_inactive_should_return_Inactive() {
+		update_post_meta( $this->_post_id, '_edd_discount_status', 'inactive' );
+
+		$this->assertSame( 'Inactive', edd_get_discount_status_label( $this->_post_id ) );
+	}
+
+	public function test_discount_status_label_active_should_return_Active() {
+		$this->assertSame( 'Active', edd_get_discount_status_label( $this->_post_id ) );
+	}
+
+	public function test_discount_status_label_unregistered_status_should_return_Active() {
+		update_post_meta( $this->_post_id, '_edd_discount_status', 'foo' );
+
+		$this->assertSame( 'Active', edd_get_discount_status_label( $this->_post_id ) );
+	}
+
 	public function test_discount_is_not_global() {
 		$this->assertFalse( edd_is_discount_not_global( $this->_post_id ) );
 	}

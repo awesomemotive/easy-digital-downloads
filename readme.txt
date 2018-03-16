@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.1
-Stable Tag: 2.8.17
+Tested up to: 4.9.4
+Stable Tag: 2.9
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -190,10 +190,52 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 == Changelog ==
 
+= 2.9, March 15, 2018 =
+
+* New: A message is now displayed on the [edd_register] shortcode when the user is already logged in.
+* New: Support was added for resume and ranged download links.
+* New: The customer name, email, and price ID was added to sales log export.
+* New: Added ability to sort by sales/earnings in the [downloads] shortcode.
+* New: Any page containing the [download_checkout] shortcode returns true for edd_is_checkout().
+* New: Upgraded to the latest version of the Chosen library.
+* New: Added United Kingdom Counties to pre-populated "states" list.
+* New: EDD_Payment::add_note now escapes the HTML provided.
+* New: Added the variable price ID to the download log entries.
+* New: Added a helper to retrieve and filter discount status labels.
+* Fix: Prevent a possible PHP Warning when no tax rate is entered, when taxes are enabled.
+* Fix: PayPal Standard: Totals with discounts could calculate differently between EDD and PayPal, preventing completion of the purchase.
+* Fix: Links would break when using SendGrid's link tracking feature.
+* Fix: Download widget would cause PHP warnings when no tags were attached to a product.
+* Fix: Improved support for payment method icons when not using a standard WP Install directory format.
+* Fix: Prevent a possible corrupted download file by verifying no output buffers exists.
+* Fix: Opt-in telemetry data was sending the incorrect Locale.
+* Fix: Prevent a possible PHP Notice when editing a discount code.
+* Fix: Checkboxes on Advanced Settings of variable prices would not always save on the first try.
+* Fix: Hardcoded 'Checkout' text was not using the 'Add to Cart text' variable.
+* Fix: Prices were possibly incorrect when using the Quick Edit feature.
+* Tweak: The edd_get_download method now returns an `EDD_Download` object instead of a `WP_Post`.
+* Tweak: Corrected some URLs to the EDD site that were using an old URL.
+* Tweak: The customer UI now shows the country and state name, instead of their codes.
+* Tweak: Removed the hyphen and "Go Back" button from discount screens.
+* Tweak: The cart contents method returned boolean false instead of an empty array when the cart was empty.
+* Tweak: Reduced the blocking calls in the opt-in telemetry requests to help with performance.
+* Dev: Added filters for new user notification email.
+* Dev: Added filter and email heading to New Sale Notifications.
+* Dev: Added hooks before and after downloads shortcode grid.
+
+= 2.8.18, February 6, 2018 =
+
+* Fix: Earnings report was incomplete and did not allow adding additional statuses.
+* Fix: Incorrect HTML attribute on the upload modal.
+* Fix: WordPress file editor was not working when Easy Digital Downloads was not active.
+* Fix: Forced file data to be sanitized as an array.
+* New: Added new filter to allow disabling X-Accel-Redirect when downloading files.
+* New: Enabled gateways are now included in the opt-in telemetry data.
+
 = 2.8.17, January 1, 2018 =
 
 * Fix: Reverted Schema microdata change from SPAN to DIV tag as it broke some layouts
-* Tweak: IP addresses on payment View Order Details screens now links to ipinfo 
+* Tweak: IP addresses on payment View Order Details screens now links to ipinfo
 
 = 2.8.16, December 21, 2017 =
 * Fix: Hardened EDD actions for use with WP Cron.
