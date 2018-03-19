@@ -126,7 +126,7 @@ module.exports = function(grunt) {
 			main: ['build/<%= pkg.name %>']
 		},
 
-		// Copy the theme into the build directory
+		// Copy the plugin into the build directory
 		copy: {
 			main: {
 				src:  [
