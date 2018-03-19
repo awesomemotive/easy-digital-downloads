@@ -745,7 +745,7 @@ function edd_get_registered_settings() {
 					),
 					'free_checkout_label' => array(
 						'id'   => 'free_checkout_label',
-						'name' => __( 'Register Text', 'easy-digital-downloads' ),
+						'name' => __( 'Complete Free Purchase Text', 'easy-digital-downloads' ),
 						'desc' => __( 'The button label for completing a free purchase.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Free Download', 'easy-digital-downloads' ),
