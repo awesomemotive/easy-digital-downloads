@@ -449,7 +449,7 @@ function edd_recovery_force_login_fields() {
 	$resuming_payment = EDD()->session->get( 'edd_resume_payment' );
 	if ( $resuming_payment ) {
 		$payment = new EDD_Payment( $resuming_payment );
-		if ( $payment->user_id > 0 && ( ! is_user_logged_in() ) ) {
+		if ( ! empty( $payment->user_id ) && ( ! is_user_logged_in() ) ) {
 			?>
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
