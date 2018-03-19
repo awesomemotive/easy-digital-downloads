@@ -17,14 +17,14 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
-						src: ['*.css', '!*.min.css', '!*jquery*.css'],
+						src: ['edd-admin.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
 					},
 					{
 						expand: true,
 						cwd: 'templates',
-						src: ['*.css', '!*.min.css'],
+						src: ['edd.css'],
 						dest: 'templates',
 						ext: '.min.css'
 					}
