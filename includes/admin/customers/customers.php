@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_customers_page() {
 	$default_views = edd_customer_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
-	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
+	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[$requested_view] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
 	} else {
 		edd_customers_list();
@@ -164,7 +164,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 				</div>
 
 				<div id="edd-item-card-wrapper" class="edd-customer-card-wrapper" style="float: left">
-					<?php $callbacks[$view]( $customer ) ?>
+					<?php call_user_func( $callbacks[ $view ], $customer ); ?>
 				</div>
 			</div>
 
@@ -231,8 +231,8 @@ function edd_customers_view( $customer ) {
 						<span class="info-item" data-key="line1"><?php echo $address['line1']; ?></span>
 						<span class="info-item" data-key="line2"><?php echo $address['line2']; ?></span>
 						<span class="info-item" data-key="city"><?php echo $address['city']; ?></span>
-						<span class="info-item" data-key="state"><?php echo $address['state']; ?></span>
-						<span class="info-item" data-key="country"><?php echo $address['country']; ?></span>
+						<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['country'], $address['state'] ); ?></span>
+						<span class="info-item" data-key="country"><?php echo edd_get_country_name( $address['country'] ); ?></span>
 						<span class="info-item" data-key="zip"><?php echo $address['zip']; ?></span>
 					</span>
 
@@ -266,7 +266,7 @@ function edd_customers_view( $customer ) {
 							?>
 						</select>
 						<?php else : ?>
-						<input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+						<input type="text" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>" value="<?php echo $address['state']; ?>"/>
 						<?php endif; ?>
 						<input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo $address['zip']; ?>" />
 					</span>

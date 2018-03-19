@@ -63,11 +63,11 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$user = get_userdata( $this->_user_id );
 
 		$user_info = array(
-			'id' => $user->ID,
-			'email' => 'testadmin@domain.com',
+			'id'         => $user->ID,
+			'email'      => 'testadmin@domain.com',
 			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
@@ -126,6 +126,10 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
+
+		global $wpdb;
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}edd_customers" );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}edd_customermeta" );
 	}
 
 	public function test_installed() {
@@ -248,10 +252,14 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 		$this->assertEquals( 1, EDD()->customers->count() );
 
+	}
+
+	public function test_count_customers_future() {
+
 		$args = array(
 			'date' => array(
-				'start' => 'January 1 ' . date( 'Y' ) + 1,
-				'end'   => 'January 1 ' . date( 'Y' ) + 2,
+				'start' => 'January 1, ' . ( date( 'Y', strtotime( '+1 year' ) ) ),
+				'end'   => 'January 1, ' . ( date( 'Y', strtotime( '+2 years' ) ) ),
 			)
 		);
 

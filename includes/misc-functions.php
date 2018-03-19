@@ -24,6 +24,20 @@ function edd_is_test_mode() {
 }
 
 /**
+ * Is Debug Mode
+ *
+ * @since 2.8.7
+ * @return bool $ret True if debug mode is enabled, false otherwise
+ */
+function edd_is_debug_mode() {
+	$ret = edd_get_option( 'debug_mode', false );
+	if( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
+		$ret = true;
+	}
+	return (bool) apply_filters( 'edd_is_debug_mode', $ret );
+}
+
+/**
  * Checks if Guest checkout is enabled
  *
  * @since 1.0
@@ -169,7 +183,9 @@ function edd_get_ip() {
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		// can include more than 1 ip, first is the public one
+		$ip = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+		$ip = trim($ip[0]);
 	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
@@ -327,7 +343,8 @@ function edd_get_currencies() {
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
-		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' )
+		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
+		'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -378,6 +395,9 @@ function edd_currency_symbol( $currency = '' ) {
 			break;
 		case "JPY" :
 			$symbol = '&yen;';
+			break;
+		case "AOA" :
+			$symbol = 'Kz';
 			break;
 		default :
 			$symbol = $currency;
@@ -590,7 +610,7 @@ function edd_is_func_disabled( $function ) {
  * @author Chris Christoff
  *
  * @param unknown $v
- * @return int|string
+ * @return int
  */
 function edd_let_to_num( $v ) {
 	$l   = substr( $v, -1 );
@@ -608,7 +628,7 @@ function edd_let_to_num( $v ) {
 			break;
 	}
 
-	return $ret;
+	return (int) $ret;
 }
 
 /**
@@ -656,11 +676,19 @@ function edd_get_upload_dir() {
 /**
  * Delete symbolic links after they have been used
  *
+ * This function is only intended to be used by WordPress cron.
+ *
  * @access public
  * @since  1.5
  * @return void
  */
 function edd_cleanup_file_symlinks() {
+
+	// Bail if not in WordPress cron
+	if ( ! edd_doing_cron() ) {
+		return;
+	}
+
 	$path = edd_get_symlink_dir();
 	$dir = opendir( $path );
 
@@ -879,7 +907,7 @@ if ( ! function_exists( 'getallheaders' ) ) :
 	 * @return array
 	 */
 	function getallheaders() {
-		$headers = '';
+		$headers = array();
 		foreach ( $_SERVER as $name => $value ) {
 			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
 				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
@@ -929,4 +957,47 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	}
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}
+
+/**
+ * Given a Payment ID, generate a link to IP address provider (ipinfo.io)
+ *
+ * @since  2.8.15
+ * @param  int		$payment_id The Payment ID
+ * @return string	A link to the IP details provider
+ */
+function edd_payment_get_ip_address_url( $payment_id ) {
+	
+	$payment = new EDD_Payment( $payment_id );
+  
+	$base_url = 'https://ipinfo.io/';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->ip ) . '" target="_blank">' . esc_attr( $payment->ip ) . '</a>';
+
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->ip, $payment_id );
+
+}
+  
+/**
+ * Abstraction for WordPress cron checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific cron related jobs. You probably won't want to use it until then.
+ *
+ * @since 2.8.16
+ *
+ * @return boolean
+ */
+function edd_doing_cron() {
+
+	// Bail if not doing WordPress cron (>4.8.0)
+	if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
+		return true;
+
+	// Bail if not doing WordPress cron (<4.8.0)
+	} elseif ( defined( 'DOING_CRON' ) && ( true === DOING_CRON ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
 }

@@ -37,12 +37,17 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
-			'user_id'    => __( 'User', 'easy-digital-downloads' ),
-			'download'   => edd_get_label_singular(),
-			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'ID'          => __( 'Log ID', 'easy-digital-downloads' ),
+			'user_id'     => __( 'User', 'easy-digital-downloads' ),
+			'customer_id' => __( 'Customer ID', 'easy-digital-downloads' ),
+			'email'       => __( 'Email', 'easy-digital-downloads' ),
+			'first_name'  => __( 'First Name', 'easy-digital-downloads' ),
+			'last_name'   => __( 'Last Name', 'easy-digital-downloads' ),
+			'download'    => edd_get_label_singular(),
+			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
+			'payment_id'  => __( 'Payment ID', 'easy-digital-downloads' ),
+			'price_id'    => __( 'Price ID', 'easy-digital-downloads' ),
+			'date'        => __( 'Date', 'easy-digital-downloads' ),
 		);
 
 		return $cols;
@@ -64,7 +69,9 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		$args = array(
 			'log_type'       => 'sale',
 			'posts_per_page' => 30,
-			'paged'          => $this->step
+			'paged'          => $this->step,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -96,6 +103,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 					if ( is_array( $cart_items ) ) {
 						foreach ( $cart_items as $item ) {
+							$log_price_id = null;
 							if ( $item['id'] == $log->post_parent ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
 									$log_price_id = get_post_meta( $log->ID, '_edd_log_price_id', true );
@@ -112,12 +120,17 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 					}
 				}
 				$data[] = array(
-					'ID'         => $log->ID,
-					'user_id'    => $customer->user_id,
-					'download'   => $download->post_title,
-					'amount'     => $amount,
-					'payment_id' => $payment->ID,
-					'date'       => get_post_field( 'post_date', $payment_id ),
+					'ID'          => $log->ID,
+					'user_id'     => $customer->user_id,
+					'customer_id' => $customer->id,
+					'email'       => $payment->email,
+					'first_name'  => $payment->first_name,
+					'last_name'   => $payment->last_name,
+					'download'    => $download->post_title,
+					'amount'      => $amount,
+					'payment_id'  => $payment->ID,
+					'price_id'    => $log_price_id,
+					'date'        => get_post_field( 'post_date', $payment_id ),
 				);
 			}
 
@@ -178,7 +191,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 	public function set_properties( $request ) {
 		$this->start       = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end         = isset( $request['end'] )   ? sanitize_text_field( $request['end'] )   : '';
+		$this->end         = isset( $request['end'] )   ? sanitize_text_field( $request['end'] ) . ' 23:59:59'  : '';
 		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
 	}
 }

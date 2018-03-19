@@ -63,7 +63,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
 			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
 			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
-			'status'       => __( 'Status', 'easy-digital-downloads' )
+			'status'       => __( 'Status', 'easy-digital-downloads' ),
+			'country_name' => __( 'Country Name', 'easy-digital-downloads' ),
 		);
 
 		if( ! edd_use_skus() ){
@@ -110,8 +111,6 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 		}
 
-		//echo json_encode($args ); exit;
-
 		$payments = edd_get_payments( $args );
 
 		if( $payments ) {
@@ -142,7 +141,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 							$price = edd_get_download_final_price( $id, $user_info, $price_override );
 						}
 
-						$download_tax = isset( $download['tax'] ) ? $download['tax'] : 0;
+						$download_tax      = isset( $download['tax'] ) ? $download['tax'] : 0;
+						$download_price_id = isset( $download['item_number']['options']['price_id'] ) ? absint( $download['item_number']['options']['price_id'] ) : false;
 
 						/* Set up verbose product column */
 
@@ -183,6 +183,12 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 						/* Set up raw products column - Nothing but product names */
 						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $download_tax . '}';
+
+						// if we have a Price ID, include it.
+						if ( false !== $download_price_id ) {
+							$products_raw .= '{' . $download_price_id . '}';
+						}
+
 						if ( $key != ( count( $downloads ) -1 ) ) {
 
 							$products_raw .= ' / ';
@@ -224,7 +230,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'currency'     => $payment->currency,
 					'ip'           => $payment->ip,
 					'mode'         => $payment->get_meta( '_edd_payment_mode', true ),
-					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status
+					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status,
+					'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
 				);
 
 			}

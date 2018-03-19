@@ -126,15 +126,21 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	}
 
 	// Get all the items purchased
+	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 9999 );
 	$payment_ids    = array_reverse( explode( ',', $customer->payment_ids ) );
-	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 50 );
-	if ( ! empty( $limit_payments ) ) {
-		$payment_ids = array_slice( $payment_ids, 0, $limit_payments );
-	}
+	$payment_args   = array(
+		'output'   => 'payments',
+		'post__in' => $payment_ids,
+		'status'   => $status,
+		'number'   => $limit_payments,
+	);
+	$payments_query = new EDD_Payments_Query( $payment_args );
+	$payments       = $payments_query->get_payments();
+
 	$purchase_data  = array();
 
-	foreach ( $payment_ids as $payment_id ) {
-		$purchase_data[] = edd_get_payment_meta_downloads( $payment_id );
+	foreach ( $payments as $payment ) {
+		$purchase_data[] = $payment->downloads;
 	}
 
 	if ( empty( $purchase_data ) ) {
@@ -398,6 +404,42 @@ function edd_validate_username( $username ) {
 }
 
 /**
+ * Attach the customer to an existing user account when completing guest purchase
+ *
+ * This only runs when a user account already exists and a guest purchase is made
+ * with the account's email address
+ *
+ * After attaching the customer to the user ID, the account is set to pending
+ *
+ * @since  2.8
+ * @param  bool   $success     True if payment was added successfully, false otherwise
+ * @param  int    $payment_id  The ID of the EDD_Payment that was added
+ * @param  int    $customer_id The ID of the EDD_Customer object
+ * @param  object $customer    The EDD_Customer object
+ * @return void
+ */
+function edd_connect_guest_customer_to_existing_user( $success, $payment_id, $customer_id, $customer ) {
+
+	if( ! empty( $customer->user_id ) ) {
+		return;
+	}
+
+	$user = get_user_by( 'email', $customer->email );
+
+	if( ! $user ) {
+		return;
+	}
+
+	$customer->update( array( 'user_id' => $user->ID ) );
+
+	// Set a flag to force the account to be verified before purchase history can be accessed
+	edd_set_user_to_pending( $user->ID  );
+	edd_send_user_verification_email( $user->ID  );
+
+}
+add_action( 'edd_customer_post_attach_payment', 'edd_connect_guest_customer_to_existing_user', 10, 4 );
+
+/**
  * Attach the newly created user_id to a customer, if one exists
  *
  * @since  2.4.6
@@ -431,7 +473,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 
 	$email    = get_the_author_meta( 'user_email', $user_id );
 
-	$payments = edd_get_payments( array( 's' => $email ) );
+	$payments = edd_get_payments( array( 's' => $email, 'output' => 'payments' ) );
 
 	if( $payments ) {
 
@@ -441,18 +483,14 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 		edd_send_user_verification_email( $user_id );
 
 		foreach( $payments as $payment ) {
-			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 ) {
-				continue; // This payment already associated with an account
+			if ( is_object( $payment ) && $payment instanceof EDD_Payment ) {
+				if ( intval( $payment->user_id ) > 0 ) {
+					continue; // This payment already associated with an account
+				}
+
+				$payment->user_id = $user_id;
+				$payment->save();
 			}
-
-			$meta                    = edd_get_payment_meta( $payment->ID );
-			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
-			$meta['user_info']['id'] = $user_id;
-			$meta['user_info']       = $meta['user_info'];
-
-			// Store the updated user ID in the payment meta
-			edd_update_payment_meta( $payment->ID, '_edd_payment_meta', $meta );
-			edd_update_payment_meta( $payment->ID, '_edd_payment_user_id', $user_id );
 		}
 	}
 
@@ -490,23 +528,14 @@ function edd_get_customer_address( $user_id = 0 ) {
 		$address = array();
 	}
 
-	if( ! isset( $address['line1'] ) )
-		$address['line1'] = '';
-
-	if( ! isset( $address['line2'] ) )
-		$address['line2'] = '';
-
-	if( ! isset( $address['city'] ) )
-		$address['city'] = '';
-
-	if( ! isset( $address['zip'] ) )
-		$address['zip'] = '';
-
-	if( ! isset( $address['country'] ) )
-		$address['country'] = '';
-
-	if( ! isset( $address['state'] ) )
-		$address['state'] = '';
+	$address = wp_parse_args( $address, array(
+		'line1'   => '',
+		'line2'   => '',
+		'city'    => '',
+		'zip'     => '',
+		'country' => '',
+		'state'   => '',
+	) );
 
 	return $address;
 }
@@ -514,11 +543,12 @@ function edd_get_customer_address( $user_id = 0 ) {
 /**
  * Sends the new user notification email when a user registers during checkout
  *
- * @access 		public
- * @since 		1.8.8
+ * @access      public
+ * @since       1.8.8
  * @param int   $user_id
  * @param array $user_data
- * @return 		void
+ *
+ * @return      void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
@@ -530,21 +560,25 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
+	// Setup and send the new user email for Admins.
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 
-	$admin_subject  = sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name );
-	$admin_heading  = __( 'New user registration', 'easy-digital-downloads' );
+	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$admin_heading  = apply_filters( 'edd_user_registration_admin_email_heading', __( 'New user registration', 'easy-digital-downloads' ), $user_data );
 	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
 	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads'), $user_data['user_email'] ) . "\r\n";
+
+	$admin_message = apply_filters( 'edd_user_registration_admin_email_message', $admin_message, $user_data );
 
 	$emails->__set( 'heading', $admin_heading );
 
 	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
 
-	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
-	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
-	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
+	// Setup and send the new user email for the end user.
+	$user_subject  = apply_filters( 'edd_user_registration_email_subject', sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$user_heading  = apply_filters( 'edd_user_registration_email_heading', __( 'Your account info', 'easy-digital-downloads' ), $user_data );
+	$user_message  = apply_filters( 'edd_user_registration_email_username', sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n", $user_data );
 
 	if ( did_action( 'edd_pre_process_purchase' ) ) {
 		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
@@ -552,17 +586,20 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
 	}
 
-	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
+	$user_message .= apply_filters( 'edd_user_registration_email_password', sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n" );
 
+	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
 	if( $emails->html ) {
 
-		$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+		$user_message .= '<a href="' . $login_url . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	} else {
 
-		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), wp_login_url() ) . "\r\n";
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), $login_url ) . "\r\n";
 
 	}
+
+	$user_message = apply_filters( 'edd_user_registration_email_message', $user_message, $user_data );
 
 	$emails->__set( 'heading', $user_heading );
 
@@ -625,9 +662,9 @@ function edd_set_user_to_verified( $user_id = 0 ) {
  * @since   2.4.4
  * @return  bool
  */
-function edd_user_pending_verification( $user_id = 0 ) {
+function edd_user_pending_verification( $user_id = null ) {
 
-	if( empty( $user_id ) ) {
+	if( is_null( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 

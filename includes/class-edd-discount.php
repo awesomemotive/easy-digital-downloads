@@ -767,6 +767,40 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Retrieves the status label of the discount.
+	 *
+	 * @since 2.9
+	 *
+	 * @return string Status label for the current discount.
+	 */
+	public function get_status_label() {
+
+		switch( $this->status ) {
+			case 'expired' :
+				$label = __( 'Expired', 'easy-digital-downloads' );
+				break;
+			case 'inactive' :
+				$label = __( 'Inactive', 'easy-digital-downloads' );
+				break;
+			case 'active' :
+			default :
+				$label = __( 'Active', 'easy-digital-downloads' );
+				break;
+		}
+
+		/**
+		 * Filters the discount status.
+		 *
+		 * @since 2.9
+		 *
+		 * @param string $label  Discount status label.
+		 * @param string $status Discount status (active or inactive).
+		 * @param int    $ID     Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_status_label', $label, $this->status, $this->ID );
+	}
+
+	/**
 	 * Retrieve the type of discount.
 	 *
 	 * @since 2.7
@@ -1155,6 +1189,9 @@ class EDD_Discount {
 		}
 
 		if ( true == $saved ) {
+			global $edd_get_discounts_cache;
+			$edd_get_discounts_cache = array();
+
 			$this->setup_discount( WP_Post::get_instance( $this->ID ) );
 
 			/**
@@ -1181,6 +1218,12 @@ class EDD_Discount {
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
 	public function add( $args ) {
+
+		// If no code is provided, return early with false
+		if ( empty( $args['code'] ) ) {
+			return false;
+		}
+
 		$meta = $this->build_meta( $args );
 
 		if ( ! empty( $this->ID ) && $this->exists() ) {
@@ -1606,9 +1649,7 @@ class EDD_Discount {
 
 		// Ensure we have requirements before proceeding
 		if ( ! $return && ! empty( $product_reqs ) ) {
-
-			switch( $this->product_condition ) {
-
+			switch ( $this->product_condition ) {
 				case 'all' :
 
 					// Default back to true
@@ -1616,7 +1657,7 @@ class EDD_Discount {
 
 					foreach ( $product_reqs as $download_id ) {
 
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1640,7 +1681,7 @@ class EDD_Discount {
 
 					foreach ( $product_reqs as $download_id ) {
 
-						if( empty( $download_id ) ) {
+						if ( empty( $download_id ) ) {
 							continue;
 						}
 
@@ -1666,12 +1707,12 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
-			if ( $cart_ids == $excluded_ps ) {
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) == count( $cart_ids ) ) {
+				$return = false;
+
 				if ( $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 				}
-
-				$return = false;
 			}
 		}
 
@@ -1749,7 +1790,7 @@ class EDD_Discount {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed' ) ) ) {
+					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ) ) ) {
 						continue;
 					}
 
@@ -1803,8 +1844,8 @@ class EDD_Discount {
 				$this->is_started( $set_error ) &&
 				! $this->is_maxed_out( $set_error ) &&
 				! $this->is_used( $user, $set_error ) &&
-				$this->is_min_price_met( $set_error ) &&
-				$this->is_product_requirements_met( $set_error )
+				$this->is_product_requirements_met( $set_error ) &&
+				$this->is_min_price_met( $set_error )
 			) {
 				$return = true;
 			}

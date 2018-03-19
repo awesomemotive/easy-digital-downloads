@@ -680,14 +680,28 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 
 /* =Registration / login Form
 -------------------------------------------------------------- */
-#edd_register_form .edd-input,
-#edd_login_form .edd-input,
-#edd_register_form label,
-#edd_login_form label {
-	display: inline-block;
-	width: 200px;
+#edd_register_form legend,
+#edd_login_form legend {
+	font-size: 120%;
+	margin-bottom: 1em;
 }
 
+#edd_register_form fieldset,
+#edd_login_form fieldset {
+	border: none;
+}
+
+#edd_register_form .edd-input,
+#edd_login_form .edd-input {
+	-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+  	box-sizing: border-box;
+}
+
+#edd_register_form label,
+#edd_login_form label {
+	cursor: pointer;
+}
 
 /* =Profile Form
 -------------------------------------------------------------- */
@@ -807,13 +821,6 @@ input[type="submit"].edd-submit:focus {
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 }
-input[type="submit"].edd-submit:hover,
-input[type="submit"].edd-submit:focus,
-.edd-submit.button:hover,
-.edd-submit.button:focus {
-	color: #333333;
-	text-decoration: none;
-}
 .edd-submit.button:active {
 	background-image: none;
 	outline: 0;
@@ -822,6 +829,10 @@ input[type="submit"].edd-submit:focus,
 }
 .edd-submit.plain {
 	padding: 0;
+	border: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 
 /** Gray (Default) */
@@ -970,6 +981,11 @@ input[type="submit"].edd-submit:focus,
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
+.edd_downloads_list:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 .edd_download {
 	float: left;
 }
@@ -984,13 +1000,22 @@ input[type="submit"].edd-submit:focus,
 	padding: 0 8px 8px;
 	margin: 0 0 10px;
 }
+.edd_download_columns_2 .edd_download:nth-child(2n+1),
+.edd_download_columns_3 .edd_download:nth-child(3n+1),
+.edd_download_columns_4 .edd_download:nth-child(4n+1),
+.edd_download_columns_5 .edd_download:nth-child(5n+1),
+.edd_download_columns_6 .edd_download:nth-child(6n+1) {
+	clear: left;
+}
 .edd_download_image {
 	max-width: 100%;
 }
 .edd_download .edd_price {
 	margin-bottom: 10px;
 }
-
+#edd_download_pagination {
+	clear: both;
+}
 
 /* =Misc styles
 -------------------------------------------------------------- */

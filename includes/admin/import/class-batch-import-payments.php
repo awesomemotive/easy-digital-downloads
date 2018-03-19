@@ -85,6 +85,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		if( $offset > $this->total ) {
 			$this->done = true;
+
+			// Clean up the temporary records in the payment import process
+			global $wpdb;
+			$sql = "DELETE FROM {$wpdb->prefix}edd_customermeta WHERE meta_key = '_canonical_import_id'";
+			$wpdb->query( $sql );
 		}
 
 		if( ! $this->done && $this->csv->data ) {
@@ -297,6 +302,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 						$download_name = $download['download'];
 						$price         = $download['price'];
 						$tax           = $download['tax'];
+						$price_id      = $download['price_id'];
 					} else {
 						$download_name = $download;
 					}
@@ -309,11 +315,15 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 					$item_price = ! isset( $price ) ? edd_get_download_price( $download_id ) : $price;
 					$item_tax   = ! isset( $tax ) ? ( $download_count > 1 ? 0.00 : $payment->tax ) : $tax;
+					$price_id   = ! isset( $price_id ) ? false : $price_id;
 
-					$payment->add_download( $download_id, array(
+					$args = array(
 						'item_price' => $item_price,
-						'tax'        => $item_tax
-					) );
+						'tax'        => $item_tax,
+						'price_id'   => $price_id,
+					);
+
+					$payment->add_download( $download_id, $args );
 
 				}
 
@@ -531,14 +541,16 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			foreach( $downloads as $key => $download ) {
 
 				$d   = (array) explode( '|', $download );
-				preg_match( '/\{(\d+(\.\d+|\d+))\}/', $d[1], $matches );
+				preg_match_all( '/\{(\d|(\d+(\.\d+|\d+)))\}/', $d[1], $matches );
 				$price = trim( substr( $d[1], 0, strpos( $d[1], '{' ) ) );
-				$tax   = isset( $matches[1] ) ? trim( $matches[1] ) : 0;
+				$tax   = isset( $matches[1][0] ) ? trim( $matches[1][0] ) : 0;
+				$price_id = isset( $matches[1][1] ) ? trim( $matches[1][1] ) : false;
 
 				$d_array[] = array(
 					'download' => trim( $d[0] ),
 					'price'    => $price - $tax,
-					'tax'      => $tax
+					'tax'      => $tax,
+					'price_id' => $price_id,
 				);
 
 			}
@@ -560,7 +572,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		$total = count( $this->csv->data );
 
 		if( $total > 0 ) {
-			$percentage = ( $this->step / $total ) * 100;
+			$percentage = ( $this->step * $this->per_step / $total ) * 100;
 		}
 
 		if( $percentage > 100 ) {

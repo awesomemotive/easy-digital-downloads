@@ -26,7 +26,16 @@ $flat_display      = edd_get_discount_type( $discount_id ) == 'flat' ? '' : ' st
 $percent_display   = edd_get_discount_type( $discount_id ) == 'percent' ? '' : ' style="display:none;"';
 $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 ?>
-<h2><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'easy-digital-downloads' ); ?></a></h2>
+<h2><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?></h2>
+
+<?php if ( isset( $_GET['edd_discount_updated'] ) ) : ?>
+	<div id="message" class="updated">
+		<p><strong><?php _e( 'Discount code updated.', 'easy-digital-downloads' ); ?></strong></p>
+
+		<p><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"><?php _e( '&larr; Back to Discounts' ); ?></a></p>
+	</div>
+<?php endif; ?>
+
 <form id="edd-edit-discount" action="" method="post">
 	<?php do_action( 'edd_edit_discount_form_top', $discount_id, $discount ); ?>
 	<table class="form-table">
@@ -37,7 +46,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-name"><?php _e( 'Name', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="name" required="required" id="edd-name" type="text" value="<?php echo esc_attr( stripslashes( $discount->post_title ) ); ?>" style="width: 300px;"/>
+					<input name="name" required="required" id="edd-name" type="text" value="<?php echo esc_attr( stripslashes( $discount->post_title ) ); ?>" />
 					<p class="description"><?php _e( 'The name of this discount', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -47,7 +56,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( edd_get_discount_code( $discount_id ) ); ?>" pattern="[a-zA-Z0-9]+" style="width: 300px;"/>
+					<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( edd_get_discount_code( $discount_id ) ); ?>" pattern="[a-zA-Z0-9-_]+" />
 					<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -70,7 +79,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input type="text" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" style="width: 40px;"/>
+					<input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" />
 					<p class="description edd-amount-description flat"<?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
 					<p class="description edd-amount-description percent"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 				</td>
@@ -135,7 +144,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -145,7 +154,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -198,7 +207,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="edit_discount"/>
 		<input type="hidden" name="discount-id" value="<?php echo absint( $_GET['discount'] ); ?>"/>
-		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
+		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $discount_id ) ); ?>"/>
 		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 	</p>

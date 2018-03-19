@@ -17,13 +17,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * customizable Purchase Receipt
  *
  * @since 1.0
- * @param int $payment_id Payment ID
- * @param bool $admin_notice Whether to send the admin email notification or not (default: true)
+ * @since 2.8 - Add parameters for EDD_Payment and EDD_Customer object.
+ *
+ * @param int          $payment_id   Payment ID
+ * @param bool         $admin_notice Whether to send the admin email notification or not (default: true)
+ * @param EDD_Payment  $payment      Payment object for payment ID.
+ * @param EDD_Customer $customer     Customer object for associated payment.
  * @return void
  */
-function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '' ) {
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '', $payment = null, $customer = null ) {
+	if ( is_null( $payment ) ) {
+		$payment = edd_get_payment( $payment_id );
+	}
 
-	$payment_data = edd_get_payment_meta( $payment_id );
+	$payment_data = $payment->get_meta( '_edd_payment_meta', true );
 
 	$from_name    = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name    = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
@@ -31,10 +38,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$from_email   = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$from_email   = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
-	if( empty( $to_email ) ) {
-
-		$to_email = edd_get_payment_user_email( $payment_id );
-
+	if ( empty( $to_email ) ) {
+		$to_email = $payment->email;
 	}
 
 	$subject      = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
@@ -46,6 +51,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$heading      = edd_do_email_tags( $heading, $payment_id );
 
 	$attachments  = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
+
 	$message      = edd_do_email_tags( edd_get_email_body_content( $payment_id, $payment_data ), $payment_id );
 
 	$emails = EDD()->emails;
@@ -53,7 +59,6 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 	$emails->__set( 'heading', $heading );
-
 
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
@@ -130,23 +135,24 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
 	$subject     = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'easy-digital-downloads' ), $payment_id ) );
 	$subject     = apply_filters( 'edd_admin_sale_notification_subject', wp_strip_all_tags( $subject ), $payment_id );
-	$subject     = edd_do_email_tags( $subject, $payment_id );
+	$subject     = wp_specialchars_decode( edd_do_email_tags( $subject, $payment_id ) );
 
-	$headers     = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
-	$headers    .= "Reply-To: ". $from_email . "\r\n";
-	//$headers  .= "MIME-Version: 1.0\r\n";
-	$headers    .= "Content-Type: text/html; charset=utf-8\r\n";
-	$headers     = apply_filters( 'edd_admin_sale_notification_headers', $headers, $payment_id, $payment_data );
+	$heading     = edd_get_option( 'sale_notification_heading', __( 'New Sale!', 'easy-digital-downloads' ) );
+	$heading     = apply_filters( 'edd_admin_sale_notification_heading', $heading, $payment_id, $payment_data );
+	$heading     = edd_do_email_tags( $heading, $payment_id );
 
 	$attachments = apply_filters( 'edd_admin_sale_notification_attachments', array(), $payment_id, $payment_data );
 
 	$message     = edd_get_sale_notification_body_content( $payment_id, $payment_data );
 
 	$emails = EDD()->emails;
+
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
+	$emails->__set( 'heading', $heading );
+
+	$headers = apply_filters( 'edd_admin_sale_notification_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
-	$emails->__set( 'heading', __( 'New Sale!', 'easy-digital-downloads' ) );
 
 	$emails->send( edd_get_admin_notice_emails(), $subject, $message, $attachments );
 
@@ -210,26 +216,67 @@ function edd_get_default_sale_notification_email() {
  *
  * @since 1.9
  * @param $user_info
+ * @param $payment   EDD_Payment for getting the names
  *
  * @return array $email_names
  */
-function edd_get_email_names( $user_info ) {
+function edd_get_email_names( $user_info, $payment = false ) {
 	$email_names = array();
-	$user_info 	= maybe_unserialize( $user_info );
-
 	$email_names['fullname'] = '';
-	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
-		$user_data = get_userdata( $user_info['id'] );
-		$email_names['name']      = $user_info['first_name'];
-		$email_names['fullname']  = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$email_names['username']  = $user_data->user_login;
-	} elseif ( isset( $user_info['first_name'] ) ) {
-		$email_names['name']     = $user_info['first_name'];
-		$email_names['fullname'] = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$email_names['username'] = $user_info['first_name'];
+
+	if ( $payment instanceof EDD_Payment ) {
+
+		if ( $payment->user_id > 0 ) {
+
+			$user_data = get_userdata( $payment->user_id );
+			$email_names['name']      = $payment->first_name;
+			$email_names['fullname']  = trim( $payment->first_name . ' ' . $payment->last_name );
+			$email_names['username']  = $user_data->user_login;
+
+		} elseif ( ! empty( $payment->first_name ) ) {
+
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			$email_names['username'] = $payment->first_name;
+
+		} else {
+
+			$email_names['name']     = $payment->email;
+			$email_names['username'] = $payment->email;
+
+		}
+
 	} else {
-		$email_names['name']     = $user_info['email'];
-		$email_names['username'] = $user_info['email'];
+
+		if ( is_serialized( $user_info ) ) {
+
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
+			if ( ! empty( $matches ) ) {
+				return array(
+					'name'     => '',
+					'fullname' => '',
+					'username' => '',
+				);
+			} else {
+				$user_info = maybe_unserialize( $user_info );
+			}
+
+		}
+
+		if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
+			$user_data = get_userdata( $user_info['id'] );
+			$email_names['name']      = $user_info['first_name'];
+			$email_names['fullname']  = $user_info['first_name'] . ' ' . $user_info['last_name'];
+			$email_names['username']  = $user_data->user_login;
+		} elseif ( isset( $user_info['first_name'] ) ) {
+			$email_names['name']     = $user_info['first_name'];
+			$email_names['fullname'] = $user_info['first_name'] . ' ' . $user_info['last_name'];
+			$email_names['username'] = $user_info['first_name'];
+		} else {
+			$email_names['name']     = $user_info['email'];
+			$email_names['username'] = $user_info['email'];
+		}
+
 	}
 
 	return $email_names;

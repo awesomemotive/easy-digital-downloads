@@ -104,7 +104,9 @@ class EDD_License {
 		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
 
 		// Check that license is valid once per week
-		add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+		if ( edd_doing_cron() ) {
+			add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+		}
 
 		// For testing license notices, uncomment this line to force checks on every page load
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
@@ -134,7 +136,7 @@ class EDD_License {
 			'version'   => $this->version,
 			'license'   => $this->license,
 			'author'    => $this->author,
-			'beta'      => edd_extension_has_beta_support( $this->item_shortname ),
+			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if( ! empty( $this->item_id ) ) {

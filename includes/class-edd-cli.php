@@ -363,12 +363,20 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
+	 * 	 --email=<customer_email>: The email address of the customer to retrieve
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd sales
+	 * wp edd sales --email=john@test.com
 	 */
 	public function sales( $args, $assoc_args ) {
+
+		$email = isset( $assoc_args ) && array_key_exists( 'email', $assoc_args )  ? $assoc_args['email'] : '';
+
+		global $wp_query;
+
+		$wp_query->query_vars['email'] = $email;
 
 		$sales = $this->api->get_recent_sales();
 
@@ -487,7 +495,7 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 * wp edd payments create --number=10 --status=completed
+	 * wp edd payments create --number=10 --status=complete
 	 * wp edd payments create --number=10 --id=103
 	 */
 	public function payments( $args, $assoc_args ) {
@@ -520,11 +528,13 @@ class EDD_CLI extends WP_CLI_Command {
 		$id         = false;
 		$price_id   = false;
 		$tax        = 0;
-		$email      = 'guest@local.dev';
+		$email      = 'guest@edd.local';
 		$fname      = 'Pippin';
 		$lname      = 'Williamson';
 		$date       = false;
 		$range      = 30;
+
+		$generate_users = false;
 
 		if( count( $assoc_args ) > 0 ) {
 			$number     = ( array_key_exists( 'number', $assoc_args ) )   ? absint( $assoc_args['number'] )             : $number;
@@ -536,6 +546,8 @@ class EDD_CLI extends WP_CLI_Command {
 			$lname      = ( array_key_exists( 'lname', $assoc_args ) )    ? sanitize_text_field( $assoc_args['lname'] ) : $lname;
 			$date       = ( array_key_exists( 'date', $assoc_args ) )     ? sanitize_text_field( $assoc_args['date'] )  : $date;
 			$range      = ( array_key_exists( 'range', $assoc_args ) )    ? absint( $assoc_args['range'] )              : $range;
+
+			$generate_users = ( array_key_exists( 'generate_users', $assoc_args ) ) ? (bool) absint( $assoc_args['generate_users'] ) : $generate_users;
 
 			// Status requires a bit more validation
 			if( array_key_exists( 'status', $assoc_args ) ) {
@@ -571,6 +583,8 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'      => 'none'
 		);
 
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payments', $number );
+
 		for( $i = 0; $i < $number; $i++ ) {
 
 			$products = array();
@@ -583,7 +597,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'post_type'     => 'download',
 					'orderby'       => 'rand',
 					'order'         => 'ASC',
-					'posts_per_page'=> 1
+					'posts_per_page'=> rand( 1, 3 ),
 				) );
 
 			} else {
@@ -617,11 +631,13 @@ class EDD_CLI extends WP_CLI_Command {
 					$prices = edd_get_variable_prices( $download->ID );
 
 					if( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
-						$price_id = rand( 0, count( $prices ) - 1 );
+						$item_price_id = array_rand( $prices );
+					} else {
+						$item_price_id = $price_id;
 					}
 
-					$item_price = $prices[ $price_id ]['amount'];
-					$options['price_id'] = $price_id;
+					$item_price = $prices[ $item_price_id ]['amount'];
+					$options['price_id'] = $item_price_id;
 
 				} else {
 
@@ -653,26 +669,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 			}
 
-			$purchase_data = array(
-				'price'	        => edd_sanitize_amount( $total ),
-				'tax'           => 0,
-				'purchase_key'  => strtolower( md5( uniqid() ) ),
-				'user_email'    => $email,
-				'user_info'     => $user_info,
-				'currency'      => edd_get_currency(),
-				'downloads'     => $final_downloads,
-				'cart_details'  => $cart_details,
-				'status'        => 'pending'
-			);
-
-			$payment_id = edd_insert_payment( $purchase_data );
-
-			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
-
-			if( $status != 'pending' ) {
-				edd_update_payment_status( $payment_id, $status );
-			}
-
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
 				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp') );
@@ -691,16 +687,94 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			if ( $generate_users ) {
+				$fname  = $this->get_fname();
+				$lname  = $this->get_lname();
+				$domain = $this->get_domain();
+				$tld    = $this->get_tld();
+
+				$email  = $fname . '.' . $lname . '@' . $domain . '.' . $tld;
+
+				$user_info = array(
+					'id'            => 0,
+					'email'         => $email,
+					'first_name'    => $fname,
+					'last_name'     => $lname,
+					'discount'      => 'none'
+				);
+			}
+
+			$purchase_data = array(
+				'price'	        => edd_sanitize_amount( $total ),
+				'tax'           => 0,
+				'purchase_key'  => strtolower( md5( uniqid() ) ),
+				'user_email'    => $email,
+				'user_info'     => $user_info,
+				'currency'      => edd_get_currency(),
+				'downloads'     => $final_downloads,
+				'cart_details'  => $cart_details,
+				'status'        => 'pending',
+			);
+
+			if ( ! empty( $timestring ) ) {
+				$purchase_data['post_date'] = $timestring;
+			}
+
+			$payment_id = edd_insert_payment( $purchase_data );
+
+			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
+
+			if( $status != 'pending' ) {
+				edd_update_payment_status( $payment_id, $status );
+			}
+
 			if ( ! empty( $timestring ) ) {
 				$payment = new EDD_Payment( $payment_id );
-				$payment->date = $timestring;
 				$payment->completed_date = $timestring;
 				$payment->save();
 			}
 
+			$progress->tick();
+
 		}
+
+		$progress->finish();
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;
+	}
+
+	protected function get_fname() {
+		$names = array(
+			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
+			'Marisa','Maybelle','Onie','Donnette','Henry','Sheryll','Leighann','Wilson',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	protected function get_lname() {
+		$names = array(
+			'Warner','Roush','Lenahan','Theiss','Sack','Troutt','Vanderburg','Lisi','Lemons','Christon','Kogut',
+			'Broad','Wernick','Horstmann','Schoenfeld','Dolloff','Murph','Shipp','Hursey','Jacobi',
+		);
+
+		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
+	}
+
+	protected function get_domain() {
+		$domains = array(
+			'example', 'edd', 'rcp', 'affwp',
+		);
+
+		return $domains[ rand( 0, ( count( $domains ) - 1 ) ) ];
+	}
+
+	protected function get_tld() {
+		$tlds = array(
+			'local', 'test', 'example', 'localhost', 'invalid',
+		);
+
+		return $tlds[ rand( 0, ( count( $tlds ) - 1 ) ) ];
 	}
 }

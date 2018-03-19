@@ -39,38 +39,45 @@ function edd_load_scripts() {
 		$has_purchase_links = true;
 	}
 
+	$in_footer = edd_scripts_in_footer();
+
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
-			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, $in_footer );
+
+			// Registered so gateways can enqueue it when they support the space formatting. wp_enqueue_script( 'jQuery.payment' );
+			wp_register_script( 'jQuery.payment', $js_dir . 'jquery.payment.min.js', array( 'jquery' ), EDD_VERSION, $in_footer );
+
 			wp_enqueue_script( 'creditCardValidator' );
 		}
 
-		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, $in_footer );
 		wp_enqueue_script( 'edd-checkout-global' );
 
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
-			'ajaxurl'            => edd_get_ajax_url(),
-			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
-			'currency_sign'      => edd_currency_filter(''),
-			'currency_pos'       => edd_get_option( 'currency_position', 'before' ),
-			'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
-			'thousands_separator'=> edd_get_option( 'thousands_separator', ',' ),
-			'no_gateway'         => __( 'Please select a payment method', 'easy-digital-downloads' ),
-			'no_discount'        => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
-			'enter_discount'     => __( 'Enter discount', 'easy-digital-downloads' ),
-			'discount_applied'   => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message
-			'no_email'           => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
-			'no_username'        => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
-			'purchase_loading'   => __( 'Please Wait...', 'easy-digital-downloads' ),
-			'complete_purchase'  => edd_get_checkout_button_purchase_label(),
-			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
-			'edd_version'        => EDD_VERSION
+			'ajaxurl'               => edd_get_ajax_url(),
+			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
+			'checkout_error_anchor' => '#edd_purchase_submit',
+			'currency_sign'         => edd_currency_filter(''),
+			'currency_pos'          => edd_get_option( 'currency_position', 'before' ),
+			'decimal_separator'     => edd_get_option( 'decimal_separator', '.' ),
+			'thousands_separator'   => edd_get_option( 'thousands_separator', ',' ),
+			'no_gateway'            => __( 'Please select a payment method', 'easy-digital-downloads' ),
+			'no_discount'           => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
+			'enter_discount'        => __( 'Enter discount', 'easy-digital-downloads' ),
+			'discount_applied'      => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message
+			'no_email'              => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
+			'no_username'           => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
+			'purchase_loading'      => __( 'Please Wait...', 'easy-digital-downloads' ),
+			'complete_purchase'     => edd_get_checkout_button_purchase_label(),
+			'taxes_enabled'         => edd_use_taxes() ? '1' : '0',
+			'edd_version'           => EDD_VERSION
 		) ) );
 	}
 
 	// Load AJAX scripts, if enabled
 	if ( ! edd_is_ajax_disabled() ) {
-		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, $in_footer );
 		wp_enqueue_script( 'edd-ajax' );
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
@@ -213,6 +220,8 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_sign'               => edd_currency_filter( '' ),
 		'currency_pos'                => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'           => edd_currency_decimal_filter(),
+		'decimal_separator'           => edd_get_option( 'decimal_separator', '.' ),
+		'thousands_separator'         => edd_get_option( 'thousands_separator', ',' ),
 		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'                 => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'              => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -220,12 +229,24 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_class'       => __( 'You must choose a method.', 'easy-digital-downloads' ),
 		'batch_export_no_reqs'        => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'            => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
-		'search_placeholder'          => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'search_placeholder_customer' => __( 'Type to search all Customers', 'easy-digital-downloads' ),
-		'search_placeholder_country'  => __( 'Type to search all Countries', 'easy-digital-downloads' ),
-		'search_placeholder_state'    => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
+		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
+		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
 	));
+
+	/*
+	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
+	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
+	 *
+	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
+	 */
+	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $suffix . '.js', array( 'jquery', 'edd-admin-scripts' ), EDD_VERSION );
+	wp_localize_script( 'edd-admin-scripts-compatibility', 'edd_backcompat_vars', array(
+		'purchase_limit_settings'     => __( 'Purchase Limit Settings', 'easy-digital-downloads' ),
+		'simple_shipping_settings'    => __( 'Simple Shipping Settings', 'easy-digital-downloads' ),
+		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
+		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
+	) );
 
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
@@ -347,3 +368,13 @@ function edd_load_head_styles() {
 	<?php
 }
 add_action( 'wp_head', 'edd_load_head_styles' );
+
+/**
+ * Determine if the frontend scripts should be loaded in the footer or header (default: footer)
+ *
+ * @since 2.8.6
+ * @return mixed
+ */
+function edd_scripts_in_footer() {
+	return apply_filters( 'edd_load_scripts_in_footer', true );
+}

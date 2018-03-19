@@ -115,7 +115,7 @@ function edd_email_template_preview() {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_email_settings', 'edd_email_template_preview' );
+add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
 
 /**
  * Displays the email preview
@@ -138,7 +138,7 @@ function edd_display_email_template_preview() {
 	}
 
 
-	EDD()->emails->heading = __( 'Purchase Receipt', 'easy-digital-downloads' );
+	EDD()->emails->heading = edd_email_preview_template_tags( edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) ) );
 
 	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );
 
@@ -181,49 +181,47 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
  * @return string $email_body Body of the email
  */
 function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
-	$user_info = maybe_unserialize( $payment_data['user_info'] );
-	$email = edd_get_payment_user_email( $payment_id );
+	$payment = edd_get_payment( $payment_id );
 
-	if( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
-		$user_data = get_userdata( $user_info['id'] );
+	if( $payment->user_id > 0 ) {
+		$user_data = get_userdata( $payment->user_id );
 		$name = $user_data->display_name;
-	} elseif( isset( $user_info['first_name'] ) && isset( $user_info['last_name'] ) ) {
-		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+	} elseif( ! empty( $payment->first_name ) && ! empty( $payment->last_name ) ) {
+		$name = $payment->first_name . ' ' . $payment->last_name;
 	} else {
-		$name = $email;
+		$name = $payment->email;
 	}
 
 	$download_list = '';
-	$downloads = maybe_unserialize( $payment_data['downloads'] );
 
-	if( is_array( $downloads ) ) {
-		foreach( $downloads as $download ) {
-			$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
-			$title = get_the_title( $id );
-			if( isset( $download['options'] ) ) {
-				if( isset( $download['options']['price_id'] ) ) {
-					$title .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'], $payment_id );
+	if( is_array( $payment->downloads ) ) {
+		foreach( $payment->downloads as $item ) {
+			$download = new EDD_Download( $item['id'] );
+			$title    = $download->get_name();
+			if( isset( $item['options'] ) ) {
+				if( isset( $item['options']['price_id'] ) ) {
+					$title .= ' - ' . edd_get_price_option_name( $item['id'], $item['options']['price_id'], $payment_id );
 				}
 			}
 			$download_list .= html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) . "\n";
 		}
 	}
 
-	$gateway = edd_get_gateway_admin_label( edd_get_payment_meta( $payment_id, '_edd_payment_gateway', true ) );
+	$gateway = edd_get_gateway_admin_label( $payment->gateway );
 
 	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
 	$default_email_body .= $download_list . "\n\n";
 	$default_email_body .= __( 'Purchased by: ', 'easy-digital-downloads' ) . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
-	$default_email_body .= __( 'Amount: ', 'easy-digital-downloads' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
+	$default_email_body .= __( 'Amount: ', 'easy-digital-downloads' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( $payment->total ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
 	$default_email_body .= __( 'Payment Method: ', 'easy-digital-downloads' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'easy-digital-downloads' );
 
-	$email = edd_get_option( 'sale_notification', false );
-	$email = $email ? stripslashes( $email ) : $default_email_body;
+	$message = edd_get_option( 'sale_notification', false );
+	$message   = $message ? stripslashes( $message ) : $default_email_body;
 
 	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
-	$email_body = edd_do_email_tags( $email, $payment_id );
+	$email_body = edd_do_email_tags( $message, $payment_id );
 
 	$email_body = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $email_body ) : $email_body;
 

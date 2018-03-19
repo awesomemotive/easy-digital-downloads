@@ -159,7 +159,7 @@ class EDD_Register_Meta {
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
 				'type'              => 'string',
-				'description'       => __( 'Defines how this products `Purchase` button should behave, either add to cart or buy now.', 'easy-digital-downloads' ),
+				'description'       => __( "Defines how this product's 'Purchase' button should behave, either add to cart or buy now", 'easy-digital-downloads' ),
 				'show_in_rest'      => true,
 			)
 		);
@@ -379,7 +379,14 @@ class EDD_Register_Meta {
 			}
 
 			if ( is_serialized( $value ) ) {
+
+				preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $value, $matches );
+				if ( ! empty( $matches ) ) {
+					return false;
+				}
+
 				$value = (array) maybe_unserialize( $value );
+
 			}
 
 		}
@@ -452,6 +459,11 @@ class EDD_Register_Meta {
 	 */
 	function sanitize_files( $files = array() ) {
 		$files = $this->remove_blank_rows( $files );
+
+		// Files should always be in array format, even when there are none.
+		if ( ! is_array( $files ) ) {
+			$files = array();
+		}
 
 		// Clean up filenames to ensure whitespaces are stripped
 		foreach( $files as $id => $file ) {

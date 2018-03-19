@@ -38,7 +38,9 @@ function edd_add_discount( $data ) {
 		edd_die();
 	}
 
-	if ( ! ctype_alnum( $data['code'] ) ) {
+	// Verify only accepted characters
+	$sanitized = preg_replace('/[^a-zA-Z0-9-_]+/', '', $data['code'] );
+	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
 		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 		edd_die();
 	}
@@ -76,7 +78,7 @@ function edd_add_discount( $data ) {
 
 		if ( edd_store_discount( $posted ) ) {
 
-			wp_redirect( add_query_arg( 'edd-message', 'discount_added', $data['edd-redirect'] ) ); edd_die();
+			wp_redirect( add_query_arg( 'edd_discount_added', '1', $data['edd-redirect'] ) ); edd_die();
 
 		} else {
 
@@ -139,12 +141,12 @@ function edd_edit_discount( $data ) {
 
 	}
 
-	$old_discount     = edd_get_discount_by( 'code', $data['code'] );
+	$old_discount     = new EDD_Discount( (int) $data['discount-id'] );
 	$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
 
 	if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
 
-		wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); edd_die();
+		wp_redirect( add_query_arg( 'edd_discount_updated', '1', $data['edd-redirect'] ) ); edd_die();
 
 	} else {
 

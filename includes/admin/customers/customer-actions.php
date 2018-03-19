@@ -250,11 +250,11 @@ function edd_add_customer_email( $args ) {
 
 			$user          = wp_get_current_user();
 			$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-			$customer_note = __( sprintf( 'Email address %s added by %s', $email, $user_login ), 'easy-digital-downloads' );
+			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
-				$customer_note = __( sprintf( 'Email address %s set as primary by %s', $email, $user_login ), 'easy-digital-downloads' );
+				$customer_note =  sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), $email, $user_login );
 				$customer->add_note( $customer_note );
 			}
 
@@ -308,7 +308,7 @@ function edd_remove_customer_email() {
 
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-		$customer_note = __( sprintf( 'Email address %s removed by %s', $_GET['email'], $user_login ), 'easy-digital-downloads' );
+		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
@@ -352,7 +352,7 @@ function edd_set_customer_primary_email() {
 
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
-		$customer_note = __( sprintf( 'Email address %s set as primary by %s', $_GET['email'], $user_login ), 'easy-digital-downloads' );
+		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
@@ -637,3 +637,17 @@ function edd_include_single_customer_recount_tool_batch_processer( $class ) {
 	}
 
 }
+
+/**
+ * Sets up additional action calls for the set_last_changed method in the EDD_DB_Customers class.
+ *
+ * @since  2.8.7
+ * @param  void
+ * @return void
+ */
+function edd_customer_action_calls() {
+	add_action( 'added_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+	add_action( 'updated_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+	add_action( 'deleted_customer_meta', array( EDD()->customers, 'set_last_changed' ) );
+}
+add_action( 'init', 'edd_customer_action_calls' );

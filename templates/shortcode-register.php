@@ -6,6 +6,8 @@ global $edd_register_redirect;
 
 do_action( 'edd_print_errors' ); ?>
 
+<?php if ( ! is_user_logged_in() ) : ?>
+
 <form id="edd_register_form" class="edd_form" action="" method="post">
 	<?php do_action( 'edd_register_form_fields_top' ); ?>
 
@@ -41,7 +43,7 @@ do_action( 'edd_print_errors' ); ?>
 			<input type="hidden" name="edd_honeypot" value="" />
 			<input type="hidden" name="edd_action" value="user_register" />
 			<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $edd_register_redirect ); ?>"/>
-			<input class="button" name="edd_register_submit" type="submit" value="<?php esc_attr_e( 'Register', 'easy-digital-downloads' ); ?>" />
+			<input class="edd-submit" name="edd_register_submit" type="submit" value="<?php esc_attr_e( 'Register', 'easy-digital-downloads' ); ?>" />
 		</p>
 
 		<?php do_action( 'edd_register_form_fields_after' ); ?>
@@ -49,3 +51,9 @@ do_action( 'edd_print_errors' ); ?>
 
 	<?php do_action( 'edd_register_form_fields_bottom' ); ?>
 </form>
+
+<?php else : ?>
+
+	<?php do_action( 'edd_register_form_logged_in' ); ?>
+
+<?php endif; ?>

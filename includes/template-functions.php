@@ -51,9 +51,20 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$purchase_page = edd_get_option( 'purchase_page', false );
 	if ( ! $purchase_page || $purchase_page == 0 ) {
+
+		global $no_checkout_error_displayed;
+		if ( ! is_null( $no_checkout_error_displayed ) ) {
+			return false;
+		}
+
+
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
+
+		$no_checkout_error_displayed = true;
+
 		return false;
+
 	}
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
@@ -65,6 +76,7 @@ function edd_get_purchase_link( $args = array() ) {
 		'price_id'    => isset( $args['price_id'] ) ? $args['price_id'] : false,
 		'direct'      => $button_behavior == 'direct' ? true : false,
 		'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
+		'checkout'    => edd_get_option( 'checkout_button_text', _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ) ),
 		'style'       => edd_get_option( 'button_style', 'button' ),
 		'color'       => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
@@ -122,8 +134,6 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
-	$args['display_price'] = $data_price_value;
-
 	$data_price  = 'data-price="' . $data_price_value . '"';
 
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
@@ -179,7 +189,7 @@ function edd_get_purchase_link( $args = array() ) {
 			}
 
 			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
-			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'easy-digital-downloads' ) . '</a>';
+			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . $args['checkout'] . '</a>';
 			?>
 
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
@@ -288,7 +298,14 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 							$item_prop = edd_add_schema_microdata() ? ' itemprop="description"' : '';
 
-							echo '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+							// Construct the default price output.
+							$price_output = '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+
+							// Filter the default price output
+							$price_output = apply_filters( 'edd_price_option_output', $price_output, $download_id, $key, $price, $form_id, $item_prop );
+
+							// Output the filtered price output
+							echo $price_output;
 
 							if( edd_add_schema_microdata() ) {
 								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
@@ -1097,3 +1114,28 @@ function edd_get_bundle_item_price_id( $bundle_item ) {
 
 	return $bundle_price_id;
 }
+
+/**
+ * Load a template file for a single download item.
+ *
+ * This is a wrapper function for backwards compatibility so the
+ * shortcode's attributes can be passed to the template file via
+ * a global variable.
+ *
+ * @since 2.8.0
+ *
+ * @param array $atts The [downloads] shortcode attributes.
+ * @param int   $i The current item count.
+ */
+function edd_download_shortcode_item( $atts, $i ) {
+	global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
+
+	/**
+	 * The variables are registered as part of the global scope so the template can access them.
+	 */
+	$edd_download_shortcode_item_atts = $atts;
+	$edd_download_shortcode_item_i = $i;
+
+	edd_get_template_part( 'shortcode', 'download' );
+}
+add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );

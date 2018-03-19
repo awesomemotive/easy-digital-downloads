@@ -92,14 +92,39 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	public function test_edd_is_email_banned() {
 
 		$emails = array();
-		$emails[] = 'john@test.com';
-		$emails[] = 'test2.com';
+		$emails[] = 'john@test.com'; // Banned email
+		$emails[] = 'test2.com'; // Banned domain
+		$emails[] = '.zip'; // Banned TLD
 
 		edd_update_option( 'banned_emails', $emails );
 
 		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
 		$this->assertTrue( edd_is_email_banned( 'john@test2.com' ) );
 		$this->assertFalse( edd_is_email_banned( 'john2@test.com' ) );
+		$this->assertTrue( edd_is_email_banned( 'john2@test.zip' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
+	}
+
+	public function test_edd_is_lowercase_email_banned_with_uppcase_tld_banned() {
+
+		$emails = array();
+		$emails[] = '.ZIP'; // Banned TLD
+
+		edd_update_option( 'banned_emails', $emails );
+
+		$this->assertTrue( edd_is_email_banned( 'john2@test.zip' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.zip@test.com' ) );
+	}
+
+	public function test_edd_is_uppercase_email_banned_with_lowercase_tld_banned() {
+
+		$emails = array();
+		$emails[] = '.zip'; // Banned TLD
+
+		edd_update_option( 'banned_emails', $emails );
+
+		$this->assertTrue( edd_is_email_banned( 'JOHN2@test.ZIP' ) );
+		$this->assertFalse( edd_is_email_banned( 'john.ZIP@test.com' ) );
 	}
 
 	/**
@@ -205,5 +230,25 @@ class Tests_Checkout extends EDD_UnitTestCase {
 				$this->assertTrue( $is_valid, $type . ' failed' );
 			}
 		}
+	}
+
+	public function test_edd_is_checkout_setting() {
+		$checkout_page = edd_get_option( 'purchase_page' );
+		$this->go_to( get_permalink( $checkout_page ) );
+		$this->assertTrue( edd_is_checkout() );
+	}
+
+	public function test_edd_is_checkout_shortcode() {
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Page', 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => '[download_checkout]' ) );
+		$this->go_to( get_permalink( $post_id ) );
+		do_action( 'template_redirect' ); // Necessary to trigger correct actions
+		$this->assertTrue( edd_is_checkout() );
+	}
+
+	public function test_edd_is_checkout_fail() {
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Page 2', 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => 'Test Page' ) );
+		$this->go_to( get_permalink( $post_id ) );
+		do_action( 'template_redirect' ); // Necessary to trigger correct actions
+		$this->assertFalse( edd_is_checkout() );
 	}
 }
