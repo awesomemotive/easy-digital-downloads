@@ -216,7 +216,7 @@ class EDD_Cart {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 		if ( empty( $this->contents ) ) {
-			return false;
+			return array();
 		}
 
 		$details = array();
@@ -725,7 +725,7 @@ class EDD_Cart {
 				}
 			}
 
-			$amount = ( $price - apply_filters( 'edd_get_cart_item_discounted_amount', $discounted_price, $discounts, $item, $price ) );
+			$amount = round( ( $price - apply_filters( 'edd_get_cart_item_discounted_amount', $discounted_price, $discounts, $item, $price ) ), edd_currency_decimal_filter() );
 
 			if ( 'flat' !== edd_get_discount_type( $code_id ) ) {
 				$amount = $amount * $item['quantity'];

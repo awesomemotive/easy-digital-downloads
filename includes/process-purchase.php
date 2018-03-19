@@ -126,7 +126,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
-		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
+		'tax_rate'     => edd_use_taxes() ? edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ) : 0, // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => $purchase_key,
 		'user_email'   => $user['user_email'],
@@ -621,7 +621,7 @@ function edd_purchase_form_validate_user_login() {
 
 	// Username
 	if ( empty( $_POST['edd_user_login'] ) && edd_no_guest_checkout() ) {
-		edd_set_error( 'must_log_in', __( 'You must login or register to complete your purchase', 'easy-digital-downloads' ) );
+		edd_set_error( 'must_log_in', __( 'You must log in or register to complete your purchase', 'easy-digital-downloads' ) );
 		return $valid_user_data;
 	}
 
