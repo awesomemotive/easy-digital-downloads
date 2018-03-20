@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<div id="message" class="updated">
 		<p><strong><?php _e( 'Discount code created.', 'easy-digital-downloads' ); ?></strong></p>
 
-		<p><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"><?php _e( '&larr; Back to Discounts' ); ?></a></p>
+		<p><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"><?php _e( '&larr; Back to Discounts', 'easy-digital-downloads' ); ?></a></p>
 	</div>
 <?php endif; ?>
 
