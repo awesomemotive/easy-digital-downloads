@@ -344,8 +344,8 @@ function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = arra
 	$download = new EDD_Download( $download_id );
 	?>
 	<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-		<meta itemprop="price" content="<?php esc_attr_e( $download->price ); ?>" />
-		<meta itemprop="priceCurrency" content="<?php esc_attr_e( edd_get_currency() ); ?>" />
+		<meta itemprop="price" content="<?php echo esc_attr( $download->price ); ?>" />
+		<meta itemprop="priceCurrency" content="<?php echo esc_attr( edd_get_currency() ); ?>" />
 	</span>
 	<?php
 }
