@@ -130,29 +130,12 @@ module.exports = function(grunt) {
 		copy: {
 			main: {
 				src:  [
-					'**',
-					'!bin/**',
-					'!node_modules/**',
-					'!build/**',
-					'!.git/**',
-					'!apigen.neon',
-					'!composer.json',
-					'!phpci.yml',
-					'!phpunit.xml',
-					'!Gruntfile.js',
-					'!package.json',
-					'!package-lock.json',
-					'!README.md',
-					'!CONTRIBUTING.md',
-					'!SUPPORT.md',
-					'!.gitignore',
-					'!.gitmodules',
-					'!.files.json',
-					'!.tx/**',
-					'!tests/**',
-					'!**/Gruntfile.js',
-					'!**/package.json',
-					'!**/*~'
+					'assets/**',
+					'includes/**',
+					'languages/**',
+					'templates/**',
+					'*.php',
+					'*.txt'
 				],
 				dest: 'build/<%= pkg.name %>/'
 			}
