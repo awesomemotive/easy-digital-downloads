@@ -60,8 +60,18 @@ abstract class Dataset {
 	 *
 	 * @return array List of fields available to the dataset.
 	 */
-	public function get_fields() {
-		return array_merge( $this->get_global_fields(), $this->fields );
+	public function get_all_fields() {
+		$fields = array_merge( $this->get_global_fields(), $this->get_fields() );
+
+		/**
+		 * Filters the fields available to a ChartJS graph.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array   $fields ChartJS fields (global and local).
+		 * @param Dataset $this   Dataset instance.
+		 */
+		return apply_filters( 'edd_reports_chart_fields', $fields, $this );
 	}
 
 }
