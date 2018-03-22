@@ -317,9 +317,412 @@ function edd_reports_earnings() {
 	}
 
 	edd_reports_graph();
+	$data = edd_get_earnings_report_data();
+
+	$earnings = $sales = array();
+
+	for ( $i = 0; $i <= 20; $i++ ) {
+		$earnings[ $i ][] = current_time( 'timestamp' ) + ( DAY_IN_SECONDS * $i );
+		$earnings[ $i ][] = $i + rand( 1, 5 );
+	}
+
+	for ( $i = 0; $i <= 20; $i++ ) {
+		$sales[ $i ][] = current_time( 'timestamp' ) + 3600 + ( DAY_IN_SECONDS * $i );
+		$sales[ $i ][] = $i + rand( 1, 5 );
+	}
+
+	?>
+	<canvas id="edd-reports-graph"></canvas>
+
+	<script type="application/javascript">
+
+		var date = moment( 'today', 'MMMM DD YYYY' );
+
+		var lineChartData = {
+			datasets: [{
+				label: "Earnings",
+				borderColor: 'rgb(237,194,64)',
+				backgroundColor: 'rgb(237,194,64)',
+				fill: false,
+				data: [
+					<?php foreach ( $earnings as $index => $values ) : ?>
+					{
+						x: moment( <?php echo $values[0] * 1000; ?> ),
+						y: <?php echo $values[1]; ?>
+					},
+					<?php endforeach; ?>
+				],
+			}, {
+				label: "Sales",
+				borderColor: 'rgb(175,216,248)',
+				backgroundColor: 'rgb(175,216,248)',
+				fill: false,
+				data: [
+					<?php foreach ( $sales as $index => $values ) : ?>
+					{
+						x: moment( <?php echo $values[0] * 1000; ?> ),
+						y: <?php echo $values[1]; ?>
+					},
+					<?php endforeach; ?>
+				],
+			}]
+		};
+
+		myLine = Chart.Line( $( '#edd-reports-graph' ), {
+			data: lineChartData,
+			options: {
+				responsive: true,
+				hoverMode: 'index',
+				stacked: false,
+				title:{
+					display: true,
+					text: 'Earnings Over Time'
+				},
+				// tooltips: {
+				// 	callbacks: {
+				// 		label: function (tooltipItem, data) {
+				// 			var label = data.datasets[tooltipItem.datasetIndex].label || '';
+				//
+				// 			if (label) {
+				// 				label += ': $' + tooltipItem.yLabel;
+				// 			}
+				// 			return label;
+				// 		},
+				// 	},
+				// },
+				scales: {
+					yAxes: [{
+						type: 'linear',
+						display: true,
+						position: "left",
+					} ],
+					xAxes: [{
+						type: 'time',
+						display: true,
+						time: {
+							min: moment().startOf( 'month' ),
+							max: moment().endOf( 'month' ),
+							unit: 'day',
+							displayFormats: {
+								day: 'MMM D',
+							},
+							tooltipFormat: 'MMMM Do, YYYY',
+						},
+					} ],
+				}
+			}
+		});
+
+	</script>
+
+	<?php
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
+
+function edd_get_earnings_report_data() {
+	// Retrieve the queried dates
+	$dates = Reports\get_dates_filter( 'objects' );
+
+	// Determine graph options
+	switch ( $dates['range'] ) {
+		case 'today' :
+		case 'yesterday' :
+			$day_by_day = true;
+			break;
+		case 'last_quarter' :
+		case 'this_quarter' :
+			$day_by_day = true;
+			break;
+		case 'other' :
+			$difference = ( $dates['start']->getTimestamp() - $dates['end']->getTimestamp() );
+
+			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
+			     || $difference >= YEAR_IN_SECONDS
+			) {
+				$day_by_day = false;
+			} else {
+				$day_by_day = true;
+			}
+			break;
+		default:
+			$day_by_day = true;
+			break;
+	}
+
+	$earnings_totals = 0.00; // Total earnings for time period shown
+	$sales_totals    = 0;    // Total sales for time period shown
+
+	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
+
+	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
+		// Hour by hour
+		$hour  = 0;
+		$month = $dates['start']->month;
+
+		$i = 0;
+		$j = 0;
+
+		$start = $dates['start']->format( 'Y-m-d' );
+		$end   = $dates['end']->format( 'Y-m-d' );
+
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start, $end );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start, $end, $include_taxes );
+
+		while ( $hour <= 23 ) {
+			$date = mktime( $hour, 0, 0, $month, $dates['start']->day, $dates['start']->year ) * 1000;
+
+			if ( isset( $earnings[ $i ] ) && $earnings[ $i ]['h'] == $hour ) {
+				$earnings_data[] = array( $date, $earnings[ $i ]['total'] );
+				$earnings_totals += $earnings[ $i ]['total'];
+				$i++;
+			} else {
+				$earnings_data[] = array( $date, 0 );
+			}
+
+			if ( isset( $sales[ $j ] ) && $sales[ $j ]['h'] == $hour ) {
+				$sales_data[] = array( $date, $sales[ $j ]['count'] );
+				$sales_totals += $sales[ $j ]['count'];
+				$j++;
+			} else {
+				$sales_data[] = array( $date, 0 );
+			}
+
+			$hour++;
+		}
+	} elseif ( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
+		$report_dates = array();
+		$i = 0;
+		while ( $i <= 6 ) {
+			if ( ( $dates['start']->day + $i ) <= $dates['end']->day ) {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $dates['start']->day + $i,
+					'month' => $dates['start']->month,
+					'year'  => $dates['start']->year,
+				);
+			} else {
+				$report_dates[ $i ] = array(
+					'day'   => (string) $i,
+					'month' => $dates['end']->month,
+					'year'  => $dates['end']->year,
+				);
+			}
+
+			$i++;
+		}
+
+		$start_date = $report_dates[0];
+		$end_date = end( $report_dates );
+
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'] );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], true, $start_date['year'] . '-' . $start_date['month'] . '-' . $start_date['day'], $end_date['year'] . '-' . $end_date['month'] . '-' . $end_date['day'], $include_taxes );
+
+		$i = 0;
+		$j = 0;
+		foreach ( $report_dates as $report_date ) {
+			$date = mktime( 0, 0, 0,  $report_date['month'], $report_date['day'], $report_date['year']  ) * 1000;
+
+			if ( array_key_exists( $i, $sales ) && $report_date['day'] == $sales[ $i ]['d'] && $report_date['month'] == $sales[ $i ]['m'] && $report_date['year'] == $sales[ $i ]['y'] ) {
+				$sales_data[] = array( $date, $sales[ $i ]['count'] );
+				$sales_totals += $sales[ $i ]['count'];
+				$i++;
+			} else {
+				$sales_data[] = array( $date, 0 );
+			}
+
+			if ( array_key_exists( $j, $earnings ) && $report_date['day'] == $earnings[ $j ]['d'] && $report_date['month'] == $earnings[ $j ]['m'] && $report_date['year'] == $earnings[ $j ]['y'] ) {
+				$earnings_data[] = array( $date, $earnings[ $j ]['total'] );
+				$earnings_totals += $earnings[ $j ]['total'];
+				$j++;
+			} else {
+				$earnings_data[] = array( $date, 0 );
+			}
+		}
+
+	} else {
+		$date_start = $dates['start']->format( 'Y-m-d' );
+		$date_end   = $dates['end']->format( 'Y-m-d' );
+
+		$sales = EDD()->payment_stats->get_sales_by_range( $dates['range'], $day_by_day, $date_start, $date_end );
+		$earnings = EDD()->payment_stats->get_earnings_by_range( $dates['range'], $day_by_day, $date_start, $date_end, $include_taxes );
+
+		$temp_data = array(
+			'sales'    => array(),
+			'earnings' => array(),
+		);
+
+		foreach ( $sales as $sale ) {
+			if ( $day_by_day ) {
+				$temp_data['sales'][ $sale['y'] ][ $sale['m'] ][ $sale['d'] ] = $sale['count'];
+			} else {
+				$temp_data['sales'][ $sale['y'] ][ $sale['m'] ] = $sale['count'];
+			}
+			$sales_totals += $sale['count'];
+		}
+
+		foreach ( $earnings as $earning ) {
+			if ( $day_by_day ) {
+				$temp_data['earnings'][ $earning['y'] ][ $earning['m'] ][ $earning['d'] ] = $earning['total'];
+			} else {
+				$temp_data['earnings'][ $earning['y'] ][ $earning['m'] ] = $earning['total'];
+			}
+			$earnings_totals += $earning['total'];
+		}
+
+		while ( $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+			$d = $dates['start']->day;
+			$m = $dates['start']->month;
+			$y = $dates['start']->year;
+
+			if ( ! isset( $temp_data['sales'][ $y ][ $m ][ $d ] ) ) {
+				$temp_data['sales'][ $y ][ $m ][ $d ] = 0;
+			}
+
+			if ( ! isset( $temp_data['earnings'][ $y ][ $m ][ $d ] ) ) {
+				$temp_data['earnings'][ $y ][ $m ][ $d ] = 0;
+			}
+
+			$date_start = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
+		}
+
+		while ( ! $day_by_day && ( strtotime( $date_start ) <= strtotime( $date_end ) ) ) {
+			$m = $dates['start']->month;
+			$y = $dates['start']->year;
+
+			if ( ! isset( $temp_data['sales'][ $y ][ $m ] ) ) {
+				$temp_data['sales'][ $y ][ $m ] = 0;
+			}
+
+			if ( ! isset( $temp_data['earnings'][ $y ][ $m ] ) ) {
+				$temp_data['earnings'][ $y ][ $m ] = 0;
+			}
+
+			$date_start = $dates['start']->addMonths( 1 )->format( 'Y-m' );
+		}
+
+		$sales_data    = array();
+		$earnings_data = array();
+
+		// When using 3 months or smaller as the custom range, show each day individually on the graph
+		if ( $day_by_day ) {
+			foreach ( $temp_data['sales'] as $year => $months ) {
+				foreach ( $months as $month => $days ) {
+					foreach ( $days as $day => $count ) {
+						$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+						$sales_data[] = array( $date, $count );
+					}
+				}
+			}
+
+			foreach ( $temp_data['earnings'] as $year => $months ) {
+				foreach ( $months as $month => $days ) {
+					foreach ( $days as $day => $total ) {
+						$date            = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+						$earnings_data[] = array( $date, $total );
+					}
+				}
+			}
+
+			// Sort dates in ascending order
+			foreach ( $sales_data as $key => $value ) {
+				$timestamps[ $key ] = $value[0];
+			}
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
+
+			foreach ( $earnings_data as $key => $value ) {
+				$earnings_timestamps[ $key ] = $value[0];
+			}
+			if ( ! empty( $earnings_timestamps ) ) {
+				array_multisort( $earnings_timestamps, SORT_ASC, $earnings_data );
+			}
+
+			// When showing more than 3 months of results, group them by month, by the first (except for the last month, group on the last day of the month selected)
+		} else {
+
+			foreach ( $temp_data['sales'] as $year => $months ) {
+				$month_keys = array_keys( $months );
+				$last_month = end( $month_keys );
+
+				if ( $day_by_day ) {
+					foreach ( $months as $month => $days ) {
+						$day_keys = array_keys( $days );
+						$last_day = end( $day_keys );
+
+						$month_keys = array_keys( $months );
+
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$sales        = array_sum( $days );
+						$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$sales_data[] = array( $date, $sales );
+					}
+				} else {
+					foreach ( $months as $month => $count ) {
+						$month_keys = array_keys( $months );
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$sales_data[] = array( $date, $count );
+					}
+				}
+			}
+
+			// Sort dates in ascending order
+			foreach ( $sales_data as $key => $value ) {
+				$timestamps[ $key ] = $value[0];
+			}
+			if ( ! empty( $timestamps ) ) {
+				array_multisort( $timestamps, SORT_ASC, $sales_data );
+			}
+
+			foreach ( $temp_data['earnings'] as $year => $months ) {
+				$month_keys = array_keys( $months );
+				$last_month = end( $month_keys );
+
+				if ( $day_by_day ) {
+					foreach ( $months as $month => $days ) {
+						$day_keys = array_keys( $days );
+						$last_day = end( $day_keys );
+
+						$month_keys = array_keys( $months );
+
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$earnings        = array_sum( $days );
+						$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$earnings_data[] = array( $date, $earnings );
+					}
+				} else {
+					foreach ( $months as $month => $count ) {
+						$month_keys = array_keys( $months );
+						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+
+						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$earnings_data[] = array( $date, $count );
+					}
+				}
+			}
+
+			// Sort dates in ascending order
+			foreach ( $earnings_data as $key => $value ) {
+				$earnings_timestamps[ $key ] = $value[0];
+			}
+			if ( ! empty( $earnings_timestamps ) ) {
+				array_multisort( $earnings_timestamps, SORT_ASC, $earnings_data );
+			}
+		}
+	}
+
+	$data = array(
+		__( 'Earnings', 'easy-digital-downloads' ) => $earnings_data,
+		__( 'Sales', 'easy-digital-downloads' )    => $sales_data
+	);
+
+	return $data;
+
+}
 
 /**
  * Renders the Reports Earnings By Category Table & Graphs
