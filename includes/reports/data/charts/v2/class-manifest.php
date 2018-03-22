@@ -11,7 +11,10 @@ namespace EDD\Reports\Data\Charts\v2;
 class Manifest {
 
 	/**
-	 * @var array
+	 * Datasets associated with the current graph.
+	 *
+	 * @since 3.0.0
+	 * @var   array
 	 */
 	public $datasets = array();
 
