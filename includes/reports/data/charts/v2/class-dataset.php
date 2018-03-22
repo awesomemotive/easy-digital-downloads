@@ -41,6 +41,17 @@ abstract class Dataset {
 	}
 
 	/**
+	 * Retrieves the list of local fields.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array List of local fields.
+	 */
+	public function get_fields() {
+		return $this->fields;
+	}
+
+	/**
 	 * Retrieves the list of fields for the current dataset.
 	 *
 	 * Includes the global fields.
