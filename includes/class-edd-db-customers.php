@@ -60,7 +60,12 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$this->table_name  = $wpdb->prefix . 'edd_customers';
 		$this->primary_key = 'id';
-		$this->version     = '1.0';
+		$this->version     = '1.1';
+
+		$current_version = get_option( $this->table_name . '_db_version' );
+		if ( version_compare( $current_version, $this->version, '<' ) ) {
+			$this->create_table();
+		}
 
 		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
 
@@ -586,7 +591,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
 		user_id bigint(20) NOT NULL,
-		email varchar(50) NOT NULL,
+		email varchar(100) NOT NULL,
 		name mediumtext NOT NULL,
 		purchase_value mediumtext NOT NULL,
 		purchase_count bigint(20) NOT NULL,
