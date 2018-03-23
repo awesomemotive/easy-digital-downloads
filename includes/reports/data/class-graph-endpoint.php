@@ -10,10 +10,6 @@
  */
 namespace EDD\Reports\Data;
 
-if ( ! class_exists( 'EDD\Reports\Data\Chart_Endpoint' ) ) {
-	require_once EDD_PLUGIN_DIR . 'includes/reports/data/class-chart-endpoint.php';
-}
-
 /**
  * Handler for building a graph endpoint in the Reports API.
  *
