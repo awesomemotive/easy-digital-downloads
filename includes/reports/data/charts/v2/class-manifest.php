@@ -7,6 +7,8 @@ namespace EDD\Reports\Data\Charts\v2;
  * Primarily used to simplify translating server-side arguments into client-side ones.
  *
  * @since 3.0.0
+ *
+ * @see Hydrator
  */
 class Manifest {
 
