@@ -49,6 +49,17 @@ final class Graph_Endpoint extends Chart_Endpoint {
 	}
 
 	/**
+	 * Sets up the options manifest.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $options Options to feed into the manifest.
+	 */
+	protected function set_options( $options ) {
+		parent::set_options( $options );
+	}
+
+	/**
 	 * Builds and outputs the graph JS to the page.
 	 *
 	 * @since 3.0
