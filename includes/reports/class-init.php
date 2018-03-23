@@ -51,9 +51,12 @@ final class Init {
 		// Chart Dependencies.
 		require_once $reports_dir . '/data/charts/v2/class-manifest.php';
 		require_once $reports_dir . '/data/charts/v2/class-dataset.php';
+		require_once $reports_dir . '/data/charts/v2/class-scale.php';
 		require_once $reports_dir . '/data/charts/v2/class-hydrator.php';
 		require_once $reports_dir . '/data/charts/v2/class-bar-dataset.php';
 		require_once $reports_dir . '/data/charts/v2/class-line-dataset.php';
+		require_once $reports_dir . '/data/charts/v2/class-linear-scale.php';
+		require_once $reports_dir . '/data/charts/v2/class-time-scale.php';
 	}
 
 	/**
