@@ -57,30 +57,10 @@ class Chart_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $args Options for displaying the graph via the graphing library.
+	 * @param array $options Options for displaying the graph via the graphing library.
 	 */
-	private function set_options( $args ) {
-		$options = array(
-			'y_mode'             => null,
-			'x_mode'             => null,
-			'y_decimals'         => 0,
-			'x_decimals'         => 0,
-			'y_position'         => 'right',
-			'time_format'        => '%d/%b',
-			'ticksize_unit'      => 'day',
-			'ticksize_num'       => 1,
-			'multiple_y_axes'    => false,
-			'bgcolor'            => '#f9f9f9',
-			'bordercolor'        => '#ccc',
-			'color'              => '#bbb',
-			'borderwidth'        => 2,
-			'bars'               => false,
-			'lines'              => true,
-			'points'             => true,
-			'additional_options' => '',
-		);
-
-		$this->options = wp_parse_args( $args, $options );
+	protected function set_options( $options ) {
+		$this->options = $options;
 	}
 
 	/**
