@@ -51,7 +51,7 @@ final class Graph_Endpoint extends Chart_Endpoint {
 	/**
 	 * Builds and outputs the graph JS to the page.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	public function build_graph() {
 		$data = $this->get_data();
