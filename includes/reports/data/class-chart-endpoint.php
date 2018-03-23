@@ -49,9 +49,11 @@ class Chart_Endpoint extends Endpoint {
 			// TODO: Throw exception.
 		}
 
-		$options = empty( $args['options'] ) ? array() : $args['options'];
-
-		$this->set_options( $options );
+		if ( ! empty( $args['options'] ) ) {
+			$this->set_options( $options );
+		} else {
+			// TODO: Throw exception.
+		}
 	}
 
 	/**
