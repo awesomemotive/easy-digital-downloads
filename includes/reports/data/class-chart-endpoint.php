@@ -56,6 +56,8 @@ class Chart_Endpoint extends Endpoint {
 		} else {
 			// TODO: Throw exception.
 		}
+
+		$manifest = new Chart\Manifest( $this->get_type(), $this->get_options() );
 	}
 
 	/**
@@ -78,8 +80,6 @@ class Chart_Endpoint extends Endpoint {
 	 */
 	protected function set_options( $options ) {
 		$this->options = $options;
-
-		$manifest = new Chart\Manifest( $this->get_type(), $options );
 	}
 
 	/**
