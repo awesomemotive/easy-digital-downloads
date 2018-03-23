@@ -18,4 +18,16 @@ class Manifest {
 	 */
 	public $datasets = array();
 
+	/**
+	 * Sets up the manifest.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type    Type of chart manifest.
+	 * @param array  $options Array of options to populate the manifest with.
+	 */
+	public function __construct( $type, $options ) {
+
+	}
+
 }
