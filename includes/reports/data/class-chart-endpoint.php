@@ -10,6 +10,8 @@
  */
 namespace EDD\Reports\Data;
 
+use EDD\Reports\Data\Charts\v2 as Chart;
+
 /**
  * Handler for building a chart endpoint in the Reports API.
  *
@@ -76,6 +78,8 @@ class Chart_Endpoint extends Endpoint {
 	 */
 	protected function set_options( $options ) {
 		$this->options = $options;
+
+		$manifest = new Chart\Manifest( $this->get_type(), $options );
 	}
 
 	/**
