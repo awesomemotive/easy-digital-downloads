@@ -37,13 +37,6 @@ final class Init {
 		require_once $reports_dir . '/class-registry.php';
 		require_once $reports_dir . '/data/class-base-object.php';
 
-		// Chart Dependencies.
-		require_once $reports_dir . '/data/charts/v2/class-manifest.php';
-		require_once $reports_dir . '/data/charts/v2/class-dataset.php';
-		require_once $reports_dir . '/data/charts/v2/class-hydrator.php';
-		require_once $reports_dir . '/data/charts/v2/class-bar-dataset.php';
-		require_once $reports_dir . '/data/charts/v2/class-line-dataset.php';
-
 		// Reports.
 		require_once $reports_dir . '/data/class-reports-registry.php';
 		require_once $reports_dir . '/data/class-report.php';
@@ -55,6 +48,13 @@ final class Init {
 		require_once $reports_dir . '/data/class-chart-endpoint.php';
 		require_once $reports_dir . '/data/class-graph-endpoint.php';
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
+
+		// Chart Dependencies.
+		require_once $reports_dir . '/data/charts/v2/class-manifest.php';
+		require_once $reports_dir . '/data/charts/v2/class-dataset.php';
+		require_once $reports_dir . '/data/charts/v2/class-hydrator.php';
+		require_once $reports_dir . '/data/charts/v2/class-bar-dataset.php';
+		require_once $reports_dir . '/data/charts/v2/class-line-dataset.php';
 	}
 
 	/**
