@@ -26,6 +26,14 @@ class Chart_Endpoint extends Endpoint {
 	protected $view = 'chart';
 
 	/**
+	 * Represents the chart type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $type;
+
+	/**
 	 * Sets up the chart endpoint.
 	 *
 	 * @since 3.0
@@ -34,6 +42,12 @@ class Chart_Endpoint extends Endpoint {
 	 */
 	public function __construct( array $args ) {
 		parent::__construct( $args );
+
+		if ( ! empty( $args['type'] ) ) {
+			$this->set_type( $args['type'] );
+		} else {
+			// TODO: Throw exception.
+		}
 
 		$options = empty( $args['options'] ) ? array() : $args['options'];
 
@@ -78,6 +92,28 @@ class Chart_Endpoint extends Endpoint {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Retrieves the chart type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Chart type.
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+	/**
+	 * Sets the chart type.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type Chart type to set.
+	 */
+	private function set_type( $type ) {
+		$this->type = sanitize_key( $type );
 	}
 
 	/**
