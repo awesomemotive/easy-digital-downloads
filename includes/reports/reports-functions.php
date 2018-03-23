@@ -251,6 +251,7 @@ function get_endpoint_views() {
 			'handler' => 'EDD\Reports\Data\Chart_Endpoint',
 			'fields'  => array(
 				'type'             => 'line',
+				'options'          => array(),
 				'data_callback'    => 'get_data',
 				'display_callback' => 'display',
 				'display_args'     => array(
