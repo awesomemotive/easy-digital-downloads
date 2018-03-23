@@ -32,7 +32,7 @@ class Manifest {
 	 * @since 3.0.0
 	 * @var   array
 	 */
-	public $datasets = array();
+	private $datasets = array();
 
 	/**
 	 * Sets up the manifest.
