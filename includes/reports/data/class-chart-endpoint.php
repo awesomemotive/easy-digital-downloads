@@ -111,7 +111,7 @@ class Chart_Endpoint extends Endpoint {
 
 			// Inject the display callback if 'display'.
 			if ( ! empty( $view_atts['display_callback'] ) && 'display' === $view_atts['display_callback'] ) {
-				$view_atts['display_callback'] = array( $this, 'display' );
+				$view_atts['display_callback'] = array( $this, 'build_graph' );
 			}
 
 			$endpoint['views'][ $view_type ] = $view_atts;
@@ -207,7 +207,7 @@ class Chart_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0
 	 */
-	public function build_graph( $display_args ) {
+	public function build_graph() {
 		$data = $this->get_data();
 
 		if ( empty( $data ) || ! is_array( $data ) ) {
@@ -304,15 +304,6 @@ class Chart_Endpoint extends Endpoint {
 
 		</script>
 		<?php
-	}
-
-	/**
-	 * Display logic for the current table endpoint.
-	 *
-	 * @since 3.0
-	 */
-	public function display() {
-		$this->build_graph( $this->get_display_args() );
 	}
 
 }
