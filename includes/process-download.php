@@ -302,7 +302,6 @@ add_action( 'init', 'edd_process_download', 100 );
  *
  * If enabled, the file is symlinked to better support large file downloads
  *
- * @access   public
  * @param    string    $file
  * @param    bool      $redirect True if we should perform a header redirect instead of calling edd_readfile_chunked()
  * @return   void
@@ -426,7 +425,6 @@ function edd_get_local_path_from_url( $url ) {
 /**
  * Get the file content type
  *
- * @access   public
  * @param    string    file extension
  * @return   string
  */
@@ -735,8 +733,6 @@ function edd_get_file_ctype( $extension ) {
 /**
  * Reads file in chunks so big downloads are possible without changing PHP.INI
  * See http://codeigniter.com/wiki/Download_helper_for_large_files/
- *
- * @access   public
  *
  * @param    string  $file     The file
  * @param    boolean $retbytes Return the bytes of file

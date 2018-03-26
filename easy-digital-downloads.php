@@ -361,7 +361,6 @@ final class Easy_Digital_Downloads {
 	/**
 	 * Loads the plugin language files.
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */

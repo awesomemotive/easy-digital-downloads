@@ -549,7 +549,6 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
  * Get Success Page URL
  *
  * @param string $query_string
- * @access      public
  * @since       1.0
  * @deprecated  2.6 Please avoid usage of this function in favor of edd_get_success_page_uri()
  * @return      string

@@ -24,7 +24,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * The metadata type.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var string
 	 */
@@ -33,7 +32,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * The name of the date column.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var string
 	 */
@@ -42,7 +40,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * The name of the cache group.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var string
 	 */
@@ -51,7 +48,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Get things started
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function __construct() {
@@ -69,7 +65,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Get columns and formats
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function get_columns() {
@@ -89,7 +84,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Get default column values
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function get_column_defaults() {
@@ -108,7 +102,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Add a customer
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function add( $data = array() ) {
@@ -167,7 +160,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Insert a new customer
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  int
 	 */
@@ -184,7 +176,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Update a customer
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  bool
 	 */
@@ -204,7 +195,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * NOTE: This should not be called directly as it does not make necessary changes to
 	 * the payment meta and logs. Use edd_customer_delete() instead
 	 *
-	 * @access  public
 	 * @since   2.3.1
 	*/
 	public function delete( $_id_or_email = false ) {
@@ -237,7 +227,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Checks if a customer exists
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function exists( $value = '', $field = 'email' ) {
@@ -254,7 +243,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Attaches a payment ID to a customer
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function attach_payment( $customer_id = 0, $payment_id = 0 ) {
@@ -273,7 +261,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Removes a payment ID from a customer
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function remove_payment( $customer_id = 0, $payment_id = 0 ) {
@@ -292,7 +279,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Increments customer purchase stats
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function increment_stats( $customer_id = 0, $amount = 0.00 ) {
@@ -313,7 +299,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Decrements customer purchase stats
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function decrement_stats( $customer_id = 0, $amount = 0.00 ) {
@@ -334,7 +319,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Updates the email address of a customer record when the email on a user is updated
 	 *
-	 * @access  public
 	 * @since   2.4
 	*/
 	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
@@ -380,7 +364,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Retrieves a single customer from the database
 	 *
-	 * @access public
 	 * @since  2.3
 	 * @param  string $column id or email
 	 * @param  mixed  $value  The Customer ID or email to search
@@ -448,7 +431,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Retrieve customers from the database
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function get_customers( $args = array() ) {
@@ -464,7 +446,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Count the total number of customers in the database
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function count( $args = array() ) {
@@ -544,7 +525,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Sets the last_changed cache key for customers.
 	 *
-	 * @access public
 	 * @since  2.8
 	 */
 	public function set_last_changed() {
@@ -554,7 +534,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Retrieves the value of the last_changed cache key for customers.
 	 *
-	 * @access public
 	 * @since  2.8
 	 */
 	public function get_last_changed() {
@@ -574,7 +553,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Create the table
 	 *
-	 * @access  public
 	 * @since   2.1
 	*/
 	public function create_table() {

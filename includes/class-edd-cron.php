@@ -52,7 +52,6 @@ class EDD_Cron {
 	/**
 	 * Schedules our events
 	 *
-	 * @access public
 	 * @since 1.6
 	 * @return void
 	 */
