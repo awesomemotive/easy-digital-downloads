@@ -166,6 +166,7 @@ class Chart_Endpoint extends Endpoint {
 		$manifest = $this->get_manifest();
 		$manifest = json_encode( $manifest );
 
+		$key_var = substr( md5( uniqid( rand() ) ), 0, 7 );
 
 		$dataset_count = count( $data );
 		$current       = 0;
@@ -178,7 +179,7 @@ class Chart_Endpoint extends Endpoint {
 
 			var date = moment( 'today', 'MMMM DD YYYY' );
 
-			var lineChartData = {
+			var <?php echo esc_js( $key_var ); ?> = {
 				<?php foreach ( $data as $set => $atts ) : ?>
 				datasets: [{
 					label: <?php echo empty( $atts['label' ] ? '' : esc_js( $atts['label'] ) ); ?>,
@@ -213,7 +214,7 @@ class Chart_Endpoint extends Endpoint {
 			};
 
 			myLine = Chart.Line( $( '#<?php echo esc_js( $target_el ); ?>' ), {
-				data: lineChartData,
+				data: <?php echo esc_js( $key_var ); ?>,
 				options: {
 					responsive: true,
 					hoverMode: 'index',
