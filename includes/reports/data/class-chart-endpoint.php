@@ -94,13 +94,30 @@ class Chart_Endpoint extends Endpoint {
 		}
 	}
 
-		if ( ! empty( $args['options'] ) ) {
-			$this->set_options( $options );
-		} else {
-			// TODO: Throw exception.
+	/**
+	 * Sets display-related properties for the Endpoint.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $atts Endpoint attributes.
+	 */
+	private function parse_display_props( $atts ) {
+
+		$view_type = $this->get_view();
+
+		if ( ! empty( $atts['views'][ $this->view ] ) ) {
+
+			$view_atts = $atts['views'][ $this->view ];
+
+			// Inject the display callback if 'display'.
+			if ( ! empty( $view_atts['display_callback'] ) && 'display' === $view_atts['display_callback'] ) {
+				$view_atts['display_callback'] = array( $this, 'display' );
+			}
+
+			$endpoint['views'][ $view_type ] = $view_atts;
 		}
 
-		$this->set_manifest();
+		return $endpoint;
 	}
 
 	/**
