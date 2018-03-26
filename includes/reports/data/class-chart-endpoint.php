@@ -64,11 +64,35 @@ class Chart_Endpoint extends Endpoint {
 		parent::__construct( $args );
 	}
 
-		if ( ! empty( $args['type'] ) ) {
-			$this->set_type( $args['type'] );
-		} else {
-			// TODO: Throw exception.
+	/**
+	 * Sets up the chart props needed for rendering.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $atts Endpoint attributes.
+	 */
+	private function setup_chart( $atts ) {
+		$view_type = $this->get_view();
+
+		if ( ! empty( $atts['views'][ $view_type ] ) ) {
+
+			$view_atts = $atts['views'][ $view_type ];
+
+			if ( ! empty( $view_atts['type'] ) ) {
+				$this->set_type( $view_atts['type'] );
+			} else {
+				// TODO: Throw exception.
+			}
+
+			if ( ! empty( $view_atts['options'] ) ) {
+				$this->set_options( $view_atts['options'] );
+			} else {
+				// TODO: Throw exception.
+			}
+
+			$this->set_manifest();
 		}
+	}
 
 		if ( ! empty( $args['options'] ) ) {
 			$this->set_options( $options );
