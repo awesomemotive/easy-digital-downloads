@@ -81,7 +81,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Show the search field
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param string $text Label for the search box
@@ -111,7 +110,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the view types
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $views All the views available
 	 */
@@ -135,7 +133,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -157,7 +154,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table's sortable columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array Array of all the sortable columns
 	 */
@@ -186,7 +182,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param array $item Contains all the data of the discount code
@@ -201,7 +196,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Render the Name Column
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @param array $item Contains all the data of the discount code
 	 * @return string Data shown in the Name column
@@ -228,7 +222,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Render the checkbox column
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @param array $item Contains all the data for the checkbox column
 	 * @return string Displays a checkbox
@@ -244,7 +237,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Render the status column
 	 *
-	 * @access public
 	 * @since 1.9.9
 	 * @param array $item Contains all the data for the checkbox column
 	 * @return string Displays the discount status
@@ -257,7 +249,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * Message to be displayed when there are no items
 	 *
 	 * @since 1.7.2
-	 * @access public
 	 */
 	function no_items() {
 		_e( 'No discounts found.', 'easy-digital-downloads' );
@@ -266,7 +257,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the bulk actions
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $actions Array of the bulk actions
 	 */
@@ -283,7 +273,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -320,7 +309,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the discount code counts
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -334,7 +322,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve all the data for all the discount codes
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $discount_codes_data Array of all the data for the discount codes
 	 */
@@ -408,7 +395,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @uses EDD_Discount_Codes_Table::get_columns()
 	 * @uses EDD_Discount_Codes_Table::get_sortable_columns()
