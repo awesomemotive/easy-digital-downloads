@@ -1685,7 +1685,7 @@ jQuery(document).ready(function ($) {
 
 				// Show column mapping
 				var select  = $form.find('select.edd-import-csv-column');
-				var row     = select.parent().parent();
+				var row     = select.parents( 'tr' ).first();
 				var options = '';
 
 				var columns = response.data.columns.sort(function(a,b) {
@@ -1717,6 +1717,10 @@ jQuery(document).ready(function ($) {
 
 					}
 
+				});
+
+				$.each( select, function() {
+					$( this ).val( $(this).attr( 'data-field' ) ).change();
 				});
 
 				$(document.body).on('click', '.edd-import-proceed', function(e) {
