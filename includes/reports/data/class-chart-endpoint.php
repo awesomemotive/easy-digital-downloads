@@ -112,9 +112,9 @@ class Chart_Endpoint extends Endpoint {
 
 		$view_type = $this->get_view();
 
-		if ( ! empty( $atts['views'][ $this->view ] ) ) {
+		if ( ! empty( $atts['views'][ $view_type ] ) ) {
 
-			$view_atts = $atts['views'][ $this->view ];
+			$view_atts = $atts['views'][ $view_type ];
 
 			// Inject the display callback if 'display'.
 			if ( ! empty( $view_atts['display_callback'] ) && 'display' === $view_atts['display_callback'] ) {
