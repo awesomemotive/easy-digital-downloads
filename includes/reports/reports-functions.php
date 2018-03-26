@@ -693,6 +693,8 @@ function default_display_report( $report ) {
 
 		$report->display_endpoint_group( 'tables' );
 
+		$report->display_endpoint_group( 'charts' );
+
 	endif; // WP_Error.
 
 	// Back-compat.
