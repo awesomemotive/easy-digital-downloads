@@ -36,6 +36,14 @@ class Chart_Endpoint extends Endpoint {
 	private $type;
 
 	/**
+	 * Represents the PHP manifestation of the chart data and options.
+	 *
+	 * @since 3.0
+	 * @var   Chart\Manifest
+	 */
+	private $manifest;
+
+	/**
 	 * Sets up the chart endpoint.
 	 *
 	 * @since 3.0
@@ -57,7 +65,7 @@ class Chart_Endpoint extends Endpoint {
 			// TODO: Throw exception.
 		}
 
-		$manifest = new Chart\Manifest( $this->get_type(), $this->get_options() );
+		$this->set_manifest();
 	}
 
 	/**
@@ -120,6 +128,26 @@ class Chart_Endpoint extends Endpoint {
 	 */
 	private function set_type( $type ) {
 		$this->type = sanitize_key( $type );
+	}
+
+	/**
+	 * Retrieves the manifest instance.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Chart\Manifest Chart manifest.
+	 */
+	public function get_manifest() {
+		return $this->manifest;
+	}
+
+	/**
+	 * Instantiates the manifest based on chart type and options.
+	 *
+	 * @since 3.0
+	 */
+	private function set_manifest() {
+		$this->manifest = new Chart\Manifest( $this->get_type(), $this->get_options() );
 	}
 
 	/**
