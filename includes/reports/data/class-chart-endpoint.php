@@ -207,10 +207,10 @@ class Chart_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0
 	 */
-	public function build_graph() {
+	public function build_graph( $display_args ) {
 		$data = $this->get_data();
 
-		if ( empty( $data ) ) {
+		if ( empty( $data ) || ! is_array( $data ) ) {
 			return;
 		}
 
