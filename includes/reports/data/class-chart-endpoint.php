@@ -162,9 +162,15 @@ class Chart_Endpoint extends Endpoint {
 			return;
 		}
 
+		// Start parsing the manifest for output as JS.
+		$manifest = $this->get_manifest();
+		$manifest = json_encode( $manifest );
+
+
 		$dataset_count = count( $data );
 		$current       = 0;
 		$target_el     = $this->get_display_arg( 'target', 'edd-reports-graph' );
+
 		?>
 		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
 
