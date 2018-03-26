@@ -74,9 +74,9 @@ final class Table_Endpoint extends Endpoint {
 
 		$view_type = $this->get_view();
 
-		if ( ! empty( $endpoint['views'][ $this->view ] ) ) {
+		if ( ! empty( $endpoint['views'][ $view_type ] ) ) {
 
-			$view_atts = $endpoint['views'][ $this->view ];
+			$view_atts = $endpoint['views'][ $view_type ];
 
 			$list_table = $this->get_list_table();
 
