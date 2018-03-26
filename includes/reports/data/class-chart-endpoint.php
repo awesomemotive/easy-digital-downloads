@@ -61,6 +61,7 @@ class Chart_Endpoint extends Endpoint {
 
 		$args = $this->parse_display_props( $args );
 
+		// Common values set last to account for overrides.
 		parent::__construct( $args );
 	}
 
