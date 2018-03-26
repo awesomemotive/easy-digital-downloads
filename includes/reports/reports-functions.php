@@ -247,9 +247,10 @@ function get_endpoint_views() {
 			),
 		),
 		'chart' => array(
-			'group'   => 'charts',
-			'handler' => 'EDD\Reports\Data\Chart_Endpoint',
-			'fields'  => array(
+			'group'          => 'charts',
+			'group_callback' => __NAMESPACE__ . '\\default_display_charts_group',
+			'handler'        => 'EDD\Reports\Data\Chart_Endpoint',
+			'fields'         => array(
 				'type'             => 'line',
 				'options'          => array(),
 				'data_callback'    => 'get_data',
@@ -851,6 +852,32 @@ function default_display_tables_group( $report ) {
 
 		</div>
 	<?php endif; // Has endpoints.
+}
+
+/**
+ * Handles default display of all chart endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function default_display_charts_group( $report ) {
+	if ( $report->has_endpoints( 'charts' ) ) :
+
+		$charts = $report->get_endpoint( 'charts' );
+		?>
+		<div id="edd-reports-charts-wrap">
+			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
+				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
+
+				<?php $chart->display(); ?>
+			<?php endforeach; ?>
+		</div>
+		<?php
+
+	else :
+		edd_debug_log( 'No charts to display' );
+	endif;
 }
 
 /**
