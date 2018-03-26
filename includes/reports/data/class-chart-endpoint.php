@@ -51,7 +51,18 @@ class Chart_Endpoint extends Endpoint {
 	 * @param array $args Chart endpoint attributes.
 	 */
 	public function __construct( array $args ) {
+		$this->errors = new \WP_Error();
+
+		// ID and Label.
+		$this->set_props( $args );
+
+		// Chart props.
+		$this->setup_chart( $args );
+
+		$args = $this->parse_display_props( $args );
+
 		parent::__construct( $args );
+	}
 
 		if ( ! empty( $args['type'] ) ) {
 			$this->set_type( $args['type'] );
