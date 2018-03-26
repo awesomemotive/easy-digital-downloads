@@ -866,7 +866,7 @@ function default_display_tables_group( $report ) {
 function default_display_charts_group( $report ) {
 	if ( $report->has_endpoints( 'charts' ) ) :
 
-		$charts = $report->get_endpoint( 'charts' );
+		$charts = $report->get_endpoints( 'charts' );
 		?>
 		<div id="edd-reports-charts-wrap">
 			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
