@@ -82,4 +82,70 @@ class Manifest {
 		$this->options = $options;
 	}
 
+	/**
+	 * Retrieves the manifest datasets.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Datasets for this chart if any are defined, otherwise an empty array.
+	 */
+	public function get_datasets() {
+		return $this->datasets;
+	}
+
+	/**
+	 * Determines whether the current chart manifest contains any datasets.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if there are datasets, otherwise false.
+	 */
+	public function has_datasets() {
+		return ! empty( $this->get_datasets() );
+	}
+
+	/**
+	 * Adds a dataset.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $data Array of dataset data.
+	 * @return bool True if the dataset was added, otherwise false.
+	 */
+	public function add_dataset( $data ) {
+		$handler = $this->get_type_handler();
+
+		if ( ! empty( $handler ) ) {
+			$this->datasets[] = new $handler( $data );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Retrieves the type handler for the current dataset type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Dataset type handler.
+	 */
+	public function get_type_handler() {
+		$handler = '';
+
+		switch( $this->get_type() ) {
+
+			case 'bar':
+				$handler = 'EDD\Reports\Data\Charts\v2\Bar_Dataset';
+				break;
+
+			case 'line':
+			default:
+				$handler = 'EDD\Reports\Data\Charts\v2\Line_Dataset';
+				break;
+
+
+		}
+	}
 }
