@@ -82,13 +82,19 @@ class Chart_Endpoint extends Endpoint {
 			if ( ! empty( $view_atts['type'] ) ) {
 				$this->set_type( $view_atts['type'] );
 			} else {
-				// TODO: Throw exception.
+				$this->errors->add(
+					'missing_chart_type',
+					sprintf( 'The chart type for \'%1$s\' endpoint is missing.', $this->get_id() )
+				);
 			}
 
 			if ( ! empty( $view_atts['options'] ) ) {
 				$this->set_options( $view_atts['options'] );
 			} else {
-				// TODO: Throw exception.
+				$this->errors->add(
+					'missing_chart_options',
+					sprintf( 'The chart options for the \'%1$s\' endpoint is missing.', $this->get_id() )
+				);
 			}
 
 			$this->set_manifest();
