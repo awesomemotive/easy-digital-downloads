@@ -73,7 +73,7 @@ function edd_get_tools_tabs() {
 	}
 
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
-	
+
 	if( edd_is_debug_mode() ) {
 		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
 	}
@@ -1162,7 +1162,6 @@ add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
  * Get system info
  *
  * @since       2.0
- * @access      public
  * @global      object $wpdb Used to query the database using the WordPress Database API
  * @return      string $return A string containing the info to output
  */

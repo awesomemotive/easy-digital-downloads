@@ -402,7 +402,6 @@ function edd_get_country_list() {
 /**
  * Get States List
  *
- * @access      public
  * @since       1.2
  * @return      array
  */
@@ -515,7 +514,6 @@ function edd_get_angola_provinces_list() {
 /**
  * Get Provinces List
  *
- * @access      public
  * @since       1.2
  * @return      array
  */

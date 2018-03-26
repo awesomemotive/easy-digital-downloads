@@ -16,7 +16,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Usage tracking
  *
- * @access public
  * @since  1.8.2
  * @return void
  */
@@ -32,7 +31,6 @@ class EDD_Tracking {
 	/**
 	 * Get things going
 	 *
-	 * @access public
 	 */
 	public function __construct() {
 
@@ -157,7 +155,6 @@ class EDD_Tracking {
 	 *
 	 * This runs during the sanitation of General settings, thus the return
 	 *
-	 * @access public
 	 * @return array
 	 */
 	public function check_for_settings_optin( $input ) {
@@ -174,7 +171,6 @@ class EDD_Tracking {
 	/**
 	 * Check for a new opt-in via the admin notice
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function check_for_optin( $data ) {
@@ -193,7 +189,6 @@ class EDD_Tracking {
 	/**
 	 * Check for a new opt-in via the admin notice
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
@@ -222,7 +217,6 @@ class EDD_Tracking {
 	 * We send once a week (while tracking is allowed) to check in, which can be
 	 * used to determine active sites.
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function schedule_send() {
@@ -234,7 +228,6 @@ class EDD_Tracking {
 	/**
 	 * Display the admin notice to users that have not opted-in or out
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function admin_notice() {
