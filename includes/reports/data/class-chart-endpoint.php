@@ -213,7 +213,7 @@ class Chart_Endpoint extends Endpoint {
 			};
 			};
 
-			myLine = Chart.Line( $( '#<?php echo esc_js( $target_el ); ?>' ), {
+			<?php echo esc_js( $key_var . '_Chart' ); ?> = Chart.Line( $( '#<?php echo esc_js( $target_el ); ?>' ), {
 				data: <?php echo esc_js( $key_var ); ?>,
 				options: {
 					responsive: true,
