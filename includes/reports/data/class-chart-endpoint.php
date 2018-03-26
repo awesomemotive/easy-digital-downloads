@@ -306,4 +306,13 @@ class Chart_Endpoint extends Endpoint {
 		<?php
 	}
 
+	/**
+	 * Display logic for the current table endpoint.
+	 *
+	 * @since 3.0
+	 */
+	public function display() {
+		$this->build_graph( $this->get_display_args() );
+	}
+
 }
