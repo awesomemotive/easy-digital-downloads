@@ -50,6 +50,17 @@ class Manifest {
 	}
 
 	/**
+	 * Retrieves the chart type.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Chart type.
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+	/**
 	 * Sets the chart type for the manifest.
 	 *
 	 * @since 3.0
