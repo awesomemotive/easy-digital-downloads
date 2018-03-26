@@ -120,7 +120,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'download' :
-				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
+				$download      = new EDD_Download( $item[ $column_name ] );
+				$column_value  = $download->get_name();
+
+				if ( false !== $item['price_id'] ) {
+					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
+				}
+
+				return '<a href="' . add_query_arg( 'download', $download->ID ) . '" >' . $column_value . '</a>';
 			case 'customer' :
 				return '<a href="' . add_query_arg( 'user', $item[ 'customer' ]->email ) . '">' . $item['customer']->name . '</a>';
 			case 'payment_id' :
@@ -381,6 +388,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$ip          = $meta['_edd_log_ip'][0];
 				$user_id     = isset( $user_info['id'] ) ? $user_info['id'] : false;
 				$customer_id = edd_get_payment_customer_id( $payment_id );
+				$price_id    = edd_has_variable_prices( $log->post_parent ) ? get_post_meta( $log->ID, '_edd_log_price_id', true ) : false;
 
 				if( ! array_key_exists( $log->post_parent, $this->queried_files ) ) {
 					$files   = maybe_unserialize( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value from $wpdb->postmeta WHERE post_id = %d and meta_key = 'edd_download_files'", $log->post_parent ) ) );
@@ -404,6 +412,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$logs_data[] = array(
 						'ID'         => $log->ID,
 						'download'   => $log->post_parent,
+						'price_id'   => $price_id,
 						'customer'   => new EDD_Customer( $customer_id ),
 						'payment_id' => $payment_id,
 						'file'       => $file_name,

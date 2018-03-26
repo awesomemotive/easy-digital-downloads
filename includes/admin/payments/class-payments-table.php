@@ -139,7 +139,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$selected_gateway = isset( $_GET['gateway'] ) ? sanitize_text_field( $_GET['gateway'] ) : 'all';
 
 		if ( ! empty( $all_gateways ) ) {
-			$gateways['all'] = __( 'All Gateways', 'edd' );
+			$gateways['all'] = __( 'All Gateways', 'easy-digital-downloads' );
 
 			foreach( $all_gateways as $slug => $admin_label ) {
 				$gateways[ $slug ] = $admin_label['admin_label'];
