@@ -310,15 +310,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->total = edd_count_total_customers( $this->args );
 
-		$pagination_args = array(
-			'total_items' => absint( $this->total ),
-			'per_page'    => absint( $this->per_page ),
-			'total_pages' => 1,
-		);
-		if ( $pagination_args['per_page'] ) {
-			$pagination_args['total_pages'] = ceil( $pagination_args['total_items'] / $pagination_args['per_page'] );
-		}
+		// Add condition to be sure we don't divide by zero.
+		// If $this->per_page is 0, then set total pages to 1.
+		$total_pages = $this->per_page ? ceil( (int) $this->total / (int) $this->per_page ) : 1;
 
-		$this->set_pagination_args( $pagination_args );
+		$this->set_pagination_args( array(
+			'total_items' => $this->total,
+			'per_page'    => $this->per_page,
+			'total_pages' => $total_pages,
+		) );
 	}
 }
