@@ -17,7 +17,7 @@ etc, etc
 ### Information (if a specific version is affected):
 PHP Version:
 
-EDD Version:
+EDD Version (or branch):
 
 WordPress Version:
 
