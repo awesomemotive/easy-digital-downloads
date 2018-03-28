@@ -1,8 +1,8 @@
-Fixes # .
+Fixes #<insert issue number>
 
-Proposed Changes
--
--
-- 
+Proposed Changes:
+1.
+2.
+3.
 
-_ Please do not submit PRs with minified CSS or JS files. This is managed at the time of release by the Core Team _
+_Please do not submit PRs with minified CSS or JS files. This is managed at the time of release by the Core Team_
