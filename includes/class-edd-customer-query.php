@@ -350,8 +350,12 @@ class EDD_Customer_Query {
 
 		// If querying for a count only, there's nothing more to do.
 		if ( $this->query_vars['count'] ) {
-			// $items is actually a count in this case.
-			return intval( $items[0]->count );
+
+			if ( isset( $items[0] ) ) {
+				// $items is actually a count in this case.
+				return intval( $items[0]->count );
+			}
+			return 0;
 		}
 
 		$this->items = $items;
