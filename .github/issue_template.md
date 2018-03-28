@@ -1,5 +1,9 @@
-# Please choose one of the following for your issue...
-... and remove the other section.
+# Instructions (START):
+The purpose of this template is to standardize GitHub issues for bug reports and enhancement requests. Please follow the instructions below.
+1. Determine whether your new issue is a "Bug Report" or "Enhancement Request."
+2. Based on your issue type, delete the unneeded template section below. For example, if you are submitting a bug report, find the entire "Enhancement Request" section of the template and delete it.
+3. Delete this entire block of instructions, from START to END, and fill out the sections to describe your reason for opening an issue.
+# Instructions (END):
 
 ## Bug Report
 ### Expected behavior
