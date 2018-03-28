@@ -1091,6 +1091,7 @@ function edd_tools_debug_log_display() {
 				</p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
 			</form>
+			<p><?php _e( 'Log file', 'easy-digital-downloads' ); ?>: <code><?php echo $edd_logs->get_log_file_path(); ?></code></p>
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 <?php
