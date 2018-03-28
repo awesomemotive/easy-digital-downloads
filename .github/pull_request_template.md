@@ -1,4 +1,4 @@
-Fixes #<insert issue number>
+Fixes #
 
 Proposed Changes:
 1.
