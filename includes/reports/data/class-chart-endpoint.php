@@ -121,10 +121,10 @@ class Chart_Endpoint extends Endpoint {
 				$view_atts['display_callback'] = array( $this, 'build_graph' );
 			}
 
-			$endpoint['views'][ $view_type ] = $view_atts;
+			$atts['views'][ $view_type ] = $view_atts;
 		}
 
-		return $endpoint;
+		return $atts;
 	}
 
 	/**
