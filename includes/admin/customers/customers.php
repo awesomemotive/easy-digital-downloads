@@ -418,7 +418,7 @@ function edd_customers_view( $customer ) {
 								<button class="button-secondary edd-add-customer-email" id="add-customer-email" style="margin: 6px 0;"><?php _e( 'Add Email', 'easy-digital-downloads' ); ?></button>
 								<span class="spinner"></span>
 							</div>
-							<div class="notice-wrap-message"></div>
+							<div class="notice-container"></div>
 						</td>
 					</tr>
 				<?php else: ?>

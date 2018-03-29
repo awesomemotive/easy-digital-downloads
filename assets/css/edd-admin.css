@@ -1592,7 +1592,7 @@ td.edd_order_price {
 .delete-customer {
 	text-align: center;
 }
-#edd-item-card-wrapper .notice-wrap-message {
+#edd-item-card-wrapper .notice-container {
 	padding-left: 20px;
 	padding-right: 20px;
 	margin-left: -20px;
