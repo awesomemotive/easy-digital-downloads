@@ -467,6 +467,19 @@ class EDD_Logging {
 
 	}
 
+	/**
+	 * Return the location of the log file that EDD_Logging will use.
+	 *
+	 * Note: Do not use this file to write to the logs, please use the `edd_debug_log` function to do so.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @return string
+	 */
+	public function get_log_file_path() {
+		return $this->file;
+	}
+
 }
 
 // Initiate the logging system
