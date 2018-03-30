@@ -145,10 +145,6 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$this->assertObjectHasAttribute( 'email', $customer );
 	}
 
-	public function test_exists() {
-		$this->assertTrue( EDD()->customers->exists( 'testadmin@domain.com' ) );
-	}
-
 	public function test_legacy_attach_payment() {
 		$payment_id = EDD_Helper_Payment::create_simple_payment();
 		$customer   = new EDD_Customer( 'testadmin@domain.com' );
