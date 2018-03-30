@@ -252,18 +252,13 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 		foreach ( $discounts as $discount ) {
 
-			if ( edd_is_discount_active( $discount->ID ) ) {
-
+			if ( edd_is_discount_active( $discount->id ) ) {
 				$discounts_list .= '<li class="edd_discount">';
-
-					$discounts_list .= '<span class="edd_discount_name">' . edd_get_discount_code( $discount->ID ) . '</span>';
+					$discounts_list .= '<span class="edd_discount_name">' . edd_get_discount_code( $discount->id ) . '</span>';
 					$discounts_list .= '<span class="edd_discount_separator"> - </span>';
-					$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ) . '</span>';
-
+					$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( edd_get_discount_type( $discount->id ), edd_get_discount_amount( $discount->id ) ) . '</span>';
 				$discounts_list .= '</li>';
-
 			}
-
 		}
 
 	} else {
@@ -289,14 +284,13 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-			'taxonomy'	=> '',
-			'terms'		=> '',
-			'text'		=> __('Purchase All Items','easy-digital-downloads' ),
-			'style'     => edd_get_option( 'button_style', 'button' ),
-			'color'     => edd_get_option( 'checkout_color', 'blue' ),
-			'class'		=> 'edd-submit'
-		), $atts, 'purchase_collection' )
-	);
+		'taxonomy'	=> '',
+		'terms'		=> '',
+		'text'		=> __('Purchase All Items','easy-digital-downloads' ),
+		'style'     => edd_get_option( 'button_style', 'button' ),
+		'color'     => edd_get_option( 'checkout_color', 'blue' ),
+		'class'		=> 'edd-submit'
+	), $atts, 'purchase_collection' ) );
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
 
@@ -340,9 +334,9 @@ function edd_downloads_query( $atts, $content = null ) {
 	), $atts, 'downloads' );
 
 	$query = array(
-		'post_type'      => 'download',
-		'orderby'        => $atts['orderby'],
-		'order'          => $atts['order']
+		'post_type' => 'download',
+		'orderby'   => $atts['orderby'],
+		'order'     => $atts['order']
 	);
 
 	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) || ( ! filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) && $atts[ 'number' ] ) ) {
@@ -364,6 +358,18 @@ function edd_downloads_query( $atts, $content = null ) {
 		case 'price':
 			$atts['orderby']   = 'meta_value';
 			$query['meta_key'] = 'edd_price';
+			$query['orderby']  = 'meta_value_num';
+		break;
+			
+		case 'sales':
+			$atts['orderby']   = 'meta_value';
+			$query['meta_key'] = '_edd_download_sales';
+			$query['orderby']  = 'meta_value_num';
+		break;
+
+		case 'earnings':
+			$atts['orderby']   = 'meta_value';
+			$query['meta_key'] = '_edd_download_earnings';
 			$query['orderby']  = 'meta_value_num';
 		break;
 
@@ -579,11 +585,16 @@ function edd_downloads_query( $atts, $content = null ) {
 		$wrapper_class = 'edd_download_columns_' . $atts['columns'];
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
+
+			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
+
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<?php do_action( 'edd_download_shortcode_item', $atts, $i ); ?>
 			<?php $i++; endwhile; ?>
 
 			<?php wp_reset_postdata(); ?>
+
+			<?php do_action( 'edd_downloads_list_bottom', $atts ); ?>
 
 			<?php if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 
@@ -642,10 +653,9 @@ add_shortcode( 'edd_downloads', 'edd_downloads_query' );
  */
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-			'id' => NULL,
-			'price_id' => false,
-		), $atts, 'edd_price' )
-	);
+		'id'       => NULL,
+		'price_id' => false,
+	), $atts, 'edd_price' ) );
 
 	if ( is_null( $id ) ) {
 		$id = get_the_ID();
@@ -767,14 +777,10 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();
 
-	if( ! edd_user_pending_verification() ) {
-
+	if ( ! edd_user_pending_verification() ) {
 		edd_get_template_part( 'shortcode', 'profile-editor' );
-
 	} else {
-
 		edd_get_template_part( 'account', 'pending' );
-
 	}
 
 	$display = ob_get_clean();
@@ -794,6 +800,7 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  * @return void
  */
 function edd_process_profile_editor_updates( $data ) {
+
 	// Profile field change request
 	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() ) {
 		return false;

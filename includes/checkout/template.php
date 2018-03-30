@@ -681,7 +681,7 @@ function edd_show_payment_icons() {
 			} else {
 
 				$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
-				$content_dir = WP_CONTENT_DIR;
+				$content_dir = WP_PLUGIN_DIR;
 
 				if( function_exists( 'wp_normalize_path' ) ) {
 
@@ -691,7 +691,7 @@ function edd_show_payment_icons() {
 
 				}
 
-				$image = str_replace( $content_dir, content_url(), $image );
+				$image = str_replace( $content_dir, WP_PLUGIN_URL, $image );
 
 			}
 

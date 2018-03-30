@@ -132,7 +132,6 @@ class EDD_Fees {
 	/**
 	 * Remove an Existing Fee
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $id Fee ID
 	 * @uses EDD_Fees::get_fees()
@@ -156,7 +155,6 @@ class EDD_Fees {
 	/**
 	 * Check if any fees are present
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
@@ -178,7 +176,6 @@ class EDD_Fees {
 	/**
 	 * Retrieve all active fees
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @param int $download_id The download ID whose fees to retrieve
@@ -275,7 +272,6 @@ class EDD_Fees {
 	 *
 	 * Can be negative
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
@@ -300,7 +296,6 @@ class EDD_Fees {
 	 *
 	 * Can be negative
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
@@ -323,7 +318,6 @@ class EDD_Fees {
 	/**
 	 * Stores the fees in the payment meta
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Session::set()
 	 * @param array $payment_meta The meta data to store with the payment

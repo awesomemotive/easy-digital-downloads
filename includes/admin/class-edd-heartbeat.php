@@ -27,7 +27,6 @@ class EDD_Heartbeat {
 	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -40,7 +39,6 @@ class EDD_Heartbeat {
 	/**
 	 * Tie into the heartbeat and append our stats
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array
 	 */
@@ -75,7 +73,6 @@ class EDD_Heartbeat {
 	/**
 	 * Load the heartbeat scripts
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array
 	 */
@@ -93,7 +90,6 @@ class EDD_Heartbeat {
 	/**
 	 * Inject our JS into the admin footer
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array
 	 */

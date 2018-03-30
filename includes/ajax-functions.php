@@ -274,8 +274,8 @@ function edd_ajax_apply_discount() {
 		}
 
 		if ( edd_is_discount_valid( $discount_code, $user ) ) {
-			$discount  = edd_get_discount_by_code( $discount_code );
-			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
+			$discount  = edd_get_discount_by( 'code', $discount_code );
+			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->id ), edd_get_discount_amount( $discount->id ) );
 			$discounts = edd_set_cart_discount( $discount_code );
 			$total     = edd_get_cart_total( $discounts );
 
@@ -650,40 +650,40 @@ add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
  * @return void
  */
 function edd_ajax_user_search() {
-	global $wpdb;
 
-	$search         = esc_sql( sanitize_text_field( $_GET['s'] ) );
-	$results        = array();
+	// Default results
+	$results = array(
+		'id'   => 0,
+		'name' => __( 'No users found', 'easy-digital-downloads' )
+	);
+
+	// Default user role
 	$user_view_role = apply_filters( 'edd_view_users_role', 'view_shop_reports' );
 
-	if ( ! current_user_can( $user_view_role ) ) {
-		$results = array();
-	} else {
-		$user_args = array(
-			'search' => '*' . esc_attr( $search ) . '*',
-			'number' => 50,
-		);
+	// User can view users
+	if ( current_user_can( $user_view_role ) ) {
+		$search = esc_sql( sanitize_text_field( $_GET['s'] ) );
+		$users  = array();
 
-		$users = get_users( $user_args );
-	}
-
-	if ( $users ) {
-
-		foreach( $users as $user ) {
-
-			$results[] = array(
-				'id'   => $user->ID,
-				'name' => $user->display_name,
-			);
+		// Searching
+		if ( ! empty( $search ) ) {
+			$users  = get_users( array(
+				'search' => '*' . $search . '*',
+				'number' => 50
+			) );
 		}
 
-	} else {
+		// Setup results based on users
+		if ( ! empty( $users ) ) {
+			$results = array();
 
-		$results[] = array(
-			'id'   => 0,
-			'name' => __( 'No users found', 'easy-digital-downloads' )
-		);
-
+			foreach( $users as $user ) {
+				$results[] = array(
+					'id'   => $user->ID,
+					'name' => $user->display_name,
+				);
+			}
+		}
 	}
 
 	echo json_encode( $results );
@@ -748,38 +748,57 @@ add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_do
  */
 function edd_ajax_search_users() {
 
-	if( current_user_can( 'manage_shop_settings' ) ) {
-
-		$search_query = trim( $_POST['user_name'] );
-		$exclude      = trim( $_POST['exclude'] );
-
-		$get_users_args = array(
-			'number' => 9999,
-			'search' => $search_query . '*'
-		);
-
-		if ( ! empty( $exclude ) ) {
-			$exclude_array = explode( ',', $exclude );
-			$get_users_args['exclude'] = $exclude_array;
-		}
-
-		$get_users_args = apply_filters( 'edd_search_users_args', $get_users_args );
-
-		$found_users = apply_filters( 'edd_ajax_found_users', get_users( $get_users_args ), $search_query );
-
-		$user_list = '<ul>';
-		if( $found_users ) {
-			foreach( $found_users as $user ) {
-				$user_list .= '<li><a href="#" data-userid="' . esc_attr( $user->ID ) . '" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
-			}
-		} else {
-			$user_list .= '<li>' . __( 'No users found', 'easy-digital-downloads' ) . '</li>';
-		}
-		$user_list .= '</ul>';
-
-		echo json_encode( array( 'results' => $user_list ) );
-
+	// Bail if user cannot manage shop settings
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		die();
 	}
-	die();
+
+	// To search for
+	$search_query = ! empty( $_POST['user_name'] )
+		? trim( $_POST['user_name'] )
+		: '';
+
+	// To exclude
+	$exclude = ! empty( $_POST['exclude'] )
+		? trim( $_POST['exclude'] )
+		: '';
+
+	// Default args
+	$defaults = array(
+		'number' => 50,
+		'search' => $search_query . '*'
+	);
+
+	// Maybe exclude users
+	if ( ! empty( $exclude ) ) {
+		$exclude_array      = explode( ',', $exclude );
+		$defaults['exclude'] = $exclude_array;
+	}
+
+	// Filter query args
+	$get_users_args = apply_filters( 'edd_search_users_args', $defaults );
+
+	// Maybe get users
+	$users = ! empty( $get_users_args ) && ! empty( $search_query )
+		? get_users( $get_users_args )
+		: array();
+
+	// Filter users
+	$found_users = apply_filters( 'edd_ajax_found_users', $users, $search_query );
+
+	// Put together the results string
+	$user_list = '<ul>';
+	if ( ! empty( $found_users ) ) {
+		foreach( $found_users as $user ) {
+			$user_list .= '<li><a href="#" data-userid="' . esc_attr( $user->ID ) . '" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
+		}
+	} else {
+		$user_list .= '<li class="no-users">' . __( 'No users found', 'easy-digital-downloads' ) . '</li>';
+	}
+	$user_list .= '</ul>';
+
+	echo json_encode( array( 'results' => $user_list ) );
+
+	edd_die();
 }
 add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
