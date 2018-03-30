@@ -14,7 +14,7 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * Discount object test fixture.
 	 *
 	 * @access protected
-	 * @var    EDD_Discount
+	 * @var    int
 	 */
 	protected static $discount_id;
 
@@ -31,8 +31,8 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * @covers EDD_DB_Discount_Meta::add_meta()
 	 * @covers EDD_Discount::add_meta()
 	 */
-	public function test_add_metadata_with_empty_key_value_should_return_false() {
-		$this->assertFalse( edd_add_discount_meta( self::$discount_id, '', '' ) );
+	public function test_add_metadata_with_empty_key_value_should_be_null() {
+		$this->assertNull( edd_add_discount_meta( self::$discount_id, '', '' ) );
 	}
 
 	/**
