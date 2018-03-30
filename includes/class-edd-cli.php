@@ -281,7 +281,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'user_id' => $user_id
 				);
 
-				$customer_id = EDD()->customers->add( $args );
+				$customer_id = edd_add_customer( $args );
 
 				if( $customer_id ) {
 					WP_CLI::line( sprintf( __( 'Customer %d created successfully', 'easy-digital-downloads' ), $customer_id ) );
@@ -862,14 +862,14 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'eddc' ) );
 		}
 
-		$discounts_db = EDD()->discounts;
-		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
-			@$discounts_db->create_table();
+		$discounts_db = edd_get_component_interface( 'discount', 'table' );
+		if ( ! $discounts_db->exists() ) {
+			@$discounts_db->create();
 		}
 
-		$discount_meta = EDD()->discount_meta;
-		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
-			@$discount_meta->create_table();
+		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
+		if ( ! $discount_meta->exists() ) {
+			@$discount_meta->create();
 		}
 
 		$sql = "SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount'";
@@ -889,7 +889,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = EDD()->discounts->count( array( 'number' => - 1 ) );
+			$new_count = count( edd_get_discounts( array( 'number' => -1 ) ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts WHERE post_type ='edd_discount'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
@@ -918,6 +918,98 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_set_upgrade_complete( 'migrate_discounts' );
 			edd_set_upgrade_complete( 'remove_legacy_discounts' );
 
+		}
+	}
+
+	/**
+	 * Migrate notes to the custom tables.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_notes
+	 * wp edd migrate_notes --force
+	 */
+	public function migrate_notes( $args, $assoc_args ) {
+		global $wpdb;
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_notes' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		if ( ! EDD()->notes->table_exists( EDD()->notes->table_name ) ) {
+			@EDD()->notes->create_table();
+		}
+
+		if ( ! EDD()->note_meta->table_exists( EDD()->note_meta->table_name ) ) {
+			@EDD()->note_meta->create_table();
+		}
+
+		$sql = "SELECT * FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
+		$results = $wpdb->get_results( $sql );
+		$total = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
+
+			foreach ( $results as $old_note ) {
+				$note_data = array(
+					'object_id'    => $old_note->comment_post_ID,
+					'object_type'  => 'payment',
+					'date_created' => $old_note->comment_date,
+					'content'      => $old_note->comment_content,
+					'user_id'      => $old_note->user_id,
+				);
+
+				$id = EDD()->notes->insert( $note_data );
+				$note = new EDD\Notes\Note( $id );
+
+				$meta = get_comment_meta( $old_note->comment_ID );
+				if ( ! empty( $meta ) ) {
+					foreach ( $meta as $key => $value ) {
+						$note->add_meta( $key, $value );
+					}
+				}
+
+				edd_debug_log( $old_note->comment_ID . ' successfully migrated to ' . $id );
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			$new_count = EDD()->notes->count();
+			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'", 0 );
+			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
+
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_set_upgrade_complete( 'migrate_notes' );
+
+			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::line( __( 'Removing old notes.', 'easy-digital-downloads' ) );
+
+			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'" );
+			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
+			$note_ids = implode( ', ', $note_ids );
+
+			$delete_query = "DELETE FROM $wpdb->comments WHERE comment_ID IN ({$note_ids})";
+			$wpdb->query( $delete_query );
+
+			$delete_postmeta_query = "DELETE FROM $wpdb->commentmeta WHERE comment_id IN ({$note_ids})";
+			$wpdb->query( $delete_postmeta_query );
+
+			edd_set_upgrade_complete( 'remove_legacy_notes' );
+		} else {
+			WP_CLI::line( __( 'No note records found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_notes' );
+			edd_set_upgrade_complete( 'remove_legacy_notes' );
 		}
 	}
 

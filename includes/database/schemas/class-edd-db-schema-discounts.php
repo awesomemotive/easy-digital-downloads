@@ -140,6 +140,7 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'name'       => 'date_created',
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
 			'sortable'   => true
 		),
 
@@ -148,6 +149,7 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'name'       => 'start_date',
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
 			'sortable'   => true
 		),
 
@@ -156,6 +158,7 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'name'       => 'end_date',
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
 			'sortable'   => true
 		)
 	);

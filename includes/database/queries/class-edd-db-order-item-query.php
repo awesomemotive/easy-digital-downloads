@@ -151,7 +151,7 @@ class EDD_Order_Item_Query extends EDD_DB_Query {
 	 *                                              'amount__in', 'subtotal__in', 'discount__in', 'tax__in', 'total__in'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'ASC'.
+	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
 	 * }

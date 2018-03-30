@@ -118,7 +118,7 @@ class EDD_Customer_Query extends EDD_DB_Query {
 	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to customer retrieved customers. Accepts 'ASC', 'DESC'. Default 'ASC'.
+	 *     @type string       $order                How to customer retrieved customers. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching customers for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found customers. Default false.
 	 * }

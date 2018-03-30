@@ -110,6 +110,7 @@ class EDD_DB_Schema_Customers extends EDD_DB_Schema {
 			'name'       => 'date_created',
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
 			'sortable'   => true
 		)
 	);

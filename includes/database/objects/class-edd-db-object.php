@@ -9,7 +9,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Object {
+class EDD_DB_Object extends EDD_DB_Base {
 
 	/**
 	 * Construct a database object
@@ -22,32 +22,6 @@ class EDD_DB_Object {
 		if ( ! empty( $item ) ) {
 			$this->init( $item );
 		}
-	}
-
-	/**
-	 * Get a property from a class if it exists, or null if not.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $prop
-	 *
-	 * @return mixed Null if not set
-	 */
-	public function __get( $prop = '' ) {
-
-		// Magically get some properties to avoid known developer issues
-		switch ( $prop ) {
-
-			// Swap uppercase ID for correct lowercase id
-			case 'ID' :
-				$prop = 'id';
-				break;
-		}
-
-		// Return prop if exists, else null
-		return isset( $this->{$prop} )
-			? $this->{$prop}
-			: null;
 	}
 
 	/**

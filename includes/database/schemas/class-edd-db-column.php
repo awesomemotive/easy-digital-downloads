@@ -181,6 +181,25 @@ class EDD_DB_Column {
 	public $not_in = true;
 
 	/**
+	 * Does this column have its own cache key?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $cache_key = false;
+
+	/**
+	 * Array of possible aliases this column can be referred to as.
+	 *
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var array
+	 */
+	public $aliases = array();
+
+	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
 	 * @since 3.0.0
@@ -232,6 +251,8 @@ class EDD_DB_Column {
 
 		// Parse arguments
 		$r = wp_parse_args( $args, array(
+
+			// Table
 			'name'       => '',
 			'type'       => '',
 			'length'     => '',
@@ -244,13 +265,26 @@ class EDD_DB_Column {
 			'encoding'   => $GLOBALS['wpdb']->charset,
 			'collation'  => $GLOBALS['wpdb']->collate,
 			'comment'    => '',
+
+			// Query
 			'primary'    => false,
 			'searchable' => false,
 			'sortable'   => false,
 			'date_query' => false,
 			'in'         => true,
-			'not_in'     => true
+			'not_in'     => true,
+
+			// Cache
+			'cache_key'  => false,
+
+			// Backwards Compatibility
+			'aliases'    => array()
 		) );
+
+		// Primary key columns are always cached
+		if ( true === $r['primary'] ) {
+			$r['cache_key'] = true;
+		}
 
 		// Return array
 		return $this->sanitize_args( $r );
@@ -285,7 +319,9 @@ class EDD_DB_Column {
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
 			'in'         => 'wp_validate_boolean',
-			'not_in'     => 'wp_validate_boolean'
+			'not_in'     => 'wp_validate_boolean',
+			'cache_key'  => 'wp_validate_boolean',
+			'aliases'    => array( $this, 'sanitize_aliases' )
 		);
 
 		// Default args array
@@ -322,5 +358,16 @@ class EDD_DB_Column {
 			'mediumint',
 			'bigint'
 		), true );
+	}
+
+	/**
+	 * Sanitize aliases array using `sanitize_key()`
+	 *
+	 * @since 3.0.0
+	 * @param array $aliases
+	 * @return array
+	 */
+	private function sanitize_aliases( $aliases = array() ) {
+		return array_map( 'sanitize_key', $aliases );
 	}
 }

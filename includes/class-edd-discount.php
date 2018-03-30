@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.7
  */
-class EDD_Discount {
+class EDD_Discount extends EDD_DB_Discount {
 	/**
 	 * Discount ID.
 	 *
@@ -194,7 +194,7 @@ class EDD_Discount {
 		}
 
 		// Already an object
-		if ( is_a( $_id_or_code_or_name, 'EDD_Discount' ) ) {
+		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
 
 		// Code
@@ -235,8 +235,8 @@ class EDD_Discount {
 		if ( 'discount_id' === $key || 'ID' == $key ) {
 			return (int) $this->id;
 
-		} else if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
+		} else if ( method_exists( $this, "get_{$key}" ) ) {
+			return call_user_func( array( $this, "get_{$key}" ) );
 
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
@@ -1270,10 +1270,10 @@ class EDD_Discount {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
-		if ( (float) $cart_amount >= (float) $this->min_price ) {
+		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
 			$return = true;
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_price ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
 		}
 
 		/**
@@ -1783,11 +1783,11 @@ class EDD_Discount {
 					break;
 
 				default:
-					$data[$key] = sanitize_text_field( $data[$key] );
+					$data[$key] = ! is_array( $data[$key] )
+						? sanitize_text_field( $data[$key] )
+						: maybe_serialize( array_map( 'sanitize_text_field', $data[$key] ) );
 					break;
-
 			}
-
 		}
 
 		return $data;
@@ -1842,19 +1842,16 @@ class EDD_Discount {
 
 		// Create new discount
 		$discount_id = edd_add_discount( $args );
+		$discount    = edd_get_discount( $discount_id );
+
 		edd_add_discount_meta( $discount_id, 'legacy_id', $old_discount->ID );
 
-		unset( $value );
-		unset( $key );
+		unset( $key, $value );
 
-		if( ! empty( $meta_to_migrate ) ) {
-
+		if ( ! empty( $meta_to_migrate ) ) {
 			foreach( $meta_to_migrate as $key => $value ) {
-
-				$discount->add_meta( $key, $value );
-
+				edd_add_discount_meta( $discount_id, $key, $value );
 			}
-
 		}
 
 		do_action( 'edd_migrate_discount_record', $old_discount->ID, $discount );

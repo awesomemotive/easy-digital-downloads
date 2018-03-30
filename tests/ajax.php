@@ -230,7 +230,7 @@ class Tests_AJAX extends WP_UnitTestCase {
 
 		class Airplane_Mode_Core {
 			function __construct() {}
-			public function enabled() { return true }
+			public function enabled() { return true; }
 		}
 
 		global $Airplane_Mode_Core;

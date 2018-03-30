@@ -241,14 +241,13 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function exists( $value = '', $field = 'email' ) {
-
 		$columns = $this->get_columns();
+
 		if ( ! array_key_exists( $field, $columns ) ) {
 			return false;
 		}
 
 		return (bool) $this->get_column_by( 'id', $field, $value );
-
 	}
 
 	/**
@@ -258,7 +257,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function attach_payment( $customer_id = 0, $payment_id = 0 ) {
-
 		$customer = new EDD_Customer( $customer_id );
 
 		if( empty( $customer->id ) ) {
@@ -267,7 +265,6 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		// Attach the payment, but don't increment stats, as this function previously did not
 		return $customer->attach_payment( $payment_id, false );
-
 	}
 
 	/**
@@ -277,7 +274,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function remove_payment( $customer_id = 0, $payment_id = 0 ) {
-
 		$customer = new EDD_Customer( $customer_id );
 
 		if( ! $customer ) {
@@ -286,7 +282,6 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		// Remove the payment, but don't decrease stats, as this function previously did not
 		return $customer->remove_payment( $payment_id, false );
-
 	}
 
 	/**
@@ -296,7 +291,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function increment_stats( $customer_id = 0, $amount = 0.00 ) {
-
 		$customer = new EDD_Customer( $customer_id );
 
 		if( empty( $customer->id ) ) {
@@ -307,7 +301,6 @@ class EDD_DB_Customers extends EDD_DB  {
 		$increased_value = $customer->increase_value( $amount );
 
 		return ( $increased_count && $increased_value ) ? true : false;
-
 	}
 
 	/**
@@ -317,7 +310,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.1
 	*/
 	public function decrement_stats( $customer_id = 0, $amount = 0.00 ) {
-
 		$customer = new EDD_Customer( $customer_id );
 
 		if( ! $customer ) {
@@ -328,7 +320,6 @@ class EDD_DB_Customers extends EDD_DB  {
 		$decreased_value = $customer->decrease_value( $amount );
 
 		return ( $decreased_count && $decreased_value ) ? true : false;
-
 	}
 
 	/**
@@ -338,7 +329,6 @@ class EDD_DB_Customers extends EDD_DB  {
 	 * @since   2.4
 	*/
 	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
-
 		$customer = new EDD_Customer( $user_id, true );
 
 		if( ! $customer ) {
@@ -358,23 +348,15 @@ class EDD_DB_Customers extends EDD_DB  {
 					$payments_array = explode( ',', $customer->payment_ids );
 
 					if( ! empty( $payments_array ) ) {
-
 						foreach ( $payments_array as $payment_id ) {
-
 							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
-
 						}
-
 					}
 
 					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
-
 				}
-
 			}
-
 		}
-
 	}
 
 	/**
@@ -434,8 +416,7 @@ class EDD_DB_Customers extends EDD_DB  {
 				return false;
 		}
 
-		$query = new EDD_Customer_Query( '', $this );
-
+		$query   = new EDD_Customer_Query();
 		$results = $query->query( $args );
 
 		if ( empty( $results ) ) {
@@ -455,11 +436,10 @@ class EDD_DB_Customers extends EDD_DB  {
 		$args = $this->prepare_customer_query_args( $args );
 		$args['count'] = false;
 
-		$query = new EDD_Customer_Query( '', $this );
+		$query = new EDD_Customer_Query();
 
 		return $query->query( $args );
 	}
-
 
 	/**
 	 * Count the total number of customers in the database
@@ -469,10 +449,10 @@ class EDD_DB_Customers extends EDD_DB  {
 	*/
 	public function count( $args = array() ) {
 		$args = $this->prepare_customer_query_args( $args );
-		$args['count'] = true;
+		$args['count']  = true;
 		$args['offset'] = 0;
 
-		$query   = new EDD_Customer_Query( '', $this );
+		$query   = new EDD_Customer_Query();
 		$results = $query->query( $args );
 
 		return $results;
@@ -602,5 +582,4 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
-
 }

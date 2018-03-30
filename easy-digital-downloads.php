@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.8.16
+ * Version: 2.8.17
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.8.16
+ * @version 2.8.17
  */
 
 // Exit if accessed directly.
@@ -145,7 +145,7 @@ final class Easy_Digital_Downloads {
 			// Bootstrap
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->register_components();
+			self::$instance->setup_components();
 
 			// APIs
 			self::$instance->roles         = new EDD_Roles();
@@ -202,9 +202,14 @@ final class Easy_Digital_Downloads {
 	public function __get( $key = '' ) {
 		switch ( $key  ) {
 			case 'customers' :
-				return isset( $this->component['customer']->table )
-					? $this->component['customer']->table
-					: null;
+			case 'customermeta' :
+			case 'customer_meta' :
+				return edd_get_component_interface( 'customer', 'query' );
+
+			case 'discounts' :
+			case 'discountmeta' :
+			case 'discount_meta' :
+				return edd_get_component_interface( 'discount', 'query' );
 
 			default :
 				return isset( $this->{$key} )
@@ -224,7 +229,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.8.16' );
+			define( 'EDD_VERSION', '2.8.17' );
 		}
 
 		// Plugin Folder Path.
@@ -264,6 +269,7 @@ final class Easy_Digital_Downloads {
 		// Component helpers are loaded before everything
 		require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-component.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/class-edd-db-base.php';
 
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-edd-db-column.php';
@@ -445,79 +451,8 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0.0
 	 * @return array
 	 */
-	private function register_components() {
-
-		// Register Customer
-		edd_register_component( 'customer', array(
-			'schema' => 'EDD_DB_Schema_Customers',
-			'table'  => 'EDD_DB_Table_Customers',
-			'meta'   => 'EDD_DB_Table_Customer_Meta',
-			'query'  => 'EDD_DB_Query_Customers',
-			'object' => 'EDD_Customer'
-		) );
-
-		// Register discount
-		edd_register_component( 'discount', array(
-			'schema' => 'EDD_DB_Schema_Discounts',
-			'table'  => 'EDD_DB_Table_Discounts',
-			'meta'   => 'EDD_DB_Table_Discount_Meta',
-			'query'  => 'EDD_DB_Query_Discounts',
-			'object' => 'EDD_Discount'
-		) );
-
-		// Register note
-		edd_register_component( 'note', array(
-			'schema' => 'EDD_DB_Schema_Notes',
-			'table'  => 'EDD_DB_Table_Notes',
-			'meta'   => 'EDD_DB_Table_Note_Meta',
-			'query'  => 'EDD_DB_Query_Notes',
-			'object' => 'EDD_Note'
-		) );
-
-		// Register order
-		edd_register_component( 'order', array(
-			'schema' => 'EDD_DB_Schema_Orders',
-			'table'  => 'EDD_DB_Table_Orders',
-			'meta'   => 'EDD_DB_Table_Order_Meta',
-			'query'  => 'EDD_DB_Query_Orders',
-			'object' => 'EDD_Order'
-		) );
-
-		// Register order item
-		edd_register_component( 'order_item', array(
-			'schema' => 'EDD_DB_Schema_Order_Items',
-			'table'  => 'EDD_DB_Table_Order_Items',
-			'meta'   => 'EDD_DB_Table_Order_Item_Meta',
-			'query'  => 'EDD_DB_Query_Order_Items',
-			'object' => 'EDD_Order_Item'
-		) );
-
-		// Register log
-		edd_register_component( 'log', array(
-			'schema' => 'EDD_DB_Schema_Logs',
-			'table'  => 'EDD_DB_Table_Logs',
-			'meta'   => 'EDD_DB_Table_Log_Meta',
-			'query'  => 'EDD_DB_Query_Logs',
-			'object' => 'EDD_Log'
-		) );
-
-		// Register log api request
-		edd_register_component( 'log_api_request', array(
-			'schema' => 'EDD_DB_Schema_Logs_Api_Requests',
-			'table'  => 'EDD_DB_Table_Logs_Api_Requests',
-			'query'  => 'EDD_DB_Query_Logs_Api_Requests',
-			'object' => 'EDD_Log_Api_Request',
-			'meta'   => false
-		) );
-
-		// Register log api request
-		edd_register_component( 'log_file_download', array(
-			'schema' => 'EDD_DB_Schema_Logs_File_Downloads',
-			'table'  => 'EDD_DB_Table_Logs_File_Downloads',
-			'query'  => 'EDD_DB_Query_Logs_File_Downloads',
-			'object' => 'EDD_Log_File_Download',
-			'meta'   => false
-		) );
+	private function setup_components() {
+		edd_setup_components();
 	}
 
 	/**

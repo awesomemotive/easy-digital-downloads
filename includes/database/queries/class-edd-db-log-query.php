@@ -124,7 +124,7 @@ class EDD_Log_Query extends EDD_DB_Query {
 	 *                                              'user_id__in', 'object_id__in', 'object_type__in'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to retrieved orders. Accepts 'ASC', 'DESC'. Default 'ASC'.
+	 *     @type string       $order                How to retrieved orders. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
 	 * }
