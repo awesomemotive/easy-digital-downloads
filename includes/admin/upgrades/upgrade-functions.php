@@ -1442,7 +1442,7 @@ function edd_notes_migration() {
 				'user_id'      => $old_note->user_id,
 			);
 
-			$id = EDD()->notes->insert( $note_data );
+			$id = edd_add_note( $note_data );
 			$note = new EDD\Notes\Note( $id );
 
 			$meta = get_comment_meta( $old_note->comment_ID );
