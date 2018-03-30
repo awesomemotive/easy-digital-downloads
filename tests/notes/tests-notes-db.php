@@ -27,49 +27,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 		self::$notes = parent::edd()->note->create_many( 5 );
 	}
 
-	/**
-	 * @covers ::get_columns()
-	 */
-	public function test_get_columns() {
-		$expected = array(
-			'id'           => '%d',
-			'object_id'    => '%s',
-			'object_type'  => '%s',
-			'content'      => '%s',
-			'user_id'      => '%s',
-			'date_created' => '%s',
-		);
-
-		$this->assertEqualSets( $expected, EDD()->notes->get_columns() );
-	}
-
-	/**
-	 * @covers ::$cache_group
-	 */
 	public function test_cache_group_should_be_notes() {
-		$this->assertSame( 'notes', EDD()->notes->cache_group );
-	}
-	/**
-	 * @covers ::$primary_key
-	 */
-	public function test_primary_key_should_be_id() {
-		$this->assertSame( 'id', EDD()->notes->primary_key );
+		$this->assertSame( 'notes', edd_get_component_interface( 'note', 'table' )->cache_group );
 	}
 
-	/**
-	 * @covers ::get_column_defaults()
-	 */
-	public function test_get_column_defaults() {
-		$expected = array(
-			'id'           => 0,
-			'object_id'    => 0,
-			'object_type'  => '',
-			'content'      => '',
-			'user_id'      => 0,
-			'date_created' => date( 'Y-m-d H:i:s' ),
-		);
-
-		$this->assertEqualSets( $expected, EDD()->notes->get_column_defaults() );
+	public function test_installed() {
+		$this->assertTrue( edd_get_component_interface( 'note', 'table' )->exists() );
 	}
 
 	/**
