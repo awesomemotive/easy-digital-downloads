@@ -38,9 +38,12 @@ class EDD_DB_Base {
 			$key = 'id';
 		}
 
+		// Class method to try and call
+		$method = "get_{$key}";
+
 		// Return property if exists
-		if ( method_exists( $this, "get_{$key}" ) ) {
-			return call_user_func( array( $this, "get_{$key}" ) );
+		if ( method_exists( $this, $method ) ) {
+			return call_user_func( array( $this, $method ) );
 
 		// Return get method results if exists
 		} elseif ( isset( $this->{$key} ) ) {
@@ -48,7 +51,7 @@ class EDD_DB_Base {
 
 		// Return null if not exists
 		} else {
-			return new WP_Error(  'edd-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
+			return null;
 		}
 	}
 }
