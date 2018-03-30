@@ -31,11 +31,6 @@ jQuery(document).ready(function ($) {
 
 			clone = row.clone();
 
-			/** manually update any select box values */
-			clone.find( 'select' ).each(function() {
-				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
-			});
-
 			clone.removeClass( 'edd_add_blank' );
 
 			clone.attr( 'data-key', key );
@@ -59,6 +54,24 @@ jQuery(document).ready(function ($) {
 
 				}
 
+			});
+
+			/** manually update any select box values */
+			clone.find( 'select' ).each(function() {
+				$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
+			});
+
+			/** manually uncheck any checkboxes */
+			clone.find( 'input[type="checkbox"]' ).each(function() {
+
+				// Make sure checkboxes are unchecked when cloned
+				var checked = $(this).is(':checked');
+				if ( checked ) {
+					$(this).prop('checked', false);
+				}
+
+				// reset the value attribute to 1 in order to properly save the new checked state
+				$(this).val(1);
 			});
 
 			clone.find( 'span.edd_price_id' ).each(function() {
@@ -1223,7 +1236,7 @@ jQuery(document).ready(function ($) {
 	});
 
 
-	$('#the-list').on('click', '.editinline', function() {
+	$('body').on('click', '#the-list .editinline', function() {
 
 		var post_id = $(this).closest('tr').attr('id');
 
@@ -1672,7 +1685,7 @@ jQuery(document).ready(function ($) {
 
 				// Show column mapping
 				var select  = $form.find('select.edd-import-csv-column');
-				var row     = select.parent().parent();
+				var row     = select.parents( 'tr' ).first();
 				var options = '';
 
 				var columns = response.data.columns.sort(function(a,b) {
@@ -1704,6 +1717,10 @@ jQuery(document).ready(function ($) {
 
 					}
 
+				});
+
+				$.each( select, function() {
+					$( this ).val( $(this).attr( 'data-field' ) ).change();
 				});
 
 				$(document.body).on('click', '.edd-import-proceed', function(e) {

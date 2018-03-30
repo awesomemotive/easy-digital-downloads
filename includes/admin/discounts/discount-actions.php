@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
  */
@@ -278,7 +278,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
  * @param array $data Discount code data
  * @uses edd_update_discount_status()
  * @return void
-*/
+ */
 function edd_deactivate_discount( $data = array() ) {
 
 	// Bail if no nonce or nonce fails

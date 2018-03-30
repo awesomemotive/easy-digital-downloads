@@ -197,15 +197,15 @@ class EDD_Discount extends EDD_DB_Discount {
 		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
 
-		// Code
+			// Code
 		} else if ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
 
-		// Name
+			// Name
 		} else if ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
-		// Default to ID
+			// Default to ID
 		} else {
 			$_id_or_code_or_name = intval( $_id_or_code_or_name );
 			$discount = edd_get_discount( $_id_or_code_or_name );
@@ -223,13 +223,11 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Magic __get method to dispatch a call to retrieve a protected property.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param mixed $key
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
-
 		$key = sanitize_key( $key );
 
 		if ( 'discount_id' === $key || 'ID' == $key ) {
@@ -309,7 +307,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Magic __set method to dispatch a call to update a protected property.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @see set()
 	 *
@@ -346,35 +343,35 @@ class EDD_Discount extends EDD_DB_Discount {
 
 				case 'expiration' :
 
-						$this->end_date = $value;
-						break;
+					$this->end_date = $value;
+					break;
 
-					case 'start' :
+				case 'start' :
 
-						$this->start_date = $value;
-						break;
+					$this->start_date = $value;
+					break;
 
-					case 'min_price' :
+				case 'min_price' :
 
-						$this->min_cart_price = $value;
-						break;
+					$this->min_cart_price = $value;
+					break;
 
-					case 'use_once' :
-					case 'is_single_use' :
+				case 'use_once' :
+				case 'is_single_use' :
 
-						$this->once_per_customer = $value;
-						break;
+					$this->once_per_customer = $value;
+					break;
 
-					case 'uses' :
+				case 'uses' :
 
-						$this->use_count = $value;
-						break;
+					$this->use_count = $value;
+					break;
 
-					case 'is_not_global' :
+				case 'is_not_global' :
 
-						$this->scope = $value ? 'not_global' : 'global';
-						break;
-				}
+					$this->scope = $value ? 'not_global' : 'global';
+					break;
+			}
 		} else {
 
 			$this->{$key} = $value;
@@ -386,7 +383,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Magic __isset method to allow empty checks on protected elements
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $key The attribute to get
 	 * @return boolean If the item is set or not
@@ -410,7 +406,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Converts the instance of the EDD_Discount object into an array for special cases.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array EDD_Discount object as an array.
 	 */
@@ -537,7 +532,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the code used to apply the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount code.
 	 */
@@ -557,7 +551,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the status of the discount
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount code status (active/inactive).
 	 */
@@ -574,10 +567,42 @@ class EDD_Discount extends EDD_DB_Discount {
 	}
 
 	/**
+	 * Retrieves the status label of the discount.
+	 *
+	 * @since 2.9
+	 *
+	 * @return string Status label for the current discount.
+	 */
+	public function get_status_label() {
+		switch( $this->status ) {
+			case 'expired' :
+				$label = __( 'Expired', 'easy-digital-downloads' );
+				break;
+			case 'inactive' :
+				$label = __( 'Inactive', 'easy-digital-downloads' );
+				break;
+			case 'active' :
+			default :
+				$label = __( 'Active', 'easy-digital-downloads' );
+				break;
+		}
+
+		/**
+		 * Filters the discount status.
+		 *
+		 * @since 2.9
+		 *
+		 * @param string $label  Discount status label.
+		 * @param string $status Discount status (active or inactive).
+		 * @param int    $id     Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_status_label', $label, $this->status, $this->id );
+	}
+
+	/**
 	 * Retrieve the type of discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount type (percent or flat amount).
 	 */
@@ -597,7 +622,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the discount amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed float Discount amount.
 	 */
@@ -617,7 +641,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the discount requirements for the discount to be satisfied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array IDs of required downloads.
 	 */
@@ -640,7 +663,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * This used to be called "is_not_global". That filter is still here for backwards compatibility.
 	 *
 	 * @since 3.0
-	 * @access public
 	 *
 	 * @return string The scope, i.e. "global".
 	 */
@@ -658,7 +680,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the product condition.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Product condition
 	 */
@@ -678,7 +699,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the downloads that are excluded from having this discount code applied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array IDs of excluded downloads.
 	 */
@@ -698,7 +718,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the start date.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Start date.
 	 */
@@ -718,7 +737,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the end date.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string End date.
 	 */
@@ -738,7 +756,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the uses for the discount code.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Uses.
 	 */
@@ -758,7 +775,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the maximum uses for the discount code.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Maximum uses.
 	 */
@@ -778,7 +794,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the minimum spend required for the discount to be satisfied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed float Minimum spend.
 	 */
@@ -798,7 +813,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Once use per customer?
 	 */
@@ -810,7 +824,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
 	 *
 	 * @since 3.0
-	 * @access public
 	 *
 	 * @return bool Once use per customer?
 	 */
@@ -830,7 +843,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Check if a discount exists.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Discount exists.
 	 */
@@ -848,7 +860,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * This is now simply a wrapper to the add() method which handles creating new discounts and updating existing ones.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool True if the save was successful, false if it failed or wasn't needed.
 	 */
@@ -863,7 +874,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Create a new discount. If the discount already exists in the database, update it.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $args Discount details.
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
@@ -1008,7 +1018,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Update an existing discount in the database.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $args Discount details.
 	 * @return bool True if update is successful, false otherwise.
@@ -1118,7 +1127,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Update the status of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $new_status New status (default: active)
 	 * @return bool If the status been updated or not.
@@ -1156,7 +1164,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Check if the discount has started.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount started?
@@ -1193,7 +1200,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Check if the discount has expired.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $update Update the discount to expired if an one is found but has an active status
 	 * @return bool Has the discount expired?
@@ -1229,7 +1235,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Check if the discount has maxed out.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount maxed out?
@@ -1260,7 +1265,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Check if the minimum cart amount is satisfied for the discount to hold.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is the minimum cart amount met?
@@ -1291,7 +1295,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Is the discount single use or not?
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Is the discount single use or not?
 	 */
@@ -1311,7 +1314,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Are the product requirements met for the discount to hold.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Are required products in the cart?
@@ -1430,10 +1432,10 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Has the discount code been used.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $user User info.
 	 * @param bool $set_error Whether an error message be set in session.
+	 * @return bool Whether the discount has been used or not.
 	 */
 	public function is_used( $user = '', $set_error = true ) {
 		$return = false;
@@ -1526,7 +1528,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Checks whether a discount holds at the time of purchase.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $user      User info.
 	 * @param bool   $set_error Whether an error message be set in session.
@@ -1568,7 +1569,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Checks if a discount code is active.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $update    Update the discount to expired if an one is found but has an active status.
 	 * @param bool $set_error Whether an error message be set in session.
@@ -1605,7 +1605,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Get Discounted Amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string|int $base_price Price before discount.
 	 * @return float $discounted_price Amount after discount.
@@ -1640,7 +1639,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Increment the usage of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int New discount usage.
 	 */
@@ -1677,7 +1675,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Decrement the usage of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int New discount usage.
 	 */
@@ -1716,7 +1713,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * Edit Discount Link.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Link to the `Edit Discount` page.
 	 */
@@ -1796,7 +1792,6 @@ class EDD_Discount extends EDD_DB_Discount {
 	/**
 	 * Migrates a legacy discount (pre 3.0) to the new DB structure.
 	 *
-	 * @access public
 	 * @since  3.0
 	 *
 	 * @param $old_id int The old post ID to migrate to the new schema.
