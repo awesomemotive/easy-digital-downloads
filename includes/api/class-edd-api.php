@@ -1443,8 +1443,7 @@ class EDD_API {
 				$stats['customers']['total_customers'] = $count[0];
 				return apply_filters( 'edd_api_stats_customers', $stats, $this );
 			} else {
-				$customers = new EDD_DB_Customers();
-				$stats['customers']['total_customers'] = $customers->count();
+				$stats['customers']['total_customers'] = edd_get_customer_count();
 				return apply_filters( 'edd_api_stats_customers', $stats, $this );
 			}
 		} elseif ( empty( $args['type'] ) ) {

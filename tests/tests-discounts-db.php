@@ -22,95 +22,44 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		$args = array(
 			array(
-				'code'              => '10FLAT',
-				'use_count'         => 54,
-				'max_uses'          => 10,
 				'name'              => '$10 Off',
+				'code'              => '10FLAT',
+				'status'            => 'active',
 				'type'              => 'flat',
 				'amount'            => '10',
-				'start_date'        => '2010-12-12 00:00:00',
-				'end_date'          => '2050-12-31 23:59:59',
+				'max_uses'          => 10,
+				'use_count'         => 54,
 				'min_cart_price'    => 128,
-				'status'            => 'active',
-				'product_condition' => 'all'
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59'
 			),
 			array(
-				'code'              => '20OFF',
-				'use_count'         => 54,
-				'max_uses'          => 10,
 				'name'              => '20 Percent Off',
+				'code'              => '20OFF',
+				'status'            => 'active',
 				'type'              => 'percent',
 				'amount'            => '20',
-				'start_date'        => '2010-12-12 00:00:00',
-				'end_date'          => '2050-12-31 23:59:59',
+				'max_uses'          => 10,
+				'use_count'         => 54,
 				'min_cart_price'    => 128,
-				'status'            => 'active',
-				'product_condition' => 'all'
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59'
 			)
 		);
 
-		foreach ( $args as $arg ) {
-			self::$discounts[] = parent::edd()->discount->create( $arg );
+		foreach ( $args as $discount ) {
+			edd_add_discount( $discount );
+			self::$discounts[] = edd_get_discount_by_code( $discount['code'] );
 		}
-	}
-
-	/**
-	 * @covers ::get_columns()
-	 */
-	public function test_get_columns() {
-		$expected = array(
-			'id'                => '%d',
-			'name'              => '%s',
-			'code'              => '%s',
-			'status'            => '%s',
-			'type'              => '%s',
-			'amount'            => '%s',
-			'description'       => '%s',
-			'date_created'      => '%s',
-			'start_date'        => '%s',
-			'end_date'          => '%s',
-			'max_uses'          => '%d',
-			'use_count'         => '%d',
-			'min_cart_price'    => '%f',
-			'once_per_customer' => '%d',
-			'product_condition' => '%s',
-			'scope'             => '%s',
-		);
-
-		$this->assertEqualSets( $expected, EDD()->discounts->get_columns() );
-	}
-
-	/**
-	 * @covers ::get_column_defaults()
-	 */
-	public function test_get_column_defaults() {
-		$expected = array(
-			'id'                => 0,
-			'name'              => '',
-			'code'              => '',
-			'status'            => '',
-			'type'              => '',
-			'amount'            => '',
-			'description'       => '',
-			'max_uses'          => 0,
-			'use_count'         => 0,
-			'min_cart_price'    => 0.00,
-			'once_per_customer' => 0,
-			'product_condition' => '',
-			'scope'             => 'global',
-			'date_created'      => date( 'Y-m-d H:i:s' ),
-			'start_date'        => '0000-00-00 00:00:00',
-			'end_date'          => '0000-00-00 00:00:00',
-		);
-
-		$this->assertEqualSets( $expected, EDD()->discounts->get_column_defaults() );
 	}
 
 	/**
 	 * @covers ::insert()
 	 */
 	public function test_insert() {
-		$id = EDD()->discounts->insert( array(
+		$id = edd_add_discount( array(
 			'code'   => 'TEST',
 			'status' => 'active',
 		) );
@@ -122,7 +71,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::update()
 	 */
 	public function test_update() {
-		$success = EDD()->discounts->update( self::$discounts[0], array(
+		$success = (bool) edd_update_discount( self::$discounts[0]->id, array(
 			'code' => 'NEWCODE',
 		) );
 
@@ -133,7 +82,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::update()
 	 */
 	public function test_update_without_id_should_fail() {
-		$success = EDD()->discounts->update( null, array(
+		$success = (bool) edd_update_discount( null, array(
 			'code' => 'NEWCODE',
 		) );
 
@@ -144,7 +93,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::delete()
 	 */
 	public function test_delete_should_return_true() {
-		$success = EDD()->discounts->delete( self::$discounts[0] );
+		$success = (bool) edd_delete_discount( self::$discounts[0]->id );
 
 		$this->assertTrue( $success );
 	}
@@ -153,7 +102,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::delete()
 	 */
 	public function test_delete_without_id_should_fail() {
-		$success = EDD()->discounts->delete( '' );
+		$success = (bool) edd_delete_discount();
 
 		$this->assertFalse( $success );
 	}
@@ -162,7 +111,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts() {
-		$discounts = EDD()->discounts->get_discounts();
+		$discounts = edd_get_discounts();
 
 		$this->assertCount( 2, $discounts );
 	}
@@ -171,7 +120,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_returns_expected_discount() {
-		$discounts = EDD()->discounts->get_discounts();
+		$discounts = edd_get_discounts();
 
 		$this->assertEquals( '20OFF', $discounts[0]->code );
 	}
@@ -180,7 +129,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_number_should_return_true() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'number' => 10,
 		) );
 
@@ -191,7 +140,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_offset_should_return_true() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'offset' => 1,
 		) );
 
@@ -202,7 +151,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_offset_order_asc() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'offset' => 1,
 			'order' => 'asc',
 		) );
@@ -214,7 +163,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_search_by_code() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'search' => '10FLAT',
 		) );
 
@@ -225,7 +174,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_search_by_name() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'search' => '$10 Off',
 		) );
 
@@ -236,7 +185,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_order_asc() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'order' => 'asc',
 		) );
 
@@ -247,7 +196,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_order_desc() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'order' => 'desc',
 		) );
 
@@ -258,7 +207,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_orderby() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'orderby' => 'code',
 			'order'   => 'asc',
 		) );
@@ -270,19 +219,19 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_type() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'type' => 'percent',
 		) );
 
 		$this->assertCount( 1, $discounts );
 
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'type' => 'flat',
 		) );
 
 		$this->assertCount( 1, $discounts );
 
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'type' => array(
 				'percent',
 				'flat',
@@ -296,7 +245,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_status() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'status' => 'active',
 		) );
 
@@ -307,7 +256,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_date_created() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
@@ -318,7 +267,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_created_start_date() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
 		) );
 
@@ -329,7 +278,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_created_end_date() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'date_created' => date( 'Y-m-d', strtotime( 'now' ) ),
 		) );
 
@@ -340,7 +289,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_end_date() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'end_date' => '2050-12-31 23:59:59',
 		) );
 
@@ -351,7 +300,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::get_discounts()
 	 */
 	public function test_get_discounts_with_start_date() {
-		$discounts = EDD()->discounts->get_discounts( array(
+		$discounts = edd_get_discounts( array(
 			'start_date' => '2010-12-12 00:00:00',
 		) );
 
@@ -362,22 +311,22 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count() {
-		$this->assertEquals( 2, EDD()->discounts->count() );
+		$this->assertEquals( 2, edd_get_discount_count() );
 	}
 
 	/**
 	 * @covers ::count()
 	 */
 	public function test_count_with_search() {
-		$discounts = EDD()->discounts->count( array(
+		$discounts = count( edd_get_discounts( array(
 			'search' => '20OFF',
-		) );
+		) ) );
 
 		$this->assertEquals( 1, $discounts );
 
-		$discounts = EDD()->discounts->count( array(
+		$discounts = count( edd_get_discounts( array(
 			'search' => 'FREE',
-		) );
+		) ) );
 
 		$this->assertEquals( 0, $discounts );
 	}
@@ -386,9 +335,9 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count_with_active_status() {
-		$this->assertEquals( 2, EDD()->discounts->count( array(
+		$this->assertEquals( 2,count( edd_get_discounts( array(
 			'status' => 'active',
-		) ) );
+		) ) ) );
 	}
 
 	/**
@@ -397,74 +346,73 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	public function test_count_with_expired_status() {
 		$discount_id = EDD_Helper_Discount::created_expired_flat_discount();
 
-		$this->assertSame( 1, EDD()->discounts->count( array(
+		$this->assertSame( 1,count( edd_get_discounts( array(
 			'status' => 'expired',
-		) ) );
+		) ) ) );
 
-		EDD()->discounts->delete( $discount_id );
+		edd_delete_discount( $discount_id );
 	}
 
 	/**
 	 * @covers ::count()
 	 */
 	public function test_count_with_type() {
-		$this->assertSame( 1, EDD()->discounts->count( array(
+		$this->assertSame( 1,count( edd_get_discounts( array(
 			'type' => 'percent',
-		) ) );
+		) ) ) );
 	}
 
 	/**
 	 * @covers ::count()
 	 */
 	public function test_count_with_date_created() {
-		$this->assertSame( 2, EDD()->discounts->count( array(
+		$this->assertSame( 2, count( edd_get_discounts( array(
 			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
-		) ) );
+		) ) ) );
 	}
 
 	/**
 	 * @covers ::count()
 	 */
 	public function test_count_with_start_date() {
-		$this->assertSame( 2, EDD()->discounts->count( array(
+		$this->assertSame( 2, count( edd_get_discounts( array(
 			'start_date' => '2010-12-12 23:59:59',
-		) ) );
+		) ) ) );
 	}
 
 	/**
 	 * @covers ::count()
 	 */
 	public function test_count_with_end_date() {
-		$this->assertSame( 2, EDD()->discounts->count( array(
+		$this->assertSame( 2, count( edd_get_discounts( array(
 			'end_date' => '2050-12-31 23:59:59',
-		) ) );
+		) ) ) );
 	}
 
 	/**
 	 * @covers ::counts_by_status()
 	 */
 	public function test_counts_by_status_active_discounts() {
-		$counts = EDD()->discounts->counts_by_status();
+		$counts = edd_get_discount_counts();
 
-		$this->assertSame( 2, $counts->active );
+		$this->assertSame( 2, $counts['active'] );
 	}
 
 	/**
 	 * @covers ::counts_by_status()
 	 */
 	public function test_counts_by_status_inactive_discounts() {
-		$counts = EDD()->discounts->counts_by_status();
+		$counts = edd_get_discount_counts();
 
-		$this->assertSame( 0, $counts->inactive );
+		$this->assertSame( 0, $counts['inactive'] );
 	}
 
 	/**
 	 * @covers ::counts_by_status()
 	 */
 	public function test_counts_by_status_expired_discounts() {
-		$counts = EDD()->discounts->counts_by_status();
+		$counts = edd_get_discount_counts();
 
-		$this->assertSame( 0, $counts->expired );
+		$this->assertSame( 0, $counts['expired'] );
 	}
-
 }

@@ -353,9 +353,9 @@ class EDD_Payment {
 	 */
 	public function __get( $key ) {
 
-		if ( method_exists( $this, 'get_' . $key ) ) {
+		if ( method_exists( $this, "get_{$key}" ) ) {
 
-			$value = call_user_func( array( $this, 'get_' . $key ) );
+			$value = call_user_func( array( $this, "get_{$key}" ) );
 
 		} else {
 

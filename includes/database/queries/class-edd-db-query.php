@@ -17,7 +17,7 @@ if ( ! class_exists( 'EDD_DB_Query' ) ) :
  *
  * @see EDD_DB_Query::__construct() for accepted arguments.
  */
-class EDD_DB_Query {
+class EDD_DB_Query extends EDD_DB_Base {
 
 	/** Global Properties *****************************************************/
 
@@ -180,9 +180,18 @@ class EDD_DB_Query {
 	 *
 	 * @since 3.0.0
 	 * @access public
-	 * @var object WP_Date_Query
+	 * @var object WP_Meta_Query
 	 */
 	protected $meta_query = false;
+
+	/**
+	 * Date query container.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var object WP_Date_Query
+	 */
+	protected $date_query = false;
 
 	/**
 	 * Query vars set by the user.
@@ -265,7 +274,7 @@ class EDD_DB_Query {
 	 *     @type string|array $orderby        Accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                        Default 'id'.
 	 *     @type string       $item           How to item retrieved items. Accepts 'ASC', 'DESC'.
-	 *                                        Default 'ASC'.
+	 *                                        Default 'DESC'.
 	 *     @type string       $search         Search term(s) to retrieve matching items for.
 	 *                                        Default empty.
 	 *     @type array        $search_columns Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
@@ -422,7 +431,7 @@ class EDD_DB_Query {
 		// Add prefixes to class properties
 		$this->table_name  = $this->apply_prefix( $this->table_name       );
 		$this->table_alias = $this->apply_prefix( $this->table_alias      );
-		$this->cache_group = $this->apply_prefix( $this->cache_group, ':' );
+		$this->cache_group = $this->apply_prefix( $this->cache_group, '-' );
 	}
 
 	/**
@@ -486,12 +495,13 @@ class EDD_DB_Query {
 			'number'            => 100,
 			'offset'            => '',
 			'orderby'           => 'id',
-			'order'             => 'ASC',
+			'order'             => 'DESC',
 			'groupby'           => '',
 			'search'            => '',
 			'search_columns'    => array(),
 			'count'             => false,
 			'meta_query'        => null, // See WP_Meta_Query
+			'date_query'        => null, // See WP_Date_Query
 			'no_found_rows'     => true,
 
 			// Caching
@@ -511,16 +521,23 @@ class EDD_DB_Query {
 		}
 
 		// Possible ins
-		$possible_ins = wp_filter_object_list( $this->columns, array( 'in'     => true ), 'and', 'name' );
+		$possible_ins = $this->get_columns( array( 'in' => true ), 'and', 'name' );
 		foreach ( $possible_ins as $in ) {
 			$key = "{$in}__in";
 			$this->query_var_defaults[ $key ] = false;
 		}
 
 		// Possible not ins
-		$possible_not_ins = wp_filter_object_list( $this->columns, array( 'not_in' => true ), 'and', 'name' );
+		$possible_not_ins = $this->get_columns( array( 'not_in' => true ), 'and', 'name' );
 		foreach ( $possible_not_ins as $in ) {
 			$key = "{$in}__not_in";
+			$this->query_var_defaults[ $key ] = false;
+		}
+
+		// Possible dates
+		$possible_dates = $this->get_columns( array( 'date_query' => true ), 'and', 'name' );
+		foreach ( $possible_dates as $date ) {
+			$key = "{$date}_query";
 			$this->query_var_defaults[ $key ] = false;
 		}
 	}
@@ -717,7 +734,7 @@ class EDD_DB_Query {
 	 * @return array
 	 */
 	private function get_column_names() {
-		return wp_list_pluck( $this->columns, 'name' );
+		return array_flip( wp_list_pluck( $this->columns, 'name' ) );
 	}
 
 	/**
@@ -734,7 +751,7 @@ class EDD_DB_Query {
 	}
 
 	/**
-	 * Set the primary column
+	 * Get a column from an array of arguments
 	 *
 	 * @since 3.0.0
 	 * @access private
@@ -742,12 +759,65 @@ class EDD_DB_Query {
 	private function get_column_by( $args = array() ) {
 
 		// Filter columns
-		$filter = wp_filter_object_list( $this->columns, $args );
+		$filter = $this->get_columns( $args );
 
 		// Return column or false
 		return ! empty( $filter )
 			? reset( $filter )
 			: false;
+	}
+
+	/**
+	 * Get columns from an array of arguments
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 */
+	private function get_columns( $args = array(), $operator = 'and', $field = false ) {
+
+		// Filter columns
+		$filter = wp_filter_object_list( $this->columns, $args, $operator, $field );
+
+		// Return column or false
+		return ! empty( $filter )
+			? $filter
+			: array();
+	}
+
+	/**
+	 * Get a single database row by any column and value, skipping cache.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $column_name  Name of database column
+	 * @param string $column_value Value to query for
+	 *
+	 * @return mixed False if empty/error, Object if successful
+	 */
+	private function get_item_raw( $column_name = '', $column_value = '' ) {
+
+		// @todo get from EDD_DB_Column
+		$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
+			? '%d'
+			: '%s';
+
+		// Query database for row
+		$table  = $this->get_table_name();
+		$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
+		$result = $this->get_db()->get_row( $select );
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		// Return row
+		return $result;
 	}
 
 	/**
@@ -790,6 +860,16 @@ class EDD_DB_Query {
 		// Fields
 		$fields  = $this->parse_fields( $this->query_vars['fields'] );
 
+		// Setup the query array (compact() is too opaque here)
+		$query = array(
+			'fields'  => $fields,
+			'join'    => $join,
+			'where'   => $where,
+			'orderby' => $orderby,
+			'limits'  => $limits,
+			'groupby' => $groupby
+		);
+
 		/**
 		 * Filters the item query clauses.
 		 *
@@ -798,7 +878,7 @@ class EDD_DB_Query {
 		 * @param array  $pieces A compacted array of item query clauses.
 		 * @param object &$this  Current instance passed by reference.
 		 */
-		$clauses = apply_filters_ref_array( $this->apply_prefix( 'item_clauses' ), array( compact( array( 'fields', 'join', 'where', 'orderby', 'limits', 'groupby' ) ), &$this ) );
+		$clauses = apply_filters_ref_array( $this->apply_prefix( 'item_clauses' ), array( $query, &$this ) );
 
 		// Setup request
 		$this->set_request_clauses( $clauses );
@@ -828,18 +908,24 @@ class EDD_DB_Query {
 	 */
 	private function get_order_by( $order = '' ) {
 
-		// Disable ORDER BY if counting, or with 'none', an empty array, or boolean false.
+		// Default orderby primary column
+		$orderby = "{$this->parse_orderby()} {$order}";
+
+		// Disable ORDER BY if counting, or: 'none', an empty array, or false.
 		if ( ! empty( $this->query_vars['count'] ) || in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
 			$orderby = '';
 
 		// Ordering by something, so figure it out
 		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
+
+			// Array of keys, or comma separated
 			$ordersby = is_array( $this->query_vars['orderby'] )
 				? $this->query_vars['orderby']
 				: preg_split( '/[,\s]/', $this->query_vars['orderby'] );
 
 			$orderby_array = array();
-			$possible_ins  = wp_filter_object_list( $this->columns, array( 'in' => true ), 'and', 'name' );
+			$possible_ins  = $this->get_columns( array( 'in'       => true ), 'and', 'name' );
+			$sortables     = $this->get_columns( array( 'sortable' => true ), 'and', 'name' );
 
 			// Loop through possible order by's
 			foreach ( $ordersby as $_key => $_value ) {
@@ -860,6 +946,12 @@ class EDD_DB_Query {
 					$_item    = $_value;
 				}
 
+				// Skip if not sortable
+				if ( ! in_array( $_value, $sortables, true ) ) {
+					continue;
+				}
+
+				// Parse orderby
 				$parsed = $this->parse_orderby( $_orderby );
 
 				// Skip if empty
@@ -869,18 +961,21 @@ class EDD_DB_Query {
 
 				// Set if __in
 				if ( in_array( $_orderby, $possible_ins, true ) ) {
-					$orderby_array[] = $parsed;
+					$orderby_array[] = "{$parsed} {$order}";
 					continue;
 				}
 
+				// Append parsed orderby to array
 				$orderby_array[] = $parsed . ' ' . $this->parse_order( $_item );
 			}
 
-			$orderby = implode( ', ', $orderby_array );
-		} else {
-			$orderby = "{$this->table_alias}.{$this->get_primary_column_name()} {$order}";
+			// Only set if valid orderby
+			if ( ! empty( $orderby_array ) ) {
+				$orderby = implode( ', ', $orderby_array );
+			}
 		}
 
+		// Return parsed orderby
 		return $orderby;
 	}
 
@@ -924,7 +1019,7 @@ class EDD_DB_Query {
 	private function parse_where() {
 
 		// Defaults
-		$where = $searchable = array();
+		$where = $searchable = $date_query = array();
 		$join  = '';
 		$and   = '/^\s*AND\s*/';
 
@@ -939,24 +1034,31 @@ class EDD_DB_Query {
 			// Literal column comparison
 			if ( ! empty( $this->query_vars[ $column->name ] ) ) {
 
-				// Numeric
-				if ( $column->is_numeric() ) {
-					$statement = "{$this->table_alias}.{$column->name} = %d";
-					$where_id  = absint( $this->query_vars[ $column->name ] );
-
-				// Array
-				} elseif ( is_array( $this->query_vars[ $column->name ] ) ) {
-					$statement = "{$this->table_alias}.{$column->name} IN ( %s )";
+				// Array (unprepared)
+				if ( is_array( $this->query_vars[ $column->name ] ) ) {
 					$where_id  = "'" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $column->name ] ) ) . "'";
+					$statement = "{$this->table_alias}.{$column->name} IN ({$where_id})";
 
-				// String
+					// Add to where array
+					$where[ $column->name ] = $statement;
+
+				// Numeric/String (prepared)
 				} else {
-					$statement = "{$this->table_alias}.{$column->name} = %s";
-					$where_id  = $this->query_vars[ $column->name ];
-				}
 
-				// Add to where array
-				$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
+					// Numeric
+					if ( $column->is_numeric() ) {
+						$statement = "{$this->table_alias}.{$column->name} = %d";
+						$where_id  = absint( $this->query_vars[ $column->name ] );
+
+					// String
+					} else {
+						$statement = "{$this->table_alias}.{$column->name} = %s";
+						$where_id  = $this->query_vars[ $column->name ];
+					}
+
+					// Add to where array
+					$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
+				}
 			}
 
 			// __in
@@ -1003,13 +1105,32 @@ class EDD_DB_Query {
 
 			// date_query
 			if ( true === $column->date_query ) {
-				$where_id   = "{$column->name}_query";
-				$date_query = $this->query_vars[ $where_id ];
+				$where_id    = "{$column->name}_query";
+				$column_date = $this->query_vars[ $where_id ];
 
-				// Setup date query where clause
-				if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-					$this->{$where_id}  = new WP_Date_Query( $date_query, "{$this->table_alias}.{$column->name}" );
-					$where[ $where_id ] = preg_replace( $and, '', $this->{$where_id}->get_sql() );
+				// Parse item
+				if ( ! empty( $column_date ) ) {
+
+					// Default arguments
+					$defaults = array(
+						'column'    => "{$this->table_alias}.{$column->name}",
+						'before'    => $column_date,
+						'inclusive' => true
+					);
+
+					// Default date query
+					if ( is_string( $column_date ) ) {
+						$date_query[] = $defaults;
+					} elseif ( is_array( $column_date ) ) {
+
+						// Maybe auto-fill column
+						if ( ! isset( $column_date['column'] ) ) {
+							$column_date['column'] = $defaults['column'];
+						}
+
+						// Add clause to date query
+						$date_query[] = $column_date;
+					}
 				}
 			}
 		}
@@ -1064,6 +1185,16 @@ class EDD_DB_Query {
 				// Remove " AND " from meta_query query where clause
 				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
 			}
+		}
+
+		// Only do a date query with an array
+		$date_query = ! empty( $date_query )
+			? $date_query
+			: $this->query_vars['date_query'];
+
+		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
+			$this->date_query    = new WP_Date_Query( $date_query, '.' );
+			$where['date_query'] = preg_replace( $and, '', $this->date_query->get_sql() );
 		}
 
 		// Set where and join clauses
@@ -1147,7 +1278,7 @@ class EDD_DB_Query {
 		$groupby = (array) array_map( 'sanitize_key', (array) $groupby );
 
 		// Orderby is a literal column name
-		$columns   = $this->get_column_names();
+		$columns   = array_flip( $this->get_column_names() );
 		$intersect = array_intersect( $columns, $groupby );
 
 		// Bail if invalid column
@@ -1196,9 +1327,9 @@ class EDD_DB_Query {
 		// Specific column
 		} else {
 
-			// Orderby is a literal column name
-			$columns = $this->get_column_names();
-			if ( in_array( $orderby, $columns, true ) ) {
+			// Orderby is a literal, sortable column name
+			$sortables = $this->get_columns( array( 'sortable' => true ), 'and', 'name' );
+			if ( in_array( $orderby, $sortables, true ) ) {
 				$parsed = "{$this->table_alias}.{$orderby}";
 			}
 		}
@@ -1219,7 +1350,7 @@ class EDD_DB_Query {
 
 		// Bail if malformed
 		if ( ! is_string( $order ) || empty( $order ) ) {
-			return 'ASC';
+			return 'DESC';
 		}
 
 		// Ascending or Descending
@@ -1271,10 +1402,35 @@ class EDD_DB_Query {
 		return $results;
 	}
 
+	/**
+	 * Shape an item ID from an object, array, or numeric value
+	 *
+	 * @since 3.0.0
+	 * @param  mixed $item
+	 *
+	 * @return int
+	 */
+	private function shape_item_id( $item = 0 ) {
+		$retval  = 0;
+		$primary = $this->get_primary_column_name();
+
+		// Item ID
+		if ( is_numeric( $item ) ) {
+			$retval = $item;
+		} elseif ( is_object( $item ) && isset( $item->{$primary} ) ) {
+			$retval = $item->{$primary};
+		} elseif ( is_array( $item ) && isset( $item[ $primary ] ) ) {
+			$retval = $item[ $primary ];
+		}
+
+		// Return the item ID
+		return absint( $retval );
+	}
+
 	/** Queries ***************************************************************/
 
 	/**
-	 * Get a single database row by the primary colum ID
+	 * Get a single database row by the primary column ID, possibly from cache
 	 *
 	 * @since 3.0.0
 	 *
@@ -1285,54 +1441,68 @@ class EDD_DB_Query {
 	public function get_item( $item_id = 0 ) {
 
 		// Bail if no item to get by
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) ) {
 			return false;
+		}
+
+		// Get item by ID
+		return $this->get_item_by( $this->get_primary_column_name(), $item_id );
+	}
+
+	/**
+	 * Get a single database row by any column and value, possibly from cache.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $column_name  Name of database column
+	 * @param string $column_value Value to query for
+	 *
+	 * @return mixed False if empty/error, Object if successful
+	 */
+	public function get_item_by( $column_name = '', $column_value = '' ) {
+
+		// Default return value
+		$retval = false;
+
+		// Bail if no key or value
+		if ( empty( $column_name ) || empty( $column_value ) ) {
+			return $retval;
+		}
+
+		// Get column names
+		$columns = $this->get_column_names();
+
+		// Bail if column does not exist
+		if ( ! isset( $columns[ $column_name ] ) ) {
+			return $retval;
 		}
 
 		// Table
-		$table   = $this->get_table_name();
-		$primary = $this->get_primary_column_name();
-
-		// Item ID
-		if ( is_numeric( $item_id ) ) {
-			$item_id = $item_id;
-		} elseif ( is_object( $item_id ) && isset( $item_id->{$primary} ) ) {
-			$item_id = $item_id->{$primary};
-		} elseif ( is_array( $item_id ) && isset( $item_id[ $primary ] ) ) {
-			$item_id = $item_id[ $primary ];
-
-		// Bail if no item to get by
-		} else {
-			return false;
-		}
-
-		// Prevent negatives
-		$item_id = absint( $item_id );
-
-		// Bail if no item to get by
-		if ( empty( $item_id ) ) {
-			return false;
-		}
+		$groups = $this->get_cache_groups();
 
 		// Check cache
-		$result = wp_cache_get( $item_id, $this->cache_group );
+		if ( ! empty( $groups[ $column_name ] ) ) {
+			$retval = wp_cache_get( $column_value, $groups[ $column_name ] );
+		}
 
 		// Item not cached
-		if ( false === $result ) {
-			$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$primary} = %d", $item_id );
-			$result = $this->get_db()->get_row( $select );
+		if ( false === $retval ) {
+
+			// Try to get item directly from DB
+			$retval = $this->get_item_raw( $column_name, $column_value );
 
 			// Bail because item does not exist
-			if ( empty( $result ) || is_wp_error( $result ) ) {
+			if ( empty( $retval ) || is_wp_error( $retval ) ) {
 				return false;
 			}
 
 			// Cache
-			$this->update_item_cache( $result );
+			$this->update_item_cache( $retval );
 		}
 
 		// Return result
-		return $result;
+		return $this->shape_item( $retval );
 	}
 
 	/**
@@ -1355,9 +1525,8 @@ class EDD_DB_Query {
 		}
 
 		// Cut out non-keys for meta
-		$columns = array_flip( $columns );
-		$meta    = array_diff_key( $data, $columns );
-		$data    = array_intersect_key( $data, $columns );
+		$meta = array_diff_key( $data, $columns );
+		$data = array_intersect_key( $data, $columns );
 
 		// Attempt to add
 		$result = $this->get_db()->insert( $table, $data );
@@ -1378,7 +1547,7 @@ class EDD_DB_Query {
 		}
 
 		// Return result
-		return $result;
+		return $this->get_db()->insert_id;
 	}
 
 	/**
@@ -1392,29 +1561,43 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function update_item( $item_id = 0, $data = array() ) {
+
+		// Bail if no item ID
+		$item_id = $this->shape_item_id( $item_id );
+		if ( empty( $item_id ) ) {
+			return false;
+		}
+
 		$where   = array( $this->get_primary_column_name() => $item_id );
 		$table   = $this->get_table_name();
 		$columns = $this->get_column_names();
 
 		// Get item to update
-		$item = (array) $this->get_item( $item_id );
+		$item = $this->get_item( $item_id );
 
 		// Item does not exist to update, so try to add instead
 		if ( empty( $item ) ) {
 			return $this->add_item( $data );
 		}
 
+		// Cast as an array for easier manipulation
+		$item = (array) $item;
+
 		// Splice new data into item, and cut out non-keys for meta
-		$data    = array_merge( $item, $data );
-		$columns = array_flip( $columns );
-		$meta    = array_diff_key( $data, $columns );
-		$data    = array_intersect_key( $data, $columns );
+		$data = array_merge( $item, $data );
+		$meta = array_diff_key( $data, $columns );
+		$save = array_intersect_key( $data, $columns );
+
+		// Bail if no change
+		if ( (array) $save === (array) $item ) {
+			return true;
+		}
 
 		// Never update the primary key value
-		unset( $data[ $this->get_primary_column_name() ] );
+		unset( $save[ $this->get_primary_column_name() ] );
 
 		// Attempt to update
-		$result = $this->get_db()->update( $table, $data, $where );
+		$result = $this->get_db()->update( $table, $save, $where );
 
 		// Bail if an error occurred
 		if ( is_wp_error( $result ) ) {
@@ -1431,8 +1614,11 @@ class EDD_DB_Query {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
-		// Clean the item cache
-		$this->clean_item_cache( $item_id );
+		// Cast to stdClass for caching
+		$save = (object) $save;
+
+		// Prime the item cache
+		$this->update_item_cache( $save );
 
 		// Return result
 		return $result;
@@ -1448,14 +1634,22 @@ class EDD_DB_Query {
 	 * @return boolean
 	 */
 	public function delete_item( $item_id = 0 ) {
+
+		// Bail if no item ID
+		$item_id = $this->shape_item_id( $item_id );
+		if ( empty( $item_id ) ) {
+			return false;
+		}
+
 		$where  = array( $this->get_primary_column_name() => $item_id );
 		$table  = $this->get_table_name();
+		$item   = $this->get_item( $item_id );
 		$result = $this->get_db()->delete( $table, $where );
 
 		// Maybe clean caches on successful delete
 		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
 			$this->delete_all_item_meta( $item_id );
-			$this->clean_item_cache( $item_id );
+			$this->clean_item_cache( $item );
 		}
 
 		// Return result
@@ -1510,6 +1704,7 @@ class EDD_DB_Query {
 	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1540,6 +1735,7 @@ class EDD_DB_Query {
 	protected function get_item_meta( $item_id = 0, $meta_key = '', $single = false ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1571,6 +1767,7 @@ class EDD_DB_Query {
 	protected function update_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1602,6 +1799,7 @@ class EDD_DB_Query {
 	protected function delete_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta_key ) ) {
 			return false;
 		}
@@ -1628,6 +1826,7 @@ class EDD_DB_Query {
 	private function save_extra_item_meta( $item_id = 0, $meta = array() ) {
 
 		// Bail if there is no bulk meta to save
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) || empty( $meta ) ) {
 			return;
 		}
@@ -1660,6 +1859,7 @@ class EDD_DB_Query {
 	private function delete_all_item_meta( $item_id = 0 ) {
 
 		// Bail if no meta was returned
+		$item_id = $this->shape_item_id( $item_id );
 		if ( empty( $item_id ) ) {
 			return;
 		}
@@ -1707,42 +1907,71 @@ class EDD_DB_Query {
 	/** Cache *****************************************************************/
 
 	/**
-	 * Prime item & meta caches for items
-	 *
-	 * Accepts an object, or an array of objects.
+	 * Get array of which database columns have uniquely cached groups
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $items
+	 * @return array
+	 */
+	private function get_cache_groups() {
+
+		// Return value
+		$cache_groups = array();
+
+		// Get cache groups
+		$groups = $this->get_columns( array( 'cache_key' => true ), 'and', 'name' );
+
+		// Setup return values
+		foreach ( $groups as $name ) {
+			$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+		}
+
+		// Return cache groups array
+		return $cache_groups;
+	}
+
+	/**
+	 * Maybe prime item & item-meta caches by querying 1 time for all un-cached
+	 * items.
+	 *
+	 * Accepts a single ID, or an array of IDs.
+	 *
+	 * The reason this accepts only IDs is because it gets called immediately
+	 * after an item is inserted in the database, but before items have been
+	 * "shaped" into proper objects, so object properties may not be set yet.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $item_ids
 	 *
 	 * @return boolean False if empty
 	 */
-	private function prime_item_caches( $items = false ) {
+	private function prime_item_caches( $item_ids = array() ) {
 
 		// Bail if no items to cache
-		if ( empty( $items ) ) {
+		if ( empty( $item_ids ) ) {
 			return false;
 		}
 
 		// Accepts single values, so cast to array
-		$items = (array) $items;
+		$item_ids = (array) $item_ids;
 
 		// Update item caches
-		if ( ! empty( $this->query_vars['update_cache'] ) ) {
+		if ( empty( $this->query_vars['update_cache'] ) ) {
 
 			// Look for non-cached IDs
-			$ids = _get_non_cached_ids( $items, $this->cache_group );
+			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
 
 			// Bail if IDs are cached
 			if ( empty( $ids ) ) {
-				return;
+				return false;
 			}
 
 			// Query
 			$table   = $this->get_table_name();
 			$primary = $this->get_primary_column_name();
 			$query   = "SELECT * FROM {$table} WHERE {$primary} IN (%s)";
-			$ids    = join( ',', array_map( 'absint', $ids ) );
+			$ids     = join( ',', array_map( 'absint', $ids ) );
 			$prepare = sprintf( $query , $ids );
 			$results = $this->get_db()->get_results( $prepare );
 
@@ -1753,20 +1982,24 @@ class EDD_DB_Query {
 		// Update meta data caches
 		if ( ! empty( $this->query_vars['update_meta_cache'] ) ) {
 			$singular = rtrim( $this->table_name, 's' ); // sic
-			update_meta_cache( $singular, $items );
+			update_meta_cache( $singular, $item_ids );
 		}
 	}
 
 	/**
-	 * Update the cache for an item.
+	 * Update the cache for an item. Does not update item-meta cache.
 	 *
-	 * Accepts an object, or an array of objects.
+	 * Accepts a single object, or an array of objects.
+	 *
+	 * The reason this does not accept ID's is because this gets called
+	 * after an item is already updated in the database, so we want to avoid
+	 * querying for it again. It's just safer this way.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param array $items
 	 */
-	private function update_item_cache( $items = false ) {
+	private function update_item_cache( $items = array() ) {
 
 		// Bail if no items to cache
 		if ( empty( $items ) ) {
@@ -1774,12 +2007,15 @@ class EDD_DB_Query {
 		}
 
 		// Make sure items is an array
-		$items = (array) $items;
+		$items  = (array) $items;
+		$groups = $this->get_cache_groups();
 
 		// Loop through all items and cache them
 		foreach ( $items as $item ) {
 			if ( is_object( $item ) ) {
-				wp_cache_set( $item->{$this->get_primary_column_name()}, $item, $this->cache_group );
+				foreach ( $groups as $key => $group ) {
+					wp_cache_set( $item->{$key}, $item, $group );
+				}
 			}
 		}
 
@@ -1788,9 +2024,13 @@ class EDD_DB_Query {
 	}
 
 	/**
-	 * Clean the cache for an item
+	 * Clean the cache for an item. Does not clean item-meta.
 	 *
-	 * Accepts an object, or an array of objects.
+	 * Accepts a single object, or an array of objects.
+	 *
+	 * The reason this does not accept ID's is because this gets called
+	 * after an item is already deleted from the database, so it cannot be
+	 * queried and may not exist in the cache. It's just safer this way.
 	 *
 	 * @since 3.0.0
 	 *
@@ -1798,22 +2038,24 @@ class EDD_DB_Query {
 	 *
 	 * @return boolean
 	 */
-	private function clean_item_cache( $items = false ) {
+	private function clean_item_cache( $items = array() ) {
 
 		// Bail if no items to cache
 		if ( empty( $items ) ) {
 			return false;
 		}
 
-		// Accepts single values, so cast to array
-		$items = (array) $items;
-
 		// Make sure items is an array
-		$items = wp_parse_id_list( $items );
+		$items = (array) $items;
+		$groups = $this->get_cache_groups();
 
 		// Loop through all items and cache them
-		foreach ( $items as $item_id ) {
-			wp_cache_delete( $item_id, $this->cache_group );
+		foreach ( $items as $item ) {
+			if ( is_object( $item ) ) {
+				foreach ( $groups as $key => $group ) {
+					wp_cache_delete( $item->{$key}, $group );
+				}
+			}
 		}
 
 		// Update last changed
@@ -1828,5 +2070,53 @@ class EDD_DB_Query {
 	private function update_last_changed() {
 		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
 	}
+
+	/** Back Compat ***********************************************************/
+
+	/**
+	 * Return a single column from an item, or null
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $name
+	 * @param int    $item_id
+	 *
+	 * @return mixed
+	 */
+	public function get_column( $name = '', $item_id = 0 ) {
+		$item = $this->get_item( $item_id );
+
+		// Return a single column from an item, or null
+		return isset( $item->{$name} )
+			? $item->{$name}
+			: null;
+	}
+
+	public function insert( $data = array() ) {
+		return $this->add_item( $data );
+	}
+
+	public function add( $data = array() ) {
+		return $this->add_item( $data );
+	}
+
+	public function update( $item_id, $data = array(), $where = '' ) {
+		return $this->update_item( $item_id, $data );
+	}
+
+	public function delete( $item_id = 0 ) {
+		return $this->delete_item( $item_id );
+	}
+
+	public function add_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
+		return $this->add_item_meta( $item_id, $meta_key, $meta_value, $unique );
+	}
+
+    public function __call( $method = '', $args = array() ) {
+		switch ( $method ) {
+			case 'add_meta' :
+				die;
+		}
+    }
 }
 endif;

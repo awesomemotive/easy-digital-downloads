@@ -3,10 +3,7 @@
 /**
  * A Base WordPress Database Table class
  *
- * @author  JJJ
- * @link    https://jjj.blog
- * @version 1.4.0
- * @license https://www.gnu.org/licenses/gpl-2.0.html
+ * @version 3.0.0
  */
 
 // Exit if accessed directly
@@ -28,9 +25,9 @@ if ( ! class_exists( 'EDD_DB_Table' ) ) :
  * - Tables upgrade via independent upgrade abstract methods
  * - Multisite friendly - site tables switch on "switch_blog" action
  *
- * @since 1.1.0
+ * @since 3.0.0
  */
-abstract class EDD_DB_Table {
+abstract class EDD_DB_Table extends EDD_DB_Base {
 
 	/**
 	 * @var string Table name, without the global table prefix
@@ -82,17 +79,12 @@ abstract class EDD_DB_Table {
 	 */
 	protected $charset_collation = '';
 
-	/**
-	 * @var WPDB Database object (usually $GLOBALS['wpdb'])
-	 */
-	protected $db = false;
-
 	/** Methods ***************************************************************/
 
 	/**
 	 * Hook into queries, admin screens, and more!
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	public function __construct() {
 
@@ -127,14 +119,14 @@ abstract class EDD_DB_Table {
 	/**
 	 * Setup this database table
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	protected abstract function set_schema();
 
 	/**
 	 * Upgrade this database table
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	protected abstract function upgrade();
 
@@ -145,7 +137,7 @@ abstract class EDD_DB_Table {
 	 *
 	 * Hooked to the "switch_blog" action.
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 *
 	 * @param int $site_id The site being switched to
 	 */
@@ -165,7 +157,7 @@ abstract class EDD_DB_Table {
 	 *
 	 * Hooked to the "admin_init" action.
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	public function maybe_upgrade() {
 
@@ -194,6 +186,23 @@ abstract class EDD_DB_Table {
 	}
 
 	/**
+	 * Check if table already exists
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return bool
+	 */
+	public function exists() {
+		$query       = "SHOW TABLES LIKE %s";
+		$like        = $this->get_db()->esc_like( $this->table_name );
+		$prepared    = $this->get_db()->prepare( $query, $like );
+		$table_exist = $this->get_db()->get_var( $prepared );
+
+		// Does the table exist?
+		return ! empty( $table_exist );
+	}
+
+	/**
 	 * Truncate the database table
 	 *
 	 * @since 3.0.0
@@ -201,12 +210,26 @@ abstract class EDD_DB_Table {
 	 * @return mixed
 	 */
 	public function truncate() {
-		$query     = "TRUNCATE %s";
-		$prepared  = $this->get_db()->prepare( $query, $this->table_name );
-		$truncated = $this->get_db()->query( $prepared );
+		$query     = "TRUNCATE TABLE {$this->table_name}";
+		$truncated = $this->get_db()->query( $query );
 
 		// Query success/fail
 		return $truncated;
+	}
+
+	/**
+	 * Delete all items from the database table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function delete_all() {
+		$query   = "DELETE FROM {$this->table_name}";
+		$deleted = $this->get_db()->query( $query );
+
+		// Query success/fail
+		return $deleted;
 	}
 
 	/** Private ***************************************************************/
@@ -227,7 +250,7 @@ abstract class EDD_DB_Table {
 	/**
 	 * Setup the necessary table variables
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	private function setup() {
 
@@ -256,7 +279,7 @@ abstract class EDD_DB_Table {
 	 * This must be done directly because WordPress does not have a mechanism
 	 * for manipulating them safely
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	private function set_wpdb_tables() {
 
@@ -292,7 +315,7 @@ abstract class EDD_DB_Table {
 	 *
 	 * Global table version in "_sitemeta" on the main network
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	private function set_db_version() {
 
@@ -310,7 +333,7 @@ abstract class EDD_DB_Table {
 	 *
 	 * Global table version from "_sitemeta" on the main network
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	private function get_db_version() {
 		$this->db_version = $this->is_global()
@@ -321,7 +344,7 @@ abstract class EDD_DB_Table {
 	/**
 	 * Add class hooks to WordPress actions
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	private function add_hooks() {
 
@@ -355,7 +378,7 @@ abstract class EDD_DB_Table {
 	/**
 	 * Create the table
 	 *
-	 * @since 1.1.0
+	 * @since 3.0.0
 	 */
 	private function create() {
 
@@ -378,26 +401,9 @@ abstract class EDD_DB_Table {
 	}
 
 	/**
-	 * Check if table already exists
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return bool
-	 */
-	private function exists() {
-		$query       = "SHOW TABLES LIKE %s";
-		$like        = $this->get_db()->esc_like( $this->table_name );
-		$prepared    = $this->get_db()->prepare( $query, $like );
-		$table_exist = $this->get_db()->get_var( $prepared );
-
-		// Does the table exist?
-		return ! empty( $table_exist );
-	}
-
-	/**
 	 * Check if table is global
 	 *
-	 * @since 1.2.0
+	 * @since 3.0.0
 	 *
 	 * @return bool
 	 */
@@ -417,7 +423,7 @@ abstract class EDD_DB_Table {
 	 * - No double underscores
 	 * - No trailing underscores
 	 *
-	 * @since 1.3.0
+	 * @since 3.0.0
 	 *
 	 * @param string $name The name of the database table
 	 *

@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Bail if not the correct EDD action for this page
 if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) ) {
@@ -21,10 +21,14 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 ?><div class="wrap">
 	<h1><?php _e( 'Add New Discount', 'easy-digital-downloads' ); ?></h1>
 	<form id="edd-add-discount" action="" method="POST">
+
 		<?php do_action( 'edd_add_discount_form_top' ); ?>
+
 		<table class="form-table">
 			<tbody>
+
 				<?php do_action( 'edd_add_discount_form_before_name' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-name"><?php _e( 'Name', 'easy-digital-downloads' ); ?></label>
@@ -34,7 +38,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'The name of this discount.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_code' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
@@ -44,7 +50,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_type' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
@@ -57,7 +65,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_amount' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
@@ -68,7 +78,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description edd-amount-description percent-discount"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_products' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-products"><?php printf( __( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
@@ -104,7 +116,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php printf( __( 'Select %s relevant to this discount. If left blank, this discount can be used on any product.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_excluded_products' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="excluded_products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
@@ -121,7 +135,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_start' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
@@ -131,7 +147,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_expiration' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
@@ -141,7 +159,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_min_cart_amount' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
@@ -151,7 +171,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'The minimum dollar amount that must be in the cart before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_max_uses' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
@@ -161,7 +183,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 						<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
+
 				<?php do_action( 'edd_add_discount_form_before_use_once' ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
@@ -173,7 +197,9 @@ if ( empty( $_GET['edd-action'] ) || ( 'add_discount' !== $_GET['edd-action'] ) 
 				</tr>
 			</tbody>
 		</table>
+
 		<?php do_action( 'edd_add_discount_form_bottom' ); ?>
+
 		<p class="submit">
 			<input type="hidden" name="edd-action" value="add_discount" />
 			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>" />

@@ -74,7 +74,7 @@ class EDD_Discount_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD_DB_Discount';
+	public $item_shape = 'EDD_Discount';
 
 	/** Cache *****************************************************************/
 
@@ -118,7 +118,7 @@ class EDD_Discount_Query extends EDD_DB_Query {
 	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to discount retrieved discounts. Accepts 'ASC', 'DESC'. Default 'ASC'.
+	 *     @type string       $order                How to discount retrieved discounts. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching discounts for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found discounts. Default false.
 	 * }

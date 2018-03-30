@@ -693,8 +693,8 @@ class Test_Misc extends EDD_UnitTestCase {
 	}
 
 	public function test_array_convert() {
-		$customer1_id = EDD()->customers->add( array( 'email' => 'test10@example.com' ) );
-		$customer2_id = EDD()->customers->add( array( 'email' => 'test11@example.com' ) );
+		$customer1_id = edd_add_customer( array( 'email' => 'test10@example.com' ) );
+		$customer2_id = edd_add_customer( array( 'email' => 'test11@example.com' ) );
 
 		// Test sending a single object in
 		$customer_object = new EDD_Customer( $customer1_id );

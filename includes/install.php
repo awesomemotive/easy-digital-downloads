@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -55,6 +55,9 @@ function edd_run_install() {
 	if ( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 	}
+
+	// Setup the components (customers, discounts, logs, etc...)
+	edd_setup_components();
 
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();

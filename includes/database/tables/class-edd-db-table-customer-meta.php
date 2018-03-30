@@ -49,7 +49,7 @@ final class EDD_DB_Table_Customer_Meta extends EDD_DB_Table {
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
-			KEY customer_id (customer_id),
+			KEY edd_customer_id (edd_customer_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 

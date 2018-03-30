@@ -27,10 +27,10 @@ if ( empty( $discount ) ) {
 }
 
 // Setup discount vars
-$product_reqs      = $discount->product_reqs;
-$excluded_products = $discount->excluded_products;
+$product_reqs      = edd_get_discount_meta( $discount->id, 'product_reqs'      );
+$excluded_products = edd_get_discount_meta( $discount->id, 'excluded_products' );
 $condition         = $discount->product_condition;
-$single_use        = $discount->is_single_use;
+$single_use        = $discount->once_per_customer;
 $flat_display      = ( $discount->type === 'flat'    ) ? '' : ' style="display:none;"';
 $percent_display   = ( $discount->type === 'percent' ) ? '' : ' style="display:none;"';
 $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:none;"';
@@ -39,10 +39,14 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 ?><div class="wrap">
 	<h1><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?></h1>
 	<form id="edd-edit-discount" action="" method="post">
-		<?php do_action( 'edd_edit_discount_form_top', $discount_id, $discount ); ?>
+
+		<?php do_action( 'edd_edit_discount_form_top', $discount->id, $discount ); ?>
+
 		<table class="form-table">
 			<tbody>
-				<?php do_action( 'edd_edit_discount_form_before_name', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_name', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-name"><?php _e( 'Name', 'easy-digital-downloads' ); ?></label>
@@ -52,7 +56,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'The name of this discount', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_code', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_code', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
@@ -62,7 +68,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_type', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_type', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
@@ -75,7 +83,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_amount', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_amount', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
@@ -86,7 +96,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description edd-amount-description percent"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_products', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_products', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-products"><?php printf( __( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
@@ -123,7 +135,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php printf( __( 'Select %s relevant to this discount. If left blank, this discount can be used on any product.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_excluded_products', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_excluded_products', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
@@ -140,7 +154,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_start', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_start', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
@@ -150,7 +166,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_expiration', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_expiration', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
@@ -160,7 +178,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_max_uses', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_max_uses', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
@@ -170,17 +190,21 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_min_cart_amount', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_min_cart_amount', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( $discount->min_price ); ?>" style="width: 40px;"/>
+						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( $discount->min_cart_price ); ?>" style="width: 40px;"/>
 						<p class="description"><?php _e( 'The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_status', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_status', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-status"><?php _e( 'Status', 'easy-digital-downloads' ); ?></label>
@@ -193,7 +217,9 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<p class="description"><?php _e( 'The status of this discount code.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
-				<?php do_action( 'edd_edit_discount_form_before_use_once', $discount_id, $discount ); ?>
+
+				<?php do_action( 'edd_edit_discount_form_before_use_once', $discount->id, $discount ); ?>
+
 				<tr>
 					<th scope="row" valign="top">
 						<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
@@ -205,10 +231,12 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 				</tr>
 			</tbody>
 		</table>
-		<?php do_action( 'edd_edit_discount_form_bottom', $discount_id, $discount ); ?>
+
+		<?php do_action( 'edd_edit_discount_form_bottom', $discount->id, $discount ); ?>
+
 		<p class="submit">
 			<input type="hidden" name="edd-action" value="edit_discount" />
-			<input type="hidden" name="discount-id" value="<?php echo esc_attr( $discount_id ); ?>" />
+			<input type="hidden" name="discount-id" value="<?php echo esc_attr( $discount->id ); ?>" />
 			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>" />
 			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>" />
 			<input type="submit" value="<?php _e( 'Update Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary" />

@@ -221,6 +221,50 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
+		if ( ! edd_has_upgrade_completed( 'migrate_notes' ) ) {
+			$results   = $wpdb->get_row( "SELECT count(comment_ID) as has_notes FROM $wpdb->comments WHERE comment_type = 'edd_payment_note' LIMIT 0, 1" );
+			$has_notes = ! empty( $results->has_notes ) ? true : false;
+
+			if ( ! $has_notes ) {
+				edd_set_upgrade_complete( 'migrate_notes' );
+				edd_set_upgrade_complete( 'remove_legacy_notes' );
+			} else {
+				printf(
+					'<div class="updated">' .
+					'<p>' .
+					__( 'Easy Digital Downloads needs to upgrade the notes table, click <a href="%1$s">here</a> to start the upgrade. <a href="#" onClick="%2$s">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
+					'</p>' .
+					'<p style="display: none;">' .
+					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all notes and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_notes</code>', 'easy-digital-downloads' ) .
+					'</p>' .
+					'</div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=notes_migration' ) ),
+					"jQuery(this).parent().next('p').slideToggle()"
+				);
+			}
+		}
+
+		if ( edd_has_upgrade_completed( 'migrate_notes' ) && ! edd_has_upgrade_completed( 'remove_legacy_notes' ) ) {
+			printf(
+				'<div class="updated">' .
+				'<p>' .
+				__( 'Easy Digital Downloads has <strong>finished migrating note</strong> records, next step is to <a href="%1%s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				'</p>' .
+				'<p style="display: none;">' .
+				__( '<strong>Removing legacy data:</strong><br />All note records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
+				'<br /><br />' .
+				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				'</p>' .
+				'</div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_notes' ) ),
+				"jQuery(this).parent().next('p').slideToggle()"
+			);
+		}
+
 		/*
 		 *  NOTICE:
 		 *
@@ -1229,15 +1273,15 @@ function edd_discounts_migration() {
 	}
 
 	if ( 1 === $step ) {
-		$discounts_db = EDD()->discounts;
-		if ( ! $discounts_db->table_exists( $discounts_db->table_name ) ) {
-			@$discounts_db->create_table();
-			edd_debug_log( $discounts_db->table_name . ' created successfully' );
+		$discounts = edd_get_component_interface( 'discount', 'table' );
+		if ( ! $discounts->exists() ) {
+			$discounts->create();
+			edd_debug_log( $discounts->table_name . ' created successfully' );
 		}
 
-		$discount_meta = EDD()->discount_meta;
-		if ( ! $discount_meta->table_exists( $discount_meta->table_name ) ) {
-			@$discount_meta->create_table();
+		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
+		if ( ! $discount_meta->exists() ) {
+			$discount_meta->create();
 			edd_debug_log( $discount_meta->table_name . ' created successfully' );
 		}
 	}
@@ -1332,3 +1376,148 @@ function edd_remove_legacy_discounts() {
 
 }
 add_action( 'edd_remove_legacy_discounts', 'edd_remove_legacy_discounts' );
+
+/**
+ * Migrates all notes and their meta to the new custom table.
+ *
+ * @since 3.0
+ */
+function edd_notes_migration() {
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+	set_time_limit( 0 );
+
+	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+
+	edd_debug_log( 'Beginning step ' . $step . ' of notes migration' );
+
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+	if ( empty( $total ) || $total <= 1 ) {
+		$total_sql = "SELECT COUNT(comment_ID) as total_notes FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
+		$results   = $wpdb->get_row( $total_sql, 0 );
+		$total     = $results->total_discounts;
+		edd_debug_log( $total . ' to migrate' );
+	}
+
+	if ( 1 === $step ) {
+		if ( ! EDD()->notes->table_exists( EDD()->notes->table_name ) ) {
+			@EDD()->notes->create_table();
+			edd_debug_log( EDD()->notes->table_name . ' created successfully' );
+		}
+
+		if ( ! EDD()->note_meta->table_exists( EDD()->note_meta->table_name ) ) {
+			@EDD()->note_meta->create_table();
+			edd_debug_log( EDD()->note_meta->table_name . ' created successfully' );
+		}
+	}
+
+	$notes = $wpdb->get_results(
+		$wpdb->prepare(
+			"
+			SELECT *
+			FROM {$wpdb->comments}
+			WHERE comment_type = 'edd_payment_note'
+			ORDER BY comment_ID ASC
+			LIMIT %d,%d;
+			",
+			$offset,
+			$number
+		)
+	);
+
+	if ( ! empty( $notes ) ) {
+		foreach ( $notes as $old_note ) {
+			$note_data = array(
+				'object_id'    => $old_note->comment_post_ID,
+				'object_type'  => 'payment',
+				'date_created' => $old_note->comment_date,
+				'content'      => $old_note->comment_content,
+				'user_id'      => $old_note->user_id,
+			);
+
+			$id = EDD()->notes->insert( $note_data );
+			$note = new EDD\Notes\Note( $id );
+
+			$meta = get_comment_meta( $old_note->comment_ID );
+			if ( ! empty( $meta ) ) {
+				foreach ( $meta as $key => $value ) {
+					$note->add_meta( $key, $value );
+				}
+			}
+
+			edd_debug_log( $old_note->comment_ID . ' successfully migrated to ' . $id );
+		}
+
+		edd_debug_log( 'Step ' . $step . ' of notes migration complete' );
+
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'notes_migration',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_safe_redirect( $redirect );
+		exit;
+	} else {
+		// No more notes found, finish up
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'migrate_notes' );
+		delete_option( 'edd_doing_upgrade' );
+
+		edd_debug_log( 'All old notes migrated, upgrade complete.' );
+
+		wp_redirect( admin_url() );
+		exit;
+	}
+}
+add_action( 'edd_notes_migration', 'edd_notes_migration' );
+
+/**
+ * Removes legacy notes data.
+ *
+ * @since 3.0
+ */
+function edd_remove_legacy_notes() {
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+	set_time_limit( 0 );
+
+	$note_ids = $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'" );
+	$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
+	$note_ids = implode( ', ', $note_ids );
+
+	edd_debug_log( 'Beginning removal of legacy notes' );
+
+	if ( ! empty( $note_ids ) ) {
+		$delete_query = "DELETE FROM $wpdb->comments WHERE comment_ID IN ({$note_ids})";
+		$wpdb->query( $delete_query );
+
+		$delete_postmeta_query = "DELETE FROM $wpdb->commentmeta WHERE comment_id IN ({$note_ids})";
+		$wpdb->query( $delete_postmeta_query );
+	}
+
+	edd_set_upgrade_complete( 'remove_legacy_notes' );
+
+	delete_option( 'edd_doing_upgrade' );
+
+	edd_debug_log( 'Legacy notes removed, upgrade complete.' );
+
+	wp_redirect( admin_url() );
+	exit;
+}
+add_action( 'edd_remove_legacy_notes', 'edd_remove_legacy_notes' );

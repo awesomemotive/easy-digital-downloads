@@ -152,32 +152,27 @@ class EDD_Download {
 	 */
 	private function setup_download( $download ) {
 
-		if( ! is_object( $download ) ) {
+		if ( ! is_object( $download ) ) {
 			return false;
 		}
 
-		if( ! is_a( $download, 'WP_Post' ) ) {
+		if ( ! is_a( $download, 'WP_Post' ) ) {
 			return false;
 		}
 
-		if( 'download' !== $download->post_type ) {
+		if ( 'download' !== $download->post_type ) {
 			return false;
 		}
 
 		foreach ( $download as $key => $value ) {
-
 			switch ( $key ) {
-
 				default:
 					$this->$key = $value;
 					break;
-
 			}
-
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -185,18 +180,12 @@ class EDD_Download {
 	 *
 	 * @since 2.2
 	 */
-	public function __get( $key ) {
-
-		if( method_exists( $this, 'get_' . $key ) ) {
-
-			return call_user_func( array( $this, 'get_' . $key ) );
-
+	public function __get( $key = '' ) {
+		if ( method_exists( $this, "get_{$key}" ) ) {
+			return call_user_func( array( $this, "get_{$key}" ) );
 		} else {
-
 			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
-
 		}
-
 	}
 
 	/**
