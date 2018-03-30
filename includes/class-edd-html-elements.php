@@ -24,7 +24,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param array $args Arguments for the dropdown
 	 * @return string $output Product dropdown
@@ -226,7 +225,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all customers
 	 *
-	 * @access public
 	 * @since 2.2
 	 * @param array $args
 	 * @return string $output Customer dropdown
@@ -250,7 +248,7 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$customers = EDD()->customers->get_customers( array(
+		$customers = edd_get_customers( array(
 			'number' => $args['number']
 		) );
 
@@ -303,7 +301,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Users
 	 *
-	 * @access public
 	 * @since 2.6.9
 	 * @param array $args
 	 * @return string $output User dropdown
@@ -379,7 +376,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Discount to select automatically
@@ -389,15 +385,16 @@ class EDD_HTML_Elements {
 	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
 		$args = array( 'nopaging' => true );
 
-		if ( ! empty( $status ) )
+		if ( ! empty( $status ) ) {
 			$args['post_status'] = $status;
+		}
 
 		$discounts = edd_get_discounts( $args );
 		$options   = array();
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
-				$options[ absint( $discount->ID ) ] = esc_html( $discount->name );
+				$options[ absint( $discount->id ) ] = esc_html( $discount->name );
 			}
 		} else {
 			$options[0] = __( 'No discounts found', 'easy-digital-downloads' );
@@ -417,7 +414,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Categories
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Category to select automatically
@@ -446,7 +442,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of years
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Year to select automatically
@@ -480,7 +475,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of months
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Month to select automatically
@@ -800,10 +794,10 @@ class EDD_HTML_Elements {
 
 		$output  = '<span class="edd_user_search_wrap">';
 			$output .= $this->text( $args );
-			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" aria-label="' . __( 'Cancel', 'easy-digital-downloads' ) . '" href="#">x</a><span></span></span>';
+			$output .= '<span class="edd_user_search_results hidden"><span></span></span>';
+			$output .= '<span class="spinner"></span>';
 		$output .= '</span>';
 
 		return $output;
 	}
-
 }

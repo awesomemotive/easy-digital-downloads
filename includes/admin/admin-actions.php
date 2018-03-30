@@ -84,3 +84,19 @@ function edd_display_product_tabs() {
 	<br />
 	<?php
 }
+
+/**
+ * Return array of query arguments that should be removed from URLs.
+ *
+ * @since 3.0.0
+ *
+ * @return array
+ */
+function edd_admin_removable_query_args() {
+	return apply_filters( 'edd_admin_removable_query_args', array(
+		'edd-action',
+		'edd-notice',
+		'edd-message',
+		'edd-redirect'
+	) );
+}

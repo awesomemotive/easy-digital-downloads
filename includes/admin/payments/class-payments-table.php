@@ -139,7 +139,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$selected_gateway = isset( $_GET['gateway'] ) ? sanitize_text_field( $_GET['gateway'] ) : 'all';
 
 		if ( ! empty( $all_gateways ) ) {
-			$gateways['all'] = __( 'All Gateways', 'edd' );
+			$gateways['all'] = __( 'All Gateways', 'easy-digital-downloads' );
 
 			foreach( $all_gateways as $slug => $admin_label ) {
 				$gateways[ $slug ] = $admin_label['admin_label'];
@@ -199,7 +199,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Show the search field
 	 *
 	 * @since 1.4
-	 * @access public
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
@@ -229,7 +228,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Retrieve the view types
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $views All the views available
 	 */
@@ -262,7 +260,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -284,7 +281,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table's sortable columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array Array of all the sortable columns
 	 */
@@ -312,7 +308,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param array $payment Contains all the data of the payment
@@ -349,7 +344,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Render the Email Column
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @param array $payment Contains all the data of the payment
 	 * @return string Data shown in the Email column
@@ -386,7 +380,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Render the checkbox column
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @param array $payment Contains all the data for the checkbox column
 	 * @return string Displays a checkbox
@@ -402,7 +395,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Render the ID column
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @param array $payment Contains all the data for the checkbox column
 	 * @return string Displays a checkbox
@@ -414,7 +406,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Render the Customer Column
 	 *
-	 * @access public
 	 * @since 2.4.3
 	 * @param array $payment Contains all the data of the payment
 	 * @return string Data shown in the User column
@@ -436,7 +427,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Retrieve the bulk actions
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $actions Array of the bulk actions
 	 */
@@ -461,7 +451,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -530,7 +519,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Retrieve the payment counts
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -585,7 +573,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Retrieve all the data for all the payments
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $payment_data Array of all the data for the payments
 	 */
@@ -659,7 +646,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @uses EDD_Payment_History_Table::get_columns()
 	 * @uses EDD_Payment_History_Table::get_sortable_columns()
