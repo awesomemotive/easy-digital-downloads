@@ -1578,9 +1578,9 @@ function edd_remove_legacy_logs() {
 	edd_debug_log( 'Beginning removal of legacy logs' );
 
 	if ( ! empty( $log_ids ) ) {
-		$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$log_ids})";
+		$delete_posts_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
 		$wpdb->query( $delete_posts_query );
-		$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$log_ids})";
+		$delete_postmeta_query = "DELETE FROM {$wpdb->postmeta} WHERE post_id IN ({$log_ids})";
 		$wpdb->query( $delete_postmeta_query );
 	}
 
