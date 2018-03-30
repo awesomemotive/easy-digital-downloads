@@ -318,7 +318,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		$discount->save();
 
-		$this->assertGreaterThan( 0, $discount->id );
+		$this->assertGreaterThan( 0, (int) $discount->id );
 	}
 
 	/**
@@ -441,8 +441,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	/**
 	 * @covers ::delete_meta()
 	 */
-	public function test_discount_delete_meta_with_no_meta_key_should_return_false() {
-		$this->assertFalse( edd_delete_discount_meta( self::$download->id, '' ) );
+	public function test_discount_delete_meta_with_no_meta_key_should_be_null() {
+		$this->assertNull( edd_delete_discount_meta( self::$download->id, '' ) );
 	}
 
 	/**
