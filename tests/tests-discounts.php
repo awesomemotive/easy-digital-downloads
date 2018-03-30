@@ -782,7 +782,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers edd_update_discount_status()
 	 */
 	public function test_discount_status_update_fail() {
-		$this->assertFalse( edd_update_discount_status( - 1 ) );
+		$this->assertFalse( edd_update_discount_status( -1 ) );
 	}
 
 	/**
@@ -802,7 +802,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_is_discount_active() {
 		edd_update_discount_status( self::$discount_id, 'active' );
 
-		$this->assertTrue( edd_is_discount_active( self::$discount_id, true ) );
+		$this->assertTrue( edd_is_discount_active( self::$discount_id, true  ) );
 		$this->assertTrue( edd_is_discount_active( self::$discount_id, false ) );
 
 		$post = array(
@@ -1012,9 +1012,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::get_discounted_amount()
 	 */
 	public function test_get_discounted_amount() {
-		$this->assertEquals( '432', edd_get_discounted_amount( '20OFF', '540' ) );
-		$this->assertEquals( '150', edd_get_discounted_amount( 'DOUBLE', '75' ) );
-		$this->assertEquals( '10', edd_get_discounted_amount( '10FLAT', '20' ) );
+		$this->assertEquals( '432', edd_get_discounted_amount( '20OFF',  '540' ) );
+		$this->assertEquals( '150', edd_get_discounted_amount( 'DOUBLE', '75'  ) );
+		$this->assertEquals( '10',  edd_get_discounted_amount( '10FLAT', '20'  ) );
 
 		// Test that an invalid Code returns the base price
 		$this->assertEquals( '10', edd_get_discounted_amount( 'FAKEDISCOUNT', '10' ) );

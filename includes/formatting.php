@@ -108,7 +108,7 @@ function edd_format_amount( $amount, $decimals = true ) {
 	}
 
 	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
-	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
+	$formatted = number_format( (float) $amount, $decimals, $decimal_sep, $thousands_sep );
 
 	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
 }
