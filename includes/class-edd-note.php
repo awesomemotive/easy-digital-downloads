@@ -86,6 +86,118 @@ class Note {
 	protected $db;
 
 	/**
+	 * Comment ID.
+	 *
+	 * @since 3.0
+	 * @var int
+	 */
+	protected $comment_ID;
+
+	/**
+	 * ID of the post the comment is associated with.
+	 *
+	 * @since 3.0
+	 * @var int
+	 */
+	protected $comment_post_ID = 0;
+
+	/**
+	 * Comment author name.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	protected $comment_author = '';
+
+	/**
+	 * Comment author email address.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	protected $comment_author_email = '';
+
+	/**
+	 * Comment author URL.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	protected $comment_author_url = '';
+
+	/**
+	 * Comment author IP address (IPv4 format).
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	protected $comment_author_IP = '';
+
+	/**
+	 * Comment date in YYYY-MM-DD HH:MM:SS format.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	protected $comment_date = '0000-00-00 00:00:00';
+
+	/**
+	 * Comment GMT date in YYYY-MM-DD HH::MM:SS format.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	protected $comment_date_gmt = '0000-00-00 00:00:00';
+
+	/**
+	 * Comment content.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	public $comment_content;
+
+	/**
+	 * Comment karma count.
+	 *
+	 * @since 3.0
+	 * @var int
+	 */
+	public $comment_karma = 0;
+
+	/**
+	 * Comment approval status.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	public $comment_approved = '1';
+
+	/**
+	 * Comment author HTTP user agent.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	public $comment_agent = '';
+
+	/**
+	 * Comment type.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	public $comment_type = '';
+
+	/**
+	 * Parent comment ID.
+	 *
+	 * @since 3.0
+	 * @var int
+	 */
+	public $comment_parent = 0;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0
@@ -103,6 +215,17 @@ class Note {
 				$this->$key = $value;
 			}
 		}
+
+		/**
+		 * We fill object vars which have the same name as the object vars in WP_Comment for backwards compatibility
+		 * purposes.
+		 */
+		$this->comment_ID       = absint( $this->id );
+		$this->comment_post_ID  = $this->object_id;
+		$this->comment_type     = $this->object_type;
+		$this->comment_date     = $this->date_created;
+		$this->comment_date_gmt = $this->date_created;
+		$this->comment_content  = $this->content;
 	}
 
 	/**
