@@ -13,9 +13,15 @@ class Factory extends \WP_UnitTest_Factory {
 	 */
 	public $discount;
 
+	/**
+	 * @var \EDD\Tests\Factory\Note
+	 */
+	public $note;
+
 	public function __construct() {
 		parent::__construct();
 
 		$this->discount = new Factory\Discount( $this );
+		$this->note = new Factory\Note( $this );
 	}
 }
