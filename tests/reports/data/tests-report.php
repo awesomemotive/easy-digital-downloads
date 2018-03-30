@@ -292,7 +292,6 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'tiles'  => 'tile',
 			'charts' => 'chart',
 			'tables' => 'table',
-			'graphs' => 'graph',
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, self::$report->parse_view_groups() );
