@@ -470,7 +470,8 @@ function edd_get_discount_type( $discount_id = 0 ) {
  * @return array $excluded_products IDs of the required products.
  */
 function edd_get_discount_excluded_products( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'excluded_products' );
+	$discount = edd_get_discount( $discount_id );
+	return $discount->excluded_products;
 }
 
 /**
@@ -483,7 +484,8 @@ function edd_get_discount_excluded_products( $discount_id = 0 ) {
  * @return array $product_reqs IDs of the required products.
  */
 function edd_get_discount_product_reqs( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'product_reqs' );
+	$discount = edd_get_discount( $discount_id );
+	return $discount->product_reqs;
 }
 
 /**
