@@ -1853,7 +1853,7 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				EDD_Customer.vars.customer_card_wrap_editable.hide();
-				EDD_Customer.vars.customer_card_wrap_edit_item.fadeIn().css( 'display', 'block' );
+				EDD_Customer.vars.customer_card_wrap_edit_item.show().css( 'display', 'block' );
 			});
 		},
 		add_email: function() {
@@ -1999,43 +1999,66 @@ jQuery(document).ready(function ($) {
 				}
 			});
 		}
-
 	};
 	EDD_Customer.init();
 
-	// AJAX user search
-	$('.edd-ajax-user-search').keyup(function() {
-		var user_search = $(this).val();
-		var exclude     = '';
-
-		if ( $(this).data('exclude') ) {
-			exclude = $(this).data('exclude');
-		}
-
-		$('.edd-ajax').show();
-		var data = {
-			action: 'edd_search_users',
-			user_name: user_search,
-			exclude: exclude
-		};
-
-		document.body.style.cursor = 'wait';
-
-		$.ajax({
-			type: "POST",
-			data: data,
-			dataType: "json",
-			url: ajaxurl,
-			success: function (search_response) {
-
-				$('.edd-ajax').hide();
-				$('.edd_user_search_results').removeClass('hidden');
-				$('.edd_user_search_results span').html('');
-				$(search_response.results).appendTo('.edd_user_search_results span');
-				document.body.style.cursor = 'default';
-			}
-		});
+	// Cancel user-search.blur when picking a user
+	var edd_user_search_mouse_down = false;
+	$('.edd_user_search_results').mousedown(function() {
+		edd_user_search_mouse_down = true;
 	});
+
+	// AJAX user search
+	$('.edd-ajax-user-search')
+
+		// Search
+		.keyup(function() {
+			var user_search = $(this).val(),
+				exclude     = '';
+
+			if ( $(this).data('exclude') ) {
+				exclude = $(this).data('exclude');
+			}
+
+			$('.edd_user_search_wrap').addClass('loading');
+
+			var data = {
+				action:    'edd_search_users',
+				user_name: user_search,
+				exclude:   exclude
+			};
+
+			$.ajax({
+				type:     "POST",
+				data:     data,
+				dataType: "json",
+				url:      ajaxurl,
+
+				success: function (search_response) {
+					$('.edd_user_search_wrap').removeClass('loading');
+					$('.edd_user_search_results').removeClass('hidden');
+					$('.edd_user_search_results span').html('');
+					if (search_response.results) {
+						$(search_response.results).appendTo('.edd_user_search_results span');
+					}
+				}
+			});
+		})
+
+		// Hide
+		.blur(function() {
+			if ( edd_user_search_mouse_down ) {
+				edd_user_search_mouse_down = false;
+			} else {
+				$(this).removeClass('loading');
+				$('.edd_user_search_results').addClass('hidden');
+			}
+		})
+
+		// Show
+		.focus(function() {
+			$(this).keyup();
+		});
 
 	$( document.body ).on('click.eddSelectUser', '.edd_user_search_results span a', function(e) {
 		e.preventDefault();

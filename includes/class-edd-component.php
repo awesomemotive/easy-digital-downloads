@@ -58,6 +58,21 @@ class EDD_Component {
 	private $interfaces = array();
 
 	/**
+	 * Array of class keys
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $class_keys = array(
+		'schema' => false,
+		'table'  => false,
+		'query'  => false,
+		'object' => false,
+		'meta'   => false
+	);
+
+	/**
 	 * Construct an EDD component
 	 *
 	 * @since 3.0.0
@@ -66,13 +81,7 @@ class EDD_Component {
 	public function __construct( $args = array() ) {
 
 		// Parse arguments
-		$r = wp_parse_args( $args, array(
-			'schema' => false,
-			'table'  => false,
-			'query'  => false,
-			'object' => false,
-			'meta'   => false
-		) );
+		$r = wp_parse_args( $args, $this->class_keys );
 
 		// Setup the component
 		$this->init( $r );
@@ -85,22 +94,13 @@ class EDD_Component {
 	 * @param array $args
 	 */
 	private function init( $args = array() ) {
+		$keys = array_keys( $this->class_keys );
 
-		// Keys that invoke new classes
-		$class_keys = array(
-			'schema',
-			'table',
-			'query',
-			'object',
-			'meta'
-		);
-
-		// Loop through keys and setup
 		foreach ( $args as $key => $value ) {
-			if ( in_array( $key, $class_keys, true ) && class_exists( $value ) ) {
+			if ( in_array( $key, $keys, true ) && class_exists( $value ) ) {
 				$this->interfaces[ $key ] = new $value;
 			} else {
-				$this->interfaces[ $key ] = $value;
+				$this->{$key} = $value;
 			}
 		}
 	}
