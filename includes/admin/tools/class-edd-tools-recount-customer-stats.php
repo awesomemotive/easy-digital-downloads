@@ -44,7 +44,6 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
@@ -53,13 +52,13 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	public function get_data() {
 
 		$args = array(
-			'number'       => $this->per_step,
-			'offset'       => $this->per_step * ( $this->step - 1 ),
-			'orderby'      => 'id',
-			'order'        => 'DESC',
+			'limit'   => $this->per_step,
+			'offset'  => $this->per_step * ( $this->step - 1 ),
+			'orderby' => 'id',
+			'order'   => 'DESC',
 		);
 
-		$customers = EDD()->customers->get_customers( $args );
+		$customers = edd_get_customers( $args );
 
 		if ( $customers ) {
 
@@ -156,7 +155,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 			'order'        => 'DESC',
 		);
 
-		$customers = EDD()->customers->get_customers( $args );
+		$customers = edd_get_customers( $args );
 		$total     = count( $customers );
 
 		$percentage = 100;
@@ -215,7 +214,6 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	/**
 	 * Perform the export
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return void
 	 */

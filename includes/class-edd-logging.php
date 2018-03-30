@@ -63,7 +63,6 @@ class EDD_Logging {
 	/**
 	 * Registers the edd_log Post Type
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @return void
 	 */
@@ -90,7 +89,6 @@ class EDD_Logging {
 	 *
 	 * The "Type" taxonomy is used to determine the type of log entry
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @return void
 	*/
@@ -103,7 +101,6 @@ class EDD_Logging {
 	 *
 	 * Sets up the default log types and allows for new ones to be created
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @return  array $terms
 	 */
@@ -120,7 +117,6 @@ class EDD_Logging {
 	 *
 	 * Checks to see if the specified type is in the registered list of types
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @uses EDD_Logging::log_types()
 	 * @param string $type Log type
@@ -136,7 +132,6 @@ class EDD_Logging {
 	 * This is just a simple and fast way to log something. Use $this->insert_log()
 	 * if you need to store custom meta data
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @uses EDD_Logging::insert_log()
 	 * @param string $title Log entry title
@@ -159,7 +154,6 @@ class EDD_Logging {
 	/**
 	 * Easily retrieves log items for a particular object ID
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @uses EDD_Logging::get_connected_logs()
 	 * @param int $object_id (default: 0)
@@ -174,7 +168,6 @@ class EDD_Logging {
 	/**
 	 * Stores a log entry
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @uses EDD_Logging::valid_type()
 	 * @param array $log_data Log entry data
@@ -217,7 +210,6 @@ class EDD_Logging {
 	/**
 	 * Update and existing log item
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @param array $log_data Log entry data
 	 * @param array $log_meta Log entry meta
@@ -291,7 +283,6 @@ class EDD_Logging {
 	/**
 	 * Retrieves number of log entries connected to particular object ID
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @param int $object_id (default: 0)
 	 * @param string $type Log type (default: null)
@@ -335,7 +326,6 @@ class EDD_Logging {
 	/**
 	 * Delete a log
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @uses EDD_Logging::valid_type
 	 * @param int $object_id (default: 0)
@@ -475,6 +465,19 @@ class EDD_Logging {
 		$this->file = '';
 		return true;
 
+	}
+
+	/**
+	 * Return the location of the log file that EDD_Logging will use.
+	 *
+	 * Note: Do not use this file to write to the logs, please use the `edd_debug_log` function to do so.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @return string
+	 */
+	public function get_log_file_path() {
+		return $this->file;
 	}
 
 }

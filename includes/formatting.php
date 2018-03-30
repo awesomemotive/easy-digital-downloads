@@ -21,13 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param string $amount Price amount to format
  * @return string $amount Newly sanitized amount
  */
-function edd_sanitize_amount( $amount ) {
+function edd_sanitize_amount( $amount = '' ) {
 	$is_negative   = false;
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
 
 	// Sanitize the amount
-	if ( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
+	if ( $decimal_sep === ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 		if ( ( $thousands_sep == '.' || $thousands_sep == ' ' ) && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
 		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
@@ -35,15 +35,17 @@ function edd_sanitize_amount( $amount ) {
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
-	} elseif( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	} elseif( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
-	if( $amount < 0 ) {
+	// Negative
+	if ( $amount < 0 ) {
 		$is_negative = true;
 	}
 
-	$amount   = preg_replace( '/[^0-9\.]/', '', $amount );
+	// Only numbers
+	$amount = preg_replace( '/[^0-9\.]/', '', $amount );
 
 	/**
 	 * Filter number of decimals to use for prices
@@ -54,9 +56,9 @@ function edd_sanitize_amount( $amount ) {
 	 * @param int|string $amount Price
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
-	$amount   = number_format( (double) $amount, $decimals, '.', '' );
+	$amount   = number_format( (float) $amount, $decimals, '.', '' );
 
-	if( $is_negative ) {
+	if ( true === $is_negative ) {
 		$amount *= -1;
 	}
 
@@ -82,22 +84,22 @@ function edd_sanitize_amount( $amount ) {
  */
 function edd_format_amount( $amount, $decimals = true ) {
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
 
 	// Format the amount
-	if ( $decimal_sep == ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
-		$whole = substr( $amount, 0, $sep_found );
-		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
+	if ( $decimal_sep === ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
+		$whole  = substr( $amount, 0, $sep_found );
+		$part   = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
 		$amount = $whole . '.' . $part;
 	}
 
 	// Strip , from the amount (if set as the thousands separator)
-	if ( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	if ( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( ',', '', $amount );
 	}
 
 	// Strip ' ' from the amount (if set as the thousands separator)
-	if ( $thousands_sep == ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	if ( $thousands_sep === ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( ' ', '', $amount );
 	}
 
@@ -106,11 +108,10 @@ function edd_format_amount( $amount, $decimals = true ) {
 	}
 
 	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
-	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
+	$formatted = number_format( (float) $amount, $decimals, $decimal_sep, $thousands_sep );
 
 	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
 }
-
 
 /**
  * Formats the currency display
@@ -120,35 +121,36 @@ function edd_format_amount( $amount, $decimals = true ) {
  * @return array $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
-	if( empty( $currency ) ) {
 
+	// Fallback to default currency
+	if ( empty( $currency ) ) {
 		$currency = edd_get_currency();
-
 	}
 
+	// Default vars
 	$position = edd_get_option( 'currency_position', 'before' );
-
 	$negative = $price < 0;
 
-	if( $negative ) {
-		$price = substr( $price, 1 ); // Remove proceeding "-" -
+	// Remove proceeding "-" -
+	if ( true === $negative ) {
+		$price = substr( $price, 1 );
 	}
 
 	$symbol = edd_currency_symbol( $currency );
 
-	if ( $position == 'before' ):
+	if ( 'before' === $position ):
 		switch ( $currency ):
-			case "GBP" :
-			case "BRL" :
-			case "EUR" :
-			case "USD" :
-			case "AUD" :
-			case "CAD" :
-			case "HKD" :
-			case "MXN" :
-			case "NZD" :
-			case "SGD" :
-			case "JPY" :
+			case 'GBP' :
+			case 'BRL' :
+			case 'EUR' :
+			case 'USD' :
+			case 'AUD' :
+			case 'CAD' :
+			case 'HKD' :
+			case 'MXN' :
+			case 'NZD' :
+			case 'SGD' :
+			case 'JPY' :
 				$formatted = $symbol . $price;
 				break;
 			default :
@@ -158,16 +160,16 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case "GBP" :
-			case "BRL" :
-			case "EUR" :
-			case "USD" :
-			case "AUD" :
-			case "CAD" :
-			case "HKD" :
-			case "MXN" :
-			case "SGD" :
-			case "JPY" :
+			case 'GBP' :
+			case 'BRL' :
+			case 'EUR' :
+			case 'USD' :
+			case 'AUD' :
+			case 'CAD' :
+			case 'HKD' :
+			case 'MXN' :
+			case 'SGD' :
+			case 'JPY' :
 				$formatted = $price . $symbol;
 				break;
 			default :
@@ -177,8 +179,8 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	endif;
 
-	if( $negative ) {
-		// Prepend the mins sign before the currency sign
+	// Prepend the mins sign before the currency sign
+	if ( true === $negative ) {
 		$formatted = '-' . $formatted;
 	}
 
@@ -201,7 +203,6 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 		case 'JPY' :
 		case 'TWD' :
 		case 'HUF' :
-
 			$decimals = 0;
 			break;
 	}
@@ -209,20 +210,24 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
 
 /**
  * Sanitizes a string key for EDD Settings
  *
- * Keys are used as internal identifiers. Alphanumeric characters, dashes, underscores, stops, colons and slashes are allowed
+ * Keys are used as internal identifiers. Alphanumeric characters, dashes,
+ * underscores, stops, colons and slashes are allowed.
+ *
+ * This differs from `sanitize_key()` in that it allows uppercase letters,
+ * stops, colons, and slashes.
  *
  * @since  2.5.8
  * @param  string $key String key
  * @return string Sanitized key
  */
-function edd_sanitize_key( $key ) {
+function edd_sanitize_key( $key = '' ) {
 	$raw_key = $key;
-	$key = preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
+	$key     = preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
 
 	/**
 	 * Filter a sanitized key string.

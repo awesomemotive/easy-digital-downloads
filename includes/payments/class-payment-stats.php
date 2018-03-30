@@ -26,7 +26,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * Retrieve sale stats
 	 *
 	 * @since 1.8
-	 * @access public
 	 *
 	 * @param int          $download_id The download product to retrieve stats for. If false, gets stats for all products
 	 * @param string|bool  $start_date  The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
@@ -80,7 +79,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * Retrieve earning stats
 	 *
 	 * @since 1.8
-	 * @access public
 	 *
 	 * @param int         $download_id   The download product to retrieve stats for. If false, gets stats for all products
 	 * @param string|bool $start_date    The starting date for which we'd like to filter our sale stats. If false, we'll use the default start date of `this_month`
@@ -221,7 +219,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 * Get the best selling products
 	 *
 	 * @since 1.8
-	 * @access public
 	 *
 	 * @param int $number The number of results to retrieve with the default set to 10.
 	 *
@@ -244,7 +241,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	/**
 	 * Retrieve sales stats based on range provided (used for Reporting)
 	 *
-	 * @access public
 	 * @since  2.6.11
 	 *
 	 * @param int          $download_id The download product to retrieve stats for. If false, gets stats for all products
@@ -319,7 +315,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	/**
 	 * Retrieve sales stats based on range provided (used for Reporting)
 	 *
-	 * @access public
 	 * @since  2.7
 	 *
 	 * @param string|bool  $start_date The starting date for which we'd like to filter our earnings stats. If false, we'll use the default start date of `this_month`
@@ -409,7 +404,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 	/**
 	 * Is the date range cachable
 	 *
-	 * @access public
 	 * @since  2.6.11
 	 *
 	 * @param  string $range Date range of the report

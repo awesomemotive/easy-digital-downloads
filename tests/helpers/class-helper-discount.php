@@ -15,10 +15,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @param int $discount_id ID of the discount to delete.
 	 */
 	public static function delete_discount( $discount_id ) {
-
-		// Delete the post
-		edd_remove_discount( $discount_id );
-
+		edd_delete_discount( $discount_id );
 	}
 
 	/**
@@ -27,24 +24,40 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_percent_discount() {
-
-		$post = array(
-			'code'              => '20OFF',
-			'uses'              => 54,
-			'max'               => 10,
+		return edd_add_discount( array(
 			'name'              => '20 Percent Off',
+			'code'              => '20OFF',
+			'status'            => 'active',
 			'type'              => 'percent',
 			'amount'            => '20',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2050 23:59:59',
-			'min_price'         => 128,
+			'use_count'         => 54,
+			'max_uses'          => 10,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2050 23:59:59'
+		) );
+	}
+
+	/**
+	 * Create a simple negative percentage discount.
+	 *
+	 * @since 2.3
+	 */
+	public static function create_simple_negative_percent_discount() {
+		return edd_add_discount( array(
+			'name'              => 'Double Double',
+			'code'              => 'DOUBLE',
 			'status'            => 'active',
-			'product_condition' => 'all'
-		);
-		$discount_id = edd_store_discount( $post );
-
-		return $discount_id;
-
+			'type'              => 'percent',
+			'amount'            => '-100',
+			'use_count'         => 54,
+			'max_uses'          => 10,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2050 23:59:59'
+		) );
 	}
 
 	/**
@@ -53,24 +66,19 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_flat_discount() {
-
-		$post = array(
-			'code'              => '10FLAT',
-			'uses'              => 0,
-			'max'               => 10,
+		return edd_add_discount( array(
 			'name'              => '$10 Off',
+			'code'              => '10FLAT',
 			'type'              => 'flat',
-			'amount'            => '10',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2050 23:59:59',
-			'min_price'         => 128,
 			'status'            => 'active',
-			'product_condition' => 'all'
-		);
-		$discount_id = edd_store_discount( $post );
-
-		return $discount_id;
-
+			'amount'            => '10',
+			'max_uses'          => 10,
+			'use_count'         => 0,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2050 23:59:59'
+		) );
 	}
 
 	/**
@@ -79,26 +87,20 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 3.0
 	 */
 	public static function created_expired_flat_discount() {
-
-		$post = array(
-			'code'              => '20FLAT',
-			'uses'              => 0,
-			'max'               => 20,
+		return edd_add_discount( array(
 			'name'              => '$20 Off',
+			'code'              => '20FLAT',
 			'type'              => 'flat',
-			'amount'            => '20',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2012 23:59:59',
-			'min_price'         => 128,
 			'status'            => 'expired',
-			'product_condition' => 'all'
-		);
-		$discount_id = edd_store_discount( $post );
-
-		return $discount_id;
-
+			'amount'            => '20',
+			'max_uses'          => 20,
+			'use_count'         => 0,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '12/12/2010 00:00:00',
+			'end_date'          => '12/31/2012 23:59:59'
+		) );
 	}
-
 
 	/**
 	 * Create legacy discount code.
@@ -110,7 +112,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 		$discount_id = wp_insert_post( array(
 			'post_type'   => 'edd_discount',
 			'post_title'  => 'Legacy Discount',
-			'post_status' => 'active',
+			'post_status' => 'active'
 		) );
 
 		$meta = array(
@@ -127,7 +129,7 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'product_condition' => 'all',
 			'excluded_products' => array( 75 ),
 			'is_not_global'     => true,
-			'is_single_use'     => true,
+			'is_single_use'     => true
 		);
 
 		remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
@@ -139,7 +141,5 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 		add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
 
 		return $discount_id;
-
 	}
-
 }
