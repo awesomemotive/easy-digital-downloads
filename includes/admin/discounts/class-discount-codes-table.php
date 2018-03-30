@@ -352,7 +352,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Displays the discount status
 	 */
 	public function column_status( $discount ) {
-		return edd_get_discount_status_label( $discount['ID'] );
+		return edd_get_discount_status_label( $discount->id );
 	}
 
 	/**
