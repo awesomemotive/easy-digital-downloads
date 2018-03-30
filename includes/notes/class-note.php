@@ -77,15 +77,6 @@ class Note {
 	protected $date_created;
 
 	/**
-	 * Database abstraction.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 * @var \EDD_DB_Notes
-	 */
-	protected $db;
-
-	/**
 	 * Comment ID.
 	 *
 	 * @since 3.0
@@ -206,9 +197,7 @@ class Note {
 	 * @param int $note_id Note ID.
 	 */
 	public function __construct( $note_id = 0 ) {
-		$this->db = EDD()->notes;
-
-		$note = $this->db->get( $note_id );
+		$note = edd_get_note( $note_id );
 
 		if ( is_object( $note ) ) {
 			foreach ( get_object_vars( $note ) as $key => $value ) {
@@ -330,7 +319,7 @@ class Note {
 		 */
 		do_action( 'edd_pre_insert_note', $args );
 
-		$id = $this->db->insert( $args );
+		$id = edd_add_note( $args );
 
 		if ( $id ) {
 			$this->id = $id;
@@ -366,7 +355,7 @@ class Note {
 	 * * @return bool True on success, false otherwise.
 	 */
 	public function update( $args = array() ) {
-		return $this->db->update( $this->id, $args );
+		return edd_update_note( $this->id, $args );
 	}
 
 	/**
@@ -378,7 +367,7 @@ class Note {
 	 * @return bool True if deleted, false otherwise.
 	 */
 	public function delete() {
-		$deleted = $this->db->delete( $this->id );
+		$deleted = edd_delete_note( $this->id );
 
 		if ( $deleted ) {
 			EDD()->note_meta->delete_all_meta( $this->id );
@@ -400,7 +389,7 @@ class Note {
 	 * @return bool True on success, false otherwise.
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
-		return EDD()->note_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+		return edd_add_note_meta( $this->id, $meta_key, $meta_value, $unique );
 	}
 
 	/**
@@ -415,7 +404,7 @@ class Note {
 	 * @return mixed string|array Array if $single is false, or value of meta key.
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
-		return EDD()->note_meta->get_meta( $this->id, $meta_key, $single );
+		return edd_get_note_meta( $this->id, $meta_key, $single );
 	}
 
 	/**
@@ -428,7 +417,7 @@ class Note {
 	 * @return bool True on success, false otherwise.
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
-		return EDD()->note_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+		return edd_update_note_meta( $this->id, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -443,7 +432,7 @@ class Note {
 	 * @return bool
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
-		return EDD()->note_meta->delete_meta( $this->id, $meta_key, $meta_value );
+		return edd_delete_note_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**
@@ -457,10 +446,9 @@ class Note {
 	 * @return array $data The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data ) {
-		$columns        = $this->db->get_columns();
-		$default_values = $this->db->get_column_defaults();
+		$default_values = array();
 
-		foreach ( $columns as $key => $type ) {
+		foreach ( $data as $key => $type ) {
 			// Only sanitize data that we were provided
 			if ( ! array_key_exists( $key, $data ) ) {
 				continue;
@@ -468,19 +456,33 @@ class Note {
 
 			switch ( $type ) {
 				case '%s':
-					$data[ $key ] = sanitize_text_field( $data[ $key ] );
-					break;
-
-				case '%d':
-					if ( ! is_numeric( $data[ $key ] ) || absint( $data[ $key ] ) !== (int) $data[ $key ] ) {
-						$data[ $key ] = $default_values[ $key ];
+					if ( 'email' == $key ) {
+						$data[$key] = sanitize_email( $data[$key] );
+					} elseif ( 'notes' == $key ) {
+						$data[$key] = strip_tags( $data[$key] );
 					} else {
-						$data[ $key ] = absint( $data[ $key ] );
+						$data[$key] = sanitize_text_field( $data[$key] );
 					}
 					break;
+				case '%d':
+					if ( ! is_numeric( $data[$key] ) || (int) $data[$key] !== absint( $data[$key] ) ) {
+						$data[$key] = $default_values[$key];
+					} else {
+						$data[$key] = absint( $data[$key] );
+					}
+					break;
+				case '%f':
+					// Convert what was given to a float
+					$value = floatval( $data[$key] );
 
+					if ( ! is_float( $value ) ) {
+						$data[$key] = $default_values[$key];
+					} else {
+						$data[$key] = $value;
+					}
+					break;
 				default:
-					$data[ $key ] = sanitize_text_field( $data[ $key ] );
+					$data[$key] = sanitize_text_field( $data[$key] );
 					break;
 			}
 		}
