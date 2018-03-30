@@ -235,8 +235,8 @@ class EDD_Discount extends EDD_DB_Discount {
 		if ( 'discount_id' === $key || 'ID' == $key ) {
 			return (int) $this->id;
 
-		} else if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
+		} else if ( method_exists( $this, "get_{$key}" ) ) {
+			return call_user_func( array( $this, "get_{$key}" ) );
 
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
