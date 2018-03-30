@@ -694,8 +694,8 @@ class Test_Misc extends EDD_UnitTestCase {
 	}
 
 	public function test_array_convert() {
-		$customer1_id = EDD()->customers->add( array( 'email' => 'test10@example.com' ) );
-		$customer2_id = EDD()->customers->add( array( 'email' => 'test11@example.com' ) );
+		$customer1_id = edd_add_customer( array( 'email' => 'test10@example.com' ) );
+		$customer2_id = edd_add_customer( array( 'email' => 'test11@example.com' ) );
 
 		// Test sending a single object in
 		$customer_object = new EDD_Customer( $customer1_id );
@@ -710,7 +710,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( array( 'foo', 'bar', 'baz' ), edd_object_to_array( array( 'foo', 'bar', 'baz' ) ) );
 
 		// Test sending in an array of objects
-		$customers = EDD()->customers->get_customers();
+		$customers = edd_get_customers();
 		$converted = edd_object_to_array( $customers );
 		$this->assertInternalType( 'array', $converted[0] );
 

@@ -33,7 +33,7 @@ final class EDD_DB_Table_Logs extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801170001;
+	protected $version = 201802280001;
 
 	/**
 	 * Setup the database schema
@@ -48,7 +48,7 @@ final class EDD_DB_Table_Logs extends EDD_DB_Table {
 			object_type varchar(20) DEFAULT NULL,
 			type varchar(30) DEFAULT NULL,
 			title varchar(200) DEFAULT NULL,
-			message longtext DEFAULT NULL,
+			content longtext DEFAULT NULL,
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
 			KEY object_id_type (object_id,object_type(20)),

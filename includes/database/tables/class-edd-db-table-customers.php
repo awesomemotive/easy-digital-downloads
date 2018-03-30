@@ -33,7 +33,7 @@ final class EDD_DB_Table_Customers extends EDD_DB_Table {
 	 * @since 3.0.0
 	 * @var int
 	 */
-	protected $version = 201801170001;
+	protected $version = 201802280001;
 
 	/**
 	 * Setup the database schema
@@ -47,14 +47,17 @@ final class EDD_DB_Table_Customers extends EDD_DB_Table {
 			user_id bigint(20) NOT NULL,
 			email varchar(50) NOT NULL,
 			name mediumtext NOT NULL,
+			status varchar(20) NOT NULL default '',
 			purchase_value mediumtext NOT NULL,
 			purchase_count bigint(20) NOT NULL,
 			payment_ids longtext NOT NULL,
 			notes longtext NOT NULL,
 			date_created datetime NOT NULL,
-			PRIMARY KEY  (id),
+			PRIMARY KEY (id),
 			UNIQUE KEY email (email),
-			KEY user (user_id)";
+			KEY user (user_id),
+			KEY status (status(20)),
+			KEY date_created (date_created)";
 	}
 
 	/**

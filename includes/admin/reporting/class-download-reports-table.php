@@ -75,7 +75,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.5
 	 *
 	 * @param array $item Contains all the data of the downloads
@@ -101,7 +100,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -121,7 +119,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table's sortable columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array Array of all the sortable columns
 	 */
@@ -136,7 +133,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return int Current page number
 	 */
@@ -148,7 +144,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the category being viewed
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @return int Category ID
 	 */
@@ -160,7 +155,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the total number of downloads
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return int $total Total number of downloads
 	 */
@@ -176,7 +170,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Outputs the reporting views
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return void
 	 */
@@ -189,7 +182,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Attaches the category filter to the log views
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @return void
 	 */
@@ -203,7 +195,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Performs the products query
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @return void
 	 */
@@ -257,7 +248,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Build all the reports data
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return array $reports_data All the data for customer reports
 	 */
@@ -286,7 +276,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Download_Reports_Table::get_columns()
 	 * @uses EDD_Download_Reports_Table::get_sortable_columns()
