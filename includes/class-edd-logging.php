@@ -101,7 +101,6 @@ class EDD_Logging {
 	/**
 	 * Get log types.
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 *
 	 * @return array $terms Log types.
@@ -119,7 +118,6 @@ class EDD_Logging {
 	 *
 	 * Checks to see if the specified type is in the registered list of types
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 *
 	 * @param string $type Log type.
@@ -135,7 +133,6 @@ class EDD_Logging {
 	 * This is just a simple and fast way to log something. Use $this->insert_log()
 	 * if you need to store custom meta data
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 *
 	 * @param string $title   Log entry title.
@@ -159,7 +156,6 @@ class EDD_Logging {
 	/**
 	 * Easily retrieves log items for a particular object ID.
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 *
 	 * @param int    $object_id Object ID (default: 0).
@@ -357,7 +353,6 @@ class EDD_Logging {
 	/**
 	 * Retrieves number of log entries connected to particular object ID.
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 * @since 1.9 - Added date query support.
 	 *
@@ -402,7 +397,6 @@ class EDD_Logging {
 	/**
 	 * Delete logs based on parameters passed.
 	 *
-	 * @access public
 	 * @since 1.3.1
 	 *
 	 * @param int    $object_id  Object ID (default: 0).
@@ -539,6 +533,19 @@ class EDD_Logging {
 
 		$this->file = '';
 		return true;
+	}
+
+	/**
+	 * Return the location of the log file that EDD_Logging will use.
+	 *
+	 * Note: Do not use this file to write to the logs, please use the `edd_debug_log` function to do so.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @return string
+	 */
+	public function get_log_file_path() {
+		return $this->file;
 	}
 
 	/**

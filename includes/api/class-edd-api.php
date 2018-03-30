@@ -98,7 +98,6 @@ class EDD_API {
 	 * Version of the API queried
 	 *
 	 * @var string
-	 * @access public
 	 * @since 2.4
 	 */
 	private $queried_version;
@@ -107,7 +106,6 @@ class EDD_API {
 	 * All versions of the API
 	 *
 	 * @var string
-	 * @access public
 	 * @since 2.4
 	 */
 	protected $versions = array();
@@ -116,7 +114,6 @@ class EDD_API {
 	 * Queried endpoint
 	 *
 	 * @var string
-	 * @access public
 	 * @since 2.4
 	 */
 	private $endpoint;
@@ -125,7 +122,6 @@ class EDD_API {
 	 * Endpoints routes
 	 *
 	 * @var object
-	 * @access public
 	 * @since 2.4
 	 */
 	private $routes;
@@ -166,7 +162,6 @@ class EDD_API {
 	/**
 	 * Registers a new rewrite endpoint for accessing the API
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @param array $rewrite_rules WordPress Rewrite Rules
 	 * @since 1.5
@@ -178,7 +173,6 @@ class EDD_API {
 	/**
 	 * Registers query vars for API access
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @author Daniel J Griffiths
 	 * @param array $vars Query vars
@@ -212,7 +206,6 @@ class EDD_API {
 	/**
 	 * Retrieve the API versions
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @return array
 	 */
@@ -223,7 +216,6 @@ class EDD_API {
 	/**
 	 * Retrieve the API version that was queried
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @return string
 	 */
@@ -368,7 +360,6 @@ class EDD_API {
 	/**
 	 * Retrieve the user ID based on the public key provided
 	 *
-	 * @access public
 	 * @since 1.5.1
 	 * @global object $wpdb Used to query the database using the WordPress
 	 * Database API
@@ -522,7 +513,6 @@ class EDD_API {
 	/**
 	 * Listens for the API and then processes the API requests
 	 *
-	 * @access public
 	 * @global $wp_query
 	 * @since 1.5
 	 * @return void
@@ -735,7 +725,6 @@ class EDD_API {
 	/**
 	 * Sets up the dates used to retrieve earnings/sales
 	 *
-	 * @access public
 	 * @since 1.5.1
 	 * @param array $args Arguments to override defaults
 	 * @return array $dates
@@ -913,7 +902,6 @@ class EDD_API {
 	/**
 	 * Process Get Customers API Request
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @author Daniel J Griffiths
 	 * @global object $wpdb Used to query the database using the WordPress
@@ -954,7 +942,7 @@ class EDD_API {
 			$field = 'email';
 		}
 
-		$customer_query = EDD()->customers->get_customers( array( 'number' => $per_page, 'offset' => $offset, $field => $customer ) );
+		$customer_query = edd_get_customers( array( 'number' => $per_page, 'offset' => $offset, $field => $customer ) );
 		$customer_count = 0;
 
 		if( $customer_query ) {
@@ -1018,7 +1006,6 @@ class EDD_API {
 	/**
 	 * Process Get Products API Request
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @param int $product Product (Download) ID
@@ -1443,8 +1430,7 @@ class EDD_API {
 				$stats['customers']['total_customers'] = $count[0];
 				return apply_filters( 'edd_api_stats_customers', $stats, $this );
 			} else {
-				$customers = new EDD_DB_Customers();
-				$stats['customers']['total_customers'] = $customers->count();
+				$stats['customers']['total_customers'] = edd_get_customer_count();
 				return apply_filters( 'edd_api_stats_customers', $stats, $this );
 			}
 		} elseif ( empty( $args['type'] ) ) {
@@ -1458,7 +1444,6 @@ class EDD_API {
 	/**
 	 * Retrieves Recent Sales
 	 *
-	 * @access public
 	 * @since  1.5
 	 * @return array
 	 */
@@ -1547,7 +1532,6 @@ class EDD_API {
 	/**
 	 * Process Get Discounts API Request
 	 *
-	 * @access public
 	 * @since 1.6
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
@@ -1633,7 +1617,6 @@ class EDD_API {
 	/**
 	 * Process Get Downloads API Request to retrieve download logs
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @author Daniel J Griffiths
 	 *
@@ -1864,7 +1847,6 @@ class EDD_API {
 	/**
 	 * Retrieve the output data
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @return array
 	 */
@@ -1933,7 +1915,6 @@ class EDD_API {
 	 *
 	 * Modifies the output of profile.php to add key generation/revocation
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @param object $user Current user info
@@ -1974,7 +1955,6 @@ class EDD_API {
 	/**
 	 * Process an API key generation/revocation
 	 *
-	 * @access public
 	 * @since 2.0.0
 	 * @param array $args
 	 * @return void
@@ -2032,7 +2012,6 @@ class EDD_API {
 	/**
 	 * Generate new API keys for a user
 	 *
-	 * @access public
 	 * @since 2.0.0
 	 * @param int $user_id User ID the key is being generated for
 	 * @param boolean $regenerate Regenerate the key for the user
@@ -2073,7 +2052,6 @@ class EDD_API {
 	/**
 	 * Revoke a users API keys
 	 *
-	 * @access public
 	 * @since 2.0.0
 	 * @param int $user_id User ID of user to revoke key for
 	 * @return string
@@ -2115,7 +2093,6 @@ class EDD_API {
 	 *
 	 * Generates the key requested by user_key_field and stores it in the database
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @param int $user_id
@@ -2263,7 +2240,6 @@ class EDD_API {
 	/**
 	 * Disable request logging
 	 *
-	 * @access public
 	 * @since  2.7
 	 */
 	public function log_requests() {
@@ -2273,7 +2249,6 @@ class EDD_API {
 	/**
 	 * Check API keys vs token
 	 *
-	 * @access public
 	 * @since  2.8.2
 	 *
 	 * @param string $secret Secret key

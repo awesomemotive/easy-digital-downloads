@@ -245,6 +245,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add cart items
 		$i = 1;
+		$paypal_sum = 0;
 		if( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
 			foreach ( $purchase_data['cart_details'] as $item ) {
 
@@ -261,6 +262,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				if ( edd_use_skus() ) {
 					$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 				}
+
+				$paypal_sum += ( $item_amount * $item['quantity'] );
 
 				$i++;
 
@@ -288,6 +291,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		if ( $discounted_amount > '0' ) {
 			$paypal_args['discount_amount_cart'] = edd_sanitize_amount( $discounted_amount );
+		}
+
+		if( $paypal_sum > $purchase_data['price'] ) {
+			$difference = round( $paypal_sum - $purchase_data['price'], 2 );
+			if( ! isset( $paypal_args['discount_amount_cart'] ) ) {
+				$paypal_args['discount_amount_cart'] = 0;
+			}
+			$paypal_args['discount_amount_cart'] += $difference;
 		}
 
 		// Add taxes to the cart
@@ -934,17 +945,18 @@ add_action( 'template_redirect', 'edd_paypal_process_pdt_on_return' );
 /**
  * Given a Payment ID, extract the transaction ID
  *
- * @since  2.1
- * @param  string $payment_id       Payment ID
- * @return string                   Transaction ID
+ * @since 2.1
+ * @since 3.0 Updated to use EDD_Note class.
+ *
+ * @param string $payment_id Payment ID.
+ * @return string Transaction ID.
  */
 function edd_paypal_get_payment_transaction_id( $payment_id ) {
-
 	$transaction_id = '';
 	$notes = edd_get_payment_notes( $payment_id );
 
 	foreach ( $notes as $note ) {
-		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->comment_content, $match ) ) {
+		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->content, $match ) ) {
 			$transaction_id = $match[1];
 			continue;
 		}
@@ -977,7 +989,6 @@ add_filter( 'edd_payment_details_transaction_id-paypal', 'edd_paypal_link_transa
 /**
  * Shows checkbox to automatically refund payments made in PayPal.
  *
- * @access public
  * @since  2.6.0
  *
  * @param int $payment_id The current payment ID.
@@ -1024,7 +1035,6 @@ add_action( 'edd_view_order_details_before', 'edd_paypal_refund_admin_js', 100 )
 /**
  * Possibly refunds a payment made with PayPal Standard or PayPal Express.
  *
- * @access public
  * @since  2.6.0
  *
  * @param int $payment_id The current payment ID.
@@ -1067,7 +1077,6 @@ add_action( 'edd_pre_refund_payment', 'edd_maybe_refund_paypal_purchase', 999 );
 /**
  * Refunds a purchase made via PayPal.
  *
- * @access public
  * @since  2.6.0
  *
  * @param object|int $payment The payment ID or object to refund.

@@ -451,7 +451,7 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$this->assertInternalType( 'array', $customer->get_payment_ids());
 
 		// Create a new customer to test no payments
-		$customer_id  = EDD()->customers->add( array( 'email' => 'test_user@example.com' ) );
+		$customer_id  = edd_add_customer( array( 'email' => 'test_user@example.com' ) );
 		$new_customer = new EDD_Customer( $customer_id );
 		$this->assertEmpty( $new_customer->get_payment_ids() );
 	}
@@ -513,5 +513,4 @@ class Tests_Customers extends EDD_UnitTestCase {
 
 		$this->assertSame( $payment->ID, $payment_id );
 	}
-
 }

@@ -73,7 +73,6 @@ function edd_straight_to_checkout() {
 /**
  * Disable Redownload
  *
- * @access public
  * @since 1.0.8.2
  * @return bool True if redownloading of files is disabled, false otherwise
  */
@@ -731,7 +730,6 @@ function edd_get_upload_dir() {
  *
  * This function is only intended to be used by WordPress cron.
  *
- * @access public
  * @since  1.5
  * @return void
  */
@@ -955,7 +953,6 @@ if ( ! function_exists( 'getallheaders' ) ) :
 	 *
 	 * Ensure getallheaders function exists in the case we're using nginx
 	 *
-	 * @access public
 	 * @since  2.4
 	 * @return array
 	 */
@@ -1010,6 +1007,24 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	}
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}
+
+/**
+ * Given a Payment ID, generate a link to IP address provider (ipinfo.io)
+ *
+ * @since  2.8.15
+ * @param  int		$payment_id The Payment ID
+ * @return string	A link to the IP details provider
+ */
+function edd_payment_get_ip_address_url( $payment_id ) {
+
+	$payment = new EDD_Payment( $payment_id );
+
+	$base_url = 'https://ipinfo.io/';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->ip ) . '" target="_blank">' . esc_attr( $payment->ip ) . '</a>';
+
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->ip, $payment_id );
+
 }
 
 /**

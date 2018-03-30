@@ -72,7 +72,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 2.0
 	 *
 	 * @param array $item Contains all the data of the keys
@@ -87,7 +86,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Displays the public key rows
 	 *
-	 * @access public
 	 * @since 2.4
 	 *
 	 * @param array $item Contains all the data of the keys
@@ -102,7 +100,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Displays the token rows
 	 *
-	 * @access public
 	 * @since 2.4
 	 *
 	 * @param array $item Contains all the data of the keys
@@ -117,7 +114,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Displays the secret key rows
 	 *
-	 * @access public
 	 * @since 2.4
 	 *
 	 * @param array $item Contains all the data of the keys
@@ -132,7 +128,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Renders the column for the user field
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return void
 	 */
@@ -167,7 +162,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -185,7 +179,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Display the key generation form
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return void
 	 */
@@ -238,7 +231,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return int Current page number
 	 */
@@ -249,7 +241,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Performs the key query
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return void
 	 */
@@ -279,7 +270,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Retrieve count of total users with keys
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return int
 	 */
@@ -298,7 +288,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return void
 	 */

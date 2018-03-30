@@ -41,19 +41,14 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	protected static function _delete_all_edd_data() {
-		global $wpdb;
+		$components = EDD()->components;
 
-		foreach ( array(
-			EDD()->customers->table_name,
-			EDD()->customer_meta->table_name,
-			EDD()->discounts->table_name,
-			EDD()->discount_meta->table_name,
-			EDD()->logs->table_name,
-			EDD()->log_meta->table_name,
-			EDD()->file_download_logs->table_name,
-			EDD()->api_request_logs->table_name,
-		) as $table ) {
-			$wpdb->query( "DELETE FROM {$table}" );
+		foreach ( $components as $component ) {
+			$thing = $component->get_interface( 'table' );
+
+			if ( $thing instanceof EDD_DB_Table ) {
+				$thing->delete_all();
+			}
 		}
 	}
 }

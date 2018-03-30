@@ -267,7 +267,7 @@ function edd_get_registered_settings() {
 					),
 					'purchase_page' => array(
 						'id'          => 'purchase_page',
-						'name'        => __( 'Checkout Page', 'easy-digital-downloads' ),
+						'name'        => __( 'Primary Checkout Page', 'easy-digital-downloads' ),
 						'desc'        => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] shortcode must be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_pages(),
@@ -529,6 +529,13 @@ function edd_get_registered_settings() {
 						'type' => 'text',
 						'std'  => 'New download purchase - Order #{payment_id}',
 					),
+					'sale_notification_heading' => array(
+						'id'   => 'sale_notification_heading',
+						'name' => __( 'Sale Notification Heading', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the heading for the sale notification email.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => __( 'New Sale!', 'easy-digital-downloads' ),
+					),
 					'sale_notification' => array(
 						'id'   => 'sale_notification',
 						'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
@@ -746,7 +753,7 @@ function edd_get_registered_settings() {
 					),
 					'free_checkout_label' => array(
 						'id'   => 'free_checkout_label',
-						'name' => __( 'Register Text', 'easy-digital-downloads' ),
+						'name' => __( 'Complete Free Purchase Text', 'easy-digital-downloads' ),
 						'desc' => __( 'The button label for completing a free purchase.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Free Download', 'easy-digital-downloads' ),
@@ -757,6 +764,13 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Text shown on the Add to Cart Buttons.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Add to Cart', 'easy-digital-downloads' ),
+					),
+					'checkout_button_text' => array(
+						'id'   => 'checkout_button_text',
+						'name' => __( 'Checkout Button Text', 'easy-digital-downloads' ),
+						'desc' => __( 'Text shown on the Add to Cart Button when the product is already in the cart.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'std'  => _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ),
 					),
 					'buy_now_text' => array(
 						'id'   => 'buy_now_text',
@@ -958,7 +972,8 @@ function edd_settings_sanitize( $input = array() ) {
 					}
 					break;
 				default:
-					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
+					// Remove from settings if empty OR if its a non-existent setting
+					if ( ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) || ! edd_is_registered_setting( $key ) ) {
 						unset( $output[ $key ] );
 					}
 					break;
@@ -976,6 +991,35 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	return $output;
+}
+
+
+/**
+ * Check if a setting exists/ is registered.
+ *
+ * @since 2.9.1
+ *
+ * @param string $setting_id Setting ID to check.
+ * @return bool
+ */
+function edd_is_registered_setting( $setting_id ) {
+	$setting_tabs = edd_get_registered_settings();
+
+	foreach ( $setting_tabs as $tab_key => $setting_sections ) {
+		foreach ( $setting_sections as $section_key => $settings ) {
+
+			// Settings COULD be without a section
+			if ( isset( $settings['id'] ) && $settings['id'] === $setting_id ) {
+				return true;
+			}
+
+			if ( isset( $settings[0] ) && is_array( $settings[0] ) && in_array( $setting_id, wp_list_pluck( $settings, 'id' ) ) ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -1244,13 +1288,13 @@ function edd_get_settings_tabs() {
  */
 function edd_get_settings_tab_sections( $tab = false ) {
 
-	$tabs     = false;
+	$tabs     = array();
 	$sections = edd_get_registered_settings_sections();
 
 	if( $tab && ! empty( $sections[ $tab ] ) ) {
 		$tabs = $sections[ $tab ];
 	} else if ( $tab ) {
-		$tabs = false;
+		$tabs = array();
 	}
 
 	return $tabs;
@@ -1922,7 +1966,7 @@ function edd_upload_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" clas="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
@@ -2025,7 +2069,7 @@ function edd_tax_rates_callback($args) {
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
-				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically. Enter a percentage, such as 6.5 for 6.5%.' ); ?>"></span></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ); ?>"></span></th>
 				<th scope="col"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>
