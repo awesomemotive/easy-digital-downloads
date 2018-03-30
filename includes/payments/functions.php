@@ -1495,7 +1495,7 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 		return false;
 	}
 
-	$notes = EDD()->notes->get_notes( array(
+	$notes = edd_get_notes( array(
 		'object_id' => $payment_id,
 		'order'     => 'ASC',
 		'search'    => '',
@@ -1541,7 +1541,14 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'comment_type'         => 'edd_payment_note'
 	) );
 
-	$note_id = EDD()->notes->insert( $filtered_data );
+	$data = array(
+		'object_id'   => $filtered_data['comment_post_ID'],
+		'content'     => $filtered_data['comment_content'],
+		'user_id'     => $filtered_data['user_id'],
+		'object_type' => 'payment',
+	);
+
+	$note_id = edd_add_note( $data );
 
 	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
 
