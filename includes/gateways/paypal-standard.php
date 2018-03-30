@@ -934,17 +934,18 @@ add_action( 'template_redirect', 'edd_paypal_process_pdt_on_return' );
 /**
  * Given a Payment ID, extract the transaction ID
  *
- * @since  2.1
- * @param  string $payment_id       Payment ID
- * @return string                   Transaction ID
+ * @since 2.1
+ * @since 3.0 Updated to use EDD_Note class.
+ *
+ * @param string $payment_id Payment ID.
+ * @return string Transaction ID.
  */
 function edd_paypal_get_payment_transaction_id( $payment_id ) {
-
 	$transaction_id = '';
 	$notes = edd_get_payment_notes( $payment_id );
 
 	foreach ( $notes as $note ) {
-		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->comment_content, $match ) ) {
+		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->content, $match ) ) {
 			$transaction_id = $match[1];
 			continue;
 		}
