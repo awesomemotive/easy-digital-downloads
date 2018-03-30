@@ -288,37 +288,55 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		echo $args['before_widget'];
 
 		// Display the widget title.
-		if( $title ) {
+		if ( $title ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
 
-		// download title.
+		// Download title.
 		echo $download_title;
 
 		do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
-		// purchase button.
+
+		// Purchase button.
 		echo $purchase_button;
 
-		// categories and tags.
-		$category_list     = $categories ? get_the_term_list( $download_id, 'download_category', '', ', ' ) : '';
-		$category_count    = count( (array) get_the_terms( $download_id, 'download_category' ) );
-		$category_labels   = edd_get_taxonomy_labels( 'download_category' );
-		$category_label    = $category_count > 1 ? $category_labels['name'] : $category_labels['singular_name'];
+		// Categories.
+		$category_list  = false;
+		$category_label = '';
+		if ( $categories ) {
+			$category_terms = (array) get_the_terms( $download_id, 'download_category' );
 
-		$tag_list     = $tags ? get_the_term_list( $download_id, 'download_tag', '', ', ' ) : '';
-		$tag_count    = count( (array) get_the_terms( $download_id, 'download_tag' ) );
-		$tag_taxonomy = edd_get_taxonomy_labels( 'download_tag' );
-		$tag_label    = $tag_count > 1 ? $tag_taxonomy['name'] : $tag_taxonomy['singular_name'];
+			if ( $category_terms && ! is_wp_error( $category_terms ) ) {
+				$category_list     = get_the_term_list( $download_id, 'download_category', '', ', ' );
+				$category_count    = count( $category_terms );
+				$category_labels   = edd_get_taxonomy_labels( 'download_category' );
+				$category_label    = $category_count > 1 ? $category_labels['name'] : $category_labels['singular_name'];
+			}
+		}
+
+		// Tags.
+		$tag_list  = false;
+		$tag_label = '';
+
+		if ( $tags ) {
+			$tag_terms = (array) get_the_terms( $download_id, 'download_tag' );
+
+			if ( $tag_terms && ! is_wp_error( $tag_terms ) ) {
+				$tag_list     = get_the_term_list( $download_id, 'download_tag', '', ', ' );
+				$tag_count    = count( $tag_terms );
+				$tag_taxonomy = edd_get_taxonomy_labels( 'download_tag' );
+				$tag_label    = $tag_count > 1 ? $tag_taxonomy['name'] : $tag_taxonomy['singular_name'];
+			}
+		}
 
 		$text = '';
 
-		if( $category_list || $tag_list ) {
+		if ( $category_list || $tag_list ) {
 			$text .= '<p class="edd-meta">';
 
-			if( $category_list ) {
-
+			if ( $category_list ) {
 				$text .= '<span class="categories">%1$s: %2$s</span><br/>';
 			}
 

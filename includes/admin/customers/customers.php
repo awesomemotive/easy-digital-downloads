@@ -223,8 +223,8 @@ function edd_customers_view( $customer = '' ) {
 						<span class="info-item" data-key="line1"><?php echo $address['line1']; ?></span>
 						<span class="info-item" data-key="line2"><?php echo $address['line2']; ?></span>
 						<span class="info-item" data-key="city"><?php echo $address['city']; ?></span>
-						<span class="info-item" data-key="state"><?php echo $address['state']; ?></span>
-						<span class="info-item" data-key="country"><?php echo $address['country']; ?></span>
+						<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['country'], $address['state'] ); ?></span>
+						<span class="info-item" data-key="country"><?php echo edd_get_country_name( $address['country'] ); ?></span>
 						<span class="info-item" data-key="zip"><?php echo $address['zip']; ?></span>
 					</span>
 
@@ -258,7 +258,7 @@ function edd_customers_view( $customer = '' ) {
 							?>
 						</select>
 						<?php else : ?>
-						<input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+						<input type="text" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>" value="<?php echo $address['state']; ?>"/>
 						<?php endif; ?>
 						<input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo $address['zip']; ?>" />
 					</span>
@@ -272,8 +272,13 @@ function edd_customers_view( $customer = '' ) {
 					<span class="customer-name info-item edit-item"><input size="20" data-key="email" name="customerinfo[email]" type="text" value="<?php echo $customer->email; ?>" placeholder="<?php _e( 'Customer Email', 'easy-digital-downloads' ); ?>" /></span>
 					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
 					<span class="customer-since info-item">
-						<?php _e( 'Customer since', 'easy-digital-downloads' ); ?>
-						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ?>
+						<?php
+						printf( 
+							/* translators: The date. */
+							esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
+							esc_html( date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) )
+						);
+						?>
 					</span>
 					<span class="customer-user-id info-item edit-item">
 						<?php

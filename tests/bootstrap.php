@@ -25,7 +25,7 @@ activate_plugin( 'easy-digital-downloads/easy-digital-downloads.php' );
 echo "Setting up Easy Digital Downloads...\n";
 
 function _disable_reqs( $status = false, $args = array(), $url = '') {
-	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disbaled for unit tests', 'edd' ) );
+	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disbaled for unit tests', 'easy-digital-downloads' ) );
 }
 add_filter( 'pre_http_request', '_disable_reqs' );
 

@@ -54,7 +54,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Show the search field
 	 *
 	 * @since 1.5
-	 * @access public
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
@@ -80,7 +79,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -112,7 +110,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.5
 	 *
 	 * @param array $item Contains all the data of the api request
@@ -127,7 +124,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Output Error Message column
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param array $item Contains all the data of the log
 	 * @return void
@@ -160,7 +156,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the search query string
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return string|false String if search is present, false otherwise
 	 */
@@ -173,7 +168,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 *
 	 * This is used to return log entries that match our search query
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return array $meta_query
 	 */
@@ -227,7 +221,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return int Current page number
 	 */
@@ -238,7 +231,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Outputs the log views
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return void
 	 */
@@ -250,7 +242,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Gets the log entries for the current view
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @global object $edd_logs EDD Logs Object
 	 * @return array $logs_data Array of all the Log entires
@@ -287,7 +278,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @global object $edd_logs EDD Logs Object
 	 * @uses EDD_API_Request_Log_Table::get_columns()
@@ -318,7 +308,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return bool
 	 */

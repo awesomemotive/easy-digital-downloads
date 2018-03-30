@@ -31,7 +31,6 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @return array $cols All the columns
 	 */
@@ -80,7 +79,6 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API

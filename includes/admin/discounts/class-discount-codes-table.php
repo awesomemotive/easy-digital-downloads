@@ -90,12 +90,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 		}
 		?>
-		<p class="search-box">
+        <p class="search-box">
             <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ) ?>"><?php echo esc_html( $text ); ?>:</label>
             <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
-	<?php
+        </p>
+		<?php
 	}
 
 	/**
@@ -122,7 +122,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-     *
+	 *
 	 * @return array $views All the views available
 	 */
 	public function get_views() {
@@ -270,7 +270,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-     *
+	 *
 	 * @param EDD_Discount $discount Discount object.
 	 * @return string Data shown in the Name column
 	 */
@@ -285,39 +285,39 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		// Edit
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $discount->id,
-		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+				'edd-action' => 'edit_discount',
+				'discount'   => $discount->id,
+			), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Active, so add "deactivate" action
 		if ( 'active' === strtolower( $discount->status ) ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'deactivate_discount',
-				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
+					'edd-action' => 'deactivate_discount',
+					'discount'   => $discount->id,
+				), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
 
-		// Inactive, so add "activate" action
+			// Inactive, so add "activate" action
 		} elseif ( 'inactive' === strtolower( $discount->status ) ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'activate_discount',
-				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
+					'edd-action' => 'activate_discount',
+					'discount'   => $discount->id,
+				), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Delete
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action' => 'delete_discount',
-			'discount'   => $discount->id,
-		), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+				'edd-action' => 'delete_discount',
+				'discount'   => $discount->id,
+			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all discount row actions
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
 		// Wrap discount title in strong anchor
 		$discount_title = '<strong><a href="' . add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $discount->id,
-		), $base ) . '">' . stripslashes( $discount->name ) . '</a></strong>';
+				'edd-action' => 'edit_discount',
+				'discount'   => $discount->id,
+			), $base ) . '">' . stripslashes( $discount->name ) . '</a></strong>';
 
 		// Return discount title & row actions
 		return $discount_title . $this->row_actions( $row_actions );
@@ -352,20 +352,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return string Displays the discount status
 	 */
 	public function column_status( $discount ) {
-		switch ( $discount->status ) {
-			case 'expired':
-				$status = __( 'Expired', 'easy-digital-downloads' );
-				break;
-			case 'inactive':
-				$status = __( 'Inactive', 'easy-digital-downloads' );
-				break;
-			case 'active':
-			default:
-				$status = __( 'Active', 'easy-digital-downloads' );
-				break;
-		}
-
-		return $status;
+		return edd_get_discount_status_label( $discount['ID'] );
 	}
 
 	/**

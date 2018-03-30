@@ -24,7 +24,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param array $args Arguments for the dropdown
 	 * @return string $output Product dropdown
@@ -226,7 +225,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all customers
 	 *
-	 * @access public
 	 * @since 2.2
 	 * @param array $args
 	 * @return string $output Customer dropdown
@@ -303,7 +301,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Users
 	 *
-	 * @access public
 	 * @since 2.6.9
 	 * @param array $args
 	 * @return string $output User dropdown
@@ -379,7 +376,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Discount to select automatically
@@ -418,7 +414,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Categories
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Category to select automatically
@@ -447,7 +442,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of years
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Year to select automatically
@@ -481,7 +475,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of months
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Month to select automatically

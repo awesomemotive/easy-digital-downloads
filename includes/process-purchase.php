@@ -126,7 +126,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
-		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
+		'tax_rate'     => edd_use_taxes() ? edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ) : 0, // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => $purchase_key,
 		'user_email'   => $user['user_email'],
