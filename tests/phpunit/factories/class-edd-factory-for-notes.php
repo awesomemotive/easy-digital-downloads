@@ -27,15 +27,15 @@ class Note extends \WP_UnitTest_Factory_For_Thing {
 	}
 
 	function create_object( $args ) {
-		return EDD()->notes->insert( $args );
+		return edd_add_note( $args );
 	}
 
 	function update_object( $note_id, $fields ) {
-		return EDD()->notes->update( $note_id, $fields );
+		return edd_update_note( $note_id, $fields );
 	}
 
 	public function delete( $note_id ) {
-		EDD()->notes->delete( $note_id );
+		edd_delete_note( $note_id );
 	}
 
 	public function delete_many( $notes ) {
