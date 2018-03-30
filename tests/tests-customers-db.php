@@ -138,22 +138,6 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$this->assertTrue( edd_get_component_interface( 'customer', 'table' )->exists() );
 	}
 
-	public function test_get_customer_columns() {
-		$columns = array(
-			'id'             => '%d',
-			'user_id'        => '%d',
-			'name'           => '%s',
-			'email'          => '%s',
-			'payment_ids'    => '%s',
-			'purchase_value' => '%f',
-			'purchase_count' => '%d',
-			'notes'          => '%s',
-			'date_created'   => '%s',
-		);
-
-		$this->assertEquals( $columns, EDD()->customers->get_columns() );
-	}
-
 	public function test_get_by() {
 		$customer = edd_get_customer_by( 'email', 'testadmin@domain.com' );
 
