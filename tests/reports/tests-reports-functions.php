@@ -164,7 +164,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_get_endpoint_views_should_return_the_defaults() {
 		$views = get_endpoint_views();
 
-		$this->assertEqualSets( array( 'tile', 'chart', 'table', 'graph' ), array_keys( $views ) );
+		$this->assertEqualSets( array( 'tile', 'chart', 'table' ), array_keys( $views ) );
 	}
 
 	/**
