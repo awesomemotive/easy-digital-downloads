@@ -1588,6 +1588,11 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$meta = array_diff_key( $data, $columns );
 		$save = array_intersect_key( $data, $columns );
 
+		// Bail if no change
+		if ( (array) $save === (array) $item ) {
+			return true;
+		}
+
 		// Never update the primary key value
 		unset( $save[ $this->get_primary_column_name() ] );
 
