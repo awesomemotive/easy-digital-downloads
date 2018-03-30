@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 2.7
  */
-class EDD_Discount {
+class EDD_Discount extends EDD_DB_Discount {
 	/**
 	 * Discount ID.
 	 *
@@ -177,13 +177,6 @@ class EDD_Discount {
 	protected $once_per_customer = null;
 
 	/**
-	 * The Database Abstraction
-	 *
-	 * @since  3.0
-	 */
-	protected $db;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 2.7
@@ -194,24 +187,32 @@ class EDD_Discount {
 	 * @param bool             $by_name             Whether identifier passed was a discount name.
 	 */
 	public function __construct( $_id_or_code_or_name = false, $by_code = false, $by_name = false ) {
-		$this->db = new EDD_DB_Discounts();
 
+		// Bail if no id or code
 		if ( empty( $_id_or_code_or_name ) ) {
 			return false;
 		}
 
-		if( is_a( $_id_or_code_or_name, 'EDD_Discount' ) ) {
+		// Already an object
+		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
+
+			// Code
 		} else if ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
+
+			// Name
 		} else if ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
+
+			// Default to ID
 		} else {
 			$_id_or_code_or_name = intval( $_id_or_code_or_name );
-			$discount = $this->db->get( $_id_or_code_or_name );
+			$discount = edd_get_discount( $_id_or_code_or_name );
 		}
 
-		if ( $discount ) {
+		// Setup or bail
+		if ( ! empty( $discount ) ) {
 			$this->setup_discount( $discount );
 		} else {
 			return false;
@@ -222,44 +223,40 @@ class EDD_Discount {
 	 * Magic __get method to dispatch a call to retrieve a protected property.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param mixed $key
 	 * @return mixed
 	 */
-	public function __get( $key ) {
-
+	public function __get( $key = '' ) {
 		$key = sanitize_key( $key );
 
-		if( 'discount_id' === $key || 'ID' == $key ) {
+		if ( 'discount_id' === $key || 'ID' == $key ) {
 			return (int) $this->id;
-		} else if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
+
+		} else if ( method_exists( $this, "get_{$key}" ) ) {
+			return call_user_func( array( $this, "get_{$key}" ) );
+
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
+
 		} else {
 
+			// Account for old property keys from pre 3.0
 			switch( $key ) {
-
-				// Account for old property keys from pre 3.0
 				case 'post_author' :
 					break;
+
 				case 'post_date' :
 				case 'post_date_gmt' :
-
 					return $this->date_created;
-					break;
 
 				case 'post_content' :
 				case 'post_title' :
-
 					return $this->name;
-					break;
 
 				case 'post_excerpt' :
 				case 'post_status' :
 					return $this->status;
-					break;
 
 				case 'comment_status' :
 				case 'ping_status' :
@@ -276,46 +273,30 @@ class EDD_Discount {
 				case 'post_mime_type' :
 				case 'comment_count' :
 				case 'filter' :
-
 					return '';
-					break;
 
 				case 'post_type' :
 					return 'edd_discount';
-					break;
 
 				case 'expiration' :
-
 					return $this->end_date;
-					break;
 
 				case 'start' :
-
 					return $this->start_date;
-					break;
 
 				case 'min_price' :
-
 					return $this->min_cart_price;
-					break;
 
 				case 'use_once' :
 				case 'is_single_use' :
 				case 'once_per_customer' :
-
 					return $this->get_is_single_use();
-					break;
 
 				case 'uses' :
-
 					return $this->use_count;
-					break;
 
 				case 'is_not_global' :
-
 					return $this->scope === 'global' ? false : true;
-					break;
-
 			}
 
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
@@ -326,7 +307,6 @@ class EDD_Discount {
 	 * Magic __set method to dispatch a call to update a protected property.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @see set()
 	 *
@@ -363,35 +343,35 @@ class EDD_Discount {
 
 				case 'expiration' :
 
-						$this->end_date = $value;
-						break;
+					$this->end_date = $value;
+					break;
 
-					case 'start' :
+				case 'start' :
 
-						$this->start_date = $value;
-						break;
+					$this->start_date = $value;
+					break;
 
-					case 'min_price' :
+				case 'min_price' :
 
-						$this->min_cart_price = $value;
-						break;
+					$this->min_cart_price = $value;
+					break;
 
-					case 'use_once' :
-					case 'is_single_use' :
+				case 'use_once' :
+				case 'is_single_use' :
 
-						$this->once_per_customer = $value;
-						break;
+					$this->once_per_customer = $value;
+					break;
 
-					case 'uses' :
+				case 'uses' :
 
-						$this->use_count = $value;
-						break;
+					$this->use_count = $value;
+					break;
 
-					case 'is_not_global' :
+				case 'is_not_global' :
 
-						$this->scope = $value ? 'not_global' : 'global';
-						break;
-				}
+					$this->scope = $value ? 'not_global' : 'global';
+					break;
+			}
 		} else {
 
 			$this->{$key} = $value;
@@ -403,7 +383,6 @@ class EDD_Discount {
 	 * Magic __isset method to allow empty checks on protected elements
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $key The attribute to get
 	 * @return boolean If the item is set or not
@@ -419,7 +398,7 @@ class EDD_Discount {
 	public function __call( $method, $args ) {
 		$property = str_replace( 'setup_', '', $method );
 		if( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
-			return $this->$property;
+			return $this->{$property( $args )};
 		}
 	}
 
@@ -427,7 +406,6 @@ class EDD_Discount {
 	 * Converts the instance of the EDD_Discount object into an array for special cases.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array EDD_Discount object as an array.
 	 */
@@ -445,12 +423,7 @@ class EDD_Discount {
 	 * @return object WP_Post instance of the discount.
 	 */
 	private function find_by_code( $code = '' ) {
-		if ( empty( $code ) || ! is_string( $code ) ) {
-			return false;
-		}
-
-		return $this->db->get_by( 'code', $code );
-
+		return edd_get_discount_by( 'code', $code );
 	}
 
 	/**
@@ -463,12 +436,7 @@ class EDD_Discount {
 	 * @return object WP_Post instance of the discount.
 	 */
 	private function find_by_name( $name = '' ) {
-		if ( empty( $name ) || ! is_string( $name ) ) {
-			return false;
-		}
-
-		return $this->db->get_by( 'name', $name );
-
+		return edd_get_discount_by( 'name', $name );
 	}
 
 	/**
@@ -478,7 +446,7 @@ class EDD_Discount {
 	 * @access private
 	 *
 	 * @param object $discount WP_Post instance of the discount.
-	 * @return bool Object var initialisation successful or not.
+	 * @return bool Object initialization successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
 		if ( null == $discount ) {
@@ -506,31 +474,25 @@ class EDD_Discount {
 		$vars = get_object_vars( $discount );
 
 		foreach ( $vars as $key => $value ) {
-
 			switch ( $key ) {
-
 				case 'start_date' :
 				case 'end_date' :
-
 					if ( '0000-00-00 00:00:00' == $value ) {
 						$this->$key = false;
 						break;
 					}
 
 				case 'notes' :
-
 					if ( ! empty( $value ) ) {
 						$this->$key = $value;
 					}
 					break;
 
 				case 'id' :
-
 					$this->$key = (int) $value;
 					break;
 
 				default:
-
 					if( is_string( $value ) ) {
 						@json_decode( $value );
 						if( json_last_error() != JSON_ERROR_NONE ) {
@@ -540,16 +502,14 @@ class EDD_Discount {
 
 					$this->$key = $value;
 					break;
-
 			}
-
 		}
 
 		/**
 		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
 		 */
-		$this->excluded_products = (array) $this->get_meta( 'excluded_product', false );
-		$this->product_reqs = (array) $this->get_meta( 'product_requirement', false );
+		$this->excluded_products = (array) edd_get_discount_meta( 'excluded_product',    false );
+		$this->product_reqs      = (array) edd_get_discount_meta( 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -572,7 +532,6 @@ class EDD_Discount {
 	 * Retrieve the code used to apply the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount code.
 	 */
@@ -592,7 +551,6 @@ class EDD_Discount {
 	 * Retrieve the status of the discount
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount code status (active/inactive).
 	 */
@@ -609,10 +567,42 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Retrieves the status label of the discount.
+	 *
+	 * @since 2.9
+	 *
+	 * @return string Status label for the current discount.
+	 */
+	public function get_status_label() {
+		switch( $this->status ) {
+			case 'expired' :
+				$label = __( 'Expired', 'easy-digital-downloads' );
+				break;
+			case 'inactive' :
+				$label = __( 'Inactive', 'easy-digital-downloads' );
+				break;
+			case 'active' :
+			default :
+				$label = __( 'Active', 'easy-digital-downloads' );
+				break;
+		}
+
+		/**
+		 * Filters the discount status.
+		 *
+		 * @since 2.9
+		 *
+		 * @param string $label  Discount status label.
+		 * @param string $status Discount status (active or inactive).
+		 * @param int    $id     Discount ID.
+		 */
+		return apply_filters( 'edd_get_discount_status_label', $label, $this->status, $this->id );
+	}
+
+	/**
 	 * Retrieve the type of discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount type (percent or flat amount).
 	 */
@@ -632,7 +622,6 @@ class EDD_Discount {
 	 * Retrieve the discount amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed float Discount amount.
 	 */
@@ -652,7 +641,6 @@ class EDD_Discount {
 	 * Retrieve the discount requirements for the discount to be satisfied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array IDs of required downloads.
 	 */
@@ -672,10 +660,9 @@ class EDD_Discount {
 	/**
 	 * Retrieve the discount scope.
 	 *
-	 * This used to be called "is_not_global". That filter is still here for backwards compatibility. 
+	 * This used to be called "is_not_global". That filter is still here for backwards compatibility.
 	 *
 	 * @since 3.0
-	 * @access public
 	 *
 	 * @return string The scope, i.e. "global".
 	 */
@@ -693,7 +680,6 @@ class EDD_Discount {
 	 * Retrieve the product condition.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Product condition
 	 */
@@ -713,7 +699,6 @@ class EDD_Discount {
 	 * Retrieve the downloads that are excluded from having this discount code applied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array IDs of excluded downloads.
 	 */
@@ -733,7 +718,6 @@ class EDD_Discount {
 	 * Retrieve the start date.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Start date.
 	 */
@@ -753,7 +737,6 @@ class EDD_Discount {
 	 * Retrieve the end date.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string End date.
 	 */
@@ -773,7 +756,6 @@ class EDD_Discount {
 	 * Retrieve the uses for the discount code.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Uses.
 	 */
@@ -793,7 +775,6 @@ class EDD_Discount {
 	 * Retrieve the maximum uses for the discount code.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Maximum uses.
 	 */
@@ -813,7 +794,6 @@ class EDD_Discount {
 	 * Retrieve the minimum spend required for the discount to be satisfied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed float Minimum spend.
 	 */
@@ -833,7 +813,6 @@ class EDD_Discount {
 	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Once use per customer?
 	 */
@@ -845,7 +824,6 @@ class EDD_Discount {
 	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
 	 *
 	 * @since 3.0
-	 * @access public
 	 *
 	 * @return bool Once use per customer?
 	 */
@@ -865,7 +843,6 @@ class EDD_Discount {
 	 * Check if a discount exists.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Discount exists.
 	 */
@@ -883,7 +860,6 @@ class EDD_Discount {
 	 * This is now simply a wrapper to the add() method which handles creating new discounts and updating existing ones.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool True if the save was successful, false if it failed or wasn't needed.
 	 */
@@ -898,19 +874,18 @@ class EDD_Discount {
 	 * Create a new discount. If the discount already exists in the database, update it.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $args Discount details.
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
 	 */
-	public function add( $args ) {
+	public function add( $args = array() ) {
+
 		// If no code is provided, return early with false
 		if ( empty( $args['code'] ) ) {
 			return false;
 		}
 
 		if ( ! empty( $this->id ) && $this->exists() ) {
-
 			return $this->update( $args );
 
 		} else {
@@ -980,8 +955,11 @@ class EDD_Discount {
 				$this->$key = $value;
 			}
 
+			$id = edd_add_discount( $args );
+
 			// The DB class 'add' implies an update if the discount being asked to be created already exists
-			if ( $id = $this->db->insert( $args ) ) {
+			if ( ! empty( $id ) ) {
+
 				// We need to update the ID of the instance of the object in order to add meta
 				$this->id = $id;
 
@@ -1040,16 +1018,13 @@ class EDD_Discount {
 	 * Update an existing discount in the database.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $args Discount details.
 	 * @return bool True if update is successful, false otherwise.
 	 */
-	public function update( $args ) {
-
-		$ret = false;
-
+	public function update( $args = array() ) {
 		$args = $this->convert_legacy_args( $args );
+		$ret  = false;
 
 		/**
 		 * Filter the data being updated
@@ -1060,25 +1035,29 @@ class EDD_Discount {
 		 * @param int   $ID   Discount ID.
 		 */
 		$args = apply_filters( 'edd_update_discount', $args, $this->id );
-
 		$args = $this->sanitize_columns( $args );
 
-		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
-			$start_timestamp = strtotime( $args['start_date'], current_time( 'timestamp' ) );
-			$end_timestamp   = strtotime( $args['end_date'], current_time( 'timestamp' ) );
+		// Get current time once to avoid inconsistencies
+		$current_time = current_time( 'timestamp' );
 
+		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
+			$start_timestamp = strtotime( $args['start_date'], $current_time );
+			$end_timestamp   = strtotime( $args['end_date'],   $current_time );
+
+			// Set the expiration date to the start date if start is later than expiration
 			if ( $start_timestamp > $end_timestamp ) {
-				// Set the expiration date to the start date if start is later than expiration
 				$args['end_date'] = $args['start_date'];
 			}
 		}
 
+		// Start date
 		if ( ! empty( $args['start_date'] ) ) {
-			$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
+			$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], $current_time ) );
 		}
 
+		// End date
 		if ( ! empty( $args['end_date'] ) ) {
-			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
+			$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], $current_time ) );
 		}
 
 		if ( isset( $args['excluded_products'] ) ) {
@@ -1092,17 +1071,13 @@ class EDD_Discount {
 				foreach( $args['excluded_products'] as $product ) {
 					$this->add_meta( 'excluded_product', absint( $product ) );
 				}
-				
+
 			} else {
-
 				$this->delete_meta( 'excluded_product' );
-
 			}
-
 		}
 
 		if ( isset( $args['product_reqs'] ) ) {
-
 			if ( is_array( $args['product_reqs'] ) ) {
 
 				// Reset meta
@@ -1114,11 +1089,8 @@ class EDD_Discount {
 				}
 
 			} else {
-
 				$this->delete_meta( 'product_requirement' );
-
 			}
-
 		}
 
 		/**
@@ -1132,17 +1104,9 @@ class EDD_Discount {
 		do_action( 'edd_pre_update_discount', $args, $this->id );
 
 		// If we are using the discounts DB
-		if ( count( array_intersect_key( $args, $this->db->get_columns() ) ) > 0 ) {
-			if ( $this->db->update( $this->id, $args ) ) {
-				$discount = $this->db->get( $this->id );
-				$this->setup_discount( $discount );
-
-				$ret = true;
-			}
-		} elseif ( 0 === count( array_intersect_key( $args, $this->db->get_columns() ) ) && count( array_intersect_key( $args, EDD()->discount_meta->get_columns() ) ) > 0 ) {
-			$discount = $this->db->get( $this->id );
+		if ( edd_update_discount( $this->id, $args ) ) {
+			$discount = edd_get_discount( $this->id );
 			$this->setup_discount( $discount );
-
 			$ret = true;
 		}
 
@@ -1163,7 +1127,6 @@ class EDD_Discount {
 	 * Update the status of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $new_status New status (default: active)
 	 * @return bool If the status been updated or not.
@@ -1201,7 +1164,6 @@ class EDD_Discount {
 	 * Check if the discount has started.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount started?
@@ -1238,7 +1200,6 @@ class EDD_Discount {
 	 * Check if the discount has expired.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $update Update the discount to expired if an one is found but has an active status
 	 * @return bool Has the discount expired?
@@ -1274,7 +1235,6 @@ class EDD_Discount {
 	 * Check if the discount has maxed out.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount maxed out?
@@ -1305,7 +1265,6 @@ class EDD_Discount {
 	 * Check if the minimum cart amount is satisfied for the discount to hold.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is the minimum cart amount met?
@@ -1315,10 +1274,10 @@ class EDD_Discount {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
-		if ( (float) $cart_amount >= (float) $this->min_price ) {
+		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
 			$return = true;
 		} elseif( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_price ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
 		}
 
 		/**
@@ -1336,7 +1295,6 @@ class EDD_Discount {
 	 * Is the discount single use or not?
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Is the discount single use or not?
 	 */
@@ -1356,7 +1314,6 @@ class EDD_Discount {
 	 * Are the product requirements met for the discount to hold.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Are required products in the cart?
@@ -1475,10 +1432,10 @@ class EDD_Discount {
 	 * Has the discount code been used.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $user User info.
 	 * @param bool $set_error Whether an error message be set in session.
+	 * @return bool Whether the discount has been used or not.
 	 */
 	public function is_used( $user = '', $set_error = true ) {
 		$return = false;
@@ -1571,7 +1528,6 @@ class EDD_Discount {
 	 * Checks whether a discount holds at the time of purchase.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $user      User info.
 	 * @param bool   $set_error Whether an error message be set in session.
@@ -1613,7 +1569,6 @@ class EDD_Discount {
 	 * Checks if a discount code is active.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $update    Update the discount to expired if an one is found but has an active status.
 	 * @param bool $set_error Whether an error message be set in session.
@@ -1650,7 +1605,6 @@ class EDD_Discount {
 	 * Get Discounted Amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string|int $base_price Price before discount.
 	 * @return float $discounted_price Amount after discount.
@@ -1685,7 +1639,6 @@ class EDD_Discount {
 	 * Increment the usage of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int New discount usage.
 	 */
@@ -1722,7 +1675,6 @@ class EDD_Discount {
 	 * Decrement the usage of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int New discount usage.
 	 */
@@ -1761,70 +1713,11 @@ class EDD_Discount {
 	 * Edit Discount Link.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
 		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->id ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
-	}
-
-	/**
-	 * Retrieve discount meta field for a discount.
-	 *
-	 * @param   string $meta_key      The meta key to retrieve.
-	 * @param   bool   $single        Whether to return a single value.
-	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
-	 *
-	 * @access  public
-	 * @since   3.0
-	 */
-	public function get_meta( $meta_key = '', $single = true ) {
-		return EDD()->discount_meta->get_meta( $this->id, $meta_key, $single );
-	}
-
-	/**
-	 * Add meta data field to a discount.
-	 *
-	 * @param   string $meta_key      Metadata name.
-	 * @param   mixed  $meta_value    Metadata value.
-	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
-	 * @return  bool                  False for failure. True for success.
-	 *
-	 * @access  public
-	 * @since   3.0
-	 */
-	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
-		return EDD()->discount_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
-	}
-
-	/**
-	 * Update discount meta field based on discount ID.
-	 *
-	 * @param   string $meta_key      Metadata key.
-	 * @param   mixed  $meta_value    Metadata value.
-	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
-	 * @return  bool                  False on failure, true if success.
-	 *
-	 * @access  public
-	 * @since   3.0
-	 */
-	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
-		return EDD()->discount_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
-	}
-
-	/**
-	 * Remove metadata matching criteria from a discount.
-	 *
-	 * @param   string $meta_key      Metadata name.
-	 * @param   mixed  $meta_value    Optional. Metadata value.
-	 * @return  bool                  False for failure. True for success.
-	 *
-	 * @access  public
-	 * @since   3.0
-	 */
-	public function delete_meta( $meta_key = '', $meta_value = '' ) {
-		return EDD()->discount_meta->delete_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**
@@ -1836,10 +1729,9 @@ class EDD_Discount {
 	 */
 	private function sanitize_columns( $data ) {
 
-		$columns        = $this->db->get_columns();
-		$default_values = $this->db->get_column_defaults();
+		$default_values = array();
 
-		foreach ( $columns as $key => $type ) {
+		foreach ( $data as $key => $type ) {
 
 			// Only sanitize data that we were provided
 			if ( ! array_key_exists( $key, $data ) ) {
@@ -1887,11 +1779,11 @@ class EDD_Discount {
 					break;
 
 				default:
-					$data[$key] = sanitize_text_field( $data[$key] );
+					$data[$key] = ! is_array( $data[$key] )
+						? sanitize_text_field( $data[$key] )
+						: maybe_serialize( array_map( 'sanitize_text_field', $data[$key] ) );
 					break;
-
 			}
-
 		}
 
 		return $data;
@@ -1900,13 +1792,14 @@ class EDD_Discount {
 	/**
 	 * Migrates a legacy discount (pre 3.0) to the new DB structure.
 	 *
-	 * @access public
 	 * @since  3.0
 	 *
 	 * @param $old_id int The old post ID to migrate to the new schema.
 	 * @return bool True if successful, false if already migrated or migration failed.
 	 */
 	public function migrate( $old_id = 0 ) {
+
+		// Bail if already migrated
 		if ( $this->is_migrated() ) {
 			return false;
 		}
@@ -1942,21 +1835,18 @@ class EDD_Discount {
 
 		$args['status'] = get_post_status( $old_discount->ID );
 
-		$discount = new EDD_Discount();
-		$discount->add( $args );
-		$discount->add_meta( 'legacy_id', $old_discount->ID );
+		// Create new discount
+		$discount_id = edd_add_discount( $args );
+		$discount    = edd_get_discount( $discount_id );
 
-		unset( $value );
-		unset( $key );
+		edd_add_discount_meta( $discount_id, 'legacy_id', $old_discount->ID );
 
-		if( ! empty( $meta_to_migrate ) ) {
+		unset( $key, $value );
 
+		if ( ! empty( $meta_to_migrate ) ) {
 			foreach( $meta_to_migrate as $key => $value ) {
-
-				$discount->add_meta( $key, $value );
-
+				edd_add_discount_meta( $discount_id, $key, $value );
 			}
-
 		}
 
 		do_action( 'edd_migrate_discount_record', $old_discount->ID, $discount );
@@ -2012,11 +1902,10 @@ class EDD_Discount {
 	 * @return bool True if it has been migrated, false otherwise.
 	 */
 	public function is_migrated() {
-		if ( $this->get_meta( 'legacy_id', true ) ) {
+		if ( edd_get_discount_meta( $this->id, 'legacy_id', true ) ) {
 			return true;
 		}
 
 		return false;
 	}
-
 }

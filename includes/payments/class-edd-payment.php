@@ -353,9 +353,9 @@ class EDD_Payment {
 	 */
 	public function __get( $key ) {
 
-		if ( method_exists( $this, 'get_' . $key ) ) {
+		if ( method_exists( $this, "get_{$key}" ) ) {
 
-			$value = call_user_func( array( $this, 'get_' . $key ) );
+			$value = call_user_func( array( $this, "get_{$key}" ) );
 
 		} else {
 
@@ -1582,7 +1582,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		edd_insert_payment_note( $this->ID, $note );
+		edd_insert_payment_note( $this->ID, esc_html( $note ) );
 	}
 
 	/**
@@ -2327,7 +2327,7 @@ class EDD_Payment {
 		$customer = new EDD_Customer( $this->customer_id );
 
 		// Make sure it exists, and that it matches that of the associated customer record
-		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && (int) $user_id !== (int) $customer->user_id ) ) {
+		if( !empty( $customer->user_id ) && ( empty( $user_id ) || (int) $user_id !== (int) $customer->user_id ) ) {
 
 			$user_id = $customer->user_id;
 
