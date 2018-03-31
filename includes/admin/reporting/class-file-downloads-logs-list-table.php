@@ -1,16 +1,17 @@
 <?php
 /**
- * File Downloads Log View Class
+ * File Downloads Log List Table.
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
+ * @since       3.0 Updated to use the custom tables.
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -20,9 +21,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * EDD_File_Downloads_Log_Table Class
  *
- * Renders the file downloads log view
- *
  * @since 1.4
+ * @since 3.0 Updated to use the custom tables and new query classes
  */
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
@@ -57,8 +57,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
 		// Set parent defaults
 		parent::__construct( array(
 			'singular' => edd_get_label_singular(),
@@ -140,9 +138,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the table columns
+	 * Set the table columns.
 	 *
 	 * @since 1.4
+     *
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
@@ -155,20 +154,22 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
 			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
+
 		return $columns;
 	}
 
 	/**
-	 * Retrieves the user we are filtering logs by, if any
+	 * Retrieves the user we are filtering logs by, if any.
 	 *
 	 * @since 1.4
-	 * @return mixed int If User ID, string If Email/Login, false if not present
+     *
+	 * @return int|string int If User ID, string If Email/Login, false if not present.
 	 */
 	public function get_filtered_user() {
 		$ret = false;
 
-		if( isset( $_GET['user'] ) ) {
-			if( is_numeric( $_GET['user'] ) ) {
+		if ( isset( $_GET['user'] ) ) {
+			if ( is_numeric( $_GET['user'] ) ) {
 				$ret = absint( $_GET['user'] );
 			} else {
 				$ret = sanitize_text_field( $_GET['user'] );
@@ -182,7 +183,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieves the ID of the download we're filtering logs by
 	 *
 	 * @since 1.4
-	 * @return int Download ID
+     *
+	 * @return int Download ID.
 	 */
 	public function get_filtered_download() {
 		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
@@ -192,28 +194,31 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieves the ID of the payment we're filtering logs by
 	 *
 	 * @since 2.0
-	 * @return int Payment ID
+     *
+	 * @return int Payment ID.
 	 */
 	public function get_filtered_payment() {
 		return ! empty( $_GET['payment'] ) ? absint( $_GET['payment'] ) : false;
 	}
 
 	/**
-	 * Retrieves the search query string
+	 * Retrieves the search query string.
 	 *
 	 * @since 1.4
-	 * @return String The search string
+     *
+	 * @return String The search string.
 	 */
 	public function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
 	}
 
 	/**
-	 * Gets the meta query for the log query
+	 * Gets the meta query for the log query.
 	 *
-	 * This is used to return log entries that match our search query, user query, or download query
+	 * This is used to return log entries that match our search query, user query, or download query.
 	 *
 	 * @since 1.4
+     *
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
@@ -303,20 +308,20 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
+	 * Retrieve the current page number.
 	 *
 	 * @since 1.4
-	 * @return int Current page number
+     *
+	 * @return int Current page number.
 	 */
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
 	/**
-	 * Outputs the log views
+	 * Outputs the log views.
 	 *
 	 * @since 1.4
-	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
@@ -355,8 +360,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
-	 * @global object $edd_logs EDD Logs Object
-	 * @return array $logs_data Array of all the Log entires
+     *
+	 * @return array $logs_data Array of all the logs.
 	 */
 	function get_logs() {
 		global $wpdb;
@@ -430,17 +435,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Setup the final data for the table.
 	 *
 	 * @since 1.5
-	 * @global object $edd_logs EDD Logs Object
-	 * @uses EDD_File_Downloads_Log_Table::get_columns()
-	 * @uses WP_List_Table::get_sortable_columns()
-	 * @uses EDD_File_Downloads_Log_Table::get_pagenum()
-	 * @uses EDD_File_Downloads_Log_Table::get_logs()
-	 * @uses EDD_File_Downloads_Log_Table::get_log_count()
-	 * @uses WP_List_Table::set_pagination_args()
-	 * @return void
 	 */
 	function prepare_items() {
 		$count_args = array();
@@ -465,10 +462,11 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
+	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items.
 	 *
 	 * @since 2.5
-	 * @return bool
+     *
+	 * @return bool Always returns true.
 	 */
 	public function has_items() {
 		return true;

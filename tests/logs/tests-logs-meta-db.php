@@ -24,7 +24,7 @@ class Logs_Meta_DB_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures.
 	 */
 	public static function wpSetUpBeforeClass() {
-		$log_id = EDD()->logs->insert( array(
+		$log_id = edd_add_log( array(
 			'object_id'   => 1234,
 			'object_type' => 'order',
 			'title'       => 'Order Status Change',
