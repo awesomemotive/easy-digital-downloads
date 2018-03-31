@@ -1525,7 +1525,7 @@ add_action( 'edd_remove_legacy_notes', 'edd_remove_legacy_notes' );
 /**
  * Migrates all logs and log meta to the new custom tables.
  *
- * @since 3.0
+ * @since 3.0.0
  */
 function edd_logs_migration() {
 	global $wpdb;
@@ -1552,28 +1552,6 @@ function edd_logs_migration() {
 		edd_debug_log( $total . ' to migrate' );
 	}
 
-	if ( 1 === $step ) {
-		if ( ! EDD()->logs->table_exists( EDD()->logs->table_name ) ) {
-			EDD()->logs->create_table();
-			edd_debug_log( EDD()->logs->table_name . ' created successfully' );
-		}
-
-		if ( ! EDD()->log_meta->table_exists( EDD()->log_meta->table_name ) ) {
-			EDD()->log_meta->create_table();
-			edd_debug_log( EDD()->log_meta->table_name . ' created successfully' );
-		}
-
-		if ( ! EDD()->api_request_logs->table_exists( EDD()->api_request_logs->table_name ) ) {
-			EDD()->api_request_logs->create_table();
-			edd_debug_log( EDD()->api_request_logs->table_name . ' created successfully' );
-		}
-
-		if ( ! EDD()->file_download_logs->table_exists( EDD()->file_download_logs->table_name ) ) {
-			EDD()->file_download_logs->create_table();
-			edd_debug_log( EDD()->file_download_logs->table_name . ' created successfully' );
-		}
-	}
-
 	$logs = $wpdb->get_results(
 		$wpdb->prepare(
 			"
@@ -1593,13 +1571,7 @@ function edd_logs_migration() {
 	if ( ! empty( $logs ) ) {
 		foreach ( $logs as $old_log ) {
 			if ( 'file_download' === $old_log->slug ) {
-				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $old_log->ID" );
-
-				if ( ! empty( $migrated ) ) {
-					continue;
-				}
-
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
+				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
 
 				$post_meta = array();
 
@@ -1617,18 +1589,8 @@ function edd_logs_migration() {
 					'date_created' => $old_log->post_date,
 				);
 
-				$new_log_id = EDD()->file_download_logs->insert( $log_data );
-
-				if ( ! empty( $new_log_id ) ) {
-					add_post_meta( $old_log->ID, '_edd_log_migrated_id', $new_log_id );
-				}
+				$new_log_id = edd_add_file_download_log( $log_data );
 			} else if ( 'api_request' === $old_log->slug ) {
-				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $old_log->ID" );
-
-				if ( ! empty( $migrated ) ) {
-					continue;
-				}
-
 				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
 
 				$post_meta = array();
@@ -1649,11 +1611,7 @@ function edd_logs_migration() {
 					'date_created' => $old_log->post_date,
 				);
 
-				$new_log_id = EDD()->api_request_logs->insert( $log_data );
-
-				if ( ! empty( $new_log_id ) ) {
-					add_post_meta( $old_log->ID, '_edd_log_migrated_id', $new_log_id );
-				}
+				$new_log_id = edd_add_api_request_log( $log_data );
 			} else {
 				$post = new WP_Post( $old_log->ID );
 
@@ -1672,9 +1630,8 @@ function edd_logs_migration() {
 					$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
 				}
 
-				$new_log_id = EDD()->logs->insert( $log_data );
+				$new_log_id = edd_add_log( $log_data );
 				$new_log = new EDD\Logs\Log( $new_log_id );
-				$new_log->add_meta( 'legacy_id', $old_log->ID );
 
 				if ( ! empty( $meta_to_migrate ) ) {
 					foreach ( $meta_to_migrate as $key => $value ) {
