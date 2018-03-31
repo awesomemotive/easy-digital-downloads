@@ -19,7 +19,9 @@ if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 
 // Load discount
 $discount_id = absint( $_GET['discount'] );
-$discount    = edd_get_discount( $discount_id );
+
+/** @var EDD_Discount */
+$discount = edd_get_discount( $discount_id );
 
 // Bail if discount does not exist
 if ( empty( $discount ) ) {
@@ -27,13 +29,13 @@ if ( empty( $discount ) ) {
 }
 
 // Setup discount vars
-$product_reqs      = edd_get_discount_meta( $discount->id, 'product_reqs'      );
-$excluded_products = edd_get_discount_meta( $discount->id, 'excluded_products' );
-$condition         = $discount->product_condition;
-$single_use        = $discount->once_per_customer;
-$flat_display      = ( $discount->type === 'flat'    ) ? '' : ' style="display:none;"';
-$percent_display   = ( $discount->type === 'percent' ) ? '' : ' style="display:none;"';
-$condition_display = ! empty( $product_reqs )          ? '' : ' style="display:none;"';
+$product_requirements = $discount->get_product_reqs();
+$excluded_products    = $discount->get_excluded_products();
+$condition            = $discount->get_product_condition();
+$single_use           = $discount->get_once_per_customer();
+$flat_display         = ( 'flat'    === $discount->get_type() ) ? '' : ' style="display:none;"';
+$percent_display      = ( 'percent' === $discount->get_type() ) ? '' : ' style="display:none;"';
+$condition_display    = ! empty( $product_requirements )        ? '' : ' style="display:none;"';
 
 // Output
 ?><div class="wrap">
@@ -116,7 +118,7 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 						<?php echo EDD()->html->product_dropdown( array(
 							'name'        => 'product_reqs[]',
 							'id'          => 'edd-products',
-							'selected'    => $product_reqs,
+							'selected'    => $product_requirements,
 							'multiple'    => true,
 							'chosen'      => true,
 							'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() )

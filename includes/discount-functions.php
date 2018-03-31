@@ -117,22 +117,43 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
+	$meta_update = false;
+	$meta_count = 0;
+
 	// Product requirements and excluded products are handled differently
 	if ( isset( $data['product_reqs'] ) ) {
-		edd_delete_discount_meta( $discount_id, 'product_requirement' );
+		if ( is_string( $data['product_reqs'] ) ) {
+			$data['product_reqs'] = maybe_unserialize( $data['product_reqs'] );
+		}
 
-		foreach ( $data['product_reqs'] as $product_requirement ) {
-			edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+		if ( is_array( $data['product_reqs'] ) ) {
+			edd_delete_discount_meta( $discount_id, 'product_requirement' );
+
+			foreach ( $data['product_reqs'] as $product_requirement ) {
+				edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+				$meta_count++;
+			}
+
+			$meta_update = true;
 		}
 
 		unset( $data['product_reqs'] );
 	}
 
 	if ( isset( $data['excluded_products'] ) ) {
-		edd_delete_discount_meta( $discount_id, 'excluded_product' );
+		if ( is_string( $data['excluded_products'] ) ) {
+			$data['excluded_products'] = maybe_unserialize( $data['excluded_products'] );
+		}
 
-		foreach ( $data['excluded_products'] as $excluded_product ) {
-			edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+		if ( is_array( $data['excluded_products'] ) ) {
+			edd_delete_discount_meta( $discount_id, 'excluded_product' );
+
+			foreach ( $data['excluded_products'] as $excluded_product ) {
+				edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+				$meta_count++;
+			}
+
+			$meta_update = true;
 		}
 
 		unset( $data['excluded_products'] );
@@ -140,7 +161,15 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 
 	$discounts = new EDD_Discount_Query();
 
-	return $discounts->update_item( $discount_id, $data );
+	$updated = $discounts->update_item( $discount_id, $data );
+
+	if ( $updated ) {
+		return $updated;
+	} elseif ( true === $meta_update ) {
+		return $meta_count;
+	} else {
+		return 0;
+	}
 }
 
 /**
@@ -1259,7 +1288,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		return $value;
 	}
 
-	switch( $meta_key ) {
+	switch ( $meta_key ) {
 		case '_edd_discount_name':
 		case '_edd_discount_status':
 		case '_edd_discount_amount':
