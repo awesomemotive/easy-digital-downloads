@@ -300,6 +300,9 @@ function edd_remove_discount( $discount_id = 0 ) {
  * @return bool Whether the status has been updated or not.
  */
 function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) {
+	if ( $discount_id <= 0 ) {
+		return false;
+	}
 
 	// Defaults
 	$updated    = false;

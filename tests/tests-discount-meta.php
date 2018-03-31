@@ -34,8 +34,8 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 			'max_uses'          => 10,
 			'min_cart_price'    => 128,
 			'product_condition' => 'all',
-			'start_date'        => '12/12/2010 00:00:00',
-			'end_date'          => '12/31/2050 23:59:59'
+			'start_date'        => '2010-12-12 00:00:00',
+			'end_date'          => '2050-12-31 23:59:59'
 		) );
 	}
 

@@ -376,7 +376,14 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_count_with_start_date() {
 		$this->assertSame( 2, count( edd_get_discounts( array(
-			'start_date' => '2010-12-12 23:59:59',
+			'start_date' => array(
+				'year'   => 2010,
+				'month'  => 12,
+				'day'    => 12,
+				'hour'   => 0,
+				'minute' => 0,
+				'second' => 0,
+			)
 		) ) ) );
 	}
 
