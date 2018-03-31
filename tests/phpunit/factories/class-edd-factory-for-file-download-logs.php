@@ -29,15 +29,15 @@ class File_Download_Log extends \WP_UnitTest_Factory_For_Thing {
 	}
 
 	function create_object( $args ) {
-		return EDD()->file_download_logs->insert( $args );
+		return edd_add_file_download_log( $args );
 	}
 
 	function update_object( $log_id, $fields ) {
-		return EDD()->file_download_logs->update( $log_id, $fields );
+		return edd_update_file_download_log( $log_id, $fields );
 	}
 
 	public function delete( $log_id ) {
-		EDD()->file_download_logs->delete( $log_id );
+		edd_delete_file_download_log( $log_id );
 	}
 
 	public function delete_many( $logs ) {
