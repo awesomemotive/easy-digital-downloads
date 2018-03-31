@@ -192,7 +192,7 @@ class EDD_Logging {
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
 		// Used to dynamically dispatch the method call to insert() to the correct class.
-		$db_object = 'logs';
+		$insert_method = 'edd_add_log';
 
 		// Set up variables to hold data to go into the logs table by default
 		$data = array (
@@ -209,9 +209,9 @@ class EDD_Logging {
 			$data['title'] = $args['post_title'];
 		}
 
-		// Override $data and $db_object based on the log type.
+		// Override $data and $insert_method based on the log type.
 		if ( 'api_request' === $args['log_type'] ) {
-			$db_object = 'api_request_logs';
+			$insert_method = 'edd_add_api_request_log';
 
 			$data = array(
 				'user_id' => $log_meta['user'],
@@ -224,7 +224,7 @@ class EDD_Logging {
 				'time'    => $log_meta['time'],
 			);
 		} else if ( 'file_download' === $args['log_type'] ) {
-			$db_object = 'file_download_logs';
+			$insert_method = 'edd_add_file_download_log';
 
 			$data = array(
 				'download_id' => $args['post_parent'],
@@ -237,10 +237,10 @@ class EDD_Logging {
 			);
 		}
 
-		$log_id = EDD()->{$db_object}->insert( $data );
+		$log_id = call_user_func( $insert_method, $data );
 
 		// Set log meta, if any
-		if ( $log_id && 'logs' === $db_object && ! empty( $log_meta ) ) {
+		if ( $log_id && 'edd_add_log' === $insert_method && ! empty( $log_meta ) ) {
 			foreach ( (array) $log_meta as $key => $meta ) {
 				$log = new EDD\Logs\Log( $log_id );
 				$log->add_meta( sanitize_key( $key ), $meta );
@@ -331,17 +331,17 @@ class EDD_Logging {
 		$query_args = wp_parse_args( $args, $defaults );
 
 		// Used to dynamically dispatch the call to the correct class.
-		$db_object = 'logs';
+		$log_type = 'logs';
 
 		if ( 'api_request' === $query_args['log_type'] ) {
-			$db_object = 'api_request_logs';
+			$log_type = 'api_request_logs';
 		} else if ( 'file_download' === $query_args['log_type'] ) {
-			$db_object = 'file_download_logs';
+			$log_type = 'file_download_logs';
 		}
 
 		$query_args['number'] = $query_args['posts_per_page'];
 
-		$logs = EDD()->{$db_object}->get_logs( $query_args );
+		$logs = call_user_func( 'edd_get_' . $log_type, $query_args );
 
 		if ( $logs ) {
 			return $logs;
@@ -381,15 +381,15 @@ class EDD_Logging {
 		}
 
 		// Used to dynamically dispatch the call to the correct class.
-		$db_object = 'logs';
+		$log_type = 'logs';
 
 		if ( 'api_request' === $type ) {
-			$db_object = 'api_request_logs';
+			$log_type = 'api_request_logs';
 		} else if ( 'file_download' === $type ) {
-			$db_object = 'file_download_logs';
+			$log_type = 'file_download_logs';
 		}
 
-		$count = EDD()->{$db_object}->count( $query_args );
+		$count = call_user_func( 'edd_count_' . $log_type, $query_args );
 
 		return $count;
 	}
@@ -417,19 +417,19 @@ class EDD_Logging {
 		}
 
 		// Used to dynamically dispatch the call to the correct class.
-		$db_object = 'logs';
+		$log_type = 'log';
 
 		if ( 'api_request' === $type ) {
-			$db_object = 'api_request_logs';
+			$log_type = 'api_request_log';
 		} else if ( 'file_download' === $type ) {
-			$db_object = 'file_download_logs';
+			$log_type = 'file_download_log';
 		}
 
-		$logs = EDD()->{$db_object}->get_logs( $query_args );
+		$logs = call_user_func( 'edd_get_' . $log_type . 's', $query_args );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				EDD()->{$db_object}->delete( $log->ID );
+				call_user_func( 'edd_delete_' . $log_type, $log->ID );
 			}
 		}
 	}
