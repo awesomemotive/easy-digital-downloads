@@ -9,7 +9,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -307,14 +307,17 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
 
 		$log_query = array(
-			'object_id'      => $download,
-			'log_type'       => 'sale',
-			'paged'          => $paged,
-			'meta_query'     => $this->get_meta_query(),
-			'posts_per_page' => $this->per_page,
+			'type'       => 'sale',
+			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
+			'meta_query' => $this->get_meta_query(),
+			'number'     => $this->per_page,
 		);
 
-		$logs = $edd_logs->get_connected_logs( $log_query );
+		if ( $download ) {
+			$log_query['object_id'] = $download;
+		}
+
+		$logs = edd_get_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
@@ -329,9 +332,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					$amount     = 0;
 
 					if ( is_array( $cart_items ) ) {
-
 						foreach ( $cart_items as $item ) {
-
 							// If the item has variable pricing, make sure it's the right variation
 							if ( $item['id'] == $log->object_id ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
@@ -345,7 +346,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 								$amount = isset( $item['price'] ) ? $item['price'] : $item['item_price'];
 								break;
 							}
-
 						}
 
 						$logs_data[] = array(
@@ -361,11 +361,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							// Keep track of the currency. Vital to produce the correct report
 							'currency'   => $payment->currency,
 						);
-
 					}
-
 				}
-
 			}
 		}
 
