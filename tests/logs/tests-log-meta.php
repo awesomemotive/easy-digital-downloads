@@ -10,7 +10,7 @@ namespace EDD\Logs;
  *
  * @coversDefaultClass \EDD_DB_Log_Meta
  */
-class Logs_Meta_DB_Tests extends \EDD_UnitTestCase {
+class Log_Meta_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.
