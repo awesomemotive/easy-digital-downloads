@@ -1070,7 +1070,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$log_ids = wp_list_pluck( $log_ids, 'ID' );
 			$log_ids = implode( ', ', $log_ids );
 
-			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log')";
+			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
 			$wpdb->query( $delete_query );
 
 			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
