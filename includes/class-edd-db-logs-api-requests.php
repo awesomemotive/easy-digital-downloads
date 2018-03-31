@@ -268,7 +268,7 @@ class EDD_DB_Logs_API_Requests extends EDD_DB {
 
 			if ( ! empty( $logs ) ) {
 				foreach ( $logs as $key => $log ) {
-					$logs[ $key ] = new EDD\Logs\API_Request_Log( $log );
+					$logs[ $key ] = new EDD\Logs\Api_Request_Log( $log );
 				}
 
 				wp_cache_set( $cache_key, $logs, $this->cache_group, 3600 );
