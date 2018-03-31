@@ -288,7 +288,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_count_should_be_5() {
-		$this->assertSame( 5, edd_get_note_count() );
+		$this->assertSame( 5, edd_count_notes() );
 	}
 
 	/**
