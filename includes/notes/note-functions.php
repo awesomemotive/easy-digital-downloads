@@ -132,27 +132,6 @@ function edd_get_note_by( $field = '', $value = '' ) {
 }
 
 /**
- * Get total number of notes.
- *
- * @since 3.0.0
- *
- * @return int
- */
-function edd_get_note_count() {
-	// Query for count
-	$notes = new EDD_Note_Query( array(
-		'number' => 0,
-		'count'  => true,
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
-	) );
-
-	// Return count
-	return absint( $notes->found_items );
-}
-
-/**
  * Add meta data field to a note.
  *
  * @since 3.0.0
