@@ -370,7 +370,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$paged     = $this->get_paged();
 		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : false;
 		$log_query = array(
-			'paged'      => $paged,
+			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
 			'meta_query' => $this->get_meta_query(),
 			'number'     => $this->per_page,
 		);
