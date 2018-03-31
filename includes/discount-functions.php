@@ -787,8 +787,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  * @return int|false Meta ID on success, false on failure.
  */
 function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = false ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->add_item_meta( $discount_id, $meta_key, $meta_value, $unique );
+	return add_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $unique );
 }
 
 /**
@@ -808,8 +807,7 @@ function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = 
  * @return bool True on success, false on failure.
  */
 function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->delete_item_meta( $discount_id, $meta_key, $meta_value );
+	return delete_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value );
 }
 
 /**
@@ -828,8 +826,7 @@ function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
  *               field if $single is true.
  */
 function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->get_item_meta( $discount_id, $key, $single );
+	return get_metadata( 'edd_discount', $discount_id, $key, $single );
 }
 
 /**
@@ -852,8 +849,7 @@ function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
  *                  false on failure.
  */
 function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_value = '' ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->update_item_meta( $discount_id, $meta_key, $meta_value, $prev_value );
+	return update_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $prev_value );
 }
 
 /**
@@ -866,8 +862,7 @@ function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_v
  * @return bool Whether the discount meta key was deleted from the database.
  */
 function delete_discount_meta_by_key( $discount_meta_key ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->delete_item_meta( null, $discount_meta_key, '', true );
+	return delete_metadata( 'edd_discount', null, $discount_meta_key, '', true );
 }
 
 /** Cart **********************************************************************/
