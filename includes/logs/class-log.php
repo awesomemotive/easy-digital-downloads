@@ -84,15 +84,6 @@ class Log {
 	protected $date_created;
 
 	/**
-	 * Database abstraction.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    \EDD_DB_Logs
-	 */
-	protected $db;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since  3.0
@@ -101,9 +92,7 @@ class Log {
 	 * @param int $log_id Log ID.
 	 */
 	public function __construct( $log_id = 0 ) {
-		$this->db = EDD()->logs;
-
-		$log = $this->db->get( $log_id );
+		$log = edd_get_log( $log_id );
 
 		if ( $log ) {
 			$this->setup_log( $log );
@@ -282,7 +271,7 @@ class Log {
 		 */
 		do_action( 'edd_pre_insert_log', $args );
 
-		$id = $this->db->insert( $args );
+		$id = edd_add_log( $args );
 
 		if ( $id ) {
 			$this->id = $id;
@@ -367,7 +356,7 @@ class Log {
 	 * @return bool True on success, false otherwise.
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
-		return EDD()->log_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+		return edd_add_log_meta( $this->id, $meta_key, $meta_value, $unique );
 	}
 
 	/**
@@ -383,7 +372,7 @@ class Log {
 	 * @return bool True on success, false otherwise.
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
-		return EDD()->log_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+		return edd_update_log_meta( $this->id, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -398,7 +387,7 @@ class Log {
 	 * @return bool True on success, false otherwise.
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
-		return EDD()->log_meta->delete_meta( $this->id, $meta_key, $meta_value );
+		return edd_delete_log_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**
@@ -412,10 +401,9 @@ class Log {
 	 * @return array $data The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data ) {
-		$columns        = $this->db->get_columns();
-		$default_values = $this->db->get_column_defaults();
+		$default_values = array();
 
-		foreach ( $columns as $key => $type ) {
+		foreach ( $data as $key => $type ) {
 			// Only sanitize data that we were provided
 			if ( ! array_key_exists( $key, $data ) ) {
 				continue;
