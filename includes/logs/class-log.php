@@ -86,13 +86,18 @@ class Log {
 	/**
 	 * Constructor.
 	 *
-	 * @since  3.0.0
-	 * @access protected
+	 * @since 3.0.0
 	 *
-	 * @param int $log_id Log ID.
+	 * @param int|object $data Log data, or a log ID.
 	 */
-	public function __construct( $log_id = 0 ) {
-		$log = edd_get_log( $log_id );
+	public function __construct( $data ) {
+		$log = null;
+
+		if ( is_object( $data ) ) {
+			$log = $data;
+		} else if ( is_numeric( $data ) ) {
+			$log = edd_get_log( $data);
+		}
 
 		if ( $log ) {
 			$this->setup_log( $log );
@@ -105,7 +110,6 @@ class Log {
 	 * @since 3.0.0
 	 *
 	 * @param mixed $key
-	 *
 	 * @return mixed
 	 */
 	public function __get( $key ) {
@@ -125,7 +129,6 @@ class Log {
 	 *
 	 * @param string $key Property name.
 	 * @param mixed $value Property value.
-	 *
 	 * @return mixed False if property doesn't exist, or returns the value from the dispatched method.
 	 */
 	public function __set( $key, $value ) {
@@ -151,9 +154,8 @@ class Log {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param string $key The attribute to get
-	 *
-	 * @return boolean If the item is set or not
+	 * @param string $key The attribute to get.
+	 * @return boolean If the item is set or not.
 	 */
 	public function __isset( $key ) {
 		if ( property_exists( $this, $key ) ) {
@@ -296,12 +298,17 @@ class Log {
 	 *
 	 * @param array $args {
 	 *      Log attributes.
-	 * }
 	 *
+	 *      @type int    $object_id   Object ID.
+	 *      @type string $object_type Object type.
+	 *      @type string $type        Log type.
+	 *      @type string $title       Log title.
+	 *      @type string $message     Log content.
+	 * }
 	 * @return bool True on success, false otherwise.
 	 */
 	public function update( $args = array() ) {
-		return EDD()->logs->update( $this->id, $args );
+		return edd_update_log( $this->id, $args );
 	}
 
 	/**
@@ -324,7 +331,6 @@ class Log {
 	 *
 	 * @param string $meta_key The meta key to retrieve.
 	 * @param bool   $single   Whether to return a single value.
-	 *
 	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
@@ -339,7 +345,6 @@ class Log {
 	 * @param string $meta_key   Metadata name.
 	 * @param mixed  $meta_value Metadata value.
 	 * @param bool   $unique     Optional, default is false. Whether the same key should not be added.
-	 *
 	 * @return bool True on success, false otherwise.
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
@@ -354,7 +359,6 @@ class Log {
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Metadata value.
 	 * @param mixed  $prev_value Optional. Previous value to check before removing.
-	 *
 	 * @return bool True on success, false otherwise.
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
@@ -368,7 +372,6 @@ class Log {
 	 *
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Optional. Metadata value.
-	 *
 	 * @return bool True on success, false otherwise.
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
@@ -381,7 +384,6 @@ class Log {
 	 * @since 3.0.0
 	 *
 	 * @param array $data The data to sanitize.
-	 *
 	 * @return array $data The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data ) {
