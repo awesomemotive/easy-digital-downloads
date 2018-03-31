@@ -206,7 +206,7 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="updated">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%1%s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
 				__( '<strong>Removing legacy data:</strong><br />All discounts records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
@@ -251,7 +251,7 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="updated">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating log</strong> records, next step is to <a href="%1%s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads has <strong>finished migrating log</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
 				__( '<strong>Removing legacy data:</strong><br />All logs records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
@@ -295,7 +295,7 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="updated">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating note</strong> records, next step is to <a href="%1%s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads has <strong>finished migrating note</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
 				__( '<strong>Removing legacy data:</strong><br />All note records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
