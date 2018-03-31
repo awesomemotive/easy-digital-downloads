@@ -1584,6 +1584,26 @@ function edd_logs_migration() {
 	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
 	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
 
+	$logs_db = edd_get_component_interface( 'log', 'table' );
+	if ( ! $logs_db->exists() ) {
+		@$logs_db->create();
+	}
+
+	$log_meta_db = edd_get_component_interface( 'log', 'meta' );
+	if ( ! $log_meta_db->exists() ) {
+		@$log_meta_db->create();
+	}
+
+	$log_api_request_db = edd_get_component_interface( 'log_api_request', 'table' );
+	if ( ! $log_api_request_db->exists() ) {
+		@$log_api_request_db->create();
+	}
+
+	$log_file_download_db = edd_get_component_interface( 'log_file_download', 'table' );
+	if ( ! $log_file_download_db->exists() ) {
+		@$log_file_download_db->create();
+	}
+
 	edd_debug_log( 'Beginning step ' . $step . ' of logs migration' );
 
 	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
