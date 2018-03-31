@@ -47,16 +47,30 @@ class EDD_DB_Schema_Logs extends EDD_DB_Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
+			'searchable' => true,
 			'sortable'   => true
 		),
 
-		// user_id
+		// type
 		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'       => 'type',
+			'type'       => 'varchar',
+			'length'     => '30',
+			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// title
+		array(
+			'name'       => 'title',
+			'type'       => 'varchar',
+			'length'     => '200',
+			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true,
+			'in'         => false,
+			'not_in'     => false
 		),
 
 		// content
@@ -65,6 +79,7 @@ class EDD_DB_Schema_Logs extends EDD_DB_Schema {
 			'type'       => 'longtext',
 			'default'    => '',
 			'searchable' => true,
+			'sortable'   => true,
 			'in'         => false,
 			'not_in'     => false
 		),
