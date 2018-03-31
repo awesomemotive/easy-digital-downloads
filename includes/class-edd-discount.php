@@ -508,8 +508,8 @@ class EDD_Discount extends EDD_DB_Discount {
 		/**
 		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
 		 */
-		$this->excluded_products = (array) edd_get_discount_meta( 'excluded_product',    false );
-		$this->product_reqs      = (array) edd_get_discount_meta( 'product_requirement', false );
+		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
+		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
