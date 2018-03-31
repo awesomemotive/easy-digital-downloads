@@ -6,7 +6,7 @@
  * @subpackage  Logs
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @since       3.0.0
  */
 namespace EDD\Logs;
 
@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Log Class.
  *
- * @since 3.0
+ * @since 3.0.0
  */
 class Log {
 
 	/**
 	 * Log ID.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    int
 	 */
@@ -32,7 +32,7 @@ class Log {
 	/**
 	 * Object ID.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    int
 	 */
@@ -41,7 +41,7 @@ class Log {
 	/**
 	 * Object type.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -50,7 +50,7 @@ class Log {
 	/**
 	 * Log type.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -59,7 +59,7 @@ class Log {
 	/**
 	 * Log title.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -68,7 +68,7 @@ class Log {
 	/**
 	 * Log message.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -77,7 +77,7 @@ class Log {
 	/**
 	 * Date log was created.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -86,7 +86,7 @@ class Log {
 	/**
 	 * Constructor.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 *
 	 * @param int $log_id Log ID.
@@ -102,8 +102,7 @@ class Log {
 	/**
 	 * Magic __get method to dispatch a call to retrieve a protected property.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 3.0.0
 	 *
 	 * @param mixed $key
 	 *
@@ -122,8 +121,7 @@ class Log {
 	/**
 	 * Magic __set method to dispatch a call to update a protected property.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 3.0.0
 	 *
 	 * @param string $key Property name.
 	 * @param mixed $value Property value.
@@ -151,8 +149,7 @@ class Log {
 	/**
 	 * Magic __isset method to allow empty checks on protected elements
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 3.0.0
 	 *
 	 * @param string $key The attribute to get
 	 *
@@ -170,7 +167,6 @@ class Log {
 	 * Converts the instance of the EDD_Discount object into an array for special cases.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array EDD_Discount object as an array.
 	 */
@@ -181,7 +177,7 @@ class Log {
 	/**
 	 * Setup object vars.
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 * @access private
 	 *
 	 * @param object $log Log data.
@@ -204,7 +200,7 @@ class Log {
 		/**
 		 * Fires before the instance of the Log object is set up.
 		 *
-		 * @since 3.0
+		 * @since 3.0.0
 		 *
 		 * @param object EDD\Logs\Log      Instance of the log object.
 		 * @param object              $log Log object returned from the database.
@@ -218,7 +214,7 @@ class Log {
 		/**
 		 * Fires after the instance of the Log object is set up. Allows extensions to add items to this object via hook.
 		 *
-		 * @since 3.0
+		 * @since 3.0.0
 		 *
 		 * @param object EDD\Logs\Log      Instance of the log object.
 		 * @param object              $log Log object returned from the database.
@@ -235,8 +231,7 @@ class Log {
 	/**
 	 * Create a new log.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 3.0.0
 	 *
 	 * @param array $args {
 	 *      Log attributes.
@@ -254,7 +249,7 @@ class Log {
 		/**
 		 * Filters the arguments before being inserted into the database.
 		 *
-		 * @since 3.0
+		 * @since 3.0.0
 		 *
 		 * @param array $args Discount args.
 		 */
@@ -265,7 +260,7 @@ class Log {
 		/**
 		 * Fires before a log has been inserted into the database.
 		 *
-		 * @since 3.0
+		 * @since 3.0.0
 		 *
 		 * @param array $args Discount args.
 		 */
@@ -284,7 +279,7 @@ class Log {
 		/**
 		 * Fires after a log has been inserted into the database.
 		 *
-		 * @since 3.0
+		 * @since 3.0.0
 		 *
 		 * @param array $args Log args.
 		 * @param int $id Log ID.
@@ -297,8 +292,7 @@ class Log {
 	/**
 	 * Update an existing log.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 3.0.0
 	 *
 	 * @param array $args {
 	 *      Log attributes.
@@ -313,17 +307,12 @@ class Log {
 	/**
 	 * Delete log.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 3.0.0
 	 *
-	 * @return bool True if deleted, false otherwise.
+	 * @return int|bool Number of rows deleted, false on error.
 	 */
 	public function delete() {
-		$deleted = EDD()->logs->delete( $this->id );
-
-		if ( $deleted ) {
-			EDD()->log_meta->delete_all_meta( $this->id );
-		}
+		$deleted = edd_delete_log( $this->id );
 
 		return $deleted;
 	}
@@ -331,8 +320,7 @@ class Log {
 	/**
 	 * Retrieve log meta field for a log.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param string $meta_key The meta key to retrieve.
 	 * @param bool   $single   Whether to return a single value.
@@ -340,14 +328,13 @@ class Log {
 	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
-		return EDD()->log_meta->get_meta( $this->id, $meta_key, $single );
+		return edd_get_log_meta( $this->id, $meta_key, $single );
 	}
 
 	/**
 	 * Add meta data field to a log.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param string $meta_key   Metadata name.
 	 * @param mixed  $meta_value Metadata value.
@@ -362,8 +349,7 @@ class Log {
 	/**
 	 * Update discount meta field based on log ID.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Metadata value.
@@ -378,8 +364,7 @@ class Log {
 	/**
 	 * Remove metadata matching criteria from a log.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Optional. Metadata value.
@@ -393,8 +378,7 @@ class Log {
 	/**
 	 * Sanitize the data for update/create.
 	 *
-	 * @access public
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param array $data The data to sanitize.
 	 *
