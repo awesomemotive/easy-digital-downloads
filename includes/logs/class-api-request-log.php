@@ -14,11 +14,11 @@ namespace EDD\Logs;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * API_Request_Log Class.
+ * Api_Request_Log Class.
  *
  * @since 3.0
  */
-class API_Request_Log {
+class Api_Request_Log {
 
 	/**
 	 * API request log ID.

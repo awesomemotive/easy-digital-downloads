@@ -23,7 +23,7 @@ class API_Request_Log extends \WP_UnitTest_Factory_For_Thing {
 	 * @param array $args
 	 * @param null  $generation_definitions
 	 *
-	 * @return \EDD\Logs\API_Request_Log|false
+	 * @return \EDD\Logs\Api_Request_Log|false
 	 */
 	function create_and_get( $args = array(), $generation_definitions = null ) {
 		return parent::create_and_get( $args, $generation_definitions );
@@ -52,9 +52,9 @@ class API_Request_Log extends \WP_UnitTest_Factory_For_Thing {
 	 *
 	 * @param $log_id Log ID.
 	 *
-	 * @return \EDD\Logs\API_Request_Log|false
+	 * @return \EDD\Logs\Api_Request_Log|false
 	 */
 	function get_object_by_id( $log_id ) {
-		return new \EDD\Logs\API_Request_Log( $log_id );
+		return new \EDD\Logs\Api_Request_Log( $log_id );
 	}
 }

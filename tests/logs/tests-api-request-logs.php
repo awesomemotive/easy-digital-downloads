@@ -46,7 +46,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 			'ip' => '10.0.0.1',
 		) );
 
-		$log = new API_Request_Log( self::$logs[0] );
+		$log = new Api_Request_Log( self::$logs[0] );
 
 		$this->assertEquals( '10.0.0.1', $log->ip );
 	}
