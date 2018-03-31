@@ -15,7 +15,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 	 *
 	 * @since 3.0.0
 	 */
-	final class EDD_DB_Table_Log_File_Downloads extends EDD_DB_Table {
+	final class EDD_DB_Table_Logs_File_Downloads extends EDD_DB_Table {
 
 		/**
 		 * Table name
