@@ -370,8 +370,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
-		//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discounts.php';
-		//require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-discount-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
