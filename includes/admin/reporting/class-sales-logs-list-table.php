@@ -22,6 +22,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the sales log list table
  *
  * @since 1.4
+ * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_Sales_Log_Table extends WP_List_Table {
 	/**
