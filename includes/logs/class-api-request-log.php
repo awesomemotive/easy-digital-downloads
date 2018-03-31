@@ -267,7 +267,7 @@ class API_Request_Log {
 		 */
 		do_action( 'edd_pre_insert_api_request_log', $args );
 
-		$id = $this->db->insert( $args );
+		$id = edd_add_api_request_log( $args );
 
 		if ( $id ) {
 			$this->id = $id;
@@ -303,7 +303,7 @@ class API_Request_Log {
 	 * * @return bool True on success, false otherwise.
 	 */
 	public function update( $args = array() ) {
-		return $this->db->update( $this->id, $args );
+		return edd_update_api_request_log( $this->id, $args );
 	}
 
 	/**
@@ -315,7 +315,7 @@ class API_Request_Log {
 	 * @return bool True if deleted, false otherwise.
 	 */
 	public function delete() {
-		return $this->db->delete( $this->id );
+		return edd_delete_api_request_log( $this->id );
 	}
 
 	/**
@@ -329,10 +329,9 @@ class API_Request_Log {
 	 * @return array $data The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data ) {
-		$columns        = $this->db->get_columns();
-		$default_values = $this->db->get_column_defaults();
+		$default_values = array();
 
-		foreach ( $columns as $key => $type ) {
+		foreach ( $data as $key => $type ) {
 			// Only sanitize data that we were provided
 			if ( ! array_key_exists( $key, $data ) ) {
 				continue;
