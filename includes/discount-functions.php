@@ -664,8 +664,8 @@ function edd_discount_product_reqs_met( $discount_id = 0, $set_error = true ) {
  */
 function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_error = true ) {
 	$discount = ( null == $code )
-		? edd_get_discount_by_code( $code )
-		: edd_get_discount( $discount_id );
+		? edd_get_discount( $discount_id )
+		: edd_get_discount_by_code( $code );
 
 	return $discount->is_used( $user, $set_error );
 }
