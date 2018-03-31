@@ -10,7 +10,7 @@ namespace EDD\Logs;
  *
  * @coversDefaultClass \EDD_DB_Logs_File_Downloads
  */
-class File_Downloads_Logs_DB_Tests extends \EDD_UnitTestCase {
+class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Logs fixture.
