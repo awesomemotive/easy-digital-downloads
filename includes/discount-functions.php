@@ -417,7 +417,7 @@ function edd_get_discount_max_uses( $discount_id = 0 ) {
  * @return int $uses Number of times a discount has been used.
  */
 function edd_get_discount_uses( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'use_count' );
+	return (int) edd_get_discount_field( $discount_id, 'use_count' );
 }
 
 /**
