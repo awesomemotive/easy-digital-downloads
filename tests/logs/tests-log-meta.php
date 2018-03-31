@@ -86,8 +86,8 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD_DB_Log_Meta::get_meta()
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
-	public function test_get_metadata_with_no_args_should_be_empty() {
-		$this->assertEmpty( self::$log->get_meta() );
+	public function test_get_metadata_with_no_args_should_return_all_keys() {
+		$this->assertNotEmpty( self::$log->get_meta() );
 	}
 
 	/**
