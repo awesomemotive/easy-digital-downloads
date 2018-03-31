@@ -35,7 +35,7 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 			'title' => 'Log title 45',
 		) );
 
-		$this->assertTrue( $success );
+		$this->assertSame( 1, $success );
 	}
 
 	/**
@@ -141,25 +141,25 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_orderby_message_and_order_asc_should_return_true() {
+	public function test_get_logs_with_orderby_content_and_order_asc_should_return_true() {
 		$logs = edd_get_logs( array(
-			'orderby' => 'message',
+			'orderby' => 'content',
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->message < $logs[1]->message );
+		$this->assertTrue( $logs[0]->content < $logs[1]->content );
 	}
 
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_orderby_message_and_order_desc_should_return_true() {
+	public function test_get_logs_with_orderby_content_and_order_desc_should_return_true() {
 		$logs = edd_get_logs( array(
-			'orderby' => 'message',
+			'orderby' => 'content',
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->message > $logs[1]->message );
+		$this->assertTrue( $logs[0]->content > $logs[1]->content );
 	}
 
 	/**
