@@ -74,7 +74,7 @@ class EDD_Log_API_Request_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = '';
+	public $item_shape = 'EDD\\Logs\\Api_Request_Log';
 
 	/** Cache *****************************************************************/
 

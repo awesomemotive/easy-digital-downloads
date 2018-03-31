@@ -148,6 +148,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			}
 		} else {
 			// Download specific earning stats
+			/** @var EDD_Logging $edd_logs */
 			global $edd_logs, $wpdb;
 
 			$args = array(
@@ -168,7 +169,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$this->timestamp = false;
-				$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
+				$log_ids  = $edd_logs->get_connected_logs( $args );
 
 				$earnings = 0;
 

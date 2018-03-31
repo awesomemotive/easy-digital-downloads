@@ -74,7 +74,7 @@ class EDD_Log_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = '';
+	public $item_shape = 'EDD\\Logs\\Log';
 
 	/** Cache *****************************************************************/
 

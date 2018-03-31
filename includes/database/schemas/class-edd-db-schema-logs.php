@@ -28,6 +28,7 @@ class EDD_DB_Schema_Logs extends EDD_DB_Schema {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -38,6 +39,7 @@ class EDD_DB_Schema_Logs extends EDD_DB_Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
+			'searchable' => true,
 			'sortable'   => true
 		),
 

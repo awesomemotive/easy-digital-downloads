@@ -53,44 +53,6 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
 }
 
 /**
- * Get File Download Log
- *
- * Returns an array of file download dates and user info.
- *
- * @deprecated 1.3.4
- * @since 1.0
- *
- * @param int $download_id the ID number of the download to retrieve a log for
- * @param bool $paginate whether to paginate the results or not
- * @param int $number the number of results to return
- * @param int $offset the number of items to skip
- *
- * @return mixed array|bool
-*/
-function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
-	$backtrace = debug_backtrace();
-
-	_edd_deprecated_function( __FUNCTION__, '1.3.4', null, $backtrace );
-
-	$download_log = get_post_meta( $download_id, '_edd_file_download_log', true );
-
-	if ( $download_log ) {
-		$download_log = array_reverse( $download_log );
-		$log = array();
-		$log['number'] = count( $download_log );
-		$log['downloads'] = $download_log;
-
-		if ( $paginate ) {
-			$log['downloads'] = array_slice( $download_log, $offset, $number );
-		}
-
-		return $log;
-	}
-
-	return false;
-}
-
-/**
  * Get Downloads Of Purchase
  *
  * Retrieves an array of all files purchased.
