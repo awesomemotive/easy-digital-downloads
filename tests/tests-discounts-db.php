@@ -257,7 +257,11 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_get_discounts_with_date_created() {
 		$discounts = edd_get_discounts( array(
-			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created_query' => array(
+				'year'  => date( 'Y', strtotime( 'now' ) ),
+				'month' => date( 'm', strtotime( 'now' ) ),
+				'day'   => date( 'd', strtotime( 'now' ) ),
+			)
 		) );
 
 		$this->assertCount( 2, $discounts );
@@ -268,7 +272,11 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_get_discounts_with_created_start_date() {
 		$discounts = edd_get_discounts( array(
-			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created_query' => array(
+				'year'  => date( 'Y', strtotime( 'now' ) ),
+				'month' => date( 'm', strtotime( 'now' ) ),
+				'day'   => date( 'd', strtotime( 'now' ) ),
+			)
 		) );
 
 		$this->assertCount( 2, $discounts );
@@ -279,7 +287,11 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_get_discounts_with_created_end_date() {
 		$discounts = edd_get_discounts( array(
-			'date_created' => date( 'Y-m-d', strtotime( 'now' ) ),
+			'date_created_query' => array(
+				'year'  => date( 'Y', strtotime( 'now' ) ),
+				'month' => date( 'm', strtotime( 'now' ) ),
+				'day'   => date( 'd', strtotime( 'now' ) ),
+			)
 		) );
 
 		$this->assertCount( 2, $discounts );
@@ -367,7 +379,11 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_count_with_date_created() {
 		$this->assertSame( 2, count( edd_get_discounts( array(
-			'date_created' => date( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+			'date_created_query' => array(
+				'year'  => date( 'Y', strtotime( 'now' ) ),
+				'month' => date( 'm', strtotime( 'now' ) ),
+				'day'   => date( 'd', strtotime( 'now' ) ),
+			)
 		) ) ) );
 	}
 
@@ -376,7 +392,7 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_count_with_start_date() {
 		$this->assertSame( 2, count( edd_get_discounts( array(
-			'start_date' => array(
+			'start_date_query' => array(
 				'year'   => 2010,
 				'month'  => 12,
 				'day'    => 12,
@@ -392,7 +408,14 @@ class Tests_Discounts_DB extends EDD_UnitTestCase {
 	 */
 	public function test_count_with_end_date() {
 		$this->assertSame( 2, count( edd_get_discounts( array(
-			'end_date' => '2050-12-31 23:59:59',
+			'end_date_query' => array(
+				'year'   => 2050,
+				'month'  => 12,
+				'day'    => 12,
+				'hour'   => 23,
+				'minute' => 59,
+				'second' => 59,
+			)
 		) ) ) );
 	}
 

@@ -91,8 +91,8 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * @covers EDD_DB_Discount_Meta::get_meta()
 	 * @covers EDD_Discount::get_meta()
 	 */
-	public function test_get_metadata_with_no_args_should_be_empty() {
-		$this->assertEmpty( edd_get_discount_meta( self::$discount_id ) );
+	public function test_get_metadata_with_no_args_should_return_array() {
+		$this->assertNotEmpty( edd_get_discount_meta( self::$discount_id ) );
 	}
 
 	/**

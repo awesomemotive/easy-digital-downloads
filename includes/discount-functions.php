@@ -266,7 +266,20 @@ function edd_has_active_discounts() {
 function edd_store_discount( $details, $discount_id = 0 ) {
 	$return = false;
 
-	if ( null == $discount_id ) {
+	// Back-compat for dates
+	if ( isset( $details['start'] ) && strstr( $details['start'], '/' ) ) {
+		$details['start_date'] = str_replace( '/', '-', $details['start'] );
+		$details['start_date'] = date( 'Y-m-d', strtotime( $details['start_date'] ) );
+		unset( $details['start'] );
+	}
+
+	if ( isset( $details['expiration'] ) && strstr( $details['expiration'], '/' ) ) {
+		$details['end_date'] = str_replace('/', '-', $details['expiration']);
+		$details['end_date'] = date( 'Y-m-d', strtotime( $details['end_date'] ) );
+		unset( $details['expiration'] );
+	}
+
+	if ( 0 === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
 	} else {
 		$return = (int) edd_update_discount( $discount_id );
@@ -633,7 +646,7 @@ function edd_discount_is_min_met( $discount_id = 0, $set_error = true ) {
  * @return bool Whether the discount is single use or not.
  */
 function edd_discount_is_single_use( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'once_per_customer' );
+	return null === edd_get_discount_field( $discount_id, 'once_per_customer' ) ? false : true;
 }
 
 /**
