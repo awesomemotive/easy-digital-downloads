@@ -102,15 +102,6 @@ class API_Request_Log {
 	protected $date_created;
 
 	/**
-	 * Database abstraction.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    \EDD_DB_Logs
-	 */
-	protected $db;
-
-	/**
 	 * Declare the default properties in WP_Post as we can't extend it.
 	 *
 	 * @since  3.0
@@ -150,9 +141,7 @@ class API_Request_Log {
 	 * @param int $log_id Log ID.
 	 */
 	public function __construct( $log_id ) {
-		$this->db = EDD()->api_request_logs;
-
-		$log = $this->db->get( $log_id );
+		$log = edd_get_api_request_log( $log_id );
 
 		if ( $log ) {
 			foreach ( get_object_vars( $log ) as $key => $value ) {

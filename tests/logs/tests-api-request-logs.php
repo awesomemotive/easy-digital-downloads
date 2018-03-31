@@ -28,75 +28,21 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$cache_group
-	 */
-	public function test_cache_group_should_be_logs() {
-		$this->assertSame( 'logs_api_requests', EDD()->api_request_logs->cache_group );
-	}
-
-	/**
-	 * @covers ::$primary_key
-	 */
-	public function test_primary_key_should_be_id() {
-		$this->assertSame( 'id', EDD()->api_request_logs->primary_key );
-	}
-
-	/**
-	 * @covers ::get_columns()
-	 */
-	public function test_get_columns_should_return_all_columns() {
-		$expected = array(
-			'id'           => '%d',
-			'user_id'      => '%d',
-			'api_key'      => '%s',
-			'token'        => '%s',
-			'version'      => '%s',
-			'request'      => '%s',
-			'error'        => '%s',
-			'ip'           => '%s',
-			'time'         => '%f',
-			'date_created' => '%s',
-		);
-
-		$this->assertEqualSets( $expected, EDD()->api_request_logs->get_columns() );
-	}
-
-	/**
-	 * @covers \EDD_DB_Logs::get_column_defaults()
-	 */
-	public function test_get_column_defaults_should_return_defaults() {
-		$expected = array(
-			'id'           => 0,
-			'user_id'      => 0,
-			'api_key'      => 'public',
-			'token'        => '',
-			'version'      => '',
-			'request'      => '',
-			'error'        => '',
-			'ip'           => '',
-			'time'         => '',
-			'date_created' => date( 'Y-m-d H:i:s' ),
-		);
-
-		$this->assertEqualSets( $expected, EDD()->api_request_logs->get_column_defaults() );
-	}
-
-	/**
 	 * @covers ::update()
 	 */
 	public function test_update_should_return_true() {
-		$success = EDD()->api_request_logs->update( self::$logs[0], array(
+		$success = edd_update_api_request_log( self::$logs[0], array(
 			'ip' => '10.0.0.1',
 		) );
 
-		$this->assertTrue( $success );
+		$this->assertSame( 1, $success );
 	}
 
 	/**
 	 * @covers ::update()
 	 */
 	public function test_log_object_after_update_should_return_true() {
-		$success = EDD()->api_request_logs->update( self::$logs[0], array(
+		$success = edd_update_api_request_log( self::$logs[0], array(
 			'ip' => '10.0.0.1',
 		) );
 
@@ -109,7 +55,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD_DB_Logs::update()
 	 */
 	public function test_update_without_ip_should_fail() {
-		$success = EDD()->api_request_logs->update( null, array(
+		$success = edd_update_api_request_log( null, array(
 			'ip' => '10.0.0.1',
 		) );
 
@@ -120,16 +66,16 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::delete()
 	 */
 	public function test_delete_should_return_true() {
-		$success = EDD()->api_request_logs->delete( self::$logs[0] );
+		$success = edd_delete_api_request_log( self::$logs[0] );
 
-		$this->assertTrue( $success );
+		$this->assertSame( 1, $success );
 	}
 
 	/**
 	 * @covers ::delete()
 	 */
 	public function test_delete_without_id_should_fail() {
-		$success = EDD()->api_request_logs->delete( '' );
+		$success = edd_delete_api_request_log( '' );
 
 		$this->assertFalse( $success );
 	}
@@ -137,17 +83,19 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs() {
-		$logs = EDD()->api_request_logs->get_logs();
+	public function test_get_logs_with_small_number_should_return_true() {
+		$logs = edd_get_api_request_logs( array(
+			'number' => 2,
+		) );
 
-		$this->assertCount( 5, $logs );
+		$this->assertCount( 2, $logs );
 	}
 
 	/**
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_number_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'number' => 10,
 		) );
 
@@ -158,7 +106,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_offset_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'number' => 10,
 			'offset' => 4,
 		) );
@@ -170,7 +118,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_search_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'search' => 'edd-api=sales',
 		) );
 
@@ -181,7 +129,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_search_with_orderby_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'search'  => 'edd-api=sales',
 			'orderby' => 'api_key',
 		) );
@@ -193,7 +141,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_search_with_orderby_and_order_desc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'search'  => 'edd-api=sales',
 			'orderby' => 'api_key',
 			'order'   => 'desc'
@@ -206,7 +154,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_search_with_orderby_and_order_asc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'search'  => 'edd-api=sales',
 			'orderby' => 'api_key',
 			'order'   => 'asc'
@@ -219,7 +167,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_invalid_search_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'search' => 'edd-api=info',
 		) );
 
@@ -230,7 +178,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_api_key_and_order_asc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'api_key',
 			'order'   => 'asc'
 		) );
@@ -242,7 +190,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_api_key_and_order_desc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'api_key',
 			'order'   => 'desc'
 		) );
@@ -254,7 +202,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_token_and_order_asc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'token',
 			'order'   => 'asc'
 		) );
@@ -266,7 +214,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_token_and_order_desc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'token',
 			'order'   => 'desc'
 		) );
@@ -278,7 +226,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_request_and_order_asc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'request',
 			'order'   => 'asc'
 		) );
@@ -290,7 +238,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_request_and_order_desc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'request',
 			'order'   => 'desc'
 		) );
@@ -302,7 +250,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_time_and_order_asc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'time',
 			'order'   => 'asc'
 		) );
@@ -314,7 +262,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_orderby_time_and_order_desc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'orderby' => 'time',
 			'order'   => 'desc'
 		) );
@@ -326,7 +274,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_order_asc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'order' => 'asc',
 		) );
 
@@ -337,7 +285,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_order_desc_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'order' => 'desc',
 		) );
 
@@ -348,7 +296,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_by_user_id_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'user_id' => \WP_UnitTest_Generator_Sequence::$incr
 		) );
 
@@ -359,7 +307,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_by_invalid_user_id_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'user_id' => 99999,
 		) );
 
@@ -370,7 +318,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_invalid_version_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'version' => 'v99999',
 		) );
 
@@ -381,7 +329,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_invalid_api_key_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'api_key' => 'b8062c469b938052f3bf4656999ee995b8062c469b938052f3bf4656999ee995',
 		) );
 
@@ -392,7 +340,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_invalid_token_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'token' => 'b8062c469b938052f3bf4656999ee995b8062c469b938052f3bf4656999ee995',
 		) );
 
@@ -403,7 +351,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_invalid_request_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'request' => 'foo',
 		) );
 
@@ -414,7 +362,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs_with_invalid_ip_should_return_true() {
-		$logs = EDD()->api_request_logs->get_logs( array(
+		$logs = edd_get_api_request_logs( array(
 			'ip' => '999.999.999.999',
 		) );
 
@@ -425,7 +373,7 @@ class API_Request_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count() {
-		$this->assertEquals( 5, EDD()->api_request_logs->count() );
+		$this->assertEquals( 5, edd_count_api_request_logs() );
 	}
 
 }
