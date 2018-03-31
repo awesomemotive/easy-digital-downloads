@@ -245,12 +245,4 @@ class Logs_DB_Tests extends \EDD_UnitTestCase {
 	public function test_count() {
 		$this->assertEquals( 5, edd_count_logs() );
 	}
-
-	/**
-	 * @covers ::counts_by_type()
-	 */
-	public function test_counts_by_type() {
-		$counts = EDD()->logs->counts_by_type();
-		$this->assertEquals( 5, $counts->sale );
-	}
 }
