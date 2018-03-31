@@ -135,13 +135,18 @@ class Api_Request_Log {
 	/**
 	 * Constructor.
 	 *
-	 * @since  3.0
-	 * @access protected
+	 * @since 3.0.0
 	 *
-	 * @param int $log_id Log ID.
+	 * @param int|object $data API request log data, or an API request log ID.
 	 */
-	public function __construct( $log_id ) {
-		$log = edd_get_api_request_log( $log_id );
+	public function __construct( $data ) {
+		$log = null;
+
+		if ( is_object( $data ) ) {
+			$log = $data;
+		} else if ( is_numeric( $data ) ) {
+			$log = edd_get_api_request_log( $data);
+		}
 
 		if ( $log ) {
 			foreach ( get_object_vars( $log ) as $key => $value ) {

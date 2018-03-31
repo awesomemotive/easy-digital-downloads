@@ -144,13 +144,18 @@ class File_Download_Log {
 	/**
 	 * Constructor.
 	 *
-	 * @since  3.0
-	 * @access protected
+	 * @since 3.0.0
 	 *
-	 * @param int $log_id Log ID.
+	 * @param int|object $data File download log data, or a file download log ID.
 	 */
-	public function __construct( $log_id ) {
-		$log = edd_get_file_download_log( $log_id );
+	public function __construct( $data ) {
+		$log = null;
+
+		if ( is_object( $data ) ) {
+			$log = $data;
+		} else if ( is_numeric( $data ) ) {
+			$log = edd_get_file_download_log( $data);
+		}
 
 		if ( $log ) {
 			foreach ( get_object_vars( $log ) as $key => $value ) {
