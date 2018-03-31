@@ -150,9 +150,7 @@ class File_Download_Log {
 	 * @param int $log_id Log ID.
 	 */
 	public function __construct( $log_id ) {
-		$this->db = EDD()->file_download_logs;
-
-		$log = $this->db->get( $log_id );
+		$log = edd_get_file_download_log( $log_id );
 
 		if ( $log ) {
 			foreach ( get_object_vars( $log ) as $key => $value ) {
