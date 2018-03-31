@@ -35,7 +35,7 @@ class File_Downloads_Logs_DB_Tests extends \EDD_UnitTestCase {
 			'ip' => '10.0.0.1',
 		) );
 
-		$this->assertTrue( $success );
+		$this->assertSame( 1, $success );
 	}
 
 	/**
@@ -68,7 +68,7 @@ class File_Downloads_Logs_DB_Tests extends \EDD_UnitTestCase {
 	public function test_delete_should_return_true() {
 		$success = edd_delete_file_download_log( self::$logs[0] );
 
-		$this->assertTrue( $success );
+		$this->assertSame( 1, $success );
 	}
 
 	/**
@@ -108,7 +108,8 @@ class File_Downloads_Logs_DB_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_logs_with_search_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'search' => '@edd.test',
+			'search'         => '@edd.test',
+			'search_columns' => array( 'email' ),
 		) );
 
 		$this->assertCount( 5, $logs );
