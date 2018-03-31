@@ -1840,7 +1840,7 @@ class EDD_API {
 			'time'    => $data['request_speed'],
 		);
 
-		EDD()->api_request_logs->insert( $data );
+		edd_add_api_request_log( $data );
 	}
 
 
