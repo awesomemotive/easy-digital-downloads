@@ -66,13 +66,13 @@ class Log {
 	protected $title;
 
 	/**
-	 * Log message.
+	 * Log content.
 	 *
 	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
-	protected $message;
+	protected $content;
 
 	/**
 	 * Date log was created.
@@ -242,7 +242,7 @@ class Log {
 	 *      @type string $object_type Object type.
 	 *      @type string $type        Log type.
 	 *      @type string $title       Log title.
-	 *      @type string $message     Log content.
+	 *      @type string $content     Log content.
 	 * }
 	 *
 	 * @return int Newly created log ID.
@@ -303,7 +303,7 @@ class Log {
 	 *      @type string $object_type Object type.
 	 *      @type string $type        Log type.
 	 *      @type string $title       Log title.
-	 *      @type string $message     Log content.
+	 *      @type string $content     Log content.
 	 * }
 	 * @return bool True on success, false otherwise.
 	 */
