@@ -22,7 +22,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * EDD_File_Downloads_Log_Table Class
  *
  * @since 1.4
- * @since 3.0 Updated to use the custom tables and new query classes
+ * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
@@ -116,12 +116,12 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
+	    switch ( $column_name ) {
 			case 'download' :
 				$download      = new EDD_Download( $item[ $column_name ] );
 				$column_value  = $download->get_name();
 
-				if ( false !== $item['price_id'] ) {
+				if ( ! empty( $item['price_id'] ) ) {
 					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
 				}
 
@@ -370,16 +370,16 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$paged     = $this->get_paged();
 		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : false;
 		$log_query = array(
-			'paged'          => $paged,
-			'meta_query'     => $this->get_meta_query(),
-			'posts_per_page' => $this->per_page,
+			'paged'      => $paged,
+			'meta_query' => $this->get_meta_query(),
+			'number'     => $this->per_page,
 		);
 
 		if ( $download ) {
-			$log_query['download'] = $download;
+			$log_query['download_id'] = $download;
 		}
 
-		$logs = EDD()->file_download_logs->get_logs( $log_query );
+		$logs = edd_get_file_download_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
@@ -423,6 +423,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 						'download'   => $log->download_id,
 						'customer'   => new EDD_Customer( $customer_id ),
 						'payment_id' => $log->payment_id,
+						'price_id'   => $log->price_id,
 						'file'       => $file_name,
 						'ip'         => $log->ip,
 						'date'       => $log->post_date,
@@ -443,7 +444,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$count_args = array();
 		$download   = $this->get_filtered_download();
 		if ( $download ) {
-			$count_args[] = $download;
+			$count_args['download_id'] = $download;
 		}
 		$count_args['meta_query'] = $this->get_meta_query();
 
@@ -452,7 +453,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->get_logs();
-		$total_items           = EDD()->file_download_logs->count( $count_args );
+		$total_items           = edd_count_file_download_logs( $count_args );
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
