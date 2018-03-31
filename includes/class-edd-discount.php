@@ -1746,16 +1746,11 @@ class EDD_Discount extends EDD_DB_Discount {
 					} elseif ( 'notes' == $key ) {
 						$data[$key] = strip_tags( $data[$key] );
 					} else {
-
-						if( is_array( $data[$key] ) ) {
-
+						if ( is_array( $data[$key] ) ) {
 							$data[$key] = json_encode( $data[$key] );
-
 						} else {
-
 							$data[$key] = sanitize_text_field( $data[$key] );
 						}
-
 					}
 					break;
 
