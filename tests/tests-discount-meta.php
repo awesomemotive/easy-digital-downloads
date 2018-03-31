@@ -44,7 +44,7 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_be_null() {
-		$this->assertNull( edd_add_discount_meta( self::$discount_id, '', '' ) );
+		$this->assertFalse( edd_add_discount_meta( self::$discount_id, '', '' ) );
 	}
 
 	/**
