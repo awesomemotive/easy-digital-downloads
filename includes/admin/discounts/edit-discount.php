@@ -170,7 +170,7 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 					<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="start_date" id="edd-start" type="text" value="<?php echo esc_attr( $discount->start_date ); ?>"  class="edd_datepicker"/>
+					<input name="start_date" id="edd-start" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->start_date ? '' : esc_attr( $discount->start_date ); ?>"  class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
@@ -182,7 +182,7 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
 				</th>
 				<td>
-					<input name="end_date" id="edd-expiration" type="text" value="<?php echo esc_attr( $discount->end_date ); ?>"  class="edd_datepicker" data-format="yyyy-mm-dd"/>
+					<input name="end_date" id="edd-expiration" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->end_date ? '' : esc_attr( $discount->end_date ); ?>"  class="edd_datepicker" data-format="yyyy-mm-dd"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
 				</td>
 			</tr>
