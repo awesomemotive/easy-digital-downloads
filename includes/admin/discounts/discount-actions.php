@@ -64,6 +64,7 @@ function edd_admin_add_discount( $data = array() ) {
 				break;
 
 			case 'end_date':
+			case 'expiration':
 				$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
 				break;
 
