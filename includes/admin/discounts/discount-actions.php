@@ -145,6 +145,8 @@ function edd_admin_edit_discount( $data = array() ) {
 	$to_update    = array();
 	$current_time = current_time( 'timestamp' );
 
+	$data = array_filter( $data );
+
 	foreach ( $data as $column => $value ) {
 		switch ( $column ) {
 			case 'discount-id':
