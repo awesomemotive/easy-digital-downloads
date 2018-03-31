@@ -921,6 +921,170 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Migrate logs to the custom tables.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_logs
+	 * wp edd migrate_logs --force
+	 */
+	public function migrate_logs( $args, $assoc_args ) {
+		global $wpdb;
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_logs' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The logs custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		$logs_db = edd_get_component_interface( 'log', 'table' );
+		if ( ! $logs_db->exists() ) {
+			@$logs_db->create();
+		}
+
+		$log_meta_db = edd_get_component_interface( 'log', 'meta' );
+		if ( ! $log_meta_db->exists() ) {
+			@$log_meta_db->create();
+		}
+
+		$log_api_request_db = edd_get_component_interface( 'log_api_request', 'table' );
+		if ( ! $log_api_request_db->exists() ) {
+			@$log_api_request_db->create();
+		}
+
+		$log_file_download_db = edd_get_component_interface( 'log_file_download', 'table' );
+		if ( ! $log_file_download_db->exists() ) {
+			@$log_file_download_db->create();
+		}
+
+		$sql = "
+			SELECT p.*, t.slug
+			FROM {$wpdb->posts} AS p
+			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+			GROUP BY p.ID
+		";
+		$results = $wpdb->get_results( $sql );
+		$total = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Logs', $total );
+
+			foreach ( $results as $old_log ) {
+				if ( 'file_download' === $old_log->slug ) {
+					$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
+
+					$post_meta = array();
+
+					foreach ( $meta as $meta_item ) {
+						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+					}
+
+					$log_data = array(
+						'download_id'  => $old_log->post_parent,
+						'file_id'      => $post_meta['_edd_log_file_id'],
+						'payment_id'   => $post_meta['_edd_log_payment_id'],
+						'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+						'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+						'ip'           => $post_meta['_edd_log_ip'],
+						'date_created' => $old_log->post_date,
+					);
+
+					$new_log_id = edd_add_file_download_log( $log_data );
+				} else if ( 'api_request' === $old_log->slug ) {
+					$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
+
+					$post_meta = array();
+
+					foreach ( $meta as $meta_item ) {
+						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+					}
+
+					$log_data = array(
+						'ip'           => $post_meta['_edd_log_request_ip'],
+						'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
+						'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
+						'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+						'version'      => $post_meta['_edd_log_version'],
+						'time'         => $post_meta['_edd_log_time'],
+						'request'      => $old_log->post_excerpt,
+						'error'        => $old_log->post_content,
+						'date_created' => $old_log->post_date,
+					);
+
+					$new_log_id = edd_add_api_request_log( $log_data );
+				} else {
+					$post = new WP_Post( $old_log->ID );
+
+					$log_data = array(
+						'object_id'   => $post->post_parent,
+						'object_type' => 'download',
+						'type'        => $old_log->slug,
+						'title'       => $old_log->post_title,
+						'message'     => $old_log->post_content
+					);
+
+					$meta            = get_post_custom( $old_log->ID );
+					$meta_to_migrate = array();
+
+					foreach ( $meta as $key => $value ) {
+						$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+					}
+
+					$new_log_id = edd_add_log( $log_data );
+					$new_log = new EDD\Logs\Log( $new_log_id );
+
+					if ( ! empty( $meta_to_migrate ) ) {
+						foreach ( $meta_to_migrate as $key => $value ) {
+							$new_log->add_meta( $key, $value );
+						}
+					}
+				}
+
+				edd_debug_log( $old_log->ID. ' successfully migrated to ' . $new_log_id );
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			$new_count = edd_count_logs() + edd_count_file_download_logs() + edd_count_api_request_logs();
+			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_log'", 0 );
+			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
+
+			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_set_upgrade_complete( 'migrate_logs' );
+
+			WP_CLI::confirm( __( 'Remove legacy logs?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::line( __( 'Removing old logs.', 'easy-digital-downloads' ) );
+
+			$log_ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_log'" );
+			$log_ids = wp_list_pluck( $log_ids, 'ID' );
+			$log_ids = implode( ', ', $log_ids );
+
+			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log')";
+			$wpdb->query( $delete_query );
+
+			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
+			$wpdb->query( $delete_postmeta_query );
+
+			edd_set_upgrade_complete( 'remove_legacy_logs' );
+		} else {
+			WP_CLI::line( __( 'No log records found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_logs' );
+			edd_set_upgrade_complete( 'remove_legacy_logs' );
+		}
+	}
+
+	/**
 	 * Migrate notes to the custom tables.
 	 *
 	 * ## OPTIONS
@@ -1019,231 +1183,6 @@ class EDD_CLI extends WP_CLI_Command {
 		);
 
 		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
-	}
-
-	/**
-	 * Migrate the API requests to the custom table.
-	 *
-	 * ## OPTIONS
-	 *
-	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
-	 *
-	 * ## EXAMPLES
-	 *
-	 * wp edd migrate_api_request_logs
-	 * wp edd migrate_api_request_logs --force
-	 */
-	public function migrate_api_request_logs( $args, $assoc_args ) {
-		global $wpdb;
-
-		$force = isset( $assoc_args['force'] ) ? true : false;
-
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_api_request_logs' );
-
-		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The API request logs custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$api_request_logs_db = EDD()->api_request_logs;
-		if ( ! $api_request_logs_db->table_exists( $api_request_logs_db->table_name ) ) {
-			@$api_request_logs_db->create_table();
-		}
-
-		$term_id_sql = "SELECT t.term_id FROM wp_terms AS t  INNER JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('edd_log_type') AND t.slug IN ('api_request')";
-		$term_id = $wpdb->get_var( $term_id_sql );
-
-		$sql = "
-			SELECT *
-			FROM wp_posts
-		  	LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-		  	WHERE wp_term_relationships.term_taxonomy_id = {$term_id}
-		  	AND wp_posts.post_type = 'edd_log'
-		  	GROUP BY wp_posts.ID
-			ORDER BY wp_posts.post_date ASC
-		";
-		$results = $wpdb->get_results( $sql );
-		$total = count( $results );
-
-		if ( ! empty( $total ) ) {
-			// Store all the new logs, Key = Legacy Log ID, Value = New Log ID
-			$new_log_ids = array();
-
-			$progress = new \cli\progress\Bar( 'Migrating API Request Logs', $total );
-
-			foreach ( $results as $log_post ) {
-				// Prevent an already migrated item from being migrated.
-				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $log_post->ID" );
-				if ( ! empty( $migrated ) ) {
-					$progress->tick();
-					continue;
-				}
-
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $log_post->ID ) );
-
-				$post_meta = array();
-
-				foreach ( $meta as $meta_item ) {
-					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-				}
-
-				$log_data = array(
-					'ip'           => $post_meta['_edd_log_request_ip'],
-					'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-					'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-					'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
-					'version'      => $post_meta['_edd_log_version'],
-					'time'         => $post_meta['_edd_log_time'],
-					'request'      => $log_post->post_excerpt,
-					'error'        => $log_post->post_content,
-					'date_created' => $log_post->post_date,
-				);
-
-				$new_log_id = $api_request_logs_db->insert( $log_data );
-
-				if ( ! empty( $new_log_id ) ) {
-					add_post_meta( $log_post->ID, '_edd_log_migrated_id', $new_log_id );
-				}
-
-				$progress->tick();
-			}
-
-			$progress->finish();
-
-			WP_CLI::line( __( 'API Request Log Migration Complete.', 'easy-digital-downloads' ) );
-			$new_count = $api_request_logs_db->count();
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
-			WP_CLI::line( __( 'Old API Request Log Count: ', 'easy-digital-downloads' ) . $old_count[0] );
-			WP_CLI::line( __( 'New API Request Log_count: ', 'easy-digital-downloads' ) . $new_count );
-
-			WP_CLI::confirm( __( 'Remove legacy API request logs?', 'easy-digital-downloads' ), $remove_args = array() );
-			WP_CLI::line( __( 'Removing old API request logs.', 'easy-digital-downloads' ) );
-
-			$log_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
-			$log_ids = implode( ', ', $log_ids );
-
-			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$log_ids})";
-			$wpdb->query( $delete_posts_query );
-
-			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$log_ids})";
-			$wpdb->query( $delete_postmeta_query );
-			edd_set_upgrade_complete( 'remove_legacy_api_request_logs' );
-
-			WP_CLI::line( __( 'All Legacy API Request Logs Removed.', 'easy-digital-downloads' ) );
-		} else {
-			WP_CLI::line( __( 'No API request logs found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_api_request_logs' );
-			edd_set_upgrade_complete( 'remove_legacy_api_request_logs' );
-		}
-	}
-
-	/**
-	 * Migrate the file download logs to the custom table.
-	 *
-	 * ## OPTIONS
-	 *
-	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
-	 *
-	 * ## EXAMPLES
-	 *
-	 * wp edd migrate_file_download_logs
-	 * wp edd migrate_file_download_logs --force
-	 */
-	public function migrate_file_download_logs( $args, $assoc_args ) {
-		global $wpdb;
-
-		$force = isset( $assoc_args['force'] ) ? true : false;
-
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_file_download_logs' );
-
-		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The file download logs custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$file_download_logs_db = EDD()->file_download_logs;
-		if ( ! $file_download_logs_db->table_exists( $file_download_logs_db->table_name ) ) {
-			@$file_download_logs_db->create_table();
-		}
-
-		$term_id_sql = "SELECT t.term_id FROM wp_terms AS t  INNER JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('edd_log_type') AND t.slug IN ('file_download')";
-		$term_id = $wpdb->get_var( $term_id_sql );
-
-		$sql = "
-			SELECT *
-			FROM wp_posts
-		  	LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-		  	WHERE wp_term_relationships.term_taxonomy_id = {$term_id}
-		  	AND wp_posts.post_type = 'edd_log'
-		  	GROUP BY wp_posts.ID
-			ORDER BY wp_posts.post_date ASC
-		";
-		$results = $wpdb->get_results( $sql );
-		$total = count( $results );
-
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating File Download Logs', $total );
-
-			foreach ( $results as $log_post ) {
-				// Prevent an already migrated item from being migrated.
-				$migrated = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_migrated_id' AND post_id = $log_post->ID" );
-				if ( ! empty( $migrated ) ) {
-					$progress->tick();
-					continue;
-				}
-
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $log_post->ID ) );
-
-				$post_meta = array();
-
-				foreach ( $meta as $meta_item ) {
-					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-				}
-
-				$log_data = array(
-					'download_id'  => $log_post->post_parent,
-					'file_id'      => $post_meta['_edd_log_file_id'],
-					'payment_id'   => $post_meta['_edd_log_payment_id'],
-					'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-					'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-					'ip'           => $post_meta['_edd_log_ip'],
-					'date_created' => $log_post->post_date,
-				);
-
-				$new_log_id = $file_download_logs_db->insert( $log_data );
-
-				if ( ! empty( $new_log_id ) ) {
-					add_post_meta( $log_post->ID, '_edd_log_migrated_id', $new_log_id );
-				}
-
-				$progress->tick();
-			}
-
-			$progress->finish();
-
-			WP_CLI::line( __( 'File Download Log Migration Complete.', 'easy-digital-downloads' ) );
-			$new_count = $file_download_logs_db->count();
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
-			WP_CLI::line( __( 'Old File Download Log Count: ', 'easy-digital-downloads' ) . $old_count[0] );
-			WP_CLI::line( __( 'New File Download Log_count: ', 'easy-digital-downloads' ) . $new_count );
-
-			WP_CLI::confirm( __( 'Remove legacy file download logs?', 'easy-digital-downloads' ), $remove_args = array() );
-			WP_CLI::line( __( 'Removing old file download logs.', 'easy-digital-downloads' ) );
-
-			$log_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id) WHERE wp_term_relationships.term_taxonomy_id = {$term_id} AND post_type = 'edd_log'", 0 );
-			$log_ids = implode( ', ', $log_ids );
-
-			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$log_ids})";
-			$wpdb->query( $delete_posts_query );
-
-			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$log_ids})";
-			$wpdb->query( $delete_postmeta_query );
-			edd_set_upgrade_complete( 'remove_legacy_file_download_logs' );
-
-			WP_CLI::line( __( 'All Legacy File Download Logs Removed.', 'easy-digital-downloads' ) );
-		} else {
-			WP_CLI::line( __( 'No file download logs found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_file_download_logs' );
-			edd_set_upgrade_complete( 'remove_legacy_file_download_logs' );
-		}
 	}
 
 	protected function get_lname() {
