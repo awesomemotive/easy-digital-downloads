@@ -11,7 +11,7 @@ class Log extends \WP_UnitTest_Factory_For_Thing {
 			'object_type' => 'download',
 			'type'        => 'sale',
 			'title'       => new \WP_UnitTest_Generator_Sequence( 'Log title %s' ),
-			'message'     => new \WP_UnitTest_Generator_Sequence( 'Log message %s' ),
+			'content'     => new \WP_UnitTest_Generator_Sequence( 'Log message %s' ),
 		);
 	}
 
