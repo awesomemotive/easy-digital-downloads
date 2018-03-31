@@ -889,7 +889,7 @@ class EDD_Discount extends EDD_DB_Discount {
 			return $this->update( $args );
 
 		} else {
-			$args = $this->convert_legacy_args( $args );
+			$args = self::convert_legacy_args( $args );
 
 			if ( ! empty( $args['start_date'] ) ) {
 				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
@@ -1023,7 +1023,7 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * @return bool True if update is successful, false otherwise.
 	 */
 	public function update( $args = array() ) {
-		$args = $this->convert_legacy_args( $args );
+		$args = self::convert_legacy_args( $args );
 		$ret  = false;
 
 		/**
@@ -1792,11 +1792,13 @@ class EDD_Discount extends EDD_DB_Discount {
 	/**
 	 * Converts pre-3.0 arguments to the 3.0+ version.
 	 *
-	 * @param $args array Arguments to be converted..
 	 * @since 3.0
-	 * @return array      The converted arguments.
+	 * @static
+	 *
+	 * @param $args array Arguments to be converted.
+	 * @return array The converted arguments.
 	 */
-	private function convert_legacy_args( $args = array() ) {
+	public static function convert_legacy_args( $args = array() ) {
 		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
 		$old = array(
 			'uses'               => 'use_count',
@@ -1811,19 +1813,13 @@ class EDD_Discount extends EDD_DB_Discount {
 
 		foreach ( $old as $old_key => $new_key ) {
 			if ( isset( $args[ $old_key ] ) ) {
-
 				if ( $old_key == 'is_not_global' ) {
-
 					$args[ $new_key ] = $args[ $old_key ] ? 'not_global' : 'global';
-
 				} else {
-
 					$args[ $new_key ] = $args[ $old_key ];
-
 				}
 
 				unset( $args[ $old_key ] );
-
 			}
 		}
 

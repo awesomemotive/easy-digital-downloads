@@ -117,6 +117,27 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
+	// Product requirements and excluded products are handled differently
+	if ( isset( $data['product_reqs'] ) ) {
+		edd_delete_discount_meta( $discount_id, 'product_requirement' );
+
+		foreach ( $data['product_reqs'] as $product_requirement ) {
+			edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+		}
+
+		unset( $data['product_reqs'] );
+	}
+
+	if ( isset( $data['excluded_products'] ) ) {
+		edd_delete_discount_meta( $discount_id, 'excluded_product' );
+
+		foreach ( $data['excluded_products'] as $excluded_product ) {
+			edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+		}
+
+		unset( $data['excluded_products'] );
+	}
+
 	$discounts = new EDD_Discount_Query();
 
 	return $discounts->update_item( $discount_id, $data );
@@ -278,6 +299,8 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 		$details['end_date'] = date( 'Y-m-d', strtotime( $details['end_date'] ) );
 		unset( $details['expiration'] );
 	}
+
+	$details = EDD_Discount::convert_legacy_args( $details );
 
 	if ( 0 === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
