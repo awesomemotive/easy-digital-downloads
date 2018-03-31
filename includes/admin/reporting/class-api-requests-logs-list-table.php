@@ -274,16 +274,9 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Setup the final data for the table.
 	 *
 	 * @since 1.5
-	 * @global object $edd_logs EDD Logs Object
-	 * @uses EDD_API_Request_Log_Table::get_columns()
-	 * @uses WP_List_Table::get_sortable_columns()
-	 * @uses EDD_API_Request_Log_Table::get_pagenum()
-	 * @uses EDD_API_Request_Log_Table::get_logs()
-	 * @uses EDD_API_Request_Log_Table::get_log_count()
-	 * @return void
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();

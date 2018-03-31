@@ -370,16 +370,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Setup the final data for the table.
 	 *
 	 * @since 1.4
-	 * @global object $edd_logs EDD Logs Object
-	 * @uses EDD_Sales_Log_Table::get_columns()
-	 * @uses WP_List_Table::get_sortable_columns()
-	 * @uses EDD_Sales_Log_Table::get_pagenum()
-	 * @uses EDD_Sales_Log_Table::get_logs()
-	 * @uses EDD_Sales_Log_Table::get_log_count()
-	 * @return void
 	 */
 	public function prepare_items() {
 		/** @var EDD_Logging $edd_logs */
