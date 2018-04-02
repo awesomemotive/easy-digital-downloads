@@ -39,13 +39,6 @@ $condition_display = ! empty( $product_reqs )          ? '' : ' style="display:n
 ?><div class="wrap">
 	<h1><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?></h1>
 
-	<?php if ( isset( $_GET['edd-message'] ) && 'discount_updated' === $_GET['edd-message'] ) : ?>
-		<div class="updated">
-			<p><strong><?php _e( 'Discount code updated.', 'easy-digital-downloads' ); ?></strong></p>
-			<p><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"><?php _e( '&larr; Back to Discounts', 'easy-digital-downloads' ); ?></a></p>
-		</div>
-	<?php endif; ?>
-
 	<form id="edd-edit-discount" action="" method="post">
 
 		<?php do_action( 'edd_edit_discount_form_top', $discount->id, $discount ); ?>
