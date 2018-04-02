@@ -27,10 +27,10 @@ interface Error_Logger_Interface {
 	public function get_errors();
 
 	/**
-	 * Sets the errors instance.
+	 * Sets up the errors instance.
 	 *
 	 * @since 3.0
 	 */
-	public function set_errors();
+	public function setup_error_logger();
 
 }
