@@ -48,6 +48,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 
 			if ( $thing instanceof EDD_DB_Table ) {
 				$thing->delete_all();
+				$thing->truncate();
 			}
 		}
 	}

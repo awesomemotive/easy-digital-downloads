@@ -15,7 +15,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 	 *
 	 * @since 3.0.0
 	 */
-	final class EDD_DB_Table_Log_File_Downloads extends EDD_DB_Table {
+	final class EDD_DB_Table_Logs_File_Downloads extends EDD_DB_Table {
 
 		/**
 		 * Table name
@@ -49,6 +49,7 @@ if ( class_exists( 'EDD_DB_Table' ) ) :
 			payment_id bigint(20) unsigned NOT NULL default '0',
 			price_id bigint(20) unsigned NOT NULL default '0',
 			user_id bigint(20) unsigned NOT NULL default '0',
+			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),

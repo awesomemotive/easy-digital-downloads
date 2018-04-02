@@ -9,7 +9,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -22,6 +22,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the sales log list table
  *
  * @since 1.4
+ * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_Sales_Log_Table extends WP_List_Table {
 	/**
@@ -296,6 +297,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @return array $logs_data Array of all the Log entires
 	 */
 	public function get_logs() {
+		/** @var EDD_Logging $edd_logs */
 		global $edd_logs;
 
 		// Prevent the queries from getting cached. Without this there are occasional memory issues for some installs
@@ -306,36 +308,36 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
 
 		$log_query = array(
-			'post_parent'    => $download,
-			'log_type'       => 'sale',
-			'paged'          => $paged,
-			'meta_query'     => $this->get_meta_query(),
-			'posts_per_page' => $this->per_page,
+			'type'       => 'sale',
+			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
+			'meta_query' => $this->get_meta_query(),
+			'number'     => $this->per_page,
 		);
 
-		$logs = $edd_logs->get_connected_logs( $log_query );
+		if ( $download ) {
+			$log_query['object_id'] = $download;
+		}
+
+		$logs = edd_get_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-
-				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+				/** @var EDD\Logs\Log $log */
+				$payment_id = $log->get_meta( 'payment_id' );
 				$payment    = new EDD_Payment( $payment_id );
 
 				// Make sure this payment hasn't been deleted
 				if ( ! empty( $payment->ID ) ) {
-
 					$customer   = new EDD_Customer( $payment->customer_id );
 					$cart_items = $payment->cart_details;
 					$amount     = 0;
 
 					if ( is_array( $cart_items ) ) {
-
 						foreach ( $cart_items as $item ) {
-
 							// If the item has variable pricing, make sure it's the right variation
-							if ( $item['id'] == $log->post_parent ) {
+							if ( $item['id'] == $log->object_id ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
-									$log_price_id = get_post_meta( $log->ID, '_edd_log_price_id', true );
+									$log_price_id = $log->get_meta( 'price_id' );
 
 									if ( (int) $item['item_number']['options']['price_id'] !== (int) $log_price_id ) {
 										continue;
@@ -345,27 +347,23 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 								$amount = isset( $item['price'] ) ? $item['price'] : $item['item_price'];
 								break;
 							}
-
 						}
 
 						$logs_data[] = array(
 							'ID'         => $log->ID,
 							'payment_id' => $payment->ID,
 							'customer'   => $customer,
-							'download'   => $log->post_parent,
+							'download'   => $log->object_id,
 							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
-							'date'       => get_post_field( 'post_date', $payment_id ),
+							'date'       => $payment->date,
 							'quantity'   => $item['quantity'],
 							// Keep track of the currency. Vital to produce the correct report
 							'currency'   => $payment->currency,
 						);
-
 					}
-
 				}
-
 			}
 		}
 
@@ -373,18 +371,12 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Setup the final data for the table.
 	 *
 	 * @since 1.4
-	 * @global object $edd_logs EDD Logs Object
-	 * @uses EDD_Sales_Log_Table::get_columns()
-	 * @uses WP_List_Table::get_sortable_columns()
-	 * @uses EDD_Sales_Log_Table::get_pagenum()
-	 * @uses EDD_Sales_Log_Table::get_logs()
-	 * @uses EDD_Sales_Log_Table::get_log_count()
-	 * @return void
 	 */
 	public function prepare_items() {
+		/** @var EDD_Logging $edd_logs */
 		global $edd_logs;
 
 		$columns               = $this->get_columns();

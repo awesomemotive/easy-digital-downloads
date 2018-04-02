@@ -4,12 +4,12 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -19,10 +19,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * EDD_Gateway_Error_Log_Table Class
  *
- * Renders the gateway errors list table
- *
- * @access      private
- * @since       1.4
+ * @since 1.4
+ * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
@@ -40,9 +38,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
 			'singular' => edd_get_label_singular(),
 			'plural'   => edd_get_label_plural(),
@@ -171,15 +166,15 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(
-			'log_type'    => 'gateway_error',
-			'paged'       => $paged,
+			'type'   => 'gateway_error',
+			'offset' => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
+			'number' => $this->per_page,
 		);
 
-		$logs = $edd_logs->get_connected_logs( $log_query );
+		$logs = edd_get_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-
 				$logs_data[] = array(
 					'ID'         => $log->ID,
 					'payment_id' => $log->post_parent,
@@ -194,26 +189,17 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Setup the final data for the table.
 	 *
 	 * @since 1.4
-	 * @global object $edd_logs EDD Logs Object
-	 * @uses EDD_Gateway_Error_Log_Table::get_columns()
-	 * @uses WP_List_Table::get_sortable_columns()
-	 * @uses EDD_Gateway_Error_Log_Table::get_pagenum()
-	 * @uses EDD_Gateway_Error_Log_Table::get_logs()
-	 * @uses EDD_Gateway_Error_Log_Table::get_log_count()
-	 * @return void
 	 */
 	public function prepare_items() {
-		global $edd_logs;
-
 		$columns               = $this->get_columns();
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->get_logs();
-		$total_items           = $edd_logs->get_log_count( 0, 'gateway_error' );
+		$total_items           = edd_count_logs( array( 'type' => 'gateway_error' ) );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,
