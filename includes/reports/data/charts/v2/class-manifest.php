@@ -115,10 +115,15 @@ class Manifest {
 	public function add_dataset( $data ) {
 		$handler = $this->get_type_handler();
 
-		if ( ! empty( $handler ) ) {
-			$this->datasets[] = new $handler( $data );
+		if ( ! empty( $handler ) && class_exists( $handler ) ) {
+			$dataset = new $handler( $data );
 
-			return true;
+			if ( ! $dataset->has_errors() ) {
+				$this->datasets[] = $dataset;
+
+				return true;
+			}
+
 		}
 
 		return false;
