@@ -249,14 +249,8 @@ class Chart_Endpoint extends Endpoint {
 	public function build_graph() {
 		// JS callback override.
 		if ( is_callable( $this->js_callback ) ) {
-			call_user_func( $this->js_callback, $this );
+			call_user_func( $this->js_callback, $this->get_display_args() );
 
-			return;
-		}
-
-		$data = $this->get_data();
-
-		if ( empty( $data ) || ! is_array( $data ) ) {
 			return;
 		}
 
