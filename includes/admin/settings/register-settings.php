@@ -964,8 +964,7 @@ function edd_settings_sanitize( $input = array() ) {
 					}
 					break;
 				default:
-					// Remove from settings if empty OR if its a non-existent setting
-					if ( ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) || ! edd_is_registered_setting( $key ) ) {
+					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
 					}
 					break;
@@ -983,35 +982,6 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	return $output;
-}
-
-
-/**
- * Check if a setting exists/ is registered.
- *
- * @since 2.9.1
- *
- * @param string $setting_id Setting ID to check.
- * @return bool
- */
-function edd_is_registered_setting( $setting_id ) {
-	$setting_tabs = edd_get_registered_settings();
-
-	foreach ( $setting_tabs as $tab_key => $setting_sections ) {
-		foreach ( $setting_sections as $section_key => $settings ) {
-
-			// Settings COULD be without a section
-			if ( isset( $settings['id'] ) && $settings['id'] === $setting_id ) {
-				return true;
-			}
-
-			if ( isset( $settings[0] ) && is_array( $settings[0] ) && in_array( $setting_id, wp_list_pluck( $settings, 'id' ) ) ) {
-				return true;
-			}
-		}
-	}
-
-	return false;
 }
 
 /**
