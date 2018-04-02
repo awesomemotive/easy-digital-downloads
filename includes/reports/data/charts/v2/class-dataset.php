@@ -1,12 +1,14 @@
 <?php
 namespace EDD\Reports\Data\Charts\v2;
 
+use EDD\Utils\Error_Logger_Interface as Error_Logger;
+
 /**
  * Represents the manifestation of a ChartJS v2 dataset in PHP form.
  *
  * @since 3.0.0
  */
-abstract class Dataset {
+abstract class Dataset implements Error_Logger {
 
 	/**
 	 * Represents the list of fields for a given dataset.
@@ -19,6 +21,14 @@ abstract class Dataset {
 	protected $fields = array();
 
 	/**
+	 * Holds errors related to instantiating the object.
+	 *
+	 * @since 3.0
+	 * @var   \WP_Error
+	 */
+	protected $errors;
+
+	/**
 	 * Represents the list of global fields for all datasets.
 	 *
 	 * @since 3.0.0
@@ -28,6 +38,15 @@ abstract class Dataset {
 		'label', 'xAxisID', 'yAxisID', 'data',
 		'backgroundColor', 'borderColor', 'borderWidth',
 	];
+
+	/**
+	 * Sets up the dataset for population.
+	 *
+	 * @since 3.0
+	 */
+	public function __construct() {
+		$this->setup_error_logger();
+	}
 
 	/**
 	 * Retrieves the list of global fields.
@@ -72,6 +91,41 @@ abstract class Dataset {
 		 * @param Dataset $this   Dataset instance.
 		 */
 		return apply_filters( 'edd_reports_chart_fields', $fields, $this );
+	}
+
+	/**
+	 * Determines whether the dataset has generated errors during instantiation.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if errors have been logged, otherwise false.
+	 */
+	public function has_errors() {
+		$errors = $this->errors->get_error_codes();
+
+		return empty( $errors ) ? false : true;
+	}
+
+	/**
+	 * Retrieves any logged errors for the dataset.
+	 *
+	 * @since 3.0
+	 *
+	 * @return \WP_Error WP_Error object for the current dataset.
+	 */
+	public function get_errors() {
+		return $this->errors;
+	}
+
+	/**
+	 * Sets up the WP_Error instance.
+	 *
+	 * @since 3.0
+	 */
+	public function setup_error_logger() {
+		if ( ! isset( $this->errors ) ) {
+			$this->errors = new \WP_Error();
+		}
 	}
 
 }
