@@ -168,18 +168,18 @@ class Manifest implements Error_Logger {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $axis Axis to associate the dataset with.
-	 * @param array  $data Dataset data
+	 * @param string $dataset_id ID to associate the dataset with.
+	 * @param array  $options    Dataset options.
 	 * @return bool True if the dataset was added, otherwise false.
 	 */
-	public function add_dataset( $axis, $data ) {
-		$handler = $this->get_type_handler();
+	public function add_dataset( $dataset_id, $options ) {
+		$handler = $this->get_dataset_handler();
 
 		if ( ! empty( $handler ) && class_exists( $handler ) ) {
-			$dataset = new $handler( $data );
+			$dataset = new $handler( $id, $this->get_endpoint(), $options );
 
 			if ( ! $dataset->has_errors() ) {
-				$this->datasets[ $axis ] = $dataset;
+				$this->datasets[ $id ] = $dataset;
 
 				return true;
 			}
