@@ -184,6 +184,41 @@ abstract class Dataset implements Error_Logger {
 	}
 
 	/**
+	 * Performs validation on incoming dataset options.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $options Dataset options.
+	 */
+	public function validate( $options ) {
+		$fields  = $this->get_all_fields();
+
+		// Strip invalid options.
+		foreach ( $options as $key => $value ) {
+			if ( ! in_array( $key, $fields, true ) ) {
+				unset( $options[ $key ] );
+			}
+		}
+
+		$data = $this->get_endpoint()->get_data_by_set( $this->get_id() );
+
+		if ( ! empty( $data ) ) {
+			$options['data'] = $data;
+
+			$this->options[ $this->get_id() ] = $options;
+		} else {
+
+			$message = sprintf( 'The data for the \'%1$s\' dataset for the \'%2$s\' endpoint in the \'%3$s\' report is missing or invalid.',
+				$this->get_id(),
+				$this->get_endpoint()->get_id(),
+				$this->get_endpoint()->get_report_id()
+			);
+
+			$this->errors->add( 'missing_chart_data', $message, $data );
+		}
+	}
+
+	/**
 	 * Determines whether the dataset has generated errors during instantiation.
 	 *
 	 * @since 3.0
