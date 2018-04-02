@@ -176,12 +176,23 @@ class Manifest implements Error_Logger {
 		$handler = $this->get_dataset_handler();
 
 		if ( ! empty( $handler ) && class_exists( $handler ) ) {
+			/** @var Dataset $dataset */
 			$dataset = new $handler( $id, $this->get_endpoint(), $options );
 
 			if ( ! $dataset->has_errors() ) {
+
 				$this->datasets[ $id ] = $dataset;
 
 				return true;
+
+			} else {
+
+				$errors = $dataset->get_errors();
+
+				foreach ( $errors as $error ) {
+					$this->errors->add( $error->get_code(), $errors->get_error_message(), $errors->get_error_data() );
+				}
+
 			}
 
 		}
