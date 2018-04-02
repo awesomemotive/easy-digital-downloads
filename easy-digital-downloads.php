@@ -72,6 +72,14 @@ final class Easy_Digital_Downloads {
 	public $api;
 
 	/**
+	 * EDD Utilities Object.
+	 *
+	 * @var object|EDD_Utilities
+	 * @since 3.0
+	 */
+	public $utils;
+
+	/**
 	 * EDD HTML Session Object.
 	 *
 	 * This holds cart items, purchase sessions, and anything else stored in the session.
@@ -151,6 +159,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->roles         = new EDD_Roles();
 			self::$instance->fees          = new EDD_Fees();
 			self::$instance->api           = new EDD_API();
+			self::$instance->utils         = new EDD_Utilities();
 			self::$instance->session       = new EDD_Session();
 			self::$instance->html          = new EDD_HTML_Elements();
 			self::$instance->emails        = new EDD_Emails();
@@ -327,6 +336,7 @@ final class Easy_Digital_Downloads {
 		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
