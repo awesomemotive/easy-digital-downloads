@@ -96,7 +96,7 @@ abstract class Base_Object implements Error_Logger {
 	}
 
 	/**
-	 * Sets the endpoint ID.
+	 * Sets the object ID.
 	 *
 	 * @since 3.0
 	 *
@@ -104,7 +104,7 @@ abstract class Base_Object implements Error_Logger {
 	 * @return void
 	 */
 	private function set_id( $object_id ) {
-		$this->object_id = $object_id;
+		$this->object_id = sanitize_key( $object_id );
 	}
 
 	/**
