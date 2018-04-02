@@ -14,6 +14,21 @@ class Factory extends \WP_UnitTest_Factory {
 	public $discount;
 
 	/**
+	 * @var \EDD\Tests\Factory\Log
+	 */
+	public $log;
+
+	/**
+	 * @var \EDD\Tests\Factory\File_Download_Log
+	 */
+	public $file_download_log;
+
+	/**
+	 * @var \EDD\Tests\Factory\API_Request_Log
+	 */
+	public $api_request_log;
+
+	/**
 	 * @var \EDD\Tests\Factory\Note
 	 */
 	public $note;
@@ -22,6 +37,9 @@ class Factory extends \WP_UnitTest_Factory {
 		parent::__construct();
 
 		$this->discount = new Factory\Discount( $this );
+		$this->log = new Factory\Log( $this );
+		$this->file_download_log = new Factory\File_Download_Log( $this );
+		$this->api_request_log = new Factory\API_Request_Log( $this );
 		$this->note = new Factory\Note( $this );
 	}
 }
