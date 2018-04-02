@@ -44,6 +44,16 @@ class Chart_Endpoint extends Endpoint {
 	private $manifest;
 
 	/**
+	 * Call to override JS output for the chart.
+	 *
+	 * Completely overrides the manifest process for the current chart..
+	 *
+	 * @since 3.0
+	 * @var   callable
+	 */
+	private $js_callback;
+
+	/**
 	 * Sets up the chart endpoint.
 	 *
 	 * @since 3.0
@@ -97,7 +107,11 @@ class Chart_Endpoint extends Endpoint {
 				);
 			}
 
-			$this->set_manifest();
+			if ( isset( $atts['render_js'] ) && is_callable( $atts['render_js'] ) ) {
+				$this->js_callback = $atts['render_js'];
+			} else {
+				$this->build_manifest();
+			}
 		}
 	}
 
@@ -205,7 +219,7 @@ class Chart_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0
 	 */
-	private function set_manifest() {
+	private function build_manifest() {
 		$this->manifest = new Chart\Manifest( $this->get_type(), $this, $this->get_options() );
 	}
 
@@ -233,6 +247,13 @@ class Chart_Endpoint extends Endpoint {
 	 * @since 3.0
 	 */
 	public function build_graph() {
+		// JS callback override.
+		if ( is_callable( $this->js_callback ) ) {
+			call_user_func( $this->js_callback, $this );
+
+			return;
+		}
+
 		$data = $this->get_data();
 
 		if ( empty( $data ) || ! is_array( $data ) ) {
