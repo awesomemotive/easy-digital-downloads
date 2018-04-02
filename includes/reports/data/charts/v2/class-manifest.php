@@ -129,8 +129,8 @@ class Manifest implements Error_Logger {
 		$datasets = $this->get_endpoint()->get_data();
 
 		if ( ! empty( $datasets ) && is_array( $datasets ) ) {
-			foreach ( $datasets as $axis => $data ) {
-				$this->add_dataset( $axis, $data );
+			foreach ( $datasets as $id => $data ) {
+				$this->add_dataset( $id, $data );
 			}
 		} else {
 
