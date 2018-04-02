@@ -124,21 +124,23 @@ class Manifest implements Error_Logger {
 	 * @param array $options Chart options and datasets.
 	 */
 	private function set_options( $options ) {
-		$this->options = $options;
+		if ( ! empty( $options['datasets'] ) && is_array( $options['datasets'] ) ) {
 
-		$datasets = $this->get_endpoint()->get_data();
-
-		if ( ! empty( $datasets ) && is_array( $datasets ) ) {
 			foreach ( $datasets as $id => $data ) {
 				$this->add_dataset( $id, $data );
 			}
+
 		} else {
 
-			$message = sprintf( 'The %s endpoint has no data.', $this->get_endpoint()->get_id() );
+			$message = sprintf( 'The %s endpoint has no datasets.', $this->get_endpoint()->get_id() );
 
-			$this->errors->add( 'missing_chart_data', $message, $this->get_endpoint() );
+			$this->errors->add( 'missing_chart_datasets', $message, $this->get_endpoint() );
 
 		}
+
+		unset( $options['datasets'] );
+
+		$this->options = $options;
 	}
 
 	/**
