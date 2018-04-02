@@ -876,9 +876,6 @@ function default_display_charts_group( $report ) {
 			<?php endforeach; ?>
 		</div>
 		<?php
-
-	else :
-		edd_debug_log( 'No charts to display' );
 	endif;
 }
 
