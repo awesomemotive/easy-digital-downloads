@@ -206,7 +206,7 @@ class Chart_Endpoint extends Endpoint {
 	 * @since 3.0
 	 */
 	private function set_manifest() {
-		$this->manifest = new Chart\Manifest( $this->get_type(), $this->get_options() );
+		$this->manifest = new Chart\Manifest( $this->get_type(), $this, $this->get_options() );
 	}
 
 	/**

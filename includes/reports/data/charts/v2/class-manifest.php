@@ -60,12 +60,15 @@ class Manifest implements Error_Logger {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $type    Type of chart manifest.
-	 * @param array  $options Array of options to populate the manifest with.
+	 * @param string         $type    Type of chart manifest.
+	 * @param Chart_Endpoint $endpoint Chart endpoint.
+	 * @param array          $options Array of options to populate the manifest with.
 	 */
-	public function __construct( $type, $options ) {
+	public function __construct( $type, $endpoint, $options ) {
 		$this->setup_error_logger();
+
 		$this->set_type( $type );
+		$this->set_endpoint( $endpoint );
 		$this->set_options( $options );
 	}
 
