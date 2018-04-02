@@ -281,7 +281,7 @@ function edd_customers_view( $customer ) {
 					<span class="customer-email info-item editable" data-key="email"><?php echo $customer->email; ?></span>
 					<span class="customer-since info-item">
 						<?php
-						printf( 
+						printf(
 							/* translators: The date. */
 							esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
 							esc_html( date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) )
@@ -418,7 +418,7 @@ function edd_customers_view( $customer ) {
 								<button class="button-secondary edd-add-customer-email" id="add-customer-email" style="margin: 6px 0;"><?php _e( 'Add Email', 'easy-digital-downloads' ); ?></button>
 								<span class="spinner"></span>
 							</div>
-							<div class="notice-wrap"></div>
+							<div class="notice-container"></div>
 						</td>
 					</tr>
 				<?php else: ?>
