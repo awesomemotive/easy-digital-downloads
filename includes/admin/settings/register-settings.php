@@ -958,6 +958,8 @@ function edd_settings_sanitize( $input = array() ) {
 				case 'checkbox':
 				case 'gateways':
 				case 'multicheck':
+				case 'radio':
+				case 'select':
 				case 'payment_icons':
 					if ( array_key_exists( $key, $input ) && $output[ $key ] === '-1' ) {
 						unset( $output[ $key ] );
