@@ -63,6 +63,7 @@ class EDD_Utilities {
 
 		// Interfaces.
 		require_once $utils_dir . 'interface-static-registry.php';
+		require_once $utils_dir . 'interface-error-logger.php';
 
 		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
