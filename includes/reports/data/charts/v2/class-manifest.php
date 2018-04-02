@@ -1,6 +1,7 @@
 <?php
 namespace EDD\Reports\Data\Charts\v2;
 
+use EDD\Reports\Data\Chart_Endpoint;
 use EDD\Utils\Error_Logger_Interface as Error_Logger;
 
 /**
@@ -33,10 +34,18 @@ class Manifest implements Error_Logger {
 	/**
 	 * Datasets associated with the current graph.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   array
 	 */
 	private $datasets = array();
+
+	/**
+	 * Represents the current Chart_Endpoint instance.
+	 *
+	 * @since 3.0
+	 * @var   Chart_Endpoint
+	 */
+	private $endpoint;
 
 	/**
 	 * Holds errors related to instantiating the manifest.
@@ -80,6 +89,28 @@ class Manifest implements Error_Logger {
 	 */
 	private function set_type( $type ) {
 		$this->type = sanitize_key( $type );
+	}
+
+	/**
+	 * Retrieves the chart endpoint object for this manifest.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Chart_Endpoint Chart endpoint.
+	 */
+	public function get_endpoint() {
+		return $this->endpoint;
+	}
+
+	/**
+	 * Sets the chart endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param EDD\Reports\Data\Chart_Endpoint $endpoint Chart_Endpoint object.
+	 */
+	private function set_endpoint( $endpoint ) {
+		$this->endpoint = $endpoint;
 	}
 
 	/**
