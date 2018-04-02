@@ -336,6 +336,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'orderby'          => 'post_date',
 		'order'            => 'DESC',
 		'ids'              => '',
+		'class'            => '',
 		'pagination'       => 'true',
 	), $atts, 'downloads' );
 
@@ -366,7 +367,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			$query['meta_key'] = 'edd_price';
 			$query['orderby']  = 'meta_value_num';
 		break;
-			
+
 		case 'sales':
 			$atts['orderby']   = 'meta_value';
 			$query['meta_key'] = '_edd_download_sales';
@@ -588,9 +589,12 @@ function edd_downloads_query( $atts, $content = null ) {
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
 		$i = 1;
-		$wrapper_class = 'edd_download_columns_' . $atts['columns'];
+		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
+		$custom_classes  = array_filter( explode( ',', $atts['class'] ) );
+		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
+		$wrapper_classes = implode( ' ', $wrapper_classes );
 		ob_start(); ?>
-		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
+		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
 
 			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
 
