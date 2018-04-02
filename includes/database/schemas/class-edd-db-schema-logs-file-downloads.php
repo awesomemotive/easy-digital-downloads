@@ -77,6 +77,15 @@ class EDD_DB_Schema_Logs_File_Downloads extends EDD_DB_Schema {
 			'default'    => '0'
 		),
 
+		// email
+		array(
+			'name'       => 'email',
+			'type'       => 'varchar',
+			'length'     => '100',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// ip
 		array(
 			'name'       => 'ip',

@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -20,9 +20,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * EDD_API_Request_Log_Table List Table Class
  *
- * Renders the gateway errors list table
- *
  * @since 1.5
+ * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
@@ -40,9 +39,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
 			'singular' => edd_get_label_singular(),
 			'plural'   => edd_get_label_plural(),
@@ -134,20 +130,20 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
 
-			$request = get_post_field( 'post_excerpt', $item['ID'] );
-			$error   = get_post_field( 'post_content', $item['ID'] );
+			$request = $item['request'];
+			$error   = $item['error'];
 			echo '<p><strong>' . __( 'API Request:', 'easy-digital-downloads' ) . '</strong></p>';
 			echo '<div>' . $request . '</div>';
-			if( ! empty( $error ) ) {
+			if ( ! empty( $error ) ) {
 				echo '<p><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong></p>';
 				echo '<div>' . esc_html( $error ) . '</div>';
 			}
 			echo '<p><strong>' . __( 'API User:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_user', true ) . '</div>';
+			echo '<div>' . $item['user_id'] . '</div>';
 			echo '<p><strong>' . __( 'API Key:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_key', true ) . '</div>';
+			echo '<div>' . $item['api_key'] . '</div>';
 			echo '<p><strong>' . __( 'Request Date:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . get_post_field( 'post_date', $item['ID'] ) . '</div>';
+			echo '<div>' . $item['date'] . '</div>';
 			?>
 		</div>
 	<?php
@@ -234,7 +230,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @since 1.5
 	 * @return void
 	 */
-	function bulk_actions( $which='' ) {
+	function bulk_actions( $which = '' ) {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
@@ -247,27 +243,29 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @return array $logs_data Array of all the Log entires
 	 */
 	public function get_logs() {
-		global $edd_logs;
-
 		$logs_data = array();
 		$paged     = $this->get_paged();
+
 		$log_query = array(
-			'log_type'   => 'api_request',
-			'paged'      => $paged,
+			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
 			'meta_query' => $this->get_meta_query(),
+			'number'     => $this->per_page,
 		);
 
-		$logs = $edd_logs->get_connected_logs( $log_query );
+		$logs = edd_get_api_request_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-
 				$logs_data[] = array(
-					'ID'      => $log->ID,
-					'version' => get_post_meta( $log->ID, '_edd_log_version', true ),
-					'speed'   => get_post_meta( $log->ID, '_edd_log_time', true ),
-					'ip'      => get_post_meta( $log->ID, '_edd_log_request_ip', true ),
-					'date'    => $log->post_date,
+					'ID'      => $log->id,
+					'version' => $log->version,
+					'speed'   => $log->time,
+					'ip'      => $log->ip,
+					'date'    => $log->date_created,
+					'api_key' => $log->api_key,
+					'request' => $log->request,
+					'error'   => $log->error,
+					'user_id' => $log->user_id,
 				);
 			}
 		}
@@ -276,26 +274,17 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Setup the final data for the table.
 	 *
 	 * @since 1.5
-	 * @global object $edd_logs EDD Logs Object
-	 * @uses EDD_API_Request_Log_Table::get_columns()
-	 * @uses WP_List_Table::get_sortable_columns()
-	 * @uses EDD_API_Request_Log_Table::get_pagenum()
-	 * @uses EDD_API_Request_Log_Table::get_logs()
-	 * @uses EDD_API_Request_Log_Table::get_log_count()
-	 * @return void
 	 */
 	public function prepare_items() {
-		global $edd_logs;
-
 		$columns               = $this->get_columns();
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable, 'ID' );
 		$this->items           = $this->get_logs();
-		$total_items           = $edd_logs->get_log_count( 0, 'api_requests' );
+		$total_items           = edd_count_api_request_logs();
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,

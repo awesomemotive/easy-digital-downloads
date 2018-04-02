@@ -1811,7 +1811,7 @@ class EDD_API {
 			return;
 		}
 
-		global $edd_logs, $wp_query;
+		global $wp_query;
 
 		$query = array(
 			'edd-api'     => $wp_query->query_vars['edd-api'],
@@ -1829,22 +1829,18 @@ class EDD_API {
 			'email'       => isset( $wp_query->query_vars['email'] )       ? $wp_query->query_vars['email']       : null,
 		);
 
-		$log_data = array(
-			'log_type'     => 'api_request',
-			'post_excerpt' => http_build_query( $query ),
-			'post_content' => ! empty( $data['error'] ) ? $data['error'] : '',
+		$data = array(
+			'user_id' => $this->user_id,
+			'api_key' => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : 'public',
+			'token'   => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : 'public',
+			'version' => $this->get_queried_version(),
+			'request' => http_build_query( $query ),
+			'error'   => ! empty( $data['error'] ) ? $data['error'] : '',
+			'ip'      => edd_get_ip(),
+			'time'    => $data['request_speed'],
 		);
 
-		$log_meta = array(
-			'request_ip' => edd_get_ip(),
-			'user'       => $this->user_id,
-			'key'        => isset( $wp_query->query_vars['key'] ) ? $wp_query->query_vars['key'] : null,
-			'token'      => isset( $wp_query->query_vars['token'] ) ? $wp_query->query_vars['token'] : null,
-			'time'       => $data['request_speed'],
-			'version'    => $this->get_queried_version()
-		);
-
-		$edd_logs->insert_log( $log_data, $log_meta );
+		edd_add_api_request_log( $data );
 	}
 
 
