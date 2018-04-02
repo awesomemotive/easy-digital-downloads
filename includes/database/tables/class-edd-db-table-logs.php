@@ -10,40 +10,40 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'EDD_DB_Table' ) ) :
-/**
- * Setup the global "edd_logs" database table
- *
- * @since 3.0.0
- */
-final class EDD_DB_Table_Logs extends EDD_DB_Table {
-
 	/**
-	 * Table name
+	 * Setup the global "edd_logs" database table
 	 *
-	 * @access protected
 	 * @since 3.0.0
-	 * @var string
 	 */
-	protected $name = 'edd_logs';
+	final class EDD_DB_Table_Logs extends EDD_DB_Table {
 
-	/**
-	 * Database version
-	 *
-	 * @access protected
-	 * @since 3.0.0
-	 * @var int
-	 */
-	protected $version = 201802280001;
+		/**
+		 * Table name
+		 *
+		 * @access protected
+		 * @since 3.0.0
+		 * @var string
+		 */
+		protected $name = 'edd_logs';
 
-	/**
-	 * Setup the database schema
-	 *
-	 * @access protected
-	 * @since 3.0.0
-	 * @return void
-	 */
-	protected function set_schema() {
-		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
+		/**
+		 * Database version
+		 *
+		 * @access protected
+		 * @since 3.0.0
+		 * @var int
+		 */
+		protected $version = 201802280001;
+
+		/**
+		 * Setup the database schema
+		 *
+		 * @access protected
+		 * @since 3.0.0
+		 * @return void
+		 */
+		protected function set_schema() {
+			$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 			object_id bigint(20) unsigned NOT NULL default '0',
 			object_type varchar(20) DEFAULT NULL,
 			type varchar(30) DEFAULT NULL,
@@ -54,17 +54,17 @@ final class EDD_DB_Table_Logs extends EDD_DB_Table {
 			KEY object_id_type (object_id,object_type(20)),
 			KEY type (type(30)),
 			KEY date_created (date_created)";
-	}
+		}
 
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0.0
-	 * @return void
-	 */
-	protected function upgrade() {
+		/**
+		 * Handle schema changes
+		 *
+		 * @access protected
+		 * @since 3.0.0
+		 * @return void
+		 */
+		protected function upgrade() {
 
+		}
 	}
-}
 endif;
