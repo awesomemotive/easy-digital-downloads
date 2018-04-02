@@ -101,7 +101,7 @@ abstract class Dataset implements Error_Logger {
 	 * @return bool True if errors have been logged, otherwise false.
 	 */
 	public function has_errors() {
-		if ( version_compare( $GLOBALS['wp_version'], '5.0', '>=' ) ) {
+		if ( method_exists( $this->errors, 'has_errors' ) ) {
 			return $this->errors->has_errors();
 		} else {
 			$errors = $this->errors->get_error_codes();
