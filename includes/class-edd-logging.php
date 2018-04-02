@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Logging
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
@@ -18,12 +18,30 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * A general use class for logging events and errors.
  *
  * @since 1.3.1
+ * @since 3.0 - Updated to work with the new tables and classes as part of the migration to custom tables.
  */
 class EDD_Logging {
 
+	/**
+	 * Whether the debug log file is writable or not.
+	 *
+	 * @var bool
+	 */
 	public $is_writable = true;
-	private $filename   = '';
-	private $file       = '';
+
+	/**
+	 * Filename of the debug log.
+	 *
+	 * @var string
+	 */
+	private $filename = '';
+
+	/**
+	 * File path to the debug log.
+	 *
+	 * @var string
+	 */
+	private $file = '';
 
 	/**
 	 * Set up the EDD Logging Class
@@ -31,15 +49,17 @@ class EDD_Logging {
 	 * @since 1.3.1
 	 */
 	public function __construct() {
-
-		// Create the log post type
-		add_action( 'init', array( $this, 'register_post_type' ), 1 );
-
-		// Create types taxonomy and default types
-		add_action( 'init', array( $this, 'register_taxonomy' ), 1 );
-
 		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 0 );
 
+		// Backwards compatibility for API request logs
+		add_filter( 'get_post_metadata', array( $this, '_api_request_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'update_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
+
+		// Backwards compatibility for file download logs
+		add_filter( 'get_post_metadata', array( $this, '_file_download_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
 	}
 
 	/**
@@ -49,60 +69,41 @@ class EDD_Logging {
 	 * @return void
 	 */
 	public function setup_log_file() {
-
-		$upload_dir       = wp_upload_dir();
-		$this->filename   = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
-		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$upload_dir     = wp_upload_dir();
+		$this->filename = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
+		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
 
 		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
-
 	}
 
 	/**
-	 * Registers the edd_log Post Type
+	 * Registers the edd_log post type.
 	 *
 	 * @since 1.3.1
-	 * @return void
+	 * @since 3.0.0 Deprecated due to migration to custom tables.
 	 */
 	public function register_post_type() {
-		/* Logs post type */
-		$log_args = array(
-			'labels'              => array( 'name' => __( 'Logs', 'easy-digital-downloads' ) ),
-			'public'              => false,
-			'exclude_from_search' => true,
-			'publicly_queryable'  => false,
-			'show_ui'             => false,
-			'query_var'           => false,
-			'rewrite'             => false,
-			'capability_type'     => 'post',
-			'supports'            => array( 'title', 'editor' ),
-			'can_export'          => true,
-		);
-
-		register_post_type( 'edd_log', $log_args );
+		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
 
 	/**
-	 * Registers the Type Taxonomy
-	 *
-	 * The "Type" taxonomy is used to determine the type of log entry
+	 * Register the log type taxonomy.
 	 *
 	 * @since 1.3.1
-	 * @return void
+	 * @since 3.0.0 Deprecated due to migration to custom tables.
 	*/
 	public function register_taxonomy() {
-		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
+		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
 
 	/**
-	 * Log types
-	 *
-	 * Sets up the default log types and allows for new ones to be created
+	 * Get log types.
 	 *
 	 * @since 1.3.1
-	 * @return  array $terms
+	 *
+	 * @return array $terms Log types.
 	 */
 	public function log_types() {
 		$terms = array(
@@ -118,11 +119,11 @@ class EDD_Logging {
 	 * Checks to see if the specified type is in the registered list of types
 	 *
 	 * @since 1.3.1
-	 * @uses EDD_Logging::log_types()
-	 * @param string $type Log type
-	 * @return bool Whether log type is valid
+	 *
+	 * @param string $type Log type.
+	 * @return bool True if valid log type, false otherwise.
 	 */
-	function valid_type( $type ) {
+	public function valid_type( $type ) {
 		return in_array( $type, $this->log_types() );
 	}
 
@@ -133,12 +134,13 @@ class EDD_Logging {
 	 * if you need to store custom meta data
 	 *
 	 * @since 1.3.1
-	 * @uses EDD_Logging::insert_log()
-	 * @param string $title Log entry title
-	 * @param string $message Log entry message
-	 * @param int $parent Log entry parent
-	 * @param string $type Log type (default: null)
-	 * @return int Log ID
+	 *
+	 * @param string $title   Log entry title.
+	 * @param string $message Log entry message.
+	 * @param int    $parent  Download ID.
+	 * @param string $type    Log type (default: null).
+	 *
+	 * @return int ID of the newly created log item.
 	 */
 	public function add( $title = '', $message = '', $parent = 0, $type = null ) {
 		$log_data = array(
@@ -152,29 +154,31 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Easily retrieves log items for a particular object ID
+	 * Easily retrieves log items for a particular object ID.
 	 *
 	 * @since 1.3.1
-	 * @uses EDD_Logging::get_connected_logs()
-	 * @param int $object_id (default: 0)
-	 * @param string $type Log type (default: null)
-	 * @param int $paged Page number (default: null)
-	 * @return array Array of the connected logs
+	 *
+	 * @param int    $object_id Object ID (default: 0).
+	 * @param string $type      Log type (default: null).
+	 * @param int    $paged     Page number (default: null).
+	 *
+	 * @return array Array of the connected logs.
 	*/
 	public function get_logs( $object_id = 0, $type = null, $paged = null ) {
 		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
 	}
 
 	/**
-	 * Stores a log entry
+	 * Stores a log entry.
 	 *
 	 * @since 1.3.1
-	 * @uses EDD_Logging::valid_type()
-	 * @param array $log_data Log entry data
-	 * @param array $log_meta Log entry meta
-	 * @return int The ID of the newly created log item
+	 * @since 3.0.0 Updated to use the new database classes as part of the migration to custom tables.
+	 *
+	 * @param array $log_data Log entry data.
+	 * @param array $log_meta Log entry meta.
+	 * @return int The ID of the newly created log item.
 	 */
-	function insert_log( $log_data = array(), $log_meta = array() ) {
+	public function insert_log( $log_data = array(), $log_meta = array() ) {
 		$defaults = array(
 			'post_type'    => 'edd_log',
 			'post_status'  => 'publish',
@@ -185,24 +189,65 @@ class EDD_Logging {
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		do_action( 'edd_pre_insert_log', $log_data, $log_meta );
+		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
-		// Store the log entry
-		$log_id = wp_insert_post( $args );
+		// Used to dynamically dispatch the method call to insert() to the correct class.
+		$insert_method = 'edd_add_log';
 
-		// Set the log type, if any
-		if ( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
-			wp_set_object_terms( $log_id, $log_data['log_type'], 'edd_log_type', false );
+		// Set up variables to hold data to go into the logs table by default
+		$data = array (
+			'message'     => $args['post_content'],
+			'object_id'   => $args['post_parent'],
+			'object_type' => isset( $args['object_type'] ) ? $args['object_type'] : 'download',
+		);
+
+		if ( $type = $args['log_type'] ) {
+			$data['type'] = $type;
 		}
 
+		if ( array_key_exists( 'post_title', $args ) ) {
+			$data['title'] = $args['post_title'];
+		}
+
+		// Override $data and $insert_method based on the log type.
+		if ( 'api_request' === $args['log_type'] ) {
+			$insert_method = 'edd_add_api_request_log';
+
+			$data = array(
+				'user_id' => $log_meta['user'],
+				'api_key' => $log_meta['key'],
+				'token'   => null === $log_meta['token'] ? 'public' : $log_meta['token'],
+				'version' => $log_meta['version'],
+				'request' => $args['post_excerpt'],
+				'error'   => $args['post_content'],
+				'ip'      => $log_meta['request_ip'],
+				'time'    => $log_meta['time'],
+			);
+		} else if ( 'file_download' === $args['log_type'] ) {
+			$insert_method = 'edd_add_file_download_log';
+
+			$data = array(
+				'download_id' => $args['post_parent'],
+				'file_id'     => $log_meta['file_id'],
+				'payment_id'  => $log_meta['payment_id'],
+				'price_id'    => $log_meta['price_id'],
+				'user_id'     => $log_meta['user_id'],
+				'email'       => $log_meta['user_info']['email'],
+				'ip'          => $log_meta['ip'],
+			);
+		}
+
+		$log_id = call_user_func( $insert_method, $data );
+
 		// Set log meta, if any
-		if ( $log_id && ! empty( $log_meta ) ) {
+		if ( $log_id && 'edd_add_log' === $insert_method && ! empty( $log_meta ) ) {
 			foreach ( (array) $log_meta as $key => $meta ) {
-				update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
+				$log = new EDD\Logs\Log( $log_id );
+				$log->add_meta( sanitize_key( $key ), $meta );
 			}
 		}
 
-		do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
+		do_action( 'edd_post_insert_log', $log_id, $args, $log_meta );
 
 		return $log_id;
 	}
@@ -211,29 +256,52 @@ class EDD_Logging {
 	 * Update and existing log item
 	 *
 	 * @since 1.3.1
-	 * @param array $log_data Log entry data
-	 * @param array $log_meta Log entry meta
-	 * @return bool True if successful, false otherwise
+	 * @since 3.0 - Added $log_id parameter and boolean return type.
+	 *
+	 * @param array $log_data Log entry data.
+	 * @param array $log_meta Log entry meta.
+	 * @param int   $log_id   Log ID.
+	 * @return bool True on success, false otherwise.
 	 */
-	public function update_log( $log_data = array(), $log_meta = array() ) {
-
-		do_action( 'edd_pre_update_log', $log_data, $log_meta );
+	public function update_log( $log_data = array(), $log_meta = array(), $log_id = 0 ) {
+		// $log_id is at the end because it was introduced in 3.0
+		do_action( 'edd_pre_update_log', $log_data, $log_meta, $log_id );
 
 		$defaults = array(
-			'post_type'   => 'edd_log',
-			'post_status' => 'publish',
-			'post_parent' => 0,
+			'post_content' => '',
+			'post_title'   => '',
+			'object_id'    => 0,
+			'object_type'  => '',
 		);
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		// Store the log entry
-		$log_id = wp_update_post( $args );
+		if ( isset( $log_data['ID'] ) && empty( $log_id ) ) {
+			$log_id = $log_data['ID'];
+		}
 
-		if ( $log_id && ! empty( $log_meta ) ) {
+		// Bail if the log ID is still empty.
+		if ( empty ( $log_id ) ) {
+			return false;
+		}
+
+		// Set up variables to hold data to go into the logs table by default
+		$db_object = 'logs';
+		$data = array (
+			'type'        => $args['type'],
+			'object_id'   => $args['object_id'],
+			'object_type' => $args['object_type'],
+			'title'       => $args['title'],
+			'message'     => $args['message'],
+		);
+
+		$result = EDD()->{$db_object}->update( $log_id, $data );
+
+		// Set log meta, if any
+		if ( $log_id && 'logs' === $db_object && ! empty( $log_meta ) ) {
 			foreach ( (array) $log_meta as $key => $meta ) {
-				if ( ! empty( $meta ) )
-					update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
+				$log = new EDD\Logs\Log( $log_id );
+				$log->update_meta( sanitize_key( $key ), $meta );
 			}
 		}
 
@@ -241,14 +309,15 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Retrieve all connected logs
+	 * Retrieve all connected logs.
 	 *
 	 * Used for retrieving logs related to particular items, such as a specific purchase.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.3.1
-	 * @param array $args Query arguments
-	 * @return mixed array if logs were found, false otherwise
+	 *
+	 * @param array $args Query arguments.
+	 * @return mixed array Logs fetched, false otherwise.
 	 */
 	public function get_connected_logs( $args = array() ) {
 		$defaults = array(
@@ -261,53 +330,46 @@ class EDD_Logging {
 
 		$query_args = wp_parse_args( $args, $defaults );
 
-		if ( $query_args['log_type'] && $this->valid_type( $query_args['log_type'] ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy'  => 'edd_log_type',
-					'field'     => 'slug',
-					'terms'     => $query_args['log_type'],
-				)
-			);
+		// Used to dynamically dispatch the call to the correct class.
+		$log_type = 'logs';
+
+		if ( 'api_request' === $query_args['log_type'] ) {
+			$log_type = 'api_request_logs';
+		} else if ( 'file_download' === $query_args['log_type'] ) {
+			$log_type = 'file_download_logs';
 		}
 
-		$logs = get_posts( $query_args );
+		$query_args['number'] = $query_args['posts_per_page'];
 
-		if ( $logs )
+		$logs = call_user_func( 'edd_get_' . $log_type, $query_args );
+
+		if ( $logs ) {
 			return $logs;
-
-		// No logs found
-		return false;
+		} else {
+			return false;
+		}
 	}
 
 	/**
-	 * Retrieves number of log entries connected to particular object ID
+	 * Retrieves number of log entries connected to particular object ID.
 	 *
 	 * @since 1.3.1
-	 * @param int $object_id (default: 0)
-	 * @param string $type Log type (default: null)
-	 * @param array $meta_query Log meta query (default: null)
-	 * @param array $date_query Log data query (default: null) (since 1.9)
-	 * @return int Log count
+	 * @since 1.9 - Added date query support.
+	 *
+	 * @param int    $object_id  Object ID (default: 0).
+	 * @param string $type       Log type (default: null).
+	 * @param array  $meta_query Log meta query (default: null).
+	 * @param array  $date_query Log date query (default: null) [since 1.9].
+	 *
+	 * @return int Log count.
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
-
 		$query_args = array(
-			'post_parent'      => $object_id,
-			'post_type'        => 'edd_log',
-			'posts_per_page'   => -1,
-			'post_status'      => 'publish',
-			'fields'           => 'ids',
+			'object_id' => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy'  => 'edd_log_type',
-					'field'     => 'slug',
-					'terms'     => $type,
-				)
-			);
+			$query_args['type'] = $type;
 		}
 
 		if ( ! empty( $meta_query ) ) {
@@ -318,83 +380,94 @@ class EDD_Logging {
 			$query_args['date_query'] = $date_query;
 		}
 
-		$logs = new WP_Query( $query_args );
+		// Used to dynamically dispatch the call to the correct class.
+		$log_type = 'logs';
 
-		return (int) $logs->post_count;
+		if ( 'api_request' === $type ) {
+			$log_type = 'api_request_logs';
+		} else if ( 'file_download' === $type ) {
+			$log_type = 'file_download_logs';
+		}
+
+		$count = call_user_func( 'edd_count_' . $log_type, $query_args );
+
+		return $count;
 	}
 
 	/**
-	 * Delete a log
+	 * Delete logs based on parameters passed.
 	 *
 	 * @since 1.3.1
-	 * @uses EDD_Logging::valid_type
-	 * @param int $object_id (default: 0)
-	 * @param string $type Log type (default: null)
-	 * @param array $meta_query Log meta query (default: null)
-	 * @return void
+	 *
+	 * @param int    $object_id  Object ID (default: 0).
+	 * @param string $type       Log type (default: null).
+	 * @param array  $meta_query Log meta query (default: null).
 	 */
 	public function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
 		$query_args = array(
-			'post_parent'    => $object_id,
-			'post_type'      => 'edd_log',
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
+			'post_parent' => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy'  => 'edd_log_type',
-					'field'     => 'slug',
-					'terms'     => $type,
-				)
-			);
+			$query_args['type'] = $type;
 		}
 
 		if ( ! empty( $meta_query ) ) {
 			$query_args['meta_query'] = $meta_query;
 		}
 
-		$logs = get_posts( $query_args );
+		// Used to dynamically dispatch the call to the correct class.
+		$log_type = 'log';
+
+		if ( 'api_request' === $type ) {
+			$log_type = 'api_request_log';
+		} else if ( 'file_download' === $type ) {
+			$log_type = 'file_download_log';
+		}
+
+		$logs = call_user_func( 'edd_get_' . $log_type . 's', $query_args );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				wp_delete_post( $log, true );
+				call_user_func( 'edd_delete_' . $log_type, $log->ID );
 			}
 		}
 	}
 
 	/**
-	 * Retrieve the log data
+	 * Retrieve the log data.
 	 *
+	 * @access public
 	 * @since 2.8.7
-	 * @return string
+	 *
+	 * @return string Log data.
 	 */
 	public function get_file_contents() {
 		return $this->get_file();
 	}
 
 	/**
-	 * Log message to file
+	 * Log message to file.
 	 *
+	 * @access public
 	 * @since 2.8.7
-	 * @return void
+	 *
+	 * @param string $message Message to insert in the log.
 	 */
 	public function log_to_file( $message = '' ) {
 		$message = date( 'Y-n-d H:i:s' ) . ' - ' . $message . "\r\n";
 		$this->write_to_log( $message );
-
 	}
 
 	/**
 	 * Retrieve the file data is written to
 	 *
+	 * @access protected
 	 * @since 2.8.7
-	 * @return string
+	 *
+	 * @return string File data.
 	 */
 	protected function get_file() {
-
 		$file = '';
 
 		if ( @file_exists( $this->file ) ) {
@@ -416,10 +489,10 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Write the log message
+	 * Write the log message.
 	 *
+	 * @access protected
 	 * @since 2.8.7
-	 * @return void
 	 */
 	protected function write_to_log( $message = '' ) {
 		$file = $this->get_file();
@@ -428,34 +501,30 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Delete the log file or removes all contents in the log file if we cannot delete it
+	 * Delete the log file or removes all contents in the log file if we cannot delete it.
 	 *
+	 * @access public
 	 * @since 2.8.7
-	 * @return void
+	 *
+	 * @return bool True if the log was cleared, false otherwise.
 	 */
 	public function clear_log_file() {
 		@unlink( $this->file );
 
 		if ( file_exists( $this->file ) ) {
 
-			// it's still there, so maybe server doesn't have delete rights
+			// It's still there, so maybe server doesn't have delete rights
 			chmod( $this->file, 0664 ); // Try to give the server delete rights
 			@unlink( $this->file );
 
-			// See if it's still there
+			// See if it's still there...
 			if ( @file_exists( $this->file ) ) {
 
-				/*
-				 * Remove all contents of the log file if we cannot delete it
-				 */
+				// Remove all contents of the log file if we cannot delete it
 				if ( is_writeable( $this->file ) ) {
-
 					file_put_contents( $this->file, '' );
-
 				} else {
-
 					return false;
-
 				}
 
 			}
@@ -464,7 +533,6 @@ class EDD_Logging {
 
 		$this->file = '';
 		return true;
-
 	}
 
 	/**
@@ -480,52 +548,396 @@ class EDD_Logging {
 		return $this->file;
 	}
 
+	/**
+	 * Backwards compatibility filters for get_post_meta() calls on API request logs.
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
+	 * @param  int    $object_id The object ID post meta was requested for.
+	 * @param  string $meta_key  The meta key requested.
+	 * @param  bool   $single    If the person wants the single value or an array of the value.
+	 * @return mixed  The meta value to return.
+	 */
+	public function _api_request_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
+		global $wpdb;
+
+		$meta_keys = apply_filters( 'edd_post_meta_api_request_log_backwards_compat_keys', array(
+			'_edd_log_request_ip',
+			'_edd_log_user',
+			'_edd_log_key',
+			'_edd_log_token',
+			'_edd_log_time',
+			'_edd_log_version',
+		) );
+
+		if ( ! in_array( $meta_key, $meta_keys ) ) {
+			return $value;
+		}
+
+		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+
+		$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
+
+		if ( ! $api_request_log || ! $api_request_log->id > 0 ) {
+			// We didn't find a API request log record with this ID... so let's check and see if it was a migrated one
+			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
+
+			if ( ! empty( $object_id ) ) {
+				$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
+			} else {
+				return $value;
+			}
+		}
+
+		switch ( $meta_key ) {
+			case '_edd_log_request_ip':
+			case '_edd_log_user':
+			case '_edd_log_key':
+			case '_edd_log_token':
+			case '_edd_log_time':
+			case '_edd_log_version':
+				$key   = str_replace( '_edd_log_', '', $meta_key );
+
+				if ( 'request_ip' === $key ) {
+					$key = 'ip';
+				}
+
+				if ( 'key' === $key ) {
+					$key = 'api_key';
+				}
+
+				if ( 'user' === $key ) {
+					$key = 'user_id';
+				}
+
+				$value = $api_request_log->$key;
+
+				if ( $show_notice ) {
+					// Throw deprecated notice if WP_DEBUG is defined and on
+					trigger_error( __( 'The EDD API request log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\API_Request_Log object to get the relevant data, instead.', 'easy-digital-downloads' ) );
+					$backtrace = debug_backtrace();
+					trigger_error( print_r( $backtrace, 1 ) );
+				}
+				break;
+
+			default:
+				/*
+				 * Developers can hook in here with add_filter( 'edd_get_post_meta_api_request_log_backwards_compat-meta_key... in order to
+				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD\Logs\API_Request_Log::get_meta
+				 */
+				$value = apply_filters( 'edd_get_post_meta_api_request_log_backwards_compat-' . $meta_key, $value, $object_id );
+				break;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Listen for calls to update_post_meta for API request logs and see if we need to filter them.
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with the
+	 *                           postmeta table.
+	 * @param int    $object_id  The object ID post meta was requested for.
+	 * @param string $meta_key   The meta key requested.
+	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
+	 * @param mixed  $prev_value The previous value of the meta.
+	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
+	 */
+	public function _api_request_log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		global $wpdb;
+
+		$meta_keys = apply_filters( 'edd_post_meta_api_request_log_backwards_compat_keys', array(
+			'_edd_log_request_ip',
+			'_edd_log_user',
+			'_edd_log_key',
+			'_edd_log_token',
+			'_edd_log_time',
+			'_edd_log_version',
+		) );
+
+		if ( ! in_array( $meta_key, $meta_keys ) ) {
+			return $check;
+		}
+
+		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+
+		$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
+
+		if ( ! $api_request_log || ! $api_request_log->id > 0 ) {
+			// We didn't find an API request log record with this ID... so let's check and see if it was a migrated one
+			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
+
+			if ( ! empty( $object_id ) ) {
+				$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
+			} else {
+				return $check;
+			}
+		}
+
+		switch ( $meta_key ) {
+			case '_edd_log_request_ip':
+			case '_edd_log_user':
+			case '_edd_log_key':
+			case '_edd_log_token':
+			case '_edd_log_time':
+			case '_edd_log_version':
+				$key   = str_replace( '_edd_log_', '', $meta_key );
+
+				if ( 'request_ip' === $key ) {
+					$key = 'ip';
+				}
+
+				if ( 'key' === $key ) {
+					$key = 'api_key';
+				}
+
+				if ( 'user' === $key ) {
+					$key = 'user_id';
+				}
+
+				$api_request_log->{$key} = $meta_value;
+
+				$api_request_log->update( array(
+					$key => $meta_value,
+				) );
+
+				// Since the old API request logs data was simply stored in a single post meta entry, just don't let it be added.
+				if ( $show_notice ) {
+					// Throw deprecated notice if WP_DEBUG is defined and on
+					trigger_error( __( 'API request log data is no longer stored in post meta. Please use the new custom database tables to insert a API request log record.', 'easy-digital-downloads' ) );
+					$backtrace = debug_backtrace();
+					trigger_error( print_r( $backtrace, 1 ) );
+				}
+				break;
+
+			default:
+				/*
+				 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
+				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
+				 */
+				$check = apply_filters( 'edd_update_post_meta_api_request_log_backwards_compat-' . $meta_key, $check, $object_id, $meta_value, $prev_value );
+				break;
+		}
+
+		return $check;
+	}
+
+	/**
+	 * Backwards compatibility filters for get_post_meta() calls on file download logs.
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
+	 * @param  int    $object_id The object ID post meta was requested for.
+	 * @param  string $meta_key  The meta key requested.
+	 * @param  bool   $single    If the person wants the single value or an array of the value.
+	 * @return mixed The meta value to return.
+	 */
+	public function _file_download_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
+		global $wpdb;
+
+		$meta_keys = apply_filters( 'edd_post_meta_log_backwards_compat_keys', array(
+			'_edd_log_user_info',
+			'_edd_log_user_id',
+			'_edd_log_file_id',
+			'_edd_key_ip',
+			'_edd_log_payment_id',
+			'_edd_log_price_id',
+		) );
+
+		if ( ! in_array( $meta_key, $meta_keys ) ) {
+			return $value;
+		}
+
+		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+
+		$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
+
+		if ( ! $file_download_log || ! $file_download_log->id > 0 ) {
+			// We didn't find a API request log record with this ID... so let's check and see if it was a migrated one
+			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
+
+			if ( ! empty( $object_id ) ) {
+				$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
+			} else {
+				return $value;
+			}
+		}
+
+		switch ( $meta_key ) {
+			case '_edd_log_user_id':
+			case '_edd_log_file_id':
+			case '_edd_key_ip':
+			case '_edd_log_payment_id':
+			case '_edd_log_price_id':
+				$key = str_replace( '_edd_log_', '', $meta_key );
+
+				$value = $file_download_log->$key;
+
+				if ( $show_notice ) {
+					// Throw deprecated notice if WP_DEBUG is defined and on
+					trigger_error( __( 'The EDD file download log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\File_Download_Log object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+					$backtrace = debug_backtrace();
+					trigger_error( print_r( $backtrace, 1 ) );
+				}
+				break;
+			case '_edd_log_user_info':
+				$user = get_userdata( $file_download_log->user_id );
+
+				$value = array(
+					'id'    => $user->ID,
+					'email' => $user->user_email,
+					'name'  => $user->display_name,
+				);
+
+				break;
+			default:
+				/*
+				 * Developers can hook in here with add_filter( 'edd_get_post_meta_file_download_log_backwards_compat-meta_key... in order to
+				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD\Logs\File_Download_Log::get_meta
+				 */
+				$value = apply_filters( 'edd_get_post_meta_file_download_log_backwards_compat-' . $meta_key, $value, $object_id );
+				break;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Listen for calls to update_post_meta for file download logs and see if we need to filter them.
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with
+	 *                           the postmeta table.
+	 * @param int    $object_id  The object ID post meta was requested for.
+	 * @param string $meta_key   The meta key requested.
+	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
+	 * @param mixed  $prev_value The previous value of the meta
+	 *
+	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta
+	 */
+	public function _file_download_log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		global $wpdb;
+
+		$meta_keys = apply_filters( 'edd_post_meta_log_backwards_compat_keys', array(
+			'_edd_log_user_info',
+			'_edd_log_user_id',
+			'_edd_log_file_id',
+			'_edd_key_ip',
+			'_edd_log_payment_id',
+			'_edd_log_price_id',
+		) );
+
+		if ( ! in_array( $meta_key, $meta_keys ) ) {
+			return $check;
+		}
+
+		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
+		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
+
+		$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
+
+		if ( ! $file_download_log || ! $file_download_log->id > 0 ) {
+			// We didn't find an API request log record with this ID... so let's check and see if it was a migrated one
+			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
+
+			if ( ! empty( $object_id ) ) {
+				$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
+			} else {
+				return $check;
+			}
+		}
+
+		switch ( $meta_key ) {
+			case '_edd_log_user_id':
+			case '_edd_log_file_id':
+			case '_edd_key_ip':
+			case '_edd_log_payment_id':
+			case '_edd_log_price_id':
+				$key = str_replace( '_edd_log_', '', $meta_key );
+
+				$file_download_log->{$key} = $meta_value;
+
+				$file_download_log->update( array( $key => $meta_value, ) );
+
+				// Since the old API request logs data was simply stored in a single post meta entry, just don't let it be added.
+				if ( $show_notice ) {
+					// Throw deprecated notice if WP_DEBUG is defined and on
+					trigger_error( __( 'File download log data is no longer stored in post meta. Please use the new custom database tables to insert a API request log record.', 'easy-digital-downloads' ) );
+					$backtrace = debug_backtrace();
+					trigger_error( print_r( $backtrace, 1 ) );
+				}
+				break;
+			case '_edd_log_user_info':
+				break;
+			default:
+				/*
+				 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
+				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
+				 */
+				$check = apply_filters( 'edd_update_post_meta_file_download_log_backwards_compat-' . $meta_key, $check, $object_id, $meta_value, $prev_value );
+				break;
+		}
+
+		return $check;
+	}
 }
 
 // Initiate the logging system
 $GLOBALS['edd_logs'] = new EDD_Logging();
 
 /**
- * Record a log entry
- *
- * This is just a simple wrapper function for the log class add() function
+ * Helper method to insert a new log into the database.
  *
  * @since 1.3.3
  *
- * @param string $title
- * @param string $message
- * @param int    $parent
- * @param null   $type
+ * @see EDD_Logging::add()
  *
- * @global $edd_logs EDD Logs Object
+ * @param string $title   Log title.
+ * @param string $message Log message.
+ * @param int    $parent  Download ID.
+ * @param null   $type    Log type.
  *
- * @uses EDD_Logging::add()
- *
- * @return mixed ID of the new log entry
+ * @return int ID of the new log.
  */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
+	/** @var EDD_Logging $edd_logs */
 	global $edd_logs;
+
 	$log = $edd_logs->add( $title, $message, $parent, $type );
+
 	return $log;
 }
 
 
 /**
- * Logs a message to the debug log file
+ * Logs a message to the debug log file.
  *
  * @since 2.8.7
  *
- * @param string $message
- * @global $edd_logs EDD Logs Object
- * @return void
+ * @param string $message Log message.
  */
 function edd_debug_log( $message = '' ) {
+	/** @var EDD_Logging $edd_logs */
 	global $edd_logs;
 
-	if( edd_is_debug_mode() ) {
-
+	if ( edd_is_debug_mode() ) {
 		$edd_logs->log_to_file( $message );
-
 	}
 }
 
