@@ -1598,6 +1598,9 @@ td.edd_order_price {
 	margin-left: -20px;
 	margin-right: -20px;
 }
+#edd-item-card-wrapper .add-customer-email-wrapper > #add-customer-email {
+	vertical-align: middle;
+}
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
 	.customer-info .customer-name {
