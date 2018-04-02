@@ -1,6 +1,7 @@
 <?php
 namespace EDD\Reports\Data\Charts\v2;
 
+use EDD\Reports\Data\Chart_Endpoint;
 use EDD\Utils\Error_Logger_Interface as Error_Logger;
 
 /**
@@ -9,6 +10,16 @@ use EDD\Utils\Error_Logger_Interface as Error_Logger;
  * @since 3.0.0
  */
 abstract class Dataset implements Error_Logger {
+
+	/**
+	 * The ID associated with the dataset.
+	 *
+	 * Primarily used for locating associated data via the endpoint's data callback.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $dataset_id;
 
 	/**
 	 * Represents the list of fields for a given dataset.
@@ -27,6 +38,22 @@ abstract class Dataset implements Error_Logger {
 	 * @var   \WP_Error
 	 */
 	protected $errors;
+
+	/**
+	 * Raw dataset options and data.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $options = array();
+
+	/**
+	 * Represents the chart endpoint the dataset is associated with.
+	 *
+	 * @since 3.0
+	 * @var   Chart_Endpoint
+	 */
+	private $endpoint;
 
 	/**
 	 * Represents the list of global fields for all datasets.
@@ -57,6 +84,61 @@ abstract class Dataset implements Error_Logger {
 	 */
 	public function get_global_fields() {
 		return $this->global_fields;
+	}
+
+	/**
+	 * Retrieves the dataset ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Dataset ID.
+	 */
+	public function get_id() {
+		return $this->dataset_id;
+	}
+
+	/**
+	 * Sets the dataset ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $dataset_id Dataset ID
+	 */
+	private function set_id( $dataset_id ) {
+		$this->dataset_id = sanitize_key( $dataset_id );
+	}
+
+	/**
+	 * Sets the chart endpoint object.
+	 *
+	 * @since 3.0
+	 *
+	 * @param EDD\Reports\Data\Chart_Endpoint $endpoint Chart_Endpoint object.
+	 */
+	private function set_endpoint( $endpoint ) {
+		$this->endpoint = $endpoint;
+	}
+
+	/**
+	 * Retrieves the raw dataset options.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Dataset options (raw).
+	 */
+	public function get_options() {
+		return $this->options;
+	}
+
+	/**
+	 * Retrieves the chart endpoint object for this dataset.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Chart_Endpoint Chart endpoint.
+	 */
+	public function get_endpoint() {
+		return $this->endpoint;
 	}
 
 	/**
