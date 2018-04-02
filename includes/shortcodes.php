@@ -590,8 +590,9 @@ function edd_downloads_query( $atts, $content = null ) {
 	if ( $downloads->have_posts() ) :
 		$i = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
-		$wrapper_classes = array_unique( array_merge( $columns_class, explode( ',', $atts['class'] ) ) );
-		$wrapper_classes = rtrim( implode( ' ', $wrapper_classes ) );
+		$custom_classes  = array_filter( explode( ',', $atts['class'] ) );
+		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
+		$wrapper_classes = implode( ' ', $wrapper_classes );
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
 
