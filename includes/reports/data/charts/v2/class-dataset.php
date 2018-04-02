@@ -70,9 +70,17 @@ abstract class Dataset implements Error_Logger {
 	 * Sets up the dataset for population.
 	 *
 	 * @since 3.0
+	 *
+	 * @param string         $dataset_id Dataset ID.
+	 * @param Chart_Endpoint $endpoint Chart endpoint object.
+	 * @param array $options Dataset options.
 	 */
-	public function __construct() {
+	public function __construct( $dataset_id, $endpoint, $options ) {
 		$this->setup_error_logger();
+
+		$this->set_id( $dataset_id );
+		$this->set_endpoint( $endpoint );
+		$this->validate( $options );
 	}
 
 	/**
