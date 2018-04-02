@@ -126,7 +126,7 @@ class Manifest implements Error_Logger {
 	private function set_options( $options ) {
 		$this->options = $options;
 
-		$datasets = $this->endpoint->get_data();
+		$datasets = $this->get_endpoint()->get_data();
 
 		if ( ! empty( $datasets ) && is_array( $datasets ) ) {
 			foreach ( $datasets as $axis => $data ) {
