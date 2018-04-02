@@ -190,13 +190,13 @@ class Manifest implements Error_Logger {
 	}
 
 	/**
-	 * Retrieves the type handler for the current dataset type.
+	 * Retrieves the handler class for the current dataset type.
 	 *
 	 * @since 3.0
 	 *
-	 * @return string Dataset type handler.
+	 * @return string Dataset handler class.
 	 */
-	public function get_type_handler() {
+	public function get_dataset_handler() {
 		$handler = '';
 
 		switch( $this->get_type() ) {
