@@ -1862,7 +1862,7 @@ jQuery(document).ready(function ($) {
 				var button  = $(this);
 				var wrapper = button.parent();
 
-				wrapper.parent().find('.notice-wrap').remove();
+				wrapper.parent().find('.notice-container').remove();
 				wrapper.find('.spinner').css('visibility', 'visible');
 				button.attr('disabled', true);
 
@@ -1885,7 +1885,7 @@ jQuery(document).ready(function ($) {
 						window.location.href=response.redirect;
 					} else {
 						button.attr('disabled', false);
-						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+						wrapper.after('<div class="notice-container"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					}
 
