@@ -74,7 +74,7 @@ class EDD_Log_File_Download_Query extends EDD_DB_Query {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'get_log_file_download';
+	public $item_shape = 'EDD\\Logs\\File_Download_Log';
 
 	/** Cache *****************************************************************/
 

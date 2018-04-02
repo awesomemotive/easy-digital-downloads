@@ -28,6 +28,7 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -37,7 +38,9 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'searchable' => true,
+			'sortable'   => true
 		),
 
 		// api_key
@@ -46,6 +49,7 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'type'       => 'varchar',
 			'length'     => '32',
 			'default'    => 'public',
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -55,6 +59,7 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'type'       => 'varchar',
 			'length'     => '32',
 			'default'    => '',
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -64,6 +69,7 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'type'       => 'varchar',
 			'length'     => '32',
 			'default'    => '',
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -93,6 +99,7 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'type'       => 'varchar',
 			'length'     => '60',
 			'default'    => '',
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -102,6 +109,7 @@ class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
 			'type'       => 'varchar',
 			'length'     => '60',
 			'default'    => '',
+			'searchable' => true,
 			'sortable'   => true
 		),
 

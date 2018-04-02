@@ -1528,6 +1528,11 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$meta = array_diff_key( $data, $columns );
 		$data = array_intersect_key( $data, $columns );
 
+		// If `date_created` is empty, use the current time
+		if ( ! isset( $data['date_created'] ) || empty( $data['date_created'] ) ) {
+			$data['date_created'] = current_time( 'mysql' );
+		}
+
 		// Attempt to add
 		$result = $this->get_db()->insert( $table, $data );
 
