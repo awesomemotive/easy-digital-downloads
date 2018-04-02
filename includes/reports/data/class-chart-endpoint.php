@@ -210,6 +210,24 @@ class Chart_Endpoint extends Endpoint {
 	}
 
 	/**
+	 * Retrieves a specific axis' data if set.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $set Dataset to retrieve corresponding data for.
+	 * @return array Data corresponding to `$set` if it's set, otherwise an empty array.
+	 */
+	public function get_data_by_set( $set ) {
+		$data = $this->get_data();
+
+		if ( isset( $data[ $set ] ) ) {
+			return $data[ $set ];
+		} else {
+			return array();
+		}
+	}
+
+	/**
 	 * Builds and outputs the graph JS to the page.
 	 *
 	 * @since 3.0
