@@ -1,6 +1,8 @@
 <?php
 namespace EDD\Reports\Data\Charts\v2;
 
+use EDD\Utils\Error_Logger_Interface as Error_Logger;
+
 /**
  * Represents a manifestation of a ChartJS v2 object's attributes in PHP form.
  *
@@ -10,7 +12,7 @@ namespace EDD\Reports\Data\Charts\v2;
  *
  * @see Hydrator
  */
-class Manifest {
+class Manifest implements Error_Logger {
 
 	/**
 	 * Represents the chart type to be manifested.
@@ -37,6 +39,14 @@ class Manifest {
 	private $datasets = array();
 
 	/**
+	 * Holds errors related to instantiating the manifest.
+	 *
+	 * @since 3.0
+	 * @var   \WP_Error
+	 */
+	protected $errors;
+
+	/**
 	 * Sets up the manifest.
 	 *
 	 * @since 3.0
@@ -45,6 +55,7 @@ class Manifest {
 	 * @param array  $options Array of options to populate the manifest with.
 	 */
 	public function __construct( $type, $options ) {
+		$this->setup_error_logger();
 		$this->set_type( $type );
 		$this->set_options( $options );
 	}
@@ -153,4 +164,40 @@ class Manifest {
 
 		}
 	}
+
+	/**
+	 * Determines whether the dataset has generated errors during instantiation.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if errors have been logged, otherwise false.
+	 */
+	public function has_errors() {
+		$errors = $this->errors->get_error_codes();
+
+		return empty( $errors ) ? false : true;
+	}
+
+	/**
+	 * Retrieves any logged errors for the dataset.
+	 *
+	 * @since 3.0
+	 *
+	 * @return \WP_Error WP_Error object for the current dataset.
+	 */
+	public function get_errors() {
+		return $this->errors;
+	}
+
+	/**
+	 * Sets up the WP_Error instance.
+	 *
+	 * @since 3.0
+	 */
+	public function setup_error_logger() {
+		if ( ! isset( $this->errors ) ) {
+			$this->errors = new \WP_Error();
+		}
+	}
+
 }

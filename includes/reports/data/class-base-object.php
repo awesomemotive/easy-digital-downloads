@@ -10,12 +10,14 @@
  */
 namespace EDD\Reports\Data;
 
+use EDD\Utils\Error_Logger_Interface as Error_Logger;
+
 /**
  * Represents an abstract base reports object.
  *
  * @since 3.0
  */
-abstract class Base_Object {
+abstract class Base_Object implements Error_Logger {
 
 	/**
 	 * Object ID.
@@ -34,7 +36,7 @@ abstract class Base_Object {
 	private $label;
 
 	/**
-	 * Holds errors related to instantiating the endpoint object.
+	 * Holds errors related to instantiating the object.
 	 *
 	 * @since 3.0
 	 * @var   \WP_Error
@@ -49,10 +51,7 @@ abstract class Base_Object {
 	 * @param array $args Arguments for instantiating the object.
 	 */
 	public function __construct( $args ) {
-		if ( ! isset( $this->errors ) ) {
-			$this->errors = new \WP_Error();
-		}
-
+		$this->setup_error_logger();
 		$this->set_props( $args );
 	}
 
@@ -162,6 +161,17 @@ abstract class Base_Object {
 	 */
 	public function get_errors() {
 		return $this->errors;
+	}
+
+	/**
+	 * Sets up the WP_Error instance for logging errors.
+	 *
+	 * @since 3.0
+	 */
+	public function setup_error_logger() {
+		if ( ! isset( $this->errors ) ) {
+			$this->errors = new \WP_Error();
+		}
 	}
 
 }
