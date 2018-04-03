@@ -21,9 +21,42 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return int
  */
 function edd_add_discount( $data = array() ) {
+	$product_requirements = isset( $data['product_reqs'] ) ? $data['product_reqs'] : null;
+	$excluded_products = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
+
+	unset( $data['product_reqs'] );
+	unset( $data['excluded_products'] );
+
 	$discounts = new EDD_Discount_Query();
 
-	return $discounts->add_item( $data );
+	$discount_id = $discounts->add_item( $data );
+
+	// Product requirements and excluded products are handled differently
+	if ( ! is_null( $product_requirements ) ) {
+		if ( is_string( $product_requirements ) ) {
+			$product_requirements = maybe_unserialize( $product_requirements );
+		}
+
+		if ( is_array( $product_requirements ) ) {
+			foreach ( $product_requirements as $product_requirement ) {
+				edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+			}
+		}
+	}
+
+	if ( ! is_null( $excluded_products ) ) {
+		if ( is_string( $excluded_products ) ) {
+			$excluded_products = maybe_unserialize( $excluded_products );
+		}
+
+		if ( is_array( $excluded_products ) ) {
+			foreach ( $excluded_products as $excluded_product ) {
+				edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+			}
+		}
+	}
+
+	return $discount_id;
 }
 
 /**
@@ -309,7 +342,7 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 	if ( 0 === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
 	} else {
-		edd_update_discount( $discount_id );
+		edd_update_discount( $discount_id, $details );
 		$return = $discount_id;
 	}
 
