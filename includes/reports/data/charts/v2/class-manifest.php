@@ -232,6 +232,105 @@ class Manifest implements Error_Logger {
 
 
 		}
+
+		return $handler;
+	}
+
+	/**
+	 * Retrieves the parsed chart datasets as an object.
+	 *
+	 * @since 3.0
+	 *
+	 * @return object Parsed chart data.
+	 */
+	public function get_chart_data() {
+		$data = array();
+
+		if ( $this->has_datasets() ) {
+			$datasets = $manifest->get_datasets();
+
+			$data['datasets'] = array();
+
+			foreach ( $datasets as $id => $set ) {
+				if ( $set->has_errors() ) {
+					continue;
+				}
+
+				$data['datasets'][] = $set->get_options();
+			}
+		} else {
+			log_it( $this->get_errors() );
+		}
+
+		return $this->array_to_object( $data );
+	}
+
+	/**
+	 * Retrieves the parsed chart options as an object.
+	 *
+	 * @since 3.0
+	 *
+	 * @return object Parsed chart options.
+	 */
+	public function get_chart_options() {
+		$defaults = array(
+			'responsive' => true,
+			'hoverMode'  => 'index',
+			'stacked'    => false,
+			'title'      => array(
+				'display' => true,
+				'text'    => $this->get_endpoint()->get_label(),
+			),
+			'scales'     => array(
+				'yAxes' => array(
+					'type'     => 'linear',
+					'display'  => true,
+					'position' => 'left',
+					'id'       => 'y-axis-1',
+				),
+				'xAxes' => array(
+					'type'    => 'time',
+					'display' => true,
+					'id'      => 'x-axis-1',
+					'ticks'   => array(
+						'source' => 'auto',
+					),
+					'time'    => array(
+						'min' => "moment().startOf( 'month' )",
+						'max' => "moment().endOf( 'month' )",
+						'unit' => 'day',
+						'displayFormats' => array(
+							'day' => 'MMM D',
+						),
+					),
+				),
+			)
+		);
+
+		$args = wp_parse_args( $this->get_options(), $defaults );
+
+		return $this->array_to_object( $args );
+	}
+
+	/**
+	 * Converts an associative array to an object of objects (recursive!).
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $array Input array.
+	 * @return object Object of objects.
+	 */
+	private function array_to_object( $array ) {
+		$object = new \stdClass();
+
+		foreach ( $array as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$value = $this->array_to_object( $value );
+			}
+			$object->{$key} = $value;
+		}
+
+		return $object;
 	}
 
 	/**
