@@ -117,9 +117,6 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
-	$meta_update = false;
-	$meta_count = 0;
-
 	// Product requirements and excluded products are handled differently
 	if ( isset( $data['product_reqs'] ) ) {
 		if ( is_string( $data['product_reqs'] ) ) {
@@ -131,10 +128,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 
 			foreach ( $data['product_reqs'] as $product_requirement ) {
 				edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
-				$meta_count++;
 			}
-
-			$meta_update = true;
 		}
 
 		unset( $data['product_reqs'] );
@@ -150,10 +144,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 
 			foreach ( $data['excluded_products'] as $excluded_product ) {
 				edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
-				$meta_count++;
 			}
-
-			$meta_update = true;
 		}
 
 		unset( $data['excluded_products'] );
