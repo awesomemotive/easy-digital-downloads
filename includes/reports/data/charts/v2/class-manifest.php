@@ -200,11 +200,7 @@ class Manifest implements Error_Logger {
 
 			} else {
 
-				$errors = $dataset->get_errors();
-
-				foreach ( $errors as $error ) {
-					$this->errors->add( $error->get_code(), $errors->get_error_message(), $errors->get_error_data() );
-				}
+				$this->errors->add( 'dataset_errors_passthrough', 'Errors have been passed through from dataset parsing.', $dataset->get_errors() );
 
 			}
 
