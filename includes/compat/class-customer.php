@@ -27,6 +27,7 @@ class Customer extends Base {
 	 */
 	public function __construct() {
 		$this->set_component( 'customer' );
+		$this->hooks();
 	}
 
 	/**
@@ -71,6 +72,54 @@ class Customer extends Base {
 
 				return ( $decreased_count && $decreased_value ) ? true : false;
 				break;
+		}
+	}
+
+	/**
+	 * Backwards compatibility hooks for customers.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 */
+	private function hooks() {
+		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
+	}
+
+	/**
+	 * Updates the email address of a customer record when the email on a user is updated.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int   $user_id       User ID.
+	 * @param array $old_user_data Old user data.
+	 * @return bool False if customer does not exist for given user ID.
+	 */
+	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
+		$customer = edd_get_customer_by( 'user_id', $user_id );
+
+		if ( ! $customer ) {
+			return false;
+		}
+
+		$user = get_userdata( $user_id );
+
+		if ( ! empty( $user ) && $user->user_email !== $customer->email ) {
+			if ( ! edd_get_customer_by( 'email', $user->user_email ) ) {
+				$success = edd_update_customer( $customer->id, array(
+					'email' => $user->user_email
+				) );
+
+				if ( $success ) {
+					$payments_array = explode( ',', $customer->payment_ids );
+					if ( ! empty( $payments_array ) ) {
+						foreach ( $payments_array as $payment_id ) {
+							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
+						}
+					}
+
+					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
+				}
+			}
 		}
 	}
 }
