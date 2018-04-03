@@ -31,9 +31,7 @@ class Hydrator {
 
 		$reflection = $this->reflect( $target );
 
-		if ( ! is_object( $target ) ) {
-			$target = $reflection->newInstanceWithoutConstructor();
-		}
+		$object = is_object( $target ) ? $target : $reflection->newInstanceWithoutConstructor();
 
 		foreach ( $data as $key => $value ) {
 			$property = $reflection->getProperty( $key );
@@ -43,10 +41,10 @@ class Hydrator {
 				$property->setAccessible( true );
 			}
 
-			$property->setValue( $target, $value );
+			$property->setValue( $object, $value );
 		}
 
-		return $target;
+		return $object;
 	}
 
 	/**

@@ -260,9 +260,7 @@ class Chart_Endpoint extends Endpoint {
 
 		$key_var = substr( md5( uniqid( rand() ) ), 0, 7 );
 
-		$dataset_count = count( $data );
-		$current       = 0;
-		$target_el     = $this->get_display_arg( 'target', 'edd-reports-graph' );
+		$target_el = $this->get_display_arg( 'target', 'edd-reports-graph' );
 
 		?>
 		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
