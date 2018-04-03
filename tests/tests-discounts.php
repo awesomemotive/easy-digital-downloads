@@ -414,13 +414,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_meta()
-	 */
-	public function test_discount_get_meta() {
-		$this->assertEquals( self::$discount->id, edd_get_discount_meta( self::$discount->id, 'legacy_id' ) );
-	}
-
-	/**
 	 * @covers ::update_meta()
 	 */
 	public function test_discount_update_meta() {
@@ -435,7 +428,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_discount_delete_meta_should_return_empty() {
 		edd_delete_discount_meta( self::$discount->id, 'legacy_id' );
 
-		$this->assertEmpty( edd_get_discount_meta( self::$download->ID, 'legacy_id' ) );
+		$this->assertEmpty( edd_get_discount_meta( self::$discount->id, 'legacy_id' ) );
 	}
 
 	/**
@@ -933,7 +926,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		edd_add_to_cart( $download_1->ID );
 		edd_add_to_cart( $download_2->ID );
 
-		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
+		$discount = EDD_Helper_Discount::create_simple_flat_discount();
 		$post = array(
 			'name'              => 'Excludes',
 			'amount'            => '1',
