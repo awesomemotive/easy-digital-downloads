@@ -48,8 +48,8 @@ class Back_Compat {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param string $name     Name of the method.
-	 * @param array $arguments Enumerated array containing the parameters passed to the $name'ed method.
+	 * @param string $name      Name of the method.
+	 * @param array  $arguments Enumerated array containing the parameters passed to the $name'ed method.
 	 * @return mixed Dependent on the method being dispatched to.
 	 */
 	public function __call( $name, $arguments ) {
