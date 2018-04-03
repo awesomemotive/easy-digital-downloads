@@ -1341,10 +1341,43 @@ function edd_discounts_migration() {
 
 		// Discounts found so migrate them
 		foreach ( $discounts as $old_discount ) {
-			$discount = new EDD_Discount;
-			$id = $discount->migrate( $old_discount->ID );
+			$old_discount = get_post( $old_discount->ID );
 
-			edd_debug_log( $old_discount->ID . ' successfully migrated to ' . $id );
+			if ( 'edd_discount' !== $old_discount->post_type ) {
+				continue;
+			}
+
+			$args = array();
+			$meta = get_post_custom( $old_discount->ID );
+			$meta_to_migrate = array();
+
+			foreach ( $meta as $key => $value ) {
+				if ( false === strpos( $key, '_edd_discount' ) ) {
+					// This is custom meta from another plugin that needs to be migrated to the new meta table
+					$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+					continue;
+				}
+
+				$value = maybe_unserialize( $value[0] );
+				$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
+			}
+
+			// If the discount name was not stored in post_meta, use value from the WP_Post object
+			if ( ! isset( $args['name'] ) ) {
+				$args['name'] = $old_discount->post_title;
+			}
+
+			$args['status'] = get_post_status( $old_discount->ID );
+
+			$discount_id = edd_store_discount( $args );
+
+			if ( ! empty( $meta_to_migrate ) ) {
+				foreach( $meta_to_migrate as $key => $value ) {
+					edd_add_discount_meta( $discount_id, $key, $value );
+				}
+			}
+
+			edd_debug_log( $old_discount->ID . ' successfully migrated to ' . $discount_id );
 		}
 
 		edd_debug_log( 'Step ' . $step . ' of discounts migration complete' );
