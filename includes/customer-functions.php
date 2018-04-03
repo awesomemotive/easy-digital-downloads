@@ -97,18 +97,22 @@ function edd_get_customer_by( $field = '', $value = '' ) {
  *
  * @since 3.0.0
  *
+ * @param array $args Arguments.
  * @return int
  */
-function edd_get_customer_count() {
-
-	// Query for count
-	$customers = new EDD_Customer_Query( array(
+function edd_get_customer_count( $args = array() ) {
+	$count_args = array(
 		'number' => 0,
 		'count'  => true,
 
 		'update_cache'      => false,
 		'update_meta_cache' => false
-	) );
+	);
+
+	$args = array_merge( $args, $count_args );
+
+	// Query for count
+	$customers = new EDD_Customer_Query( $args );
 
 	// Return count
 	return absint( $customers->found_items );

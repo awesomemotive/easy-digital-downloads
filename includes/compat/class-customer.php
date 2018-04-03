@@ -41,22 +41,63 @@ class Customer extends Base {
 	 */
 	public function __call( $name, $arguments ) {
 		switch ( $name ) {
+			case 'add':
+			case 'insert':
+				return edd_add_customer( $arguments[0] );
+				break;
+			case 'update':
+				return edd_update_customer( $arguments[0], $arguments[1] );
+				break;
+			case 'delete':
+				if ( ! is_bool( $arguments[0] ) ) {
+					return false;
+				}
+
+				$column = is_email( $arguments[0] ) ? 'email' : 'id';
+				$customer = edd_get_customer_by( $column, $arguments[0] );
+				edd_delete_customer( $customer->id );
+				break;
+			case 'exists':
+				return (bool) edd_get_customer_by( 'email', $arguments[0] );
+				break;
+			case 'get_customer_by':
+				return edd_get_customer_by( $arguments[0], $arguments[1] );
+				break;
+			case 'get_customers':
+				return edd_get_customers( $arguments[0] );
+				break;
+			case 'count':
+				return edd_get_customer_count();
 			case 'get_column':
 				return edd_get_customer_by( $arguments[0], $arguments[1] );
 				break;
 			case 'attach_payment':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
+
+				if ( ! $customer ) {
+					return false;
+				}
+
 				return $customer->attach_payment( $arguments[1], false );
 				break;
 			case 'remove_payment':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
+
+				if ( ! $customer ) {
+					return false;
+				}
+
 				return $customer->remove_payment( $arguments[1], false );
 				break;
 			case 'increment_stats':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
+
+				if ( ! $customer ) {
+					return false;
+				}
 
 				$increased_count = $customer->increase_purchase_count();
 				$increased_value = $customer->increase_value( $arguments[1] );
@@ -66,6 +107,10 @@ class Customer extends Base {
 			case 'decrement_stats':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
+
+				if ( ! $customer ) {
+					return false;
+				}
 
 				$decreased_count = $customer->decrease_purchase_count();
 				$decreased_value = $customer->decrease_value( $arguments[1] );
