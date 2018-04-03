@@ -74,6 +74,9 @@ class EDD_Utilities {
 		// Date management.
 		require_once $utils_dir . 'class-date.php';
 
+		// Hydrator.
+		require_once $utils_dir . 'class-hydrator.php';
+
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
 	}
