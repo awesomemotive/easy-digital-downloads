@@ -955,6 +955,9 @@ class EDD_Discount extends EDD_DB_Discount {
 				$this->$key = $value;
 			}
 
+			// We have to ensure an ID is not passed to edd_add_discount()
+			unset( $args['id'] );
+
 			$id = edd_add_discount( $args );
 
 			// The DB class 'add' implies an update if the discount being asked to be created already exists
