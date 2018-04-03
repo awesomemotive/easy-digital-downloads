@@ -166,6 +166,9 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+
+			// Register backwards compatibility hooks
+			new EDD\Compat\Customer();
 		}
 
 		return self::$instance;
