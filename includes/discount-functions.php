@@ -520,8 +520,7 @@ function edd_get_discount_min_price( $discount_id = 0 ) {
  * @return float $amount Discount amount.
  */
 function edd_get_discount_amount( $discount_id = 0 ) {
-	$discount = edd_get_discount( $discount_id );
-	return edd_format_discount_rate( $discount->type, $discount->amount );
+	return edd_get_discount_field( $discount_id, 'amount' );
 }
 
 /**
