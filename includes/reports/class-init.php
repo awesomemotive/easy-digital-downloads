@@ -49,6 +49,7 @@ final class Init {
 		require_once $reports_dir . '/data/class-endpoint-registry.php';
 
 		// Chart Dependencies.
+		require_once $reports_dir . '/data/charts/v2/class-chart-template.php';
 		require_once $reports_dir . '/data/charts/v2/class-manifest.php';
 		require_once $reports_dir . '/data/charts/v2/class-dataset.php';
 		require_once $reports_dir . '/data/charts/v2/class-bar-dataset.php';
