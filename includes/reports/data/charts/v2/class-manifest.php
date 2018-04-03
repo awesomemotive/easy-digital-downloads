@@ -144,11 +144,22 @@ class Manifest implements Error_Logger {
 	}
 
 	/**
+	 * Retrieves parsed options for the chart manifest.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Chart options.
+	 */
+	public function get_options() {
+		return $this->options;
+	}
+
+	/**
 	 * Retrieves the manifest datasets.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Datasets for this chart if any are defined, otherwise an empty array.
+	 * @return Dataset[] Datasets for this chart if any are defined, otherwise an empty array.
 	 */
 	public function get_datasets() {
 		return $this->datasets;
