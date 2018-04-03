@@ -55,8 +55,8 @@ class Hydrator {
 	 * @since 3.0
 	 *
 	 * @param object       $object Hydrated object to extract.
-	 * @param array|string $fields Fields to extract from the object. Accepts 'all' for
-	 *                             all object fields or an array of fields.
+	 * @param array|string $fields Optional. Fields to extract from the object. Accepts 'all' for
+	 *                             all object fields or an array of fields. Default 'all'.
 	 * @return array
 	 * @throws \ReflectionException
 	 */
@@ -79,7 +79,7 @@ class Hydrator {
 
 			// Convert private and protected to public.
 			if ( $property->isPrivate() || $property->isProtected() ) {
-				$property->setAccessible(true);
+				$property->setAccessible( true );
 			}
 
 			$data[ $property->getName() ] = $property->getValue( $object );
