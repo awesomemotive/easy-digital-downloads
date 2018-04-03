@@ -762,7 +762,7 @@ function edd_get_discounted_amount( $code = '', $base_price = 0 ) {
 
 	return ! empty( $discount->id )
 		? $discount->get_discounted_amount( $base_price )
-		: false;
+		: $base_price;
 }
 
 /**

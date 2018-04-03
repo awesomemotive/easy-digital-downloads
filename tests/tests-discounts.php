@@ -417,7 +417,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::get_meta()
 	 */
 	public function test_discount_get_meta() {
-		$this->assertEquals( self::$discount->id, edd_get_discount_meta( self::$download->id, 'legacy_id' ) );
+		$this->assertEquals( self::$discount->id, edd_get_discount_meta( self::$discount->id, 'legacy_id' ) );
 	}
 
 	/**
@@ -426,7 +426,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_discount_update_meta() {
 		edd_update_discount_meta( self::$discount->id, 'test_meta_key', 'test_meta_value' );
 
-		$this->assertEquals( 'test_meta_value', edd_get_discount_meta( self::$download->id, 'test_meta_key' ) );
+		$this->assertEquals( 'test_meta_value', edd_get_discount_meta( self::$discount->id, 'test_meta_key' ) );
 	}
 
 	/**
@@ -435,14 +435,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_discount_delete_meta_should_return_empty() {
 		edd_delete_discount_meta( self::$discount->id, 'legacy_id' );
 
-		$this->assertEmpty( edd_get_discount_meta( self::$download->id, 'legacy_id' ) );
+		$this->assertEmpty( edd_get_discount_meta( self::$download->ID, 'legacy_id' ) );
 	}
 
 	/**
 	 * @covers ::delete_meta()
 	 */
 	public function test_discount_delete_meta_with_no_meta_key_should_be_false() {
-		$this->assertFalse( edd_delete_discount_meta( self::$download->id, '' ) );
+		$this->assertFalse( edd_delete_discount_meta( self::$download->ID, '' ) );
 	}
 
 	/*
