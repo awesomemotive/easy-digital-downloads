@@ -261,36 +261,30 @@ function edd_get_discount_counts() {
 }
 
 /**
- * Has Active Discounts
- *
  * Checks if there is any active discounts, returns a boolean.
  *
  * @since 1.0
+ * @since 3.0 Updated to be more efficient and make direct calls to the EDD_Discount object.
+ *
  * @return bool
  */
 function edd_has_active_discounts() {
-
-	// Get active discounts
 	$discounts = edd_get_discounts( array(
 		'number' => 1,
 		'status' => 'active'
 	) );
 
-	// Bail if no active discounts
 	if ( empty( $discounts ) ) {
 		return false;
 	}
 
-	// Loop through discounts and run appropriate filters
 	foreach ( $discounts as $discount ) {
-
-		// If we catch an active one, we can quit and return true.
-		if ( edd_is_discount_active( $discount, false ) ) {
+		/** @var $discount EDD_Discount */
+		if ( $discount->is_active( false, true ) ) {
 			return true;
 		}
 	}
 
-	// Return
 	return false;
 }
 
