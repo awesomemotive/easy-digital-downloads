@@ -21,9 +21,25 @@ defined( 'ABSPATH' ) || exit;
 class Back_Compat {
 
 	/**
-	 * Constructor.
+	 * Holds the component for which we are handling back-compat. There is a chance that two methods have the same name
+	 * and need to be dispatched to completely other methods. When a new instance of Back_Compat is created, a component
+	 * can be passed to the constructor which will allow __call() to dispatch to the correct methods.
+	 *
+	 * @since 3.0.0
+	 * @access private
 	 */
-	public function __construct() {
+	private $component;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $component Component for which we are handling back-compat for. Default empty.
+	 */
+	public function __construct( $component = '' ) {
+		if ( ! empty( $component ) ) {
+			$this->component = $component;
+		}
+
 		$this->hooks();
 	}
 
@@ -37,38 +53,40 @@ class Back_Compat {
 	 * @return mixed Dependent on the method being dispatched to.
 	 */
 	public function __call( $name, $arguments ) {
-		switch ( $name ) {
-			case 'get_column':
-				return edd_get_customer_by( $arguments[0], $arguments[1] );
-				break;
-			case 'attach_payment':
-				/** @var $customer \EDD_Customer */
-				$customer = edd_get_customer( $arguments[0] );
-				return $customer->attach_payment( $arguments[1], false );
-				break;
-			case 'remove_payment':
-				/** @var $customer \EDD_Customer */
-				$customer = edd_get_customer( $arguments[0] );
-				return $customer->remove_payment( $arguments[1], false );
-				break;
-			case 'increment_stats':
-				/** @var $customer \EDD_Customer */
-				$customer = edd_get_customer( $arguments[0] );
+		if ( 'customers' === $this->component ) {
+			switch ( $name ) {
+				case 'get_column':
+					return edd_get_customer_by( $arguments[0], $arguments[1] );
+					break;
+				case 'attach_payment':
+					/** @var $customer \EDD_Customer */
+					$customer = edd_get_customer( $arguments[0] );
+					return $customer->attach_payment( $arguments[1], false );
+					break;
+				case 'remove_payment':
+					/** @var $customer \EDD_Customer */
+					$customer = edd_get_customer( $arguments[0] );
+					return $customer->remove_payment( $arguments[1], false );
+					break;
+				case 'increment_stats':
+					/** @var $customer \EDD_Customer */
+					$customer = edd_get_customer( $arguments[0] );
 
-				$increased_count = $customer->increase_purchase_count();
-				$increased_value = $customer->increase_value( $arguments[1] );
+					$increased_count = $customer->increase_purchase_count();
+					$increased_value = $customer->increase_value( $arguments[1] );
 
-				return ( $increased_count && $increased_value ) ? true : false;
-				break;
-			case 'decrement_stats':
-				/** @var $customer \EDD_Customer */
-				$customer = edd_get_customer( $arguments[0] );
+					return ( $increased_count && $increased_value ) ? true : false;
+					break;
+				case 'decrement_stats':
+					/** @var $customer \EDD_Customer */
+					$customer = edd_get_customer( $arguments[0] );
 
-				$decreased_count = $customer->decrease_purchase_count();
-				$decreased_value = $customer->decrease_value( $arguments[1] );
+					$decreased_count = $customer->decrease_purchase_count();
+					$decreased_value = $customer->decrease_value( $arguments[1] );
 
-				return ( $decreased_count && $decreased_value ) ? true : false;
-				break;
+					return ( $decreased_count && $decreased_value ) ? true : false;
+					break;
+			}
 		}
 	}
 

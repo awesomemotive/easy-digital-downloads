@@ -222,7 +222,7 @@ final class Easy_Digital_Downloads {
 			case 'customers' :
 			case 'customermeta' :
 			case 'customer_meta' :
-				return self::$instance->back_compat;
+				return new EDD\Back_Compat( 'customers' );
 
 			default :
 				return isset( $this->{$key} )
