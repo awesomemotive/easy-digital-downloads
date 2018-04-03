@@ -445,40 +445,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertFalse( edd_delete_discount_meta( self::$download->id, '' ) );
 	}
 
-	/**
-	 * @covers ::is_migrated()
-	 */
-	public function test_discount_is_migrated() {
-		$this->assertTrue( self::$discount->is_migrated() );
-	}
-
-	/**
-	 * @covers ::is_migrated()
-	 * @covers ::migrate()
-	 */
-	public function test_legacy_discount_is_migrated_should_return_false() {
-		$legacy_discount_id = EDD_Helper_Discount::create_legacy_discount();
-		$legacy_discount    = new EDD_Discount( $legacy_discount_id );
-		$this->assertFalse( $legacy_discount->is_migrated() );
-
-		$migrated_discount_id = $legacy_discount->migrate( $legacy_discount_id );
-		$migrated_discount    = new EDD_Discount( $migrated_discount_id );
-		$this->assertTrue( $migrated_discount->is_migrated() );
-	}
-
-	/**
-	 * @covers ::is_migrated()
-	 * @covers ::migrate()
-	 */
-	public function test_migrate_legacy_discount_should_return_true() {
-		$legacy_discount_id   = EDD_Helper_Discount::create_legacy_discount();
-		$legacy_discount      = new EDD_Discount( $legacy_discount_id );
-		$migrated_discount_id = $legacy_discount->migrate( $legacy_discount_id );
-		$migrated_discount    = new EDD_Discount( $migrated_discount_id );
-
-		$this->assertTrue( $migrated_discount->is_migrated() );
-	}
-
 	/*
 	 * Legacy tests
 	 *

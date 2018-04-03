@@ -493,9 +493,9 @@ class EDD_Discount extends EDD_DB_Discount {
 					break;
 
 				default:
-					if( is_string( $value ) ) {
+					if ( is_string( $value ) ) {
 						@json_decode( $value );
-						if( json_last_error() != JSON_ERROR_NONE ) {
+						if ( json_last_error() != JSON_ERROR_NONE ) {
 							$this->$key = json_decode( $value );
 						}
 					}
@@ -966,7 +966,7 @@ class EDD_Discount extends EDD_DB_Discount {
 				if ( isset( $args['excluded_products'] ) ) {
 					if ( is_array( $args['excluded_products'] ) ) {
 						foreach ( $args['excluded_products'] as $product ) {
-							$this->add_meta( 'excluded_product', absint( $product ) );
+							edd_add_discount_meta( $this->id, 'excluded_product', absint( $product ) );
 						}
 					}
 				}
@@ -974,16 +974,10 @@ class EDD_Discount extends EDD_DB_Discount {
 				if ( isset( $args['product_reqs'] ) ) {
 					if ( is_array( $args['product_reqs'] ) ) {
 						foreach ( $args['product_reqs'] as $product ) {
-							$this->add_meta( 'product_requirement', absint( $product ) );
+							edd_add_discount_meta( $this->id, 'product_requirement', absint( $product ) );
 						}
 					}
 				}
-
-				// We've successfully added/updated the discount, reset the class vars with the new data
-				$discount = $this->find_by_code( $args['code'] );
-
-				// Setup the discount data with the values from DB
-				$this->setup_discount( $discount );
 			}
 
 			/**
@@ -1819,19 +1813,5 @@ class EDD_Discount extends EDD_DB_Discount {
 		}
 
 		return $args;
-	}
-
-	/**
-	 * Determines if a discount has been migrated from the old schema.
-	 *
-	 * @since 3.0
-	 * @return bool True if it has been migrated, false otherwise.
-	 */
-	public function is_migrated() {
-		if ( edd_get_discount_meta( $this->id, 'legacy_id', true ) ) {
-			return true;
-		}
-
-		return false;
 	}
 }
