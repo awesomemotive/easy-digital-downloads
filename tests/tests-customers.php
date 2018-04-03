@@ -140,6 +140,7 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$data = array( 'email' => $test_email );
 
 		$customer_id = $customer->create( $data );
+
 		$this->assertTrue( is_numeric( $customer_id ) );
 		$this->assertEquals( $customer->email, $test_email );
 		$this->assertEquals( $customer->id, $customer_id );
