@@ -161,15 +161,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 
 	$discounts = new EDD_Discount_Query();
 
-	$updated = $discounts->update_item( $discount_id, $data );
-
-	if ( $updated ) {
-		return $updated;
-	} elseif ( true === $meta_update ) {
-		return $meta_count;
-	} else {
-		return 0;
-	}
+	return $discounts->update_item( $discount_id, $data );
 }
 
 /**
@@ -334,7 +326,8 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 	if ( 0 === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
 	} else {
-		$return = (int) edd_update_discount( $discount_id );
+		edd_update_discount( $discount_id );
+		$return = $discount_id;
 	}
 
 	return $return;
