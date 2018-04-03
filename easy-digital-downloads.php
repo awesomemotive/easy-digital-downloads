@@ -130,6 +130,14 @@ final class Easy_Digital_Downloads {
 	public $components = array();
 
 	/**
+	 * EDD Back Compat handler.
+	 *
+	 * @var EDD\Back_Compat
+	 * @since 3.0.0
+	 */
+	private $back_compat;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -166,6 +174,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+			self::$instance->back_compat   = new EDD\Back_Compat();
 		}
 
 		return self::$instance;
@@ -209,11 +218,11 @@ final class Easy_Digital_Downloads {
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
-		switch ( $key  ) {
+		switch ( $key ) {
 			case 'customers' :
 			case 'customermeta' :
 			case 'customer_meta' :
-				return edd_get_component_interface( 'customer', 'query' );
+				return self::$instance->back_compat;
 
 			default :
 				return isset( $this->{$key} )
@@ -345,6 +354,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-back-compat.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
