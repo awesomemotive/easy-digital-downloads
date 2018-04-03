@@ -419,7 +419,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	public function test_discount_update_meta() {
 		edd_update_discount_meta( self::$discount->id, 'test_meta_key', 'test_meta_value' );
 
-		$this->assertEquals( 'test_meta_value', edd_get_discount_meta( self::$discount->id, 'test_meta_key' ) );
+		$this->assertEquals( 'test_meta_value', edd_get_discount_meta( self::$discount->id, 'test_meta_key', true ) );
 	}
 
 	/**
