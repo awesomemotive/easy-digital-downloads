@@ -102,20 +102,23 @@ class EDD_Customer extends EDD_DB_Customer {
 	 * @since 2.3
 	 */
 	public function __construct( $_id_or_email = false, $by_user_id = false ) {
-
 		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
 			return false;
 		}
 
 		$by_user_id = is_bool( $by_user_id ) ? $by_user_id : false;
 
-		if ( is_numeric( $_id_or_email ) ) {
-			$field = $by_user_id ? 'user_id' : 'id';
+		if ( is_object( $_id_or_email ) ) {
+			$customer = $_id_or_email;
 		} else {
-			$field = 'email';
-		}
+			if ( is_numeric( $_id_or_email ) ) {
+				$field = $by_user_id ? 'user_id' : 'id';
+			} else {
+				$field = 'email';
+			}
 
-		$customer = edd_get_customer_by( $field, $_id_or_email );
+			$customer = edd_get_customer_by( $field, $_id_or_email );
+		}
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
 			return false;
