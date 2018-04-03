@@ -396,12 +396,12 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_discount_is_product_requirements_met() {
 		$args = array(
-			'product_reqs' => array( self::$download->id ),
+			'product_reqs' => array( self::$download->ID ),
 		);
 
 		edd_update_discount( self::$discount_id, $args );
 
-		edd_add_to_cart( self::$download->id );
+		edd_add_to_cart( self::$download->ID );
 
 		$this->assertTrue( self::$discount->is_product_requirements_met() );
 	}
