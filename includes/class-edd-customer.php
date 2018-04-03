@@ -125,7 +125,6 @@ class EDD_Customer extends EDD_DB_Customer {
 		}
 
 		$this->setup_customer( $customer );
-
 	}
 
 	/**
