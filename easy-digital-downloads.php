@@ -247,11 +247,6 @@ final class Easy_Digital_Downloads {
 			case 'customer_meta' :
 				return edd_get_component_interface( 'customer', 'query' );
 
-			case 'discounts' :
-			case 'discountmeta' :
-			case 'discount_meta' :
-				return edd_get_component_interface( 'discount', 'query' );
-
 			default :
 				return isset( $this->{$key} )
 					? $this->{$key}
