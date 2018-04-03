@@ -233,4 +233,15 @@ class EDD_Utilities {
 		return $this->time_format;
 	}
 
+	/**
+	 * Retrieves a Hydrator instance.
+	 *
+	 * @since 3.0
+	 *
+	 * @return \EDD\Utils\Hydrator
+	 */
+	public function get_hydrator() {
+		return new EDD\Utils\Hydrator();
+	}
+
 }
