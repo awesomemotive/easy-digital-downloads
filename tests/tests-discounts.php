@@ -601,14 +601,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers edd_get_discount_amount()
 	 */
 	public function test_discount_amount() {
-		$this->assertSame( '20.00%', edd_get_discount_amount( self::$discount_id ) );
+		$this->assertSame( 20.0, edd_get_discount_amount( self::$discount_id ) );
 	}
 
 	/**
 	 * @covers edd_get_discount_amount()
 	 */
 	public function test_discount_amount_negative() {
-		$this->assertSame( '-100.00%', edd_get_discount_amount( self::$negativediscount_id ) );
+		$this->assertSame( -100.0, edd_get_discount_amount( self::$negativediscount_id ) );
 	}
 
 	/**
@@ -833,6 +833,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_formatted_discount_amount_flat() {
 		$amount = edd_get_discount_amount( self::$flatdiscount_id );
+
 		$this->assertSame( '&#36;10.00', edd_format_discount_rate( 'flat', $amount ) );
 	}
 
