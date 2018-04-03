@@ -35,7 +35,7 @@ class Manifest implements Error_Logger {
 	 * Datasets associated with the current graph.
 	 *
 	 * @since 3.0
-	 * @var   array
+	 * @var   Dataset[]
 	 */
 	private $datasets = array();
 
