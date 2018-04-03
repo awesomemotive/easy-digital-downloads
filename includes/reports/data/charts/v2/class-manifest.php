@@ -190,11 +190,11 @@ class Manifest implements Error_Logger {
 
 		if ( ! empty( $handler ) && class_exists( $handler ) ) {
 			/** @var Dataset $dataset */
-			$dataset = new $handler( $id, $this->get_endpoint(), $options );
+			$dataset = new $handler( $dataset_id, $this->get_endpoint(), $options );
 
 			if ( ! $dataset->has_errors() ) {
 
-				$this->datasets[ $id ] = $dataset;
+				$this->datasets[ $dataset_id ] = $dataset;
 
 				return true;
 
