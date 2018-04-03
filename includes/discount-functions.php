@@ -310,14 +310,12 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 
 	// Back-compat for dates
 	if ( isset( $details['start'] ) && strstr( $details['start'], '/' ) ) {
-		$details['start_date'] = str_replace( '/', '-', $details['start'] );
-		$details['start_date'] = date( 'Y-m-d', strtotime( $details['start_date'] ) );
+		$details['start_date'] = date( 'Y-m-d', strtotime( $details['start'] ) ) . ' 00:00:00';
 		unset( $details['start'] );
 	}
 
 	if ( isset( $details['expiration'] ) && strstr( $details['expiration'], '/' ) ) {
-		$details['end_date'] = str_replace('/', '-', $details['expiration']);
-		$details['end_date'] = date( 'Y-m-d', strtotime( $details['end_date'] ) );
+		$details['end_date'] = date( 'Y-m-d', strtotime( $details['expiration'] ) ) . ' 23:59:59';
 		unset( $details['expiration'] );
 	}
 
