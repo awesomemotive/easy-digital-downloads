@@ -5,16 +5,26 @@
  */
 class Tests_Customers_DB extends EDD_UnitTestCase {
 
-	protected $_post_id = null;
+	/**
+	 * Download fixture.
+	 *
+	 * @var int
+	 */
+	protected static $post_id;
 
-	protected $_user_id = null;
+	/**
+	 * User fixture.
+	 *
+	 * @var int
+	 */
+	protected static $user_id;
 
 	protected $_customer_id = null;
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->_post_id = $this->factory->post->create( array(
+		self::$post_id = self::factory()->post->create( array(
 			'post_title'  => 'Test Download',
 			'post_type'   => 'download',
 			'post_status' => 'publish'
@@ -59,12 +69,12 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 			'_edd_download_limit_override_1' => 1
 		);
 		foreach( $meta as $key => $value ) {
-			update_post_meta( $this->_post_id, $key, $value );
+			update_post_meta( self::$post_id, $key, $value );
 		}
 
 		/** Generate some sales */
-		$this->_user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		$user = get_userdata( $this->_user_id );
+		self::$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$user = get_userdata( self::$user_id );
 
 		$user_info = array(
 			'id'         => $user->ID,
@@ -76,7 +86,7 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 
 		$download_details = array(
 			array(
-				'id' => $this->_post_id,
+				'id' => self::$post_id,
 				'options' => array(
 					'price_id' => 1
 				)
@@ -93,9 +103,9 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$cart_details = array(
 			array(
 				'name' => 'Test Download',
-				'id' => $this->_post_id,
+				'id' => self::$post_id,
 				'item_number' => array(
-					'id' => $this->_post_id,
+					'id' => self::$post_id,
 					'options' => array(
 						'price_id' => 1
 					)
@@ -141,8 +151,7 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 	public function test_get_by() {
 		$customer = edd_get_customer_by( 'email', 'testadmin@domain.com' );
 
-		$this->assertInternalType( 'object', $customer );
-		$this->assertObjectHasAttribute( 'email', $customer );
+		$this->assertGreaterThan( 0, $customer->id );
 	}
 
 	public function test_legacy_attach_payment() {
