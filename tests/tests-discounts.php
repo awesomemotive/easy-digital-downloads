@@ -529,7 +529,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		$expired_discount_id = edd_store_discount( $post );
 
-		$this->assertFalse( edd_is_discount_active( $expired_discount_id, false ) );
+		$this->assertFalse( edd_is_discount_active( $expired_discount_id, true ) );
 
 		$this->assertEquals( 'expired', get_post_meta( $expired_discount_id, '_edd_discount_status', true ) );
 	}
