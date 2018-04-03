@@ -21,9 +21,42 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return int
  */
 function edd_add_discount( $data = array() ) {
+	$product_requirements = isset( $data['product_reqs'] ) ? $data['product_reqs'] : null;
+	$excluded_products = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
+
+	unset( $data['product_reqs'] );
+	unset( $data['excluded_products'] );
+
 	$discounts = new EDD_Discount_Query();
 
-	return $discounts->add_item( $data );
+	$discount_id = $discounts->add_item( $data );
+
+	// Product requirements and excluded products are handled differently
+	if ( ! is_null( $product_requirements ) ) {
+		if ( is_string( $product_requirements ) ) {
+			$product_requirements = maybe_unserialize( $product_requirements );
+		}
+
+		if ( is_array( $product_requirements ) ) {
+			foreach ( $product_requirements as $product_requirement ) {
+				edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+			}
+		}
+	}
+
+	if ( ! is_null( $excluded_products ) ) {
+		if ( is_string( $excluded_products ) ) {
+			$excluded_products = maybe_unserialize( $excluded_products );
+		}
+
+		if ( is_array( $excluded_products ) ) {
+			foreach ( $excluded_products as $excluded_product ) {
+				edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+			}
+		}
+	}
+
+	return $discount_id;
 }
 
 /**
@@ -117,6 +150,39 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
+	// Product requirements and excluded products are handled differently
+	if ( isset( $data['product_reqs'] ) ) {
+		if ( is_string( $data['product_reqs'] ) ) {
+			$data['product_reqs'] = maybe_unserialize( $data['product_reqs'] );
+		}
+
+		if ( is_array( $data['product_reqs'] ) ) {
+			edd_delete_discount_meta( $discount_id, 'product_requirement' );
+
+			foreach ( $data['product_reqs'] as $product_requirement ) {
+				edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+			}
+		}
+
+		unset( $data['product_reqs'] );
+	}
+
+	if ( isset( $data['excluded_products'] ) ) {
+		if ( is_string( $data['excluded_products'] ) ) {
+			$data['excluded_products'] = maybe_unserialize( $data['excluded_products'] );
+		}
+
+		if ( is_array( $data['excluded_products'] ) ) {
+			edd_delete_discount_meta( $discount_id, 'excluded_product' );
+
+			foreach ( $data['excluded_products'] as $excluded_product ) {
+				edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+			}
+		}
+
+		unset( $data['excluded_products'] );
+	}
+
 	$discounts = new EDD_Discount_Query();
 
 	return $discounts->update_item( $discount_id, $data );
@@ -219,36 +285,30 @@ function edd_get_discount_counts() {
 }
 
 /**
- * Has Active Discounts
- *
  * Checks if there is any active discounts, returns a boolean.
  *
  * @since 1.0
+ * @since 3.0 Updated to be more efficient and make direct calls to the EDD_Discount object.
+ *
  * @return bool
  */
 function edd_has_active_discounts() {
-
-	// Get active discounts
 	$discounts = edd_get_discounts( array(
 		'number' => 1,
 		'status' => 'active'
 	) );
 
-	// Bail if no active discounts
 	if ( empty( $discounts ) ) {
 		return false;
 	}
 
-	// Loop through discounts and run appropriate filters
 	foreach ( $discounts as $discount ) {
-
-		// If we catch an active one, we can quit and return true.
-		if ( edd_is_discount_active( $discount, false ) ) {
+		/** @var $discount EDD_Discount */
+		if ( $discount->is_active( false, true ) ) {
 			return true;
 		}
 	}
 
-	// Return
 	return false;
 }
 
@@ -266,10 +326,24 @@ function edd_has_active_discounts() {
 function edd_store_discount( $details, $discount_id = 0 ) {
 	$return = false;
 
-	if ( null == $discount_id ) {
+	// Back-compat for dates
+	if ( isset( $details['start'] ) && strstr( $details['start'], '/' ) ) {
+		$details['start_date'] = date( 'Y-m-d', strtotime( $details['start'] ) ) . ' 00:00:00';
+		unset( $details['start'] );
+	}
+
+	if ( isset( $details['expiration'] ) && strstr( $details['expiration'], '/' ) ) {
+		$details['end_date'] = date( 'Y-m-d', strtotime( $details['expiration'] ) ) . ' 23:59:59';
+		unset( $details['expiration'] );
+	}
+
+	$details = EDD_Discount::convert_legacy_args( $details );
+
+	if ( 0 === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
 	} else {
-		$return = (int) edd_update_discount( $discount_id );
+		edd_update_discount( $discount_id, $details );
+		$return = $discount_id;
 	}
 
 	return $return;
@@ -300,6 +374,9 @@ function edd_remove_discount( $discount_id = 0 ) {
  * @return bool Whether the status has been updated or not.
  */
 function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) {
+	if ( $discount_id <= 0 ) {
+		return false;
+	}
 
 	// Defaults
 	$updated    = false;
@@ -417,7 +494,7 @@ function edd_get_discount_max_uses( $discount_id = 0 ) {
  * @return int $uses Number of times a discount has been used.
  */
 function edd_get_discount_uses( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'use_count' );
+	return (int) edd_get_discount_field( $discount_id, 'use_count' );
 }
 
 /**
@@ -443,8 +520,7 @@ function edd_get_discount_min_price( $discount_id = 0 ) {
  * @return float $amount Discount amount.
  */
 function edd_get_discount_amount( $discount_id = 0 ) {
-	$discount = edd_get_discount( $discount_id );
-	return edd_format_discount_rate( $discount->type, $discount->amount );
+	return edd_get_discount_field( $discount_id, 'amount' );
 }
 
 /**
@@ -630,7 +706,7 @@ function edd_discount_is_min_met( $discount_id = 0, $set_error = true ) {
  * @return bool Whether the discount is single use or not.
  */
 function edd_discount_is_single_use( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'once_per_customer' );
+	return null === edd_get_discount_field( $discount_id, 'once_per_customer' ) ? false : true;
 }
 
 /**
@@ -664,8 +740,8 @@ function edd_discount_product_reqs_met( $discount_id = 0, $set_error = true ) {
  */
 function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_error = true ) {
 	$discount = ( null == $code )
-		? edd_get_discount_by_code( $code )
-		: edd_get_discount( $discount_id );
+		? edd_get_discount( $discount_id )
+		: edd_get_discount_by_code( $code );
 
 	return $discount->is_used( $user, $set_error );
 }
@@ -718,7 +794,7 @@ function edd_get_discounted_amount( $code = '', $base_price = 0 ) {
 
 	return ! empty( $discount->id )
 		? $discount->get_discounted_amount( $base_price )
-		: false;
+		: $base_price;
 }
 
 /**
@@ -787,8 +863,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  * @return int|false Meta ID on success, false on failure.
  */
 function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = false ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->add_item_meta( $discount_id, $meta_key, $meta_value, $unique );
+	return add_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $unique );
 }
 
 /**
@@ -808,8 +883,7 @@ function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = 
  * @return bool True on success, false on failure.
  */
 function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->delete_item_meta( $discount_id, $meta_key, $meta_value );
+	return delete_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value );
 }
 
 /**
@@ -828,8 +902,7 @@ function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
  *               field if $single is true.
  */
 function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->get_item_meta( $discount_id, $key, $single );
+	return get_metadata( 'edd_discount', $discount_id, $key, $single );
 }
 
 /**
@@ -852,8 +925,7 @@ function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
  *                  false on failure.
  */
 function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_value = '' ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->update_item_meta( $discount_id, $meta_key, $meta_value, $prev_value );
+	return update_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $prev_value );
 }
 
 /**
@@ -866,8 +938,7 @@ function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_v
  * @return bool Whether the discount meta key was deleted from the database.
  */
 function delete_discount_meta_by_key( $discount_meta_key ) {
-	$discounts = new EDD_Discount_Query();
-	return $discounts->delete_item_meta( null, $discount_meta_key, '', true );
+	return delete_metadata( 'edd_discount', null, $discount_meta_key, '', true );
 }
 
 /** Cart **********************************************************************/
@@ -1225,7 +1296,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		return $value;
 	}
 
-	switch( $meta_key ) {
+	switch ( $meta_key ) {
 		case '_edd_discount_name':
 		case '_edd_discount_status':
 		case '_edd_discount_amount':
