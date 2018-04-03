@@ -122,38 +122,6 @@ final class Easy_Digital_Downloads {
 	public $cart;
 
 	/**
-	 * EDD Logs DB Object.
-	 *
-	 * @var object|EDD_DB_Logs
-	 * @since 3.0
-	 */
-	public $logs;
-
-	/**
-	 * EDD Log Meta DB Object.
-	 *
-	 * @var object|EDD_DB_Log_Meta
-	 * @since 3.0
-	 */
-	public $log_meta;
-
-	/**
-	 * EDD API Request Logs DB Object.
-	 *
-	 * @var object|EDD_DB_Logs_API_Requests
-	 * @since 3.0
-	 */
-	public $api_request_logs;
-
-	/**
-	 * EDD File Download Logs DB Object.
-	 *
-	 * @var object|EDD_DB_Logs_File_Downloads
-	 * @since 3.0
-	 */
-	public $file_download_logs;
-
-	/**
 	 * EDD Components array
 	 *
 	 * @var array
