@@ -1212,7 +1212,7 @@ class EDD_Discount extends EDD_DB_Discount {
 
 		if ( $end_date < current_time( 'timestamp' ) ) {
 			if ( $update ) {
-				$this->update_status( 'inactive' );
+				$this->update_status( 'expired' );
 			}
 			$return = true;
 		}
