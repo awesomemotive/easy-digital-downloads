@@ -270,26 +270,28 @@ class EDD_DB_Query extends EDD_DB_Base {
 	 *     Optional. Array or query string of item query parameters.
 	 *     Default empty.
 	 *
-	 *     @type string       $fields         Site fields to return. Accepts 'ids' (returns an array of item IDs)
-	 *                                        or empty (returns an array of complete item objects). Default empty.
-	 *     @type boolean      $count          Whether to return a item count (true) or array of item objects.
-	 *                                        Default false.
-	 *     @type integer      $number         Limit number of items to retrieve. Use 0 for no limit.
-	 *                                        Default 100.
-	 *     @type integer      $offset         Number of items to offset the query. Used to build LIMIT clause.
-	 *                                        Default 0.
-	 *     @type boolean      $no_found_rows  Whether to disable the `SQL_CALC_FOUND_ROWS` query.
-	 *                                        Default true.
-	 *     @type string|array $orderby        Accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
-	 *                                        Default 'id'.
-	 *     @type string       $item           How to item retrieved items. Accepts 'ASC', 'DESC'.
-	 *                                        Default 'DESC'.
-	 *     @type string       $search         Search term(s) to retrieve matching items for.
-	 *                                        Default empty.
-	 *     @type array        $search_columns Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
-	 *                                        Default empty array.
-	 *     @type boolean      $update_cache   Whether to prime the cache for found items.
-	 *                                        Default false.
+	 *     @type string       $fields            Site fields to return. Accepts 'ids' (returns an array of item IDs)
+	 *                                           or empty (returns an array of complete item objects). Default empty.
+	 *     @type boolean      $count             Whether to return a item count (true) or array of item objects.
+	 *                                           Default false.
+	 *     @type integer      $number            Limit number of items to retrieve. Use 0 for no limit.
+	 *                                           Default 100.
+	 *     @type integer      $offset            Number of items to offset the query. Used to build LIMIT clause.
+	 *                                           Default 0.
+	 *     @type boolean      $no_found_rows     Whether to disable the `SQL_CALC_FOUND_ROWS` query.
+	 *                                           Default true.
+	 *     @type string|array $orderby           Accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
+	 *                                           Default 'id'.
+	 *     @type string       $item              How to item retrieved items. Accepts 'ASC', 'DESC'.
+	 *                                           Default 'DESC'.
+	 *     @type string       $search            Search term(s) to retrieve matching items for.
+	 *                                           Default empty.
+	 *     @type array        $search_columns    Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
+	 *                                           Default empty array.
+	 *     @type boolean      $update_item_cache Whether to prime the cache for found items.
+	 *                                           Default false.
+	 *     @type boolean      $update_meta_cache Whether to prime the meta cache for found items.
+	 *                                           Default false.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -415,7 +417,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 			'no_found_rows'     => true,
 
 			// Caching
-			'update_cache'      => true,
+			'update_item_cache' => true,
 			'update_meta_cache' => true
 		);
 
@@ -792,7 +794,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 			// Never limit, never update item/meta caches when counting
 			$this->query_vars['number']            = false;
-			$this->query_vars['update_cache']      = false;
+			$this->query_vars['update_item_cache'] = false;
 			$this->query_vars['update_meta_cache'] = false;
 
 			// Cast to int if not grouping counts
@@ -1981,7 +1983,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$item_ids = (array) $item_ids;
 
 		// Update item caches
-		if ( empty( $this->query_vars['update_cache'] ) ) {
+		if ( empty( $this->query_vars['update_item_cache'] ) ) {
 
 			// Look for non-cached IDs
 			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
