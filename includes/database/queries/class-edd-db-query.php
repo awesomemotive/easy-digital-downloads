@@ -194,13 +194,22 @@ class EDD_DB_Query extends EDD_DB_Base {
 	protected $date_query = false;
 
 	/**
-	 * Query vars set by the user.
+	 * Parsed query vars set by the user.
 	 *
 	 * @since 3.0.0
 	 * @access public
 	 * @var array
 	 */
 	protected $query_vars = array();
+
+	/**
+	 * Original query vars set by the user.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var array
+	 */
+	protected $query_var_originals = array();
 
 	/**
 	 * Default values for query vars.
@@ -283,7 +292,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 	 *                                        Default false.
 	 * }
 	 */
-	public function __construct( $query = '' ) {
+	public function __construct( $query = array() ) {
 
 		// Setup
 		$this->set_prefix();
@@ -291,40 +300,14 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$this->set_primary_column();
 		$this->set_query_var_defaults();
 
-		$this->query( $query );
-	}
-
-	/**
-	 * Parses arguments passed to the item query with default query parameters.
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 *
-	 * @see EDD_DB_Query::__construct()
-	 *
-	 * @param string|array $query Array or string of EDD_DB_Query arguments. See EDD_DB_Query::__construct().
-	 */
-	public function parse_query( $query = '' ) {
-
-		// Fallback query vars
-		if ( empty( $query ) ) {
-			$query = $this->query_vars;
+		// Maybe execute a query if arguments were passed
+		if ( ! empty( $query ) ) {
+			$this->query( $query );
 		}
-
-		$this->query_vars = wp_parse_args( $query, $this->query_var_defaults );
-
-		/**
-		 * Fires after the item query vars have been parsed.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param EDD_DB_Query &$this The EDD_DB_Query instance (passed by reference).
-		 */
-		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
 
 	/**
-	 * Sets up the WordPress query for retrieving items.
+	 * Queries the database and retrieves items or counts.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -333,79 +316,9 @@ class EDD_DB_Query extends EDD_DB_Base {
 	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
 	 */
 	public function query( $query = array() ) {
-		$this->query_vars = wp_parse_args( $query );
+		$this->parse_query( $query );
 
 		return $this->get_items();
-	}
-
-	/**
-	 * Retrieves a list of items matching the query vars.
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 *
-	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
-	 */
-	public function get_items() {
-		$this->parse_query();
-
-		/**
-		 * Fires before object items are retrieved.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param EDD_DB_Query &$this Current instance of EDD_DB_Query, passed by reference.
-		 */
-		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
-
-		// $args can include anything. Only use the args defined in the query_var_defaults to compute the key.
-		$slice        = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
-		$key          = md5( serialize( $slice ) );
-		$last_changed = wp_cache_get_last_changed( $this->cache_group );
-
-		// Check the cache
-		$cache_key   = "get_{$this->item_name_plural}:{$key}:{$last_changed}";
-		$cache_value = wp_cache_get( $cache_key, $this->cache_group );
-
-		// No cache value
-		if ( false === $cache_value ) {
-			$item_ids = $this->get_item_ids();
-
-			// Set the number of found items
-			$this->set_found_items( $item_ids );
-
-			// Format the cached value
-			$cache_value = array(
-				'item_ids'    => $item_ids,
-				'found_items' => intval( $this->found_items ),
-			);
-
-			// Add value to the cache
-			wp_cache_add( $cache_key, $cache_value, $this->cache_group );
-
-		// Value exists in cache
-		} else {
-			$item_ids          = $cache_value['item_ids'];
-			$this->found_items = intval( $cache_value['found_items'] );
-		}
-
-		// Pagination
-		if ( ! empty( $this->found_items ) && ! empty( $this->query_vars['number'] ) ) {
-			$this->max_num_pages = ceil( $this->found_items / $this->query_vars['number'] );
-		}
-
-		// Return an int of the count
-		if ( ! empty( $this->query_vars['count'] ) ) {
-			if ( empty( $this->query_vars['groupby'] ) ) {
-				$item_ids = intval( $item_ids );
-			}
-		}
-
-		// Set items from IDs
-		$this->set_items( $item_ids );
-
-		// Return array of items
-		return $this->items;
 	}
 
 	/** Private Setters *******************************************************/
@@ -752,6 +665,8 @@ class EDD_DB_Query extends EDD_DB_Base {
 	 *
 	 * @since 3.0.0
 	 * @access private
+	 *
+	 * @return mixed EDD_DB_Column object, or false
 	 */
 	private function get_column_by( $args = array() ) {
 
@@ -815,6 +730,75 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 		// Return row
 		return $result;
+	}
+
+	/**
+	 * Retrieves a list of items matching the query vars.
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 *
+	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
+	 */
+	private function get_items() {
+
+		/**
+		 * Fires before object items are retrieved.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param EDD_DB_Query &$this Current instance of EDD_DB_Query, passed by reference.
+		 */
+		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
+
+		// $args can include anything. Only use the args defined in the query_var_defaults to compute the key.
+		$slice        = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
+		$key          = md5( serialize( $slice ) );
+		$last_changed = wp_cache_get_last_changed( $this->cache_group );
+
+		// Check the cache
+		$cache_key   = "get_{$this->item_name_plural}:{$key}:{$last_changed}";
+		$cache_value = wp_cache_get( $cache_key, $this->cache_group );
+
+		// No cache value
+		if ( false === $cache_value ) {
+			$item_ids = $this->get_item_ids();
+
+			// Set the number of found items
+			$this->set_found_items( $item_ids );
+
+			// Format the cached value
+			$cache_value = array(
+				'item_ids'    => $item_ids,
+				'found_items' => intval( $this->found_items ),
+			);
+
+			// Add value to the cache
+			wp_cache_add( $cache_key, $cache_value, $this->cache_group );
+
+		// Value exists in cache
+		} else {
+			$item_ids          = $cache_value['item_ids'];
+			$this->found_items = intval( $cache_value['found_items'] );
+		}
+
+		// Pagination
+		if ( ! empty( $this->found_items ) && ! empty( $this->query_vars['number'] ) ) {
+			$this->max_num_pages = ceil( $this->found_items / $this->query_vars['number'] );
+		}
+
+		// Return an int of the count
+		if ( ! empty( $this->query_vars['count'] ) ) {
+			if ( empty( $this->query_vars['groupby'] ) ) {
+				$item_ids = intval( $item_ids );
+			}
+		}
+
+		// Set items from IDs
+		$this->set_items( $item_ids );
+
+		// Return array of items
+		return $this->items;
 	}
 
 	/**
@@ -1006,6 +990,37 @@ class EDD_DB_Query extends EDD_DB_Base {
 	}
 
 	/** Private Parsers *******************************************************/
+
+	/**
+	 * Parses arguments passed to the item query with default query parameters.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 *
+	 * @see EDD_DB_Query::__construct()
+	 *
+	 * @param string|array $query Array or string of EDD_DB_Query arguments. See EDD_DB_Query::__construct().
+	 */
+	private function parse_query( $query = array() ) {
+
+		// Setup the query_vars_original var
+		$this->query_var_originals = wp_parse_args( $query );
+
+		// Setup the query_vars parsed var
+		$this->query_vars = wp_parse_args(
+			$this->query_var_originals,
+			$this->query_var_defaults
+		);
+
+		/**
+		 * Fires after the item query vars have been parsed.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param EDD_DB_Query &$this The EDD_DB_Query instance (passed by reference).
+		 */
+		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
+	}
 
 	/**
 	 * Parse the where clauses for all known columns
