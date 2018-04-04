@@ -166,6 +166,9 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+
+			// Register backwards compatibility hooks
+			new EDD\Compat\Customer();
 		}
 
 		return self::$instance;
@@ -209,11 +212,11 @@ final class Easy_Digital_Downloads {
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
-		switch ( $key  ) {
+		switch ( $key ) {
 			case 'customers' :
 			case 'customermeta' :
 			case 'customer_meta' :
-				return edd_get_component_interface( 'customer', 'query' );
+				return new EDD\Compat\Customer();
 
 			default :
 				return isset( $this->{$key} )
@@ -326,6 +329,10 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-note-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-item-query.php';
+
+		// Backwards Compatibility
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {

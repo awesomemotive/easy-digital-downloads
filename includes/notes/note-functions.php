@@ -77,7 +77,7 @@ function edd_get_note( $note_id = 0 ) {
  *
  * @since 3.0.0
  *
- * @param array $args
+ * @param array $args Arguments.
  * @return int
  */
 function edd_count_notes( $args = array() ) {
