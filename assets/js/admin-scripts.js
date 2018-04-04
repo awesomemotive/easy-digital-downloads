@@ -1685,7 +1685,7 @@ jQuery(document).ready(function ($) {
 
 				// Show column mapping
 				var select  = $form.find('select.edd-import-csv-column');
-				var row     = select.parent().parent();
+				var row     = select.parents( 'tr' ).first();
 				var options = '';
 
 				var columns = response.data.columns.sort(function(a,b) {
@@ -1717,6 +1717,10 @@ jQuery(document).ready(function ($) {
 
 					}
 
+				});
+
+				$.each( select, function() {
+					$( this ).val( $(this).attr( 'data-field' ) ).change();
 				});
 
 				$(document.body).on('click', '.edd-import-proceed', function(e) {
@@ -1858,7 +1862,7 @@ jQuery(document).ready(function ($) {
 				var button  = $(this);
 				var wrapper = button.parent();
 
-				wrapper.parent().find('.notice-wrap').remove();
+				wrapper.parent().find('.notice-container').remove();
 				wrapper.find('.spinner').css('visibility', 'visible');
 				button.attr('disabled', true);
 
@@ -1881,7 +1885,7 @@ jQuery(document).ready(function ($) {
 						window.location.href=response.redirect;
 					} else {
 						button.attr('disabled', false);
-						wrapper.after('<div class="notice-wrap"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+						wrapper.after('<div class="notice-container"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
 						wrapper.find('.spinner').css('visibility', 'hidden');
 					}
 

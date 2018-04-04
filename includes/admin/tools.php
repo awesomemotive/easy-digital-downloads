@@ -73,7 +73,7 @@ function edd_get_tools_tabs() {
 	}
 
 	$tabs['system_info']   = __( 'System Info', 'easy-digital-downloads' );
-	
+
 	if( edd_is_debug_mode() ) {
 		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
 	}
@@ -487,7 +487,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[currency]" class="edd-import-csv-column">
+									<select name="edd-import-field[currency]" class="edd-import-csv-column" data-field="Currency">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -496,7 +496,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Email', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[email]" class="edd-import-csv-column">
+									<select name="edd-import-field[email]" class="edd-import-csv-column" data-field="Email">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -505,7 +505,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'First Name', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[first_name]" class="edd-import-csv-column">
+									<select name="edd-import-field[first_name]" class="edd-import-csv-column" data-field="First Name">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -514,7 +514,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Last Name', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[last_name]" class="edd-import-csv-column">
+									<select name="edd-import-field[last_name]" class="edd-import-csv-column" data-field="Last Name">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -523,7 +523,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[customer_id]" class="edd-import-csv-column">
+									<select name="edd-import-field[customer_id]" class="edd-import-csv-column" data-field="Customer ID">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -532,7 +532,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Discount Code(s)', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[discounts]" class="edd-import-csv-column">
+									<select name="edd-import-field[discounts]" class="edd-import-csv-column" data-field="Discount Code">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -541,7 +541,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[ip]" class="edd-import-csv-column">
+									<select name="edd-import-field[ip]" class="edd-import-csv-column" data-field="IP Address">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -550,7 +550,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Mode (Live|Test)', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[mode]" class="edd-import-csv-column">
+									<select name="edd-import-field[mode]" class="edd-import-csv-column" data-field="Mode (Live|Test)">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -559,7 +559,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[parent_payment_id]" class="edd-import-csv-column">
+									<select name="edd-import-field[parent_payment_id]" class="edd-import-csv-column" data-field="">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -568,7 +568,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[gateway]" class="edd-import-csv-column">
+									<select name="edd-import-field[gateway]" class="edd-import-csv-column" data-field="Payment Method">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -577,7 +577,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[number]" class="edd-import-csv-column">
+									<select name="edd-import-field[number]" class="edd-import-csv-column" data-field="Payment Number">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -586,7 +586,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Date', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[date]" class="edd-import-csv-column">
+									<select name="edd-import-field[date]" class="edd-import-csv-column" data-field="Date">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -595,7 +595,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[key]" class="edd-import-csv-column">
+									<select name="edd-import-field[key]" class="edd-import-csv-column" data-field="Purchase Key">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -604,7 +604,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Purchased Product(s)', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[downloads]" class="edd-import-csv-column">
+									<select name="edd-import-field[downloads]" class="edd-import-csv-column" data-field="Products (Raw)">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -613,7 +613,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Status', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[status]" class="edd-import-csv-column">
+									<select name="edd-import-field[status]" class="edd-import-csv-column" data-field="Status">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -622,7 +622,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[subtotal]" class="edd-import-csv-column">
+									<select name="edd-import-field[subtotal]" class="edd-import-csv-column" data-field="">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -631,7 +631,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Tax', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[tax]" class="edd-import-csv-column">
+									<select name="edd-import-field[tax]" class="edd-import-csv-column" data-field="Tax ($)">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -640,7 +640,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Total', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[total]" class="edd-import-csv-column">
+									<select name="edd-import-field[total]" class="edd-import-csv-column" data-field="Amount ($)">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -649,7 +649,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[transaction_id]" class="edd-import-csv-column">
+									<select name="edd-import-field[transaction_id]" class="edd-import-csv-column" data-field="Transaction ID">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -658,7 +658,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'User', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[user_id]" class="edd-import-csv-column">
+									<select name="edd-import-field[user_id]" class="edd-import-csv-column" data-field="User">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -667,7 +667,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Address Line 1', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[line1]" class="edd-import-csv-column">
+									<select name="edd-import-field[line1]" class="edd-import-csv-column" data-field="Address">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -676,7 +676,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Address Line 2', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[line2]" class="edd-import-csv-column">
+									<select name="edd-import-field[line2]" class="edd-import-csv-column" data-field="Address (Line 2)">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -685,7 +685,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'City', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[city]" class="edd-import-csv-column">
+									<select name="edd-import-field[city]" class="edd-import-csv-column" data-field="City">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -694,7 +694,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[state]" class="edd-import-csv-column">
+									<select name="edd-import-field[state]" class="edd-import-csv-column" data-field="State">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -703,7 +703,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[zip]" class="edd-import-csv-column">
+									<select name="edd-import-field[zip]" class="edd-import-csv-column" data-field="Zip / Postal Code">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -712,7 +712,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Country', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[country]" class="edd-import-csv-column">
+									<select name="edd-import-field[country]" class="edd-import-csv-column" data-field="Country">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -769,7 +769,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Author', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_author]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_author]" class="edd-import-csv-column" data-field="Author">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -778,7 +778,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Categories', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[categories]" class="edd-import-csv-column">
+									<select name="edd-import-field[categories]" class="edd-import-csv-column" data-field="Categories">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -787,7 +787,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Creation Date', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_date]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_date]" class="edd-import-csv-column" data-field="Date Created">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -796,7 +796,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Description', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_content]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_content]" class="edd-import-csv-column" data-field="Description">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -805,7 +805,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Excerpt', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_excerpt]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_excerpt]" class="edd-import-csv-column" data-field="Excerpt">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -814,7 +814,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Image', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[featured_image]" class="edd-import-csv-column">
+									<select name="edd-import-field[featured_image]" class="edd-import-csv-column" data-field="Featured Image">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -823,7 +823,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Notes', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[notes]" class="edd-import-csv-column">
+									<select name="edd-import-field[notes]" class="edd-import-csv-column" data-field="Notes">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -832,7 +832,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Price(s)', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[price]" class="edd-import-csv-column">
+									<select name="edd-import-field[price]" class="edd-import-csv-column" data-field="Price">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -841,7 +841,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product SKU', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[sku]" class="edd-import-csv-column">
+									<select name="edd-import-field[sku]" class="edd-import-csv-column" data-field="SKU">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -850,7 +850,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Slug', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_name]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_name]" class="edd-import-csv-column" data-field="Slug">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -859,7 +859,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Status', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_status]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_status]" class="edd-import-csv-column" data-field="Status">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -868,7 +868,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Tags', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[tags]" class="edd-import-csv-column">
+									<select name="edd-import-field[tags]" class="edd-import-csv-column" data-field="Tags">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -877,7 +877,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Product Title', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[post_title]" class="edd-import-csv-column">
+									<select name="edd-import-field[post_title]" class="edd-import-csv-column" data-field="Name">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -886,7 +886,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Download Files', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[files]" class="edd-import-csv-column">
+									<select name="edd-import-field[files]" class="edd-import-csv-column" data-field="Files">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -895,7 +895,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[download_limit]" class="edd-import-csv-column">
+									<select name="edd-import-field[download_limit]" class="edd-import-csv-column" data-field="File Download Limit">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -904,7 +904,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[sales]" class="edd-import-csv-column">
+									<select name="edd-import-field[sales]" class="edd-import-csv-column" data-field="Sales">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -913,7 +913,7 @@ function edd_tools_import_export_display() {
 							<tr>
 								<td><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
 								<td>
-									<select name="edd-import-field[earnings]" class="edd-import-csv-column">
+									<select name="edd-import-field[earnings]" class="edd-import-csv-column" data-field="Earnings">
 										<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 									</select>
 								</td>
@@ -1091,6 +1091,7 @@ function edd_tools_debug_log_display() {
 				</p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
 			</form>
+			<p><?php _e( 'Log file', 'easy-digital-downloads' ); ?>: <code><?php echo $edd_logs->get_log_file_path(); ?></code></p>
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 <?php
@@ -1162,7 +1163,6 @@ add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
  * Get system info
  *
  * @since       2.0
- * @access      public
  * @global      object $wpdb Used to query the database using the WordPress Database API
  * @return      string $return A string containing the info to output
  */

@@ -30,7 +30,6 @@ class EDD_Payments_Export extends EDD_Export {
 	/**
 	 * Set the export headers
 	 *
-	 * @access public
 	 * @since 1.6
 	 * @return void
 	 */
@@ -52,7 +51,6 @@ class EDD_Payments_Export extends EDD_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols All the columns
 	 */
@@ -95,7 +93,6 @@ class EDD_Payments_Export extends EDD_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API

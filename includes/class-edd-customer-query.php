@@ -19,7 +19,6 @@ class EDD_Customer_Query {
 	/**
 	 * SQL for database query.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    string
 	 */
@@ -28,7 +27,6 @@ class EDD_Customer_Query {
 	/**
 	 * Date query container.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    object WP_Date_Query
 	 */
@@ -37,7 +35,6 @@ class EDD_Customer_Query {
 	/**
 	 * Meta query container.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    object WP_Meta_Query
 	 */
@@ -46,7 +43,6 @@ class EDD_Customer_Query {
 	/**
 	 * Query vars set by the user.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    array
 	 */
@@ -55,7 +51,6 @@ class EDD_Customer_Query {
 	/**
 	 * Default values for query vars.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    array
 	 */
@@ -64,7 +59,6 @@ class EDD_Customer_Query {
 	/**
 	 * List of customers located by the query.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    array
 	 */
@@ -73,7 +67,6 @@ class EDD_Customer_Query {
 	/**
 	 * The amount of found customers for the current query.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    int
 	 */
@@ -82,7 +75,6 @@ class EDD_Customer_Query {
 	/**
 	 * The number of pages.
 	 *
-	 * @access public
 	 * @since  2.8
 	 * @var    int
 	 */
@@ -172,7 +164,6 @@ class EDD_Customer_Query {
 	 *
 	 * Sets up the customer query defaults and optionally runs a query.
 	 *
-	 * @access public
 	 * @since  2.8
 	 *
 	 * @param string|array $query {
@@ -256,7 +247,6 @@ class EDD_Customer_Query {
 	/**
 	 * Sets up the query for retrieving customers.
 	 *
-	 * @access public
 	 * @since  2.8
 	 *
 	 * @see EDD_Customer_Query::__construct()
@@ -360,8 +350,12 @@ class EDD_Customer_Query {
 
 		// If querying for a count only, there's nothing more to do.
 		if ( $this->query_vars['count'] ) {
-			// $items is actually a count in this case.
-			return intval( $items[0]->count );
+
+			if ( isset( $items[0] ) ) {
+				// $items is actually a count in this case.
+				return intval( $items[0]->count );
+			}
+			return 0;
 		}
 
 		$this->items = $items;

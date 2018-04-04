@@ -73,7 +73,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Show the search field
 	 *
 	 * @since 1.4
-	 * @access public
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
@@ -111,7 +110,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param array $item Contains all the data of the log item
@@ -144,7 +142,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -164,7 +161,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the user we are filtering logs by, if any
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return mixed int If User ID, string If Email/Login, false if not present
 	 */
@@ -185,7 +181,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the ID of the download we're filtering logs by
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return int Download ID
 	 */
@@ -196,7 +191,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the ID of the payment we're filtering logs by
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return int Payment ID
 	 */
@@ -207,7 +201,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the search query string
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return String The search string
 	 */
@@ -220,7 +213,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * This is used to return log entries that match our search query, user query, or download query
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $meta_query
 	 */
@@ -313,7 +305,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return int Current page number
 	 */
@@ -324,7 +315,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Outputs the log views
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -336,7 +326,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Sets up the downloads filter
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -365,7 +354,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Gets the log entries for the current view
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @global object $edd_logs EDD Logs Object
 	 * @return array $logs_data Array of all the Log entires
@@ -441,7 +429,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @global object $edd_logs EDD Logs Object
 	 * @uses EDD_File_Downloads_Log_Table::get_columns()
@@ -473,7 +460,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return bool
 	 */

@@ -988,7 +988,6 @@ add_filter( 'edd_payment_details_transaction_id-paypal', 'edd_paypal_link_transa
 /**
  * Shows checkbox to automatically refund payments made in PayPal.
  *
- * @access public
  * @since  2.6.0
  *
  * @param int $payment_id The current payment ID.
@@ -1035,7 +1034,6 @@ add_action( 'edd_view_order_details_before', 'edd_paypal_refund_admin_js', 100 )
 /**
  * Possibly refunds a payment made with PayPal Standard or PayPal Express.
  *
- * @access public
  * @since  2.6.0
  *
  * @param int $payment_id The current payment ID.
@@ -1078,7 +1076,6 @@ add_action( 'edd_pre_refund_payment', 'edd_maybe_refund_paypal_purchase', 999 );
 /**
  * Refunds a purchase made via PayPal.
  *
- * @access public
  * @since  2.6.0
  *
  * @param object|int $payment The payment ID or object to refund.

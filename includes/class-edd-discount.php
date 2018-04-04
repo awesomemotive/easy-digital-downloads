@@ -238,7 +238,6 @@ class EDD_Discount {
 	 * Magic __get method to dispatch a call to retrieve a protected property.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param mixed $key
 	 * @return mixed
@@ -259,7 +258,6 @@ class EDD_Discount {
 	 * Magic __set method to dispatch a call to update a protected property.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @see set()
 	 *
@@ -290,7 +288,6 @@ class EDD_Discount {
 	 * Magic __isset method to allow empty checks on protected elements
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $key The attribute to get
 	 * @return boolean If the item is set or not
@@ -307,7 +304,6 @@ class EDD_Discount {
 	 * Converts the instance of the EDD_Discount object into an array for special cases.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array EDD_Discount object as an array.
 	 */
@@ -322,7 +318,7 @@ class EDD_Discount {
 	 * @access private
 	 *
 	 * @param string $code Discount code.
-	 * @return object WP_Post instance of the discount.
+	 * @return WP_Post Post instance of the discount.
 	 */
 	private function find_by_code( $code = '' ) {
 		if ( empty( $code ) || ! is_string( $code ) ) {
@@ -356,8 +352,8 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @param string $code Discount name.
-	 * @return object WP_Post instance of the discount.
+	 * @param string $name Discount name.
+	 * @return WP_Post Post instance of the discount.
 	 */
 	private function find_by_name( $name = '' ) {
 		if ( empty( $name ) || ! is_string( $name ) ) {
@@ -391,7 +387,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @param object $discount WP_Post instance of the discount.
+	 * @param WP_Post $discount WP_Post instance of the discount.
 	 * @return bool Object var initialisation successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
@@ -670,7 +666,6 @@ class EDD_Discount {
 	 * Helper method to retrieve meta data associated with the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $key    Meta key.
 	 * @param bool   $single Return single item or array.
@@ -684,7 +679,6 @@ class EDD_Discount {
 	 * Helper method to update post meta associated with the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $key        Meta key.
 	 * @param string $value      Meta value.
@@ -706,7 +700,6 @@ class EDD_Discount {
 	 * Retrieve the ID of the WP_Post object.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Discount ID.
 	 */
@@ -718,7 +711,6 @@ class EDD_Discount {
 	 * Retrieve the name of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Name of the discount.
 	 */
@@ -730,7 +722,6 @@ class EDD_Discount {
 	 * Retrieve the code used to apply the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount code.
 	 */
@@ -750,7 +741,6 @@ class EDD_Discount {
 	 * Retrieve the status of the discount
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount code status (active/inactive).
 	 */
@@ -804,7 +794,6 @@ class EDD_Discount {
 	 * Retrieve the type of discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Discount type (percent or flat amount).
 	 */
@@ -824,7 +813,6 @@ class EDD_Discount {
 	 * Retrieve the discount amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed float Discount amount.
 	 */
@@ -844,7 +832,6 @@ class EDD_Discount {
 	 * Retrieve the discount requirements for the discount to be satisfied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array IDs of required downloads.
 	 */
@@ -868,7 +855,6 @@ class EDD_Discount {
 	 * Retrieve the downloads that are excluded from having this discount code applied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array IDs of excluded downloads.
 	 */
@@ -892,7 +878,6 @@ class EDD_Discount {
 	 * Retrieve the start date.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Start date.
 	 */
@@ -912,7 +897,6 @@ class EDD_Discount {
 	 * Retrieve the end date.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string End date.
 	 */
@@ -932,7 +916,6 @@ class EDD_Discount {
 	 * Retrieve the uses for the discount code.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Uses.
 	 */
@@ -952,7 +935,6 @@ class EDD_Discount {
 	 * Retrieve the maximum uses for the discount code.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Maximum uses.
 	 */
@@ -972,7 +954,6 @@ class EDD_Discount {
 	 * Retrieve the minimum spend required for the discount to be satisfied.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed float Minimum spend.
 	 */
@@ -992,7 +973,6 @@ class EDD_Discount {
 	 * Retrieve the usage limit per limit (if the discount can only be used once per customer).
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Once use per customer?
 	 */
@@ -1012,7 +992,6 @@ class EDD_Discount {
 	 * Retrieve the property determining if a discount is not global.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Whether or not the discount code is global.
 	 */
@@ -1032,7 +1011,6 @@ class EDD_Discount {
 	 * Retrieve the product condition.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Product condition
 	 */
@@ -1052,7 +1030,6 @@ class EDD_Discount {
 	 * Check if a discount exists.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Discount exists.
 	 */
@@ -1149,7 +1126,6 @@ class EDD_Discount {
 	 * Once object variables has been set, an update is needed to persist them to the database.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool True if the save was successful, false if it failed or wasn't needed.
 	 */
@@ -1212,7 +1188,6 @@ class EDD_Discount {
 	 * Create a new discount. If the discount already exists in the database, update it.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $args Discount details.
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
@@ -1296,7 +1271,6 @@ class EDD_Discount {
 	 * Update an existing discount in the database.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $args Discount details.
 	 * @return mixed bool|int false if data isn't passed and class not instantiated for creation, or post ID for the new discount.
@@ -1412,7 +1386,6 @@ class EDD_Discount {
 	 * Update the status of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $new_status New status (default: active)
 	 * @return bool If the status been updated or not.
@@ -1458,7 +1431,6 @@ class EDD_Discount {
 	 * Check if the discount has started.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount started?
@@ -1495,7 +1467,6 @@ class EDD_Discount {
 	 * Check if the discount has expired.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $update Update the discount to expired if an one is found but has an active status
 	 * @return bool Has the discount expired?
@@ -1532,7 +1503,6 @@ class EDD_Discount {
 	 * Check if the discount has maxed out.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is discount maxed out?
@@ -1563,7 +1533,6 @@ class EDD_Discount {
 	 * Check if the minimum cart amount is satisfied for the discount to hold.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Is the minimum cart amount met?
@@ -1594,7 +1563,6 @@ class EDD_Discount {
 	 * Is the discount single use or not?
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return bool Is the discount single use or not?
 	 */
@@ -1614,7 +1582,6 @@ class EDD_Discount {
 	 * Are the product requirements met for the discount to hold.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $set_error Whether an error message be set in session.
 	 * @return bool Are required products in the cart?
@@ -1732,7 +1699,6 @@ class EDD_Discount {
 	 * Has the discount code been used.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $user User info.
 	 * @param bool $set_error Whether an error message be set in session.
@@ -1828,7 +1794,6 @@ class EDD_Discount {
 	 * Checks whether a discount holds at the time of purchase.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string $user      User info.
 	 * @param bool   $set_error Whether an error message be set in session.
@@ -1870,7 +1835,6 @@ class EDD_Discount {
 	 * Checks if a discount code is active.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $update    Update the discount to expired if an one is found but has an active status.
 	 * @param bool $set_error Whether an error message be set in session.
@@ -1906,7 +1870,6 @@ class EDD_Discount {
 	 * Get Discounted Amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param string|int $base_price Price before discount.
 	 * @return float $discounted_price Amount after discount.
@@ -1930,7 +1893,6 @@ class EDD_Discount {
 		 * Filter the discounted amount calculated.
 		 *
 		 * @since 2.7
-		 * @access public
 		 *
 		 * @param float $amount Calculated discounted amount.
 		 */
@@ -1941,7 +1903,6 @@ class EDD_Discount {
 	 * Increment the usage of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int New discount usage.
 	 */
@@ -1977,7 +1938,6 @@ class EDD_Discount {
 	 * Decrement the usage of the discount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int New discount usage.
 	 */
@@ -2015,7 +1975,6 @@ class EDD_Discount {
 	 * Edit Discount Link.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return string Link to the `Edit Discount` page.
 	 */

@@ -59,7 +59,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 2.4
 	 *
 	 * @param array $item Contains all the data of the downloads
@@ -74,7 +73,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since  2.4
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -93,7 +91,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	/**
 	 * Outputs the reporting views
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return void
 	 */
@@ -115,7 +112,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since  2.4
 	 * @return int Current page number
 	 */
@@ -126,7 +122,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	/**
 	 * Build all the reports data
 	 *
-	 * @access public
 	 * @since  2.4
 	 * @return array $reports_data All the data for customer reports
 	 */
@@ -386,7 +381,6 @@ class EDD_Categories_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @uses EDD_Categories_Reports_Table::get_columns()
 	 * @uses EDD_Categories_Reports_Table::get_sortable_columns()

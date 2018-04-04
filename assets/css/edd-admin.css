@@ -1592,11 +1592,14 @@ td.edd_order_price {
 .delete-customer {
 	text-align: center;
 }
-#edd-item-card-wrapper .notice-wrap {
+#edd-item-card-wrapper .notice-container {
 	padding-left: 20px;
 	padding-right: 20px;
 	margin-left: -20px;
 	margin-right: -20px;
+}
+#edd-item-card-wrapper .add-customer-email-wrapper > #add-customer-email {
+	vertical-align: middle;
 }
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
