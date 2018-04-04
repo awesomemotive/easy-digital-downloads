@@ -99,7 +99,7 @@ function edd_get_customer_by( $field = '', $value = '' ) {
  *
  * @return int
  */
-function edd_get_customer_count() {
+function edd_count_customers() {
 
 	// Query for count
 	$customers = new EDD_Customer_Query( array(

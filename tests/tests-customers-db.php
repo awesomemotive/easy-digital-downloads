@@ -213,7 +213,7 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 	}
 
 	public function test_count_customers() {
-		$this->assertEquals( 1, edd_get_customer_count() );
+		$this->assertEquals( 1, edd_count_customers() );
 	}
 
 	public function test_update_customer_email_on_user_update() {
