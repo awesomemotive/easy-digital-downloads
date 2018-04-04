@@ -285,6 +285,21 @@ function edd_get_discount_counts() {
 }
 
 /**
+ * Query for discount notes.
+ *
+ * @since 3.0.0
+ *
+ * @param int $discount_id Discount ID.
+ * @return array Retrieved notes.
+ */
+function edd_get_discount_notes( $discount_id = 0 ) {
+	return edd_get_notes( array(
+		'object_id'   => $discount_id,
+		'object_type' => 'discount',
+	) );
+}
+
+/**
  * Checks if there is any active discounts, returns a boolean.
  *
  * @since 1.0
