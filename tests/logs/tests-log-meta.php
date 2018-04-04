@@ -123,6 +123,4 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	public function test_delete_metadata_with_invalid_key_should_return_false() {
 		$this->assertFalse( self::$log->delete_meta( 'key_that_does_not_exist' ) );
 	}
-
-
 }
