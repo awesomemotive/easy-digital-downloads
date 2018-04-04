@@ -27,6 +27,12 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 		self::$log = parent::edd()->log->create_and_get();
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+
+		edd_get_component_interface( 'log', 'meta' )->delete_all();
+	}
+
 	/**
 	 * @covers \EDD_DB_Log_Meta::add_meta()
 	 * @covers \EDD\Logs\Log::add_meta()
@@ -79,8 +85,8 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD_DB_Log_Meta::get_meta()
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
-	public function test_get_metadata_with_no_args_should_return_all_keys() {
-		$this->assertNotEmpty( self::$log->get_meta() );
+	public function test_get_metadata_with_no_args_should_be_empty() {
+		$this->assertEmpty( self::$log->get_meta() );
 	}
 
 	/**
