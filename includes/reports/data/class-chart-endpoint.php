@@ -60,19 +60,20 @@ class Chart_Endpoint extends Endpoint {
 	 *
 	 * @param array $args Chart endpoint attributes.
 	 */
-	public function __construct( array $args ) {
+	public function __construct( $args ) {
 		$this->errors = new \WP_Error();
 
 		// ID and Label.
 		$this->set_props( $args );
 
-		// Chart props.
-		$this->setup_chart( $args );
-
 		$args = $this->parse_display_props( $args );
 
 		// Common values set last to account for overrides.
 		parent::__construct( $args );
+
+		// Chart props.
+		$this->setup_chart( $args );
+
 	}
 
 	/**
