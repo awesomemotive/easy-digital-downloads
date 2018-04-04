@@ -21,14 +21,15 @@ defined( 'ABSPATH' ) || exit;
 class Customer extends Base {
 
 	/**
-	 * Constructor.
+	 * Holds the component for which we are handling back-compat. There is a chance that two methods have the same name
+	 * and need to be dispatched to completely other methods. When a new instance of Back_Compat is created, a component
+	 * can be passed to the constructor which will allow __call() to dispatch to the correct methods.
 	 *
 	 * @since 3.0.0
+	 * @access protected
+	 * @var string
 	 */
-	public function __construct() {
-		$this->set_component( 'customer' );
-		$this->hooks();
-	}
+	protected $component = 'customer';
 
 	/**
 	 * Magic method to handle calls to method that no longer exist.

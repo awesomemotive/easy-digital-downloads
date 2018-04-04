@@ -26,21 +26,18 @@ abstract class Base {
 	 * can be passed to the constructor which will allow __call() to dispatch to the correct methods.
 	 *
 	 * @since 3.0.0
-	 * @access private
+	 * @access protected
 	 * @var string
 	 */
-	private $component;
+	protected $component;
 
 	/**
-	 * Setter for component.
+	 * Constructor.
 	 *
 	 * @since 3.0.0
-	 * @access protected
-	 *
-	 * @param string $component Component for which we are handling back-compat for. Default empty.
 	 */
-	protected function set_component( $component ) {
-		$this->component = $component;
+	public function __construct() {
+		$this->hooks();
 	}
 
 	/**
