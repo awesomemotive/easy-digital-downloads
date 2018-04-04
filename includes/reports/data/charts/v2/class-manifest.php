@@ -288,7 +288,7 @@ class Manifest implements Error_Logger {
 		$data = array();
 
 		if ( $this->has_datasets() ) {
-			$datasets = $manifest->get_datasets();
+			$datasets = $this->get_datasets();
 
 			$data['datasets'] = array();
 
