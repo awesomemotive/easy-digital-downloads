@@ -34,6 +34,9 @@ abstract class Base {
 	/**
 	 * Setter for component.
 	 *
+	 * @since 3.0.0
+	 * @access protected
+	 *
 	 * @param string $component Component for which we are handling back-compat for. Default empty.
 	 */
 	protected function set_component( $component ) {
@@ -50,4 +53,12 @@ abstract class Base {
 	public function get_component() {
 		return $this->component;
 	}
+
+	/**
+	 * Backwards compatibility hooks for component.
+	 *
+	 * @since 3.0.0
+	 * @access protected
+	 */
+	abstract protected function hooks();
 }

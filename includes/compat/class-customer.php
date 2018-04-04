@@ -124,9 +124,9 @@ class Customer extends Base {
 	 * Backwards compatibility hooks for customers.
 	 *
 	 * @since 3.0.0
-	 * @access private
+	 * @access protected
 	 */
-	private function hooks() {
+	protected function hooks() {
 		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
 	}
 
