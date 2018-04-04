@@ -145,8 +145,13 @@ a.edd-delete:hover {
 	min-width: 200px;
 }
 #edd-add-discount input[type="text"],
-#edd-edit-discount input[type="text"] {
+#edd-edit-discount input[type="text"],
+#edd-edit-discount textarea {
 	width: 300px;
+}
+
+#edd-edit-discount textarea {
+	height: 100px;
 }
 
 #edd-add-discount input.edd-price-field,

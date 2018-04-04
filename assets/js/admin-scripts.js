@@ -760,6 +760,40 @@ jQuery(document).ready(function ($) {
 
 			});
 
+            $('#edd-add-discount-note').on('click', function(e) {
+                e.preventDefault();
+                var postData = {
+                    action: 'edd_add_discount_note',
+                    discount_id: $(this).data('discount-id'),
+                    note: $('#edd-discount-note').val()
+                };
+
+                if ( postData.note ) {
+                    $.ajax({
+                        type: "POST",
+                        data: postData,
+                        url: ajaxurl,
+                        success: function (response) {
+                            $('.edd-discount-notes').append( response );
+                            $('.edd-no-discount-notes').hide();
+                            $('#edd-discount-note').val('');
+                        }
+                    }).fail(function (data) {
+                        if ( window.console && window.console.log ) {
+                            console.log( data );
+                        }
+                    });
+
+                } else {
+                    var border_color = $('#edd-discount-note').css('border-color');
+                    $('#edd-discount-note').css('border-color', 'red');
+                    setTimeout( function() {
+                        $('#edd-discount-note').css('border-color', border_color );
+                    }, 500 );
+                }
+
+            });
+
 		},
 
 		remove_note : function() {
@@ -796,6 +830,38 @@ jQuery(document).ready(function ($) {
 				}
 
 			});
+
+            $( document.body ).on('click', '.edd-delete-discount-note', function(e) {
+                e.preventDefault();
+
+                if ( confirm( edd_vars.delete_payment_note) ) {
+
+                    var postData = {
+                        action: 'edd_delete_discount_note',
+                        discount_id: $(this).data('discount-id'),
+                        note_id: $(this).data('note-id')
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        data: postData,
+                        url: ajaxurl,
+                        success: function (response) {
+                            $('#edd-discount-note-' + postData.note_id ).remove();
+                            if( ! $('.edd-discount-note').length ) {
+                                $('.edd-no-discount-notes').show();
+                            }
+                            return false;
+                        }
+                    }).fail(function (data) {
+                        if ( window.console && window.console.log ) {
+                            console.log( data );
+                        }
+                    });
+                    return true;
+                }
+
+            });
 
 		},
 

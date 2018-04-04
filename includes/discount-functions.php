@@ -300,6 +300,45 @@ function edd_get_discount_notes( $discount_id = 0 ) {
 }
 
 /**
+ * Builds the HTML for display a discount note.
+ *
+ * @since 3.0.0
+ *
+ * @param object|int $note        The note object or ID.
+ * @param int        $discount_id The discount ID the note is connected to.
+ * @return string HTML for display.
+ */
+function edd_get_discount_note_html( $note, $discount_id = 0 ) {
+	if ( is_numeric( $note ) ) {
+		$note = new EDD\Notes\Note( $note );
+	}
+
+	if ( ! empty( $note->user_id ) ) {
+		$user = get_userdata( $note->user_id );
+		$user = $user->display_name;
+	} else {
+		$user = __( 'EDD Bot', 'easy-digital-downloads' );
+	}
+
+	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
+
+	$delete_note_url = wp_nonce_url( add_query_arg( array(
+		'edd-action'  => 'delete_discount_note',
+		'note_id'     => $note->id,
+		'discount_id' => $discount_id,
+	) ), 'edd_delete_discount_note_' . $note->id );
+
+	$note_html = '<div class="edd-discount-note" id="edd-discount-note-' . $note->id . '">';
+		$note_html .='<p><strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '<br/>';
+		$note_html .= make_clickable( $note->content );
+		$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-discount-note" data-note-id="' . absint( $note->id ) . '" data-discount-id="' . absint( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$note_html .= '</p>';
+	$note_html .= '</div>';
+
+	return $note_html;
+}
+
+/**
  * Checks if there is any active discounts, returns a boolean.
  *
  * @since 1.0
