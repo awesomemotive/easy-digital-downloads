@@ -236,6 +236,47 @@ class Manifest implements Error_Logger {
 		return $handler;
 	}
 
+
+	/**
+	 * Renders the manifest in JS form.
+	 *
+	 * @since 3.0
+	 */
+	public function render() {
+		$endpoint  = $this->get_endpoint();
+		$target_el = $endpoint->get_display_arg( 'target', 'edd-reports-graph' );
+		$key_var   = substr( md5( uniqid( rand() ) ), 0, 7 );
+
+		$hydrator = EDD()->utils->get_hydrator();
+
+		$hydrator_data = array(
+			'data'    => $this->get_chart_data(),
+			'options' => $this->get_chart_options()
+		);
+
+		try {
+
+			$chart = $hydrator->hydrate( 'EDD\Reports\Data\Charts\v2\Chart_Template', $hydrator_data );
+			$data  = $hydrator->extract( $chart );
+
+		} catch ( \ReflectionException $exception ) {
+
+			edd_debug_log( $exception->getMessage() );
+
+			return;
+
+		}
+		?>
+		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
+
+		<script type="application/javascript">
+
+
+
+		</script>
+		<?php
+	}
+
 	/**
 	 * Retrieves the parsed chart datasets as an object.
 	 *
