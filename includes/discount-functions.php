@@ -116,10 +116,9 @@ function edd_get_discount_by_code( $code = '' ) {
  */
 function edd_get_discount_by( $field = '', $value = '' ) {
 	$discounts = new EDD_Discount_Query();
-	$discount  = $discounts->get_item_by( $field, $value );
 
-	// Return discount
-	return $discount;
+	// Return item
+	return $discounts->get_item_by( $field, $value );
 }
 
 /**
@@ -209,11 +208,11 @@ function edd_get_discounts( $args = array() ) {
 		$r['number'] = $r['posts_per_page'];
 	}
 
-	// Query
-	$discounts = new EDD_Discount_Query( $r );
+	// Instantiate a query object
+	$discounts = new EDD_Discount_Query();
 
 	// Return discounts
-	return $discounts->items;
+	return $discounts->query( $r );
 }
 
 /**
@@ -221,20 +220,20 @@ function edd_get_discounts( $args = array() ) {
  *
  * @since 3.0.0
  *
+ * @param array $args Arguments.
  * @return int
  */
-function edd_get_discount_count() {
+function edd_get_discount_count( $args = array() ) {
 
-	// Query for count
-	$discounts = new EDD_Discount_Query( array(
-		'number' => 0,
-		'count'  => true,
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
+	// Parse args
+	$r = wp_parse_args( $args, 	array(
+		'count' => true
 	) );
 
-	// Return count
+	// Query for count(s)
+	$discounts = new EDD_Discount_Query( $r );
+
+	// Return count(s)
 	return absint( $discounts->found_items );
 }
 
@@ -257,12 +256,8 @@ function edd_get_discount_counts() {
 
 	// Query for count
 	$counts = new EDD_Discount_Query( array(
-		'number'  => 0,
 		'count'   => true,
-		'groupby' => 'status',
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
+		'groupby' => 'status'
 	) );
 
 	// Default array
@@ -293,15 +288,19 @@ function edd_get_discount_counts() {
  * @return bool
  */
 function edd_has_active_discounts() {
+
+	// Query for active discounts
 	$discounts = edd_get_discounts( array(
 		'number' => 1,
 		'status' => 'active'
 	) );
 
+	// Bail if none
 	if ( empty( $discounts ) ) {
 		return false;
 	}
 
+	// Check each discount for active status, applying filters, etc...
 	foreach ( $discounts as $discount ) {
 		/** @var $discount EDD_Discount */
 		if ( $discount->is_active( false, true ) ) {
