@@ -297,10 +297,8 @@ class Manifest implements Error_Logger {
 					continue;
 				}
 
-				$data['datasets'][] = $set->get_options();
+				$data['datasets'][ $id ] = $set->get_options();
 			}
-		} else {
-			log_it( $this->get_errors() );
 		}
 
 		return $this->array_to_object( $data );
