@@ -291,10 +291,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$this->set_primary_column();
 		$this->set_query_var_defaults();
 
-		// Maybe query
-		if ( ! empty( $query ) ) {
-			$this->query( $query );
-		}
+		$this->query( $query );
 	}
 
 	/**
