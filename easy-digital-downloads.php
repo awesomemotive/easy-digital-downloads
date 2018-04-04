@@ -122,38 +122,6 @@ final class Easy_Digital_Downloads {
 	public $cart;
 
 	/**
-	 * EDD Logs DB Object.
-	 *
-	 * @var object|EDD_DB_Logs
-	 * @since 3.0
-	 */
-	public $logs;
-
-	/**
-	 * EDD Log Meta DB Object.
-	 *
-	 * @var object|EDD_DB_Log_Meta
-	 * @since 3.0
-	 */
-	public $log_meta;
-
-	/**
-	 * EDD API Request Logs DB Object.
-	 *
-	 * @var object|EDD_DB_Logs_API_Requests
-	 * @since 3.0
-	 */
-	public $api_request_logs;
-
-	/**
-	 * EDD File Download Logs DB Object.
-	 *
-	 * @var object|EDD_DB_Logs_File_Downloads
-	 * @since 3.0
-	 */
-	public $file_download_logs;
-
-	/**
 	 * EDD Components array
 	 *
 	 * @var array
@@ -198,6 +166,9 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+
+			// Register backwards compatibility hooks
+			new EDD\Compat\Customer();
 		}
 
 		return self::$instance;
@@ -241,16 +212,11 @@ final class Easy_Digital_Downloads {
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
-		switch ( $key  ) {
+		switch ( $key ) {
 			case 'customers' :
 			case 'customermeta' :
 			case 'customer_meta' :
-				return edd_get_component_interface( 'customer', 'query' );
-
-			case 'discounts' :
-			case 'discountmeta' :
-			case 'discount_meta' :
-				return edd_get_component_interface( 'discount', 'query' );
+				return new EDD\Compat\Customer();
 
 			default :
 				return isset( $this->{$key} )
@@ -363,6 +329,10 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-note-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-edd-db-order-item-query.php';
+
+		// Backwards Compatibility
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
 
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {

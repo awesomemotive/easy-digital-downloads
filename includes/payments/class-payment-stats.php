@@ -152,15 +152,26 @@ class EDD_Payment_Stats extends EDD_Stats {
 			global $edd_logs, $wpdb;
 
 			$args = array(
-				'post_parent'        => $download_id,
-				'nopaging'           => true,
-				'log_type'           => 'sale',
-				'fields'             => 'ids',
-				'suppress_filters'   => false,
-				'start_date'         => $this->start_date, // These dates are not valid query args, but they are used for cache keys
-				'end_date'           => $this->end_date,
-				'edd_transient_type' => 'edd_earnings', // This is not a valid query arg, but is used for cache keying
-				'include_taxes'      => $include_taxes,
+				'object_id'          => $download_id,
+				'object_type'        => 'download',
+				'type'               => 'sale',
+				'log_type'           => false,
+				'date_created_query' => array(
+					'after'     => array(
+						'year'  => date( 'Y', $this->start_date ),
+						'month' => date( 'm', $this->start_date ),
+						'day'   => date( 'd', $this->start_date ),
+					),
+					'before'    => array(
+						'year'  => date( 'Y', $this->end_date ),
+						'month' => date( 'm', $this->end_date ),
+						'day'   => date( 'd', $this->end_date ),
+					),
+					'inclusive' => true,
+				),
+				'start_date'    => $this->start_date,
+				'end_date'      => $this->end_date,
+				'include_taxes' => $include_taxes,
 			);
 
 			$args   = apply_filters( 'edd_stats_earnings_args', $args );
@@ -169,13 +180,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$this->timestamp = false;
-				$log_ids  = $edd_logs->get_connected_logs( $args );
+				$logs = $edd_logs->get_connected_logs( $args );
 
 				$earnings = 0;
 
-				if ( $log_ids ) {
-					$log_ids     = implode( ',', array_map('intval', $log_ids ) );
-					$payment_ids = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
+				if ( $logs ) {
+					$payment_ids = array();
+					
+					foreach ( $logs as $log ) {
+						$payment_ids[] = edd_get_log_meta( $log->id, 'payment_id', true );
+					}
 
 					foreach ( $payment_ids as $payment_id ) {
 						$items = edd_get_payment_meta_cart_details( $payment_id );

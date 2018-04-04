@@ -141,6 +141,7 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -150,6 +151,7 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
+			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -159,6 +161,7 @@ class EDD_DB_Schema_Discounts extends EDD_DB_Schema {
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
+			'searchable' => true,
 			'sortable'   => true
 		)
 	);

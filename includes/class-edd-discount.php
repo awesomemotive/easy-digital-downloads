@@ -493,9 +493,9 @@ class EDD_Discount extends EDD_DB_Discount {
 					break;
 
 				default:
-					if( is_string( $value ) ) {
+					if ( is_string( $value ) ) {
 						@json_decode( $value );
-						if( json_last_error() != JSON_ERROR_NONE ) {
+						if ( json_last_error() != JSON_ERROR_NONE ) {
 							$this->$key = json_decode( $value );
 						}
 					}
@@ -508,8 +508,8 @@ class EDD_Discount extends EDD_DB_Discount {
 		/**
 		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
 		 */
-		$this->excluded_products = (array) edd_get_discount_meta( 'excluded_product',    false );
-		$this->product_reqs      = (array) edd_get_discount_meta( 'product_requirement', false );
+		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
+		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -889,7 +889,7 @@ class EDD_Discount extends EDD_DB_Discount {
 			return $this->update( $args );
 
 		} else {
-			$args = $this->convert_legacy_args( $args );
+			$args = self::convert_legacy_args( $args );
 
 			if ( ! empty( $args['start_date'] ) ) {
 				$args['start_date'] = date( 'Y-m-d H:i:s', strtotime( $args['start_date'], current_time( 'timestamp' ) ) );
@@ -955,6 +955,9 @@ class EDD_Discount extends EDD_DB_Discount {
 				$this->$key = $value;
 			}
 
+			// We have to ensure an ID is not passed to edd_add_discount()
+			unset( $args['id'] );
+
 			$id = edd_add_discount( $args );
 
 			// The DB class 'add' implies an update if the discount being asked to be created already exists
@@ -966,7 +969,7 @@ class EDD_Discount extends EDD_DB_Discount {
 				if ( isset( $args['excluded_products'] ) ) {
 					if ( is_array( $args['excluded_products'] ) ) {
 						foreach ( $args['excluded_products'] as $product ) {
-							$this->add_meta( 'excluded_product', absint( $product ) );
+							edd_add_discount_meta( $this->id, 'excluded_product', absint( $product ) );
 						}
 					}
 				}
@@ -974,16 +977,10 @@ class EDD_Discount extends EDD_DB_Discount {
 				if ( isset( $args['product_reqs'] ) ) {
 					if ( is_array( $args['product_reqs'] ) ) {
 						foreach ( $args['product_reqs'] as $product ) {
-							$this->add_meta( 'product_requirement', absint( $product ) );
+							edd_add_discount_meta( $this->id, 'product_requirement', absint( $product ) );
 						}
 					}
 				}
-
-				// We've successfully added/updated the discount, reset the class vars with the new data
-				$discount = $this->find_by_code( $args['code'] );
-
-				// Setup the discount data with the values from DB
-				$this->setup_discount( $discount );
 			}
 
 			/**
@@ -1023,7 +1020,7 @@ class EDD_Discount extends EDD_DB_Discount {
 	 * @return bool True if update is successful, false otherwise.
 	 */
 	public function update( $args = array() ) {
-		$args = $this->convert_legacy_args( $args );
+		$args = self::convert_legacy_args( $args );
 		$ret  = false;
 
 		/**
@@ -1215,7 +1212,7 @@ class EDD_Discount extends EDD_DB_Discount {
 
 		if ( $end_date < current_time( 'timestamp' ) ) {
 			if ( $update ) {
-				$this->update_status( 'inactive' );
+				$this->update_status( 'expired' );
 			}
 			$return = true;
 		}
@@ -1746,16 +1743,11 @@ class EDD_Discount extends EDD_DB_Discount {
 					} elseif ( 'notes' == $key ) {
 						$data[$key] = strip_tags( $data[$key] );
 					} else {
-
-						if( is_array( $data[$key] ) ) {
-
+						if ( is_array( $data[$key] ) ) {
 							$data[$key] = json_encode( $data[$key] );
-
 						} else {
-
 							$data[$key] = sanitize_text_field( $data[$key] );
 						}
-
 					}
 					break;
 
@@ -1790,78 +1782,15 @@ class EDD_Discount extends EDD_DB_Discount {
 	}
 
 	/**
-	 * Migrates a legacy discount (pre 3.0) to the new DB structure.
-	 *
-	 * @since  3.0
-	 *
-	 * @param $old_id int The old post ID to migrate to the new schema.
-	 * @return bool True if successful, false if already migrated or migration failed.
-	 */
-	public function migrate( $old_id = 0 ) {
-
-		// Bail if already migrated
-		if ( $this->is_migrated() ) {
-			return false;
-		}
-
-		$old_discount = get_post( $old_id );
-
-		if ( 'edd_discount' !== $old_discount->post_type ) {
-			return false;
-		}
-
-		$args = array();
-		$meta = get_post_custom( $old_discount->ID );
-		$meta_to_migrate = array();
-
-		foreach ( $meta as $key => $value ) {
-			if ( false === strpos( $key, '_edd_discount' ) ) {
-
-				// This is custom meta from another plugin that needs to be migrated to the new meta table
-				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-
-				continue;
-			}
-
-			$value = maybe_unserialize( $value[0] );
-
-			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
-		}
-
-		// If the discount name was not stored in post_meta, use value from the WP_Post object
-		if ( ! isset( $args['name'] ) ) {
-			$args['name'] = $old_discount->post_title;
-		}
-
-		$args['status'] = get_post_status( $old_discount->ID );
-
-		// Create new discount
-		$discount_id = edd_add_discount( $args );
-		$discount    = edd_get_discount( $discount_id );
-
-		edd_add_discount_meta( $discount_id, 'legacy_id', $old_discount->ID );
-
-		unset( $key, $value );
-
-		if ( ! empty( $meta_to_migrate ) ) {
-			foreach( $meta_to_migrate as $key => $value ) {
-				edd_add_discount_meta( $discount_id, $key, $value );
-			}
-		}
-
-		do_action( 'edd_migrate_discount_record', $old_discount->ID, $discount );
-
-		return $discount->id;
-	}
-
-	/**
 	 * Converts pre-3.0 arguments to the 3.0+ version.
 	 *
-	 * @param $args array Arguments to be converted..
 	 * @since 3.0
-	 * @return array      The converted arguments.
+	 * @static
+	 *
+	 * @param $args array Arguments to be converted.
+	 * @return array The converted arguments.
 	 */
-	private function convert_legacy_args( $args = array() ) {
+	public static function convert_legacy_args( $args = array() ) {
 		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
 		$old = array(
 			'uses'               => 'use_count',
@@ -1876,36 +1805,16 @@ class EDD_Discount extends EDD_DB_Discount {
 
 		foreach ( $old as $old_key => $new_key ) {
 			if ( isset( $args[ $old_key ] ) ) {
-
 				if ( $old_key == 'is_not_global' ) {
-
 					$args[ $new_key ] = $args[ $old_key ] ? 'not_global' : 'global';
-
 				} else {
-
 					$args[ $new_key ] = $args[ $old_key ];
-
 				}
 
 				unset( $args[ $old_key ] );
-
 			}
 		}
 
 		return $args;
-	}
-
-	/**
-	 * Determines if a discount has been migrated from the old schema.
-	 *
-	 * @since 3.0
-	 * @return bool True if it has been migrated, false otherwise.
-	 */
-	public function is_migrated() {
-		if ( edd_get_discount_meta( $this->id, 'legacy_id', true ) ) {
-			return true;
-		}
-
-		return false;
 	}
 }
