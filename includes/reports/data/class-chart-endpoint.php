@@ -110,9 +110,17 @@ class Chart_Endpoint extends Endpoint {
 
 			if ( isset( $view_atts['render_js'] ) && is_callable( $view_atts['render_js'] ) ) {
 				$this->js_callback = $atts['render_js'];
-			} else {
-				$this->build_manifest();
 			}
+
+		}
+
+		if ( null === $this->js_callback ) {
+			// Due to the parent constructor firing last, make sure the report gets set for the benefit of the manifest.
+			if ( ! empty( $atts['report'] ) ) {
+				parent::set_report_id( $atts['report'] );
+			}
+
+			$this->build_manifest();
 		}
 
 	}
