@@ -105,7 +105,7 @@ function edd_get_customer_by( $field = '', $value = '' ) {
  * @param array $args Arguments.
  * @return int
  */
-function edd_get_customer_count( $args = array() ) {
+function edd_count_customers( $args = array() ) {
 	$count_args = array(
 		'number' => 0,
 		'count'  => true,
