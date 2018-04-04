@@ -271,7 +271,10 @@ class Chart_Endpoint extends Endpoint {
 
 		// Start parsing the manifest for output as JS.
 		$manifest = $this->get_manifest();
-		$manifest = json_encode( $manifest );
+
+		$manifest->render();
+
+		return;
 
 		$key_var = substr( md5( uniqid( rand() ) ), 0, 7 );
 
