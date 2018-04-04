@@ -108,12 +108,13 @@ class Chart_Endpoint extends Endpoint {
 				);
 			}
 
-			if ( isset( $atts['render_js'] ) && is_callable( $atts['render_js'] ) ) {
+			if ( isset( $view_atts['render_js'] ) && is_callable( $view_atts['render_js'] ) ) {
 				$this->js_callback = $atts['render_js'];
 			} else {
 				$this->build_manifest();
 			}
 		}
+
 	}
 
 	/**
