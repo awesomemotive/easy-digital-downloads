@@ -789,6 +789,13 @@ class EDD_DB_Query extends EDD_DB_Base {
 
 		// Return an int of the count
 		if ( ! empty( $this->query_vars['count'] ) ) {
+
+			// Never limit, never update item/meta caches when counting
+			$this->query_vars['number']            = false;
+			$this->query_vars['update_cache']      = false;
+			$this->query_vars['update_meta_cache'] = false;
+
+			// Cast to int if not grouping counts
 			if ( empty( $this->query_vars['groupby'] ) ) {
 				$item_ids = intval( $item_ids );
 			}
