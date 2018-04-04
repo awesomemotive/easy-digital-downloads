@@ -169,7 +169,7 @@ class Tests_Customers_DB extends \EDD_UnitTestCase {
 	public function test_get_customer_by() {
 		$customer = edd_get_customer_by( 'email', 'user' . \WP_UnitTest_Generator_Sequence::$incr . '@edd.test' );
 
-		$this->assertGreaterThan( 0, $customer->id );
+		$this->assertSame( 'user' . \WP_UnitTest_Generator_Sequence::$incr . '@edd.test', $customer->email );
 	}
 
 	public function test_update_customer_email_on_user_update() {
