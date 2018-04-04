@@ -25,6 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return mixed False on failure. ID of new EDD_Customer object on success.
  */
 function edd_add_customer( $data = array() ) {
+	// An email must be given for every customer that is created.
+	if ( ! isset( $data['email'] ) || empty( $data['email'] ) ) {
+		return false;
+	}
+
 	$customers = new EDD_Customer_Query();
 
 	return $customers->add_item( $data );
@@ -97,18 +102,22 @@ function edd_get_customer_by( $field = '', $value = '' ) {
  *
  * @since 3.0.0
  *
+ * @param array $args Arguments.
  * @return int
  */
-function edd_get_customer_count() {
-
-	// Query for count
-	$customers = new EDD_Customer_Query( array(
+function edd_count_customers( $args = array() ) {
+	$count_args = array(
 		'number' => 0,
 		'count'  => true,
 
 		'update_cache'      => false,
 		'update_meta_cache' => false
-	) );
+	);
+
+	$args = array_merge( $args, $count_args );
+
+	// Query for count
+	$customers = new EDD_Customer_Query( $args );
 
 	// Return count
 	return absint( $customers->found_items );

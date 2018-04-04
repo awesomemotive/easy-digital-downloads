@@ -341,6 +341,13 @@ class EDD_Logging {
 
 		$query_args['number'] = $query_args['posts_per_page'];
 
+		if ( ! isset( $query_args['offset'] ) ) {
+			$query_args['offset'] = get_query_var( 'paged' ) > 1
+				? ( ( get_query_var( 'paged' ) - 1 ) * $query_args['number'] )
+				: 0;
+			unset( $query_args['paged'] );
+		}
+
 		$logs = call_user_func( 'edd_get_' . $log_type, $query_args );
 
 		if ( $logs ) {

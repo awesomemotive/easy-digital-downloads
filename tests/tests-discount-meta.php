@@ -24,7 +24,19 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * @access public
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$discount_id = EDD_Helper_Discount::create_simple_percent_discount();
+		self::$discount_id = self::edd()->discount->create_object( array(
+			'name'              => '20 Percent Off',
+			'code'              => '20OFF',
+			'status'            => 'active',
+			'type'              => 'percent',
+			'amount'            => '20',
+			'use_count'         => 54,
+			'max_uses'          => 10,
+			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '2010-12-12 00:00:00',
+			'end_date'          => '2050-12-31 23:59:59'
+		) );
 	}
 
 	/**
@@ -32,7 +44,7 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_be_null() {
-		$this->assertNull( edd_add_discount_meta( self::$discount_id, '', '' ) );
+		$this->assertFalse( edd_add_discount_meta( self::$discount_id, '', '' ) );
 	}
 
 	/**
@@ -79,7 +91,7 @@ class Tests_Discount_Meta extends EDD_UnitTestCase {
 	 * @covers EDD_DB_Discount_Meta::get_meta()
 	 * @covers EDD_Discount::get_meta()
 	 */
-	public function test_get_metadata_with_no_args_should_be_empty() {
+	public function test_get_metadata_with_no_args_should_return_array() {
 		$this->assertEmpty( edd_get_discount_meta( self::$discount_id ) );
 	}
 
