@@ -125,7 +125,6 @@ class EDD_Customer extends EDD_DB_Customer {
 		}
 
 		$this->setup_customer( $customer );
-
 	}
 
 	/**
@@ -216,10 +215,9 @@ class EDD_Customer extends EDD_DB_Customer {
 		$created = false;
 
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
-		if ( edd_add_customer( $data ) ) {
-
+		if ( $customer_id = edd_add_customer( $data ) ) {
 			// We've successfully added/updated the customer, reset the class vars with the new data
-			$customer = edd_get_customer_by( 'email', $args['email'] );
+			$customer = edd_get_customer( $customer_id );
 
 			// Setup the customer data with the values from DB
 			$this->setup_customer( $customer );
