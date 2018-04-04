@@ -25,6 +25,12 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 		self::$customer = parent::edd()->customer->create_and_get();
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+
+		edd_get_component_interface( 'customer', 'meta' )->delete_all();
+	}
+
 	/**
 	 * @covers \EDD_DB_Note_Meta::add_meta()
 	 * @covers Note::add_meta()
@@ -53,8 +59,8 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 		$this->assertNotEmpty( self::$customer->update_meta( 'test_key_2', '1' ) );
 	}
 
-	public function test_get_metadata_with_no_args_should_not_be_empty() {
-		$this->assertNotEmpty( self::$customer->get_meta() );
+	public function test_get_metadata_with_no_args_should_be_empty() {
+		$this->assertEmpty( self::$customer->get_meta() );
 	}
 
 	public function test_get_metadata_with_invalid_key_should_be_empty() {
