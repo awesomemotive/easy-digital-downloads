@@ -25,6 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return mixed False on failure. ID of new EDD_Customer object on success.
  */
 function edd_add_customer( $data = array() ) {
+	// An email must be given for every customer that is created.
+	if ( ! isset( $data['email'] ) || empty( $data['email'] ) ) {
+		return false;
+	}
+
 	$customers = new EDD_Customer_Query();
 
 	return $customers->add_item( $data );
