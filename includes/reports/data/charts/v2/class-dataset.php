@@ -184,6 +184,17 @@ abstract class Dataset implements Error_Logger {
 	}
 
 	/**
+	 * Attempts to retrieve data associated with the current dataset.
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed Data associated with the current dataset.
+	 */
+	public function get_data() {
+		return $this->get_endpoint()->get_data_by_set( $this->get_id() );
+	}
+
+	/**
 	 * Performs validation on incoming dataset options.
 	 *
 	 * @since 3.0
@@ -200,12 +211,12 @@ abstract class Dataset implements Error_Logger {
 			}
 		}
 
-		$data = $this->get_endpoint()->get_data_by_set( $this->get_id() );
+		$data = $this->get_data();
 
 		if ( ! empty( $data ) ) {
 			$options['data'] = $data;
 
-			$this->options[ $this->get_id() ] = $options;
+			$this->options = $options;
 		} else {
 
 			$message = sprintf( 'The data for the \'%1$s\' dataset for the \'%2$s\' endpoint in the \'%3$s\' report is missing or invalid.',
