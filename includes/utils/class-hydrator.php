@@ -66,7 +66,7 @@ class Hydrator {
 		if ( is_string( $fields ) ) {
 			if ( 'all' === $fields ) {
 				$props  = $reflection->getProperties();
-				$fields = array_keys( $props );
+				$fields = wp_list_pluck( $props, 'name' );
 			} else {
 				$fields = array( $fields );
 			}
