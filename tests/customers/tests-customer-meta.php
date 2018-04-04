@@ -53,7 +53,7 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 		$this->assertNotEmpty( self::$customer->update_meta( 'test_key_2', '1' ) );
 	}
 
-	public function test_get_metadata_with_no_args_should_return_array() {
+	public function test_get_metadata_with_no_args_should_not_be_empty() {
 		$this->assertNotEmpty( self::$customer->get_meta() );
 	}
 

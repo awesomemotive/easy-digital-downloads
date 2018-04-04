@@ -151,17 +151,17 @@ class Tests_Customers_DB extends \EDD_UnitTestCase {
 	}
 
 	public function test_count_should_be_5() {
-		$this->assertSame( 5, edd_get_customer_count() );
+		$this->assertSame( 5, edd_count_customers() );
 	}
 
 	public function test_count_with_id_should_be_1() {
-		$this->assertSame( 1, edd_get_customer_count( array(
+		$this->assertSame( 1, edd_count_customers( array(
 			'id' => self::$customers[2]
 		) ) );
 	}
 
 	public function test_count_with_email_should_be_1() {
-		$this->assertSame( 1, edd_get_customer_count( array(
+		$this->assertSame( 1, edd_count_customers( array(
 			'email' => 'user' . \WP_UnitTest_Generator_Sequence::$incr . '@edd.test'
 		) ) );
 	}
