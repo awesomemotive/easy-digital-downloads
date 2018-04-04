@@ -172,7 +172,7 @@ abstract class Endpoint extends Base_Object {
 	 *
 	 * @param string $report Report ID.
 	 */
-	private function set_report_id( $report ) {
+	protected function set_report_id( $report ) {
 		$this->report_id = $report;
 	}
 
