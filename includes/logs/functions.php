@@ -21,11 +21,14 @@ defined( 'ABSPATH' ) || exit;
  * @return int|false ID of newly created log, false on error.
  */
 function edd_add_log( $data = array() ) {
-	// An object ID and object type must be supplied for every log that is inserted into the database.
+
+	// An object ID and object type must be supplied for every log that is
+	// inserted into the database.
 	if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
 		return false;
 	}
 
+	// Instantiate a query object
 	$logs = new EDD_Log_Query();
 
 	return $logs->add_item( $data );
@@ -46,7 +49,7 @@ function edd_delete_log( $log_id = 0 ) {
 }
 
 /**
- * Update a log.
+ * Update a log item.
  *
  * @since 3.0.0
  *
@@ -61,7 +64,7 @@ function edd_update_log( $log_id = 0, $data = array() ) {
 }
 
 /**
- * Query for a log.
+ * Get a log item by ID.
  *
  * @since 3.0.0
  *
@@ -73,30 +76,7 @@ function edd_get_log( $log_id = 0 ) {
 }
 
 /**
- * Count logs.
- *
- * @since 3.0.0
- *
- * @param array $args
- * @return int
- */
-function edd_count_logs( $args = array() ) {
-	$count_args = array(
-		'number' => 0,
-		'count'  => true,
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
-	);
-
-	$args = array_merge( $args, $count_args );
-
-	$logs = new EDD_Log_Query( $args );
-	return absint( $logs->found_items );
-}
-
-/**
- * Query for logs.
+ * Get a log by a specific field's value.
  *
  * @since 3.0.0
  *
@@ -105,14 +85,12 @@ function edd_count_logs( $args = array() ) {
  * @return object
  */
 function edd_get_log_by( $field = '', $value = '' ) {
-	// Query for log
-	$logs = new EDD_Log_Query( array(
-		'number' => 1,
-		$field   => $value
-	) );
 
-	// Return log
-	return reset( $logs->items );
+	// Instantiate a query object
+	$logs = new EDD_Log_Query();
+
+	// Get an item
+	return $logs->get_item_by( $field, $value );
 }
 
 /**
@@ -124,15 +102,45 @@ function edd_get_log_by( $field = '', $value = '' ) {
  * @return array
  */
 function edd_get_logs( $args = array() ) {
-	// Query for logs
-	$logs = new EDD_Log_Query( $args );
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$logs = new EDD_Log_Query();
 
 	// Return notes
-	return $logs->items;
+	return $logs->query( $r );
 }
 
 /**
- * Add a file download log.
+ * Count logs.
+ *
+ * @since 3.0.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_logs( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$logs = new EDD_Log_Query( $r );
+
+	// Return count(s)
+	return absint( $logs->found_items );
+}
+
+/** File Downloads ************************************************************/
+
+/**
+ * Add a file download log item.
  *
  * @since 3.0.0
  *
@@ -140,18 +148,21 @@ function edd_get_logs( $args = array() ) {
  * @return int|false ID of newly created log, false on error.
  */
 function edd_add_file_download_log( $data = array() ) {
-	// A download ID and a payment ID must be supplied for every log that is inserted into the database.
+
+	// A download ID and a payment ID must be supplied for every log that is
+	// inserted into the database.
 	if ( empty( $data['download_id'] ) || empty( $data['payment_id'] ) ) {
 		return false;
 	}
 
+	// Instantiate a query object
 	$logs = new EDD_Log_File_Download_Query();
 
 	return $logs->add_item( $data );
 }
 
 /**
- * Delete a file download log.
+ * Delete a file download log item.
  *
  * @since 3.0.0
  *
@@ -165,7 +176,7 @@ function edd_delete_file_download_log( $log_id = 0 ) {
 }
 
 /**
- * Update a file download log.
+ * Update a file download log item.
  *
  * @since 3.0.0
  *
@@ -180,7 +191,7 @@ function edd_update_file_download_log( $log_id = 0, $data = array() ) {
 }
 
 /**
- * Query for a file download log.
+ * Get a file download log item by ID.
  *
  * @since 3.0.0
  *
@@ -192,30 +203,7 @@ function edd_get_file_download_log( $log_id = 0 ) {
 }
 
 /**
- * Count logs.
- *
- * @since 3.0.0
- *
- * @param array $args
- * @return int
- */
-function edd_count_file_download_logs( $args = array() ) {
-	$count_args = array(
-		'number' => 0,
-		'count'  => true,
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
-	);
-
-	$args = array_merge( $args, $count_args );
-
-	$logs = new EDD_Log_File_Download_Query( $args );
-	return absint( $logs->found_items );
-}
-
-/**
- * Query for logs.
+ * Get a file download log item by field and value.
  *
  * @since 3.0.0
  *
@@ -224,14 +212,12 @@ function edd_count_file_download_logs( $args = array() ) {
  * @return object
  */
 function edd_get_file_download_log_by( $field = '', $value = '' ) {
-	// Query for log
-	$logs = new EDD_Log_File_Download_Query( array(
-		'number' => 1,
-		$field   => $value
-	) );
 
-	// Return log
-	return reset( $logs->items );
+	// Instantiate a query object
+	$logs = new EDD_Log_File_Download_Query();
+
+	// Return item
+	return $logs->get_item_by( $field, $value );
 }
 
 /**
@@ -243,12 +229,42 @@ function edd_get_file_download_log_by( $field = '', $value = '' ) {
  * @return array
  */
 function edd_get_file_download_logs( $args = array() ) {
-	// Query for logs
-	$logs = new EDD_Log_File_Download_Query( $args );
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$logs = new EDD_Log_File_Download_Query();
 
 	// Return logs
-	return $logs->items;
+	return $logs->query( $r );
 }
+
+/**
+ * Count file download logs.
+ *
+ * @since 3.0.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_file_download_logs( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$logs = new EDD_Log_File_Download_Query( $r );
+
+	// Return count(s)
+	return absint( $logs->found_items );
+}
+
+/** API Requests **************************************************************/
 
 /**
  * Add an API request log.
@@ -259,18 +275,21 @@ function edd_get_file_download_logs( $args = array() ) {
  * @return int|false ID of newly created log, false on error.
  */
 function edd_add_api_request_log( $data = array() ) {
-	// A request is required for every API request log that is inserted into the database.
+
+	// A request is required for every API request log that is inserted into
+	// the database.
 	if ( empty( $data['request'] ) ) {
 		return false;
 	}
 
+	// Instantiate a query object
 	$logs = new EDD_Log_API_Request_Query();
 
 	return $logs->add_item( $data );
 }
 
 /**
- * Delete an API request log.
+ * Delete an API request log item.
  *
  * @since 3.0.0
  *
@@ -284,7 +303,7 @@ function edd_delete_api_request_log( $log_id = 0 ) {
 }
 
 /**
- * Update an API request log.
+ * Update an API request log item.
  *
  * @since 3.0.0
  *
@@ -299,7 +318,7 @@ function edd_update_api_request_log( $log_id = 0, $data = array() ) {
 }
 
 /**
- * Query for an API request log.
+ * Get an API request log item by ID.
  *
  * @since 3.0.0
  *
@@ -311,30 +330,7 @@ function edd_get_api_request_log( $log_id = 0 ) {
 }
 
 /**
- * Count API request logs.
- *
- * @since 3.0.0
- *
- * @param array $args
- * @return int
- */
-function edd_count_api_request_logs( $args = array() ) {
-	$count_args = array(
-		'number' => 0,
-		'count'  => true,
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
-	);
-
-	$args = array_merge( $args, $count_args );
-
-	$logs = new EDD_Log_API_Request_Query( $args );
-	return absint( $logs->found_items );
-}
-
-/**
- * Query for API request logs.
+ * Get an API request log item by a specific field's value.
  *
  * @since 3.0.0
  *
@@ -343,14 +339,10 @@ function edd_count_api_request_logs( $args = array() ) {
  * @return object
  */
 function edd_get_api_request_log_by( $field = '', $value = '' ) {
-	// Query for API request log
-	$logs = new EDD_Log_API_Request_Query( array(
-		'number' => 1,
-		$field   => $value
-	) );
+	$logs = new EDD_Log_API_Request_Query();
 
 	// Return note
-	return reset( $logs->items );
+	return $logs->get_item_by( $field, $value );
 }
 
 /**
@@ -362,12 +354,42 @@ function edd_get_api_request_log_by( $field = '', $value = '' ) {
  * @return array
  */
 function edd_get_api_request_logs( $args = array() ) {
-	// Query for API request logs
-	$logs = new EDD_Log_API_Request_Query( $args );
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$logs = new EDD_Log_API_Request_Query();
 
 	// Return logs
-	return $logs->items;
+	return $logs->query( $r );
 }
+
+/**
+ * Count API request logs.
+ *
+ * @since 3.0.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_api_request_logs( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$logs = new EDD_Log_API_Request_Query( $r );
+
+	// Return count(s)
+	return absint( $logs->found_items );
+}
+
+/** Meta **********************************************************************/
 
 /**
  * Add meta data field to a log.
