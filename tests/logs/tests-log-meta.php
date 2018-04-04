@@ -24,14 +24,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures.
 	 */
 	public static function wpSetUpBeforeClass() {
-		$log_id = edd_add_log( array(
-			'object_id'   => 1234,
-			'object_type' => 'order',
-			'title'       => 'Order Status Change',
-			'message'     => 'Order status has changed from pending to completed.',
-		) );
-
-		self::$log = new Log( $log_id );
+		self::$log = parent::edd()->log->create_and_get();
 	}
 
 	/**
