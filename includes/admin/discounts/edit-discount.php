@@ -260,7 +260,7 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
 	                    <?php wp_nonce_field( 'edd_discount_note', 'edd_discount_note_nonce' ); ?>
 
                         <p>
-                            <button id="edd-add-discount-note" class="button button-secondary left" data-discount-id="<?php echo esc_attr( $discount->id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
+                            <button type="button" id="edd-add-discount-note" class="edd-discount-note-submit button button-secondary left" data-discount-id="<?php echo esc_attr( $discount->id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
                         </p>
                     </td>
                 </tr>
