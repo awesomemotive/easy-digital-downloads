@@ -9,14 +9,19 @@ namespace EDD\Tests;
 class Factory extends \WP_UnitTest_Factory {
 
 	/**
+	 * @var \EDD\Tests\Factory\API_Request_Log
+	 */
+	public $api_request_log;
+
+	/**
+	 * @var \EDD\Tests\Factory\Customer
+	 */
+	public $customer;
+
+	/**
 	 * @var \EDD\Tests\Factory\Discount
 	 */
 	public $discount;
-
-	/**
-	 * @var \EDD\Tests\Factory\Log
-	 */
-	public $log;
 
 	/**
 	 * @var \EDD\Tests\Factory\File_Download_Log
@@ -24,9 +29,9 @@ class Factory extends \WP_UnitTest_Factory {
 	public $file_download_log;
 
 	/**
-	 * @var \EDD\Tests\Factory\API_Request_Log
+	 * @var \EDD\Tests\Factory\Log
 	 */
-	public $api_request_log;
+	public $log;
 
 	/**
 	 * @var \EDD\Tests\Factory\Note
@@ -36,10 +41,11 @@ class Factory extends \WP_UnitTest_Factory {
 	public function __construct() {
 		parent::__construct();
 
-		$this->discount = new Factory\Discount( $this );
-		$this->log = new Factory\Log( $this );
-		$this->file_download_log = new Factory\File_Download_Log( $this );
 		$this->api_request_log = new Factory\API_Request_Log( $this );
+		$this->discount = new Factory\Discount( $this );
+		$this->customer = new Factory\Customer( $this );
+		$this->file_download_log = new Factory\File_Download_Log( $this );
+		$this->log = new Factory\Log( $this );
 		$this->note = new Factory\Note( $this );
 	}
 }

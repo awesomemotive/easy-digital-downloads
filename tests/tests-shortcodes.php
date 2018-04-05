@@ -214,7 +214,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		EDD_Helper_Discount::create_simple_percent_discount();
 
 		$this->assertInternalType( 'string', edd_discounts_shortcode( array() ) );
-		$this->assertEquals( '<ul id="edd_discounts_list"><li class="edd_discount"><span class="edd_discount_name">20OFF</span><span class="edd_discount_separator"> - </span><span class="edd_discount_amount">20%</span></li></ul>', edd_discounts_shortcode( array() ) );
+		$this->assertEquals( '<ul id="edd_discounts_list"><li class="edd_discount"><span class="edd_discount_name">20OFF</span><span class="edd_discount_separator"> - </span><span class="edd_discount_amount">20.00%</span></li></ul>', edd_discounts_shortcode( array() ) );
 	}
 
 	public function test_purchase_collection_shortcode() {
