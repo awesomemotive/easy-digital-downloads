@@ -145,12 +145,12 @@ a.edd-delete:hover {
 	min-width: 200px;
 }
 #edd-add-discount input[type="text"],
-#edd-edit-discount input[type="text"],
-#edd-edit-discount textarea {
+#edd-edit-discount input[type="text"] {
 	width: 300px;
 }
 
 #edd-edit-discount textarea {
+	width: 80%;
 	height: 100px;
 }
 
@@ -158,6 +158,64 @@ a.edd-delete:hover {
 #edd-edit-discount input.edd-price-field {
 	padding: 3px 5px;
 	width: 125px;
+}
+
+.edd-discount-notes .edd-discount-note {
+	background-color: #ffffee;
+	border-left: 5px solid #cccc00;
+	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	width: 80%;
+	position: relative;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.edd-discount-notes .edd-discount-note div {
+	padding: 5px 10px;
+	margin: 0;
+}
+
+.edd-discount-notes .edd-discount-note .edd-discount-note-author {
+	padding: 2px 2px 2px 0;
+	float: left;
+}
+
+.edd-discount-notes .edd-discount-note time {
+	float: left;
+	font-size: 11px;
+	line-height: 11px;
+	color: #aaa;
+	padding: 5px 0;
+	vertical-align: middle;
+}
+
+.edd-discount-notes .edd-discount-note p {
+	clear: both;
+	padding: 5px 0;
+}
+
+.edd-discount-notes .edd-discount-note .edd-discount-note-author {
+	margin-right: 5px;
+}
+
+.edd-discount-notes .edd-discount-note .edd-delete-note {
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 10px;
+	font-size: 10px;
+	line-height: 10px;
+	text-decoration: none;
+	color: #aaa;
+	z-index: 1;
+}
+
+.edd-discount-notes .edd-discount-note .edd-delete-note:hover {
+	color: #888;
+}
+
+.edd-discount-notes .edd-no-discount-notes {
+	margin: 4px 0 10px 0;
 }
 
 /* List Tables
@@ -1561,7 +1619,7 @@ td.edd_order_price {
 }
 .disconnect-user a {
 	color: #aaa;
-	font-size: 20px;	
+	font-size: 20px;
 }
 #customer-edit-actions {
 	line-height: 28px;
