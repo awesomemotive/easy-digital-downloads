@@ -279,7 +279,7 @@ class Manifest implements Error_Logger {
 	 *
 	 * @since 3.0
 	 *
-	 * @return object Parsed chart data.
+	 * @return array Parsed chart data.
 	 */
 	public function get_chart_data() {
 		$data = array();
@@ -298,7 +298,7 @@ class Manifest implements Error_Logger {
 			}
 		}
 
-		return $this->array_to_object( $data );
+		return $data;
 	}
 
 	/**
