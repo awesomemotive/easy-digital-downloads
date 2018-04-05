@@ -1898,11 +1898,12 @@ class EDD_DB_Query extends EDD_DB_Base {
 			return;
 		}
 
-		// Add the site prefix to meta table name
-		$table = "{$this->get_db()->prefix}{$table}";
+		// Guess the item ID column for the meta table
+		$primary_id     = $this->get_primary_column_name();
+		$item_id_column = $this->apply_prefix( "{$this->item_name}_{$primary_id}" );
 
 		// Get meta IDs
-		$sql      = "SELECT meta_id FROM {$table} WHERE {$this->get_primary_column_name()} = %d";
+		$sql      = "SELECT meta_id FROM {$table} WHERE {$item_id_column} = %d";
 		$prepared = $this->get_db()->prepare( $sql, $item_id );
 		$meta_ids = $this->get_db()->get_col( $prepared );
 
@@ -1925,9 +1926,7 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$table = $this->apply_prefix( $this->item_name );
 
 		// Return table if exists, or false if not
-		return _get_meta_table( $table )
-			? $table
-			: false;
+		return _get_meta_table( $table );
 	}
 
 	/** Cache *****************************************************************/
@@ -2096,53 +2095,5 @@ class EDD_DB_Query extends EDD_DB_Base {
 	private function update_last_changed() {
 		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
 	}
-
-	/** Back Compat ***********************************************************/
-
-	/**
-	 * Return a single column from an item, or null
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $name
-	 * @param int    $item_id
-	 *
-	 * @return mixed
-	 */
-	public function get_column( $name = '', $item_id = 0 ) {
-		$item = $this->get_item( $item_id );
-
-		// Return a single column from an item, or null
-		return isset( $item->{$name} )
-			? $item->{$name}
-			: null;
-	}
-
-	public function insert( $data = array() ) {
-		return $this->add_item( $data );
-	}
-
-	public function add( $data = array() ) {
-		return $this->add_item( $data );
-	}
-
-	public function update( $item_id, $data = array(), $where = '' ) {
-		return $this->update_item( $item_id, $data );
-	}
-
-	public function delete( $item_id = 0 ) {
-		return $this->delete_item( $item_id );
-	}
-
-	public function add_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
-		return $this->add_item_meta( $item_id, $meta_key, $meta_value, $unique );
-	}
-
-    public function __call( $method = '', $args = array() ) {
-		switch ( $method ) {
-			case 'add_meta' :
-				die;
-		}
-    }
 }
 endif;
