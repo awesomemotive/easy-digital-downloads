@@ -858,7 +858,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_discounts' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'eddc' ) );
+			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$discounts_db = edd_get_component_interface( 'discount', 'table' );
