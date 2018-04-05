@@ -271,6 +271,8 @@ function edd_load_admin_scripts( $hook ) {
 		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
 	) );
 
+	wp_enqueue_script( 'wp-ajax-response' );
+
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
 
