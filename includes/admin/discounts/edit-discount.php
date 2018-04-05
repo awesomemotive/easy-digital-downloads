@@ -33,8 +33,10 @@ $product_requirements = $discount->get_product_reqs();
 $excluded_products    = $discount->get_excluded_products();
 $condition            = $discount->get_product_condition();
 $single_use           = $discount->get_once_per_customer();
+$notes                = edd_get_discount_notes( $discount->id );
 $flat_display         = ( 'flat'    === $discount->get_type() ) ? '' : ' style="display:none;"';
 $percent_display      = ( 'percent' === $discount->get_type() ) ? '' : ' style="display:none;"';
+$no_notes_display     =   empty( $notes                )        ? '' : ' style="display:none;"';
 $condition_display    = ! empty( $product_requirements )        ? '' : ' style="display:none;"';
 
 // Output
@@ -188,7 +190,7 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input type="text" id="edd-max-uses" name="max_uses" value="<?php echo esc_attr( $discount->max_uses ); ?>" style="width: 40px;"/>
+                        <input type="text" id="edd-max-uses" name="max_uses" value="<?php echo esc_attr( $discount->max_uses ); ?>" />
                         <p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
@@ -200,7 +202,7 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( $discount->min_cart_price ); ?>" style="width: 40px;"/>
+                        <input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( edd_sanitize_amount( $discount->min_cart_price ) ); ?>" />
                         <p class="description"><?php _e( 'The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
@@ -239,26 +241,24 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="notes"><?php _e( 'Discount Notes', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <div class="edd-discount-notes">
+                        <div class="edd-discount-notes" id="edd-discount-notes">
 		                    <?php
-		                    $notes = edd_get_discount_notes( $discount->id );
 
+							// Maybe output discount notes
 		                    if ( ! empty( $notes ) ) {
-			                    $no_notes_display = ' style="display:none;"';
-
 			                    foreach ( $notes as $note ) {
 				                    echo edd_get_discount_note_html( $note, $discount->id );
 			                    }
-		                    } else {
-			                    $no_notes_display = '';
 		                    }
-		                    echo '<p class="edd-no-discount-notes"' . $no_notes_display . '>'. __( 'No discount notes.', 'easy-digital-downloads' ) . '</p>';
+
 		                    ?>
+							<p class="edd-no-discount-notes"<?php echo $no_notes_display; ?>><?php _e( 'No discount notes.', 'easy-digital-downloads' ); ?></p>
                         </div>
+
                         <textarea name="edd-discount-note" id="edd-discount-note"></textarea>
 
                         <p>
-                            <button id="edd-add-discount-note" class="button button-secondary left" data-discount-id="<?php echo absint( $discount->id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
+                            <button id="edd-add-discount-note" class="button button-secondary left" data-discount-id="<?php echo esc_attr( $discount->id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
                         </p>
                     </td>
                 </tr>
@@ -270,7 +270,7 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
 		<p class="submit">
 			<input type="hidden" name="edd-action" value="edit_discount" />
 			<input type="hidden" name="discount-id" value="<?php echo esc_attr( $discount->id ); ?>" />
-			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $discount_id ) ); ?>" />
+			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $discount->id ) ); ?>" />
 			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>" />
 			<input type="submit" value="<?php _e( 'Update Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary" />
 		</p>
