@@ -294,7 +294,7 @@ class Manifest implements Error_Logger {
 					continue;
 				}
 
-				$data['datasets'][ $id ] = $set->get_options();
+				$data['datasets'][] = $set->get_options();
 			}
 		}
 
