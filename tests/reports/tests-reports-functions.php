@@ -5,6 +5,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
+new \EDD\Reports\Init();
+
 /**
  * Tests for the Endpoint object.
  *
@@ -14,14 +16,6 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  * @group edd_objects
  */
 class Reports_Functions_Tests extends \EDD_UnitTestCase {
-
-	/**
-	 * Reports fixture.
-	 *
-	 * @var \EDD\Reports\Init
-	 * @static
-	 */
-	protected static $reports;
 
 	/**
 	 * Date fixture.
@@ -34,13 +28,6 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		// Remove all core report registrations to maintain a "vanilla state".
-		add_action( 'edd_reports_init', function( $reports ) {
-			$reports->exchangeArray( array() );
-		}, 999999 );
-
-		self::$reports = new \EDD\Reports\Init();
-
 		self::$date = EDD()->utils->date();
 	}
 

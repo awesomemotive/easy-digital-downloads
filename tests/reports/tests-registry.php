@@ -5,6 +5,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
+new \EDD\Reports\Init();
+
 /**
  * Tests for the Reports registry API.
  *
@@ -16,27 +18,12 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
 class Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
-	 * Reports fixture.
-	 *
-	 * @var \EDD\Reports\Init
-	 * @static
-	 */
-	protected static $reports;
-
-	/**
 	 * Reports registry fixture.
 	 *
 	 * @access protected
 	 * @var    \EDD\Reports\Data\Reports_Registry
 	 */
 	protected $registry;
-
-	/**
-	 * Set up fixtures once.
-	 */
-	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Reports\Init();
-	}
 
 	/**
 	 * Set up fixtures once.
