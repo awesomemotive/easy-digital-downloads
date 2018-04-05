@@ -873,6 +873,30 @@ function edd_get_registered_settings() {
 						'type' => 'rich_editor',
 					),
 				),
+				'privacy_policy'     => array(
+					'show_agree_to_privacy_policy' => array(
+						'id'   => 'show_agree_to_privacy_policy',
+						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to privacy policy on the checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_label' => array(
+						'id'   => 'privacy_agree_label',
+						'name' => __( 'Agree to Privacy Policy Label', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to privacy policy check box.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'agree_privacy_page' => array(
+						'id'   => 'privacy_agree_page',
+						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
+						'desc' => __( 'If Agree to Privacy Policy is checked, enter page for the Privacy Agreement Here.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
+				),
 			)
 		)
 	);
@@ -1309,6 +1333,7 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+			'privacy_policy'     => __( 'Privacy Policy', 'easy-digital-downloads' ),
 		) ),
 	);
 

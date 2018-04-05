@@ -774,14 +774,14 @@ function edd_terms_agreement() {
 		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
-			<div id="edd_terms" style="display:none;">
+			<div id="edd_terms" class="edd-terms" style="display:none;">
 				<?php
 					do_action( 'edd_before_terms' );
 					echo wpautop( stripslashes( $agree_text ) );
 					do_action( 'edd_after_terms' );
 				?>
 			</div>
-			<div id="edd_show_terms">
+			<div id="edd_show_terms" class="edd-show-terms">
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
@@ -797,6 +797,51 @@ function edd_terms_agreement() {
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
+
+
+/**
+ * Renders the Checkout Agree to Privacy Policy, this displays a checkbox for users to
+ * agree the Privacy Policy set in the EDD Settings. This is only displayed if T&Cs are
+ * set in the EDD Settings.
+ *
+ * @since 2.9.1
+ * @return void
+ */
+function edd_privacy_agreement() {
+	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+		$agree_page      = edd_get_option( 'privacy_agree_page', get_option( 'page_for_privacy_policy' ) );
+		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
+		$agreement_text  = get_post_field( 'post_content', $agree_page );
+		if ( empty( $agree_page ) || empty( $agreement_text ) ) {
+			return;
+		}
+
+		ob_start();
+		?>
+		<fieldset id="edd-privacy-policy-agreement">
+			<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+				<?php
+				do_action( 'edd_before_privacy_policy' );
+				echo wpautop( stripslashes( $agreement_text ) );
+				do_action( 'edd_after_privacy_policy' );
+				?>
+			</div>
+			<div id="edd-show-privacy-policy" class="edd-show-terms">
+				<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+			</div>
+			<div class="edd-privacy-policy-agreement">
+				<input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1"/>
+				<label for="edd-agree-to-privacy-policy"><?php echo stripslashes( $agree_label ); ?></label>
+			</div>
+		</fieldset>
+		<?php
+		$html_output = ob_get_clean();
+
+		echo apply_filters( 'edd_checkout_privacy_policy_agreement_html', $html_output );
+	}
+}
+add_action( 'edd_purchase_form_before_submit', 'edd_privacy_agreement' );
 
 /**
  * Shows the final purchase total at the bottom of the checkout page
@@ -913,8 +958,8 @@ function edd_agree_to_terms_js() {
 		jQuery(document).ready(function($){
 			$( document.body ).on('click', '.edd_terms_links', function(e) {
 				//e.preventDefault();
-				$('#edd_terms').slideToggle();
-				$('.edd_terms_links').toggle();
+				$(this).parent().prev('.edd-terms').slideToggle();
+				$(this).parent().find('.edd_terms_links').toggle();
 				return false;
 			});
 		});
