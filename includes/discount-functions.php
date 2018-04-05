@@ -63,6 +63,7 @@ function edd_add_discount( $data = array() ) {
  * Delete a discount
  *
  * @since 3.0.0
+ *
  * @param int $discount_id
  * @return int
  */
@@ -83,6 +84,7 @@ function edd_delete_discount( $discount_id = 0 ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object
+ * @since 3.0 Updated to call edd_get_discount_by()
  *
  * @param int $discount_id Discount ID.
  * @return mixed object|bool EDD_Discount object or false if not found.
@@ -92,10 +94,11 @@ function edd_get_discount( $discount_id = 0 ) {
 }
 
 /**
- * Get Discount By Code.
+ * Get discount by code.
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param string $code Discount code.
  * @return EDD_Discount|bool EDD_Discount object or false if not found.
@@ -109,6 +112,7 @@ function edd_get_discount_by_code( $code = '' ) {
  *
  * @since 2.0
  * @since 2.7 Updated to use EDD_Discount object
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param string $field The field to retrieve the discount with.
  * @param mixed  $value The value for $field.
@@ -126,9 +130,10 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  *
  * @since 2.0
  * @since 2.7 Updated to use EDD_Discount object
+ * @since 3.0 Updated to call edd_get_discount()
  *
+ * @param int $discount_id Discount ID.
  * @param string $field The field to retrieve the discount with.
- * @param mixed  $value The value for $field.
  * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_field( $discount_id, $field = '' ) {
@@ -366,6 +371,7 @@ function edd_remove_discount( $discount_id = 0 ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int    $discount_id Discount ID (default: 0)
  * @param string $new_status  New status (default: active)
@@ -403,6 +409,7 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int $discount_id Discount ID.
  *
@@ -410,6 +417,7 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
  */
 function edd_discount_exists( $discount_id ) {
 	$discount = edd_get_discount( $discount_id );
+
 	return $discount->exists();
 }
 
@@ -419,6 +427,7 @@ function edd_discount_exists( $discount_id ) {
  * @since 1.0
  * @since 2.6.11 Added $update parameter.
  * @since 2.7    Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int  $discount_id   Discount ID.
  * @param bool $update    Update the discount to expired if an one is found but has an active status/
@@ -436,6 +445,7 @@ function edd_is_discount_active( $discount_id = 0, $update = true, $set_error = 
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return string $code Discount Code.
@@ -449,6 +459,7 @@ function edd_get_discount_code( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return string $start Discount start date.
@@ -462,6 +473,7 @@ function edd_get_discount_start_date( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return string $expiration Discount expiration.
@@ -475,6 +487,7 @@ function edd_get_discount_expiration( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return int $max_uses Maximum number of uses for the discount code.
@@ -488,6 +501,7 @@ function edd_get_discount_max_uses( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return int $uses Number of times a discount has been used.
@@ -501,6 +515,7 @@ function edd_get_discount_uses( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return float $min_price Minimum purchase amount.
@@ -514,6 +529,7 @@ function edd_get_discount_min_price( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return float $amount Discount amount.
@@ -527,6 +543,7 @@ function edd_get_discount_amount( $discount_id = 0 ) {
  *
  * @since 1.4
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  * @return string $type Discount type
@@ -540,6 +557,7 @@ function edd_get_discount_type( $discount_id = 0 ) {
  *
  * @since 1.9
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int $discount_id Discount ID.
  * @return array $excluded_products IDs of the required products.
@@ -554,6 +572,7 @@ function edd_get_discount_excluded_products( $discount_id = 0 ) {
  *
  * @since 1.5
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int $discount_id Discount ID.
  * @return array $product_reqs IDs of the required products.
@@ -568,6 +587,7 @@ function edd_get_discount_product_reqs( $discount_id = 0 ) {
  *
  * @since 1.5
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  *
@@ -631,6 +651,7 @@ function edd_get_discount_scope( $discount_id = 0 ) {
  * @since 1.0
  * @since 2.6.11 Added $update parameter.
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int  $discount_id Discount ID.
  * @param bool $update  Update the discount to expired if an one is found but has an active status.
@@ -648,6 +669,7 @@ function edd_is_discount_expired( $discount_id = 0, $update = true ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int  $discount_id   Discount ID.
  * @param bool $set_error Whether an error message be set in session.
@@ -665,6 +687,7 @@ function edd_is_discount_started( $discount_id = 0, $set_error = true ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int  $discount_id   Discount ID.
  * @param bool $set_error Whether an error message be set in session.
@@ -682,6 +705,7 @@ function edd_is_discount_maxed_out( $discount_id = 0, $set_error = true ) {
  *
  * @since 1.1.7
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int  $discount_id   Discount ID.
  * @param bool $set_error Whether an error message be set in session.
@@ -699,6 +723,7 @@ function edd_discount_is_min_met( $discount_id = 0, $set_error = true ) {
  *
  * @since 1.5
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_field()
  *
  * @param int $discount_id Discount ID.
  *
@@ -713,6 +738,7 @@ function edd_discount_is_single_use( $discount_id = 0 ) {
  *
  * @since 1.5
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param int  $discount_id   Discount ID.
  * @param bool $set_error Whether an error message be set in session.
@@ -729,6 +755,7 @@ function edd_discount_product_reqs_met( $discount_id = 0, $set_error = true ) {
  * @since 1.1.5
  * @since 1.5 Added $discount_id parameter.
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount()
  *
  * @param string $code      Discount Code.
  * @param string $user      User info.
@@ -750,6 +777,7 @@ function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string $code      Discount Code.
  * @param string $user      User info.
@@ -769,6 +797,7 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string $code Discount code.
  * @return int Discount ID.
@@ -783,6 +812,7 @@ function edd_get_discount_id_by_code( $code = '' ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string           $code       Code to calculate a discount for.
  * @param mixed string|int $base_price Price before discount.
@@ -801,6 +831,7 @@ function edd_get_discounted_amount( $code = '', $base_price = 0 ) {
  *
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string $code Discount code to be incremented.
  * @return int New usage.
@@ -819,6 +850,7 @@ function edd_increase_discount_usage( $code = '' ) {
  *
  * @since 2.5.7
  * @since 2.7 Updated to use EDD_Discount object.
+ * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string $code Discount code to be decremented.
  * @return int New usage.

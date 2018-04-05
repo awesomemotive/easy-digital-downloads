@@ -49,7 +49,7 @@ function edd_delete_log( $log_id = 0 ) {
 }
 
 /**
- * Update a log item.
+ * Update a log.
  *
  * @since 3.0.0
  *
@@ -64,7 +64,7 @@ function edd_update_log( $log_id = 0, $data = array() ) {
 }
 
 /**
- * Get a log item by ID.
+ * Get a log by ID.
  *
  * @since 3.0.0
  *
@@ -140,7 +140,7 @@ function edd_count_logs( $args = array() ) {
 /** File Downloads ************************************************************/
 
 /**
- * Add a file download log item.
+ * Add a file download log.
  *
  * @since 3.0.0
  *
@@ -162,7 +162,7 @@ function edd_add_file_download_log( $data = array() ) {
 }
 
 /**
- * Delete a file download log item.
+ * Delete a file download log.
  *
  * @since 3.0.0
  *
@@ -176,7 +176,7 @@ function edd_delete_file_download_log( $log_id = 0 ) {
 }
 
 /**
- * Update a file download log item.
+ * Update a file download log.
  *
  * @since 3.0.0
  *
@@ -191,7 +191,7 @@ function edd_update_file_download_log( $log_id = 0, $data = array() ) {
 }
 
 /**
- * Get a file download log item by ID.
+ * Get a file download log by ID.
  *
  * @since 3.0.0
  *
@@ -203,7 +203,7 @@ function edd_get_file_download_log( $log_id = 0 ) {
 }
 
 /**
- * Get a file download log item by field and value.
+ * Get a file download log by field and value.
  *
  * @since 3.0.0
  *
@@ -289,7 +289,7 @@ function edd_add_api_request_log( $data = array() ) {
 }
 
 /**
- * Delete an API request log item.
+ * Delete an API request log.
  *
  * @since 3.0.0
  *
@@ -303,7 +303,7 @@ function edd_delete_api_request_log( $log_id = 0 ) {
 }
 
 /**
- * Update an API request log item.
+ * Update an API request log.
  *
  * @since 3.0.0
  *
@@ -318,7 +318,7 @@ function edd_update_api_request_log( $log_id = 0, $data = array() ) {
 }
 
 /**
- * Get an API request log item by ID.
+ * Get an API request log by ID.
  *
  * @since 3.0.0
  *
@@ -330,7 +330,7 @@ function edd_get_api_request_log( $log_id = 0 ) {
 }
 
 /**
- * Get an API request log item by a specific field's value.
+ * Get an API request log by a specific field's value.
  *
  * @since 3.0.0
  *

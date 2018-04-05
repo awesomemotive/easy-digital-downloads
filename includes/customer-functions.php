@@ -52,18 +52,36 @@ function edd_delete_customer( $customer_id = 0 ) {
 	return $customers->delete_item( $customer_id );
 }
 
+/**
+ * Update a customer.
+ *
+ * @since 3.0.0
+ * @param int $customer_id Customer ID.
+ * @param array $data
+ *
+ * @return int
+ */
 function edd_update_customer( $customer_id = 0, $data = array() ) {
 	$customers = new EDD_Customer_Query();
 
 	return $customers->update_item( $customer_id, $data );
 }
 
+/**
+ * Get a customer item by ID.
+ *
+ * @since 3.0.0
+ * @param int $customer_id Customer ID.
+ * @param array $data
+ *
+ * @return int
+ */
 function edd_get_customer( $customer_id = 0 ) {
 	return edd_get_customer_by( 'id', $customer_id );
 }
 
 /**
- * Query for customers
+ * Get a customer item by a specific field's value.
  *
  * @since 3.0.0
  * @param array $args
