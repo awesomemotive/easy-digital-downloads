@@ -237,7 +237,7 @@ function get_endpoint_views() {
 			'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
 			'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
 			'fields'         => array(
-				'data_callback'    => '',
+				'data_callback'    => '::get_data',
 				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
 					'type'             => '' ,
@@ -253,8 +253,8 @@ function get_endpoint_views() {
 			'fields'         => array(
 				'type'             => 'line',
 				'options'          => array(),
-				'data_callback'    => 'get_data',
-				'display_callback' => 'display',
+				'data_callback'    => '::get_data',
+				'display_callback' => '::display',
 				'display_args'     => array(
 					'colors' => 'core',
 				),
@@ -265,8 +265,8 @@ function get_endpoint_views() {
 			'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
 			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
 			'fields'         => array(
-				'data_callback'    => 'prepare_items',
-				'display_callback' => 'display',
+				'data_callback'    => '::prepare_items',
+				'display_callback' => '::display',
 				'display_args'     => array(
 					'class_name' => '',
 					'class_file' => '',
