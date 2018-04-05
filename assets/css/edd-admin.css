@@ -198,7 +198,7 @@ a.edd-delete:hover {
 	margin-right: 5px;
 }
 
-.edd-discount-notes .edd-discount-note .edd-delete-note {
+.edd-discount-notes .edd-discount-note .edd-delete-discount-note {
 	position: absolute;
 	right: 0;
 	top: 0;

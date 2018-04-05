@@ -53,7 +53,7 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 		$note_html .='<div><strong class="edd-discount-note-author">' . esc_html( $user ) . '</strong>';
 		$note_html .= '<time datetime="' . esc_attr( $note->date_created ) . '">' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '</time>';
 		$note_html .= '<p>' . make_clickable( $note->content ) . '</p>';
-		$note_html .= '<a href="' . esc_url( $delete_note_url ) . '#edd-discount-notes" class="edd-delete-note" data-note-id="' . esc_attr( $note->id ) . '" data-discount-id="' . esc_attr( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$note_html .= '<a href="' . esc_url( $delete_note_url ) . '#edd-discount-notes" class="edd-delete-discount-note" data-note-id="' . esc_attr( $note->id ) . '" data-discount-id="' . esc_attr( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</div>';
 	$note_html .= '</div>';
 
