@@ -762,9 +762,11 @@ jQuery(document).ready(function ($) {
 
             $('#edd-add-discount-note').on('click', function(e) {
                 e.preventDefault();
+
                 var postData = {
                     action: 'edd_add_discount_note',
                     discount_id: $(this).data('discount-id'),
+					nonce: $('#edd_discount_note_nonce').val(),
                     note: $('#edd-discount-note').val()
                 };
 
@@ -842,6 +844,7 @@ jQuery(document).ready(function ($) {
                     var postData = {
                         action: 'edd_delete_discount_note',
                         discount_id: $(this).data('discount-id'),
+                        nonce: $('#edd_discount_note_nonce').val(),
                         note_id: $(this).data('note-id')
                     };
 
