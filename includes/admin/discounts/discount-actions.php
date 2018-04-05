@@ -308,27 +308,41 @@ function edd_deactivate_discount( $data = array() ) {
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
 
+/** Notes *********************************************************************/
+
 /**
  * Add a discount note via AJAX.
  *
  * @since 3.0.0
  */
 function edd_ajax_add_discount_note() {
-	$discount_id = absint( $_POST['discount_id'] );
-	$note       = wp_kses( $_POST['note'], array() );
 
-	if( ! current_user_can( 'edit_shop_payments', $discount_id ) ) {
-		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	}
+	// Get discount ID
+	$discount_id = ! empty( $_POST['discount_id'] )
+		? absint( $_POST['discount_id'] )
+		: 0;
 
+	// Get note contents (maybe sanitize)
+	$note        = ! empty( $_POST['note'] )
+		? wp_kses( stripslashes_deep( $_POST['note'] ), array() )
+		: '';
+
+	// Bail if no discount
 	if ( empty( $discount_id ) ) {
 		die( '-1' );
 	}
 
+	// Bail if no note
 	if ( empty( $note ) ) {
 		die( '-1' );
 	}
 
+	// Bail if user not capable
+	if ( ! current_user_can( 'manage_shop_discounts', $discount_id ) ) {
+		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Add the note
 	$note_id = edd_add_note( array(
 		'object_id'   => $discount_id,
 		'object_type' => 'discount',
@@ -336,6 +350,7 @@ function edd_ajax_add_discount_note() {
 		'user_id'     => get_current_user_id()
 	) );
 
+	// Output the note HTML
 	die( edd_get_discount_note_html( $note_id, $discount_id ) );
 }
 add_action( 'wp_ajax_edd_add_discount_note', 'edd_ajax_add_discount_note' );
@@ -348,10 +363,19 @@ add_action( 'wp_ajax_edd_add_discount_note', 'edd_ajax_add_discount_note' );
  * @param array $data Data from $_GET.
  */
 function edd_delete_discount_note( $data ) {
-	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_discount_note_' . $data['note_id'] ) )
-		return;
 
-	if( ! current_user_can( 'edit_shop_payments', $data['discount_id'] ) ) {
+	// Bail if missing any data
+	if ( empty( $data['_wpnonce'] ) || empty( $data['note_id'] ) || empty( $data['discount_id'] ) ) {
+		return;
+	}
+
+	// Bail if nonce fails
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_discount_note_' . $data['note_id'] ) ) {
+		return;
+	}
+
+	// Bail if not capable
+	if ( ! current_user_can( 'manage_shop_discounts', $data['discount_id'] ) ) {
 		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
@@ -359,7 +383,7 @@ function edd_delete_discount_note( $data ) {
 
 	edd_delete_note( $data['note_id'] );
 
-	wp_redirect( $edit_discount_url  );
+	wp_redirect( $edit_discount_url );
 }
 add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
 
@@ -369,21 +393,33 @@ add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
  * @since 3.0.0
  */
 function edd_ajax_delete_discount_note() {
-	$discount_id = absint( $_POST['discount_id'] );
-	$note_id = absint( $_POST['note_id'] );
 
-	if( ! current_user_can( 'edit_shop_payments', $discount_id ) ) {
-		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	}
+	// Get discount ID
+	$discount_id = ! empty( $_POST['discount_id'] )
+		? absint( $_POST['discount_id'] )
+		: 0;
 
+	// Get note ID
+	$note_id     = ! empty( $_POST['note_id'] )
+		? absint( $_POST['note_id'] )
+		: 0;
+
+	// Bail if no discount
 	if ( empty( $discount_id ) ) {
 		die( '-1' );
 	}
 
+	// Bail if no note
 	if ( empty( $note_id ) ) {
 		die( '-1' );
 	}
 
+	// Bail if user not capable
+	if ( ! current_user_can( 'manage_shop_discounts', $discount_id ) ) {
+		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Delete note
 	edd_delete_note( $note_id );
 
 	die( '0' );
