@@ -1,19 +1,20 @@
 <?php
+namespace EDD\Discounts;
 
 /**
  * Tests for Discounts API.
  *
- * @covers EDD_Discount
+ * @covers \EDD_Discount
  * @group edd_discounts
  *
- * @coversDefaultClass EDD_Discount
+ * @coversDefaultClass \EDD_Discount
  */
-class Tests_Discounts extends EDD_UnitTestCase {
+class Tests_Discounts extends \EDD_UnitTestCase {
 
 	/**
 	 * Download test fixture.
 	 *
-	 * @var WP_Post
+	 * @var \WP_Post
 	 * @static
 	 */
 	protected static $download;
@@ -29,7 +30,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	/**
 	 * Discount object test fixture.
 	 *
-	 * @var EDD_Discount
+	 * @var \EDD_Discount
 	 * @static
 	 */
 	protected static $discount;
@@ -53,7 +54,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	/**
 	 * Legacy discount test fixture.
 	 *
-	 * @var EDD_Discount
+	 * @var \EDD_Discount
 	 * @static
 	 */
 	protected static $legacy_discount_id;
@@ -62,12 +63,12 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$download = EDD_Helper_Download::create_simple_download();
+		self::$download = \EDD_Helper_Download::create_simple_download();
 
-		self::$discount_id         = EDD_Helper_Discount::create_simple_percent_discount();
-		self::$negativediscount_id = EDD_Helper_Discount::create_simple_negative_percent_discount();
-		self::$flatdiscount_id     = EDD_Helper_Discount::create_simple_flat_discount();
-		self::$legacy_discount_id  = EDD_Helper_Discount::create_legacy_discount();
+		self::$discount_id         = \EDD_Helper_Discount::create_simple_percent_discount();
+		self::$negativediscount_id = \EDD_Helper_Discount::create_simple_negative_percent_discount();
+		self::$flatdiscount_id     = \EDD_Helper_Discount::create_simple_flat_discount();
+		self::$legacy_discount_id  = \EDD_Helper_Discount::create_legacy_discount();
 
 		self::$discount = edd_get_discount( self::$discount_id );
 	}
@@ -110,7 +111,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::setup_discount()
 	 */
 	public function test_id_is_0_when_no_id_is_passed() {
-		$d = new EDD_Discount();
+		$d = new \EDD_Discount();
 
 		$this->assertTrue( 0 === $d->id );
 	}
@@ -259,7 +260,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::get_type()
 	 */
 	public function test_get_discount_type_of_flat_discount() {
-		$d = new EDD_Discount( self::$flatdiscount_id );
+		$d = new \EDD_Discount( self::$flatdiscount_id );
 		$this->assertEquals( 'flat', $d->get_type() );
 	}
 
@@ -310,7 +311,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::add()
 	 */
 	public function test_discount_save() {
-		$discount = new EDD_Discount();
+		$discount = new \EDD_Discount();
 		$discount->code = '30FLAT';
 		$discount->name = '$30 Off';
 		$discount->type = 'flat';
@@ -334,7 +335,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'amount' => 30,
 		);
 
-		$discount = new EDD_Discount();
+		$discount = new \EDD_Discount();
 		$discount->add( $args );
 
 		$this->assertGreaterThan( 0, $discount->id );
@@ -458,7 +459,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_store_discount()
+	 * @covers \edd_store_discount()
 	 */
 	public function test_updating_discount_code() {
 		$post = array(
@@ -480,21 +481,21 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_update_discount_status()
+	 * @covers \edd_update_discount_status()
 	 */
 	public function test_discount_status_update() {
 		$this->assertTrue( edd_update_discount_status( self::$discount_id, 'active' ) );
 	}
 
 	/**
-	 * @covers edd_update_discount_status()
+	 * @covers \edd_update_discount_status()
 	 */
 	public function test_discount_status_update_fail() {
 		$this->assertFalse( edd_update_discount_status( -1 ) );
 	}
 
 	/**
-	 * @covers edd_has_active_discounts()
+	 * @covers \edd_has_active_discounts()
 	 */
 	public function test_discounts_exists() {
 		edd_update_discount_status( self::$discount_id, 'active' );
@@ -503,9 +504,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_update_discount_status()
-	 * @covers edd_is_discount_active()
-	 * @covers edd_store_discount()
+	 * @covers \edd_update_discount_status()
+	 * @covers \edd_is_discount_active()
+	 * @covers \edd_store_discount()
 	 */
 	public function test_is_discount_active() {
 		edd_update_discount_status( self::$discount_id, 'active' );
@@ -535,15 +536,15 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_discount_exists()
+	 * @covers \edd_discount_exists()
 	 */
 	public function test_discount_exists_helper() {
 		$this->assertTrue( edd_discount_exists( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_update_discount_status()
-	 * @covers edd_get_discount()
+	 * @covers \edd_update_discount_status()
+	 * @covers \edd_get_discount()
 	 */
 	public function test_get_discount() {
 		edd_update_discount_status( self::$discount_id, 'active' );
@@ -556,119 +557,119 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_code()
+	 * @covers \edd_get_discount_code()
 	 */
 	public function test_get_discount_code() {
 		$this->assertSame( '20OFF', edd_get_discount_code( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_start_date()
+	 * @covers \edd_get_discount_start_date()
 	 */
 	public function test_discount_start_date() {
 		$this->assertSame( '2010-12-12 00:00:00', edd_get_discount_start_date( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_expiration()
+	 * @covers \edd_get_discount_expiration()
 	 */
 	public function test_discount_expiration_date() {
 		$this->assertSame( '2050-12-31 23:59:59', edd_get_discount_expiration( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_max_uses()
+	 * @covers \edd_get_discount_max_uses()
 	 */
 	public function test_discount_max_uses() {
 		$this->assertSame( 10, edd_get_discount_max_uses( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_uses()
+	 * @covers \edd_get_discount_uses()
 	 */
 	public function test_discount_uses() {
 		$this->assertSame( 54, edd_get_discount_uses( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_min_price()
+	 * @covers \edd_get_discount_min_price()
 	 */
 	public function testDiscountMinPrice() {
 		$this->assertSame( '128.00', edd_get_discount_min_price( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_amount()
+	 * @covers \edd_get_discount_amount()
 	 */
 	public function test_discount_amount() {
 		$this->assertSame( 20.0, edd_get_discount_amount( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_amount()
+	 * @covers \edd_get_discount_amount()
 	 */
 	public function test_discount_amount_negative() {
 		$this->assertSame( -100.0, edd_get_discount_amount( self::$negativediscount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_type()
+	 * @covers \edd_get_discount_type()
 	 */
 	public function test_discount_type() {
 		$this->assertSame( 'percent', edd_get_discount_type( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_get_discount_product_condition()
+	 * @covers \edd_get_discount_product_condition()
 	 */
 	public function test_discount_product_condition() {
 		$this->assertSame( 'all', edd_get_discount_product_condition( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_is_discount_not_global()
+	 * @covers \edd_is_discount_not_global()
 	 */
 	public function test_discount_is_not_global() {
 		$this->assertFalse( edd_is_discount_not_global( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_discount_is_single_use()
+	 * @covers \edd_discount_is_single_use()
 	 */
 	public function test_discount_is_single_use() {
 		$this->assertFalse( edd_discount_is_single_use( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_is_discount_started()
+	 * @covers \edd_is_discount_started()
 	 */
 	public function test_discount_is_started() {
 		$this->assertTrue( edd_is_discount_started( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_is_discount_expired()
+	 * @covers \edd_is_discount_expired()
 	 */
 	public function test_discount_is_expired() {
 		$this->assertFalse( edd_is_discount_expired( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_is_discount_maxed_out()
+	 * @covers \edd_is_discount_maxed_out()
 	 */
 	public function test_discount_is_maxed_out() {
 		$this->assertTrue( edd_is_discount_maxed_out( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_discount_is_min_met()
+	 * @covers \edd_discount_is_min_met()
 	 */
 	public function test_discount_is_min_met() {
 		$this->assertFalse( edd_discount_is_min_met( self::$discount_id ) );
 	}
 
 	/**
-	 * @covers edd_is_discount_used()
+	 * @covers \edd_is_discount_used()
 	 * @covers ::is_used()
 	 */
 	public function test_discount_is_used() {
@@ -681,22 +682,22 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::is_used()
 	 */
 	public function test_is_used_case_insensitive() {
-		$payment_id         = EDD_Helper_Payment::create_simple_payment();
+		$payment_id         = \EDD_Helper_Payment::create_simple_payment();
 		$payment            = edd_get_payment( $payment_id );
 		$payment->discounts = '20off';
 		$payment->status    = 'publish';
 		$payment->save();
 
-		$discount                = new EDD_Discount( '20OFF', true );
+		$discount                = new \EDD_Discount( '20OFF', true );
 		$discount->is_single_use = true;
 		$this->assertTrue( $discount->is_used( 'admin@example.org', false ) );
 		$discount->is_single_use = false;
 
-		EDD_Helper_Payment::delete_payment( $payment_id );
+		\EDD_Helper_Payment::delete_payment( $payment_id );
 	}
 
 	/**
-	 * @covers edd_is_discount_valid()
+	 * @covers \edd_is_discount_valid()
 	 * @covers ::is_valid()
 	 */
 	public function test_discount_is_valid_when_purchasing() {
@@ -704,8 +705,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_id_by_code()
-	 *@covers edd_get_discount_id_by()
+	 * @covers \edd_get_discount_id_by_code()
+	 *@covers \edd_get_discount_id_by()
 	 */
 	public function test_discount_id_by_code() {
 		$id       = edd_get_discount_id_by_code( '20OFF' );
@@ -716,7 +717,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 
 	/**
-	 * @covers edd_get_discounted_amount()
+	 * @covers \edd_get_discounted_amount()
 	 * @covers ::get_discounted_amount()
 	 */
 	public function test_get_discounted_amount() {
@@ -729,9 +730,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_id_by_code()
-	 * @covers edd_get_discount_uses()
-	 * @covers edd_increase_discount_usage()
+	 * @covers \edd_get_discount_id_by_code()
+	 * @covers \edd_get_discount_uses()
+	 * @covers \edd_increase_discount_usage()
 	 * @covers ::increase_usage()
 	 */
 	public function test_increase_discount_usage() {
@@ -747,8 +748,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	/**
 	 * @covers _edd_discount_update_meta_backcompat()
-	 * @covers edd_get_discount_code()
-	 * @covers edd_increase_discount_usage()
+	 * @covers \edd_get_discount_code()
+	 * @covers \edd_increase_discount_usage()
 	 */
 	public function test_discount_inactive_at_max() {
 		update_post_meta( self::$discount_id, '_edd_discount_status', 'active' );
@@ -765,8 +766,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	/**
 	 * @covers _edd_discount_update_meta_backcompat()
-	 * @covers edd_get_discount_code()
-	 * @covers edd_increase_discount_usage()
+	 * @covers \edd_get_discount_code()
+	 * @covers \edd_increase_discount_usage()
 	 * @covers ::decrease_usage()
 	 */
 	public function test_discount_active_after_decreasing_at_max() {
@@ -782,9 +783,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_id_by_code()
-	 * @covers edd_get_discount_uses()
-	 * @covers edd_decrease_discount_usage()
+	 * @covers \edd_get_discount_id_by_code()
+	 * @covers \edd_get_discount_uses()
+	 * @covers \edd_decrease_discount_usage()
 	 */
 	public function test_decrease_discount_usage() {
 		$id   = edd_get_discount_id_by_code( '20OFF' );
@@ -799,7 +800,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	/**
 	 * @covers _edd_discount_post_meta_bc_filter()
-	 * @covers edd_format_discount_rate()
+	 * @covers \edd_format_discount_rate()
 	 */
 	public function test_formatted_discount_amount() {
 		$rate = get_post_meta( self::$discount_id, '_edd_discount_amount', true );
@@ -807,7 +808,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_by()
+	 * @covers \edd_get_discount_by()
 	 */
 	public function test_edd_get_discount_by() {
 		$discount = edd_get_discount_by( 'id', self::$discount_id );
@@ -819,8 +820,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_amount()
-	 * @covers edd_format_discount_rate()
+	 * @covers \edd_get_discount_amount()
+	 * @covers \edd_format_discount_rate()
 	 */
 	public function test_formatted_discount_amount_negative() {
 		$amount = edd_get_discount_amount( self::$negativediscount_id );
@@ -828,8 +829,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_amount()
-	 * @covers edd_format_discount_rate()
+	 * @covers \edd_get_discount_amount()
+	 * @covers \edd_format_discount_rate()
 	 */
 	public function test_formatted_discount_amount_flat() {
 		$amount = edd_get_discount_amount( self::$flatdiscount_id );
@@ -838,7 +839,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_excluded_products()
+	 * @covers \edd_get_discount_excluded_products()
 	 * @covers ::get_excluded_products()
 	 */
 	public function test_discount_excluded_products() {
@@ -846,7 +847,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_discount_product_reqs()
+	 * @covers \edd_get_discount_product_reqs()
 	 * @covers ::get_product_reqs()
 	 */
 	public function test_discount_product_reqs() {
@@ -854,8 +855,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_delete_discount()
-	 * @covers edd_get_discount()
+	 * @covers \edd_delete_discount()
+	 * @covers \edd_get_discount()
 	 */
 	public function test_deletion_of_discount() {
 		edd_delete_discount( self::$discount_id );
@@ -866,8 +867,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_set_cart_discount()
-	 * @covers edd_get_discount_code()
+	 * @covers \edd_set_cart_discount()
+	 * @covers \edd_get_discount_code()
 	 */
 	public function test_set_discount() {
 		EDD()->session->set( 'cart_discounts', null );
@@ -881,7 +882,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_set_cart_discount()
+	 * @covers \edd_set_cart_discount()
 	 */
 	public function test_set_multiple_discounts() {
 		EDD()->session->set( 'cart_discounts', null );
@@ -907,7 +908,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertEquals( '16.00', edd_get_cart_total() );
 
 		// Test a new code
-		$code_id = EDD_Helper_Discount::create_simple_percent_discount();
+		$code_id = \EDD_Helper_Discount::create_simple_percent_discount();
 		update_post_meta( $code_id, '_edd_discount_code', 'SECONDcode' );
 
 		$discounts = edd_set_cart_discount( 'SECONDCODE' );
@@ -918,16 +919,16 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_store_discount()
-	 * @covers edd_get_cart_discountable_subtotal()
+	 * @covers \edd_store_discount()
+	 * @covers \edd_get_cart_discountable_subtotal()
 	 */
 	public function test_discountable_subtotal() {
-		$download_1 = EDD_Helper_Download::create_simple_download();
-		$download_2 = EDD_Helper_Download::create_simple_download();
+		$download_1 = \EDD_Helper_Download::create_simple_download();
+		$download_2 = \EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download_1->ID );
 		edd_add_to_cart( $download_2->ID );
 
-		$discount = EDD_Helper_Discount::create_simple_flat_discount();
+		$discount = \EDD_Helper_Discount::create_simple_flat_discount();
 		$post = array(
 			'name'              => 'Excludes',
 			'amount'            => '1',
@@ -943,26 +944,26 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		$this->assertEquals( '20', edd_get_cart_discountable_subtotal( $discount ) );
 
-		$download_3 = EDD_Helper_Download::create_simple_download();
+		$download_3 = \EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download_3->ID );
 
 		$this->assertEquals( '40', edd_get_cart_discountable_subtotal( $discount ) );
 
-		EDD_Helper_Download::delete_download( $download_1->ID );
-		EDD_Helper_Download::delete_download( $download_2->ID );
-		EDD_Helper_Download::delete_download( $download_3->ID );
-		EDD_Helper_Discount::delete_discount( $discount );
+		\EDD_Helper_Download::delete_download( $download_1->ID );
+		\EDD_Helper_Download::delete_download( $download_2->ID );
+		\EDD_Helper_Download::delete_download( $download_3->ID );
+		\EDD_Helper_Discount::delete_discount( $discount );
 	}
 
 	/**
-	 * @covers edd_discount_is_min_met()
-	 * @covers edd_is_discount_valid()
+	 * @covers \edd_discount_is_min_met()
+	 * @covers \edd_is_discount_valid()
 	 */
 	public function test_discount_min_excluded_products() {
 		edd_empty_cart();
-		$download_1 = EDD_Helper_Download::create_simple_download();
-		$download_2 = EDD_Helper_Download::create_simple_download();
-		$discount   = EDD_Helper_Discount::create_simple_flat_discount();
+		$download_1 = \EDD_Helper_Download::create_simple_download();
+		$download_2 = \EDD_Helper_Download::create_simple_download();
+		$discount   = \EDD_Helper_Discount::create_simple_flat_discount();
 
 		$post = array(
 			'name'              => 'Excludes',
@@ -982,20 +983,20 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		edd_add_to_cart( $download_2->ID );
 		$this->assertFalse( edd_discount_is_min_met( $discount ) );
 
-		$download_3 = EDD_Helper_Download::create_simple_download();
+		$download_3 = \EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download_3->ID );
 		$this->assertTrue( edd_discount_is_min_met( $discount ) );
 
 		$discount_obj = edd_get_discount( $discount );
 		$this->assertFalse( edd_is_discount_valid( $discount_obj->code ) );
 
-		EDD_Helper_Download::delete_download( $download_1->ID );
-		EDD_Helper_Download::delete_download( $download_2->ID );
-		EDD_Helper_Download::delete_download( $download_3->ID );
+		\EDD_Helper_Download::delete_download( $download_1->ID );
+		\EDD_Helper_Download::delete_download( $download_2->ID );
+		\EDD_Helper_Download::delete_download( $download_3->ID );
 	}
 
 	/**
-	 * @covers edd_get_discounts()
+	 * @covers \edd_get_discounts()
 	 */
 	public function test_edd_get_discounts() {
 		$found_discounts = edd_get_discounts( array(
