@@ -403,12 +403,8 @@ function edd_reports_earnings() {
 			options: lineChartOptions
 		};
 
-		console.log( lineChartOptions );
-		// console.log( lineChartConfig );
-
 		myLine = Chart.Line( $( '#edd-reports-graph' ), lineChartConfig );
 
-		// console.log( myLine );
 	</script>
 
 	<?php
