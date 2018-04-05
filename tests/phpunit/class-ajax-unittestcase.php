@@ -19,8 +19,8 @@ class Ajax_UnitTestCase extends \WP_Ajax_UnitTestCase {
 
 		global $current_user;
 
-		$current_user = new WP_User(1);
-		$current_user->set_role('administrator');
+		$current_user = new \WP_User( 1 );
+		$current_user->set_role( 'administrator' );
 		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
 		add_filter( 'edd_log_email_errors', '__return_false' );
 	}
@@ -34,7 +34,7 @@ class Ajax_UnitTestCase extends \WP_Ajax_UnitTestCase {
 	protected static function edd() {
 		static $factory = null;
 		if ( ! $factory ) {
-			$factory = new EDD\Tests\Factory();
+			$factory = new Factory();
 		}
 		return $factory;
 	}
@@ -45,7 +45,7 @@ class Ajax_UnitTestCase extends \WP_Ajax_UnitTestCase {
 		foreach ( $components as $component ) {
 			$thing = $component->get_interface( 'table' );
 
-			if ( $thing instanceof EDD_DB_Table ) {
+			if ( $thing instanceof \EDD_DB_Table ) {
 				$thing->delete_all();
 				$thing->truncate();
 			}
