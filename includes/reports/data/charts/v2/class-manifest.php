@@ -306,7 +306,7 @@ class Manifest implements Error_Logger {
 	 *
 	 * @since 3.0
 	 *
-	 * @return object Parsed chart options.
+	 * @return array Parsed chart options.
 	 */
 	public function get_chart_options() {
 		$defaults = array(
@@ -318,55 +318,33 @@ class Manifest implements Error_Logger {
 				'text'    => $this->get_endpoint()->get_label(),
 			),
 			'scales'     => array(
-				'yAxes' => array(
-					'type'     => 'linear',
-					'display'  => true,
-					'position' => 'left',
-					'id'       => 'y-axis-1',
-				),
 				'xAxes' => array(
-					'type'    => 'time',
-					'display' => true,
-					'id'      => 'x-axis-1',
-					'ticks'   => array(
-						'source' => 'auto',
-					),
-					'time'    => array(
-						'min' => "moment().startOf( 'month' )",
-						'max' => "moment().endOf( 'month' )",
-						'unit' => 'day',
-						'displayFormats' => array(
-							'day' => 'MMM D',
+					array(
+						'type'     => "time",
+						'display'  => true,
+						'ticks'    => array(
+							'source' => 'auto',
 						),
+						'position' => 'bottom',
+						'time'     => array(
+							'unit' => 'day',
+							'displayFormats' => array(
+								'day' => 'MMM D',
+							),
+						),
+					),
+				),
+				'yAxes' => array(
+					array(
+						'type'     => 'linear',
+						'display'  => true,
+						'position' => 'left',
 					),
 				),
 			)
 		);
 
-		$args = wp_parse_args( $this->get_options(), $defaults );
-
-		return $this->array_to_object( $args );
-	}
-
-	/**
-	 * Converts an associative array to an object of objects (recursive!).
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $array Input array.
-	 * @return object Object of objects.
-	 */
-	private function array_to_object( $array ) {
-		$object = new \stdClass();
-
-		foreach ( $array as $key => $value ) {
-			if ( is_array( $value ) ) {
-				$value = $this->array_to_object( $value );
-			}
-			$object->{$key} = $value;
-		}
-
-		return $object;
+		return array_merge( $defaults, $this->get_options() );
 	}
 
 	/**
