@@ -329,12 +329,12 @@ function edd_ajax_add_discount_note() {
 
 	// Bail if no discount
 	if ( empty( $discount_id ) ) {
-		die( '-1' );
+		wp_die( '-1' );
 	}
 
 	// Bail if no note
 	if ( empty( $note ) ) {
-		die( '-1' );
+		wp_die( '-1' );
 	}
 
 	// Bail if user not capable
@@ -406,12 +406,12 @@ function edd_ajax_delete_discount_note() {
 
 	// Bail if no discount
 	if ( empty( $discount_id ) ) {
-		die( '-1' );
+		wp_die( '-1' );
 	}
 
 	// Bail if no note
 	if ( empty( $note_id ) ) {
-		die( '-1' );
+		wp_die( '-1' );
 	}
 
 	// Bail if user not capable
@@ -422,6 +422,6 @@ function edd_ajax_delete_discount_note() {
 	// Delete note
 	edd_delete_note( $note_id );
 
-	die( '0' );
+	wp_die( '0' );
 }
 add_action( 'wp_ajax_edd_delete_discount_note', 'edd_ajax_delete_discount_note' );
