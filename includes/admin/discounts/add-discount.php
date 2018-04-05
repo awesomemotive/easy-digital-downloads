@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
 ?><div class="wrap">
 	<h1><?php _e( 'Add New Discount', 'easy-digital-downloads' ); ?></h1>
 
+	<hr class="wp-header-end">
+
 	<form id="edd-add-discount" action="" method="post">
 
 		<?php do_action( 'edd_add_discount_form_top' ); ?>
