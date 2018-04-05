@@ -774,7 +774,10 @@ jQuery(document).ready(function ($) {
                         data: postData,
                         url: ajaxurl,
                         success: function (response) {
-                            $('.edd-discount-notes').append( response );
+                            var res = wpAjax.parseAjaxResponse( response );
+                            res = res.responses[0];
+
+                            $('.edd-discount-notes').append( res.data );
                             $('.edd-no-discount-notes').hide();
                             $('#edd-discount-note').val('');
                         }
