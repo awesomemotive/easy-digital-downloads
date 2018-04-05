@@ -243,11 +243,6 @@ class Manifest implements Error_Logger {
 	 * @since 3.0
 	 */
 	public function render() {
-		$endpoint  = $this->get_endpoint();
-		$target_el = $endpoint->get_display_arg( 'target', 'edd-reports-graph' );
-		$key_var   = substr( md5( uniqid( rand() ) ), 0, 7 );
-
-		$hydrator = EDD()->utils->get_hydrator();
 
 		$hydrator_data = array(
 			'data'    => $this->get_chart_data(),
@@ -256,8 +251,10 @@ class Manifest implements Error_Logger {
 
 		try {
 
-			$chart = $hydrator->hydrate( 'EDD\Reports\Data\Charts\v2\Chart_Template', $hydrator_data );
-			$data  = $hydrator->extract( $chart );
+			$hydrator = EDD()->utils->get_hydrator();
+
+			$chart  = $hydrator->hydrate( 'EDD\Reports\Data\Charts\v2\Chart_Template', $hydrator_data );
+			$config = $hydrator->extract( $chart );
 
 		} catch ( \ReflectionException $exception ) {
 
