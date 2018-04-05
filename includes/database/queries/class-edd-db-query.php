@@ -720,14 +720,14 @@ class EDD_DB_Query extends EDD_DB_Base {
 		$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
 		$result = $this->get_db()->get_row( $select );
 
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
 		// Bail if no row exists
 		if ( empty( $result ) ) {
 			return false;
+		}
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
 
 		// Return row
@@ -1557,14 +1557,14 @@ class EDD_DB_Query extends EDD_DB_Base {
 		// Attempt to add
 		$result = $this->get_db()->insert( $table, $data );
 
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
 		// Bail if no insert occurred
 		if ( empty( $result ) ) {
 			return false;
+		}
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
 
 		// Maybe save meta keys
@@ -1623,16 +1623,18 @@ class EDD_DB_Query extends EDD_DB_Base {
 		unset( $save[ $this->get_primary_column_name() ] );
 
 		// Attempt to update
-		$result = $this->get_db()->update( $table, $save, $where );
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
+		$result = ! empty( $save )
+			? $this->get_db()->update( $table, $save, $where )
+			: false;
 
 		// Bail if no update occurred
 		if ( empty( $result ) ) {
 			return false;
+		}
+
+		// Bail if an error occurred
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
 
 		// Maybe save meta keys
