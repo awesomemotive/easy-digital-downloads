@@ -368,51 +368,47 @@ function edd_reports_earnings() {
 			}]
 		};
 
-		myLine = Chart.Line( $( '#edd-reports-graph' ), {
-			data: lineChartData,
-			options: {
-				responsive: true,
-				hoverMode: 'index',
-				stacked: false,
-				title:{
+		lineChartOptions = {
+			responsive: true,
+			hoverMode: 'index',
+			stacked: false,
+			title:{
+				display: true,
+				text: 'Earnings Over Time'
+			},
+			scales: {
+				yAxes: [{
+					type: 'linear',
 					display: true,
-					text: 'Earnings Over Time'
-				},
-				// tooltips: {
-				// 	callbacks: {
-				// 		label: function (tooltipItem, data) {
-				// 			var label = data.datasets[tooltipItem.datasetIndex].label || '';
-				//
-				// 			if (label) {
-				// 				label += ': $' + tooltipItem.yLabel;
-				// 			}
-				// 			return label;
-				// 		},
-				// 	},
-				// },
-				scales: {
-					yAxes: [{
-						type: 'linear',
-						display: true,
-						position: "left",
-					} ],
-					xAxes: [{
-						type: 'time',
-						display: true,
-						time: {
-							min: moment().startOf( 'month' ),
-							max: moment().endOf( 'month' ),
-							unit: 'day',
-							displayFormats: {
-								day: 'MMM D',
-							},
-							tooltipFormat: 'MMMM Do, YYYY',
+					position: "left",
+				} ],
+				xAxes: [{
+					type: 'time',
+					display: true,
+					time: {
+						min: moment().startOf( 'month' ),
+						max: moment().endOf( 'month' ),
+						unit: 'day',
+						displayFormats: {
+							day: 'MMM D',
 						},
-					} ],
-				}
+						tooltipFormat: 'MMMM Do, YYYY',
+					},
+				} ],
 			}
-		});
+		};
 
+		lineChartConfig = {
+			data: lineChartData,
+			options: lineChartOptions
+		};
+
+		console.log( lineChartOptions );
+		// console.log( lineChartConfig );
+
+		myLine = Chart.Line( $( '#edd-reports-graph' ), lineChartConfig );
+
+		// console.log( myLine );
 	</script>
 
 	<?php
