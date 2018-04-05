@@ -318,6 +318,14 @@ abstract class Endpoint extends Base_Object {
 
 			$this->display_callback = $display_callback;
 
+		} elseif ( is_string( $display_callback ) && '::' === substr( $display_callback, 0, 2 ) ) {
+
+			$method = str_replace( '::', '', $display_callback );
+
+			$display_callback = array( $this, $display_callback );
+
+			$this->set_display_callback( $display_callback );
+
 		} else {
 
 			$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
@@ -356,6 +364,14 @@ abstract class Endpoint extends Base_Object {
 		if ( is_callable( $data_callback ) ) {
 
 			$this->data_callback = $data_callback;
+
+		} elseif ( is_string( $data_callback ) && '::' === substr( $data_callback, 0, 2 ) ) {
+
+			$method = str_replace( '::', '', $data_callback );
+
+			$data_callback = array( $this, $data_callback );
+
+			$this->set_data_callback( $data_callback );
 
 		} else {
 
