@@ -257,7 +257,6 @@ function get_endpoint_views() {
 				'display_callback' => 'display',
 				'display_args'     => array(
 					'colors' => 'core',
-					'target' => 'edd-reports-graph',
 				),
 			),
 		),
