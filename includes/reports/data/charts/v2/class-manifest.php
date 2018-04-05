@@ -173,7 +173,9 @@ class Manifest implements Error_Logger {
 	 * @return bool True if there are datasets, otherwise false.
 	 */
 	public function has_datasets() {
-		return ! empty( $this->get_datasets() );
+		$datasets = $this->get_datasets();
+
+		return ! empty( $datasets );
 	}
 
 	/**
