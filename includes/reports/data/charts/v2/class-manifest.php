@@ -263,12 +263,45 @@ class Manifest implements Error_Logger {
 			return;
 
 		}
+
+		$endpoint  = $this->get_endpoint();
+		$default   = "edd_reports_graph_{$endpoint->get_id()}";
+		$target_el = $endpoint->get_display_arg( 'target', $default );
+
+		// Add the chart type to the config.
+		$config['type'] = $this->get_type();
+
+		$config = json_encode( $config );
+		$type   = $this->get_type();
 		?>
 		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
 
 		<script type="application/javascript">
 
+			// Bring in chart config.
+			<?php echo esc_js( $target_el ); ?> = <?php echo $config; ?>;
 
+			// Convert dataset x-axis values to moment() objects.
+			<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
+
+				dataset.data.forEach( function( pair, index ) {
+					pair.x = moment( pair.x );
+				} );
+
+			} );
+
+			// Set min and max moment() values for the x-axis.
+			<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
+				// TODO hook up the date range.
+				xaxis.time.min = moment().startOf( 'month' );
+				xaxis.time.max = moment().endOf( 'month' );
+			} );
+
+			// Instantiate the chart.
+			<?php echo esc_js( $target_el ); ?>_chart = new Chart(
+				$( '#<?php echo esc_js( $target_el ); ?>' ),
+				<?php echo esc_js( $target_el ); ?>
+			);
 
 		</script>
 		<?php
