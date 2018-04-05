@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Add a discount
@@ -282,6 +282,22 @@ function edd_get_discount_counts() {
 
 	// Return counts
 	return array_merge( $defaults, $r );
+}
+
+/**
+ * Query for discount notes.
+ *
+ * @since 3.0.0
+ *
+ * @param int $discount_id Discount ID.
+ * @return array Retrieved notes.
+ */
+function edd_get_discount_notes( $discount_id = 0 ) {
+	return edd_get_notes( array(
+		'object_id'   => $discount_id,
+		'object_type' => 'discount',
+		'order'       => 'asc'
+	) );
 }
 
 /**
