@@ -296,6 +296,7 @@ function edd_get_discount_notes( $discount_id = 0 ) {
 	return edd_get_notes( array(
 		'object_id'   => $discount_id,
 		'object_type' => 'discount',
+		'order'       => 'asc'
 	) );
 }
 
@@ -328,11 +329,12 @@ function edd_get_discount_note_html( $note, $discount_id = 0 ) {
 		'discount_id' => $discount_id,
 	) ), 'edd_delete_discount_note_' . $note->id );
 
-	$note_html = '<div class="edd-discount-note" id="edd-discount-note-' . $note->id . '">';
-		$note_html .='<p><strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '<br/>';
-		$note_html .= make_clickable( $note->content );
-		$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-discount-note" data-note-id="' . absint( $note->id ) . '" data-discount-id="' . absint( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		$note_html .= '</p>';
+	$note_html = '<div class="edd-discount-note" id="edd-discount-note-' . esc_attr( $note->id ) . '">';
+		$note_html .='<div><strong class="edd-discount-note-author">' . esc_html( $user ) . '</strong>';
+		$note_html .= '<time datetime="' . esc_attr( $note->date_created ) . '">' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '</time>';
+		$note_html .= '<p>' . make_clickable( $note->content ) . '</p>';
+		$note_html .= '<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-note" data-note-id="' . esc_attr( $note->id ) . '" data-discount-id="' . esc_attr( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$note_html .= '</div>';
 	$note_html .= '</div>';
 
 	return $note_html;
