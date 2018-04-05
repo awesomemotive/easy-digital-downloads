@@ -766,7 +766,7 @@ jQuery(document).ready(function ($) {
                 var postData = {
                     action: 'edd_add_discount_note',
                     discount_id: $(this).data('discount-id'),
-					nonce: $('#edd_discount_note_nonce').val(),
+                    nonce: $('#edd_discount_note_nonce').val(),
                     note: $('#edd-discount-note').val()
                 };
 
