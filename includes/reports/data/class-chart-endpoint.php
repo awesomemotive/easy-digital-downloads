@@ -138,19 +138,8 @@ class Chart_Endpoint extends Endpoint {
 
 		if ( ! empty( $atts['views'][ $view_type ] ) ) {
 
-			$view_atts = $atts['views'][ $view_type ];
+			$atts['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $atts['views'][ $view_type ] );
 
-			// Inject the display callback if 'display'.
-			if ( ! empty( $view_atts['display_callback'] ) && 'display' === $view_atts['display_callback'] ) {
-				$view_atts['display_callback'] = array( $this, 'build_graph' );
-			}
-
-			// Inject the display callback if 'display'.
-			if ( ! empty( $view_atts['data_callback'] ) && 'get_data' === $view_atts['data_callback'] ) {
-				$view_atts['display_callback'] = array( $this, 'get_data' );
-			}
-
-			$atts['views'][ $view_type ] = $view_atts;
 		}
 
 		return $atts;

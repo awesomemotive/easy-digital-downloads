@@ -406,4 +406,39 @@ abstract class Endpoint extends Base_Object {
 			'endpoint_id' => $this->get_id(),
 		) );
 	}
+
+	/**
+	 * Converts callback attributes signified as methods (prefixed with '::')
+	 * to methods under the given object.
+	 *
+	 * This conversion can only really happen once the Endpoint is generated
+	 * because the object context doesn't yet exist during registration.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array  $atts   View attributes for an endpoint.
+	 * @param object $object Optional. Object under which the method should be assigned.
+	 *                       Default is the current Endpoint object.
+	 * @return array (Maybe) adjusted list of view attributes.
+	 */
+	protected function maybe_convert_callbacks_to_methods( $atts, $object = null ) {
+		$callbacks = array( 'display_callback', 'data_callback' );
+
+		if ( null === $object ) {
+			$object = $this;
+		}
+
+		foreach ( $callbacks as $callback ) {
+			if ( ! empty( $atts[ $callback ] )
+				&& ( is_string( $atts[ $callback ] ) && '::' === substr( $atts[ $callback ], 0, 2 ) )
+			) {
+				$method = str_replace( '::', '', $atts[ $callback ] );
+
+				$atts[ $callback ] = array( $object, $method );
+			}
+		}
+
+		return $atts;
+	}
+
 }
