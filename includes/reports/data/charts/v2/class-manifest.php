@@ -251,7 +251,8 @@ class Manifest implements Error_Logger {
 
 		$config = json_encode( $config );
 
-		$default   = "edd_reports_graph_{$this->get_endpoint()->get_id()}";
+		$endpoint  = $this->get_endpoint();
+		$default   = "edd_reports_graph_{$endpoint->get_id()}";
 		$target_el = $endpoint->get_display_arg( 'target', $default );
 
 		// The target ID has to be JS compatible, so no dashes.
