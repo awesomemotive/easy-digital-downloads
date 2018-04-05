@@ -1344,7 +1344,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 			if ( $show_notice ) {
 				// Throw deprecated notice if WP_DEBUG is defined and on
-				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloads' ) );
 
 				$backtrace = debug_backtrace();
 				trigger_error( print_r( $backtrace, 1 ) );
@@ -1358,7 +1358,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 			if ( $show_notice ) {
 				// Throw deprecated notice if WP_DEBUG is defined and on
-				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloads' ) );
 
 				$backtrace = debug_backtrace();
 				trigger_error( print_r( $backtrace, 1 ) );
@@ -1372,7 +1372,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 			if ( $show_notice ) {
 				// Throw deprecated notice if WP_DEBUG is defined and on
-				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+				trigger_error( __( 'The _edd_discount_status postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD_Discount object to get the relevant data, instead.', 'easy-digital-downloads' ) );
 
 				$backtrace = debug_backtrace();
 				trigger_error( print_r( $backtrace, 1 ) );
