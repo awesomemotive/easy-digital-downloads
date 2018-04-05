@@ -24,14 +24,13 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures.
 	 */
 	public static function wpSetUpBeforeClass() {
-		$log_id = edd_add_log( array(
-			'object_id'   => 1234,
-			'object_type' => 'order',
-			'title'       => 'Order Status Change',
-			'message'     => 'Order status has changed from pending to completed.',
-		) );
+		self::$log = parent::edd()->log->create_and_get();
+	}
 
-		self::$log = new Log( $log_id );
+	public function tearDown() {
+		parent::tearDown();
+
+		edd_get_component_interface( 'log', 'meta' )->delete_all();
 	}
 
 	/**
@@ -86,8 +85,8 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD_DB_Log_Meta::get_meta()
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
-	public function test_get_metadata_with_no_args_should_return_all_keys() {
-		$this->assertNotEmpty( self::$log->get_meta() );
+	public function test_get_metadata_with_no_args_should_be_empty() {
+		$this->assertEmpty( self::$log->get_meta() );
 	}
 
 	/**
@@ -123,6 +122,4 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	public function test_delete_metadata_with_invalid_key_should_return_false() {
 		$this->assertFalse( self::$log->delete_meta( 'key_that_does_not_exist' ) );
 	}
-
-
 }
