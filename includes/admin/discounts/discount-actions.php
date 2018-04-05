@@ -307,3 +307,135 @@ function edd_deactivate_discount( $data = array() ) {
 	edd_die();
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
+
+/** Notes *********************************************************************/
+
+/**
+ * Add a discount note via AJAX.
+ *
+ * @since 3.0.0
+ */
+function edd_ajax_add_discount_note() {
+
+	// Check AJAX referrer
+	check_ajax_referer( 'edd_discount_note', 'nonce' );
+
+	// Get discount ID
+	$discount_id = ! empty( $_POST['discount_id'] )
+		? absint( $_POST['discount_id'] )
+		: 0;
+
+	// Get note contents (maybe sanitize)
+	$note        = ! empty( $_POST['note'] )
+		? wp_kses( stripslashes_deep( $_POST['note'] ), array() )
+		: '';
+
+	// Bail if no discount
+	if ( empty( $discount_id ) ) {
+		wp_die( -1 );
+	}
+
+	// Bail if no note
+	if ( empty( $note ) ) {
+		wp_die( -1 );
+	}
+
+	// Bail if user not capable
+	if ( ! current_user_can( 'manage_shop_discounts', $discount_id ) ) {
+		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Add the note
+	$note_id = edd_add_note( array(
+		'object_id'   => $discount_id,
+		'object_type' => 'discount',
+		'content'     => $note,
+		'user_id'     => get_current_user_id()
+	) );
+
+	$x = new WP_Ajax_Response();
+	$x->add(
+		array(
+			'what' => 'edd_discount_note_html',
+			'data' => edd_get_discount_note_html( $note_id, $discount_id ),
+		)
+	);
+	$x->send();
+}
+add_action( 'wp_ajax_edd_add_discount_note', 'edd_ajax_add_discount_note' );
+
+/**
+ * Delete a discount note.
+ *
+ * @since 3.0.0
+ *
+ * @param array $data Data from $_GET.
+ */
+function edd_delete_discount_note( $data ) {
+
+	// Bail if missing any data
+	if ( empty( $data['_wpnonce'] ) || empty( $data['note_id'] ) || empty( $data['discount_id'] ) ) {
+		return;
+	}
+
+	// Bail if nonce fails
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_discount_note_' . $data['note_id'] ) ) {
+		return;
+	}
+
+	// Bail if not capable
+	if ( ! current_user_can( 'manage_shop_discounts', $data['discount_id'] ) ) {
+		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$edit_discount_url = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&edd-message=discount-note-deleted&discount=' . absint( $data['discount_id'] ) );
+
+	edd_delete_note( $data['note_id'] );
+
+	wp_redirect( $edit_discount_url );
+}
+add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
+
+/**
+ * Delete a discount note via AJAX.
+ *
+ * @since 3.0.0
+ */
+function edd_ajax_delete_discount_note() {
+
+	// Check AJAX referrer
+	check_ajax_referer( 'edd_discount_note', 'nonce' );
+
+	// Get discount ID
+	$discount_id = ! empty( $_POST['discount_id'] )
+		? absint( $_POST['discount_id'] )
+		: 0;
+
+	// Get note ID
+	$note_id     = ! empty( $_POST['note_id'] )
+		? absint( $_POST['note_id'] )
+		: 0;
+
+	// Bail if no discount
+	if ( empty( $discount_id ) ) {
+		wp_die( -1 );
+	}
+
+	// Bail if no note
+	if ( empty( $note_id ) ) {
+		wp_die( -1 );
+	}
+
+	// Bail if user not capable
+	if ( ! current_user_can( 'manage_shop_discounts', $discount_id ) ) {
+		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Delete note
+	if ( edd_delete_note( $note_id ) ) {
+		wp_die( 1 );
+	}
+
+	wp_die( 0 );
+}
+add_action( 'wp_ajax_edd_delete_discount_note', 'edd_ajax_delete_discount_note' );
