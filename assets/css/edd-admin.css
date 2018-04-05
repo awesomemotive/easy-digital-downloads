@@ -1422,7 +1422,8 @@ td.edd_order_price {
 #edd-item-tab-wrapper {
 	float:left;
 	width: 18%;
-	z-index: 1;
+	z-index: 3;
+	position: relative;
 }
 #edd-item-tab-wrapper-list {
 	background: #fff;
@@ -1434,6 +1435,7 @@ td.edd_order_price {
 	color: #444;
 	font-size: 12px;
 	border-bottom: 1px solid #e5e5e5;
+	border-right: 1px solid #e5e5e5;
 	margin-bottom: 0;
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
@@ -1449,6 +1451,7 @@ td.edd_order_price {
 	display: block;
 	background-color: #fff;
 	padding: 8px 10px 8px 6px;
+	border-right-color: #fff;
 }
 #edd-item-tab-wrapper-list .inactive a,
 #edd-item-tab-wrapper-list .inactive a:visited {
@@ -1692,7 +1695,8 @@ td.edd_order_price {
 		background: #fff;
 		margin: 0;
 	}
-	#edd-item-tab-wrapper-list li {
+	#edd-item-tab-wrapper-list li,
+	#edd-item-tab-wrapper-list li.active {
 		float: left;
 		display: inline;
 		font-size: 14px;
