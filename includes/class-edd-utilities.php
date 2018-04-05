@@ -74,9 +74,6 @@ class EDD_Utilities {
 		// Date management.
 		require_once $utils_dir . 'class-date.php';
 
-		// Hydrator.
-		require_once $utils_dir . 'class-hydrator.php';
-
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
 	}
@@ -231,17 +228,6 @@ class EDD_Utilities {
 	 */
 	public function get_time_format() {
 		return $this->time_format;
-	}
-
-	/**
-	 * Retrieves a Hydrator instance.
-	 *
-	 * @since 3.0
-	 *
-	 * @return \EDD\Utils\Hydrator
-	 */
-	public function get_hydrator() {
-		return new EDD\Utils\Hydrator();
 	}
 
 }
