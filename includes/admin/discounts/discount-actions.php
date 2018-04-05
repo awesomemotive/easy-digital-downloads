@@ -317,6 +317,9 @@ add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
  */
 function edd_ajax_add_discount_note() {
 
+	// Check AJAX referrer
+	check_ajax_referer( 'edd_discount_note', 'nonce' );
+
 	// Get discount ID
 	$discount_id = ! empty( $_POST['discount_id'] )
 		? absint( $_POST['discount_id'] )
@@ -399,6 +402,9 @@ add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
  * @since 3.0.0
  */
 function edd_ajax_delete_discount_note() {
+
+	// Check AJAX referrer
+	check_ajax_referer( 'edd_discount_note', 'nonce' );
 
 	// Get discount ID
 	$discount_id = ! empty( $_POST['discount_id'] )
