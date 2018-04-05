@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Bail if no discount passed
 if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
