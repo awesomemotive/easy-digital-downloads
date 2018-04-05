@@ -243,36 +243,17 @@ class Manifest implements Error_Logger {
 	 * @since 3.0
 	 */
 	public function render() {
+		$config = new \stdClass();
 
-		$hydrator_data = array(
-			'data'    => $this->get_chart_data(),
-			'options' => $this->get_chart_options()
-		);
-
-		try {
-
-			$hydrator = EDD()->utils->get_hydrator();
-
-			$chart  = $hydrator->hydrate( 'EDD\Reports\Data\Charts\v2\Chart_Template', $hydrator_data );
-			$config = $hydrator->extract( $chart );
-
-		} catch ( \ReflectionException $exception ) {
-
-			edd_debug_log( $exception->getMessage() );
-
-			return;
-
-		}
-
-		$endpoint  = $this->get_endpoint();
-		$default   = "edd_reports_graph_{$endpoint->get_id()}";
-		$target_el = $endpoint->get_display_arg( 'target', $default );
-
-		// Add the chart type to the config.
-		$config['type'] = $this->get_type();
+		$config->type    = $this->get_type();
+		$config->data    = $this->get_chart_data();
+		$config->options = $this->get_chart_options();
 
 		$config = json_encode( $config );
-		$type   = $this->get_type();
+
+		$default   = "edd_reports_graph_{$this->get_endpoint()->get_id()}";
+		$target_el = $endpoint->get_display_arg( 'target', $default );
+
 		?>
 		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
 
