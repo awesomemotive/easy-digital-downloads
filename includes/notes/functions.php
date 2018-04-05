@@ -64,7 +64,7 @@ function edd_update_note( $note_id = 0, $data = array() ) {
 }
 
 /**
- * Query for a note.
+ * Get a note by ID.
  *
  * @since 3.0.0
  *
@@ -76,7 +76,7 @@ function edd_get_note( $note_id = 0 ) {
 }
 
 /**
- * Query for notes.
+ * Get a note by a specific field's value.
  *
  * @since 3.0.0
  *
