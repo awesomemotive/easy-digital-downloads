@@ -84,17 +84,7 @@ final class Table_Endpoint extends Endpoint {
 				$endpoint;
 			}
 
-			// Inject the default list table display callback if 'display'.
-			if ( ! empty( $view_atts['display_callback'] ) && 'display' === $view_atts['display_callback'] ) {
-				$view_atts['display_callback'] = array( $list_table, 'display' );
-			}
-
-			// Inject the default list table data callback if 'prepare_items'.
-			if ( ! empty( $view_atts['data_callback'] ) && 'prepare_items' === $view_atts['data_callback'] ) {
-				$view_atts['data_callback'] = array( $list_table, 'prepare_items' );
-			}
-
-			$endpoint['views'][ $view_type ] = $view_atts;
+			$endpoint['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $view_atts, $list_table );;
 		}
 
 		return $endpoint;
