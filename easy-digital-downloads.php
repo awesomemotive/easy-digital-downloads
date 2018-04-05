@@ -378,12 +378,12 @@ final class Easy_Digital_Downloads {
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-api-request-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-file-download-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/log-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/notes/class-note.php';
-		require_once EDD_PLUGIN_DIR . 'includes/notes/note-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/class-edd-api-request-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/class-edd-file-download-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/class-edd-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/notes/class-edd-note.php';
+		require_once EDD_PLUGIN_DIR . 'includes/notes/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
