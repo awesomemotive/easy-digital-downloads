@@ -5,6 +5,8 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
+new \EDD\Reports\Init();
+
 /**
  * Tests for the Endpoint object.
  *
@@ -15,20 +17,6 @@ if ( ! class_exists( '\EDD\Reports\Init' ) ) {
  * @coversDefaultClass \EDD\Reports\Data\Base_Object
  */
 class Base_Object_Tests extends \EDD_UnitTestCase {
-
-	/**
-	 * Reports fixture.
-	 *
-	 * @var \EDD\Reports\Init
-	 */
-	protected static $reports;
-
-	/**
-	 * Set up fixtures once.
-	 */
-	public static function wpSetUpBeforeClass() {
-		self::$reports = new \EDD\Reports\Init();
-	}
 
 	/**
 	 * @covers ::display()
