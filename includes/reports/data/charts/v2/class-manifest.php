@@ -254,6 +254,8 @@ class Manifest implements Error_Logger {
 		$default   = "edd_reports_graph_{$this->get_endpoint()->get_id()}";
 		$target_el = $endpoint->get_display_arg( 'target', $default );
 
+		// The target ID has to be JS compatible, so no dashes.
+		$target_el = str_replace( '-', '_', $target_el );
 		?>
 		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
 
