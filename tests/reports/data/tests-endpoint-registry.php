@@ -253,25 +253,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::register_endpoint()
-	 * @group edd_errors
-	 * @throws \EDD_Exception
-	 */
-	public function test_register_endpoint_with_missing_required_view_sub_attribute_should_throw_exception() {
-		$this->setExpectedException(
-			'\EDD\Reports\Exceptions\Invalid_Parameter',
-			"The 'data_callback' parameter for the 'tile' view is missing or invalid in 'EDD\Reports\Data\Endpoint_Registry::validate_view_attributes'."
-		);
-
-		$added = $this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array()
-			)
-		) );
-	}
-
-	/**
-	 * @covers ::register_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_no_priority_should_set_priority_10() {
