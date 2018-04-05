@@ -795,7 +795,7 @@ class EDD_Logging {
 
 				if ( $show_notice ) {
 					// Throw deprecated notice if WP_DEBUG is defined and on
-					trigger_error( __( 'The EDD file download log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\File_Download_Log object to get the relevant data, instead.', 'easy-digital-downloadsd' ) );
+					trigger_error( __( 'The EDD file download log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\File_Download_Log object to get the relevant data, instead.', 'easy-digital-downloads' ) );
 					$backtrace = debug_backtrace();
 					trigger_error( print_r( $backtrace, 1 ) );
 				}

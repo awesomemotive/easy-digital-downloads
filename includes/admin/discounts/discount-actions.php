@@ -73,7 +73,9 @@ function edd_admin_add_discount( $data = array() ) {
 				break;
 
 			default:
-				$to_add[ $column ] = sanitize_text_field( $value );
+				$to_add[ $column ] = is_array( $value )
+					? array_map( 'sanitize_text_field', $value )
+					: sanitize_text_field( $value );
 				break;
 		}
 	}
