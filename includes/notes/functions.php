@@ -21,11 +21,14 @@ defined( 'ABSPATH' ) || exit;
  * @return int
  */
 function edd_add_note( $data = array() ) {
-	// An object ID and object type must be supplied for every note that is inserted into the database.
+
+	// An object ID and object type must be supplied for every note that is
+	// inserted into the database.
 	if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
 		return false;
 	}
 
+	// Instantiate a query object
 	$notes = new EDD_Note_Query();
 
 	return $notes->add_item( $data );
@@ -61,7 +64,7 @@ function edd_update_note( $note_id = 0, $data = array() ) {
 }
 
 /**
- * Query for a note.
+ * Get a note by ID.
  *
  * @since 3.0.0
  *
@@ -73,26 +76,19 @@ function edd_get_note( $note_id = 0 ) {
 }
 
 /**
- * Count notes.
+ * Get a note by a specific field's value.
  *
  * @since 3.0.0
  *
- * @param array $args
- * @return int
+ * @param string $field Database table field.
+ * @param string $value Value of the row.
+ * @return object
  */
-function edd_count_notes( $args = array() ) {
-	$count_args = array(
-		'number' => 0,
-		'count'  => true,
+function edd_get_note_by( $field = '', $value = '' ) {
+	$notes = new EDD_Note_Query();
 
-		'update_cache'      => false,
-		'update_meta_cache' => false
-	);
-
-	$args = array_merge( $args, $count_args );
-
-	$notes = new EDD_Note_Query( $args );
-	return absint( $notes->found_items );
+	// Return note
+	return $notes->get_item_by( $field, $value );
 }
 
 /**
@@ -104,32 +100,42 @@ function edd_count_notes( $args = array() ) {
  * @return array
  */
 function edd_get_notes( $args = array() ) {
-	// Query for notes
-	$notes = new EDD_Note_Query( $args );
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$notes = new EDD_Note_Query();
 
 	// Return notes
-	return $notes->items;
+	return $notes->query( $r );
 }
 
 /**
- * Query for notes.
+ * Count notes.
  *
  * @since 3.0.0
  *
- * @param string $field Database table field.
- * @param string $value Value of the row.
- * @return object
+ * @param array $args Arguments.
+ * @return int
  */
-function edd_get_note_by( $field = '', $value = '' ) {
-	// Query for note
-	$notes = new EDD_Note_Query( array(
-		'number' => 1,
-		$field   => $value
+function edd_count_notes( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
 	) );
 
-	// Return note
-	return reset( $notes->items );
+	// Query for count(s)
+	$notes = new EDD_Note_Query( $r );
+
+	// Return count(s)
+	return absint( $notes->found_items );
 }
+
+/** Meta **********************************************************************/
 
 /**
  * Add meta data field to a note.

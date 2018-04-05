@@ -328,7 +328,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 		) );
 
 		foreach ( $logs as $log ) {
-			$this->assertInstanceOf( Log::class, $log );
+			$this->assertInstanceOf( 'EDD\\Logs\\Log', $log );
 		}
 	}
 

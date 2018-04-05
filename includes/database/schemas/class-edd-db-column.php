@@ -332,7 +332,7 @@ class EDD_DB_Column {
 
 			// Callback is callable
 			if ( isset( $callbacks[ $key ] ) && is_callable( $callbacks[ $key ] ) ) {
-				$r[ $key ] = $callbacks[ $key ]( $value );
+				$r[ $key ] = call_user_func( $callbacks[ $key ], $value );
 
 			// Callback is malformed so just let it through to avoid breakage
 			} else {

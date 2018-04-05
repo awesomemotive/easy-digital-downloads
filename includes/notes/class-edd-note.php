@@ -194,27 +194,33 @@ class Note {
 	 * @since 3.0
 	 * @access protected
 	 *
-	 * @param int $note_id Note ID.
+	 * @param int|object $data Note data or note ID.
 	 */
-	public function __construct( $note_id = 0 ) {
-		$note = edd_get_note( $note_id );
+	public function __construct( $data ) {
+		$note = null;
 
-		if ( is_object( $note ) ) {
+		if ( is_object( $data ) ) {
+			$note = $data;
+		} else if ( is_numeric( $data ) ) {
+			$note = edd_get_note( $data);
+		}
+
+		if ( $note ) {
 			foreach ( get_object_vars( $note ) as $key => $value ) {
 				$this->$key = $value;
 			}
-		}
 
-		/**
-		 * We fill object vars which have the same name as the object vars in WP_Comment for backwards compatibility
-		 * purposes.
-		 */
-		$this->comment_ID       = absint( $this->id );
-		$this->comment_post_ID  = $this->object_id;
-		$this->comment_type     = $this->object_type;
-		$this->comment_date     = $this->date_created;
-		$this->comment_date_gmt = $this->date_created;
-		$this->comment_content  = $this->content;
+			/**
+			 * We fill object vars which have the same name as the object vars in WP_Comment for backwards compatibility
+			 * purposes.
+			 */
+			$this->comment_ID       = absint( $this->id );
+			$this->comment_post_ID  = $this->object_id;
+			$this->comment_type     = $this->object_type;
+			$this->comment_date     = $this->date_created;
+			$this->comment_date_gmt = $this->date_created;
+			$this->comment_content  = $this->content;
+		}
 	}
 
 	/**

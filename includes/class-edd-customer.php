@@ -102,27 +102,29 @@ class EDD_Customer extends EDD_DB_Customer {
 	 * @since 2.3
 	 */
 	public function __construct( $_id_or_email = false, $by_user_id = false ) {
-
 		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
 			return false;
 		}
 
 		$by_user_id = is_bool( $by_user_id ) ? $by_user_id : false;
 
-		if ( is_numeric( $_id_or_email ) ) {
-			$field = $by_user_id ? 'user_id' : 'id';
+		if ( is_object( $_id_or_email ) ) {
+			$customer = $_id_or_email;
 		} else {
-			$field = 'email';
-		}
+			if ( is_numeric( $_id_or_email ) ) {
+				$field = $by_user_id ? 'user_id' : 'id';
+			} else {
+				$field = 'email';
+			}
 
-		$customer = edd_get_customer_by( $field, $_id_or_email );
+			$customer = edd_get_customer_by( $field, $_id_or_email );
+		}
 
 		if ( empty( $customer ) || ! is_object( $customer ) ) {
 			return false;
 		}
 
 		$this->setup_customer( $customer );
-
 	}
 
 	/**
@@ -213,10 +215,9 @@ class EDD_Customer extends EDD_DB_Customer {
 		$created = false;
 
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
-		if ( edd_add_customer( $data ) ) {
-
+		if ( $customer_id = edd_add_customer( $data ) ) {
 			// We've successfully added/updated the customer, reset the class vars with the new data
-			$customer = edd_get_customer_by( 'email', $args['email'] );
+			$customer = edd_get_customer( $customer_id );
 
 			// Setup the customer data with the values from DB
 			$this->setup_customer( $customer );

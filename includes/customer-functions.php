@@ -25,6 +25,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return mixed False on failure. ID of new EDD_Customer object on success.
  */
 function edd_add_customer( $data = array() ) {
+
+	// An email must be given for every customer that is created.
+	if ( ! isset( $data['email'] ) || empty( $data['email'] ) ) {
+		return false;
+	}
+
+	// Instantiate a query object
 	$customers = new EDD_Customer_Query();
 
 	return $customers->add_item( $data );
@@ -45,14 +52,49 @@ function edd_delete_customer( $customer_id = 0 ) {
 	return $customers->delete_item( $customer_id );
 }
 
-function edd_get_customer( $customer_id = 0 ) {
-	return edd_get_customer_by( 'id', $customer_id );
-}
-
+/**
+ * Update a customer.
+ *
+ * @since 3.0.0
+ * @param int $customer_id Customer ID.
+ * @param array $data
+ *
+ * @return int
+ */
 function edd_update_customer( $customer_id = 0, $data = array() ) {
 	$customers = new EDD_Customer_Query();
 
 	return $customers->update_item( $customer_id, $data );
+}
+
+/**
+ * Get a customer item by ID.
+ *
+ * @since 3.0.0
+ * @param int $customer_id Customer ID.
+ * @param array $data
+ *
+ * @return int
+ */
+function edd_get_customer( $customer_id = 0 ) {
+	return edd_get_customer_by( 'id', $customer_id );
+}
+
+/**
+ * Get a customer item by a specific field's value.
+ *
+ * @since 3.0.0
+ * @param array $args
+ *
+ * @return object
+ */
+function edd_get_customer_by( $field = '', $value = '' ) {
+
+	// Instantiate a query object
+	$customers = new EDD_Customer_Query();
+
+	// Get an item
+	return $customers->get_item_by( $field, $value );
 }
 
 /**
@@ -65,31 +107,16 @@ function edd_update_customer( $customer_id = 0, $data = array() ) {
  */
 function edd_get_customers( $args = array() ) {
 
-	// Query for customers
-	$customers = new EDD_Customer_Query( $args );
-
-	// Return customers
-	return $customers->items;
-}
-
-/**
- * Query for customers
- *
- * @since 3.0.0
- * @param array $args
- *
- * @return object
- */
-function edd_get_customer_by( $field = '', $value = '' ) {
-
-	// Query for customer
-	$customers = new EDD_Customer_Query( array(
-		'number' => 1,
-		$field   => $value
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
 	) );
 
-	// Return customer
-	return reset( $customers->items );
+	// Instantiate a query object
+	$customers = new EDD_Customer_Query();
+
+	// Return customers
+	return $customers->query( $r );
 }
 
 /**
@@ -97,20 +124,20 @@ function edd_get_customer_by( $field = '', $value = '' ) {
  *
  * @since 3.0.0
  *
+ * @param array $args Arguments.
  * @return int
  */
-function edd_get_customer_count() {
+function edd_count_customers( $args = array() ) {
 
-	// Query for count
-	$customers = new EDD_Customer_Query( array(
-		'number' => 0,
-		'count'  => true,
-
-		'update_cache'      => false,
-		'update_meta_cache' => false
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
 	) );
 
-	// Return count
+	// Query for count(s)
+	$customers = new EDD_Customer_Query( $r );
+
+	// Return count(s)
 	return absint( $customers->found_items );
 }
 
@@ -124,6 +151,8 @@ function edd_get_customer_count() {
 function edd_get_edit_customers_role() {
 	return apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 }
+
+/** Meta **********************************************************************/
 
 /**
  * Add meta data field to a customer.
