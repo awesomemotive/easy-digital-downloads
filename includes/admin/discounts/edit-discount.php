@@ -41,6 +41,8 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
 ?><div class="wrap">
 	<h1><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?></h1>
 
+	<hr class="wp-header-end">
+
 	<form id="edd-edit-discount" action="" method="post">
 
 		<?php do_action( 'edd_edit_discount_form_top', $discount->id, $discount ); ?>

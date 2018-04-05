@@ -57,6 +57,8 @@ function edd_customers_list() {
     <div class="wrap">
         <h1><?php _e( 'Customers', 'easy-digital-downloads' ); ?></h1>
 
+		<hr class="wp-header-end">
+
 		<?php do_action( 'edd_customers_table_top' ); ?>
 
         <form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
@@ -72,6 +74,7 @@ function edd_customers_list() {
 		<?php do_action( 'edd_customers_table_bottom' ); ?>
 
     </div>
+
 	<?php
 }
 
