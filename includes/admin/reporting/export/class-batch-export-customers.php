@@ -142,7 +142,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 		// We can't count the number when getting them for a specific download
 		if( empty( $this->download ) ) {
 
-			$total = edd_get_customer_count();
+			$total = edd_count_customers();
 
 			if( $total > 0 ) {
 

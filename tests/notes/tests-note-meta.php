@@ -26,6 +26,12 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 		self::$note = parent::edd()->note->create_and_get();
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+
+		edd_get_component_interface( 'note', 'meta' )->delete_all();
+	}
+
 	/**
 	 * @covers \EDD_DB_Note_Meta::add_meta()
 	 * @covers Note::add_meta()
@@ -70,7 +76,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	 * @covers \EDD_DB_Note_Meta::get_meta()
 	 * @covers Note::get_meta()
 	 */
-	public function test_get_metadata_with_no_key_should_be_empty() {
+	public function test_get_metadata_with_no_args_should_be_empty() {
 		$this->assertEmpty( self::$note->get_meta() );
 	}
 
