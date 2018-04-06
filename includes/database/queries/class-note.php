@@ -49,7 +49,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Notes';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Notes';
 
 	/** Item ******************************************************************/
 
@@ -78,7 +78,7 @@ class Note extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD\\Notes\\Note';
+	public $item_shape = '\\EDD\\Notes\\Note';
 
 	/** Cache *****************************************************************/
 

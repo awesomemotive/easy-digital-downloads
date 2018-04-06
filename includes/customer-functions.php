@@ -32,7 +32,7 @@ function edd_add_customer( $data = array() ) {
 	}
 
 	// Instantiate a query object
-	$customers = new EDD_Customer_Query();
+	$customers = new EDD\Database\Queries\Customer();
 
 	return $customers->add_item( $data );
 }
@@ -47,7 +47,7 @@ function edd_add_customer( $data = array() ) {
  * @return mixed False on failure. ID of new EDD_Customer object on success.
  */
 function edd_delete_customer( $customer_id = 0 ) {
-	$customers = new EDD_Customer_Query();
+	$customers = new EDD\Database\Queries\Customer();
 
 	return $customers->delete_item( $customer_id );
 }
@@ -62,7 +62,7 @@ function edd_delete_customer( $customer_id = 0 ) {
  * @return int
  */
 function edd_update_customer( $customer_id = 0, $data = array() ) {
-	$customers = new EDD_Customer_Query();
+	$customers = new EDD\Database\Queries\Customer();
 
 	return $customers->update_item( $customer_id, $data );
 }
@@ -91,7 +91,7 @@ function edd_get_customer( $customer_id = 0 ) {
 function edd_get_customer_by( $field = '', $value = '' ) {
 
 	// Instantiate a query object
-	$customers = new EDD_Customer_Query();
+	$customers = new EDD\Database\Queries\Customer();
 
 	// Get an item
 	return $customers->get_item_by( $field, $value );
@@ -113,7 +113,7 @@ function edd_get_customers( $args = array() ) {
 	) );
 
 	// Instantiate a query object
-	$customers = new EDD_Customer_Query();
+	$customers = new EDD\Database\Queries\Customer();
 
 	// Return customers
 	return $customers->query( $r );
@@ -135,7 +135,7 @@ function edd_count_customers( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$customers = new EDD_Customer_Query( $r );
+	$customers = new EDD\Database\Queries\Customer( $r );
 
 	// Return count(s)
 	return absint( $customers->found_items );

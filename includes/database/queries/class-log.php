@@ -49,7 +49,7 @@ class Log extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Logs';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Logs';
 
 	/** Item ******************************************************************/
 

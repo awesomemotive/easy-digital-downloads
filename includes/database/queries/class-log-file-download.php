@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  *
- * @see \EDD\Database\Queries\Log_File_Download_Log::__construct() for accepted arguments.
+ * @see \EDD\Database\Queries\Log_File_Download::__construct() for accepted arguments.
  */
-class Log_File_Download_Log extends Base {
+class Log_File_Download extends Base {
 
 	/** Table Properties ******************************************************/
 
@@ -49,7 +49,7 @@ class Log_File_Download_Log extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Logs_File_Downloads';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Logs_File_Downloads';
 
 	/** Item ******************************************************************/
 

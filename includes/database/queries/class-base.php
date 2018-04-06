@@ -10,6 +10,8 @@
  */
 namespace EDD\Database\Queries;
 
+use EDD\Database\Schemas\Column;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -184,7 +186,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0.0
 	 * @access public
-	 * @var object WP_Meta_Query
+	 * @var object \WP_Meta_Query
 	 */
 	protected $meta_query = false;
 
@@ -193,7 +195,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0.0
 	 * @access public
-	 * @var object WP_Date_Query
+	 * @var \WP_Date_Query
 	 */
 	protected $date_query = false;
 
@@ -375,8 +377,8 @@ class Base extends \EDD\Database\Base {
 		// Loop through columns array
 		foreach ( $columns as $column ) {
 			if ( is_array( $column ) ) {
-				$new_columns[] = new EDD_DB_Column( $column );
-			} elseif ( $column instanceof EDD_DB_Column ) {
+				$new_columns[] = new Column( $column );
+			} elseif ( $column instanceof Column ) {
 				$new_columns[] = $column;
 			}
 		}
@@ -1197,7 +1199,7 @@ class Base extends \EDD\Database\Base {
 		// Maybe perform a meta-query
 		$meta_query = $this->query_vars['meta_query'];
 		if ( ! empty( $meta_query ) && is_array( $meta_query ) ) {
-			$this->meta_query = new WP_Meta_Query( $meta_query );
+			$this->meta_query = new \WP_Meta_Query( $meta_query );
 			$table            = $this->apply_prefix( $this->item_name );
 			$clauses          = $this->meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
 
@@ -1218,7 +1220,7 @@ class Base extends \EDD\Database\Base {
 			: $this->query_vars['date_query'];
 
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-			$this->date_query    = new WP_Date_Query( $date_query, '.' );
+			$this->date_query    = new \WP_Date_Query( $date_query, '.' );
 			$where['date_query'] = preg_replace( $and, '', $this->date_query->get_sql() );
 		}
 

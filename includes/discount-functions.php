@@ -27,7 +27,7 @@ function edd_add_discount( $data = array() ) {
 	unset( $data['product_reqs'] );
 	unset( $data['excluded_products'] );
 
-	$discounts = new EDD_Discount_Query();
+	$discounts = new EDD\Database\Queries\Discount();
 
 	$discount_id = $discounts->add_item( $data );
 
@@ -68,7 +68,7 @@ function edd_add_discount( $data = array() ) {
  * @return int
  */
 function edd_delete_discount( $discount_id = 0 ) {
-	$discounts = new EDD_Discount_Query();
+	$discounts = new EDD\Database\Queries\Discount();
 
 	do_action( 'edd_pre_delete_discount', $discount_id );
 
@@ -119,7 +119,7 @@ function edd_get_discount_by_code( $code = '' ) {
  * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by( $field = '', $value = '' ) {
-	$discounts = new EDD_Discount_Query();
+	$discounts = new EDD\Database\Queries\Discount();
 
 	// Return item
 	return $discounts->get_item_by( $field, $value );
@@ -187,7 +187,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		unset( $data['excluded_products'] );
 	}
 
-	$discounts = new EDD_Discount_Query();
+	$discounts = new EDD\Database\Queries\Discount();
 
 	return $discounts->update_item( $discount_id, $data );
 }
@@ -214,7 +214,7 @@ function edd_get_discounts( $args = array() ) {
 	}
 
 	// Instantiate a query object
-	$discounts = new EDD_Discount_Query();
+	$discounts = new EDD\Database\Queries\Discount();
 
 	// Return discounts
 	return $discounts->query( $r );
@@ -236,7 +236,7 @@ function edd_get_discount_count( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$discounts = new EDD_Discount_Query( $r );
+	$discounts = new EDD\Database\Queries\Discount( $r );
 
 	// Return count(s)
 	return absint( $discounts->found_items );
@@ -260,7 +260,7 @@ function edd_get_discount_counts() {
 	);
 
 	// Query for count
-	$counts = new EDD_Discount_Query( array(
+	$counts = new EDD\Database\Queries\Discount( array(
 		'count'   => true,
 		'groupby' => 'status'
 	) );
