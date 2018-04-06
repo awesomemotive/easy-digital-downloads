@@ -61,10 +61,10 @@ abstract class Dataset implements Error_Logger {
 	 * @since 3.0.0
 	 * @var   array
 	 */
-	protected $global_fields = [
+	protected $global_fields = array(
 		'label', 'xAxisID', 'yAxisID', 'data',
 		'backgroundColor', 'borderColor', 'borderWidth',
-	];
+	);
 
 	/**
 	 * Sets up the dataset for population.
