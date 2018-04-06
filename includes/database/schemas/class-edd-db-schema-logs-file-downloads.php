@@ -1,15 +1,24 @@
 <?php
-
 /**
- * Logs: EDD_DB_Schema class
+ * File Download Logs Schema Class.
  *
- * @package Plugins/EDD/Database/Schema/Logs/Downloads
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Schemas;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema_Logs_File_Downloads extends EDD_DB_Schema {
+/**
+ * File Download Logs Schema Class.
+ *
+ * @since 3.0.0
+ */
+class Logs_File_Downloads extends Base {
 
 	/**
 	 * Array of database column objects

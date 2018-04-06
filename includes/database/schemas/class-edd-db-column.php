@@ -1,22 +1,26 @@
 <?php
-
 /**
- * Orders: EDD_DB_Query class
+ * Base Schema Column Class.
  *
- * @package Plugins/EDD/Database/Queries
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Schemas;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Base class used for querying custom database tables.
+ * Base class used for each column for a custom table.
  *
  * @since 3.0.0
  *
- * @see EDD_DB_Query::__construct() for accepted arguments.
+ * @see \EDD\Database\Schemas\Column::__construct() for accepted arguments.
  */
-class EDD_DB_Column {
+class Column {
 
 	/**
 	 * Name for the database column

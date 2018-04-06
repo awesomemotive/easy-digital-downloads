@@ -1,15 +1,24 @@
 <?php
-
 /**
- * Log API Requests: EDD_DB_Schema class
+ * API Request Logs Schema Class.
  *
- * @package Plugins/EDD/Database/Schema/Logs/Requests
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Schemas;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema_Logs_Api_Requests extends EDD_DB_Schema {
+/**
+ * API Request Logs Schema Class.
+ *
+ * @since 3.0.0
+ */
+class Logs_Api_Requests extends Base {
 
 	/**
 	 * Array of database column objects
