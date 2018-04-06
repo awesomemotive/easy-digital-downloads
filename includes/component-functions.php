@@ -50,15 +50,15 @@ function edd_register_component( $name = '', $args = array() ) {
 	// Parse arguments
 	$r = wp_parse_args( $args, array(
 		'name'   => $name,
-		'schema' => 'EDD_DB_Schema',
-		'table'  => 'EDD_DB_Table',
-		'query'  => 'EDD_DB_Query',
-		'object' => 'EDD_DB_Object',
+		'schema' => '\\EDD\\Database\\Schemas\\Base',
+		'table'  => '\\EDD\\Database\\Tables\\Base',
+		'query'  => '\\EDD\\Database\\Queries\\Base',
+		'object' => '\\EDD\\Database\\Objects\\Base',
 		'meta'   => false
 	) );
 
 	// Setup the component
-	EDD()->components[ $name ] = new EDD_Component( $r );
+	EDD()->components[ $name ] = new EDD\Component( $r );
 }
 
 /**
@@ -116,73 +116,73 @@ function edd_setup_components() {
 
 	// Register Customer
 	edd_register_component( 'customer', array(
-		'schema' => 'EDD_DB_Schema_Customers',
-		'table'  => 'EDD_DB_Table_Customers',
-		'meta'   => 'EDD_DB_Table_Customer_Meta',
-		'query'  => 'EDD_Customer_Query',
+		'schema' => '\\EDD\\Database\\Schema\\Customers',
+		'table'  => '\\EDD\\Database\\Tables\\Customers',
+		'meta'   => '\\EDD\\Database\\Tables\\Customer_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Customer',
 		'object' => 'EDD_Customer'
 	) );
 
 	// Register discount
 	edd_register_component( 'discount', array(
-		'schema' => 'EDD_DB_Schema_Discounts',
-		'table'  => 'EDD_DB_Table_Discounts',
-		'meta'   => 'EDD_DB_Table_Discount_Meta',
-		'query'  => 'EDD_Discount_Query',
+		'schema' => '\\EDD\\Database\\Schema\\Discounts',
+		'table'  => '\\EDD\\Database\\Tables\\Discounts',
+		'meta'   => '\\EDD\\Database\\Tables\\Discount_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Discount',
 		'object' => 'EDD_Discount'
 	) );
 
 	// Register note
 	edd_register_component( 'note', array(
-		'schema' => 'EDD_DB_Schema_Notes',
-		'table'  => 'EDD_DB_Table_Notes',
-		'meta'   => 'EDD_DB_Table_Note_Meta',
-		'query'  => 'EDD_Note_Query',
-		'object' => 'EDD_Note'
+		'schema' => '\\EDD\\Database\\Schema\\Notes',
+		'table'  => '\\EDD\\Database\\Tables\\Notes',
+		'meta'   => '\\EDD\\Database\\Tables\\Note_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Note',
+		'object' => '\\EDD\\Notes\\Note'
 	) );
 
 	// Register order
 	edd_register_component( 'order', array(
-		'schema' => 'EDD_DB_Schema_Orders',
-		'table'  => 'EDD_DB_Table_Orders',
-		'meta'   => 'EDD_DB_Table_Order_Meta',
-		'query'  => 'EDD_Order_Query',
-		'object' => 'EDD_Order'
+		'schema' => '\\EDD\\Database\\Schema\\Orders',
+		'table'  => '\\EDD\\Database\\Tables\\Orders',
+		'meta'   => '\\EDD\\Database\\Tables\\Order_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Order',
+		'object' => '\\EDD\\Orders\\Order'
 	) );
 
 	// Register order item
 	edd_register_component( 'order_item', array(
-		'schema' => 'EDD_DB_Schema_Order_Items',
-		'table'  => 'EDD_DB_Table_Order_Items',
-		'meta'   => 'EDD_DB_Table_Order_Item_Meta',
-		'query'  => 'EDD_Order_Item_Query',
-		'object' => 'EDD_Order_Item'
+		'schema' => '\\EDD\\Database\\Schema\\Order_Items',
+		'table'  => '\\EDD\\Database\\Tables\\Order_Items',
+		'meta'   => '\\EDD\\Database\\Tables\\Order_Item_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Order_Item',
+		'object' => '\\EDD\\Orders\\Order_Item'
 	) );
 
 	// Register log
 	edd_register_component( 'log', array(
-		'schema' => 'EDD_DB_Schema_Logs',
-		'table'  => 'EDD_DB_Table_Logs',
-		'meta'   => 'EDD_DB_Table_Log_Meta',
-		'query'  => 'EDD_Log_Query',
-		'object' => 'EDD_Log'
+		'schema' => '\\EDD\\Database\\Schema\\Logs',
+		'table'  => '\\EDD\\Database\\Tables\\Logs',
+		'meta'   => '\\EDD\\Database\\Tables\\Log_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Log',
+		'object' => '\\EDD\\Logs\\Log'
 	) );
 
 	// Register log api request
 	edd_register_component( 'log_api_request', array(
-		'schema' => 'EDD_DB_Schema_Logs_Api_Requests',
-		'table'  => 'EDD_DB_Table_Logs_Api_Requests',
-		'query'  => 'EDD_Log_Api_Request_Query',
-		'object' => 'EDD_Log_Api_Request',
+		'schema' => '\\EDD\\Database\\Schema\\Logs_Api_Requests',
+		'table'  => '\\EDD\\Database\\Tables\\Logs_Api_Requests',
+		'query'  => '\\EDD\\Database\\Queries\\Log_Api_Request',
+		'object' => '\\EDD\\Logs\\Api_Request_Log',
 		'meta'   => false
 	) );
 
 	// Register log api request
 	edd_register_component( 'log_file_download', array(
-		'schema' => 'EDD_DB_Schema_Logs_File_Downloads',
-		'table'  => 'EDD_DB_Table_Logs_File_Downloads',
-		'query'  => 'EDD_Log_File_Download_Query',
-		'object' => 'EDD_Log_File_Download',
+		'schema' => '\\EDD\\Database\\Schema\\Logs_File_Downloads',
+		'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',
+		'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
+		'object' => '\\EDD\\Logs\\File_Download_Log',
 		'meta'   => false
 	) );
 
