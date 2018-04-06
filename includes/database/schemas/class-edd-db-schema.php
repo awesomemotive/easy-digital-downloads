@@ -1,15 +1,19 @@
 <?php
-
 /**
- * EDD_DB_Schema Base class
+ * Base Schema Class.
  *
- * @package Plugins/EDD/Database/Schema/Base
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Schemas;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema extends EDD_DB_Base {
+class Base extends \EDD\Database\Base {
 
 	/**
 	 * Array of database column objects to turn into EDD_DB_Column

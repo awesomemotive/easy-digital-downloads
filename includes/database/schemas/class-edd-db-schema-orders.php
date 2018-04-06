@@ -1,15 +1,24 @@
 <?php
-
 /**
- * Orders: EDD_DB_Schema class
+ * Orders Schema Class.
  *
- * @package Plugins/EDD/Database/Schema/Orders
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Schemas;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema_Orders extends EDD_DB_Schema {
+/**
+ * Orders Schema Class.
+ *
+ * @since 3.0.0
+ */
+class Orders extends Base {
 
 	/**
 	 * Array of database column objects

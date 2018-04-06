@@ -1,15 +1,24 @@
 <?php
-
 /**
- * Order Items: EDD_DB_Schema class
+ * Order Items Schema Class.
  *
- * @package Plugins/EDD/Database/Schema/OrderItems
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Schemas;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class EDD_DB_Schema_Order_Items extends EDD_DB_Schema {
+/**
+ * Order Items Schema Class.
+ *
+ * @since 3.0.0
+ */
+class Order_Items extends Base {
 
 	/**
 	 * Array of database column objects
