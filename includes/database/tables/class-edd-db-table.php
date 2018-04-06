@@ -1,15 +1,19 @@
 <?php
-
 /**
- * A Base WordPress Database Table class
+ * Base Easy Digital Downloads Custom Table Class.
  *
- * @version 3.0.0
+ * @package     EDD
+ * @subpackage  Database\Tables
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Tables;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'EDD_DB_Table' ) ) :
+if ( ! class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 	/**
 	 * A base WordPress database table class, which facilitates the creation of
 	 * and schema changes to individual database tables.
@@ -27,7 +31,7 @@ if ( ! class_exists( 'EDD_DB_Table' ) ) :
 	 *
 	 * @since 3.0.0
 	 */
-	abstract class EDD_DB_Table extends EDD_DB_Base {
+	abstract class Base extends \EDD\Database\Base {
 
 		/**
 		 * @var string Table name, without the global table prefix

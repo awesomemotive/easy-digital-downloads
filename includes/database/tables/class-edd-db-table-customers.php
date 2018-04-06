@@ -1,21 +1,25 @@
 <?php
-
 /**
- * Customers Table: EDD_DB_Table_Customers class
+ * Customers Table.
  *
- * @package Plugins/EDD/Database/Object
+ * @package     EDD
+ * @subpackage  Database\Tables
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Tables;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'EDD_DB_Table' ) ) :
+if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_customers" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Customers extends EDD_DB_Table {
+final class Customers extends Base {
 
 	/**
 	 * Table name
