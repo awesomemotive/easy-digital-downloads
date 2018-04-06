@@ -194,18 +194,10 @@ class Note {
 	 * @since 3.0
 	 * @access protected
 	 *
-	 * @param int|object $data Note data or note ID.
+	 * @param object $note Note data or note ID.
 	 */
-	public function __construct( $data ) {
-		$note = null;
-
-		if ( is_object( $data ) ) {
-			$note = $data;
-		} else if ( is_numeric( $data ) ) {
-			$note = edd_get_note( $data);
-		}
-
-		if ( $note ) {
+	public function __construct( $note = null ) {
+		if ( is_object( $note ) ) {
 			foreach ( get_object_vars( $note ) as $key => $value ) {
 				$this->$key = $value;
 			}
