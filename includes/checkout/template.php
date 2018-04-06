@@ -680,28 +680,25 @@ function edd_show_payment_icons() {
 
 			} else {
 
-				$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
-				$content_dir = WP_PLUGIN_DIR;
+				// Get the absolute path to the payment icon
+				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
 
 				if( function_exists( 'wp_normalize_path' ) ) {
 
-					// Replaces backslashes with forward slashes for Windows systems
-					$image = wp_normalize_path( $image );
-					$content_dir = wp_normalize_path( $content_dir );
-
+					// Convert absolute path to URL
+					$image = str_replace( wp_normalize_path( untrailingslashit( ABSPATH ) ), site_url(), $image );
 				}
-
-				$image = str_replace( $content_dir, WP_PLUGIN_URL, $image );
 
 			}
 
+			// Convert payment icon URL to https if necessary
 			if( edd_is_ssl_enforced() || is_ssl() ) {
 
 				$image = edd_enforced_ssl_asset_filter( $image );
 
 			}
 
-			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+			echo '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $card ) . '"/>';
 		}
 
 	}
@@ -770,7 +767,7 @@ function edd_terms_agreement() {
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
-		
+
 		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
