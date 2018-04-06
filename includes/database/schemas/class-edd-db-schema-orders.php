@@ -132,7 +132,7 @@ class EDD_DB_Schema_Orders extends EDD_DB_Schema {
 
 		// discounts
 		array(
-			'name'       => 'discounts',
+			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0'
