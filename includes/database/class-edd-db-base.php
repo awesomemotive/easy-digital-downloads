@@ -1,13 +1,14 @@
 <?php
-
 /**
- * A Base WordPress Database Table class
+ * Base Custom Table Class.
  *
- * @author  JJJ
- * @link    https://jjj.blog
- * @version 1.4.0
- * @license https://www.gnu.org/licenses/gpl-2.0.html
+ * @package     EDD
+ * @subpackage  Database
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -21,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  */
-class EDD_DB_Base {
+class Base {
 
 	/**
 	 * Magic getter for immutability.
