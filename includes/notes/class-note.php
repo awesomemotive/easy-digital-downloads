@@ -6,21 +6,21 @@
  * @subpackage  Classes/Notes
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @since       3.0.0
  */
 namespace EDD\Notes;
 
+use EDD\Base_Object;
+
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Note Class.
  *
- * @since 3.0
+ * @since 3.0.0
  */
-class Note {
+class Note extends Base_Object {
 
 	/**
 	 * Note ID.
@@ -197,11 +197,9 @@ class Note {
 	 * @param \object $note Note data from the database.
 	 */
 	public function __construct( $note = null ) {
-		if ( is_object( $note ) ) {
-			foreach ( get_object_vars( $note ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
+		parent::__construct( $note );
 
+		if ( is_object( $note ) ) {
 			/**
 			 * We fill object vars which have the same name as the object vars in WP_Comment for backwards compatibility
 			 * purposes.
@@ -212,28 +210,6 @@ class Note {
 			$this->comment_date     = $this->date_created;
 			$this->comment_date_gmt = $this->date_created;
 			$this->comment_content  = $this->content;
-		}
-	}
-
-	/**
-	 * Magic __get method to dispatch a call to retrieve a protected property.
-	 *
-	 * @since 3.0
-	 * @access public
-	 *
-	 * @param mixed $key
-	 *
-	 * @return mixed
-	 */
-	public function __get( $key ) {
-		if ( ! in_array( $key, array( 'comment_ID', 'comment_post_ID' ), true ) ) {
-			$key = sanitize_key( $key );
-		}
-
-		if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
-		} elseif ( property_exists( $this, $key ) ) {
-			return apply_filters( 'edd_note_' . $key, $this->{$key}, $this->id );
 		}
 	}
 
@@ -294,60 +270,5 @@ class Note {
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
 		return edd_delete_note_meta( $this->id, $meta_key, $meta_value );
-	}
-
-	/**
-	 * Sanitize the data for update/create.
-	 *
-	 * @access public
-	 * @since 3.0
-	 *
-	 * @param array $data The data to sanitize.
-	 *
-	 * @return array $data The sanitized data, based off column defaults.
-	 */
-	private function sanitize_columns( $data ) {
-		$default_values = array();
-
-		foreach ( $data as $key => $type ) {
-			// Only sanitize data that we were provided
-			if ( ! array_key_exists( $key, $data ) ) {
-				continue;
-			}
-
-			switch ( $type ) {
-				case '%s':
-					if ( 'email' == $key ) {
-						$data[$key] = sanitize_email( $data[$key] );
-					} elseif ( 'notes' == $key ) {
-						$data[$key] = strip_tags( $data[$key] );
-					} else {
-						$data[$key] = sanitize_text_field( $data[$key] );
-					}
-					break;
-				case '%d':
-					if ( ! is_numeric( $data[$key] ) || (int) $data[$key] !== absint( $data[$key] ) ) {
-						$data[$key] = $default_values[$key];
-					} else {
-						$data[$key] = absint( $data[$key] );
-					}
-					break;
-				case '%f':
-					// Convert what was given to a float
-					$value = floatval( $data[$key] );
-
-					if ( ! is_float( $value ) ) {
-						$data[$key] = $default_values[$key];
-					} else {
-						$data[$key] = $value;
-					}
-					break;
-				default:
-					$data[$key] = sanitize_text_field( $data[$key] );
-					break;
-			}
-		}
-
-		return $data;
 	}
 }
