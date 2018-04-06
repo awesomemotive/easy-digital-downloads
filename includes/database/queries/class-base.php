@@ -1704,7 +1704,7 @@ class Base extends \EDD\Database\Base {
 
 		// Callback exists
 		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
-			$this->item_shape = 'EDD_DB_Object';
+			$this->item_shape = 'EDD\\Database\\Objects\\Base';
 		}
 
 		// Bail early if item is already an object of the correct shape

@@ -188,7 +188,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 					$payment_ids = array();
 					
 					foreach ( $logs as $log ) {
-						$payment_ids[] = edd_get_log_meta( $log->id, 'payment_id', true );
+						$payment_ids[] = edd_get_log_meta( $log->get_id(), 'payment_id', true );
 					}
 
 					foreach ( $payment_ids as $payment_id ) {

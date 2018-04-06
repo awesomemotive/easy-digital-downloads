@@ -956,7 +956,7 @@ function edd_paypal_get_payment_transaction_id( $payment_id ) {
 	$notes = edd_get_payment_notes( $payment_id );
 
 	foreach ( $notes as $note ) {
-		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->content, $match ) ) {
+		if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note->get_content(), $match ) ) {
 			$transaction_id = $match[1];
 			continue;
 		}

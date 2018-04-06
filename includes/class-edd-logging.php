@@ -489,7 +489,7 @@ class EDD_Logging {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				call_user_func( 'edd_delete_' . $log_type, $log->ID );
+				call_user_func( 'edd_delete_' . $log_type, $log->get_id() );
 			}
 		}
 	}

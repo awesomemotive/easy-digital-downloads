@@ -86,6 +86,83 @@ class Log extends Base_Object {
 	protected $date_created;
 
 	/**
+	 * Retrieve ID of the log.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return int
+	 */
+	public function get_id() {
+		return $this->id;
+	}
+
+	/**
+	 * Retrieve object ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return int
+	 */
+	public function get_object_id() {
+		return $this->object_id;
+	}
+
+	/**
+	 * Retrieve object type.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_object_type() {
+		return $this->object_type;
+	}
+
+	/**
+	 * Retrieve the type of log.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+	/**
+	 * Retrieve the title of the log.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_title() {
+		return $this->title;
+	}
+
+	/**
+	 * Retrieve the content of the log.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_content() {
+		return $this->content;
+	}
+
+	/**
+	 * Retrieve the date the log was created.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_date_created() {
+		return $this->date_created;
+	}
+
+	/**
 	 * Retrieve log meta field for a log.
 	 *
 	 * @since 3.0.0
