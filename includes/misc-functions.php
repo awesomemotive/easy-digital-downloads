@@ -766,7 +766,7 @@ function edd_object_to_array( $object = array() ) {
 	if ( is_array( $object ) ) {
 		$return = array();
 		foreach ( $object as $item ) {
-			if ( is_a( $object, 'EDD_Payment' ) ) {
+			if ( $object instanceof EDD_Payment ) {
 				$return[] = $object->array_convert();
 			} else {
 				$return[] = edd_object_to_array( $item );
@@ -774,7 +774,7 @@ function edd_object_to_array( $object = array() ) {
 
 		}
 	} else {
-		if ( is_a( $object, 'EDD_Payment' ) ) {
+		if ( $object instanceof EDD_Payment ) {
 			$return = $object->array_convert();
 		} else {
 			$return = get_object_vars( $object );

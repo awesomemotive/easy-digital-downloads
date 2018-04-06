@@ -405,7 +405,7 @@ class EDD_Discount {
 			return false;
 		}
 
-		if ( ! is_a( $discount, 'WP_Post' ) ) {
+		if ( ! $discount instanceof WP_Post ) {
 			return false;
 		}
 
