@@ -54,6 +54,6 @@ class File_Download_Log extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD\Logs\File_Download_Log|false
 	 */
 	function get_object_by_id( $log_id ) {
-		return new \EDD\Logs\File_Download_Log( $log_id );
+		return edd_get_file_download_log( $log_id );
 	}
 }

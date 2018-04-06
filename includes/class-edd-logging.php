@@ -241,8 +241,9 @@ class EDD_Logging {
 
 		// Set log meta, if any
 		if ( $log_id && 'edd_add_log' === $insert_method && ! empty( $log_meta ) ) {
+			$log = edd_get_log( $log_id );
+
 			foreach ( (array) $log_meta as $key => $meta ) {
-				$log = new EDD\Logs\Log( $log_id );
 				$log->add_meta( sanitize_key( $key ), $meta );
 			}
 		}
@@ -276,8 +277,8 @@ class EDD_Logging {
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		if ( isset( $log_data['ID'] ) && empty( $log_id ) ) {
-			$log_id = $log_data['ID'];
+		if ( isset( $args['ID'] ) && empty( $log_id ) ) {
+			$log_id = $args['ID'];
 		}
 
 		// Bail if the log ID is still empty.
@@ -285,22 +286,74 @@ class EDD_Logging {
 			return false;
 		}
 
-		// Set up variables to hold data to go into the logs table by default
-		$db_object = 'logs';
+		// Used to dynamically dispatch the method call to insert() to the correct class.
+		$update_method = 'edd_update_log';
+
+		if ( $type = $args['log_type'] ) {
+			$data['type'] = $args['log_type'];
+		}
+
 		$data = array (
-			'type'        => $args['type'],
 			'object_id'   => $args['object_id'],
 			'object_type' => $args['object_type'],
 			'title'       => $args['title'],
 			'message'     => $args['message'],
 		);
 
-		$result = EDD()->{$db_object}->update( $log_id, $data );
+		if ( 'api_request' === $data['type'] ) {
+			$legacy = array(
+				'user'         => 'user_id',
+				'key'          => 'api_key',
+				'token'        => 'token',
+				'version'      => 'version',
+				'post_excerpt' => 'request',
+				'post_content' => 'error',
+				'request_ip'   => 'ip',
+				'time'         => 'time',
+			);
+
+			foreach ( $legacy as $old_key => $new_key ) {
+				if ( isset( $log_meta[ $old_key ] ) ) {
+					$data[ $new_key ] = $log_meta[ $old_key ];
+
+					unset( $log_meta[ $old_key ] );
+				}
+			}
+		} else if ( 'file_download' === $data['type'] ) {
+			$legacy = array(
+				'file_id'    => 'file_id',
+				'payment_id' => 'payment_id',
+				'price_id'   => 'price_id',
+				'user_id'    => 'user_id',
+				'ip'         => 'ip',
+			);
+
+			foreach ( $legacy as $old_key => $new_key ) {
+				if ( isset( $log_meta[ $old_key ] ) ) {
+					$data[ $new_key ] = $log_meta[ $old_key ];
+
+					unset( $log_meta[ $old_key ] );
+				}
+			}
+
+			if ( isset( $log_meta['user_info']['email'] ) ) {
+				$data['email'] = $log_meta['user_info']['email'];
+			}
+
+			if ( isset( $args['post_parent'] ) ) {
+				$data['download_id'] = $args['post_parent'];
+			}
+		}
+
+		unset( $data['type'] );
+
+		call_user_func( $update_method, $data );
 
 		// Set log meta, if any
-		if ( $log_id && 'logs' === $db_object && ! empty( $log_meta ) ) {
+		if ( 'edd_update_log' === $update_method && ! empty( $log_meta ) ) {
+			$log = edd_get_log( $log_id );
+
 			foreach ( (array) $log_meta as $key => $meta ) {
-				$log = new EDD\Logs\Log( $log_id );
 				$log->update_meta( sanitize_key( $key ), $meta );
 			}
 		}
@@ -436,7 +489,7 @@ class EDD_Logging {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				call_user_func( 'edd_delete_' . $log_type, $log->ID );
+				call_user_func( 'edd_delete_' . $log_type, $log->get_id() );
 			}
 		}
 	}
