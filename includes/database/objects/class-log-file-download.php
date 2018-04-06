@@ -1,6 +1,6 @@
 <?php
 /**
- * API Request Database Object Class.
+ * File Download Log Database Object Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -14,10 +14,10 @@ namespace EDD\Database\Objects;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * API Request Log Class.
+ * File Download Log Class.
  *
  * @since 3.0.0
  */
-class Log_Api_Request extends Base {
+class Log_File_Download extends Base {
 
 }
