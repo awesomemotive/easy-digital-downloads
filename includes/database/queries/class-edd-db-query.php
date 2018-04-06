@@ -1,23 +1,27 @@
 <?php
-
 /**
- * Orders: EDD_DB_Query class
+ * Base Database Query Class.
  *
- * @package Plugins/EDD/Database/Queries
+ * @package     EDD
+ * @subpackage  Database\Queries
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Queries;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'EDD_DB_Query' ) ) :
+if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
 /**
  * Base class used for querying custom database tables.
  *
  * @since 3.0.0
  *
- * @see EDD_DB_Query::__construct() for accepted arguments.
+ * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
  */
-class EDD_DB_Query extends EDD_DB_Base {
+class Base extends \EDD\Database\Base {
 
 	/** Global Properties *****************************************************/
 
