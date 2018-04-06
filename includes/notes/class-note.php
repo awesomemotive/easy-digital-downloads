@@ -214,6 +214,90 @@ class Note extends Base_Object {
 	}
 
 	/**
+	 * Magic getter for backwards compatibility.
+	 *
+	 * This is needed otherwise it breaks all the payment gateways that rely on payment notes.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $name Property to get.
+	 * @return mixed Property.
+	 */
+	public function __get( $name ) {
+		if ( in_array( $name, array( 'comment_ID', 'comment_post_ID', 'comment_type', 'comment_date', 'comment_date_gmt', 'comment_content' ) ) ) {
+			return $this->{$name};
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieve note ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return int
+	 */
+	public function get_id() {
+		return $this->id;
+	}
+
+	/**
+	 * Retrieve object ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return int
+	 */
+	public function get_object_id() {
+		return $this->object_id;
+	}
+
+	/**
+	 * Retrieve object type.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_object_type() {
+		return $this->object_type;
+	}
+
+	/**
+	 * Retrieve note content.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_content() {
+		return $this->content;
+	}
+
+	/**
+	 * Retrieve user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return int
+	 */
+	public function get_user_id() {
+		return $this->user_id;
+	}
+
+	/**
+	 * Retrieve the date the note was created.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_date_created() {
+		return $this->date_created;
+	}
+
+	/**
 	 * Add meta to a note.
 	 *
 	 * @access public

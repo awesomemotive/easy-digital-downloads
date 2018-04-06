@@ -53,6 +53,6 @@ class Log extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD\Logs\Log|false
 	 */
 	function get_object_by_id( $log_id ) {
-		return new \EDD\Logs\Log( $log_id );
+		return edd_get_log( $log_id );
 	}
 }
