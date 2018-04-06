@@ -1,5 +1,23 @@
 <?php
+/**
+ * Customer Database Object Class.
+ *
+ * @package     EDD
+ * @subpackage  Database\Objects
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
+ */
+namespace EDD\Database\Objects;
 
-class EDD_DB_Customer extends EDD_DB_Object {
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Customer class.
+ *
+ * @since 3.0.0
+ */
+class Customer extends Base {
 	
 }
