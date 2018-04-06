@@ -84,9 +84,9 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'content' => 'Note with updated body',
 		) ) );
 
-		$note = new Note( self::$notes[0] );
+		$note = edd_get_note( self::$notes[0] );
 
-		$this->assertSame( 'Note with updated body', $note->content );
+		$this->assertSame( 'Note with updated body', $note->get_content() );
 	}
 
 	/**
@@ -99,12 +99,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::delete()
 	 */
-	public function test_delete_should_be_null() {
+	public function test_delete_should_return_false() {
 		$this->assertSame( 1, edd_delete_note( self::$notes[0] ) );
 
-		$note = new Note( self::$notes[0] );
+		$note = edd_get_note( self::$notes[0] );
 
-		$this->assertNull( $note->id );
+		$this->assertFalse( $note );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $notes[0]->object_id < $notes[1]->object_id );
+		$this->assertTrue( $notes[0]->get_object_id() < $notes[1]->get_object_id() );
 	}
 	/**
 	 * @covers ::get_notes()
@@ -161,7 +161,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $notes[0]->object_id > $notes[1]->object_id );
+		$this->assertTrue( $notes[0]->get_object_id() > $notes[1]->get_object_id() );
 	}
 
 	/**
@@ -173,7 +173,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $notes[0]->content < $notes[1]->content );
+		$this->assertTrue( $notes[0]->get_content() < $notes[1]->get_content() );
 	}
 	/**
 	 * @covers ::get_notes()
@@ -183,7 +183,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'orderby' => 'content',
 			'order'   => 'desc'
 		) );
-		$this->assertTrue( $notes[0]->content > $notes[1]->content );
+		$this->assertTrue( $notes[0]->get_content() > $notes[1]->get_content() );
 	}
 
 	/**
@@ -195,7 +195,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $notes[0]->user_id < $notes[1]->user_id );
+		$this->assertTrue( $notes[0]->get_user_id() < $notes[1]->get_user_id() );
 	}
 	/**
 	 * @covers ::get_notes()
@@ -206,7 +206,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $notes[0]->user_id > $notes[1]->user_id );
+		$this->assertTrue( $notes[0]->get_user_id() > $notes[1]->get_user_id() );
 	}
 
 	/**
@@ -217,7 +217,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 			'order' => 'asc',
 		) );
 
-		$this->assertTrue( $notes[0]->id < $notes[1]->id );
+		$this->assertTrue( $notes[0]->get_id() < $notes[1]->get_id() );
 	}
 	/**
 	 * @covers ::get_notes()
@@ -226,7 +226,7 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 		$notes = edd_get_notes( array(
 			'order' => 'desc',
 		) );
-		$this->assertTrue( $notes[0]->id > $notes[1]->id );
+		$this->assertTrue( $notes[0]->get_id() > $notes[1]->get_id() );
 	}
 
 	/**

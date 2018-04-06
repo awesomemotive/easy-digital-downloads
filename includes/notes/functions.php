@@ -29,7 +29,7 @@ function edd_add_note( $data = array() ) {
 	}
 
 	// Instantiate a query object
-	$notes = new EDD_Note_Query();
+	$notes = new EDD\Database\Queries\Note();
 
 	return $notes->add_item( $data );
 }
@@ -43,7 +43,7 @@ function edd_add_note( $data = array() ) {
  * @return int
  */
 function edd_delete_note( $note_id = 0 ) {
-	$notes = new EDD_Note_Query();
+	$notes = new EDD\Database\Queries\Note();
 
 	return $notes->delete_item( $note_id );
 }
@@ -58,7 +58,7 @@ function edd_delete_note( $note_id = 0 ) {
  * @return bool Whether or not the note was updated.
  */
 function edd_update_note( $note_id = 0, $data = array() ) {
-	$notes = new EDD_Note_Query();
+	$notes = new EDD\Database\Queries\Note();
 
 	return $notes->update_item( $note_id, $data );
 }
@@ -85,7 +85,7 @@ function edd_get_note( $note_id = 0 ) {
  * @return object
  */
 function edd_get_note_by( $field = '', $value = '' ) {
-	$notes = new EDD_Note_Query();
+	$notes = new EDD\Database\Queries\Note();
 
 	// Return note
 	return $notes->get_item_by( $field, $value );
@@ -107,7 +107,7 @@ function edd_get_notes( $args = array() ) {
 	) );
 
 	// Instantiate a query object
-	$notes = new EDD_Note_Query();
+	$notes = new EDD\Database\Queries\Note();
 
 	// Return notes
 	return $notes->query( $r );
@@ -129,7 +129,7 @@ function edd_count_notes( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$notes = new EDD_Note_Query( $r );
+	$notes = new EDD\Database\Queries\Note( $r );
 
 	// Return count(s)
 	return absint( $notes->found_items );
