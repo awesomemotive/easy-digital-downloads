@@ -770,7 +770,7 @@ function edd_terms_agreement() {
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
-		
+
 		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
@@ -785,6 +785,30 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
+
+			<?php if ( ! edd_get_option( 'show_agree_to_privacy_policy', false ) && edd_get_option( 'show_to_privacy_policy_on_checkout', false ) ) : ?>
+				<?php
+				$agree_page      = edd_get_option( 'privacy_agree_page', get_option( 'page_for_privacy_policy' ) );
+				$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
+				$agreement_text  = get_post_field( 'post_content', $agree_page );
+				?>
+
+				<?php if ( ! empty( $agreement_text ) ) : ?>
+					<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+						<?php
+						do_action( 'edd_before_privacy_policy' );
+						echo wpautop( stripslashes( $agreement_text ) );
+						do_action( 'edd_after_privacy_policy' );
+						?>
+					</div>
+					<div id="edd-show-privacy-policy" class="edd-show-terms">
+						<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+						<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+					</div>
+				<?php endif; ?>
+
+			<?php endif; ?>
+
 			<div class="edd-terms-agreement">
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
@@ -809,27 +833,33 @@ add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
  */
 function edd_privacy_agreement() {
 	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
-		$agree_page      = edd_get_option( 'privacy_agree_page', get_option( 'page_for_privacy_policy' ) );
 		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
-		$agreement_text  = get_post_field( 'post_content', $agree_page );
-		if ( empty( $agree_page ) || empty( $agreement_text ) ) {
-			return;
-		}
 
 		ob_start();
 		?>
 		<fieldset id="edd-privacy-policy-agreement">
-			<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+
+			<?php if ( edd_get_option( 'show_to_privacy_policy_on_checkout', false ) ) : ?>
+
 				<?php
-				do_action( 'edd_before_privacy_policy' );
-				echo wpautop( stripslashes( $agreement_text ) );
-				do_action( 'edd_after_privacy_policy' );
+				$agree_page      = edd_get_option( 'privacy_agree_page', get_option( 'page_for_privacy_policy' ) );
+				$agreement_text  = get_post_field( 'post_content', $agree_page );
 				?>
-			</div>
-			<div id="edd-show-privacy-policy" class="edd-show-terms">
-				<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
-				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
-			</div>
+
+				<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+					<?php
+					do_action( 'edd_before_privacy_policy' );
+					echo wpautop( stripslashes( $agreement_text ) );
+					do_action( 'edd_after_privacy_policy' );
+					?>
+				</div>
+				<div id="edd-show-privacy-policy" class="edd-show-terms">
+					<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+					<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+				</div>
+
+			<?php endif; ?>
+
 			<div class="edd-privacy-policy-agreement">
 				<input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1"/>
 				<label for="edd-agree-to-privacy-policy"><?php echo stripslashes( $agree_label ); ?></label>
