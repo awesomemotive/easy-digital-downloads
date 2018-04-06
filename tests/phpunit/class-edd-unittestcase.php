@@ -46,7 +46,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 		foreach ( $components as $component ) {
 			$thing = $component->get_interface( 'table' );
 
-			if ( $thing instanceof EDD_DB_Table ) {
+			if ( $thing instanceof \EDD\Database\Tables\Base ) {
 				$thing->delete_all();
 				$thing->truncate();
 			}
