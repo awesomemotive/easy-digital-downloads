@@ -49,7 +49,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Logs_Api_Requests';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Logs_Api_Requests';
 
 	/** Item ******************************************************************/
 

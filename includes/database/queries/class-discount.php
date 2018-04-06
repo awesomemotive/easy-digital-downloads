@@ -49,7 +49,7 @@ class Discount extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Discounts';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Discounts';
 
 	/** Item ******************************************************************/
 
@@ -78,7 +78,7 @@ class Discount extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD_Discount';
+	public $item_shape = '\\EDD_Discount';
 
 	/** Cache *****************************************************************/
 

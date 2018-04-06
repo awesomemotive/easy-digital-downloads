@@ -49,7 +49,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Customers';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Customers';
 
 	/** Item ******************************************************************/
 
@@ -78,7 +78,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD_Customer';
+	public $item_shape = '\\EDD_Customer';
 
 	/** Cache *****************************************************************/
 

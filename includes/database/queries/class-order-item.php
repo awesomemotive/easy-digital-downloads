@@ -49,7 +49,7 @@ class Order_Item extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema_Order_Items';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Order_Items';
 
 	/** Item ******************************************************************/
 
