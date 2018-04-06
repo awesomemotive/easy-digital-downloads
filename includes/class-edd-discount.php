@@ -3,21 +3,22 @@
  * Discount Object
  *
  * @package     EDD
- * @subpackage  Classes/Discount
- * @copyright   Copyright (c) 2016, Sunny Ratilal
+ * @subpackage  Discounts
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Discount Class
  *
  * @since 2.7
+ * @since 3.0.0 No longer extends EDD_DB_Discount
  */
-class EDD_Discount extends EDD_DB_Discount {
+class EDD_Discount {
 	/**
 	 * Discount ID.
 	 *
