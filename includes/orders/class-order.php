@@ -141,6 +141,14 @@ class Order {
 	protected $items;
 
 	/**
+	 * Order discounts.
+	 *
+	 * @since 3.0.0
+	 * @var   array
+	 */
+	protected $discounts;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0.0
@@ -319,5 +327,16 @@ class Order {
 	 */
 	public function get_items() {
 		return $this->items;
+	}
+
+	/**
+	 * Retrieve any discounts that were applied to the order.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array Order discounts.
+	 */
+	public function get_discounts() {
+		return $this->discounts;
 	}
 }
