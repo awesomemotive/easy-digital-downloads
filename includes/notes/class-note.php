@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Notes
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
@@ -211,24 +211,6 @@ class Note extends Base_Object {
 			$this->comment_date_gmt = $this->date_created;
 			$this->comment_content  = $this->content;
 		}
-	}
-
-	/**
-	 * Magic getter for backwards compatibility.
-	 *
-	 * This is needed otherwise it breaks all the payment gateways that rely on payment notes.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $name Property to get.
-	 * @return mixed Property.
-	 */
-	public function __get( $name ) {
-		if ( in_array( $name, array( 'comment_ID', 'comment_post_ID', 'comment_type', 'comment_date', 'comment_date_gmt', 'comment_content' ) ) ) {
-			return $this->{$name};
-		}
-
-		return null;
 	}
 
 	/**
