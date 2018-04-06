@@ -1,10 +1,14 @@
 <?php
-
 /**
- * Orders: EDD_Note_Query class
+ * Note Query Class.
  *
- * @package Plugins/EDD/Database/Queries/Notes
+ * @package     EDD
+ * @subpackage  Database\Queries
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Queries;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -14,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  *
- * @see EDD_Note_Query::__construct() for accepted arguments.
+ * @see \EDD\Database\Queries\Note::__construct() for accepted arguments.
  */
-class EDD_Note_Query extends EDD_DB_Query {
+class Note extends Base {
 
 	/** Table Properties ******************************************************/
 
