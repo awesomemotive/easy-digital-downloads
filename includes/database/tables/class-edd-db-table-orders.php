@@ -1,21 +1,25 @@
 <?php
-
 /**
- * Orders Table: EDD_DB_Table_Orders class
+ * Orders Table.
  *
- * @package Plugins/EDD/Database/Object
+ * @package     EDD
+ * @subpackage  Database\Tables
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
  */
+namespace EDD\Database\Tables;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'EDD_DB_Table' ) ) :
+if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_orders" database table
  *
  * @since 3.0.0
  */
-final class EDD_DB_Table_Orders extends EDD_DB_Table {
+final class Orders extends Base {
 
 	/**
 	 * Table name
