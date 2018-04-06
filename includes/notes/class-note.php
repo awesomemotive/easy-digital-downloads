@@ -194,12 +194,12 @@ class Note {
 	 * @since 3.0
 	 * @access protected
 	 *
-	 * @param object $note Note data or note ID.
+	 * @param \object $note Note data from the database.
 	 */
 	public function __construct( $note = null ) {
 		if ( is_object( $note ) ) {
 			foreach ( get_object_vars( $note ) as $key => $value ) {
-				$this->$key = $value;
+				$this->{$key} = $value;
 			}
 
 			/**
@@ -235,143 +235,6 @@ class Note {
 		} elseif ( property_exists( $this, $key ) ) {
 			return apply_filters( 'edd_note_' . $key, $this->{$key}, $this->id );
 		}
-	}
-
-	/**
-	 * Magic __set method to dispatch a call to update a protected property.
-	 *
-	 * @since 3.0
-	 * @access public
-	 *
-	 * @param string $key Property name.
-	 * @param mixed $value Property value.
-	 *
-	 * @return mixed False if property doesn't exist, or returns the value from the dispatched method.
-	 */
-	public function __set( $key, $value ) {
-		$key = sanitize_key( $key );
-
-		// Only real properties can be saved.
-		$keys = array_keys( get_class_vars( get_called_class() ) );
-
-		if ( ! in_array( $key, $keys ) ) {
-			return false;
-		}
-
-		// Dispatch to setter method if value needs to be sanitized
-		if ( method_exists( $this, 'set_' . $key ) ) {
-			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
-		} else {
-			$this->{$key} = $value;
-		}
-	}
-
-	/**
-	 * Magic __isset method to allow empty checks on protected elements.
-	 *
-	 * @since 3.0
-	 * @access public
-	 *
-	 * @param string $key The attribute to get
-	 *
-	 * @return boolean If the item is set or not
-	 */
-	public function __isset( $key ) {
-		if ( property_exists( $this, $key ) ) {
-			return false === empty( $this->{$key} );
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Create a new note.
-	 *
-	 * @since 3.0
-	 * @access public
-	 *
-	 * @param array $args {
-	 *      Note attributes.
-	 * }
-	 *
-	 * @return int Newly created note ID.
-	 */
-	public function create( $args = array() ) {
-		/**
-		 * Filters the arguments before being inserted into the database.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array $args Note args.
-		 */
-		$args = apply_filters( 'edd_insert_note', $args );
-
-		$args = $this->sanitize_columns( $args );
-
-		/**
-		 * Fires before a note has been inserted into the database.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array $args Discount args.
-		 */
-		do_action( 'edd_pre_insert_note', $args );
-
-		$id = edd_add_note( $args );
-
-		if ( $id ) {
-			$this->id = $id;
-
-			foreach ( $args as $key => $value ) {
-				$this->{$key} = $value;
-			}
-		}
-
-		/**
-		 * Fires after a note has been inserted into the database.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array $args Note args.
-		 * @param int $id Note ID.
-		 */
-		do_action( 'edd_post_insert_note', $args, $this->id );
-
-		return $id;
-	}
-
-	/**
-	 * Update an existing note.
-	 *
-	 * @since 3.0
-	 * @access public
-	 *
-	 * @param array $args {
-	 *      Note attributes.
-	 * }
-	 *
-	 * * @return bool True on success, false otherwise.
-	 */
-	public function update( $args = array() ) {
-		return edd_update_note( $this->id, $args );
-	}
-
-	/**
-	 * Delete a note.
-	 *
-	 * @since 3.0
-	 * @access public
-	 *
-	 * @return bool True if deleted, false otherwise.
-	 */
-	public function delete() {
-		$deleted = edd_delete_note( $this->id );
-
-		if ( $deleted ) {
-			EDD()->note_meta->delete_all_meta( $this->id );
-		}
-
-		return $deleted;
 	}
 
 	/**
