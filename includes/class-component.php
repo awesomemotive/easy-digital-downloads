@@ -1,7 +1,21 @@
 <?php
+/**
+ * Component Class.
+ *
+ * @package     EDD
+ * @subpackage  Core
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0.0
+ */
+namespace EDD;
 
-
-class EDD_Component {
+/**
+ * Component Class.
+ *
+ * @since 3.0.0
+ */
+class Component {
 
 	/**
 	 * Database schema definition
