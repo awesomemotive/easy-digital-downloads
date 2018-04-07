@@ -1,16 +1,56 @@
 module.exports = function(grunt) {
 
-// Load multiple grunt tasks using globbing patterns
-require('load-grunt-tasks')(grunt);
+	// Load multiple grunt tasks using globbing patterns
+	require('load-grunt-tasks')(grunt);
 
-// Project configuration.
-grunt.initConfig({
-	pkg: grunt.file.readJSON('package.json'),
+	// Project configuration.
+	grunt.initConfig({
+
+		pkg: grunt.file.readJSON('package.json'),
+
+		cssmin: {
+			options: {
+				mergeIntoShorthands: false,
+			},
+			target: {
+				files: [
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'templates',
+						src: ['edd.css'],
+						dest: 'templates',
+						ext: '.min.css'
+					}
+				],
+			}
+		},
+
+		uglify: {
+			options: {
+				mangle: false,
+			},
+			target: {
+				files: [{
+					expand: true,
+					cwd: 'assets/js',
+					src: [ '*.js', '!*.min.js', '!*jquery*.js' ],
+					dest: 'assets/js',
+					ext: '.min.js',
+					extDot: 'last',
+				}]
+			}
+		},
 
 		checktextdomain: {
 			options:{
 				text_domain: 'easy-digital-downloads',
-				create_report_file: true,
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -30,17 +70,17 @@ grunt.initConfig({
 					'__ngettext_noop:1,2,3d',
 					'_c:1,2d',
 					'_nc:1,2,4c,5d'
-					]
-				},
-				files: {
-					src: [
-						'**/*.php', // Include all files
-						'!node_modules/**', // Exclude node_modules/
-						'!build/.*'// Exclude build/
-						],
-					expand: true
-				}
+				]
 			},
+			files: {
+				src: [
+					'**/*.php', // Include all files
+					'!node_modules/**', // Exclude node_modules/
+					'!build/**'// Exclude build/
+				],
+				expand: true
+			}
+		},
 
 		makepot: {
 			target: {
@@ -81,103 +121,43 @@ grunt.initConfig({
 			}
 		},
 
-		exec: {
-			txpull: { // Pull Transifex translation - grunt exec:txpull
-				cmd: 'tx pull -a -f --minimum-perc=1' // Change the percentage with --minimum-perc=yourvalue
-			},
-			txpush_s: { // Push pot to Transifex - grunt exec:txpush_s
-				cmd: 'tx push -s'
-			},
+		// Clean up build directory
+		clean: {
+			main: ['build/<%= pkg.name %>']
 		},
 
-		dirs: {
-			lang: 'languages',
-		},
-
-		potomo: {
-			dist: {
-				options: {
-					poDel: true
-				},
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.lang %>',
-					src: ['*.po'],
-					dest: '<%= dirs.lang %>',
-					ext: '.mo',
-					nonull: true
-			}]
-		}
-	},
-
-	// Clean up build directory
-	clean: {
-		main: ['build/<%= pkg.name %>']
-	},
-
-	// Copy the theme into the build directory
-	copy: {
-		main: {
-			src:  [
-				'**',
-				'!node_modules/**',
-				'!build/**',
-				'!.git/**',
-				'!Gruntfile.js',
-				'!package.json',
-				'!.gitignore',
-				'!.gitmodules',
-				'!.tx/**',
-				'!tests/**',
-				'!**/Gruntfile.js',
-				'!**/package.json',
-				'!**/README.md',
-				'!**/*~'
-			],
-			dest: 'build/<%= pkg.name %>/'
-		}
-	},
-
-	//Compress build directory into <name>.zip and <name>-<version>.zip
-	compress: {
-		main: {
-			options: {
-				mode: 'zip',
-				archive: './build/<%= pkg.name %>.zip'
-			},
-			expand: true,
-			cwd: 'build/<%= pkg.name %>/',
-			src: ['**/*'],
-			dest: '<%= pkg.name %>/'
-		}
-	},
-
-	glotpress_download: {
-		core: {
-			options: {
-				domainPath: 'languages',
-				url: 'https://translate.wordpress.org',
-				slug: 'wp-plugins/easy-digital-downloads/stable',
-				textdomain: 'easy-digital-downloads',
-				filter: {
-					minimum_percentage: 1,
-				}
+		// Copy the plugin into the build directory
+		copy: {
+			main: {
+				src:  [
+					'assets/**',
+					'includes/**',
+					'languages/**',
+					'templates/**',
+					'*.php',
+					'*.txt'
+				],
+				dest: 'build/<%= pkg.name %>/'
 			}
 		},
-	},
 
-});
+		// Compress build directory into <name>.zip and <name>-<version>.zip
+		compress: {
+			main: {
+				options: {
+					mode: 'zip',
+					archive: './build/<%= pkg.name %>.zip'
+				},
+				expand: true,
+				cwd: 'build/<%= pkg.name %>/',
+				src: ['**/*'],
+				dest: '<%= pkg.name %>/'
+			}
+		},
 
-// Default task. - grunt makepot
-grunt.registerTask( 'default', 'makepot' );
+	});
 
-// Makepot and push it on Transifex task(s).
-grunt.registerTask( 'tx-push', [ 'makepot', 'exec:txpush_s' ] );
-
-// Pull from Transifex and create .mo task(s).
-grunt.registerTask( 'tx-pull', [ 'exec:txpull', 'potomo' ] );
-
-// Build task(s).
-grunt.registerTask( 'build', [ 'clean', 'copy', 'compress' ] );
+	// Build task(s).
+	grunt.registerTask( 'build', [ 'cssmin', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
 
 };

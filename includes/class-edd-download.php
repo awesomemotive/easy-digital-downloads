@@ -530,7 +530,6 @@ class EDD_Download {
 	 * Retrieve the Download IDs that are bundled with this Download based on the variable pricing ID passed
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @param int $price_id Variable pricing ID
 	 * @return array List of bundled downloads
 	 */

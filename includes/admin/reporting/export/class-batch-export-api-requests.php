@@ -31,7 +31,6 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 2.7
 	 * @return array $cols All the columns
 	 */
@@ -53,7 +52,6 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 2.7
  	 * @global object $edd_logs EDD Logs Object
 	 * @return array $data The data for the CSV file

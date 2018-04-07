@@ -30,7 +30,6 @@ class EDD_Export {
 	/**
 	 * Can we export?
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return bool Whether we can export or not
 	 */
@@ -41,7 +40,6 @@ class EDD_Export {
 	/**
 	 * Set the export headers
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
@@ -60,7 +58,6 @@ class EDD_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols All the columns
 	 */
@@ -75,7 +72,6 @@ class EDD_Export {
 	/**
 	 * Retrieve the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols Array of the columns
 	 */
@@ -87,7 +83,6 @@ class EDD_Export {
 	/**
 	 * Output the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @uses EDD_Export::get_csv_cols()
 	 * @return void
@@ -106,7 +101,6 @@ class EDD_Export {
 	/**
 	 * Get the data being exported
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $data Data for Export
 	 */
@@ -132,7 +126,6 @@ class EDD_Export {
 	/**
 	 * Output the CSV rows
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
@@ -159,7 +152,6 @@ class EDD_Export {
 	/**
 	 * Perform the export
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @uses EDD_Export::can_export()
 	 * @uses EDD_Export::headers()

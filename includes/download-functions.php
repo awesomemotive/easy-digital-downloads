@@ -82,30 +82,42 @@ function edd_get_download_by( $field = '', $value = '' ) {
  * Retrieves a download post object by ID or slug.
  *
  * @since 1.0
- * @param int $download Download ID
- * @return WP_Post $download Entire download data
+ * @since 2.9 - Return an EDD_Download object.
+ *
+ * @param int $download_id Download ID.
+ *
+ * @return EDD_Download $download Entire download data.
  */
-function edd_get_download( $download = 0 ) {
-	if ( is_numeric( $download ) ) {
-		$download = get_post( $download );
-		if ( ! $download || 'download' !== $download->post_type )
-			return null;
-		return $download;
+function edd_get_download( $download_id = 0 ) {
+	$download = null;
+
+	if ( is_numeric( $download_id ) ) {
+
+		$found_download = new EDD_Download( $download_id );
+
+		if ( ! empty( $found_download->ID ) ) {
+			$download = $found_download;
+		}
+
+	} else { // Support getting a download by name.
+		$args = array(
+			'post_type'     => 'download',
+			'name'          => $download_id,
+			'post_per_page' => 1,
+			'fields'        => 'ids',
+		);
+
+		$downloads = new WP_Query( $args );
+		if ( is_array( $downloads->posts ) && ! empty( $downloads->posts ) ) {
+
+			$download_id = $downloads->posts[0];
+
+			$download = new EDD_Download( $download_id );
+
+		}
 	}
 
-	$args = array(
-		'post_type'   => 'download',
-		'name'        => $download,
-		'numberposts' => 1
-	);
-
-	$download = get_posts($args);
-
-	if ( $download ) {
-		return $download[0];
-	}
-
-	return null;
+	return $download;
 }
 
 /**

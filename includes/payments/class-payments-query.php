@@ -27,7 +27,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * The args to pass to the edd_get_payments() query
 	 *
 	 * @var array
-	 * @access public
 	 * @since 1.8
 	 */
 	public $args = array();
@@ -44,7 +43,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * The payments found based on the criteria set
 	 *
 	 * @var array
-	 * @access public
 	 * @since 1.8
 	 */
 	public $payments = array();
@@ -73,7 +71,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
 	 * the query is run to convert them to the proper syntax.
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
@@ -112,7 +109,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Set a query variable.
 	 *
-	 * @access public
 	 * @since 1.8
 	 */
 	public function __set( $query_var, $value ) {
@@ -125,7 +121,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Unset a query variable.
 	 *
-	 * @access public
 	 * @since 1.8
 	 */
 	public function __unset( $query_var ) {
@@ -135,7 +130,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Nothing here at the moment.
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -154,9 +148,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * query is run, or the filter on the arguments (existing mainly for backwards
 	 * compatibility).
 	 *
-	 * @access public
 	 * @since 1.8
-	 * @return array
+	 * @return EDD_Payment[]
 	 */
 	public function get_payments() {
 
@@ -219,9 +212,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * If querying a specific date, add the proper filters.
 	 *
-	 * @access public
 	 * @since 1.8
-	 * @return void
 	 */
 	public function date_filter_pre() {
 		if( ! ( $this->args['start_date'] || $this->args['end_date'] ) ) {
@@ -237,7 +228,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * If querying a specific date, remove filters after the query has been run
 	 * to avoid affecting future queries.
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -252,7 +242,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Post Status
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -268,7 +257,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Current Page
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -284,7 +272,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Posts Per Page
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -307,7 +294,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Current Month
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -323,7 +309,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Order by
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -342,7 +327,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Specific User
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -366,7 +350,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Specific customer id
 	 *
-	 * @access  public
 	 * @since   2.6
 	 * @return  void
 	 */
@@ -384,7 +367,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Specific gateway
 	 *
-	 * @access  public
 	 * @since   2.8
 	 * @return  void
 	 */
@@ -402,7 +384,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Specific payments
 	 *
-	 * @access  public
 	 * @since   2.8.7
 	 * @return  void
 	 */
@@ -417,7 +398,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Search
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -539,7 +519,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Payment Mode
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -558,7 +537,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Children
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -572,7 +550,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Specific Download
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */

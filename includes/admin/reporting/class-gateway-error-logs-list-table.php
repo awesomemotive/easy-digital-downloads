@@ -65,7 +65,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param array $item Contains all the data of the log item
@@ -85,7 +84,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Output Error Message Column
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @param array $item Contains all the data of the log
 	 * @return void
@@ -120,7 +118,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -140,7 +137,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return int Current page number
 	 */
@@ -151,7 +147,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Outputs the log views
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -163,7 +158,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Gets the log entries for the current view
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @global object $edd_logs EDD Logs Object
 	 * @return array $logs_data Array of all the Log entires
@@ -202,7 +196,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @global object $edd_logs EDD Logs Object
 	 * @uses EDD_Gateway_Error_Log_Table::get_columns()
@@ -233,7 +226,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return bool
 	 */

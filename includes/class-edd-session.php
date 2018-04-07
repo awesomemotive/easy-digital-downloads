@@ -110,7 +110,6 @@ class EDD_Session {
 	/**
 	 * Setup the WP_Session instance
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return void
 	 */
@@ -141,7 +140,6 @@ class EDD_Session {
 	/**
 	 * Retrieve session ID
 	 *
-	 * @access public
 	 * @since 1.6
 	 * @return string Session ID
 	 */
@@ -153,7 +151,6 @@ class EDD_Session {
 	/**
 	 * Retrieve a session variable
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $key Session key
 	 * @return mixed Session variable
@@ -170,7 +167,7 @@ class EDD_Session {
 				$this->set( $key, null );
 				return false;
 			}
-			
+
 			if ( is_numeric( $this->session[ $key ] ) ) {
 				$return = $this->session[ $key ];
 			} else {
@@ -229,7 +226,6 @@ class EDD_Session {
 	 *
 	 * This is for hosts and caching plugins to identify if caching should be disabled
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @param bool $set Whether to set or destroy
 	 * @return void
@@ -249,7 +245,6 @@ class EDD_Session {
 	/**
 	 * Force the cookie expiration variant time to 23 hours
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @param int $exp Default expiration (1 hour)
 	 * @return int
@@ -261,7 +256,6 @@ class EDD_Session {
 	/**
 	 * Force the cookie expiration time to 24 hours
 	 *
-	 * @access public
 	 * @since 1.9
 	 * @param int $exp Default expiration (1 hour)
 	 * @return int Cookie expiration time
@@ -277,7 +271,6 @@ class EDD_Session {
 	 * Checks to see if the server supports PHP sessions
 	 * or if the EDD_USE_PHP_SESSIONS constant is defined
 	 *
-	 * @access public
 	 * @since 2.1
 	 * @author Daniel J Griffiths
 	 * @return boolean $ret True if we are using PHP sessions, false otherwise

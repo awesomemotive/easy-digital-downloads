@@ -443,6 +443,20 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
 }
 
 /**
+ * Retrieves the discount status label.
+ *
+ * @since 2.9
+ *
+ * @param int $code_id Discount ID.
+ * @return string Product condition.
+ */
+function edd_get_discount_status_label( $code_id = null ) {
+	$discount = new EDD_Discount( $code_id );
+
+	return $discount->get_status_label();
+}
+
+/**
  * Check if a discount is not global.
  *
  * By default discounts are applied to all products in the cart. Non global discounts are

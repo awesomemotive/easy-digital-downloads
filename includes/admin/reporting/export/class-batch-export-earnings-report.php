@@ -24,7 +24,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @var string
 	 */
 	public $export_type = 'earnings_report';
@@ -33,7 +32,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Set the export headers.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return void
 	 */
@@ -116,7 +114,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 *
 	 * We make use of this function to set up the header of the earnings report.
 	 *
-	 * @access public
 	 * @since 2.7
 	 *
 	 * @return array $cols CSV header.
@@ -164,7 +161,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Print the CSV rows for the current step.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed string|false
 	 */
@@ -244,7 +240,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Get the Export Data.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array $data The data for the CSV file
 	 */
@@ -333,7 +328,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Return the calculated completion percentage
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Percentage of batch processing complete.
 	 */
@@ -357,7 +351,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Set the properties specific to the earnings report.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $request The Form Data passed into the batch processing
 	 * @return void

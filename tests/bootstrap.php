@@ -36,7 +36,7 @@ wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User'
 add_filter( 'edd_log_email_errors', '__return_false' );
 
 function _disable_reqs( $status = false, $args = array(), $url = '') {
-	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disbaled for unit tests', 'edd' ) );
+	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disbaled for unit tests', 'easy-digital-downloads' ) );
 }
 add_filter( 'pre_http_request', '_disable_reqs' );
 

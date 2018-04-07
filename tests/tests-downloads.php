@@ -35,6 +35,28 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertEquals( $out->post_type, $this->_post->post_type );
 	}
 
+	public function test_get_download_null() {
+		$out = edd_get_download( 999999999 );
+
+		$this->assertSame( null, $out );
+	}
+
+	public function test_get_download_by_name() {
+		$out = edd_get_download( $this->_post->post_name );
+
+		$this->assertObjectHasAttribute( 'ID', $out );
+		$this->assertObjectHasAttribute( 'post_title', $out );
+		$this->assertObjectHasAttribute( 'post_type', $out );
+
+		$this->assertEquals( 'Variable Test Download Product', $out->get_name() );
+	}
+
+	public function test_get_download_by_name_null() {
+		$out = edd_get_download( 'TESTING BY NAME NULL' );
+
+		$this->assertSame( null, $out );
+	}
+
 	public function test_edd_get_download_by() {
 
 		$download = edd_get_download_by( 'id', $this->_post->ID );
