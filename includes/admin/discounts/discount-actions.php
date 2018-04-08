@@ -60,7 +60,7 @@ function edd_admin_add_discount( $data = array() ) {
 		switch ( $column ) {
 			case 'start_date':
 			case 'start':
-				$to_add['start_date'] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
+				$to_add[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
 				break;
 
 			case 'end_date':
