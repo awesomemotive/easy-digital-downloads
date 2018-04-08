@@ -51,6 +51,7 @@ final class Order_Discounts extends Base {
 		object_id bigint(20) unsigned NOT NULL default '0',
 		object_type varchar(20) DEFAULT NULL,
 		amount decimal(18,9) NOT NULL default '0',
+		discount_id bigint(20) unsigned NOT NULL default '0',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY (id),
