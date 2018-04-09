@@ -61,7 +61,7 @@ class Order_Adjustments extends Base {
 			'sortable'   => true
 		),
 
-		// type
+		// type_id
 		array(
 			'name'       => 'type_id',
 			'type'       => 'bigint',

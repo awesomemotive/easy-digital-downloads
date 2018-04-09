@@ -40,6 +40,17 @@ class Orders extends Base {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// order_number
 		array(
 			'name'       => 'order_number',

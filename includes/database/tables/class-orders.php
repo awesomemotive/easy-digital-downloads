@@ -49,6 +49,7 @@ final class Orders extends Base {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "id bigint(20) unsigned NOT NULL auto_increment,
+			parent bigint(20) unsigned NOT NULL default '0',
 			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
