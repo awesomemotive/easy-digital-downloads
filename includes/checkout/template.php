@@ -680,18 +680,15 @@ function edd_show_payment_icons() {
 
 			} else {
 
-				$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
-				$content_dir = WP_PLUGIN_DIR;
+				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
 
-				if( function_exists( 'wp_normalize_path' ) ) {
+				// Replaces backslashes with forward slashes for Windows systems
+				$plugin_dir  = wp_normalize_path( WP_PLUGIN_DIR );
+				$content_dir = wp_normalize_path( WP_CONTENT_DIR );
+				$image       = wp_normalize_path( $image );
 
-					// Replaces backslashes with forward slashes for Windows systems
-					$image = wp_normalize_path( $image );
-					$content_dir = wp_normalize_path( $content_dir );
-
-				}
-
-				$image = str_replace( $content_dir, WP_PLUGIN_URL, $image );
+				$image = str_replace( $plugin_dir, WP_PLUGIN_URL, $image );
+				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
 
 			}
 
@@ -770,7 +767,7 @@ function edd_terms_agreement() {
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
-		
+
 		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
