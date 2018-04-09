@@ -291,6 +291,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-adjustments.php';
 
 		// Database Objects
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-base.php';
@@ -302,6 +303,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-note.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order-adjustment.php';
 
 		// Database Tables
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-base.php';
@@ -313,6 +315,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustments.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-discount-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-meta.php';
@@ -330,6 +334,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-note.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-adjustment.php';
 
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';

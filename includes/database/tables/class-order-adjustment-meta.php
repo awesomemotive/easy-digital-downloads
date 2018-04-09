@@ -1,6 +1,6 @@
 <?php
 /**
- * Logs Table.
+ * Order Adjustment Meta Table.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
- * Setup the global "edd_logs" database table
+ * Setup the global "edd_order_adjustmentmeta" database table
  *
  * @since 3.0.0
  */
-final class Logs extends Base {
+final class Order_Adjustment_Meta extends Base {
 
 	/**
 	 * Table name
@@ -28,7 +28,7 @@ final class Logs extends Base {
 	 * @since 3.0.0
 	 * @var string
 	 */
-	protected $name = 'edd_logs';
+	protected $name = 'edd_order_adjustmentmeta';
 
 	/**
 	 * Database version
@@ -47,18 +47,14 @@ final class Logs extends Base {
 	 * @return void
 	 */
 	protected function set_schema() {
-		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
-		object_id bigint(20) unsigned NOT NULL default '0',
-		object_type varchar(20) DEFAULT NULL,
-		type varchar(30) DEFAULT NULL,
-		title varchar(200) DEFAULT NULL,
-		content longtext DEFAULT NULL,
-		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		PRIMARY KEY (id),
-		KEY object_id_type (object_id,object_type(20)),
-		KEY type (type(30)),
-		KEY date_created (date_created)";
+		$max_index_length = 191;
+		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
+		edd_order_adjustment_id bigint(20) unsigned NOT NULL default '0',
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY (meta_id),
+		KEY edd_order_adjustment_id (edd_order_adjustment_id),
+		KEY meta_key (meta_key({$max_index_length}))";
 	}
 
 	/**

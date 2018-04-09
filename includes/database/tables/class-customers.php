@@ -57,6 +57,7 @@ final class Customers extends Base {
 			payment_ids longtext NOT NULL,
 			notes longtext NOT NULL,
 			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			UNIQUE KEY email (email),
 			KEY user (user_id),

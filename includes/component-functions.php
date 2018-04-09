@@ -159,6 +159,15 @@ function edd_setup_components() {
 		'object' => '\\EDD\\Orders\\Order_Item'
 	) );
 
+	// Register order discount
+	edd_register_component( 'order_adjustment', array(
+		'schema' => '\\EDD\\Database\\Schema\\Order_Adjustments',
+		'table'  => '\\EDD\\Database\\Tables\\Order_Adjustments',
+		'query'  => '\\EDD\\Database\\Queries\\Order_Adjustment',
+		'object' => '\\EDD\\Orders\\Order_Adjustment',
+		'meta'   => '\\EDD\\Database\\Tables\\Order_Adjustment_Meta',
+	) );
+
 	// Register log
 	edd_register_component( 'log', array(
 		'schema' => '\\EDD\\Database\\Schema\\Logs',

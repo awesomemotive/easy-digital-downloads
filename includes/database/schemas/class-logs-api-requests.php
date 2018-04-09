@@ -129,6 +129,16 @@ class Logs_Api_Requests extends Base {
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
 			'sortable'   => true
+		),
+
+		// date_modified
+		array(
+			'name'       => 'date_modified',
+			'type'       => 'datetime',
+			'default'    => 'CURRENT_TIMESTAMP',
+			'extra'      => 'ON UPDATE CURRENT_TIMESTAMP',
+			'date_query' => true,
+			'sortable'   => true
 		)
 	);
 }

@@ -61,6 +61,7 @@ final class Discounts extends Base {
 			min_cart_price decimal(18,9) NOT NULL default '0',
 			product_condition varchar(20) NOT NULL DEFAULT 'all',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			start_date datetime NOT NULL default '0000-00-00 00:00:00',
 			end_date datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
