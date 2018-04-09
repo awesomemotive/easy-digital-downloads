@@ -48,6 +48,7 @@ final class Discounts extends Base {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
+			parent bigint(20) unsigned NOT NULL default '0',
 			name varchar(200) NOT NULL default '',
 			code varchar(50) NOT NULL default '',
 			status varchar(20) NOT NULL default '',
