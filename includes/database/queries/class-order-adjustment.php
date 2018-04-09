@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Extra Query Class.
+ * Order Adjustment Query Class.
  *
  * @package     EDD
  * @subpackage  Database\Queries
@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  *
- * @see \EDD\Database\Queries\Order_Extra::__construct() for accepted arguments.
+ * @see \EDD\Database\Queries\Order_Adjustment::__construct() for accepted arguments.
  */
-class Order_Extra extends Base {
+class Order_Adjustment extends Base {
 
 	/** Table Properties ******************************************************/
 
@@ -31,7 +31,7 @@ class Order_Extra extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'order_discounts';
+	public $table_name = 'order_adjustments';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Order_Extra extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'od';
+	public $table_alias = 'oa';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Order_Extra extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Order_Extras';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Order_Adjustments';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Order_Extra extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'order_discount';
+	public $item_name = 'order_adjustment';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Order_Extra extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'order_discounts';
+	public $item_name_plural = 'order_adjustments';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -89,7 +89,7 @@ class Order_Extra extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'order_extras';
+	public $cache_group = 'order_adjustments';
 
 	/** Methods ***************************************************************/
 
@@ -111,9 +111,6 @@ class Order_Extra extends Base {
 	 *     @type string       $object_type          An object types to only return that type. Default empty.
 	 *     @type array        $object_type__in      Array of object types to include. Default empty.
 	 *     @type array        $object_type__not_in  Array of object types to exclude. Default empty.
-	 *     @type string       $discount_id          Limit results to those affiliated with a given discount ID. Default empty.
-	 *     @type array        $discount_id__in      Array of discounts. Default empty.
-	 *     @type array        $discount_id__not_in  Array of discounts. Default empty.
 	 *     @type string       $amount               Limit results to those affiliated with a given total. Default empty.
 	 *     @type array        $amount__in           Array of amounts to include. Default empty.
 	 *     @type array        $amount__not_in       Array of amounts to exclude. Default empty.

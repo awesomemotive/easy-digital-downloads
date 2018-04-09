@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Discounts Schema Class.
+ * Order Adjustments Schema Class.
  *
  * @package     EDD
  * @subpackage  Database\Schemas
@@ -14,11 +14,11 @@ namespace EDD\Database\Schemas;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Order Items Schema Class.
+ * Order Adjustments Schema Class.
  *
  * @since 3.0.0
  */
-class Order_Extras extends Base {
+class Order_Adjustments extends Base {
 
 	/**
 	 * Array of database column objects
@@ -63,6 +63,17 @@ class Order_Extras extends Base {
 
 		// type
 		array(
+			'name'       => 'type_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// type
+		array(
 			'name'       => 'type',
 			'type'       => 'varchar',
 			'length'     => '20',
@@ -71,13 +82,12 @@ class Order_Extras extends Base {
 			'sortable'   => true
 		),
 
-		// type
+		// description
 		array(
-			'name'       => 'type_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
+			'name'       => 'description',
+			'type'       => 'varchar',
+			'length'     => '100',
+			'default'    => '',
 			'searchable' => true,
 			'sortable'   => true
 		),

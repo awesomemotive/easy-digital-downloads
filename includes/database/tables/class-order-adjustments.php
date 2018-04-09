@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Extras Table.
+ * Order Adjustments Table.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
- * Setup the global "edd_order_extras" database table
+ * Setup the global "edd_order_adjustments" database table
  *
  * @since 3.0.0
  */
-final class Order_Extras extends Base {
+final class Order_Adjustments extends Base {
 
 	/**
 	 * Table name
@@ -28,7 +28,7 @@ final class Order_Extras extends Base {
 	 * @since 3.0.0
 	 * @var string
 	 */
-	protected $name = 'edd_order_extras';
+	protected $name = 'edd_order_adjustments';
 
 	/**
 	 * Database version
@@ -50,8 +50,9 @@ final class Order_Extras extends Base {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 		object_id bigint(20) unsigned NOT NULL default '0',
 		object_type varchar(20) DEFAULT NULL,
-		type varchar(20) DEFAULT NULL,
 		type_id bigint(20) unsigned NOT NULL default '0',
+		type varchar(20) DEFAULT NULL,
+		description varchar(100) DEFAULT NULL,
 		amount decimal(18,9) NOT NULL default '0',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
