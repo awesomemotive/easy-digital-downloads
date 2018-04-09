@@ -56,6 +56,7 @@ final class Logs_File_Downloads extends Base {
 		email varchar(100) NOT NULL default '',
 		ip varchar(60) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
+		date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY (id),
 		KEY user_id (user_id),
 		KEY download_id (download_id),
