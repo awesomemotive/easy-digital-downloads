@@ -53,6 +53,7 @@ final class Notes extends Base {
 			user_id bigint(20) unsigned NOT NULL default '0',
 			content longtext NOT NULL default '',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			KEY object_id_type (object_id,object_type(20)),
 			KEY user_id (user_id),

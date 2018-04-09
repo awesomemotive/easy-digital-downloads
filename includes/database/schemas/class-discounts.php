@@ -154,6 +154,16 @@ class Discounts extends Base {
 			'sortable'   => true
 		),
 
+		// date_modified
+		array(
+			'name'       => 'date_modified',
+			'type'       => 'datetime',
+			'default'    => 'CURRENT_TIMESTAMP',
+			'extra'      => 'ON UPDATE CURRENT_TIMESTAMP',
+			'date_query' => true,
+			'sortable'   => true
+		),
+
 		// start_date
 		array(
 			'name'       => 'start_date',
