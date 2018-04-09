@@ -165,7 +165,7 @@ function edd_setup_components() {
 		'table'  => '\\EDD\\Database\\Tables\\Order_Adjustments',
 		'query'  => '\\EDD\\Database\\Queries\\Order_Adjustment',
 		'object' => '\\EDD\\Orders\\Order_Adjustment',
-		'meta'   => false,
+		'meta'   => '\\EDD\\Database\\Tables\\Order_Adjustment_Meta',
 	) );
 
 	// Register log

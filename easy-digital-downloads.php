@@ -316,6 +316,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-items.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustments.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-discount-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-meta.php';
