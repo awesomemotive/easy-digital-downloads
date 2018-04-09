@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Discount Query Class.
+ * Order Extra Query Class.
  *
  * @package     EDD
  * @subpackage  Database\Queries
@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  *
- * @see \EDD\Database\Queries\Order_Discount::__construct() for accepted arguments.
+ * @see \EDD\Database\Queries\Order_Extra::__construct() for accepted arguments.
  */
-class Order_Discount extends Base {
+class Order_Extra extends Base {
 
 	/** Table Properties ******************************************************/
 
@@ -49,7 +49,7 @@ class Order_Discount extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Order_Discounts';
+	public $table_schema = '\\EDD\\Database\\Schemas\\Order_Extras';
 
 	/** Item ******************************************************************/
 
@@ -89,7 +89,7 @@ class Order_Discount extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'order_discounts';
+	public $cache_group = 'order_extras';
 
 	/** Methods ***************************************************************/
 
