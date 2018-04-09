@@ -160,11 +160,11 @@ function edd_setup_components() {
 	) );
 
 	// Register order discount
-	edd_register_component( 'order_discount', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Discounts',
-		'table'  => '\\EDD\\Database\\Tables\\Order_Discounts',
-		'query'  => '\\EDD\\Database\\Queries\\Order_Discount',
-		'object' => '\\EDD\\Orders\\Order_Discount',
+	edd_register_component( 'order_extra', array(
+		'schema' => '\\EDD\\Database\\Schema\\Order_Extras',
+		'table'  => '\\EDD\\Database\\Tables\\Order_Extras',
+		'query'  => '\\EDD\\Database\\Queries\\Order_Extra',
+		'object' => '\\EDD\\Orders\\Order_Extra',
 		'meta'   => false,
 	) );
 

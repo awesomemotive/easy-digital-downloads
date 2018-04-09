@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Discount Database Object Class.
+ * Order Extra Database Object Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -18,6 +18,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  */
-class Order_Discount extends Base {
+class Order_Extra extends Base {
 
 }

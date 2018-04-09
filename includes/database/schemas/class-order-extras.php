@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0.0
  */
-class Order_Discounts extends Base {
+class Order_Extras extends Base {
 
 	/**
 	 * Array of database column objects
@@ -61,22 +61,32 @@ class Order_Discounts extends Base {
 			'sortable'   => true
 		),
 
-		// amount
+		// type
 		array(
-			'name'       => 'amount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
+			'name'       => 'type',
+			'type'       => 'varchar',
+			'length'     => '20',
+			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// type
+		array(
+			'name'       => 'type_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
 			'default'    => '0',
 			'searchable' => true,
 			'sortable'   => true
 		),
 
-		// discount_id
+		// amount
 		array(
-			'name'       => 'discount_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
+			'name'       => 'amount',
+			'type'       => 'decimal',
+			'length'     => '18,9',
 			'default'    => '0',
 			'searchable' => true,
 			'sortable'   => true
