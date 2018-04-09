@@ -60,6 +60,7 @@ final class Order_Items extends Base {
 			discount decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
 			KEY order_product_price_id (order_id,product_id,price_id),
 			KEY type_status (type(20),status(20))";

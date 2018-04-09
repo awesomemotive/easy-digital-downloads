@@ -144,6 +144,16 @@ class Order_Items extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0'
-		)
+		),
+
+		// date_modified
+		array(
+			'name'       => 'date_modified',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'searchable' => true,
+			'sortable'   => true
+		),
 	);
 }
