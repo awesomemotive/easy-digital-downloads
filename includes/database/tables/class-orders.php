@@ -53,7 +53,7 @@ final class Orders extends Base {
 			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
 			user_id bigint(20) unsigned NOT NULL default '0',
 			customer_id bigint(20) unsigned NOT NULL default '0',

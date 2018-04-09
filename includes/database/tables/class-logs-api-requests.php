@@ -57,7 +57,7 @@ final class Logs_Api_Requests extends Base {
 		ip varchar(60) NOT NULL default '',
 		time varchar(60) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
 		KEY user_id (user_id),
 		KEY date_created (date_created)";

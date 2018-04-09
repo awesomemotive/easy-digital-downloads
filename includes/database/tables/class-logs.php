@@ -54,7 +54,7 @@ final class Logs extends Base {
 		title varchar(200) DEFAULT NULL,
 		content longtext DEFAULT NULL,
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
 		KEY type (type(30)),
