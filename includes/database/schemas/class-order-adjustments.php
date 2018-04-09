@@ -1,6 +1,6 @@
 <?php
 /**
- * Logs Schema Class.
+ * Order Adjustments Schema Class.
  *
  * @package     EDD
  * @subpackage  Database\Schemas
@@ -14,11 +14,11 @@ namespace EDD\Database\Schemas;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Logs Schema Class.
+ * Order Adjustments Schema Class.
  *
  * @since 3.0.0
  */
-class Logs extends Base {
+class Order_Adjustments extends Base {
 
 	/**
 	 * Array of database column objects
@@ -37,7 +37,6 @@ class Logs extends Base {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -64,35 +63,43 @@ class Logs extends Base {
 
 		// type
 		array(
+			'name'       => 'type_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// type
+		array(
 			'name'       => 'type',
 			'type'       => 'varchar',
-			'length'     => '30',
+			'length'     => '20',
 			'default'    => '',
 			'searchable' => true,
 			'sortable'   => true
 		),
 
-		// title
+		// description
 		array(
-			'name'       => 'title',
+			'name'       => 'description',
 			'type'       => 'varchar',
-			'length'     => '200',
+			'length'     => '100',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true,
-			'in'         => false,
-			'not_in'     => false
+			'sortable'   => true
 		),
 
-		// content
+		// amount
 		array(
-			'name'       => 'content',
-			'type'       => 'longtext',
-			'default'    => '',
+			'name'       => 'amount',
+			'type'       => 'decimal',
+			'length'     => '18,9',
+			'default'    => '0',
 			'searchable' => true,
-			'sortable'   => true,
-			'in'         => false,
-			'not_in'     => false
+			'sortable'   => true
 		),
 
 		// date_created
