@@ -156,7 +156,7 @@ class EDD_Download {
 			return false;
 		}
 
-		if( ! is_a( $download, 'WP_Post' ) ) {
+		if( ! $download instanceof WP_Post ) {
 			return false;
 		}
 

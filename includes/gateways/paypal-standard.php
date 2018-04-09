@@ -1083,7 +1083,7 @@ add_action( 'edd_pre_refund_payment', 'edd_maybe_refund_paypal_purchase', 999 );
  */
 function edd_refund_paypal_purchase( $payment ) {
 
-	if( ! is_a( $payment, 'EDD_Payment' ) && is_numeric( $payment ) ) {
+	if( ! $payment instanceof EDD_Payment && is_numeric( $payment ) ) {
 		$payment = new EDD_Payment( $payment );
 	}
 

@@ -24,7 +24,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 	global $wpdb;
 
-	if ( is_a( $payment_or_txn_id, 'WP_Post' ) || is_a( $payment_or_txn_id, 'EDD_Payment' ) ) {
+	if ( $payment_or_txn_id instanceof WP_Post || $payment_or_txn_id instanceof EDD_Payment ) {
 		$payment_id = $payment_or_txn_id->ID;
 	} elseif ( $by_txn ) {
 		if ( empty( $payment_or_txn_id ) ) {
