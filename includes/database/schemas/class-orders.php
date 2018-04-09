@@ -79,6 +79,16 @@ class Orders extends Base {
 			'sortable'   => true
 		),
 
+		// date_modified
+		array(
+			'name'       => 'date_modified',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// date_completed
 		array(
 			'name'       => 'date_completed',

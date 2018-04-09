@@ -115,8 +115,7 @@ class Order_Adjustments extends Base {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => 'CURRENT_TIMESTAMP',
-			'extra'      => 'ON UPDATE CURRENT_TIMESTAMP',
+			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
 			'sortable'   => true
 		)
