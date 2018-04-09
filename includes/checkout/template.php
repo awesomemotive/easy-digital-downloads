@@ -797,7 +797,7 @@ function edd_terms_agreement() {
 					<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
 						<?php
 						do_action( 'edd_before_privacy_policy' );
-						echo wpautop( stripslashes( $agreement_text ) );
+						echo wpautop( do_shortcode( stripslashes( $agreement_text ) ) );
 						do_action( 'edd_after_privacy_policy' );
 						?>
 					</div>
