@@ -334,7 +334,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'to'   => date( 'Y-m-d H:i:s' ),
 		);
 
-		EDD()->session->set( 'reports:dates', $expected );
+		set_transient( 'reports:dates', $expected );
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
@@ -623,7 +623,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
-		EDD()->session->set( 'reports:dates', array(
+		set_transient( 'reports:dates', array(
 			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 			'range' => 'other',
@@ -642,9 +642,6 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
-
-		// Clean up.
-		EDD()->session->set( 'reports:dates', array() );
 	}
 
 	/**
@@ -671,7 +668,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_dates_filter_range()
 	 * @group edd_dates
 	 */
-	public function test_get_dates_filter_range_with_no_report_id_should_fallback_to_last_30_days_if_range_var_not_set() {
+	public function test_get_dates_filter_range_with_no_preset_range_should_defualt_to_last_30_days() {
 		$this->assertSame( 'last_30_days', get_dates_filter_range() );
 	}
 
@@ -679,15 +676,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers ::\EDD\Reports\get_dates_filter_range()
 	 * @group edd_dates
 	 */
-	public function test_get_dates_filter_range_with_report_id_should_return_that_reports_range() {
-		EDD()->session->set( 'reports:dates', array(
+	public function test_get_dates_filter_range_with_non_default_range_set_should_return_that_reports_range() {
+		set_transient( 'reports:dates', array(
 			'range' => 'last_quarter',
 		) );
 
 		$this->assertSame( 'last_quarter', get_dates_filter_range() );
-
-		// Clean up.
-		EDD()->session->set( 'reports:dates', false );
 	}
 
 	/**
