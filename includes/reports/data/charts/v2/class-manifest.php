@@ -245,13 +245,7 @@ class Manifest implements Error_Logger {
 	 * @since 3.0
 	 */
 	public function render() {
-		$config = new \stdClass();
-
-		$config->type    = $this->get_type();
-		$config->data    = $this->get_chart_data();
-		$config->options = $this->get_chart_options();
-
-		$config = json_encode( $config );
+		$config = $this->build_config();
 
 		$endpoint  = $this->get_endpoint();
 		$default   = "edd_reports_graph_{$endpoint->get_id()}";
@@ -291,6 +285,23 @@ class Manifest implements Error_Logger {
 
 		</script>
 		<?php
+	}
+
+	/**
+	 * Builds the chart config.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string JSON-encoded config object.
+	 */
+	protected function build_config() {
+		$config = new \stdClass();
+
+		$config->type    = $this->get_type();
+		$config->data    = $this->get_chart_data();
+		$config->options = $this->get_chart_options();
+
+		return json_encode( $config );
 	}
 
 	/**
