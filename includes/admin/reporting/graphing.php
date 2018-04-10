@@ -24,31 +24,7 @@ function edd_reports_graph() {
 	// Retrieve the queried dates
 	$dates = Reports\get_dates_filter( 'objects' );
 
-	// Determine graph options
-	switch ( $dates['range'] ) {
-		case 'today' :
-		case 'yesterday' :
-			$day_by_day = true;
-			break;
-		case 'last_quarter' :
-		case 'this_quarter' :
-			$day_by_day = true;
-			break;
-		case 'other' :
-			$difference = ( $dates['start']->getTimestamp() - $dates['end']->getTimestamp() );
-
-			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
-			     || $difference >= YEAR_IN_SECONDS
-			) {
-				$day_by_day = false;
-			} else {
-				$day_by_day = true;
-			}
-			break;
-		default:
-			$day_by_day = true;
-			break;
-	}
+	$day_by_day = Reports\get_dates_filter_day_by_day();
 
 	$earnings_totals = 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;    // Total sales for time period shown

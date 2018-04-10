@@ -1,6 +1,7 @@
 <?php
 namespace EDD\Reports\Data\Charts\v2;
 
+use EDD\Reports;
 use EDD\Reports\Data\Chart_Endpoint;
 use EDD\Utils\Error_Logger_Interface as Error_Logger;
 
