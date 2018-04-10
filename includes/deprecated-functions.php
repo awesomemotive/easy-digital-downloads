@@ -836,9 +836,7 @@ function edd_report_views() {
  * @deprecated 3.0 Use \EDD\Reports\get_dates_filter() instead
  * @see \EDD\Reports\get_dates_filter()
  *
- * @param string $timezone Optional. Timezone to force for report filter dates calculations.
- *                         Default empty.
- *
+ * @param string $timezone Unused.
  * @return array Array of report filter dates.
  */
 function edd_get_report_dates( $timezone = '' ) {
