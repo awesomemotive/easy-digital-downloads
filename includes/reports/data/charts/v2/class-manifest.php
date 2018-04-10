@@ -248,6 +248,10 @@ class Manifest implements Error_Logger {
 	public function render() {
 		$config = $this->build_config();
 
+		// Dates.
+		$dates      = Reports\get_dates_filter();
+		$day_by_day = Reports\get_dates_filter_day_by_day();
+
 		$endpoint  = $this->get_endpoint();
 		$default   = "edd_reports_graph_{$endpoint->get_id()}";
 		$target_el = $endpoint->get_display_arg( 'target', $default );
@@ -273,9 +277,13 @@ class Manifest implements Error_Logger {
 
 			// Set min and max moment() values for the x-axis.
 			<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
-				// TODO hook up the date range.
-				xaxis.time.min = moment().startOf( 'month' );
-				xaxis.time.max = moment().endOf( 'month' );
+				<?php if ( false === $day_by_day ) : ?>
+					xaxis.time.unit = 'month';
+					console.log( xaxis.time );
+				<?php endif; ?>
+
+				xaxis.time.min = moment( '<?php echo esc_js( $dates['start'] ); ?>' );
+				xaxis.time.max = moment( '<?php echo esc_js( $dates['end'] ); ?>' );
 			} );
 
 			// Instantiate the chart.
