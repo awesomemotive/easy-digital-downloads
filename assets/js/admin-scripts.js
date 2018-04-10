@@ -1903,20 +1903,25 @@ jQuery(document).ready(function ($) {
 		},
 		remove_user: function() {
 			$( document.body ).on( 'click', '#disconnect-customer', function( e ) {
+
 				e.preventDefault();
-				var customer_id = $('input[name="customerinfo[id]"]').val();
 
-				var postData = {
-					edd_action:   'disconnect-userid',
-					customer_id: customer_id,
-					_wpnonce:     $( '#edit-customer-info #_wpnonce' ).val()
-				};
+				if ( confirm( edd_vars.disconnect_customer ) ) {
 
-				$.post(ajaxurl, postData, function( response ) {
+					var customer_id = $('input[name="customerinfo[id]"]').val();
 
-					window.location.href=window.location.href;
+					var postData = {
+						edd_action:   'disconnect-userid',
+						customer_id: customer_id,
+						_wpnonce:     $( '#edit-customer-info #_wpnonce' ).val()
+					};
 
-				}, 'json');
+					$.post(ajaxurl, postData, function( response ) {
+
+						window.location.href=window.location.href;
+
+					}, 'json');
+				}
 
 			});
 		},
