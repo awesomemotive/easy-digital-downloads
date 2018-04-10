@@ -249,8 +249,11 @@ class Manifest implements Error_Logger {
 		$config = $this->build_config();
 
 		// Dates.
-		$dates      = Reports\get_dates_filter();
+		$dates      = Reports\get_dates_filter( 'objects' );
 		$day_by_day = Reports\get_dates_filter_day_by_day();
+
+		// Adjust end date forward by 1 second to push into the next day (for ChartJS display purposes).
+		$dates['end']->addSeconds( 1 );
 
 		$endpoint  = $this->get_endpoint();
 		$default   = "edd_reports_graph_{$endpoint->get_id()}";
@@ -282,8 +285,8 @@ class Manifest implements Error_Logger {
 					console.log( xaxis.time );
 				<?php endif; ?>
 
-				xaxis.time.min = moment( '<?php echo esc_js( $dates['start'] ); ?>' );
-				xaxis.time.max = moment( '<?php echo esc_js( $dates['end'] ); ?>' );
+				xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );
+				xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
 			} );
 
 			// Instantiate the chart.
