@@ -368,7 +368,8 @@ class Manifest implements Error_Logger {
 						'time'     => array(
 							'unit' => 'day',
 							'displayFormats' => array(
-								'day' => 'MMM D',
+								'day'   => 'MMM D',
+								'month' => 'MMM',
 							),
 						),
 					),
