@@ -477,7 +477,7 @@ function get_dates_filter_options() {
  *                                         is 'objects', a Carbon object, otherwise a date time string.
  * }
  */
-function get_dates_filter( $values = 'strings', $timezone = '' ) {
+function get_dates_filter( $values = 'strings', $timezone = null ) {
 	$date  = EDD()->utils->date( 'now', $timezone );
 	$dates = parse_dates_for_range( $date );
 
