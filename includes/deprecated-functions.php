@@ -849,7 +849,7 @@ function edd_get_report_dates( $timezone = '' ) {
 
 	add_filter( 'edd_get_dates_filter_range', '\EDD\Reports\compat_filter_date_range' );
 
-	$filter_dates = Reports\get_dates_filter( 'objects', $timezone );
+	$filter_dates = Reports\get_dates_filter( 'objects' );
 	$range        = Reports\get_dates_filter_range();
 
 	remove_filter( 'edd_get_report_dates_default_range', '\EDD\Reports\compat_filter_date_range' );
