@@ -172,7 +172,7 @@ abstract class Endpoint extends Base_Object {
 	 *
 	 * @param string $report Report ID.
 	 */
-	private function set_report_id( $report ) {
+	protected function set_report_id( $report ) {
 		$this->report_id = $report;
 	}
 
@@ -223,6 +223,28 @@ abstract class Endpoint extends Base_Object {
 			) );
 
 		}
+	}
+
+	/**
+	 * Retrieves the value of a given display argument if set.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $key     Display argument key.
+	 * @param string $default Optional. Default value to return in the event the argument isn't set.
+	 *                        Default empty string.
+	 * @return mixed|string Value of the display argument if set, otherwise an empty string.
+	 */
+	public function get_display_arg( $key, $default = '' ) {
+		$display_args = $this->get_display_args();
+
+		if ( isset( $display_args[ $key ] ) ) {
+			$value = $display_args[ $key ];
+		} else {
+			$value = $default;
+		}
+
+		return $value;
 	}
 
 	/**
@@ -296,6 +318,14 @@ abstract class Endpoint extends Base_Object {
 
 			$this->display_callback = $display_callback;
 
+		} elseif ( is_string( $display_callback ) && '::' === substr( $display_callback, 0, 2 ) ) {
+
+			$method = str_replace( '::', '', $display_callback );
+
+			$display_callback = array( $this, $display_callback );
+
+			$this->set_display_callback( $display_callback );
+
 		} else {
 
 			$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
@@ -334,6 +364,14 @@ abstract class Endpoint extends Base_Object {
 		if ( is_callable( $data_callback ) ) {
 
 			$this->data_callback = $data_callback;
+
+		} elseif ( is_string( $data_callback ) && '::' === substr( $data_callback, 0, 2 ) ) {
+
+			$method = str_replace( '::', '', $data_callback );
+
+			$data_callback = array( $this, $data_callback );
+
+			$this->set_data_callback( $data_callback );
 
 		} else {
 
@@ -384,4 +422,39 @@ abstract class Endpoint extends Base_Object {
 			'endpoint_id' => $this->get_id(),
 		) );
 	}
+
+	/**
+	 * Converts callback attributes signified as methods (prefixed with '::')
+	 * to methods under the given object.
+	 *
+	 * This conversion can only really happen once the Endpoint is generated
+	 * because the object context doesn't yet exist during registration.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array  $atts   View attributes for an endpoint.
+	 * @param object $object Optional. Object under which the method should be assigned.
+	 *                       Default is the current Endpoint object.
+	 * @return array (Maybe) adjusted list of view attributes.
+	 */
+	protected function maybe_convert_callbacks_to_methods( $atts, $object = null ) {
+		$callbacks = array( 'display_callback', 'data_callback' );
+
+		if ( null === $object ) {
+			$object = $this;
+		}
+
+		foreach ( $callbacks as $callback ) {
+			if ( ! empty( $atts[ $callback ] )
+				&& ( is_string( $atts[ $callback ] ) && '::' === substr( $atts[ $callback ], 0, 2 ) )
+			) {
+				$method = str_replace( '::', '', $atts[ $callback ] );
+
+				$atts[ $callback ] = array( $object, $method );
+			}
+		}
+
+		return $atts;
+	}
+
 }

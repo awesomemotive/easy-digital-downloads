@@ -838,7 +838,6 @@ function edd_report_views() {
  *
  * @param string $timezone Optional. Timezone to force for report filter dates calculations.
  *                         Default empty.
- *
  * @return array Array of report filter dates.
  */
 function edd_get_report_dates( $timezone = '' ) {

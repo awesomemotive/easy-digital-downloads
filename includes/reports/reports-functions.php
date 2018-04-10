@@ -237,7 +237,7 @@ function get_endpoint_views() {
 			'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
 			'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
 			'fields'         => array(
-				'data_callback'    => '',
+				'data_callback'    => '::get_data',
 				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
 					'type'             => '' ,
@@ -247,23 +247,31 @@ function get_endpoint_views() {
 			),
 		),
 		'chart' => array(
-			'group' => 'charts',
+			'group'          => 'charts',
+			'group_callback' => __NAMESPACE__ . '\\default_display_charts_group',
+			'handler'        => 'EDD\Reports\Data\Chart_Endpoint',
+			'fields'         => array(
+				'type'             => 'line',
+				'options'          => array(),
+				'data_callback'    => '::get_data',
+				'display_callback' => '::display',
+				'display_args'     => array(
+					'colors' => 'core',
+				),
+			),
 		),
 		'table' => array(
 			'group'          => 'tables',
 			'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
 			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
 			'fields'         => array(
-				'display_callback' => 'display',
-				'data_callback'    => 'prepare_items',
+				'data_callback'    => '::prepare_items',
+				'display_callback' => '::display',
 				'display_args'     => array(
 					'class_name' => '',
 					'class_file' => '',
 				),
 			),
-		),
-		'graph' => array(
-			'group' => 'graphs',
 		),
 	);
 }
@@ -406,7 +414,7 @@ function get_filter_value( $filter ) {
 
 	if ( validate_filter( $filter ) ) {
 
-		$filter_value = EDD()->session->get( "reports:{$filter}" );
+		$filter_value = get_transient( "reports:{$filter}" );
 
 		if ( false !== $filter_value ) {
 			$value = $filter_value;
@@ -469,7 +477,7 @@ function get_dates_filter_options() {
  *                                         is 'objects', a Carbon object, otherwise a date time string.
  * }
  */
-function get_dates_filter( $values = 'strings', $timezone = '' ) {
+function get_dates_filter( $values = 'strings', $timezone = null ) {
 	$date  = EDD()->utils->date( 'now', $timezone );
 	$dates = parse_dates_for_range( $date );
 
@@ -491,10 +499,10 @@ function get_dates_filter( $values = 'strings', $timezone = '' ) {
 	 *     Query date range for the current graph filter request.
 	 *
 	 *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
-	 *                                         If `$values` is 'objects', a Carbon object, otherwise a date
+	 *                                         If `$values` is 'objects', a Date object, otherwise a date
 	 *                                         time string.
 	 *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
-	 *                                         is 'objects', a Carbon object, otherwise a date time string.
+	 *                                         is 'objects', a Date object, otherwise a date time string.
 	 * }
 	 */
 	return apply_filters( 'edd_get_dates_filter', $dates );
@@ -618,6 +626,8 @@ function parse_dates_for_range( $date, $range = null ) {
 			break;
 	}
 
+	$dates['range'] = $range;
+
 	return $dates;
 }
 
@@ -661,6 +671,50 @@ function get_dates_filter_range() {
 	return apply_filters( 'edd_get_dates_filter_range', $range, $dates );
 }
 
+/**
+ * Determines whether results should be displayed day by day or not.
+ *
+ * @since 3.0
+ *
+ * @return bool True if results should use day by day, otherwise false.
+ */
+function get_dates_filter_day_by_day() {
+	// Retrieve the queried dates
+	$dates = get_dates_filter( 'objects' );
+
+	// Determine graph options
+	switch ( $dates['range'] ) {
+		case 'today' :
+		case 'yesterday' :
+			$day_by_day = true;
+			break;
+		case 'last_quarter' :
+		case 'this_quarter' :
+			$day_by_day = true;
+			break;
+		case 'this_year':
+		case 'last_year':
+			$day_by_day = false;
+			break;
+		case 'other' :
+			$difference = ( $dates['start']->getTimestamp() - $dates['end']->getTimestamp() );
+
+			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
+			     || $difference >= YEAR_IN_SECONDS
+			) {
+				$day_by_day = false;
+			} else {
+				$day_by_day = true;
+			}
+			break;
+		default:
+			$day_by_day = true;
+			break;
+	}
+
+	return $day_by_day;
+}
+
 //
 // Display callbacks.
 //
@@ -682,6 +736,8 @@ function default_display_report( $report ) {
 
 		$report->display_endpoint_group( 'tables' );
 
+		$report->display_endpoint_group( 'charts' );
+
 	endif; // WP_Error.
 
 	// Back-compat.
@@ -699,7 +755,8 @@ function default_display_report( $report ) {
 		 * @deprecated 3.0 Use the new Reports API to register new tabs.
 		 * @see \EDD\Reports\add_report()
 		 *
-		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+		 *                                                   or WP_Error if invalid.
 		 */
 		edd_do_action_deprecated( "edd_reports_tab_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
 
@@ -716,7 +773,8 @@ function default_display_report( $report ) {
 		 * @deprecated 3.0 Use the new Reports API to register new tabs.
 		 * @see \EDD\Reports\add_report()
 		 *
-		 * @param \EDD\Reports\Data\Report $report Current report object.
+		 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+		 *                                                   or WP_Error if invalid.
 		 */
 		edd_do_action_deprecated( "edd_reports_view_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
 
@@ -728,12 +786,19 @@ function default_display_report( $report ) {
  *
  * @since 3.0
  *
- * @param \EDD\Reports\Data\Report $report Report object the tile endpoint is being rendered in.
- *                                               Not always set.
- * @param array                          $args   Tile display arguments.
+ * @param Data\Report $report Report object the tile endpoint is being rendered in.
+ *                            Not always set.
+ * @param array       $args   {
+ *     Tile display arguments.
+ *
+ *     @type Data\Tile_Endpoint $endpoint     Endpoint object.
+ *     @type mixed|array        $data         Date for display. By default, will be an array,
+ *                                            but can be of other types.
+ *     @type array              $display_args Array of any display arguments.
+ * }
  * @return void Meta box display callbacks only echo output.
  */
-function default_display_tile( $object, $tile ) {
+function default_display_tile( $report, $tile ) {
 	if ( ! isset( $tile['args'] ) ) {
 		return;
 	}
@@ -835,6 +900,29 @@ function default_display_tables_group( $report ) {
 }
 
 /**
+ * Handles default display of all chart endpoints registered against a report.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ */
+function default_display_charts_group( $report ) {
+	if ( $report->has_endpoints( 'charts' ) ) :
+
+		$charts = $report->get_endpoints( 'charts' );
+		?>
+		<div id="edd-reports-charts-wrap">
+			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
+				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
+
+				<?php $chart->display(); ?>
+			<?php endforeach; ?>
+		</div>
+		<?php
+	endif;
+}
+
+/**
  * Handles display of the 'Date' filter for reports.
  *
  * @since 3.0
@@ -845,11 +933,12 @@ function default_display_tables_group( $report ) {
 function display_dates_filter( $report ) {
 	$options = get_dates_filter_options();
 	$dates   = get_filter_value( 'dates' );
-	$class   = $dates['range'] === 'other' ? '' : 'screen-reader-text';
+	$range   = isset( $dates['range'] ) ? $dates['range'] : get_dates_filter_range();
+	$class   = $range === 'other' ? '' : 'screen-reader-text';
 	?>
 	<select id="edd-graphs-date-options" name="range">
 		<?php foreach ( $options as $key => $label ) : ?>
-			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $label ); ?></option>
+			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $range ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
 	</select>
 

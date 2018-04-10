@@ -63,6 +63,7 @@ class EDD_Utilities {
 
 		// Interfaces.
 		require_once $utils_dir . 'interface-static-registry.php';
+		require_once $utils_dir . 'interface-error-logger.php';
 
 		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
@@ -175,9 +176,11 @@ class EDD_Utilities {
 	 *                            Default is the timezone set in WordPress settings.
 	 * @return \EDD\Utils\Date Date instance.
 	 */
-	public function date( $date_string = 'now' ) {
+	public function date( $date_string = 'now', $timezone = null ) {
 
-		$timezone = edd_get_timezone();
+		if ( null === $timezone ) {
+			$timezone = edd_get_timezone();
+		}
 
 		/*
 		 * Create the DateTime object with the "local" WordPress timezone.
