@@ -770,7 +770,7 @@ function edd_parse_report_dates( $form_data ) {
 				break;
 		}
 
-		EDD()->session->set( "reports:{$filter}", $session_data );
+		set_transient( "reports:{$filter}", $session_data );
 
 	}
 
