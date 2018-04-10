@@ -43,6 +43,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$registry = EDD()->utils->get_registry( 'reports' );
 		$registry->exchangeArray( array() );
 
+		delete_transient( 'reports:dates' );
+
 		parent::tearDown();
 	}
 
