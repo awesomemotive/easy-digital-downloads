@@ -414,7 +414,7 @@ function get_filter_value( $filter ) {
 
 	if ( validate_filter( $filter ) ) {
 
-		$filter_value = EDD()->session->get( "reports:{$filter}" );
+		$filter_value = get_transient( "reports:{$filter}" );
 
 		if ( false !== $filter_value ) {
 			$value = $filter_value;
