@@ -1373,7 +1373,7 @@ function edd_get_italian_states_list() {
 		'FG' => 'Foggia',
 		'FC' => 'Forli-Cesena',
 		'FR' => 'Frosinone',
-		'GE' => 'Genova',
+		'GE' => 'Genoa',
 		'GO' => 'Gorizia',
 		'GR' => 'Grosseto',
 		'IM' => 'Imperia',
