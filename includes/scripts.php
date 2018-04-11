@@ -206,6 +206,7 @@ function edd_load_admin_scripts( $hook ) {
 		'revoke_api_key'              => __( 'Are you sure you wish to revoke this API key?', 'easy-digital-downloads' ),
 		'regenerate_api_key'          => __( 'Are you sure you wish to regenerate this API key?', 'easy-digital-downloads' ),
 		'resend_receipt'              => __( 'Are you sure you wish to resend the purchase receipt?', 'easy-digital-downloads' ),
+		'disconnect_customer'         => __( 'Are you sure you wish to disconnect the WordPress user from this customer record?', 'easy-digital-downloads' ),
 		'copy_download_link_text'     => __( 'Copy these links to your clipboard and give them to your customer', 'easy-digital-downloads' ),
 		'delete_payment_download'     => sprintf( __( 'Are you sure you wish to delete this %s?', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'one_price_min'               => __( 'You must have at least one price', 'easy-digital-downloads' ),
