@@ -1022,8 +1022,13 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 			}
 
 			foreach ( $section_or_setting as $section => $section_settings ) {
-				$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+
+				if ( ! empty( $section_settings['type'] ) ) {
+					$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+				}
+
 			}
+
 		}
 
 	}
