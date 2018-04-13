@@ -897,6 +897,42 @@ class EDD_API {
 					$dates['year']      = date( 'Y', $current_time ) - 1;
 				break;
 
+				case 'this_week' :
+				case 'last_week' :
+					$current_time    = current_time( 'timestamp' );
+					$start_of_week   = get_option( 'start_of_week' );
+
+					if ( 'last_week' === $args['date'] ) {
+						$today = date( 'd', $current_time - WEEK_IN_SECONDS );
+					} else {
+						$today = date( 'd', $current_time );
+					}
+
+					$day_of_the_week = date( 'w', $current_time );
+					$month           = date( 'n', $current_time );
+					$year            = date( 'Y', $current_time );
+
+					// Account for a week the spans a month change (including if that week spans over a break in the year.
+					if ( ( $today - $day_of_the_week ) < 1 ) {
+						$start_date = date( 'd', strtotime( $year . '-' . $month . '-' . $today . ' -' . $day_of_the_week . ' days' ) );
+						$month      = $month > 1 ? $month -= 1 : 12;
+					} else {
+						$start_date = $today - $day_of_the_week;
+					}
+
+					$start_date = date( 'd', strtotime( $year . '-' . $month . '-' . $start_date . ' +' . $start_of_week . 'days' ) );
+
+					$dates['day']        = $start_date;
+					$dates['m_start']    = $month;
+					$dates['year']       = $month === 12 ? $year - 1 : $year;
+
+					$base_start_date      = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+					$base_start_timestamp = strtotime( $base_start_date . ' +6 days' );
+					$dates['m_end']       = date( 'n', $base_start_timestamp );
+					$dates['day_end']     = date( 'd', $base_start_timestamp );
+					$dates['year_end']    = date( 'Y', $base_start_timestamp );
+				break;
+
 			endswitch;
 		}
 
