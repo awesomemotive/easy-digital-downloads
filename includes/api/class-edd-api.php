@@ -899,8 +899,7 @@ class EDD_API {
 
 				case 'this_week' :
 				case 'last_week' :
-					$current_time    = current_time( 'timestamp' );
-					$start_of_week   = get_option( 'start_of_week' );
+					$start_of_week = get_option( 'start_of_week' );
 
 					if ( 'last_week' === $args['date'] ) {
 						$today = date( 'd', $current_time - WEEK_IN_SECONDS );
