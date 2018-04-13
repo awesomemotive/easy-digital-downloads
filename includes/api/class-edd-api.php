@@ -914,14 +914,23 @@ class EDD_API {
 					// Account for a week the spans a month change (including if that week spans over a break in the year.
 					if ( ( $today - $day_of_the_week ) < 1 ) {
 						$start_date = date( 'd', strtotime( $year . '-' . $month . '-' . $today . ' -' . $day_of_the_week . ' days' ) );
-						$month      = $month > 1 ? $month -= 1 : 12;
+						$month      = $month > 1 ? $month-- : 12;
 					} else {
 						$start_date = $today - $day_of_the_week;
 					}
 
-					$start_date = date( 'd', strtotime( $year . '-' . $month . '-' . $start_date . ' +' . $start_of_week . 'days' ) );
+					// Account for the WordPress Start of Week setting.
+					$adjusted_start_date = date( 'd', strtotime( $year . '-' . $month . '-' . $start_date . ' +' . $start_of_week . 'days' ) );
 
-					$dates['day']        = $start_date;
+					/**
+					 * Account for when the base start of the week is the end of one month, but the WordPress Start of Week setting
+					 * Jumps it to the following month.
+					 */
+					if ( $adjusted_start_date < $start_date ) {
+						$month = 12 === $month ? 1 : $month++;
+					}
+
+					$dates['day']        = $adjusted_start_date;
 					$dates['m_start']    = $month;
 					$dates['year']       = $month === 12 ? $year - 1 : $year;
 
