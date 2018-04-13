@@ -1596,7 +1596,9 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 
 	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
 
-	if ( ! empty( $note->get_user_id() ) ) {
+	$user_id = $note->get_user_id();
+
+	if ( ! empty( $user_id ) ) {
 		$user = get_userdata( $note->get_user_id() );
 		$user = $user->display_name;
 	} else {
