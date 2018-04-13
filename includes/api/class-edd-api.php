@@ -1322,86 +1322,22 @@ class EDD_API {
 
 					$earnings['totals'] = $total;
 				} else {
-					if ( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-						$current_time = current_time( 'timestamp' );
+					$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+					$date_end   = $dates['year'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-						if ( 'this_quarter' == $args['date'] ) {
-							$month_now = date( 'n', $current_time );
-							$dates['year']     = date( 'Y', $current_time );
-							$dates['year_end'] = $dates['year'];
+					$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
+					if ( $results instanceof WP_Error ) {
 
-							if ( $month_now <= 3 ) {
-								$dates['m_start']  = 1;
-								$dates['m_end']    = 3;
-							} else if ( $month_now <= 6 ) {
-								$dates['m_start'] = 4;
-								$dates['m_end']   = 6;
-							} else if ( $month_now <= 9 ) {
-								$dates['m_start'] = 7;
-								$dates['m_end']   = 9;
-							} else {
-								$dates['m_start']  = 10;
-								$dates['m_end']    = 12;
+						$error_message = __( 'There was an error retrieving earnings.', 'easy-digital-downloads' );
+
+						foreach ( $results->errors as $error_key => $error_array ) {
+							if ( ! empty( $error_array[0] ) ) {
+								$error_message = $error_array[0];
 							}
-
-							$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
-						} else {
-							$month_now = date( 'n' );
-
-							if ( $month_now <= 3 ) {
-								$dates['m_start']  = 10;
-								$dates['m_end']    = 12;
-								$dates['year']     = date( 'Y', $current_time ) - 1; // Previous year
-							} else if ( $month_now <= 6 ) {
-								$dates['m_start'] = 1;
-								$dates['m_end']   = 3;
-								$dates['year']    = date( 'Y', $current_time );
-							} else if ( $month_now <= 9 ) {
-								$dates['m_start'] = 4;
-								$dates['m_end']   = 6;
-								$dates['year']    = date( 'Y', $current_time );
-							} else {
-								$dates['m_start'] = 7;
-								$dates['m_end']   = 9;
-								$dates['year']    = date( 'Y', $current_time );
-							}
-
-							$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'],  $dates['year'] );
-							$dates['year_end'] = $dates['year'];
 						}
 
-						$dates['day_start'] = 1;
-
-						if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) < $dates['day_start'] ) {
-							$next_day = mktime( 0, 0, 0, $dates['m_start'] + 1, 1, $dates['year'] );
-							$day = date( 'd', $next_day );
-							$month = date( 'm', $next_day );
-							$year = date( 'Y', $next_day );
-							$date_start = $year . '-' . $month . '-' . $day;
-						} else {
-							$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
-						}
-
-						if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ) < $dates['day_end'] ) {
-							$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
-						} else {
-							$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
-						}
-
-						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
-
-						$total = (float) 0.00;
-
-						foreach ( $results as $result ) {
-							$total += (float) $result['total'];
-						}
-
-						$earnings['earnings'][ $args['date'] ] = (float) $total;
+						$error['error'] = sprintf( '%s %s', $error_message, $args['date'] );
 					} else {
-						$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
-						$date_end = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
-
-						$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end );
 						if ($args['date'] == 'yesterday' || $args['date'] == 'today') {
 							foreach ($results as $result) {
 								$earnings['earnings'][ $args['date'] ] += $result['total'];
