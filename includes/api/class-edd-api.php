@@ -758,21 +758,24 @@ class EDD_API {
 			switch ( $args['date'] ) :
 
 				case 'this_month' :
-					$dates['day']       = null;
+					$dates['day']       = 1;
+					$dates['day_end']   = date( 't', $current_time );
 					$dates['m_start']   = date( 'n', $current_time );
 					$dates['m_end']     = date( 'n', $current_time );
 					$dates['year']      = date( 'Y', $current_time );
 				break;
 
 				case 'last_month' :
-					$dates['day']     = null;
-					$dates['m_start'] = date( 'n', $current_time ) == 1 ? 12 : date( 'n', $current_time ) - 1;
-					$dates['m_end']   = $dates['m_start'];
-					$dates['year']    = date( 'n', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
-				break;
+					$dates['day']       = 1;
+					$dates['m_start']   = date( 'n', $current_time ) == 1 ? 12 : date( 'n', $current_time ) - 1;
+					$dates['m_end']     = $dates['m_start'];
+					$dates['year']      = date( 'n', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
+					$dates['day_end']   = date( 't', strtotime( $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'] ) );
+					break;
 
 				case 'today' :
 					$dates['day']       = date( 'd', $current_time );
+					$dates['day_end']   = date( 'd', $current_time );
 					$dates['m_start']   = date( 'n', $current_time );
 					$dates['m_end']     = date( 'n', $current_time );
 					$dates['year']      = date( 'Y', $current_time );
@@ -802,6 +805,7 @@ class EDD_API {
 					}
 
 					$dates['day']       = $day;
+					$dates['day_end']   = $day;
 					$dates['m_start']   = $month;
 					$dates['m_end']     = $month;
 					$dates['year']      = $year;
@@ -811,7 +815,7 @@ class EDD_API {
 				case 'this_quarter' :
 					$month_now = date( 'n', $current_time );
 
-					$dates['day']           = null;
+					$dates['day']           = 1;
 
 					if ( $month_now <= 3 ) {
 
@@ -838,12 +842,15 @@ class EDD_API {
 						$dates['year']      = date( 'Y', $current_time );
 
 					}
-				break;
+
+					$dates['day_end']   = date( 't', strtotime( $dates['year'] . '-' . $dates['m_end'] ) );
+
+					break;
 
 				case 'last_quarter' :
 					$month_now = date( 'n', $current_time );
 
-					$dates['day']           = null;
+					$dates['day']           = 1;
 
 					if ( $month_now <= 3 ) {
 
@@ -870,19 +877,23 @@ class EDD_API {
 						$dates['year']      = date( 'Y', $current_time );
 
 					}
+
+					$dates['day_end']   = date( 't', strtotime( $dates['year'] . '-' . $dates['m_end'] ) );
 				break;
 
 				case 'this_year' :
-					$dates['day']       = null;
-					$dates['m_start']   = null;
-					$dates['m_end']     = null;
+					$dates['day']       = 1;
+					$dates['m_start']   = 1;
+					$dates['m_end']     = 12;
+					$dates['day_end']   = 31;
 					$dates['year']      = date( 'Y', $current_time );
 				break;
 
 				case 'last_year' :
-					$dates['day']       = null;
-					$dates['m_start']   = null;
-					$dates['m_end']     = null;
+					$dates['day']       = 1;
+					$dates['m_start']   = 1;
+					$dates['m_end']     = 12;
+					$dates['day_end']   = 31;
 					$dates['year']      = date( 'Y', $current_time ) - 1;
 				break;
 
