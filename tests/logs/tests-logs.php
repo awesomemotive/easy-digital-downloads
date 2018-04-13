@@ -46,9 +46,9 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'title' => 'Log title 45',
 		) );
 
-		$log = new Log( self::$logs[0] );
+		$log = edd_get_log( self::$logs[0] );
 
-		$this->assertEquals( 'Log title 45', $log->title );
+		$this->assertEquals( 'Log title 45', $log->get_title() );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->title < $logs[1]->title );
+		$this->assertTrue( $logs[0]->get_title() < $logs[1]->get_title() );
 	}
 
 	/**
@@ -135,7 +135,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->title > $logs[1]->title );
+		$this->assertTrue( $logs[0]->get_title() > $logs[1]->get_title() );
 	}
 
 	/**
@@ -147,7 +147,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->content < $logs[1]->content );
+		$this->assertTrue( $logs[0]->get_content() < $logs[1]->get_content() );
 	}
 
 	/**
@@ -159,7 +159,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->content > $logs[1]->content );
+		$this->assertTrue( $logs[0]->get_content() > $logs[1]->get_content() );
 	}
 
 	/**
@@ -170,7 +170,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'order' => 'asc',
 		) );
 
-		$this->assertTrue( $logs[0]->id < $logs[1]->id );
+		$this->assertTrue( $logs[0]->get_id() < $logs[1]->get_id() );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class Logs_Tests extends \EDD_UnitTestCase {
 			'order' => 'desc',
 		) );
 
-		$this->assertTrue( $logs[0]->id > $logs[1]->id );
+		$this->assertTrue( $logs[0]->get_id() > $logs[1]->get_id() );
 	}
 
 	/**

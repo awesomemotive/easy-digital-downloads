@@ -52,6 +52,6 @@ class Note extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD\Notes\Note|false
 	 */
 	function get_object_by_id( $note_id ) {
-		return new \EDD\Notes\Note( $note_id );
+		return edd_get_note( $note_id );
 	}
 }

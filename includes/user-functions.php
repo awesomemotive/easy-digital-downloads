@@ -1020,6 +1020,23 @@ function edd_show_user_api_key_field( $user ) {
 		return;
 	}
 
+	/**
+	 * Show API User Key Fields
+	 *
+	 * Allows showing/hiding the user API Key fields. By default will only try to show on admin pages. The filter
+	 * allows for developers to choose to show it in other places that the WordPress profile editor hooks are used
+	 * like bbPress
+	 *
+	 * @since 2.9.1
+	 *
+	 * @param boolean If EDD should attempt to load the user API fields
+	 * @param WP_User The User object currently being viewed.
+	 */
+	$show_fields = apply_filters( 'edd_show_user_api_key_fields', is_admin(), $user );
+	if ( ! $show_fields ) {
+		return;
+	}
+
 	if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 		$user = get_userdata( $user->ID );
 		$public_key = EDD()->api->get_user_public_key( $user->ID );
