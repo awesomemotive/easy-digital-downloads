@@ -1373,13 +1373,12 @@ class EDD_API {
 
 						$error['error'] = sprintf( '%s %s', $error_message, $args['date'] );
 					} else {
-						if ($args['date'] == 'yesterday' || $args['date'] == 'today') {
-							foreach ($results as $result) {
-								$earnings['earnings'][ $args['date'] ] += $result['total'];
-							}
-						} else {
-							$earnings['earnings'][ $args['date'] ] = $results[0]['total'];
+						$total_earnings = 0;
+						foreach ($results as $result) {
+							$total_earnings += $result['total'];
 						}
+
+						$earnings['earnings'][ $args['date'] ] = edd_format_amount( $total_earnings );
 					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
