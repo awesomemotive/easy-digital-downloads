@@ -44,6 +44,14 @@ class Chart_Endpoint extends Endpoint {
 	private $manifest;
 
 	/**
+	 * Represents the ChartJS options passed to the chart endpoint.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $options = array();
+
+	/**
 	 * Call to override JS output for the chart.
 	 *
 	 * Completely overrides the manifest process for the current chart..
