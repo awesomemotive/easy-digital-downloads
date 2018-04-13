@@ -911,12 +911,14 @@ class EDD_API {
 					$month           = date( 'n', $current_time );
 					$year            = date( 'Y', $current_time );
 
-					// Account for a week the spans a month change (including if that week spans over a break in the year.
+					// Account for a week the spans a month change (including if that week spans over a break in the year).
 					if ( ( $today - $day_of_the_week ) < 1 ) {
-						$start_date = date( 'd', strtotime( $year . '-' . $month . '-' . $today . ' -' . $day_of_the_week . ' days' ) );
-						$month      = $month > 1 ? $month-- : 12;
+						$start_date     = date( 'd', strtotime( $year . '-' . $month . '-' . $today . ' -' . $day_of_the_week . ' days' ) );
+						$month          = $month > 1 ? $month -- : 12;
+						$adjusted_month = true;
 					} else {
-						$start_date = $today - $day_of_the_week;
+						$start_date     = $today - $day_of_the_week;
+						$adjusted_month = false;
 					}
 
 					// Account for the WordPress Start of Week setting.
@@ -927,12 +929,17 @@ class EDD_API {
 					 * Jumps it to the following month.
 					 */
 					if ( $adjusted_start_date < $start_date ) {
-						$month = 12 === $month ? 1 : $month++;
+						if ( 12 === $month ) {
+							$month = 1;
+							$year++;
+						} else {
+							$month++;
+						}
 					}
 
 					$dates['day']        = $adjusted_start_date;
 					$dates['m_start']    = $month;
-					$dates['year']       = $month === 12 ? $year - 1 : $year;
+					$dates['year']       = $month === 12 && $adjusted_month ? $year - 1 : $year;
 
 					$base_start_date      = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
 					$base_start_timestamp = strtotime( $base_start_date . ' +6 days' );
