@@ -1203,31 +1203,30 @@ class EDD_API {
 
 					$sales['totals'] = array_sum( $sales['sales'] );
 				} else {
-					if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-						$start_date = $dates['year'] . '-' . $dates['m_start'] . '-01';
-						$end_date = $dates['year'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
+					$end_date   = $dates['year'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-						$start_date = date( 'Y-m-d', strtotime( $start_date ) );
-						$end_date = date( 'Y-m-d', strtotime( $end_date ) );
+					$stats = EDD()->payment_stats->get_sales_by_range( $args['date'], false, $start_date, $end_date );
+					if ( $stats instanceof WP_Error ) {
 
-						$stats = EDD()->payment_stats->get_sales_by_range( $args['date'], false, $start_date, $end_date );
+						$error_message = __( 'There was an error retrieving earnings.', 'easy-digital-downloads' );
 
-						if ( empty( $stats ) ) {
-							$sales['sales'][ $args['date'] ] = 0;
-						} else {
-							$sales['sales'][ $args['date'] ] = $stats[0]['count'];
+						foreach ( $stats->errors as $error_key => $error_array ) {
+							if ( ! empty( $error_array[0] ) ) {
+								$error_message = $error_array[0];
+							}
 						}
+
+						$error['error'] = sprintf( '%s %s', $error_message, $args['date'] );
 					} else {
-						$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
-						$start_date = date( 'Y-m-d', strtotime( $start_date ) );
-						$end_date = date( 'Y-m-d', strtotime( '+1 day', strtotime( $start_date ) ) );
-
-						$stats = EDD()->payment_stats->get_sales_by_range( 'yesterday', true, $start_date, $end_date );
-
 						if ( empty( $stats ) ) {
 							$sales['sales'][ $args['date'] ] = 0;
 						} else {
-							$sales['sales'][ $args['date'] ] = (int) $stats[0]['count'];
+							$total_sales = 0;
+							foreach( $stats as $date ) {
+								$total_sales += (int) $date['count'];
+							}
+							$sales['sales'][ $args['date'] ] = $total_sales;
 						}
 					}
 				}
