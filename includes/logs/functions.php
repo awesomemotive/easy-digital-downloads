@@ -29,7 +29,7 @@ function edd_add_log( $data = array() ) {
 	}
 
 	// Instantiate a query object
-	$logs = new EDD_Log_Query();
+	$logs = new EDD\Database\Queries\Log();
 
 	return $logs->add_item( $data );
 }
@@ -43,7 +43,7 @@ function edd_add_log( $data = array() ) {
  * @return int
  */
 function edd_delete_log( $log_id = 0 ) {
-	$logs = new EDD_Log_Query();
+	$logs = new EDD\Database\Queries\Log();
 
 	return $logs->delete_item( $log_id );
 }
@@ -58,7 +58,7 @@ function edd_delete_log( $log_id = 0 ) {
  * @return bool Whether or not the log was updated.
  */
 function edd_update_log( $log_id = 0, $data = array() ) {
-	$logs = new EDD_Log_Query();
+	$logs = new EDD\Database\Queries\Log();
 
 	return $logs->update_item( $log_id, $data );
 }
@@ -87,7 +87,7 @@ function edd_get_log( $log_id = 0 ) {
 function edd_get_log_by( $field = '', $value = '' ) {
 
 	// Instantiate a query object
-	$logs = new EDD_Log_Query();
+	$logs = new EDD\Database\Queries\Log();
 
 	// Get an item
 	return $logs->get_item_by( $field, $value );
@@ -109,7 +109,7 @@ function edd_get_logs( $args = array() ) {
 	) );
 
 	// Instantiate a query object
-	$logs = new EDD_Log_Query();
+	$logs = new EDD\Database\Queries\Log();
 
 	// Return notes
 	return $logs->query( $r );
@@ -131,7 +131,7 @@ function edd_count_logs( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$logs = new EDD_Log_Query( $r );
+	$logs = new EDD\Database\Queries\Log( $r );
 
 	// Return count(s)
 	return absint( $logs->found_items );
@@ -156,7 +156,7 @@ function edd_add_file_download_log( $data = array() ) {
 	}
 
 	// Instantiate a query object
-	$logs = new EDD_Log_File_Download_Query();
+	$logs = new EDD\Database\Queries\Log_File_Download();
 
 	return $logs->add_item( $data );
 }
@@ -170,7 +170,7 @@ function edd_add_file_download_log( $data = array() ) {
  * @return int
  */
 function edd_delete_file_download_log( $log_id = 0 ) {
-	$logs = new EDD_Log_File_Download_Query();
+	$logs = new EDD\Database\Queries\Log_File_Download();
 
 	return $logs->delete_item( $log_id );
 }
@@ -185,7 +185,7 @@ function edd_delete_file_download_log( $log_id = 0 ) {
  * @return bool Whether or not the file download log was updated.
  */
 function edd_update_file_download_log( $log_id = 0, $data = array() ) {
-	$logs = new EDD_Log_File_Download_Query();
+	$logs = new EDD\Database\Queries\Log_File_Download();
 
 	return $logs->update_item( $log_id, $data );
 }
@@ -214,7 +214,7 @@ function edd_get_file_download_log( $log_id = 0 ) {
 function edd_get_file_download_log_by( $field = '', $value = '' ) {
 
 	// Instantiate a query object
-	$logs = new EDD_Log_File_Download_Query();
+	$logs = new EDD\Database\Queries\Log_File_Download();
 
 	// Return item
 	return $logs->get_item_by( $field, $value );
@@ -236,7 +236,7 @@ function edd_get_file_download_logs( $args = array() ) {
 	) );
 
 	// Instantiate a query object
-	$logs = new EDD_Log_File_Download_Query();
+	$logs = new EDD\Database\Queries\Log_File_Download();
 
 	// Return logs
 	return $logs->query( $r );
@@ -258,7 +258,7 @@ function edd_count_file_download_logs( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$logs = new EDD_Log_File_Download_Query( $r );
+	$logs = new EDD\Database\Queries\Log_File_Download( $r );
 
 	// Return count(s)
 	return absint( $logs->found_items );
@@ -283,7 +283,7 @@ function edd_add_api_request_log( $data = array() ) {
 	}
 
 	// Instantiate a query object
-	$logs = new EDD_Log_API_Request_Query();
+	$logs = new EDD\Database\Queries\Log_Api_Request();
 
 	return $logs->add_item( $data );
 }
@@ -297,7 +297,7 @@ function edd_add_api_request_log( $data = array() ) {
  * @return int
  */
 function edd_delete_api_request_log( $log_id = 0 ) {
-	$logs = new EDD_Log_API_Request_Query();
+	$logs = new EDD\Database\Queries\Log_Api_Request();
 
 	return $logs->delete_item( $log_id );
 }
@@ -312,7 +312,7 @@ function edd_delete_api_request_log( $log_id = 0 ) {
  * @return bool Whether or not the API request log was updated.
  */
 function edd_update_api_request_log( $log_id = 0, $data = array() ) {
-	$logs = new EDD_Log_API_Request_Query();
+	$logs = new EDD\Database\Queries\Log_Api_Request();
 
 	return $logs->update_item( $log_id, $data );
 }
@@ -339,7 +339,7 @@ function edd_get_api_request_log( $log_id = 0 ) {
  * @return object
  */
 function edd_get_api_request_log_by( $field = '', $value = '' ) {
-	$logs = new EDD_Log_API_Request_Query();
+	$logs = new EDD\Database\Queries\Log_Api_Request();
 
 	// Return note
 	return $logs->get_item_by( $field, $value );
@@ -361,7 +361,7 @@ function edd_get_api_request_logs( $args = array() ) {
 	) );
 
 	// Instantiate a query object
-	$logs = new EDD_Log_API_Request_Query();
+	$logs = new EDD\Database\Queries\Log_Api_Request();
 
 	// Return logs
 	return $logs->query( $r );
@@ -383,7 +383,7 @@ function edd_count_api_request_logs( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$logs = new EDD_Log_API_Request_Query( $r );
+	$logs = new EDD\Database\Queries\Log_Api_Request( $r );
 
 	// Return count(s)
 	return absint( $logs->found_items );

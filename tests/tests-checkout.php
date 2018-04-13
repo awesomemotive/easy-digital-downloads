@@ -51,6 +51,52 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * Test the default 3 columns used for checkout carts.
+	 */
+	public function test_checkout_cart_columns_default() {
+		$this->assertSame( 3, edd_checkout_cart_columns() );
+	}
+
+	/**
+	 * Test the default 3 columns + 1 column used for checkout carts.
+	 */
+	public function test_checkout_cart_columns_add_one() {
+		add_action( 'edd_checkout_table_header_first', '__return_true' );
+		$this->assertSame( 4, edd_checkout_cart_columns() );
+		remove_action( 'edd_checkout_table_header_first', '__return_true' );
+	}
+
+	/**
+	 * Test the default 3 columns + 2 columns used for checkout carts.
+	 */
+	public function test_checkout_cart_columns_add_two() {
+		add_action( 'edd_checkout_table_header_first', '__return_true' );
+		add_action( 'edd_checkout_table_header_first', '__return_false' );
+		$this->assertSame( 5, edd_checkout_cart_columns() );
+		remove_action( 'edd_checkout_table_header_first', '__return_true' );
+		remove_action( 'edd_checkout_table_header_first', '__return_false' );
+	}
+
+	/**
+	 * Test the filter at the bottom of
+	 */
+	public function test_checkout_cart_columns_filter() {
+		add_filter( 'edd_checkout_cart_columns', array( $this, 'helper_test_checkout_cart_columns_filter' ) );
+		$this->assertSame( 2, edd_checkout_cart_columns() );
+		remove_filter( 'edd_checkout_cart_columns', array( $this, 'helper_test_checkout_cart_columns_filter' ) );
+	}
+
+		/**
+		 * Helper function for the above test, to test the filter in edd_checkout_cart_columns()
+		 * @param $columns
+		 *
+		 * @return int
+		 */
+		public function helper_test_checkout_cart_columns_filter( $columns ) {
+			return 2;
+		}
+
+	/**
      * Test to make sure the checkout form returns the expected HTML
      */
 	public function test_checkout_form() {

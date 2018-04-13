@@ -3,21 +3,22 @@
  * Customer Object
  *
  * @package     EDD
- * @subpackage  Classes/Customer
- * @copyright   Copyright (c) 2015, Chris Klosowski
+ * @subpackage  Customers
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.3
-*/
+ */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * EDD_Customer Class
+ * EDD_Customer Class.
  *
  * @since 2.3
+ * @since 3.0.0 No longer extends EDD_DB_Customer.
  */
-class EDD_Customer extends EDD_DB_Customer {
+class EDD_Customer {
 
 	/**
 	 * The customer ID
