@@ -303,9 +303,9 @@ class EDD_API {
 		// Make sure we have both user and api key
 		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( ! $this->is_public_query() || ! empty( $wp_query->query_vars['token'] ) ) ) {
 
-			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) ) {
-				$this->missing_auth();
-				return  false;
+		    if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) ) {
+		        $this->missing_auth();
+				return false;
 			}
 
 			// Auth was provided, include the upgrade routine so we can use the fallback api checks
@@ -2260,5 +2260,16 @@ class EDD_API {
 	public function check_keys( $secret, $public, $token ) {
 		return hash_equals( md5( $secret . $public ), $token );
 	}
+
+	/**
+     * Flush previous API output. This is for unit tests only as we use a static fixutre.
+     *
+     * @since 3.0.0
+     */
+	public function flush_api_output() {
+	    if ( defined( 'EDD_UNIT_TESTS' ) ) {
+	        $this->data = array();
+        }
+    }
 
 }

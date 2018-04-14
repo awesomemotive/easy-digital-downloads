@@ -120,13 +120,23 @@ function edd_unset_error( $error_id ) {
  *
  * @author Sunny Ratilal
  * @since 1.6
+ *
+ * @param string       $message Error message.
+ * @param string       $title   Optional. Error title (unused). Default empty.
+ * @param string|array $args    Optional. Arguments to control behavior. Default empty array.
+ *
  * @return void
  */
 function _edd_die_handler() {
-	if ( defined( 'EDD_UNIT_TESTS' ) )
-		return '_edd_die_handler';
-	else
+	if ( defined( 'EDD_UNIT_TESTS' ) ) {
+//		if ( ! is_scalar( $message ) ) {
+//			$message = 0;
+//		}
+
+//		throw new WPDieException( $message );
+	} else {
 		die();
+	}
 }
 
 /**
@@ -139,7 +149,7 @@ function _edd_die_handler() {
  * @return void
  */
 function edd_die( $message = '', $title = '', $status = 400 ) {
-	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
-	add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
+//	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
+//	add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
 	wp_die( $message, $title, array( 'response' => $status ));
 }
