@@ -28,28 +28,28 @@ class Discount extends Base {
 	 * Name of the database table to query.
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $table_name = 'discounts';
+	protected $table_name = 'discounts';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $table_alias = 'd';
+	protected $table_alias = 'd';
 
 	/**
 	 * Name of class used to setup the database schema
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Discounts';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Discounts';
 
 	/** Item ******************************************************************/
 
@@ -57,28 +57,28 @@ class Discount extends Base {
 	 * Name for a single item
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $item_name = 'discount';
+	protected $item_name = 'discount';
 
 	/**
 	 * Plural version for a group of items.
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $item_name_plural = 'discounts';
+	protected $item_name_plural = 'discounts';
 
 	/**
 	 * Callback function for turning IDs into objects
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var mixed
 	 */
-	public $item_shape = '\\EDD_Discount';
+	protected $item_shape = '\\EDD_Discount';
 
 	/** Cache *****************************************************************/
 
@@ -86,10 +86,10 @@ class Discount extends Base {
 	 * Group to cache queries and queried items in.
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	public $cache_group = 'discounts';
+	protected $cache_group = 'discounts';
 
 	/** Methods ***************************************************************/
 
@@ -97,7 +97,7 @@ class Discount extends Base {
 	 * Sets up the discount query, based on the query vars passed.
 	 *
 	 * @since 3.0.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @param string|array $query {
 	 *     Optional. Array or query string of discount query parameters. Default empty.

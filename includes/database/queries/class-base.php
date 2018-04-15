@@ -34,7 +34,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @var string
 	 */
-	public $prefix = 'edd';
+	protected $prefix = 'edd';
 
 	/** Table Properties ******************************************************/
 
@@ -45,7 +45,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = '';
+	protected $table_name = '';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -58,7 +58,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = '';
+	protected $table_alias = '';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -67,7 +67,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema';
+	protected $table_schema = 'EDD_DB_Schema';
 
 	/** Item ******************************************************************/
 
@@ -82,7 +82,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = '';
+	protected $item_name = '';
 
 	/**
 	 * Plural version for a group of items.
@@ -95,7 +95,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = '';
+	protected $item_name_plural = '';
 
 	/**
 	 * Name of class used to turn IDs into first-class objects.
@@ -108,7 +108,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD_DB_Object';
+	protected $item_shape = 'EDD_DB_Object';
 
 	/** Cache *****************************************************************/
 
@@ -123,7 +123,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = '';
+	protected $cache_group = '';
 
 	/** Columns ***************************************************************/
 
@@ -233,7 +233,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var int
 	 */
-	public $found_items = 0;
+	protected $found_items = 0;
 
 	/**
 	 * The number of pages.
@@ -242,7 +242,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var int
 	 */
-	public $max_num_pages = 0;
+	protected $max_num_pages = 0;
 
 	/**
 	 * SQL for database query.
@@ -251,7 +251,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $request = '';
+	protected $request = '';
 
 	/** Methods ***************************************************************/
 
