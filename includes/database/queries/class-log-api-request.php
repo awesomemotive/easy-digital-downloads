@@ -31,7 +31,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'logs_api_requests';
+	protected $table_name = 'logs_api_requests';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'n';
+	protected $table_alias = 'n';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Logs_Api_Requests';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Logs_Api_Requests';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'log';
+	protected $item_name = 'log';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'logs';
+	protected $item_name_plural = 'logs';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -78,7 +78,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD\\Logs\\Api_Request_Log';
+	protected $item_shape = 'EDD\\Logs\\Api_Request_Log';
 
 	/** Cache *****************************************************************/
 
@@ -89,7 +89,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'logs_api_requests';
+	protected $cache_group = 'logs_api_requests';
 
 	/** Methods ***************************************************************/
 

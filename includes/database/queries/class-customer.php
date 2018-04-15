@@ -31,7 +31,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'customers';
+	protected $table_name = 'customers';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'c';
+	protected $table_alias = 'c';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Customers';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Customers';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'customer';
+	protected $item_name = 'customer';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'customers';
+	protected $item_name_plural = 'customers';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -78,7 +78,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = '\\EDD_Customer';
+	protected $item_shape = '\\EDD_Customer';
 
 	/** Cache *****************************************************************/
 
@@ -89,7 +89,7 @@ class Customer extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'customers';
+	protected $cache_group = 'customers';
 
 	/** Methods ***************************************************************/
 
