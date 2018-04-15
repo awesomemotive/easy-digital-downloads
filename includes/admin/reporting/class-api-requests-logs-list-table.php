@@ -256,7 +256,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-			    /** @var $log EDD\Logs\Api_Request_Log */
+            	/** @var $log EDD\Logs\Api_Request_Log */
 
 				$logs_data[] = array(
 					'ID'      => $log->get_id(),

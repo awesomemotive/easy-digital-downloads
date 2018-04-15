@@ -383,7 +383,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-			    /** @var $log EDD\Logs\File_Download_Log */
+				/** @var $log EDD\Logs\File_Download_Log */
 
 				$customer_id = edd_get_payment_customer_id( $log->get_payment_id() );
 
