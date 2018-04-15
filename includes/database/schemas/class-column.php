@@ -131,6 +131,15 @@ class Column {
 	public $comment = '';
 
 	/**
+	 * What is the string-replace pattern?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $pattern = '';
+
+	/**
 	 * Is this the primary column?
 	 *
 	 * @since 3.0.0
@@ -138,6 +147,24 @@ class Column {
 	 * @var string
 	 */
 	public $primary = false;
+
+	/**
+	 * Is this the column used as a created date?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $created = false;
+
+	/**
+	 * Is this the column used as a modified date?
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $modified = false;
 
 	/**
 	 * Is this column searchable?
@@ -271,6 +298,7 @@ class Column {
 			'comment'    => '',
 
 			// Query
+			'pattern'    => false,
 			'searchable' => false,
 			'sortable'   => false,
 			'date_query' => false,
@@ -279,7 +307,8 @@ class Column {
 
 			// Special
 			'primary'    => false,
-			'changed'    => false,
+			'created'    => false,
+			'modified'   => false,
 
 			// Cache
 			'cache_key'  => false,
@@ -321,8 +350,10 @@ class Column {
 			'encoding'   => 'wp_kses_data',
 			'collation'  => 'wp_kses_data',
 			'comment'    => 'wp_kses_data',
+			'pattern'    => array( $this, 'sanitize_pattern' ),
 			'primary'    => 'wp_validate_boolean',
-			'changed'    => 'wp_validate_boolean',
+			'created'    => 'wp_validate_boolean',
+			'modified'   => 'wp_validate_boolean',
 			'searchable' => 'wp_validate_boolean',
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
@@ -377,5 +408,28 @@ class Column {
 	 */
 	private function sanitize_aliases( $aliases = array() ) {
 		return array_map( 'sanitize_key', $aliases );
+	}
+
+	/**
+	 * Sanitize a pattern
+	 *
+	 * @since 3.0.0
+	 * @param mixed $pattern
+	 * @return string
+	 */
+	private function sanitize_pattern( $pattern = false ) {
+
+		// Allowed patterns
+		$allowed_patterns = array( '%s', '%d', '%f' );
+
+		// Return pattern if allowed
+		if ( in_array( $pattern, $allowed_patterns, true ) ) {
+			return $pattern;
+		}
+
+		// Fallback to digit or string
+		return $this->is_numeric()
+			? '%d'
+			: '%s';
 	}
 }
