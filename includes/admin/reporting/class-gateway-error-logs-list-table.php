@@ -158,8 +158,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @return array $logs_data Array of all the Log entires
 	 */
 	public function get_logs() {
-		global $edd_logs;
-
 		// Prevent the queries from getting cached. Without this there are occasional memory issues for some installs
 		wp_suspend_cache_addition( true );
 
@@ -175,12 +173,14 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
+				/** @var $log EDD\Logs\Log */
+
 				$logs_data[] = array(
-					'ID'         => $log->ID,
-					'payment_id' => $log->post_parent,
+					'ID'         => $log->get_id(),
+					'payment_id' => $log->get_object_id(),
 					'error'      => 'error',
-					'gateway'    => edd_get_payment_gateway( $log->post_parent ),
-					'date'       => $log->post_date,
+					'gateway'    => edd_get_payment_gateway( $log->get_object_id() ),
+					'date'       => $log->get_date_created(),
 				);
 			}
 		}

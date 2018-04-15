@@ -295,7 +295,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			}
 
 			if ( ! $this->file_search ) {
-				// Meta query only works for non file name searche
+				// Meta query only works for non file name search
 				$meta_query[] = array(
 					'key'     => $key,
 					'value'   => $search,
@@ -383,34 +383,36 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				$customer_id = edd_get_payment_customer_id( $log->payment_id );
+			    /** @var $log EDD\Logs\File_Download_Log */
 
-				if ( ! array_key_exists( $log->download_id, $this->queried_files ) ) {
-					$files   = maybe_unserialize( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value from $wpdb->postmeta WHERE post_id = %d and meta_key = 'edd_download_files'", $log->post_parent ) ) );
-					$this->queried_files[ $log->download_id ] = $files;
+				$customer_id = edd_get_payment_customer_id( $log->get_payment_id() );
+
+				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
+				    $files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
+				    $this->queried_files[ $log->get_download_id() ] = $files;
 				} else {
-					$files = $this->queried_files[ $log->download_id ];
+					$files = $this->queried_files[ $log->get_download_id() ];
 				}
 
 				// For backwards compatibility purposes
-				$user = get_userdata( $log->user_id );
+				$user = get_userdata( $log->get_user_id() );
 				$meta = array(
 					'_edd_log_user_info'  => array(
 						'id'    => $user->ID,
 						'email' => $user->user_email,
 						'name'  => $user->display_name,
 					),
-					'_edd_log_user_id'    => $log->user_id,
-					'_edd_log_file_id'    => $log->file_id,
-					'_edd_log_ip'         => $log->ip,
-					'_edd_log_payment_id' => $log->payment_id,
-					'_edd_log_price_id'   => $log->price_id,
+					'_edd_log_user_id'    => $log->get_user_id(),
+					'_edd_log_file_id'    => $log->get_file_id(),
+					'_edd_log_ip'         => $log->get_id(),
+					'_edd_log_payment_id' => $log->get_payment_id(),
+					'_edd_log_price_id'   => $log->get_price_id(),
 				);
 
 				// Filter the download files
 				$files = apply_filters( 'edd_log_file_download_download_files', $files, $log, $meta );
 
-				$file_id = $log->file_id;
+				$file_id = $log->get_file_id();
 
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
@@ -419,14 +421,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
 					$logs_data[] = array(
-						'ID'         => $log->id,
-						'download'   => $log->download_id,
+						'ID'         => $log->get_id(),
+						'download'   => $log->get_download_id(),
 						'customer'   => new EDD_Customer( $customer_id ),
-						'payment_id' => $log->payment_id,
-						'price_id'   => $log->price_id,
+						'payment_id' => $log->get_payment_id(),
+						'price_id'   => $log->get_price_id(),
 						'file'       => $file_name,
-						'ip'         => $log->ip,
-						'date'       => $log->post_date,
+						'ip'         => $log->get_ip(),
+						'date'       => $log->get_date_created(),
 					);
 				}
 			}
