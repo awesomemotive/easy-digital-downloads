@@ -209,7 +209,7 @@ class Column {
 	 * @since 3.0.0
 	 * @access public
 	 *
-	 * @param string|array $query {
+	 * @param string|array $args {
 	 *     Optional. Array or query string of order query parameters. Default empty.
 	 *
 	 *     @type string   $name        Name of database column
