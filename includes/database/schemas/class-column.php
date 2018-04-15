@@ -251,7 +251,10 @@ class Column {
 	 *     @type string   $encoding    Typically inherited from wpdb
 	 *     @type string   $collation   Typically inherited from wpdb
 	 *     @type string   $comment     Typically empty
+	 *     @type boolean  $pattern     What is the string-replace pattern?
 	 *     @type boolean  $primary     Is this the primary column?
+	 *     @type boolean  $created     Is this the column used as a created date?
+	 *     @type boolean  $modified    Is this the column used as a modified date?
 	 *     @type boolean  $searchable  Is this column searchable?
 	 *     @type boolean  $sortable    Is this column used in orderby?
 	 *     @type boolean  $date_query  Is this column a datetime?
