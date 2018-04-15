@@ -636,6 +636,19 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Return the current time as a UTC timestamp
+	 *
+	 * This is used by add_item() and update_item()
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	private function get_current_time() {
+		return gmdate( "Y-m-d\TH:i:s\Z" );
+	}
+
+	/**
 	 * Return the literal table name (with prefix) from $wpdb
 	 *
 	 * @since 3.0.0
@@ -1595,15 +1608,15 @@ class Base extends \EDD\Database\Base {
 		$data    = array_intersect_key( $data, $columns );
 
 		// Get the current time (maybe used by created/modified)
-		$time = current_time( 'mysql' );
+		$time = $this->get_current_time();
 
-		// If date-created is empty, use the current time
+		// If date-created exists, but is empty or default, use the current time
 		$created = $this->get_column_by( array( 'created' => true ) );
 		if ( ! empty( $created ) && ( empty( $data[ $created->name ] ) || ( $data[ $created->name ] === $created->default ) ) ) {
 			$data[ $created->name ] = $time;
 		}
 
-		// If date-modified is empty, use the current time
+		// If date-modified exists, but is empty or default, use the current time
 		$modified = $this->get_column_by( array( 'modified' => true ) );
 		if ( ! empty( $modified ) && ( empty( $data[ $modified->name ] ) || ( $data[ $modified->name ] === $modified->default ) ) ) {
 			$data[ $modified->name ] = $time;
@@ -1684,7 +1697,7 @@ class Base extends \EDD\Database\Base {
 		// If date-modified is empty, use the current time
 		$modified = $this->get_column_by( array( 'modified' => true ) );
 		if ( ! empty( $modified ) ) {
-			$save[ $modified->name ] = current_time( 'mysql' );
+			$save[ $modified->name ] = $this->get_current_time();
 		}
 
 		// Try to update
