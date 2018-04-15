@@ -271,12 +271,15 @@ class Column {
 			'comment'    => '',
 
 			// Query
-			'primary'    => false,
 			'searchable' => false,
 			'sortable'   => false,
 			'date_query' => false,
 			'in'         => true,
 			'not_in'     => true,
+
+			// Special
+			'primary'    => false,
+			'changed'    => false,
 
 			// Cache
 			'cache_key'  => false,
@@ -319,6 +322,7 @@ class Column {
 			'collation'  => 'wp_kses_data',
 			'comment'    => 'wp_kses_data',
 			'primary'    => 'wp_validate_boolean',
+			'changed'    => 'wp_validate_boolean',
 			'searchable' => 'wp_validate_boolean',
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
