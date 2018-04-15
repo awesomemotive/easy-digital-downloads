@@ -335,7 +335,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					if ( is_array( $cart_items ) ) {
 						foreach ( $cart_items as $item ) {
 							// If the item has variable pricing, make sure it's the right variation
-							if ( $item['id'] == $log->object_id ) {
+							if ( $item['id'] == $log->get_object_id() ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
 									$log_price_id = $log->get_meta( 'price_id' );
 
@@ -350,10 +350,10 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 						}
 
 						$logs_data[] = array(
-							'ID'         => $log->ID,
+							'ID'         => $log->get_id(),
 							'payment_id' => $payment->ID,
 							'customer'   => $customer,
-							'download'   => $log->object_id,
+							'download'   => $log->get_object_id(),
 							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
