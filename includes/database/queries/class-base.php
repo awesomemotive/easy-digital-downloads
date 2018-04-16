@@ -1824,7 +1824,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1855,7 +1855,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1887,7 +1887,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1919,7 +1919,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1928,6 +1928,31 @@ class Base extends \EDD\Database\Base {
 
 		// Return results of get meta data
 		return delete_metadata( $table, $item_id, $meta_key, $meta_value, $delete_all );
+	}
+
+	/**
+	 * Get registered meta data keys
+	 *
+	 * This is a copy of get_registered_meta_keys() for WordPress versions lower
+	 * than 4.6.0.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_registered_meta_keys() {
+		global $wp_meta_keys;
+
+		// Get the object type
+		$object_type = $this->apply_prefix( $this->item_name );
+
+		// Bail if not set or not an array
+		if ( ! is_array( $wp_meta_keys ) || ! isset( $wp_meta_keys[ $object_type ] ) ) {
+			return array();
+		}
+
+		// Return the keys
+		return $wp_meta_keys[ $object_type ];
 	}
 
 	/**
@@ -1952,6 +1977,10 @@ class Base extends \EDD\Database\Base {
 		if ( empty( $table ) ) {
 			return;
 		}
+
+		// Only save registered keys
+		$keys = $this->get_registered_meta_keys();
+		$meta = array_intersect_key( $meta, $keys );
 
 		// Save or delete meta data
 		foreach ( $meta as $key => $value ) {
