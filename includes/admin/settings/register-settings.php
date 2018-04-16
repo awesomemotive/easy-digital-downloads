@@ -973,6 +973,11 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'text':
+					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) {
+						unset( $output[ $key ] );
+					}
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
@@ -1009,7 +1014,6 @@ function edd_settings_sanitize( $input = array() ) {
 function edd_get_registered_settings_types( $filtered_tab = false, $filtered_section = false ) {
 	$settings      = edd_get_registered_settings();
 	$setting_types = array();
-
 	foreach ( $settings as $tab_id => $tab ) {
 
 		if ( false !== $filtered_tab && $filtered_tab !== $tab_id ) {
@@ -1019,7 +1023,7 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 		foreach ( $tab as $section_id => $section_or_setting ) {
 
 			// See if we have a setting registered at the tab level for backwards compatibility
-			if ( is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
+			if ( false !== $filtered_section && is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
 				$setting_types[ $section_or_setting['id'] ] = $section_or_setting['type'];
 				continue;
 			}
@@ -1029,8 +1033,13 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 			}
 
 			foreach ( $section_or_setting as $section => $section_settings ) {
-				$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+
+				if ( ! empty( $section_settings['type'] ) ) {
+					$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+				}
+
 			}
+
 		}
 
 	}
