@@ -221,8 +221,16 @@ class Column {
 	public $cache_key = false;
 
 	/**
-	 * Array of possible aliases this column can be referred to as.
+	 * Array of capabilities to check when interacting with column data.
 	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var array
+	 */
+	public $caps = array();
+
+	/**
+	 * Array of possible aliases this column can be referred to as.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -316,6 +324,9 @@ class Column {
 			// Cache
 			'cache_key'  => false,
 
+			// Capabilities
+			'caps'       => array(),
+
 			// Backwards Compatibility
 			'aliases'    => array()
 		) );
@@ -363,7 +374,8 @@ class Column {
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
-			'aliases'    => array( $this, 'sanitize_aliases' )
+			'caps'       => array( $this, 'sanitize_capabilities' ),
+			'aliases'    => array( $this, 'sanitize_aliases'      )
 		);
 
 		// Default args array
@@ -400,6 +412,22 @@ class Column {
 			'mediumint',
 			'bigint'
 		), true );
+	}
+
+	/**
+	 * Sanitize aliases array using `sanitize_key()`
+	 *
+	 * @since 3.0.0
+	 * @param array $aliases
+	 * @return array
+	 */
+	private function sanitize_capabilities( $caps = array() ) {
+		return wp_parse_args( $caps, array(
+			'select' => '',
+			'insert' => '',
+			'update' => '',
+			'delete' => ''
+		) );
 	}
 
 	/**
