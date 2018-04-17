@@ -460,6 +460,18 @@ function get_filter_key( $filter ) {
 }
 
 /**
+ * Clears the value of a filter.
+ *
+ * @since 3.0
+ *
+ * @param string $filter Filter key to clear.
+ * @return bool true if successful, false otherwise.
+ */
+function clear_filter( $filter ) {
+	return delete_transient( get_filter_key( $filter ) );
+}
+
+/**
  * Retrieves key/label pairs of date filter options for use in a drop-down.
  *
  * @since 3.0

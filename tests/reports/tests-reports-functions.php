@@ -619,13 +619,11 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
-		$filter_key = get_filter_key( 'dates' );
-
-		set_transient( $filter_key, array(
+		set_filter_value( 'dates', array(
 			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 			'range' => 'other',
@@ -675,13 +673,13 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_range()
+	 * @covers \EDD\Reports\get_dates_filter_range()
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_non_default_range_set_should_return_that_reports_range() {
 		$filter_key = get_filter_key( 'dates' );
 
-		set_transient( $filter_key, array(
+		set_filter_value( 'dates', array(
 			'range' => 'last_quarter',
 		) );
 
@@ -733,6 +731,49 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$expected = "reports:filter-{$filter}:site-{$site}:user-{$user}";
 
 		$this->assertSame( $expected, get_filter_key( $filter ) );
+	}
+
+	/**
+	 * @covers \EDD\Reports\set_filter_value
+	 */
+	public function test_set_filter_key_with_invalid_filter_should_not_set_filter() {
+		set_filter_value( 'foo', 'bar' );
+
+		$this->assertSame( '', get_filter_value( 'foo' ) );
+	}
+
+	/**
+	 * @covers \EDD\Reports\set_filter_value
+	 */
+	public function test_set_filter_value_with_valid_filter_should_set_it() {
+		$dates = array(
+			'from' => date( 'Y-m-d H:i:s' ),
+			'to'   => date( 'Y-m-d H:i:s' ),
+		);
+
+		set_filter_value( 'dates', $dates );
+
+		$this->assertEqualSetsWithIndex( $dates, get_filter_value( 'dates' ) );
+	}
+
+	/**
+	 * @covers \EDD\Reports\clear_filter
+	 */
+	public function test_clear_filter_should_clear_it() {
+		$dates = array(
+			'from' => date( 'Y-m-d H:i:s' ),
+			'to'   => date( 'Y-m-d H:i:s' ),
+		);
+
+		// Set the dates filter so there's something to clear.
+		set_filter_value( 'dates', $dates );
+
+		$this->assertEqualSetsWithIndex( $dates, get_filter_value( 'dates' ) );
+
+		// Clear it.
+		clear_filter( 'dates' );
+
+		$this->assertSame( '', get_filter_value( 'dates' ) );
 	}
 
 	/**
