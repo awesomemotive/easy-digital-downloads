@@ -25,7 +25,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * API request log ID.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    int
 	 */
@@ -34,7 +34,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * User ID.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    int
 	 */
@@ -43,7 +43,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * API key.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -70,11 +70,20 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * API request.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    string
 	 */
 	protected $request;
+
+	/**
+	 * Request errors.
+	 *
+	 * @since  3.0.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $error;
 
 	/**
 	 * IP.
@@ -167,6 +176,17 @@ class Api_Request_Log extends Base_Object {
 	 */
 	public function get_request() {
 		return $this->request;
+	}
+
+	/**
+	 * Retrieve any errors for the API request.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_error() {
+		return $this->error;
 	}
 
 	/**

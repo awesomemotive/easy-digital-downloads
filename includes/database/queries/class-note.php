@@ -31,7 +31,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'notes';
+	protected $table_name = 'notes';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'n';
+	protected $table_alias = 'n';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Notes';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Notes';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'note';
+	protected $item_name = 'note';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'notes';
+	protected $item_name_plural = 'notes';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -78,7 +78,7 @@ class Note extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = '\\EDD\\Notes\\Note';
+	protected $item_shape = '\\EDD\\Notes\\Note';
 
 	/** Cache *****************************************************************/
 
@@ -89,7 +89,7 @@ class Note extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'notes';
+	protected $cache_group = 'notes';
 
 	/** Methods ***************************************************************/
 

@@ -31,7 +31,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'order_adjustments';
+	protected $table_name = 'order_adjustments';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'oa';
+	protected $table_alias = 'oa';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Order_Adjustments';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Order_Adjustments';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'order_adjustment';
+	protected $item_name = 'order_adjustment';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'order_adjustments';
+	protected $item_name_plural = 'order_adjustments';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -78,7 +78,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = '';
+	protected $item_shape = '';
 
 	/** Cache *****************************************************************/
 
@@ -89,7 +89,7 @@ class Order_Adjustment extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'order_adjustments';
+	protected $cache_group = 'order_adjustments';
 
 	/** Methods ***************************************************************/
 

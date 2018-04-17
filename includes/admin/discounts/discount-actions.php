@@ -51,21 +51,25 @@ function edd_admin_add_discount( $data = array() ) {
 		edd_die();
 	}
 
+	// Convert legacy arguments
+
 	// Setup default discount values
 	$to_add            = array();
 	$to_add['status']  = 'active';
 	$current_timestamp = current_time( 'timestamp' );
 
+	$data = array_filter( $data );
+
 	foreach ( $data as $column => $value ) {
 		switch ( $column ) {
 			case 'start_date':
 			case 'start':
-				$to_add[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
+				$to_add['start_date'] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
 				break;
 
 			case 'end_date':
 			case 'expiration':
-				$to_add[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
+				$to_add['end_date'] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
 				break;
 
 			case 'product_reqs':
@@ -83,6 +87,8 @@ function edd_admin_add_discount( $data = array() ) {
 	// Meta values
 	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? $data['product_reqs']      : '';
 	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
+	
+	$to_add = array_filter( $to_add );
 
 	// Strip out known non-columns
 	$to_strip = array(

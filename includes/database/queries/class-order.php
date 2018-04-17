@@ -31,7 +31,7 @@ class Order extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'orders';
+	protected $table_name = 'orders';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Order extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'o';
+	protected $table_alias = 'o';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Order extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Orders';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Orders';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Order extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'order';
+	protected $item_name = 'order';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Order extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'orders';
+	protected $item_name_plural = 'orders';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -78,7 +78,7 @@ class Order extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = '';
+	protected $item_shape = '';
 
 	/** Cache *****************************************************************/
 
@@ -89,7 +89,7 @@ class Order extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'orders';
+	protected $cache_group = 'orders';
 
 	/** Methods ***************************************************************/
 
