@@ -669,7 +669,7 @@ var_dump( $start );
 				'start' => EDD()->utils->date( $start )->startOfDay(),
 				'end'   => EDD()->utils->date( $end )->endOfDay(),
 			);
-var_dump( $dates['start'] );
+var_dump( $dates['start']->toDateTimeString );
 			break;
 	}
 
