@@ -171,12 +171,14 @@ class EDD_Utilities {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $date_string Optional. Date string. Default 'now'.
-	 * @param string $timezone    Optional. Timezone to generate the Carbon instance for.
-	 *                            Default is the timezone set in WordPress settings.
+	 * @param string $date_string  Optional. Date string. Default 'now'.
+	 * @param string $timezone     Optional. Timezone to generate the Carbon instance for.
+	 *                             Default is the timezone set in WordPress settings.
+	 * @param bool   $apply_offset Optional. Whether to apply the offset in seconds to the generated
+	 *                             date. Default true.
 	 * @return \EDD\Utils\Date Date instance.
 	 */
-	public function date( $date_string = 'now', $timezone = null ) {
+	public function date( $date_string = 'now', $timezone = null, $apply_offset = true ) {
 
 		if ( null === $timezone ) {
 			$timezone = edd_get_timezone();
@@ -189,6 +191,17 @@ class EDD_Utilities {
 		 * convert the UNIX timestamp, it just lays the groundwork for deriving the offset.
 		 */
 		$date = new EDD\Utils\Date( $date_string, new DateTimezone( $timezone ) );
+
+		if ( false === $apply_offset ) {
+			/*
+			 * The offset is automatically applied when the Date object is instantiated.
+			 *
+			 * If $apply_offset is false, the interval needs to be removed again after the fact.
+			 */
+			$offset   = $date->getOffset();
+			$interval = \DateInterval::createFromDateString( "-{$offset} seconds" );
+			$date->add( $interval );
+		}
 
 		return $date;
 	}
