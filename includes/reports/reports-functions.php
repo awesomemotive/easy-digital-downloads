@@ -414,7 +414,10 @@ function get_filter_value( $filter ) {
 
 	if ( validate_filter( $filter ) ) {
 
-		$filter_value = get_transient( "reports:{$filter}" );
+		$site = get_current_blog_id();
+		$user = get_current_user_id();
+
+		$filter_value = get_transient( "reports:filter-{$filter}:site-{$site}:user-{$user}" );
 
 		if ( false !== $filter_value ) {
 			$value = $filter_value;

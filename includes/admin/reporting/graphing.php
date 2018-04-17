@@ -700,6 +700,8 @@ function edd_parse_report_dates( $form_data ) {
 	// Load the Reports API dependencies.
 	Reports\Init::bootstrap();
 
+	$site    = get_current_blog_id();
+	$user    = get_current_user_id();
 	$dates   = Reports\get_dates_filter();
 	$filters = Reports\get_filters();
 
@@ -746,7 +748,7 @@ function edd_parse_report_dates( $form_data ) {
 				break;
 		}
 
-		set_transient( "reports:{$filter}", $session_data );
+		set_transient( "reports:filter-{$filter}:site-{$site}:user-{$user}", $session_data );
 
 	}
 
