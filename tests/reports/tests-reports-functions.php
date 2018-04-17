@@ -634,6 +634,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'other',
 		);
 var_dump( 'test start' );
+var_dump( self::$date->getTimezone() );
 		set_filter_value( 'dates', $dates );
 
 		$expected = array(
