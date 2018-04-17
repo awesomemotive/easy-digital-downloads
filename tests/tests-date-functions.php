@@ -9,6 +9,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Holds the original GMT offset for restoration during class tear down.
+	 *
 	 * @var int
 	 */
 	public static $original_gmt_offset;
