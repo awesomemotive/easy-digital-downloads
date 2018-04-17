@@ -14,5 +14,8 @@
     "grunt-wp-i18n": "^1.0.2",
     "load-grunt-tasks": "^3.5.2",
     "makepot": "^0.3.0"
+  },
+  "dependencies": {
+    "npm": "^5.8.0"
   }
 }

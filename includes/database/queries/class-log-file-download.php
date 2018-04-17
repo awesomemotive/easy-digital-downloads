@@ -31,7 +31,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = 'logs_file_downloads';
+	protected $table_name = 'logs_file_downloads';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -40,7 +40,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = 'n';
+	protected $table_alias = 'n';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -49,7 +49,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = '\\EDD\\Database\\Schemas\\Logs_File_Downloads';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Logs_File_Downloads';
 
 	/** Item ******************************************************************/
 
@@ -60,7 +60,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = 'log';
+	protected $item_name = 'log';
 
 	/**
 	 * Plural version for a group of items.
@@ -69,7 +69,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = 'logs';
+	protected $item_name_plural = 'logs';
 
 	/**
 	 * Callback function for turning IDs into objects
@@ -78,7 +78,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD\\Logs\\File_Download_Log';
+	protected $item_shape = 'EDD\\Logs\\File_Download_Log';
 
 	/** Cache *****************************************************************/
 
@@ -89,7 +89,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = 'logs_file_downloads';
+	protected $cache_group = 'logs_file_downloads';
 
 	/** Methods ***************************************************************/
 

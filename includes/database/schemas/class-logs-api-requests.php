@@ -127,6 +127,7 @@ class Logs_Api_Requests extends Base {
 			'name'       => 'date_created',
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
+			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
 		),
@@ -136,8 +137,8 @@ class Logs_Api_Requests extends Base {
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
+			'modified'   => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 	);

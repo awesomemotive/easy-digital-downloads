@@ -1572,7 +1572,7 @@ function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
 
 	do_action( 'edd_pre_delete_payment_note', $note_id, $payment_id );
 
-	$ret = EDD()->notes->delete( $note_id );
+	$ret = edd_delete_note( $note_id );
 
 	do_action( 'edd_post_delete_payment_note', $note_id, $payment_id );
 
@@ -1580,20 +1580,26 @@ function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
 }
 
 /**
- * Gets the payment note HTML
+ * Gets the payment note HTML.
  *
  * @since 1.9
- * @param object|int $note The comment object or ID
- * @param int $payment_id The payment ID the note is connected to
- * @return string
+ * @since 3.0 Updated to use new core objects.
+ *
+ * @param object|int $note       The note object or ID.
+ * @param int        $payment_id The payment ID the note is connected to.
+ * @return string Payment note HTML.
  */
 function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 	if ( is_numeric( $note ) ) {
-		$note = new EDD\Notes\Note( $note );
+		$note = edd_get_note( $note );
 	}
 
-	if ( ! empty( $note->user_id ) ) {
-		$user = get_userdata( $note->user_id );
+	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
+
+	$user_id = $note->get_user_id();
+
+	if ( ! empty( $user_id ) ) {
+		$user = get_userdata( $note->get_user_id() );
 		$user = $user->display_name;
 	} else {
 		$user = __( 'EDD Bot', 'easy-digital-downloads' );
@@ -1603,15 +1609,15 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
-		'note_id'    => $note->id,
+		'note_id'    => $note->get_id(),
 		'payment_id' => $payment_id
-	) ), 'edd_delete_payment_note_' . $note->id );
+	) ), 'edd_delete_payment_note_' . $note->get_id() );
 
-	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->id . '">';
+	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->get_id() . '">';
 		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '<br/>';
-			$note_html .= make_clickable( $note->content );
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->id ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->get_date_created() ) ) . '<br/>';
+			$note_html .= make_clickable( $note->get_content() );
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->get_id() ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';
 	$note_html .= '</div>';
 

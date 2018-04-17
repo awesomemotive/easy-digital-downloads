@@ -1140,12 +1140,14 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
-		if ( ! EDD()->notes->table_exists( EDD()->notes->table_name ) ) {
-			@EDD()->notes->create_table();
+		$notes_db = edd_get_component_interface( 'note', 'table' );
+		if ( ! $notes_db->exists() ) {
+			@$notes_db->create();
 		}
 
-		if ( ! EDD()->note_meta->table_exists( EDD()->note_meta->table_name ) ) {
-			@EDD()->note_meta->create_table();
+		$note_meta_db = edd_get_component_interface( 'note', 'meta' );
+		if ( ! $note_meta_db->exists() ) {
+			@$note_meta_db->create();
 		}
 
 		$sql = "SELECT * FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
@@ -1165,7 +1167,7 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 
 				$id = edd_add_note( $note_data );
-				$note = new EDD\Notes\Note( $id );
+				$note = edd_get_note( $id );
 
 				$meta = get_comment_meta( $old_note->comment_ID );
 				if ( ! empty( $meta ) ) {
@@ -1181,8 +1183,8 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = EDD()->notes->count();
-			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'", 0 );
+			$new_count = edd_count_notes();
+			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
@@ -1192,14 +1194,14 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), $remove_args = array() );
 			WP_CLI::line( __( 'Removing old notes.', 'easy-digital-downloads' ) );
 
-			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'" );
+			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'" );
 			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
 			$note_ids = implode( ', ', $note_ids );
 
-			$delete_query = "DELETE FROM $wpdb->comments WHERE comment_ID IN ({$note_ids})";
+			$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
 			$wpdb->query( $delete_query );
 
-			$delete_postmeta_query = "DELETE FROM $wpdb->commentmeta WHERE comment_id IN ({$note_ids})";
+			$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
 			$wpdb->query( $delete_postmeta_query );
 
 			edd_set_upgrade_complete( 'remove_legacy_notes' );

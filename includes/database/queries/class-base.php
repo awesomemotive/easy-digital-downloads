@@ -34,7 +34,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @var string
 	 */
-	public $prefix = 'edd';
+	protected $prefix = 'edd';
 
 	/** Table Properties ******************************************************/
 
@@ -45,7 +45,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_name = '';
+	protected $table_name = '';
 
 	/**
 	 * String used to alias the database table in MySQL statement.
@@ -58,7 +58,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_alias = '';
+	protected $table_alias = '';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -67,7 +67,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $table_schema = 'EDD_DB_Schema';
+	protected $table_schema = 'EDD_DB_Schema';
 
 	/** Item ******************************************************************/
 
@@ -82,7 +82,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name = '';
+	protected $item_name = '';
 
 	/**
 	 * Plural version for a group of items.
@@ -95,7 +95,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $item_name_plural = '';
+	protected $item_name_plural = '';
 
 	/**
 	 * Name of class used to turn IDs into first-class objects.
@@ -108,7 +108,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var mixed
 	 */
-	public $item_shape = 'EDD_DB_Object';
+	protected $item_shape = 'EDD_DB_Object';
 
 	/** Cache *****************************************************************/
 
@@ -123,23 +123,12 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $cache_group = '';
+	protected $cache_group = '';
 
 	/** Columns ***************************************************************/
 
 	/**
-	 * Primary database table column.
-	 *
-	 * This is set based on the column that has primary=true
-	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var WP_DB_Column
-	 */
-	protected $primary_column = false;
-
-	/**
-	 * Array of database column objects
+	 * Array of all database column objects
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -244,7 +233,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var int
 	 */
-	public $found_items = 0;
+	protected $found_items = 0;
 
 	/**
 	 * The number of pages.
@@ -253,7 +242,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var int
 	 */
-	public $max_num_pages = 0;
+	protected $max_num_pages = 0;
 
 	/**
 	 * SQL for database query.
@@ -262,7 +251,7 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var string
 	 */
-	public $request = '';
+	protected $request = '';
 
 	/** Methods ***************************************************************/
 
@@ -305,7 +294,6 @@ class Base extends \EDD\Database\Base {
 		// Setup
 		$this->set_prefix();
 		$this->set_columns();
-		$this->set_primary_column();
 		$this->set_query_var_defaults();
 
 		// Maybe execute a query if arguments were passed
@@ -385,18 +373,6 @@ class Base extends \EDD\Database\Base {
 
 		// Set columns
 		$this->columns = $new_columns;
-	}
-
-	/**
-	 * Set the primary column
-	 *
-	 * @since 3.0.0
-	 * @access private
-	 */
-	private function set_primary_column() {
-		$this->primary_column = $this->get_column_by( array(
-			'primary' => true
-		) );
 	}
 
 	/**
@@ -634,6 +610,45 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Pass-through method to return a new WP_Meta_Query object
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 * @param array $args See WP_Date_Query
+	 *
+	 * @return \WP_Date_Query
+	 */
+	private function get_meta_query( $args = array() ) {
+		return new \WP_Meta_Query( $args );
+	}
+
+	/**
+	 * Pass-through method to return a new WP_Date_Query object
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 * @param array $args See WP_Date_Query
+	 *
+	 * @return \WP_Date_Query
+	 */
+	private function get_date_query( $args = array() ) {
+		return new \WP_Date_Query( $args, '.' );
+	}
+
+	/**
+	 * Return the current time as a UTC timestamp
+	 *
+	 * This is used by add_item() and update_item()
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	private function get_current_time() {
+		return gmdate( "Y-m-d\TH:i:s\Z" );
+	}
+
+	/**
 	 * Return the literal table name (with prefix) from $wpdb
 	 *
 	 * @since 3.0.0
@@ -663,9 +678,48 @@ class Base extends \EDD\Database\Base {
 	 * @return string Default "id", Primary column name if not empty
 	 */
 	private function get_primary_column_name() {
-		return ! empty( $this->primary_column->name )
-			? $this->primary_column->name
-			: 'id';
+		return $this->get_column_field( array( 'primary' => true ), 'name', 'id' );
+	}
+
+	/**
+	 * Return the date_created database column name
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string Default "date_created", column name if not empty
+	 */
+	private function get_created_column_name() {
+		return $this->get_column_field( array( 'created' => true ), 'name', 'date_created' );
+	}
+
+	/**
+	 * Return the date_modified database column name
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string Default "date_modified", column name if not empty
+	 */
+	private function get_modified_column_name() {
+		return $this->get_column_field( array( 'modified' => true ), 'name', 'date_modified' );
+	}
+
+	/**
+	 * Get a column from an array of arguments
+	 *
+	 * @since 3.0.0
+	 * @access private
+	 *
+	 * @return mixed EDD_DB_Column object, or false
+	 */
+	private function get_column_field( $args = array(), $field = '', $default = false ) {
+
+		// Get column
+		$column = $this->get_column_by( $args );
+
+		// Return field, or default
+		return isset( $column->{$field} )
+			? $column->{$field}
+			: $default;
 	}
 
 	/**
@@ -716,15 +770,11 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function get_item_raw( $column_name = '', $column_value = '' ) {
 
-		// @todo get from EDD_DB_Column
-		$pattern = $this->get_column_by( array( 'name' => $column_name ) )->is_numeric()
-			? '%d'
-			: '%s';
-
 		// Query database for row
-		$table  = $this->get_table_name();
-		$select = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
-		$result = $this->get_db()->get_row( $select );
+		$pattern = $this->get_column_field( array( 'name' => $column_name ), 'pattern', '%s' );
+		$table   = $this->get_table_name();
+		$select  = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
+		$result  = $this->get_db()->get_row( $select );
 
 		// Bail if no row exists
 		if ( empty( $result ) ) {
@@ -1199,7 +1249,7 @@ class Base extends \EDD\Database\Base {
 		// Maybe perform a meta-query
 		$meta_query = $this->query_vars['meta_query'];
 		if ( ! empty( $meta_query ) && is_array( $meta_query ) ) {
-			$this->meta_query = new \WP_Meta_Query( $meta_query );
+			$this->meta_query = $this->get_meta_query( $meta_query );
 			$table            = $this->apply_prefix( $this->item_name );
 			$clauses          = $this->meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
 
@@ -1219,8 +1269,9 @@ class Base extends \EDD\Database\Base {
 			? $date_query
 			: $this->query_vars['date_query'];
 
+		// Maybe perform a date-query
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-			$this->date_query    = new \WP_Date_Query( $date_query, '.' );
+			$this->date_query    = $this->get_date_query( $date_query );
 			$where['date_query'] = preg_replace( $and, '', $this->date_query->get_sql() );
 		}
 
@@ -1542,9 +1593,9 @@ class Base extends \EDD\Database\Base {
 	 * @return boolean
 	 */
 	public function add_item( $data = array() ) {
+
+		// Get primary column
 		$primary = $this->get_primary_column_name();
-		$table   = $this->get_table_name();
-		$columns = $this->get_column_names();
 
 		// Bail if trying to update an existing item
 		if ( isset( $data[ $primary ] ) ) {
@@ -1552,15 +1603,27 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Cut out non-keys for meta
-		$meta = array_diff_key( $data, $columns );
-		$data = array_intersect_key( $data, $columns );
+		$columns = $this->get_column_names();
+		$meta    = array_diff_key( $data, $columns );
+		$data    = array_intersect_key( $data, $columns );
 
-		// If `date_created` is empty, use the current time
-		if ( ! isset( $data['date_created'] ) || empty( $data['date_created'] ) ) {
-			$data['date_created'] = current_time( 'mysql' );
+		// Get the current time (maybe used by created/modified)
+		$time = $this->get_current_time();
+
+		// If date-created exists, but is empty or default, use the current time
+		$created = $this->get_column_by( array( 'created' => true ) );
+		if ( ! empty( $created ) && ( empty( $data[ $created->name ] ) || ( $data[ $created->name ] === $created->default ) ) ) {
+			$data[ $created->name ] = $time;
 		}
 
-		// Attempt to add
+		// If date-modified exists, but is empty or default, use the current time
+		$modified = $this->get_column_by( array( 'modified' => true ) );
+		if ( ! empty( $modified ) && ( empty( $data[ $modified->name ] ) || ( $data[ $modified->name ] === $modified->default ) ) ) {
+			$data[ $modified->name ] = $time;
+		}
+
+		// Try to add
+		$table  = $this->get_table_name();
 		$result = $this->get_db()->insert( $table, $data );
 
 		// Bail if no insert occurred
@@ -1600,12 +1663,14 @@ class Base extends \EDD\Database\Base {
 			return false;
 		}
 
-		$where   = array( $this->get_primary_column_name() => $item_id );
-		$table   = $this->get_table_name();
-		$columns = $this->get_column_names();
+		// Get primary column
+		$primary  = $this->get_primary_column_name();
 
-		// Get item to update
-		$item = $this->get_item( $item_id );
+		// Get item to update (from database, not cache)
+		$item     = $this->get_item_raw( $primary, $item_id );
+
+		// Never update the primary key value
+		unset( $data[ $primary ] );
 
 		// Item does not exist to update, so try to add instead
 		if ( empty( $item ) ) {
@@ -1616,9 +1681,10 @@ class Base extends \EDD\Database\Base {
 		$item = (array) $item;
 
 		// Splice new data into item, and cut out non-keys for meta
-		$data = array_merge( $item, $data );
-		$meta = array_diff_key( $data, $columns );
-		$save = array_intersect_key( $data, $columns );
+		$columns = $this->get_column_names();
+		$data    = array_merge( $item, $data );
+		$meta    = array_diff_key( $data, $columns );
+		$save    = array_intersect_key( $data, $columns );
 
 		// Bail if no change
 		if ( (array) $save === (array) $item ) {
@@ -1626,9 +1692,17 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Never update the primary key value
-		unset( $save[ $this->get_primary_column_name() ] );
+		unset( $save[ $primary ] );
 
-		// Attempt to update
+		// If date-modified is empty, use the current time
+		$modified = $this->get_column_by( array( 'modified' => true ) );
+		if ( ! empty( $modified ) ) {
+			$save[ $modified->name ] = $this->get_current_time();
+		}
+
+		// Try to update
+		$where  = array( $primary => $item_id );
+		$table  = $this->get_table_name();
 		$result = ! empty( $save )
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
@@ -1675,10 +1749,16 @@ class Base extends \EDD\Database\Base {
 			return false;
 		}
 
-		$where  = array( $this->get_primary_column_name() => $item_id );
-		$table  = $this->get_table_name();
-		$item   = $this->get_item( $item_id );
-		$result = $this->get_db()->delete( $table, $where );
+		// Get vars
+		$primary = $this->get_primary_column_name();
+		$table   = $this->get_table_name();
+		$where   = array( $primary => $item_id );
+
+		// Get item (before it's deleted)
+		$item    = $this->get_item_raw( $primary, $item_id );
+
+		// Try to delete
+		$result  = $this->get_db()->delete( $table, $where );
 
 		// Maybe clean caches on successful delete
 		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
@@ -1744,7 +1824,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1775,7 +1855,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1807,7 +1887,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1839,7 +1919,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get meta table name
-		$table = $this->get_meta_table_name();
+		$table = $this->apply_prefix( $this->item_name );
 
 		// Bail if no meta table exists
 		if ( empty( $table ) ) {
@@ -1848,6 +1928,31 @@ class Base extends \EDD\Database\Base {
 
 		// Return results of get meta data
 		return delete_metadata( $table, $item_id, $meta_key, $meta_value, $delete_all );
+	}
+
+	/**
+	 * Get registered meta data keys
+	 *
+	 * This is a copy of get_registered_meta_keys() for WordPress versions lower
+	 * than 4.6.0.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_registered_meta_keys() {
+		global $wp_meta_keys;
+
+		// Get the object type
+		$object_type = $this->apply_prefix( $this->item_name );
+
+		// Bail if not set or not an array
+		if ( ! is_array( $wp_meta_keys ) || ! isset( $wp_meta_keys[ $object_type ] ) ) {
+			return array();
+		}
+
+		// Return the keys
+		return $wp_meta_keys[ $object_type ];
 	}
 
 	/**
@@ -1872,6 +1977,10 @@ class Base extends \EDD\Database\Base {
 		if ( empty( $table ) ) {
 			return;
 		}
+
+		// Only save registered keys
+		$keys = $this->get_registered_meta_keys();
+		$meta = array_intersect_key( $meta, $keys );
 
 		// Save or delete meta data
 		foreach ( $meta as $key => $value ) {
