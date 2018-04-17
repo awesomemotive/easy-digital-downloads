@@ -184,8 +184,6 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	public function test_get_payment_completed_date() {
 
-		$this->markTestSkipped( 'This code needs to account for timezone differences.' );
-
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertInternalType( 'string', $payment->completed_date );
