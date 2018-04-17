@@ -664,11 +664,12 @@ function parse_dates_for_range( $date, $range = null ) {
 				$start = $end = 'now';
 
 			}
-
+var_dump( $start );
 			$dates = array(
 				'start' => EDD()->utils->date( $start )->startOfDay(),
 				'end'   => EDD()->utils->date( $end )->endOfDay(),
 			);
+var_dump( $dates['start'] );
 			break;
 	}
 
