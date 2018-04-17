@@ -633,7 +633,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 			'range' => 'other',
 		);
-
+var_dump( 'test start' );
 		set_filter_value( 'dates', $dates );
 
 		$expected = array(
