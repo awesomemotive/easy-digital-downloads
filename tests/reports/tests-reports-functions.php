@@ -73,7 +73,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_active_tab()
+	 * @covers \EDD\Reports\get_active_tab()
 	 */
 	public function test_get_active_tab_should_use_the_value_of_the_tab_var_when_set() {
 		$_REQUEST['tab'] = 'sales';
@@ -82,7 +82,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_active_tab()
+	 * @covers \EDD\Reports\get_active_tab()
 	 */
 	public function test_get_active_tab_should_use_the_sanitized_value_of_the_tab_var_when_set() {
 		$_REQUEST['tab'] = 'sales/figures';
@@ -91,7 +91,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint()
+	 * @covers \EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error() {
@@ -101,7 +101,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint()
+	 * @covers \EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_WP_Error_code_invalid_endpoint() {
@@ -111,7 +111,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint()
+	 * @covers \EDD\Reports\get_endpoint()
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
@@ -134,7 +134,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint()
+	 * @covers \EDD\Reports\get_endpoint()
 	 * @group edd_errors
 	 * @throws \EDD_Exception
 	 */
@@ -156,7 +156,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_endpoint_views()
+	 * @covers \EDD\Reports\parse_endpoint_views()
 	 */
 	public function test_get_endpoint_views_should_return_the_defaults() {
 		$views = get_endpoint_views();
@@ -165,7 +165,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_endpoint_views()
+	 * @covers \EDD\Reports\parse_endpoint_views()
 	 */
 	public function test_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
 		$expected = array(
@@ -178,7 +178,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_endpoint_views()
+	 * @covers \EDD\Reports\parse_endpoint_views()
 	 */
 	public function test_parse_endpoint_views_with_valid_view_should_inject_defaults() {
 		$expected = array(
@@ -203,7 +203,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_endpoint_views()
+	 * @covers \EDD\Reports\parse_endpoint_views()
 	 */
 	public function test_parse_endpoint_views_should_strip_invalid_fields() {
 		$views = array(
@@ -218,7 +218,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_endpoint_views()
+	 * @covers \EDD\Reports\parse_endpoint_views()
 	 */
 	public function test_parse_endpoint_views_should_inject_default_display_args() {
 		$expected = array(
@@ -241,21 +241,21 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\validate_endpoint_view()
+	 * @covers \EDD\Reports\validate_endpoint_view()
 	 */
 	public function test_validate_endpoint_view_with_valid_view_should_return_true() {
 		$this->assertTrue( validate_endpoint_view( 'tile' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\validate_endpoint_view()
+	 * @covers \EDD\Reports\validate_endpoint_view()
 	 */
 	public function test_validate_endpoint_view_with_invalid_view_should_return_false() {
 		$this->assertFalse( validate_endpoint_view( 'fake' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint_handler()
+	 * @covers \EDD\Reports\get_endpoint_handler()
 	 */
 	public function test_get_endpoint_handler_with_valid_view_should_return_the_handler() {
 		$expected = 'EDD\Reports\Data\Tile_Endpoint';
@@ -264,14 +264,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint_handler()
+	 * @covers \EDD\Reports\get_endpoint_handler()
 	 */
 	public function test_get_endpoint_handler_with_invalid_view_should_return_empty() {
 		$this->assertSame( '', get_endpoint_handler( 'fake' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 * @covers \EDD\Reports\get_endpoint_group_callback()
 	 */
 	public function test_get_endpoint_group_callback_with_tile_view_should_return_that_group_callback() {
 		$expected = 'EDD\Reports\default_display_tiles_group';
@@ -280,7 +280,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 * @covers \EDD\Reports\get_endpoint_group_callback()
 	 */
 	public function test_get_endpoint_group_callback_with_table_view_should_return_that_group_callback() {
 		$expected = 'EDD\Reports\default_display_tables_group';
@@ -289,14 +289,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_endpoint_group_callback()
+	 * @covers \EDD\Reports\get_endpoint_group_callback()
 	 */
 	public function test_get_endpoint_group_callback_with_invalid_view_should_return_an_empty_string() {
 		$this->assertSame( '', get_endpoint_group_callback( 'fake' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filters()
+	 * @covers \EDD\Reports\get_filters()
 	 */
 	public function test_get_filters_should_return_records_for_all_official_filters() {
 		$expected = array( 'dates', 'products', 'taxes' );
@@ -305,28 +305,28 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\validate_filter()
+	 * @covers \EDD\Reports\validate_filter()
 	 */
 	public function test_validate_filter_with_valid_filter_should_return_true() {
 		$this->assertTrue( validate_filter( 'dates' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\validate_filter()
+	 * @covers \EDD\Reports\validate_filter()
 	 */
 	public function test_validate_filter_with_invalid_filter_should_return_false() {
 		$this->assertFalse( validate_filter( 'fake' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_value()
+	 * @covers \EDD\Reports\get_filter_value()
 	 */
 	public function test_get_filter_value_with_invalid_filter_should_return_an_empty_string() {
 		$this->assertSame( '', get_filter_value( 'fake' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_value()
+	 * @covers \EDD\Reports\get_filter_value()
 	 */
 	public function test_get_filter_value_with_a_valid_filter_should_retrieve_that_filters_value() {
 		$expected = array(
@@ -334,15 +334,13 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'to'   => date( 'Y-m-d H:i:s' ),
 		);
 
-		$filter_key = get_filter_key( 'dates' );
-
-		set_transient( $filter_key, $expected );
+		set_filter_value( 'dates', $expected );
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_options()
+	 * @covers \EDD\Reports\get_dates_filter_options()
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_options_should_match_defaults() {
@@ -365,7 +363,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_dates_filter()
+	 * @covers \EDD\Reports\get_dates_filter()
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_should_return_strings() {
@@ -385,7 +383,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_dates_filter()
+	 * @covers \EDD\Reports\get_dates_filter()
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_objects_as_values_should_return_objects() {
@@ -401,7 +399,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_month_range_should_return_those_dates() {
@@ -421,7 +419,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
@@ -441,7 +439,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_today_range_should_return_those_dates() {
@@ -461,7 +459,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_yesterday_range_should_return_those_dates() {
@@ -481,7 +479,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_week_range_should_return_those_dates() {
@@ -501,7 +499,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_week_range_should_return_those_dates() {
@@ -521,7 +519,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_30_days_range_should_return_those_dates() {
@@ -541,7 +539,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_quarter_range_should_return_those_dates() {
@@ -561,7 +559,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates() {
@@ -581,7 +579,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_this_year_range_should_return_those_dates() {
@@ -601,7 +599,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_last_year_range_should_return_those_dates() {
@@ -649,7 +647,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\parse_dates_for_range()
+	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_last_30_days() {
@@ -669,7 +667,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_dates_filter_range()
+	 * @covers \EDD\Reports\get_dates_filter_range()
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_no_preset_range_should_defualt_to_last_30_days() {
@@ -691,14 +689,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_key
+	 * @covers \EDD\Reports\get_filter_key
 	 */
 	public function test_get_filter_key_should_begin_with_reports() {
 		$this->assertRegExp( '/^reports/', get_filter_key( 'dates' ) );
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_key
+	 * @covers \EDD\Reports\get_filter_key
 	 */
 	public function test_get_filter_key_should_contain_the_filter_name() {
 		$filter = 'dates';
@@ -707,7 +705,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_key
+	 * @covers \EDD\Reports\get_filter_key
 	 */
 	public function test_get_filter_key_should_contain_the_current_site_id() {
 		$site = get_current_blog_id();
@@ -716,7 +714,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_key
+	 * @covers \EDD\Reports\get_filter_key
 	 */
 	public function test_get_filter_key_should_contain_the_current_user_id() {
 		$user = get_current_user_id();
@@ -725,7 +723,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::\EDD\Reports\get_filter_key
+	 * @covers \EDD\Reports\get_filter_key
 	 */
 	public function test_get_filter_key_should_contain_reports_the_filter_the_site_and_the_user() {
 		$filter = 'dates';
