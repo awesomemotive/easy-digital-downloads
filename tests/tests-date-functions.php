@@ -34,6 +34,8 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 */
 	public static function wpTearDownAfterClass() {
 		update_option( 'gmt_offset', self::$original_gmt_offset );
+
+		EDD()->utils->get_wp_offset( true );
 	}
 
 	//
