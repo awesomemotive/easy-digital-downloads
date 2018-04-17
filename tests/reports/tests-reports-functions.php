@@ -334,7 +334,9 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'to'   => date( 'Y-m-d H:i:s' ),
 		);
 
-		set_transient( 'reports:dates', $expected );
+		$filter_key = get_filter_key( 'dates' );
+
+		set_transient( $filter_key, $expected );
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
@@ -623,7 +625,9 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
-		set_transient( 'reports:dates', array(
+		$filter_key = get_filter_key( 'dates' );
+
+		set_transient( $filter_key, array(
 			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 			'range' => 'other',
@@ -677,7 +681,9 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_non_default_range_set_should_return_that_reports_range() {
-		set_transient( 'reports:dates', array(
+		$filter_key = get_filter_key( 'dates' );
+
+		set_transient( $filter_key, array(
 			'range' => 'last_quarter',
 		) );
 
