@@ -666,8 +666,8 @@ function parse_dates_for_range( $date, $range = null ) {
 			}
 var_dump( $dates_from_report );
 			$dates = array(
-				'start' => EDD()->utils->date( $start )->startOfDay(),
-				'end'   => EDD()->utils->date( $end )->endOfDay(),
+				'start' => EDD()->utils->date( $start, null, false )->startOfDay(),
+				'end'   => EDD()->utils->date( $end, null, false )->endOfDay(),
 			);
 			break;
 	}
