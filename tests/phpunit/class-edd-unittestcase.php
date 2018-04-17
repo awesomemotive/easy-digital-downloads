@@ -13,6 +13,13 @@ require_once dirname( __FILE__ ) . '/factory.php';
  */
 class EDD_UnitTestCase extends WP_UnitTestCase {
 
+	/**
+	 * Holds the original GMT offset for restoration during class tear down.
+	 *
+	 * @var int
+	 */
+	public static $original_gmt_offset;
+
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
@@ -28,6 +35,10 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 
 	public static function tearDownAfterClass() {
 		self::_delete_all_edd_data();
+
+		update_option( 'gmt_offset', self::$original_gmt_offset );
+
+		EDD()->utils->get_wp_offset( true );
 
 		parent::tearDownAfterClass();
 	}
