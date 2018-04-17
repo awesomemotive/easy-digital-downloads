@@ -685,6 +685,53 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::\EDD\Reports\get_filter_key
+	 */
+	public function test_get_filter_key_should_begin_with_reports() {
+		$this->assertRegExp( '/^reports/', get_filter_key( 'dates' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_filter_key
+	 */
+	public function test_get_filter_key_should_contain_the_filter_name() {
+		$filter = 'dates';
+
+		$this->assertRegExp( "/filter-{$filter}/", get_filter_key( $filter ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_filter_key
+	 */
+	public function test_get_filter_key_should_contain_the_current_site_id() {
+		$site = get_current_blog_id();
+
+		$this->assertRegExp( "/site-{$site}/", get_filter_key( 'dates' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_filter_key
+	 */
+	public function test_get_filter_key_should_contain_the_current_user_id() {
+		$user = get_current_user_id();
+
+		$this->assertRegExp( "/user-{$user}/", get_filter_key( 'dates' ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Reports\get_filter_key
+	 */
+	public function test_get_filter_key_should_contain_reports_the_filter_the_site_and_the_user() {
+		$filter = 'dates';
+		$site   = get_current_blog_id();
+		$user   = get_current_user_id();
+
+		$expected = "reports:filter-{$filter}:site-{$site}:user-{$user}";
+
+		$this->assertSame( $expected, get_filter_key( $filter ) );
+	}
+
+	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
 	 * @param array $dates Start/end dates array.

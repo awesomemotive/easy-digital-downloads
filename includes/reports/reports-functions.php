@@ -414,10 +414,9 @@ function get_filter_value( $filter ) {
 
 	if ( validate_filter( $filter ) ) {
 
-		$site = get_current_blog_id();
-		$user = get_current_user_id();
+		$filter_key = get_filter_key( $filter );
 
-		$filter_value = get_transient( "reports:filter-{$filter}:site-{$site}:user-{$user}" );
+		$filter_value = get_transient( $filter_key );
 
 		if ( false !== $filter_value ) {
 			$value = $filter_value;
@@ -426,6 +425,21 @@ function get_filter_value( $filter ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Builds the transient key used for a given reports filter.
+ *
+ * @since 3.0
+ *
+ * @param string $filter Filter key to retrieve the value for.
+ * @return string Transient key for the filter.
+ */
+function get_filter_key( $filter ) {
+	$site = get_current_blog_id();
+	$user = get_current_user_id();
+
+	return "reports:filter-{$filter}:site-{$site}:user-{$user}";
 }
 
 /**
