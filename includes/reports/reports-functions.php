@@ -414,8 +414,7 @@ function get_filter_value( $filter ) {
 
 	if ( validate_filter( $filter ) ) {
 
-		$filter_key = get_filter_key( $filter );
-
+		$filter_key   = get_filter_key( $filter );
 		$filter_value = get_transient( $filter_key );
 
 		if ( false !== $filter_value ) {
@@ -425,6 +424,24 @@ function get_filter_value( $filter ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Sets the value of a given report filter.
+ *
+ * The filter will only be set if the filter is valid.
+ *
+ * @since 3.0
+ *
+ * @param string $filter Filter name.
+ * @param mixed  $value  Filter value.
+ */
+function set_filter_value( $filter, $value ) {
+	if ( validate_filter( $filter ) ) {
+		$filter_key = get_filter_key( $filter );
+
+		set_transient( $filter_key, $value );
+	}
 }
 
 /**
