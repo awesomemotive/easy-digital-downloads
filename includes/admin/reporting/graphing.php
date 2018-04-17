@@ -748,7 +748,9 @@ function edd_parse_report_dates( $form_data ) {
 				break;
 		}
 
-		set_transient( "reports:filter-{$filter}:site-{$site}:user-{$user}", $session_data );
+		$filter_key = Reports\get_filter_key( $filter );
+
+		set_transient( $filter_key, $session_data );
 
 	}
 
