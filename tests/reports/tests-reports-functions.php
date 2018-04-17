@@ -628,15 +628,17 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_parse_dates_for_range_with_other_range_should_return_dates_for_request_vars() {
-		set_filter_value( 'dates', array(
+		$dates = array(
 			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 			'range' => 'other',
-		) );
+		);
+
+		set_filter_value( 'dates', $dates );
 
 		$expected = array(
-			'start' => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
+			'start' => $dates['from'],
+			'end'   => $dates['to'],
 			'range' => 'other',
 		);
 
