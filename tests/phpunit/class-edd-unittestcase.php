@@ -23,6 +23,8 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
+		self::$original_gmt_offset = get_option( 'gmt_offset', 0 );
+
 		edd_install();
 
 		global $current_user;
