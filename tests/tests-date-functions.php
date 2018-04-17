@@ -8,9 +8,16 @@
 class Date_Functions_Tests extends EDD_UnitTestCase {
 
 	/**
+	 * Holds the original GMT offset for restoration during class tear down.
+	 * @var int
+	 */
+	public static $original_gmt_offset;
+
+	/**
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
+		self::$original_gmt_offset = get_option( 'gmt_offset' );
 		update_option( 'gmt_offset', -5 );
 
 		EDD()->utils->get_wp_offset( true );
@@ -21,6 +28,14 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		parent::tearDown();
 	}
+
+	/**
+	 * Cleans up after the test class has run.
+	 */
+	public static function wpTearDownAfterClass() {
+		update_option( 'gmt_offset', self::$original_gmt_offset );
+	}
+
 	//
 	// Tests
 	//
