@@ -16,7 +16,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Holds the original GMT offset for restoration during class tear down.
 	 *
-	 * @var int
+	 * @var string
 	 */
 	public static $original_gmt_offset;
 
