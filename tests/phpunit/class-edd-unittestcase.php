@@ -23,8 +23,6 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
-		self::$original_gmt_offset = get_option( 'gmt_offset', 0 );
-
 		edd_install();
 
 		global $current_user;
@@ -38,7 +36,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	public static function tearDownAfterClass() {
 		self::_delete_all_edd_data();
 
-		update_option( 'gmt_offset', self::$original_gmt_offset );
+		delete_option( 'gmt_offset' );
 
 		EDD()->utils->get_wp_offset( true );
 
