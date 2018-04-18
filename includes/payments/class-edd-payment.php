@@ -595,6 +595,8 @@ class EDD_Payment {
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
 			$this->new          = true;
+
+			do_action( 'edd_insert_payment', $this->ID, $payment_data );
 		}
 
 		return $this->ID;

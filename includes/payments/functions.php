@@ -258,8 +258,6 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	$payment->save();
 
-	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
-
 	if ( ! empty( $payment->ID ) ) {
 		return $payment->ID;
 	}
