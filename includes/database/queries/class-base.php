@@ -501,7 +501,8 @@ class Base extends \EDD\Database\Base {
 	 * @access private
 	 */
 	private function set_request() {
-		$this->request = "{$this->request_clauses['select']} {$this->request_clauses['from']} {$this->request_clauses['where']} {$this->request_clauses['groupby']} {$this->request_clauses['orderby']} {$this->request_clauses['limits']}";
+		$clauses       = array_map( 'trim', $this->request_clauses );
+		$this->request = implode( ' ', $clauses );
 	}
 
 	/**
