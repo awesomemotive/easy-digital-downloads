@@ -587,6 +587,9 @@ function edd_downloads_query( $atts, $content = null ) {
 	$query = apply_filters( 'edd_downloads_query', $query, $atts );
 
 	$downloads = new WP_Query( $query );
+
+	do_action( 'edd_downloads_list_before', $atts );
+
 	if ( $downloads->have_posts() ) :
 		$i = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
@@ -594,7 +597,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
 		$wrapper_classes = implode( ' ', $wrapper_classes );
 		ob_start(); ?>
-		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
+
+		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 
 			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
 
@@ -645,6 +649,8 @@ function edd_downloads_query( $atts, $content = null ) {
 	else:
 		$display = sprintf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
+
+	do_action( 'edd_downloads_list_after', $atts );
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
