@@ -368,7 +368,7 @@ class Manifest implements Error_Logger {
 		$config->type    = $this->get_type();
 		$config->data    = $this->get_chart_data();
 
-		if ( $this->has_labels() ) {
+		if ( $this->is_pie_manifest() ) {
 
 			$config->labels  = $this->get_labels();
 			$config->options = array(
