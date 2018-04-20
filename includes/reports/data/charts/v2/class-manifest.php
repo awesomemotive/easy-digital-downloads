@@ -411,41 +411,52 @@ class Manifest implements Error_Logger {
 	 * @return array Parsed chart options.
 	 */
 	public function get_chart_options() {
-		$defaults = array(
-			'responsive' => true,
-			'hoverMode'  => 'index',
-			'stacked'    => false,
-			'title'      => array(
-				'display' => true,
-				'text'    => $this->get_endpoint()->get_label(),
-			),
-			'scales'     => array(
-				'xAxes' => array(
-					array(
-						'type'     => "time",
-						'display'  => true,
-						'ticks'    => array(
-							'source' => 'auto',
-						),
-						'position' => 'bottom',
-						'time'     => array(
-							'unit' => 'day',
-							'displayFormats' => array(
-								'day'   => 'MMM D',
-								'month' => 'MMM',
+
+		if ( $this->is_pie_manifest() ) {
+
+			$defaults = array(
+				'responsive' => true,
+			);
+
+		} else {
+
+			$defaults = array(
+				'responsive' => true,
+				'hoverMode'  => 'index',
+				'stacked'    => false,
+				'title'      => array(
+					'display' => true,
+					'text'    => $this->get_endpoint()->get_label(),
+				),
+				'scales'     => array(
+					'xAxes' => array(
+						array(
+							'type'     => "time",
+							'display'  => true,
+							'ticks'    => array(
+								'source' => 'auto',
+							),
+							'position' => 'bottom',
+							'time'     => array(
+								'unit' => 'day',
+								'displayFormats' => array(
+									'day'   => 'MMM D',
+									'month' => 'MMM',
+								),
 							),
 						),
 					),
-				),
-				'yAxes' => array(
-					array(
-						'type'     => 'linear',
-						'display'  => true,
-						'position' => 'left',
+					'yAxes' => array(
+						array(
+							'type'     => 'linear',
+							'display'  => true,
+							'position' => 'left',
+						),
 					),
-				),
-			)
-		);
+				)
+			);
+
+		}
 
 		return array_merge( $defaults, $this->get_options() );
 	}
