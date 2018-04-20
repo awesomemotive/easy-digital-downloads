@@ -78,6 +78,13 @@ class Manifest implements Error_Logger {
 
 		$this->set_type( $type );
 		$this->set_endpoint( $endpoint );
+
+		if ( in_array( $this->get_type(), array( 'pie', 'doughnut' ), true ) ) {
+			$this->set_labels( $options['labels'] );
+
+			unset( $options['labels'] );
+		}
+
 		$this->set_options( $options );
 	}
 
