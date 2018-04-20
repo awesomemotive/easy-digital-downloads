@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-04-16 21:55:35+00:00\n"
+"POT-Creation-Date: 2018-04-20 17:28:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -195,7 +195,7 @@ msgstr ""
 
 #: includes/admin/admin-pages.php:43 includes/admin/plugins.php:57
 #: includes/admin/settings/contextual-help.php:87
-#: includes/admin/settings/register-settings.php:1243
+#: includes/admin/settings/register-settings.php:1279
 msgid "Extensions"
 msgstr ""
 
@@ -635,7 +635,7 @@ msgid "City"
 msgstr ""
 
 #: includes/admin/customers/customers.php:269
-#: includes/admin/settings/register-settings.php:2041
+#: includes/admin/settings/register-settings.php:2077
 #: includes/admin/tools.php:695 includes/checkout/template.php:435
 #: templates/shortcode-profile-editor.php:171
 msgid "State / Province"
@@ -739,7 +739,7 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:698
 #: includes/admin/downloads/metabox.php:823
 #: includes/admin/payments/view-order-details.php:490
-#: includes/admin/settings/register-settings.php:2044 includes/scripts.php:227
+#: includes/admin/settings/register-settings.php:2080 includes/scripts.php:227
 #: templates/checkout_cart.php:57 templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
 msgid "Remove"
@@ -1205,12 +1205,12 @@ msgstr ""
 
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
-#: includes/admin/settings/register-settings.php:1236
-#: includes/admin/settings/register-settings.php:1291
-#: includes/admin/settings/register-settings.php:1296
-#: includes/admin/settings/register-settings.php:1300
-#: includes/admin/settings/register-settings.php:1305
-#: includes/admin/settings/register-settings.php:1308
+#: includes/admin/settings/register-settings.php:1272
+#: includes/admin/settings/register-settings.php:1327
+#: includes/admin/settings/register-settings.php:1332
+#: includes/admin/settings/register-settings.php:1336
+#: includes/admin/settings/register-settings.php:1341
+#: includes/admin/settings/register-settings.php:1344
 #: includes/admin/tools.php:68
 msgid "General"
 msgstr ""
@@ -1716,7 +1716,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1031
 #: includes/admin/settings/register-settings.php:744
-#: includes/admin/thickbox.php:59 includes/checkout/template.php:890
+#: includes/admin/thickbox.php:59 includes/checkout/template.php:965
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
 msgstr ""
@@ -2555,7 +2555,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
-#: includes/admin/settings/register-settings.php:2040
+#: includes/admin/settings/register-settings.php:2076
 #: includes/admin/tools.php:713 templates/shortcode-profile-editor.php:162
 msgid "Country"
 msgstr ""
@@ -2819,7 +2819,7 @@ msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-payments.php:62
 #: includes/admin/settings/register-settings.php:352
-#: includes/admin/settings/register-settings.php:1292
+#: includes/admin/settings/register-settings.php:1328
 msgid "Currency"
 msgstr ""
 
@@ -2951,7 +2951,7 @@ msgid "Refresh Reports"
 msgstr ""
 
 #: includes/admin/reporting/logs.php:144
-#: includes/admin/settings/register-settings.php:1318
+#: includes/admin/settings/register-settings.php:1354
 msgid "File Downloads"
 msgstr ""
 
@@ -2981,7 +2981,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:59
 #: includes/admin/settings/contextual-help.php:71
-#: includes/admin/settings/register-settings.php:1240
+#: includes/admin/settings/register-settings.php:1276
 msgid "Taxes"
 msgstr ""
 
@@ -3128,7 +3128,7 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:48
 #: includes/admin/settings/register-settings.php:420
-#: includes/admin/settings/register-settings.php:1237
+#: includes/admin/settings/register-settings.php:1273
 msgid "Payment Gateways"
 msgstr ""
 
@@ -3157,7 +3157,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:57
-#: includes/admin/settings/register-settings.php:1238
+#: includes/admin/settings/register-settings.php:1274
 msgid "Emails"
 msgstr ""
 
@@ -3177,7 +3177,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
-#: includes/admin/settings/register-settings.php:1239
+#: includes/admin/settings/register-settings.php:1275
 msgid "Styles"
 msgstr ""
 
@@ -3260,7 +3260,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:93
-#: includes/admin/settings/register-settings.php:1315
+#: includes/admin/settings/register-settings.php:1351
 msgid "Miscellaneous"
 msgstr ""
 
@@ -3306,6 +3306,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:285
 #: includes/admin/settings/register-settings.php:294
 #: includes/admin/settings/register-settings.php:305
+#: includes/admin/settings/register-settings.php:909
 msgid "Select a page"
 msgstr ""
 
@@ -3437,7 +3438,7 @@ msgid "The symbol (usually , or .) to separate decimal points."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:388
-#: includes/admin/settings/register-settings.php:1293
+#: includes/admin/settings/register-settings.php:1329
 msgid "API"
 msgstr ""
 
@@ -3940,7 +3941,7 @@ msgid "The button label for completing a free purchase."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:751
-#: includes/checkout/template.php:893
+#: includes/checkout/template.php:968
 msgid "Free Download"
 msgstr ""
 
@@ -4099,217 +4100,267 @@ msgid "A postfix to append to all sequential order numbers."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:858
+msgid "Terms and Privacy Policy"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:861
+msgid "Terms and Privacy Policy Settings"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:862
+msgid ""
+"Depending on legal and regulatory requirements, it may be necessary for "
+"your site to show checkboxes for Terms of Agreement and/or Privacy Policy."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:866
 msgid "Agree to Terms"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:859
+#: includes/admin/settings/register-settings.php:867
 msgid ""
 "Check this to show an agree to terms on the checkout that users must agree "
 "to before purchasing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:864
+#: includes/admin/settings/register-settings.php:872
 msgid "Agree to Terms Label"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:865
+#: includes/admin/settings/register-settings.php:873
 msgid "Label shown next to the agree to terms check box."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:871
+#: includes/admin/settings/register-settings.php:879
 msgid "Agreement Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:872
+#: includes/admin/settings/register-settings.php:880
 msgid "If Agree to Terms is checked, enter the agreement terms here."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:882
+#: includes/admin/settings/register-settings.php:885
+msgid "Agree to Privacy Policy"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:886
+msgid ""
+"Check this to show an agree to privacy policy on checkout that users must "
+"agree to before purchasing."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:891
+msgid "Agree to Privacy Policy Label"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:892
+msgid "Label shown next to the agree to privacy policy check box."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:898
+msgid "Show the privacy policy on checkout"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:899
+msgid "Display your privacy policy on checkout."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:904
+msgid "Privacy Agreement Page"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:905
+msgid ""
+"If Agree to Privacy Policy is checked, select a page for the Privacy "
+"Agreement here."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:918
 msgid "Buy Now Disabled"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:883
+#: includes/admin/settings/register-settings.php:919
 msgid ""
 "Buy Now buttons are only available for stores that have a single supported "
 "gateway active and that do not use taxes."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:986
+#: includes/admin/settings/register-settings.php:1022
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1130
+#: includes/admin/settings/register-settings.php:1166
 msgid "Error setting default gateway. No gateways are enabled."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1143
+#: includes/admin/settings/register-settings.php:1179
 msgid "%s could not be set as the default gateway. It must first be enabled."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1246
+#: includes/admin/settings/register-settings.php:1282
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1249
+#: includes/admin/settings/register-settings.php:1285
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1297
+#: includes/admin/settings/register-settings.php:1333
 #: includes/gateways/functions.php:25 includes/gateways/paypal-standard.php:33
 msgid "PayPal Standard"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1301
+#: includes/admin/settings/register-settings.php:1337
 msgid "Purchase Receipts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1302
+#: includes/admin/settings/register-settings.php:1338
 msgid "New Sale Notifications"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1311
+#: includes/admin/settings/register-settings.php:1347
 msgid "Main"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1316 includes/install.php:92
+#: includes/admin/settings/register-settings.php:1352 includes/install.php:92
 #: templates/widget-cart-checkout.php:6 templates/widget-cart-empty.php:7
 msgid "Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1317
+#: includes/admin/settings/register-settings.php:1353
 msgid "Button Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1319
+#: includes/admin/settings/register-settings.php:1355
 msgid "Accounting"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1320
+#: includes/admin/settings/register-settings.php:1356
 msgid "Terms of Agreement"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1562
+#: includes/admin/settings/register-settings.php:1598
 msgid ""
 "Don't see what you need? More Payment Gateway options are available <a "
 "href=\"%s\">here</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1783
+#: includes/admin/settings/register-settings.php:1819
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1941
+#: includes/admin/settings/register-settings.php:1977
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2042
+#: includes/admin/settings/register-settings.php:2078
 msgid "Country Wide"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2043
+#: includes/admin/settings/register-settings.php:2079
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2043
+#: includes/admin/settings/register-settings.php:2079
 msgid ""
 "<strong>Regional tax rates: </strong>When a customer enters an address on "
 "checkout that matches the specified region for this tax rate, the cart tax "
 "will adjust automatically. Enter a percentage, such as 6.5 for 6.5%."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2060
-#: includes/admin/settings/register-settings.php:2105
+#: includes/admin/settings/register-settings.php:2096
+#: includes/admin/settings/register-settings.php:2141
 msgid "Choose a country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2075
+#: includes/admin/settings/register-settings.php:2111
 msgid "Choose a state"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2087
-#: includes/admin/settings/register-settings.php:2115
+#: includes/admin/settings/register-settings.php:2123
+#: includes/admin/settings/register-settings.php:2151
 msgid "Apply to whole country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2090
-#: includes/admin/settings/register-settings.php:2118
+#: includes/admin/settings/register-settings.php:2126
+#: includes/admin/settings/register-settings.php:2154
 msgid "Remove Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2123
+#: includes/admin/settings/register-settings.php:2159
 msgid "Add Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2176
+#: includes/admin/settings/register-settings.php:2212
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2189
+#: includes/admin/settings/register-settings.php:2225
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2201
+#: includes/admin/settings/register-settings.php:2237
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2214
+#: includes/admin/settings/register-settings.php:2250
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2226
+#: includes/admin/settings/register-settings.php:2262
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2235
+#: includes/admin/settings/register-settings.php:2271
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2244
+#: includes/admin/settings/register-settings.php:2280
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2252
+#: includes/admin/settings/register-settings.php:2288
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2253
+#: includes/admin/settings/register-settings.php:2289
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2273
+#: includes/admin/settings/register-settings.php:2309
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2280
+#: includes/admin/settings/register-settings.php:2316
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2290
+#: includes/admin/settings/register-settings.php:2326
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2308
+#: includes/admin/settings/register-settings.php:2344
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2321
+#: includes/admin/settings/register-settings.php:2357
 msgid "Deactivate License"
 msgstr ""
 
@@ -5248,12 +5299,13 @@ msgstr ""
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:746 includes/process-purchase.php:350
+#: includes/checkout/template.php:746 includes/process-purchase.php:356
 #: includes/scripts.php:67
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:769
+#: includes/checkout/template.php:769 includes/checkout/template.php:789
+#: includes/checkout/template.php:833
 msgid "Agree to Terms?"
 msgstr ""
 
@@ -5265,15 +5317,23 @@ msgstr ""
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:807
+#: includes/checkout/template.php:802 includes/checkout/template.php:854
+msgid "Show Privacy Policy"
+msgstr ""
+
+#: includes/checkout/template.php:803 includes/checkout/template.php:855
+msgid "Hide Privacy Policy"
+msgstr ""
+
+#: includes/checkout/template.php:882
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:833
+#: includes/checkout/template.php:908
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:856
+#: includes/checkout/template.php:931
 msgid "Next"
 msgstr ""
 
@@ -6639,16 +6699,16 @@ msgstr ""
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:93 includes/process-purchase.php:674
+#: includes/login-register.php:93 includes/process-purchase.php:694
 msgid "The username you entered does not exist"
 msgstr ""
 
 #: includes/login-register.php:147 includes/login-register.php:155
-#: includes/process-purchase.php:552
+#: includes/process-purchase.php:572
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:151 includes/process-purchase.php:545
+#: includes/login-register.php:151 includes/process-purchase.php:565
 msgid "Username already taken"
 msgstr ""
 
@@ -6656,8 +6716,8 @@ msgstr ""
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:163 includes/process-purchase.php:492
-#: includes/process-purchase.php:567 includes/process-purchase.php:707
+#: includes/login-register.php:163 includes/process-purchase.php:512
+#: includes/process-purchase.php:587 includes/process-purchase.php:727
 msgid "Invalid email"
 msgstr ""
 
@@ -7183,97 +7243,101 @@ msgstr ""
 msgid "The email address %s is already in use."
 msgstr ""
 
-#: includes/process-purchase.php:317
+#: includes/process-purchase.php:323
 msgid "The selected payment gateway is not enabled"
 msgstr ""
 
-#: includes/process-purchase.php:377
+#: includes/process-purchase.php:383
 msgid "One or more of the discounts you entered is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:394
+#: includes/process-purchase.php:400
 msgid "You must agree to the terms of use"
 msgstr ""
 
-#: includes/process-purchase.php:409
+#: includes/process-purchase.php:414
+msgid "You must agree to the privacy policy"
+msgstr ""
+
+#: includes/process-purchase.php:429
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: includes/process-purchase.php:413
+#: includes/process-purchase.php:433
 msgid "Please enter your first name"
 msgstr ""
 
-#: includes/process-purchase.php:423
+#: includes/process-purchase.php:443
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/process-purchase.php:427
+#: includes/process-purchase.php:447
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:431
+#: includes/process-purchase.php:451
 msgid "Please select your billing country"
 msgstr ""
 
-#: includes/process-purchase.php:435
+#: includes/process-purchase.php:455
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:497 includes/process-purchase.php:818
+#: includes/process-purchase.php:517 includes/process-purchase.php:838
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:550
+#: includes/process-purchase.php:570
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:559
+#: includes/process-purchase.php:579
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:572
+#: includes/process-purchase.php:592
 msgid ""
 "Email already used. Login or use a different email to complete your "
 "purchase."
 msgstr ""
 
-#: includes/process-purchase.php:580 includes/process-purchase.php:714
+#: includes/process-purchase.php:600 includes/process-purchase.php:734
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:588
+#: includes/process-purchase.php:608
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:597 includes/process-purchase.php:670
+#: includes/process-purchase.php:617 includes/process-purchase.php:690
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:600
+#: includes/process-purchase.php:620
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:624
+#: includes/process-purchase.php:644
 msgid "You must log in or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:651
+#: includes/process-purchase.php:671
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:696
+#: includes/process-purchase.php:716
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:882
+#: includes/process-purchase.php:902
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1131
+#: includes/process-purchase.php:1151
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1167
+#: includes/process-purchase.php:1187
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 
