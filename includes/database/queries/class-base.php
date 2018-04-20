@@ -683,28 +683,6 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
-	 * Return the date_created database column name
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string Default "date_created", column name if not empty
-	 */
-	private function get_created_column_name() {
-		return $this->get_column_field( array( 'created' => true ), 'name', 'date_created' );
-	}
-
-	/**
-	 * Return the date_modified database column name
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string Default "date_modified", column name if not empty
-	 */
-	private function get_modified_column_name() {
-		return $this->get_column_field( array( 'modified' => true ), 'name', 'date_modified' );
-	}
-
-	/**
 	 * Get a column from an array of arguments
 	 *
 	 * @since 3.0.0
