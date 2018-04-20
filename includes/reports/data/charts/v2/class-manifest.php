@@ -79,7 +79,7 @@ class Manifest implements Error_Logger {
 		$this->set_type( $type );
 		$this->set_endpoint( $endpoint );
 
-		if ( in_array( $this->get_type(), array( 'pie', 'doughnut' ), true ) ) {
+		if ( $this->is_pie_manifest() ) {
 			$this->set_labels( $options['labels'] );
 
 			unset( $options['labels'] );
@@ -322,7 +322,7 @@ class Manifest implements Error_Logger {
 			// Bring in chart config.
 			<?php echo esc_js( $target_el ); ?> = <?php echo $config; ?>;
 
-			<?php if ( ! in_array( $this->get_type(), array( 'pie', 'doughnut' ) ) ) : ?>
+			<?php if ( ! $this->is_pie_manifest() ) : ?>
 				// Convert dataset x-axis values to moment() objects.
 				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
 
@@ -456,6 +456,17 @@ class Manifest implements Error_Logger {
 		);
 
 		return array_merge( $defaults, $this->get_options() );
+	}
+
+	/**
+	 * Determines whether the chart manifest is for a pie or doughnut chart.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if the manifest is for a pie or doughnut chart, otherwise false.
+	 */
+	public function is_pie_manifest() {
+		return in_array( $this->get_type(), array( 'pie', 'doughnut' ), true );
 	}
 
 	/**
