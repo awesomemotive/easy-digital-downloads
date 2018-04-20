@@ -598,7 +598,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$wrapper_classes = implode( ' ', $wrapper_classes );
 		ob_start(); ?>
 
-		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
+		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
 
 			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
 
