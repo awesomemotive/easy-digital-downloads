@@ -211,26 +211,34 @@ abstract class Dataset implements Error_Logger {
 			}
 		}
 
-		$data = $this->get_data();
+		$data      = $this->get_data();
+		$processed = array();
 
 		if ( ! empty( $data ) ) {
-			$processed = array();
 
-			$first_key   = key( $data );
-			$value_count = count( $data[ $first_key ] );
+			if ( $this instanceof Pie_Dataset ) {
 
-			foreach ( $data as $key => $value ) {
-				if ( isset( $value[1] ) ) {
-					$processed[ $key ] = array(
-						'x' => $value[0] * 1000,
-						'y' => $value[1],
-					);
-				} else {
-					$processed[ $key ] = array(
-						'x' => $value[0] * 1000
-					);
+				$processed = $data;
+
+			} else {
+
+				$first_key   = key( $data );
+				$value_count = count( $data[ $first_key ] );
+
+				foreach ( $data as $key => $value ) {
+					if ( isset( $value[1] ) ) {
+						$processed[ $key ] = array(
+							'x' => $value[0] * 1000,
+							'y' => $value[1],
+						);
+					} else {
+						$processed[ $key ] = array(
+							'x' => $value[0] * 1000
+						);
+					}
 				}
 			}
+
 
 			$options['data'] = $processed;
 
