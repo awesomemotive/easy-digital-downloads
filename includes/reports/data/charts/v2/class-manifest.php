@@ -367,7 +367,19 @@ class Manifest implements Error_Logger {
 
 		$config->type    = $this->get_type();
 		$config->data    = $this->get_chart_data();
-		$config->options = $this->get_chart_options();
+
+		if ( $this->has_labels() ) {
+
+			$config->labels  = $this->get_labels();
+			$config->options = array(
+				'responsive' => true,
+			);
+
+		} else {
+
+			$config->options = $this->get_chart_options();
+
+		}
 
 		return json_encode( $config );
 	}
