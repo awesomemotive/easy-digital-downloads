@@ -372,11 +372,13 @@ abstract class Base extends \EDD\Database\Base {
 	private function is_testing() {
 		return (bool)
 
-			       // Tests constant is being used
-		       ( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR )
+			// Tests constant is being used
+			( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR )
 
-		       // Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
-		       || function_exists( '_manually_load_plugin' );
+			||
+
+			// Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
+			function_exists( '_manually_load_plugin' );
 	}
 
 	/**
@@ -412,8 +414,6 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return bool
 	 */
 	private function is_global() {
-
-		// Is the table global?
 		return ( true === $this->global );
 	}
 
