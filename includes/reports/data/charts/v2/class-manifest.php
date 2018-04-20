@@ -367,19 +367,7 @@ class Manifest implements Error_Logger {
 
 		$config->type    = $this->get_type();
 		$config->data    = $this->get_chart_data();
-
-		if ( $this->is_pie_manifest() ) {
-
-			$config->labels  = $this->get_labels();
-			$config->options = array(
-				'responsive' => true,
-			);
-
-		} else {
-
-			$config->options = $this->get_chart_options();
-
-		}
+		$config->options = $this->get_chart_options();
 
 		return json_encode( $config );
 	}
@@ -406,6 +394,10 @@ class Manifest implements Error_Logger {
 
 				$data['datasets'][] = $set->get_options();
 			}
+		}
+
+		if ( $this->is_pie_manifest() ) {
+			$data['labels'] = $this->get_labels();
 		}
 
 		return $data;
