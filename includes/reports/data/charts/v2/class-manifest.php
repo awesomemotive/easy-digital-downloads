@@ -33,12 +33,20 @@ class Manifest implements Error_Logger {
 	private $options = array();
 
 	/**
-	 * Datasets associated with the current graph.
+	 * Datasets associated with the current chart.
 	 *
 	 * @since 3.0
 	 * @var   Dataset[]
 	 */
 	private $datasets = array();
+
+	/**
+	 * Labels associated with the current pie or doughnut chart.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $labels = array();
 
 	/**
 	 * Represents the current Chart_Endpoint instance.
@@ -177,6 +185,39 @@ class Manifest implements Error_Logger {
 		$datasets = $this->get_datasets();
 
 		return ! empty( $datasets );
+	}
+
+	/**
+	 * Sets the labels property (for pie and doughnut charts).
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $labels Array of pie or doughnut chart labels.
+	 */
+	private function set_labels( $labels ) {
+		$this->labels = $labels;
+	}
+
+	/**
+	 * Retrieves the manifest labels (for pie and doughnut charts).
+	 *
+	 * @since 3.0
+	 */
+	public function get_labels() {
+		return $this->labels;
+	}
+
+	/**
+	 * Determines whether the current chart manifest contains any labels (for pie and doughnut charts).
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if there are labels, otherwise false.
+	 */
+	public function has_labels() {
+		$labels = $this->get_labels();
+
+		return ! empty( $labels );
 	}
 
 	/**
