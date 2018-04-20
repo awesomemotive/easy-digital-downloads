@@ -272,6 +272,11 @@ class Manifest implements Error_Logger {
 
 		switch( $this->get_type() ) {
 
+			case 'doughnut':
+			case 'pie':
+				$handler = 'EDD\Reports\Data\Charts\v2\Pie_Dataset';
+				break;
+
 			case 'bar':
 				$handler = 'EDD\Reports\Data\Charts\v2\Bar_Dataset';
 				break;
