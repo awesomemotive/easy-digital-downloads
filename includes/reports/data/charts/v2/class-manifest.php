@@ -322,25 +322,28 @@ class Manifest implements Error_Logger {
 			// Bring in chart config.
 			<?php echo esc_js( $target_el ); ?> = <?php echo $config; ?>;
 
-			// Convert dataset x-axis values to moment() objects.
-			<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
+			<?php if ( ! in_array( $this->get_type(), array( 'pie', 'doughnut' ) ) ) : ?>
+				// Convert dataset x-axis values to moment() objects.
+				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
 
-				dataset.data.forEach( function( pair, index ) {
-					pair.x = moment( pair.x );
+					dataset.data.forEach( function( pair, index ) {
+						pair.x = moment( pair.x );
+					} );
+
 				} );
 
-			} );
+				// Set min and max moment() values for the x-axis.
+				<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
+					<?php if ( false === $day_by_day ) : ?>
+						xaxis.time.unit = 'month';
+						console.log( xaxis.time );
+					<?php endif; ?>
 
-			// Set min and max moment() values for the x-axis.
-			<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
-				<?php if ( false === $day_by_day ) : ?>
-					xaxis.time.unit = 'month';
-					console.log( xaxis.time );
-				<?php endif; ?>
+					xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );
+					xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
+				} );
 
-				xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );
-				xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
-			} );
+			<?php endif; // Line and bar charts ?>
 
 			// Instantiate the chart.
 			<?php echo esc_js( $target_el ); ?>_chart = new Chart(
