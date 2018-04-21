@@ -164,13 +164,15 @@ function get_report( $report_id, $build_endpoints = true ) {
  * @return array List of report tabs, otherwise an empty array.
  */
 function get_tabs() {
+	$group = 'core';
+
 	/** @var Data\Reports_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {
 		return array();
 	} else {
-		$registered_reports = $registry->get_reports( 'priority' );
+		$registered_reports = $registry->get_reports( 'priority', $group );
 	}
 
 	$reports = array();
@@ -190,6 +192,13 @@ function get_tabs() {
 		 * @param array $views 'Reports' tab views.
 		 */
 		$legacy_views = edd_apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_reports_get_tabs' );
+
+		// Only retrieve reports in the 'core' group for display as core Reports tabs.
+		foreach ( $legacy_views as $report_id => $atts ) {
+			if ( $group !== $atts['group'] ) {
+				unset( $legacy_views[ $report_id ] );
+			}
+		}
 
 		$reports = array_merge( $reports, $legacy_views );
 	}
