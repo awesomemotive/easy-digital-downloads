@@ -176,7 +176,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	 * @return
 	 */
 	public function get_reports( $sort = '', $group = 'core' ) {
-		$reports = $this->get_items_sorted( $report_id_or_sort );
+		$reports = $this->get_items_sorted( $sort );
 
 		foreach ( $reports as $report_id => $atts ) {
 			if ( $group !== $atts['group'] ) {
