@@ -970,7 +970,9 @@ function default_display_charts_group( $report ) {
 			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
 				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
-				<?php $chart->display(); ?>
+				<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>">
+					<?php $chart->display(); ?>
+				</div>
 			<?php endforeach; ?>
 		</div>
 		<?php
