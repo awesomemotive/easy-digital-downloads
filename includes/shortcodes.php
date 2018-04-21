@@ -600,7 +600,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
 
-			<?php do_action( 'edd_downloads_list_top', $atts ); ?>
+			<?php do_action( 'edd_downloads_list_top', $atts, $downloads ); ?>
 
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<?php do_action( 'edd_download_shortcode_item', $atts, $i ); ?>
@@ -650,7 +650,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$display = sprintf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
 
-	do_action( 'edd_downloads_list_after', $atts );
+	do_action( 'edd_downloads_list_after', $atts, $downloads );
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
