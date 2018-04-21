@@ -170,13 +170,7 @@ function get_tabs() {
 	if ( is_wp_error( $registry ) ) {
 		return array();
 	} else {
-		$registered_reports = $registry->get_reports( 'priority', 'core' );
-	}
-
-	$reports = array();
-
-	foreach ( $registered_reports as $report_id => $attributes ) {
-		$reports[ $report_id ] = $attributes['label'];
+		$reports = $registry->get_reports( 'priority', 'core' );
 	}
 
 	if ( has_filter( 'edd_report_views' ) ) {
@@ -191,7 +185,20 @@ function get_tabs() {
 		 */
 		$legacy_views = edd_apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_reports_get_tabs' );
 
-		$reports = array_merge( $reports, $legacy_views );
+		foreach ( $legacy_views as $report_id => $label ) {
+			$reports[ $report_id ] = array(
+				'label'    => $label,
+				'priority' => 10,
+			);
+		}
+	}
+
+	// Re-sort by priority.
+	uasort( $reports, array( $registry, 'priority_sort' ) );
+
+	// Convert to slug/label pairs.
+	foreach ( $reports as $report_id => $attributes ) {
+		$reports[ $report_id ] = $attributes['label'];
 	}
 
 	/**
