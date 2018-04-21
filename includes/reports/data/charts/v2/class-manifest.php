@@ -10,9 +10,7 @@ use EDD\Utils\Error_Logger_Interface as Error_Logger;
  *
  * Primarily used to simplify translating server-side arguments into client-side ones.
  *
- * @since 3.0.0
- *
- * @see Hydrator
+ * @since 3.0
  */
 class Manifest implements Error_Logger {
 
