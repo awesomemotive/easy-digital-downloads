@@ -23,7 +23,6 @@ use EDD\Reports;
  *
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
- * @method array get_reports( string $sort )
  */
 class Reports_Registry extends Reports\Registry implements Utils\Static_Registry {
 
@@ -82,9 +81,6 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 				parent::remove_item( $report_id_or_sort );
 				break;
 
-			case 'get_reports':
-				return $this->get_items_sorted( $report_id_or_sort );
-				break;
 		}
 	}
 
@@ -165,6 +161,29 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 			return parent::add_item( $report_id, $attributes );
 
 		}
+	}
+
+	/**
+	 * Retrieves registered reports.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $sort  Optional. How to sort the list of registered reports before retrieval.
+	 *                      Accepts 'priority' or 'ID' (alphabetized by item ID), or empty (none).
+	 *                      Default empty.
+	 * @param string $group Optional. The reports group to retrieve reports for. Default 'core'.
+	 * @return
+	 */
+	public function get_reports( $sort = '', $group = 'core' ) {
+		$reports = $this->get_items_sorted( $report_id_or_sort );
+
+		foreach ( $reports as $report_id => $atts ) {
+			if ( $group !== $atts['group'] ) {
+				unset( $reports[ $report_id ] );
+			}
+		}
+
+		return $reports;
 	}
 
 	/**
