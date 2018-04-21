@@ -72,13 +72,7 @@ class Registry extends Utils\Registry {
 				break;
 
 			case 'priority':
-				parent::uasort( function( $a, $b ) {
-					if ( $a['priority'] == $b['priority'] ) {
-						return 0;
-					}
-
-					return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
-				} );
+				parent::uasort( array( $this, 'priority_sort' ) );
 				break;
 
 			default: break;
@@ -86,4 +80,22 @@ class Registry extends Utils\Registry {
 
 		return parent::get_items();
 	}
+
+	/**
+	 * Sorting helper to sort items by priority.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $a Item A.
+	 * @param array $b Item B
+	 * @return int Zero (0) if `$a` equals `$b`. Minus one (-1) if `$a` is less than `$b`, otherwise one (1).
+	 */
+	public function priority_sort( $a, $b ) {
+		if ( $a['priority'] == $b['priority'] ) {
+			return 0;
+		}
+
+		return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
+	}
+
 }
