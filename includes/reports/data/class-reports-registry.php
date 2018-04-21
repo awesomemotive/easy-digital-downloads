@@ -109,6 +109,7 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 		$defaults = array(
 			'label'      => '',
 			'priority'   => 10,
+			'group'      => 'core',
 			'capability' => 'view_shop_reports',
 			'filters'    => array( 'dates' ),
 			'endpoints'  => array(),
