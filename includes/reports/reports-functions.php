@@ -945,7 +945,9 @@ function default_display_tables_group( $report ) {
 			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
 				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
 
-				<?php $table->display(); ?>
+				<div class="edd-reports-table">
+					<?php $table->display(); ?>
+				</div>
 			<?php endforeach; ?>
 
 		</div>
