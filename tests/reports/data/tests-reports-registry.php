@@ -350,6 +350,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 						'id'         => 'foo',
 						'label'      => 'Foo',
 						'priority'   => 10,
+						'group'      => 'core',
 						'capability' => 'view_shop_reports',
 						'endpoints'  => array(
 							'tiles' => array()
