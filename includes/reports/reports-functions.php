@@ -943,9 +943,9 @@ function default_display_tables_group( $report ) {
 		<div id="edd-reports-tables-wrap">
 
 			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
-				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
-
 				<div class="edd-reports-table">
+					<h3><?php echo esc_html( $table->get_label() ); ?></h3>
+
 					<?php $table->display(); ?>
 				</div>
 			<?php endforeach; ?>
@@ -968,9 +968,9 @@ function default_display_charts_group( $report ) {
 		?>
 		<div id="edd-reports-charts-wrap">
 			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
-
 				<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>">
+					<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
+
 					<?php $chart->display(); ?>
 				</div>
 			<?php endforeach; ?>
