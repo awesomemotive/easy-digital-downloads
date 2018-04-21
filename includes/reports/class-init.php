@@ -53,6 +53,7 @@ final class Init {
 		require_once $reports_dir . '/data/charts/v2/class-dataset.php';
 		require_once $reports_dir . '/data/charts/v2/class-bar-dataset.php';
 		require_once $reports_dir . '/data/charts/v2/class-line-dataset.php';
+		require_once $reports_dir . '/data/charts/v2/class-pie-dataset.php';
 	}
 
 	/**

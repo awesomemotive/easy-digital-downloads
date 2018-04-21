@@ -1153,6 +1153,15 @@ td.edd_order_price {
 	width: 80%;
 }
 
+.edd-reports-chart-pie,
+.edd-reports-chart-doughnut {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	float: left;
+	width: 50%;
+}
+
 /* Upgrades page styles
 -------------------------------------------------------------- */
 
