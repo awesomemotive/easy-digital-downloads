@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.4
-Stable Tag: 2.9
+Tested up to: 4.9.5
+Stable Tag: 2.9.1
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,29 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.1, April 20, 2018 =
+* Fix: Some text field settings were getting emptied when saving a subsection setting.
+* Fix: Stats API Endpoint requests were failing when pseudo-date ranges were used other than yesterday and today.
+* Fix: API key fields were appearing on bbPress forum Edit Profile screen.
+* Fix: There was a typo in Italian provinces. Genova should have been Genoa.
+* Fix: Corrected an issue with showing payment method icons when using EDD in a non-standard installation.
+* Fix: Corrected a CSS conflict in the customer card view for the additional emails section.
+* Fix: The edd_checkout_cart_columns function now properly counts the number of columns in the cart display.
+* Fix: In some cases, the customer list table could throw PHP warnings when calculating the pagination.
+* Fix: Improve the RTL-Compatibility of some translation strings.
+* Fix: Improved PHP 7.2 compatibility with the settings display.
+* Fix: Incorrect or missing textdomains were corrected or added.
+* Fix: There was an unnecessary update of _edd_payment_user_id when constructing EDD_Payment objects.
+* Fix: Corrected the setting title for completing free purchase button.
+* New: Added a confirmation alert when clicking "Disconnect User" on customer card.
+* New: Add support for a new Privacy Policy checkbox.
+* New: Added a class parameter to [downloads] shortcode arguments.
+* New: The debug log view now shows the path to the currently used EDD Debug log file.
+* New: Fields are now auto-mapped during the CSV import.
+* Tweak: Switched all `is_a` checks to use `instanceof` for performance.
+* Dev: Many improvements to the @return and @access tags in DocBlocks.
+* Dev: Updates to our Grunt configuration.
 
 = 2.9, March 15, 2018 =
 
