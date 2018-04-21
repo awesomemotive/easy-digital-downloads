@@ -56,30 +56,6 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers \EDD\Reports\get_active_tab()
 	 */
-	public function test_get_active_tab_should_default_to_the_key_of_the_first_report() {
-		$registry = EDD()->utils->get_registry( 'reports' );
-
-		$reports = array_keys( $registry->get_reports() );
-
-		if ( empty( $reports ) ) {
-			add_report( 'foo', array(
-				'label'      => 'Foo',
-				'capability' => 'exist',
-				'endpoints'  => array(
-					'tiles' => array( 'foo' ),
-				),
-				'filters'    => array( 'dates' ),
-			) );
-
-			$this->assertSame( 'foo', get_active_tab() );
-		} else {
-			$this->assertSame( reset( $reports ), get_active_tab() );
-		}
-	}
-
-	/**
-	 * @covers \EDD\Reports\get_active_tab()
-	 */
 	public function test_get_active_tab_should_use_the_value_of_the_tab_var_when_set() {
 		$_REQUEST['tab'] = 'sales';
 
