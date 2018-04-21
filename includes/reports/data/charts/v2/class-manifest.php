@@ -416,6 +416,9 @@ class Manifest implements Error_Logger {
 
 			$defaults = array(
 				'responsive' => true,
+				'legend'     => array(
+					'position' => 'left',
+				),
 			);
 
 		} else {
