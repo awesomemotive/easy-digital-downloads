@@ -61,6 +61,14 @@ final class Report extends Base_Object {
 	private $filters = array( 'dates' );
 
 	/**
+	 * Represents the group to display the report under.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	private $group;
+
+	/**
 	 * Constructs the report object.
 	 *
 	 * @since 3.0
@@ -102,6 +110,11 @@ final class Report extends Base_Object {
 
 		}
 
+		if ( ! empty( $args['group'] ) ) {
+
+			$this->set_group( $args['group'] );
+
+		}
 	}
 
 	/**
@@ -415,6 +428,28 @@ final class Report extends Base_Object {
 		}
 
 		$this->filters = array_unique( $this->filters );
+	}
+
+	/**
+	 * Retrieves the display group for the current report.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Display group. Default 'reports'.
+	 */
+	public function get_group() {
+		return $this->group;
+	}
+
+	/**
+	 * Sets the display group for the current report.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $group Report display group.
+	 */
+	private function set_group( $group ) {
+		$this->group = sanitize_key( $group );
 	}
 
 	/**
