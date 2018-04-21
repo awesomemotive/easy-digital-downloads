@@ -33,12 +33,20 @@ class Manifest implements Error_Logger {
 	private $options = array();
 
 	/**
-	 * Datasets associated with the current graph.
+	 * Datasets associated with the current chart.
 	 *
 	 * @since 3.0
 	 * @var   Dataset[]
 	 */
 	private $datasets = array();
+
+	/**
+	 * Labels associated with the current pie or doughnut chart.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	private $labels = array();
 
 	/**
 	 * Represents the current Chart_Endpoint instance.
@@ -70,6 +78,13 @@ class Manifest implements Error_Logger {
 
 		$this->set_type( $type );
 		$this->set_endpoint( $endpoint );
+
+		if ( $this->is_pie_manifest() ) {
+			$this->set_labels( $options['labels'] );
+
+			unset( $options['labels'] );
+		}
+
 		$this->set_options( $options );
 	}
 
@@ -180,6 +195,39 @@ class Manifest implements Error_Logger {
 	}
 
 	/**
+	 * Sets the labels property (for pie and doughnut charts).
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $labels Array of pie or doughnut chart labels.
+	 */
+	private function set_labels( $labels ) {
+		$this->labels = $labels;
+	}
+
+	/**
+	 * Retrieves the manifest labels (for pie and doughnut charts).
+	 *
+	 * @since 3.0
+	 */
+	public function get_labels() {
+		return $this->labels;
+	}
+
+	/**
+	 * Determines whether the current chart manifest contains any labels (for pie and doughnut charts).
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if there are labels, otherwise false.
+	 */
+	public function has_labels() {
+		$labels = $this->get_labels();
+
+		return ! empty( $labels );
+	}
+
+	/**
 	 * Adds a dataset.
 	 *
 	 * @since 3.0
@@ -223,6 +271,11 @@ class Manifest implements Error_Logger {
 		$handler = '';
 
 		switch( $this->get_type() ) {
+
+			case 'doughnut':
+			case 'pie':
+				$handler = 'EDD\Reports\Data\Charts\v2\Pie_Dataset';
+				break;
 
 			case 'bar':
 				$handler = 'EDD\Reports\Data\Charts\v2\Bar_Dataset';
@@ -269,25 +322,28 @@ class Manifest implements Error_Logger {
 			// Bring in chart config.
 			<?php echo esc_js( $target_el ); ?> = <?php echo $config; ?>;
 
-			// Convert dataset x-axis values to moment() objects.
-			<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
+			<?php if ( ! $this->is_pie_manifest() ) : ?>
+				// Convert dataset x-axis values to moment() objects.
+				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
 
-				dataset.data.forEach( function( pair, index ) {
-					pair.x = moment( pair.x );
+					dataset.data.forEach( function( pair, index ) {
+						pair.x = moment( pair.x );
+					} );
+
 				} );
 
-			} );
+				// Set min and max moment() values for the x-axis.
+				<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
+					<?php if ( false === $day_by_day ) : ?>
+						xaxis.time.unit = 'month';
+						console.log( xaxis.time );
+					<?php endif; ?>
 
-			// Set min and max moment() values for the x-axis.
-			<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
-				<?php if ( false === $day_by_day ) : ?>
-					xaxis.time.unit = 'month';
-					console.log( xaxis.time );
-				<?php endif; ?>
+					xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );
+					xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
+				} );
 
-				xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );
-				xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
-			} );
+			<?php endif; // Line and bar charts ?>
 
 			// Instantiate the chart.
 			<?php echo esc_js( $target_el ); ?>_chart = new Chart(
@@ -340,6 +396,10 @@ class Manifest implements Error_Logger {
 			}
 		}
 
+		if ( $this->is_pie_manifest() ) {
+			$data['labels'] = $this->get_labels();
+		}
+
 		return $data;
 	}
 
@@ -351,43 +411,68 @@ class Manifest implements Error_Logger {
 	 * @return array Parsed chart options.
 	 */
 	public function get_chart_options() {
-		$defaults = array(
-			'responsive' => true,
-			'hoverMode'  => 'index',
-			'stacked'    => false,
-			'title'      => array(
-				'display' => true,
-				'text'    => $this->get_endpoint()->get_label(),
-			),
-			'scales'     => array(
-				'xAxes' => array(
-					array(
-						'type'     => "time",
-						'display'  => true,
-						'ticks'    => array(
-							'source' => 'auto',
-						),
-						'position' => 'bottom',
-						'time'     => array(
-							'unit' => 'day',
-							'displayFormats' => array(
-								'day'   => 'MMM D',
-								'month' => 'MMM',
+
+		if ( $this->is_pie_manifest() ) {
+
+			$defaults = array(
+				'responsive' => true,
+				'legend'     => array(
+					'position' => 'left',
+				),
+			);
+
+		} else {
+
+			$defaults = array(
+				'responsive' => true,
+				'hoverMode'  => 'index',
+				'stacked'    => false,
+				'title'      => array(
+					'display' => true,
+					'text'    => $this->get_endpoint()->get_label(),
+				),
+				'scales'     => array(
+					'xAxes' => array(
+						array(
+							'type'     => "time",
+							'display'  => true,
+							'ticks'    => array(
+								'source' => 'auto',
+							),
+							'position' => 'bottom',
+							'time'     => array(
+								'unit' => 'day',
+								'displayFormats' => array(
+									'day'   => 'MMM D',
+									'month' => 'MMM',
+								),
 							),
 						),
 					),
-				),
-				'yAxes' => array(
-					array(
-						'type'     => 'linear',
-						'display'  => true,
-						'position' => 'left',
+					'yAxes' => array(
+						array(
+							'type'     => 'linear',
+							'display'  => true,
+							'position' => 'left',
+						),
 					),
-				),
-			)
-		);
+				)
+			);
+
+		}
 
 		return array_merge( $defaults, $this->get_options() );
+	}
+
+	/**
+	 * Determines whether the chart manifest is for a pie or doughnut chart.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if the manifest is for a pie or doughnut chart, otherwise false.
+	 */
+	public function is_pie_manifest() {
+		return in_array( $this->get_type(), array( 'pie', 'doughnut' ), true );
 	}
 
 	/**

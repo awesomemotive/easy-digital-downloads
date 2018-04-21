@@ -202,7 +202,7 @@ abstract class Dataset implements Error_Logger {
 	 * @param array $options Dataset options.
 	 */
 	public function validate( $options ) {
-		$fields  = $this->get_all_fields();
+		$fields = $this->get_all_fields();
 
 		// Strip invalid options.
 		foreach ( $options as $key => $value ) {
@@ -211,10 +211,42 @@ abstract class Dataset implements Error_Logger {
 			}
 		}
 
-		$data = $this->get_data();
+		$data      = $this->get_data();
+		$processed = array();
 
 		if ( ! empty( $data ) ) {
-			$processed = array();
+
+			$options['data'] = $this->parse_data_for_output( $data );
+
+			$this->options = $options;
+
+		} else {
+
+			$message = sprintf( 'The data for the \'%1$s\' dataset for the \'%2$s\' endpoint in the \'%3$s\' report is missing or invalid.',
+				$this->get_id(),
+				$this->get_endpoint()->get_id(),
+				$this->get_endpoint()->get_report_id()
+			);
+
+			$this->errors->add( 'missing_chart_data', $message, $data );
+		}
+	}
+
+	/**
+	 * Parses the dataset data for output via JS.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $data Dataset data.
+	 * @return array Processed data.
+	 */
+	public function parse_data_for_output( $data ) {
+
+		if ( $this instanceof Pie_Dataset ) {
+
+			$processed = $data;
+
+		} else {
 
 			$first_key   = key( $data );
 			$value_count = count( $data[ $first_key ] );
@@ -231,20 +263,9 @@ abstract class Dataset implements Error_Logger {
 					);
 				}
 			}
-
-			$options['data'] = $processed;
-
-			$this->options = $options;
-		} else {
-
-			$message = sprintf( 'The data for the \'%1$s\' dataset for the \'%2$s\' endpoint in the \'%3$s\' report is missing or invalid.',
-				$this->get_id(),
-				$this->get_endpoint()->get_id(),
-				$this->get_endpoint()->get_report_id()
-			);
-
-			$this->errors->add( 'missing_chart_data', $message, $data );
 		}
+
+		return $processed;
 	}
 
 	/**
