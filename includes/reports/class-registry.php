@@ -16,7 +16,7 @@ use EDD\Reports\Exceptions as Reports_Exceptions;
 /**
  * Defines the construct for building a reports item registry.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Registry extends Utils\Registry {
 

@@ -178,7 +178,7 @@ class Chart_Endpoint extends Endpoint {
 	/**
 	 * Retrieves the value of a graph option if set.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $key Option key to retrieve a value for.
 	 * @return mixed Value of the option key if set, otherwise an empty string.

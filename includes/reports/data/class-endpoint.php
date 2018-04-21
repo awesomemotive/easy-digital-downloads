@@ -228,7 +228,7 @@ abstract class Endpoint extends Base_Object {
 	/**
 	 * Retrieves the value of a given display argument if set.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $key     Display argument key.
 	 * @param string $default Optional. Default value to return in the event the argument isn't set.

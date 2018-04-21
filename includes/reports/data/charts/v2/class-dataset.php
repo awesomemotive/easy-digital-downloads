@@ -7,7 +7,7 @@ use EDD\Utils\Error_Logger_Interface as Error_Logger;
 /**
  * Represents the manifestation of a ChartJS v2 dataset in PHP form.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 abstract class Dataset implements Error_Logger {
 
@@ -26,7 +26,7 @@ abstract class Dataset implements Error_Logger {
 	 *
 	 * Should be defined by all sub-classes.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   array
 	 */
 	protected $fields = array();
@@ -58,7 +58,7 @@ abstract class Dataset implements Error_Logger {
 	/**
 	 * Represents the list of global fields for all datasets.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   array
 	 */
 	protected $global_fields = array(
@@ -86,7 +86,7 @@ abstract class Dataset implements Error_Logger {
 	/**
 	 * Retrieves the list of global fields.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array List of global fields.
 	 */
@@ -152,7 +152,7 @@ abstract class Dataset implements Error_Logger {
 	/**
 	 * Retrieves the list of local fields.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array List of local fields.
 	 */
@@ -165,7 +165,7 @@ abstract class Dataset implements Error_Logger {
 	 *
 	 * Includes the global fields.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array List of fields available to the dataset.
 	 */
@@ -175,7 +175,7 @@ abstract class Dataset implements Error_Logger {
 		/**
 		 * Filters the fields available to a ChartJS graph.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param array   $fields ChartJS fields (global and local).
 		 * @param Dataset $this   Dataset instance.
