@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order_Discount Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Order_Discount {
 
 	/**
 	 * Order Discount ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $id;
@@ -31,7 +31,7 @@ class Order_Discount {
 	/**
 	 * Object ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $object_id;
@@ -39,7 +39,7 @@ class Order_Discount {
 	/**
 	 * Object type.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $object_type;
@@ -47,7 +47,7 @@ class Order_Discount {
 	/**
 	 * Discount ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $discount_id;
@@ -55,7 +55,7 @@ class Order_Discount {
 	/**
 	 * Discount amount.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $amount;
@@ -63,7 +63,7 @@ class Order_Discount {
 	/**
 	 * Constructor.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 *
 	 * @param object $order_discount Order discount data directly from the database.
@@ -79,7 +79,7 @@ class Order_Discount {
 	/**
 	 * Retrieve order discount ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Order discount ID.
 	 */
@@ -90,7 +90,7 @@ class Order_Discount {
 	/**
 	 * Retrieve object ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Object ID.
 	 */
@@ -101,7 +101,7 @@ class Order_Discount {
 	/**
 	 * Retrieve object type.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Object type.
 	 */
@@ -112,7 +112,7 @@ class Order_Discount {
 	/**
 	 * Retrieve discount ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Discount ID.
 	 */
@@ -123,7 +123,7 @@ class Order_Discount {
 	/**
 	 * Retrieve discount amount.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return float Discount amount.
 	 */

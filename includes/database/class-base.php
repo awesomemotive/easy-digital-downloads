@@ -20,14 +20,14 @@ defined( 'ABSPATH' ) || exit;
  * database interfaces, starting with a magic getter, but likely expanding into
  * a magic call handler and others.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Base {
 
 	/**
 	 * Magic getter for immutability.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $key
 	 * @return mixed

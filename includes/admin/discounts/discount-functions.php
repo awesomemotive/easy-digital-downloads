@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Builds the HTML for display a discount note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param object|int $note        The note object or ID.
  * @param int        $discount_id The discount ID the note is connected to.

@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order Item Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Order_Item extends Base {
 

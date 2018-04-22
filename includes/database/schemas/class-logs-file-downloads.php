@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * File Download Logs Schema Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Logs_File_Downloads extends Base {
 
 	/**
 	 * Array of database column objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */

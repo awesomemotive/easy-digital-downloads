@@ -125,7 +125,7 @@ final class Easy_Digital_Downloads {
 	 * EDD Components array
 	 *
 	 * @var array
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	public $components = array();
 
@@ -206,7 +206,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * This is probably still not working right, so don't count on it yet.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $key
 	 * @return mixed
@@ -503,7 +503,7 @@ final class Easy_Digital_Downloads {
 	 * other utility occurs on them (query, migration, etc...)
 	 *
 	 * @access public
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @return array
 	 */
 	private function setup_components() {

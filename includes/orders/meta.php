@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add meta data field to an order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_id   Order ID.
  * @param string  $meta_key   Meta data name.
@@ -36,7 +36,7 @@ function edd_add_order_meta( $order_id, $meta_key, $meta_value, $unique = false 
  * You can match based on the key, or key and value. Removing based on key and value, will keep from removing duplicate
  * meta data with the same key. It also allows removing all meta data matching key, if needed.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_id   Order ID.
  * @param string  $meta_key   Meta data name.
@@ -51,7 +51,7 @@ function edd_delete_order_meta( $order_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve order meta field for an order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_id  Order ID.
  * @param string  $key       Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
@@ -72,7 +72,7 @@ function edd_get_order_meta( $order_id, $key = '', $single = false ) {
  *
  * If the meta field for the order does not exist, it will be added.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_id   Order ID.
  * @param string  $meta_key   Meta data key.
@@ -88,7 +88,7 @@ function edd_update_order_meta( $order_id, $meta_key, $meta_value, $prev_value =
 /**
  * Delete everything from order meta matching meta key.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $meta_key Key to search for when deleting.
  *
@@ -103,7 +103,7 @@ function edd_delete_order_meta_by_key( $meta_key ) {
 /**
  * Add meta data field to an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_item_id  Order ID.
  * @param string  $meta_key       Meta data name.
@@ -122,7 +122,7 @@ function edd_add_order_item_meta( $order_item_id, $meta_key, $meta_value, $uniqu
  * You can match based on the key, or key and value. Removing based on key and value, will keep from removing duplicate
  * meta data with the same key. It also allows removing all meta data matching key, if needed.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_item_id  Order ID.
  * @param string  $meta_key       Meta data name.
@@ -137,7 +137,7 @@ function edd_delete_order_item_meta( $order_item_id, $meta_key, $meta_value = ''
 /**
  * Retrieve order_item meta field for an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_item_id  Order ID.
  * @param string  $key            Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
@@ -158,7 +158,7 @@ function edd_get_order_item_meta( $order_item_id, $key = '', $single = false ) {
  *
  * If the meta field for the order_item does not exist, it will be added.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $order_item_id  Order Item ID.
  * @param string  $meta_key       Meta data key.
@@ -174,7 +174,7 @@ function edd_update_order_item_meta( $order_item_id, $meta_key, $meta_value, $pr
 /**
  * Delete everything from order_item meta matching meta key.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $meta_key Key to search for when deleting.
  *
@@ -189,7 +189,7 @@ function edd_delete_order_item_meta_by_key( $meta_key ) {
 /**
  * Add meta data field to an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $adjustment_id  Order ID.
  * @param string  $meta_key       Meta data name.
@@ -208,7 +208,7 @@ function edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value, 
  * You can match based on the key, or key and value. Removing based on key and value, will keep from removing duplicate
  * meta data with the same key. It also allows removing all meta data matching key, if needed.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $adjustment_id  Order ID.
  * @param string  $meta_key       Meta data name.
@@ -223,7 +223,7 @@ function edd_delete_order_adjustment_meta( $adjustment_id, $meta_key, $meta_valu
 /**
  * Retrieve order_item meta field for an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $adjustment_id  Order ID.
  * @param string  $key            Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
@@ -244,7 +244,7 @@ function edd_get_order_adjustment_meta( $adjustment_id, $key = '', $single = fal
  *
  * If the meta field for the order_item does not exist, it will be added.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $adjustment_id  Order Item ID.
  * @param string  $meta_key       Meta data key.
@@ -260,7 +260,7 @@ function edd_update_order_adjustment_meta( $adjustment_id, $meta_key, $meta_valu
 /**
  * Delete everything from order_item meta matching meta key.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $meta_key Key to search for when deleting.
  *

@@ -29,7 +29,7 @@ if ( ! class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
  * - Tables upgrade via independent upgrade abstract methods
  * - Multisite friendly - site tables switch on "switch_blog" action
  *
- * @since 3.0.0
+ * @since 3.0
  */
 abstract class Base extends \EDD\Database\Base {
 
@@ -88,7 +88,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Hook into queries, admin screens, and more!
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	public function __construct() {
 
@@ -123,14 +123,14 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Setup this database table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	protected abstract function set_schema();
 
 	/**
 	 * Upgrade this database table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	protected abstract function upgrade();
 
@@ -141,7 +141,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * Hooked to the "switch_blog" action.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $site_id The site being switched to
 	 */
@@ -161,7 +161,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * Hooked to the "admin_init" action.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
 
@@ -192,7 +192,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Check if table already exists
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return bool
 	 */
@@ -209,7 +209,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Truncate the database table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return mixed
 	 */
@@ -224,7 +224,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Delete all items from the database table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return mixed
 	 */
@@ -241,7 +241,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Return the global database interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return wpdb
 	 */
@@ -254,7 +254,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Setup the necessary table variables
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function setup() {
 
@@ -283,7 +283,7 @@ abstract class Base extends \EDD\Database\Base {
 	 * This must be done directly because WordPress does not have a mechanism
 	 * for manipulating them safely
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function set_wpdb_tables() {
 
@@ -319,7 +319,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * Global table version in "_sitemeta" on the main network
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function set_db_version() {
 
@@ -337,7 +337,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * Global table version from "_sitemeta" on the main network
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function get_db_version() {
 		$this->db_version = $this->is_global()
@@ -348,7 +348,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Add class hooks to WordPress actions
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function add_hooks() {
 
@@ -384,7 +384,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Create the table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function create() {
 
@@ -409,7 +409,7 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Check if table is global
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return bool
 	 */
@@ -427,7 +427,7 @@ abstract class Base extends \EDD\Database\Base {
 	 * - No double underscores
 	 * - No trailing underscores
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $name The name of the database table
 	 *

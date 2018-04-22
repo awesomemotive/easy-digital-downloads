@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Log class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Log extends Base {
 

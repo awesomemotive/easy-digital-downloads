@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add a note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int
@@ -37,7 +37,7 @@ function edd_add_note( $data = array() ) {
 /**
  * Delete a note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $note_id Note ID.
  * @return int
@@ -51,7 +51,7 @@ function edd_delete_note( $note_id = 0 ) {
 /**
  * Update a note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $note_id Note ID.
  * @param array $data    Updated note data.
@@ -66,7 +66,7 @@ function edd_update_note( $note_id = 0, $data = array() ) {
 /**
  * Get a note by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $note_id Note ID.
  * @return object
@@ -78,7 +78,7 @@ function edd_get_note( $note_id = 0 ) {
 /**
  * Get a note by a specific field's value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -94,7 +94,7 @@ function edd_get_note_by( $field = '', $value = '' ) {
 /**
  * Query for notes.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -116,7 +116,7 @@ function edd_get_notes( $args = array() ) {
 /**
  * Count notes.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args Arguments.
  * @return int

@@ -39,7 +39,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * Discount counts, keyed by status
 	 *
 	 * @var array
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	public $counts = array(
 		'active'   => 0,
@@ -106,7 +106,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Get the base URL for the discount list table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -363,7 +363,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Return discount code wrapped in a code tag
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param EDD_Discount $discount Discount object.
 	 *

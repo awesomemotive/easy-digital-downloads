@@ -19,7 +19,7 @@ if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
 /**
  * Base class used for querying custom database tables.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
  */
@@ -30,7 +30,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Global prefix used for tables/hooks/cache-groups/etc...
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var string
 	 */
@@ -41,7 +41,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Name of the database table to query.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -54,7 +54,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used to avoid collisions with JOINs.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -63,7 +63,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Name of class used to setup the database schema
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -78,7 +78,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used to automatically generate action hooks.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -91,7 +91,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used to automatically generate action hooks.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -104,7 +104,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used when looping through return values to guarantee their shape.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var mixed
 	 */
@@ -119,7 +119,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * Do not use colons: ":". These are reserved for internal use only.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -130,7 +130,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Array of all database column objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -141,7 +141,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * SQL query clauses.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 * @var array
 	 */
@@ -157,7 +157,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Request clauses.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 * @var array
 	 */
@@ -173,7 +173,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Meta query container.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var object \WP_Meta_Query
 	 */
@@ -182,7 +182,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Date query container.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var \WP_Date_Query
 	 */
@@ -191,7 +191,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parsed query vars set by the user.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -200,7 +200,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Original query vars set by the user.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -209,7 +209,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Default values for query vars.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -220,7 +220,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * List of items located by the query.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -229,7 +229,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * The amount of found items for the current query.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var int
 	 */
@@ -238,7 +238,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * The number of pages.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var int
 	 */
@@ -247,7 +247,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * SQL for database query.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -258,7 +258,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Sets up the item query, based on the query vars passed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 *
 	 * @param string|array $query {
@@ -305,7 +305,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Queries the database and retrieves items or counts.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 *
 	 * @param string|array $query Array or URL query string of parameters.
@@ -323,7 +323,7 @@ class Base extends \EDD\Database\Base {
 	 * Prefix table names, cache groups, and other things, to avoid conflicts
 	 * with other plugins or themes that might be doing their own things.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return
 	 */
@@ -343,7 +343,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set columns objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 */
 	private function set_columns() {
@@ -378,7 +378,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set default query vars based on columns
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 */
 	private function set_query_var_defaults() {
@@ -439,7 +439,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set the request clauses
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param array $clauses
 	 */
@@ -497,7 +497,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set the request
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 */
 	private function set_request() {
@@ -508,7 +508,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set items by mapping them through the single item callback.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param array $item_ids
 	 */
@@ -539,7 +539,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Filters the object query results.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param array        $results An array of items.
 		 * @param EDD_DB_Query &$this   Current instance of EDD_DB_Query, passed by reference.
@@ -557,7 +557,7 @@ class Base extends \EDD\Database\Base {
 	 * Populates found_items and max_num_pages properties for the current query
 	 * if the limit clause was used.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @param  array $item_ids Optional array of item IDs
@@ -573,7 +573,7 @@ class Base extends \EDD\Database\Base {
 					/**
 					 * Filters the query used to retrieve found item count.
 					 *
-					 * @since 3.0.0
+					 * @since 3.0
 					 *
 					 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
 					 * @param object $item_query        The object instance.
@@ -600,7 +600,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return the global database interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return wpdb
 	 */
@@ -613,7 +613,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Pass-through method to return a new WP_Meta_Query object
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param array $args See WP_Date_Query
 	 *
@@ -626,7 +626,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Pass-through method to return a new WP_Date_Query object
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param array $args See WP_Date_Query
 	 *
@@ -641,7 +641,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used by add_item() and update_item()
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -652,7 +652,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return the literal table name (with prefix) from $wpdb
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -663,7 +663,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return array of column names
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array
 	 */
@@ -674,7 +674,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return the primary database column name
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Default "id", Primary column name if not empty
 	 */
@@ -685,7 +685,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a column from an array of arguments
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @return mixed EDD_DB_Column object, or false
@@ -704,7 +704,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a column from an array of arguments
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @return mixed EDD_DB_Column object, or false
@@ -723,7 +723,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get columns from an array of arguments
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 */
 	private function get_columns( $args = array(), $operator = 'and', $field = false ) {
@@ -740,7 +740,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a single database row by any column and value, skipping cache.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $column_name  Name of database column
 	 * @param string $column_value Value to query for
@@ -772,7 +772,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Retrieves a list of items matching the query vars.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
@@ -782,7 +782,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Fires before object items are retrieved.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param EDD_DB_Query &$this Current instance of EDD_DB_Query, passed by reference.
 		 */
@@ -848,7 +848,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Used internally to get a list of item IDs matching the query vars.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
@@ -898,7 +898,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Filters the item query clauses.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param array  $pieces A compacted array of item query clauses.
 		 * @param object &$this  Current instance passed by reference.
@@ -926,7 +926,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get the ORDERBY clause.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param string $order
 	 * @return string
@@ -1007,7 +1007,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Used internally to generate an SQL string for searching across multiple columns.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @param string $string  Search string.
@@ -1038,7 +1038,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses arguments passed to the item query with default query parameters.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 *
 	 * @see EDD_DB_Query::__construct()
@@ -1059,7 +1059,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Fires after the item query vars have been parsed.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param EDD_DB_Query &$this The EDD_DB_Query instance (passed by reference).
 		 */
@@ -1069,7 +1069,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parse the where clauses for all known columns
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 */
 	private function parse_where() {
@@ -1213,7 +1213,7 @@ class Base extends \EDD\Database\Base {
 			 *
 			 * The default columns include 'email' and 'path.
 			 *
-			 * @since 3.0.0
+			 * @since 3.0
 			 *
 			 * @param array        $search_columns Array of column names to be searched.
 			 * @param string       $search         Text being searched.
@@ -1262,7 +1262,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parse which fields to query for
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string  $fields
 	 * @param boolean $alias
@@ -1319,7 +1319,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses and sanitizes the 'groupby' keys passed into the item query
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $groupby
 	 * @return string
@@ -1360,7 +1360,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses and sanitizes 'orderby' keys passed to the item query.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 *
 	 * @param string $orderby Field for the items to be ordered by.
@@ -1398,7 +1398,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses an 'order' query variable and cast it to 'ASC' or 'DESC' as necessary.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param string $order The 'order' query variable.
 	 * @return string The sanitized 'order' query variable.
@@ -1421,7 +1421,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Maybe append the prefix to string.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $string
 	 * @param string $sep
@@ -1440,7 +1440,7 @@ class Base extends \EDD\Database\Base {
 	 * This will try to use item_shape, but will fallback to a private
 	 * method for querying and caching items.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $items
 	 * @return array
@@ -1462,7 +1462,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Shape an item ID from an object, array, or numeric value
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param  mixed $item
 	 *
 	 * @return int
@@ -1489,7 +1489,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a single database row by the primary column ID, possibly from cache
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
 	 *
@@ -1510,7 +1510,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a single database row by any column and value, possibly from cache.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $column_name  Name of database column
 	 * @param string $column_value Value to query for
@@ -1565,7 +1565,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Add an item to the database
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $data
 	 *
@@ -1627,7 +1627,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Update an item in the database
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
 	 * @param array $data
@@ -1714,7 +1714,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Delete an item from the database
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
 	 *
@@ -1753,7 +1753,7 @@ class Base extends \EDD\Database\Base {
 	 * Shape an item from the database into the type of object it always wanted
 	 * to be when it grew up (EDD_Customer, EDD_Discount, EDD_Payment, etc...)
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param mixed ID of item, or row from database
 	 *
@@ -1785,7 +1785,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Add meta data to an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int    $item_id
 	 * @param string $meta_key
@@ -1817,7 +1817,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int     $item_id
 	 * @param string  $meta_key
@@ -1848,7 +1848,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Update meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int    $item_id
 	 * @param string $meta_key
@@ -1880,7 +1880,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Delete meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int    $item_id
 	 * @param string $meta_key
@@ -1915,7 +1915,7 @@ class Base extends \EDD\Database\Base {
 	 * This is a copy of get_registered_meta_keys() for WordPress versions lower
 	 * than 4.6.0.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array
 	 */
@@ -1937,7 +1937,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Maybe update meta values on item update/save
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $meta
 	 */
@@ -1972,7 +1972,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Delete all meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
 	 *
@@ -2012,7 +2012,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return meta table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return mixed Table name if exists, False if not
 	 */
@@ -2030,7 +2030,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get array of which database columns have uniquely cached groups
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array
 	 */
@@ -2061,7 +2061,7 @@ class Base extends \EDD\Database\Base {
 	 * after an item is inserted in the database, but before items have been
 	 * "shaped" into proper objects, so object properties may not be set yet.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $item_ids
 	 *
@@ -2116,7 +2116,7 @@ class Base extends \EDD\Database\Base {
 	 * after an item is already updated in the database, so we want to avoid
 	 * querying for it again. It's just safer this way.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $items
 	 */
@@ -2153,7 +2153,7 @@ class Base extends \EDD\Database\Base {
 	 * after an item is already deleted from the database, so it cannot be
 	 * queried and may not exist in the cache. It's just safer this way.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $items
 	 *
@@ -2186,7 +2186,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Update the last_changed key for the cache group
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function update_last_changed() {
 		wp_cache_set( 'last_changed', microtime(), $this->cache_group );

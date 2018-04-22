@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base Object.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Base extends \EDD\Database\Base {
 
 	/**
 	 * Construct a database object
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param mixed Null by default, Array/Object if not
 	 */
@@ -36,7 +36,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Initialize class properties based on data array
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $data
 	 */
@@ -53,7 +53,7 @@ class Base extends \EDD\Database\Base {
 
 	/**
 	 * Return
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return boolean
 	 */

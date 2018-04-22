@@ -17,7 +17,7 @@ if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_notes" database table
  *
- * @since 3.0.0
+ * @since 3.0
  */
 final class Notes extends Base {
 
@@ -25,7 +25,7 @@ final class Notes extends Base {
 	 * Table name
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var string
 	 */
 	protected $name = 'edd_notes';
@@ -34,7 +34,7 @@ final class Notes extends Base {
 	 * Database version
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var int
 	 */
 	protected $version = 201802280001;
@@ -43,7 +43,7 @@ final class Notes extends Base {
 	 * Setup the database schema
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @return void
 	 */
 	protected function set_schema() {
@@ -64,7 +64,7 @@ final class Notes extends Base {
 	 * Handle schema changes
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @return void
 	 */
 	protected function upgrade() {
