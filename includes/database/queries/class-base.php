@@ -163,8 +163,7 @@ class Base extends \EDD\Database\Base {
 	 * Meta query container.
 	 *
 	 * @since 3.0
-	 * @access public
-	 * @var object \WP_Meta_Query
+	 * @var   object|\WP_Meta_Query
 	 */
 	protected $meta_query = false;
 
@@ -575,7 +574,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return wpdb
+	 * @return wpdb|object
 	 */
 	private static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
@@ -587,10 +586,9 @@ class Base extends \EDD\Database\Base {
 	 * Pass-through method to return a new WP_Meta_Query object
 	 *
 	 * @since 3.0
-	 * @access private
-	 * @param array $args See WP_Date_Query
 	 *
-	 * @return \WP_Date_Query
+	 * @param array $args See WP_Date_Query
+	 * @return \WP_Meta_Query
 	 */
 	private function get_meta_query( $args = array() ) {
 		return new \WP_Meta_Query( $args );
