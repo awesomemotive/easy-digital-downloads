@@ -52,7 +52,8 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
-	 * Return
+	 * Determines whether the current item exists.
+	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
