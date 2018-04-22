@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * File Download Log Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Log_File_Download extends Base {
 

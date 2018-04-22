@@ -1533,7 +1533,7 @@ add_action( 'edd_download_sysinfo', 'edd_tools_sysinfo_download' );
 /**
  * Renders the Logs tab in the Tools screen.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_tools_tab_logs() {
 	if ( ! current_user_can( 'view_shop_reports' ) ) {

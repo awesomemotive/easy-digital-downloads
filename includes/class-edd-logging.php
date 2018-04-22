@@ -82,7 +82,7 @@ class EDD_Logging {
 	 * Registers the edd_log post type.
 	 *
 	 * @since 1.3.1
-	 * @since 3.0.0 Deprecated due to migration to custom tables.
+	 * @since 3.0 Deprecated due to migration to custom tables.
 	 */
 	public function register_post_type() {
 		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
@@ -92,7 +92,7 @@ class EDD_Logging {
 	 * Register the log type taxonomy.
 	 *
 	 * @since 1.3.1
-	 * @since 3.0.0 Deprecated due to migration to custom tables.
+	 * @since 3.0 Deprecated due to migration to custom tables.
 	*/
 	public function register_taxonomy() {
 		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
@@ -172,7 +172,7 @@ class EDD_Logging {
 	 * Stores a log entry.
 	 *
 	 * @since 1.3.1
-	 * @since 3.0.0 Updated to use the new database classes as part of the migration to custom tables.
+	 * @since 3.0 Updated to use the new database classes as part of the migration to custom tables.
 	 *
 	 * @param array $log_data Log entry data.
 	 * @param array $log_meta Log entry meta.
@@ -613,7 +613,7 @@ class EDD_Logging {
 	 *
 	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
 	 * @param  int    $object_id The object ID post meta was requested for.
@@ -796,7 +796,7 @@ class EDD_Logging {
 	 *
 	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
 	 * @param  int    $object_id The object ID post meta was requested for.

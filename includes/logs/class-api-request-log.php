@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * API Request Log Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Api_Request_Log extends Base_Object {
 
@@ -115,7 +115,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the API request log ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -126,7 +126,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the user ID of the user making the API request.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -137,7 +137,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the API key of the user.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -148,7 +148,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the token of the user.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -159,7 +159,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the version of the API used.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -170,7 +170,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the API request.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -181,7 +181,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve any errors for the API request.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -192,7 +192,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve IP address of the client making the API request.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -203,7 +203,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve speed of the API request.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return float
 	 */
@@ -214,7 +214,7 @@ class Api_Request_Log extends Base_Object {
 	/**
 	 * Retrieve the date the API request was created.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */

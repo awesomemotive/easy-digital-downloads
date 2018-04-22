@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Log Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Log extends Base_Object {
 
@@ -88,7 +88,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve ID of the log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -99,7 +99,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve object ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -110,7 +110,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve object type.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -121,7 +121,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve the type of log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -132,7 +132,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve the title of the log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -143,7 +143,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve the content of the log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -154,7 +154,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve the date the log was created.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -165,7 +165,7 @@ class Log extends Base_Object {
 	/**
 	 * Retrieve log meta field for a log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $meta_key The meta key to retrieve.
 	 * @param bool   $single   Whether to return a single value.
@@ -178,7 +178,7 @@ class Log extends Base_Object {
 	/**
 	 * Add meta data field to a log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $meta_key   Metadata name.
 	 * @param mixed  $meta_value Metadata value.
@@ -192,7 +192,7 @@ class Log extends Base_Object {
 	/**
 	 * Update discount meta field based on log ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Metadata value.
@@ -206,7 +206,7 @@ class Log extends Base_Object {
 	/**
 	 * Remove metadata matching criteria from a log.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Optional. Metadata value.

@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order_Item Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Order_Item {
 
 	/**
 	 * Order Item ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $id;
@@ -31,7 +31,7 @@ class Order_Item {
 	/**
 	 * Order ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $order_id;
@@ -39,7 +39,7 @@ class Order_Item {
 	/**
 	 * Product ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $product_id;
@@ -47,7 +47,7 @@ class Order_Item {
 	/**
 	 * Cart index.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $cart_index;
@@ -55,7 +55,7 @@ class Order_Item {
 	/**
 	 * Item type.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $type;
@@ -68,7 +68,7 @@ class Order_Item {
 	/**
 	 * Item quantity.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $quantity;
@@ -76,7 +76,7 @@ class Order_Item {
 	/**
 	 * Item amount.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $amount;
@@ -84,7 +84,7 @@ class Order_Item {
 	/**
 	 * Item subtotal.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $subtotal;
@@ -92,7 +92,7 @@ class Order_Item {
 	/**
 	 * Item tax.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $tax;
@@ -100,7 +100,7 @@ class Order_Item {
 	/**
 	 * Item total.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $total;
@@ -108,7 +108,7 @@ class Order_Item {
 	/**
 	 * Constructor.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 *
 	 * @param object $order_item Order item data directly from the database.
@@ -124,7 +124,7 @@ class Order_Item {
 	/**
 	 * Retrieve order item ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Order item ID.
 	 */
@@ -135,7 +135,7 @@ class Order_Item {
 	/**
 	 * Retrieve the product ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Product ID.
 	 */
@@ -146,7 +146,7 @@ class Order_Item {
 	/**
 	 * Retrieve cart index.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Cart index.
 	 */
@@ -157,7 +157,7 @@ class Order_Item {
 	/**
 	 * Retrieve item type.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Item type.
 	 */
@@ -168,7 +168,7 @@ class Order_Item {
 	/**
 	 * Retrieve item status.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Item status.
 	 */
@@ -179,7 +179,7 @@ class Order_Item {
 	/**
 	 * Retrieve item quantity.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Item quantity.
 	 */
@@ -190,7 +190,7 @@ class Order_Item {
 	/**
 	 * Retrieve item amount.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return float Item amount.
 	 */

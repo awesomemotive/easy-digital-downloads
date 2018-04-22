@@ -106,7 +106,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve file download log ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -117,7 +117,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve download ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -128,7 +128,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve file ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -139,7 +139,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve payment ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -150,7 +150,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve price ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -161,7 +161,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve user ID of the user who downloaded the file.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -172,7 +172,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve email address.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -183,7 +183,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve IP address of client used to download file.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -194,7 +194,7 @@ class File_Download_Log extends Base_Object {
 	/**
 	 * Retrieve the date the file was downloaded.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
