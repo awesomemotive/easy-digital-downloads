@@ -88,6 +88,8 @@ final class Tile_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0
 	 */
-	public function display() {}
+	public function display() {
+		return;
+	}
 
 }
