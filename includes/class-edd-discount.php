@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0.0 No longer extends EDD_DB_Discount
+ * @since 3.0 No longer extends EDD_DB_Discount
  */
 class EDD_Discount {
 	/**

@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base class used for each column for a custom table.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @see \EDD\Database\Schemas\Column::__construct() for accepted arguments.
  */
@@ -25,7 +25,7 @@ class Column {
 	/**
 	 * Name for the database column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -34,7 +34,7 @@ class Column {
 	/**
 	 * Type of database column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -43,7 +43,7 @@ class Column {
 	/**
 	 * Length of database column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -52,7 +52,7 @@ class Column {
 	/**
 	 * Is integer unsigned?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -61,7 +61,7 @@ class Column {
 	/**
 	 * Is integer filled with zeroes?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -70,7 +70,7 @@ class Column {
 	/**
 	 * Is data in a binary format?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -79,7 +79,7 @@ class Column {
 	/**
 	 * Is null an allowed value?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -88,7 +88,7 @@ class Column {
 	/**
 	 * Typically empty/null, or date value
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -97,7 +97,7 @@ class Column {
 	/**
 	 * auto_increment, etc...
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -106,7 +106,7 @@ class Column {
 	/**
 	 * Typically inherited from wpdb.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -115,7 +115,7 @@ class Column {
 	/**
 	 * Typically inherited from wpdb
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -124,7 +124,7 @@ class Column {
 	/**
 	 * Typically empty; probably ignore.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -133,7 +133,7 @@ class Column {
 	/**
 	 * What is the string-replace pattern?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -142,7 +142,7 @@ class Column {
 	/**
 	 * Is this the primary column?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -151,7 +151,7 @@ class Column {
 	/**
 	 * Is this the column used as a created date?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -160,7 +160,7 @@ class Column {
 	/**
 	 * Is this the column used as a modified date?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -169,7 +169,7 @@ class Column {
 	/**
 	 * Is this column searchable?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -178,7 +178,7 @@ class Column {
 	/**
 	 * Is this column a date (that uses WP_Date_Query?)
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -187,7 +187,7 @@ class Column {
 	/**
 	 * Is this column used in orderby?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -196,7 +196,7 @@ class Column {
 	/**
 	 * Is __in supported?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -205,7 +205,7 @@ class Column {
 	/**
 	 * Is __not_in supported?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -214,7 +214,7 @@ class Column {
 	/**
 	 * Does this column have its own cache key?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -224,7 +224,7 @@ class Column {
 	 * Array of possible aliases this column can be referred to as.
 	 *
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -233,7 +233,7 @@ class Column {
 	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 *
 	 * @param string|array $args {
@@ -276,7 +276,7 @@ class Column {
 	/**
 	 * Parse column arguments
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @param array $args
 	 * @return array
@@ -332,7 +332,7 @@ class Column {
 	/**
 	 * Sanitize arguments after they are parsed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param array $args
 	 * @return array
@@ -389,7 +389,7 @@ class Column {
 	/**
 	 * Return if a column type is numeric or not.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @return boolean
 	 */
@@ -405,7 +405,7 @@ class Column {
 	/**
 	 * Sanitize aliases array using `sanitize_key()`
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param array $aliases
 	 * @return array
 	 */
@@ -416,7 +416,7 @@ class Column {
 	/**
 	 * Sanitize a pattern
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param mixed $pattern
 	 * @return string
 	 */

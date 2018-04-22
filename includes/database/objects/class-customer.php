@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Customer class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Customer extends Base {
 	

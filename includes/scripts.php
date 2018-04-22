@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Return the current script version
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @return string
  */

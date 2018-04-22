@@ -1601,7 +1601,7 @@ add_action( 'edd_remove_legacy_notes', 'edd_remove_legacy_notes' );
 /**
  * Migrates all logs and log meta to the new custom tables.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_logs_migration() {
 	global $wpdb;
@@ -1768,7 +1768,7 @@ add_action( 'edd_logs_migration', 'edd_logs_migration' );
 /**
  * Removes legacy logs data.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_remove_legacy_logs() {
 	global $wpdb;

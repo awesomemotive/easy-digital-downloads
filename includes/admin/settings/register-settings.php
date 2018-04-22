@@ -860,6 +860,14 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms'     => array(
+					array(
+					'id'   => 'terms_settings',
+						'name' => '<h3>' . __( 'Terms and Privacy Policy', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+						'tooltip_title' => __( 'Terms and Privacy Policy Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Depending on legal and regulatory requirements, it may be necessary for your site to show checkboxes for Terms of Agreement and/or Privacy Policy.','easy-digital-downloads' ),
+					),
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
@@ -878,6 +886,34 @@ function edd_get_registered_settings() {
 						'name' => __( 'Agreement Text', 'easy-digital-downloads' ),
 						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
 						'type' => 'rich_editor',
+					),
+					'show_agree_to_privacy_policy' => array(
+						'id'   => 'show_agree_to_privacy_policy',
+						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to privacy policy on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_label' => array(
+						'id'   => 'privacy_agree_label',
+						'name' => __( 'Agree to Privacy Policy Label', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to privacy policy check box.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'show_privacy_policy_on_checkout' => array(
+						'id'   => 'show_to_privacy_policy_on_checkout',
+						'name' => __( 'Show the privacy policy on checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Display your privacy policy on checkout.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_page' => array(
+						'id'   => 'privacy_agree_page',
+						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
+						'desc' => __( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
 				),
 			)
