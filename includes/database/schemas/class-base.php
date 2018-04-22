@@ -18,7 +18,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Array of database column objects to turn into EDD_DB_Column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */

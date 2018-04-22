@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * API Request Log Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Log_Api_Request extends Base {
 

@@ -88,7 +88,7 @@ function edd_display_product_tabs() {
 /**
  * Return array of query arguments that should be removed from URLs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @return array
  */

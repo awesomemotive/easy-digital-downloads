@@ -120,7 +120,7 @@ add_action( 'edd_add_discount', 'edd_admin_add_discount' );
 /**
  * Saves an edited discount
  *
- * @since 3.0.0
+ * @since 3.0
  * @param array $data Discount code data
  * @return void
  */
@@ -211,7 +211,7 @@ add_action( 'edd_edit_discount', 'edd_admin_edit_discount' );
  * Listens for when a discount delete button is clicked and deletes the
  * discount code
  *
- * @since 3.0.0
+ * @since 3.0
  * @param array $data Discount code data
  * @uses edd_delete_discount()
  * @return void
@@ -319,7 +319,7 @@ add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
 /**
  * Add a discount note via AJAX.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_ajax_add_discount_note() {
 
@@ -373,7 +373,7 @@ add_action( 'wp_ajax_edd_add_discount_note', 'edd_ajax_add_discount_note' );
 /**
  * Delete a discount note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data Data from $_GET.
  */
@@ -405,7 +405,7 @@ add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
 /**
  * Delete a discount note via AJAX.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_ajax_delete_discount_note() {
 

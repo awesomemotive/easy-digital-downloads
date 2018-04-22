@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add a discount
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int
@@ -62,7 +62,7 @@ function edd_add_discount( $data = array() ) {
 /**
  * Delete a discount
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $discount_id
  * @return int
@@ -148,7 +148,7 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
 /**
  * Update a discount
  *
- * @since 3.0.0
+ * @since 3.0
  * @param int $discount_id Discount ID.
  * @param array $data
  * @return int
@@ -223,7 +223,7 @@ function edd_get_discounts( $args = array() ) {
 /**
  * Return total number of discounts
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args Arguments.
  * @return int
@@ -245,7 +245,7 @@ function edd_get_discount_count( $args = array() ) {
 /**
  * Query for and return array of discount counts, keyed by status
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @return array
  */
@@ -287,7 +287,7 @@ function edd_get_discount_counts() {
 /**
  * Query for discount notes.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $discount_id Discount ID.
  * @return array Retrieved notes.
@@ -899,7 +899,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
 /**
  * Add meta data field to a discount.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $discount_id  Discount ID.
  * @param string  $meta_key     Meta data name.
@@ -920,7 +920,7 @@ function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = 
  * value, will keep from removing duplicate meta data with the same key. It also
  * allows removing all meta data matching key, if needed.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $discount_id  Discount ID.
  * @param string  $meta_key     Meta data name.
@@ -936,7 +936,7 @@ function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve discount meta field for a discount.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $discount_id  Discount ID.
  * @param string  $key          Optional. The meta key to retrieve. By default, returns
@@ -960,7 +960,7 @@ function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
  *
  * If the meta field for the discount does not exist, it will be added.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $discount_id  Discount ID.
  * @param string  $meta_key     Meta data key.
@@ -978,7 +978,7 @@ function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_v
 /**
  * Delete everything from discount meta matching meta key.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $discount_meta_key Key to search for when deleting.
  *

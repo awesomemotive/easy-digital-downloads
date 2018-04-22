@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Order {
 
 	/**
 	 * Order ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $id;
@@ -31,7 +31,7 @@ class Order {
 	/**
 	 * Order number.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $number;
@@ -39,7 +39,7 @@ class Order {
 	/**
 	 * Order status.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $status;
@@ -47,7 +47,7 @@ class Order {
 	/**
 	 * Date created.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $date_created;
@@ -55,7 +55,7 @@ class Order {
 	/**
 	 * Date completed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $date_completed;
@@ -63,7 +63,7 @@ class Order {
 	/**
 	 * User ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $user_id;
@@ -71,7 +71,7 @@ class Order {
 	/**
 	 * Customer ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   int
 	 */
 	protected $customer_id;
@@ -79,7 +79,7 @@ class Order {
 	/**
 	 * Email.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $email;
@@ -87,7 +87,7 @@ class Order {
 	/**
 	 * IP.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $ip;
@@ -95,7 +95,7 @@ class Order {
 	/**
 	 * Payment gateway.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $gateway;
@@ -103,7 +103,7 @@ class Order {
 	/**
 	 * Payment key.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   string
 	 */
 	protected $payment_key;
@@ -111,7 +111,7 @@ class Order {
 	/**
 	 * Subtotal.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $subtotal;
@@ -119,7 +119,7 @@ class Order {
 	/**
 	 * Tax.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $tax;
@@ -127,7 +127,7 @@ class Order {
 	/**
 	 * Order discount.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   array
 	 */
 	protected $discount;
@@ -135,7 +135,7 @@ class Order {
 	/**
 	 * Order total.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   float
 	 */
 	protected $total;
@@ -143,7 +143,7 @@ class Order {
 	/**
 	 * Order items.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var   array
 	 */
 	protected $items;
@@ -151,7 +151,7 @@ class Order {
 	/**
 	 * Constructor.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 *
 	 * @param object $order Order data directly from the database.
@@ -167,7 +167,7 @@ class Order {
 	/**
 	 * Retrieve order ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Order ID.
 	 */
@@ -178,7 +178,7 @@ class Order {
 	/**
 	 * Retrieve order number.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -189,7 +189,7 @@ class Order {
 	/**
 	 * Retrieve order status.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Order status.
 	 */
@@ -200,7 +200,7 @@ class Order {
 	/**
 	 * Retrieve the date the order was created.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Date order was created.
 	 */
@@ -211,7 +211,7 @@ class Order {
 	/**
 	 * Retrieve the date the order was completed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Date order was completed.
 	 */
@@ -222,7 +222,7 @@ class Order {
 	/**
 	 * Retrieve user ID associated with order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int User ID.
 	 */
@@ -233,7 +233,7 @@ class Order {
 	/**
 	 * Retrieve customer ID associated with order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int Customer ID.
 	 */
@@ -244,7 +244,7 @@ class Order {
 	/**
 	 * Retrieve email address associated with order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Email address.
 	 */
@@ -255,7 +255,7 @@ class Order {
 	/**
 	 * Retrieve IP address used to complete the order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string IP address.
 	 */
@@ -266,7 +266,7 @@ class Order {
 	/**
 	 * Retrieve the payment gateway used to complete the order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Payment gateway.
 	 */
@@ -277,7 +277,7 @@ class Order {
 	/**
 	 * Retrieve payment key.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Payment key.
 	 */
@@ -288,7 +288,7 @@ class Order {
 	/**
 	 * Retrieve order subtotal.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return float Subtotal.
 	 */
@@ -299,7 +299,7 @@ class Order {
 	/**
 	 * Retrieve tax applied to the order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return float Tax.
 	 */
@@ -310,7 +310,7 @@ class Order {
 	/**
 	 * Retrieve the discounted amount that was applied to the order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array Order discount.
 	 */
@@ -321,7 +321,7 @@ class Order {
 	/**
 	 * Retrieve order total.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return float Order total.
 	 */
@@ -332,7 +332,7 @@ class Order {
 	/**
 	 * Retrieve all the items in the order.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array Order items.
 	 */

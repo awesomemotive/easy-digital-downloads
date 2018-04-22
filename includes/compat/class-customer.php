@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Customer Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Customer extends Base {
 
@@ -25,7 +25,7 @@ class Customer extends Base {
 	 * and need to be dispatched to completely other methods. When a new instance of Back_Compat is created, a component
 	 * can be passed to the constructor which will allow __call() to dispatch to the correct methods.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 * @var string
 	 */
@@ -34,7 +34,7 @@ class Customer extends Base {
 	/**
 	 * Magic method to handle calls to method that no longer exist.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $name      Name of the method.
 	 * @param array  $arguments Enumerated array containing the parameters passed to the $name'ed method.
@@ -124,7 +124,7 @@ class Customer extends Base {
 	/**
 	 * Backwards compatibility hooks for customers.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 */
 	protected function hooks() {
