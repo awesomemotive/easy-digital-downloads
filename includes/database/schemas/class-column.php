@@ -54,7 +54,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $unsigned = true;
 
@@ -63,7 +63,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $zerofill = false;
 
@@ -72,7 +72,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $binary = false;
 
@@ -81,7 +81,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $allow_null = false;
 
@@ -144,7 +144,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $primary = false;
 
@@ -153,7 +153,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $created = false;
 
@@ -162,7 +162,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $modified = false;
 
@@ -171,7 +171,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $searchable = false;
 
@@ -180,7 +180,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $date_query = false;
 
@@ -189,7 +189,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $sortable = false;
 
@@ -198,7 +198,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $in = true;
 
@@ -207,7 +207,7 @@ class Column {
 	 *
 	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $not_in = true;
 
@@ -219,6 +219,15 @@ class Column {
 	 * @var string
 	 */
 	public $cache_key = false;
+
+	/**
+	 * Does this column fire a transition action when it's value changes?
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @var bool
+	 */
+	public $transition = false;
 
 	/**
 	 * Array of possible aliases this column can be referred to as.
@@ -305,6 +314,7 @@ class Column {
 			'searchable' => false,
 			'sortable'   => false,
 			'date_query' => false,
+			'transition' => false,
 			'in'         => true,
 			'not_in'     => true,
 
@@ -360,6 +370,7 @@ class Column {
 			'searchable' => 'wp_validate_boolean',
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
+			'transition' => 'wp_validate_boolean',
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
