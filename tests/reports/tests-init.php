@@ -20,6 +20,8 @@ class Init_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @dataProvider _test_bootstrap_dp
 	 * @covers ::bootstrap()
+	 *
+	 * @group edd_includes
 	 */
 	public function test_bootstrap( $path_to_file ) {
 		$this->assertFileExists( $path_to_file );
