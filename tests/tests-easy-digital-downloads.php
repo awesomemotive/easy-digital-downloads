@@ -47,7 +47,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 	 * @group edd_includes
 	 */
 	public function test_includes( $path_to_file ) {
-		array( $path_to_file );
+		$this->assertFileExists( $path_to_file );
 	}
 
 	/**
@@ -151,7 +151,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 	 * @group edd_includes
 	 */
 	public function test_includes_assets( $path_to_file ) {
-		array( $path_to_file );
+		$this->assertFileExists( $path_to_file );
 	}
 
 	/**
