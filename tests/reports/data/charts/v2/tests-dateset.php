@@ -127,11 +127,11 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 			)
 		);
 
-		$args = array_merge( $defaults, $args );
+		$endpoint_args = array_merge( $defaults, $endpoint_args );
 
 		return $this->getMockForAbstractClass(
 			'EDD\\Reports\\Data\\Charts\\v2\\Dataset',
-			array( $dataset_id, new Chart_Endpoint( $args ), $args['views']['chart']['options'] )
+			array( $dataset_id, new Chart_Endpoint( $endpoint_args ), $endpoint_args['views']['chart']['options'] )
 		);
 	}
 }
