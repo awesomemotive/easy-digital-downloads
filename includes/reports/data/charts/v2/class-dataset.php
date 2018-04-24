@@ -84,17 +84,6 @@ abstract class Dataset implements Error_Logger {
 	}
 
 	/**
-	 * Retrieves the list of global fields.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array List of global fields.
-	 */
-	public function get_global_fields() {
-		return $this->global_fields;
-	}
-
-	/**
 	 * Retrieves the dataset ID.
 	 *
 	 * @since 3.0
@@ -158,6 +147,17 @@ abstract class Dataset implements Error_Logger {
 	 */
 	public function get_fields() {
 		return $this->fields;
+	}
+
+	/**
+	 * Retrieves the list of global fields.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array List of global fields.
+	 */
+	public function get_global_fields() {
+		return $this->global_fields;
 	}
 
 	/**
