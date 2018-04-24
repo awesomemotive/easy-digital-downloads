@@ -83,25 +83,35 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_data()
+	 */
+	public function test_get_data_should_retrieve_data_from_the_attached_endpoint_based_on_the_dataset_id() {
+		$expected = array( 40, 20, 30, 10 );
+
+		$this->assertEqualSets( $expected, $this->mock_Dataset->get_data() );
+	}
+
+	/**
 	 * Mocks a Dataset fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Dataset
 	 */
-	protected function get_Dataset_mock( $dataset_id, $args = array() ) {
+	protected function get_Dataset_mock( $dataset_id, $endpoint_args = array() ) {
 		$defaults = array(
+			'id'    => 'test_endpoint',
 			'label' => __( 'Foo Dataset', 'edd-example-report' ),
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() {
+					'data_callback' => function() use ( $dataset_id ) {
 						return array(
-							'sales' => array( 40, 20, 30, 10 ),
+							$dataset_id => array( 40, 20, 30, 10 ),
 						);
 					},
 					'type'    => 'pie',
 					'options' => array(
 						'cutoutPercentage' => 50,
 						'datasets'         => array(
-							'sales' => array(
+							$dataset_id => array(
 								'label'           => __( 'Sales' ),
 								'backgroundColor' => array(
 									'rgb(234,16,109)',
