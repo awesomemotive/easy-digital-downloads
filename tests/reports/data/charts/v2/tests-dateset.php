@@ -21,8 +21,10 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Mocks a Dataset fixture.
+	 *
+	 * @return \EDD\Reports\Data\Charts\v2\Dataset
 	 */
-	protected function mock_Dataset( $args ) {
+	protected function get_Dataset_mock( $dataset_id, $args = array() ) {
 		$defaults = array(
 			'label' => __( 'Foo Dataset', 'edd-example-report' ),
 			'views' => array(
@@ -56,7 +58,7 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 
 		return $this->getMockForAbstractClass(
 			'EDD\\Reports\\Data\\Charts\\v2\\Dataset',
-			array( 'foo', new Chart_Endpoint( $args ), $args['views']['chart']['options'] )
+			array( $dataset_id, new Chart_Endpoint( $args ), $args['views']['chart']['options'] )
 		);
 	}
 }
