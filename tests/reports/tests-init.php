@@ -41,26 +41,26 @@ class Init_Tests extends \EDD_UnitTestCase {
 			array( $reports_dir . 'exceptions/class-invalid-view-parameter.php' ),
 
 			// Dependencies.
-			array( $reports_dir . '/class-registry.php' ),
-			array( $reports_dir . '/data/class-base-object.php' ),
+			array( $reports_dir . 'class-registry.php' ),
+			array( $reports_dir . 'data/class-base-object.php' ),
 
 			// Reports.
-			array( $reports_dir . '/data/class-reports-registry.php' ),
-			array( $reports_dir . '/data/class-report.php' ),
+			array( $reports_dir . 'data/class-reports-registry.php' ),
+			array( $reports_dir . 'data/class-report.php' ),
 
 			// Endpoints.
-			array( $reports_dir . '/data/class-endpoint.php' ),
-			array( $reports_dir . '/data/class-tile-endpoint.php' ),
-			array( $reports_dir . '/data/class-table-endpoint.php' ),
-			array( $reports_dir . '/data/class-chart-endpoint.php' ),
-			array( $reports_dir . '/data/class-endpoint-registry.php' ),
+			array( $reports_dir . 'data/class-endpoint.php' ),
+			array( $reports_dir . 'data/class-tile-endpoint.php' ),
+			array( $reports_dir . 'data/class-table-endpoint.php' ),
+			array( $reports_dir . 'data/class-chart-endpoint.php' ),
+			array( $reports_dir . 'data/class-endpoint-registry.php' ),
 
 			// Chart Dependencies.
-			array( $reports_dir . '/data/charts/v2/class-manifest.php' ),
-			array( $reports_dir . '/data/charts/v2/class-dataset.php' ),
-			array( $reports_dir . '/data/charts/v2/class-bar-dataset.php' ),
-			array( $reports_dir . '/data/charts/v2/class-line-dataset.php' ),
-			array( $reports_dir . '/data/charts/v2/class-pie-dataset.php' ),
+			array( $reports_dir . 'data/charts/v2/class-manifest.php' ),
+			array( $reports_dir . 'data/charts/v2/class-dataset.php' ),
+			array( $reports_dir . 'data/charts/v2/class-bar-dataset.php' ),
+			array( $reports_dir . 'data/charts/v2/class-line-dataset.php' ),
+			array( $reports_dir . 'data/charts/v2/class-pie-dataset.php' ),
 		);
 	}
 }
