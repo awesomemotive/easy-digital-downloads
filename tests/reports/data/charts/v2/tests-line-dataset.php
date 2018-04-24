@@ -1,8 +1,6 @@
 <?php
 namespace EDD\Reports\Data\Charts\v2;
 
-use EDD\Reports\Data\Chart_Endpoint;
-
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
