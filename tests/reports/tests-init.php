@@ -1,11 +1,11 @@
 <?php
-namespace EDD\Reports );
+namespace EDD\Reports;
 
 if ( ! class_exists( '\EDD\Reports\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' ) );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
-new \EDD\Reports\Init() );
+new \EDD\Reports\Init();
 
 /**
  * Tests for the Reports Init class.
