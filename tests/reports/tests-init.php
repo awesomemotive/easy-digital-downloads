@@ -18,40 +18,49 @@ new \EDD\Reports\Init();
 class Init_Tests extends \EDD_UnitTestCase {
 
 	/**
+	 * @dataProvider _test_bootstrap_dp
 	 * @covers ::bootstrap()
 	 */
-	public function test_bootstrap() {
-		$reports_dir = EDD_PLUGIN_DIR . 'includes/reports/' );
-
-		// Functions.
-		$this->assertFileExists( $reports_dir . 'reports-functions.php' );
-
-		// Exceptions.
-		$this->assertFileExists( $reports_dir . 'exceptions/class-invalid-parameter.php' );
-		$this->assertFileExists( $reports_dir . 'exceptions/class-invalid-view.php' );
-		$this->assertFileExists( $reports_dir . 'exceptions/class-invalid-view-parameter.php' );
-
-		// Dependencies.
-		$this->assertFileExists( $reports_dir . '/class-registry.php' );
-		$this->assertFileExists( $reports_dir . '/data/class-base-object.php' );
-
-		// Reports.
-		$this->assertFileExists( $reports_dir . '/data/class-reports-registry.php' );
-		$this->assertFileExists( $reports_dir . '/data/class-report.php' );
-
-		// Endpoints.
-		$this->assertFileExists( $reports_dir . '/data/class-endpoint.php' );
-		$this->assertFileExists( $reports_dir . '/data/class-tile-endpoint.php' );
-		$this->assertFileExists( $reports_dir . '/data/class-table-endpoint.php' );
-		$this->assertFileExists( $reports_dir . '/data/class-chart-endpoint.php' );
-		$this->assertFileExists( $reports_dir . '/data/class-endpoint-registry.php' );
-
-		// Chart Dependencies.
-		$this->assertFileExists( $reports_dir . '/data/charts/v2/class-manifest.php' );
-		$this->assertFileExists( $reports_dir . '/data/charts/v2/class-dataset.php' );
-		$this->assertFileExists( $reports_dir . '/data/charts/v2/class-bar-dataset.php' );
-		$this->assertFileExists( $reports_dir . '/data/charts/v2/class-line-dataset.php' );
-		$this->assertFileExists( $reports_dir . '/data/charts/v2/class-pie-dataset.php' );
+	public function test_bootstrap( $path_to_file ) {
+		$this->assertFileExists( $path_to_file );
 	}
 
+	/**
+	 * Data provider for test_bootstrap method.
+	 */
+	public function _test_bootstrap_dp() {
+		$reports_dir = EDD_PLUGIN_DIR . 'includes/reports/';
+
+		return array(
+			// Functions.
+			array( $reports_dir . 'reports-functions.php' ),
+
+			// Exceptions.
+			array( $reports_dir . 'exceptions/class-invalid-parameter.php' ),
+			array( $reports_dir . 'exceptions/class-invalid-view.php' ),
+			array( $reports_dir . 'exceptions/class-invalid-view-parameter.php' ),
+
+			// Dependencies.
+			array( $reports_dir . '/class-registry.php' ),
+			array( $reports_dir . '/data/class-base-object.php' ),
+
+			// Reports.
+			array( $reports_dir . '/data/class-reports-registry.php' ),
+			array( $reports_dir . '/data/class-report.php' ),
+
+			// Endpoints.
+			array( $reports_dir . '/data/class-endpoint.php' ),
+			array( $reports_dir . '/data/class-tile-endpoint.php' ),
+			array( $reports_dir . '/data/class-table-endpoint.php' ),
+			array( $reports_dir . '/data/class-chart-endpoint.php' ),
+			array( $reports_dir . '/data/class-endpoint-registry.php' ),
+
+			// Chart Dependencies.
+			array( $reports_dir . '/data/charts/v2/class-manifest.php' ),
+			array( $reports_dir . '/data/charts/v2/class-dataset.php' ),
+			array( $reports_dir . '/data/charts/v2/class-bar-dataset.php' ),
+			array( $reports_dir . '/data/charts/v2/class-line-dataset.php' ),
+			array( $reports_dir . '/data/charts/v2/class-pie-dataset.php' ),
+		);
+	}
 }
