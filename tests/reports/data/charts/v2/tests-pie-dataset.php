@@ -26,13 +26,7 @@ class Pie_Dataset_Tests extends \EDD_UnitTestCase {
 			'hoverBorderWidth'
 		);
 
-		if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
-			$class = 'EDD\\Reports\\Data\\Charts\\v2\\Pie_Dataset';
-		} else {
-			$class = Pie_Dataset::class;
-		}
-
-		$pie_dataset = $this->getMockBuilder( $class )
+		$pie_dataset = $this->getMockBuilder( 'EDD\\Reports\\Data\\Charts\\v2\\Pie_Dataset' )
 			->setMethods( null )
 			->disableOriginalConstructor()
 			->getMock();

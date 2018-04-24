@@ -26,13 +26,7 @@ class Bar_Dataset_Tests extends \EDD_UnitTestCase {
 			'hoverBorderColor', 'hoverBorderWidth'
 		);
 
-		if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
-			$class = 'EDD\\Reports\\Data\\Charts\\v2\\Bar_Dataset';
-		} else {
-			$class = Bar_Dataset::class;
-		}
-
-		$bar_dataset = $this->getMockBuilder( $class )
+		$bar_dataset = $this->getMockBuilder( 'EDD\\Reports\\Data\\Charts\\v2\\Bar_Dataset' )
 			->setMethods( null )
 			->disableOriginalConstructor()
 			->getMock();
