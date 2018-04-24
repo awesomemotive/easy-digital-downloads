@@ -638,7 +638,7 @@ class Base extends \EDD\Database\Base {
 	 * @return array
 	 */
 	private function get_column_names() {
-		return array_flip( wp_list_pluck( $this->columns, 'name' ) );
+		return array_flip( $this->get_columns( array(), 'and', 'name' ) );
 	}
 
 	/**
@@ -1536,29 +1536,36 @@ class Base extends \EDD\Database\Base {
 			return $this->update_item( $data[ $primary ], $data );
 		}
 
+		// Get default values for item (from columns)
+		$item = $this->default_item();
+
+		// Never include the primary key value
+		unset( $item[ $primary ] );
+
 		// Cut out non-keys for meta
 		$columns = $this->get_column_names();
+		$data    = array_merge( $item, $data );
 		$meta    = array_diff_key( $data, $columns );
-		$data    = array_intersect_key( $data, $columns );
+		$save    = array_intersect_key( $data, $columns );
 
 		// Get the current time (maybe used by created/modified)
 		$time = $this->get_current_time();
 
 		// If date-created exists, but is empty or default, use the current time
 		$created = $this->get_column_by( array( 'created' => true ) );
-		if ( ! empty( $created ) && ( empty( $data[ $created->name ] ) || ( $data[ $created->name ] === $created->default ) ) ) {
-			$data[ $created->name ] = $time;
+		if ( ! empty( $created ) && ( empty( $save[ $created->name ] ) || ( $save[ $created->name ] === $created->default ) ) ) {
+			$save[ $created->name ] = $time;
 		}
 
 		// If date-modified exists, but is empty or default, use the current time
 		$modified = $this->get_column_by( array( 'modified' => true ) );
-		if ( ! empty( $modified ) && ( empty( $data[ $modified->name ] ) || ( $data[ $modified->name ] === $modified->default ) ) ) {
-			$data[ $modified->name ] = $time;
+		if ( ! empty( $modified ) && ( empty( $save[ $modified->name ] ) || ( $save[ $modified->name ] === $modified->default ) ) ) {
+			$save[ $modified->name ] = $time;
 		}
 
 		// Try to add
 		$table  = $this->get_table_name();
-		$result = $this->get_db()->insert( $table, $data );
+		$result = $this->get_db()->insert( $table, $save );
 
 		// Bail if no insert occurred
 		if ( empty( $result ) ) {
@@ -1578,10 +1585,11 @@ class Base extends \EDD\Database\Base {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
-		$this->prime_item_caches( $item_id );
+		// Use get item to prime caches
+		$this->update_item_cache( $item_id );
 
 		// Transition item data
-		$this->transition_item( $data, $item_id );
+		$this->transition_item( $save, $item_id );
 
 		// Return result
 		return $item_id;
@@ -1663,14 +1671,11 @@ class Base extends \EDD\Database\Base {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
+		// Use get item to prime caches
+		$this->update_item_cache( $item_id );
+
 		// Transition item data
 		$this->transition_item( $save, $item );
-
-		// Cast to stdClass for caching
-		$save = (object) $save;
-
-		// Prime the item cache
-		$this->update_item_cache( $save );
 
 		// Return result
 		return $result;
@@ -1741,6 +1746,34 @@ class Base extends \EDD\Database\Base {
 
 		// Return the newly shaped item
 		return new $this->item_shape( $item );
+	}
+
+	/**
+	 * Return an item comprised of all default values
+	 *
+	 * This is used by `add_item()` to populate known default values, to ensure
+	 * new item data is always what we expect it to be.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	private function default_item() {
+
+		// Default return value
+		$retval   = array();
+
+		// Get column names and defaults
+		$names    = $this->get_columns( array(), 'and', 'name'    );
+		$defaults = $this->get_columns( array(), 'and', 'default' );
+
+		// Put together an item using default values
+		foreach ( $names as $key => $name ) {
+			$retval[ $name ] = $defaults[ $key ];
+		}
+
+		// Return
+		return $retval;
 	}
 
 	/**
@@ -2082,11 +2115,12 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $item_ids
+	 * @param array   $item_ids
+	 * @param boolean $force
 	 *
 	 * @return boolean False if empty
 	 */
-	private function prime_item_caches( $item_ids = array() ) {
+	private function prime_item_caches( $item_ids = array(), $force = false ) {
 
 		// Bail if no items to cache
 		if ( empty( $item_ids ) ) {
@@ -2097,7 +2131,7 @@ class Base extends \EDD\Database\Base {
 		$item_ids = (array) $item_ids;
 
 		// Update item caches
-		if ( ! empty( $this->query_vars['update_item_cache'] ) ) {
+		if ( ! empty( $force ) || ! empty( $this->query_vars['update_item_cache'] ) ) {
 
 			// Look for non-cached IDs
 			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
@@ -2141,13 +2175,23 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function update_item_cache( $items = array() ) {
 
+		// Maybe query for single item
+		if ( is_numeric( $items ) ) {
+			$primary = $this->get_primary_column_name();
+			$items   = $this->get_item_raw( $primary, $items );
+		}
+
 		// Bail if no items to cache
 		if ( empty( $items ) ) {
 			return false;
 		}
 
-		// Make sure items is an array
-		$items  = (array) $items;
+		// Make sure items are an array (without casting objects to arrays)
+		if ( ! is_array( $items ) ) {
+			$items = array( $items );
+		}
+
+		// Get cache groups
 		$groups = $this->get_cache_groups();
 
 		// Loop through all items and cache them
