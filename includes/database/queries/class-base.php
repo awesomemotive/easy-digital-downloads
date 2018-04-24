@@ -1833,8 +1833,8 @@ class Base extends \EDD\Database\Base {
 		foreach ( $diff as $key => $value ) {
 			$old_value  = $old_data[ $key ];
 			$new_value  = $new_data[ $key ];
-			$transition = $this->apply_prefix( "transition_{$this->item_name}_from_{$old_value}_to_{$new_value}" );
-			do_action( $transition, $item_id );
+			$transition = $this->apply_prefix( "transition_{$this->item_name}_{$key}" );
+			do_action( $transition, $old_value, $new_value, $item_id );
 		}
 	}
 
