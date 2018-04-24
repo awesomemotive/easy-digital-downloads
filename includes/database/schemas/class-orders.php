@@ -67,7 +67,8 @@ class Orders extends Base {
 			'length'     => '20',
 			'default'    => 'pending',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// date_created
