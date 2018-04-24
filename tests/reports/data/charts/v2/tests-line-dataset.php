@@ -32,7 +32,13 @@ class Line_Dataset_Tests extends \EDD_UnitTestCase {
 			'steppedLine',
 		);
 
-		$line_dataset = $this->getMockBuilder( Line_Dataset::class )
+		if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
+			$class = 'EDD\\Reports\\Data\\Charts\\v2\\Line_Dataset';
+		} else {
+			$class = Line_Dataset::class;
+		}
+
+		$line_dataset = $this->getMockBuilder( $class )
 			->setMethods( null )
 			->disableOriginalConstructor()
 			->getMock();
