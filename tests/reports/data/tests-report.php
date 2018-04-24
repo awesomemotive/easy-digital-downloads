@@ -3,7 +3,7 @@ namespace EDD\Reports\Data;
 
 use EDD\Reports;
 
-if ( ! class_exists( '\EDD\Reports\Init' ) ) {
+if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
 }
 
