@@ -700,7 +700,7 @@ class Base extends \EDD\Database\Base {
 
 		// Return column or false
 		return ! empty( $filter )
-			? $filter
+			? array_values( $filter )
 			: array();
 	}
 
@@ -1570,13 +1570,21 @@ class Base extends \EDD\Database\Base {
 			return $result;
 		}
 
+		// Get the new item ID
+		$item_id = $this->get_db()->insert_id;
+
 		// Maybe save meta keys
 		if ( ! empty( $meta ) ) {
-			$this->save_extra_item_meta( $result, $meta );
+			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
+		$this->prime_item_caches( $item_id );
+
+		// Transition item data
+		$this->transition_item( $data, $item_id );
+
 		// Return result
-		return $this->get_db()->insert_id;
+		return $item_id;
 	}
 
 	/**
@@ -1655,6 +1663,9 @@ class Base extends \EDD\Database\Base {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
+		// Transition item data
+		$this->transition_item( $save, $item );
+
 		// Cast to stdClass for caching
 		$save = (object) $save;
 
@@ -1730,6 +1741,68 @@ class Base extends \EDD\Database\Base {
 
 		// Return the newly shaped item
 		return new $this->item_shape( $item );
+	}
+
+	/**
+	 * Transition an item when adding or updating.
+	 *
+	 * This method takes the data being saved, looks for any columns that are
+	 * known to transition between values, and fires actions on them.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return array
+	 */
+	private function transition_item( $new_data = array(), $old_data = array() ) {
+
+		// Look for transition columns
+		$columns = $this->get_columns( array( 'transition' => true ), 'and', 'name' );
+
+		// Bail if no columns to transition
+		if ( empty( $columns ) ) {
+			return;
+		}
+
+		// Get the item ID
+		$item_id = $this->shape_item_id( $old_data );
+
+		// Bail if item ID cannot be retrieved
+		if ( empty( $item_id ) ) {
+			return;
+		}
+
+		// If no old value(s), it's new
+		if ( ! is_array( $old_data ) ) {
+			$old_data = $new_data;
+
+			// Set all old values to "new"
+			foreach ( $old_data as $key => $value ) {
+				$value            = 'new';
+				$old_data[ $key ] = $value;
+			}
+		}
+
+		// Compare
+		$keys = array_flip( $columns );
+		$new  = array_intersect_key( $new_data, $keys );
+		$old  = array_intersect_key( $old_data, $keys );
+
+		// Get the difference
+		$diff = array_diff( $new, $old );
+
+		// Bail if nothing is changing
+		if ( empty( $diff ) ) {
+			return;
+		}
+
+		// Do the actions
+		foreach ( $diff as $key => $value ) {
+			$old_value  = $old_data[ $key ];
+			$new_value  = $new_data[ $key ];
+			$transition = $this->apply_prefix( "transition_{$this->item_name}_from_{$old_value}_to_{$new_value}" );
+			do_action( $transition, $item_id );
+		}
 	}
 
 	/** Meta ******************************************************************/
@@ -2024,7 +2097,7 @@ class Base extends \EDD\Database\Base {
 		$item_ids = (array) $item_ids;
 
 		// Update item caches
-		if ( empty( $this->query_vars['update_item_cache'] ) ) {
+		if ( ! empty( $this->query_vars['update_item_cache'] ) ) {
 
 			// Look for non-cached IDs
 			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
