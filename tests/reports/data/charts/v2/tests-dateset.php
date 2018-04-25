@@ -135,6 +135,53 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::parse_data_for_output()
+	 */
+	public function test_parse_data_for_output_should_return_single_axis_keyed_data_for_single_level_non_pie_data() {
+		$expected = array(
+			array( 'x' => 40 * 1000 ),
+			array( 'x' => 20 * 1000 ),
+			array( 'x' => 30 * 1000 ),
+			array( 'x' => 10 * 1000 ),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, $this->mock_Dataset->parse_data_for_output( array( 40, 20, 30, 10 ) ) );
+	}
+
+	/**
+	 * @covers ::parse_data_for_output()
+	 */
+	public function test_parse_data_for_output_should_return_double_axis_keyed_data_for_double_level_non_pie_data() {
+		$expected = array(
+			array(
+				'x' => 40 * 1000,
+				'y' => 1,
+			),
+			array(
+				'x' => 20 * 1000,
+				'y' => 2,
+			),
+			array(
+				'x' => 30 * 1000,
+				'y' => 3,
+			),
+			array(
+				'x' => 10 * 1000,
+				'y' => 4,
+			),
+		);
+
+		$data = array(
+			array( 40, 1 ),
+			array( 20, 2 ),
+			array( 30, 3 ),
+			array( 10, 4 )
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, $this->mock_Dataset->parse_data_for_output( $data ) );
+	}
+
+	/**
 	 * Mocks a Dataset fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Dataset
