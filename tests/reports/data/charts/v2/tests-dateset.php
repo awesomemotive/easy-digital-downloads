@@ -10,10 +10,11 @@ if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 new \EDD\Reports\Init();
 
 /**
- * Tests for Dataset class.
+ * Tests for the Dataset class.
  *
  * @group edd_reports
  * @group edd_reports_data
+ * @group edd_reports_charts
  *
  * @coversDefaultClass \EDD\Reports\Data\Charts\v2\Dataset
  */
