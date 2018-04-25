@@ -34,6 +34,10 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 		$this->mock_Dataset = $this->get_Dataset_mock( 'test' );
 	}
 
+	public function test_Dataset_should_implement_Error_Logger_Interface() {
+		$this->assertInstanceOf( 'EDD\\Utils\\Error_Logger_Interface', $this->mock_Dataset );
+	}
+
 	/**
 	 * @covers ::get_id()
 	 * @covers ::set_id()
