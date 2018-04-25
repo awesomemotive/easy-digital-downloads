@@ -34,4 +34,9 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 		$this->mock_Manifest = $this->get_Manifest_mock( 'test' );
 	}
 
+	public function test_Dataset_should_implement_Error_Logger_Interface() {
+		$this->assertInstanceOf( 'EDD\\Utils\\Error_Logger_Interface', $this->mock_Manifest );
+	}
+
+
 }
