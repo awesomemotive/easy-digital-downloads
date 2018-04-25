@@ -67,15 +67,15 @@ class Manifest implements Error_Logger {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string         $type    Type of chart manifest.
 	 * @param Chart_Endpoint $endpoint Chart endpoint.
-	 * @param array          $options Array of options to populate the manifest with.
 	 */
-	public function __construct( $type, $endpoint, $options ) {
+	public function __construct( $endpoint ) {
 		$this->setup_error_logger();
 
-		$this->set_type( $type );
+		$this->set_type( $endpoint->get_type() );
 		$this->set_endpoint( $endpoint );
+
+		$options = $endpoint->get_options();
 
 		if ( $this->is_pie_manifest() ) {
 			$this->set_labels( $options['labels'] );
