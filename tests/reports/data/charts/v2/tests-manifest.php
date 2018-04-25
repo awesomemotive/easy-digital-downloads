@@ -34,9 +34,55 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 		$this->mock_Manifest = $this->get_Manifest_mock( 'test' );
 	}
 
-	public function test_Dataset_should_implement_Error_Logger_Interface() {
+	/**
+	 * @covers ::__construct()
+	 */
+	public function test_Manifest_should_implement_Error_Logger_Interface() {
 		$this->assertInstanceOf( 'EDD\\Utils\\Error_Logger_Interface', $this->mock_Manifest );
 	}
 
+	/**
+	 * Mocks a Manifest fixture.
+	 *
+	 * @return \EDD\Reports\Data\Charts\v2\Manifest
+	 */
+	protected function get_Manifest_mock( $dataset_id, $endpoint_args = array() ) {
+		$defaults = array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() use ( $dataset_id ) {
+						return array(
+							$dataset_id => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type'    => 'pie',
+					'options' => array(
+						'cutoutPercentage' => 50,
+						'datasets'         => array(
+							$dataset_id => array(
+								'label'           => __( 'Sales' ),
+								'backgroundColor' => array(
+									'rgb(234,16,109)',
+									'rgb(98,133,193)',
+									'rgb(151,99,143)',
+									'rgb(244,10,43)',
+								),
+							),
+						),
+						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
+					),
+				),
+			)
+		);
+
+		$endpoint_args = array_merge( $defaults, $endpoint_args );
+
+		return $this->getMockForAbstractClass(
+			'EDD\\Reports\\Data\\Charts\\v2\\Manifest',
+			array( new Chart_Endpoint( $endpoint_args ) )
+		);
+	}
 
 }
