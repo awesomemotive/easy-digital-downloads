@@ -92,6 +92,49 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::validate()
+	 */
+	public function test_validate_should_have_errors_if_no_data() {
+		$dataset = $this->get_Dataset_mock( 'test', array(
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return;
+					},
+					'options' => array(),
+				),
+			),
+		) );
+
+		$this->assertTrue( $dataset->has_errors() );
+	}
+
+	/**
+	 * @covers ::validate()
+	 */
+	public function test_validate_should_log_missing_chart_data_error_if_no_data() {
+		$dataset = $this->get_Dataset_mock( 'test', array(
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return;
+					},
+					'options' => array(),
+				),
+			),
+		) );
+
+		$this->assertContains( 'missing_chart_data', $dataset->get_errors()->get_error_codes() );
+	}
+
+	/**
+	 * @covers ::validate()
+	 */
+	public function test_validate_should_add_data_key_to_options_if_successful() {
+		$this->assertArrayHasKey( 'data', $this->mock_Dataset->get_options() );
+	}
+
+	/**
 	 * Mocks a Dataset fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Dataset
