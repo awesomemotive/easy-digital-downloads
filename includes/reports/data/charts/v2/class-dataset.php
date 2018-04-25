@@ -248,26 +248,19 @@ abstract class Dataset implements Error_Logger {
 
 		} else {
 
-			$first_key   = key( $data );
-
-			if ( is_array( $data[ $first_key ] ) ) {
-				$value_count = count( $data[ $first_key ] );
-			} else {
-				$value_count = 1;
-			}
-
-			foreach ( $data as $key => $value ) {
-				if ( isset( $value[1] ) ) {
+			foreach ( $data as $key => $values ) {
+				if ( is_array( $values ) && isset( $values[1] ) ) {
 					$processed[ $key ] = array(
-						'x' => $value[0] * 1000,
-						'y' => $value[1],
+						'x' => $values[0] * 1000,
+						'y' => $values[1],
 					);
 				} else {
 					$processed[ $key ] = array(
-						'x' => $value[0] * 1000
+						'x' => $values * 1000,
 					);
 				}
 			}
+
 		}
 
 		return $processed;
