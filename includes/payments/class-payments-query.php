@@ -499,6 +499,17 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__set( 'meta_query', $search_meta );
 			$this->__unset( 's' );
 
+		} elseif ( edd_get_option( 'enable_sequential' ) ) {
+
+			$search_meta = array(
+				'key'     => '_edd_payment_number',
+				'value'   => $search,
+				'compare' => 'LIKE'
+			);
+
+			$this->__set( 'meta_query', $search_meta );
+			$this->__unset( 's' );
+
 		} else {
 			$this->__set( 's', $search );
 		}
