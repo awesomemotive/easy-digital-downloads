@@ -485,7 +485,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__set( 'download', $search );
 			$this->__unset( 's' );
 
-		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
+		} elseif ( false !== strpos( $search, 'discount:' ) ) {
 
 			$search = trim( str_replace( 'discount:', '', $search ) );
 			$search = 'discount.*' . $search;
