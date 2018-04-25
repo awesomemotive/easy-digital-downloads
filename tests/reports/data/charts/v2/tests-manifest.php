@@ -42,6 +42,33 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_type()
+	 * @covers ::set_type()
+	 */
+	public function test_get_type_should_return_the_chart_type() {
+		$this->assertSame( 'pie', $this->mock_Manifest->get_type() );
+	}
+
+	/**
+	 * @covers ::get_endpoint()
+	 * @covers ::set_endpoint()
+	 */
+	public function test_get_endpoint_should_return_a_Chart_Endpoint() {
+		$this->assertInstanceOf( 'EDD\\Reports\\Data\\Chart_Endpoint', $this->mock_Manifest->get_endpoint() );
+	}
+
+	/**
+	 * @covers ::get_options()
+	 */
+	public function test_get_options_should_retrieve_the_options_minus_the_labels_and_datasets() {
+		$expected = array(
+			'cutoutPercentage' => 50,
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, $this->mock_Manifest->get_options() );
+	}
+
+	/**
 	 * Mocks a Manifest fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Manifest

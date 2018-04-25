@@ -245,6 +245,7 @@ class Manifest implements Error_Logger {
 
 				$this->datasets[ $dataset_id ] = $dataset;
 
+
 				return true;
 
 			} else {
