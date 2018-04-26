@@ -77,7 +77,7 @@ class Manifest implements Error_Logger {
 
 		$options = $endpoint->get_options();
 
-		if ( $this->is_pie_manifest() ) {
+		if ( $this->is_pie_manifest() && ! empty( $options['labels'] ) ) {
 			$this->set_labels( $options['labels'] );
 
 			unset( $options['labels'] );
