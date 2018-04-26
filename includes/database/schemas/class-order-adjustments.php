@@ -79,7 +79,8 @@ class Order_Adjustments extends Base {
 			'length'     => '20',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// description
