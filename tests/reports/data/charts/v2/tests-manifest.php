@@ -281,6 +281,96 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_chart_options()
+	 */
+	public function test_get_chart_options_default_pie_options_should_match() {
+		$expected = array(
+			'responsive' => true,
+			'legend'     => array(
+				'position' => 'left',
+			),
+			'cutoutPercentage' => 50,
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, $this->mock_Manifest->get_chart_options() );
+	}
+
+	/**
+	 * @covers ::get_chart_options()
+	 */
+	public function test_get_chart_options_default_non_pie_options_should_match_and_include_the_endpoint_label() {
+		$manifest = $this->get_Manifest_mock( 'foo', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type'    => 'line',
+					'options' => array(
+						'datasets' => array(
+							'foo' => array(
+								'label'           => __( 'Sales' ),
+								'backgroundColor' => array(
+									'rgb(234,16,109)',
+									'rgb(98,133,193)',
+									'rgb(151,99,143)',
+									'rgb(244,10,43)',
+								),
+							),
+						),
+						'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
+					),
+				),
+			)
+		) );
+
+		$expected = array(
+			'responsive' => true,
+			'hoverMode'  => 'index',
+			'stacked'    => false,
+			'title'      => array(
+				'display' => true,
+				'text'    => 'Foo Dataset'
+			),
+			'scales'     => array(
+				'xAxes' => array(
+					array(
+						'type'     => "time",
+						'display'  => true,
+						'ticks'    => array(
+							'source' => 'auto',
+						),
+						'position' => 'bottom',
+						'time'     => array(
+							'unit' => 'day',
+							'displayFormats' => array(
+								'day'   => 'MMM D',
+								'month' => 'MMM',
+							),
+						),
+					),
+				),
+				'yAxes' => array(
+					array(
+						'type'     => 'linear',
+						'display'  => true,
+						'position' => 'left',
+					),
+				),
+			),
+			'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, $manifest->get_chart_options() );
+	}
+
+
+
+	/**
 	 * Mocks a Manifest fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Manifest
