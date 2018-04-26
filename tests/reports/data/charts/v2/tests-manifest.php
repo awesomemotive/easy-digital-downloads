@@ -368,7 +368,86 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, $manifest->get_chart_options() );
 	}
 
+	/**
+	 * @covers ::is_pie_manifest()
+	 */
+	public function test_is_pie_manifest_should_return_true_if_type_is_pie() {
+		$this->assertTrue( $this->mock_Manifest->is_pie_manifest() );
+	}
 
+	/**
+	 * @covers ::is_pie_manifest()
+	 */
+	public function test_is_pie_manifest_should_return_true_if_type_is_doughnut() {
+		$manifest = $this->get_Manifest_mock( 'foo', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type'    => 'doughnut',
+					'options' => array(
+						'cutoutPercentage' => 50,
+						'datasets'         => array(
+							'bar' => array(
+								'label'           => __( 'Sales' ),
+								'backgroundColor' => array(
+									'rgb(234,16,109)',
+									'rgb(98,133,193)',
+									'rgb(151,99,143)',
+									'rgb(244,10,43)',
+								),
+							),
+						),
+						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
+					),
+				),
+			)
+		) );
+
+		$this->assertTrue( $manifest->is_pie_manifest() );
+	}
+
+	/**
+	 * @covers ::is_pie_manifest()
+	 */
+	public function test_is_pie_manifest_should_return_false_if_type_is_not_pie_or_doughnut() {
+		$manifest = $this->get_Manifest_mock( 'foo', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type'    => 'line',
+					'options' => array(
+						'cutoutPercentage' => 50,
+						'datasets'         => array(
+							'bar' => array(
+								'label'           => __( 'Sales' ),
+								'backgroundColor' => array(
+									'rgb(234,16,109)',
+									'rgb(98,133,193)',
+									'rgb(151,99,143)',
+									'rgb(244,10,43)',
+								),
+							),
+						),
+						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
+					),
+				),
+			)
+		) );
+
+		$this->assertFalse( $manifest->is_pie_manifest() );
+	}
 
 	/**
 	 * Mocks a Manifest fixture.
