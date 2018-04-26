@@ -208,6 +208,35 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_dataset_handler()
+	 */
+	public function test_get_dataset_handler_should_return_an_empty_handler_string_for_an_invalid_type() {
+		$manifest = $this->get_Manifest_mock( 'test', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type' => 'fake',
+				),
+			),
+		) );
+
+		$this->assertSame( '', $manifest->get_dataset_handler() );
+	}
+
+	/**
+	 * @covers ::get_dataset_handler()
+	 */
+	public function test_get_dataset_handler_should_return_a_handler_string_for_a_valid_type() {
+		$this->assertSame( 'EDD\\Reports\\Data\\Charts\\v2\\Pie_Dataset', $this->mock_Manifest->get_dataset_handler() );
+	}
+
+	/**
 	 * Mocks a Manifest fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Manifest
