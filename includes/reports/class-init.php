@@ -34,26 +34,26 @@ final class Init {
 		require_once $reports_dir . 'exceptions/class-invalid-view-parameter.php';
 
 		// Dependencies.
-		require_once $reports_dir . '/class-registry.php';
-		require_once $reports_dir . '/data/class-base-object.php';
+		require_once $reports_dir . 'class-registry.php';
+		require_once $reports_dir . 'data/class-base-object.php';
 
 		// Reports.
-		require_once $reports_dir . '/data/class-reports-registry.php';
-		require_once $reports_dir . '/data/class-report.php';
+		require_once $reports_dir . 'data/class-reports-registry.php';
+		require_once $reports_dir . 'data/class-report.php';
 
 		// Endpoints.
-		require_once $reports_dir . '/data/class-endpoint.php';
-		require_once $reports_dir . '/data/class-tile-endpoint.php';
-		require_once $reports_dir . '/data/class-table-endpoint.php';
-		require_once $reports_dir . '/data/class-chart-endpoint.php';
-		require_once $reports_dir . '/data/class-endpoint-registry.php';
+		require_once $reports_dir . 'data/class-endpoint.php';
+		require_once $reports_dir . 'data/class-tile-endpoint.php';
+		require_once $reports_dir . 'data/class-table-endpoint.php';
+		require_once $reports_dir . 'data/class-chart-endpoint.php';
+		require_once $reports_dir . 'data/class-endpoint-registry.php';
 
 		// Chart Dependencies.
-		require_once $reports_dir . '/data/charts/v2/class-manifest.php';
-		require_once $reports_dir . '/data/charts/v2/class-dataset.php';
-		require_once $reports_dir . '/data/charts/v2/class-bar-dataset.php';
-		require_once $reports_dir . '/data/charts/v2/class-line-dataset.php';
-		require_once $reports_dir . '/data/charts/v2/class-pie-dataset.php';
+		require_once $reports_dir . 'data/charts/v2/class-manifest.php';
+		require_once $reports_dir . 'data/charts/v2/class-dataset.php';
+		require_once $reports_dir . 'data/charts/v2/class-bar-dataset.php';
+		require_once $reports_dir . 'data/charts/v2/class-line-dataset.php';
+		require_once $reports_dir . 'data/charts/v2/class-pie-dataset.php';
 	}
 
 	/**
