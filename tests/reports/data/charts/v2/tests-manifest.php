@@ -111,6 +111,13 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::has_datasets()
+	 */
+	public function test_has_datasets_should_return_true_if_there_are_datasets() {
+		$this->assertTrue( $this->mock_Manifest->has_datasets() );
+	}
+
+	/**
 	 * @covers ::get_labels()
 	 * @covers ::set_labels()
 	 */
@@ -147,10 +154,35 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::has_datasets()
+	 * @covers ::has_labels()
 	 */
-	public function test_has_datasets_should_return_true_if_there_are_datasets() {
-		$this->assertTrue( $this->mock_Manifest->has_datasets() );
+	public function test_has_labels_should_return_true_if_labels() {
+		$this->assertTrue( $this->mock_Manifest->has_labels() );
+	}
+
+	/**
+	 * @covers ::has_labels()
+	 */
+	public function test_has_labels_should_return_false_if_no_labels() {
+		$manifest = $this->get_Manifest_mock( 'test', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type'    => 'pie',
+					'options' => array(
+						'cutoutPercentage' => 50,
+					),
+				),
+			)
+		) );
+
+		$this->assertFalse( $manifest->has_labels() );
 	}
 
 	/**
