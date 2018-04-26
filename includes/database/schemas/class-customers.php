@@ -73,7 +73,8 @@ class Customers extends Base {
 			'length'     => '20',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// purchase_value
