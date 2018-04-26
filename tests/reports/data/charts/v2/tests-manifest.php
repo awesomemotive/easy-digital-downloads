@@ -186,6 +186,28 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::add_dataset()
+	 */
+	public function test_add_dataset_should_return_false_on_failure() {
+		$manifest = $this->get_Manifest_mock( 'test', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type' => 'fake',
+				),
+			),
+		) );
+
+		$this->assertFalse( $manifest->add_dataset( 'test', array() ) );
+	}
+
+	/**
 	 * Mocks a Manifest fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Manifest
