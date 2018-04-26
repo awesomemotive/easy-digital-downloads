@@ -69,6 +69,22 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_datasets()
+	 */
+	public function test_get_datasets_should_retrieve_an_array_with_Dataset_values() {
+		$this->assertContainsOnlyType( 'EDD\\Reports\\Data\\Charts\\v2\\Dataset', $this->mock_Manifest->get_datasets() );
+	}
+
+	/**
+	 * @covers ::get_datasets()
+	 */
+	public function test_get_datasets_should_be_keyed_with_strings() {
+		$keys = array_keys( $this->mock_Manifest->get_datasets() );
+
+		$this->assertContainsOnlyType( 'int', $keys );
+	}
+
+	/**
 	 * Mocks a Manifest fixture.
 	 *
 	 * @return \EDD\Reports\Data\Charts\v2\Manifest
