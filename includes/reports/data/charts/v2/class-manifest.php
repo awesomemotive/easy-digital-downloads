@@ -281,7 +281,6 @@ class Manifest implements Error_Logger {
 				break;
 
 			case 'line':
-			default:
 				$handler = 'EDD\Reports\Data\Charts\v2\Line_Dataset';
 				break;
 
