@@ -81,7 +81,7 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	public function test_get_datasets_should_be_keyed_with_strings() {
 		$keys = array_keys( $this->mock_Manifest->get_datasets() );
 
-		$this->assertContainsOnlyType( 'int', $keys );
+		$this->assertContainsOnlyType( 'string', $keys );
 	}
 
 	/**
