@@ -84,17 +84,6 @@ abstract class Dataset implements Error_Logger {
 	}
 
 	/**
-	 * Retrieves the list of global fields.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array List of global fields.
-	 */
-	public function get_global_fields() {
-		return $this->global_fields;
-	}
-
-	/**
 	 * Retrieves the dataset ID.
 	 *
 	 * @since 3.0
@@ -158,6 +147,17 @@ abstract class Dataset implements Error_Logger {
 	 */
 	public function get_fields() {
 		return $this->fields;
+	}
+
+	/**
+	 * Retrieves the list of global fields.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array List of global fields.
+	 */
+	public function get_global_fields() {
+		return $this->global_fields;
 	}
 
 	/**
@@ -248,21 +248,19 @@ abstract class Dataset implements Error_Logger {
 
 		} else {
 
-			$first_key   = key( $data );
-			$value_count = count( $data[ $first_key ] );
-
-			foreach ( $data as $key => $value ) {
-				if ( isset( $value[1] ) ) {
+			foreach ( $data as $key => $values ) {
+				if ( is_array( $values ) && isset( $values[1] ) ) {
 					$processed[ $key ] = array(
-						'x' => $value[0] * 1000,
-						'y' => $value[1],
+						'x' => $values[0] * 1000,
+						'y' => $values[1],
 					);
 				} else {
 					$processed[ $key ] = array(
-						'x' => $value[0] * 1000
+						'x' => $values * 1000,
 					);
 				}
 			}
+
 		}
 
 		return $processed;
