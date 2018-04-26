@@ -111,6 +111,42 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_labels()
+	 * @covers ::set_labels()
+	 */
+	public function test_get_label_should_retrieve_labels_if_set() {
+		$expected = array( 'First', 'Second', 'Third', 'Fourth' );
+
+		$this->assertEqualSets( $expected, $this->mock_Manifest->get_labels() );
+	}
+
+	/**
+	 * @covers ::get_labels()
+	 * @covers ::set_labels()
+	 */
+	public function test_get_labels_should_retrieve_an_empty_array_if_not_set() {
+		$manifest = $this->get_Manifest_mock( 'test', array(
+			'id'    => 'test_endpoint',
+			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() {
+						return array(
+							'test' => array( 40, 20, 30, 10 ),
+						);
+					},
+					'type'    => 'pie',
+					'options' => array(
+						'cutoutPercentage' => 50,
+					),
+				),
+			)
+		) );
+
+		$this->assertEqualSets( array(), $manifest->get_labels() );
+	}
+
+	/**
 	 * @covers ::has_datasets()
 	 */
 	public function test_has_datasets_should_return_true_if_there_are_datasets() {
