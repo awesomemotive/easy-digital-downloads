@@ -1613,21 +1613,21 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get primary column
-		$primary  = $this->get_primary_column_name();
+		$primary = $this->get_primary_column_name();
 
 		// Get item to update (from database, not cache)
-		$item     = $this->get_item_raw( $primary, $item_id );
+		$item    = $this->get_item_raw( $primary, $item_id );
 
-		// Never update the primary key value
-		unset( $data[ $primary ] );
-
-		// Item does not exist to update, so try to add instead
+		// Bail if item does not exist to update
 		if ( empty( $item ) ) {
-			return $this->add_item( $data );
+			return false;
 		}
 
 		// Cast as an array for easier manipulation
 		$item = (array) $item;
+
+		// Never update the primary key value
+		unset( $data[ $primary ] );
 
 		// Splice new data into item, and cut out non-keys for meta
 		$columns = $this->get_column_names();
