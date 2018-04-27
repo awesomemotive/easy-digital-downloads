@@ -3,12 +3,14 @@
  * Order Object.
  *
  * @package     EDD
- * @subpackage  Classes/Notes
+ * @subpackage  Orders
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
 namespace EDD\Orders;
+
+use EDD\Base_Object;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Order {
+class Order extends Base_Object {
 
 	/**
 	 * Order ID.
@@ -147,22 +149,6 @@ class Order {
 	 * @var   array
 	 */
 	protected $items;
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 *
-	 * @param object $order Order data directly from the database.
-	 */
-	public function __construct( $order ) {
-		if ( is_object( $order ) ) {
-			foreach ( get_object_vars( $order ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
-		}
-	}
 
 	/**
 	 * Retrieve order ID.
