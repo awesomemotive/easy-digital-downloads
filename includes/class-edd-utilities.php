@@ -169,6 +169,8 @@ class EDD_Utilities {
 	/**
 	 * Retrieves a date instance for the WP timezone (and offset) based on the given date string.
 	 *
+	 * Incoming time is expected to be UTC.
+	 *
 	 * @since 3.0
 	 *
 	 * @param string $date_string  Optional. Date string. Default 'now'.
