@@ -1,24 +1,26 @@
 <?php
 /**
- * Order Discount Object.
+ * Order Adjustment Object.
  *
  * @package     EDD
- * @subpackage  Classes/Notes
+ * @subpackage  Orders
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
 namespace EDD\Orders;
 
+use EDD\Base_Object;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Order_Discount Class.
+ * Order_Adjustment Class.
  *
  * @since 3.0
  */
-class Order_Discount {
+class Order_Adjustment extends Base_Object {
 
 	/**
 	 * Order Discount ID.
@@ -45,36 +47,20 @@ class Order_Discount {
 	protected $object_type;
 
 	/**
-	 * Discount ID.
+	 * Type ID.
 	 *
 	 * @since 3.0
 	 * @var   int
 	 */
-	protected $discount_id;
+	protected $type_id;
 
 	/**
-	 * Discount amount.
+	 * Type.
 	 *
 	 * @since 3.0
-	 * @var   float
+	 * @var   string
 	 */
-	protected $amount;
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 *
-	 * @param object $order_discount Order discount data directly from the database.
-	 */
-	public function __construct( $order_discount ) {
-		if ( is_object( $order_discount ) ) {
-			foreach ( get_object_vars( $order_discount ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
-		}
-	}
+	protected $type;
 
 	/**
 	 * Retrieve order discount ID.
