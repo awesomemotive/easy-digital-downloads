@@ -1483,14 +1483,14 @@ function edd_notes_migration() {
 	}
 
 	if ( 1 === $step ) {
-		if ( ! EDD()->notes->table_exists( EDD()->notes->table_name ) ) {
-			@EDD()->notes->create_table();
-			edd_debug_log( EDD()->notes->table_name . ' created successfully' );
+		$notes_db = edd_get_component_interface( 'note', 'table' );
+		if ( ! $notes_db->exists() ) {
+			@$notes_db->create();
 		}
 
-		if ( ! EDD()->note_meta->table_exists( EDD()->note_meta->table_name ) ) {
-			@EDD()->note_meta->create_table();
-			edd_debug_log( EDD()->note_meta->table_name . ' created successfully' );
+		$note_meta_db = edd_get_component_interface( 'note', 'meta' );
+		if ( ! $note_meta_db->exists() ) {
+			@$note_meta_db->create();
 		}
 	}
 
