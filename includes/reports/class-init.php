@@ -75,32 +75,38 @@ final class Init {
 		 *
 		 *     add_action( 'edd_reports_init', function( $reports ) {
 		 *
-		 *         $reports->add_report( 'test', array(
-		 *             'label'     => 'Test',
-		 *             'priority'  => 11,
-		 *             'endpoints' => array(
+		 *         try {
+		 *             $reports->add_report( 'test', array(
+		 *                 'label'     => 'Test',
+		 *                 'priority'  => 11,
+		 *                 'endpoints' => array(
 		 *
-		 *                 // Endpoints supporting multiple view groups can be reused:
-		 *                 'tiles'  => array( 'test_endpoint', ... ),
-		 *                 'tables' => array( 'test_endpoint' ),
-		 *             ),
-		 *         ) );
-		 *
-		 *         $reports->register_endpoint( 'test_endpoint', array(
-		 *             'label' => 'Test Endpoint',
-		 *             'views' => array(
-		 *
-		 *                 // Possible to register a single endpoint for multiple view groups.
-		 *                 'tile' => array(
-		 *                     'data_callback' => '__return_true',
-		 *                     'display_args'  => array(
-		 *                         'context'          => 'secondary',
-		 *                         'comparison_label' => 'Filtered by ...',
-		 *                     ),
+		 *                     // Endpoints supporting multiple view groups can be reused:
+		 *                     'tiles'  => array( 'test_endpoint', ... ),
+		 *                     'tables' => array( 'test_endpoint' ),
 		 *                 ),
-		 *                 'table' => array( ... ),
-		 *             ),
-		 *         ) );
+		 *             ) );
+		 *
+		 *             $reports->register_endpoint( 'test_endpoint', array(
+		 *                 'label' => 'Test Endpoint',
+		 *                 'views' => array(
+		 *
+		 *                     // Possible to register a single endpoint for multiple view groups.
+		 *                     'tile' => array(
+		 *                         'data_callback' => '__return_true',
+		 *                         'display_args'  => array(
+		 *                             'context'          => 'secondary',
+		 *                             'comparison_label' => 'Filtered by ...',
+		 *                         ),
+		 *                     ),
+		 *                     'table' => array( ... ),
+		 *                 ),
+		 *             ) );
+		 *         } catch ( \EDD_Exception $exception ) {
+		 *
+		 *             edd_debug_log_exception( $exception );
+		 *
+		 *         }
 		 *
 		 *     } );
 		 *
