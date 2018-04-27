@@ -1,5 +1,13 @@
 <?php
-namespace EDD\Reports\Data\Charts\v2;
+/**
+ * Reports API - Dataset class
+ *
+ * @package     EDD
+ * @subpackage  Reports\Data
+ * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0
+ */namespace EDD\Reports\Data\Charts\v2;
 
 use EDD\Reports\Data\Chart_Endpoint;
 use EDD\Utils\Error_Logger_Interface as Error_Logger;

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Reports API - Bar Dataset class
+ *
+ * @package     EDD
+ * @subpackage  Reports\Data
+ * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0
+ */
 namespace EDD\Reports\Data\Charts\v2;
 
 /**
