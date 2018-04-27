@@ -163,6 +163,7 @@ function edd_register_core_reports( $reports ) {
 
 	try {
 
+		// Endpoint whitelisted for display testing purposes pre-implementation.
 		$reports->register_endpoint( 'test_tile', array(
 			'label' => 'Test Tile',
 			'views' => array(
