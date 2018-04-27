@@ -13,6 +13,10 @@ class Tests_Privacy extends EDD_UnitTestCase {
 		parent::tearDown();
 	}
 
+	public function test_string_mask_0_char() {
+		$this->assertSame( '', edd_mask_string( '' ) );
+	}
+
 	public function test_string_mask_1_char() {
 		$this->assertSame( 'a', edd_mask_string( 'a' ) );
 	}
@@ -23,6 +27,10 @@ class Tests_Privacy extends EDD_UnitTestCase {
 
 	public function test_string_mask_5_char() {
 		$this->assertSame( 'h***o', edd_mask_string( 'hello' ) );
+	}
+
+	public function test_domain_mask_0_parts() {
+		$this->assertSame( '', edd_mask_domain( '' ) );
 	}
 
 	public function test_domain_mask_2_parts() {
@@ -41,7 +49,11 @@ class Tests_Privacy extends EDD_UnitTestCase {
 		$this->assertSame( 'e*****e.i*****d.org.uk', edd_mask_domain( 'example.invalid.org.uk' ) );
 	}
 
-	public function test_email_mask_() {
+	public function test_email_mask() {
 		$this->assertSame( 'a***n@e*****e.org', edd_pseudo_mask_email( 'admin@example.org' ) );
+	}
+
+	public function test_email_mask_not_email() {
+		$this->assertSame( 'test-string', edd_pseudo_mask_email( 'test-string' ) );
 	}
 }
