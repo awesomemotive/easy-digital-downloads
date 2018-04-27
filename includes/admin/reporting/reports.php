@@ -317,99 +317,12 @@ function edd_reports_earnings() {
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
-
-	edd_reports_graph();
-	$data = edd_get_earnings_report_data();
-
-	$earnings = $sales = array();
-
-	for ( $i = 0; $i <= 20; $i++ ) {
-		$earnings[ $i ][] = current_time( 'timestamp' ) + ( DAY_IN_SECONDS * $i );
-		$earnings[ $i ][] = $i + rand( 1, 5 );
-	}
-
-	for ( $i = 0; $i <= 20; $i++ ) {
-		$sales[ $i ][] = current_time( 'timestamp' ) + 3600 + ( DAY_IN_SECONDS * $i );
-		$sales[ $i ][] = $i + rand( 1, 5 );
-	}
-
 	?>
-	<canvas id="edd-reports-graph"></canvas>
-
-	<script type="application/javascript">
-
-		var date = moment( 'today', 'MMMM DD YYYY' );
-
-		var lineChartData = {
-			datasets: [{
-				label: "Earnings",
-				borderColor: 'rgb(237,194,64)',
-				backgroundColor: 'rgb(237,194,64)',
-				fill: false,
-				data: [
-					<?php foreach ( $earnings as $index => $values ) : ?>
-					{
-						x: moment( <?php echo $values[0] * 1000; ?> ),
-						y: <?php echo $values[1]; ?>
-					},
-					<?php endforeach; ?>
-				],
-			}, {
-				label: "Sales",
-				borderColor: 'rgb(175,216,248)',
-				backgroundColor: 'rgb(175,216,248)',
-				fill: false,
-				data: [
-					<?php foreach ( $sales as $index => $values ) : ?>
-					{
-						x: moment( <?php echo $values[0] * 1000; ?> ),
-						y: <?php echo $values[1]; ?>
-					},
-					<?php endforeach; ?>
-				],
-			}]
-		};
-
-		lineChartOptions = {
-			responsive: true,
-			hoverMode: 'index',
-			stacked: false,
-			title:{
-				display: true,
-				text: 'Earnings Over Time'
-			},
-			scales: {
-				yAxes: [{
-					type: 'linear',
-					display: true,
-					position: "left",
-				} ],
-				xAxes: [{
-					type: 'time',
-					display: true,
-					time: {
-						min: moment().startOf( 'month' ),
-						max: moment().endOf( 'month' ),
-						unit: 'day',
-						displayFormats: {
-							day: 'MMM D',
-						},
-						tooltipFormat: 'MMMM Do, YYYY',
-					},
-				} ],
-			}
-		};
-
-		lineChartConfig = {
-			data: lineChartData,
-			options: lineChartOptions
-		};
-
-		myLine = Chart.Line( $( '#edd-reports-graph' ), lineChartConfig );
-
-	</script>
-
+	<div class="tablenav top">
+		<div class="alignleft actions"><?php edd_report_views(); ?></div>
+	</div>
 	<?php
+	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
