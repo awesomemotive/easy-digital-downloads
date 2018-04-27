@@ -35,6 +35,7 @@ function edd_reports_page() {
 	$active_tab = Reports\get_active_tab();
 	?>
 	<style>
+		/* Vertical tabs style overrides for Reports only */
 		#edd-item-wrapper {
 			max-width: 100%;
 		}
