@@ -38,7 +38,7 @@ Handling this data also allows us to:
 		__( 'If you choose to create an account with us, your name, address, and email address, which will be used to populate the checkout for future orders.', 'easy-digital-downloads' ),
 	);
 
-	$additional_collection = apply_filters( 'edd_privacy_policy_additinal_collection', $additional_collection );
+	$additional_collection = apply_filters( 'edd_privacy_policy_additional_collection', $additional_collection );
 
 	$content .= __( 'Additionally we may also collect the following information:', 'easy-digital-downloads' ) . "\n";
 	if ( ! empty( $additional_collection ) ) {
