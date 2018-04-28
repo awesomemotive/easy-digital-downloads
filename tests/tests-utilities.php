@@ -93,7 +93,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
 		$result = self::$utils->get_registry( 'reports' );
 
-		$this->assertInstanceOf( '\EDD\Reports\Data\Reports_Registry', $result );
+		$this->assertInstanceOf( '\EDD\Reports\Data\Report_Registry', $result );
 	}
 
 	/**

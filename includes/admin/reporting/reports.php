@@ -157,7 +157,7 @@ function edd_reports_page() {
  *
  * @since 3.0
  *
- * @param \EDD\Reports\Data\Reports_Registry $reports Reports registry.
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
 function edd_register_core_reports( $reports ) {
 

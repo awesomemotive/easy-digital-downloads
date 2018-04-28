@@ -8,20 +8,20 @@ if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 new \EDD\Reports\Init();
 
 /**
- * Tests for the Reports registry API.
+ * Tests for the Report registry API.
  *
  * @group edd_registry
  * @group edd_reports
  *
- * @coversDefaultClass \EDD\Reports\Data\Reports_Registry
+ * @coversDefaultClass \EDD\Reports\Data\Report_Registry
  */
-class Reports_Registry_Tests extends \EDD_UnitTestCase {
+class Report_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
-	 * Reports registry fixture.
+	 * Report registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Reports\Data\Reports_Registry
+	 * @var    \EDD\Reports\Data\Report_Registry
 	 */
 	protected $registry;
 
@@ -31,7 +31,7 @@ class Reports_Registry_Tests extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->registry = new \EDD\Reports\Data\Reports_Registry();
+		$this->registry = new \EDD\Reports\Data\Report_Registry();
 	}
 
 	/**

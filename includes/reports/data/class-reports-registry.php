@@ -1,6 +1,6 @@
 <?php
 /**
- * Reports API - Reports Registry
+ * Reports API - Report Registry
  *
  * @package     EDD
  * @subpackage  Reports
@@ -24,7 +24,7 @@ use EDD\Reports;
  * @method array get_report( string $report_id )
  * @method void  remove_report( string $report_id )
  */
-class Reports_Registry extends Reports\Registry implements Utils\Static_Registry {
+class Report_Registry extends Reports\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.
@@ -35,23 +35,23 @@ class Reports_Registry extends Reports\Registry implements Utils\Static_Registry
 	public static $item_error_label = 'report';
 
 	/**
-	 * The one true Reports registry instance.
+	 * The one true Report registry instance.
 	 *
 	 * @since 3.0
-	 * @var   Reports_Registry
+	 * @var   Report_Registry
 	 */
 	private static $instance;
 
 	/**
-	 * Retrieves the one true Reports registry instance.
+	 * Retrieves the one true Report registry instance.
 	 *
 	 * @since 3.0
 	 *
-	 * @return Reports_Registry Reports registry instance.
+	 * @return Report_Registry Report registry instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new Reports_Registry();
+			self::$instance = new Report_Registry();
 		}
 
 		return self::$instance;

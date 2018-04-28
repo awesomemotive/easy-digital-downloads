@@ -39,7 +39,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		unset( $_REQUEST['filter_to'] );
 		unset( $_REQUEST['range'] );
 
-		/** @var \EDD\Reports\Data\Reports_Registry|\WP_Error $registry */
+		/** @var \EDD\Reports\Data\Report_Registry|\WP_Error $registry */
 		$registry = EDD()->utils->get_registry( 'reports' );
 		$registry->exchangeArray( array() );
 

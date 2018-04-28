@@ -92,7 +92,7 @@ function get_endpoint( $endpoint_id, $view_type ) {
  *
  * @since 3.0
  *
- * @see \EDD\Reports\Data\Reports_Registry::add_report()
+ * @see \EDD\Reports\Data\Report_Registry::add_report()
  *
  * @param string $report_id   Report ID.
  * @param array  $attributes {
@@ -106,7 +106,7 @@ function get_endpoint( $endpoint_id, $view_type ) {
  * @return bool True if the report was successfully registered, otherwise false.
  */
 function add_report( $report_id, $attributes ) {
-	/** @var Data\Reports_Registry|\WP_Error $registry */
+	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -133,7 +133,7 @@ function add_report( $report_id, $attributes ) {
  *
  * @since 3.0
  *
- * @see \EDD\Reports\Data\Reports_Registry::build_report()
+ * @see \EDD\Reports\Data\Report_Registry::build_report()
  *
  * @param string $report_id       Report ID.
  * @param bool   $build_endpoints Optional. Whether to build the endpoints (includes registering
@@ -142,7 +142,7 @@ function add_report( $report_id, $attributes ) {
  * @return Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
 function get_report( $report_id, $build_endpoints = true ) {
-	/** @var Data\Reports_Registry|\WP_Error $registry */
+	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {
@@ -164,7 +164,7 @@ function get_report( $report_id, $build_endpoints = true ) {
  * @return array List of report tabs, otherwise an empty array.
  */
 function get_tabs() {
-	/** @var Data\Reports_Registry|\WP_Error $registry */
+	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
 	if ( is_wp_error( $registry ) ) {

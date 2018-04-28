@@ -64,7 +64,7 @@ final class Init {
 	public function __construct() {
 		self::bootstrap();
 
-		$reports = Data\Reports_Registry::instance();
+		$reports = Data\Report_Registry::instance();
 
 		/**
 		 * Fires when the Reports API is initialized.
@@ -122,7 +122,7 @@ final class Init {
 		 *
 		 * @since 3.0
 		 *
-		 * @param Data\Reports_Registry $reports Reports registry instance,
+		 * @param Data\Report_Registry $reports Report registry instance,
 		 *                                       passed by reference.
 		 */
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
