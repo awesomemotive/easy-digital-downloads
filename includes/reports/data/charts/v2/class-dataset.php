@@ -3,7 +3,7 @@
  * Reports API - Dataset class
  *
  * @package     EDD
- * @subpackage  Reports\Data
+ * @subpackage  Reports\Data\Charts
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
@@ -16,6 +16,8 @@ use EDD\Utils\Error_Logger_Interface as Error_Logger;
  * Represents the manifestation of a ChartJS v2 dataset in PHP form.
  *
  * @since 3.0
+ *
+ * @see Error_Logger_Interface
  */
 abstract class Dataset implements Error_Logger {
 
