@@ -93,11 +93,11 @@ class EDD_Utilities {
 
 				if ( ! did_action( 'edd_reports_init' ) ) {
 
-					_doing_it_wrong( __FUNCTION__, 'The Reports registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+					_doing_it_wrong( __FUNCTION__, 'The Report registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
 
-				} elseif ( class_exists( '\EDD\Reports\Data\Reports_Registry' ) ) {
+				} elseif ( class_exists( '\EDD\Reports\Data\Report_Registry' ) ) {
 
-					$registry = \EDD\Reports\Data\Reports_Registry::instance();
+					$registry = \EDD\Reports\Data\Report_Registry::instance();
 
 				}
 				break;

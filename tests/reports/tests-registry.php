@@ -8,7 +8,7 @@ if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 new \EDD\Reports\Init();
 
 /**
- * Tests for the Reports registry API.
+ * Tests for the Report registry API.
  *
  * @group edd_registry
  * @group edd_reports
@@ -18,10 +18,10 @@ new \EDD\Reports\Init();
 class Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
-	 * Reports registry fixture.
+	 * Report registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Reports\Data\Reports_Registry
+	 * @var    \EDD\Reports\Data\Report_Registry
 	 */
 	protected $registry;
 
