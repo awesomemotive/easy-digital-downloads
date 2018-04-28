@@ -13,12 +13,12 @@ namespace EDD\Reports\Exceptions;
 use EDD\Utils\Exceptions;
 
 /**
- * Implements an Invalid_Argument exception thrown when a given
- * argument or parameter is invalid.
+ * Implements an Invalid_View_Parameter exception thrown when a given
+ * view parameter is invalid.
  *
  * @since 3.0
  *
- * @see \InvalidArgumentException
+ * @see Invalid_Parameter
  * @see \EDD_Exception
  */
 class Invalid_View_Parameter extends Invalid_Parameter implements \EDD_Exception {
