@@ -47,7 +47,7 @@ class Init_Tests extends \EDD_UnitTestCase {
 			array( $reports_dir . 'data/class-base-object.php' ),
 
 			// Reports.
-			array( $reports_dir . 'data/class-reports-registry.php' ),
+			array( $reports_dir . 'data/class-report-registry.php' ),
 			array( $reports_dir . 'data/class-report.php' ),
 
 			// Endpoints.

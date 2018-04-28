@@ -38,7 +38,7 @@ final class Init {
 		require_once $reports_dir . 'data/class-base-object.php';
 
 		// Reports.
-		require_once $reports_dir . 'data/class-reports-registry.php';
+		require_once $reports_dir . 'data/class-report-registry.php';
 		require_once $reports_dir . 'data/class-report.php';
 
 		// Endpoints.
