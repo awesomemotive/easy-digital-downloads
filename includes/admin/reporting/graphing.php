@@ -630,10 +630,9 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 function edd_reports_graph_controls() {
 	$date_options = Reports\get_dates_filter_options();
 
-	$dates   = edd_get_report_dates();
-	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
-	$view    = edd_get_reporting_view();
-	$taxes   = ! empty( $_GET['exclude_taxes'] ) ? false : true;
+	$dates = edd_get_report_dates();
+	$view  = edd_get_reporting_view();
+	$taxes = ! empty( $_GET['exclude_taxes'] ) ? false : true;
 
 	if( empty( $dates['day_end'] ) ) {
 		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
@@ -652,13 +651,13 @@ function edd_reports_graph_controls() {
 					<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
 				<?php endif; ?>
 
-				<select id="edd-graphs-date-options" name="range">
+				<select class="edd-graphs-date-options" name="range">
 				<?php foreach ( $date_options as $key => $option ) : ?>
 						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
 					<?php endforeach; ?>
 				</select>
 
-				<div id="edd-date-range-options" <?php echo $display; ?>>
+				<div class="edd-date-range-options">
 					<?php
 					$dates_values = \EDD\Reports\get_filter_value( 'dates' );
 

@@ -990,9 +990,9 @@ jQuery(document).ready(function ($) {
 		date_options : function() {
 
 			// Show hide extended date options
-			$( '#edd-graphs-date-options' ).change( function() {
-				var $this = $(this),
-					date_range_options = $( '#edd-date-range-options' );
+			$( '.edd-graphs-date-options' ).on( 'change', function( event ) {
+				var	$this = $( this ),
+					date_range_options = $this.next( '.edd-date-range-options');
 
 				if ( 'other' === $this.val() ) {
 					date_range_options.removeClass( 'screen-reader-text' );
