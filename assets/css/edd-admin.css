@@ -1039,11 +1039,11 @@ td.edd_order_price {
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-#edd-graphs-date-options,
-#edd-date-range-options {
+.edd-graphs-date-options,
+.edd-date-range-options {
 	float: left;
 }
-#edd-date-range-options span {
+.edd-date-range-options span {
 	float: left;
 	line-height: 24px;
 	height: 24px;
