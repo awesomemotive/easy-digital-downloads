@@ -35,12 +35,9 @@ final class EDD_Amazon_Payments {
 	 */
 	private function __construct() {
 
-		if ( version_compare( phpversion(), 5.3, '<' ) ) {
-			// The Amazon Login & Pay libraries require PHP 5.3
-			return;
-		}
-
-		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
+		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] )
+			? sanitize_text_field( $_REQUEST['amazon_reference_id'] )
+			: '';
 
 		// Run this separate so we can ditch as early as possible
 		$this->register();
