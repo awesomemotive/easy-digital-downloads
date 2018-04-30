@@ -130,6 +130,31 @@ final class Easy_Digital_Downloads {
 	public $components = array();
 
 	/**
+	 * EDD Requirements array
+	 *
+	 * @var array
+	 * @since 3.0
+	 */
+	private $requirements = array(
+
+		// PHP
+		'php' => array(
+			'minimum' => '5.3.0',
+			'current' => false,
+			'checked' => false,
+			'ok'      => false
+		),
+
+		// WordPress
+		'wp' => array(
+			'minimum' => '4.4.0',
+			'current' => false,
+			'checked' => false,
+			'ok'      => false
+		)
+	);
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -151,6 +176,7 @@ final class Easy_Digital_Downloads {
 			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
 
 			// Bootstrap
+			self::$instance->setup_requirements();
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->setup_components();
@@ -222,6 +248,47 @@ final class Easy_Digital_Downloads {
 				return isset( $this->{$key} )
 					? $this->{$key}
 					: null;
+		}
+	}
+
+	/**
+	 * Setup plugin requirements
+	 *
+	 * @access private
+	 * @since 3.0
+	 */
+	private function setup_requirements() {
+
+		// Loop through requirements
+		foreach ( $this->requirements as $dependency => $properties ) {
+
+			// Which dependency are we checking?
+			switch ( $dependency ) {
+
+				// PHP
+				case 'php' :
+					$version = phpversion();
+					break;
+
+				// WP
+				case 'wp' :
+					$version = get_bloginfo( 'version' );
+					break;
+
+				// Unknown
+				default :
+					$version = false;
+					break;
+			}
+
+			// Merge to original array
+			if ( ! empty( $version ) ) {
+				$this->requirements[ $dependency ] = array_merge( $this->requirements[ $dependency ], array(
+					'current' => $version,
+					'checked' => true,
+					'ok'      => version_compare( $version, $properties['minimum'], '>=' )
+				) );
+			}
 		}
 	}
 
