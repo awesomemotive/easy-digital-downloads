@@ -178,8 +178,7 @@ final class Easy_Digital_Downloads {
 			// Bootstrap
 			self::$instance->setup_requirements();
 			self::$instance->setup_constants();
-			self::$instance->includes();
-			self::$instance->setup_components();
+			self::$instance->setup_files();
 
 			// APIs
 			self::$instance->roles         = new EDD_Roles();
@@ -334,15 +333,38 @@ final class Easy_Digital_Downloads {
 	 * @since 1.4
 	 * @return void
 	 */
-	private function includes() {
+	private function setup_files() {
+		$this->setup_options();
+		$this->setup_utilities();
+		$this->setup_reports();
+		$this->setup_components();
+		$this->setup_backcompat();
+		$this->setup_objects();
+		$this->setup_functions();
 
-		// Settings
-		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
-		$GLOBALS['edd_options'] = edd_get_settings();
+		// Admin
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			$this->setup_admin();
+		} else {
+			$this->setup_frontend();
+		}
+	}
 
-		// Utilities
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-utilities.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
+	/**
+	 * Setup all of the custom database tables
+	 *
+	 * This method invokes all of the classes for each custom database table,
+	 * and returns them in an array for easier testing.
+	 *
+	 * In a normal request, this method is called extremely early in EDD's load
+	 * order, to ensure these tables have been created & upgraded before any
+	 * other utility occurs on them (query, migration, etc...)
+	 *
+	 * @access public
+	 * @since 3.0
+	 * @return array
+	 */
+	private function setup_components() {
 
 		// Component helpers are loaded before everything
 		require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
@@ -406,13 +428,85 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-adjustment.php';
 
+		// Call the component setup function
+		edd_setup_components();
+	}
+
+	/**
+	 * Setup all EDD settings & options
+	 *
+	 * @since 3.0
+	 */
+	private function setup_options() {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
+		$GLOBALS['edd_options'] = edd_get_settings();
+	}
+
+	/**
+	 * Setup utilities
+	 *
+	 * @since 3.0
+	 */
+	private function setup_utilities() {
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-utilities.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
+	}
+
+	/**
+	 * Setup all EDD settings & options
+	 *
+	 * @since 3.0
+	 */
+	private function setup_reports() {
+		require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
+	}
+
+	/**
+	 * Setup backwards compatibility
+	 *
+	 * @since 3.0
+	 */
+	private function setup_backcompat() {
+
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
 
-		// Deprecated functions
+		// Original Classes
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
+
+		// Classes
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
+
+		// Deprecated Functions
 		if ( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		}
+	}
+
+	/**
+	 * Setup objects
+	 *
+	 * @since 3.0
+	 */
+	private function setup_objects() {
+
+		// CLI
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
 		}
 
 		// API
@@ -427,29 +521,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-
-		// Compat Classes
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
-
-		// CLI
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
-		}
-
-		// Classes
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
@@ -483,8 +554,14 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
+	}
 
-		// Functions
+	/**
+	 * Setup functions
+	 *
+	 * @since 3.0
+	 */
+	private function setup_functions() {
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
@@ -508,73 +585,65 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
-		require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
-
-		// Admin
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customers.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
-		} else {
-			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
-			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
-		}
-
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
+
+		// Must always be loaded to ensure cron runs
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
 	}
 
 	/**
-	 * Setup all of the custom database tables
+	 * Setup administration
 	 *
-	 * This method invokes all of the classes for each custom database table,
-	 * and returns them in an array for easier testing.
-	 *
-	 * In a normal request, this method is called extremely early in EDD's load
-	 * order, to ensure these tables have been created & upgraded before any
-	 * other utility occurs on them (query, migration, etc...)
-	 *
-	 * @access public
 	 * @since 3.0
-	 * @return array
 	 */
-	private function setup_components() {
-		edd_setup_components();
+	private function setup_admin() {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+	}
+
+	/**
+	 * Setup front-end specific code
+	 *
+	 * @since 3.0
+	 */
+	private function setup_frontend() {
+		require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
+		require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 	}
 
 	/**
@@ -584,40 +653,40 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	public function load_textdomain() {
-		global $wp_version;
 
 		/*
-		 * Due to the introduction of language packs through translate.wordpress.org, loading our textdomain is complex.
+		 * Due to the introduction of language packs through translate.wordpress.org,
+		 * loading our textdomain is complex.
 		 *
 		 * In v2.4.6, our textdomain changed from "edd" to "easy-digital-downloads".
 		 *
-		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
+		 * To support existing translation files from before the change, we must
+		 * look for translation files in several places and under several names.
 		 *
 		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
 		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
 		 * - wp-content/plugins/easy-digital-downloads/languages/
 		 *
-		 * In wp-content/languages/edd/ we must look for "easy-digital-downloads-{lang}_{country}.mo"
-		 * In wp-content/languages/edd/ we must look for "edd-{lang}_{country}.mo" as that was the old file naming convention
-		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
-		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for both naming conventions. This is done by filtering "load_textdomain_mofile"
+		 * In wp-content/languages/edd/ we must look for:
+		 * - "easy-digital-downloads-{lang}_{country}.mo"
 		 *
+		 * In wp-content/languages/edd/ we must look for:
+		 * - "edd-{lang}_{country}.mo" as that was the old file naming convention
+		 *
+		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for:
+		 * - "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
+		 *
+		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for:
+		 * - both naming conventions. This is done by filtering "load_textdomain_mofile"
 		 */
-
 		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
 		// Set filter for plugin's languages directory.
-		$edd_lang_dir  = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
-		$edd_lang_dir  = apply_filters( 'edd_languages_directory', $edd_lang_dir );
-
-		// Traditional WordPress plugin locale filter.
-
-		$get_locale = get_locale();
-
-		if ( $wp_version >= 4.7 ) {
-
-			$get_locale = get_user_locale();
-		}
+		$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
+		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+		$get_locale   = function_exists( 'get_user_locale' )
+			? get_user_locale()
+			: get_locale();
 
 		/**
 		 * Defines the plugin language locale used in AffiliateWP.
@@ -625,42 +694,40 @@ final class Easy_Digital_Downloads {
 		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 		 *                  otherwise uses `get_locale()`.
 		 */
-		$locale        = apply_filters( 'plugin_locale',  $get_locale, 'easy-digital-downloads' );
-		$mofile        = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
+		$locale = apply_filters( 'plugin_locale',  $get_locale, 'easy-digital-downloads' );
+		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
-		$mofile_global1 = WP_LANG_DIR . '/edd/easy-digital-downloads-' . $locale . '.mo';
+		$mofile_global1 = WP_LANG_DIR . "/edd/easy-digital-downloads-{$locale}.mo";
 
 		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo
-		$mofile_global2 = WP_LANG_DIR . '/edd/edd-' . $locale . '.mo';
+		$mofile_global2 = WP_LANG_DIR . "/edd/edd-{$locale}.mo";
 
 		// Look in wp-content/languages/plugins/easy-digital-downloads
-		$mofile_global3 = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
+		$mofile_global3 = WP_LANG_DIR . "/plugins/easy-digital-downloads/{$mofile}";
 
+		// Try to load from first global location
 		if ( file_exists( $mofile_global1 ) ) {
-
 			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
 
+		// Try to load from next global location
 		} elseif ( file_exists( $mofile_global2 ) ) {
-
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
 
+		// Try to load from next global location
 		} elseif ( file_exists( $mofile_global3 ) ) {
-
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 
+		// Load the default language files
 		} else {
-
-			// Load the default language files.
 			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
-
 	}
 
 	/**
 	 * Load a .mo file for the old textdomain if one exists.
 	 *
-	 * h/t: https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
+	 * @see https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
 	 */
 	function load_old_textdomain( $mofile, $textdomain ) {
 
@@ -670,11 +737,8 @@ final class Easy_Digital_Downloads {
 
 		return $mofile;
 	}
-
 }
-
 endif; // End if class_exists check.
-
 
 /**
  * The main function for that returns Easy_Digital_Downloads
