@@ -187,7 +187,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertInternalType( 'string', $payment->completed_date );
-		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $payment->completed_date ) ) );
+		$this->assertEquals( date( 'Y-m-d H:i' ), date( 'Y-m-d H:i', strtotime( $payment->completed_date ) ) );
 
 	}
 

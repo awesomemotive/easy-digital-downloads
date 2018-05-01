@@ -990,14 +990,14 @@ jQuery(document).ready(function ($) {
 		date_options : function() {
 
 			// Show hide extended date options
-			$( '#edd-graphs-date-options' ).change( function() {
-				var $this = $(this),
-					date_range_options = $( '#edd-date-range-options' );
+			$( '.edd-graphs-date-options' ).on( 'change', function( event ) {
+				var	$this = $( this ),
+					date_range_options = $this.next( '.edd-date-range-options');
 
 				if ( 'other' === $this.val() ) {
-					date_range_options.show();
+					date_range_options.removeClass( 'screen-reader-text' );
 				} else {
-					date_range_options.hide();
+					date_range_options.addClass( 'screen-reader-text' );
 				}
 			});
 
@@ -2170,6 +2170,11 @@ jQuery(document).ready(function ($) {
 			$('#add-customer-note').click();
 		}
 	});
+
+	// Enable reports meta box toggle states.
+	if ( typeof postboxes !== 'undefined' && /edd-reports/.test( pagenow ) ) {
+		postboxes.add_postbox_toggles( pagenow );
+	}
 
 });
 
