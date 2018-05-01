@@ -61,8 +61,66 @@ class EDD_Utilities {
 	private function includes() {
 		$utils_dir = EDD_PLUGIN_DIR . 'includes/utils/';
 
+		// Interfaces.
+		require_once $utils_dir . 'interface-static-registry.php';
+		require_once $utils_dir . 'interface-error-logger.php';
+
+		// Exceptions.
+		require_once $utils_dir . 'class-edd-exception.php';
+		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
+		require_once $utils_dir . 'exceptions/class-invalid-argument.php';
+		require_once $utils_dir . 'exceptions/class-invalid-parameter.php';
+
 		// Date management.
 		require_once $utils_dir . 'class-date.php';
+
+		// Registry.
+		require_once $utils_dir . 'class-registry.php';
+	}
+
+	/**
+	 * Retrieves a given registry instance by name.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $name Registry name.
+	 * @return \EDD\Utils\Registry|\WP_Error The registry instance if it exists, otherwise a WP_Error..
+	 */
+	public function get_registry( $name ) {
+
+		switch( $name ) {
+			case 'reports':
+
+				if ( ! did_action( 'edd_reports_init' ) ) {
+
+					_doing_it_wrong( __FUNCTION__, 'The Report registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+
+				} elseif ( class_exists( '\EDD\Reports\Data\Report_Registry' ) ) {
+
+					$registry = \EDD\Reports\Data\Report_Registry::instance();
+
+				}
+				break;
+
+			case 'reports:endpoints':
+
+				if ( ! did_action( 'edd_reports_init' ) ) {
+
+					_doing_it_wrong( __FUNCTION__, 'The Endpoints registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+
+				} elseif ( class_exists( '\EDD\Reports\Data\Endpoint_Registry' ) ) {
+
+					$registry = \EDD\Reports\Data\Endpoint_Registry::instance();
+
+				}
+				break;
+
+			default:
+				$registry = new \WP_Error( 'invalid_registry', "The '{$name}' registry does not exist." );
+				break;
+		}
+
+		return $registry;
 	}
 
 	/**
@@ -111,16 +169,22 @@ class EDD_Utilities {
 	/**
 	 * Retrieves a date instance for the WP timezone (and offset) based on the given date string.
 	 *
+	 * Incoming time is expected to be UTC.
+	 *
 	 * @since 3.0
 	 *
-	 * @param string $date_string Optional. Date string. Default 'now'.
-	 * @param string $timezone    Optional. Timezone to generate the Carbon instance for.
-	 *                            Default is the timezone set in WordPress settings.
+	 * @param string $date_string  Optional. Date string. Default 'now'.
+	 * @param string $timezone     Optional. Timezone to generate the Carbon instance for.
+	 *                             Default is the timezone set in WordPress settings.
+	 * @param bool   $apply_offset Optional. Whether to apply the offset in seconds to the generated
+	 *                             date. Default true.
 	 * @return \EDD\Utils\Date Date instance.
 	 */
-	public function date( $date_string = 'now' ) {
+	public function date( $date_string = 'now', $timezone = null, $apply_offset = true ) {
 
-		$timezone = edd_get_timezone();
+		if ( null === $timezone ) {
+			$timezone = edd_get_timezone();
+		}
 
 		/*
 		 * Create the DateTime object with the "local" WordPress timezone.
@@ -129,6 +193,17 @@ class EDD_Utilities {
 		 * convert the UNIX timestamp, it just lays the groundwork for deriving the offset.
 		 */
 		$date = new EDD\Utils\Date( $date_string, new DateTimezone( $timezone ) );
+
+		if ( false === $apply_offset ) {
+			/*
+			 * The offset is automatically applied when the Date object is instantiated.
+			 *
+			 * If $apply_offset is false, the interval needs to be removed again after the fact.
+			 */
+			$offset   = $date->getOffset();
+			$interval = \DateInterval::createFromDateString( "-{$offset} seconds" );
+			$date->add( $interval );
+		}
 
 		return $date;
 	}

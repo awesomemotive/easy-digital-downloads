@@ -3,6 +3,7 @@
 
 /**
  * @group edd_downloads
+ * @group edd_functions
  */
 class Tests_Downloads extends EDD_UnitTestCase {
 	protected $_post = null;
