@@ -345,6 +345,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
 
 		// Component helpers are loaded before everything
+		require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
 		require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-component.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/class-base.php';
@@ -508,6 +509,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
+		require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 
 		// Admin
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
