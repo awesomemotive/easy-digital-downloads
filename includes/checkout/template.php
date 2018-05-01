@@ -979,7 +979,7 @@ function edd_get_checkout_button_purchase_label() {
  * @return void
  */
 function edd_agree_to_terms_js() {
-	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+	if ( edd_get_option( 'show_agree_to_terms', false ) || edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
