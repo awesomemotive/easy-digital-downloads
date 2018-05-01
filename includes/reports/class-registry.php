@@ -63,6 +63,7 @@ class Registry extends Utils\Registry {
 	 * @param string $sort Optional. How to sort the list of registered items before retrieval.
 	 *                     Accepts 'priority' or 'ID' (alphabetized by item ID), or empty (none).
 	 *                     Default empty.
+	 * @return array An array of all registered items, sorted if `$sort` is not empty.
 	 */
 	public function get_items_sorted( $sort = '' ) {
 		// If sorting, handle it before retrieval from the ArrayObject.
