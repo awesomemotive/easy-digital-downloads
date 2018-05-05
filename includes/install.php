@@ -155,25 +155,23 @@ function edd_run_install() {
 	}
 
 	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $sections ) {
-		foreach( $sections as $section => $settings) {
+	$all_settings = edd_get_registered_settings();
+	foreach ( $all_settings as $tab => $sections ) {
+		foreach ( $sections as $section => $settings) {
 
 			// Check for backwards compatibility
 			$tab_sections = edd_get_settings_tab_sections( $tab );
-			if( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
+			if ( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
 				$section = 'main';
 				$settings = $sections;
 			}
 
 			foreach ( $settings as $option ) {
-
-				if( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+				if ( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
 					$options[ $option['id'] ] = '1';
 				}
-
 			}
 		}
-
 	}
 
 	$merged_options = array_merge( $edd_options, $options );
@@ -214,7 +212,6 @@ function edd_run_install() {
 			edd_set_upgrade_complete( $upgrade );
 		}
 	}
-
 }
 
 /**
