@@ -109,6 +109,8 @@ jQuery(document).ready(function ($) {
 
 				// Setup chosen fields again if they exist
 				clone.find('.edd-select-chosen').chosen({
+					disable_search_threshold: 13,
+					search_contains: true,
 					inherit_select_classes: true,
 					placeholder_text_single: edd_vars.one_option,
 					placeholder_text_multiple: edd_vars.one_or_more_option,
@@ -1356,6 +1358,8 @@ jQuery(document).ready(function ($) {
 
 	// Setup Chosen menus
 	$('.edd-select-chosen').chosen({
+		disable_search_threshold: 13,
+		search_contains: true,
 		inherit_select_classes: true,
 		placeholder_text_single: edd_vars.one_option,
 		placeholder_text_multiple: edd_vars.one_or_more_option,
