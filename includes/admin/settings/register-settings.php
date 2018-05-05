@@ -605,6 +605,7 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
 						'type'    => 'color_select',
+						'chosen'  => true,
 						'options' => edd_get_button_colors(),
 					),
 				),
@@ -1983,6 +1984,9 @@ function edd_color_select_callback( $args ) {
 	}
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
+	if ( $args['chosen'] ) {
+		$class .= 'edd-select-chosen';
+	}
 
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
 
@@ -2120,9 +2124,8 @@ function edd_shop_states_callback( $args ) {
 		$placeholder = '';
 	}
 
-	$class = edd_sanitize_html_class( $args['field_class'] );
-
 	$states = edd_get_shop_states();
+	$class  = edd_sanitize_html_class( $args['field_class'] );
 
 	if ( $args['chosen'] ) {
 		$class .= 'edd-select-chosen';
