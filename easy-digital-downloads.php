@@ -67,6 +67,7 @@ final class EDD_Requirements_Check {
 		'php' => array(
 			'minimum' => '5.3.0',
 			'name'    => 'PHP',
+			'exists'  => true,
 			'current' => false,
 			'checked' => false,
 			'met'     => false
@@ -76,6 +77,7 @@ final class EDD_Requirements_Check {
 		'wp' => array(
 			'minimum' => '4.4.0',
 			'name'    => 'WordPress',
+			'exists'  => true,
 			'current' => false,
 			'checked' => false,
 			'met'     => false
@@ -159,6 +161,16 @@ final class EDD_Requirements_Check {
 	}
 
 	/**
+	 * Plugin specific text to describe a single missing requirement.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_missing_text() {
+		return esc_html__( 'Requires %s (%s), but it appears to be missing.', 'easy-digital-downloads' );
+	}
+
+	/**
 	 * Plugin specific text used to link to an external requirements page.
 	 *
 	 * @since 3.0
@@ -229,12 +241,27 @@ final class EDD_Requirements_Check {
 	 * @param array $requirement
 	 */
 	private function unmet_requirement_description( $requirement = array() ) {
-		echo '<p>' . sprintf(
-			$this->unmet_requirements_description_text(),
-			'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
-			'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>',
-			'<strong>' . esc_html( $requirement['current'] ) . '</strong>'
-		) . '</p>';
+
+		// Requirement exists, but is out of date
+		if ( ! empty( $requirement['exists'] ) ) {
+			$text = sprintf(
+				$this->unmet_requirements_description_text(),
+				'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
+				'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>',
+				'<strong>' . esc_html( $requirement['current'] ) . '</strong>'
+			);
+
+		// Requirement could not be found
+		} else {
+			$text = sprintf(
+				$this->unmet_requirements_missing_text(),
+				'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
+				'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>'
+			);
+		}
+
+		// Output the description
+		echo '<p>' . $text . '</p>';
 	}
 
 	/**
