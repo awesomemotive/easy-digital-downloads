@@ -46,11 +46,6 @@ add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_secti
 function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 		$paypal_settings = array (
-			'paypal_settings' => array(
-				'id'   => 'paypal_settings',
-				'name' => '<strong>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</strong>',
-				'type' => 'header',
-			),
 			'paypal_email' => array(
 				'id'   => 'paypal_email',
 				'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
@@ -80,16 +75,17 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 			'size' => 'regular',
 		);
 
-		$disable_ipn_desc = sprintf(
+		$desc  = sprintf(
 			__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
 		);
 
 		$paypal_settings['disable_paypal_verification'] = array(
-			'id'   => 'disable_paypal_verification',
-			'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
-			'desc' => $disable_ipn_desc,
-			'type' => 'checkbox',
+			'id'    => 'disable_paypal_verification',
+			'name'  => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
+			'check' => __( 'Disabled', 'easy-digital-downloads' ),
+			'desc'  => $desc,
+			'type'  => 'checkbox_description',
 		);
 
 		$api_key_settings = array(
@@ -154,7 +150,6 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 		return $gateway_settings;
 }
 add_filter( 'edd_settings_gateways', 'edd_register_paypal_gateway_settings', 1, 1 );
-
 
 /**
  * Process PayPal Purchase

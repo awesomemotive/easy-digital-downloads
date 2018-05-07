@@ -98,15 +98,15 @@ a.edd-delete:hover {
 	border-bottom-color: #4f6d59;
 }
 
-.download_page_edd-settings .form-table label {
-	color: #666;
-	font-size: 14px;
-	font-style: italic;
-	margin: 4px 0 0;
+.download_page_edd-settings .edd-check-wrapper {
+	clear: both;
+}
+.download_page_edd-settings .edd-check-wrapper label {
+	margin: -2px 0 3px 0;
+	display: inline-block;
+	vertical-align: initial;
 }
 
-.download_page_edd-settings .form-table input.small-text ~ label,
-.download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
 .download_page_edd-settings .form-table tr > th > strong,
 .download_page_edd-settings .form-table tr > th > h3 {
 	font-size: 1.2em;
@@ -117,7 +117,7 @@ a.edd-delete:hover {
 /* Tooltips */
 .edd-help-tip {
 	cursor: help;
-	margin-top: -4px;
+	margin-top: -2px;
 	font-size: 24px;
 	color: grey;
 }
@@ -1314,15 +1314,25 @@ td.edd_order_price {
 	max-width: 100%;
 }
 #edd_tax_rates .edd_tax_country,
-#edd_tax_rates .edd_tax_state {
-	width: 180px;
+#edd_tax_rates .edd_tax_state,
+#edd_tax_rates .edd_tax_global {
+	width: 20%;
+}
+#edd_tax_rates .edd_tax_rate {
+	width: 12%;
+}
+#edd_tax_rates .edd_tax_remove {
+	width: 18%;
+}
+#edd_tax_rates th {
+	padding: 15px 10px;
 }
 @media screen and ( max-width: 782px ) {
 	#edd_tax_rates thead {
 		display: none;
 	}
 	#edd_tax_rates td {
-		padding: 8px 8px 8px 35%;
+		padding: 8px 8px 8px 8px;
 	}
 	#edd_tax_rates td:before {
 		font-weight: 600;
@@ -1330,12 +1340,6 @@ td.edd_order_price {
 	#edd_tax_rates tbody tr:not(:first-child) .edd_tax_country {
 		border-top: 1px solid #e5e5e5;
 	}
-}
-#edd_tax_rates .edd_tax_rate {
-	width: 80px;
-}
-#edd_tax_rates th {
-	padding: 15px 10px;
 }
 .wrap-licenses .form-table,
 .wrap-licenses thead,

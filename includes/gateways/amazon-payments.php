@@ -345,11 +345,6 @@ final class EDD_Amazon_Payments {
 	public function register_gateway_settings( $gateway_settings ) {
 
 		$default_amazon_settings = array(
-			'amazon' => array(
-				'id'   => 'amazon',
-				'name' => '<strong>' . __( 'Amazon Payments Settings', 'easy-digital-downloads' ) . '</strong>',
-				'type' => 'header',
-			),
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
 				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),
