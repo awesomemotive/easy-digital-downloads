@@ -186,14 +186,16 @@ function edd_privacy_cutomer_record_exporter( $email_address = '', $page = 1 ) {
 			)
 		);
 
-		if ( ! empty( $customer->get_meta( 'agree_to_terms_time' ) ) ) {
+		$agree_to_terms_time = $customer->get_meta( 'agree_to_terms_time' );
+		if ( ! empty( $agree_to_terms_time ) ) {
 			$export_data['data'][] = array(
 				'name' => __( 'Agreed to Terms' ),
 				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_terms_time' ) ) )
 			);
 		}
 
-		if ( ! empty( $customer->get_meta( 'agree_to_privacy_time' ) ) ) {
+		$agree_to_privacy_time = $customer->get_meta( 'agree_to_privacy_time' );
+		if ( ! empty( $agree_to_privacy_time ) ) {
 			$export_data['data'][] = array(
 				'name' => __( 'Agreed to Privacy Policy' ),
 				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_privacy_time' ) ) )
