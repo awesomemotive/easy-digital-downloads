@@ -319,32 +319,22 @@ a.edd-delete:hover {
 	margin-left: 5px;
 }
 
-#edd-payment-filters {
-	background: #f5f5f5;
-	clear: both;
-	background-image: -webkit-gradient(linear, left bottom, left top, from(#f5f5f5), to(#fafafa));
-	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image:    -moz-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image:      -o-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image: linear-gradient(to top, #f5f5f5, #fafafa);
-	border-color: #dfdfdf;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 3px;
-	font-size: 13px;
-	line-height: 2.1em;
-	overflow: auto;
-	padding: 12px;
-	margin: 8px 0;
-}
 #edd-payments-filter ul.subsubsub {
 	margin-bottom: 8px;
+}
+#edd-payment-filters .filter-items {
+	padding: 10px;
 }
 #edd-payment-filters p {
 	color: #777;
 }
 #edd-payment-date-filters input {
 	vertical-align: middle;
+	max-width: 125px;
+	padding: 5px;
+}
+#edd-payment-after-core-filters .button-secondary {
+	margin: 2px 0 0 0;
 }
 tr.status-refunded td {
 	background: #cecece;
