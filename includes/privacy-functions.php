@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Given a string, mask it with the * character.
  *
  * First and last character will remain with the filling characters being changed to *. One Character will
- * be left in tact as is. Two character strings will has the first character remain and the second be a *.
+ * be left in tact as is. Two character strings will have the first character remain and the second be a *.
  *
  * @since 2.9.2
  * @param string $string
@@ -54,7 +54,7 @@ function edd_mask_string( $string = '' ) {
 /**
  * Given a domain, mask it with the * character.
  *
- * TLD parts will remain in tact (.com, .co.uk, etc). All subdomains will be masked t**t.e*****e.co.uk.
+ * TLD parts will remain intact (.com, .co.uk, etc). All subdomains will be masked t**t.e*****e.co.uk.
  *
  * @since 2.9.2
  * @param string $domain
