@@ -130,7 +130,7 @@ function edd_register_privacy_exporters( $exporters ) {
 
 	$exporters[] = array(
 		'exporter_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
-		'callback'               => 'edd_privacy_cutomer_record_exporter',
+		'callback'               => 'edd_privacy_customer_record_exporter',
 	);
 
 	$exporters[] = array(
@@ -152,7 +152,7 @@ add_filter( 'wp_privacy_personal_data_exporters', 'edd_register_privacy_exporter
  *
  * @return array
  */
-function edd_privacy_cutomer_record_exporter( $email_address = '', $page = 1 ) {
+function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) {
 
 	$customer    = new EDD_Customer( $email_address );
 	$export_data = array();
