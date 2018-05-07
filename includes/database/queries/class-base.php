@@ -233,6 +233,14 @@ class Base extends \EDD\Database\Base {
 	 */
 	protected $request = '';
 
+	/**
+	 * The last error, if any.
+	 *
+	 * @since 3.0
+	 * @var mixed
+	 */
+	protected $last_error = false;
+
 	/** Methods ***************************************************************/
 
 	/**
@@ -721,14 +729,9 @@ class Base extends \EDD\Database\Base {
 		$select  = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
 		$result  = $this->get_db()->get_row( $select );
 
-		// Bail if no row exists
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Return row
@@ -1505,8 +1508,8 @@ class Base extends \EDD\Database\Base {
 			// Try to get item directly from DB
 			$retval = $this->get_item_raw( $column_name, $column_value );
 
-			// Bail because item does not exist
-			if ( empty( $retval ) || is_wp_error( $retval ) ) {
+			// Bail on failure
+			if ( $this->failed( $retval ) ) {
 				return false;
 			}
 
@@ -1531,15 +1534,15 @@ class Base extends \EDD\Database\Base {
 		// Get primary column
 		$primary = $this->get_primary_column_name();
 
-		// Bail if trying to update an existing item
+		// Bail if data to add includes the primary column
 		if ( isset( $data[ $primary ] ) ) {
-			return $this->update_item( $data[ $primary ], $data );
+			return false;
 		}
 
 		// Get default values for item (from columns)
 		$item = $this->default_item();
 
-		// Never include the primary key value
+		// Unset the primary key value from defaults
 		unset( $item[ $primary ] );
 
 		// Cut out non-keys for meta
@@ -1567,14 +1570,9 @@ class Base extends \EDD\Database\Base {
 		$table  = $this->get_table_name();
 		$result = $this->get_db()->insert( $table, $save );
 
-		// Bail if no insert occurred
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Get the new item ID
@@ -1626,7 +1624,7 @@ class Base extends \EDD\Database\Base {
 		// Cast as an array for easier manipulation
 		$item = (array) $item;
 
-		// Never update the primary key value
+		// Unset the primary key from data to parse
 		unset( $data[ $primary ] );
 
 		// Splice new data into item, and cut out non-keys for meta
@@ -1640,7 +1638,7 @@ class Base extends \EDD\Database\Base {
 			return true;
 		}
 
-		// Never update the primary key value
+		// Unset the primary key from data to save
 		unset( $save[ $primary ] );
 
 		// If date-modified is empty, use the current time
@@ -1656,14 +1654,9 @@ class Base extends \EDD\Database\Base {
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
 
-		// Bail if no update occurred
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Maybe save meta keys
@@ -1699,20 +1692,28 @@ class Base extends \EDD\Database\Base {
 
 		// Get vars
 		$primary = $this->get_primary_column_name();
-		$table   = $this->get_table_name();
-		$where   = array( $primary => $item_id );
 
 		// Get item (before it's deleted)
 		$item    = $this->get_item_raw( $primary, $item_id );
 
+		// Bail if item does not exist to delete
+		if ( empty( $item ) ) {
+			return false;
+		}
+
 		// Try to delete
+		$table   = $this->get_table_name();
+		$where   = array( $primary => $item_id );
 		$result  = $this->get_db()->delete( $table, $where );
 
-		// Maybe clean caches on successful delete
-		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
-			$this->delete_all_item_meta( $item_id );
-			$this->clean_item_cache( $item );
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
+			return false;
 		}
+
+		// Clean caches on successful delete
+		$this->delete_all_item_meta( $item_id );
+		$this->clean_item_cache( $item );
 
 		// Return result
 		return $result;
@@ -1846,6 +1847,33 @@ class Base extends \EDD\Database\Base {
 			 */
 			do_action( $key_action, $old_value, $new_value, $item_id );
 		}
+	}
+
+	/**
+	 * Check if the query failed
+	 *
+	 * @since 3.0
+	 * @param mixed $result
+	 * @return boolean
+	 */
+	private function failed( $result = false ) {
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			$retval = true;
+
+		// Bail if an error occurred
+		} elseif ( is_wp_error( $result ) ) {
+			$this->last_error = $result;
+			$retval           = true;
+
+		// No errors
+		} else {
+			$retval = false;
+		}
+
+		// Return the result
+		return $retval;
 	}
 
 	/** Meta ******************************************************************/
