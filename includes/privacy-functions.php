@@ -116,3 +116,34 @@ function edd_pseudo_mask_email( $email_address ) {
 
 	return $email_address;
 }
+
+/**
+ * Log the privacy and terms timestamp for the last completed purchase for a customer.
+ *
+ * Stores the timestamp of the last time the user clicked the 'complete purchase' button for the Agree to Terms and/or
+ * Privacy Policy checkboxes during the checkout process.
+ *
+ * @since 2.9.2
+ *
+ * @param $payment_id
+ * @param $payment_data
+ *
+ * @return void
+ */
+function edd_log_terms_and_privacy_times( $payment_id, $payment_data ) {
+	$payment  = edd_get_payment( $payment_id );
+	$customer = new EDD_Customer( $payment->customer_id );
+
+	if ( empty( $customer->id ) ) {
+		return;
+	}
+
+	if ( ! empty( $payment_data['agree_to_terms_time'] ) ) {
+		$customer->update_meta( 'agree_to_terms_time', $payment_data['agree_to_terms_time'] );
+	}
+
+	if ( ! empty( $payment_data['agree_to_privacy_time'] ) ) {
+		$customer->update_meta( 'agree_to_privacy_time', $payment_data['agree_to_terms_time'] );
+	}
+}
+add_action( 'edd_insert_payment', 'edd_log_terms_and_privacy_times', 10, 2 );

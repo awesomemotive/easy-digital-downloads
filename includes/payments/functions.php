@@ -258,6 +258,14 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	$payment->save();
 
+	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) {
+		$payment_data['agree_to_terms_time'] = current_time( 'timestamp' );
+	}
+
+	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) && ! empty( $_POST['edd_agree_to_privacy_policy'] ) ) {
+		$payment_data['agree_to_privacy_time'] = current_time( 'timestamp' );
+	}
+
 	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
 
 	if ( ! empty( $payment->ID ) ) {

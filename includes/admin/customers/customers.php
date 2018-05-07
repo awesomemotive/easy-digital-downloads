@@ -321,6 +321,79 @@ function edd_customers_view( $customer ) {
 						<?php endif; ?>
 					</span>
 
+					<?php
+					$show_agree_to_terms   = edd_get_option( 'show_agree_to_terms', false );
+					$show_agree_to_privacy = edd_get_option( 'show_agree_to_privacy_policy', false );
+
+					if ( $show_agree_to_terms || $show_agree_to_privacy ) {
+						$agreement_timtestamp = $customer->get_meta( 'agree_to_terms_time' );
+						$privacy_timestamp    = $customer->get_meta( 'agree_to_privacy_time' );
+
+						if ( empty( $agreement_timtestamp ) || empty( $privacy_timestamp ) ) {
+							$payments = edd_get_payments( array(
+								'output'   => 'payments',
+								'post__in' => explode( ',', $customer->payment_ids ),
+								'orderby'  => 'date',
+							));
+
+							$last_payment_date = '';
+
+							foreach ( $payments as $payment ) {
+								if ( empty( $payment->gateway ) ) {
+									continue;
+								}
+
+								// We should be using `date` here, as that is the date the button was clicked.
+								$last_payment_date = strtotime( $payment->date );
+								break;
+							}
+						}
+						?>
+
+						<?php if ( $show_agree_to_terms ) : ?>
+						<span class="customer-terms-agreement-date info-item">
+							<?php _e( 'Agreed to Terms', 'easy-digital-downloads' ); ?>:
+							<br />
+							<?php if ( ! empty( $agreement_timtestamp ) ) : ?>
+								<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timtestamp ); ?>
+							<?php else: ?>
+								<?php
+									if ( empty( $last_payment_date ) ) {
+										_e( 'No date found.', 'easy-digital-downloads' );
+									} else {
+										echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
+										?>
+										<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Agreement Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
+										<?php
+									}
+								?>
+							<?php endif; ?>
+						</span>
+						<?php endif; ?>
+
+						<?php if ( $show_agree_to_privacy ) : ?>
+						<span class="customer-privacy-policy-date info-item">
+							<?php _e( 'Agreed to Privacy Policy', 'easy-digital-downloads' ); ?>:
+							<br />
+							<?php if ( ! empty( $privacy_timestamp ) ) : ?>
+								<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $privacy_timestamp ); ?>
+							<?php else: ?>
+								<?php
+								if ( empty( $last_payment_date ) ) {
+									_e( 'No date found.', 'easy-digital-downloads' );
+								} else {
+									echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
+									?>
+									<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ); ?>"></span>
+									<?php
+								}
+								?>
+							<?php endif; ?>
+						</span>
+						<?php endif; ?>
+
+					<?php } ?>
+
 				</div>
 
 			</div>
