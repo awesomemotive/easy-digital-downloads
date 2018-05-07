@@ -32,7 +32,7 @@ Handling this data also allows us to:
 
 	$additional_collection = array(
 		__( 'Location and traffic data (including IP address and browser type) if you place an order, or if we need to estimate taxes and shipping costs based on your location.', 'easy-digital-downloads' ),
-		__( 'Product pages visited and content viewed whist your session is active.', 'easy-digital-downloads' ),
+		__( 'Product pages visited and content viewed while your session is active.', 'easy-digital-downloads' ),
 		__( 'Your comments and product reviews if you choose to leave them on our website.', 'easy-digital-downloads' ),
 		__( 'Account email/password to allow you to access your account, if you have one.', 'easy-digital-downloads' ),
 		__( 'If you choose to create an account with us, your name, address, and email address, which will be used to populate the checkout for future orders.', 'easy-digital-downloads' ),
