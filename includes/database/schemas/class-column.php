@@ -276,8 +276,20 @@ class Column {
 		// Parse arguments
 		$r = $this->parse_args( $args );
 
-		// Set object parameters
-		foreach ( $r as $key => $value ) {
+		// Maybe set arguments
+		if ( ! empty( $r ) ) {
+			$this->set_args( $r );
+		}
+	}
+
+	/**
+	 * Set column arguments
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	private function set_args( $args = array() ) {
+		foreach ( $args as $key => $value ) {
 			$this->{$key} = $value;
 		}
 	}
@@ -334,6 +346,9 @@ class Column {
 		if ( true === $r['primary'] ) {
 			$r['cache_key'] = true;
 		}
+
+		// Set the args before they are sanitized
+		$this->set_args( $r );
 
 		// Return array
 		return $this->sanitize_args( $r );

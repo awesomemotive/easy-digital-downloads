@@ -1062,19 +1062,11 @@ class Base extends \EDD\Database\Base {
 					// Add to where array
 					$where[ $column->name ] = $statement;
 
-				// Numeric/String (prepared)
+				// Numeric/String/Float (prepared)
 				} else {
-
-					// Numeric
-					if ( $column->is_numeric() ) {
-						$statement = "{$this->table_alias}.{$column->name} = %d";
-						$where_id  = absint( $this->query_vars[ $column->name ] );
-
-					// String
-					} else {
-						$statement = "{$this->table_alias}.{$column->name} = %s";
-						$where_id  = $this->query_vars[ $column->name ];
-					}
+					$pattern   = $this->get_column_field( array( 'name' => $column->name ), 'pattern', '%s' );
+					$where_id  = $this->query_vars[ $column->name ];
+					$statement = "{$this->table_alias}.{$column->name} = {$pattern}";
 
 					// Add to where array
 					$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
