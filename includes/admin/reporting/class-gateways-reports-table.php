@@ -32,7 +32,6 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 	 */
 	public $per_page = 30;
 
-
 	/**
 	 * Get things started
 	 *
@@ -40,15 +39,11 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
 			'singular' => edd_get_label_singular(),
 			'plural'   => edd_get_label_plural(),
 			'ajax'     => false,
 		) );
-
 	}
 
 	/**
@@ -84,16 +79,13 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
+		return array(
 			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
 			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
 			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
 		);
-
-		return $columns;
 	}
-
 
 	/**
 	 * Retrieve the current page number
@@ -105,7 +97,6 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
-
 	/**
 	 * Outputs the reporting views
 	 *
@@ -113,10 +104,10 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
+		// These aren't really bulk actions but this outputs the markup in
+		// the right place.
 		edd_report_views();
 	}
-
 
 	/**
 	 * Build all the reports data
@@ -138,14 +129,13 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 				'ID'             => $gateway_id,
 				'label'          => $gateway['admin_label'],
 				'complete_sales' => edd_format_amount( $complete_count, false ),
-				'pending_sales'  => edd_format_amount( $pending_count, false ),
+				'pending_sales'  => edd_format_amount( $pending_count,  false ),
 				'total_sales'    => edd_format_amount( $complete_count + $pending_count, false ),
 			);
 		}
 
 		return $reports_data;
 	}
-
 
 	/**
 	 * Setup the final data for the table
@@ -162,7 +152,6 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->reports_data();
-
 	}
 }
 
