@@ -330,7 +330,7 @@ a.edd-delete:hover {
 }
 #edd-payment-date-filters input {
 	vertical-align: middle;
-	max-width: 125px;
+	max-width: 100px;
 	padding: 5px;
 }
 #edd-payment-after-core-filters .button-secondary {
