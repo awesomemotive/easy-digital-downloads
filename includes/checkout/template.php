@@ -744,7 +744,7 @@ function edd_discount_field() {
 				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'easy-digital-downloads' ); ?></span>
 				<span class="edd-discount-code-field-wrap">
 					<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'easy-digital-downloads' ); ?>"/>
-					<input type="submit" class="edd-apply-discount edd-submit button <?php echo $color . ' ' . $style; ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'easy-digital-downloads' ); ?>"/>
+					<input type="submit" class="edd-apply-discount edd-submit <?php echo $color . ' ' . $style; ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'easy-digital-downloads' ); ?>"/>
 				</span>
 				<span class="edd-discount-loader edd-loading" id="edd-discount-loader" style="display:none;"></span>
 				<span id="edd-discount-error-wrap" class="edd_error edd-alert edd-alert-error" aria-hidden="true" style="display:none;"></span>
@@ -979,7 +979,7 @@ function edd_get_checkout_button_purchase_label() {
  * @return void
  */
 function edd_agree_to_terms_js() {
-	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+	if ( edd_get_option( 'show_agree_to_terms', false ) || edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
