@@ -306,7 +306,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 				$customers['customers'][ $customer_count ]['stats']['total_purchases'] = $customer_obj->purchase_count;
 				$customers['customers'][ $customer_count ]['stats']['total_spent']     = $customer_obj->purchase_value;
-				$customers['customers'][ $customer_count ]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
+				$customers['customers'][ $customer_count ]['stats']['total_downloads'] = edd_count_file_downloads_of_customer( $customer_obj->id );
 
 				$customer_count++;
 
