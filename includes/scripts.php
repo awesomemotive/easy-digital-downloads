@@ -303,6 +303,9 @@ function edd_load_admin_scripts( $hook ) {
 
 	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', array(), $version );
 	wp_enqueue_style( 'edd-admin' );
+
+	wp_register_style( 'edd-admin-datepicker', $css_dir . 'edd-admin-datepicker' . $suffix . '.css', array( 'edd-admin' ), $version );
+	wp_enqueue_style( 'edd-admin-datepicker' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 
