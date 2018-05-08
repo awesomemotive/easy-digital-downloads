@@ -18,13 +18,13 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * EDD_Gateawy_Reports_Table Class
+ * EDD_Gateway_Reports_Table Class
  *
  * Renders the Download Reports table
  *
  * @since 1.5
  */
-class EDD_Gateawy_Reports_Table extends WP_List_Table {
+class EDD_Gateway_Reports_Table extends WP_List_Table {
 
 	/**
 	 * @var int Number of items per page
@@ -151,9 +151,9 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 	 * Setup the final data for the table
 	 *
 	 * @since 1.5
-	 * @uses EDD_Gateawy_Reports_Table::get_columns()
-	 * @uses EDD_Gateawy_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Gateawy_Reports_Table::reports_data()
+	 * @uses EDD_Gateway_Reports_Table::get_columns()
+	 * @uses EDD_Gateway_Reports_Table::get_sortable_columns()
+	 * @uses EDD_Gateway_Reports_Table::reports_data()
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -165,3 +165,10 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 
 	}
 }
+
+/**
+ * Back-compat for typo
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6549
+ */
+class_alias( 'EDD_Gateway_Reports_Table', 'EDD_Gateawy_Reports_Table' );
