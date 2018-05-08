@@ -287,8 +287,8 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
  * Renders the Gateways Table
  *
  * @since 1.3
- * @uses EDD_Gateawy_Reports_Table::prepare_items()
- * @uses EDD_Gateawy_Reports_Table::display()
+ * @uses EDD_Gateway_Reports_Table::prepare_items()
+ * @uses EDD_Gateway_Reports_Table::display()
  * @return void
  */
 function edd_reports_gateways_table() {
@@ -299,7 +299,7 @@ function edd_reports_gateways_table() {
 
 	include( dirname( __FILE__ ) . '/class-gateways-reports-table.php' );
 
-	$downloads_table = new EDD_Gateawy_Reports_Table();
+	$downloads_table = new EDD_Gateway_Reports_Table();
 	$downloads_table->prepare_items();
 	$downloads_table->display();
 }
