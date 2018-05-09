@@ -715,24 +715,38 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 		return false;
 	}
 
+	if ( true === $return_label ) {
+		return edd_get_payment_status_label( $payment->post_status );
+	} else {
+		$statuses = edd_get_payment_statuses();
+
+		// Account that our 'publish' status is labeled 'Complete'
+		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+
+		// Make sure we're matching cases, since they matter
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
+	}
+
+	return ! empty( $status ) ? $status : false;
+}
+
+/**
+ * Given a payment status string, return the label for that string.
+ *
+ * @since 2.9.2
+ * @param string $status
+ *
+ * @return bool|mixed
+ */
+function edd_get_payment_status_label( $status = '' ) {
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
 		return false;
 	}
 
-	$payment = new EDD_Payment( $payment->ID );
-
-	if ( array_key_exists( $payment->status, $statuses ) ) {
-		if ( true === $return_label ) {
-			return $statuses[ $payment->status ];
-		} else {
-			// Account that our 'publish' status is labeled 'Complete'
-			$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
-
-			// Make sure we're matching cases, since they matter
-			return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
-		}
+	if ( array_key_exists( $status, $statuses ) ) {
+		return $statuses[ $status ];
 	}
 
 	return false;

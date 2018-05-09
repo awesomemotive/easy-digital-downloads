@@ -229,60 +229,130 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 		return array( 'data' => array(), 'done' => true );
 	}
 
-
 	$export_items = array();
 	foreach ( $payments as $payment ) {
+
+		$order_items = array();
+		foreach ( $payment->downloads as $cart_item ) {
+			$download = new EDD_Download( $cart_item['id'] );
+			$name     = $download->get_name();
+
+			if ( $download->has_variable_prices() && isset( $cart_item['options']['price_id'] ) ) {
+				$variation_name = edd_get_price_option_name( $download->ID, $cart_item['options']['price_id'] );
+				if ( ! empty( $variation_name ) ) {
+					$name .= ' - ' . $variation_name;
+				}
+			}
+
+			$order_items[] = $name . ' &times; ' . $cart_item['quantity'];
+		}
+
+		$items_purchased = implode( ', ', $order_items );
+
+		$billing_name = array();
+		if ( ! empty( $payment->user_info['first_name'] ) ) {
+			$billing_name[] = $payment->user_info['first_name'];
+		}
+
+		if ( ! empty( $payment->user_info['last_name'] ) ) {
+			$billing_name[] = $payment->user_info['last_name'];
+		}
+		$billing_name = implode( ' ', array_values( $billing_name ) );
+
+		$billing_street = array();
+		if ( ! empty( ! empty( $payment->address['line1'] ) ) ) {
+			$billing_street[] = $payment->address['line1'];
+		}
+
+		if ( ! empty( ! empty( $payment->address['line2'] ) ) ) {
+			$billing_street[] = $payment->address['line2'];
+		}
+		$billing_street = implode( "\n", array_values( $billing_street ) );
+
+
+		$billing_city_state = array();
+		if ( ! empty( $payment->address['city'] ) ) {
+			$billing_city_state[] = $payment->address['city'];
+		}
+
+		if ( ! empty( $payment->address['state'] ) ) {
+			$billing_city_state[] = $payment->address['state'];
+		}
+		$billing_city_state = implode( ', ', array_values( $billing_city_state ) );
+
+		$billing_country_postal = array();
+		if ( ! empty( $payment->address['zip'] ) ) {
+			$billing_country_postal[] = $payment->address['zip'];
+		}
+
+		if ( ! empty( $payment->address['country'] ) ) {
+			$billing_country_postal[] = $payment->address['country'];
+		}
+		$billing_country_postal = implode( "\n", array_values( $billing_country_postal ) );
+
+		$full_billing_address = '';
+		if ( ! empty( $billing_name ) ) {
+			$full_billing_address .= $billing_name . "\n";
+		}
+
+		if ( ! empty( $billing_street ) ) {
+			$full_billing_address .= $billing_street . "\n";
+		}
+
+		if ( ! empty( $billing_city_state ) ) {
+			$full_billing_address .= $billing_city_state . "\n";
+		}
+
+		if ( ! empty( $billing_country_postal ) ) {
+			$full_billing_address .= $billing_country_postal . "\n";
+		}
+
+
 		$data_points = array(
 			array(
-				'name'  => __( 'Order ID', 'easy-digital-downloads' ),
-				'value' => $payment->ID,
+				'name'  => __( 'Order ID / Number', 'easy-digital-downloads' ),
+				'value' => $payment->number,
 			),
 			array(
-				'name'  => __( 'First Name', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->user_info['first_name'] ) ? $payment->user_info['first_name'] : '',
+				'name' => __( 'Order Date', 'easy-digital-downloads' ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $payment->date ) ),
 			),
 			array(
-				'name'  => __( 'Last Name', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->user_info['last_name'] ) ? $payment->user_info['last_name'] : '',
+				'name' => __( 'Order Completed Date', 'easy-digital-downloads' ),
+				'value' =>  ! empty( $payment->completed_date )
+					? date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $payment->completed_date ) )
+					: '',
+			),
+			array(
+				'name' => __( 'Order Total', 'easy-digital-downloads' ),
+				'value' => edd_currency_filter( edd_format_amount( $payment->total ), $payment->currency ),
+			),
+			array(
+				'name' => __( 'Order Items', 'easy-digital-downloads' ),
+				'value' => $items_purchased,
 			),
 			array(
 				'name'  => __( 'Email Address', 'easy-digital-downloads' ),
 				'value' => ! empty( $payment->email ) ? $payment->email : '',
 			),
 			array(
-				'name'  => __( 'Address', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->address['line1'] ) ? $payment->address['line1'] : '',
-			),
-			array(
-				'name'  => __( 'Address Line 2', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->address['line2'] ) ? $payment->address['line2'] : '',
-			),
-			array(
-				'name'  => __( 'City', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->address['city'] ) ? $payment->address['city'] : '',
-			),
-			array(
-				'name'  => __( 'State', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->address['state'] ) ? $payment->address['state'] : '',
-			),
-			array(
-				'name'  => __( 'Postal Code', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->address['zip'] ) ? $payment->address['zip'] : '',
-			),
-			array(
-				'name'  => __( 'Country', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->address['country'] ) ? $payment->address['country'] : '',
+				'name'  => __( 'Billing Address', 'easy-digital-downloads' ),
+				'value' => $full_billing_address,
 			),
 			array(
 				'name'  => __( 'IP Address', 'easy-digital-downloads' ),
 				'value' => ! empty( $payment->ip ) ? $payment->ip : '',
 			),
+			array(
+				'name'  => __( 'Status', 'easy-digital-downloads' ),
+				'value' => edd_get_payment_status_label( $payment->status ),
+			),
 		);
 
 		$export_items[] = array(
-			'group_id'    => 'edd-billing-information',
-			'group_label' => __( 'Customer Billing information', 'easy-digital-downloads' ),
-			'item_id'     => "edd-billing-addresses-{$payment->ID}",
+			'group_id'    => 'edd-order-details',
+			'group_label' => __( 'Customer Orders', 'easy-digital-downloads' ),
+			'item_id'     => "edd-order-details-{$payment->ID}",
 			'data'        => $data_points,
 		);
 
