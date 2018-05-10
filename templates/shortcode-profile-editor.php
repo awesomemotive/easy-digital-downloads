@@ -112,7 +112,7 @@ if ( is_user_logged_in() ):
 									$remove_url = wp_nonce_url(
 										add_query_arg(
 											array(
-												'email'      => $email,
+												'email'      => rawurlencode( $email ),
 												'edd_action' => 'profile-remove-email',
 												'redirect'   => esc_url( edd_get_current_page_url() ),
 											)
