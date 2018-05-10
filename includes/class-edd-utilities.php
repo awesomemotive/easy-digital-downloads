@@ -17,7 +17,7 @@
 class EDD_Utilities {
 
 	/**
-	 * Represents the WordPress gmt offset in seconds.
+	 * Represents the WordPress GMT offset in seconds.
 	 *
 	 * @since 3.0
 	 * @var   int
@@ -134,6 +134,9 @@ class EDD_Utilities {
 	/**
 	 * Retrieves a date format string based on a given short-hand format.
 	 *
+	 * @see edd_get_date_format()
+	 * @see edd_get_date_picker_format()
+	 *
 	 * @since 3.0
 	 *
 	 * @param string $format Shorthand date format string. Accepts 'date', 'time', 'mysql', 'datetime',
@@ -144,42 +147,52 @@ class EDD_Utilities {
 	 */
 	public function get_date_format_string( $format = 'date' ) {
 
+		// Default to 'date' if empty
 		if ( empty( $format ) ) {
 			$format = 'date';
 		}
 
-		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'picker-field', 'picker-js' ) ) ) {
+		// Bail if format is not known
+		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'date-attribute', 'date-js' ) ) ) {
 			return $format;
 		}
 
-		switch( $format ) {
-			case 'picker-field' :
-				$format = 'yyyy-mm-dd';
+		// What known format are we getting?
+		switch ( $format ) {
+
+			// jQuery UI Datepicker fields, placeholders, etc...
+			case 'date-attribute' :
+				$retval = 'yyyy-mm-dd';
 				break;
 
-			case 'picker-js' :
-				$format = 'yy-mm-dd';
+			// jQuery UI Datepicker JS variable
+			case 'date-js' :
+				$retval = 'yy-mm-dd';
 				break;
 
+			// MySQL datetime columns
 			case 'mysql':
-				$format = 'Y-m-d H:i:s';
+				$retval = 'Y-m-d H:i:s';
 				break;
 
+			// WordPress date_format + time_format
 			case 'datetime':
-				$format = $this->get_date_format() . ' ' . $this->get_time_format();
+				$retval = $this->get_date_format() . ' ' . $this->get_time_format();
 				break;
 
+			// WordPress time_format only
 			case 'time':
-				$format = $this->get_time_format();
+				$retval = $this->get_time_format();
 				break;
 
+			// WordPress date_fromat only
 			case 'date':
 			default:
-				$format = $this->get_date_format();
+				$retval = $this->get_date_format();
 				break;
 		}
 
-		return $format;
+		return $retval;
 	}
 
 	/**
