@@ -670,14 +670,14 @@ function edd_reports_graph_controls() {
 							<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
 							<?php echo EDD()->html->date_field( array(
 								'name'        => 'filter_from',
-								'placeholder' => 'yyyy-mm-dd',
+								'placeholder' => edd_get_date_picker_format(),
 								'value'       => $from
 							) ); ?>
 
 							<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
 							<?php echo EDD()->html->date_field( array(
 								'name'        => 'filter_to',
-								'placeholder' => 'yyyy-mm-dd',
+								'placeholder' => edd_get_date_picker_format(),
 								'value'       => $to
 							) ); ?>
 						</span>
