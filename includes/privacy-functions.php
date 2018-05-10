@@ -349,6 +349,8 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 			),
 		);
 
+		$data_points = apply_filters( 'edd_privacy_order_details_item', $data_points, $payment );
+
 		$export_items[] = array(
 			'group_id'    => 'edd-order-details',
 			'group_label' => __( 'Customer Orders', 'easy-digital-downloads' ),
