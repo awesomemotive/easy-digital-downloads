@@ -50,8 +50,8 @@ function edd_get_timezone_id() {
  *
  * @param string $format Shorthand date format string. Accepts 'date', 'time', 'mysql', or
  *                       'datetime'. If none of the accepted values, the original value will
- *                       simply be returned. Default is the value of the `$date_format` property,
- *                       derived from the core 'date_format' option.
+ *                       simply be returned. Default 'date' represents the value of the
+ *                       'date_format' option.
  *
  * @return string date_format()-compatible date format string.
  */
