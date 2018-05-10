@@ -227,7 +227,7 @@ class EDD_Utilities {
 	 * @return int Value of the gmt_offset property.
 	 */
 	public function get_gmt_offset( $refresh = false ) {
-		if ( is_null( $this->gmt_format ) || ( true === $refresh ) ) {
+		if ( is_null( $this->gmt_offset ) || ( true === $refresh ) ) {
 			$this->set_gmt_offset();
 		}
 

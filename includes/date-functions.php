@@ -58,3 +58,34 @@ function edd_get_timezone_id() {
 function edd_get_date_format( $format = 'date' ) {
 	return EDD()->utils->get_date_format_string( $format );
 }
+
+/**
+ * Get the format used by date pickers
+ *
+ * @since 3.0
+ *
+ * @param string $context The context we are getting the format for. Accepts 'display' or 'js'.
+ *                        Use 'js' for use with jQuery UI Datepicker. Use 'display' for HTML attributes.
+ * @return string
+ */
+function edd_get_date_picker_format( $context = 'display' ) {
+
+	// What is the context that we are getting the picker format for?
+	switch ( $context ) {
+
+		// jQuery UI Datepicker does its own thing
+		case 'js' :
+		case 'javascript' :
+			$retval = 'yy-mm-dd';
+			break;
+
+		// Used to display in an attribute, placeholder, etc...
+		case 'display' :
+		default :
+			$retval = 'yyyy-mm-dd';
+			break;
+	}
+
+	// Filter & return
+	return apply_filters( 'edd_get_date_picker_format', $retval, $context );
+}
