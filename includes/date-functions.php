@@ -60,7 +60,18 @@ function edd_get_date_format( $format = 'date' ) {
 }
 
 /**
- * Get the format used by date pickers
+ * Get the format used by jQuery UI Datepickers.
+ *
+ * Use this if you need to use placeholder or format attributes in input fields.
+ *
+ * This is a bit different than `edd_get_date_format()` because these formats
+ * are exposed to users as hints and also used by jQuery UI so the Datepicker
+ * knows what format it returns into it's connected input value.
+ *
+ * Previous to this function existing, all values were hard-coded, causing some
+ * inconsistencies across admin-area screens.
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/commit/e9855762892b6eec578b0a402f7950f22bd19632
  *
  * @since 3.0
  *
@@ -76,13 +87,13 @@ function edd_get_date_picker_format( $context = 'display' ) {
 		// jQuery UI Datepicker does its own thing
 		case 'js' :
 		case 'javascript' :
-			$retval = EDD()->utils->get_date_format_string( 'picker-js' );
+			$retval = EDD()->utils->get_date_format_string( 'date-js' );
 			break;
 
 		// Used to display in an attribute, placeholder, etc...
 		case 'display' :
 		default :
-			$retval = EDD()->utils->get_date_format_string( 'picker-field' );
+			$retval = EDD()->utils->get_date_format_string( 'date-attribute' );
 			break;
 	}
 
