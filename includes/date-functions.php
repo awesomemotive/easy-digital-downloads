@@ -97,6 +97,13 @@ function edd_get_date_picker_format( $context = 'display' ) {
 			break;
 	}
 
-	// Filter & return
+	/**
+	 * Filter the date picker format, allowing for custom overrides
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $retval  Date format for date picker
+	 * @param string $context The context this format is for
+	 */
 	return apply_filters( 'edd_get_date_picker_format', $retval, $context );
 }
