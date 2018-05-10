@@ -295,7 +295,7 @@ function edd_customers_view( $customer = '' ) {
 	                    printf(
 		                    /* translators: The date. */
 		                    esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
-                            esc_html( date_i18n( get_option( 'date_format' ), strtotime( $customer->date_created ) ) )
+                            esc_html( edd_date_i18n( $customer->date_created ) )
                         );
 	                    ?>
 					</span>
@@ -468,7 +468,7 @@ function edd_customers_view( $customer = '' ) {
                     <tr>
                         <td><?php echo esc_html( $payment->ID ); ?></td>
                         <td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-                        <td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?></td>
+                        <td><?php echo edd_date_i18n( $payment->post_date ); ?></td>
                         <td><?php echo edd_get_payment_status( $payment, true ); ?></td>
                         <td>
                             <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">

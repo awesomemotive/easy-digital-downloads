@@ -22,7 +22,7 @@ class EDD_Utilities {
 	 * @since 3.0
 	 * @var   int
 	 */
-	private $wp_offset;
+	private $gmt_offset = null;
 
 	/**
 	 * Represents the value of the WordPress 'date_format' option at run-time.
@@ -30,7 +30,7 @@ class EDD_Utilities {
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $date_format;
+	private $date_format = null;
 
 	/**
 	 * Represents the value of the WordPress 'time_format' option at run-time.
@@ -38,7 +38,15 @@ class EDD_Utilities {
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $time_format;
+	private $time_format = null;
+
+	/**
+	 * Represents the value of the WordPress time zone at run-time.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	private $time_zone = null;
 
 	/**
 	 * Sets up instantiating core utilities.
@@ -46,10 +54,10 @@ class EDD_Utilities {
 	 * @since 3.0
 	 */
 	public function __construct() {
-		$this->wp_offset   = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
-		$this->date_format = get_option( 'date_format', 'M j, Y' );
-		$this->time_format = get_option( 'time_format', 'g:i a' );
-
+		$this->set_gmt_offset();
+		$this->set_date_format();
+		$this->set_time_format();
+		$this->set_time_zone();
 		$this->includes();
 	}
 
@@ -134,7 +142,7 @@ class EDD_Utilities {
 	 *                       derived from the core 'date_format' option.
 	 * @return string date_format()-compatible date format string.
 	 */
-	public function get_date_format_string( $format ) {
+	public function get_date_format_string( $format = 'date' ) {
 
 		if ( empty( $format ) ) {
 			$format = 'date';
@@ -145,16 +153,16 @@ class EDD_Utilities {
 		}
 
 		switch( $format ) {
-			case 'time':
-				$format = $this->get_time_format();
+			case 'mysql':
+				$format = 'Y-m-d H:i:s';
 				break;
 
 			case 'datetime':
 				$format = $this->get_date_format() . ' ' . $this->get_time_format();
 				break;
 
-			case 'mysql':
-				$format = 'Y-m-d H:i:s';
+			case 'time':
+				$format = $this->get_time_format();
 				break;
 
 			case 'date':
@@ -182,8 +190,9 @@ class EDD_Utilities {
 	 */
 	public function date( $date_string = 'now', $timezone = null, $apply_offset = true ) {
 
+		// Fallback to this time zone
 		if ( null === $timezone ) {
-			$timezone = edd_get_timezone();
+			$timezone = $this->get_time_zone();
 		}
 
 		/*
@@ -209,42 +218,147 @@ class EDD_Utilities {
 	}
 
 	/**
-	 * Retrieves the value of the wp_offset property.
+	 * Retrieves the WordPress GMT offset property, as cached at run-time.
 	 *
 	 * @since 3.0
 	 *
-	 * @param bool $refresh Optional. Whether to refresh the `$wp_offset` value before retrieval.
+	 * @param bool $refresh Optional. Whether to refresh the `$gmt_offset` value before retrieval.
 	 *                      Default false.
-	 * @return int Value of the wp_offset property.
+	 * @return int Value of the gmt_offset property.
 	 */
-	public function get_wp_offset( $refresh = false ) {
-		if ( true === $refresh ) {
-			$this->wp_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
+	public function get_gmt_offset( $refresh = false ) {
+		if ( is_null( $this->gmt_format ) || ( true === $refresh ) ) {
+			$this->set_gmt_offset();
 		}
 
-		return $this->wp_offset;
+		return $this->gmt_offset;
 	}
 
 	/**
-	 * Retrieves the WordPress date_format, as cached at run-time.
+	 * Retrieves the WordPress date format, as cached at run-time.
 	 *
 	 * @since 3.0
 	 *
+	 * @param bool $refresh Optional. Whether to refresh the `$gmt_offset` value before retrieval.
+	 *                      Default false.
 	 * @return string Value of the `$date_format` property.
 	 */
-	public function get_date_format() {
+	public function get_date_format( $refresh = false ) {
+		if ( is_null( $this->date_format ) || ( true === $refresh ) ) {
+			$this->set_date_format();
+		}
+
 		return $this->date_format;
 	}
 
 	/**
-	 * Retrieves the WordPress time_format, as cached at run-time.
+	 * Retrieves the WordPress time format, as cached at run-time.
 	 *
 	 * @since 3.0
 	 *
+	 * @param bool $refresh Optional. Whether to refresh the `$gmt_offset` value before retrieval.
+	 *                      Default false.
 	 * @return string Value of the `$time_format` property.
 	 */
-	public function get_time_format() {
+	public function get_time_format( $refresh = false ) {
+		if ( is_null( $this->time_format ) || ( true === $refresh ) ) {
+			$this->set_time_format();
+		}
+
 		return $this->time_format;
 	}
 
+	/**
+	 * Retrieves the WordPress time zone, as cached at run-time.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $refresh Optional. Whether to refresh the `$time_zone` value before retrieval.
+	 *                      Default false.
+	 * @return string Value of the `$time_zone` property.
+	 */
+	public function get_time_zone( $refresh = false ) {
+		if ( is_null( $this->time_zone ) || ( true === $refresh ) ) {
+			$this->set_time_zone();
+		}
+
+		return $this->time_zone;
+	}
+
+	/** Private Setters *******************************************************/
+
+	/**
+	 * Private setter for GMT offset
+	 *
+	 * @since 3.0
+	 */
+	private function set_gmt_offset() {
+		$this->gmt_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
+	}
+
+	/**
+	 * Private setter for date format
+	 *
+	 * @since 3.0
+	 */
+	private function set_date_format() {
+		$this->date_format = get_option( 'date_format', 'M j, Y' );
+	}
+
+	/**
+	 * Private setter for time format
+	 *
+	 * @since 3.0
+	 */
+	private function set_time_format() {
+		$this->time_format = get_option( 'time_format', 'g:i a'  );
+	}
+
+	/**
+	 * Private setter for time zone
+	 *
+	 * @since 3.0
+	 */
+	private function set_time_zone() {
+
+		// Default return value
+		$retval = 'UTC';
+
+		// Get some useful values
+		$timezone   = get_option( 'timezone_string' );
+		$gmt_offset = $this->get_gmt_offset();
+
+		// Use timezone string if it's available
+		if ( ! empty( $timezone ) ) {
+			$retval = $timezone;
+
+		// Use GMT offset to calculate from list
+		} elseif ( ! empty( $gmt_offset ) ) {
+
+			// Attempt to guess the timezone string from the GMT offset & DST
+			$is_dst   = date( 'I' );
+			$timezone = timezone_name_from_abbr( '', $gmt_offset, $is_dst );
+
+			// Return the timezone
+			if ( false !== $timezone ) {
+				$retval = $timezone;
+
+			// Last try, guess timezone string manually
+			} else {
+				$list = timezone_abbreviations_list();
+
+				foreach ( $list as $abbr ) {
+					foreach ( $abbr as $city ) {
+						if ( ( $city['dst'] == $is_dst ) && ( $city['offset'] == $gmt_offset ) ) {
+							$retval = $city['timezone_id'];
+							break 2;
+						}
+					}
+				}
+			}
+		}
+
+		// Set
+		$this->time_zone = $retval;
+	}
 }
