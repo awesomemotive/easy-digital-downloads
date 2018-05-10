@@ -136,10 +136,10 @@ class EDD_Utilities {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $format Shorthand date format string. Accepts 'date', 'time', 'mysql', or
-	 *                       'datetime'. If none of the accepted values, the original value will
-	 *                       simply be returned. Default is the value of the `$date_format` property,
-	 *                       derived from the core 'date_format' option.
+	 * @param string $format Shorthand date format string. Accepts 'date', 'time', 'mysql', 'datetime',
+	 *                       'picker-field' or 'picker-js'. If none of the accepted values, the
+	 *                       original value will simply be returned. Default is the value of the
+	 *                       `$date_format` property, derived from the core 'date_format' option.
 	 * @return string date_format()-compatible date format string.
 	 */
 	public function get_date_format_string( $format = 'date' ) {
@@ -148,11 +148,19 @@ class EDD_Utilities {
 			$format = 'date';
 		}
 
-		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql' ) ) ) {
+		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'picker-field', 'picker-js' ) ) ) {
 			return $format;
 		}
 
 		switch( $format ) {
+			case 'picker-field' :
+				$format = 'yyyy-mm-dd';
+				break;
+
+			case 'picker-js' :
+				$format = 'yy-mm-dd';
+				break;
+
 			case 'mysql':
 				$format = 'Y-m-d H:i:s';
 				break;

@@ -76,13 +76,13 @@ function edd_get_date_picker_format( $context = 'display' ) {
 		// jQuery UI Datepicker does its own thing
 		case 'js' :
 		case 'javascript' :
-			$retval = 'yy-mm-dd';
+			$retval = EDD()->utils->get_date_format_string( 'picker-js' );
 			break;
 
 		// Used to display in an attribute, placeholder, etc...
 		case 'display' :
 		default :
-			$retval = 'yyyy-mm-dd';
+			$retval = EDD()->utils->get_date_format_string( 'picker-field' );
 			break;
 	}
 
