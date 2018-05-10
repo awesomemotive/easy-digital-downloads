@@ -21,49 +21,24 @@
  * @return string The formatted date, translated if locale specifies it.
  */
 function edd_date_i18n( $timestamp, $format = 'date' ) {
-
 	$format = edd_get_date_format( $format );
+
+	// If timestamp is a string, attempt to turn it into a timestamp.
+	if ( is_string( $timestamp ) ) {
+		$timestamp = strtotime( $timestamp );
+	}
 
 	return date_i18n( $format, (int) $timestamp );
 }
 
 /**
- * Attempts to derive a timezone string from the WordPress settings.
+ * Retrieve timezone ID
  *
- * @since 3.0
- *
- * @return string WordPress timezone as derived from a combination of the timezone_string
- *                and gmt_offset options. If no valid timezone could be found, defaults to
- *                UTC.
+ * @since 1.6
+ * @return string $timezone The timezone ID
  */
-function edd_get_timezone() {
-
-	// Passing a $default value doesn't work for the timezone_string option.
-	$timezone = get_option( 'timezone_string' );
-
-	/*
-	 * If the timezone isn't set, or rather was set to a UTC offset, core saves the value
-	 * to the gmt_offset option and leaves timezone_string empty – because that makes
-	 * total sense, obviously. ¯\_(ツ)_/¯
-	 *
-	 * So, try to use the gmt_offset to derive a timezone.
-	 */
-	if ( empty( $timezone ) ) {
-		// Try to grab the offset instead.
-		$gmt_offset = get_option( 'gmt_offset', 0 );
-
-		// Yes, core returns it as a string, so as not to confuse it with falsey.
-		if ( '0' !== $gmt_offset ) {
-			$timezone = timezone_name_from_abbr( '', (int) $gmt_offset * HOUR_IN_SECONDS, date( 'I' ) );
-		}
-
-		// If the offset was 0 or $timezone is still empty, just use 'UTC'.
-		if ( '0' === $gmt_offset || empty( $timezone ) ) {
-			$timezone = 'UTC';
-		}
-	}
-
-	return $timezone;
+function edd_get_timezone_id() {
+	return EDD()->utils->get_time_zone( true );
 }
 
 /**
@@ -80,6 +55,6 @@ function edd_get_timezone() {
  *
  * @return string date_format()-compatible date format string.
  */
-function edd_get_date_format( $format ) {
+function edd_get_date_format( $format = 'date' ) {
 	return EDD()->utils->get_date_format_string( $format );
 }

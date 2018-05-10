@@ -57,7 +57,7 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php if ( filter_var( $edd_receipt_args['date'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Date', 'easy-digital-downloads' ); ?>:</strong></td>
-			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
+			<td><?php echo edd_date_i18n( $meta['date'] ); ?></td>
 		</tr>
 		<?php endif; ?>
 
