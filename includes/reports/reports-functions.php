@@ -1008,18 +1008,18 @@ function display_dates_filter( $report ) {
 				echo EDD()->html->date_field( array(
 					'id'          => 'filter_from',
 					'name'        => 'filter_from',
-					'value'       => ( empty( $dates['from'] ) || 'other' !== $dates['range'] ) ? '' : $dates['from'],
+					'value'       => ( empty( $dates['from'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['from'],
 					'label'       => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-					'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
+					'placeholder' => edd_get_date_picker_format()
 				) );
 
 				// To.
 				echo EDD()->html->date_field( array(
 					'id'          => 'filter_to',
 					'name'        => 'filter_to',
-					'value'       => ( empty( $dates['to'] ) || 'other' !== $dates['range'] ) ? '' : $dates['to'],
+					'value'       => ( empty( $dates['to'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['to'],
 					'label'       => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-					'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ),
+					'placeholder' => edd_get_date_picker_format()
 				) );
 				?>
 			</span>

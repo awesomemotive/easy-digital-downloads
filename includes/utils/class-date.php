@@ -31,7 +31,7 @@ final class Date extends \Carbon\Carbon {
 	 */
 	public function __construct( $time = 'now', \DateTimeZone $timezone = null ) {
 		if ( null === $timezone ) {
-			$timezone = new \DateTimeZone( edd_get_timezone() );
+			$timezone = new \DateTimeZone( edd_get_timezone_id() );
 		}
 
 		parent::__construct( $time, $timezone );
@@ -54,13 +54,19 @@ final class Date extends \Carbon\Carbon {
 	 * @return string|int|\DateTime Formatted date string, timestamp if `$type` is timestamp,
 	 *                              or a DateTime object if `$type` is 'object'.
 	 */
-	public function format( $format ) {
+	public function format( $format = 'datetime' ) {
 
 		if ( empty( $format ) || true === $format ) {
 			$format = 'datetime';
 		}
 
 		switch( $format ) {
+
+			// jQuery UI Datepicker formats
+			case 'date-attribute':
+			case 'date-js':
+
+			// WordPress Formats
 			case 'date':
 			case 'time':
 			case 'datetime':
@@ -101,7 +107,6 @@ final class Date extends \Carbon\Carbon {
 	 * @return int WordPress "local" timestamp.
 	 */
 	public function getWPTimestamp() {
-		return $this->getTimestamp() + EDD()->utils->get_wp_offset();
+		return $this->getTimestamp() + EDD()->utils->get_gmt_offset();
 	}
-
 }

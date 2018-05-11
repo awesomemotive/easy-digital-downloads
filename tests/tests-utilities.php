@@ -21,7 +21,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		update_option( 'gmt_offset', -5 );
 
-		EDD()->utils->get_wp_offset( true );
+		EDD()->utils->get_gmt_offset( true );
 
 		self::$utils = new \EDD_Utilities;
 	}
@@ -117,27 +117,27 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_wp_offset()
+	 * @covers ::get_gmt_offset()
 	 * @group edd_dates
 	 */
-	public function test_get_wp_offset_should_return_wp_offset() {
+	public function test_get_gmt_offset_should_return_gmt_offset() {
 		$expected = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
 
-		$this->assertSame( $expected, self::$utils->get_wp_offset() );
+		$this->assertSame( $expected, self::$utils->get_gmt_offset() );
 	}
 
 	/**
-	 * @covers ::get_wp_offset()
+	 * @covers ::get_gmt_offset()
 	 * @group edd_dates
 	 */
-	public function test_get_wp_offset_refresh_true_should_refresh_the_stored_offset() {
+	public function test_get_gmt_offset_refresh_true_should_refresh_the_stored_offset() {
 		$current_gmt = get_option( 'gmt_offset', 0 );
 
 		update_option( 'gmt_offset', -6 );
 
 		$expected = get_option( 'gmt_offset', -6 ) * HOUR_IN_SECONDS;
 
-		$this->assertSame( $expected, self::$utils->get_wp_offset( true ) );
+		$this->assertSame( $expected, self::$utils->get_gmt_offset( true ) );
 
 		// Clean up.
 		update_option( 'gmt_offset', $current_gmt );
