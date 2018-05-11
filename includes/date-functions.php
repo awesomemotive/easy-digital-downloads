@@ -21,49 +21,24 @@
  * @return string The formatted date, translated if locale specifies it.
  */
 function edd_date_i18n( $timestamp, $format = 'date' ) {
-
 	$format = edd_get_date_format( $format );
+
+	// If timestamp is a string, attempt to turn it into a timestamp.
+	if ( is_string( $timestamp ) ) {
+		$timestamp = strtotime( $timestamp );
+	}
 
 	return date_i18n( $format, (int) $timestamp );
 }
 
 /**
- * Attempts to derive a timezone string from the WordPress settings.
+ * Retrieve timezone ID
  *
- * @since 3.0
- *
- * @return string WordPress timezone as derived from a combination of the timezone_string
- *                and gmt_offset options. If no valid timezone could be found, defaults to
- *                UTC.
+ * @since 1.6
+ * @return string $timezone The timezone ID
  */
-function edd_get_timezone() {
-
-	// Passing a $default value doesn't work for the timezone_string option.
-	$timezone = get_option( 'timezone_string' );
-
-	/*
-	 * If the timezone isn't set, or rather was set to a UTC offset, core saves the value
-	 * to the gmt_offset option and leaves timezone_string empty – because that makes
-	 * total sense, obviously. ¯\_(ツ)_/¯
-	 *
-	 * So, try to use the gmt_offset to derive a timezone.
-	 */
-	if ( empty( $timezone ) ) {
-		// Try to grab the offset instead.
-		$gmt_offset = get_option( 'gmt_offset', 0 );
-
-		// Yes, core returns it as a string, so as not to confuse it with falsey.
-		if ( '0' !== $gmt_offset ) {
-			$timezone = timezone_name_from_abbr( '', (int) $gmt_offset * HOUR_IN_SECONDS, date( 'I' ) );
-		}
-
-		// If the offset was 0 or $timezone is still empty, just use 'UTC'.
-		if ( '0' === $gmt_offset || empty( $timezone ) ) {
-			$timezone = 'UTC';
-		}
-	}
-
-	return $timezone;
+function edd_get_timezone_id() {
+	return EDD()->utils->get_time_zone( true );
 }
 
 /**
@@ -75,11 +50,60 @@ function edd_get_timezone() {
  *
  * @param string $format Shorthand date format string. Accepts 'date', 'time', 'mysql', or
  *                       'datetime'. If none of the accepted values, the original value will
- *                       simply be returned. Default is the value of the `$date_format` property,
- *                       derived from the core 'date_format' option.
+ *                       simply be returned. Default 'date' represents the value of the
+ *                       'date_format' option.
  *
  * @return string date_format()-compatible date format string.
  */
-function edd_get_date_format( $format ) {
+function edd_get_date_format( $format = 'date' ) {
 	return EDD()->utils->get_date_format_string( $format );
+}
+
+/**
+ * Get the format used by jQuery UI Datepickers.
+ *
+ * Use this if you need to use placeholder or format attributes in input fields.
+ *
+ * This is a bit different than `edd_get_date_format()` because these formats
+ * are exposed to users as hints and also used by jQuery UI so the Datepicker
+ * knows what format it returns into it's connected input value.
+ *
+ * Previous to this function existing, all values were hard-coded, causing some
+ * inconsistencies across admin-area screens.
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/commit/e9855762892b6eec578b0a402f7950f22bd19632
+ *
+ * @since 3.0
+ *
+ * @param string $context The context we are getting the format for. Accepts 'display' or 'js'.
+ *                        Use 'js' for use with jQuery UI Datepicker. Use 'display' for HTML attributes.
+ * @return string
+ */
+function edd_get_date_picker_format( $context = 'display' ) {
+
+	// What is the context that we are getting the picker format for?
+	switch ( $context ) {
+
+		// jQuery UI Datepicker does its own thing
+		case 'js' :
+		case 'javascript' :
+			$retval = EDD()->utils->get_date_format_string( 'date-js' );
+			break;
+
+		// Used to display in an attribute, placeholder, etc...
+		case 'display' :
+		default :
+			$retval = EDD()->utils->get_date_format_string( 'date-attribute' );
+			break;
+	}
+
+	/**
+	 * Filter the date picker format, allowing for custom overrides
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $retval  Date format for date picker
+	 * @param string $context The context this format is for
+	 */
+	return apply_filters( 'edd_get_date_picker_format', $retval, $context );
 }

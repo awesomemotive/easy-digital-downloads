@@ -667,11 +667,19 @@ function edd_reports_graph_controls() {
 						$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
 						?>
 						<span class="edd-search-date">
-						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
-							<?php echo EDD()->html->date_field( array( 'name' => 'filter_from', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $from ) ); ?>
+							<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
+							<?php echo EDD()->html->date_field( array(
+								'name'        => 'filter_from',
+								'placeholder' => edd_get_date_picker_format(),
+								'value'       => $from
+							) ); ?>
 
 							<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
-							<?php echo EDD()->html->date_field( array( 'name' => 'filter_to', 'placeholder' => __( 'mm/dd/yyyy', 'easy-digital-downloads' ), 'value' => $to ) ); ?>
+							<?php echo EDD()->html->date_field( array(
+								'name'        => 'filter_to',
+								'placeholder' => edd_get_date_picker_format(),
+								'value'       => $to
+							) ); ?>
 						</span>
 					</fieldset>
 				</div>

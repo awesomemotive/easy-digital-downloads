@@ -246,6 +246,7 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_decimals'           => edd_currency_decimal_filter(),
 		'decimal_separator'           => edd_get_option( 'decimal_separator', '.' ),
 		'thousands_separator'         => edd_get_option( 'thousands_separator', ',' ),
+		'date_picker_format'          => edd_get_date_picker_format( 'js' ),
 		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'                 => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'              => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
