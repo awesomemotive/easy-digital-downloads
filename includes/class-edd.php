@@ -100,6 +100,22 @@ final class Easy_Digital_Downloads {
 	public $cart;
 
 	/**
+	 * EDD Tracking Object
+	 *
+	 * @var object|EDD_Tracking
+	 * @since 3.0
+	 */
+	public $tracking;
+
+	/**
+	 * EDD Notices Object
+	 *
+	 * @var object|EDD_Notices
+	 * @since 3.0
+	 */
+	public $notices;
+
+	/**
 	 * EDD Components array
 	 *
 	 * @var array
@@ -146,6 +162,12 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+			self::$instance->tracking      = new EDD_Tracking();
+
+			// Admin APIs
+			if ( is_admin() ) {
+				self::$instance->notices   = new EDD_Notices();
+			}
 
 			// Register backwards compatibility hooks
 			new EDD\Compat\Customer();
