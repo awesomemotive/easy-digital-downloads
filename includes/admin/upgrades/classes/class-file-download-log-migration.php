@@ -68,6 +68,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 			foreach ( $step_items as $log_id ) {
 
+				$log_id           = (int) $log_id['object_id'];
 				$sanitized_log_id = absint( $log_id );
 
 				if ( $sanitized_log_id !== $log_id ) {
@@ -83,8 +84,6 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 					if ( $customer_id < 0 ) {
 						$customer_id = 0;
 					}
-
-					edd_debug_log( "Updating log ID {$log_id} with customer ID {$customer_id} and removing user info" );
 
 					update_post_meta( $log_id, '_edd_log_customer_id', $customer_id );
 					delete_post_meta( $log_id, '_edd_log_user_info' );
@@ -187,34 +186,17 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	}
 
 	public function pre_fetch() {
-		global $edd_logs;
+		global $wpdb;
 
+		// Get all the file download logs
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_file_download_log_ids' );
-		}
 
-		// Get any file download logs that have an entry for the user info
-		$file_download_log_ids = get_option( 'edd_file_download_log_ids', false );
-		if ( false === $file_download_log_ids ) {
+			$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download'" );
+			$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type'" );
+			$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id}" );
 
-			$log_query = array(
-				'post_parent'            => null,
-				'log_type'               => 'file_download',
-				'posts_per_page'         => -1,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				'fields'                 => 'ids',
-				'meta_query'             => array(
-					array(
-						'key'     => '_edd_log_user_info',
-						'compare' => 'EXISTS',
-					)
-				)
-			);
-
-			$file_download_log_ids = $edd_logs->get_connected_logs( $log_query );
-
-			$this->store_data( 'edd_file_download_log_ids', $file_download_log_ids );
+			$this->store_data( 'edd_file_download_log_ids', $log_ids );
 
 		}
 
