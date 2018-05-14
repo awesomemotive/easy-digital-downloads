@@ -1242,7 +1242,7 @@ function edd_upgrade_render_update_file_download_log_data() {
 			</h2>
 			<div class="inside migrate-file-download-logs-control">
 				<p>
-					<?php _e( 'This will update the file download logs to remove some PII and make file download counts more accurate.', 'easy-digital-downloads' ); ?>
+					<?php _e( 'This will update the file download logs to remove some <abbr title="Personally Identifiable Information">PII</abbr> and make file download counts more accurate.', 'easy-digital-downloads' ); ?>
 				</p>
 				<form method="post" id="edd-fix-file-download-logs-form" class="edd-export-form edd-import-export-form">
 			<span class="step-instructions-wrapper">
