@@ -40,7 +40,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 * @since  2.9.2
 	 * @var integer
 	 */
-	public $per_step = 25;
+	public $per_step = 50;
 
 	/**
 	 * Get the Export Data
@@ -73,6 +73,11 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 				if ( $sanitized_log_id !== $log_id ) {
 					edd_debug_log( "Log ID mismatch, skipping log ID {$log_id}" );
+					continue;
+				}
+
+				$has_customer_id = get_post_meta( $log_id, '_edd_log_customer_id', true );
+				if ( ! empty( $has_customer_id ) ) {
 					continue;
 				}
 
