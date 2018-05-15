@@ -13,7 +13,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		update_option( 'gmt_offset', -5 );
 
-		EDD()->utils->get_wp_offset( true );
+		EDD()->utils->get_gmt_offset( true );
 	}
 
 	public function tearDown() {
@@ -31,7 +31,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 */
 	public function test_date_i18n_with_timestamp_and_no_format_should_return_localized_date_in_date_format() {
 		$expected = gmdate( get_option( 'date_format', '' ), strtotime( '01/02/2003' ) );
-		$actual   = edd_date_i18n( strtotime( '01/02/2003' ) );
+		$actual   = edd_date_i18n( '01/02/2003' );
 
 		$this->assertSame( $expected, $actual );
 	}
@@ -41,7 +41,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 */
 	public function test_date_i18n_with_empty_format_should_return_localized_date_in_date_format() {
 		$expected = gmdate( get_option( 'date_format', '' ), strtotime( '01/02/2003' ) );
-		$actual   = edd_date_i18n( strtotime( '01/02/2003' ), '' );
+		$actual   = edd_date_i18n( '01/02/2003', '' );
 
 		$this->assertSame( $expected, $actual );
 	}
@@ -61,10 +61,10 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_get_timezone()
+	 * @covers ::edd_get_timezone_id()
 	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {
-		$this->assertSame( 'America/New_York', edd_get_timezone() );
+		$this->assertSame( 'America/New_York', edd_get_timezone_id() );
 	}
 
 	/**

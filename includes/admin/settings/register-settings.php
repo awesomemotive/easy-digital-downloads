@@ -2357,8 +2357,13 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( $edd_option ) {
 			$value = $edd_option;
 		} else {
-			$value = isset( $args['std'] ) ? $args['std'] : '';
+			$value = isset( $args['std'] )
+				? $args['std']
+				: '';
 		}
+
+		$now        = current_time( 'timestamp' );
+		$expiration = strtotime( $license->expires, $now );
 
 		if ( ! empty( $license ) && is_object( $license ) ) {
 
@@ -2368,11 +2373,10 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 				switch ( $license->error ) {
 
 					case 'expired' :
-
 						$class      = 'expired';
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
-							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+							edd_date_i18n( $expiration ),
 							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 						);
 
@@ -2381,7 +2385,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'revoked' :
-
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
@@ -2393,7 +2396,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'missing' :
-
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
@@ -2406,7 +2408,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'invalid' :
 					case 'site_inactive' :
-
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
@@ -2419,7 +2420,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'item_name_mismatch' :
-
 						$class      = 'error';
 						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
 
@@ -2428,7 +2428,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'no_activations_left':
-
 						$class      = 'error';
 						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
 
@@ -2437,7 +2436,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'license_not_activable':
-
 						$class      = 'error';
 						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'easy-digital-downloads' );
 
@@ -2445,7 +2443,6 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					default :
-
 						$class      = 'error';
 						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'easy-digital-downloads' );
 						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownloads.com/support' );
@@ -2463,40 +2460,31 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 						$class = 'valid';
 
-						$now        = current_time( 'timestamp' );
-						$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
-
 						if ( 'lifetime' === $license->expires ) {
-
 							$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
 
 							$license_status = 'license-lifetime-notice';
 
-						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
-
+						} elseif ( ( $expiration > $now ) && ( $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) ) {
 							$messages[] = sprintf(
 								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+								edd_date_i18n( $expiration ),
 								'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 							);
 
 							$license_status = 'license-expires-soon-notice';
 
 						} else {
-
 							$messages[] = sprintf(
 								__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+								edd_date_i18n( $expiration )
 							);
 
 							$license_status = 'license-expiration-date-notice';
-
 						}
 
 						break;
-
 				}
-
 			}
 
 		} else {

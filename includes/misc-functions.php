@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Is Test Mode
@@ -786,6 +786,17 @@ function edd_let_to_num( $v ) {
 }
 
 /**
+ * Return the name of base uploads directory.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_uploads_base_dir() {
+	return 'edd'; // No filter, for now
+}
+
+/**
  * Retrieve the URL of the symlink directory
  *
  * @since 1.5
@@ -793,8 +804,10 @@ function edd_let_to_num( $v ) {
  */
 function edd_get_symlink_url() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$url = $wp_upload_dir['baseurl'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = '/' . $edd_dir . '/symlinks';
+	wp_mkdir_p( $wp_upload_dir['basedir'] . $path );
+	$url = $wp_upload_dir['baseurl'] . $path;
 
 	return apply_filters( 'edd_get_symlink_url', $url );
 }
@@ -807,8 +820,9 @@ function edd_get_symlink_url() {
  */
 function edd_get_symlink_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$path = $wp_upload_dir['basedir'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir . '/symlinks';
+	wp_mkdir_p( $path );
 
 	return apply_filters( 'edd_get_symlink_dir', $path );
 }
@@ -821,10 +835,20 @@ function edd_get_symlink_dir() {
  */
 function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
-	$path = $wp_upload_dir['basedir'] . '/edd';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
+	wp_mkdir_p( $path );
 
 	return apply_filters( 'edd_get_upload_dir', $path );
+}
+
+/**
+ * Return whether the base uploads directory is public or private
+ *
+ * @since 3.0
+ */
+function edd_is_uploads_url_public() {
+	return true;
 }
 
 /**
@@ -866,42 +890,6 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
 function edd_use_skus() {
 	$ret = edd_get_option( 'enable_skus', false );
 	return (bool) apply_filters( 'edd_use_skus', $ret );
-}
-
-/**
- * Retrieve timezone
- *
- * @since 1.6
- * @return string $timezone The timezone ID
- */
-function edd_get_timezone_id() {
-
-	// if site timezone string exists, return it
-	if ( $timezone = get_option( 'timezone_string' ) )
-		return $timezone;
-
-	// get UTC offset, if it isn't set return UTC
-	if ( ! ( $utc_offset = 3600 * get_option( 'gmt_offset', 0 ) ) )
-		return 'UTC';
-
-	// attempt to guess the timezone string from the UTC offset
-	$timezone = timezone_name_from_abbr( '', $utc_offset );
-
-	// last try, guess timezone string manually
-	if ( $timezone === false ) {
-
-		$is_dst = date( 'I' );
-
-		foreach ( timezone_abbreviations_list() as $abbr ) {
-			foreach ( $abbr as $city ) {
-				if ( $city['dst'] == $is_dst &&  $city['offset'] == $utc_offset )
-					return $city['timezone_id'];
-			}
-		}
-	}
-
-	// fallback
-	return 'UTC';
 }
 
 /**
@@ -966,7 +954,8 @@ function edd_set_upload_dir( $upload ) {
 		$upload['subdir'] = "/$y/$m";
 	}
 
-	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$edd_dir          = edd_get_uploads_base_dir();
+	$upload['subdir'] = '/' . $edd_dir . $upload['subdir'];
 	$upload['path']   = $upload['basedir'] . $upload['subdir'];
 	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;

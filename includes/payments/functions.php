@@ -1605,8 +1605,6 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 		$user = __( 'EDD Bot', 'easy-digital-downloads' );
 	}
 
-	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
-
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
 		'note_id'    => $note->get_id(),
@@ -1615,7 +1613,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 
 	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->get_id() . '">';
 		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->get_date_created() ) ) . '<br/>';
+			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . edd_date_i18n( $note->get_date_created(), 'datetime' ) . '<br/>';
 			$note_html .= make_clickable( $note->get_content() );
 			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->get_id() ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</p>';

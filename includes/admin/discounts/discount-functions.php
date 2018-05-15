@@ -38,9 +38,6 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 		? get_userdata( $note->user_id )->display_name
 		: __( 'EDD Bot', 'easy-digital-downloads' );
 
-	// Date format
-	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
-
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action'  => 'delete_discount_note',
@@ -51,7 +48,7 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 	// Output
 	$note_html = '<div class="edd-discount-note" id="edd-discount-note-' . esc_attr( $note->id ) . '">';
 		$note_html .='<div><strong class="edd-discount-note-author">' . esc_html( $user ) . '</strong>';
-		$note_html .= '<time datetime="' . esc_attr( $note->date_created ) . '">' . date_i18n( $date_format, strtotime( $note->date_created ) ) . '</time>';
+		$note_html .= '<time datetime="' . esc_attr( $note->date_created ) . '">' . edd_date_i18n( $note->date_created, 'datetime' ) . '</time>';
 		$note_html .= '<p>' . make_clickable( $note->content ) . '</p>';
 		$note_html .= '<a href="' . esc_url( $delete_note_url ) . '#edd-discount-notes" class="edd-delete-discount-note" data-note-id="' . esc_attr( $note->id ) . '" data-discount-id="' . esc_attr( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		$note_html .= '</div>';
