@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Notes Schema Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Notes extends Base {
 
 	/**
 	 * Array of database column objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */

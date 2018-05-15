@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Is Test Mode
@@ -628,12 +628,114 @@ function _edd_deprecated_file( $file, $version, $replacement = null, $message = 
 	 * @param bool $show_errors Whether to trigger errors for deprecated files.
 	 */
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_file_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
 		if ( ! is_null( $replacement ) ) {
 			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative file name */
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $file, $version, $replacement ) . $message );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $file, $version, $replacement ) . $message );
 		} else {
 			/* translators: 1: PHP file name, 2: EDD version number */
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'easy-digital-downloads' ), $file, $version ) . $message );
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $file, $version ) . $message );
+		}
+	}
+}
+
+/**
+ * Fires functions attached to a deprecated EDD filter hook.
+ *
+ * When a filter hook is deprecated, the apply_filters() call is replaced with
+ * edd_apply_filters_deprecated(), which triggers a deprecation notice and then fires
+ * the original filter hook.
+ *
+ * @param string $tag         The name of the filter hook.
+ * @param array  $args        Array of additional function arguments to be passed to apply_filters().
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used. Default false.
+ * @param string $message     Optional. A message regarding the change. Default null.
+ */
+function edd_apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+	if ( ! has_filter( $tag ) ) {
+		return $args[0];
+	}
+
+	_edd_deprecated_hook( $tag, $version, $replacement, $message );
+
+	return apply_filters_ref_array( $tag, $args );
+}
+
+/**
+ * Fires functions attached to a deprecated EDD action hook.
+ *
+ * When an action hook is deprecated, the do_action() call is replaced with
+ * edd_do_action_deprecated(), which triggers a deprecation notice and then fires
+ * the original hook.
+ *
+ * @param string $tag         The name of the action hook.
+ * @param array  $args        Array of additional function arguments to be passed to do_action().
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used.
+ * @param string $message     Optional. A message regarding the change.
+ */
+function edd_do_action_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+	if ( ! has_action( $tag ) ) {
+		return;
+	}
+
+	_edd_deprecated_hook( $tag, $version, $replacement, $message );
+
+	do_action_ref_array( $tag, $args );
+}
+
+/**
+ * Marks a deprecated EDD action or filter hook as deprecated and throws a notice.
+ *
+ * Use the {@see 'edd_deprecated_hook_run'} action to get the backtrace describing where
+ * the deprecated hook was called.
+ *
+ * Default behavior is to trigger a user error if `WP_DEBUG` is true.
+ *
+ * This function is called by the edd_do_action_deprecated() and edd_apply_filters_deprecated()
+ * functions, and so generally does not need to be called directly.
+ *
+ * @since 3.0
+ *
+ * @param string $hook        The hook that was used.
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used.
+ * @param string $message     Optional. A message regarding the change.
+ */
+function _edd_deprecated_hook( $hook, $version, $replacement = null, $message = null ) {
+	/**
+	 * Fires when a deprecated EDD hook is called.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $hook        The hook that was called.
+	 * @param string $replacement The hook that should be used as a replacement.
+	 * @param string $version     The version of WordPress that deprecated the argument used.
+	 * @param string $message     A message regarding the change.
+	 */
+	do_action( 'edd_deprecated_hook_run', $hook, $replacement, $version, $message );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	/**
+	 * Filters whether to trigger deprecated EDD hook errors.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $trigger Whether to trigger deprecated hook errors. Requires
+	 *                      `WP_DEBUG` to be defined true.
+	 */
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_hook_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
+		if ( ! is_null( $replacement ) ) {
+			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative hook name */
+			trigger_error( sprintf( __( 'The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use the %3$s hook instead.', 'easy-digital-downloads' ), $hook, $version, $replacement ) . $message );
+		} else {
+			/* translators: 1: PHP file name, 2: EDD version number */
+			trigger_error( sprintf( __( 'The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $hook, $version ) . $message );
 		}
 	}
 }
@@ -684,6 +786,17 @@ function edd_let_to_num( $v ) {
 }
 
 /**
+ * Return the name of base uploads directory.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_uploads_base_dir() {
+	return 'edd'; // No filter, for now
+}
+
+/**
  * Retrieve the URL of the symlink directory
  *
  * @since 1.5
@@ -691,8 +804,10 @@ function edd_let_to_num( $v ) {
  */
 function edd_get_symlink_url() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$url = $wp_upload_dir['baseurl'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = '/' . $edd_dir . '/symlinks';
+	wp_mkdir_p( $wp_upload_dir['basedir'] . $path );
+	$url = $wp_upload_dir['baseurl'] . $path;
 
 	return apply_filters( 'edd_get_symlink_url', $url );
 }
@@ -705,8 +820,9 @@ function edd_get_symlink_url() {
  */
 function edd_get_symlink_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$path = $wp_upload_dir['basedir'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir . '/symlinks';
+	wp_mkdir_p( $path );
 
 	return apply_filters( 'edd_get_symlink_dir', $path );
 }
@@ -719,8 +835,9 @@ function edd_get_symlink_dir() {
  */
 function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
-	$path = $wp_upload_dir['basedir'] . '/edd';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
+	wp_mkdir_p( $path );
 
 	return apply_filters( 'edd_get_upload_dir', $path );
 }
@@ -764,42 +881,6 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
 function edd_use_skus() {
 	$ret = edd_get_option( 'enable_skus', false );
 	return (bool) apply_filters( 'edd_use_skus', $ret );
-}
-
-/**
- * Retrieve timezone
- *
- * @since 1.6
- * @return string $timezone The timezone ID
- */
-function edd_get_timezone_id() {
-
-	// if site timezone string exists, return it
-	if ( $timezone = get_option( 'timezone_string' ) )
-		return $timezone;
-
-	// get UTC offset, if it isn't set return UTC
-	if ( ! ( $utc_offset = 3600 * get_option( 'gmt_offset', 0 ) ) )
-		return 'UTC';
-
-	// attempt to guess the timezone string from the UTC offset
-	$timezone = timezone_name_from_abbr( '', $utc_offset );
-
-	// last try, guess timezone string manually
-	if ( $timezone === false ) {
-
-		$is_dst = date( 'I' );
-
-		foreach ( timezone_abbreviations_list() as $abbr ) {
-			foreach ( $abbr as $city ) {
-				if ( $city['dst'] == $is_dst &&  $city['offset'] == $utc_offset )
-					return $city['timezone_id'];
-			}
-		}
-	}
-
-	// fallback
-	return 'UTC';
 }
 
 /**
@@ -864,7 +945,8 @@ function edd_set_upload_dir( $upload ) {
 		$upload['subdir'] = "/$y/$m";
 	}
 
-	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$edd_dir          = edd_get_uploads_base_dir();
+	$upload['subdir'] = '/' . $edd_dir . $upload['subdir'];
 	$upload['path']   = $upload['basedir'] . $upload['subdir'];
 	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;

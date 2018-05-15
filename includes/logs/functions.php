@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add a log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int|false ID of newly created log, false on error.
@@ -37,7 +37,7 @@ function edd_add_log( $data = array() ) {
 /**
  * Delete a log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $log_id Log ID.
  * @return int
@@ -51,7 +51,7 @@ function edd_delete_log( $log_id = 0 ) {
 /**
  * Update a log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $log_id Log ID.
  * @param array $data   Updated log data.
@@ -66,7 +66,7 @@ function edd_update_log( $log_id = 0, $data = array() ) {
 /**
  * Get a log by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $log_id Log ID.
  * @return object
@@ -78,7 +78,7 @@ function edd_get_log( $log_id = 0 ) {
 /**
  * Get a log by a specific field's value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -96,7 +96,7 @@ function edd_get_log_by( $field = '', $value = '' ) {
 /**
  * Query for logs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -118,7 +118,7 @@ function edd_get_logs( $args = array() ) {
 /**
  * Count logs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return int
@@ -142,7 +142,7 @@ function edd_count_logs( $args = array() ) {
 /**
  * Add a file download log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int|false ID of newly created log, false on error.
@@ -164,7 +164,7 @@ function edd_add_file_download_log( $data = array() ) {
 /**
  * Delete a file download log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $log_id Log ID.
  * @return int
@@ -178,7 +178,7 @@ function edd_delete_file_download_log( $log_id = 0 ) {
 /**
  * Update a file download log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $log_id API request log ID.
  * @param array $data   Updated file download log data.
@@ -193,7 +193,7 @@ function edd_update_file_download_log( $log_id = 0, $data = array() ) {
 /**
  * Get a file download log by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $log_id Log ID.
  * @return object
@@ -205,7 +205,7 @@ function edd_get_file_download_log( $log_id = 0 ) {
 /**
  * Get a file download log by field and value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -223,7 +223,7 @@ function edd_get_file_download_log_by( $field = '', $value = '' ) {
 /**
  * Query for file download logs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -245,7 +245,7 @@ function edd_get_file_download_logs( $args = array() ) {
 /**
  * Count file download logs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return int
@@ -269,7 +269,7 @@ function edd_count_file_download_logs( $args = array() ) {
 /**
  * Add an API request log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int|false ID of newly created log, false on error.
@@ -291,7 +291,7 @@ function edd_add_api_request_log( $data = array() ) {
 /**
  * Delete an API request log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $log_id API request log ID.
  * @return int
@@ -305,7 +305,7 @@ function edd_delete_api_request_log( $log_id = 0 ) {
 /**
  * Update an API request log.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $log_id API request log ID.
  * @param array $data   Updated API request log data.
@@ -320,7 +320,7 @@ function edd_update_api_request_log( $log_id = 0, $data = array() ) {
 /**
  * Get an API request log by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $log_id API request log ID.
  * @return object
@@ -332,7 +332,7 @@ function edd_get_api_request_log( $log_id = 0 ) {
 /**
  * Get an API request log by a specific field's value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -348,7 +348,7 @@ function edd_get_api_request_log_by( $field = '', $value = '' ) {
 /**
  * Query for API request logs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -370,7 +370,7 @@ function edd_get_api_request_logs( $args = array() ) {
 /**
  * Count API request logs.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return int

@@ -35,12 +35,9 @@ final class EDD_Amazon_Payments {
 	 */
 	private function __construct() {
 
-		if ( version_compare( phpversion(), 5.3, '<' ) ) {
-			// The Amazon Login & Pay libraries require PHP 5.3
-			return;
-		}
-
-		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
+		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] )
+			? sanitize_text_field( $_REQUEST['amazon_reference_id'] )
+			: '';
 
 		// Run this separate so we can ditch as early as possible
 		$this->register();
@@ -348,11 +345,6 @@ final class EDD_Amazon_Payments {
 	public function register_gateway_settings( $gateway_settings ) {
 
 		$default_amazon_settings = array(
-			'amazon' => array(
-				'id'   => 'amazon',
-				'name' => '<strong>' . __( 'Amazon Payments Settings', 'easy-digital-downloads' ) . '</strong>',
-				'type' => 'header',
-			),
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
 				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),

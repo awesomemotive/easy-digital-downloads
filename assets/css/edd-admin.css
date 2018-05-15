@@ -30,15 +30,83 @@ a.edd-delete:hover {
 /* General Settings Styles
 -------------------------------------------------------------- */
 
-.download_page_edd-settings .form-table label {
-	color: #666;
-	font-size: 14px;
-	font-style: italic;
-	margin: 4px 0 0;
+.edd-settings-sub-nav {
+	margin: 0 0px 10px 0;
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
-.download_page_edd-settings .form-table input.small-text ~ label,
-.download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
+.edd-settings-sub-nav a {
+	padding: 13px;
+	display: block;
+}
+
+.edd-settings-sub-nav a.current {
+	border-bottom: 4px solid #000;
+	padding-bottom: 9px;
+}
+
+.admin-color-fresh .edd-settings-sub-nav a.current {
+	border-bottom-color: #00a0d2;
+}
+
+/* Blue */
+.admin-color-blue .edd-settings-sub-nav a.current {
+	border-bottom-color: #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .edd-settings-sub-nav a.current {
+	border-bottom-color: #096484;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .edd-settings-sub-nav a.current {
+	border-bottom-color: #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .edd-settings-sub-nav a.current {
+	border-bottom-color: #26292c;
+}
+
+/* Ocean */
+.admin-color-ocean .edd-settings-sub-nav a.current {
+	border-bottom-color: #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .edd-settings-sub-nav a.current {
+	border-bottom-color: #be3631;
+}
+
+/* Light */
+.admin-color-light .edd-settings-sub-nav a.current {
+	border-bottom-color: #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .edd-settings-sub-nav a.current {
+	border-bottom-color: #36533f;
+}
+
+/* Mint */
+.admin-color-mint .edd-settings-sub-nav a.current {
+	border-bottom-color: #4f6d59;
+}
+
+.download_page_edd-settings .edd-check-wrapper {
+	clear: both;
+}
+.download_page_edd-settings .edd-check-wrapper label {
+	margin: -2px 0 3px 0;
+	display: inline-block;
+	vertical-align: initial;
+}
+
 .download_page_edd-settings .form-table tr > th > strong,
 .download_page_edd-settings .form-table tr > th > h3 {
 	font-size: 1.2em;
@@ -49,7 +117,7 @@ a.edd-delete:hover {
 /* Tooltips */
 .edd-help-tip {
 	cursor: help;
-	margin-top: -4px;
+	margin-top: -2px;
 	font-size: 24px;
 	color: grey;
 }
@@ -251,32 +319,22 @@ a.edd-delete:hover {
 	margin-left: 5px;
 }
 
-#edd-payment-filters {
-	background: #f5f5f5;
-	clear: both;
-	background-image: -webkit-gradient(linear, left bottom, left top, from(#f5f5f5), to(#fafafa));
-	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image:    -moz-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image:      -o-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image: linear-gradient(to top, #f5f5f5, #fafafa);
-	border-color: #dfdfdf;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 3px;
-	font-size: 13px;
-	line-height: 2.1em;
-	overflow: auto;
-	padding: 12px;
-	margin: 8px 0;
-}
 #edd-payments-filter ul.subsubsub {
 	margin-bottom: 8px;
+}
+#edd-payment-filters .filter-items {
+	padding: 10px;
 }
 #edd-payment-filters p {
 	color: #777;
 }
 #edd-payment-date-filters input {
 	vertical-align: middle;
+	max-width: 100px;
+	padding: 5px;
+}
+#edd-payment-after-core-filters .button-secondary {
+	margin: 2px 0 0 0;
 }
 tr.status-refunded td {
 	background: #cecece;
@@ -1039,11 +1097,11 @@ td.edd_order_price {
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-#edd-graphs-date-options,
-#edd-date-range-options {
+.edd-graphs-date-options,
+.edd-date-range-options {
 	float: left;
 }
-#edd-date-range-options span {
+.edd-date-range-options span {
 	float: left;
 	line-height: 24px;
 	height: 24px;
@@ -1153,6 +1211,85 @@ td.edd_order_price {
 	width: 80%;
 }
 
+#edd-reports-tiles-wrap #dashboard-widgets {
+	overflow: auto;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container {
+	width: 33.3%;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container {
+	margin-top: 1px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
+	margin-left: 0;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #tertiary-sortables {
+	margin-right: 0;
+}
+
+#edd-reports-tiles-wrap .metabox-holder .empty-container {
+	height: 127px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox,
+#edd-reports-tiles-wrap #dashboard-widgets .meta-box-sortables {
+	min-height: 127px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
+	min-height: 0;
+}
+
+#edd-reports-tiles-wrap h2.hndle {
+	margin-left: 25px;
+	text-align: center;
+	font-weight: normal;
+	color: #999;
+}
+
+#edd-reports-tiles-wrap .postbox .inside {
+	text-align: center;
+}
+
+#edd-reports-tiles-wrap .inside span {
+	display: block;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value {
+	color: #21759b;
+	font-size: 3em;
+	line-height: 1;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value.tile-no-data {
+	color: #888;
+	font-size: 1.5em;
+	line-height: 1;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value.tile-url {
+	font-size: 1.5em;
+}
+
+#edd-reports-tiles-wrap .inside .tile-compare {
+	color: #333;
+	padding-top: 10px;
+	font-size: 1.1em;
+}
+
+.edd-reports-chart-pie,
+.edd-reports-chart-doughnut {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	float: left;
+	width: 50%;
+}
+
 /* Upgrades page styles
 -------------------------------------------------------------- */
 
@@ -1167,15 +1304,25 @@ td.edd_order_price {
 	max-width: 100%;
 }
 #edd_tax_rates .edd_tax_country,
-#edd_tax_rates .edd_tax_state {
-	width: 180px;
+#edd_tax_rates .edd_tax_state,
+#edd_tax_rates .edd_tax_global {
+	width: 20%;
+}
+#edd_tax_rates .edd_tax_rate {
+	width: 12%;
+}
+#edd_tax_rates .edd_tax_remove {
+	width: 18%;
+}
+#edd_tax_rates th {
+	padding: 15px 10px;
 }
 @media screen and ( max-width: 782px ) {
 	#edd_tax_rates thead {
 		display: none;
 	}
 	#edd_tax_rates td {
-		padding: 8px 8px 8px 35%;
+		padding: 8px 8px 8px 8px;
 	}
 	#edd_tax_rates td:before {
 		font-weight: 600;
@@ -1183,12 +1330,6 @@ td.edd_order_price {
 	#edd_tax_rates tbody tr:not(:first-child) .edd_tax_country {
 		border-top: 1px solid #e5e5e5;
 	}
-}
-#edd_tax_rates .edd_tax_rate {
-	width: 80px;
-}
-#edd_tax_rates th {
-	padding: 15px 10px;
 }
 .wrap-licenses .form-table,
 .wrap-licenses thead,
@@ -1319,43 +1460,245 @@ td.edd_order_price {
 /* General styles
 -------------------------------------------------------------- */
 
+
+.chosen-container.chosen-container-multi {
+	width: 100% !important;
+}
+
+.chosen-container {
+	font-size: 14px;
+}
+
+.chosen-container-single .chosen-single div b {
+	background-image: none;
+}
+
+.chosen-container-single .chosen-single div b:before {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 2px;
+	top: 0px;
+	font-family: dashicons;
+	font-size: 15px;
+	content: '\f140';
+	color: #555;
+	margin-top: 1px;
+}
+
+.chosen-container-single .chosen-search input[type=text]:before {
+	display: block;
+	width: 20px;
+	height: 20px;
+	font-family: dashicons;
+	content: '\f140';
+}
+
+.chosen-container-single .chosen-search:after {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	color: #aaa;
+	font-family: dashicons;
+	font-size: 17px;
+	content: '\f179';
+}
+
+.chosen-container-multi .chosen-choices,
+.chosen-container-single .chosen-single,
+.chosen-container-active.chosen-with-drop .chosen-single {
+	border: 1px solid #e5e5e5;
+	border-radius: 0;
+	background: #fff;
+	height: 29px;
+	padding: 2px 5px;
+	outline: none;
+}
+
+.chosen-container-active .chosen-single {
+	outline: auto 5px -webkit-focus-ring-color;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type=text] {
+	min-height: 29px !important;
+}
+
+.chosen-container-multi .chosen-choices,
+.chosen-container-single .chosen-single {
+	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
+}
+
+.chosen-container-multi.chosen-with-drop .chosen-choices,
+.chosen-container-active.chosen-with-drop .chosen-single {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.chosen-container-multi.chosen-with-drop .chosen-choices {
+	border-bottom-color: transparent;
+}
+
+.chosen-container-single .chosen-single div {
+	width: 17px;
+}
+.chosen-container-single .chosen-single span {
+	margin-right: 13px;
+}
+
+.chosen-container .chosen-drop {
+	font-size: 13px;
+	position: absolute;
+	top: 100%;
+	z-index: 1010;
+	width: 100%;
+	border: 1px solid #e5e5e5;
+	border-top: 0;
+	border-radius: 0;
+	background: #fff;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.chosen-container-single .chosen-search input[type=text] {
+	margin: 1px 0;
+	padding: 4px 20px 4px 5px;
+	width: 100% !important;
+	height: auto;
+	outline: 0;
+	border: 1px solid #ddd;
+	border-radius: 0;
+	font-size: 13px;
+	line-height: normal;
+	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
+}
+
+.chosen-container .chosen-results {
+	color: #444;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: auto;
+	margin: 0 4px 4px 0 !important;
+	padding: 0 0 0 4px;
+	max-height: 240px;
+}
+
+.chosen-container .chosen-results li.highlighted {
+	background-image: none;
+	color: #fff;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice {
+	margin: 3px 5px 3px 0;
+	padding: 5px 22px 5px 5px;
+	border: 1px solid #ddd;
+	max-width: 100%;
+	border-radius: 0;
+	background: #f4f4f4;
+	box-shadow: none;
+	color: #333;
+	cursor: default;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+	position: absolute;
+	top: 4px;
+	right: 3px;
+	display: block;
+	width: 15px;
+	height: 15px;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close:before {
+	height: 15px;
+	width: 15px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #555;
+	font-family: 'dashicons';
+	content: '\f158';
+	font-size: 15px;
+	line-height: 15px;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover:before {
+	color: #aaa;
+}
+
+@media only screen and ( -webkit-min-device-pixel-ratio: 1.5 ),
+only screen and ( min-resolution: 144dpi ),
+only screen and ( min-resolution: 1.5dppx ) {
+	.chosen-rtl .chosen-search input[type=text],
+	.chosen-container-single .chosen-single abbr,
+	.chosen-container-single .chosen-single div b,
+	.chosen-container-single .chosen-search input[type=text],
+	.chosen-container-multi .chosen-choices .search-choice .search-choice-close,
+	.chosen-container .chosen-results-scroll-down span,
+	.chosen-container .chosen-results-scroll-up span {
+		background-image: none !important;
+	}
+}
+
+/* WordPress Color Schemes */
+
+/* Fresh */
+
+.admin-color-fresh .chosen-container .chosen-results li.highlighted {
+	background-color: #00a0d2;
+}
+
+/* Blue */
+.admin-color-blue .chosen-container .chosen-results li.highlighted {
+	background-color: #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .chosen-container .chosen-results li.highlighted {
+	background-color: #096484;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .chosen-container .chosen-results li.highlighted {
+	background-color: #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .chosen-container .chosen-results li.highlighted {
+	background-color: #26292c;
+}
+
+/* Ocean */
+.admin-color-ocean .chosen-container .chosen-results li.highlighted {
+	background-color: #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .chosen-container .chosen-results li.highlighted {
+	background-color: #be3631;
+}
+
+/* Light */
+.admin-color-light .chosen-container .chosen-results li.highlighted {
+	background-color: #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .chosen-container .chosen-results li.highlighted {
+	background-color: #36533f;
+}
+
+/* Mint */
+.admin-color-mint .chosen-container .chosen-results li.highlighted {
+	background-color: #4f6d59;
+}
+
 .edd-select-chosen {
 	width: 100%;
 	max-width: 300px;
-}
-.chosen-container-multi .chosen-choices {
-	background-image: none;
-	border-color: #dfdfdf;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-}
-.chosen-container-multi .chosen-choices input {
-	border-color: #dfdfdf;
-	height:27px !important;
-	margin:2px;
-}
-.chosen-container .chosen-drop {
-	border-color: #aaa;
-	-webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-.chosen-container .search-field {
-	float: none !important;
-}
-.chosen-container .search-field input {
-	width: 90% !important;
-}
-.chosen-container-active .chosen-choices {
-	border-color: #aaa;
-	-webkit-border-top-left-radius: 3px;
-	border-top-left-radius: 3px;
-	-webkit-border-top-right-radius: 3px;
-	border-top-right-radius: 3px;
-	-webkit-border-bottom-left-radius: 0;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-	-webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .download_page_edd-tools .tablenav .actions {

@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Add a customer to the database
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  *
@@ -40,7 +40,7 @@ function edd_add_customer( $data = array() ) {
 /**
  * Delete a customer from the database
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int ID of customer to delete
  *
@@ -55,7 +55,7 @@ function edd_delete_customer( $customer_id = 0 ) {
 /**
  * Update a customer.
  *
- * @since 3.0.0
+ * @since 3.0
  * @param int $customer_id Customer ID.
  * @param array $data
  *
@@ -70,7 +70,7 @@ function edd_update_customer( $customer_id = 0, $data = array() ) {
 /**
  * Get a customer item by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  * @param int $customer_id Customer ID.
  * @param array $data
  *
@@ -83,7 +83,7 @@ function edd_get_customer( $customer_id = 0 ) {
 /**
  * Get a customer item by a specific field's value.
  *
- * @since 3.0.0
+ * @since 3.0
  * @param array $args
  *
  * @return object
@@ -100,7 +100,7 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 /**
  * Query for customers
  *
- * @since 3.0.0
+ * @since 3.0
  * @param array $args
  *
  * @return array
@@ -122,7 +122,7 @@ function edd_get_customers( $args = array() ) {
 /**
  * Get total number of customers
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args Arguments.
  * @return int
@@ -144,7 +144,7 @@ function edd_count_customers( $args = array() ) {
 /**
  * Return the role used to edit customers
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @return string
  */
@@ -157,7 +157,7 @@ function edd_get_edit_customers_role() {
 /**
  * Add meta data field to a customer.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $customer_id  Customer ID.
  * @param string  $meta_key     Meta data name.
@@ -178,7 +178,7 @@ function edd_add_customer_meta( $customer_id, $meta_key, $meta_value, $unique = 
  * value, will keep from removing duplicate meta data with the same key. It also
  * allows removing all meta data matching key, if needed.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $customer_id  Customer ID.
  * @param string  $meta_key     Meta data name.
@@ -194,7 +194,7 @@ function edd_delete_customer_meta( $customer_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve customer meta field for a customer.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $customer_id  Customer ID.
  * @param string  $key          Optional. The meta key to retrieve. By default, returns
@@ -218,7 +218,7 @@ function edd_get_customer_meta( $customer_id, $key = '', $single = false ) {
  *
  * If the meta field for the customer does not exist, it will be added.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $customer_id  Customer ID.
  * @param string  $meta_key     Meta data key.
@@ -236,7 +236,7 @@ function edd_update_customer_meta( $customer_id, $meta_key, $meta_value, $prev_v
 /**
  * Delete everything from customer meta matching meta key.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $meta_key Key to search for when deleting.
  *
@@ -251,7 +251,7 @@ function edd_delete_customer_meta_by_key( $meta_key ) {
 /**
  * Backwards compatibility layer for old `customer_id` column.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string  $query   SQL query.
  * @return string $request SQL query with column replaced.

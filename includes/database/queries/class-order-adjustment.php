@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class used for querying order discounts.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @see \EDD\Database\Queries\Order_Adjustment::__construct() for accepted arguments.
  */
@@ -27,7 +27,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Name of the database table to query.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * String used to alias the database table in MySQL statement.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -45,7 +45,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Name of class used to setup the database schema
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -56,7 +56,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Name for a single item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -65,7 +65,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Plural version for a group of items.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -74,7 +74,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Callback function for turning IDs into objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var mixed
 	 */
@@ -85,7 +85,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Group to cache queries and queried items in.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -96,7 +96,7 @@ class Order_Adjustment extends Base {
 	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 *
 	 * @param string|array $query {

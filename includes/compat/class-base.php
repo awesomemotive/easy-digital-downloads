@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 abstract class Base {
 
@@ -25,7 +25,7 @@ abstract class Base {
 	 * and need to be dispatched to completely other methods. When a new instance of Back_Compat is created, a component
 	 * can be passed to the constructor which will allow __call() to dispatch to the correct methods.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 * @var string
 	 */
@@ -34,7 +34,7 @@ abstract class Base {
 	/**
 	 * Constructor.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	public function __construct() {
 		$this->hooks();
@@ -43,7 +43,7 @@ abstract class Base {
 	/**
 	 * Getter for component.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Component.
 	 */
@@ -54,7 +54,7 @@ abstract class Base {
 	/**
 	 * Backwards compatibility hooks for component.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access protected
 	 */
 	abstract protected function hooks();

@@ -17,7 +17,7 @@ if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_logs" database table
  *
- * @since 3.0.0
+ * @since 3.0
  */
 final class Logs extends Base {
 
@@ -25,7 +25,7 @@ final class Logs extends Base {
 	 * Table name
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var string
 	 */
 	protected $name = 'edd_logs';
@@ -34,7 +34,7 @@ final class Logs extends Base {
 	 * Database version
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @var int
 	 */
 	protected $version = 201802280001;
@@ -43,7 +43,7 @@ final class Logs extends Base {
 	 * Setup the database schema
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @return void
 	 */
 	protected function set_schema() {
@@ -65,7 +65,7 @@ final class Logs extends Base {
 	 * Handle schema changes
 	 *
 	 * @access protected
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @return void
 	 */
 	protected function upgrade() {

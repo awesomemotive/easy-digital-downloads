@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order Items Schema Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Order_Items extends Base {
 
 	/**
 	 * Array of database column objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -85,7 +85,8 @@ class Order_Items extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'download',
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// status
@@ -94,7 +95,8 @@ class Order_Items extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// quantity

@@ -1483,14 +1483,14 @@ function edd_notes_migration() {
 	}
 
 	if ( 1 === $step ) {
-		if ( ! EDD()->notes->table_exists( EDD()->notes->table_name ) ) {
-			@EDD()->notes->create_table();
-			edd_debug_log( EDD()->notes->table_name . ' created successfully' );
+		$notes_db = edd_get_component_interface( 'note', 'table' );
+		if ( ! $notes_db->exists() ) {
+			@$notes_db->create();
 		}
 
-		if ( ! EDD()->note_meta->table_exists( EDD()->note_meta->table_name ) ) {
-			@EDD()->note_meta->create_table();
-			edd_debug_log( EDD()->note_meta->table_name . ' created successfully' );
+		$note_meta_db = edd_get_component_interface( 'note', 'meta' );
+		if ( ! $note_meta_db->exists() ) {
+			@$note_meta_db->create();
 		}
 	}
 
@@ -1601,7 +1601,7 @@ add_action( 'edd_remove_legacy_notes', 'edd_remove_legacy_notes' );
 /**
  * Migrates all logs and log meta to the new custom tables.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_logs_migration() {
 	global $wpdb;
@@ -1768,7 +1768,7 @@ add_action( 'edd_logs_migration', 'edd_logs_migration' );
 /**
  * Removes legacy logs data.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_remove_legacy_logs() {
 	global $wpdb;

@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Orders Schema Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Orders extends Base {
 
 	/**
 	 * Array of database column objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -67,7 +67,8 @@ class Orders extends Base {
 			'length'     => '20',
 			'default'    => 'pending',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// date_created

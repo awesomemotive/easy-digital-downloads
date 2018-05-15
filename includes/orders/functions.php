@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add an order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int|false ID of newly created order, false on error.
@@ -37,7 +37,7 @@ function edd_add_order( $data = array() ) {
 /**
  * Delete an order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $order_id Order ID.
  * @return int
@@ -51,7 +51,7 @@ function edd_delete_order( $order_id = 0 ) {
 /**
  * Update an order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $order_id Order ID.
  * @param array $data   Updated order data.
@@ -66,7 +66,7 @@ function edd_update_order( $order_id = 0, $data = array() ) {
 /**
  * Get an order by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $order_id Order ID.
  * @return object
@@ -78,7 +78,7 @@ function edd_get_order( $order_id = 0 ) {
 /**
  * Get an order by a specific field value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -96,7 +96,7 @@ function edd_get_order_by( $field = '', $value = '' ) {
 /**
  * Query for orders.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -118,7 +118,7 @@ function edd_get_orders( $args = array() ) {
 /**
  * Count orders.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return int
@@ -142,7 +142,7 @@ function edd_count_orders( $args = array() ) {
 /**
  * Add an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int|false ID of newly created order, false on error.
@@ -164,7 +164,7 @@ function edd_add_order_item( $data = array() ) {
 /**
  * Delete an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $order_id Order ID.
  * @return int
@@ -178,7 +178,7 @@ function edd_delete_order_item( $order_id = 0 ) {
 /**
  * Update an order item.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $order_id API request order ID.
  * @param array $data   Updated file download order data.
@@ -193,7 +193,7 @@ function edd_update_order_item( $order_id = 0, $data = array() ) {
 /**
  * Get an order item by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $order_id Order ID.
  * @return object
@@ -205,7 +205,7 @@ function edd_get_order_item( $order_id = 0 ) {
 /**
  * Get an order item by field and value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -223,7 +223,7 @@ function edd_get_order_item_by( $field = '', $value = '' ) {
 /**
  * Query for order items.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -245,7 +245,7 @@ function edd_get_order_items( $args = array() ) {
 /**
  * Count order items.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return int
@@ -269,7 +269,7 @@ function edd_count_order_items( $args = array() ) {
 /**
  * Add an API request order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $data
  * @return int|false ID of newly created order, false on error.
@@ -291,7 +291,7 @@ function edd_add_order_adjustment( $data = array() ) {
 /**
  * Delete an API request order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $order_id API request order ID.
  * @return int
@@ -305,7 +305,7 @@ function edd_delete_order_adjustment( $order_id = 0 ) {
 /**
  * Update an API request order.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int   $order_id API request order ID.
  * @param array $data   Updated API request order data.
@@ -320,7 +320,7 @@ function edd_update_order_adjustment( $order_id = 0, $data = array() ) {
 /**
  * Get an API request order by ID.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int $order_id API request order ID.
  * @return object
@@ -332,7 +332,7 @@ function edd_get_order_adjustment( $order_id = 0 ) {
 /**
  * Get an API request order by a specific field value.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -348,7 +348,7 @@ function edd_get_order_adjustment_by( $field = '', $value = '' ) {
 /**
  * Query for API request orders.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return array
@@ -370,7 +370,7 @@ function edd_get_order_adjustments( $args = array() ) {
 /**
  * Count API request orders.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param array $args
  * @return int

@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Discounts Schema Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Discounts extends Base {
 
 	/**
 	 * Array of database column objects
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -48,7 +48,8 @@ class Discounts extends Base {
 			'unsigned'   => true,
 			'default'    => '0',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// name
@@ -76,7 +77,8 @@ class Discounts extends Base {
 			'length'     => '20',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// type
@@ -85,7 +87,8 @@ class Discounts extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// scope
@@ -94,7 +97,8 @@ class Discounts extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'sortable'   => true
+			'sortable'   => true,
+			'transition' => true
 		),
 
 		// amount

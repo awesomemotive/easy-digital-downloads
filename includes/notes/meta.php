@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add meta data field to a note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $note_id    Note ID.
  * @param string  $meta_key   Meta data name.
@@ -34,7 +34,7 @@ function edd_add_note_meta( $note_id, $meta_key, $meta_value, $unique = false ) 
  * You can match based on the key, or key and value. Removing based on key and value, will keep from removing duplicate
  * meta data with the same key. It also allows removing all meta data matching key, if needed.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $note_id    Note ID.
  * @param string  $meta_key   Meta data name.
@@ -49,7 +49,7 @@ function edd_delete_note_meta( $note_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve note meta field for a note.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $note_id  Note ID.
  * @param string  $key      Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
@@ -70,7 +70,7 @@ function edd_get_note_meta( $note_id, $key = '', $single = false ) {
  *
  * If the meta field for the note does not exist, it will be added.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param int     $note_id    Note ID.
  * @param string  $meta_key   Meta data key.
@@ -86,7 +86,7 @@ function edd_update_note_meta( $note_id, $meta_key, $meta_value, $prev_value = '
 /**
  * Delete everything from note meta matching meta key.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $meta_key Key to search for when deleting.
  *

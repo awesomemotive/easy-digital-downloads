@@ -19,7 +19,7 @@ if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
 /**
  * Base class used for querying custom database tables.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
  */
@@ -30,9 +30,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Global prefix used for tables/hooks/cache-groups/etc...
 	 *
-	 * @since 3.0.0
-	 *
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $prefix = 'edd';
 
@@ -41,9 +40,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Name of the database table to query.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $table_name = '';
 
@@ -54,18 +52,16 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used to avoid collisions with JOINs.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $table_alias = '';
 
 	/**
 	 * Name of class used to setup the database schema
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $table_schema = 'EDD_DB_Schema';
 
@@ -78,9 +74,8 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used to automatically generate action hooks.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $item_name = '';
 
@@ -91,9 +86,8 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used to automatically generate action hooks.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $item_name_plural = '';
 
@@ -104,9 +98,8 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used when looping through return values to guarantee their shape.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var mixed
+	 * @since 3.0
+	 * @var   mixed
 	 */
 	protected $item_shape = 'EDD_DB_Object';
 
@@ -119,9 +112,8 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * Do not use colons: ":". These are reserved for internal use only.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $cache_group = '';
 
@@ -130,9 +122,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Array of all database column objects
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	protected $columns = array();
 
@@ -141,9 +132,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * SQL query clauses.
 	 *
-	 * @since 3.0.0
-	 * @access protected
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	protected $query_clauses = array(
 		'select'  => '',
@@ -157,9 +147,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Request clauses.
 	 *
-	 * @since 3.0.0
-	 * @access protected
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	protected $request_clauses = array(
 		'select'  => '',
@@ -173,45 +162,40 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Meta query container.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var object \WP_Meta_Query
+	 * @since 3.0
+	 * @var   object|\WP_Meta_Query
 	 */
 	protected $meta_query = false;
 
 	/**
 	 * Date query container.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var \WP_Date_Query
+	 * @since 3.0
+	 * @var   \WP_Date_Query
 	 */
 	protected $date_query = false;
 
 	/**
 	 * Parsed query vars set by the user.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	protected $query_vars = array();
 
 	/**
 	 * Original query vars set by the user.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	protected $query_var_originals = array();
 
 	/**
 	 * Default values for query vars.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	protected $query_var_defaults = array();
 
@@ -220,46 +204,49 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * List of items located by the query.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
+	 * @since 3.0
+	 * @var   array
 	 */
 	public $items = array();
 
 	/**
 	 * The amount of found items for the current query.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var int
+	 * @since 3.0
+	 * @var   int
 	 */
 	protected $found_items = 0;
 
 	/**
 	 * The number of pages.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var int
+	 * @since 3.0
+	 * @var   int
 	 */
 	protected $max_num_pages = 0;
 
 	/**
 	 * SQL for database query.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 3.0
+	 * @var   string
 	 */
 	protected $request = '';
+
+	/**
+	 * The last error, if any.
+	 *
+	 * @since 3.0
+	 * @var mixed
+	 */
+	protected $last_error = false;
 
 	/** Methods ***************************************************************/
 
 	/**
 	 * Sets up the item query, based on the query vars passed.
 	 *
-	 * @since 3.0.0
-	 * @access public
+	 * @since 3.0
 	 *
 	 * @param string|array $query {
 	 *     Optional. Array or query string of item query parameters.
@@ -305,8 +292,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Queries the database and retrieves items or counts.
 	 *
-	 * @since 3.0.0
-	 * @access public
+	 * @since 3.0
 	 *
 	 * @param string|array $query Array or URL query string of parameters.
 	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
@@ -320,12 +306,11 @@ class Base extends \EDD\Database\Base {
 	/** Private Setters *******************************************************/
 
 	/**
-	 * Prefix table names, cache groups, and other things, to avoid conflicts
-	 * with other plugins or themes that might be doing their own things.
+	 * Prefix table names, cache groups, and other things.
 	 *
-	 * @since 3.0.0
+	 * This is to avoid conflicts with other plugins or themes that might be doing their own things.
 	 *
-	 * @return
+	 * @since 3.0
 	 */
 	private function set_prefix() {
 
@@ -343,8 +328,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set columns objects
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 */
 	private function set_columns() {
 
@@ -378,8 +362,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set default query vars based on columns
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 */
 	private function set_query_var_defaults() {
 
@@ -439,8 +422,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set the request clauses
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
+	 *
 	 * @param array $clauses
 	 */
 	private function set_request_clauses( $clauses = array() ) {
@@ -497,18 +480,17 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Set the request
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 */
 	private function set_request() {
-		$this->request = "{$this->request_clauses['select']} {$this->request_clauses['from']} {$this->request_clauses['where']} {$this->request_clauses['groupby']} {$this->request_clauses['orderby']} {$this->request_clauses['limits']}";
+		$clauses       = array_map( 'trim', $this->request_clauses );
+		$this->request = implode( ' ', $clauses );
 	}
 
 	/**
 	 * Set items by mapping them through the single item callback.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 * @param array $item_ids
 	 */
 	private function set_items( $item_ids = array() ) {
@@ -538,7 +520,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Filters the object query results.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param array        $results An array of items.
 		 * @param EDD_DB_Query &$this   Current instance of EDD_DB_Query, passed by reference.
@@ -556,8 +538,7 @@ class Base extends \EDD\Database\Base {
 	 * Populates found_items and max_num_pages properties for the current query
 	 * if the limit clause was used.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @param  array $item_ids Optional array of item IDs
 	 */
@@ -572,7 +553,7 @@ class Base extends \EDD\Database\Base {
 					/**
 					 * Filters the query used to retrieve found item count.
 					 *
-					 * @since 3.0.0
+					 * @since 3.0
 					 *
 					 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
 					 * @param object $item_query        The object instance.
@@ -599,9 +580,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return the global database interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
-	 * @return wpdb
+	 * @return wpdb|object
 	 */
 	private static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
@@ -612,11 +593,10 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Pass-through method to return a new WP_Meta_Query object
 	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @param array $args See WP_Date_Query
+	 * @since 3.0
 	 *
-	 * @return \WP_Date_Query
+	 * @param array $args See WP_Date_Query
+	 * @return \WP_Meta_Query
 	 */
 	private function get_meta_query( $args = array() ) {
 		return new \WP_Meta_Query( $args );
@@ -625,10 +605,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Pass-through method to return a new WP_Date_Query object
 	 *
-	 * @since 3.0.0
-	 * @access private
-	 * @param array $args See WP_Date_Query
+	 * @since 3.0
 	 *
+	 * @param array $args See WP_Date_Query
 	 * @return \WP_Date_Query
 	 */
 	private function get_date_query( $args = array() ) {
@@ -640,7 +619,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * This is used by add_item() and update_item()
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -651,7 +630,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return the literal table name (with prefix) from $wpdb
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -662,18 +641,18 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return array of column names
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array
 	 */
 	private function get_column_names() {
-		return array_flip( wp_list_pluck( $this->columns, 'name' ) );
+		return array_flip( $this->get_columns( array(), 'and', 'name' ) );
 	}
 
 	/**
 	 * Return the primary database column name
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string Default "id", Primary column name if not empty
 	 */
@@ -682,32 +661,9 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
-	 * Return the date_created database column name
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string Default "date_created", column name if not empty
-	 */
-	private function get_created_column_name() {
-		return $this->get_column_field( array( 'created' => true ), 'name', 'date_created' );
-	}
-
-	/**
-	 * Return the date_modified database column name
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string Default "date_modified", column name if not empty
-	 */
-	private function get_modified_column_name() {
-		return $this->get_column_field( array( 'modified' => true ), 'name', 'date_modified' );
-	}
-
-	/**
 	 * Get a column from an array of arguments
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @return mixed EDD_DB_Column object, or false
 	 */
@@ -725,8 +681,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a column from an array of arguments
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @return mixed EDD_DB_Column object, or false
 	 */
@@ -744,8 +699,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get columns from an array of arguments
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 */
 	private function get_columns( $args = array(), $operator = 'and', $field = false ) {
 
@@ -754,18 +708,17 @@ class Base extends \EDD\Database\Base {
 
 		// Return column or false
 		return ! empty( $filter )
-			? $filter
+			? array_values( $filter )
 			: array();
 	}
 
 	/**
 	 * Get a single database row by any column and value, skipping cache.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $column_name  Name of database column
 	 * @param string $column_value Value to query for
-	 *
 	 * @return mixed False if empty/error, Object if successful
 	 */
 	private function get_item_raw( $column_name = '', $column_value = '' ) {
@@ -776,14 +729,9 @@ class Base extends \EDD\Database\Base {
 		$select  = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
 		$result  = $this->get_db()->get_row( $select );
 
-		// Bail if no row exists
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Return row
@@ -793,8 +741,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Retrieves a list of items matching the query vars.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
 	 */
@@ -803,7 +750,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Fires before object items are retrieved.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param EDD_DB_Query &$this Current instance of EDD_DB_Query, passed by reference.
 		 */
@@ -869,8 +816,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Used internally to get a list of item IDs matching the query vars.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
 	 */
@@ -919,7 +865,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Filters the item query clauses.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param array  $pieces A compacted array of item query clauses.
 		 * @param object &$this  Current instance passed by reference.
@@ -947,8 +893,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get the ORDERBY clause.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
+	 *
 	 * @param string $order
 	 * @return string
 	 */
@@ -1028,8 +974,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Used internally to generate an SQL string for searching across multiple columns.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @param string $string  Search string.
 	 * @param array  $columns Columns to search.
@@ -1059,8 +1004,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses arguments passed to the item query with default query parameters.
 	 *
-	 * @since 3.0.0
-	 * @access public
+	 * @since 3.0
 	 *
 	 * @see EDD_DB_Query::__construct()
 	 *
@@ -1080,7 +1024,7 @@ class Base extends \EDD\Database\Base {
 		/**
 		 * Fires after the item query vars have been parsed.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0
 		 *
 		 * @param EDD_DB_Query &$this The EDD_DB_Query instance (passed by reference).
 		 */
@@ -1090,8 +1034,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parse the where clauses for all known columns
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 */
 	private function parse_where() {
 
@@ -1119,19 +1062,11 @@ class Base extends \EDD\Database\Base {
 					// Add to where array
 					$where[ $column->name ] = $statement;
 
-				// Numeric/String (prepared)
+				// Numeric/String/Float (prepared)
 				} else {
-
-					// Numeric
-					if ( $column->is_numeric() ) {
-						$statement = "{$this->table_alias}.{$column->name} = %d";
-						$where_id  = absint( $this->query_vars[ $column->name ] );
-
-					// String
-					} else {
-						$statement = "{$this->table_alias}.{$column->name} = %s";
-						$where_id  = $this->query_vars[ $column->name ];
-					}
+					$pattern   = $this->get_column_field( array( 'name' => $column->name ), 'pattern', '%s' );
+					$where_id  = $this->query_vars[ $column->name ];
+					$statement = "{$this->table_alias}.{$column->name} = {$pattern}";
 
 					// Add to where array
 					$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
@@ -1234,7 +1169,7 @@ class Base extends \EDD\Database\Base {
 			 *
 			 * The default columns include 'email' and 'path.
 			 *
-			 * @since 3.0.0
+			 * @since 3.0
 			 *
 			 * @param array        $search_columns Array of column names to be searched.
 			 * @param string       $search         Text being searched.
@@ -1283,11 +1218,10 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parse which fields to query for
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
-	 * @param string  $fields
-	 * @param boolean $alias
-	 *
+	 * @param string $fields
+	 * @param bool   $alias
 	 * @return string
 	 */
 	private function parse_fields( $fields = '', $alias = true ) {
@@ -1340,7 +1274,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses and sanitizes the 'groupby' keys passed into the item query
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $groupby
 	 * @return string
@@ -1381,8 +1315,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses and sanitizes 'orderby' keys passed to the item query.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
 	 *
 	 * @param string $orderby Field for the items to be ordered by.
 	 * @return string|false Value to used in the ORDER clause. False otherwise.
@@ -1419,8 +1352,8 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Parses an 'order' query variable and cast it to 'ASC' or 'DESC' as necessary.
 	 *
-	 * @since 3.0.0
-	 * @access private
+	 * @since 3.0
+	 *
 	 * @param string $order The 'order' query variable.
 	 * @return string The sanitized 'order' query variable.
 	 */
@@ -1442,11 +1375,10 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Maybe append the prefix to string.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $string
 	 * @param string $sep
-	 *
 	 * @return string
 	 */
 	private function apply_prefix( $string = '', $sep = '_' ) {
@@ -1461,7 +1393,7 @@ class Base extends \EDD\Database\Base {
 	 * This will try to use item_shape, but will fallback to a private
 	 * method for querying and caching items.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $items
 	 * @return array
@@ -1483,9 +1415,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Shape an item ID from an object, array, or numeric value
 	 *
-	 * @since 3.0.0
-	 * @param  mixed $item
+	 * @since 3.0
 	 *
+	 * @param  mixed $item
 	 * @return int
 	 */
 	private function shape_item_id( $item = 0 ) {
@@ -1510,10 +1442,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a single database row by the primary column ID, possibly from cache
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
-	 *
 	 * @return mixed False if empty/error, Object if successful
 	 */
 	public function get_item( $item_id = 0 ) {
@@ -1531,11 +1462,10 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get a single database row by any column and value, possibly from cache.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $column_name  Name of database column
 	 * @param string $column_value Value to query for
-	 *
 	 * @return mixed False if empty/error, Object if successful
 	 */
 	public function get_item_by( $column_name = '', $column_value = '' ) {
@@ -1570,8 +1500,8 @@ class Base extends \EDD\Database\Base {
 			// Try to get item directly from DB
 			$retval = $this->get_item_raw( $column_name, $column_value );
 
-			// Bail because item does not exist
-			if ( empty( $retval ) || is_wp_error( $retval ) ) {
+			// Bail on failure
+			if ( $this->failed( $retval ) ) {
 				return false;
 			}
 
@@ -1586,10 +1516,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Add an item to the database
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $data
-	 *
 	 * @return boolean
 	 */
 	public function add_item( $data = array() ) {
@@ -1597,62 +1526,72 @@ class Base extends \EDD\Database\Base {
 		// Get primary column
 		$primary = $this->get_primary_column_name();
 
-		// Bail if trying to update an existing item
+		// Bail if data to add includes the primary column
 		if ( isset( $data[ $primary ] ) ) {
-			return $this->update_item( $data[ $primary ], $data );
+			return false;
 		}
+
+		// Get default values for item (from columns)
+		$item = $this->default_item();
+
+		// Unset the primary key value from defaults
+		unset( $item[ $primary ] );
 
 		// Cut out non-keys for meta
 		$columns = $this->get_column_names();
+		$data    = array_merge( $item, $data );
 		$meta    = array_diff_key( $data, $columns );
-		$data    = array_intersect_key( $data, $columns );
+		$save    = array_intersect_key( $data, $columns );
 
 		// Get the current time (maybe used by created/modified)
 		$time = $this->get_current_time();
 
 		// If date-created exists, but is empty or default, use the current time
 		$created = $this->get_column_by( array( 'created' => true ) );
-		if ( ! empty( $created ) && ( empty( $data[ $created->name ] ) || ( $data[ $created->name ] === $created->default ) ) ) {
-			$data[ $created->name ] = $time;
+		if ( ! empty( $created ) && ( empty( $save[ $created->name ] ) || ( $save[ $created->name ] === $created->default ) ) ) {
+			$save[ $created->name ] = $time;
 		}
 
 		// If date-modified exists, but is empty or default, use the current time
 		$modified = $this->get_column_by( array( 'modified' => true ) );
-		if ( ! empty( $modified ) && ( empty( $data[ $modified->name ] ) || ( $data[ $modified->name ] === $modified->default ) ) ) {
-			$data[ $modified->name ] = $time;
+		if ( ! empty( $modified ) && ( empty( $save[ $modified->name ] ) || ( $save[ $modified->name ] === $modified->default ) ) ) {
+			$save[ $modified->name ] = $time;
 		}
 
 		// Try to add
 		$table  = $this->get_table_name();
-		$result = $this->get_db()->insert( $table, $data );
+		$result = $this->get_db()->insert( $table, $save );
 
-		// Bail if no insert occurred
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
 		}
 
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
+		// Get the new item ID
+		$item_id = $this->get_db()->insert_id;
 
 		// Maybe save meta keys
 		if ( ! empty( $meta ) ) {
-			$this->save_extra_item_meta( $result, $meta );
+			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
+		// Use get item to prime caches
+		$this->update_item_cache( $item_id );
+
+		// Transition item data
+		$this->transition_item( $save, $item_id );
+
 		// Return result
-		return $this->get_db()->insert_id;
+		return $item_id;
 	}
 
 	/**
 	 * Update an item in the database
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
 	 * @param array $data
-	 *
 	 * @return boolean
 	 */
 	public function update_item( $item_id = 0, $data = array() ) {
@@ -1664,21 +1603,21 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Get primary column
-		$primary  = $this->get_primary_column_name();
+		$primary = $this->get_primary_column_name();
 
 		// Get item to update (from database, not cache)
-		$item     = $this->get_item_raw( $primary, $item_id );
+		$item    = $this->get_item_raw( $primary, $item_id );
 
-		// Never update the primary key value
-		unset( $data[ $primary ] );
-
-		// Item does not exist to update, so try to add instead
+		// Bail if item does not exist to update
 		if ( empty( $item ) ) {
-			return $this->add_item( $data );
+			return false;
 		}
 
 		// Cast as an array for easier manipulation
 		$item = (array) $item;
+
+		// Unset the primary key from data to parse
+		unset( $data[ $primary ] );
 
 		// Splice new data into item, and cut out non-keys for meta
 		$columns = $this->get_column_names();
@@ -1691,7 +1630,7 @@ class Base extends \EDD\Database\Base {
 			return true;
 		}
 
-		// Never update the primary key value
+		// Unset the primary key from data to save
 		unset( $save[ $primary ] );
 
 		// If date-modified is empty, use the current time
@@ -1707,14 +1646,9 @@ class Base extends \EDD\Database\Base {
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
 
-		// Bail if no update occurred
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Maybe save meta keys
@@ -1722,11 +1656,11 @@ class Base extends \EDD\Database\Base {
 			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
-		// Cast to stdClass for caching
-		$save = (object) $save;
+		// Use get item to prime caches
+		$this->update_item_cache( $item_id );
 
-		// Prime the item cache
-		$this->update_item_cache( $save );
+		// Transition item data
+		$this->transition_item( $save, $item );
 
 		// Return result
 		return $result;
@@ -1735,10 +1669,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Delete an item from the database
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
-	 *
 	 * @return boolean
 	 */
 	public function delete_item( $item_id = 0 ) {
@@ -1751,20 +1684,28 @@ class Base extends \EDD\Database\Base {
 
 		// Get vars
 		$primary = $this->get_primary_column_name();
-		$table   = $this->get_table_name();
-		$where   = array( $primary => $item_id );
 
 		// Get item (before it's deleted)
 		$item    = $this->get_item_raw( $primary, $item_id );
 
+		// Bail if item does not exist to delete
+		if ( empty( $item ) ) {
+			return false;
+		}
+
 		// Try to delete
+		$table   = $this->get_table_name();
+		$where   = array( $primary => $item_id );
 		$result  = $this->get_db()->delete( $table, $where );
 
-		// Maybe clean caches on successful delete
-		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
-			$this->delete_all_item_meta( $item_id );
-			$this->clean_item_cache( $item );
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
+			return false;
 		}
+
+		// Clean caches on successful delete
+		$this->delete_all_item_meta( $item_id );
+		$this->clean_item_cache( $item );
 
 		// Return result
 		return $result;
@@ -1774,10 +1715,9 @@ class Base extends \EDD\Database\Base {
 	 * Shape an item from the database into the type of object it always wanted
 	 * to be when it grew up (EDD_Customer, EDD_Discount, EDD_Payment, etc...)
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param mixed ID of item, or row from database
-	 *
 	 * @return mixed False on error, Object of single-object class type on success
 	 */
 	private function shape_item( $item = 0 ) {
@@ -1801,18 +1741,144 @@ class Base extends \EDD\Database\Base {
 		return new $this->item_shape( $item );
 	}
 
+	/**
+	 * Return an item comprised of all default values
+	 *
+	 * This is used by `add_item()` to populate known default values, to ensure
+	 * new item data is always what we expect it to be.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	private function default_item() {
+
+		// Default return value
+		$retval   = array();
+
+		// Get column names and defaults
+		$names    = $this->get_columns( array(), 'and', 'name'    );
+		$defaults = $this->get_columns( array(), 'and', 'default' );
+
+		// Put together an item using default values
+		foreach ( $names as $key => $name ) {
+			$retval[ $name ] = $defaults[ $key ];
+		}
+
+		// Return
+		return $retval;
+	}
+
+	/**
+	 * Transition an item when adding or updating.
+	 *
+	 * This method takes the data being saved, looks for any columns that are
+	 * known to transition between values, and fires actions on them.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return array
+	 */
+	private function transition_item( $new_data = array(), $old_data = array() ) {
+
+		// Look for transition columns
+		$columns = $this->get_columns( array( 'transition' => true ), 'and', 'name' );
+
+		// Bail if no columns to transition
+		if ( empty( $columns ) ) {
+			return;
+		}
+
+		// Get the item ID
+		$item_id = $this->shape_item_id( $old_data );
+
+		// Bail if item ID cannot be retrieved
+		if ( empty( $item_id ) ) {
+			return;
+		}
+
+		// If no old value(s), it's new
+		if ( ! is_array( $old_data ) ) {
+			$old_data = $new_data;
+
+			// Set all old values to "new"
+			foreach ( $old_data as $key => $value ) {
+				$value            = 'new';
+				$old_data[ $key ] = $value;
+			}
+		}
+
+		// Compare
+		$keys = array_flip( $columns );
+		$new  = array_intersect_key( $new_data, $keys );
+		$old  = array_intersect_key( $old_data, $keys );
+
+		// Get the difference
+		$diff = array_diff( $new, $old );
+
+		// Bail if nothing is changing
+		if ( empty( $diff ) ) {
+			return;
+		}
+
+		// Do the actions
+		foreach ( $diff as $key => $value ) {
+			$old_value  = $old_data[ $key ];
+			$new_value  = $new_data[ $key ];
+			$key_action = $this->apply_prefix( "transition_{$this->item_name}_{$key}" );
+
+			/**
+			 * Fires after an object value has transitioned.
+			 *
+			 * @since 3.0
+			 *
+			 * @param mixed $old_value The value being transitioned FROM.
+			 * @param mixed $new_value The value being transitioned TO.
+			 * @param int   $item_Id   The ID of the item that is transitioning.
+			 */
+			do_action( $key_action, $old_value, $new_value, $item_id );
+		}
+	}
+
+	/**
+	 * Check if the query failed
+	 *
+	 * @since 3.0
+	 * @param mixed $result
+	 * @return boolean
+	 */
+	private function failed( $result = false ) {
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			$retval = true;
+
+		// Bail if an error occurred
+		} elseif ( is_wp_error( $result ) ) {
+			$this->last_error = $result;
+			$retval           = true;
+
+		// No errors
+		} else {
+			$retval = false;
+		}
+
+		// Return the result
+		return $retval;
+	}
+
 	/** Meta ******************************************************************/
 
 	/**
 	 * Add meta data to an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int    $item_id
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $unique
-	 *
 	 * @return mixed
 	 */
 	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
@@ -1838,12 +1904,11 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int     $item_id
 	 * @param string  $meta_key
 	 * @param boolean $single
-	 *
 	 * @return mixed
 	 */
 	protected function get_item_meta( $item_id = 0, $meta_key = '', $single = false ) {
@@ -1869,13 +1934,12 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Update meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int    $item_id
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $prev_value
-	 *
 	 * @return mixed
 	 */
 	protected function update_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
@@ -1901,13 +1965,12 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Delete meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int    $item_id
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $delete_all
-	 *
 	 * @return mixed
 	 */
 	protected function delete_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $delete_all = false ) {
@@ -1936,7 +1999,7 @@ class Base extends \EDD\Database\Base {
 	 * This is a copy of get_registered_meta_keys() for WordPress versions lower
 	 * than 4.6.0.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array
 	 */
@@ -1958,7 +2021,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Maybe update meta values on item update/save
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $meta
 	 */
@@ -1993,11 +2056,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Delete all meta data for an item
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param int $item_id
-	 *
-	 * @return type
 	 */
 	private function delete_all_item_meta( $item_id = 0 ) {
 
@@ -2033,7 +2094,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Return meta table
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return mixed Table name if exists, False if not
 	 */
@@ -2051,7 +2112,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Get array of which database columns have uniquely cached groups
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array
 	 */
@@ -2082,13 +2143,14 @@ class Base extends \EDD\Database\Base {
 	 * after an item is inserted in the database, but before items have been
 	 * "shaped" into proper objects, so object properties may not be set yet.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
-	 * @param array $item_ids
+	 * @param array   $item_ids
+	 * @param boolean $force
 	 *
 	 * @return boolean False if empty
 	 */
-	private function prime_item_caches( $item_ids = array() ) {
+	private function prime_item_caches( $item_ids = array(), $force = false ) {
 
 		// Bail if no items to cache
 		if ( empty( $item_ids ) ) {
@@ -2099,7 +2161,7 @@ class Base extends \EDD\Database\Base {
 		$item_ids = (array) $item_ids;
 
 		// Update item caches
-		if ( empty( $this->query_vars['update_item_cache'] ) ) {
+		if ( ! empty( $force ) || ! empty( $this->query_vars['update_item_cache'] ) ) {
 
 			// Look for non-cached IDs
 			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
@@ -2137,19 +2199,29 @@ class Base extends \EDD\Database\Base {
 	 * after an item is already updated in the database, so we want to avoid
 	 * querying for it again. It's just safer this way.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $items
 	 */
 	private function update_item_cache( $items = array() ) {
+
+		// Maybe query for single item
+		if ( is_numeric( $items ) ) {
+			$primary = $this->get_primary_column_name();
+			$items   = $this->get_item_raw( $primary, $items );
+		}
 
 		// Bail if no items to cache
 		if ( empty( $items ) ) {
 			return false;
 		}
 
-		// Make sure items is an array
-		$items  = (array) $items;
+		// Make sure items are an array (without casting objects to arrays)
+		if ( ! is_array( $items ) ) {
+			$items = array( $items );
+		}
+
+		// Get cache groups
 		$groups = $this->get_cache_groups();
 
 		// Loop through all items and cache them
@@ -2174,7 +2246,7 @@ class Base extends \EDD\Database\Base {
 	 * after an item is already deleted from the database, so it cannot be
 	 * queried and may not exist in the cache. It's just safer this way.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param array $items
 	 *
@@ -2207,7 +2279,7 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Update the last_changed key for the cache group
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 */
 	private function update_last_changed() {
 		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
