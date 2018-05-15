@@ -138,6 +138,7 @@ function edd_register_privacy_exporters( $exporters ) {
 		'callback'               => 'edd_privacy_billing_information_exporter',
 	);
 
+
 	$exporters[] = array(
 		'exporter_friendly_name' => __( 'File Downloads', 'easy-digital-downloads' ),
 		'callback'               => 'edd_privacy_file_download_log_exporter',
