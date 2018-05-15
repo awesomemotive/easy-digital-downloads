@@ -424,19 +424,19 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 			),
 			array(
 				'name' => __( 'Order ID', 'easy-digital-downloads' ),
-				'value' => $log_meta['_edd_log_payment_id'],
+				'value' => $log_meta['_edd_log_payment_id'][0],
 			),
 			array(
 				'name' => __( 'Customer ID', 'easy-digital-downloads' ),
-				'value' => $log_meta['_edd_log_customer_id'],
+				'value' => $log_meta['_edd_log_customer_id'][0],
 			),
 			array(
 				'name'  => __( 'User ID', 'easy-digital-downloads' ),
-				'value' => $log_meta['_edd_log_user_id'],
+				'value' => $log_meta['_edd_log_user_id'][0],
 			),
 			array(
 				'name'  => __( 'IP Address', 'easy-digital-downloads' ),
-				'value' => $log_meta['_edd_log_ip'],
+				'value' => $log_meta['_edd_log_ip'][0],
 			),
 		);
 
