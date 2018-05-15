@@ -260,11 +260,11 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 		$billing_name = implode( ' ', array_values( $billing_name ) );
 
 		$billing_street = array();
-		if ( ! empty( ! empty( $payment->address['line1'] ) ) ) {
+		if ( ! empty( $payment->address['line1'] ) ) {
 			$billing_street[] = $payment->address['line1'];
 		}
 
-		if ( ! empty( ! empty( $payment->address['line2'] ) ) ) {
+		if ( ! empty( $payment->address['line2'] ) ) {
 			$billing_street[] = $payment->address['line2'];
 		}
 		$billing_street = implode( "\n", array_values( $billing_street ) );
