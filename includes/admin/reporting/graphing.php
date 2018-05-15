@@ -659,7 +659,7 @@ function edd_reports_graph_controls() {
 
 				<div class="edd-date-range-options">
 					<fieldset>
-						<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-didgital-downloads' ); ?></legend>
+						<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
 						<?php
 						$dates_values = \EDD\Reports\get_filter_value( 'dates' );
 
