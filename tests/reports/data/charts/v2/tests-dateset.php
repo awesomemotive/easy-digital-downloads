@@ -197,7 +197,7 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	protected function get_Dataset_mock( $dataset_id, $endpoint_args = array() ) {
 		$defaults = array(
 			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'edd-example-report' ),
+			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function() use ( $dataset_id ) {
@@ -210,7 +210,7 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 						'cutoutPercentage' => 50,
 						'datasets'         => array(
 							$dataset_id => array(
-								'label'           => __( 'Sales' ),
+								'label'           => __( 'Sales', 'easy-digital-downloads' ),
 								'backgroundColor' => array(
 									'rgb(234,16,109)',
 									'rgb(98,133,193)',
