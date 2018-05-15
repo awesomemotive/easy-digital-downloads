@@ -1001,7 +1001,7 @@ function display_dates_filter( $report ) {
 
 	<div class="edd-date-range-options<?php echo esc_attr( $class ); ?>">
 		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-didgital-downloads' ); ?></legend>
+			<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
 			<span class="edd-search-date">
 				<?php
 				// From.
