@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Is Test Mode
@@ -786,6 +786,17 @@ function edd_let_to_num( $v ) {
 }
 
 /**
+ * Return the name of base uploads directory.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_uploads_base_dir() {
+	return 'edd'; // No filter, for now
+}
+
+/**
  * Retrieve the URL of the symlink directory
  *
  * @since 1.5
@@ -793,8 +804,10 @@ function edd_let_to_num( $v ) {
  */
 function edd_get_symlink_url() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$url = $wp_upload_dir['baseurl'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = '/' . $edd_dir . '/symlinks';
+	wp_mkdir_p( $wp_upload_dir['basedir'] . $path );
+	$url = $wp_upload_dir['baseurl'] . $path;
 
 	return apply_filters( 'edd_get_symlink_url', $url );
 }
@@ -807,8 +820,9 @@ function edd_get_symlink_url() {
  */
 function edd_get_symlink_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$path = $wp_upload_dir['basedir'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir . '/symlinks';
+	wp_mkdir_p( $path );
 
 	return apply_filters( 'edd_get_symlink_dir', $path );
 }
@@ -821,8 +835,9 @@ function edd_get_symlink_dir() {
  */
 function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
-	$path = $wp_upload_dir['basedir'] . '/edd';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
+	wp_mkdir_p( $path );
 
 	return apply_filters( 'edd_get_upload_dir', $path );
 }
@@ -930,7 +945,8 @@ function edd_set_upload_dir( $upload ) {
 		$upload['subdir'] = "/$y/$m";
 	}
 
-	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$edd_dir          = edd_get_uploads_base_dir();
+	$upload['subdir'] = '/' . $edd_dir . $upload['subdir'];
 	$upload['path']   = $upload['basedir'] . $upload['subdir'];
 	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;
