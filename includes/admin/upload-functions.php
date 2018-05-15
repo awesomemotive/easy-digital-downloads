@@ -10,8 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Change Downloads Upload Directory
@@ -42,7 +41,7 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
 /**
  * Creates blank index.php and .htaccess files
  *
- * This function runs approximately once per month in order to ensure all folders
+ * This function runs approximately once per day in order to ensure all folders
  * have their necessary protection files
  *
  * @since 1.1.5
@@ -50,7 +49,6 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  * @param bool $force
  * @param bool $method
  */
-
 function edd_create_protection_files( $force = false, $method = false ) {
 	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 
@@ -67,7 +65,7 @@ function edd_create_protection_files( $force = false, $method = false ) {
 				// Update the .htaccess rules if they don't match
 				@file_put_contents( $upload_path . '/.htaccess', $rules );
 			}
-		} elseif( wp_is_writable( $upload_path ) ) {
+		} elseif ( wp_is_writable( $upload_path ) ) {
 			// Create the file if it doesn't exist
 			@file_put_contents( $upload_path . '/.htaccess', $rules );
 		}
@@ -85,8 +83,9 @@ function edd_create_protection_files( $force = false, $method = false ) {
 				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 		}
+
 		// Check for the files once per day
-		set_transient( 'edd_check_protection_files', true, 3600 * 24 );
+		set_transient( 'edd_check_protection_files', true, DAY_IN_SECONDS );
 	}
 }
 add_action( 'admin_init', 'edd_create_protection_files' );
@@ -137,10 +136,11 @@ function edd_scan_folders( $path = '', $return = array() ) {
  */
 function edd_get_htaccess_rules( $method = false ) {
 
-	if( empty( $method ) )
+	if ( empty( $method ) ) {
 		$method = edd_get_file_download_method();
+	}
 
-	switch( $method ) :
+	switch ( $method ) {
 
 		case 'redirect' :
 			// Prevent directory browsing
@@ -158,10 +158,17 @@ function edd_get_htaccess_rules( $method = false ) {
 			    $rules .= "Allow from all\n";
 			$rules .= "</FilesMatch>\n";
 			break;
+	}
 
-	endswitch;
-	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
-	return $rules;
+	/**
+	 * Filter and return the htaccess rules used to allow or deny access
+	 *
+	 * @since 1.6
+	 *
+	 * @param string $rules  The contents of .htaccess
+	 * @param string $method The method (either direct|redirect)
+	 */
+	return apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
 }
 
 
