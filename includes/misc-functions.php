@@ -843,6 +843,62 @@ function edd_get_upload_dir() {
 }
 
 /**
+ * Retrieve the URL to the file upload directory without the trailing slash
+ *
+ * @since  3.0
+ * @return string $purl URL to the EDD upload directory
+ */
+function edd_get_upload_url() {
+	$wp_upload_dir = wp_upload_dir();
+	$edd_dir       = edd_get_uploads_base_dir();
+	$url           = $wp_upload_dir['baseurl'] . '/' . $edd_dir;
+
+	return apply_filters( 'edd_get_upload_url', $url );
+}
+
+/**
+ * Determine if the uploads directory is publicly accessible
+ *
+ * @since 3.0
+ *
+ * @return bool True if URL returns 200, False if anything else
+ */
+function edd_is_uploads_url_public() {
+	$transient_key = 'edd_is_uploads_url_public';
+	$public        = get_transient( $transient_key );
+
+	// No transient
+	if ( false === $public ) {
+
+		// Setup vars for request
+		$upload_url = edd_get_upload_url();
+		$url        = esc_url_raw( $upload_url );
+		$args       = array(
+			'sslverify'   => false,
+			'timeout'     => 2,
+			'redirection' => 0
+		);
+
+		// Send the request
+		$response   = wp_remote_get( $url, $args );
+		$code       = wp_remote_retrieve_response_code( $response );
+		$public     = (int) ( 200 === (int) $code );
+
+		// Set the transient
+		set_transient( $transient_key, $public, 12 * HOUR_IN_SECONDS );
+	}
+
+	/**
+	 * Filter whether the uploads directory is public or not.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $code Response code from remote get request
+	 */
+	return (bool) apply_filters( 'edd_is_uploads_dir_public', $code );
+}
+
+/**
  * Delete symbolic links after they have been used
  *
  * This function is only intended to be used by WordPress cron.
