@@ -258,4 +258,3 @@ class EDD_Notices {
 		}
 	}
 }
-new EDD_Notices;
