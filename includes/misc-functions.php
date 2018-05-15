@@ -843,6 +843,15 @@ function edd_get_upload_dir() {
 }
 
 /**
+ * Return whether the base uploads directory is public or private
+ *
+ * @since 3.0
+ */
+function edd_is_uploads_url_public() {
+	return true;
+}
+
+/**
  * Delete symbolic links after they have been used
  *
  * This function is only intended to be used by WordPress cron.
