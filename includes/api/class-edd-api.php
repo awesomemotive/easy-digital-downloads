@@ -2260,7 +2260,7 @@ class EDD_API {
 	/**
      * Flush previous API output. This is for unit tests only as we use a static fixutre.
      *
-     * @since 3.0.0
+     * @since 3.0
      */
 	public function flush_api_output() {
 	    if ( defined( 'EDD_UNIT_TESTS' ) ) {

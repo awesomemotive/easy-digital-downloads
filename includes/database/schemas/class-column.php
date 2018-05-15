@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base class used for each column for a custom table.
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @see \EDD\Database\Schemas\Column::__construct() for accepted arguments.
  */
@@ -25,7 +25,7 @@ class Column {
 	/**
 	 * Name for the database column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -34,7 +34,7 @@ class Column {
 	/**
 	 * Type of database column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -43,7 +43,7 @@ class Column {
 	/**
 	 * Length of database column
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -52,43 +52,43 @@ class Column {
 	/**
 	 * Is integer unsigned?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $unsigned = true;
 
 	/**
 	 * Is integer filled with zeroes?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $zerofill = false;
 
 	/**
 	 * Is data in a binary format?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $binary = false;
 
 	/**
 	 * Is null an allowed value?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $allow_null = false;
 
 	/**
 	 * Typically empty/null, or date value
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -97,7 +97,7 @@ class Column {
 	/**
 	 * auto_increment, etc...
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -106,7 +106,7 @@ class Column {
 	/**
 	 * Typically inherited from wpdb.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -115,7 +115,7 @@ class Column {
 	/**
 	 * Typically inherited from wpdb
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -124,7 +124,7 @@ class Column {
 	/**
 	 * Typically empty; probably ignore.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -133,7 +133,7 @@ class Column {
 	/**
 	 * What is the string-replace pattern?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -142,79 +142,79 @@ class Column {
 	/**
 	 * Is this the primary column?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $primary = false;
 
 	/**
 	 * Is this the column used as a created date?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $created = false;
 
 	/**
 	 * Is this the column used as a modified date?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $modified = false;
 
 	/**
 	 * Is this column searchable?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $searchable = false;
 
 	/**
 	 * Is this column a date (that uses WP_Date_Query?)
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $date_query = false;
 
 	/**
 	 * Is this column used in orderby?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $sortable = false;
 
 	/**
 	 * Is __in supported?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $in = true;
 
 	/**
 	 * Is __not_in supported?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
-	 * @var string
+	 * @var bool
 	 */
 	public $not_in = true;
 
 	/**
 	 * Does this column have its own cache key?
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var string
 	 */
@@ -222,6 +222,16 @@ class Column {
 
 	/**
 	 * Array of capabilities to check when interacting with column data.
+	 * Does this column fire a transition action when it's value changes?
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @var bool
+	 */
+	public $transition = false;
+
+	/**
+	 * Array of possible aliases this column can be referred to as.
 	 *
 	 * @since 3.0.0
 	 * @access public
@@ -232,7 +242,7 @@ class Column {
 	/**
 	 * Array of possible aliases this column can be referred to as.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @var array
 	 */
@@ -241,7 +251,7 @@ class Column {
 	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 *
 	 * @param string|array $args {
@@ -275,8 +285,20 @@ class Column {
 		// Parse arguments
 		$r = $this->parse_args( $args );
 
-		// Set object parameters
-		foreach ( $r as $key => $value ) {
+		// Maybe set arguments
+		if ( ! empty( $r ) ) {
+			$this->set_args( $r );
+		}
+	}
+
+	/**
+	 * Set column arguments
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	private function set_args( $args = array() ) {
+		foreach ( $args as $key => $value ) {
 			$this->{$key} = $value;
 		}
 	}
@@ -284,7 +306,7 @@ class Column {
 	/**
 	 * Parse column arguments
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @param array $args
 	 * @return array
@@ -313,6 +335,7 @@ class Column {
 			'searchable' => false,
 			'sortable'   => false,
 			'date_query' => false,
+			'transition' => false,
 			'in'         => true,
 			'not_in'     => true,
 
@@ -336,6 +359,9 @@ class Column {
 			$r['cache_key'] = true;
 		}
 
+		// Set the args before they are sanitized
+		$this->set_args( $r );
+
 		// Return array
 		return $this->sanitize_args( $r );
 	}
@@ -343,7 +369,7 @@ class Column {
 	/**
 	 * Sanitize arguments after they are parsed.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access private
 	 * @param array $args
 	 * @return array
@@ -371,6 +397,7 @@ class Column {
 			'searchable' => 'wp_validate_boolean',
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
+			'transition' => 'wp_validate_boolean',
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
@@ -401,7 +428,7 @@ class Column {
 	/**
 	 * Return if a column type is numeric or not.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @access public
 	 * @return boolean
 	 */
@@ -417,7 +444,7 @@ class Column {
 	/**
 	 * Sanitize aliases array using `sanitize_key()`
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param array $aliases
 	 * @return array
 	 */
@@ -444,7 +471,7 @@ class Column {
 	/**
 	 * Sanitize a pattern
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param mixed $pattern
 	 * @return string
 	 */

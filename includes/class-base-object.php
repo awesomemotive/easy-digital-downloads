@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Implements a base object to be extended by core objects.
  *
- * @since 3.0.0
+ * @since 3.0
  * @abstract
  */
 abstract class Base_Object {
@@ -40,7 +40,7 @@ abstract class Base_Object {
 	/**
 	 * Converts the given object to an array.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return array Array version of the given object.
 	 */

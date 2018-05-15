@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register a new EDD component (customer, discount, order, etc...)
  *
- * @since 3.0.0
+ * @since 3.0
  *
  * @param string $name
  * @param array  $args
@@ -64,7 +64,7 @@ function edd_register_component( $name = '', $args = array() ) {
 /**
  * Get an EDD Component object
  *
- * @since 3.0.0
+ * @since 3.0
  * @param string $name
  *
  * @return mixed False if not exists, EDD_Component if exists
@@ -81,7 +81,7 @@ function edd_get_component( $name = '' ) {
 /**
  * Get an EDD Component interface
  *
- * @since 3.0.0
+ * @since 3.0
  * @param string $component
  * @param string $interface
  *
@@ -104,7 +104,7 @@ function edd_get_component_interface( $component = '', $interface = '' ) {
 /**
  * Setup all EDD components
  *
- * @since 3.0.0
+ * @since 3.0
  */
 function edd_setup_components() {
 	static $setup = false;

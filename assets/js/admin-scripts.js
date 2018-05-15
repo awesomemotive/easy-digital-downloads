@@ -109,6 +109,8 @@ jQuery(document).ready(function ($) {
 
 				// Setup chosen fields again if they exist
 				clone.find('.edd-select-chosen').chosen({
+					disable_search_threshold: 13,
+					search_contains: true,
 					inherit_select_classes: true,
 					placeholder_text_single: edd_vars.one_option,
 					placeholder_text_multiple: edd_vars.one_or_more_option,
@@ -379,9 +381,8 @@ jQuery(document).ready(function ($) {
 	// Date picker
 	var edd_datepicker = $( '.edd_datepicker' );
 	if ( edd_datepicker.length > 0 ) {
-		var dateFormat = 'yy-mm-dd';
 		edd_datepicker.datepicker( {
-			dateFormat: dateFormat
+			dateFormat: edd_vars.date_picker_format
 		} );
 	}
 
@@ -990,14 +991,14 @@ jQuery(document).ready(function ($) {
 		date_options : function() {
 
 			// Show hide extended date options
-			$( '#edd-graphs-date-options' ).change( function() {
-				var $this = $(this),
-					date_range_options = $( '#edd-date-range-options' );
+			$( '.edd-graphs-date-options' ).on( 'change', function( event ) {
+				var	$this = $( this ),
+					date_range_options = $this.next( '.edd-date-range-options');
 
 				if ( 'other' === $this.val() ) {
-					date_range_options.show();
+					date_range_options.removeClass( 'screen-reader-text' );
 				} else {
-					date_range_options.hide();
+					date_range_options.addClass( 'screen-reader-text' );
 				}
 			});
 
@@ -1356,6 +1357,8 @@ jQuery(document).ready(function ($) {
 
 	// Setup Chosen menus
 	$('.edd-select-chosen').chosen({
+		disable_search_threshold: 13,
+		search_contains: true,
 		inherit_select_classes: true,
 		placeholder_text_single: edd_vars.one_option,
 		placeholder_text_multiple: edd_vars.one_or_more_option,
@@ -2170,6 +2173,11 @@ jQuery(document).ready(function ($) {
 			$('#add-customer-note').click();
 		}
 	});
+
+	// Enable reports meta box toggle states.
+	if ( typeof postboxes !== 'undefined' && /edd-reports/.test( pagenow ) ) {
+		postboxes.add_postbox_toggles( pagenow );
+	}
 
 });
 

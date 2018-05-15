@@ -13,14 +13,14 @@ namespace EDD;
 /**
  * Component Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Component {
 
 	/**
 	 * Database schema definition
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var object
 	 */
@@ -29,7 +29,7 @@ class Component {
 	/**
 	 * Database table interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var object
 	 */
@@ -38,7 +38,7 @@ class Component {
 	/**
 	 * Database single object interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var object
 	 */
@@ -47,7 +47,7 @@ class Component {
 	/**
 	 * Database query interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var object
 	 */
@@ -56,7 +56,7 @@ class Component {
 	/**
 	 * Database single object interface
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var object
 	 */
@@ -65,7 +65,7 @@ class Component {
 	/**
 	 * Array of interface objects instantiated during init
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var array
 	 */
@@ -74,7 +74,7 @@ class Component {
 	/**
 	 * Array of class keys
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @var array
 	 */
@@ -89,7 +89,7 @@ class Component {
 	/**
 	 * Construct an EDD component
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param array $args
 	 */
 	public function __construct( $args = array() ) {
@@ -104,7 +104,7 @@ class Component {
 	/**
 	 * Setup an EDD component based on parsing in constructor
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 * @param array $args
 	 */
 	private function init( $args = array() ) {
@@ -122,7 +122,7 @@ class Component {
 	/**
 	 * Return an interface object
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @param string $name
 	 * @return object

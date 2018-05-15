@@ -42,14 +42,7 @@ class EDD_Notices {
 
 		// Global (non-action-based) messages
 		if ( ( edd_get_option( 'purchase_page', '' ) == '' || 'trash' == get_post_status( edd_get_option( 'purchase_page', '' ) ) ) && current_user_can( 'edit_pages' ) && ! get_user_meta( get_current_user_id(), '_edd_set_checkout_dismissed' ) ) {
-			ob_start();
-			?>
-			<div class="error">
-				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ); ?></p>
-				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
-			</div>
-			<?php
-			echo ob_get_clean();
+			$notices['error']['edd-no-purchase-page'] = sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) );
 		}
 
 		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
@@ -57,7 +50,6 @@ class EDD_Notices {
 		}
 
 		if( stristr( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
-
 			ob_start();
 			?>
 			<div class="error">
@@ -89,7 +81,6 @@ class EDD_Notices {
 
 
 		if ( class_exists( 'EDD_Recount_Earnings' ) && current_user_can( 'manage_shop_settings' ) ) {
-
 			ob_start();
 			?>
 			<div class="error">
@@ -97,7 +88,6 @@ class EDD_Notices {
 			</div>
 			<?php
 			echo ob_get_clean();
-
 		}
 
 		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475

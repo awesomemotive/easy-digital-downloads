@@ -105,7 +105,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Date:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'm/d/Y', $payment_date ) ); ?>" class="medium-text edd_datepicker"/>
+												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'Y-m-d', $payment_date ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 											</p>
 										</div>
 

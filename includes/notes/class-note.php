@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Note Class.
  *
- * @since 3.0.0
+ * @since 3.0
  */
 class Note extends Base_Object {
 
@@ -216,7 +216,7 @@ class Note extends Base_Object {
 	/**
 	 * Retrieve note ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -227,7 +227,7 @@ class Note extends Base_Object {
 	/**
 	 * Retrieve object ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -238,7 +238,7 @@ class Note extends Base_Object {
 	/**
 	 * Retrieve object type.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -249,7 +249,7 @@ class Note extends Base_Object {
 	/**
 	 * Retrieve note content.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */
@@ -260,7 +260,7 @@ class Note extends Base_Object {
 	/**
 	 * Retrieve user ID.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -271,7 +271,7 @@ class Note extends Base_Object {
 	/**
 	 * Retrieve the date the note was created.
 	 *
-	 * @since 3.0.0
+	 * @since 3.0
 	 *
 	 * @return string
 	 */

@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Customer Class.
  *
  * @since 2.3
- * @since 3.0.0 No longer extends EDD_DB_Customer.
+ * @since 3.0 No longer extends EDD_DB_Customer.
  */
 class EDD_Customer {
 
