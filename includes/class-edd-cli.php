@@ -804,7 +804,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$download_ids_with_files[ $meta_item->post_id ] = array_keys( $files );
 		}
 
-		// Next, find all payment records that exist the downloads with files.
+		// Next, find all payment records that exist for the downloads that have files.
 		$sales_logs_args = array(
 			'post_parent'            => array_keys( $download_ids_with_files ),
 			'log_type'               => 'sale',
