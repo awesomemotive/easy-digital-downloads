@@ -38,7 +38,7 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 
 		delete_option( 'gmt_offset' );
 
-		EDD()->utils->get_wp_offset( true );
+		EDD()->utils->get_gmt_offset( true );
 
 		parent::tearDownAfterClass();
 	}

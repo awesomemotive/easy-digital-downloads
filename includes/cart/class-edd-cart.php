@@ -1358,43 +1358,47 @@ class EDD_Cart {
 	 * @return bool
 	 */
 	public function save() {
+
+		// Bail if carts cannot be saved
 		if ( ! $this->is_saving_enabled() ) {
 			return false;
 		}
 
-		$user_id  = get_current_user_id();
-		$cart     = EDD()->session->get( 'edd_cart' );
-		$token    = edd_generate_cart_token();
-		$messages = EDD()->session->get( 'edd_cart_messages' );
+		// Get cart & cart token
+		$cart  = EDD()->session->get( 'edd_cart' );
+		$token = edd_generate_cart_token();
 
 		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
 			update_user_meta( $user_id, 'edd_saved_cart', $cart,  false );
 			update_user_meta( $user_id, 'edd_cart_token', $token, false );
 		} else {
-			$cart = json_encode( $cart );
-			setcookie( 'edd_saved_cart', $cart,  time() + 3600 * 24 * 7, COOKIEPATH, COOKIE_DOMAIN );
-			setcookie( 'edd_cart_token', $token, time() + 3600 * 24 * 7, COOKIEPATH, COOKIE_DOMAIN );
+			$cart    = json_encode( $cart );
+			$expires = time() + WEEK_IN_SECONDS;
+			@setcookie( 'edd_saved_cart', $cart,  $expires, COOKIEPATH, COOKIE_DOMAIN );
+			@setcookie( 'edd_cart_token', $token, $expires, COOKIEPATH, COOKIE_DOMAIN );
 		}
 
+		// Get all cart messages
 		$messages = EDD()->session->get( 'edd_cart_messages' );
 
-		if ( ! $messages ) {
+		// Make sure it's an array, if empty
+		if ( empty( $messages ) ) {
 			$messages = array();
 		}
 
+		// Add the success message
 		$messages['edd_cart_save_successful'] = sprintf(
 			'<strong>%1$s</strong>: %2$s',
 			__( 'Success', 'easy-digital-downloads' ),
 			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
 		);
 
+		// Set these messages in the session
 		EDD()->session->set( 'edd_cart_messages', $messages );
 
-		if ( $cart ) {
-			return true;
-		}
-
-		return false;
+		// Return if cart saved
+		return ! empty( $cart );
 	}
 
 	/**

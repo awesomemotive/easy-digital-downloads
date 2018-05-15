@@ -100,6 +100,22 @@ final class Easy_Digital_Downloads {
 	public $cart;
 
 	/**
+	 * EDD Tracking Object
+	 *
+	 * @var object|EDD_Tracking
+	 * @since 3.0
+	 */
+	public $tracking;
+
+	/**
+	 * EDD Notices Object
+	 *
+	 * @var object|EDD_Notices
+	 * @since 3.0
+	 */
+	public $notices;
+
+	/**
 	 * EDD Components array
 	 *
 	 * @var array
@@ -146,6 +162,12 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+			self::$instance->tracking      = new EDD_Tracking();
+
+			// Admin APIs
+			if ( is_admin() ) {
+				self::$instance->notices   = new EDD_Notices();
+			}
 
 			// Register backwards compatibility hooks
 			new EDD\Compat\Customer();
@@ -227,7 +249,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.9.1' );
+			define( 'EDD_VERSION', '3.0.0-alpha-1' );
 		}
 
 		// Plugin Root File.
@@ -509,6 +531,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
