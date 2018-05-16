@@ -400,3 +400,60 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 	);
 
 }
+
+/**
+ * Given a customer ID, anonymize the data related to that customer.
+ *
+ * Only the customer record is affected in this function. The data that is changed:
+ * - The name is changed to 'Anonymized Customer'
+ * - The email address is anonymized, but kept in a format that passes is_email checks
+ * - The date created is set to the timestamp of 0 (January 1, 1970)
+ * - Notes are fully cleared
+ * - Any additional email addresses are removed
+ *
+ * Once completed, a note is left stating when the customer was anonymized.
+ *
+ * @param int $customer_id
+ *
+ * @return array
+ */
+function edd_anonymize_customer( $customer_id = 0 ) {
+
+	$customer = new EDD_Customer( $customer_id );
+	if ( empty( $customer->id ) ) {
+		return array( 'success' => false, 'message' => sprintf( __( 'No customer with ID %d', 'easy-digital-downloads' ), $customer_id ) );
+	}
+
+	$customer->update( array(
+		'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+		'email'        => edd_anonymize_email( $customer->email ),
+		'date_created' => date( 'Y-m-d H:i:s', 0 ),
+		'notes'        => '',
+	) );
+
+	// Loop through all their email addresses, and remove any additional email addresses.
+	foreach ( $customer->emails as $email ) {
+		$customer->remove_email( $email );
+	}
+
+	if ( $customer->user_id > 0 ) {
+		delete_user_meta( $customer->user_id, '_edd_user_address' );
+	}
+
+	/**
+	 * Run further anonymization on a customer
+	 *
+	 * Developers and extensions can use the EDD_Customer object passed into the edd_anonymize_customer action
+	 * to complete further anonymization.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param EDD_Customer $customer The EDD_Customer object that was found.
+	 */
+	do_action( 'edd_anonymize_customer', $customer );
+
+	$customer->add_note( __( 'Customer anonymized successfully' ) );
+	return array( 'success' => true, 'message' => sprintf( __( 'Customer ID %d successfully anonymized', 'easy-digital-downloads' ), $customer_id ) );
+
+
+}
