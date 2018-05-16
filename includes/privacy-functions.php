@@ -174,13 +174,6 @@ function edd_anonymize_customer( $customer_id = 0 ) {
 		return array( 'success' => false, 'message' => sprintf( __( 'No customer with ID %d', 'easy-digital-downloads' ), $customer_id ) );
 	}
 
-	$customer->update( array(
-		'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
-		'email'        => edd_anonymize_email( $customer->email ),
-		'date_created' => date( 'Y-m-d H:i:s', 0 ),
-		'notes'        => '',
-	) );
-
 	// Loop through all their email addresses, and remove any additional email addresses.
 	foreach ( $customer->emails as $email ) {
 		$customer->remove_email( $email );
@@ -189,6 +182,14 @@ function edd_anonymize_customer( $customer_id = 0 ) {
 	if ( $customer->user_id > 0 ) {
 		delete_user_meta( $customer->user_id, '_edd_user_address' );
 	}
+
+	$customer->update( array(
+		'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+		'email'        => edd_anonymize_email( $customer->email ),
+		'date_created' => date( 'Y-m-d H:i:s', 0 ),
+		'notes'        => '',
+		'user_id'      => 0,
+	) );
 
 	/**
 	 * Run further anonymization on a customer
