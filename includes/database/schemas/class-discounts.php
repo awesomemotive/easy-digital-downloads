@@ -156,7 +156,8 @@ class Discounts extends Base {
 		array(
 			'name'       => 'product_condition',
 			'type'       => 'varchar',
-			'length'     => '20'
+			'length'     => '20',
+			'default'    => '',
 		),
 
 		// date_created
