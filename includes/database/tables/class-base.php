@@ -222,6 +222,21 @@ abstract class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Drop the database table
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed
+	 */
+	public function drop() {
+		$query   = "DROP TABLE {$this->table_name}";
+		$dropped = $this->get_db()->query( $query );
+
+		// Query success/fail
+		return $dropped;
+	}
+
+	/**
 	 * Delete all items from the database table
 	 *
 	 * @since 3.0
