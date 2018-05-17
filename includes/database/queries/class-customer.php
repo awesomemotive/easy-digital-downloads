@@ -105,11 +105,21 @@ class Customer extends Base {
 	 *     @type int          $id                   An customer ID to only return that customer. Default empty.
 	 *     @type array        $id__in               Array of customer IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of customer IDs to exclude. Default empty.
-	 *     @type array        $date_created_query   Date query clauses to limit customers by. See WP_Date_Query.
+	 *     @type int          $user_id              A user ID to only return that object. Default empty.
+	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
+	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
+	 *     @type string       $email                Limit results to those affiliated with a given email. Default empty.
+	 *     @type array        $email__in            Array of email to include affiliated orders for. Default empty.
+	 *     @type array        $email__not_in        Array of email to exclude affiliated orders for. Default empty.
+	 *     @type string       $status               An order statuses to only return that order. Default empty.
+	 *     @type array        $status__in           Array of order statuses to include. Default empty.
+	 *     @type array        $status__not_in       Array of order statuses to exclude. Default empty.
+	 *     @type decimal      $purchase_value       An 18,9 numeric value. Default empty.
+	 *     @type int          $purchase_count       A numeric value. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit discounts by. See WP_Date_Query.
 	 *                                              Default null.
-	 *     @type array        $start_date_query     Date query clauses to limit customers by. See WP_Date_Query.
-	 *                                              Default null.
-	 *     @type array        $end_date_query       Date query clauses to limit customers by. See WP_Date_Query.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a customer count (true) or array of customer objects.
 	 *                                              Default false.

@@ -114,8 +114,16 @@ class Log extends Base {
 	 *     @type string       $user_id              A user ID to only return those users. Default empty.
 	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
 	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
+	 *     @type string       $type                 A type to only return those types. Default empty.
+	 *     @type array        $type__in             Array of types to include. Default empty.
+	 *     @type array        $type__not_in         Array of types to exclude. Default empty.
 	 *     @type array        $title                Title to search by. Default empty.
 	 *     @type array        $content              Content to search by. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a count (true) or array of objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of IDs)
