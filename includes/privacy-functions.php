@@ -741,6 +741,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 		if ( ! is_null( $items_removed ) && ! $result['success'] ) {
 			$items_retained = true;
 		}
+
+		$messages[] = $result['message'];
 	}
 
 
