@@ -44,6 +44,7 @@ body.wp-admin.rtl .edd-datepicker {
     border: none;
     color: #fff;
     font-weight: normal;
+	padding: .2em 0;
 }
 
 .edd-datepicker .ui-datepicker-header .ui-state-hover {
