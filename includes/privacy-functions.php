@@ -274,11 +274,12 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
 	}
 
-	$statues = edd_get_payment_status_keys();
-	$payment_status_actions = array();
-	foreach ( $statues as $status ) {
+	$action = edd_get_option( 'payment_privacy_status_action' . $payment->status, false );
 
-		switch ( $status ) {
+	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
+	if ( empty( $action ) ) {
+
+		switch ( $payment->status ) {
 
 			case 'publish':
 			case 'refunded':
@@ -299,21 +300,22 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 
 		}
 
-		/**
-		 * Allow filtering of what type of action should be taken for a payment.
-		 *
-		 * Developers and extensions can use this filter to modify how Easy Digital Downloads will treat an order
-		 * that has been requested to be deleted or anonymized.
-		 *
-		 * @since 2.9.2
-		 *
-		 * @param string      $action  What action will be performed (none, delete, anonymize)
-		 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
-		 */
-		$payment_status_actions[ $status ] = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
 	}
 
-	switch( $payment_status_actions[ $payment->status ] ) {
+	/**
+	 * Allow filtering of what type of action should be taken for a payment.
+	 *
+	 * Developers and extensions can use this filter to modify how Easy Digital Downloads will treat an order
+	 * that has been requested to be deleted or anonymized.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param string      $action  What action will be performed (none, delete, anonymize)
+	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
+	 */
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
+
+	switch( $action ) {
 
 		case 'none':
 		default:
@@ -654,6 +656,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 		'eraser_friendly_name' => __( 'Payment Record', 'easy-digital-downloads' ),
 		'callback'             => 'edd_privacy_payment_eraser',
 	);
+
 	return $erasers;
 
 }
