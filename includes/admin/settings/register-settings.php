@@ -896,17 +896,8 @@ function edd_get_registered_settings() {
 					'show_privacy_policy_on_checkout' => array(
 						'id'   => 'show_to_privacy_policy_on_checkout',
 						'name' => __( 'Show the privacy policy on checkout', 'easy-digital-downloads' ),
-						'desc' => __( 'Display your privacy policy on checkout.', 'easy-digital-downloads' ),
+						'desc' => __( 'Display your privacy policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>',
 						'type' => 'checkbox',
-					),
-					'agree_privacy_page' => array(
-						'id'   => 'privacy_agree_page',
-						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
-						'desc' => __( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'easy-digital-downloads' ),
-						'type'        => 'select',
-						'options'     => edd_get_pages(),
-						'chosen'      => true,
-						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
 				),
 			)

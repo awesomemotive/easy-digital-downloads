@@ -785,7 +785,7 @@ function edd_terms_agreement() {
 
 			<?php if ( ! edd_get_option( 'show_agree_to_privacy_policy', false ) && edd_get_option( 'show_to_privacy_policy_on_checkout', false ) ) : ?>
 				<?php
-				$agree_page      = edd_get_option( 'privacy_agree_page', get_option( 'page_for_privacy_policy' ) );
+				$agree_page      = get_option( 'wp_page_for_privacy_policy' );
 				$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
 				$agreement_text  = get_post_field( 'post_content', $agree_page );
 				?>
@@ -839,7 +839,7 @@ function edd_privacy_agreement() {
 			<?php if ( edd_get_option( 'show_to_privacy_policy_on_checkout', false ) ) : ?>
 
 				<?php
-				$agree_page      = edd_get_option( 'privacy_agree_page', get_option( 'page_for_privacy_policy' ) );
+				$agree_page      = get_option( 'wp_page_for_privacy_policy' );
 				$agreement_text  = get_post_field( 'post_content', $agree_page );
 				?>
 
