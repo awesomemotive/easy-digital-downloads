@@ -378,8 +378,13 @@ jQuery(document).ready(function ($) {
 
 	//$('#edit-slug-box').remove();
 
-	// Date picker
-	var edd_datepicker = $( '.edd_datepicker' );
+	/**
+	 * Date picker
+	 *
+	 * This juggles a few CSS classes to avoid styling collisions with other
+	 * third-party plugins.
+	 */
+	var edd_datepicker = $( 'input.edd_datepicker' );
 	if ( edd_datepicker.length > 0 ) {
 		edd_datepicker.datepicker( {
 			dateFormat: edd_vars.date_picker_format,
