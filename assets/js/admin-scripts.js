@@ -384,7 +384,9 @@ jQuery(document).ready(function ($) {
 		edd_datepicker.datepicker( {
 			dateFormat: edd_vars.date_picker_format,
 			beforeShow: function() {
-				$( '#ui-datepicker-div' ).addClass( 'edd-datepicker' );
+				$( '#ui-datepicker-div' )
+					.removeClass( 'ui-datepicker' )
+					.addClass( 'edd-datepicker' );
 			}
 		} );
 	}
