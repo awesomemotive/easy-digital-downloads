@@ -141,6 +141,11 @@ class Order_Item extends Base {
 	 *     @type string       $total                Limit results to those affiliated with a given total. Default empty.
 	 *     @type array        $total__in            Array of totals to include affiliated orders for. Default empty.
 	 *     @type array        $total__not_in        Array of totals to exclude affiliated orders for. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a order count (true) or array of order objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of order IDs)
