@@ -75,8 +75,10 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 
 		// Tab & Section
 		$tab_url = add_query_arg( array(
-			'tab'     => $active_tab,
-			'section' => $section_id
+			'post_type' => 'download',
+			'page'      => 'edd-settings',
+			'tab'       => $active_tab,
+			'section'   => $section_id
 		) );
 
 		// Settings not updated
@@ -91,11 +93,9 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 		$links[ $section_id ] = '<li class="' . esc_attr( $class ) . '"><a class="' . esc_attr( $class ) . '" href="' . esc_url( $tab_url ) . '">' . esc_html( $section_name ) . '</a><li>';
 	} ?>
 
-	<div>
-		<ul class="subsubsub edd-settings-sub-nav">
-			<?php echo implode( '', $links ); ?>
-		</ul>
-	</div>
+	<ul class="subsubsub edd-settings-sub-nav">
+		<?php echo implode( '', $links ); ?>
+	</ul>
 
 	<?php
 }
@@ -112,36 +112,34 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 function edd_options_page_form( $active_tab = '', $section = '', $override = false ) {
 ?>
 
-	<div>
-		<form method="post" action="options.php" class="edd-settings-form">
-			<?php
+	<form method="post" action="options.php" class="edd-settings-form">
+		<?php
 
-			settings_fields( 'edd_settings' );
+		settings_fields( 'edd_settings' );
 
-			if ( 'main' === $section ) {
-				do_action( 'edd_settings_tab_top', $active_tab );
-			}
+		if ( 'main' === $section ) {
+			do_action( 'edd_settings_tab_top', $active_tab );
+		}
 
-			do_action( 'edd_settings_tab_top_' . $active_tab . '_' . $section );
+		do_action( 'edd_settings_tab_top_' . $active_tab . '_' . $section );
 
-			do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
+		do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
 
-			do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
+		do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
 
-			// For backwards compatibility
-			if ( 'main' === $section ) {
-				do_action( 'edd_settings_tab_bottom', $active_tab );
-			}
+		// For backwards compatibility
+		if ( 'main' === $section ) {
+			do_action( 'edd_settings_tab_bottom', $active_tab );
+		}
 
-			// If the main section was empty and we overrode the view with the
-			// next subsection, prepare the section for saving
-			if ( true === $override ) {
-				?><input type="hidden" name="edd_section_override" value="<?php echo esc_attr( $section ); ?>" /><?php
-			}
+		// If the main section was empty and we overrode the view with the
+		// next subsection, prepare the section for saving
+		if ( true === $override ) {
+			?><input type="hidden" name="edd_section_override" value="<?php echo esc_attr( $section ); ?>" /><?php
+		}
 
-			submit_button(); ?>
-		</form>
-	</div>
+		submit_button(); ?>
+	</form>
 
 <?php
 }
@@ -158,8 +156,8 @@ function edd_options_page() {
 	$all_settings   = edd_get_registered_settings();
 	$settings_tabs  = edd_get_settings_tabs();
 	$settings_tabs  = empty( $settings_tabs ) ? array() : $settings_tabs;
-	$active_tab     = isset( $_GET['tab']     ) ? sanitize_text_field( $_GET['tab']     ) : 'general';
-	$active_tab     = array_key_exists( $active_tab,     $settings_tabs ) ? $active_tab : 'general';
+	$active_tab     = isset( $_GET['tab']   ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
+	$active_tab     = array_key_exists( $active_tab, $settings_tabs ) ? $active_tab : 'general';
 	$sections       = edd_get_settings_tab_sections( $active_tab );
 	$section        = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
 	$section        = array_key_exists( $section, $sections ) ? $section : '';
