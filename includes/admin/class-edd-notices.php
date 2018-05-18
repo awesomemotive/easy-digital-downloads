@@ -326,10 +326,22 @@ class EDD_Notices {
 
 			// No payment gateways are enabled
 			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
+
+				// URL to fix this
+				$url = add_query_arg( array(
+					'post_type' => 'download',
+					'page'      => 'edd-settings',
+					'tab'       => 'gateways'
+				) );
+
+				// Link
+				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';
+
+				// Add the notice
 				$this->add_notice( array(
 					'id'             => 'edd-gateways',
 					'class'          => 'error',
-					'message'        => __( 'No payment gateways are enabled.', 'easy-digital-downloads' ),
+					'message'        => sprintf( __( 'No payment gateways are enabled. %s.', 'easy-digital-downloads' ), $link ),
 					'is_dismissible' => false
 				) );
 			}
