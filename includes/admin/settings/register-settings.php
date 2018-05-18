@@ -1402,7 +1402,7 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
-			'privacy'            => __( 'Privacy Settings', 'easy-digital-downloads' ),
+			'privacy'            => __( 'Privacy', 'easy-digital-downloads' ),
 		) ),
 	);
 
