@@ -686,7 +686,7 @@ function edd_register_privacy_eraser_customer_id_lookup( $erasers = array() ) {
 
 	return $erasers;
 }
-add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 1, 5 );
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_customer_id_lookup', 5, 1 );
 
 /**
  * Lookup the customer ID for this email address so that we can use it later in the anonymization process.
@@ -698,13 +698,12 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 
  */
 function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
 	$customer = new EDD_Customer( $email_address );
-
 	update_option( 'edd_priv_' . md5( $email_address ), $customer->id, false );
 
 	return array(
 		'items_removed'  => false,
 		'items_retained' => false,
-		'messages'       => '',
+		'messages'       => array(),
 		'done'           => true,
 	);
 }
@@ -724,7 +723,7 @@ function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
 
 	return $erasers;
 }
-add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 1, 9999 );
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_customer_id_removal', 9999, 1 );
 
 /**
  * Delete the customer ID for this email address that was found in edd_privacy_prefetch_customer_id()
@@ -740,7 +739,7 @@ function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
 	return array(
 		'items_removed'  => false,
 		'items_retained' => false,
-		'messages'       => '',
+		'messages'       => array(),
 		'done'           => true,
 	);
 }
@@ -770,7 +769,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 	return $erasers;
 
 }
-add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers' );
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 11, 1 );
 
 /**
  * Anonymize a customer record through the WP Core Privacy Data Eraser methods.
