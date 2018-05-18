@@ -198,7 +198,12 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 
 	// Now we should look at payments this customer has associated, and if there are an payments that should not be modified,
 	// do not modify the customer.
-	$payments = edd_get_payments( array( 'post__in' => implode( ',', $customer->payment_ids ), 'output' => 'payments' ) );
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'number'   => -1,
+	) );
+
 	foreach ( $payments as $payment ) {
 		$action = _edd_privacy_get_payment_action( $payment );
 		if ( 'none' === $action ) {
