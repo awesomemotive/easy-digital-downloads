@@ -94,7 +94,7 @@ class Customers extends Base {
 			'default'    => '0'
 		),
 
-		// payment_ids
+		// payment_ids (remove during 3.0)
 		array(
 			'name'       => 'payment_ids',
 			'type'       => 'longtext',
@@ -104,7 +104,7 @@ class Customers extends Base {
 			'not_in'     => false
 		),
 
-		// notes
+		// notes (remove during 3.0)
 		array(
 			'name'       => 'notes',
 			'type'       => 'longtext',
