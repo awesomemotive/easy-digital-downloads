@@ -414,6 +414,24 @@ function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
 
 }
 
+/**
+ * Since our eraser callbacks need to look up a stored customer ID by hashed email address, developers can use this
+ * to retrieve the customer ID associated with an email address that's being requested to be deleted even after the
+ * customer has been anonymized.
+ *
+ * @since 2.9.2
+ *
+ * @param $email_address
+ *
+ * @return EDD_Customer
+ */
+function _edd_privacy_get_customer_id_for_email( $email_address ) {
+	$customer_id = get_option( 'edd_priv_' . md5( $email_address ), true );
+	$customer    = new EDD_Customer( $customer_id );
+
+	return $customer;
+}
+
 /** Exporter Functions */
 
 /**
@@ -780,8 +798,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 
  * @return array
  */
 function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
-	$customer_id = get_option( 'edd_priv_' . md5( $email_address ), true );
-	$customer    = new EDD_Customer( $customer_id );
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
 	$anonymized = _edd_anonymize_customer( $customer->id );
 	if ( empty( $anonymized['success'] ) ) {
@@ -810,8 +827,7 @@ function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
-	$customer_id = get_option( 'edd_priv_' . md5( $email_address ), true );
-	$customer    = new EDD_Customer( $customer_id );
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
