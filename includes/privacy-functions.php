@@ -671,6 +671,81 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 /** Anonymization Functions */
 
 /**
+ * This registers a single eraser _very_ early to avoid any other hook into the EDD data from running first.
+ *
+ * We are going to set an option of what customer we're currently deleting for what email address, so that after the customer
+ * is anonymized we can still find them. Then we'll delete it.
+ *
+ * @param array $erasers
+ */
+function edd_register_privacy_eraser_customer_id_lookup( $erasers = array() ) {
+	$erasers[] = array(
+		'eraser_friendly_name' => 'pre-eraser-customer-id-lookup',
+		'callback'             => 'edd_privacy_prefetch_customer_id',
+	);
+
+	return $erasers;
+}
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 1, 5 );
+
+/**
+ * Lookup the customer ID for this email address so that we can use it later in the anonymization process.
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
+	$customer = new EDD_Customer( $email_address );
+
+	update_option( 'edd_priv_' . md5( $email_address ), $customer->id, false );
+
+	return array(
+		'items_removed'  => false,
+		'items_retained' => false,
+		'messages'       => '',
+		'done'           => true,
+	);
+}
+
+/**
+ * This registers a single eraser _very_ late to remove a customer ID that was found for the erasers.
+ *
+ * We are now assumed done with our exporters, so we can go ahead and delete the customer ID we found for this eraser.
+ *
+ * @param array $erasers
+ */
+function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
+	$erasers[] = array(
+		'eraser_friendly_name' => 'post-eraser-customer-id-lookup',
+		'callback'             => 'edd_privacy_remove_customer_id',
+	);
+
+	return $erasers;
+}
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 1, 9999 );
+
+/**
+ * Delete the customer ID for this email address that was found in edd_privacy_prefetch_customer_id()
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
+	delete_option( 'edd_priv_' . md5( $email_address ) );
+
+	return array(
+		'items_removed'  => false,
+		'items_retained' => false,
+		'messages'       => '',
+		'done'           => true,
+	);
+}
+
+/**
  * Register eraser for EDD Data
  *
  * @param array $erasers
@@ -706,7 +781,8 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers' )
  * @return array
  */
 function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
-	$customer = new EDD_Customer( $email_address );
+	$customer_id = get_option( 'edd_priv_' . md5( $email_address ), true );
+	$customer    = new EDD_Customer( $customer_id );
 
 	$anonymized = _edd_anonymize_customer( $customer->id );
 	if ( empty( $anonymized['success'] ) ) {
@@ -735,7 +811,9 @@ function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
-	$customer = new EDD_Customer( $email_address );
+	$customer_id = get_option( 'edd_priv_' . md5( $email_address ), true );
+	$customer    = new EDD_Customer( $customer_id );
+
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
 		'output'   => 'payments',
