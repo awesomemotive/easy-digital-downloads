@@ -262,7 +262,6 @@ function edd_register_settings() {
 	// Register our setting in the options table
 	register_setting( 'edd_settings', 'edd_settings', 'edd_settings_sanitize' );
 }
-
 add_action( 'admin_init', 'edd_register_settings' );
 
 /**
@@ -991,23 +990,27 @@ function edd_get_registered_settings() {
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
 
-	$doing_section = false;
-	if ( ! empty( $_POST['_wp_http_referer'] ) ) {
-		$doing_section = true;
-	}
-
+	// Default values
+	$referrer      = '';
 	$setting_types = edd_get_registered_settings_types();
-	$input         = $input ? $input : array();
+	$doing_section = ! empty( $_POST['_wp_http_referer'] );
+	$input         = ! empty( $input )
+		? $input
+		: array();
 
-	if ( $doing_section ) {
-		parse_str( $_POST['_wp_http_referer'], $referrer ); // Pull out the tab and section
-		$tab     = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
-		$section = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
+	if ( true === $doing_section ) {
 
+		// Pull out the tab and section
+		parse_str( $_POST['_wp_http_referer'], $referrer );
+		$tab     = ! empty( $referrer['tab']     ) ? sanitize_key( $referrer['tab']     ) : 'general';
+		$section = ! empty( $referrer['section'] ) ? sanitize_key( $referrer['section'] ) : 'main';
+
+		// Maybe override the tab section
 		if ( ! empty( $_POST['edd_section_override'] ) ) {
 			$section = sanitize_text_field( $_POST['edd_section_override'] );
 		}
 
+		// Get setting types for this section
 		$setting_types = edd_get_registered_settings_types( $tab, $section );
 
 		// Run a general sanitization for the tab for special fields (like taxes)
@@ -1017,23 +1020,16 @@ function edd_settings_sanitize( $input = array() ) {
 		$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
 	}
 
-	// Merge our new settings with the existing
-	$output = array_merge( $edd_options, $input );
+	// Remove non setting types and merge settings together
+	$non_setting_types = edd_get_non_setting_types();
+	$setting_types     = array_diff( $setting_types, $non_setting_types );
+	$output            = array_merge( $edd_options, $input );
 
+	// Loop through settings, and apply any filters
 	foreach ( $setting_types as $key => $type ) {
 
+		// Skip if type is empty
 		if ( empty( $type ) ) {
-			continue;
-		}
-
-		// Some setting types are not actually settings, just keep moving along here
-		$non_setting_types = apply_filters( 'edd_non_setting_types', array(
-			'header',
-			'descriptive_text',
-			'hook',
-		) );
-
-		if ( in_array( $type, $non_setting_types ) ) {
 			continue;
 		}
 
@@ -1042,7 +1038,7 @@ function edd_settings_sanitize( $input = array() ) {
 			$output[ $key ] = apply_filters( 'edd_settings_sanitize', $output[ $key ], $key );
 		}
 
-		if ( $doing_section ) {
+		if ( true === $doing_section ) {
 			switch ( $type ) {
 				case 'checkbox':
 				case 'gateways':
@@ -1063,18 +1059,13 @@ function edd_settings_sanitize( $input = array() ) {
 					}
 					break;
 			}
-		} else {
-			if ( empty( $input[ $key ] ) ) {
-				unset( $output[ $key ] );
-			}
+		} elseif ( empty( $input[ $key ] ) ) {
+			unset( $output[ $key ] );
 		}
 	}
 
-	if ( $doing_section ) {
-		add_settings_error( 'edd-notices', '', __( 'Settings updated.', 'easy-digital-downloads' ), 'updated' );
-	}
-
-	return $output;
+	// Return output
+	return (array) $output;
 }
 
 /**
@@ -1120,6 +1111,21 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 	}
 
 	return $setting_types;
+}
+
+/**
+ * Return array of settings field types that aren't settings.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_non_setting_types() {
+	return apply_filters( 'edd_non_setting_types', array(
+		'header',
+		'descriptive_text',
+		'hook',
+	) );
 }
 
 /**
@@ -1208,44 +1214,38 @@ add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
 /**
  * Payment Gateways Settings Sanitization
  *
- * Adds a settings error (for the updated message)
- *
  * @since 2.7
  *
  * @param array $input The value inputted in the field
  *
  * @return string $input Sanitized value
  */
-function edd_settings_sanitize_gateways( $input ) {
+function edd_settings_sanitize_gateways( $input = array() ) {
 
+	// Bail if user cannot manage shop settings
 	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $input['default_gateway'] ) ) {
 		return $input;
 	}
 
+	// Unset the default gateway if there are no `gateways` enabled
 	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
-
-		add_settings_error( 'edd-notices', '', __( 'Error setting default gateway. No gateways are enabled.', 'easy-digital-downloads' ) );
 		unset( $input['default_gateway'] );
 
-	} else if ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
-
+	// Current gateway is no longer enabled, so 
+	} elseif ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
 		$enabled_gateways = $input['gateways'];
-		$all_gateways     = edd_get_payment_gateways();
-		$selected_default = $all_gateways[ $input['default_gateway'] ];
 
 		reset( $enabled_gateways );
+
 		$first_gateway = key( $enabled_gateways );
 
 		if ( $first_gateway ) {
-			add_settings_error( 'edd-notices', '', sprintf( __( '%s could not be set as the default gateway. It must first be enabled.', 'easy-digital-downloads' ), $selected_default['admin_label'] ), 'error' );
 			$input['default_gateway'] = $first_gateway;
 		}
-
 	}
 
 	return $input;
 }
-
 add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' );
 
 /**
@@ -1738,15 +1738,16 @@ function edd_gateway_select_callback( $args ) {
 	}
 
 	$html     = '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '">';
+	$html    .= '<option value="">' . __( '&mdash; No gateway &mdash;', 'easy-digital-downloads' ) . '</option>';
 	$gateways = edd_get_payment_gateways();
 
-	foreach ( $gateways as $key => $option ) :
+	foreach ( $gateways as $key => $option ) {
 		$selected = isset( $edd_option )
 			? selected( $key, $edd_option, false )
 			: '';
 		$disabled = disabled( edd_is_gateway_active( $key ), false, false );
 		$html    .= '<option value="' . edd_sanitize_key( $key ) . '"' . $selected . ' ' . $disabled . '>' . esc_html( $option['admin_label'] ) . '</option>';
-	endforeach;
+	}
 
 	$html .= '</select>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';

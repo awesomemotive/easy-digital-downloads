@@ -31,7 +31,7 @@ class EDD_Notices {
 	 */
 	public function __construct() {
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' )     );
-		add_action( 'admin_init',          array( $this, 'add_notices'     )     );
+		add_action( 'admin_init',          array( $this, 'add_notices'     ), 20 );
 		add_action( 'admin_notices',       array( $this, 'display_notices' ), 30 );
 	}
 
@@ -126,7 +126,7 @@ class EDD_Notices {
 		}
 
 		// User can view shop reports
-		if ( current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
+		if ( current_user_can( 'view_shop_reports' ) ) {
 			$this->add_reports_notices();
 		}
 
@@ -134,11 +134,12 @@ class EDD_Notices {
 		if ( current_user_can( 'manage_shop_settings' ) ) {
 			$this->add_system_notices();
 			$this->add_data_notices();
+			$this->add_settings_notices();
 		}
 
 		// Generic notices
-		if ( ! empty( $_GET['edd-message'] ) ) {
-			$this->add_user_action_notices( $_GET['edd-message'] );
+		if ( ! empty( $_REQUEST['edd-message'] ) ) {
+			$this->add_user_action_notices( $_REQUEST['edd-message'] );
 		}
 	}
 
@@ -228,7 +229,7 @@ class EDD_Notices {
 	private function add_reports_notices() {
 
 		// Test mode
-		if ( ! empty( $_GET['page'] ) && ( 'edd-payment-history' === $_GET['page'] )) {
+		if ( ! empty( $_GET['page'] ) && ( 'edd-payment-history' === $_GET['page'] ) && edd_is_test_mode() ) {
 			$this->add_notice( array(
 				'id'             => 'edd-payment-history-test-mode',
 				'message'        => sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) ),
@@ -302,6 +303,36 @@ class EDD_Notices {
 				'is_dismissible' => false,
 				'message'        => sprintf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) )
 			) );
+		}
+	}
+
+	/**
+	 * Notices about settings (updating, etc...)
+	 *
+	 * @since 3.0
+	 */
+	private function add_settings_notices() {
+
+		// Settings area
+		if ( ! empty( $_GET['page'] ) && ( 'edd-settings' === $_GET['page'] ) ) {
+
+			// Settings updated
+			if ( ! empty( $_GET['settings-updated'] ) ) {
+				$this->add_notice( array(
+					'id'      => 'edd-notices',
+					'message' => __( 'Settings updated.', 'easy-digital-downloads' )
+				) );
+			}
+
+			// No payment gateways are enabled
+			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
+				$this->add_notice( array(
+					'id'             => 'edd-gateways',
+					'class'          => 'error',
+					'message'        => __( 'No payment gateways are enabled.', 'easy-digital-downloads' ),
+					'is_dismissible' => false
+				) );
+			}
 		}
 	}
 
