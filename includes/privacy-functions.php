@@ -693,36 +693,36 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers' );
 
 /**
-	 * Anonymize a customer record through the WP Core Privacy Data Eraser methods.
-	 *
-	 * @param     $email_address
-	 * @param int $page
-	 *
-	 * @return array
-	 */
-	function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
-		$customer = new EDD_Customer( $email_address );
+ * Anonymize a customer record through the WP Core Privacy Data Eraser methods.
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
+	$customer = new EDD_Customer( $email_address );
 
-		$anonymized = _edd_anonymize_customer( $customer->id );
-		if ( empty( $anonymized['success'] ) ) {
-			return array(
-				'items_removed'  => false,
-				'items_retained' => false,
-				'messages'       => array( $anonymized['message'] ),
-				'done'           => true,
-			);
-		}
-
+	$anonymized = _edd_anonymize_customer( $customer->id );
+	if ( empty( $anonymized['success'] ) ) {
 		return array(
-			'items_removed'  => true,
+			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array( sprintf( __( 'Customer for %s has been anonymized.', 'easy-digital-downloads' ), $email_address ) ),
+			'messages'       => array( $anonymized['message'] ),
 			'done'           => true,
 		);
+	}
+
+	return array(
+		'items_removed'  => true,
+		'items_retained' => false,
+		'messages'       => array( sprintf( __( 'Customer for %s has been anonymized.', 'easy-digital-downloads' ), $email_address ) ),
+		'done'           => true,
+	);
 }
 
 /**
- * Anonymize a customer record through the WP Core Privacy Data Eraser methods.
+ * Anonymize a payment record through the WP Core Privacy Data Eraser methods.
  *
  * @param     $email_address
  * @param int $page
