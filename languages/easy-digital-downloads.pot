@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-05-15 01:25:07+00:00\n"
+"POT-Creation-Date: 2018-05-18 03:49:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -272,187 +272,184 @@ msgstr ""
 msgid "Generate New API Keys"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:45
+#: includes/admin/class-edd-notices.php:216
 msgid "No checkout page is configured. Set one in <a href=\"%s\">Settings</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:49
+#: includes/admin/class-edd-notices.php:234
 msgid ""
 "Note: Test Mode is enabled. While in test mode no live transactions are "
 "processed. <a href=\"%s\">Settings</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:56
-msgid ""
-"The download files in %s are not currently protected due to your site "
-"running on NGINX."
+#: includes/admin/class-edd-notices.php:267
+msgid "The files in %s are not currently protected."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:57
+#: includes/admin/class-edd-notices.php:268
 msgid ""
-"To protect them, you must add a redirect rule as explained in <a "
+"To protect them, you must add this <a "
 "href=\"http://docs.easydigitaldownloads.com/article/682-protected-download-"
-"files-on-nginx\">this guide</a>."
+"files-on-nginx\">NGINX redirect rule</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:58
-msgid ""
-"If you have already added the redirect rule, you may safely dismiss this "
-"notice"
+#: includes/admin/class-edd-notices.php:269
+#: includes/admin/class-edd-notices.php:283
+msgid "If you have already done this, you may safely and permenently %s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:59
-#: includes/admin/class-edd-notices.php:76
-msgid "Dismiss Notice"
+#: includes/admin/class-edd-notices.php:269
+#: includes/admin/class-edd-notices.php:283
+msgid "dismiss this notice"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:73
-msgid "The Easy Digital Downloads .htaccess file is missing from %s!"
+#: includes/admin/class-edd-notices.php:281
+msgid "The .htaccess file is missing from: %s"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:74
+#: includes/admin/class-edd-notices.php:282
 msgid ""
 "First, please resave the Misc settings tab a few times. If this warning "
 "continues to appear, create a file called \".htaccess\" in the %s "
 "directory, and copy the following into it:"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:87
+#: includes/admin/class-edd-notices.php:303
 msgid ""
 "Easy Digital Downloads 2.5 contains a <a href=\"%s\">built in recount "
 "tool</a>. Please <a href=\"%s\">deactivate the Easy Digital Downloads - "
 "Recount Earnings plugin</a>"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:108
+#: includes/admin/class-edd-notices.php:331
 msgid "Discount code added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:111
+#: includes/admin/class-edd-notices.php:337
 msgid "There was a problem adding that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:114
+#: includes/admin/class-edd-notices.php:344
 msgid "A discount with that code already exists, please use a different code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:117
+#: includes/admin/class-edd-notices.php:351
 msgid "Discount code updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:120
+#: includes/admin/class-edd-notices.php:357
 msgid "No changes were made to that discount code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:123
+#: includes/admin/class-edd-notices.php:363
 msgid "There was a problem updating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:126
+#: includes/admin/class-edd-notices.php:370
 msgid ""
 "The discount code could not be added because one or more of the required "
 "fields was empty, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:129
+#: includes/admin/class-edd-notices.php:377
 msgid ""
 "The discount code entered is invalid; only alphanumeric characters are "
 "allowed, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:132
+#: includes/admin/class-edd-notices.php:384
 msgid "Discount code deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:135
+#: includes/admin/class-edd-notices.php:390
 msgid "There was a problem deleting that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:138
+#: includes/admin/class-edd-notices.php:397
 msgid "Discount code activated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:141
+#: includes/admin/class-edd-notices.php:403
 msgid "There was a problem activating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:144
+#: includes/admin/class-edd-notices.php:410
 msgid "Discount code deactivated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:147
+#: includes/admin/class-edd-notices.php:416
 msgid "There was a problem deactivating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:156
+#: includes/admin/class-edd-notices.php:429
 msgid "The payment has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:159
+#: includes/admin/class-edd-notices.php:435
 msgid "The purchase receipt has been resent."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:162
+#: includes/admin/class-edd-notices.php:441
 msgid "The reports have been refreshed."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:165
+#: includes/admin/class-edd-notices.php:447
 msgid "The payment note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:174
+#: includes/admin/class-edd-notices.php:459
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:177
+#: includes/admin/class-edd-notices.php:465
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:180
+#: includes/admin/class-edd-notices.php:471
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:183
+#: includes/admin/class-edd-notices.php:478
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:186
+#: includes/admin/class-edd-notices.php:484
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:195
-msgid "The payment note has been added successfully."
+#: includes/admin/class-edd-notices.php:496
+msgid "The note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:198
-msgid "The payment has been successfully updated."
+#: includes/admin/class-edd-notices.php:502
+msgid "The payment has been updated successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:207
+#: includes/admin/class-edd-notices.php:514
 msgid "Customer successfully deleted"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:210
+#: includes/admin/class-edd-notices.php:520
 msgid "User successfully verified"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:213
+#: includes/admin/class-edd-notices.php:526
 msgid "Customer email added"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:216
+#: includes/admin/class-edd-notices.php:532
 msgid "Customer email removed"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:219
+#: includes/admin/class-edd-notices.php:538
 msgid "Failed to remove customer email"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:222
+#: includes/admin/class-edd-notices.php:545
 msgid "Primary email updated for customer"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:225
+#: includes/admin/class-edd-notices.php:552
 msgid "Failed to set primary email"
 msgstr ""
 
@@ -3402,7 +3399,7 @@ msgid "Usage Tracking"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:384
-#: includes/admin/tracking.php:280
+#: includes/admin/tracking.php:287
 msgid "Allow"
 msgstr ""
 
@@ -4867,15 +4864,22 @@ msgstr ""
 msgid "Log file"
 msgstr ""
 
-#: includes/admin/tracking.php:279
-msgid ""
-"Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and "
-"our newsletter and immediately be emailed a discount to the EDD shop, valid "
-"towards the <a href=\"%s\" target=\"_blank\">purchase of extensions</a>. No "
-"sensitive data is tracked."
+#: includes/admin/tracking.php:284
+msgid "Allow Easy Digital Downloads to track plugin usage?"
 msgstr ""
 
-#: includes/admin/tracking.php:281
+#: includes/admin/tracking.php:285
+msgid ""
+"Opt-in to light usage tracking and our newsletter, and immediately be "
+"emailed a discount to the EDD shop, valid towards the <a href=\"%s\" "
+"target=\"_blank\">purchase of extensions</a>."
+msgstr ""
+
+#: includes/admin/tracking.php:286
+msgid "No sensitive data is tracked."
+msgstr ""
+
+#: includes/admin/tracking.php:287
 msgid "Do not allow"
 msgstr ""
 
