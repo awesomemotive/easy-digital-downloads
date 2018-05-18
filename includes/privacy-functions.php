@@ -12,6 +12,8 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/** Helper Functions */
+
 /**
  * Given a string, mask it with the * character.
  *
@@ -116,6 +118,119 @@ function edd_pseudo_mask_email( $email_address ) {
 
 	return $email_address;
 }
+
+/**
+ * Return an anonymized email address.
+ *
+ * While WP Core supports anonymizing email addresses with the wp_privacy_anonymize_data function,
+ * it turns every email address into deleted@site.invalid, which does not work when some purchase/customer records
+ * are still needed for legal and regulatory reasons.
+ *
+ * This function will anonymize the email with an MD5 that is salted
+ * and given a randomized uniqid prefixed with the store URL in order to prevent connecting a single customer across
+ * multiple stores, as well as the timestamp at the time of anonymization (so it trying the same email again will not be
+ * repeatable and therefore connected), and return the email address as <hash>@site.invalid.
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address
+ *
+ * @return string
+ */
+function edd_anonymize_email( $email_address ) {
+
+	if ( empty( $email_address ) ) {
+		return $email_address;
+	}
+
+	$email_address    = strtolower( $email_address );
+	$email_parts      = explode( '@', $email_address );
+	$anonymized_email = wp_hash( uniqid( get_option( 'site_url' ), true ) . $email_parts[0] . current_time( 'timestamp' ), 'nonce' );
+
+
+	return $anonymized_email . '@site.invalid';
+}
+
+/**
+ * Given a customer ID, anonymize the data related to that customer.
+ *
+ * Only the customer record is affected in this function. The data that is changed:
+ * - The name is changed to 'Anonymized Customer'
+ * - The email address is anonymized, but kept in a format that passes is_email checks
+ * - The date created is set to the timestamp of 0 (January 1, 1970)
+ * - Notes are fully cleared
+ * - Any additional email addresses are removed
+ *
+ * Once completed, a note is left stating when the customer was anonymized.
+ *
+ * @param int $customer_id
+ *
+ * @return array
+ */
+function edd_anonymize_customer( $customer_id = 0 ) {
+
+	$customer = new EDD_Customer( $customer_id );
+	if ( empty( $customer->id ) ) {
+		return array( 'success' => false, 'message' => sprintf( __( 'No customer with ID %d', 'easy-digital-downloads' ), $customer_id ) );
+	}
+
+	/**
+	 * Determines if this customer should be allowed to be anonymized.
+	 *
+	 * Developers and extensions can use this filter to make it possible to not anonymize a customer. A sample use case
+	 * would be if the customer has pending orders, and that payment requires shipping, anonymizing the customer may
+	 * not be ideal.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param array {
+	 *     Contains data related to if the anonymization should take place
+	 *
+	 *     @type bool   $should_anonymize If the customer should be anonymized.
+	 *     @type string $message          A message to display if the customer could not be anonymized.
+	 * }
+	 */
+	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => array() ), $customer );
+
+	if ( ! $should_anonymize_customer['should_anonymize'] ) {
+		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
+	}
+
+	// Loop through all their email addresses, and remove any additional email addresses.
+	foreach ( $customer->emails as $email ) {
+		$customer->remove_email( $email );
+	}
+
+	if ( $customer->user_id > 0 ) {
+		delete_user_meta( $customer->user_id, '_edd_user_address' );
+	}
+
+	$customer->update( array(
+		'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+		'email'        => edd_anonymize_email( $customer->email ),
+		'date_created' => date( 'Y-m-d H:i:s', 0 ),
+		'notes'        => '',
+		'user_id'      => 0,
+	) );
+
+	/**
+	 * Run further anonymization on a customer
+	 *
+	 * Developers and extensions can use the EDD_Customer object passed into the edd_anonymize_customer action
+	 * to complete further anonymization.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param EDD_Customer $customer The EDD_Customer object that was found.
+	 */
+	do_action( 'edd_anonymize_customer', $customer );
+
+	$customer->add_note( __( 'Customer anonymized successfully' ) );
+	return array( 'success' => true, 'message' => sprintf( __( 'Customer ID %d successfully anonymized', 'easy-digital-downloads' ), $customer_id ) );
+
+}
+
+/** Exporter Functions */
 
 /**
  * Register any of our Privacy Data Exporters
@@ -367,4 +482,51 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 		'done' => false,
 	);
 
+}
+
+/** Anonymization Functions */
+
+/**
+ * Register eraser for EDD Data
+ *
+ * @param array $erasers
+ *
+ * @return array
+ */
+function edd_register_privacy_erasers( $erasers = array() ) {
+	$erasers[] = array(
+		'eraser_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_customer_eraser',
+	);
+	return $erasers;
+}
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers' );
+
+/**
+ * Anonymize a customer record through the WP Core Privacy Data Eraser methods.
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
+	$customer = new EDD_Customer( $email_address );
+
+	$anonymized = edd_anonymize_customer( $customer->id );
+	if ( empty( $anonymized['success'] ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array( $anonymized['message'] ),
+			'done'           => true,
+		);
+	}
+
+	return array(
+		'items_removed'  => true,
+		'items_retained' => false,
+		'messages'       => array( sprintf( __( 'Customer for %s has been anonymized.', 'easy-digital-downloads' ), $email_address ) ),
+		'done'           => true,
+	);
 }
