@@ -416,7 +416,7 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 		$data_points = array(
 			array(
 				'name' => __( 'Date of Download', 'easy-digital-downloads' ),
-				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $log->date ) ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $log->post_date ) ),
 			),
 			array(
 				'name' => __( 'Product Downloaded', 'easy-digital-downloads' ),
