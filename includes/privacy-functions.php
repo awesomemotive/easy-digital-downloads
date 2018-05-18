@@ -196,6 +196,19 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
 	}
 
+	// Now we should look at payments this customer has associated, and if there are an payments that should not be modified,
+	// do not modify the customer.
+	$payments = edd_get_payments( array( 'post__in' => implode( ',', $customer->payment_ids ), 'output' => 'payments' ) );
+	foreach ( $payments as $payment ) {
+		$action = _edd_privacy_get_payment_action( $payment );
+		if ( 'none' === $action ) {
+			return array(
+				'success' => false,
+				'message' => __( 'Customer could not be anonymized due to payments that could not be anonymized or deleted.', 'easy-digital-downloads' )
+			);
+		}
+	}
+
 	// Loop through all their email addresses, and remove any additional email addresses.
 	foreach ( $customer->emails as $email ) {
 		$customer->remove_email( $email );
@@ -274,46 +287,7 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
 	}
 
-	$action = edd_get_option( 'payment_privacy_status_action' . $payment->status, false );
-
-	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
-	if ( empty( $action ) ) {
-
-		switch ( $payment->status ) {
-
-			case 'publish':
-			case 'refunded':
-			case 'revoked':
-				$action = 'anonymize';
-				break;
-
-			case 'failed':
-			case 'abandoned':
-				$action = 'delete';
-				break;
-
-			case 'pending':
-			case 'processing':
-			default:
-				$action = 'none';
-				break;
-
-		}
-
-	}
-
-	/**
-	 * Allow filtering of what type of action should be taken for a payment.
-	 *
-	 * Developers and extensions can use this filter to modify how Easy Digital Downloads will treat an order
-	 * that has been requested to be deleted or anonymized.
-	 *
-	 * @since 2.9.2
-	 *
-	 * @param string      $action  What action will be performed (none, delete, anonymize)
-	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
-	 */
-	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
+	$action = _edd_privacy_get_payment_action( $payment );
 
 	switch( $action ) {
 
@@ -377,6 +351,62 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 	}
 
 	return $return;
+}
+
+/**
+ * Given an EDD_Payment, determine what action should be taken during the eraser processes.
+ *
+ * @since 2.9.2
+ *
+ * @param EDD_Payment $payment
+ *
+ * @return string
+ */
+function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
+
+	$action = edd_get_option( 'payment_privacy_status_action' . $payment->status, false );
+
+	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
+	if ( empty( $action ) ) {
+
+		switch ( $payment->status ) {
+
+			case 'publish':
+			case 'refunded':
+			case 'revoked':
+				$action = 'anonymize';
+				break;
+
+			case 'failed':
+			case 'abandoned':
+				$action = 'delete';
+				break;
+
+			case 'pending':
+			case 'processing':
+			default:
+				$action = 'none';
+				break;
+
+		}
+
+	}
+
+	/**
+	 * Allow filtering of what type of action should be taken for a payment.
+	 *
+	 * Developers and extensions can use this filter to modify how Easy Digital Downloads will treat an order
+	 * that has been requested to be deleted or anonymized.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param string      $action  What action will be performed (none, delete, anonymize)
+	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
+	 */
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
+
+	return $action;
+
 }
 
 /** Exporter Functions */
@@ -701,23 +731,13 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers' )
  */
 function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$customer = new EDD_Customer( $email_address );
-
-	// First get any payment IDs found with this email address attached.
-	$found_payment_ids = edd_get_payments( array(
-		'fields' => 'ids',
-		'user'   => $email_address,
-		'page'   => $page
-
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'page'     => $page,
 	) );
 
-	// If a customer was found, also get their attached payment IDs.
-	if ( ! empty( $customer->id ) ) {
-		$found_payment_ids = array_merge( $found_payment_ids, explode( ',', $customer->payment_ids ) );
-	}
-
-	$found_payment_ids = array_map( 'trim', array_unique( $found_payment_ids ) );
-
-	if ( empty( $found_payment_ids ) ) {
+	if ( empty( $payments ) ) {
 
 		$message = 1 === $page ?
 			sprintf( __( 'No payments found for %s', 'easy-digital-downloads' ), $email_address ) :
@@ -734,8 +754,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$items_removed  = null;
 	$items_retained = null;
 	$messages       = array();
-	foreach ( $found_payment_ids as $payment_id ) {
-		$result = _edd_anonymize_payment( $payment_id );
+	foreach ( $payments as $payment ) {
+		$result = _edd_anonymize_payment( $payment->ID );
 
 		if ( ! is_null( $items_removed ) && $result['success'] ) {
 			$items_removed = true;
