@@ -51,30 +51,30 @@ add_action( 'admin_init', 'edd_do_automatic_upgrades' );
  * @return void
  */
 function edd_show_upgrade_notices() {
-
 	global $wpdb;
 
+	// Don't show notices on the upgrades page
 	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' ) {
-		return; // Don't show notices on the upgrades page
+		return;
 	}
 
-	$edd_version = get_option( 'edd_version' );
-
-	if ( ! $edd_version ) {
-		// 1.3 is the first version to use this option so we must add it
-		$edd_version = '1.3';
-	}
-
+	$edd_version = get_option( 'edd_version', '1.3' );
 	$edd_version = preg_replace( '/[^0-9.].*/', '', $edd_version );
 
 	if ( ! get_option( 'edd_payment_totals_upgraded' ) && ! get_option( 'edd_version' ) ) {
-		if ( wp_count_posts( 'edd_payment' )->publish < 1 )
+		if ( wp_count_posts( 'edd_payment' )->publish < 1 ) {
 			return; // No payment exist yet
+		}
 
 		// The payment history needs updated for version 1.2
-		$url = add_query_arg( 'edd-action', 'upgrade_payments' );
+		$url            = add_query_arg( 'edd-action', 'upgrade_payments' );
 		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'easy-digital-downloads' ), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __( 'Click to Upgrade', 'easy-digital-downloads' ) . '</a>' );
-		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
+
+		EDD()->notices->add_notice( array(
+			'id'      => 'edd-payments-upgrade',
+			'class'   => 'error',
+			'message' => $upgrade_notice
+		) );
 	}
 
 	if ( version_compare( $edd_version, '1.3.2', '<' ) && ! get_option( 'edd_logs_upgraded' ) ) {
