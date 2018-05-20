@@ -934,7 +934,7 @@ function edd_is_uploads_url_protected() {
 	 *
 	 * @param string $protected Response code from remote get request
 	 */
-	return (bool) apply_filters( 'edd_is_uploads_dir_public', $protected );
+	return (bool) apply_filters( 'edd_is_uploads_url_protected', $protected );
 }
 
 /**
