@@ -708,31 +708,44 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 		if( ! $payment->ID > 0 ) {
 			return false;
 		}
-
 	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
 		return false;
 	}
 
+	if ( true === $return_label ) {
+		return edd_get_payment_status_label( $payment->post_status );
+	} else {
+		$statuses = edd_get_payment_statuses();
+
+		// Account that our 'publish' status is labeled 'Complete'
+		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+
+		// Make sure we're matching cases, since they matter
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
+	}
+
+	return ! empty( $status ) ? $status : false;
+}
+
+/**
+ * Given a payment status string, return the label for that string.
+ *
+ * @since 2.9.2
+ * @param string $status
+ *
+ * @return bool|mixed
+ */
+function edd_get_payment_status_label( $status = '' ) {
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
 		return false;
 	}
 
-	$payment = new EDD_Payment( $payment->ID );
-
-	if ( array_key_exists( $payment->status, $statuses ) ) {
-		if ( true === $return_label ) {
-			return $statuses[ $payment->status ];
-		} else {
-			// Account that our 'publish' status is labeled 'Complete'
-			$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
-
-			// Make sure we're matching cases, since they matter
-			return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
-		}
+	if ( array_key_exists( $status, $statuses ) ) {
+		return $statuses[ $status ];
 	}
 
 	return false;
@@ -745,17 +758,15 @@ function edd_get_payment_status( $payment, $return_label = false ) {
  * @return array $payment_status All the available payment statuses
  */
 function edd_get_payment_statuses() {
-	$payment_statuses = array(
-		'pending'   => __( 'Pending', 'easy-digital-downloads' ),
-		'publish'   => __( 'Complete', 'easy-digital-downloads' ),
-		'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
-		'failed'    => __( 'Failed', 'easy-digital-downloads' ),
-		'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),
-		'revoked'   => __( 'Revoked', 'easy-digital-downloads' ),
+	return apply_filters( 'edd_payment_statuses', array(
+		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
+		'publish'    => __( 'Complete',   'easy-digital-downloads' ),
+		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
+		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
+		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' ),
+		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
 		'processing' => __( 'Processing', 'easy-digital-downloads' )
-	);
-
-	return apply_filters( 'edd_payment_statuses', $payment_statuses );
+	) );
 }
 
 /**
@@ -788,7 +799,6 @@ function edd_is_payment_complete( $payment_id = 0 ) {
 		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
 			$ret = true;
 		}
-
 	}
 
 	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
