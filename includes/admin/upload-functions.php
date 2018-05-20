@@ -54,9 +54,6 @@ function edd_create_protection_files( $force = false, $method = false ) {
 
 		$upload_path = edd_get_upload_dir();
 
-		// Make sure the /edd folder is created
-		wp_mkdir_p( $upload_path );
-
 		// Top level .htaccess file
 		$rules = edd_get_htaccess_rules( $method );
 		if ( edd_htaccess_exists() ) {

@@ -240,8 +240,8 @@ class EDD_Tracking {
 	 */
 	public function admin_notice() {
 
-		// Bail if directory is not public
-		if ( ! edd_is_uploads_url_public() ) {
+		// Bail if directory is protected
+		if ( edd_is_uploads_url_protected() ) {
 			return;
 		}
 
