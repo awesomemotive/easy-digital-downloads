@@ -635,7 +635,7 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
  * @global $edd_logs
  * @param int $download_id Download ID
  * @param int $file_id ID of the file downloaded
- * @param array $user_info User information
+ * @param array $user_info User information (Deprecated)
  * @param string $ip IP Address
  * @param int $payment_id Payment ID
  * @param int $price_id Price ID, if any
@@ -645,19 +645,19 @@ function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip
 	global $edd_logs;
 
 	$log_data = array(
-		'post_parent'	=> $download_id,
-		'log_type'		=> 'file_download'
+		'post_parent' => $download_id,
+		'log_type'    => 'file_download',
 	);
 
-	$user_id = isset( $user_info['id'] ) ? $user_info['id'] : (int) -1;
+	$payment = new EDD_Payment( $payment_id );
 
 	$log_meta = array(
-		'user_info'	=> $user_info,
-		'user_id'	=> $user_id,
-		'file_id'	=> (int) $file_id,
-		'ip'		=> $ip,
-		'payment_id'=> $payment_id,
-		'price_id'  => (int) $price_id
+		'customer_id' => $payment->customer_id,
+		'user_id'     => $payment->user_id,
+		'file_id'     => (int) $file_id,
+		'ip'          => $ip,
+		'payment_id'  => $payment_id,
+		'price_id'    => (int) $price_id,
 	);
 
 	$edd_logs->insert_log( $log_data, $log_meta );
