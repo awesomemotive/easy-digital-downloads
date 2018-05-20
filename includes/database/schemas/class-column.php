@@ -230,8 +230,16 @@ class Column {
 	public $transition = false;
 
 	/**
-	 * Array of possible aliases this column can be referred to as.
+	 * Maybe validate this data before it is written to the database.
 	 *
+	 * @since 3.0
+	 * @access public
+	 * @var string
+	 */
+	public $validate = false;
+
+	/**
+	 * Array of possible aliases this column can also be referred to.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -269,6 +277,9 @@ class Column {
 	 *     @type boolean  $date_query  Is this column a datetime?
 	 *     @type boolean  $in          Is __in supported?
 	 *     @type boolean  $not_in      Is __not_in supported?
+	 *     @type boolean  $cache_key   Is this column queried independently?
+	 *     @type boolean  $transition  Does this column transition between changes?
+	 *     @type string   $validate    A callback function used to validate on save.
 	 * }
 	 */
 	public function __construct( $args = array() ) {
@@ -338,6 +349,9 @@ class Column {
 			// Cache
 			'cache_key'  => false,
 
+			// Validation
+			'validate'   => '',
+
 			// Backwards Compatibility
 			'aliases'    => array()
 		) );
@@ -389,6 +403,7 @@ class Column {
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
+			'validate'   => array( $this, 'sanitize_validation' ),
 			'aliases'    => array( $this, 'sanitize_aliases' )
 		);
 
@@ -440,7 +455,7 @@ class Column {
 	}
 
 	/**
-	 * Sanitize a pattern
+	 * Sanitize the pattern
 	 *
 	 * @since 3.0
 	 * @param mixed $pattern
@@ -460,5 +475,18 @@ class Column {
 		return $this->is_numeric()
 			? '%d'
 			: '%s';
+	}
+
+	/**
+	 * Sanitize the validation callback
+	 *
+	 * @since 3.0
+	 * @param string $callback
+	 * @return string
+	 */
+	private function sanitize_validation( $callback = '' ) {
+		return is_callable( $callback )
+			? $callback
+			: '';
 	}
 }
