@@ -106,21 +106,37 @@ function edd_htaccess_exists() {
  * Scans all folders inside of /uploads/edd
  *
  * @since 1.1.5
+ *
+ * @param string $path   Path to scan
+ * @param array  $return Results of previous recursion
+ *
  * @return array $return List of files inside directory
  */
 function edd_scan_folders( $path = '', $return = array() ) {
-	$path = $path == ''? dirname( __FILE__ ) : $path;
+	$path  = ( $path === '' ) ? dirname( __FILE__ ) : $path;
 	$lists = @scandir( $path );
 
-	if ( ! empty( $lists ) ) {
-		foreach ( $lists as $f ) {
-			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != ".." ) {
-				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) )
-					$return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
+	// Bail early if nothing to scan
+	if ( empty( $lists ) ) {
+		return $return;
+	}
 
-				edd_scan_folders( $path . DIRECTORY_SEPARATOR . $f, $return);
-			}
+	// Loop through directory items
+	foreach ( $lists as $f ) {
+		$dir = $path . DIRECTORY_SEPARATOR . $f;
+
+		// Skip if not a directory
+		if ( ! is_dir( $dir ) || ( $f === "." ) || ( $f === ".." ) ) {
+			continue;
 		}
+
+		// Maybe add directory to return array
+		if ( ! in_array( $dir, $return, true ) ) {
+			$return[] = trailingslashit( $dir );
+		}
+
+		// Recursively scan
+		edd_scan_folders( $dir, $return );
 	}
 
 	return $return;
