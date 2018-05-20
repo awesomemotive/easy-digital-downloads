@@ -477,7 +477,7 @@ function edd_get_registered_settings() {
 					),
 					'accepted_cards' => array(
 						'id'      => 'accepted_cards',
-						'name'    => __( 'Accepted Payment Method Icons', 'easy-digital-downloads' ),
+						'name'    => __( 'Payment Method Icons', 'easy-digital-downloads' ),
 						'desc'    => __( 'Display icons for the selected payment methods.', 'easy-digital-downloads' ) . '<br/>' . __( 'You will also need to configure your gateway settings if you are accepting credit cards.', 'easy-digital-downloads' ),
 						'type'    => 'payment_icons',
 						'options' => apply_filters( 'edd_accepted_payment_icons', array(
@@ -1208,7 +1208,6 @@ function edd_settings_sanitize_taxes( $input ) {
 
 	return $input;
 }
-
 add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
 
 /**
@@ -1231,7 +1230,7 @@ function edd_settings_sanitize_gateways( $input = array() ) {
 	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
 		unset( $input['default_gateway'] );
 
-	// Current gateway is no longer enabled, so 
+	// Current gateway is no longer enabled, so
 	} elseif ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
 		$enabled_gateways = $input['gateways'];
 
@@ -1585,24 +1584,24 @@ function edd_multicheck_callback( $args ) {
 function edd_payment_icons_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$class = edd_sanitize_html_class( $args['field_class'] );
+	$html  = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
+	$html .= '<input type="hidden" name="edd_settings[payment_icons_order]" class="edd-order" value="' . edd_get_option( 'payment_icons_order' ) . '" />';
 
-	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
 	if ( ! empty( $args['options'] ) ) {
+		$class = edd_sanitize_html_class( $args['field_class'] );
+		$html .= '<ul id="edd-payment-icons-list" class="edd-sortable-list">';
+
 		foreach ( $args['options'] as $key => $option ) {
+			$enabled = isset( $edd_option[ $key ] )
+				? $option
+				: null;
 
-			if ( isset( $edd_option[ $key ] ) ) {
-				$enabled = $option;
-			} else {
-				$enabled = null;
-			}
-
-			$html .= '<div class="edd-check-wrapper">';
-			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="edd-settings-payment-icon-wrapper">';
+			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
+			$html .= '<label>';
 			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
 
 			if ( edd_string_is_image_url( $key ) ) {
-				$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+				$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" />';
 
 			} else {
 
@@ -1625,19 +1624,43 @@ function edd_payment_icons_callback( $args ) {
 					$image = str_replace( $content_dir, content_url(), $image );
 				}
 
-				$html .= '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
+				$html .= '<img class="payment-icon" src="' . esc_url( $image ) . '" />';
 			}
 
-
 			$html .= $option . '</label>';
-			$html .= '<div>';
+			$html .= '</li>';
 		}
 
+		$html .= '</ul>';
 		$html .= '<p class="description" style="margin-top:16px;">' . wp_kses_post( $args['desc'] ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
+
+/**
+ * Enforce the payment icon order
+ *
+ * @since 3.0
+ *
+ * @param array $icons
+ * @return array
+ */
+function edd_order_accepted_payment_icons( $icons = array() ) {
+
+	// Get the order option
+	$order = edd_get_option( 'payment_icons_order', '' );
+
+	// If order is set, enforce it
+	if ( ! empty( $order ) ) {
+		$order = array_flip( explode( ',', $order ) );
+		$icons = array_merge( $order, $icons );
+	}
+
+	// Return ordered icons
+	return $icons;
+}
+add_filter( 'edd_accepted_payment_icons', 'edd_order_accepted_payment_icons', 99 );
 
 /**
  * Radio Callback
@@ -1691,29 +1714,39 @@ function edd_radio_callback( $args ) {
 function edd_gateways_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	$class = edd_sanitize_html_class( $args['field_class'] );
+	$html  = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
+	$html .= '<input type="hidden" name="edd_settings[gateways_order]" class="edd-order" value="' . edd_get_option( 'gateways_order' ) . '" />';
 
-	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
+	if ( ! empty( $args['options'] ) ) {
+		$class = edd_sanitize_html_class( $args['field_class'] );
+		$html .= '<ul id="edd-payment-gateways" class="edd-sortable-list">';
 
-	foreach ( $args['options'] as $key => $option ) :
-		if ( isset( $edd_option[ $key ] ) ) {
-			$enabled = '1';
-		} else {
-			$enabled = null;
+		foreach ( $args['options'] as $key => $option ) {
+			if ( isset( $edd_option[ $key ] ) ) {
+				$enabled = '1';
+			} else {
+				$enabled = null;
+			}
+
+			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
+			$html .= '<label>';
+			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
+			$html .= esc_html( $option['admin_label'] );
+			$html .= '</label>';
+			$html .= '</li>';
 		}
 
-		$html .= '<div class="edd-check-wrapper">';
-		$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
-		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . esc_html( $option['admin_label'] ) . '</label>';
-		$html .= '</div>';
-	endforeach;
-	$url_args = array(
-		'utm_source'   => 'settings',
-		'utm_medium'   => 'gateways',
-		'utm_campaign' => 'admin',
-	);
-	$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
-	$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+		$html .= '</ul>';
+
+		$url_args = array(
+			'utm_source'   => 'settings',
+			'utm_medium'   => 'gateways',
+			'utm_campaign' => 'admin',
+		);
+
+		$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
+		$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }

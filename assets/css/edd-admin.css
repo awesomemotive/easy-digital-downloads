@@ -114,6 +114,53 @@ a.edd-delete:hover {
 	margin: 0 auto;
 }
 
+.edd-sortable-list {
+	margin: 0;
+	width: 300px;
+	position: relative;
+}
+
+.edd-sortable-list li {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	height: 28px;
+	cursor: move;
+}
+
+.edd-sortable-list li label * {
+	vertical-align: middle;
+}
+
+.edd-sortable-list li label:after {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 6px;
+	top: 0px;
+	color: #aaa;
+	font-family: dashicons;
+	font-size: 17px;
+	content: '\f228';
+}
+
+.form-table .edd-sortable-list li label {
+	display: block;
+	height: 28px;
+	padding: 0;
+	margin: 0;
+	cursor: move;
+}
+
+.edd-sortable-list .payment-icon {
+	width: 32px;
+	height: 24px;
+	position: relative;
+	top: -2px;
+	margin-right: 5px;
+}
+
 /* Tooltips */
 .edd-help-tip {
 	cursor: help;
@@ -135,12 +182,6 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
-.download_page_edd-settings .edd-settings-payment-icon-wrapper {
-	margin-right:10px;
-	line-height:16px;
-	height:16px;
-	display: table;
-}
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */

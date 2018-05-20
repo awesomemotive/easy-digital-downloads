@@ -36,6 +36,30 @@ function edd_get_payment_gateways() {
 }
 
 /**
+ * Enforce the gateway order
+ *
+ * @since 3.0
+ *
+ * @param array $icons
+ * @return array
+ */
+function edd_order_gateways( $icons = array() ) {
+
+	// Get the order option
+	$order = edd_get_option( 'gateways_order', '' );
+
+	// If order is set, enforce it
+	if ( ! empty( $order ) ) {
+		$order = array_flip( explode( ',', $order ) );
+		$icons = array_merge( $order, $icons );
+	}
+
+	// Return ordered icons
+	return $icons;
+}
+add_filter( 'edd_payment_gateways', 'edd_order_gateways', 99 );
+
+/**
  * Returns a list of all enabled gateways.
  *
  * @since 1.0

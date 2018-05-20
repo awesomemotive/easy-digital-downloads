@@ -652,14 +652,23 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 */
 function edd_show_payment_icons() {
 
-	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
+	if ( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
 		return;
 	}
 
 	$payment_methods = edd_get_option( 'accepted_cards', array() );
 
-	if( empty( $payment_methods ) ) {
+	if ( empty( $payment_methods ) ) {
 		return;
+	}
+
+	// Get the order option
+	$order = edd_get_option( 'payment_icons_order', '' );
+
+	// If order is set, enforce it
+	if ( ! empty( $order ) ) {
+		$order           = array_flip( explode( ',', $order ) );
+		$payment_methods = array_merge( $order, $payment_methods );
 	}
 
 	echo '<div class="edd-payment-icons">';
