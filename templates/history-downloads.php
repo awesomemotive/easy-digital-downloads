@@ -67,7 +67,7 @@ if ( $purchases ) :
 												</a>
 											</div>
 
-											<?php do_action( 'edd_download_history_files', $filekey, $file, $id, $payment->ID, $purchase_data );
+											<?php do_action( 'edd_download_history_files', $filekey, $file, $download['id'], $payment->ID, $purchase_data );
 										endforeach;
 
 									else :
