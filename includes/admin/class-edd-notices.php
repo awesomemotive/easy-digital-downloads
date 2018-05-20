@@ -163,10 +163,8 @@ class EDD_Notices {
 			return;
 		}
 
-		$notice = "_edd_{$key}_dismissed";
-
 		// Dismiss notice
-		edd_update_option( $notice, 1 );
+		edd_update_option( $key, 1 );
 		wp_redirect( remove_query_arg( array( 'edd_action', 'edd_notice' ) ) );
 		exit;
 	}
@@ -211,7 +209,7 @@ class EDD_Notices {
 
 		// Checkout page is missing
 		$purchase_page = edd_get_option( 'purchase_page', '' );
-		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) && ! edd_get_option( '_edd_set_checkout_dismissed' ) ) {
+		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) && ! edd_get_option( 'dismissed_notice_checkout' ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
 				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ),
@@ -245,13 +243,13 @@ class EDD_Notices {
 	 */
 	private function add_system_notices() {
 
-		// Bail if uploads directory is not public
-		if ( ! edd_is_uploads_url_public() ) {
+		// Bail if uploads directory is protected
+		if ( edd_is_uploads_url_protected() ) {
 			return;
 		}
 
 		// Bail if already permanently dismissed
-		if ( edd_get_option( '_edd_uploads_is_public_dismissed', false ) ) {
+		if ( edd_get_option( 'dismissed_notice_uploads', false ) ) {
 			return;
 		}
 
@@ -267,7 +265,7 @@ class EDD_Notices {
 				'message'        => array(
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
 					__( 'To protect them, you must add this <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
-					sprintf( __( 'If you have already done this, you may safely and permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'uploads_is_public' ) ) ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
+					sprintf( __( 'If you have already done this, or it does not apply to your site, you may safely and permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'dismissed_notice_uploads' ) ) ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
 				)
 			) );
 		}
@@ -281,7 +279,7 @@ class EDD_Notices {
 				'message'        => array(
 					sprintf( __( 'The .htaccess file is missing from: %s', 'easy-digital-downloads' ), '<strong>' . $upload_directory . '</strong>' ),
 					sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . $upload_directory . '</strong>' ),
-					sprintf( __( 'If you have already done this, you may safely and permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'uploads_is_public' ) ) ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' ),
+					sprintf( __( 'If you have already done this, or it does not apply to your site, you may safely and permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'dismissed_notice_uploads' ) ) ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' ),
 					'<pre>' . edd_get_htaccess_rules() . '</pre>'
 				)
 			) );
