@@ -1185,6 +1185,7 @@ function edd_tools_sysinfo_display() {
 	}
 
 	?>
+
     <form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>"
           method="post" dir="ltr">
         <textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea"
@@ -1328,13 +1329,13 @@ function edd_tools_sysinfo_get() {
 		// Object
 		$thing = $component->get_interface( 'table' );
 		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ':', 26, ' ' ) . $thing->get_version() . "\n";
+			$return .= str_pad( $thing->name . ': ', 26, ' ' ) . $thing->get_version() . "\n";
 		}
 
 		// Meta
 		$thing = $component->get_interface( 'meta' );
 		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ':', 26, ' ' ) . $thing->get_version() . "\n";
+			$return .= str_pad( $thing->name . ': ', 26, ' ' ) . $thing->get_version() . "\n";
 		}
 	}
 
@@ -1420,7 +1421,7 @@ function edd_tools_sysinfo_get() {
 		$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
 		foreach ( $muplugins as $plugin => $plugin_data ) {
-			$return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+			$return .= str_pad( $plugin_data['Name'] . ': ', 26, ' ' ) . $plugin_data['Version'] . "\n";
 		}
 
 		$return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
@@ -1438,7 +1439,7 @@ function edd_tools_sysinfo_get() {
 		}
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -1452,7 +1453,7 @@ function edd_tools_sysinfo_get() {
 		}
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -1473,7 +1474,7 @@ function edd_tools_sysinfo_get() {
 
 			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 			$plugin = get_plugin_data( $plugin_path );
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+			$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 		}
 
 		$return = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
