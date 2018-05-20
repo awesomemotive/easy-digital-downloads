@@ -1320,6 +1320,26 @@ function edd_tools_sysinfo_get() {
 
 	$return = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
+	// EDD Database tables
+	$return .= "\n" . '-- EDD Database Tables' . "\n\n";
+
+	foreach ( EDD()->components as $component ) {
+
+		// Object
+		$thing = $component->get_interface( 'table' );
+		if ( ! empty( $thing ) ) {
+			$return .= str_pad( $thing->name . ':', 26, ' ' ) . $thing->get_version() . "\n";
+		}
+
+		// Meta
+		$thing = $component->get_interface( 'meta' );
+		if ( ! empty( $thing ) ) {
+			$return .= str_pad( $thing->name . ':', 26, ' ' ) . $thing->get_version() . "\n";
+		}
+	}
+
+	$return = apply_filters( 'edd_sysinfo_after_edd_database_tables', $return );
+
 	// EDD pages
 	$purchase_page = edd_get_option( 'purchase_page', '' );
 	$success_page  = edd_get_option( 'success_page', '' );
