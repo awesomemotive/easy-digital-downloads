@@ -240,8 +240,8 @@ class EDD_Tracking {
 	 */
 	public function admin_notice() {
 
-		// Bail if directory is not public
-		if ( ! edd_is_uploads_url_public() ) {
+		// Bail if directory is protected
+		if ( edd_is_uploads_url_protected() ) {
 			return;
 		}
 
@@ -260,12 +260,15 @@ class EDD_Tracking {
 			return;
 		}
 
+		// Get this one time and use it below
+		$network_url = network_site_url( '/' );
+
 		// No notices for local installs
 		if (
-			stristr( network_site_url( '/' ), '.dev'      ) !== false ||
-			stristr( network_site_url( '/' ), 'dev.'      ) !== false ||
-			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
-			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
+			stristr( $network_url, '.dev'      ) !== false ||
+			stristr( $network_url, 'dev.'      ) !== false ||
+			stristr( $network_url, 'localhost' ) !== false ||
+			stristr( $network_url, ':8888'     ) !== false // This is common with MAMP on OS X
 		) {
 			update_option( 'edd_tracking_notice', '1' );
 
@@ -275,11 +278,19 @@ class EDD_Tracking {
 			$optout_url     = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
 			$extensions_url = 'https://easydigitaldownloads.com/downloads/?utm_source=' . $source . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
-			echo '<div class="updated"><p>';
-			echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), $extensions_url );
-			echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a>';
-			echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>';
-			echo '</p></div>';
+
+			// Add the notice
+			EDD()->notices->add_notice( array(
+				'id'      => 'edd-allow-tracking',
+				'class'   => 'updated',
+				'message' => array(
+					'<strong>' . __( 'Allow Easy Digital Downloads to track plugin usage?', 'easy-digital-downloads' ) . '</strong>',
+					sprintf( __( 'Opt-in to light usage tracking and our newsletter, and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>.', 'easy-digital-downloads' ), $extensions_url ),
+					__( 'No sensitive data is tracked.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a> <a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>'
+				),
+				'is_dismissible' => false
+			) );
 		}
 	}
 }

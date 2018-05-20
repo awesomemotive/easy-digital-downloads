@@ -126,6 +126,7 @@ class Order extends Base {
 	 *     @type string       $payment_key          Limit results to those affiliated with a given payment key. Default empty.
 	 *     @type array        $payment_key__in      Array of payment keys to include affiliated orders for. Default empty.
 	 *     @type array        $payment_key__not_in  Array of payment keys to exclude affiliated orders for. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit orders by. See WP_Date_Query.
 	 *                                              Default null.
 	 *     @type array        $date_completed_query Date query clauses to limit orders by. See WP_Date_Query.

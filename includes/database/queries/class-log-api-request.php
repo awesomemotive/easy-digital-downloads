@@ -125,6 +125,11 @@ class Log_Api_Request extends Base {
 	 *     @type string       $time                 A time to only return that type. Default empty.
 	 *     @type array        $time__in             Array of times to include. Default empty.
 	 *     @type array        $time__not_in         Array of times to exclude. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a count (true) or array of objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of IDs)

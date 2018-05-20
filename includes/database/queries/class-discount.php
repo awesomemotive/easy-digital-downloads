@@ -102,10 +102,36 @@ class Discount extends Base {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of discount query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An discount ID to only return that discount. Default empty.
+	 *     @type int          $id                   A discount ID to only return that discount. Default empty.
 	 *     @type array        $id__in               Array of discount IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of discount IDs to exclude. Default empty.
+	 *     @type int          $code                 A discount code to only return that discount. Default empty.
+	 *     @type array        $code__in             Array of discount codes to include. Default empty.
+	 *     @type array        $code__not_in         Array of discount codes to exclude. Default empty.
+	 *     @type int          $status               A discount status to only return that discount. Default empty.
+	 *     @type array        $status__in           Array of discount statuses to include. Default empty.
+	 *     @type array        $status__not_in       Array of discount statuses to exclude. Default empty.
+	 *     @type int          $type                 A discount type to only return that discount. Default empty.
+	 *     @type array        $type__in             Array of discount types to include. Default empty.
+	 *     @type array        $type__not_in         Array of discount types to exclude. Default empty.
+	 *     @type int          $scope                A discount scope to only return that discount. Default empty.
+	 *     @type array        $scope__in            Array of discount scopes to include. Default empty.
+	 *     @type array        $scope__not_in        Array of discount scopes to exclude. Default empty.
+	 *     @type int          $amount               A discount amount to only return that discount. Default empty.
+	 *     @type array        $amount__in           Array of discount amounts to include. Default empty.
+	 *     @type array        $amount__not_in       Array of discount amounts to exclude. Default empty.
+	 *     @type int          $max_uses             A discount max_uses to only return that discount. Default empty.
+	 *     @type array        $max_uses__in         Array of discount max_usess to include. Default empty.
+	 *     @type array        $max_uses__not_in     Array of discount max_usess to exclude. Default empty.
+	 *     @type int          $use_count            A discount use_count to only return that discount. Default empty.
+	 *     @type array        $use_count__in        Array of discount use_counts to include. Default empty.
+	 *     @type array        $use_count__not_in    Array of discount use_counts to exclude. Default empty.
+	 *     @type array        $once_per_customer    A true or false. Default empty.
+	 *     @type array        $min_cart_price       Minimum cart price. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit discounts by. See WP_Date_Query.
+	 *                                              Default null.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
 	 *     @type array        $start_date_query     Date query clauses to limit discounts by. See WP_Date_Query.
 	 *                                              Default null.
