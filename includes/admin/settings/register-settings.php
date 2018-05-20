@@ -1606,12 +1606,13 @@ function edd_payment_icons_callback( $args ) {
 				$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
 
 			} else {
-
 				$card = strtolower( str_replace( ' ', '', $option ) );
 
 				if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-
 					$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+
+				} elseif ( has_filter( 'edd_accepted_payment_' . $key . '_image' ) ) {
+					$image = apply_filters( 'edd_accepted_payment_' . $key . '_image', '' );
 
 				} else {
 					$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
