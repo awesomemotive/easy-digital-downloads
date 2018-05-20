@@ -58,7 +58,6 @@ class Logs_File_Downloads extends Base {
 			'default'    => '0'
 		),
 
-
 		// payment_id
 		array(
 			'name'       => 'payment_id',
@@ -86,7 +85,7 @@ class Logs_File_Downloads extends Base {
 			'default'    => '0'
 		),
 
-		// email
+		// email (remove during 3.0)
 		array(
 			'name'       => 'email',
 			'type'       => 'varchar',
@@ -123,6 +122,6 @@ class Logs_File_Downloads extends Base {
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true
-		),
+		)
 	);
 }

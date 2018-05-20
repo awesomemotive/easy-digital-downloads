@@ -17,7 +17,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
-						src: ['edd-admin.css'],
+						src: ['edd-admin*.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
 					},

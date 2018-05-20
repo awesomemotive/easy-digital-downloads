@@ -803,12 +803,17 @@ function edd_get_uploads_base_dir() {
  * @return string $url URL of the symlink directory
  */
 function edd_get_symlink_url() {
+
+	// Make sure the symlink directory exists
+	edd_get_symlink_dir();
+
+	// Get the URL
 	$wp_upload_dir = wp_upload_dir();
 	$edd_dir       = edd_get_uploads_base_dir();
 	$path          = '/' . $edd_dir . '/symlinks';
-	wp_mkdir_p( $wp_upload_dir['basedir'] . $path );
-	$url = $wp_upload_dir['baseurl'] . $path;
+	$url           = $wp_upload_dir['baseurl'] . $path;
 
+	// Filter & return
 	return apply_filters( 'edd_get_symlink_url', $url );
 }
 
@@ -822,9 +827,13 @@ function edd_get_symlink_dir() {
 	$wp_upload_dir = wp_upload_dir();
 	$edd_dir       = edd_get_uploads_base_dir();
 	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir . '/symlinks';
-	wp_mkdir_p( $path );
+	$retval        = apply_filters( 'edd_get_symlink_dir', $path );
 
-	return apply_filters( 'edd_get_symlink_dir', $path );
+	// Make sure the directory exists
+	wp_mkdir_p( $retval );
+
+	// Return, possibly filtered
+	return $retval;
 }
 
 /**
@@ -837,18 +846,95 @@ function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
 	$edd_dir       = edd_get_uploads_base_dir();
 	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
-	wp_mkdir_p( $path );
+	$retval        =  apply_filters( 'edd_get_upload_dir', $path );
 
-	return apply_filters( 'edd_get_upload_dir', $path );
+	// Make sure the directory exists
+	wp_mkdir_p( $retval );
+
+	// Return, possibly filtered
+	return $retval;
 }
 
 /**
- * Return whether the base uploads directory is public or private
+ * Retrieve the URL to the file upload directory without the trailing slash
+ *
+ * @since  3.0
+ * @return string $purl URL to the EDD upload directory
+ */
+function edd_get_upload_url() {
+
+	// Make sure the symlink directory exists
+	edd_get_upload_dir();
+
+	// Get the URL
+	$wp_upload_dir = wp_upload_dir();
+	$edd_dir       = edd_get_uploads_base_dir();
+	$url           = $wp_upload_dir['baseurl'] . '/' . $edd_dir;
+
+	return apply_filters( 'edd_get_upload_url', $url );
+}
+
+/**
+ * Determine if the uploads directory is protected, and not publicly accessible.
  *
  * @since 3.0
+ *
+ * @return bool True if URL returns 200, False if anything else
  */
-function edd_is_uploads_url_public() {
-	return true;
+function edd_is_uploads_url_protected() {
+	$transient_key = 'edd_is_uploads_url_protected';
+	$protected     = get_transient( $transient_key );
+
+	// No transient
+	if ( false === $protected ) {
+
+		// Get the upload path
+		$upload_path = edd_get_upload_dir();
+
+		// The upload path is writeable
+		if ( wp_is_writable( $upload_path ) ) {
+
+			// Get the file path
+			$file_name = wp_unique_filename( $upload_path, 'edd-temp.jpg' );
+			$file_path = trailingslashit( $upload_path ) . $file_name;
+
+			// Save a temporary file - we will try to access it
+			if ( ! file_exists( $file_path ) ) {
+				@file_put_contents( $file_path, 'Just testing!' );
+			}
+
+			// Setup vars for request
+			$upload_url = edd_get_upload_url() . '/' . $file_name;
+			$url        = esc_url_raw( $upload_url );
+			$args       = array(
+				'sslverify'   => false,
+				'timeout'     => 2,
+				'redirection' => 0
+			);
+
+			// Send the request
+			$response   = wp_remote_get( $url, $args );
+			$code       = wp_remote_retrieve_response_code( $response );
+			$protected  = (int) ( 200 !== (int) $code );
+
+			// Delete the temporary file
+			if ( file_exists( $file_path ) ) {
+				@unlink( $file_path );
+			}
+		}
+
+		// Set the transient
+		set_transient( $transient_key, $protected, 12 * HOUR_IN_SECONDS );
+	}
+
+	/**
+	 * Filter whether the uploads directory is public or not.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $protected Response code from remote get request
+	 */
+	return (bool) apply_filters( 'edd_is_uploads_url_protected', $protected );
 }
 
 /**
