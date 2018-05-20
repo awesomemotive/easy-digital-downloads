@@ -251,6 +251,19 @@ abstract class Base extends \EDD\Database\Base {
 		return $deleted;
 	}
 
+	/**
+	 * Return the current table version from the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		$this->get_db_version();
+
+		return $this->db_version;
+	}
+
 	/** Private ***************************************************************/
 
 	/**
