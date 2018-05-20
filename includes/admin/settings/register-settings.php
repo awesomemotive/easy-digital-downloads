@@ -1041,6 +1041,7 @@ function edd_settings_sanitize( $input = array() ) {
 		if ( true === $doing_section ) {
 			switch ( $type ) {
 				case 'checkbox':
+				case 'checkbox_description':
 				case 'gateways':
 				case 'multicheck':
 				case 'payment_icons':
