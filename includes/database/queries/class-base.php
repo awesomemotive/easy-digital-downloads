@@ -1560,7 +1560,10 @@ class Base extends \EDD\Database\Base {
 
 		// Try to add
 		$table  = $this->get_table_name();
-		$result = $this->get_db()->insert( $table, $save );
+		$save   = $this->validate_item( $save );
+		$result = ! empty( $save )
+			? $this->get_db()->insert( $table, $save )
+			: false;
 
 		// Bail on failure
 		if ( $this->failed( $result ) ) {
@@ -1642,6 +1645,7 @@ class Base extends \EDD\Database\Base {
 		// Try to update
 		$where  = array( $primary => $item_id );
 		$table  = $this->get_table_name();
+		$save   = $this->validate_item( $save );
 		$result = ! empty( $save )
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
@@ -1739,6 +1743,38 @@ class Base extends \EDD\Database\Base {
 
 		// Return the newly shaped item
 		return new $this->item_shape( $item );
+	}
+
+	/**
+	 * Validate an item before it is updated in or added to the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return mixed False on error, Array of validated values on success
+	 */
+	private function validate_item( $item = array() ) {
+		foreach ( $item as $key => $value ) {
+
+			// Get callback for column
+			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
+
+			// Attempt to validate
+			if ( ! empty( $callback ) && is_callable( $callback ) ) {
+				$validated = call_user_func( $callback, $value );
+
+				// Bail if error
+				if ( is_wp_error( $validated ) ) {
+					return false;
+				}
+
+				// Update the value
+				$item[ $key ] = $validated;
+			}
+		}
+
+		// Return the validated item
+		return $item;
 	}
 
 	/**
