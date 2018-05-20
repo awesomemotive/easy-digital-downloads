@@ -384,6 +384,38 @@ jQuery(document).ready(function ($) {
 	}
 
 	/**
+	 * Sortables
+	 *
+	 * This makes certain settings sortable, and attempts to stash the results
+	 * in the nearest .edd-order input value.
+	 */
+	var edd_sortables = $( 'ul.edd-sortable-list' );
+	if ( edd_sortables.length > 0 ) {
+		edd_sortables.sortable({
+			axis:        'y',
+			items:       'li',
+			cursor:      'move',
+			tolerance:   'pointer',
+			containment: 'parent',
+			distance:    2,
+			opacity:     0.9,
+			scroll:      true,
+
+			/**
+			 * When sorting stops, assign the value to the previous input.
+			 * This input should be a hidden text field
+			 */
+			stop: function () {
+				var keys = $.map( $( this ).children( 'li' ), function(el) {
+					 return $(el).data( 'key' );
+				});
+
+				$( this ).prev( 'input.edd-order' ).val( keys );
+			}
+		});
+	}
+
+	/**
 	 * Edit payment screen JS
 	 */
 	var EDD_Edit_Payment = {
