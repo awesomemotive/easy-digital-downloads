@@ -260,12 +260,15 @@ class EDD_Tracking {
 			return;
 		}
 
+		// Get this one time and use it below
+		$network_url = network_site_url( '/' );
+
 		// No notices for local installs
 		if (
-			stristr( network_site_url( '/' ), '.dev'      ) !== false ||
-			stristr( network_site_url( '/' ), 'dev.'      ) !== false ||
-			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
-			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
+			stristr( $network_url, '.dev'      ) !== false ||
+			stristr( $network_url, 'dev.'      ) !== false ||
+			stristr( $network_url, 'localhost' ) !== false ||
+			stristr( $network_url, ':8888'     ) !== false // This is common with MAMP on OS X
 		) {
 			update_option( 'edd_tracking_notice', '1' );
 
