@@ -1032,8 +1032,6 @@ input[class*="edd-price-field"] {
 	vertical-align: middle;
 }
 .edd_dashboard_widget .b {
-	font-size: 14px;
-	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 	padding-right: 6px;
 	width: auto;
 }
