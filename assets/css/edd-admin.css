@@ -1073,8 +1073,6 @@ input[class*="edd-price-field"] {
 	vertical-align: middle;
 }
 .edd_dashboard_widget .b {
-	font-size: 14px;
-	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 	padding-right: 6px;
 	width: auto;
 }
@@ -1457,19 +1455,6 @@ td.edd_order_price {
 }
 .wrap-licenses p.submit {
 	clear: both;
-}
-
-/* System Info page styles
--------------------------------------------------------------- */
-
-#system-info-textarea {
-	background: none;
-	font-family: Menlo, Monaco, monospace;
-	display: block;
-	overflow: auto;
-	white-space: pre;
-	width: 800px;
-	height: 400px;
 }
 
 /* Button styles
@@ -2303,6 +2288,32 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 }
 
+/* System Info page styles
+-------------------------------------------------------------- */
+
+.inside .edd-tools-textarea {
+	background: #32373c;
+	color: rgba(240,245,250,0.7);
+	font-size: 12px;
+	font-family: Menlo, Monaco, monospace;
+	display: block;
+	overflow: auto;
+	white-space: pre;
+	width: 100%;
+	height: 450px;
+	padding: 10px;
+	outline: none;
+}
+
+#system-info-textarea::selection {
+	background: #555;
+	color: #fff;
+}
+
+#edd-system-info .edd-inline-button {
+	margin-left: 5px;
+}
+
 /* Tools Styles
 -------------------------------------------------------------- */
 
@@ -2312,11 +2323,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 .edd-recount-stats-descriptions span {
 	display: none;
 	line-height: 24px;
-}
-
-#edd-debug-log p.submit {
-	margin:  20px 0 0;
-	padding: 0;
 }
 
 #edd-debug-log .edd-inline-button {

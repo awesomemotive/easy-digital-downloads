@@ -662,33 +662,32 @@ function edd_show_payment_icons() {
 		return;
 	}
 
-	// Get the order option
+	// Get the icon order option
 	$order = edd_get_option( 'payment_icons_order', '' );
 
 	// If order is set, enforce it
 	if ( ! empty( $order ) ) {
 		$order           = array_flip( explode( ',', $order ) );
+		$order           = array_intersect_key( $order, $payment_methods );
 		$payment_methods = array_merge( $order, $payment_methods );
 	}
 
 	echo '<div class="edd-payment-icons">';
 
-	foreach( $payment_methods as $key => $card ) {
-
-		if( edd_string_is_image_url( $key ) ) {
-
+	foreach ( $payment_methods as $key => $card ) {
+		if ( edd_string_is_image_url( $key ) ) {
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 
 		} else {
-
 			$card = strtolower( str_replace( ' ', '', $card ) );
 
-			if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-
+			if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
 
-			} else {
+			} elseif ( has_filter( 'edd_accepted_payment_' . $key . '_image' ) ) {
+				$image = apply_filters( 'edd_accepted_payment_' . $key  . '_image', '' );
 
+			} else {
 				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
 
 				// Replaces backslashes with forward slashes for Windows systems
@@ -698,18 +697,14 @@ function edd_show_payment_icons() {
 
 				$image = str_replace( $plugin_dir, WP_PLUGIN_URL, $image );
 				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
-
 			}
 
-			if( edd_is_ssl_enforced() || is_ssl() ) {
-
+			if ( edd_is_ssl_enforced() || is_ssl() ) {
 				$image = edd_enforced_ssl_asset_filter( $image );
-
 			}
 
 			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 		}
-
 	}
 
 	echo '</div>';

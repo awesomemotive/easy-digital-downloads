@@ -128,7 +128,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-	    switch ( $column_name ) {
+		$base_url = remove_query_arg( 'paged' );
+		switch ( $column_name ) {
 			case 'download' :
 				$download      = new EDD_Download( $item[ $column_name ] );
 				$column_value  = $download->get_name();
@@ -137,9 +138,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
 				}
 
-				return '<a href="' . add_query_arg( 'download', $download->ID ) . '" >' . $column_value . '</a>';
+				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
 			case 'customer' :
-				return '<a href="' . add_query_arg( 'user', $item[ 'customer' ]->email ) . '">' . $item['customer']->name . '</a>';
+				return '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>';
 			case 'payment_id' :
 				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
 			case 'ip' :
@@ -171,20 +172,18 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieves the user we are filtering logs by, if any.
+	 * Retrieves the customer we are filtering logs by, if any
 	 *
 	 * @since 1.4
-     *
-	 * @return int|string int If User ID, string If Email/Login, false if not present.
+	 * @return mixed int If customer ID, string If Email, false if not present
 	 */
-	public function get_filtered_user() {
+	public function get_filtered_customer() {
 		$ret = false;
 
-		if ( isset( $_GET['user'] ) ) {
-			if ( is_numeric( $_GET['user'] ) ) {
-				$ret = absint( $_GET['user'] );
-			} else {
-				$ret = sanitize_text_field( $_GET['user'] );
+		if( isset( $_GET['customer'] ) ) {
+			$customer = new EDD_Customer( sanitize_text_field( $_GET['customer'] ) );
+			if ( ! empty( $customer->id ) ) {
+				$ret = $customer->id;
 			}
 		}
 
@@ -234,25 +233,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
-		$user       = $this->get_filtered_user();
-		$payment    = $this->get_filtered_payment();
-		$meta_query = array();
-
-		if ( $user ) {
-			// Show only logs from a specific user
-			if( is_numeric( $user ) ) {
-				$meta_query[] = array(
-					'key'   => '_edd_log_user_id',
-					'value' => $user,
-				);
-			} else {
-				$meta_query[] = array(
-					'key'     => '_edd_log_user_info',
-					'value'   => $user,
-					'compare' => 'LIKE',
-				);
-			}
-		}
+		$customer_id = $this->get_filtered_customer();
+		$payment     = $this->get_filtered_payment();
+		$meta_query  = array();
 
 		if ( $payment ) {
 			// Show only logs from a specific payment
@@ -262,7 +245,11 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			);
 		}
 
-		$search = $this->get_search();
+		if ( ! empty( $customer_id ) ) {
+			$search = $customer_id;
+		} else {
+			$search = $this->get_search();
+		}
 
 		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
@@ -270,38 +257,22 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$key     = '_edd_log_ip';
 				$compare = '=';
 			} else if ( is_email( $search ) ) {
-				// This is an email search. We use this to ensure it works for guest users and logged-in users
-				$key     = '_edd_log_user_info';
-				$compare = 'LIKE';
+				$customer = new EDD_Customer( $search );
+				if ( ! empty( $customer->id ) ) {
+					$key     = '_edd_log_customer_id';
+					$search  = $customer->id;
+					$compare = '=';
+				}
 			} else {
-				// Look for a user
-				$key = '_edd_log_user_id';
-				$compare = 'LIKE';
+				if ( is_numeric( $search ) ) {
+					$customer = new EDD_Customer( $search );
 
-				if ( ! is_numeric( $search ) ) {
-					// Searching for user by username
-					$user = get_user_by( 'login', $search );
-
-					if ( $user ) {
-						// Found one, set meta value to user's ID
-						$search = $user->ID;
+					if ( ! empty( $customer->id ) ) {
+						$key     = '_edd_log_customer_id';
+						$search  = $customer->id;
+						$compare = '=';
 					} else {
-						// No user found so let's do a real search query
-						$users = new WP_User_Query( array(
-							'search'         => $search,
-							'search_columns' => array( 'user_url', 'user_nicename' ),
-							'number'         => 1,
-							'fields'         => 'ids',
-						) );
-
-						$found_user = $users->get_results();
-
-						if ( $found_user ) {
-							$search = $found_user[0];
-						} else {
-							// No users were found so let's look for file names instead
-							$this->file_search = true;
-						}
+						$this->file_search = true;
 					}
 				}
 			}
@@ -399,9 +370,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 				$customer_id = edd_get_payment_customer_id( $log->get_payment_id() );
 
-				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
-				    $files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
-				    $this->queried_files[ $log->get_download_id() ] = $files;
+				$meta        = get_post_custom( $log->ID );
+				$customer_id = isset( $meta['_edd_log_customer_id'] )
+					? (int) $meta['_edd_log_customer_id'][0]
+					: null;
+
+				if ( ! array_key_exists( $log->post_parent, $this->queried_files ) ) {
+					$files   = maybe_unserialize( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value from $wpdb->postmeta WHERE post_id = %d and meta_key = 'edd_download_files'", $log->post_parent ) ) );
+					$this->queried_files[ $log->post_parent ] = $files;
 				} else {
 					$files = $this->queried_files[ $log->get_download_id() ];
 				}
