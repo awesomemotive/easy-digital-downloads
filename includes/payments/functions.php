@@ -1526,15 +1526,18 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
  * @return int|false The new note ID, false otherwise.
  */
 function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
-	if ( empty( $payment_id ) ) {
+
+	// Bail if no payment ID or note
+	if ( empty( $payment_id ) || empty( $note ) ) {
 		return false;
 	}
 
 	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
 
 	/**
-	 * For backwards compatibility purposes, we need to pass the data to wp_filter_comment in the event that the note
-	 * data is filtered using the WordPress Core filters prior to be inserted into the database.
+	 * For backwards compatibility purposes, we need to pass the data to
+	 * wp_filter_comment in the event that the note data is filtered using the
+	 * WordPress Core filters prior to be inserted into the database.
 	 */
 	$filtered_data = wp_filter_comment( array(
 		'comment_post_ID'      => $payment_id,
@@ -1551,17 +1554,17 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'comment_type'         => 'edd_payment_note'
 	) );
 
-	$data = array(
+	// Add the note
+	$note_id = edd_add_note( array(
 		'object_id'   => $filtered_data['comment_post_ID'],
 		'content'     => $filtered_data['comment_content'],
 		'user_id'     => $filtered_data['user_id'],
 		'object_type' => 'payment',
-	);
-
-	$note_id = edd_add_note( $data );
+	) );
 
 	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
 
+	// Return the ID of the new note
 	return $note_id;
 }
 
@@ -1593,55 +1596,15 @@ function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
  * Gets the payment note HTML.
  *
  * @since 1.9
- * @since 3.0 Updated to use new core objects.
+ * @since 3.0 Deprecated & unused (use edd_admin_get_note_html())
  *
  * @param object|int $note       The note object or ID.
  * @param int        $payment_id The payment ID the note is connected to.
+ *
  * @return string Payment note HTML.
  */
 function edd_get_payment_note_html( $note, $payment_id = 0 ) {
-
-	// Get the note
-	if ( is_numeric( $note ) ) {
-		$note = edd_get_note( $note );
-	}
-
-	// No note, so bail
-	if ( empty( $note ) ) {
-		return;
-	}
-
-	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
-
-	// User
-	$user_id = $note->get_user_id();
-	$author  = ! empty( $user_id )
-		? get_userdata( $user_id )->display_name
-		: __( 'EDD Bot', 'easy-digital-downloads' );
-
-	// URL to delete note
-	$delete_note_url = wp_nonce_url( add_query_arg( array(
-		'edd-action' => 'delete_payment_note',
-		'note_id'    => $note->get_id(),
-		'payment_id' => $payment_id
-	) ), 'edd_delete_payment_note_' . $note->get_id() );
-
-	// Start a buffer
-	ob_start(); ?>
-
-	<div class="edd-payment-note" id="edd-payment-note-<?php echo esc_attr( $note->get_id() ); ?>">
-		<div>
-			<strong class="edd-payment-note-author"><?php echo esc_html( $author ); ?></strong>
-			<time datetime="<?php echo esc_attr( $note->get_date_created() ); ?>"><?php echo edd_date_i18n( $note->get_date_created(), 'datetime' ); ?></time>
-			<p><?php echo make_clickable( $note->get_content() ); ?></p>
-			<a href="<?php esc_url( $delete_note_url ); ?>" class="edd-delete-payment-note" data-note-id="<?php echo esc_attr( $note->get_id() ); ?>" data-payment-id="<?php echo esc_attr( $payment_id ); ?>"><?php _e( 'Delete', 'easy-digital-downloads' ); ?></a>
-		</div>
-	</div>
-
-	<?php
-
-	// Return the current buffer
-	return ob_get_clean();
+	return edd_admin_get_note_html( $note );
 }
 
 /**

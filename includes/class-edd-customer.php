@@ -91,13 +91,6 @@ class EDD_Customer {
 	protected $notes;
 
 	/**
-	 * The raw notes values, for internal use only
-	 *
-	 * @since 2.8
-	 */
-	private $raw_notes = null;
-
-	/**
 	 * Get things going
 	 *
 	 * @since 2.3
@@ -144,12 +137,6 @@ class EDD_Customer {
 		foreach ( $customer as $key => $value ) {
 
 			switch ( $key ) {
-
-				case 'notes':
-					if ( ! empty( $value ) ) {
-						$this->$key = $value;
-					}
-					break;
 
 				case 'purchase_value':
 					$this->$key = floatval( $value );
@@ -662,93 +649,103 @@ class EDD_Customer {
 	/**
 	 * Get the parsed notes for a customer as an array
 	 *
-	 * @since  2.3
-	 * @param  integer $length The number of notes to get
-	 * @param  integer $paged What note to start at
-	 * @return array           The notes requsted
+	 * @since 2.3
+	 * @since 3.0 Use the new Notes component & API
+	 *
+	 * @param integer $length The number of notes to get
+	 * @param integer $paged What note to start at
+	 *
+	 * @return array The notes requested
 	 */
 	public function get_notes( $length = 20, $paged = 1 ) {
 
-		$length = is_numeric( $length ) ? $length : 20;
-		$offset = is_numeric( $paged ) && $paged != 1 ? ( ( absint( $paged ) - 1 ) * $length ) : 0;
+		// Number
+		$length = is_numeric( $length )
+			? absint( $length )
+			: 20;
 
-		$all_notes   = $this->get_raw_notes();
-		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
+		// Offset
+		$offset = is_numeric( $paged ) && ( $paged !== 1 )
+			? ( ( absint( $paged ) - 1 ) * $length )
+			: 0;
 
-		$desired_notes = array_slice( $notes_array, $offset, $length );
-
-		return $desired_notes;
+		// Return the paginated notes for back-compat
+		return edd_get_notes( array(
+			'object_id'   => $this->id,
+			'object_type' => 'customer',
+			'number'      => $length,
+			'offset'      => $offset
+		) );
 	}
 
 	/**
 	 * Get the total number of notes we have after parsing
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @since 3.0 Use the new Notes component & API
+	 *
 	 * @return int The number of notes for the customer
 	 */
 	public function get_notes_count() {
-		$all_notes   = $this->get_raw_notes();
-		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
-
-		return count( $notes_array );
+		return edd_get_notes( array(
+			'count'       => true,
+			'object_id'   => $this->id,
+			'object_type' => 'customer'
+		) );
 	}
 
 	/**
 	 * Add a note for the customer
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @since 3.0 Use the new Notes component & API
+	 *
 	 * @param string $note The note to add
 	 * @return string|boolean The new note if added successfully, false otherwise
 	 */
 	public function add_note( $note = '' ) {
 
+		// Bail if note content is empty
 		$note = trim( $note );
 		if ( empty( $note ) ) {
 			return false;
 		}
 
-		$notes = $this->get_raw_notes();
+		/**
+		 * Filter the note of a customer before it's added
+		 *
+		 * @since 2.3
+		 * @since 3.0 No longer includes the datetime stamp
+		 *
+		 * @param string $note The content of the note to add
+		 * @return string
+		 */
+		$note = apply_filters( 'edd_customer_add_note_string', $note );
 
-		if ( empty( $notes ) ) {
-			$notes = '';
-		}
+		/**
+		 * Allow actions before a note is added
+		 *
+		 * @since 2.3
+		 */
+		do_action( 'edd_customer_pre_add_note', $note, $this->id, $this );
 
-		$note_string = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
-		$new_note    = apply_filters( 'edd_customer_add_note_string', $note_string );
-		$notes      .= "\n\n" . $new_note;
-
-		do_action( 'edd_customer_pre_add_note', $new_note, $this->id, $this );
-
-		$updated = $this->update( array(
-			'notes' => $notes
+		// Try to add the note
+		edd_add_note( array(
+			'user_id'     => 0, // Authored by System/Bot
+			'object_id'   => $this->id,
+			'object_type' => 'customer',
+			'content'     => wp_kses( stripslashes( $note ), array() ),
 		) );
 
-		if ( $updated ) {
-			$this->raw_notes = $notes;
-			$this->notes     = $this->get_notes();
-		}
-
-		do_action( 'edd_customer_post_add_note', $this->notes, $new_note, $this->id, $this );
+		/**
+		 * Allow actions after a note is added
+		 *
+		 * @since 3.0 Changed to an empty string since notes were moved out
+		 */
+		do_action( 'edd_customer_post_add_note', '', $note, $this->id, $this );
 
 		// Return the formatted note, so we can test, as well as update any displays
-		return $new_note;
-	}
-
-	/**
-	 * Get the notes column for the customer
-	 *
-	 * @since  2.3
-	 * @return string The Notes for the customer, non-parsed
-	 */
-	private function get_raw_notes() {
-
-		if ( ! is_null( $this->raw_notes ) ) {
-			return $this->raw_notes;
-		}
-
-		$this->raw_notes = '';
-
-		return (string) $this->raw_notes;
+		return $note;
 	}
 
 	/**
@@ -828,8 +825,6 @@ class EDD_Customer {
 				case '%s':
 					if ( 'email' == $key ) {
 						$data[$key] = sanitize_email( $data[$key] );
-					} elseif ( 'notes' == $key ) {
-						$data[$key] = strip_tags( $data[$key] );
 					} else {
 						$data[$key] = sanitize_text_field( $data[$key] );
 					}
@@ -857,12 +852,9 @@ class EDD_Customer {
 				default:
 					$data[$key] = sanitize_text_field( $data[$key] );
 					break;
-
 			}
-
 		}
 
 		return $data;
 	}
-
 }

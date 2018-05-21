@@ -246,6 +246,77 @@ a.edd-delete:hover {
 	height: auto;
 }
 
+/* Note Styles
+-------------------------------------------------------------- */
+
+.edd-notes .edd-note {
+	background-color: #ffffee;
+	border-left: 5px solid #cccc00;
+	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	width: 80%;
+	position: relative;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.edd-notes .edd-note div {
+	padding: 5px 10px;
+	margin: 0;
+}
+
+.edd-notes .edd-note .edd-note-author {
+	padding: 2px 2px 2px 0;
+	float: left;
+}
+
+.edd-notes .edd-note time {
+	float: left;
+	font-size: 11px;
+	line-height: 11px;
+	color: #aaa;
+	padding: 5px 0;
+	vertical-align: middle;
+}
+
+.edd-notes .edd-note p {
+	clear: both;
+	padding: 5px 0;
+	margin: 0;
+}
+
+.edd-notes .edd-note .edd-note-author {
+	margin-right: 5px;
+}
+
+.edd-notes .edd-note .edd-delete-note {
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 10px;
+	font-size: 10px;
+	line-height: 10px;
+	text-decoration: none;
+	color: #aaa;
+	z-index: 1;
+}
+
+.edd-notes .edd-note .edd-delete-note:hover {
+	color: #888;
+}
+
+.edd-notes .edd-no-notes {
+	margin: 4px 0 10px 0;
+}
+
+textarea[name="edd-note"] {
+	width: 80%;
+	min-height: 70px;
+}
+
+#edd-customer-notes {
+	margin-bottom: 50px;
+}
+
 /* Discount Code Styles
 -------------------------------------------------------------- */
 
@@ -267,64 +338,6 @@ a.edd-delete:hover {
 #edd-edit-discount input.edd-price-field {
 	padding: 3px 5px;
 	width: 125px;
-}
-
-.edd-discount-notes .edd-discount-note {
-	background-color: #ffffee;
-	border-left: 5px solid #cccc00;
-	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-	width: 80%;
-	position: relative;
-	margin-bottom: 10px;
-	overflow: hidden;
-}
-
-.edd-discount-notes .edd-discount-note div {
-	padding: 5px 10px;
-	margin: 0;
-}
-
-.edd-discount-notes .edd-discount-note .edd-discount-note-author {
-	padding: 2px 2px 2px 0;
-	float: left;
-}
-
-.edd-discount-notes .edd-discount-note time {
-	float: left;
-	font-size: 11px;
-	line-height: 11px;
-	color: #aaa;
-	padding: 5px 0;
-	vertical-align: middle;
-}
-
-.edd-discount-notes .edd-discount-note p {
-	clear: both;
-	padding: 5px 0;
-}
-
-.edd-discount-notes .edd-discount-note .edd-discount-note-author {
-	margin-right: 5px;
-}
-
-.edd-discount-notes .edd-discount-note .edd-delete-discount-note {
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 10px;
-	font-size: 10px;
-	line-height: 10px;
-	text-decoration: none;
-	color: #aaa;
-	z-index: 1;
-}
-
-.edd-discount-notes .edd-discount-note .edd-delete-note:hover {
-	color: #888;
-}
-
-.edd-discount-notes .edd-no-discount-notes {
-	margin: 4px 0 10px 0;
 }
 
 /* List Tables
@@ -2082,9 +2095,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 .customer-note-input {
 	margin-bottom: 5px;
 	width: 100%;
-}
-#edd-customer-notes div:nth-of-type(even) {
-	background-color: #fcfcfc;
 }
 .customer-note-wrapper {
 	border-bottom: 1px solid #f9f9f9;

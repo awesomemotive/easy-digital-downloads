@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-05-21 18:21:50+00:00\n"
+"POT-Creation-Date: 2018-05-21 22:52:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -61,7 +61,7 @@ msgstr ""
 #: includes/EDD_SL_Plugin_Updater.php:399
 #: includes/admin/customers/customer-actions.php:296
 #: includes/admin/customers/customer-actions.php:338
-#: includes/admin/customers/customer-actions.php:585
+#: includes/admin/customers/customer-actions.php:518
 #: includes/admin/discounts/discount-actions.php:32
 #: includes/admin/discounts/discount-actions.php:136
 #: includes/admin/discounts/discount-actions.php:141
@@ -82,11 +82,8 @@ msgstr ""
 #: includes/admin/import/class-batch-import-payments.php:76
 #: includes/admin/import/class-batch-import.php:156
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:293
-#: includes/admin/payments/actions.php:316
-#: includes/admin/payments/actions.php:332
-#: includes/admin/payments/actions.php:359
-#: includes/admin/payments/actions.php:379
+#: includes/admin/payments/actions.php:285
+#: includes/admin/payments/actions.php:308
 #: includes/admin/payments/view-order-details.php:22
 #: includes/admin/payments/view-order-details.php:32
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:150
@@ -212,7 +209,7 @@ msgstr ""
 msgid "Easy Digital Downloads Info and Tools"
 msgstr ""
 
-#: includes/admin/admin-pages.php:42 includes/admin/customers/customers.php:671
+#: includes/admin/admin-pages.php:42 includes/admin/customers/customers.php:632
 msgid "Tools"
 msgstr ""
 
@@ -492,13 +489,12 @@ msgid "Download log"
 msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:171
-#: includes/admin/customers/customers.php:622
+#: includes/admin/customers/customers.php:583
 #: includes/admin/discounts/class-discount-codes-table.php:316
 #: includes/admin/discounts/class-discount-codes-table.php:397
-#: includes/admin/discounts/discount-functions.php:59
+#: includes/admin/notes/note-functions.php:97
 #: includes/admin/payments/class-payments-table.php:394
 #: includes/admin/payments/class-payments-table.php:462
-#: includes/payments/functions.php:1637
 msgid "Delete"
 msgstr ""
 
@@ -509,7 +505,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:188
 #: includes/admin/discounts/add-discount.php:32
 #: includes/admin/discounts/class-discount-codes-table.php:163
-#: includes/admin/discounts/edit-discount.php:58
+#: includes/admin/discounts/edit-discount.php:60
 #: includes/admin/downloads/dashboard-columns.php:31
 #: includes/admin/payments/view-order-details.php:660
 #: includes/admin/reporting/class-export-customers.php:74
@@ -540,15 +536,13 @@ msgstr ""
 
 #: includes/admin/customers/customer-actions.php:24
 #: includes/admin/customers/customer-actions.php:186
-#: includes/admin/customers/customer-actions.php:370
-#: includes/admin/customers/customer-actions.php:517
+#: includes/admin/customers/customer-actions.php:450
 msgid "You do not have permission to edit this customer."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:33
 #: includes/admin/customers/customer-actions.php:382
-#: includes/admin/customers/customer-actions.php:449
-#: includes/admin/customers/customer-actions.php:528
+#: includes/admin/customers/customer-actions.php:461
 msgid "Cheatin' eh?!"
 msgstr ""
 
@@ -612,7 +606,7 @@ msgstr ""
 
 #: includes/admin/customers/customer-actions.php:296
 #: includes/admin/customers/customer-actions.php:338
-#: includes/admin/customers/customer-actions.php:585
+#: includes/admin/customers/customer-actions.php:518
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
@@ -626,27 +620,23 @@ msgstr ""
 msgid "Email address %s removed by %s"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:386
-msgid "A note is required"
-msgstr ""
-
-#: includes/admin/customers/customer-actions.php:436
+#: includes/admin/customers/customer-actions.php:369
 msgid "You do not have permission to delete this customer."
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:453
+#: includes/admin/customers/customer-actions.php:386
 msgid "Please confirm you want to delete this customer"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:492
+#: includes/admin/customers/customer-actions.php:425
 msgid "Error deleting customer"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:497
+#: includes/admin/customers/customer-actions.php:430
 msgid "Invalid Customer ID"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:552
+#: includes/admin/customers/customer-actions.php:485
 msgid "Failed to disconnect user from customer"
 msgstr ""
 
@@ -741,7 +731,7 @@ msgid "Update Customer"
 msgstr ""
 
 #: includes/admin/customers/customers.php:347
-#: includes/admin/customers/customers.php:644
+#: includes/admin/customers/customers.php:605
 #: includes/admin/payments/view-order-details.php:651
 #: includes/admin/payments/view-order-details.php:671
 #: includes/admin/thickbox.php:132
@@ -839,7 +829,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:459
 #: includes/admin/discounts/add-discount.php:71
 #: includes/admin/discounts/class-discount-codes-table.php:165
-#: includes/admin/discounts/edit-discount.php:97
+#: includes/admin/discounts/edit-discount.php:99
 #: includes/admin/payments/class-payments-table.php:302
 #: includes/admin/reporting/class-export-payments.php:72
 #: includes/admin/reporting/export/class-batch-export-payments.php:54
@@ -868,7 +858,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:461
 #: includes/admin/discounts/class-discount-codes-table.php:169
-#: includes/admin/discounts/edit-discount.php:216
+#: includes/admin/discounts/edit-discount.php:218
 #: includes/admin/payments/class-payments-table.php:305
 #: includes/admin/reporting/class-export-payments.php:80
 #: includes/admin/reporting/export/class-batch-export-downloads.php:48
@@ -898,46 +888,42 @@ msgstr ""
 msgid "No %s Found"
 msgstr ""
 
-#: includes/admin/customers/customers.php:553
+#: includes/admin/customers/customers.php:549
 #: includes/admin/reporting/export/class-batch-export-downloads.php:56
 msgid "Notes"
 msgstr ""
 
-#: includes/admin/customers/customers.php:591
-msgid "No Customer Notes"
-msgstr ""
-
-#: includes/admin/customers/customers.php:628
+#: includes/admin/customers/customers.php:589
 msgid "Are you sure you want to delete this customer?"
 msgstr ""
 
-#: includes/admin/customers/customers.php:633
+#: includes/admin/customers/customers.php:594
 msgid "Delete all associated payments and records?"
 msgstr ""
 
-#: includes/admin/customers/customers.php:643
+#: includes/admin/customers/customers.php:604
 msgid "Delete Customer"
 msgstr ""
 
-#: includes/admin/customers/customers.php:674 includes/admin/tools.php:150
+#: includes/admin/customers/customers.php:635 includes/admin/tools.php:150
 msgid "Recount Customer Stats"
 msgstr ""
 
-#: includes/admin/customers/customers.php:675
+#: includes/admin/customers/customers.php:636
 msgid ""
 "Use this tool to recalculate the purchase count and total value of the "
 "customer."
 msgstr ""
 
-#: includes/admin/customers/customers.php:682 includes/admin/tools.php:133
+#: includes/admin/customers/customers.php:643 includes/admin/tools.php:133
 msgid "Recount Stats"
 msgstr ""
 
-#: includes/admin/customers/customers.php:709
+#: includes/admin/customers/customers.php:670
 msgid "This customer's user account is pending verification."
 msgstr ""
 
-#: includes/admin/customers/customers.php:711
+#: includes/admin/customers/customers.php:672
 msgid "Verify account."
 msgstr ""
 
@@ -1029,103 +1015,103 @@ msgstr ""
 
 #: includes/admin/discounts/add-discount.php:44
 #: includes/admin/discounts/class-discount-codes-table.php:164
-#: includes/admin/discounts/edit-discount.php:70
+#: includes/admin/discounts/edit-discount.php:72
 msgid "Code"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:48
-#: includes/admin/discounts/edit-discount.php:74
+#: includes/admin/discounts/edit-discount.php:76
 msgid ""
 "Enter a code for this discount, such as 10PERCENT. Only alphanumeric "
 "characters are allowed."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:56
-#: includes/admin/discounts/edit-discount.php:82
+#: includes/admin/discounts/edit-discount.php:84
 msgid "Type"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:60
-#: includes/admin/discounts/edit-discount.php:86
+#: includes/admin/discounts/edit-discount.php:88
 msgid "Percentage"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:61
-#: includes/admin/discounts/edit-discount.php:87
+#: includes/admin/discounts/edit-discount.php:89
 msgid "Flat amount"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:63
-#: includes/admin/discounts/edit-discount.php:89
+#: includes/admin/discounts/edit-discount.php:91
 msgid "The kind of discount to apply for this discount."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:75
-#: includes/admin/discounts/edit-discount.php:101
+#: includes/admin/discounts/edit-discount.php:103
 msgid "Enter the discount amount in %s"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:76
-#: includes/admin/discounts/edit-discount.php:102
+#: includes/admin/discounts/edit-discount.php:104
 msgid "Enter the discount percentage. 10 = 10%"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:84
-#: includes/admin/discounts/edit-discount.php:110
+#: includes/admin/discounts/edit-discount.php:112
 msgid "%s Requirements"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:93
 #: includes/admin/discounts/add-discount.php:131
-#: includes/admin/discounts/edit-discount.php:120
-#: includes/admin/discounts/edit-discount.php:158
+#: includes/admin/discounts/edit-discount.php:122
+#: includes/admin/discounts/edit-discount.php:160
 msgid "Select one or more %s"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:99
-#: includes/admin/discounts/edit-discount.php:126
+#: includes/admin/discounts/edit-discount.php:128
 msgid "Cart must contain all selected %s"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:100
-#: includes/admin/discounts/edit-discount.php:127
+#: includes/admin/discounts/edit-discount.php:129
 msgid "Cart needs one or more of the selected %s"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:106
-#: includes/admin/discounts/edit-discount.php:133
+#: includes/admin/discounts/edit-discount.php:135
 msgid "Apply discount to entire purchase."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:110
-#: includes/admin/discounts/edit-discount.php:137
+#: includes/admin/discounts/edit-discount.php:139
 msgid "Apply discount only to selected %s."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:114
-#: includes/admin/discounts/edit-discount.php:141
+#: includes/admin/discounts/edit-discount.php:143
 msgid ""
 "Select %s relevant to this discount. If left blank, this discount can be "
 "used on any product."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:122
-#: includes/admin/discounts/edit-discount.php:149
+#: includes/admin/discounts/edit-discount.php:151
 msgid "Excluded %s"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:133
-#: includes/admin/discounts/edit-discount.php:160
+#: includes/admin/discounts/edit-discount.php:162
 msgid "%s that this discount code cannot be applied to."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:141
-#: includes/admin/discounts/edit-discount.php:168
+#: includes/admin/discounts/edit-discount.php:170
 msgid "Start date"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:145
-#: includes/admin/discounts/edit-discount.php:172
+#: includes/admin/discounts/edit-discount.php:174
 msgid ""
 "Enter the start date for this discount code in the format of yyyy-mm-dd. "
 "For no start date, leave blank. If entered, the discount can only be used "
@@ -1133,7 +1119,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:153
-#: includes/admin/discounts/edit-discount.php:180
+#: includes/admin/discounts/edit-discount.php:182
 msgid "Expiration date"
 msgstr ""
 
@@ -1144,7 +1130,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:165
-#: includes/admin/discounts/edit-discount.php:204
+#: includes/admin/discounts/edit-discount.php:206
 msgid "Minimum Amount"
 msgstr ""
 
@@ -1155,24 +1141,24 @@ msgid ""
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:177
-#: includes/admin/discounts/edit-discount.php:192
+#: includes/admin/discounts/edit-discount.php:194
 msgid "Max Uses"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:181
-#: includes/admin/discounts/edit-discount.php:196
+#: includes/admin/discounts/edit-discount.php:198
 msgid ""
 "The maximum number of times this discount can be used. Leave blank for "
 "unlimited."
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:189
-#: includes/admin/discounts/edit-discount.php:231
+#: includes/admin/discounts/edit-discount.php:233
 msgid "Use Once Per Customer"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:193
-#: includes/admin/discounts/edit-discount.php:235
+#: includes/admin/discounts/edit-discount.php:237
 msgid "Limit this discount to a single-use per customer?"
 msgstr ""
 
@@ -1188,13 +1174,13 @@ msgid "All"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:144
-#: includes/admin/discounts/edit-discount.php:220
+#: includes/admin/discounts/edit-discount.php:222
 #: includes/class-edd-discount.php:587
 msgid "Active"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:145
-#: includes/admin/discounts/edit-discount.php:221
+#: includes/admin/discounts/edit-discount.php:223
 #: includes/class-edd-discount.php:583
 msgid "Inactive"
 msgstr ""
@@ -1423,54 +1409,40 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: includes/admin/discounts/discount-functions.php:42
-#: includes/payments/functions.php:1620
-msgid "EDD Bot"
-msgstr ""
-
 #: includes/admin/discounts/edit-discount.php:17
 #: includes/admin/discounts/edit-discount.php:28
 msgid "Something went wrong."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:44 includes/post-types.php:109
+#: includes/admin/discounts/edit-discount.php:46 includes/post-types.php:109
 msgid "Edit Discount"
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:62
+#: includes/admin/discounts/edit-discount.php:64
 msgid "The name of this discount"
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:184
+#: includes/admin/discounts/edit-discount.php:186
 msgid ""
 "Enter the expiration date for this discount code in the format of "
 "yyyy-mm-dd. For no expiration, leave blank"
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:208
+#: includes/admin/discounts/edit-discount.php:210
 msgid ""
 "The minimum amount that must be purchased before this discount can be used. "
 "Leave blank for no minimum."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:223
+#: includes/admin/discounts/edit-discount.php:225
 msgid "The status of this discount code."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:243
+#: includes/admin/discounts/edit-discount.php:245
 msgid "Discount Notes"
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:257
-msgid "No notes for this discount."
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:265
-#: includes/admin/payments/view-order-details.php:798
-msgid "Add Note"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:279
+#: includes/admin/discounts/edit-discount.php:262
 msgid "Update Discount Code"
 msgstr ""
 
@@ -1962,11 +1934,20 @@ msgstr ""
 msgid "Import complete! <a href=\"%s\">View imported %s</a>."
 msgstr ""
 
+#: includes/admin/notes/note-functions.php:44
+msgid "No notes."
+msgstr ""
+
+#: includes/admin/notes/note-functions.php:80
+msgid "EDD Bot"
+msgstr ""
+
+#: includes/admin/notes/note-functions.php:128
+msgid "Add Note"
+msgstr ""
+
 #: includes/admin/payments/actions.php:25
-#: includes/admin/payments/actions.php:316
-#: includes/admin/payments/actions.php:332
-#: includes/admin/payments/actions.php:359
-#: includes/admin/payments/actions.php:379 includes/emails/actions.php:53
+#: includes/admin/payments/actions.php:308 includes/emails/actions.php:53
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -1978,7 +1959,7 @@ msgstr ""
 msgid "Error creating new customer"
 msgstr ""
 
-#: includes/admin/payments/actions.php:293
+#: includes/admin/payments/actions.php:285
 msgid "Error Updating Payment"
 msgstr ""
 
@@ -2214,7 +2195,7 @@ msgstr ""
 msgid "The specified ID does not belong to a payment. Please try again"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:49
+#: includes/admin/payments/view-order-details.php:50
 msgid "Payment %s"
 msgstr ""
 
@@ -2475,10 +2456,6 @@ msgstr ""
 
 #: includes/admin/payments/view-order-details.php:777
 msgid "Payment Notes"
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:792
-msgid "No payment notes"
 msgstr ""
 
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:95
