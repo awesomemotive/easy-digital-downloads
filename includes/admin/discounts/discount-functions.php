@@ -35,7 +35,7 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 
 	// User
 	$user_id = $note->get_user_id();
-	$user    = ! empty( $user_id )
+	$author  = ! empty( $user_id )
 		? get_userdata( $user_id )->display_name
 		: __( 'EDD Bot', 'easy-digital-downloads' );
 
@@ -51,7 +51,7 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 
 	<div class="edd-discount-note" id="edd-discount-note-<?php echo esc_attr( $note->get_id() ); ?>">
 		<div>
-			<strong class="edd-discount-note-author"><?php echo esc_html( $user ); ?></strong>
+			<strong class="edd-discount-note-author"><?php echo esc_html( $author ); ?></strong>
 			<time datetime="<?php echo esc_attr( $note->get_date_created() ); ?>"><?php echo edd_date_i18n( $note->get_date_created(), 'datetime' ); ?></time>
 			<p><?php echo make_clickable( $note->get_content() ); ?></p>
 			<a href="<?php esc_url( $delete_note_url ); ?>#edd-discount-notes" class="edd-delete-discount-note" data-note-id="<?php echo esc_attr( $note->get_id() ); ?>" data-discount-id="<?php echo esc_attr( $discount_id ); ?>"><?php _e( 'Delete', 'easy-digital-downloads' ); ?></a>
