@@ -384,6 +384,121 @@ jQuery(document).ready(function ($) {
 	}
 
 	/**
+	 * Notes
+	 */
+	var EDD_Notes = {
+		init : function() {
+			this.enter_key();
+			this.add_note();
+			this.remove_note();		
+		},
+
+		enter_key : function() {
+			$(document.body).on('keydown', '#edd-note', function(e) {
+				if (e.keyCode === 13 && ( e.metaKey || e.ctrlKey ) ) {
+					$('#edd-add-note').click();
+				}
+			});			
+		},
+
+		/**
+		 * Ajax handler for adding new notes
+		 *
+		 * @since 3.0
+		 */
+		add_note : function() {
+            $('#edd-add-note').on('click', function(e) {
+                e.preventDefault();
+
+				var edd_note       = $('#edd-note'),
+					edd_notes      = $('.edd-notes'),
+					edd_no_notes   = $('.edd-no-notes'),
+					edd_note_nonce = $('#edd_note_nonce');
+
+                var postData = {
+                    action:      'edd_add_note',
+					nonce:       edd_note_nonce.val(),
+                    object_id:   $( this ).data('object-id'),
+                    object_type: $( this ).data('object-type'),
+                    note:        edd_note.val()
+                };
+
+                if ( postData.note ) {
+                    $.ajax({
+                        type: "POST",
+                        data: postData,
+                        url:  ajaxurl,
+                        success: function (response) {
+                            var res = wpAjax.parseAjaxResponse( response );
+                            res = res.responses[0];
+
+                            edd_notes.append( res.data );
+                            edd_no_notes.hide();
+                            edd_note.val('');
+                        }
+                    }).fail(function (data) {
+                        if ( window.console && window.console.log ) {
+                            console.log( data );
+                        }
+                    });
+
+                } else {
+                    var border_color = edd_note.css('border-color');
+
+                    edd_note.css('border-color', 'red');
+
+                    setTimeout( function() {
+                        edd_note.css('border-color', border_color );
+                    }, 500 );
+                }
+            });
+		},
+
+		/**
+		 * Ajax handler for deleting existing notes
+		 *
+		 * @since 3.0
+		 */
+		remove_note : function() {
+			$( document.body ).on('click', '.edd-delete-note', function(e) {
+				e.preventDefault();
+
+				var edd_note       = $('#edd-note'),
+					edd_no_notes   = $('.edd-no-notes'),
+					edd_note_nonce = $('#edd_note_nonce');
+
+				if ( confirm( edd_vars.delete_note ) ) {
+					var postData = {
+						action:  'edd_delete_note',
+						nonce:   edd_note_nonce.val(),
+						note_id: $( this ).data('note-id')
+					};
+
+					$.ajax({
+						type: "POST",
+						data: postData,
+						url:  ajaxurl,
+						success: function (response) {
+							$('#edd-note-' + postData.note_id ).remove();
+							if ( ! edd_note.length ) {
+								edd_no_notes.show();
+							}
+							return false;
+						}
+					}).fail(function (data) {
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
+					});
+					return true;
+				}
+			});
+		}
+	};
+
+	EDD_Notes.init();
+
+	/**
 	 * Edit payment screen JS
 	 */
 	var EDD_Edit_Payment = {
@@ -397,8 +512,6 @@ jQuery(document).ready(function ($) {
 			this.edit_price();
 			this.recalculate_total();
 			this.variable_prices_check();
-			this.add_note();
-			this.remove_note();
 			this.resend_receipt();
 			this.copy_download_link();
 		},
@@ -707,148 +820,6 @@ jQuery(document).ready(function ($) {
 					});
 				}
 			});
-		},
-
-		add_note : function() {
-
-			$('#edd-add-payment-note').on('click', function(e) {
-				e.preventDefault();
-				var postData = {
-					action : 'edd_insert_payment_note',
-					payment_id : $( this ).data('payment-id'),
-					note : $('#edd-payment-note').val()
-				};
-
-				if ( postData.note ) {
-
-					$.ajax({
-						type: "POST",
-						data: postData,
-						url: ajaxurl,
-						success: function (response) {
-							$('#edd-payment-notes-inner').append( response );
-							$('.edd-no-payment-notes').hide();
-							$('#edd-payment-note').val('');
-						}
-					}).fail(function (data) {
-						if ( window.console && window.console.log ) {
-							console.log( data );
-						}
-					});
-
-				} else {
-					var border_color = $('#edd-payment-note').css('border-color');
-					$('#edd-payment-note').css('border-color', 'red');
-					setTimeout( function() {
-						$('#edd-payment-note').css('border-color', border_color );
-					}, 500 );
-				}
-			});
-
-            $('#edd-add-discount-note').on('click', function(e) {
-                e.preventDefault();
-
-                var postData = {
-                    action: 'edd_add_discount_note',
-                    discount_id: $( this ).data('discount-id'),
-                    nonce: $('#edd_discount_note_nonce').val(),
-                    note: $('#edd-discount-note').val()
-                };
-
-                if ( postData.note ) {
-                    $.ajax({
-                        type: "POST",
-                        data: postData,
-                        url: ajaxurl,
-                        success: function (response) {
-                            var res = wpAjax.parseAjaxResponse( response );
-                            res = res.responses[0];
-
-                            $('.edd-discount-notes').append( res.data );
-                            $('.edd-no-discount-notes').hide();
-                            $('#edd-discount-note').val('');
-                        }
-                    }).fail(function (data) {
-                        if ( window.console && window.console.log ) {
-                            console.log( data );
-                        }
-                    });
-
-                } else {
-                    var border_color = $('#edd-discount-note').css('border-color');
-                    $('#edd-discount-note').css('border-color', 'red');
-                    setTimeout( function() {
-                        $('#edd-discount-note').css('border-color', border_color );
-                    }, 500 );
-                }
-            });
-		},
-
-		remove_note : function() {
-
-			$( document.body ).on('click', '.edd-delete-payment-note', function(e) {
-
-				e.preventDefault();
-
-				if ( confirm( edd_vars.delete_payment_note) ) {
-
-					var postData = {
-						action : 'edd_delete_payment_note',
-						payment_id : $( this ).data('payment-id'),
-						note_id : $( this ).data('note-id')
-					};
-
-					$.ajax({
-						type: "POST",
-						data: postData,
-						url: ajaxurl,
-						success: function (response) {
-							$('#edd-payment-note-' + postData.note_id ).remove();
-							if ( ! $('.edd-payment-note').length ) {
-								$('.edd-no-payment-notes').show();
-							}
-							return false;
-						}
-					}).fail(function (data) {
-						if ( window.console && window.console.log ) {
-							console.log( data );
-						}
-					});
-					return true;
-				}
-			});
-
-            $( document.body ).on('click', '.edd-delete-discount-note', function(e) {
-                e.preventDefault();
-
-                if ( confirm( edd_vars.delete_payment_note) ) {
-
-                    var postData = {
-                        action: 'edd_delete_discount_note',
-                        discount_id: $( this ).data('discount-id'),
-                        nonce: $('#edd_discount_note_nonce').val(),
-                        note_id: $( this ).data('note-id')
-                    };
-
-                    $.ajax({
-                        type: "POST",
-                        data: postData,
-                        url: ajaxurl,
-                        success: function (response) {
-                            $('#edd-discount-note-' + postData.note_id ).remove();
-                            if ( ! $('.edd-discount-note').length ) {
-                                $('.edd-no-discount-notes').show();
-                            }
-                            return false;
-                        }
-                    }).fail(function (data) {
-                        if ( window.console && window.console.log ) {
-                            console.log( data );
-                        }
-                    });
-                    return true;
-                }
-            });
 		},
 
 		resend_receipt : function() {
@@ -1822,7 +1793,6 @@ jQuery(document).ready(function ($) {
 			customer_card_wrap_edit_item: $( '.edd-customer-card-wrapper .edit-item' ),
 			user_id: $('input[name="customerinfo[user_id]"]'),
 			state_input: $(':input[name="customerinfo[state]"]'),
-			note: $( '#customer-note' )
 		},
 		init : function() {
 			this.edit_customer();
@@ -1831,7 +1801,6 @@ jQuery(document).ready(function ($) {
 			this.remove_user();
 			this.cancel_edit();
 			this.change_country();
-			this.add_note();
 			this.delete_checked();
 		},
 		edit_customer: function() {
@@ -1933,42 +1902,6 @@ jQuery(document).ready(function ($) {
 				});
 
 				return false;
-			});
-		},
-		add_note : function() {
-			$( document.body ).on( 'click', '#add-customer-note', function( e ) {
-				e.preventDefault();
-				var postData = {
-					edd_action : 'add-customer-note',
-					customer_id : $( '#customer-id' ).val(),
-					customer_note : EDD_Customer.vars.note.val(),
-					add_customer_note_nonce: $( '#add_customer_note_nonce' ).val()
-				};
-
-				if ( postData.customer_note ) {
-
-					$.ajax({
-						type: "POST",
-						data: postData,
-						url: ajaxurl,
-						success: function ( response ) {
-							$( '#edd-customer-notes' ).prepend( response );
-							$( '.edd-no-customer-notes' ).hide();
-							EDD_Customer.vars.note.val( '' );
-						}
-					}).fail( function ( data ) {
-						if ( window.console && window.console.log ) {
-							console.log( data );
-						}
-					});
-
-				} else {
-					var border_color = EDD_Customer.vars.note.css( 'border-color' );
-					EDD_Customer.vars.note.css( 'border-color', 'red' );
-					setTimeout( function() {
-						EDD_Customer.vars.note.css( 'border-color', border_color );
-					}, 500 );
-				}
 			});
 		},
 		delete_checked: function() {
@@ -2075,12 +2008,6 @@ jQuery(document).ready(function ($) {
 			}
 		});
 	}
-
-	$(document.body).on('keydown', '.customer-note-input', function(e) {
-		if(e.keyCode === 13 && (e.metaKey || e.ctrlKey)) {
-			$('#add-customer-note').click();
-		}
-	});
 
 	// Enable reports meta box toggle states.
 	if ( typeof postboxes !== 'undefined' && /edd-reports/.test( pagenow ) ) {
