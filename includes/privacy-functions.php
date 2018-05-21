@@ -12,6 +12,8 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/** Helper Functions */
+
 /**
  * Given a string, mask it with the * character.
  *
@@ -116,6 +118,321 @@ function edd_pseudo_mask_email( $email_address ) {
 
 	return $email_address;
 }
+
+/**
+ * Return an anonymized email address.
+ *
+ * While WP Core supports anonymizing email addresses with the wp_privacy_anonymize_data function,
+ * it turns every email address into deleted@site.invalid, which does not work when some purchase/customer records
+ * are still needed for legal and regulatory reasons.
+ *
+ * This function will anonymize the email with an MD5 that is salted
+ * and given a randomized uniqid prefixed with the store URL in order to prevent connecting a single customer across
+ * multiple stores, as well as the timestamp at the time of anonymization (so it trying the same email again will not be
+ * repeatable and therefore connected), and return the email address as <hash>@site.invalid.
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address
+ *
+ * @return string
+ */
+function edd_anonymize_email( $email_address ) {
+
+	if ( empty( $email_address ) ) {
+		return $email_address;
+	}
+
+	$email_address    = strtolower( $email_address );
+	$email_parts      = explode( '@', $email_address );
+	$anonymized_email = wp_hash( uniqid( get_option( 'site_url' ), true ) . $email_parts[0] . current_time( 'timestamp' ), 'nonce' );
+
+
+	return $anonymized_email . '@site.invalid';
+}
+
+/**
+ * Given a customer ID, anonymize the data related to that customer.
+ *
+ * Only the customer record is affected in this function. The data that is changed:
+ * - The name is changed to 'Anonymized Customer'
+ * - The email address is anonymized, but kept in a format that passes is_email checks
+ * - The date created is set to the timestamp of 0 (January 1, 1970)
+ * - Notes are fully cleared
+ * - Any additional email addresses are removed
+ *
+ * Once completed, a note is left stating when the customer was anonymized.
+ *
+ * @param int $customer_id
+ *
+ * @return array
+ */
+function _edd_anonymize_customer( $customer_id = 0 ) {
+
+	$customer = new EDD_Customer( $customer_id );
+	if ( empty( $customer->id ) ) {
+		return array( 'success' => false, 'message' => sprintf( __( 'No customer with ID %d', 'easy-digital-downloads' ), $customer_id ) );
+	}
+
+	/**
+	 * Determines if this customer should be allowed to be anonymized.
+	 *
+	 * Developers and extensions can use this filter to make it possible to not anonymize a customer. A sample use case
+	 * would be if the customer has pending orders, and that payment requires shipping, anonymizing the customer may
+	 * not be ideal.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param array {
+	 *     Contains data related to if the anonymization should take place
+	 *
+	 *     @type bool   $should_anonymize If the customer should be anonymized.
+	 *     @type string $message          A message to display if the customer could not be anonymized.
+	 * }
+	 */
+	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => array() ), $customer );
+
+	if ( ! $should_anonymize_customer['should_anonymize'] ) {
+		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
+	}
+
+	// Now we should look at payments this customer has associated, and if there are any payments that should not be modified,
+	// do not modify the customer.
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'number'   => -1,
+	) );
+
+	foreach ( $payments as $payment ) {
+		$action = _edd_privacy_get_payment_action( $payment );
+		if ( 'none' === $action ) {
+			return array(
+				'success' => false,
+				'message' => __( 'Customer could not be anonymized due to payments that could not be anonymized or deleted.', 'easy-digital-downloads' )
+			);
+		}
+	}
+
+	// Loop through all their email addresses, and remove any additional email addresses.
+	foreach ( $customer->emails as $email ) {
+		$customer->remove_email( $email );
+	}
+
+	if ( $customer->user_id > 0 ) {
+		delete_user_meta( $customer->user_id, '_edd_user_address' );
+	}
+
+	$customer->update( array(
+		'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+		'email'        => edd_anonymize_email( $customer->email ),
+		'date_created' => date( 'Y-m-d H:i:s', 0 ),
+		'notes'        => '',
+		'user_id'      => 0,
+	) );
+
+	/**
+	 * Run further anonymization on a customer
+	 *
+	 * Developers and extensions can use the EDD_Customer object passed into the edd_anonymize_customer action
+	 * to complete further anonymization.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param EDD_Customer $customer The EDD_Customer object that was found.
+	 */
+	do_action( 'edd_anonymize_customer', $customer );
+
+	$customer->add_note( __( 'Customer anonymized successfully' ) );
+	return array( 'success' => true, 'message' => sprintf( __( 'Customer ID %d successfully anonymized', 'easy-digital-downloads' ), $customer_id ) );
+
+}
+
+/**
+ * Given a payment ID, anonymize the data related to that payment.
+ *
+ * Only the payment record is affected in this function. The data that is changed:
+ * - First Name is made blank
+ * - Last  Name is made blank
+ * - All email addresses are converted to the anonymized email address on the customer
+ * - The IP address is run to only be the /24 IP Address (ending in .0) so it cannot be traced back to a user
+ * - Address line 1 is made blank
+ * - Address line 2 is made blank
+ *
+ * @param int $payment_id
+ *
+ * @return array
+ */
+function _edd_anonymize_payment( $payment_id = 0 ) {
+
+	$payment = edd_get_payment( $payment_id );
+	if ( false === $payment ) {
+		return array( 'success' => false, 'message' => sprintf( __( 'No payment with ID %d', 'easy-digital-downloads' ), $payment_id ) );
+	}
+
+	/**
+	 * Determines if this payment should be allowed to be anonymized.
+	 *
+	 * Developers and extensions can use this filter to make it possible to not anonymize a payment. A sample use case
+	 * would be if the payment is pending orders, and the payment requires shipping, anonymizing the payment may
+	 * not be ideal.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param array {
+	 *     Contains data related to if the anonymization should take place
+	 *
+	 *     @type bool   $should_anonymize If the payment should be anonymized.
+	 *     @type string $message          A message to display if the customer could not be anonymized.
+	 * }
+	 */
+	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array( 'should_anonymize' => true, 'message' => array() ), $payment );
+
+	if ( ! $should_anonymize_payment['should_anonymize'] ) {
+		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
+	}
+
+	$action = _edd_privacy_get_payment_action( $payment );
+
+	switch( $action ) {
+
+		case 'none':
+		default:
+			$return = array(
+				'success' => false,
+				'message' => sprintf( __( 'Payment not modified, due to status: %s.', 'easy-digital-downloads' ), $payment->status )
+			);
+			break;
+
+		case 'delete':
+			edd_delete_purchase( $payment->ID, true, true );
+
+			$return = array(
+				'success' => true,
+				'message' => sprintf( __( 'Payment %d with status %s deleted.', 'easy-digital-downloads' ), $payment->ID, $payment->status )
+			);
+			break;
+
+		case 'anonymize':
+			$customer = new EDD_Customer( $payment->customer_id );
+
+			$payment->ip    = wp_privacy_anonymize_ip( $payment->ip );
+			$payment->email = $customer->email;
+
+			// Anonymize the line 1 and line 2 of the address. City, state, zip, and country are possibly needed for taxes.
+			$address = $payment->address;
+			if ( isset( $address['line1'] ) ) {
+				$address['line1'] = '';
+			}
+
+			if ( isset( $address['line2'] ) ) {
+				$address['line2'] = '';
+			}
+
+			$payment->address = $address;
+
+			$payment->first_name = '';
+			$payment->last_name  = '';
+
+
+			/**
+			 * Run further anonymization on a payment
+			 *
+			 * Developers and extensions can use the EDD_Payment object passed into the edd_anonymize_payment action
+			 * to complete further anonymization.
+			 *
+			 * @since 2.9.2
+			 *
+			 * @param EDD_Payment $payment The EDD_Payment object that was found.
+			 */
+			do_action( 'edd_anonymize_payment', $payment );
+
+			$payment->save();
+			$return = array(
+				'success' => true,
+				'message' => sprintf( __( 'Payment ID %d successfully anonymized', 'easy-digital-downloads' ), $payment_id )
+			);
+			break;
+	}
+
+	return $return;
+}
+
+/**
+ * Given an EDD_Payment, determine what action should be taken during the eraser processes.
+ *
+ * @since 2.9.2
+ *
+ * @param EDD_Payment $payment
+ *
+ * @return string
+ */
+function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
+
+	$action = edd_get_option( 'payment_privacy_status_action_' . $payment->status, false );
+
+	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
+	if ( empty( $action ) ) {
+
+		switch ( $payment->status ) {
+
+			case 'publish':
+			case 'refunded':
+			case 'revoked':
+				$action = 'anonymize';
+				break;
+
+			case 'failed':
+			case 'abandoned':
+				$action = 'delete';
+				break;
+
+			case 'pending':
+			case 'processing':
+			default:
+				$action = 'none';
+				break;
+
+		}
+
+	}
+
+	/**
+	 * Allow filtering of what type of action should be taken for a payment.
+	 *
+	 * Developers and extensions can use this filter to modify how Easy Digital Downloads will treat an order
+	 * that has been requested to be deleted or anonymized.
+	 *
+	 * @since 2.9.2
+	 *
+	 * @param string      $action  What action will be performed (none, delete, anonymize)
+	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
+	 */
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
+
+	return $action;
+
+}
+
+/**
+ * Since our eraser callbacks need to look up a stored customer ID by hashed email address, developers can use this
+ * to retrieve the customer ID associated with an email address that's being requested to be deleted even after the
+ * customer has been anonymized.
+ *
+ * @since 2.9.2
+ *
+ * @param $email_address
+ *
+ * @return EDD_Customer
+ */
+function _edd_privacy_get_customer_id_for_email( $email_address ) {
+	$customer_id = get_option( 'edd_priv_' . md5( $email_address ), true );
+	$customer    = new EDD_Customer( $customer_id );
+
+	return $customer;
+}
+
+/** Exporter Functions */
 
 /**
  * Register any of our Privacy Data Exporters
@@ -375,6 +692,16 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 
 }
 
+/**
+ * Adds the file download logs for a customer to the WP Core Privacy Data exporter
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address The email address to look up file download logs for.
+ * @param int    $page          The page of logs to request.
+ *
+ * @return array
+ */
 function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 ) {
 	global $edd_logs;
 
@@ -454,5 +781,195 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 	return array(
 		'data' => $export_items,
 		'done' => false,
+	);
+}
+
+/** Anonymization Functions */
+
+/**
+ * This registers a single eraser _very_ early to avoid any other hook into the EDD data from running first.
+ *
+ * We are going to set an option of what customer we're currently deleting for what email address, so that after the customer
+ * is anonymized we can still find them. Then we'll delete it.
+ *
+ * @param array $erasers
+ */
+function edd_register_privacy_eraser_customer_id_lookup( $erasers = array() ) {
+	$erasers[] = array(
+		'eraser_friendly_name' => 'pre-eraser-customer-id-lookup',
+		'callback'             => 'edd_privacy_prefetch_customer_id',
+	);
+
+	return $erasers;
+}
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_customer_id_lookup', 5, 1 );
+
+/**
+ * Lookup the customer ID for this email address so that we can use it later in the anonymization process.
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
+	$customer = new EDD_Customer( $email_address );
+	update_option( 'edd_priv_' . md5( $email_address ), $customer->id, false );
+
+	return array(
+		'items_removed'  => false,
+		'items_retained' => false,
+		'messages'       => array(),
+		'done'           => true,
+	);
+}
+
+/**
+ * This registers a single eraser _very_ late to remove a customer ID that was found for the erasers.
+ *
+ * We are now assumed done with our exporters, so we can go ahead and delete the customer ID we found for this eraser.
+ *
+ * @param array $erasers
+ */
+function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
+	$erasers[] = array(
+		'eraser_friendly_name' => 'post-eraser-customer-id-lookup',
+		'callback'             => 'edd_privacy_remove_customer_id',
+	);
+
+	return $erasers;
+}
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_customer_id_removal', 9999, 1 );
+
+/**
+ * Delete the customer ID for this email address that was found in edd_privacy_prefetch_customer_id()
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
+	delete_option( 'edd_priv_' . md5( $email_address ) );
+
+	return array(
+		'items_removed'  => false,
+		'items_retained' => false,
+		'messages'       => array(),
+		'done'           => true,
+	);
+}
+
+/**
+ * Register eraser for EDD Data
+ *
+ * @param array $erasers
+ *
+ * @return array
+ */
+function edd_register_privacy_erasers( $erasers = array() ) {
+
+	// The order of these matter, customer needs to be anonymized prior to the customer, so that the payment can adopt
+	// properties of the customer like email.
+
+	$erasers[] = array(
+		'eraser_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_customer_eraser',
+	);
+
+	$erasers[] = array(
+		'eraser_friendly_name' => __( 'Payment Record', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_payment_eraser',
+	);
+
+	return $erasers;
+
+}
+add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 11, 1 );
+
+/**
+ * Anonymize a customer record through the WP Core Privacy Data Eraser methods.
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
+
+	$anonymized = _edd_anonymize_customer( $customer->id );
+	if ( empty( $anonymized['success'] ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array( $anonymized['message'] ),
+			'done'           => true,
+		);
+	}
+
+	return array(
+		'items_removed'  => true,
+		'items_retained' => false,
+		'messages'       => array( sprintf( __( 'Customer for %s has been anonymized.', 'easy-digital-downloads' ), $email_address ) ),
+		'done'           => true,
+	);
+}
+
+/**
+ * Anonymize a payment record through the WP Core Privacy Data Eraser methods.
+ *
+ * @param     $email_address
+ * @param int $page
+ *
+ * @return array
+ */
+function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
+
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'page'     => $page,
+	) );
+
+	if ( empty( $payments ) ) {
+
+		$message = 1 === $page ?
+			sprintf( __( 'No payments found for %s', 'easy-digital-downloads' ), $email_address ) :
+			sprintf( __( 'All eligible payments anonymized or deleted for %s', 'easy-digital-downloads' ), $email_address );
+
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array( $message ),
+			'done'           => true,
+		);
+	}
+
+	$items_removed  = null;
+	$items_retained = null;
+	$messages       = array();
+	foreach ( $payments as $payment ) {
+		$result = _edd_anonymize_payment( $payment->ID );
+
+		if ( ! is_null( $items_removed ) && $result['success'] ) {
+			$items_removed = true;
+		}
+
+		if ( ! is_null( $items_removed ) && ! $result['success'] ) {
+			$items_retained = true;
+		}
+
+		$messages[] = $result['message'];
+	}
+
+
+
+	return array(
+		'items_removed'  => ! is_null( $items_removed ) ? $items_removed : false,
+		'items_retained' => ! is_null( $items_retained ) ? $items_retained : false,
+		'messages'       => $messages,
+		'done'           => false,
 	);
 }
