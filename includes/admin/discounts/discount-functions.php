@@ -45,15 +45,19 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 		'discount_id' => $discount_id,
 	), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ), 'edd_delete_discount_note_' . $note->get_id() );
 
-	// Output
-	$note_html = '<div class="edd-discount-note" id="edd-discount-note-' . esc_attr( $note->get_id() ) . '">';
-		$note_html .='<div><strong class="edd-discount-note-author">' . esc_html( $user ) . '</strong>';
-		$note_html .= '<time datetime="' . esc_attr( $note->get_date_created() ) . '">' . edd_date_i18n( $note->get_date_created(), 'datetime' ) . '</time>';
-		$note_html .= '<p>' . make_clickable( $note->get_content() ) . '</p>';
-		$note_html .= '<a href="' . esc_url( $delete_note_url ) . '#edd-discount-notes" class="edd-delete-discount-note" data-note-id="' . esc_attr( $note->get_id() ) . '" data-discount-id="' . esc_attr( $discount_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		$note_html .= '</div>';
-	$note_html .= '</div>';
+	// Start a buffer
+	ob_start(); ?>
 
-	// Return
-	return $note_html;
+	<div class="edd-discount-note" id="edd-discount-note-<?php echo esc_attr( $note->get_id() ); ?>">
+		<div><strong class="edd-discount-note-author"><?php echo esc_html( $user ); ?></strong>
+		<time datetime="<?php echo esc_attr( $note->get_date_created() ); ?>"><?php echo edd_date_i18n( $note->get_date_created(), 'datetime' ); ?></time>
+		<p><?php echo make_clickable( $note->get_content() ); ?></p>
+		<a href="<?php esc_url( $delete_note_url ); ?>#edd-discount-notes" class="edd-delete-discount-note" data-note-id="<?php echo esc_attr( $note->get_id() ); ?>" data-discount-id="<?php echo esc_attr( $discount_id ); ?>"><?php _e( 'Delete', 'easy-digital-downloads' ); ?></a>
+		</div>
+	</div>
+
+	<?php
+
+	// Return the current buffer
+	return ob_get_clean();
 }
