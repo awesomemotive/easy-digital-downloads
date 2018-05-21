@@ -1041,6 +1041,7 @@ function edd_settings_sanitize( $input = array() ) {
 		if ( true === $doing_section ) {
 			switch ( $type ) {
 				case 'checkbox':
+				case 'checkbox_description':
 				case 'gateways':
 				case 'multicheck':
 				case 'payment_icons':
@@ -1604,12 +1605,13 @@ function edd_payment_icons_callback( $args ) {
 				$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" />';
 
 			} else {
-
 				$card = strtolower( str_replace( ' ', '', $option ) );
 
 				if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-
 					$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+
+				} elseif ( has_filter( 'edd_accepted_payment_' . $key . '_image' ) ) {
+					$image = apply_filters( 'edd_accepted_payment_' . $key . '_image', '' );
 
 				} else {
 					$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
@@ -1639,7 +1641,7 @@ function edd_payment_icons_callback( $args ) {
 }
 
 /**
- * Enforce the payment icon order
+ * Enforce the payment icon order (from the sortable admin area UI)
  *
  * @since 3.0
  *
@@ -1654,6 +1656,7 @@ function edd_order_accepted_payment_icons( $icons = array() ) {
 	// If order is set, enforce it
 	if ( ! empty( $order ) ) {
 		$order = array_flip( explode( ',', $order ) );
+		$order = array_intersect_key( $order, $icons );
 		$icons = array_merge( $order, $icons );
 	}
 

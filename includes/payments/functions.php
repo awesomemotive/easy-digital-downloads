@@ -708,31 +708,44 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 		if( ! $payment->ID > 0 ) {
 			return false;
 		}
-
 	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
 		return false;
 	}
 
+	if ( true === $return_label ) {
+		return edd_get_payment_status_label( $payment->post_status );
+	} else {
+		$statuses = edd_get_payment_statuses();
+
+		// Account that our 'publish' status is labeled 'Complete'
+		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+
+		// Make sure we're matching cases, since they matter
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
+	}
+
+	return ! empty( $status ) ? $status : false;
+}
+
+/**
+ * Given a payment status string, return the label for that string.
+ *
+ * @since 2.9.2
+ * @param string $status
+ *
+ * @return bool|mixed
+ */
+function edd_get_payment_status_label( $status = '' ) {
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
 		return false;
 	}
 
-	$payment = new EDD_Payment( $payment->ID );
-
-	if ( array_key_exists( $payment->status, $statuses ) ) {
-		if ( true === $return_label ) {
-			return $statuses[ $payment->status ];
-		} else {
-			// Account that our 'publish' status is labeled 'Complete'
-			$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
-
-			// Make sure we're matching cases, since they matter
-			return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
-		}
+	if ( array_key_exists( $status, $statuses ) ) {
+		return $statuses[ $status ];
 	}
 
 	return false;
@@ -745,17 +758,15 @@ function edd_get_payment_status( $payment, $return_label = false ) {
  * @return array $payment_status All the available payment statuses
  */
 function edd_get_payment_statuses() {
-	$payment_statuses = array(
-		'pending'   => __( 'Pending', 'easy-digital-downloads' ),
-		'publish'   => __( 'Complete', 'easy-digital-downloads' ),
-		'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
-		'failed'    => __( 'Failed', 'easy-digital-downloads' ),
-		'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),
-		'revoked'   => __( 'Revoked', 'easy-digital-downloads' ),
+	return apply_filters( 'edd_payment_statuses', array(
+		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
+		'publish'    => __( 'Complete',   'easy-digital-downloads' ),
+		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
+		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
+		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' ),
+		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
 		'processing' => __( 'Processing', 'easy-digital-downloads' )
-	);
-
-	return apply_filters( 'edd_payment_statuses', $payment_statuses );
+	) );
 }
 
 /**
@@ -788,7 +799,6 @@ function edd_is_payment_complete( $payment_id = 0 ) {
 		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
 			$ret = true;
 		}
-
 	}
 
 	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
@@ -1590,36 +1600,48 @@ function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
  * @return string Payment note HTML.
  */
 function edd_get_payment_note_html( $note, $payment_id = 0 ) {
+
+	// Get the note
 	if ( is_numeric( $note ) ) {
 		$note = edd_get_note( $note );
 	}
 
-	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
-
-	$user_id = $note->get_user_id();
-
-	if ( ! empty( $user_id ) ) {
-		$user = get_userdata( $note->get_user_id() );
-		$user = $user->display_name;
-	} else {
-		$user = __( 'EDD Bot', 'easy-digital-downloads' );
+	// No note, so bail
+	if ( empty( $note ) ) {
+		return;
 	}
 
+	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
+
+	// User
+	$user_id = $note->get_user_id();
+	$author  = ! empty( $user_id )
+		? get_userdata( $user_id )->display_name
+		: __( 'EDD Bot', 'easy-digital-downloads' );
+
+	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
 		'note_id'    => $note->get_id(),
 		'payment_id' => $payment_id
 	) ), 'edd_delete_payment_note_' . $note->get_id() );
 
-	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->get_id() . '">';
-		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . edd_date_i18n( $note->get_date_created(), 'datetime' ) . '<br/>';
-			$note_html .= make_clickable( $note->get_content() );
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->get_id() ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		$note_html .= '</p>';
-	$note_html .= '</div>';
+	// Start a buffer
+	ob_start(); ?>
 
-	return $note_html;
+	<div class="edd-payment-note" id="edd-payment-note-<?php echo esc_attr( $note->get_id() ); ?>">
+		<div>
+			<strong class="edd-payment-note-author"><?php echo esc_html( $author ); ?></strong>
+			<time datetime="<?php echo esc_attr( $note->get_date_created() ); ?>"><?php echo edd_date_i18n( $note->get_date_created(), 'datetime' ); ?></time>
+			<p><?php echo make_clickable( $note->get_content() ); ?></p>
+			<a href="<?php esc_url( $delete_note_url ); ?>" class="edd-delete-payment-note" data-note-id="<?php echo esc_attr( $note->get_id() ); ?>" data-payment-id="<?php echo esc_attr( $payment_id ); ?>"><?php _e( 'Delete', 'easy-digital-downloads' ); ?></a>
+		</div>
+	</div>
+
+	<?php
+
+	// Return the current buffer
+	return ob_get_clean();
 }
 
 /**

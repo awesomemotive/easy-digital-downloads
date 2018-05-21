@@ -174,6 +174,13 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
+		if ( version_compare( $edd_version, '2.9.2', '<' ) || ! edd_has_upgrade_completed( 'update_file_download_log_data' ) ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the file download logs database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=update_file_download_log_data' ) )
+			);
+		}
+
 		if ( ! edd_has_upgrade_completed( 'migrate_discounts' ) ) {
 			// Check to see if we have discounts in the Database
 			$results       = $wpdb->get_row( "SELECT count(ID) as has_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount' LIMIT 0, 1" );
@@ -1656,7 +1663,7 @@ function edd_logs_migration() {
 			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
 			GROUP BY p.ID
 			LIMIT %d,%d;
 			",
@@ -1841,3 +1848,129 @@ function edd_remove_legacy_logs() {
 	}
 }
 add_action( 'edd_remove_legacy_logs', 'edd_remove_legacy_logs' );
+
+/**
+ * Output the results of the file-download log data update
+ *
+ * @since 2.9.2
+ */
+function edd_upgrade_render_update_file_download_log_data() {
+	$migration_complete = edd_has_upgrade_completed( 'update_file_download_log_data' );
+
+	if ( $migration_complete ) : ?>
+		<div id="edd-sl-migration-complete" class="notice notice-success">
+			<p>
+				<?php _e( '<strong>Migration complete:</strong> You have already completed the update to the file download logs.', 'easy-digital-downloads' ); ?>
+			</p>
+		</div>
+		<?php return; ?>
+	<?php endif; ?>
+
+	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
+		<p>
+			<?php _e( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'easy-digital-downloads' ); ?>
+			<br /><br />
+			<?php _e( 'You may now leave this page.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+
+	<div id="edd-migration-nav-warn" class="notice notice-info">
+		<p>
+			<?php _e( '<strong>Important:</strong> Please leave this screen open and do not navigate away until the process completes.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+
+	<style>
+		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
+	</style>
+	<script>
+		jQuery( function($) {
+			$(document).ready(function () {
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
+
+					if (element.id === 'edd-batch-success') {
+						element = $(element);
+
+						element.parent().prev().find('.edd-migration.allowed').hide();
+						element.parent().prev().find('.edd-migration.unavailable').show();
+						var element_wrapper = element.parents().eq(4);
+						element_wrapper.find('.dashicons.dashicons-yes').show();
+
+						var next_step_wrapper = element_wrapper.next();
+						if (next_step_wrapper.find('.postbox').length) {
+							next_step_wrapper.find('.edd-migration.allowed').show();
+							next_step_wrapper.find('.edd-migration.unavailable').hide();
+
+							if (auto_start_next_step) {
+								next_step_wrapper.find('.edd-export-form').submit();
+							}
+						} else {
+							$('#edd-migration-nav-warn').hide();
+							$('#edd-migration-ready').slideDown();
+						}
+
+					}
+				});
+			});
+		});
+	</script>
+
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php _e( 'Update file download logs', 'easy-digital-downloads' ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside migrate-file-download-logs-control">
+				<p>
+					<?php _e( 'This will update the file download logs to remove some <abbr title="Personally Identifiable Information">PII</abbr> and make file download counts more accurate.', 'easy-digital-downloads' ); ?>
+				</p>
+				<form method="post" id="edd-fix-file-download-logs-form" class="edd-export-form edd-import-export-form">
+			<span class="step-instructions-wrapper">
+
+				<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+				<?php if ( ! $migration_complete ) : ?>
+					<span class="edd-migration allowed">
+						<input type="submit" id="migrate-logs-submit" value="<?php _e( 'Update File Download Logs', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+					</span>
+				<?php else: ?>
+					<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Update File Download Logs', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+					&mdash; <?php _e( 'File download logs have already been updated.', 'easy-digital-downloads' ); ?>
+				<?php endif; ?>
+
+				<input type="hidden" name="edd-export-class" value="EDD_File_Download_Log_Migration" />
+				<span class="spinner"></span>
+
+			</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+
+	<?php
+}
+
+/**
+ * Register the batch file-download log migration
+ *
+ * @since 2.9.2
+ */
+function edd_register_batch_file_download_log_migration() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_file_download_log_migration_batch_processor', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_batch_file_download_log_migration', 10 );
+
+/**
+ * Include the file-download log batch processor
+ *
+ * @since 2.9.2
+ *
+ * @param string $class
+ */
+function edd_include_file_download_log_migration_batch_processor( $class = '' ) {
+	if ( 'EDD_File_Download_Log_Migration' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/classes/class-file-download-log-migration.php';
+	}
+}

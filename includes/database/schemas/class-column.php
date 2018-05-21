@@ -221,6 +221,7 @@ class Column {
 	public $cache_key = false;
 
 	/**
+	 * Array of capabilities to check when interacting with column data.
 	 * Does this column fire a transition action when it's value changes?
 	 *
 	 * @since 3.0
@@ -232,14 +233,23 @@ class Column {
 	/**
 	 * Maybe validate this data before it is written to the database.
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 * @access public
 	 * @var string
 	 */
-	public $validate = false;
+	public $validate = '';
 
 	/**
-	 * Array of possible aliases this column can also be referred to.
+	 * Array of capabilities used to interface with this column.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var array
+	 */
+	public $caps = array();
+
+	/**
+	 * Array of possible aliases this column can be referred to as.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -280,6 +290,8 @@ class Column {
 	 *     @type boolean  $cache_key   Is this column queried independently?
 	 *     @type boolean  $transition  Does this column transition between changes?
 	 *     @type string   $validate    A callback function used to validate on save.
+	 *     @type array    $caps        Array of capabilities to check.
+	 *     @type array    $aliases     Array of possible column name aliases.
 	 * }
 	 */
 	public function __construct( $args = array() ) {
@@ -352,6 +364,9 @@ class Column {
 			// Validation
 			'validate'   => '',
 
+			// Capabilities
+			'caps'       => array(),
+
 			// Backwards Compatibility
 			'aliases'    => array()
 		) );
@@ -403,8 +418,8 @@ class Column {
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
-			'validate'   => array( $this, 'sanitize_validation' ),
-			'aliases'    => array( $this, 'sanitize_aliases' )
+			'caps'       => array( $this, 'sanitize_capabilities' ),
+			'aliases'    => array( $this, 'sanitize_aliases'      )
 		);
 
 		// Default args array
@@ -465,9 +480,25 @@ class Column {
 	}
 
 	/**
-	 * Sanitize aliases array using `sanitize_key()`
+	 * Sanitize capabilities array
 	 *
 	 * @since 3.0
+	 * @param array $caps
+	 * @return array
+	 */
+	private function sanitize_capabilities( $caps = array() ) {
+		return wp_parse_args( $caps, array(
+			'select' => 'exist',
+			'insert' => 'exist',
+			'update' => 'exist',
+			'delete' => 'exist'
+		) );
+	}
+
+	/**
+	 * Sanitize aliases array using `sanitize_key()`
+	 *
+	 * @since 3.0.0
 	 * @param array $aliases
 	 * @return array
 	 */

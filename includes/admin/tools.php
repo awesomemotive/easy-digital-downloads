@@ -1119,14 +1119,14 @@ function edd_tools_debug_log_display() {
         <div class="inside">
             <form id="edd-debug-log" method="post">
                 <p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
-                <textarea readonly="readonly" class="large-text" rows="15"
+                <textarea readonly="readonly" class="edd-tools-textarea" rows="15"
                           name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
-                <p class="submit">
+                <p>
                     <input type="hidden" name="edd_action" value="submit_debug_log"/>
 					<?php
 					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
-					submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
-					submit_button( __( 'Copy Entire Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Clear Log',               'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
 					?>
                 </p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
@@ -1185,15 +1185,29 @@ function edd_tools_sysinfo_display() {
 	}
 
 	?>
-    <form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>"
-          method="post" dir="ltr">
-        <textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea"
-                  name="edd-sysinfo"><?php echo edd_tools_sysinfo_get(); ?></textarea>
-        <p class="submit">
-            <input type="hidden" name="edd-action" value="download_sysinfo"/>
-			<?php submit_button( 'Download System Info File', 'primary', 'edd-download-sysinfo', false ); ?>
-        </p>
-    </form>
+
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'System Information', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p>
+				<?php esc_html_e( 'Use the system information below to help troubleshoot problems.', 'easy-digital-downloads' ); ?>
+			</p>
+
+			<form id="edd-system-info" action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
+				<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" class="edd-tools-textarea" name="edd-sysinfo"
+					><?php echo edd_tools_sysinfo_get(); ?></textarea>
+
+				<p>
+					<input type="hidden" name="edd-action" value="download_sysinfo"/>
+					<?php
+					submit_button( __( 'Download System Info File', 'easy-digital-downloads' ), 'primary', 'edd-download-sysinfo', false );
+					submit_button( __( 'Copy to Clipboard',         'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
+					?>
+				</p>
+			</form>
+		</div>
+	</div>
+
 	<?php
 }
 add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
@@ -1320,6 +1334,26 @@ function edd_tools_sysinfo_get() {
 
 	$return = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
+	// EDD Database tables
+	$return .= "\n" . '-- EDD Database Tables' . "\n\n";
+
+	foreach ( EDD()->components as $component ) {
+
+		// Object
+		$thing = $component->get_interface( 'table' );
+		if ( ! empty( $thing ) ) {
+			$return .= str_pad( $thing->name . ': ', 26, ' ' ) . $thing->get_version() . "\n";
+		}
+
+		// Meta
+		$thing = $component->get_interface( 'meta' );
+		if ( ! empty( $thing ) ) {
+			$return .= str_pad( $thing->name . ': ', 26, ' ' ) . $thing->get_version() . "\n";
+		}
+	}
+
+	$return = apply_filters( 'edd_sysinfo_after_edd_database_tables', $return );
+
 	// EDD pages
 	$purchase_page = edd_get_option( 'purchase_page', '' );
 	$success_page  = edd_get_option( 'success_page', '' );
@@ -1400,7 +1434,7 @@ function edd_tools_sysinfo_get() {
 		$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
 		foreach ( $muplugins as $plugin => $plugin_data ) {
-			$return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
+			$return .= str_pad( $plugin_data['Name'] . ': ', 26, ' ' ) . $plugin_data['Version'] . "\n";
 		}
 
 		$return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
@@ -1418,7 +1452,7 @@ function edd_tools_sysinfo_get() {
 		}
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -1432,7 +1466,7 @@ function edd_tools_sysinfo_get() {
 		}
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -1453,7 +1487,7 @@ function edd_tools_sysinfo_get() {
 
 			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 			$plugin = get_plugin_data( $plugin_path );
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+			$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 		}
 
 		$return = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
