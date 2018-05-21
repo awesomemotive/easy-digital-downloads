@@ -903,7 +903,7 @@ function edd_get_registered_settings() {
 						'id'   => 'privacy_agree_page',
 						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
 						'desc' => __( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'easy-digital-downloads' ),
-						'type'        => 'se 	lect',
+						'type'        => 'select',
 						'options'     => edd_get_pages(),
 						'chosen'      => true,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
