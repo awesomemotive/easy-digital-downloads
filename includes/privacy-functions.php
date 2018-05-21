@@ -369,7 +369,7 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
  */
 function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
 
-	$action = edd_get_option( 'payment_privacy_status_action' . $payment->status, false );
+	$action = edd_get_option( 'payment_privacy_status_action_' . $payment->status, false );
 
 	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
 	if ( empty( $action ) ) {
