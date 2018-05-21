@@ -882,6 +882,11 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 		'callback'             => 'edd_privacy_payment_eraser',
 	);
 
+	$erasers[] = array(
+		'eraser_friendly_name' => __( 'File Download Logs', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_file_download_logs_eraser',
+	);
+
 	return $erasers;
 
 }
@@ -919,8 +924,8 @@ function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
 /**
  * Anonymize a payment record through the WP Core Privacy Data Eraser methods.
  *
- * @param     $email_address
- * @param int $page
+ * @param string $email_address
+ * @param int    $page
  *
  * @return array
  */
@@ -970,6 +975,72 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 		'items_removed'  => ! is_null( $items_removed ) ? $items_removed : false,
 		'items_retained' => ! is_null( $items_retained ) ? $items_retained : false,
 		'messages'       => $messages,
+		'done'           => false,
+	);
+}
+
+/**
+ * Anonymize the file download logs.
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address
+ * @param int    $page
+ *
+ * @return array
+ */
+function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
+	global $edd_logs;
+
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
+
+	$log_query = array(
+		'log_type'               => 'file_download',
+		'posts_per_page'         => 25,
+		'paged'                  => $page,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
+			array(
+				'key'   => '_edd_log_customer_id',
+				'value' => $customer->id,
+			)
+		)
+	);
+
+	$logs = $edd_logs->get_connected_logs( $log_query );
+
+	if ( empty( $logs ) ) {
+
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array( sprintf( __( 'All eligible file download logs anonymized or deleted for %s', 'easy-digital-downloads' ), $email_address ) ),
+			'done'           => true,
+		);
+	}
+
+	foreach ( $logs as $log ) {
+		$current_ip = get_post_meta( $log->ID, '_edd_log_ip', true );
+		update_post_meta( $log->ID, '_edd_log_ip', wp_privacy_anonymize_ip( $current_ip ) );
+
+		/**
+		 * Run further anonymization on a file download log
+		 *
+		 * Developers and extensions can use the $log WP_Post object passed into the edd_anonymize_file_download_log action
+		 * to complete further anonymization.
+		 *
+		 * @since 2.9.2
+		 *
+		 * @param WP_Post $log The WP_Post object for the log
+		 */
+		do_action( 'edd_anonymize_file_download_log', $log );
+	}
+
+	return array(
+		'items_removed'  => true,
+		'items_retained' => false,
+		'messages'       => array(),
 		'done'           => false,
 	);
 }
