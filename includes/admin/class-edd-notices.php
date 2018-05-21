@@ -493,7 +493,7 @@ class EDD_Notices {
 					break;
 				case 'payment-note-deleted' :
 					$this->add_notice( array(
-						'id'      => 'edd-payment-note-deleted',
+						'id'      => 'edd-note-deleted',
 						'message' => __( 'The payment note has been deleted.', 'easy-digital-downloads' )
 					) );
 					break;
