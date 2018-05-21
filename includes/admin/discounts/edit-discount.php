@@ -254,7 +254,7 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
 		                    }
 
 		                    ?>
-							<p class="edd-no-discount-notes"<?php echo $no_notes_display; ?>><?php _e( 'No discount notes.', 'easy-digital-downloads' ); ?></p>
+							<p class="edd-no-discount-notes"<?php echo $no_notes_display; ?>><?php _e( 'No notes for this discount.', 'easy-digital-downloads' ); ?></p>
                         </div>
 
                         <textarea name="edd-discount-note" id="edd-discount-note"></textarea>
