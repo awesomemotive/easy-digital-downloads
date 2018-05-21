@@ -470,7 +470,7 @@ function edd_get_registered_settings() {
 					'default_gateway' => array(
 						'id'      => 'default_gateway',
 						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
-						'desc'    => __( 'This gateway will be loaded automatically with the checkout page.', 'easy-digital-downloads' ),
+						'desc'    => __( 'Select this gateway automatically on the checkout page. (If not set, the first active gateway is used.)', 'easy-digital-downloads' ),
 						'type'    => 'gateway_select',
 						'chosen'  => true,
 						'options' => $gateways,
