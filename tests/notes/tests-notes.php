@@ -1,18 +1,17 @@
 <?php
-namespace EDD\Discounts;
+namespace EDD\Notes;
 
 use EDD\Tests\Ajax_UnitTestCase;
 
 /**
  * Discount Ajax functions to be tested
  */
-require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
-require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-functions.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/notes/note-actions.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/notes/note-functions.php';
 
 /**
  * Class Tests_Notes
  *
- * @group edd_discounts
  * @group edd_notes
  * @group edd_ajax
  */
@@ -31,6 +30,13 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	 * @var \EDD\Notes\Note
 	 */
 	protected static $note;
+
+	/**
+	 * Setup the parent
+	 */
+	public function setUp() {
+		parent::setup();
+	}
 
 	/**
 	 * Set up fixtures once.
@@ -66,10 +72,10 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	 * @covers \edd_ajax_add_discount_note()
 	 */
 	public function test_add_discount_note_with_no_args_should_die() {
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-
+		$_POST['nonce'] = wp_create_nonce( 'edd_note' );
+		$e = false;
 		try {
-			$this->_handleAjax( 'edd_add_discount_note' );
+			$this->_handleAjax( 'edd_add_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
 
 		$this->assertSame( '-1', $e->getMessage() );
@@ -81,15 +87,16 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public function test_add_discount_note_with_incorrect_role_should_die() {
 		$this->_setRole( 'subscriber' );
 
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-		$_POST['discount_id'] = self::$discount->id;
-		$_POST['note'] = 'This is a test note.';
+		$_POST['nonce']       = wp_create_nonce( 'edd_note' );
+		$_POST['object_id']   = self::$discount->id;
+		$_POST['object_type'] = 'discount';
+		$_POST['note']        = 'This is a test note.';
 
 		try {
-			$this->_handleAjax( 'edd_add_discount_note' );
+			$this->_handleAjax( 'edd_add_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
 
-		$this->assertSame( 'You do not have permission to edit this discount.', $e->getMessage() );
+		$this->assertSame( '-1', $e->getMessage() );
 	}
 
 	/**
@@ -98,11 +105,12 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public function test_add_discount_note_with_no_note_should_die() {
 		$this->_setRole( 'shop_manager' );
 
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-		$_POST['discount_id'] = self::$discount->id;
+		$_POST['nonce']       = wp_create_nonce( 'edd_note' );
+		$_POST['object_id']   = self::$discount->id;
+		$_POST['object_type'] = 'discount';
 
 		try {
-			$this->_handleAjax( 'edd_add_discount_note' );
+			$this->_handleAjax( 'edd_add_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
 
 		$this->assertSame( '-1', $e->getMessage() );
@@ -114,27 +122,28 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public function test_add_discount_note_should_return_true() {
 		$this->_setRole( 'shop_manager' );
 
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-		$_POST['discount_id'] = self::$discount->id;
-		$_POST['note'] = 'This is a test note.';
+		$_POST['nonce']       = wp_create_nonce( 'edd_note' );
+		$_POST['object_id']   = self::$discount->id;
+		$_POST['object_type'] = 'discount';
+		$_POST['note']        = 'This is a test note.';
 
 		try {
-			$this->_handleAjax( 'edd_add_discount_note' );
+			$this->_handleAjax( 'edd_add_note' );
 		} catch ( \WPAjaxDieContinueException $e ) {
 			unset( $e );
 		}
 
-		$this->assertContains( 'edd_discount_note_html', $this->_last_response );
+		$this->assertContains( 'edd_note_html', $this->_last_response );
 	}
 
 	/**
 	 * @covers \edd_ajax_delete_discount_note()
 	 */
 	public function test_delete_discount_note_with_no_args_should_die() {
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
+		$_POST['nonce'] = wp_create_nonce( 'edd_note' );
 
 		try {
-			$this->_handleAjax( 'edd_delete_discount_note' );
+			$this->_handleAjax( 'edd_delete_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
 
 		$this->assertSame( '-1', $e->getMessage() );
@@ -146,15 +155,14 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public function test_delete_discount_note_with_incorrect_role_should_die() {
 		$this->_setRole( 'subscriber' );
 
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-		$_POST['discount_id'] = self::$discount->id;
+		$_POST['nonce']   = wp_create_nonce( 'edd_note' );
 		$_POST['note_id'] = 1;
 
 		try {
-			$this->_handleAjax( 'edd_delete_discount_note' );
+			$this->_handleAjax( 'edd_delete_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
 		
-		$this->assertSame( 'You do not have permission to edit this discount.', $e->getMessage() );
+		$this->assertSame( '-1', $e->getMessage() );
 	}
 
 	/**
@@ -163,12 +171,11 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public function test_delete_discount_note_with_invalid_id_should_die() {
 		$this->_setRole( 'shop_manager' );
 
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-		$_POST['discount_id'] = self::$discount->id;
+		$_POST['nonce']   = wp_create_nonce( 'edd_note' );
 		$_POST['note_id'] = 99;
 
 		try {
-			$this->_handleAjax( 'edd_delete_discount_note' );
+			$this->_handleAjax( 'edd_delete_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
 
 		$this->assertSame( '0', $e->getMessage() );
@@ -180,13 +187,12 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public function test_delete_discount_note_should_return_true() {
 		$this->_setRole( 'shop_manager' );
 
-		$_POST['nonce'] = wp_create_nonce( 'edd_discount_note' );
-		$_POST['discount_id'] = self::$discount->id;
-		$_POST['note_id'] = self::$note->id;
+		$_POST['nonce']   = wp_create_nonce( 'edd_note' );
+		$_POST['note_id'] = self::$note->get_id();
 
 		try {
-			$this->_handleAjax( 'edd_delete_discount_note' );
-		} catch ( \WPAjaxDieContinueException $e ) {}
+			$this->_handleAjax( 'edd_delete_note' );
+		} catch ( \WPAjaxDieStopException $e ) {}
 
 		$this->assertSame( '1', $e->getMessage() );
 	}

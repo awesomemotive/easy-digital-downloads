@@ -537,64 +537,25 @@ function edd_customers_view( $customer = '' ) {
  */
 function edd_customer_notes_view( $customer ) {
 
-	$paged          = isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) ? $_GET['paged'] : 1;
-	$paged          = absint( $paged );
-	$note_count     = $customer->get_notes_count();
-	$per_page       = apply_filters( 'edd_customer_notes_per_page', 20 );
-	$total_pages    = ceil( $note_count / $per_page );
-	$customer_notes = $customer->get_notes( $per_page, $paged );
-
-	?>
+	$paged      = ! empty( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	$per_page   = apply_filters( 'edd_customer_notes_per_page', 20 );
+	$notes      = $customer->get_notes( $per_page, $paged );
+	$note_count = $customer->get_notes_count(); ?>
 
     <div id="edd-item-notes-wrapper">
         <div class="edd-item-header-small">
-			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
+			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo esc_html( $customer->name ); ?></span>
         </div>
         <h3><?php _e( 'Notes', 'easy-digital-downloads' ); ?></h3>
 
-		<?php if ( 1 == $paged ) : ?>
-            <div style="display: block; margin-bottom: 35px;">
-                <form id="edd-add-customer-note" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&id=' . $customer->id ); ?>">
-                    <textarea id="customer-note" name="customer_note" class="customer-note-input" rows="10"></textarea>
-                    <br />
-                    <input type="hidden" id="customer-id" name="customer_id" value="<?php echo $customer->id; ?>" />
-                    <input type="hidden" name="edd_action" value="add-customer-note" />
-					<?php wp_nonce_field( 'add-customer-note', 'add_customer_note_nonce', true, true ); ?>
-                    <input id="add-customer-note" class="right button-primary" type="submit" value="Add Note" />
-                </form>
-            </div>
-		<?php endif; ?>
-
-		<?php
-		$pagination_args = array(
-			'base'     => '%_%',
-			'format'   => '?paged=%#%',
-			'total'    => $total_pages,
-			'current'  => $paged,
-			'show_all' => true
-		);
-
-		echo paginate_links( $pagination_args );
-		?>
+		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
 
         <div id="edd-customer-notes">
-			<?php if ( count( $customer_notes ) > 0 ) : ?>
-				<?php foreach( $customer_notes as $key => $note ) : ?>
-                    <div class="customer-note-wrapper dashboard-comment-wrap comment-item">
-					<span class="note-content-wrap">
-						<?php echo stripslashes( $note ); ?>
-					</span>
-                    </div>
-				<?php endforeach; ?>
-			<?php else: ?>
-                <div class="edd-no-customer-notes">
-					<?php _e( 'No Customer Notes', 'easy-digital-downloads' ); ?>
-                </div>
-			<?php endif; ?>
+			<?php echo edd_admin_get_notes_html( $notes ); ?>
+			<?php echo edd_admin_get_new_note_form( $customer->id, 'customer' ); ?>
         </div>
 
-		<?php echo paginate_links( $pagination_args ); ?>
-
+		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
     </div>
 
 	<?php
