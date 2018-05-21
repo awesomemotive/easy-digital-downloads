@@ -33,6 +33,8 @@ function edd_get_discount_note_html( $note = 0, $discount_id = 0 ) {
 		return;
 	}
 
+	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
+
 	// User
 	$user_id = $note->get_user_id();
 	$author  = ! empty( $user_id )
