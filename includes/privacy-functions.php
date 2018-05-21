@@ -455,6 +455,12 @@ function edd_register_privacy_exporters( $exporters ) {
 		'callback'               => 'edd_privacy_billing_information_exporter',
 	);
 
+
+	$exporters[] = array(
+		'exporter_friendly_name' => __( 'File Downloads', 'easy-digital-downloads' ),
+		'callback'               => 'edd_privacy_file_download_log_exporter',
+	);
+
 	return $exporters;
 
 }
@@ -684,6 +690,98 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 		'done' => false,
 	);
 
+}
+
+/**
+ * Adds the file download logs for a customer to the WP Core Privacy Data exporter
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address The email address to look up file download logs for.
+ * @param int    $page          The page of logs to request.
+ *
+ * @return array
+ */
+function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 ) {
+	global $edd_logs;
+
+	$customer = new EDD_Customer( $email_address );
+	$log_query = array(
+		'log_type'               => 'file_download',
+		'posts_per_page'         => 100,
+		'paged'                  => $page,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
+			array(
+				'key'   => '_edd_log_customer_id',
+				'value' => $customer->id,
+			)
+		)
+	);
+
+	$logs = $edd_logs->get_connected_logs( $log_query );
+
+	// If we haven't found any payments for this page, just return that we're done.
+	if ( empty( $logs ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
+	$found_downloads = array();
+
+	$export_items = array();
+	foreach ( $logs as $log ) {
+
+		$log_meta = get_post_meta( $log->ID );
+
+		if ( ! isset( $found_downloads[ $log->post_parent ] ) ) {
+			$found_downloads[ $log->post_parent ] = new EDD_Download( $log->post_parent );
+		}
+
+		$download = $found_downloads[ $log->post_parent ];
+
+		$data_points = array(
+			array(
+				'name' => __( 'Date of Download', 'easy-digital-downloads' ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $log->post_date ) ),
+			),
+			array(
+				'name' => __( 'Product Downloaded', 'easy-digital-downloads' ),
+				'value' =>  $download->get_name(),
+			),
+			array(
+				'name' => __( 'Order ID', 'easy-digital-downloads' ),
+				'value' => $log_meta['_edd_log_payment_id'][0],
+			),
+			array(
+				'name' => __( 'Customer ID', 'easy-digital-downloads' ),
+				'value' => $log_meta['_edd_log_customer_id'][0],
+			),
+			array(
+				'name'  => __( 'User ID', 'easy-digital-downloads' ),
+				'value' => $log_meta['_edd_log_user_id'][0],
+			),
+			array(
+				'name'  => __( 'IP Address', 'easy-digital-downloads' ),
+				'value' => $log_meta['_edd_log_ip'][0],
+			),
+		);
+
+		$export_items[] = array(
+			'group_id'    => 'edd-file-download-logs',
+			'group_label' => __( 'File Download Logs', 'easy-digital-downloads' ),
+			'item_id'     => "edd-file-download-logs-{$log->ID}",
+			'data'        => $data_points,
+		);
+
+	}
+
+
+	// Add the data to the list, and tell the exporter to come back for the next page of payments.
+	return array(
+		'data' => $export_items,
+		'done' => false,
+	);
 }
 
 /** Anonymization Functions */
