@@ -461,6 +461,11 @@ function edd_register_privacy_exporters( $exporters ) {
 		'callback'               => 'edd_privacy_file_download_log_exporter',
 	);
 
+	$exporters[] = array(
+		'exporter_friendly_name' => __( 'API Access Logs', 'easy-digital-downloads' ),
+		'callback'               => 'edd_privacy_api_access_log_exporter',
+	);
+
 	return $exporters;
 
 }
@@ -478,52 +483,53 @@ add_filter( 'wp_privacy_personal_data_exporters', 'edd_register_privacy_exporter
 function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) {
 
 	$customer    = new EDD_Customer( $email_address );
-	$export_data = array();
 
-	if ( ! empty( $customer->id ) ) {
-		$export_data = array(
-			'group_id'    => 'edd-customer-record',
-			'group_label' => __( 'Customer Record', 'easy-digital-downloads' ),
-			'item_id'     => "edd-customer-record-{$customer->id}",
-			'data'        => array(
-				array(
-					'name'  => __( 'Customer ID', 'easy-digital-downloads' ),
-					'value' => $customer->id
-				),
-				array(
-					'name'  => __( 'Primary Email', 'easy-digital-downloads' ),
-					'value' => $customer->email
-				),
-				array(
-					'name'  => __( 'Name', 'easy-digital-downloads' ),
-					'value' => $customer->name
-				),
-				array(
-					'name'  => __( 'Date Created', 'easy-digital-downloads' ),
-					'value' => $customer->date_created
-				),
-				array(
-					'name'  => __( 'All Email Addresses', 'easy-digital-downloads' ),
-					'value' => implode( ', ', $customer->emails )
-				),
-			)
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
+	$export_data = array(
+		'group_id'    => 'edd-customer-record',
+		'group_label' => __( 'Customer Record', 'easy-digital-downloads' ),
+		'item_id'     => "edd-customer-record-{$customer->id}",
+		'data'        => array(
+			array(
+				'name'  => __( 'Customer ID', 'easy-digital-downloads' ),
+				'value' => $customer->id
+			),
+			array(
+				'name'  => __( 'Primary Email', 'easy-digital-downloads' ),
+				'value' => $customer->email
+			),
+			array(
+				'name'  => __( 'Name', 'easy-digital-downloads' ),
+				'value' => $customer->name
+			),
+			array(
+				'name'  => __( 'Date Created', 'easy-digital-downloads' ),
+				'value' => $customer->date_created
+			),
+			array(
+				'name'  => __( 'All Email Addresses', 'easy-digital-downloads' ),
+				'value' => implode( ', ', $customer->emails )
+			),
+		)
+	);
+
+	$agree_to_terms_time = $customer->get_meta( 'agree_to_terms_time' );
+	if ( ! empty( $agree_to_terms_time ) ) {
+		$export_data['data'][] = array(
+			'name' => __( 'Agreed to Terms' ),
+			'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_terms_time' ) ) )
 		);
+	}
 
-		$agree_to_terms_time = $customer->get_meta( 'agree_to_terms_time' );
-		if ( ! empty( $agree_to_terms_time ) ) {
-			$export_data['data'][] = array(
-				'name' => __( 'Agreed to Terms' ),
-				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_terms_time' ) ) )
-			);
-		}
-
-		$agree_to_privacy_time = $customer->get_meta( 'agree_to_privacy_time' );
-		if ( ! empty( $agree_to_privacy_time ) ) {
-			$export_data['data'][] = array(
-				'name' => __( 'Agreed to Privacy Policy' ),
-				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_privacy_time' ) ) )
-			);
-		}
+	$agree_to_privacy_time = $customer->get_meta( 'agree_to_privacy_time' );
+	if ( ! empty( $agree_to_privacy_time ) ) {
+		$export_data['data'][] = array(
+			'name' => __( 'Agreed to Privacy Policy' ),
+			'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_privacy_time' ) ) )
+		);
 	}
 
 	return array( 'data' => array( $export_data ), 'done' => true );
@@ -784,6 +790,78 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 	);
 }
 
+/**
+ * Adds the api access logs for a user to the WP Core Privacy Data exporter
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address The email address to look up api access logs for.
+ * @param int    $page          The page of logs to request.
+ *
+ * @return array
+ */
+function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
+	global $edd_logs;
+
+	$user = get_user_by_email( $email_address );
+	$log_query = array(
+		'log_type'               => 'api_access',
+		'posts_per_page'         => 100,
+		'paged'                  => $page,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
+			array(
+				'key'   => '_edd_log_user',
+				'value' => $user->ID,
+			)
+		)
+	);
+
+	$logs = $edd_logs->get_connected_logs( $log_query );
+
+	// If we haven't found any api access logs for this page, just return that we're done.
+	if ( empty( $logs ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
+	$export_items = array();
+	foreach ( $logs as $log ) {
+
+		$ip_address = get_post_meta( $log->ID, '_edd_log_request_ip', true );
+
+		$data_points = array(
+			array(
+				'name' => __( 'Date', 'easy-digital-downloads' ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $log->post_date ) ),
+			),
+			array(
+				'name'  => __( 'Request', 'easy-digital-downloads' ),
+				'value' => $log->post_excerpt,
+			),
+			array(
+				'name'  => __( 'IP Address', 'easy-digital-downloads' ),
+				'value' => $ip_address,
+			),
+		);
+
+		$export_items[] = array(
+			'group_id'    => 'edd-api-access-logs',
+			'group_label' => __( 'API Access Logs', 'easy-digital-downloads' ),
+			'item_id'     => "edd-api-access-logs-{$log->ID}",
+			'data'        => $data_points,
+		);
+
+	}
+
+
+	// Add the data to the list, and tell the exporter to come back for the next page of payments.
+	return array(
+		'data' => $export_items,
+		'done' => false,
+	);
+}
+
 /** Anonymization Functions */
 
 /**
@@ -885,6 +963,11 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 	$erasers[] = array(
 		'eraser_friendly_name' => __( 'File Download Logs', 'easy-digital-downloads' ),
 		'callback'             => 'edd_privacy_file_download_logs_eraser',
+	);
+
+	$erasers[] = array(
+		'eraser_friendly_name' => __( 'API Access Logs', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_api_access_logs_eraser',
 	);
 
 	return $erasers;
@@ -1035,6 +1118,79 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 		 * @param WP_Post $log The WP_Post object for the log
 		 */
 		do_action( 'edd_anonymize_file_download_log', $log );
+	}
+
+	return array(
+		'items_removed'  => true,
+		'items_retained' => false,
+		'messages'       => array(),
+		'done'           => false,
+	);
+}
+
+/**
+ * Delete API Access Logs
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address
+ * @param int    $page
+ *
+ * @return array
+ */
+function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
+	global $edd_logs;
+
+	$user = get_user_by_email( $email_address );
+
+	if ( false === $user ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array( sprintf( __( 'No User found for %s, no access logs to remove', 'easy-digital-downloads' ), $email_address ) ),
+			'done'           => true,
+		);
+	}
+
+	$log_query = array(
+		'log_type'               => 'api_access',
+		'posts_per_page'         => 25,
+		'paged'                  => $page,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
+			array(
+				'key'   => '_edd_log_user',
+				'value' => $user->ID,
+			)
+		)
+	);
+
+	$logs = $edd_logs->get_connected_logs( $log_query );
+
+	if ( empty( $logs ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array( sprintf( __( 'All API access logs deleted for %s', 'easy-digital-downloads' ), $email_address ) ),
+			'done'           => true,
+		);
+	}
+
+	foreach ( $logs as $log ) {
+		wp_delete_post( $log->ID );
+
+		/**
+		 * Run further actions on an api access log
+		 *
+		 * Developers and extensions can use the $log WP_Post object passed into the edd_delete_api_access_log action
+		 * to complete further actions.
+		 *
+		 * @since 2.9.2
+		 *
+		 * @param WP_Post $log The WP_Post object for the log
+		 */
+		do_action( 'edd_delete_api_access_log', $log );
 	}
 
 	return array(
