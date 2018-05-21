@@ -91,6 +91,7 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
 	 * @since 3.0
 	 *
 	 * @param array $gateway_list List of enabled payment gateways
+	 * @return array Array of sorted gateways
 	 */
 	$gateway_list = apply_filters( 'edd_enabled_payment_gateways_before_sort', $gateway_list );
 
@@ -358,8 +359,12 @@ function edd_show_gateways() {
 	$gateways      = edd_get_enabled_payment_gateways();
 	$show_gateways = false;
 
-	if ( count( $gateways ) > 1 && ( edd_get_cart_total() <= 0 ) ) {
+	if ( count( $gateways ) > 1 ) {
 		$show_gateways = true;
+
+		if ( edd_get_cart_total() <= 0 ) {
+			$show_gateways = false;
+		}
 	}
 
 	return apply_filters( 'edd_show_gateways', $show_gateways );
