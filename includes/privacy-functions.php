@@ -196,7 +196,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
 	}
 
-	// Now we should look at payments this customer has associated, and if there are an payments that should not be modified,
+	// Now we should look at payments this customer has associated, and if there are any payments that should not be modified,
 	// do not modify the customer.
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
@@ -826,8 +826,8 @@ function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
 /**
  * Anonymize a payment record through the WP Core Privacy Data Eraser methods.
  *
- * @param     $email_address
- * @param int $page
+ * @param string $email_address
+ * @param int    $page
  *
  * @return array
  */
