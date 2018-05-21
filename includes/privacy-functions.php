@@ -886,8 +886,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
  *
  * @since 2.9.2
  *
- * @param     $email_address
- * @param int $page
+ * @param string $email_address
+ * @param int    $page
  *
  * @return array
  */
