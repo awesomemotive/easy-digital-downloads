@@ -914,14 +914,10 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 
 	if ( empty( $logs ) ) {
 
-		$message = 1 === $page ?
-			sprintf( __( 'No file download logs found for %s', 'easy-digital-downloads' ), $email_address ) :
-			sprintf( __( 'All file download logs anonymized for %s', 'easy-digital-downloads' ), $email_address );
-
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array( $message ),
+			'messages'       => array( sprintf( __( 'All eligible file download logs anonymized or deleted for %s', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);
 	}
