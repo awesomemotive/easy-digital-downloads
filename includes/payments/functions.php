@@ -1600,36 +1600,48 @@ function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
  * @return string Payment note HTML.
  */
 function edd_get_payment_note_html( $note, $payment_id = 0 ) {
+
+	// Get the note
 	if ( is_numeric( $note ) ) {
 		$note = edd_get_note( $note );
 	}
 
-	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
-
-	$user_id = $note->get_user_id();
-
-	if ( ! empty( $user_id ) ) {
-		$user = get_userdata( $note->get_user_id() );
-		$user = $user->display_name;
-	} else {
-		$user = __( 'EDD Bot', 'easy-digital-downloads' );
+	// No note, so bail
+	if ( empty( $note ) ) {
+		return;
 	}
 
+	/** @var $note EDD\Notes\Note For IDE type-hinting purposes. */
+
+	// User
+	$user_id = $note->get_user_id();
+	$author  = ! empty( $user_id )
+		? get_userdata( $user_id )->display_name
+		: __( 'EDD Bot', 'easy-digital-downloads' );
+
+	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
 		'note_id'    => $note->get_id(),
 		'payment_id' => $payment_id
 	) ), 'edd_delete_payment_note_' . $note->get_id() );
 
-	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->get_id() . '">';
-		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . edd_date_i18n( $note->get_date_created(), 'datetime' ) . '<br/>';
-			$note_html .= make_clickable( $note->get_content() );
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->get_id() ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		$note_html .= '</p>';
-	$note_html .= '</div>';
+	// Start a buffer
+	ob_start(); ?>
 
-	return $note_html;
+	<div class="edd-payment-note" id="edd-payment-note-<?php echo esc_attr( $note->get_id() ); ?>">
+		<div>
+			<strong class="edd-payment-note-author"><?php echo esc_html( $author ); ?></strong>
+			<time datetime="<?php echo esc_attr( $note->get_date_created() ); ?>"><?php echo edd_date_i18n( $note->get_date_created(), 'datetime' ); ?></time>
+			<p><?php echo make_clickable( $note->get_content() ); ?></p>
+			<a href="<?php esc_url( $delete_note_url ); ?>" class="edd-delete-payment-note" data-note-id="<?php echo esc_attr( $note->get_id() ); ?>" data-payment-id="<?php echo esc_attr( $payment_id ); ?>"><?php _e( 'Delete', 'easy-digital-downloads' ); ?></a>
+		</div>
+	</div>
+
+	<?php
+
+	// Return the current buffer
+	return ob_get_clean();
 }
 
 /**
