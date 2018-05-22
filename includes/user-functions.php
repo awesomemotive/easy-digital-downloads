@@ -109,17 +109,29 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * @return WP_Post[]|false List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+
+	// Fall back to user ID
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
+	// Bail if no user
 	if ( empty( $user ) ) {
 		return false;
 	}
 
-	$customer = is_numeric( $user )
-		? edd_get_customer( $user )
-		: edd_get_customer_by( 'user_id', $user );
+	// Try to get customer
+	if ( is_numeric( $user ) ) {
+		$customer = edd_get_customer_by( 'user_id', $user );
+	} elseif ( is_email( $user ) ) {
+		$customer = edd_get_customer_by( 'email',   $user );
+	} else {
+		return false;
+	}
+
+	if ( empty( $customer ) ) {
+		return false;
+	}
 
 	$payment_ids = $customer->get_payment_ids();
 
