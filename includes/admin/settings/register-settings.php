@@ -281,10 +281,16 @@ function edd_get_registered_settings() {
 
 	// Only build settings if not already build
 	if ( null === $edd_settings ) {
-		$states       = edd_get_shop_states( edd_get_shop_country() );
-		$pages        = edd_get_pages();
-		$gateways     = edd_get_payment_gateways();
-		$edd_settings = array(
+		$options = array(
+			'none'      => __( 'None',      'easy-digital-downloads' ),
+			'anonymize' => __( 'Anonymize', 'easy-digital-downloads' ),
+			'delete'    => __( 'Delete',    'easy-digital-downloads' )
+		);
+		$payment_statuses = edd_get_payment_statuses();
+		$states           = edd_get_shop_states( edd_get_shop_country() );
+		$pages            = edd_get_pages();
+		$gateways         = edd_get_payment_gateways();
+		$edd_settings     = array(
 
 			// General Settings
 			'general' => apply_filters( 'edd_settings_general', array(
@@ -901,8 +907,8 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms' => array(
-					array(
-					'id' => 'terms_settings',
+					'' => array(
+						'id'            => 'terms_settings',
 						'name'          => '<h3>' . __( 'Terms and Privacy Policy', 'easy-digital-downloads' ) . '</h3>',
 						'desc'          => '',
 						'type'          => 'header',
@@ -955,17 +961,56 @@ function edd_get_registered_settings() {
 						'chosen'      => true,
 						'options'     => $pages,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
+				),
+				'privacy' => array(
+					'' => array(
+						'id'            => 'terms_settings',
+						'name'          => '<h3>' . __( 'Privacy', 'easy-digital-downloads' ) . '</h3>',
+						'desc'          => '',
+						'type'          => 'header',
+						'tooltip_title' => __( 'Payment Status Actions', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' )				
 					)
 				)
-			) )
-		);
+			)
+		) );
+
+		// Add Privacy settings for statuses
+		foreach ( $payment_statuses as $status => $label ) {
+			switch ( $status ) {
+				case 'publish':
+				case 'refunded':
+				case 'revoked':
+					$action = 'anonymize';
+					break;
+
+				case 'failed':
+				case 'abandoned':
+					$action = 'delete';
+					break;
+
+				case 'pending':
+				case 'processing':
+				default:
+					$action = 'none';
+					break;
+			}
+
+			$edd_settings['misc']['privacy'][] = array(
+				'id'      => 'payment_privacy_status_action_' . $status,
+				'name'    => sprintf( _x( '%s Payments', 'payment status labels: Pending Payments', 'easy-digital-downloads' ), $label ),
+				'desc'    => '',
+				'type'    => 'select',
+				'std'     => $action,
+				'options' => $options,
+			);
+		}
 
 		if ( ! edd_shop_supports_buy_now() ) {
-			$edd_settings['misc']['button_text']['buy_now_text'] = array(
-				'disabled'      => true,
-				'tooltip_title' => __( 'Buy Now Disabled', 'easy-digital-downloads' ),
-				'tooltip_desc'  => __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' )
-			);
+			$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
+			$edd_settings['misc']['button_text']['buy_now_text']['tooltip_title'] = __( 'Buy Now Disabled', 'easy-digital-downloads' );
+			$edd_settings['misc']['button_text']['buy_now_text']['tooltip_desc']  = __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
 		}
 	}
 
@@ -1267,11 +1312,12 @@ function edd_sanitize_text_field( $input = '' ) {
 			'class' => array(),
 			'id'    => array(),
 		),
-		'a'      => array(
-			'href'  => array(),
-			'title' => array(),
-			'class' => array(),
-			'id'    => array(),
+		'a' => array(
+			'href'   => array(),
+			'target' => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'id'     => array(),
 		),
 		'strong' => array(),
 		'em'     => array(),
@@ -1390,36 +1436,37 @@ function edd_get_registered_settings_sections() {
 	if ( null === $sections ) {
 		$sections = array(
 			'general'    => apply_filters( 'edd_settings_sections_general', array(
-				'main'     => __( 'General',  'easy-digital-downloads' ),
-				'currency' => __( 'Currency', 'easy-digital-downloads' ),
-				'api'      => __( 'API',      'easy-digital-downloads' ),
+				'main'               => __( 'General',  'easy-digital-downloads' ),
+				'currency'           => __( 'Currency', 'easy-digital-downloads' ),
+				'api'                => __( 'API',      'easy-digital-downloads' )
 			) ),
 			'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
-				'main'   => __( 'General',         'easy-digital-downloads' ),
-				'paypal' => __( 'PayPal Standard', 'easy-digital-downloads' ),
+				'main'               => __( 'General',         'easy-digital-downloads' ),
+				'paypal'             => __( 'PayPal Standard', 'easy-digital-downloads' )
 			) ),
 			'emails'     => apply_filters( 'edd_settings_sections_emails', array(
-				'main'               => __( 'General',                'easy-digital-downloads' ),
-				'purchase_receipts'  => __( 'Purchase Receipts',      'easy-digital-downloads' ),
-				'sale_notifications' => __( 'New Sale Notifications', 'easy-digital-downloads' ),
+				'main'               => __( 'General',            'easy-digital-downloads' ),
+				'purchase_receipts'  => __( 'Purchase Receipts',  'easy-digital-downloads' ),
+				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' )
 			) ),
 			'styles'     => apply_filters( 'edd_settings_sections_styles', array(
-				'main' => __( 'General', 'easy-digital-downloads' ),
+				'main'               => __( 'General', 'easy-digital-downloads' )
 			) ),
 			'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
-				'main' => __( 'General', 'easy-digital-downloads' ),
+				'main'               => __( 'General', 'easy-digital-downloads' ),
 			) ),
 			'extensions' => apply_filters( 'edd_settings_sections_extensions', array(
-				'main' => __( 'Main', 'easy-digital-downloads' ),
+				'main'               => __( 'Main', 'easy-digital-downloads' )
 			) ),
 			'licenses'   => apply_filters( 'edd_settings_sections_licenses', array() ),
 			'misc'       => apply_filters( 'edd_settings_sections_misc', array(
-				'main'           => __( 'General',            'easy-digital-downloads' ),
-				'checkout'       => __( 'Checkout',           'easy-digital-downloads' ),
-				'button_text'    => __( 'Button Text',        'easy-digital-downloads' ),
-				'file_downloads' => __( 'File Downloads',     'easy-digital-downloads' ),
-				'accounting'     => __( 'Accounting',         'easy-digital-downloads' ),
-				'site_terms'     => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+				'main'               => __( 'Miscellaneous',      'easy-digital-downloads' ),
+				'checkout'           => __( 'Checkout',           'easy-digital-downloads' ),
+				'button_text'        => __( 'Button Text',        'easy-digital-downloads' ),
+				'file_downloads'     => __( 'File Downloads',     'easy-digital-downloads' ),
+				'accounting'         => __( 'Accounting',         'easy-digital-downloads' ),
+				'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+				'privacy'            => __( 'Privacy',            'easy-digital-downloads' )
 			) ),
 		);
 	}
