@@ -232,7 +232,6 @@ class EDD_Logging {
 				'payment_id'  => $log_meta['payment_id'],
 				'price_id'    => $log_meta['price_id'],
 				'user_id'     => $log_meta['user_id'],
-				'email'       => $log_meta['user_info']['email'],
 				'ip'          => $log_meta['ip'],
 			);
 		}
@@ -334,10 +333,6 @@ class EDD_Logging {
 
 					unset( $log_meta[ $old_key ] );
 				}
-			}
-
-			if ( isset( $log_meta['user_info']['email'] ) ) {
-				$data['email'] = $log_meta['user_info']['email'];
 			}
 
 			if ( isset( $args['post_parent'] ) ) {
