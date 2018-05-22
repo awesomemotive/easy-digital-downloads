@@ -422,15 +422,16 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.enter_key();
 			this.add_note();
-			this.remove_note();		
+			this.remove_note();
 		},
 
 		enter_key : function() {
 			$(document.body).on('keydown', '#edd-note', function(e) {
 				if (e.keyCode === 13 && ( e.metaKey || e.ctrlKey ) ) {
+					e.preventDefault();
 					$('#edd-add-note').click();
 				}
-			});			
+			});
 		},
 
 		/**
