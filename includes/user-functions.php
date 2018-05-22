@@ -354,7 +354,7 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 /**
- * Counts the total number of files a customer has downloaded
+ * Counts the total number of files a user (or customer if an email address is given) has downloaded
  *
  * @since       1.3
  * @param       mixed $user - ID or email
@@ -364,13 +364,10 @@ function edd_count_file_downloads_of_user( $user ) {
 	global $edd_logs;
 
 	if ( is_email( $user ) ) {
-		$meta_query = array(
-			array(
-				'key'     => '_edd_log_user_info',
-				'value'   => $user,
-				'compare' => 'LIKE'
-			)
-		);
+
+		// If we got an email, look up the customer ID and call the direct query for customer download counts.
+		return edd_count_file_downloads_of_customer( $user );
+
 	} else {
 		$meta_query = array(
 			array(
@@ -379,6 +376,27 @@ function edd_count_file_downloads_of_user( $user ) {
 			)
 		);
 	}
+
+	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+}
+
+/**
+ * Counts the total number of files a customer has downloaded.
+ *
+ * @param string|int $customer_id_or_email The email address or id of the customer.
+ *
+ * @return int The total number of files the customer has downloaded.
+ */
+function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
+	global $edd_logs;
+
+	$customer = new EDD_Customer( $customer_id_or_email );
+	$meta_query = array(
+		array(
+			'key'   => '_edd_log_customer_id',
+			'value' => $customer->id,
+		)
+	);
 
 	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
 }
@@ -1017,6 +1035,23 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
 function edd_show_user_api_key_field( $user ) {
 
 	if ( get_current_user_id() !== $user->ID ) {
+		return;
+	}
+
+	/**
+	 * Show API User Key Fields
+	 *
+	 * Allows showing/hiding the user API Key fields. By default will only try to show on admin pages. The filter
+	 * allows for developers to choose to show it in other places that the WordPress profile editor hooks are used
+	 * like bbPress
+	 *
+	 * @since 2.9.1
+	 *
+	 * @param boolean If EDD should attempt to load the user API fields
+	 * @param WP_User The User object currently being viewed.
+	 */
+	$show_fields = apply_filters( 'edd_show_user_api_key_fields', is_admin(), $user );
+	if ( ! $show_fields ) {
 		return;
 	}
 

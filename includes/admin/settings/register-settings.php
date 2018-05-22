@@ -853,6 +853,14 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms'     => array(
+					array(
+					'id'   => 'terms_settings',
+						'name' => '<h3>' . __( 'Terms and Privacy Policy', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+						'tooltip_title' => __( 'Terms and Privacy Policy Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Depending on legal and regulatory requirements, it may be necessary for your site to show checkboxes for Terms of Agreement and/or Privacy Policy.','easy-digital-downloads' ),
+					),
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
@@ -872,10 +880,86 @@ function edd_get_registered_settings() {
 						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
 						'type' => 'rich_editor',
 					),
+					'show_agree_to_privacy_policy' => array(
+						'id'   => 'show_agree_to_privacy_policy',
+						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to privacy policy on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_label' => array(
+						'id'   => 'privacy_agree_label',
+						'name' => __( 'Agree to Privacy Policy Label', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to privacy policy check box.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'show_privacy_policy_on_checkout' => array(
+						'id'   => 'show_to_privacy_policy_on_checkout',
+						'name' => __( 'Show the privacy policy on checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Display your privacy policy on checkout.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_page' => array(
+						'id'   => 'privacy_agree_page',
+						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
+						'desc' => __( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
+					),
 				),
+				'privacy' => array(),
 			)
 		)
 	);
+
+	$payment_statuses = edd_get_payment_statuses();
+
+	$edd_settings['misc']['privacy'][] = array(
+		'id' => 'payment_privacy_status_action_descriptive_text',
+		'name' => '<h4>' . __( 'Payment Status Actions', 'easy-digital-downloads' ) . '</h4>',
+		'desc' => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' ),
+		'type' => 'descriptive_text',
+	);
+
+	foreach ( $payment_statuses as $status => $label ) {
+
+		switch ( $status ) {
+
+			case 'publish':
+			case 'refunded':
+			case 'revoked':
+				$action = 'anonymize';
+				break;
+
+			case 'failed':
+			case 'abandoned':
+				$action = 'delete';
+				break;
+
+			case 'pending':
+			case 'processing':
+			default:
+				$action = 'none';
+				break;
+
+		}
+
+		$edd_settings['misc']['privacy'][] = array(
+			'id'   => 'payment_privacy_status_action_' . $status,
+			'name' => sprintf( _x( '%s Payments', 'payment status labels: Pending Payments', 'easy-digital-downloads' ), $label ),
+			'desc' => '',
+			'type'        => 'select',
+			'options'     => array(
+				'none'      => __( 'None', 'easy-digital-downloads' ),
+				'anonymize' => __( 'Anonymize', 'easy-digital-downloads' ),
+				'delete'    => __( 'Delete', 'easy-digital-downloads' ),
+			),
+			'std'         => $action,
+		);
+
+	}
 
 	if ( ! edd_shop_supports_buy_now() ) {
 		$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
@@ -963,6 +1047,11 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'text':
+					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) {
+						unset( $output[ $key ] );
+					}
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
@@ -998,7 +1087,6 @@ function edd_settings_sanitize( $input = array() ) {
 function edd_get_registered_settings_types( $filtered_tab = false, $filtered_section = false ) {
 	$settings      = edd_get_registered_settings();
 	$setting_types = array();
-
 	foreach ( $settings as $tab_id => $tab ) {
 
 		if ( false !== $filtered_tab && $filtered_tab !== $tab_id ) {
@@ -1008,7 +1096,7 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 		foreach ( $tab as $section_id => $section_or_setting ) {
 
 			// See if we have a setting registered at the tab level for backwards compatibility
-			if ( is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
+			if ( false !== $filtered_section && is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
 				$setting_types[ $section_or_setting['id'] ] = $section_or_setting['type'];
 				continue;
 			}
@@ -1018,8 +1106,13 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 			}
 
 			foreach ( $section_or_setting as $section => $section_settings ) {
-				$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+
+				if ( ! empty( $section_settings['type'] ) ) {
+					$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+				}
+
 			}
+
 		}
 
 	}
@@ -1159,10 +1252,11 @@ function edd_sanitize_text_field( $input ) {
 			'id'    => array(),
 		),
 		'a' => array(
-			'href' => array(),
-			'title' => array(),
-			'class' => array(),
-			'id'    => array(),
+			'href'   => array(),
+			'target' => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'id'     => array(),
 		),
 		'strong' => array(),
 		'em' => array(),
@@ -1309,6 +1403,7 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+			'privacy'            => __( 'Privacy', 'easy-digital-downloads' ),
 		) ),
 	);
 
