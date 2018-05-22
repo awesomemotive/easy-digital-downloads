@@ -457,7 +457,7 @@ jQuery(document).ready(function ($) {
 
                 if ( postData.note ) {
                     $.ajax({
-                        type: "POST",
+                        type: 'POST',
                         data: postData,
                         url:  ajaxurl,
                         success: function (response) {
@@ -495,7 +495,7 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on('click', '.edd-delete-note', function(e) {
 				e.preventDefault();
 
-				var edd_note       = $('#edd-note'),
+				var edd_notes      = $('.edd-notes'),
 					edd_no_notes   = $('.edd-no-notes'),
 					edd_note_nonce = $('#edd_note_nonce');
 
@@ -512,7 +512,8 @@ jQuery(document).ready(function ($) {
 						url:  ajaxurl,
 						success: function (response) {
 							$('#edd-note-' + postData.note_id ).remove();
-							if ( ! edd_note.length ) {
+
+							if ( edd_notes.length === 1 ) {
 								edd_no_notes.show();
 							}
 							return false;
