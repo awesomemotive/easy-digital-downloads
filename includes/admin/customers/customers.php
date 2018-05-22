@@ -530,10 +530,10 @@ function edd_customer_notes_view( $customer ) {
 		$show_agree_to_privacy = edd_get_option( 'show_agree_to_privacy_policy', false );
 
 		if ( $show_agree_to_terms || $show_agree_to_privacy ) {
-			$agreement_timtestamp = $customer->get_meta( 'agree_to_terms_time' );
-			$privacy_timestamp    = $customer->get_meta( 'agree_to_privacy_time' );
+			$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time', false );
+			$privacy_timestamps   = $customer->get_meta( 'agree_to_privacy_time', false );
 
-			if ( empty( $agreement_timtestamp ) || empty( $privacy_timestamp ) ) {
+			if ( empty( $agreement_timestamps ) || empty( $privacy_timestamps ) ) {
 				$payments = edd_get_payments( array(
 					'output'   => 'payments',
 					'post__in' => explode( ',', $customer->payment_ids ),
@@ -551,6 +551,14 @@ function edd_customer_notes_view( $customer ) {
 					$last_payment_date = strtotime( $payment->date );
 					break;
 				}
+			} else {
+				if ( is_array( $agreement_timestamps ) ) {
+					$agreement_timestamp = array_pop( $agreement_timestamps );
+				}
+
+				if ( is_array( $privacy_timestamps ) ) {
+					$privacy_timestamp = array_pop( $privacy_timestamps );
+				}
 			}
 			?>
 
@@ -558,9 +566,12 @@ function edd_customer_notes_view( $customer ) {
 
 			<?php if ( $show_agree_to_terms ) : ?>
 				<span class="customer-terms-agreement-date info-item">
-					<?php _e( 'Agreed to Terms', 'easy-digital-downloads' ); ?>:
-					<?php if ( ! empty( $agreement_timtestamp ) ) : ?>
-						<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timtestamp ); ?>
+					<?php _e( 'Last Agreed to Terms', 'easy-digital-downloads' ); ?>:
+					<?php if ( ! empty( $agreement_timestamp ) ) : ?>
+						<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timestamp ); ?>
+						<?php if ( ! empty( $agreement_timestamps ) ) : ?>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Previous Agreement Dates', 'easy-digital-downloads' ); ?></strong><br /><?php foreach ( $agreement_timestamps as $timestamp ) { echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ); } ?>"></span>
+						<?php endif; ?>
 					<?php else: ?>
 						<?php
 						if ( empty( $last_payment_date ) ) {
@@ -568,7 +579,7 @@ function edd_customer_notes_view( $customer ) {
 						} else {
 							echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
 							?>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Agreement Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
 							<?php
 						}
 						?>
@@ -578,9 +589,12 @@ function edd_customer_notes_view( $customer ) {
 
 			<?php if ( $show_agree_to_privacy ) : ?>
 				<span class="customer-privacy-policy-date info-item">
-					<?php _e( 'Agreed to Privacy Policy', 'easy-digital-downloads' ); ?>:
+					<?php _e( 'Last Agreed to Privacy Policy', 'easy-digital-downloads' ); ?>:
 					<?php if ( ! empty( $privacy_timestamp ) ) : ?>
 						<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $privacy_timestamp ); ?>
+						<?php if ( ! empty( $privacy_timestamps ) ) : ?>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Previous Agreement Dates', 'easy-digital-downloads' ); ?></strong><br /><?php foreach ( $privacy_timestamps as $timestamp ) { echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ); } ?>"></span>
+						<?php endif; ?>
 					<?php else: ?>
 						<?php
 						if ( empty( $last_payment_date ) ) {

@@ -909,9 +909,57 @@ function edd_get_registered_settings() {
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
 				),
+				'privacy' => array(),
 			)
 		)
 	);
+
+	$payment_statuses = edd_get_payment_statuses();
+
+	$edd_settings['misc']['privacy'][] = array(
+		'id' => 'payment_privacy_status_action_descriptive_text',
+		'name' => '<h4>' . __( 'Payment Status Actions', 'easy-digital-downloads' ) . '</h4>',
+		'desc' => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' ),
+		'type' => 'descriptive_text',
+	);
+
+	foreach ( $payment_statuses as $status => $label ) {
+
+		switch ( $status ) {
+
+			case 'publish':
+			case 'refunded':
+			case 'revoked':
+				$action = 'anonymize';
+				break;
+
+			case 'failed':
+			case 'abandoned':
+				$action = 'delete';
+				break;
+
+			case 'pending':
+			case 'processing':
+			default:
+				$action = 'none';
+				break;
+
+		}
+
+		$edd_settings['misc']['privacy'][] = array(
+			'id'   => 'payment_privacy_status_action_' . $status,
+			'name' => sprintf( _x( '%s Payments', 'payment status labels: Pending Payments', 'easy-digital-downloads' ), $label ),
+			'desc' => '',
+			'type'        => 'select',
+			'options'     => array(
+				'none'      => __( 'None', 'easy-digital-downloads' ),
+				'anonymize' => __( 'Anonymize', 'easy-digital-downloads' ),
+				'delete'    => __( 'Delete', 'easy-digital-downloads' ),
+			),
+			'std'         => $action,
+		);
+
+	}
 
 	if ( ! edd_shop_supports_buy_now() ) {
 		$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
@@ -1204,10 +1252,11 @@ function edd_sanitize_text_field( $input ) {
 			'id'    => array(),
 		),
 		'a' => array(
-			'href' => array(),
-			'title' => array(),
-			'class' => array(),
-			'id'    => array(),
+			'href'   => array(),
+			'target' => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'id'     => array(),
 		),
 		'strong' => array(),
 		'em' => array(),
@@ -1354,6 +1403,7 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+			'privacy'            => __( 'Privacy', 'easy-digital-downloads' ),
 		) ),
 	);
 
