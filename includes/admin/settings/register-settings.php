@@ -880,6 +880,12 @@ function edd_get_registered_settings() {
 						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
 						'type' => 'rich_editor',
 					),
+				),
+			)
+		),
+		'privacy' => apply_filters( 'edd_settings_privacy',
+			array(
+				'privacy_policy' => array(
 					'show_agree_to_privacy_policy' => array(
 						'id'   => 'show_agree_to_privacy_policy',
 						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
@@ -900,18 +906,33 @@ function edd_get_registered_settings() {
 						'type' => 'checkbox',
 					),
 				),
-				'privacy' => array(),
+				'export_erase' => array()
 			)
 		)
 	);
 
 	$payment_statuses = edd_get_payment_statuses();
 
-	$edd_settings['misc']['privacy'][] = array(
-		'id' => 'payment_privacy_status_action_descriptive_text',
-		'name' => '<h4>' . __( 'Payment Status Actions', 'easy-digital-downloads' ) . '</h4>',
-		'desc' => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' ),
+	$edd_settings['privacy']['export_erase'][] = array(
+		'id'            => 'payment_privacy_status_action_header',
+		'name'          => '<h3>' . __( 'Payment Status Actions', 'easy-digital-downloads' ) . '</h3>',
+		'type'          => 'descriptive_text',
+		'desc'          => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' ),
+		'tooltip_title' => __( 'What settings should I use?', 'easy-digital-downloads' ),
+		'tooltip_desc'  => __( 'By default, Easy Digital Downloads sets suggested actions based on the Payment Status. These are purely recommendations, and you may need to change them to suit your store\'s needs. If you are unsure, you can safely leave these settings as is.','easy-digital-downloads' ),
+	);
+
+	$edd_settings['privacy']['export_erase'][] = array(
+		'id'   => 'payment_privacy_status_descriptive_text',
+		'name' => '',
 		'type' => 'descriptive_text',
+
+	);
+
+	$select_options = array(
+		'none'      => __( 'No Action', 'easy-digital-downloads' ),
+		'anonymize' => __( 'Anonymize', 'easy-digital-downloads' ),
+		'delete'    => __( 'Delete', 'easy-digital-downloads' ),
 	);
 
 	foreach ( $payment_statuses as $status => $label ) {
@@ -937,17 +958,13 @@ function edd_get_registered_settings() {
 
 		}
 
-		$edd_settings['misc']['privacy'][] = array(
-			'id'   => 'payment_privacy_status_action_' . $status,
-			'name' => sprintf( _x( '%s Payments', 'payment status labels: Pending Payments', 'easy-digital-downloads' ), $label ),
-			'desc' => '',
-			'type'        => 'select',
-			'options'     => array(
-				'none'      => __( 'None', 'easy-digital-downloads' ),
-				'anonymize' => __( 'Anonymize', 'easy-digital-downloads' ),
-				'delete'    => __( 'Delete', 'easy-digital-downloads' ),
-			),
-			'std'         => $action,
+		$edd_settings['privacy']['export_erase'][] = array(
+			'id'      => 'payment_privacy_status_action_' . $status,
+			'name'    => sprintf( _x( '%s Payments', 'payment status labels for the privacy export & erase settings: Pending Payments', 'easy-digital-downloads' ), $label ),
+			'desc'    => '',
+			'type'    => 'select',
+			'options' => $select_options,
+			'std'     => $action,
 		);
 
 	}
@@ -1314,6 +1331,7 @@ function edd_get_settings_tabs() {
 	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
 	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
 	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
+	$tabs['privacy']  = __( 'Privacy', 'easy-digital-downloads' );
 
 	if( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'easy-digital-downloads' );
@@ -1395,6 +1413,10 @@ function edd_get_registered_settings_sections() {
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
 			'privacy'            => __( 'Privacy', 'easy-digital-downloads' ),
+		) ),
+		'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
+			'export_erase'   => __( 'Export & Erase', 'easy-digital-downloads' ),
+			'privacy_policy' => __( 'Privacy Policy', 'easy-digital-downloads' ),
 		) ),
 	);
 
@@ -2443,7 +2465,7 @@ add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
 function edd_add_setting_tooltip( $html, $args ) {
 
 	if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-		$tooltip = '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+		$tooltip = '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong><br />' . $args['tooltip_desc'] . '"></span>';
 		$html .= $tooltip;
 	}
 
