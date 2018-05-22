@@ -947,6 +947,11 @@ function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
  */
 function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
 	$erasers[] = array(
+		'eraser_friendly_name' => __( 'Possibly Delete Customer', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_maybe_delete_customer_eraser',
+	);
+
+	$erasers[] = array(
 		'eraser_friendly_name' => 'post-eraser-customer-id-lookup',
 		'callback'             => 'edd_privacy_remove_customer_id',
 	);
@@ -975,6 +980,75 @@ function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
 }
 
 /**
+ * If after the payment anonymization/erasure methods have been run, and there are no longer payments
+ * for the requested customer, go ahead and delete the customer
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address The email address requesting anonymization/erasure
+ * @param int    $page          The page (not needed for this query)
+ *
+ * @return array
+ */
+function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'page'     => $page,
+	) );
+
+	if ( ! empty( $payments ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(
+				sprintf( __( 'Customer for %s not deleted, due to remaining payments.', 'easy-digital-downloads' ), $email_address ),
+			),
+			'done'           => true,
+		);
+	}
+
+	if ( empty( $payments ) ) {
+		global $wpdb;
+
+		$deleted_customer = EDD()->customers->delete( $customer->id );
+		if ( $deleted_customer ) {
+			$customer_meta_table = EDD()->customer_meta->table_name;
+			$deleted_meta = $wpdb->query( "DELETE FROM {$customer_meta_table} WHERE customer_id = {$customer->id}" );
+
+			return array(
+				'items_removed'  => true,
+				'items_retained' => false,
+				'messages'       => array(
+					sprintf( __( 'Customer for %s successfully deleted.', 'easy-digital-downloads' ), $email_address ),
+				),
+				'done'           => true,
+			);
+		}
+	}
+
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(
+				sprintf( __( 'Customer for %s failed to be deleted.', 'easy-digital-downloads' ), $email_address ),
+			),
+			'done'           => true,
+		);
+}
+
+/**
  * Register eraser for EDD Data
  *
  * @param array $erasers
@@ -988,7 +1062,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 
 	$erasers[] = array(
 		'eraser_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
-		'callback'             => 'edd_privacy_customer_eraser',
+		'callback'             => 'edd_privacy_customer_anonymizer',
 	);
 
 	$erasers[] = array(
@@ -1019,7 +1093,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 
  *
  * @return array
  */
-function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
+function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
 	$anonymized = _edd_anonymize_customer( $customer->id );
