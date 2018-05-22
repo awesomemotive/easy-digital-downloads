@@ -1355,4 +1355,3 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 		'done'           => false,
 	);
 }
->>>>>>> master
