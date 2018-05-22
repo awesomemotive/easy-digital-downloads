@@ -32,7 +32,7 @@ Handling this data also allows us to:
 - Respond to your queries, refund requests, or complaints.
 - Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.
 - Set up and administer your account, provide technical and/or customer support, and to verify your identity.
-' ) ) );
+', 'easy-digital-downloads' ) ) );
 
 	$content .= "\n\n";
 
@@ -319,7 +319,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 */
 	do_action( 'edd_anonymize_customer', $customer );
 
-	$customer->add_note( __( 'Customer anonymized successfully' ) );
+	$customer->add_note( __( 'Customer anonymized successfully', 'easy-digital-downloads' ) );
 	return array( 'success' => true, 'message' => sprintf( __( 'Customer ID %d successfully anonymized.', 'easy-digital-downloads' ), $customer_id ) );
 
 }
