@@ -919,7 +919,7 @@ function edd_get_registered_settings() {
 		'type'          => 'descriptive_text',
 		'desc'          => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' ),
 		'tooltip_title' => __( 'What settings should I use?', 'easy-digital-downloads' ),
-		'tooltip_desc'  => __( 'By default, Easy Digital Downloads sets suggested actions based on the Payment Status. These are purely recommendations, and you may need to change them to suit your store\'s needs.','easy-digital-downloads' ),
+		'tooltip_desc'  => __( 'By default, Easy Digital Downloads sets suggested actions based on the Payment Status. These are purely recommendations, and you may need to change them to suit your store\'s needs. If you are unsure, you can safely leave these settings as is.','easy-digital-downloads' ),
 	);
 
 	$edd_settings['privacy']['export_erase'][] = array(
