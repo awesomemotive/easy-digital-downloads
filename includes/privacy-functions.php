@@ -607,7 +607,7 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 		foreach ( $agree_to_privacy_time as $timestamp ) {
 			$export_data['data'][] = array(
 				'name' => __( 'Agreed to Privacy Policy', 'easy-digital-downloads' ),
-				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ) )
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp )
 			);
 		}
 	}
