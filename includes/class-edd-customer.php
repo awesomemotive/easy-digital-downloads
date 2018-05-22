@@ -674,7 +674,8 @@ class EDD_Customer {
 			'object_id'   => $this->id,
 			'object_type' => 'customer',
 			'number'      => $length,
-			'offset'      => $offset
+			'offset'      => $offset,
+			'order'       => 'asc'
 		) );
 	}
 
@@ -687,8 +688,7 @@ class EDD_Customer {
 	 * @return int The number of notes for the customer
 	 */
 	public function get_notes_count() {
-		return edd_get_notes( array(
-			'count'       => true,
+		return edd_count_notes( array(
 			'object_id'   => $this->id,
 			'object_type' => 'customer'
 		) );
