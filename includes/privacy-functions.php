@@ -804,6 +804,11 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 	global $edd_logs;
 
 	$user = get_user_by_email( $email_address );
+
+	if ( false === $user ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
 	$log_query = array(
 		'log_type'               => 'api_access',
 		'posts_per_page'         => 100,
