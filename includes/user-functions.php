@@ -117,17 +117,18 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 		return false;
 	}
 
-	$by_user_id = is_numeric( $user ) ? true : false;
+	$customer = is_numeric( $user )
+		? edd_get_customer( $user )
+		: edd_get_customer_by( 'user_id', $user );
 
-	$customer = new EDD_Customer( $user, $by_user_id );
+	$payment_ids = $customer->get_payment_ids();
 
-	if ( empty( $customer->payment_ids ) ) {
+	if ( empty( $payment_ids ) ) {
 		return false;
 	}
 
 	// Get all the items purchased
 	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 9999 );
-	$payment_ids    = array_reverse( explode( ',', $customer->payment_ids ) );
 	$payment_args   = array(
 		'output'   => 'payments',
 		'post__in' => $payment_ids,
@@ -294,27 +295,20 @@ function edd_has_purchases( $user_id = null ) {
 function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	if ( is_email( $user ) ) {
-
 		$field = 'email';
-
 	} elseif ( is_numeric( $user ) ) {
-
 		$field = 'user_id';
-
+	} else {
+		return;
 	}
 
 	$stats    = array();
 	$customer = edd_get_customer_by( $field, $user );
 
-	if( $customer ) {
-
-		$customer = new EDD_Customer( $customer->id );
-
+	if ( ! empty( $customer ) ) {
 		$stats['purchases']   = absint( $customer->purchase_count );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
-
 	}
-
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }

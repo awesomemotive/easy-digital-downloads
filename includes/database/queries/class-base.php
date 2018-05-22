@@ -268,7 +268,7 @@ class Base extends \EDD\Database\Base {
 	 *                                           Default 'DESC'.
 	 *     @type string       $search            Search term(s) to retrieve matching items for.
 	 *                                           Default empty.
-	 *     @type array        $search_columns    Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
+	 *     @type array        $search_columns    Array of column names to be searched.
 	 *                                           Default empty array.
 	 *     @type boolean      $update_item_cache Whether to prime the cache for found items.
 	 *                                           Default false.
@@ -1166,8 +1166,6 @@ class Base extends \EDD\Database\Base {
 
 			/**
 			 * Filters the columns to search in a EDD_DB_Query search.
-			 *
-			 * The default columns include 'email' and 'path.
 			 *
 			 * @since 3.0
 			 *
