@@ -40,7 +40,7 @@ class Log_Api_Request extends Base {
 	 * @access public
 	 * @var string
 	 */
-	protected $table_alias = 'n';
+	protected $table_alias = 'la';
 
 	/**
 	 * Name of class used to setup the database schema
