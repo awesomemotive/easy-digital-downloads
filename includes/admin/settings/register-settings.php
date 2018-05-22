@@ -960,7 +960,7 @@ function edd_get_registered_settings() {
 
 		$edd_settings['privacy']['export_erase'][] = array(
 			'id'      => 'payment_privacy_status_action_' . $status,
-			'name'    => sprintf( _x( '%s Payments', 'payment status labels: Pending Payments', 'easy-digital-downloads' ), $label ),
+			'name'    => sprintf( _x( '%s Payments', 'payment status labels for the privacy export & erase settings: Pending Payments', 'easy-digital-downloads' ), $label ),
 			'desc'    => '',
 			'type'    => 'select',
 			'options' => $select_options,
