@@ -533,33 +533,33 @@ function edd_customer_notes_view( $customer ) {
 			$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time', false );
 			$privacy_timestamps   = $customer->get_meta( 'agree_to_privacy_time', false );
 
-			if ( empty( $agreement_timestamps ) || empty( $privacy_timestamps ) ) {
-				$payments = edd_get_payments( array(
-					'output'   => 'payments',
-					'post__in' => explode( ',', $customer->payment_ids ),
-					'orderby'  => 'date',
-				));
+			$payments = edd_get_payments( array(
+				'output'         => 'payments',
+				'post__in'       => explode( ',', $customer->payment_ids ),
+				'orderby'        => 'date',
+				'posts_per_page' => 1
+			));
 
-				$last_payment_date = '';
+			$last_payment_date = '';
 
-				foreach ( $payments as $payment ) {
-					if ( empty( $payment->gateway ) ) {
-						continue;
-					}
-
-					// We should be using `date` here, as that is the date the button was clicked.
-					$last_payment_date = strtotime( $payment->date );
-					break;
-				}
-			} else {
-				if ( is_array( $agreement_timestamps ) ) {
-					$agreement_timestamp = array_pop( $agreement_timestamps );
+			foreach ( $payments as $payment ) {
+				if ( empty( $payment->gateway ) ) {
+					continue;
 				}
 
-				if ( is_array( $privacy_timestamps ) ) {
-					$privacy_timestamp = array_pop( $privacy_timestamps );
-				}
+				// We should be using `date` here, as that is the date the button was clicked.
+				$last_payment_date = strtotime( $payment->date );
+				break;
 			}
+
+			if ( is_array( $agreement_timestamps ) ) {
+				$agreement_timestamp = array_pop( $agreement_timestamps );
+			}
+
+			if ( is_array( $privacy_timestamps ) ) {
+				$privacy_timestamp = array_pop( $privacy_timestamps );
+			}
+
 			?>
 
 			<h3><?php _e( 'Agreements', 'easy-digital-downloads' ); ?></h3>
