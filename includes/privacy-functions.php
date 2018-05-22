@@ -12,6 +12,51 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Register the EDD template for a privacy policy.
+ *
+ * Note, this is just a suggestion and should be customized to meet your businesses needs.
+ *
+ * @since 2.9.2
+ */
+function edd_register_privacy_policy_template() {
+
+	if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+		return;
+	}
+
+	$content = wp_kses_post( apply_filters( 'edd_privacy_policy_content', __( '
+We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.
+Handling this data also allows us to:
+- Send you important account/order/service information.
+- Respond to your queries, refund requests, or complaints.
+- Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.
+- Set up and administer your account, provide technical and/or customer support, and to verify your identity.
+' ) ) );
+
+	$content .= "\n\n";
+
+	$additional_collection = array(
+		__( 'Location and traffic data (including IP address and browser type) if you place an order, or if we need to estimate taxes and shipping costs based on your location.', 'easy-digital-downloads' ),
+		__( 'Product pages visited and content viewed while your session is active.', 'easy-digital-downloads' ),
+		__( 'Your comments and product reviews if you choose to leave them on our website.', 'easy-digital-downloads' ),
+		__( 'Account email/password to allow you to access your account, if you have one.', 'easy-digital-downloads' ),
+		__( 'If you choose to create an account with us, your name, address, and email address, which will be used to populate the checkout for future orders.', 'easy-digital-downloads' ),
+	);
+
+	$additional_collection = apply_filters( 'edd_privacy_policy_additional_collection', $additional_collection );
+
+	$content .= __( 'Additionally we may also collect the following information:', 'easy-digital-downloads' ) . "\n";
+	if ( ! empty( $additional_collection ) ) {
+		foreach ( $additional_collection as $item ) {
+			$content .= '- ' . $item . "\n";
+		}
+	}
+
+	wp_add_privacy_policy_content( 'Easy Digital Downloads', wpautop( $content ) );
+}
+add_action( 'admin_init', 'edd_register_privacy_policy_template' );
+
 /** Helper Functions */
 
 /**
@@ -112,6 +157,37 @@ function edd_pseudo_mask_email( $email_address ) {
 }
 
 /**
+ * Log the privacy and terms timestamp for the last completed purchase for a customer.
+ *
+ * Stores the timestamp of the last time the user clicked the 'complete purchase' button for the Agree to Terms and/or
+ * Privacy Policy checkboxes during the checkout process.
+ *
+ * @since 2.9.2
+ *
+ * @param $payment_id
+ * @param $payment_data
+ *
+ * @return void
+ */
+function edd_log_terms_and_privacy_times( $payment_id, $payment_data ) {
+	$payment  = edd_get_payment( $payment_id );
+	$customer = new EDD_Customer( $payment->customer_id );
+
+	if ( empty( $customer->id ) ) {
+		return;
+	}
+
+	if ( ! empty( $payment_data['agree_to_terms_time'] ) ) {
+		$customer->add_meta( 'agree_to_terms_time', $payment_data['agree_to_terms_time'] );
+	}
+
+	if ( ! empty( $payment_data['agree_to_privacy_time'] ) ) {
+		$customer->add_meta( 'agree_to_privacy_time', $payment_data['agree_to_terms_time'] );
+	}
+}
+add_action( 'edd_insert_payment', 'edd_log_terms_and_privacy_times', 10, 2 );
+
+/*
  * Return an anonymized email address.
  *
  * While WP Core supports anonymizing email addresses with the wp_privacy_anonymize_data function,
@@ -904,6 +980,11 @@ function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
  */
 function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
 	$erasers[] = array(
+		'eraser_friendly_name' => __( 'Possibly Delete Customer', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_maybe_delete_customer_eraser',
+	);
+
+	$erasers[] = array(
 		'eraser_friendly_name' => 'post-eraser-customer-id-lookup',
 		'callback'             => 'edd_privacy_remove_customer_id',
 	);
@@ -932,6 +1013,75 @@ function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
 }
 
 /**
+ * If after the payment anonymization/erasure methods have been run, and there are no longer payments
+ * for the requested customer, go ahead and delete the customer
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address The email address requesting anonymization/erasure
+ * @param int    $page          The page (not needed for this query)
+ *
+ * @return array
+ */
+function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'page'     => $page,
+	) );
+
+	if ( ! empty( $payments ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(
+				sprintf( __( 'Customer for %s not deleted, due to remaining payments.', 'easy-digital-downloads' ), $email_address ),
+			),
+			'done'           => true,
+		);
+	}
+
+	if ( empty( $payments ) ) {
+		global $wpdb;
+
+		$deleted_customer = EDD()->customers->delete( $customer->id );
+		if ( $deleted_customer ) {
+			$customer_meta_table = EDD()->customer_meta->table_name;
+			$deleted_meta = $wpdb->query( "DELETE FROM {$customer_meta_table} WHERE customer_id = {$customer->id}" );
+
+			return array(
+				'items_removed'  => true,
+				'items_retained' => false,
+				'messages'       => array(
+					sprintf( __( 'Customer for %s successfully deleted.', 'easy-digital-downloads' ), $email_address ),
+				),
+				'done'           => true,
+			);
+		}
+	}
+
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(
+				sprintf( __( 'Customer for %s failed to be deleted.', 'easy-digital-downloads' ), $email_address ),
+			),
+			'done'           => true,
+		);
+}
+
+/**
  * Register eraser for EDD Data
  *
  * @since 2.9.2
@@ -947,7 +1097,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 
 	$erasers[] = array(
 		'eraser_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
-		'callback'             => 'edd_privacy_customer_eraser',
+		'callback'             => 'edd_privacy_customer_anonymizer',
 	);
 
 	$erasers[] = array(
@@ -980,7 +1130,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 
  *
  * @return array
  */
-function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
+function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
 	$anonymized = _edd_anonymize_customer( $customer->id );
