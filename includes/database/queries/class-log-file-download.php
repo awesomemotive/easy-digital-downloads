@@ -40,7 +40,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	protected $table_alias = 'n';
+	protected $table_alias = 'lf';
 
 	/**
 	 * Name of class used to setup the database schema
