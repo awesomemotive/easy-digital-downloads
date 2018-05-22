@@ -49,7 +49,7 @@ Handling this data also allows us to:
 	$content .= __( 'Additionally we may also collect the following information:', 'easy-digital-downloads' ) . "\n";
 	if ( ! empty( $additional_collection ) ) {
 		foreach ( $additional_collection as $item ) {
-			$content .= '-' . $item . "\n";
+			$content .= '- ' . $item . "\n";
 		}
 	}
 
