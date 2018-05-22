@@ -466,18 +466,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			$this->__unset( 's' );
 
-		} elseif ( edd_get_option( 'enable_sequential' ) ) {
-
-			$search_meta = array(
-				'key'     => '_edd_payment_number',
-				'value'   => $search,
-				'compare' => 'LIKE'
-			);
-
-			$this->__set( 'meta_query', $search_meta );
-			$this->__unset( 's' );
-
-		} elseif ( is_numeric( $search ) ) {
+		} elseif ( is_numeric( $search ) && ! edd_get_option( 'enable_sequential' ) ) {
 
 			$post = get_post( $search );
 
@@ -496,7 +485,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__set( 'download', $search );
 			$this->__unset( 's' );
 
-		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
+		} elseif ( false !== strpos( $search, 'discount:' ) ) {
 
 			$search = trim( str_replace( 'discount:', '', $search ) );
 			$search = 'discount.*' . $search;
@@ -505,6 +494,17 @@ class EDD_Payments_Query extends EDD_Stats {
 				'key'     => '_edd_payment_meta',
 				'value'   => $search,
 				'compare' => 'REGEXP',
+			);
+
+			$this->__set( 'meta_query', $search_meta );
+			$this->__unset( 's' );
+
+		} elseif ( edd_get_option( 'enable_sequential' ) ) {
+
+			$search_meta = array(
+				'key'     => '_edd_payment_number',
+				'value'   => $search,
+				'compare' => 'LIKE'
 			);
 
 			$this->__set( 'meta_query', $search_meta );
