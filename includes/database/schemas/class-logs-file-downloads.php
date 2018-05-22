@@ -85,16 +85,6 @@ class Logs_File_Downloads extends Base {
 			'default'    => '0'
 		),
 
-		// email (remove during 3.0)
-		array(
-			'name'       => 'email',
-			'type'       => 'varchar',
-			'length'     => '100',
-			'default'    => '',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
 		// ip
 		array(
 			'name'       => 'ip',
