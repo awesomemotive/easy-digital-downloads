@@ -259,14 +259,4 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	public function get_total( $log_query = array() ) {
 		return edd_count_logs( $log_query );
 	}
-
-	/**
-	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
-	 *
-	 * @since 2.5
-	 * @return bool
-	 */
-	public function has_items() {
-		return true;
-	}
 }
