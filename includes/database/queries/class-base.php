@@ -640,7 +640,7 @@ class Base extends \EDD\Database\Base {
 		// Remove all valid columns filters
 		remove_all_filters( 'date_query_valid_columns' );
 
-		// Return the date 
+		// Return the date
 		return $date_query;
 	}
 

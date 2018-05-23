@@ -381,7 +381,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 			if ( ! empty( $start_date ) ) {
 				$retval['date_created_query'][] = array(
 					'column' => 'date_created',
-					'after'  => $start_date
+					'after'  => date( "Y-m-d H:i:s", strtotime( "{$start_date} midnight" ) )
 				);
 			}
 
@@ -389,7 +389,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 			if ( ! empty( $end_date ) ) {
 				$retval['date_created_query'][] = array(
 					'column' => 'date_created',
-					'before' => $end_date
+					'before' => date( "Y-m-d H:i:s", strtotime( "{$end_date} + 1 day" ) )
 				);
 			}
 		}
