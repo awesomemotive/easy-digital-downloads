@@ -241,6 +241,15 @@ class Base extends \EDD\Database\Base {
 	 */
 	protected $last_error = false;
 
+	/**
+	 * This private variable only exists to temporarily hold onto the SQL used
+	 * in a date query. This is necessary to work around WordPress filters.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	private $date_query_sql = '';
+
 	/** Methods ***************************************************************/
 
 	/**
@@ -607,11 +616,32 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $args See WP_Date_Query
+	 * @param array  $args   See WP_Date_Query
+	 * @param string $column Column to run date query on. Default `date_created`
+	 *
 	 * @return \WP_Date_Query
 	 */
-	private function get_date_query( $args = array() ) {
-		return new \WP_Date_Query( $args, '.' );
+	private function get_date_query( $args = array(), $column = 'date_created' ) {
+
+		// Remove all valid columns filters
+		remove_all_filters( 'date_query_valid_columns' );
+
+		// Filter valid date columns for these columns
+		add_filter( 'date_query_valid_columns', function() {
+			return $this->get_columns( array( 'date_query' => true ), 'and', 'name' );
+		} );
+
+		$date_query = new \WP_Date_Query( $args, $column );
+		$table      = $this->get_table_name();
+		$date_query->column = "{$table}.{$column}";
+		$date_query->validate_column( $column );
+		$this->date_query_sql = $date_query->get_sql();
+
+		// Remove all valid columns filters
+		remove_all_filters( 'date_query_valid_columns' );
+
+		// Return the date 
+		return $date_query;
 	}
 
 	/**
@@ -1205,7 +1235,7 @@ class Base extends \EDD\Database\Base {
 		// Maybe perform a date-query
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
 			$this->date_query    = $this->get_date_query( $date_query );
-			$where['date_query'] = preg_replace( $and, '', $this->date_query->get_sql() );
+			$where['date_query'] = preg_replace( $and, '', $this->date_query_sql );
 		}
 
 		// Set where and join clauses

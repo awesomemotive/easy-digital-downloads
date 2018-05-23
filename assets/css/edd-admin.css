@@ -355,6 +355,24 @@ textarea[name="edd-note"] {
 	width: 15%;
 }
 
+/* Filter Bar Styles
+-------------------------------------------------------------- */
+
+#edd-filters .filter-items {
+	padding: 10px;
+}
+#edd-filters p {
+	color: #777;
+}
+#edd-date-filters input {
+	vertical-align: middle;
+	max-width: 100px;
+	padding: 5px;
+}
+#edd-after-core-filters .button-secondary {
+	margin: 2px 0 0 0;
+}
+
 /* Payment History Styles
 -------------------------------------------------------------- */
 .edit-php.post-type-download .wrap .wp-heading-inline,
@@ -376,20 +394,7 @@ textarea[name="edd-note"] {
 #edd-payments-filter ul.subsubsub {
 	margin-bottom: 8px;
 }
-#edd-payment-filters .filter-items {
-	padding: 10px;
-}
-#edd-payment-filters p {
-	color: #777;
-}
-#edd-payment-date-filters input {
-	vertical-align: middle;
-	max-width: 100px;
-	padding: 5px;
-}
-#edd-payment-after-core-filters .button-secondary {
-	margin: 2px 0 0 0;
-}
+
 tr.status-refunded td {
 	background: #cecece;
 	border-top-color: #ccc;
@@ -2243,12 +2248,12 @@ only screen and ( min-resolution: 1.5dppx ) {
 		padding: 0;
 	}
 
-	#edd-payment-filters span {
+	#edd-filters span {
 		display: block;
 		margin: 2px 0;
 	}
 
-	#edd-payment-filters a,
+	#edd-filters a,
 	.download_page_edd-reports .button {
 		text-align: center;
 	}
@@ -2276,9 +2281,9 @@ only screen and ( min-resolution: 1.5dppx ) {
 	#system-info-textarea,
 	#edd-add-discount input[type="text"],
 	#edd-edit-discount input[type="text"],
-	#edd-payment-filters input:not([type='radio']),
-	#edd-payment-filters select,
-	#edd-payment-filters a {
+	#edd-filters input:not([type='radio']),
+	#edd-filters select,
+	#edd-filters a {
 		width: 100%;
 	}
 

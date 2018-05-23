@@ -13,26 +13,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
 /**
  * EDD_File_Downloads_Log_Table Class
  *
  * @since 1.4
  * @since 3.0 Updated to use the custom tables and new query classes.
  */
-class EDD_File_Downloads_Log_Table extends WP_List_Table {
-
-	/**
-	 * Number of items per page
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $per_page = 15;
+class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
 	 * Are we searching for files?
@@ -57,64 +44,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		// Set parent defaults
-		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
-		) );
-
-		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
-	}
-
-	/**
-	 * Show the search field
-	 *
-	 * @since 1.4
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
-	 */
-	public function search_box( $text, $input_id ) {
-
-		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-
-		?>
-
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
-		</p>
-
-		<?php
-	}
-
-	/**
-	 * Gets the name of the primary column.
-	 *
-	 * @since 2.5
-	 * @access protected
-	 *
-	 * @return string Name of the primary column.
-	 */
-	protected function get_primary_column_name() {
-		return 'id';
+		parent::__construct();
 	}
 
 	/**
@@ -169,120 +99,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		);
 
 		return $columns;
-	}
-
-	/**
-	 * Retrieves the customer we are filtering logs by, if any
-	 *
-	 * @since 1.4
-	 * @return mixed int If customer ID, string If Email, false if not present
-	 */
-	public function get_filtered_customer() {
-		$ret = false;
-
-		if ( isset( $_GET['customer'] ) ) {
-			$customer = new EDD_Customer( sanitize_text_field( $_GET['customer'] ) );
-			if ( ! empty( $customer->id ) ) {
-				$ret = $customer->id;
-			}
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * Retrieves the ID of the download we're filtering logs by
-	 *
-	 * @since 1.4
-     *
-	 * @return int Download ID.
-	 */
-	public function get_filtered_download() {
-		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
-	}
-
-	/**
-	 * Retrieves the ID of the payment we're filtering logs by
-	 *
-	 * @since 2.0
-     *
-	 * @return int Payment ID.
-	 */
-	public function get_filtered_payment() {
-		return ! empty( $_GET['payment'] ) ? absint( $_GET['payment'] ) : false;
-	}
-
-	/**
-	 * Retrieves the search query string.
-	 *
-	 * @since 1.4
-     *
-	 * @return String The search string.
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
-	}
-
-	/**
-	 * Gets the meta query for the log query.
-	 *
-	 * This is used to return log entries that match our search query, user query, or download query.
-	 *
-	 * @since 1.4
-     *
-	 * @return array $meta_query
-	 */
-	public function get_meta_query() {
-		return array();
-	}
-
-	/**
-	 * Retrieve the current page number.
-	 *
-	 * @since 1.4
-     *
-	 * @return int Current page number.
-	 */
-	function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
-	/**
-	 * Outputs the log views.
-	 *
-	 * @since 1.4
-	 */
-	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_log_views();
-	}
-
-	/**
-	 * Sets up the downloads filter
-	 *
-	 * @since 1.4
-	 * @return void
-	 */
-	public function downloads_filter() {
-		$downloads = get_posts( array(
-			'post_type'              => 'download',
-			'post_status'            => 'any',
-			'posts_per_page'         => -1,
-			'orderby'                => 'title',
-			'order'                  => 'ASC',
-			'fields'                 => 'ids',
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		) );
-
-		if ( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
-				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
-				}
-			echo '</select>';
-		}
 	}
 
 	/**
@@ -361,23 +177,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @since 1.5
 	 */
-	public function prepare_items() {
-
-		$this->_column_headers = array(
-			$this->get_columns(),
-			array(),
-			$this->get_sortable_columns()
-		);
-
-		$log_query   = $this->get_query_args();
-		$this->items = $this->get_logs( $log_query );
-		$total_items = edd_count_file_download_logs( $log_query );
-
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page ),
-		) );
+	public function get_total( $log_query = array() ) {
+		return edd_count_file_download_logs( $log_query );
 	}
 
 	/**
@@ -432,16 +233,5 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		// Return query arguments
 		return $retval;
-	}
-
-	/**
-	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items.
-	 *
-	 * @since 2.5
-     *
-	 * @return bool Always returns true.
-	 */
-	public function has_items() {
-		return true;
 	}
 }

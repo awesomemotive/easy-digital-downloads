@@ -165,9 +165,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		 */
 		$gateways = apply_filters( 'edd_payments_table_gateways', $gateways ); ?>
 
-		<div class="wp-filter" id="edd-payment-filters">
+		<div class="wp-filter" id="edd-filters">
 			<div class="filter-items">
-				<span id="edd-payment-date-filters">
+				<span id="edd-date-filters">
 					<span>
 						<label for="start-date"><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
 						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>

@@ -20,34 +20,43 @@ defined( 'ABSPATH' ) || exit;
  * @author Daniel J Griffiths
  */
 function edd_tools_page() {
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
-	?>
+	$active_tab = isset( $_GET['tab'] )
+		? sanitize_key( $_GET['tab'] )
+		: 'general'; ?>
+
     <div class="wrap">
         <h2><?php _e( 'Easy Digital Downloads Tools', 'easy-digital-downloads' ); ?></h2>
         <h2 class="nav-tab-wrapper">
 			<?php
+
 			foreach ( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
 				$tab_url = add_query_arg( array(
-					'tab' => $tab_id,
-				) );
+					'post_type' => 'download',
+					'page'      => 'edd-tools',
+					'tab'       => $tab_id
+				), admin_url( 'edit.php' ) );
 
 				$tab_url = remove_query_arg( array(
 					'edd-message',
 				), $tab_url );
 
-				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
-				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
+				$active = ( $active_tab === $tab_id )
+					? ' nav-tab-active'
+					: '';
 
+				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
 			}
 			?>
         </h2>
+
         <div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
 			?>
         </div><!-- .metabox-holder -->
     </div><!-- .wrap -->
+
 	<?php
 }
 
