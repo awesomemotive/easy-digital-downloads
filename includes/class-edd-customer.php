@@ -53,7 +53,7 @@ class EDD_Customer {
 	 *
 	 * @since 2.6
 	 */
-	public $emails;
+	protected $emails;
 
 	/**
 	 * The customer's name
@@ -74,7 +74,7 @@ class EDD_Customer {
 	 *
 	 * @since  2.3
 	 */
-	public $payment_ids;
+	protected $payment_ids;
 
 	/**
 	 * The user ID associated with the customer
@@ -89,13 +89,6 @@ class EDD_Customer {
 	 * @since  2.3
 	 */
 	protected $notes;
-
-	/**
-	 * The raw notes values, for internal use only
-	 *
-	 * @since 2.8
-	 */
-	private $raw_notes = null;
 
 	/**
 	 * Get things going
@@ -142,15 +135,7 @@ class EDD_Customer {
 		}
 
 		foreach ( $customer as $key => $value ) {
-
 			switch ( $key ) {
-
-				case 'notes':
-					if ( ! empty( $value ) ) {
-						$this->$key = $value;
-					}
-					break;
-
 				case 'purchase_value':
 					$this->$key = floatval( $value );
 					break;
@@ -162,12 +147,8 @@ class EDD_Customer {
 				default:
 					$this->$key = $value;
 					break;
-
 			}
 		}
-
-		$this->emails   = (array) edd_get_customer_meta( $this->id, 'additional_email', false );
-		$this->emails[] = $this->email;
 
 		// Customer ID and email are the only things that are necessary, make sure they exist
 		if ( ! empty( $this->id ) && ! empty( $this->email ) ) {
@@ -175,7 +156,32 @@ class EDD_Customer {
 		}
 
 		return false;
+	}
 
+	/**
+	 * Magic getter for deprecated properties
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __get( $key = '' ) {
+		switch ( $key ) {
+			case 'emails' :
+				$emails   = (array) edd_get_customer_meta( $this->id, 'additional_email', false );
+				$emails[] = $this->email;
+				return $emails;
+
+			case 'payment_ids' :
+				$payment_ids = $this->get_payment_ids();
+				$payment_ids = implode( ',', $payment_ids );
+				return $payment_ids;
+			default:
+				return isset( $this->{$key} )
+					? $this->{$key}
+					: edd_get_customer_meta( $this->id, $key );
+		}
 	}
 
 	/**
@@ -202,10 +208,6 @@ class EDD_Customer {
 			return false;
 		}
 
-		if ( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
-			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
-		}
-
 		/**
 		 * Fires before a customer is created
 		 *
@@ -215,8 +217,20 @@ class EDD_Customer {
 
 		$created = false;
 
+		// Add the customer
+		$customer_id = edd_add_customer( $data );
+
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
-		if ( $customer_id = edd_add_customer( $data ) ) {
+		if ( ! empty( $customer_id ) ) {
+
+			// Maybe add payments
+			if ( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
+				$payment_ids = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
+				foreach ( $payment_ids as $payment_id ) {
+					edd_add_customer_meta( $customer_id, 'payment_id', $payment_id );
+				}
+			}
+
 			// We've successfully added/updated the customer, reset the class vars with the new data
 			$customer = edd_get_customer( $customer_id );
 
@@ -235,7 +249,6 @@ class EDD_Customer {
 		do_action( 'edd_customer_post_create', $created, $args );
 
 		return $created;
-
 	}
 
 	/**
@@ -309,7 +322,6 @@ class EDD_Customer {
 		}
 
 		return $ret;
-
 	}
 
 	/**
@@ -400,15 +412,12 @@ class EDD_Customer {
 	 */
 	public function get_payment_ids() {
 
-		$payment_ids = $this->payment_ids;
-
-		if ( ! empty( $payment_ids ) ) {
-			$payment_ids = array_map( 'absint', explode( ',', $payment_ids ) );
-		} else {
-			$payment_ids = array();
+		// Bail if no customer
+		if ( empty( $this->id ) ) {
+			return array();
 		}
 
-		return $payment_ids;
+		return array_map( 'absint', (array) edd_get_customer_meta( $this->id, 'payment_id' ) );
 	}
 
 	/*
@@ -420,16 +429,17 @@ class EDD_Customer {
 	 */
 	public function get_payments( $status = array() ) {
 
-		$payment_ids = $this->get_payment_ids();
-
 		$payments = array();
-		foreach ( $payment_ids as $payment_id ) {
 
-			$payment = new EDD_Payment( $payment_id );
-			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status ) ) || $status == $payment->status ) {
-				$payments[] = new EDD_Payment( $payment_id );
+		$payment_ids = $this->get_payment_ids();
+		if ( ! empty( $payment_ids ) ) {
+			foreach ( $payment_ids as $payment_id ) {
+				$payment = new EDD_Payment( $payment_id );
+
+				if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status, true ) ) || $status === $payment->status ) {
+					$payments[] = $payment;
+				}
 			}
-
 		}
 
 		return $payments;
@@ -445,38 +455,36 @@ class EDD_Customer {
 	 */
 	public function attach_payment( $payment_id = 0, $update_stats = true ) {
 
+		// Bail if no payment ID
 		if ( empty( $payment_id ) ) {
 			return false;
 		}
 
+		// Get payment
 		$payment = new EDD_Payment( $payment_id );
 
-		if ( empty( $this->payment_ids ) ) {
+		// Bail if payment does not exist
+		if ( empty( $payment ) ) {
+			return false;
+		}
 
-			$new_payment_ids = $payment->ID;
+		// Get all previous payment IDs
+		$payments = $this->get_payment_ids();
 
-		} else {
-
-			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
-
-			if ( in_array( $payment->ID, $payment_ids ) ) {
-				$update_stats = false;
-			}
-
-			$payment_ids[] = $payment->ID;
-
-			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
+		// Bail if already attached
+		if ( in_array( $payment_id, $payments, true ) ) {
+			return true;
 		}
 
 		do_action( 'edd_customer_pre_attach_payment', $payment->ID, $this->id, $this );
 
-		$payment_added = $this->update( array( 'payment_ids' => $new_payment_ids ) );
+		$added    = edd_add_customer_meta( $this->id, 'payment_id', $payment_id );
+		$attached = ! empty( $added );
 
-		if ( $payment_added ) {
-			$this->payment_ids = $new_payment_ids;
+		if ( ! empty( $attached ) ) {
 
 			// We added this payment successfully, increment the stats
-			if ( $update_stats ) {
+			if ( ! empty( $update_stats ) ) {
 
 				if ( ! empty( $payment->total ) ) {
 					$this->increase_value( $payment->total );
@@ -486,9 +494,9 @@ class EDD_Customer {
 			}
 		}
 
-		do_action( 'edd_customer_post_attach_payment', $payment_added, $payment->ID, $this->id, $this );
+		do_action( 'edd_customer_post_attach_payment', $attached, $payment->ID, $this->id, $this );
 
-		return $payment_added;
+		return $attached;
 	}
 
 	/**
@@ -501,62 +509,60 @@ class EDD_Customer {
 	 */
 	public function remove_payment( $payment_id = 0, $update_stats = true ) {
 
+		// Bail if no payment ID
 		if ( empty( $payment_id ) ) {
 			return false;
 		}
 
+		// Get payment
 		$payment = new EDD_Payment( $payment_id );
 
+		// Bail if payment does not exist
+		if ( empty( $payment ) ) {
+			return false;
+		}
+
+		// Get all previous payment IDs
+		$payments = $this->get_payment_ids();
+
+		// Bail if already attached
+		if ( ! in_array( $payment_id, $payments, true ) ) {
+			return true;
+		}
+
+		// Don't update stats when published or revoked
 		if ( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
 			$update_stats = false;
 		}
 
-		$new_payment_ids = '';
+		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id, $this );
 
-		if ( ! empty( $this->payment_ids ) ) {
+		$deleted   = edd_delete_customer_meta( $this->id, 'payment_id', $payment_id );
+		$dettached = ! empty( $deleted );
 
-			$payment_ids = array_map( 'absint', explode( ',', $this->payment_ids ) );
+		if ( ! empty( $dettached ) ) {
 
-			$pos = array_search( $payment->ID, $payment_ids );
-			if ( false === $pos ) {
-				return false;
-			}
+			// We added this payment successfully, increment the stats
+			if ( ! empty( $update_stats ) ) {
 
-			unset( $payment_ids[ $pos ] );
-
-			$payment_ids     = array_filter( $payment_ids );
-			$new_payment_ids = implode( ',', array_unique( array_values( $payment_ids ) ) );
-		}
-
-		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id );
-
-		$payment_removed = $this->update( array( 'payment_ids' => $new_payment_ids ) );
-
-		if ( $payment_removed ) {
-
-			$this->payment_ids = $new_payment_ids;
-
-			if ( $update_stats ) {
-				// We removed this payment successfully, decrement the stats
 				if ( ! empty( $payment->total ) ) {
 					$this->decrease_value( $payment->total );
 				}
 
 				$this->decrease_purchase_count();
 			}
-
 		}
 
-		do_action( 'edd_customer_post_remove_payment', $payment_removed, $payment->ID, $this->id, $this );
+		do_action( 'edd_customer_post_remove_payment', $dettached, $payment->ID, $this->id, $this );
 
-		return $payment_removed;
+		return $dettached;
 	}
 
 	/**
 	 * Increase the purchase count of a customer
 	 *
 	 * @since  2.3
-	 * @param  integer $count The number to imcrement by
+	 * @param  integer $count The number to increment by
 	 * @return int            The purchase count
 	 */
 	public function increase_purchase_count( $count = 1 ) {
@@ -662,93 +668,103 @@ class EDD_Customer {
 	/**
 	 * Get the parsed notes for a customer as an array
 	 *
-	 * @since  2.3
-	 * @param  integer $length The number of notes to get
-	 * @param  integer $paged What note to start at
-	 * @return array           The notes requsted
+	 * @since 2.3
+	 * @since 3.0 Use the new Notes component & API
+	 *
+	 * @param integer $length The number of notes to get
+	 * @param integer $paged What note to start at
+	 *
+	 * @return array The notes requested
 	 */
 	public function get_notes( $length = 20, $paged = 1 ) {
 
-		$length = is_numeric( $length ) ? $length : 20;
-		$offset = is_numeric( $paged ) && $paged != 1 ? ( ( absint( $paged ) - 1 ) * $length ) : 0;
+		// Number
+		$length = is_numeric( $length )
+			? absint( $length )
+			: 20;
 
-		$all_notes   = $this->get_raw_notes();
-		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
+		// Offset
+		$offset = is_numeric( $paged ) && ( $paged !== 1 )
+			? ( ( absint( $paged ) - 1 ) * $length )
+			: 0;
 
-		$desired_notes = array_slice( $notes_array, $offset, $length );
-
-		return $desired_notes;
+		// Return the paginated notes for back-compat
+		return edd_get_notes( array(
+			'object_id'   => $this->id,
+			'object_type' => 'customer',
+			'number'      => $length,
+			'offset'      => $offset,
+			'order'       => 'asc'
+		) );
 	}
 
 	/**
 	 * Get the total number of notes we have after parsing
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @since 3.0 Use the new Notes component & API
+	 *
 	 * @return int The number of notes for the customer
 	 */
 	public function get_notes_count() {
-		$all_notes   = $this->get_raw_notes();
-		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
-
-		return count( $notes_array );
+		return edd_count_notes( array(
+			'object_id'   => $this->id,
+			'object_type' => 'customer'
+		) );
 	}
 
 	/**
 	 * Add a note for the customer
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @since 3.0 Use the new Notes component & API
+	 *
 	 * @param string $note The note to add
 	 * @return string|boolean The new note if added successfully, false otherwise
 	 */
 	public function add_note( $note = '' ) {
 
+		// Bail if note content is empty
 		$note = trim( $note );
 		if ( empty( $note ) ) {
 			return false;
 		}
 
-		$notes = $this->get_raw_notes();
+		/**
+		 * Filter the note of a customer before it's added
+		 *
+		 * @since 2.3
+		 * @since 3.0 No longer includes the datetime stamp
+		 *
+		 * @param string $note The content of the note to add
+		 * @return string
+		 */
+		$note = apply_filters( 'edd_customer_add_note_string', $note );
 
-		if ( empty( $notes ) ) {
-			$notes = '';
-		}
+		/**
+		 * Allow actions before a note is added
+		 *
+		 * @since 2.3
+		 */
+		do_action( 'edd_customer_pre_add_note', $note, $this->id, $this );
 
-		$note_string = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
-		$new_note    = apply_filters( 'edd_customer_add_note_string', $note_string );
-		$notes      .= "\n\n" . $new_note;
-
-		do_action( 'edd_customer_pre_add_note', $new_note, $this->id, $this );
-
-		$updated = $this->update( array(
-			'notes' => $notes
+		// Try to add the note
+		edd_add_note( array(
+			'user_id'     => 0, // Authored by System/Bot
+			'object_id'   => $this->id,
+			'object_type' => 'customer',
+			'content'     => wp_kses( stripslashes( $note ), array() ),
 		) );
 
-		if ( $updated ) {
-			$this->raw_notes = $notes;
-			$this->notes     = $this->get_notes();
-		}
-
-		do_action( 'edd_customer_post_add_note', $this->notes, $new_note, $this->id, $this );
+		/**
+		 * Allow actions after a note is added
+		 *
+		 * @since 3.0 Changed to an empty string since notes were moved out
+		 */
+		do_action( 'edd_customer_post_add_note', '', $note, $this->id, $this );
 
 		// Return the formatted note, so we can test, as well as update any displays
-		return $new_note;
-	}
-
-	/**
-	 * Get the notes column for the customer
-	 *
-	 * @since  2.3
-	 * @return string The Notes for the customer, non-parsed
-	 */
-	private function get_raw_notes() {
-
-		if ( ! is_null( $this->raw_notes ) ) {
-			return $this->raw_notes;
-		}
-
-		$this->raw_notes = '';
-
-		return (string) $this->raw_notes;
+		return $note;
 	}
 
 	/**
@@ -774,7 +790,7 @@ class EDD_Customer {
 	 *
 	 * @since   2.6
 	 */
-	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+	public function add_meta( $meta_key = '', $meta_value = '', $unique = false ) {
 		return edd_add_customer_meta( $this->id, $meta_key, $meta_value, $unique );
 	}
 
@@ -788,7 +804,7 @@ class EDD_Customer {
 	 *
 	 * @since   2.6
 	 */
-	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+	public function update_meta( $meta_key = '', $meta_value = '', $prev_value = '' ) {
 		return edd_update_customer_meta( $this->id, $meta_key, $meta_value, $prev_value );
 	}
 
@@ -828,8 +844,6 @@ class EDD_Customer {
 				case '%s':
 					if ( 'email' == $key ) {
 						$data[$key] = sanitize_email( $data[$key] );
-					} elseif ( 'notes' == $key ) {
-						$data[$key] = strip_tags( $data[$key] );
 					} else {
 						$data[$key] = sanitize_text_field( $data[$key] );
 					}
@@ -857,12 +871,9 @@ class EDD_Customer {
 				default:
 					$data[$key] = sanitize_text_field( $data[$key] );
 					break;
-
 			}
-
 		}
 
 		return $data;
 	}
-
 }

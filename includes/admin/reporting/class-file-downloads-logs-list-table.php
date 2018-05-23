@@ -13,26 +13,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
 /**
  * EDD_File_Downloads_Log_Table Class
  *
  * @since 1.4
  * @since 3.0 Updated to use the custom tables and new query classes.
  */
-class EDD_File_Downloads_Log_Table extends WP_List_Table {
-
-	/**
-	 * Number of items per page
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $per_page = 15;
+class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
 	 * Are we searching for files?
@@ -57,64 +44,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		// Set parent defaults
-		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
-		) );
-
-		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
-	}
-
-	/**
-	 * Show the search field
-	 *
-	 * @since 1.4
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
-	 */
-	public function search_box( $text, $input_id ) {
-
-		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-
-		?>
-
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
-		</p>
-
-		<?php
-	}
-
-	/**
-	 * Gets the name of the primary column.
-	 *
-	 * @since 2.5
-	 * @access protected
-	 *
-	 * @return string Name of the primary column.
-	 */
-	protected function get_primary_column_name() {
-		return 'ID';
+		parent::__construct();
 	}
 
 	/**
@@ -128,7 +58,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-	    switch ( $column_name ) {
+		$base_url = remove_query_arg( 'paged' );
+		switch ( $column_name ) {
 			case 'download' :
 				$download      = new EDD_Download( $item[ $column_name ] );
 				$column_value  = $download->get_name();
@@ -137,9 +68,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
 				}
 
-				return '<a href="' . add_query_arg( 'download', $download->ID ) . '" >' . $column_value . '</a>';
+				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
 			case 'customer' :
-				return '<a href="' . add_query_arg( 'user', $item[ 'customer' ]->email ) . '">' . $item['customer']->name . '</a>';
+				return '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>';
 			case 'payment_id' :
 				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
 			case 'ip' :
@@ -158,214 +89,16 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID',     'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
+			'customer'   => __( 'Customer',   'easy-digital-downloads' ),
 			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'file'       => __( 'File', 'easy-digital-downloads' ),
+			'file'       => __( 'File',       'easy-digital-downloads' ),
 			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
-			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'date'       => __( 'Date',       'easy-digital-downloads' ),
 		);
 
 		return $columns;
-	}
-
-	/**
-	 * Retrieves the user we are filtering logs by, if any.
-	 *
-	 * @since 1.4
-     *
-	 * @return int|string int If User ID, string If Email/Login, false if not present.
-	 */
-	public function get_filtered_user() {
-		$ret = false;
-
-		if ( isset( $_GET['user'] ) ) {
-			if ( is_numeric( $_GET['user'] ) ) {
-				$ret = absint( $_GET['user'] );
-			} else {
-				$ret = sanitize_text_field( $_GET['user'] );
-			}
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * Retrieves the ID of the download we're filtering logs by
-	 *
-	 * @since 1.4
-     *
-	 * @return int Download ID.
-	 */
-	public function get_filtered_download() {
-		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
-	}
-
-	/**
-	 * Retrieves the ID of the payment we're filtering logs by
-	 *
-	 * @since 2.0
-     *
-	 * @return int Payment ID.
-	 */
-	public function get_filtered_payment() {
-		return ! empty( $_GET['payment'] ) ? absint( $_GET['payment'] ) : false;
-	}
-
-	/**
-	 * Retrieves the search query string.
-	 *
-	 * @since 1.4
-     *
-	 * @return String The search string.
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
-	}
-
-	/**
-	 * Gets the meta query for the log query.
-	 *
-	 * This is used to return log entries that match our search query, user query, or download query.
-	 *
-	 * @since 1.4
-     *
-	 * @return array $meta_query
-	 */
-	public function get_meta_query() {
-		$user       = $this->get_filtered_user();
-		$payment    = $this->get_filtered_payment();
-		$meta_query = array();
-
-		if ( $user ) {
-			// Show only logs from a specific user
-			if( is_numeric( $user ) ) {
-				$meta_query[] = array(
-					'key'   => '_edd_log_user_id',
-					'value' => $user,
-				);
-			} else {
-				$meta_query[] = array(
-					'key'     => '_edd_log_user_info',
-					'value'   => $user,
-					'compare' => 'LIKE',
-				);
-			}
-		}
-
-		if ( $payment ) {
-			// Show only logs from a specific payment
-			$meta_query[] = array(
-				'key'   => '_edd_log_payment_id',
-				'value' => $payment,
-			);
-		}
-
-		$search = $this->get_search();
-
-		if ( ! empty( $search ) ) {
-			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				// This is an IP address search
-				$key     = '_edd_log_ip';
-				$compare = '=';
-			} else if ( is_email( $search ) ) {
-				// This is an email search. We use this to ensure it works for guest users and logged-in users
-				$key     = '_edd_log_user_info';
-				$compare = 'LIKE';
-			} else {
-				// Look for a user
-				$key = '_edd_log_user_id';
-				$compare = 'LIKE';
-
-				if ( ! is_numeric( $search ) ) {
-					// Searching for user by username
-					$user = get_user_by( 'login', $search );
-
-					if ( $user ) {
-						// Found one, set meta value to user's ID
-						$search = $user->ID;
-					} else {
-						// No user found so let's do a real search query
-						$users = new WP_User_Query( array(
-							'search'         => $search,
-							'search_columns' => array( 'user_url', 'user_nicename' ),
-							'number'         => 1,
-							'fields'         => 'ids',
-						) );
-
-						$found_user = $users->get_results();
-
-						if ( $found_user ) {
-							$search = $found_user[0];
-						} else {
-							// No users were found so let's look for file names instead
-							$this->file_search = true;
-						}
-					}
-				}
-			}
-
-			if ( ! $this->file_search ) {
-				// Meta query only works for non file name search
-				$meta_query[] = array(
-					'key'     => $key,
-					'value'   => $search,
-					'compare' => $compare,
-				);
-			}
-		}
-
-		return $meta_query;
-	}
-
-	/**
-	 * Retrieve the current page number.
-	 *
-	 * @since 1.4
-     *
-	 * @return int Current page number.
-	 */
-	function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
-	/**
-	 * Outputs the log views.
-	 *
-	 * @since 1.4
-	 */
-	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_log_views();
-	}
-
-	/**
-	 * Sets up the downloads filter
-	 *
-	 * @since 1.4
-	 * @return void
-	 */
-	public function downloads_filter() {
-		$downloads = get_posts( array(
-			'post_type'              => 'download',
-			'post_status'            => 'any',
-			'posts_per_page'         => -1,
-			'orderby'                => 'title',
-			'order'                  => 'ASC',
-			'fields'                 => 'ids',
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		) );
-
-		if ( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All', 'easy-digital-downloads' ) . '</option>';
-				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
-				}
-			echo '</select>';
-		}
 	}
 
 	/**
@@ -375,21 +108,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
      *
 	 * @return array $logs_data Array of all the logs.
 	 */
-	function get_logs() {
-		global $wpdb;
-
+	function get_logs( $log_query = array() ) {
 		$logs_data = array();
-		$paged     = $this->get_paged();
-		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : false;
-		$log_query = array(
-			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
-			'meta_query' => $this->get_meta_query(),
-			'number'     => $this->per_page,
-		);
-
-		if ( $download ) {
-			$log_query['download_id'] = $download;
-		}
 
 		$logs = edd_get_file_download_logs( $log_query );
 
@@ -397,11 +117,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			foreach ( $logs as $log ) {
 				/** @var $log EDD\Logs\File_Download_Log */
 
-				$customer_id = edd_get_payment_customer_id( $log->get_payment_id() );
+				$meta        = get_post_custom( $log->get_payment_id() );
+				$customer_id = (int) isset( $meta['_edd_log_customer_id'] )
+					? $meta['_edd_log_customer_id'][0]
+					: edd_get_payment_customer_id( $log->get_payment_id() );
 
 				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
-				    $files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
-				    $this->queried_files[ $log->get_download_id() ] = $files;
+					$files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
+					$this->queried_files[ $log->get_download_id() ] = $files;
 				} else {
 					$files = $this->queried_files[ $log->get_download_id() ];
 				}
@@ -429,9 +152,11 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
 
-				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+				$file_name = isset( $files[ $file_id ]['name'] )
+					? $files[ $file_id ]['name']
+					: null;
 
-				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
+				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
 						'ID'         => $log->get_id(),
 						'download'   => $log->get_download_id(),
@@ -454,36 +179,61 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @since 1.5
 	 */
-	function prepare_items() {
-		$count_args = array();
-		$download   = $this->get_filtered_download();
-		if ( $download ) {
-			$count_args['download_id'] = $download;
-		}
-		$count_args['meta_query'] = $this->get_meta_query();
-
-		$columns               = $this->get_columns();
-		$hidden                = array(); // No hidden columns
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->get_logs();
-		$total_items           = edd_count_file_download_logs( $count_args );
-
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page ),
-		) );
+	public function get_total( $log_query = array() ) {
+		return edd_count_file_download_logs( $log_query );
 	}
 
 	/**
-	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items.
+	 * Return array of query arguments
 	 *
-	 * @since 2.5
-     *
-	 * @return bool Always returns true.
+	 * @since 3.0
+	 *
+	 * @return array
 	 */
-	public function has_items() {
-		return true;
+	private function get_query_args() {
+
+		// Pagination
+		$paged  = $this->get_paged();
+		$offset = ( $paged > 1 )
+			? ( ( $paged - 1 ) * $this->per_page )
+			: 0;
+
+		// Defaults
+		$retval = array(
+			'download_id' => $this->get_filtered_download(),
+			'customer_id' => $this->get_filtered_customer(),
+			'payment_id'  => $this->get_filtered_payment(),
+			'meta_query'  => $this->get_meta_query(),
+			'offset'      => $offset,
+			'number'      => $this->per_page
+		);
+
+		$search = $this->get_search();
+
+		if ( ! empty( $search ) ) {
+			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+				$retval['ip'] = $search;
+
+			} elseif ( is_email( $search ) ) {
+				$customer = new EDD_Customer( $search );
+				if ( ! empty( $customer->id ) ) {
+					$retval['customer_id'] = $customer->id;
+				}
+
+			} elseif ( is_numeric( $search ) ) {
+				$customer = new EDD_Customer( $search );
+
+				if ( ! empty( $customer->id ) ) {
+					$retval['customer_id'] = $customer->id;
+				} else {
+					$this->file_search = true;
+				}
+			} else {
+				$retval['file_id'] = $search;
+			}
+		}
+
+		// Return query arguments
+		return $retval;
 	}
 }

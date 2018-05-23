@@ -3,7 +3,7 @@
  * Customer Reports Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Reports
+ * @subpackage  Reports
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
@@ -150,7 +150,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'date_created' :
-				$value = date_i18n( get_option( 'date_format' ), strtotime( $item['date_created'] ) );
+				$value = edd_date_i18n( $item['date_created'] );
 				break;
 
 			default:

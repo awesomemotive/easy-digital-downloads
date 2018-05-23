@@ -109,25 +109,38 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * @return WP_Post[]|false List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+
+	// Fall back to user ID
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
+	// Bail if no user
 	if ( empty( $user ) ) {
 		return false;
 	}
 
-	$by_user_id = is_numeric( $user ) ? true : false;
+	// Try to get customer
+	if ( is_numeric( $user ) ) {
+		$customer = edd_get_customer_by( 'user_id', $user );
+	} elseif ( is_email( $user ) ) {
+		$customer = edd_get_customer_by( 'email',   $user );
+	} else {
+		return false;
+	}
 
-	$customer = new EDD_Customer( $user, $by_user_id );
+	if ( empty( $customer ) ) {
+		return false;
+	}
 
-	if ( empty( $customer->payment_ids ) ) {
+	$payment_ids = $customer->get_payment_ids();
+
+	if ( empty( $payment_ids ) ) {
 		return false;
 	}
 
 	// Get all the items purchased
 	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 9999 );
-	$payment_ids    = array_reverse( explode( ',', $customer->payment_ids ) );
 	$payment_args   = array(
 		'output'   => 'payments',
 		'post__in' => $payment_ids,
@@ -294,27 +307,20 @@ function edd_has_purchases( $user_id = null ) {
 function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	if ( is_email( $user ) ) {
-
 		$field = 'email';
-
 	} elseif ( is_numeric( $user ) ) {
-
 		$field = 'user_id';
-
+	} else {
+		return;
 	}
 
 	$stats    = array();
 	$customer = edd_get_customer_by( $field, $user );
 
-	if( $customer ) {
-
-		$customer = new EDD_Customer( $customer->id );
-
+	if ( ! empty( $customer ) ) {
 		$stats['purchases']   = absint( $customer->purchase_count );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
-
 	}
-
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -354,7 +360,8 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 /**
- * Counts the total number of files a customer has downloaded
+ * Counts the total number of files a user (or customer if an email address is
+ * given) has downloaded
  *
  * @since       1.3
  * @param       mixed $user - ID or email
@@ -363,14 +370,11 @@ function edd_purchase_total_of_user( $user = null ) {
 function edd_count_file_downloads_of_user( $user ) {
 	global $edd_logs;
 
+	// If we got an email, look up the customer ID and call the direct query
+	// for customer download counts.
 	if ( is_email( $user ) ) {
-		$meta_query = array(
-			array(
-				'key'     => '_edd_log_user_info',
-				'value'   => $user,
-				'compare' => 'LIKE'
-			)
-		);
+		return edd_count_file_downloads_of_customer( $user );
+
 	} else {
 		$meta_query = array(
 			array(
@@ -379,6 +383,27 @@ function edd_count_file_downloads_of_user( $user ) {
 			)
 		);
 	}
+
+	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+}
+
+/**
+ * Counts the total number of files a customer has downloaded.
+ *
+ * @param string|int $customer_id_or_email The email address or id of the customer.
+ *
+ * @return int The total number of files the customer has downloaded.
+ */
+function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
+	global $edd_logs;
+
+	$customer   = new EDD_Customer( $customer_id_or_email );
+	$meta_query = array(
+		array(
+			'key'   => '_edd_log_customer_id',
+			'value' => $customer->id,
+		)
+	);
 
 	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
 }

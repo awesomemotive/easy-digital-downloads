@@ -232,7 +232,6 @@ class EDD_Logging {
 				'payment_id'  => $log_meta['payment_id'],
 				'price_id'    => $log_meta['price_id'],
 				'user_id'     => $log_meta['user_id'],
-				'email'       => $log_meta['user_info']['email'],
 				'ip'          => $log_meta['ip'],
 			);
 		}
@@ -334,10 +333,6 @@ class EDD_Logging {
 
 					unset( $log_meta[ $old_key ] );
 				}
-			}
-
-			if ( isset( $log_meta['user_info']['email'] ) ) {
-				$data['email'] = $log_meta['user_info']['email'];
 			}
 
 			if ( isset( $args['post_parent'] ) ) {
@@ -999,4 +994,35 @@ function edd_debug_log( $message = '' ) {
 	if ( edd_is_debug_mode() ) {
 		$edd_logs->log_to_file( $message );
 	}
+}
+
+/**
+ * Logs an exception to the debug log file.
+ *
+ * @since 3.0
+ *
+ * @param \Exception $exception Exception object.
+ */
+function edd_debug_log_exception( $exception ) {
+
+	$label = get_class( $exception );
+
+	if ( $exception->getCode() ) {
+
+		$message = sprintf( '%1$s: %2$s - %3$s',
+			$label,
+			$exception->getCode(),
+			$exception->getMessage()
+		);
+
+	} else {
+
+		$message = sprintf( '%1$s: %2$s',
+			$label,
+			$exception->getMessage()
+		);
+
+	}
+
+	edd_debug_log( $message );
 }

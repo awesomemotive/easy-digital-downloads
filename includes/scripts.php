@@ -206,6 +206,13 @@ function edd_load_admin_scripts( $hook ) {
 		$admin_deps = array( 'jquery', 'jquery-form' );
 	}
 
+	wp_register_script( 'edd-moment-js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js', array(), '2.20.1' );
+	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $suffix . '.js', array( 'edd-moment-js' ), '2.7.1', false );
+
+	if ( edd_is_admin_page( $hook, 'reports' ) ) {
+		$admin_deps[] = 'edd-chart-js';
+	}
+
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, $version, false );
 
 	wp_enqueue_script( 'edd-admin-scripts' );
@@ -217,7 +224,7 @@ function edd_load_admin_scripts( $hook ) {
 		'use_this_file'               => __( 'Use This File', 'easy-digital-downloads' ),
 		'quick_edit_warning'          => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
 		'delete_payment'              => __( 'Are you sure you wish to delete this payment?', 'easy-digital-downloads' ),
-		'delete_payment_note'         => __( 'Are you sure you wish to delete this note?', 'easy-digital-downloads' ),
+		'delete_note'                 => __( 'Are you sure you wish to delete this note?', 'easy-digital-downloads' ),
 		'delete_tax_rate'             => __( 'Are you sure you wish to delete this tax rate?', 'easy-digital-downloads' ),
 		'revoke_api_key'              => __( 'Are you sure you wish to revoke this API key?', 'easy-digital-downloads' ),
 		'regenerate_api_key'          => __( 'Are you sure you wish to regenerate this API key?', 'easy-digital-downloads' ),
@@ -239,6 +246,7 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_decimals'           => edd_currency_decimal_filter(),
 		'decimal_separator'           => edd_get_option( 'decimal_separator', '.' ),
 		'thousands_separator'         => edd_get_option( 'thousands_separator', ',' ),
+		'date_picker_format'          => edd_get_date_picker_format( 'js' ),
 		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
 		'remove_text'                 => __( 'Remove', 'easy-digital-downloads' ),
 		'type_to_search'              => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -280,7 +288,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_media();
 
 	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
-	wp_enqueue_script( 'jquery-flot' );
+//	wp_enqueue_script( 'jquery-flot' );
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
@@ -296,6 +304,9 @@ function edd_load_admin_scripts( $hook ) {
 
 	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', array(), $version );
 	wp_enqueue_style( 'edd-admin' );
+
+	wp_register_style( 'edd-admin-datepicker', $css_dir . 'edd-admin-datepicker' . $suffix . '.css', array( 'edd-admin' ), $version );
+	wp_enqueue_style( 'edd-admin-datepicker' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 

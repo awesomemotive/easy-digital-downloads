@@ -40,7 +40,7 @@ class Log_File_Download extends Base {
 	 * @access public
 	 * @var string
 	 */
-	protected $table_alias = 'n';
+	protected $table_alias = 'lf';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -105,26 +105,32 @@ class Log_File_Download extends Base {
 	 *     @type int          $id                   An log ID to only return that order. Default empty.
 	 *     @type array        $id__in               Array of log IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of log IDs to exclude. Default empty.
+	 *     @type string       $download_id          A download ID to only return those users. Default empty.
+	 *     @type array        $download_id__in      Array of download IDs to include. Default empty.
+	 *     @type array        $download_id__not_in  Array of download IDs to exclude. Default empty.
+	 *     @type string       $file_id              A file ID to only return those users. Default empty.
+	 *     @type array        $file_id__in          Array of file IDs to include. Default empty.
+	 *     @type array        $file_id__not_in      Array of file IDs to exclude. Default empty.
+	 *     @type string       $payment_id           A payment ID to only return those users. Default empty.
+	 *     @type array        $payment_id__in       Array of payment IDs to include. Default empty.
+	 *     @type array        $payment_id__not_in   Array of payment IDs to exclude. Default empty.
+	 *     @type string       $price_id             A price ID to only return those users. Default empty.
+	 *     @type array        $price_id__in         Array of price IDs to include. Default empty.
+	 *     @type array        $price_id__not_in     Array of price IDs to exclude. Default empty.
 	 *     @type string       $user_id              A user ID to only return those users. Default empty.
 	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
 	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
-	 *     @type string       $api_key              An API key to only return that type. Default empty.
-	 *     @type array        $api_key__in          Array of API keys to include. Default empty.
-	 *     @type array        $api_key__not_in      Array of API keys to exclude. Default empty.
-	 *     @type string       $token                A token to only return that type. Default empty.
-	 *     @type array        $token__in            Array of tokens to include. Default empty.
-	 *     @type array        $token__not_in        Array of tokens to exclude. Default empty.
-	 *     @type string       $version              A version to only return that type. Default empty.
-	 *     @type array        $version__in          Array of versions to include. Default empty.
-	 *     @type array        $version__not_in      Array of versions to exclude. Default empty.
-	 *     @type array        $request              Request to search by. Default empty.
-	 *     @type array        $error                Error to search by. Default empty.
+	 *     @type string       $email                An email to only return that type. Default empty.
+	 *     @type array        $email__in            Array of emails to include. Default empty.
+	 *     @type array        $email__not_in        Array of emails to exclude. Default empty.
 	 *     @type string       $ip                   An IP to only return that type. Default empty.
 	 *     @type array        $ip__in               Array of IPs to include. Default empty.
 	 *     @type array        $ip__not_in           Array of IPs to exclude. Default empty.
-	 *     @type string       $time                 A time to only return that type. Default empty.
-	 *     @type array        $time__in             Array of times to include. Default empty.
-	 *     @type array        $time__not_in         Array of times to exclude. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a count (true) or array of objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of IDs)

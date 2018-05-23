@@ -37,7 +37,7 @@ final class Logs extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201802280001;
+	protected $version = 201805220001;
 
 	/**
 	 * Setup the database schema
@@ -50,14 +50,14 @@ final class Logs extends Base {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 		object_id bigint(20) unsigned NOT NULL default '0',
 		object_type varchar(20) DEFAULT NULL,
-		type varchar(30) DEFAULT NULL,
+		type varchar(20) DEFAULT NULL,
 		title varchar(200) DEFAULT NULL,
 		content longtext DEFAULT NULL,
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
-		KEY type (type(30)),
+		KEY type (type(20)),
 		KEY date_created (date_created)";
 	}
 

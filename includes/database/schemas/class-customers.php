@@ -94,27 +94,6 @@ class Customers extends Base {
 			'default'    => '0'
 		),
 
-		// payment_ids
-		array(
-			'name'       => 'payment_ids',
-			'type'       => 'longtext',
-			'searchable' => false,
-			'sortable'   => false,
-			'in'         => false,
-			'not_in'     => false
-		),
-
-		// notes
-		array(
-			'name'       => 'notes',
-			'type'       => 'longtext',
-			'default'    => '',
-			'searchable' => false,
-			'sortable'   => false,
-			'in'         => false,
-			'not_in'     => false
-		),
-
 		// date_created
 		array(
 			'name'       => 'date_created',

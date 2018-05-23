@@ -37,7 +37,7 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201802280001;
+	protected $version = 201805220001;
 
 	/**
 	 * Setup the database schema
@@ -54,8 +54,6 @@ final class Customers extends Base {
 			status varchar(20) NOT NULL default '',
 			purchase_value mediumtext NOT NULL,
 			purchase_count bigint(20) NOT NULL,
-			payment_ids longtext NOT NULL,
-			notes longtext NOT NULL,
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),

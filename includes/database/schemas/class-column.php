@@ -221,6 +221,7 @@ class Column {
 	public $cache_key = false;
 
 	/**
+	 * Array of capabilities to check when interacting with column data.
 	 * Does this column fire a transition action when it's value changes?
 	 *
 	 * @since 3.0
@@ -230,8 +231,25 @@ class Column {
 	public $transition = false;
 
 	/**
-	 * Array of possible aliases this column can be referred to as.
+	 * Maybe validate this data before it is written to the database.
 	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $validate = '';
+
+	/**
+	 * Array of capabilities used to interface with this column.
+	 *
+	 * @since 3.0.0
+	 * @access public
+	 * @var array
+	 */
+	public $caps = array();
+
+	/**
+	 * Array of possible aliases this column can be referred to as.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -269,6 +287,11 @@ class Column {
 	 *     @type boolean  $date_query  Is this column a datetime?
 	 *     @type boolean  $in          Is __in supported?
 	 *     @type boolean  $not_in      Is __not_in supported?
+	 *     @type boolean  $cache_key   Is this column queried independently?
+	 *     @type boolean  $transition  Does this column transition between changes?
+	 *     @type string   $validate    A callback function used to validate on save.
+	 *     @type array    $caps        Array of capabilities to check.
+	 *     @type array    $aliases     Array of possible column name aliases.
 	 * }
 	 */
 	public function __construct( $args = array() ) {
@@ -276,8 +299,20 @@ class Column {
 		// Parse arguments
 		$r = $this->parse_args( $args );
 
-		// Set object parameters
-		foreach ( $r as $key => $value ) {
+		// Maybe set arguments
+		if ( ! empty( $r ) ) {
+			$this->set_args( $r );
+		}
+	}
+
+	/**
+	 * Set column arguments
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	private function set_args( $args = array() ) {
+		foreach ( $args as $key => $value ) {
 			$this->{$key} = $value;
 		}
 	}
@@ -326,6 +361,12 @@ class Column {
 			// Cache
 			'cache_key'  => false,
 
+			// Validation
+			'validate'   => '',
+
+			// Capabilities
+			'caps'       => array(),
+
 			// Backwards Compatibility
 			'aliases'    => array()
 		) );
@@ -335,19 +376,22 @@ class Column {
 			$r['cache_key'] = true;
 		}
 
+		// Set the args before they are sanitized
+		$this->set_args( $r );
+
 		// Return array
-		return $this->sanitize_args( $r );
+		return $this->validate_args( $r );
 	}
 
 	/**
-	 * Sanitize arguments after they are parsed.
+	 * Validate arguments after they are parsed.
 	 *
 	 * @since 3.0
 	 * @access private
 	 * @param array $args
 	 * @return array
 	 */
-	private function sanitize_args( $args = array() ) {
+	private function validate_args( $args = array() ) {
 
 		// Sanitization callbacks
 		$callbacks = array(
@@ -374,7 +418,8 @@ class Column {
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
-			'aliases'    => array( $this, 'sanitize_aliases' )
+			'caps'       => array( $this, 'sanitize_capabilities' ),
+			'aliases'    => array( $this, 'sanitize_aliases'      )
 		);
 
 		// Default args array
@@ -405,18 +450,55 @@ class Column {
 	 * @return boolean
 	 */
 	public function is_numeric() {
-		return (bool) in_array( strtolower( $this->type ), array(
+		return $this->is_type( array(
 			'tinyint',
 			'int',
 			'mediumint',
 			'bigint'
-		), true );
+		) );
+	}
+
+	/**
+	 * Return if this column is of a certain type.
+	 *
+	 * @since 3.0
+	 * @param mixed $type The type to check. Accepts an array.
+	 * @return boolean True if of type, False if not
+	 */
+	private function is_type( $type = '' ) {
+
+		// If string, cast to array
+		if ( is_string( $type ) ) {
+			$type = (array) $type;
+		}
+
+		// Make them lowercase
+		$types = array_map( 'strtolower', $type );
+
+		// Return if match or not
+		return (bool) in_array( strtolower( $this->type ), $types, true );
+	}
+
+	/**
+	 * Sanitize capabilities array
+	 *
+	 * @since 3.0
+	 * @param array $caps
+	 * @return array
+	 */
+	private function sanitize_capabilities( $caps = array() ) {
+		return wp_parse_args( $caps, array(
+			'select' => 'exist',
+			'insert' => 'exist',
+			'update' => 'exist',
+			'delete' => 'exist'
+		) );
 	}
 
 	/**
 	 * Sanitize aliases array using `sanitize_key()`
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 * @param array $aliases
 	 * @return array
 	 */
@@ -425,7 +507,7 @@ class Column {
 	}
 
 	/**
-	 * Sanitize a pattern
+	 * Sanitize the pattern
 	 *
 	 * @since 3.0
 	 * @param mixed $pattern
@@ -445,5 +527,59 @@ class Column {
 		return $this->is_numeric()
 			? '%d'
 			: '%s';
+	}
+
+	/**
+	 * Sanitize the validation callback
+	 *
+	 * @since 3.0
+	 * @param string $callback
+	 * @return string
+	 */
+	private function sanitize_validation( $callback = '' ) {
+
+		// Return callback if it's callable
+		if ( is_callable( $callback ) ) {
+			return $callback;
+		}
+
+		// Intval fallback
+		if ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
+			$callback = 'intval';
+
+		// Datetime fallback
+		} elseif ( $this->is_type( 'datetime' ) ) {
+			$callback = array( $this, 'validate_datetime' );
+		}
+
+		// Return the callback
+		return $callback;
+	}
+
+	/**
+	 * Fallback to validate a datetime value if no other is set.
+	 *
+	 * @since 3.0
+	 * @param string $value
+	 */
+	public function validate_datetime( $value = '0000-00-00 00:00:00' ) {
+
+		// Fallback for empty values
+		if ( empty( $value ) ) {
+			$value = ! empty( $this->default )
+				? $this->default
+				: '0000-00-00 00:00:00';
+
+		// Fallback if WordPress function exists
+		} elseif ( function_exists( 'date_i18n' ) ) {
+			$value = date_i18n( 'Y-m-d H:i:s', strtotime( $value ), true );
+
+		// Fallback if only PHP date function exists
+		} elseif ( function_exists( 'date' ) ) {
+			$value = date( 'Y-m-d H:i:s', strtotime( $value ) );
+		}
+
+		// Return the validated value
+		return $value;
 	}
 }

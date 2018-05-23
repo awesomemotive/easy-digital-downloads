@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Blocks access to Download attachments
@@ -23,18 +23,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_block_attachments() {
-	if ( ! is_attachment() )
+
+	// Bail if not an attachment
+	if ( ! is_attachment() ) {
 		return;
+	}
 
 	$parent   = get_post_field( 'post_parent', get_the_ID() );
 	$uri      = wp_get_attachment_url( get_the_ID() );
-	$edd_file = strpos( $uri, '/edd/' );
+	$edd_dir  = edd_get_uploads_base_dir();
+	$edd_file = strpos( $uri, '/' . $edd_dir . '/' );
 
 	if ( ! $parent && false === $edd_file ) {
 		return;
 	}
 
-	if ( 'download' != get_post_type( $parent ) && false === $edd_file ) {
+	if ( 'download' !== get_post_type( $parent ) && false === $edd_file ) {
 		return;
 	}
 
@@ -79,11 +83,8 @@ function edd_unset_discount_query_arg( $query ) {
 		 	// reset and re-parse query vars
 			$wp->query_vars['page_id'] = get_option( 'page_on_front' );
 			$query->parse_query( $wp->query_vars );
-
 		}
-
 	}
-
 }
 add_action( 'pre_get_posts', 'edd_unset_discount_query_arg', 999999 );
 
@@ -95,20 +96,17 @@ add_action( 'pre_get_posts', 'edd_unset_discount_query_arg', 999999 );
  */
 function edd_prevent_canonical_redirect( $redirect_url, $requested_url ) {
 
-	if( ! is_front_page() ) {
+	if ( ! is_front_page() ) {
 		return $redirect_url;
 	}
 
 	$discount = get_query_var( 'discount' );
 
-	if( ! empty( $discount ) || false !== strpos( $requested_url, 'discount' ) ) {
-
+	if ( ! empty( $discount ) || false !== strpos( $requested_url, 'discount' ) ) {
 		$redirect_url = $requested_url;
-
 	}
 
 	return $redirect_url;
-
 }
 add_action( 'redirect_canonical', 'edd_prevent_canonical_redirect', 0, 2 );
 
@@ -119,18 +117,17 @@ add_action( 'redirect_canonical', 'edd_prevent_canonical_redirect', 0, 2 );
  * @return string
  */
 function edd_refresh_permalinks_on_bad_404() {
-
 	global $wp;
 
-	if( ! is_404() ) {
+	if ( ! is_404() ) {
 		return;
 	}
 
-	if( isset( $_GET['edd-flush'] ) ) {
+	if ( isset( $_GET['edd-flush'] ) ) {
 		return;
 	}
 
-	if( false === get_transient( 'edd_refresh_404_permalinks' ) ) {
+	if ( false === get_transient( 'edd_refresh_404_permalinks' ) ) {
 
 		$slug  = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
 
@@ -145,7 +142,6 @@ function edd_refresh_permalinks_on_bad_404() {
 		set_transient( 'edd_refresh_404_permalinks', 1, HOUR_IN_SECONDS * 12 );
 
 		wp_redirect( home_url( add_query_arg( array( 'edd-flush' => 1 ), $wp->request ) ) ); exit;
-
 	}
 }
 add_action( 'template_redirect', 'edd_refresh_permalinks_on_bad_404' );

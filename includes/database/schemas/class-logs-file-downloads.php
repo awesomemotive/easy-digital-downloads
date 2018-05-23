@@ -58,7 +58,6 @@ class Logs_File_Downloads extends Base {
 			'default'    => '0'
 		),
 
-
 		// payment_id
 		array(
 			'name'       => 'payment_id',
@@ -84,16 +83,6 @@ class Logs_File_Downloads extends Base {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0'
-		),
-
-		// email
-		array(
-			'name'       => 'email',
-			'type'       => 'varchar',
-			'length'     => '100',
-			'default'    => '',
-			'searchable' => true,
-			'sortable'   => true
 		),
 
 		// ip
@@ -123,6 +112,6 @@ class Logs_File_Downloads extends Base {
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true
-		),
+		)
 	);
 }

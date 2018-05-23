@@ -10,7 +10,7 @@
   */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Process Download
@@ -391,7 +391,8 @@ function edd_get_local_path_from_url( $url ) {
 
 	$file       = $url;
 	$upload_dir = wp_upload_dir();
-	$upload_url = $upload_dir['baseurl'] . '/edd';
+	$edd_dir    = edd_get_uploads_base_dir();
+	$upload_url = $upload_dir['baseurl'] . '/' . $edd_dir;
 
 	if( defined( 'UPLOADS' ) && strpos( $file, UPLOADS ) !== false ) {
 

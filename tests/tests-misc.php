@@ -3,6 +3,7 @@
 
 /**
  * @group edd_misc
+ * @group edd_functions
  */
 class Test_Misc extends EDD_UnitTestCase {
 

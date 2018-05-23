@@ -66,7 +66,7 @@ class Logs extends Base {
 		array(
 			'name'       => 'type',
 			'type'       => 'varchar',
-			'length'     => '30',
+			'length'     => '20',
 			'default'    => '',
 			'searchable' => true,
 			'sortable'   => true

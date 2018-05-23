@@ -39,11 +39,12 @@ $cart_items     = $payment->cart_details;
 $user_id        = $payment->user_id;
 $payment_date   = strtotime( $payment->date );
 $unlimited      = $payment->has_unlimited_downloads;
-$user_info      = edd_get_payment_meta_user_info( $payment_id );
 $address        = $payment->address;
 $gateway        = $payment->gateway;
 $currency_code  = $payment->currency;
-$customer       = new EDD_Customer( $payment->customer_id );
+$customer       = edd_get_customer( $payment->customer_id );
+$user_info      = edd_get_payment_meta_user_info( $payment_id );
+$notes          = edd_get_payment_notes( $payment_id );
 ?>
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment %s', 'easy-digital-downloads' ), $number ); ?></h2>
@@ -57,7 +58,6 @@ $customer       = new EDD_Customer( $payment->customer_id );
 						<div id="side-sortables" class="meta-box-sortables ui-sortable">
 
 							<?php do_action( 'edd_view_order_details_sidebar_before', $payment_id ); ?>
-
 
 							<div id="edd-order-update" class="postbox edd-order-data">
 
@@ -105,7 +105,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Date:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'm/d/Y', $payment_date ) ); ?>" class="medium-text edd_datepicker"/>
+												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'Y-m-d', $payment_date ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 											</p>
 										</div>
 
@@ -773,34 +773,13 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 							<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
 
-							<div id="edd-payment-notes" class="postbox">
+							<div id="edd-notes" class="postbox">
 								<h3 class="hndle"><span><?php _e( 'Payment Notes', 'easy-digital-downloads' ); ?></span></h3>
 								<div class="inside">
-									<div id="edd-payment-notes-inner">
-										<?php
-										$notes = edd_get_payment_notes( $payment_id );
-										if ( ! empty( $notes ) ) :
-											$no_notes_display = ' style="display:none;"';
-											foreach ( $notes as $note ) :
-
-												echo edd_get_payment_note_html( $note, $payment_id );
-
-											endforeach;
-										else :
-											$no_notes_display = '';
-										endif;
-										echo '<p class="edd-no-payment-notes"' . $no_notes_display . '>'. __( 'No payment notes', 'easy-digital-downloads' ) . '</p>';
-										?>
-									</div>
-									<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
-
-									<p>
-										<button id="edd-add-payment-note" class="button button-secondary right" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
-									</p>
-
-									<div class="clear"></div>
+									<?php echo edd_admin_get_notes_html( $notes ); ?>
+									<?php echo edd_admin_get_new_note_form( $payment_id, 'payment' ); ?>
 								</div><!-- /.inside -->
-							</div><!-- /#edd-payment-notes -->
+							</div><!-- /#edd-notes -->
 
 							<?php do_action( 'edd_view_order_details_main_after', $payment_id ); ?>
 						</div><!-- /#normal-sortables -->
