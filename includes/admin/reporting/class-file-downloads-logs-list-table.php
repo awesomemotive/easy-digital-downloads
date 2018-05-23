@@ -114,7 +114,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'ID';
+		return 'id';
 	}
 
 	/**
@@ -370,14 +370,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 				$customer_id = edd_get_payment_customer_id( $log->get_payment_id() );
 
-				$meta        = get_post_custom( $log->ID );
+				$meta        = get_post_custom( $log->get_payment_id() );
 				$customer_id = isset( $meta['_edd_log_customer_id'] )
 					? (int) $meta['_edd_log_customer_id'][0]
 					: null;
 
-				if ( ! array_key_exists( $log->post_parent, $this->queried_files ) ) {
-					$files   = maybe_unserialize( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value from $wpdb->postmeta WHERE post_id = %d and meta_key = 'edd_download_files'", $log->post_parent ) ) );
-					$this->queried_files[ $log->post_parent ] = $files;
+				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
+					$files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
+					$this->queried_files[ $log->get_download_id() ] = array_values( $files );
 				} else {
 					$files = $this->queried_files[ $log->get_download_id() ];
 				}
