@@ -793,7 +793,7 @@ input.edd_submit_plain {
 }
 .edd-submit,
 #edd-purchase-button,
-input[type="submit"].edd-submit {
+[type="submit"].edd-submit {
 	display: inline-block;
 	padding: 6px 12px;
 	margin: 0;
@@ -816,7 +816,7 @@ input[type="submit"].edd-submit {
 	user-select: none;
 }
 .edd-submit.button:focus,
-input[type="submit"].edd-submit:focus {
+[type="submit"].edd-submit:focus {
 	outline: thin dotted #333;
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
