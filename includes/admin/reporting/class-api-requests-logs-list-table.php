@@ -12,25 +12,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
 /**
  * EDD_API_Request_Log_Table List Table Class
  *
  * @since 1.5
  * @since 3.0 Updated to use the custom tables and new query classes.
  */
-class EDD_API_Request_Log_Table extends WP_List_Table {
-	/**
-	 * Number of items per page
-	 *
-	 * @var int
-	 * @since 1.5
-	 */
-	public $per_page = 30;
+class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
 	 * Get things started
@@ -39,49 +27,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
-		) );
-	}
-
-	/**
-	 * Show the search field
-	 *
-	 * @since 1.5
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
-	 */
-	public function search_box( $text, $input_id ) {
-
-		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-
-		?>
-
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
-		</p>
-
-		<?php
+		parent::__construct();
 	}
 
 	/**
@@ -91,16 +37,14 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'ID'      => __( 'Log ID', 'easy-digital-downloads' ),
+		return array(
+			'ID'      => __( 'Log ID',          'easy-digital-downloads' ),
 			'details' => __( 'Request Details', 'easy-digital-downloads' ),
-			'version' => __( 'API Version', 'easy-digital-downloads' ),
-			'ip'      => __( 'Request IP', 'easy-digital-downloads' ),
-			'speed'   => __( 'Request Speed', 'easy-digital-downloads' ),
-			'date'    => __( 'Date', 'easy-digital-downloads' ),
+			'version' => __( 'API Version',     'easy-digital-downloads' ),
+			'ip'      => __( 'Request IP',      'easy-digital-downloads' ),
+			'speed'   => __( 'Request Speed',   'easy-digital-downloads' ),
+			'date'    => __( 'Date',            'easy-digital-downloads' )
 		);
-
-		return $columns;
 	}
 
 	/**
@@ -162,16 +106,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieves the search query string
-	 *
-	 * @since 1.5
-	 * @return string|false String if search is present, false otherwise
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
-	}
-
-	/**
 	 * Gets the meta query for the log query
 	 *
 	 * This is used to return log entries that match our search query
@@ -227,44 +161,15 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
-	/**
-	 * Outputs the log views
-	 *
-	 * @since 1.5
-	 * @return void
-	 */
-	function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_log_views();
-	}
-
-	/**
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.5
-	 * @global object $edd_logs EDD Logs Object
-	 * @return array $logs_data Array of all the Log entires
+	 *
+	 * @return array $logs_data Array of all the Log entries
 	 */
-	public function get_logs() {
+	public function get_logs( $log_query = array() ) {
 		$logs_data = array();
-		$paged     = $this->get_paged();
-
-		$log_query = array(
-			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
-			'meta_query' => $this->get_meta_query(),
-			'number'     => $this->per_page,
-		);
-
-		$logs = edd_get_api_request_logs( $log_query );
+		$logs      = edd_get_api_request_logs( $log_query );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
@@ -288,33 +193,15 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setup the final data for the table.
+	 * Get the total number of items
 	 *
-	 * @since 1.5
-	 */
-	public function prepare_items() {
-		$columns               = $this->get_columns();
-		$hidden                = array(); // No hidden columns
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable, 'ID' );
-		$this->items           = $this->get_logs();
-		$total_items           = edd_count_api_request_logs();
-
-		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page ),
-			)
-		);
-	}
-
-	/**
-	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
+	 * @since 3.0
 	 *
-	 * @since 2.5
-	 * @return bool
+	 * @param array $log_query
+	 *
+	 * @return int
 	 */
-	public function has_items() {
-		return true;
+	public function get_total( $log_query = array() ) {
+		return edd_count_api_request_logs( $log_query );
 	}
 }

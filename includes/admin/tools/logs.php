@@ -13,6 +13,77 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Setup the logs view
+ *
+ * @since 3.0
+ *
+ * @param type $type
+ * @return boolean
+ */
+function edd_logs_view_setup( $type = '' ) {
+
+	// Bail if cannot view
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		return false;
+	}
+
+	// Includes
+	require_once ABSPATH        . 'wp-admin/includes/class-wp-list-table.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-base-logs-list-table.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-' . sanitize_key( $type ) . '-logs-list-table.php';
+
+	// Done!
+	return true;
+}
+
+/**
+ * Output the log page
+ *
+ * @since 3.0
+ *
+ * @param object $logs_table List table class to work with
+ * @param string $tag        Type of log to view
+ */
+function edd_logs_view_page( $logs_table, $tag = '' ) {
+	$tag = sanitize_key( $tag );
+	$logs_table->prepare_items(); ?>
+
+	<div class="wrap">
+		<?php
+		/**
+		 * Fires at the top of the File Downloads logs view.
+		 *
+		 * @since 3.0
+		 */
+		do_action( "edd_logs_{$tag}_top" ); ?>
+
+		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=' . $tag ); ?>">
+			<input type="hidden" name="post_type" value="download" />
+			<input type="hidden" name="page" value="edd-tools" />
+			<input type="hidden" name="tab" value="<?php echo esc_attr( $tag ); ?>" />
+			<?php
+			wp_nonce_field( -1, 'edd_filter', false );
+			$logs_table->views();
+			$logs_table->advanced_filters();
+			$logs_table->display();
+			?>
+		</form>
+
+		<?php
+		/**
+		 * Fires at the bottom of the File Downloads logs view.
+		 *
+		 * @since 3.0
+		 */
+		do_action( "edd_logs_{$tag}_bottom" ); ?>
+
+	</div>
+<?php
+}
+
+/** Views *********************************************************************/
+
+/**
  * Sales Log View
  *
  * @since 1.4
@@ -22,15 +93,14 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_logs_view_sales() {
 
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	// Setup or bail
+	if ( ! edd_logs_view_setup( 'sales' ) ) {
 		return;
 	}
 
-	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-sales-logs-list-table.php';
-
 	$logs_table = new EDD_Sales_Log_Table();
-	$logs_table->prepare_items();
-	$logs_table->display();
+
+	edd_logs_view_page( $logs_table, 'sales' );
 }
 add_action( 'edd_logs_view_sales', 'edd_logs_view_sales' );
 
@@ -45,43 +115,14 @@ add_action( 'edd_logs_view_sales', 'edd_logs_view_sales' );
  */
 function edd_logs_view_file_downloads() {
 
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	// Setup or bail
+	if ( ! edd_logs_view_setup( 'file-downloads' ) ) {
 		return;
 	}
 
-	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-file-downloads-logs-list-table.php';
-
 	$logs_table = new EDD_File_Downloads_Log_Table();
-	$logs_table->prepare_items();
-	?>
-	<div class="wrap">
-		<?php
-		/**
-		 * Fires at the top of the File Downloads logs view.
-		 *
-		 * @since 1.4
-		 */
-		do_action( 'edd_logs_file_downloads_top' );
-		?>
-		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs' ); ?>">
-			<?php
-			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' );
-			$logs_table->display();
-			?>
-			<input type="hidden" name="post_type" value="download" />
-			<input type="hidden" name="page" value="edd-reports" />
-			<input type="hidden" name="tab" value="logs" />
-		</form>
-		<?php
-		/**
-		 * Fires at the bottom of the File Downloads logs view.
-		 *
-		 * @since 1.4
-		 */
-		do_action( 'edd_logs_file_downloads_bottom' );
-		?>
-	</div>
-<?php
+
+	edd_logs_view_page( $logs_table, 'file_downloads' );
 }
 add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
 
@@ -95,15 +136,14 @@ add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
  */
 function edd_logs_view_gateway_errors() {
 
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	// Setup or bail
+	if ( ! edd_logs_view_setup( 'gateway-error' ) ) {
 		return;
 	}
 
-	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-gateway-error-logs-list-table.php';
-
 	$logs_table = new EDD_Gateway_Error_Log_Table();
-	$logs_table->prepare_items();
-	$logs_table->display();
+
+	edd_logs_view_page( $logs_table, 'gateway_errors' );
 }
 add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
@@ -119,43 +159,14 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
 function edd_logs_view_api_requests() {
 
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
+	// Setup or bail
+	if ( ! edd_logs_view_setup( 'api-requests' ) ) {
 		return;
 	}
 
-	include EDD_PLUGIN_DIR . 'includes/admin/reporting/class-api-requests-logs-list-table.php';
-
 	$logs_table = new EDD_API_Request_Log_Table();
-	$logs_table->prepare_items();
-	?>
-	<div class="wrap">
-		<?php
-		/**
-		 * Fires at the top of the API Requests logs view.
-		 *
-		 * @since 1.5
-		 */
-		do_action( 'edd_logs_api_requests_top' );
-		?>
-		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs' ); ?>">
-			<?php
-			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-api-requests' );
-			$logs_table->display();
-			?>
-			<input type="hidden" name="post_type" value="download" />
-			<input type="hidden" name="page" value="edd-reports" />
-			<input type="hidden" name="tab" value="logs" />
-		</form>
-		<?php
-		/**
-		 * Fires at the bottom of the API Requests logs view.
-		 *
-		 * @since 1.5
-		 */
-		do_action( 'edd_logs_api_requests_bottom' );
-		?>
-	</div>
-<?php
+
+	edd_logs_view_page( $logs_table, 'api_requests' );
 }
 add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
 
@@ -167,13 +178,6 @@ add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
  * @return array $views Log Views
  */
 function edd_log_default_views() {
-	$views = array(
-		'file_downloads'  => __( 'File Downloads', 'easy-digital-downloads' ),
-		'sales' 		  => __( 'Sales',          'easy-digital-downloads' ),
-		'gateway_errors'  => __( 'Payment Errors', 'easy-digital-downloads' ),
-		'api_requests'    => __( 'API Requests',   'easy-digital-downloads' )
-	);
-
 	/**
 	 * Filters the default logs views.
 	 *
@@ -182,15 +186,20 @@ function edd_log_default_views() {
 	 * @param array $views Logs views. Each key/value pair represents the view slug
 	 *                     and label, respectively.
 	 */
-	$views = apply_filters( 'edd_log_views', $views );
-
-	return $views;
+	return apply_filters( 'edd_log_views', array(
+		'file_downloads'  => __( 'File Downloads', 'easy-digital-downloads' ),
+		'sales' 		  => __( 'Sales',          'easy-digital-downloads' ),
+		'gateway_errors'  => __( 'Payment Errors', 'easy-digital-downloads' ),
+		'api_requests'    => __( 'API Requests',   'easy-digital-downloads' )
+	) );
 }
 
 /**
  * Renders the Reports page views drop down
  *
  * @since 1.3
+ * @since 3.0 deprecated
+ *
  * @return void
 */
 function edd_log_views() {
@@ -199,28 +208,17 @@ function edd_log_views() {
 		? sanitize_text_field( $_GET['view'] )
 		: 'file_downloads'; ?>
 
-	<form id="edd-logs-filter" method="get" action="edit.php">
-		<select id="edd-logs-view" name="view">
-			<option value="-1"><?php _e( '&mdash; Log Type &mdash;', 'easy-digital-downloads' ); ?></option>
-			<?php foreach ( $views as $view_id => $label ) : ?>
-				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
-			<?php endforeach; ?>
-		</select>
+	<select id="edd-logs-view" name="view">
+		<?php foreach ( $views as $view_id => $label ) : ?>
+			<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php endforeach; ?>
+	</select>
 
-		<?php
-		/**
-		 * Fires immediately after the logs view actions are rendered in the Logs screen.
-		 *
-		 * @since 1.3
-		 */
-		do_action( 'edd_log_view_actions' );
-		?>
-
-		<input type="hidden" name="post_type" value="download" />
-		<input type="hidden" name="page" value="edd-tools" />
-		<input type="hidden" name="tab" value="logs" />
-
-		<?php submit_button( __( 'Apply', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-	</form>
 	<?php
+	/**
+	 * Fires immediately after the logs view actions are rendered in the Logs screen.
+	 *
+	 * @since 1.3
+	 */
+	do_action( 'edd_log_view_actions' );
 }
