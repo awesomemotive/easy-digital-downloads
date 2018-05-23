@@ -190,6 +190,31 @@ function edd_render_customer_view( $view, $callbacks ) {
 function edd_customers_view( $customer = '' ) {
 	$customer_edit_role = edd_get_edit_customers_role();
 
+	$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time',   false );
+	$privacy_timestamps   = $customer->get_meta( 'agree_to_privacy_time', false );
+
+	$last_payment = edd_get_payments( array(
+		'output'   => 'payments',
+		'post__in' => $customer->get_payment_ids(),
+		'orderby'  => 'date',
+		'number'   => 1
+	) );
+
+	if ( ! empty( $last_payment ) ) {
+		$last_payment      = reset( $last_payment );
+		$last_payment_date = strtotime( $last_payment->date );
+	} else {
+		$last_payment_date = '';
+	}
+
+	if ( is_array( $agreement_timestamps ) ) {
+		$agreement_timestamp = array_pop( $agreement_timestamps );
+	}
+
+	if ( is_array( $privacy_timestamps ) ) {
+		$privacy_timestamp = array_pop( $privacy_timestamps );
+	}
+
 	do_action( 'edd_customer_card_top', $customer ); ?>
 
     <div class="info-wrapper customer-section">
@@ -227,37 +252,39 @@ function edd_customers_view( $customer = '' ) {
                             <legend class="screen-reader-text"><?php _e( 'Customer Address', 'easy-digital-downloads' ); ?></legend>
 
                             <span class="customer-address info-item editable">
-							<span class="info-item" data-key="line1"><?php echo esc_html( $address['line1'] ); ?></span>
-							<span class="info-item" data-key="line2"><?php echo esc_html( $address['line2'] ); ?></span>
-							<span class="info-item" data-key="city"><?php echo esc_html( $address['city'] ); ?></span>
-							<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['country'], $address['state'] ); ?></span>
-							<span class="info-item" data-key="country"><?php echo esc_html( $address['country'] ); ?></span>
-							<span class="info-item" data-key="zip"><?php echo esc_html( $address['zip'] ); ?></span>
-						</span>
+								<span class="info-item" data-key="line1"><?php echo esc_html( $address['line1'] ); ?></span>
+								<span class="info-item" data-key="line2"><?php echo esc_html( $address['line2'] ); ?></span>
+								<span class="info-item" data-key="city"><?php echo esc_html( $address['city'] ); ?></span>
+								<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['country'], $address['state'] ); ?></span>
+								<span class="info-item" data-key="country"><?php echo esc_html( $address['country'] ); ?></span>
+								<span class="info-item" data-key="zip"><?php echo esc_html( $address['zip'] ); ?></span>
+							</span>
 
-                            <span class="customer-address info-item edit-item">
-							<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line1'] ); ?>" />
-							<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line2'] ); ?>" />
-							<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
-							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
+							<span class="customer-address info-item edit-item">
+								<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line1'] ); ?>" />
+								<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line2'] ); ?>" />
+								<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
+								<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
+									<?php
+
+									$selected_country = $address['country'];
+									$countries        = edd_get_country_list();
+
+									foreach ( $countries as $country_code => $country ) {
+										echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
+									}
+									?>
+								</select>
+
 								<?php
 
-								$selected_country = $address['country'];
-								$countries        = edd_get_country_list();
-
-								foreach ( $countries as $country_code => $country ) {
-									echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
-								}
-								?>
-							</select>
-								<?php
 								$selected_state = edd_get_shop_state();
 								$states         = edd_get_shop_states( $selected_country );
 
 								$selected_state = isset( $address['state'] ) ? $address['state'] : $selected_state;
 
 								if( ! empty( $states ) ) : ?>
-                                    <select data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-select info-item">
+									<select data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-select info-item">
 									<?php
 									foreach( $states as $state_code => $state ) {
 										echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . esc_html( $state ) . '</option>';
@@ -265,10 +292,10 @@ function edd_customers_view( $customer = '' ) {
 									?>
 								</select>
 								<?php else : ?>
-                                    <input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+									<input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
 								<?php endif; ?>
-                                <input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['zip'] ); ?>" />
-						</span>
+								<input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['zip'] ); ?>" />
+							</span>
                         </fieldset>
 					<?php endif; ?>
                 </div>
@@ -366,6 +393,62 @@ function edd_customers_view( $customer = '' ) {
 			<?php do_action( 'edd_customer_stats_list', $customer ); ?>
         </ul>
     </div>
+
+
+	<?php do_action( 'edd_customer_before_agreements', $customer ); ?>
+
+	<div id="edd-item-agreements-wrapper" class="customer-agreements-wrapper customer-section">
+		<h3><?php _e( 'Agreements', 'easy-digital-downloads' ); ?></h3>
+		<p class="customer-terms-agreement-date info-item">
+			<?php if ( ! empty( $agreement_timestamp ) ) {
+				echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timestamp );
+				_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
+
+				if ( ! empty( $agreement_timestamps ) ) : ?>
+
+					<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Previous Agreement Dates', 'easy-digital-downloads' ); ?></strong><br /><?php foreach ( $agreement_timestamps as $timestamp ) { echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ); } ?>"></span>
+
+				<?php endif;
+
+			} elseif ( empty( $last_payment_date ) ) {
+				_e( 'No terms agreement found.', 'easy-digital-downloads' );
+
+			} else {
+				echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
+				_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
+				?>
+
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
+
+				<?php
+			} ?>
+		</p>
+
+		<p class="customer-privacy-policy-date info-item">
+			<?php if ( ! empty( $privacy_timestamp ) ) {
+				echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $privacy_timestamp );
+				_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
+
+				if ( ! empty( $privacy_timestamps ) ) : ?>
+
+					<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Previous Agreement Dates', 'easy-digital-downloads' ); ?></strong><br /><?php foreach ( $privacy_timestamps as $timestamp ) { echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ); } ?>"></span>
+
+				<?php endif;
+
+			} elseif ( empty( $last_payment_date ) ) {
+				_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
+
+			} else {
+				echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
+				_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
+				?>
+
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ); ?>"></span>
+
+				<?php
+			} ?>
+		</p>
+	</div>
 
 	<?php do_action( 'edd_customer_before_tables_wrapper', $customer ); ?>
 
@@ -547,105 +630,6 @@ function edd_customer_notes_view( $customer ) {
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo esc_html( $customer->name ); ?></span>
         </div>
         <h3><?php _e( 'Notes', 'easy-digital-downloads' ); ?></h3>
-
-		<div id="edd-item-notes-wrapper">
-			<div class="edd-item-notes-header">
-				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
-			</div>
-			<?php
-			$show_agree_to_terms   = edd_get_option( 'show_agree_to_terms', false );
-			$show_agree_to_privacy = edd_get_option( 'show_agree_to_privacy_policy', false );
-
-			$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time', false );
-			$privacy_timestamps   = $customer->get_meta( 'agree_to_privacy_time', false );
-
-			$payments = edd_get_payments( array(
-				'output'         => 'payments',
-				'post__in'       => explode( ',', $customer->payment_ids ),
-				'orderby'        => 'date',
-				'posts_per_page' => 1
-			));
-
-			$last_payment_date = '';
-
-			foreach ( $payments as $payment ) {
-				if ( empty( $payment->gateway ) ) {
-					continue;
-				}
-
-				// We should be using `date` here, as that is the date the button was clicked.
-				$last_payment_date = strtotime( $payment->date );
-				break;
-			}
-
-			if ( is_array( $agreement_timestamps ) ) {
-				$agreement_timestamp = array_pop( $agreement_timestamps );
-			}
-
-			if ( is_array( $privacy_timestamps ) ) {
-				$privacy_timestamp = array_pop( $privacy_timestamps );
-			}
-
-			?>
-
-			<h3><?php _e( 'Agreements', 'easy-digital-downloads' ); ?></h3>
-
-			<span class="customer-terms-agreement-date info-item">
-				<?php _e( 'Last Agreed to Terms', 'easy-digital-downloads' ); ?>:
-				<?php if ( ! empty( $agreement_timestamp ) ) : ?>
-					<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timestamp ); ?>
-					<?php if ( ! empty( $agreement_timestamps ) ) : ?>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Previous Agreement Dates', 'easy-digital-downloads' ); ?></strong><br /><?php foreach ( $agreement_timestamps as $timestamp ) { echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ); } ?>"></span>
-					<?php endif; ?>
-				<?php else: ?>
-					<?php
-					if ( empty( $last_payment_date ) ) {
-						_e( 'No date found.', 'easy-digital-downloads' );
-					} else {
-						echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
-						?>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
-						<?php
-					}
-					?>
-				<?php endif; ?>
-			</span>
-
-			<span class="customer-privacy-policy-date info-item">
-				<?php _e( 'Last Agreed to Privacy Policy', 'easy-digital-downloads' ); ?>:
-				<?php if ( ! empty( $privacy_timestamp ) ) : ?>
-					<?php echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $privacy_timestamp ); ?>
-					<?php if ( ! empty( $privacy_timestamps ) ) : ?>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Previous Agreement Dates', 'easy-digital-downloads' ); ?></strong><br /><?php foreach ( $privacy_timestamps as $timestamp ) { echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ); } ?>"></span>
-					<?php endif; ?>
-				<?php else: ?>
-					<?php
-					if ( empty( $last_payment_date ) ) {
-						_e( 'No date found.', 'easy-digital-downloads' );
-					} else {
-						echo date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date );
-						?>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php _e( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ); ?>"></span>
-						<?php
-					}
-					?>
-				<?php endif; ?>
-			</span>
-
-			<h3><?php _e( 'Notes', 'easy-digital-downloads' ); ?></h3>
-
-			<?php if ( 1 == $paged ) : ?>
-			<div style="display: block; margin-bottom: 35px;">
-				<form id="edd-add-customer-note" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=notes&id=' . $customer->id ); ?>">
-					<textarea id="customer-note" name="customer_note" class="customer-note-input" rows="10"></textarea>
-					<br />
-					<input type="hidden" id="customer-id" name="customer_id" value="<?php echo $customer->id; ?>" />
-					<input type="hidden" name="edd_action" value="add-customer-note" />
-					<?php wp_nonce_field( 'add-customer-note', 'add_customer_note_nonce', true, true ); ?>
-					<input id="add-customer-note" class="right button-primary" type="submit" value="Add Note" />
-				</form>
-			</div>
-		<?php endif; ?>
 
 		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
 
