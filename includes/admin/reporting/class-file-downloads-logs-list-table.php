@@ -159,13 +159,13 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID',     'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
+			'customer'   => __( 'Customer',   'easy-digital-downloads' ),
 			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'file'       => __( 'File', 'easy-digital-downloads' ),
+			'file'       => __( 'File',       'easy-digital-downloads' ),
 			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
-			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'date'       => __( 'Date',       'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -245,39 +245,40 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			);
 		}
 
-		if ( ! empty( $customer_id ) ) {
-			$search = $customer_id;
-		} else {
-			$search = $this->get_search();
-		}
+		$search = ! empty( $customer_id )
+			? $customer_id
+			: $this->get_search();
 
 		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// This is an IP address search
 				$key     = '_edd_log_ip';
 				$compare = '=';
-			} else if ( is_email( $search ) ) {
+
+			} elseif ( is_email( $search ) ) {
 				$customer = new EDD_Customer( $search );
 				if ( ! empty( $customer->id ) ) {
 					$key     = '_edd_log_customer_id';
 					$search  = $customer->id;
 					$compare = '=';
 				}
-			} else {
-				if ( is_numeric( $search ) ) {
-					$customer = new EDD_Customer( $search );
 
-					if ( ! empty( $customer->id ) ) {
-						$key     = '_edd_log_customer_id';
-						$search  = $customer->id;
-						$compare = '=';
-					} else {
-						$this->file_search = true;
-					}
+			} elseif ( is_numeric( $search ) ) {
+				$customer = new EDD_Customer( $search );
+
+				if ( ! empty( $customer->id ) ) {
+					$key     = '_edd_log_customer_id';
+					$search  = $customer->id;
+					$compare = '=';
+				} else {
+					$this->file_search = true;
 				}
+			} else {
+				$key     = '_edd_log_file_id';
+				$compare = '=';
 			}
 
-			if ( ! $this->file_search ) {
+			if ( ! empty( $key ) && empty( $this->file_search ) ) {
 				// Meta query only works for non file name search
 				$meta_query[] = array(
 					'key'     => $key,
@@ -331,7 +332,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All', 'easy-digital-downloads' ) . '</option>';
+				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
@@ -346,21 +347,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
      *
 	 * @return array $logs_data Array of all the logs.
 	 */
-	function get_logs() {
-		global $wpdb;
-
+	function get_logs( $log_query = array() ) {
 		$logs_data = array();
-		$paged     = $this->get_paged();
-		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : false;
-		$log_query = array(
-			'offset'     => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
-			'meta_query' => $this->get_meta_query(),
-			'number'     => $this->per_page,
-		);
-
-		if ( $download ) {
-			$log_query['download_id'] = $download;
-		}
 
 		$logs = edd_get_file_download_logs( $log_query );
 
@@ -431,19 +419,27 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since 1.5
 	 */
 	function prepare_items() {
-		$count_args = array();
-		$download   = $this->get_filtered_download();
-		if ( $download ) {
-			$count_args['download_id'] = $download;
-		}
-		$count_args['meta_query'] = $this->get_meta_query();
+		$paged     = $this->get_paged();
+		$offset    = $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0;
+		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : false;
+		$log_query = array(
+			'offset'     => $offset,
+			'meta_query' => $this->get_meta_query(),
+			'number'     => $this->per_page,
+		);
 
-		$columns               = $this->get_columns();
-		$hidden                = array(); // No hidden columns
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->get_logs();
-		$total_items           = edd_count_file_download_logs( $count_args );
+		if ( ! empty( $download ) ) {
+			$log_query['download_id'] = $download;
+		}
+
+		$this->_column_headers = array( 
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns()
+		);
+
+		$this->items = $this->get_logs( $log_query );
+		$total_items = edd_count_file_download_logs( $log_query );
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
