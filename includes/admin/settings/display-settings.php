@@ -62,9 +62,12 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
  */
 function edd_options_page_secondary_nav( $active_tab = '', $section = '', $sections = array() ) {
 
-	// Bail if no sections
+	// Back compat for section'less tabs (Licenses, etc...)
 	if ( empty( $sections ) ) {
-		return;
+		$section  = 'main';
+		$sections = array(
+			'main' => __( 'General', 'easy-digital-downloads' )
+		);
 	}
 
 	// Default links array
@@ -110,7 +113,11 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
  * @param boolean $override
  */
 function edd_options_page_form( $active_tab = '', $section = '', $override = false ) {
-?>
+
+	// Setup the action & section suffix
+	$suffix = ! empty( $section )
+		? $active_tab . '_' . $section
+		: $active_tab . '_main'; ?>
 
 	<form method="post" action="options.php" class="edd-settings-form">
 		<?php
@@ -121,11 +128,11 @@ function edd_options_page_form( $active_tab = '', $section = '', $override = fal
 			do_action( 'edd_settings_tab_top', $active_tab );
 		}
 
-		do_action( 'edd_settings_tab_top_' . $active_tab . '_' . $section );
+		do_action( 'edd_settings_tab_top_' . $suffix );
 
-		do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
+		do_settings_sections( 'edd_settings_' . $suffix );
 
-		do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
+		do_action( 'edd_settings_tab_bottom_' . $suffix  );
 
 		// For backwards compatibility
 		if ( 'main' === $section ) {
@@ -165,7 +172,7 @@ function edd_options_page() {
 	// Default values
 	$has_main_settings = true;
 	$override          = false;
-	
+
 	// Let's verify we have a 'main' section to show
 	if ( empty( $all_settings[ $active_tab ]['main'] ) ) {
 		$has_main_settings = false;
