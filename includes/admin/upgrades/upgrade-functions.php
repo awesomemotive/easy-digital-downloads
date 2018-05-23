@@ -1861,8 +1861,11 @@ function edd_upgrade_render_update_file_download_log_data() {
 				<?php _e( '<strong>Migration complete:</strong> You have already completed the update to the file download logs.', 'easy-digital-downloads' ); ?>
 			</p>
 		</div>
-		<?php return; ?>
-	<?php endif; ?>
+		<?php
+
+		delete_option( 'edd_doing_upgrade' );
+		return;
+	endif; ?>
 
 	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
 		<p>
