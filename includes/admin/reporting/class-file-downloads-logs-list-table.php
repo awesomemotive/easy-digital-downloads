@@ -124,7 +124,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
 					$files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
-					$this->queried_files[ $log->get_download_id() ] = array_values( $files );
+					$this->queried_files[ $log->get_download_id() ] = $files;
 				} else {
 					$files = $this->queried_files[ $log->get_download_id() ];
 				}
@@ -152,9 +152,11 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
 
-				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+				$file_name = isset( $files[ $file_id ]['name'] )
+					? $files[ $file_id ]['name']
+					: null;
 
-				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
+				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
 						'ID'         => $log->get_id(),
 						'download'   => $log->get_download_id(),
