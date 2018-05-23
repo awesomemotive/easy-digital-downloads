@@ -768,12 +768,12 @@ function edd_get_payment_status_label( $status = '' ) {
 function edd_get_payment_statuses() {
 	return apply_filters( 'edd_payment_statuses', array(
 		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
+		'processing' => __( 'Processing', 'easy-digital-downloads' ),
 		'publish'    => __( 'Complete',   'easy-digital-downloads' ),
 		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
-		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
-		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' ),
 		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
-		'processing' => __( 'Processing', 'easy-digital-downloads' )
+		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
+		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' )
 	) );
 }
 
