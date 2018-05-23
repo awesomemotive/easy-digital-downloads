@@ -883,7 +883,7 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 	global $edd_logs;
 
-	$user = get_user_by_email( $email_address );
+	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
 		return array( 'data' => array(), 'done' => true );
@@ -1300,7 +1300,7 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 	global $edd_logs;
 
-	$user = get_user_by_email( $email_address );
+	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
 		return array(
