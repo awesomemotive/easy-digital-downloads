@@ -11,25 +11,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
 /**
  * EDD_Gateway_Error_Log_Table Class
  *
  * @since 1.4
  * @since 3.0 Updated to use the custom tables and new query classes.
  */
-class EDD_Gateway_Error_Log_Table extends WP_List_Table {
-	/**
-	 * Number of items per page
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $per_page = 30;
+class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
 	 * Get things started
@@ -38,11 +26,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
-		) );
+		parent::__construct();
 	}
 
 	/**
@@ -117,57 +101,27 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'error'      => __( 'Error', 'easy-digital-downloads' ),
+		return array(
+			'ID'         => __( 'Log ID',        'easy-digital-downloads' ),
+			'payment_id' => __( 'Payment ID',    'easy-digital-downloads' ),
+			'error'      => __( 'Error',         'easy-digital-downloads' ),
 			'message'    => __( 'Error Message', 'easy-digital-downloads' ),
-			'gateway'    => __( 'Gateway', 'easy-digital-downloads' ),
-			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'gateway'    => __( 'Gateway',       'easy-digital-downloads' ),
+			'date'       => __( 'Date',          'easy-digital-downloads' )
 		);
-
-		return $columns;
-	}
-
-	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.4
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
-	/**
-	 * Outputs the log views
-	 *
-	 * @since 1.4
-	 * @return void
-	 */
-	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
-		edd_log_views();
 	}
 
 	/**
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
+	 * @param  array  $log_query Query arguments
 	 * @global object $edd_logs EDD Logs Object
-	 * @return array $logs_data Array of all the Log entires
+	 * @return array $logs_data Array of all the Log entries
 	 */
-	public function get_logs() {
-		// Prevent the queries from getting cached. Without this there are occasional memory issues for some installs
-		wp_suspend_cache_addition( true );
-
-		$logs_data = array();
-		$paged     = $this->get_paged();
-		$log_query = array(
-			'type'   => 'gateway_error',
-			'offset' => $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0,
-			'number' => $this->per_page,
-		);
+	public function get_logs( $log_query = array() ) {
+		$logs_data         = array();
+		$log_query['type'] = 'gateway_error';
 
 		$logs = edd_get_logs( $log_query );
 
@@ -191,31 +145,11 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table.
 	 *
-	 * @since 1.4
+	 * @since 1.5
 	 */
-	public function prepare_items() {
-		$columns               = $this->get_columns();
-		$hidden                = array(); // No hidden columns
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->get_logs();
-		$total_items           = edd_count_logs( array( 'type' => 'gateway_error' ) );
+	public function get_total( $log_query = array() ) {
+		$log_query['type'] = 'gateway_error';
 
-		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page ),
-			)
-		);
-	}
-
-	/**
-	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
-	 *
-	 * @since 2.5
-	 * @return bool
-	 */
-	public function has_items() {
-		return true;
+		return edd_count_logs( $log_query );
 	}
 }

@@ -37,7 +37,7 @@ final class Logs_File_Downloads extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201802280001;
+	protected $version = 201805220001;
 
 	/**
 	 * Setup the database schema
@@ -53,7 +53,6 @@ final class Logs_File_Downloads extends Base {
 		payment_id bigint(20) unsigned NOT NULL default '0',
 		price_id bigint(20) unsigned NOT NULL default '0',
 		user_id bigint(20) unsigned NOT NULL default '0',
-		email varchar(100) NOT NULL default '',
 		ip varchar(60) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',

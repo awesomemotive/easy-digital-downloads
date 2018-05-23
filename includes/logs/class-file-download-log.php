@@ -77,15 +77,6 @@ class File_Download_Log extends Base_Object {
 	protected $user_id;
 
 	/**
-	 * Email address.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    string
-	 */
-	protected $email;
-
-	/**
 	 * IP.
 	 *
 	 * @since  3.0
@@ -167,17 +158,6 @@ class File_Download_Log extends Base_Object {
 	 */
 	public function get_user_id() {
 		return $this->user_id;
-	}
-
-	/**
-	 * Retrieve email address.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_email() {
-		return $this->email;
 	}
 
 	/**

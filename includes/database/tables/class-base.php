@@ -222,6 +222,21 @@ abstract class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Drop the database table
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed
+	 */
+	public function drop() {
+		$query   = "DROP TABLE {$this->table_name}";
+		$dropped = $this->get_db()->query( $query );
+
+		// Query success/fail
+		return $dropped;
+	}
+
+	/**
 	 * Delete all items from the database table
 	 *
 	 * @since 3.0
@@ -234,6 +249,19 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Query success/fail
 		return $deleted;
+	}
+
+	/**
+	 * Return the current table version from the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		$this->get_db_version();
+
+		return $this->db_version;
 	}
 
 	/** Private ***************************************************************/

@@ -111,9 +111,20 @@ class Order_Adjustment extends Base {
 	 *     @type string       $object_type          An object types to only return that type. Default empty.
 	 *     @type array        $object_type__in      Array of object types to include. Default empty.
 	 *     @type array        $object_type__not_in  Array of object types to exclude. Default empty.
+	 *     @type string       $type_id              A type ID to only return that type. Default empty.
+	 *     @type array        $type_id__in          Array of types IDs to include. Default empty.
+	 *     @type array        $type_id__not_in      Array of types IDS to exclude. Default empty.
+	 *     @type string       $type                 A type to only return that type. Default empty.
+	 *     @type array        $type__in             Array of types to include. Default empty.
+	 *     @type array        $type__not_in         Array of types to exclude. Default empty.
 	 *     @type string       $amount               Limit results to those affiliated with a given total. Default empty.
 	 *     @type array        $amount__in           Array of amounts to include. Default empty.
 	 *     @type array        $amount__not_in       Array of amounts to exclude. Default empty.
+	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
+	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
+	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a order count (true) or array of order objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of order IDs)

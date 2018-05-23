@@ -37,7 +37,7 @@ final class Order_Adjustments extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201802280001;
+	protected $version = 201805220001;
 
 	/**
 	 * Setup the database schema

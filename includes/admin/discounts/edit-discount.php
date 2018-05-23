@@ -34,6 +34,8 @@ $excluded_products    = $discount->get_excluded_products();
 $condition            = $discount->get_product_condition();
 $single_use           = $discount->get_once_per_customer();
 $notes                = edd_get_discount_notes( $discount->id );
+
+// Show/Hide
 $flat_display         = ( 'flat'    === $discount->get_type() ) ? '' : ' style="display:none;"';
 $percent_display      = ( 'percent' === $discount->get_type() ) ? '' : ' style="display:none;"';
 $no_notes_display     =   empty( $notes                )        ? '' : ' style="display:none;"';
@@ -168,8 +170,8 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input name="start_date" id="edd-start" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->start_date ? '' : esc_attr( $discount->start_date ); ?>"  class="edd_datepicker"/>
-                        <p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
+                        <input name="start_date" id="edd-start" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->start_date ? '' : esc_attr( $discount->start_date ); ?>" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+                        <p class="description"><?php _e( 'Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
 
@@ -180,8 +182,8 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input name="end_date" id="edd-expiration" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->end_date ? '' : esc_attr( $discount->end_date ); ?>"  class="edd_datepicker" data-format="yyyy-mm-dd"/>
-                        <p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
+                        <input name="end_date" id="edd-expiration" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->end_date ? '' : esc_attr( $discount->end_date ); ?>"  class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+                        <p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
 
@@ -243,27 +245,8 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="notes"><?php _e( 'Discount Notes', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <div class="edd-discount-notes" id="edd-discount-notes">
-		                    <?php
-
-							// Maybe output discount notes
-		                    if ( ! empty( $notes ) ) {
-			                    foreach ( $notes as $note ) {
-				                    echo edd_get_discount_note_html( $note, $discount->id );
-			                    }
-		                    }
-
-		                    ?>
-							<p class="edd-no-discount-notes"<?php echo $no_notes_display; ?>><?php _e( 'No discount notes.', 'easy-digital-downloads' ); ?></p>
-                        </div>
-
-                        <textarea name="edd-discount-note" id="edd-discount-note"></textarea>
-
-	                    <?php wp_nonce_field( 'edd_discount_note', 'edd_discount_note_nonce' ); ?>
-
-                        <p>
-                            <button type="button" id="edd-add-discount-note" class="edd-discount-note-submit button button-secondary left" data-discount-id="<?php echo esc_attr( $discount->id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
-                        </p>
+						<?php echo edd_admin_get_notes_html( $notes ); ?>
+						<?php echo edd_admin_get_new_note_form( $discount->id, 'discount' ); ?>
                     </td>
                 </tr>
 			</tbody>

@@ -106,18 +106,6 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_search_should_return_true() {
-		$logs = edd_get_file_download_logs( array(
-			'search'         => '@edd.test',
-			'search_columns' => array( 'email' ),
-		) );
-
-		$this->assertCount( 5, $logs );
-	}
-
-	/**
-	 * @covers ::get_logs()
-	 */
 	public function test_get_logs_with_orderby_download_id_and_order_asc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
 			'orderby' => 'download_id',
@@ -142,25 +130,25 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_orderby_email_and_order_asc_should_return_true() {
+	public function test_get_logs_with_orderby_file_id_and_order_asc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'orderby' => 'email',
+			'orderby' => 'file_id',
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_email() < $logs[1]->get_email() );
+		$this->assertTrue( $logs[0]->get_file_id() < $logs[1]->get_file_id() );
 	}
 
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_orderby_email_and_order_desc_should_return_true() {
+	public function test_get_logs_with_orderby_file_id_and_order_desc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'orderby' => 'email',
+			'orderby' => 'file_id',
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_email() > $logs[1]->get_email() );
+		$this->assertTrue( $logs[0]->get_file_id() > $logs[1]->get_file_id() );
 	}
 
 	/**

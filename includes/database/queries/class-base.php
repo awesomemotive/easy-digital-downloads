@@ -233,6 +233,23 @@ class Base extends \EDD\Database\Base {
 	 */
 	protected $request = '';
 
+	/**
+	 * The last error, if any.
+	 *
+	 * @since 3.0
+	 * @var mixed
+	 */
+	protected $last_error = false;
+
+	/**
+	 * This private variable only exists to temporarily hold onto the SQL used
+	 * in a date query. This is necessary to work around WordPress filters.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	private $date_query_sql = '';
+
 	/** Methods ***************************************************************/
 
 	/**
@@ -260,7 +277,7 @@ class Base extends \EDD\Database\Base {
 	 *                                           Default 'DESC'.
 	 *     @type string       $search            Search term(s) to retrieve matching items for.
 	 *                                           Default empty.
-	 *     @type array        $search_columns    Array of column names to be searched. Accepts 'email', 'date_created', 'date_completed'.
+	 *     @type array        $search_columns    Array of column names to be searched.
 	 *                                           Default empty array.
 	 *     @type boolean      $update_item_cache Whether to prime the cache for found items.
 	 *                                           Default false.
@@ -599,11 +616,44 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $args See WP_Date_Query
+	 * @param array  $args   See WP_Date_Query
+	 * @param string $column Column to run date query on. Default `date_created`
+	 *
 	 * @return \WP_Date_Query
 	 */
-	private function get_date_query( $args = array() ) {
-		return new \WP_Date_Query( $args, '.' );
+	private function get_date_query( $args = array(), $column = 'date_created' ) {
+
+		// Filter valid date columns for these columns
+		add_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns'), 2 );
+
+		$date_query = new \WP_Date_Query( $args, $column );
+		$table      = $this->get_table_name();
+		$date_query->column = "{$table}.{$column}";
+		$date_query->validate_column( $column );
+		$this->date_query_sql = $date_query->get_sql();
+
+		// Remove all valid columns filters
+		remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns'), 2 );
+
+		// Return the date
+		return $date_query;
+	}
+
+	/**
+	 * This public method should not be called directly ever.
+	 *
+	 * It only exists to hack around a WordPress core issue with WP_Date_Query
+	 * column stubbornness.
+	 *
+	 * @since 3.0
+	 *
+	 * @access private
+	 * @param array $columns
+	 * @return array
+	 */
+	public function __filter_valid_date_columns( $columns = array() ) {
+		$columns = $this->get_columns( array( 'date_query' => true ), 'and', 'name' );
+		return $columns;
 	}
 
 	/**
@@ -721,14 +771,9 @@ class Base extends \EDD\Database\Base {
 		$select  = $this->get_db()->prepare( "SELECT * FROM {$table} WHERE {$column_name} = {$pattern}", $column_value );
 		$result  = $this->get_db()->get_row( $select );
 
-		// Bail if no row exists
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Return row
@@ -1059,19 +1104,11 @@ class Base extends \EDD\Database\Base {
 					// Add to where array
 					$where[ $column->name ] = $statement;
 
-				// Numeric/String (prepared)
+				// Numeric/String/Float (prepared)
 				} else {
-
-					// Numeric
-					if ( $column->is_numeric() ) {
-						$statement = "{$this->table_alias}.{$column->name} = %d";
-						$where_id  = absint( $this->query_vars[ $column->name ] );
-
-					// String
-					} else {
-						$statement = "{$this->table_alias}.{$column->name} = %s";
-						$where_id  = $this->query_vars[ $column->name ];
-					}
+					$pattern   = $this->get_column_field( array( 'name' => $column->name ), 'pattern', '%s' );
+					$where_id  = $this->query_vars[ $column->name ];
+					$statement = "{$this->table_alias}.{$column->name} = {$pattern}";
 
 					// Add to where array
 					$where[ $column->name ] = $this->get_db()->prepare( $statement, $where_id );
@@ -1152,8 +1189,8 @@ class Base extends \EDD\Database\Base {
 			}
 		}
 
-		// Falsey search strings are ignored.
-		if ( strlen( $this->query_vars['search'] ) ) {
+		// Maybe search if columns are searchable
+		if ( ! empty( $searchable ) && strlen( $this->query_vars['search'] ) ) {
 			$search_columns = array();
 
 			// Intersect against known searchable columns
@@ -1171,8 +1208,6 @@ class Base extends \EDD\Database\Base {
 
 			/**
 			 * Filters the columns to search in a EDD_DB_Query search.
-			 *
-			 * The default columns include 'email' and 'path.
 			 *
 			 * @since 3.0
 			 *
@@ -1212,7 +1247,7 @@ class Base extends \EDD\Database\Base {
 		// Maybe perform a date-query
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
 			$this->date_query    = $this->get_date_query( $date_query );
-			$where['date_query'] = preg_replace( $and, '', $this->date_query->get_sql() );
+			$where['date_query'] = preg_replace( $and, '', $this->date_query_sql );
 		}
 
 		// Set where and join clauses
@@ -1505,8 +1540,8 @@ class Base extends \EDD\Database\Base {
 			// Try to get item directly from DB
 			$retval = $this->get_item_raw( $column_name, $column_value );
 
-			// Bail because item does not exist
-			if ( empty( $retval ) || is_wp_error( $retval ) ) {
+			// Bail on failure
+			if ( $this->failed( $retval ) ) {
 				return false;
 			}
 
@@ -1531,15 +1566,15 @@ class Base extends \EDD\Database\Base {
 		// Get primary column
 		$primary = $this->get_primary_column_name();
 
-		// Bail if trying to update an existing item
+		// Bail if data to add includes the primary column
 		if ( isset( $data[ $primary ] ) ) {
-			return $this->update_item( $data[ $primary ], $data );
+			return false;
 		}
 
 		// Get default values for item (from columns)
 		$item = $this->default_item();
 
-		// Never include the primary key value
+		// Unset the primary key value from defaults
 		unset( $item[ $primary ] );
 
 		// Cut out non-keys for meta
@@ -1565,16 +1600,14 @@ class Base extends \EDD\Database\Base {
 
 		// Try to add
 		$table  = $this->get_table_name();
-		$result = $this->get_db()->insert( $table, $save );
+		$save   = $this->validate_item( $save );
+		$result = ! empty( $save )
+			? $this->get_db()->insert( $table, $save )
+			: false;
 
-		// Bail if no insert occurred
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Get the new item ID
@@ -1626,7 +1659,7 @@ class Base extends \EDD\Database\Base {
 		// Cast as an array for easier manipulation
 		$item = (array) $item;
 
-		// Never update the primary key value
+		// Unset the primary key from data to parse
 		unset( $data[ $primary ] );
 
 		// Splice new data into item, and cut out non-keys for meta
@@ -1640,7 +1673,7 @@ class Base extends \EDD\Database\Base {
 			return true;
 		}
 
-		// Never update the primary key value
+		// Unset the primary key from data to save
 		unset( $save[ $primary ] );
 
 		// If date-modified is empty, use the current time
@@ -1652,18 +1685,14 @@ class Base extends \EDD\Database\Base {
 		// Try to update
 		$where  = array( $primary => $item_id );
 		$table  = $this->get_table_name();
+		$save   = $this->validate_item( $save );
 		$result = ! empty( $save )
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
 
-		// Bail if no update occurred
-		if ( empty( $result ) ) {
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Bail if an error occurred
-		if ( is_wp_error( $result ) ) {
-			return $result;
 		}
 
 		// Maybe save meta keys
@@ -1699,20 +1728,28 @@ class Base extends \EDD\Database\Base {
 
 		// Get vars
 		$primary = $this->get_primary_column_name();
-		$table   = $this->get_table_name();
-		$where   = array( $primary => $item_id );
 
 		// Get item (before it's deleted)
 		$item    = $this->get_item_raw( $primary, $item_id );
 
+		// Bail if item does not exist to delete
+		if ( empty( $item ) ) {
+			return false;
+		}
+
 		// Try to delete
+		$table   = $this->get_table_name();
+		$where   = array( $primary => $item_id );
 		$result  = $this->get_db()->delete( $table, $where );
 
-		// Maybe clean caches on successful delete
-		if ( ! empty( $result ) && ! is_wp_error( $result ) ) {
-			$this->delete_all_item_meta( $item_id );
-			$this->clean_item_cache( $item );
+		// Bail on failure
+		if ( $this->failed( $result ) ) {
+			return false;
 		}
+
+		// Clean caches on successful delete
+		$this->delete_all_item_meta( $item_id );
+		$this->clean_item_cache( $item );
 
 		// Return result
 		return $result;
@@ -1746,6 +1783,38 @@ class Base extends \EDD\Database\Base {
 
 		// Return the newly shaped item
 		return new $this->item_shape( $item );
+	}
+
+	/**
+	 * Validate an item before it is updated in or added to the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return mixed False on error, Array of validated values on success
+	 */
+	private function validate_item( $item = array() ) {
+		foreach ( $item as $key => $value ) {
+
+			// Get callback for column
+			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
+
+			// Attempt to validate
+			if ( ! empty( $callback ) && is_callable( $callback ) ) {
+				$validated = call_user_func( $callback, $value );
+
+				// Bail if error
+				if ( is_wp_error( $validated ) ) {
+					return false;
+				}
+
+				// Update the value
+				$item[ $key ] = $validated;
+			}
+		}
+
+		// Return the validated item
+		return $item;
 	}
 
 	/**
@@ -1846,6 +1915,33 @@ class Base extends \EDD\Database\Base {
 			 */
 			do_action( $key_action, $old_value, $new_value, $item_id );
 		}
+	}
+
+	/**
+	 * Check if the query failed
+	 *
+	 * @since 3.0
+	 * @param mixed $result
+	 * @return boolean
+	 */
+	private function failed( $result = false ) {
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			$retval = true;
+
+		// Bail if an error occurred
+		} elseif ( is_wp_error( $result ) ) {
+			$this->last_error = $result;
+			$retval           = true;
+
+		// No errors
+		} else {
+			$retval = false;
+		}
+
+		// Return the result
+		return $retval;
 	}
 
 	/** Meta ******************************************************************/
