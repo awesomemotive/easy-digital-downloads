@@ -381,7 +381,7 @@ jQuery(document).ready(function ($) {
 	}
 
 	// Process checkout
-	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
+	$(document).on('click', '#edd_purchase_form #edd_purchase_submit [type=submit]', function(e) {
 
 		var eddPurchaseform = document.getElementById('edd_purchase_form');
 
