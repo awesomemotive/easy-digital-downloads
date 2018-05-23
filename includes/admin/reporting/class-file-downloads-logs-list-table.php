@@ -180,7 +180,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	public function get_filtered_customer() {
 		$ret = false;
 
-		if( isset( $_GET['customer'] ) ) {
+		if ( isset( $_GET['customer'] ) ) {
 			$customer = new EDD_Customer( sanitize_text_field( $_GET['customer'] ) );
 			if ( ! empty( $customer->id ) ) {
 				$ret = $customer->id;
@@ -233,62 +233,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
-		$customer_id = $this->get_filtered_customer();
-		$payment     = $this->get_filtered_payment();
-		$meta_query  = array();
-
-		if ( $payment ) {
-			// Show only logs from a specific payment
-			$meta_query[] = array(
-				'key'   => '_edd_log_payment_id',
-				'value' => $payment,
-			);
-		}
-
-		$search = ! empty( $customer_id )
-			? $customer_id
-			: $this->get_search();
-
-		if ( ! empty( $search ) ) {
-			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				// This is an IP address search
-				$key     = '_edd_log_ip';
-				$compare = '=';
-
-			} elseif ( is_email( $search ) ) {
-				$customer = new EDD_Customer( $search );
-				if ( ! empty( $customer->id ) ) {
-					$key     = '_edd_log_customer_id';
-					$search  = $customer->id;
-					$compare = '=';
-				}
-
-			} elseif ( is_numeric( $search ) ) {
-				$customer = new EDD_Customer( $search );
-
-				if ( ! empty( $customer->id ) ) {
-					$key     = '_edd_log_customer_id';
-					$search  = $customer->id;
-					$compare = '=';
-				} else {
-					$this->file_search = true;
-				}
-			} else {
-				$key     = '_edd_log_file_id';
-				$compare = '=';
-			}
-
-			if ( ! empty( $key ) && empty( $this->file_search ) ) {
-				// Meta query only works for non file name search
-				$meta_query[] = array(
-					'key'     => $key,
-					'value'   => $search,
-					'compare' => $compare,
-				);
-			}
-		}
-
-		return $meta_query;
+		return array();
 	}
 
 	/**
@@ -356,12 +301,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			foreach ( $logs as $log ) {
 				/** @var $log EDD\Logs\File_Download_Log */
 
-				$customer_id = edd_get_payment_customer_id( $log->get_payment_id() );
-
 				$meta        = get_post_custom( $log->get_payment_id() );
-				$customer_id = isset( $meta['_edd_log_customer_id'] )
-					? (int) $meta['_edd_log_customer_id'][0]
-					: null;
+				$customer_id = (int) isset( $meta['_edd_log_customer_id'] )
+					? $meta['_edd_log_customer_id'][0]
+					: edd_get_payment_customer_id( $log->get_payment_id() );
 
 				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
 					$files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
@@ -418,26 +361,15 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @since 1.5
 	 */
-	function prepare_items() {
-		$paged     = $this->get_paged();
-		$offset    = $paged > 1 ? ( ( $paged - 1 ) * $this->per_page ) : 0;
-		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : false;
-		$log_query = array(
-			'offset'     => $offset,
-			'meta_query' => $this->get_meta_query(),
-			'number'     => $this->per_page,
-		);
+	public function prepare_items() {
 
-		if ( ! empty( $download ) ) {
-			$log_query['download_id'] = $download;
-		}
-
-		$this->_column_headers = array( 
+		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
 			$this->get_sortable_columns()
 		);
 
+		$log_query   = $this->get_query_args();
 		$this->items = $this->get_logs( $log_query );
 		$total_items = edd_count_file_download_logs( $log_query );
 
@@ -446,6 +378,60 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			'per_page'    => $this->per_page,
 			'total_pages' => ceil( $total_items / $this->per_page ),
 		) );
+	}
+
+	/**
+	 * Return array of query arguments
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	private function get_query_args() {
+
+		// Pagination
+		$paged  = $this->get_paged();
+		$offset = ( $paged > 1 )
+			? ( ( $paged - 1 ) * $this->per_page )
+			: 0;
+
+		// Defaults
+		$retval = array(
+			'download_id' => $this->get_filtered_download(),
+			'customer_id' => $this->get_filtered_customer(),
+			'payment_id'  => $this->get_filtered_payment(),
+			'meta_query'  => $this->get_meta_query(),
+			'offset'      => $offset,
+			'number'      => $this->per_page
+		);
+
+		$search = $this->get_search();
+
+		if ( ! empty( $search ) ) {
+			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+				$retval['ip'] = $search;
+
+			} elseif ( is_email( $search ) ) {
+				$customer = new EDD_Customer( $search );
+				if ( ! empty( $customer->id ) ) {
+					$retval['customer_id'] = $customer->id;
+				}
+
+			} elseif ( is_numeric( $search ) ) {
+				$customer = new EDD_Customer( $search );
+
+				if ( ! empty( $customer->id ) ) {
+					$retval['customer_id'] = $customer->id;
+				} else {
+					$this->file_search = true;
+				}
+			} else {
+				$retval['file_id'] = $search;
+			}
+		}
+
+		// Return query arguments
+		return $retval;
 	}
 
 	/**
