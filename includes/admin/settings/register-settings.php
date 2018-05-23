@@ -2468,10 +2468,11 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 				: '';
 		}
 
-		$now        = current_time( 'timestamp' );
-		$expiration = strtotime( $license->expires, $now );
-
 		if ( ! empty( $license ) && is_object( $license ) ) {
+			$now        = current_time( 'timestamp' );
+			$expiration = ! empty( $license->expires )
+				? strtotime( $license->expires, $now )
+				: false;
 
 			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
 			if ( false === $license->success ) {
