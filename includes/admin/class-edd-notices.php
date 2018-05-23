@@ -101,7 +101,7 @@ class EDD_Notices {
 		}
 
 		// Assemble the message
-		$message = '<div id="message" class="notice ' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
+		$message = '<div class="notice ' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
 		$message = str_replace( "'", "\'", $message );
 
 		// Avoid malformed notices variable

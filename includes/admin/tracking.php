@@ -239,11 +239,15 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
+		static $once = null;
 
-		// Bail if directory is protected
-		if ( edd_is_uploads_url_protected() ) {
+		// Only 1 notice
+		if ( ! is_null( $once ) ) {
 			return;
 		}
+
+		// Already ran once
+		$once = true;
 
 		// Bail if already noticed
 		if ( get_option( 'edd_tracking_notice' ) ) {
