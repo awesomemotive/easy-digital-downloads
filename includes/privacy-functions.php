@@ -411,6 +411,12 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 			$payment->last_name  = '';
 
 
+			wp_update_post( array(
+				'ID' => $payment->ID,
+				'post_title' => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+				'post_name'  => sanitize_title( __( 'Anonymized Customer', 'easy-digital-downloads' ) ),
+			) );
+
 			/**
 			 * Run further anonymization on a payment
 			 *
