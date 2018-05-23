@@ -484,8 +484,7 @@ function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
 	 * @param string      $action  What action will be performed (none, delete, anonymize)
 	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
 	 */
-	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
-
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $payment->status, $action, $payment );
 	return $action;
 
 }
