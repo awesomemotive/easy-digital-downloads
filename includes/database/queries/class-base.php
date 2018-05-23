@@ -623,13 +623,8 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function get_date_query( $args = array(), $column = 'date_created' ) {
 
-		// Remove all valid columns filters
-		remove_all_filters( 'date_query_valid_columns' );
-
 		// Filter valid date columns for these columns
-		add_filter( 'date_query_valid_columns', function() {
-			return $this->get_columns( array( 'date_query' => true ), 'and', 'name' );
-		} );
+		add_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns'), 2 );
 
 		$date_query = new \WP_Date_Query( $args, $column );
 		$table      = $this->get_table_name();
@@ -638,10 +633,27 @@ class Base extends \EDD\Database\Base {
 		$this->date_query_sql = $date_query->get_sql();
 
 		// Remove all valid columns filters
-		remove_all_filters( 'date_query_valid_columns' );
+		remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns'), 2 );
 
 		// Return the date
 		return $date_query;
+	}
+
+	/**
+	 * This public method should not be called directly ever.
+	 *
+	 * It only exists to hack around a WordPress core issue with WP_Date_Query
+	 * column stubbornness.
+	 *
+	 * @since 3.0
+	 *
+	 * @access private
+	 * @param array $columns
+	 * @return array
+	 */
+	public function __filter_valid_date_columns( $columns = array() ) {
+		$columns = $this->get_columns( array( 'date_query' => true ), 'and', 'name' );
+		return $columns;
 	}
 
 	/**
