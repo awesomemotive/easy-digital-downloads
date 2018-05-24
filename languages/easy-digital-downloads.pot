@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-05-24 00:59:35+00:00\n"
+"POT-Creation-Date: 2018-05-24 21:13:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -196,7 +196,7 @@ msgstr ""
 
 #: includes/admin/admin-pages.php:43 includes/admin/plugins.php:57
 #: includes/admin/settings/contextual-help.php:87
-#: includes/admin/settings/register-settings.php:1337
+#: includes/admin/settings/register-settings.php:1329
 msgid "Extensions"
 msgstr ""
 
@@ -431,7 +431,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:267
 #: includes/admin/payments/class-payments-table.php:367
 #: includes/admin/payments/class-payments-table.php:435
-#: includes/admin/settings/register-settings.php:935
+#: includes/admin/settings/register-settings.php:927
 #: includes/payments/functions.php:1618
 msgid "Delete"
 msgstr ""
@@ -449,12 +449,12 @@ msgstr ""
 #: includes/admin/reporting/class-export-customers.php:74
 #: includes/admin/reporting/export/class-batch-export-customers.php:42
 #: includes/admin/reporting/export/class-batch-export-downloads.php:43
-#: includes/privacy-functions.php:586 templates/shortcode-receipt.php:123
+#: includes/privacy-functions.php:589 templates/shortcode-receipt.php:123
 msgid "Name"
 msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:177
-#: includes/privacy-functions.php:582
+#: includes/privacy-functions.php:585
 msgid "Primary Email"
 msgstr ""
 
@@ -468,7 +468,7 @@ msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:180
 #: includes/admin/reporting/export/class-batch-export-downloads.php:44
-#: includes/privacy-functions.php:590
+#: includes/privacy-functions.php:593
 msgid "Date Created"
 msgstr ""
 
@@ -639,7 +639,7 @@ msgid "City"
 msgstr ""
 
 #: includes/admin/customers/customers.php:269
-#: includes/admin/settings/register-settings.php:2140
+#: includes/admin/settings/register-settings.php:2131
 #: includes/admin/tools.php:695 includes/checkout/template.php:435
 #: templates/shortcode-profile-editor.php:171
 msgid "State / Province"
@@ -663,7 +663,7 @@ msgid "Customer since %s"
 msgstr ""
 
 #: includes/admin/customers/customers.php:313
-#: includes/privacy-functions.php:852
+#: includes/privacy-functions.php:857
 msgid "User ID"
 msgstr ""
 
@@ -744,14 +744,14 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:698
 #: includes/admin/downloads/metabox.php:823
 #: includes/admin/payments/view-order-details.php:490
-#: includes/admin/settings/register-settings.php:2143 includes/scripts.php:227
+#: includes/admin/settings/register-settings.php:2134 includes/scripts.php:227
 #: templates/checkout_cart.php:57 templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
 msgid "Remove"
 msgstr ""
 
 #: includes/admin/customers/customers.php:416
-#: includes/checkout/template.php:182 includes/privacy-functions.php:749
+#: includes/checkout/template.php:182 includes/privacy-functions.php:754
 msgid "Email Address"
 msgstr ""
 
@@ -802,7 +802,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:41
 #: includes/admin/reporting/export/class-batch-export-payments.php:60
 #: includes/admin/reporting/export/class-batch-export-sales.php:49
-#: includes/admin/tools.php:587 includes/privacy-functions.php:925
+#: includes/admin/tools.php:587 includes/privacy-functions.php:932
 #: templates/history-purchases.php:19 templates/shortcode-receipt.php:59
 msgid "Date"
 msgstr ""
@@ -814,7 +814,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:80
 #: includes/admin/reporting/export/class-batch-export-downloads.php:48
 #: includes/admin/reporting/export/class-batch-export-payments.php:65
-#: includes/admin/tools.php:614 includes/privacy-functions.php:761
+#: includes/admin/tools.php:614 includes/privacy-functions.php:766
 msgid "Status"
 msgstr ""
 
@@ -1253,13 +1253,13 @@ msgstr ""
 
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
-#: includes/admin/settings/register-settings.php:1329
-#: includes/admin/settings/register-settings.php:1385
-#: includes/admin/settings/register-settings.php:1390
+#: includes/admin/settings/register-settings.php:1321
+#: includes/admin/settings/register-settings.php:1377
+#: includes/admin/settings/register-settings.php:1382
+#: includes/admin/settings/register-settings.php:1386
+#: includes/admin/settings/register-settings.php:1391
 #: includes/admin/settings/register-settings.php:1394
-#: includes/admin/settings/register-settings.php:1399
-#: includes/admin/settings/register-settings.php:1402
-#: includes/admin/settings/register-settings.php:1418
+#: includes/admin/settings/register-settings.php:1409
 #: includes/admin/tools.php:68
 msgid "General"
 msgstr ""
@@ -2393,7 +2393,7 @@ msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:689
-#: includes/checkout/template.php:347 includes/privacy-functions.php:753
+#: includes/checkout/template.php:347 includes/privacy-functions.php:758
 msgid "Billing Address"
 msgstr ""
 
@@ -2566,8 +2566,8 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:41
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:43
 #: includes/admin/reporting/export/class-batch-export-payments.php:63
-#: includes/admin/tools.php:542 includes/privacy-functions.php:757
-#: includes/privacy-functions.php:856 includes/privacy-functions.php:933
+#: includes/admin/tools.php:542 includes/privacy-functions.php:762
+#: includes/privacy-functions.php:861 includes/privacy-functions.php:940
 msgid "IP Address"
 msgstr ""
 
@@ -2605,7 +2605,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
-#: includes/admin/settings/register-settings.php:2139
+#: includes/admin/settings/register-settings.php:2130
 #: includes/admin/tools.php:713 templates/shortcode-profile-editor.php:162
 msgid "Country"
 msgstr ""
@@ -2859,8 +2859,8 @@ msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-payments.php:42
 #: includes/admin/reporting/export/class-batch-export-sales.php:41
-#: includes/admin/tools.php:524 includes/privacy-functions.php:578
-#: includes/privacy-functions.php:848
+#: includes/admin/tools.php:524 includes/privacy-functions.php:581
+#: includes/privacy-functions.php:853
 msgid "Customer ID"
 msgstr ""
 
@@ -2870,7 +2870,7 @@ msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-payments.php:62
 #: includes/admin/settings/register-settings.php:352
-#: includes/admin/settings/register-settings.php:1386
+#: includes/admin/settings/register-settings.php:1378
 msgid "Currency"
 msgstr ""
 
@@ -3002,8 +3002,8 @@ msgid "Refresh Reports"
 msgstr ""
 
 #: includes/admin/reporting/logs.php:144
-#: includes/admin/settings/register-settings.php:1412
-#: includes/privacy-functions.php:541
+#: includes/admin/settings/register-settings.php:1404
+#: includes/privacy-functions.php:544
 msgid "File Downloads"
 msgstr ""
 
@@ -3033,7 +3033,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:59
 #: includes/admin/settings/contextual-help.php:71
-#: includes/admin/settings/register-settings.php:1333
+#: includes/admin/settings/register-settings.php:1325
 msgid "Taxes"
 msgstr ""
 
@@ -3180,7 +3180,7 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:48
 #: includes/admin/settings/register-settings.php:420
-#: includes/admin/settings/register-settings.php:1330
+#: includes/admin/settings/register-settings.php:1322
 msgid "Payment Gateways"
 msgstr ""
 
@@ -3209,7 +3209,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:57
-#: includes/admin/settings/register-settings.php:1331
+#: includes/admin/settings/register-settings.php:1323
 msgid "Emails"
 msgstr ""
 
@@ -3229,7 +3229,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
-#: includes/admin/settings/register-settings.php:1332
+#: includes/admin/settings/register-settings.php:1324
 msgid "Styles"
 msgstr ""
 
@@ -3312,7 +3312,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:93
-#: includes/admin/settings/register-settings.php:1409
+#: includes/admin/settings/register-settings.php:1401
 msgid "Miscellaneous"
 msgstr ""
 
@@ -3489,7 +3489,7 @@ msgid "The symbol (usually , or .) to separate decimal points."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:388
-#: includes/admin/settings/register-settings.php:1387
+#: includes/admin/settings/register-settings.php:1379
 msgid "API"
 msgstr ""
 
@@ -4151,91 +4151,77 @@ msgid "A postfix to append to all sequential order numbers."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:858
-msgid "Terms and Privacy Policy"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:861
-msgid "Terms and Privacy Policy Settings"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:862
-msgid ""
-"Depending on legal and regulatory requirements, it may be necessary for "
-"your site to show checkboxes for Terms of Agreement and/or Privacy Policy."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:866
 msgid "Agree to Terms"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:867
+#: includes/admin/settings/register-settings.php:859
 msgid ""
 "Check this to show an agree to terms on the checkout that users must agree "
 "to before purchasing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:872
+#: includes/admin/settings/register-settings.php:864
 msgid "Agree to Terms Label"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:873
+#: includes/admin/settings/register-settings.php:865
 msgid "Label shown next to the agree to terms check box."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:879
+#: includes/admin/settings/register-settings.php:871
 msgid "Agreement Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:880
+#: includes/admin/settings/register-settings.php:872
 msgid "If Agree to Terms is checked, enter the agreement terms here."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:891
+#: includes/admin/settings/register-settings.php:883
 msgid "Agree to Privacy Policy"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:892
+#: includes/admin/settings/register-settings.php:884
 msgid ""
 "Check this to show an agree to Privacy Policy on checkout that users must "
 "agree to before purchasing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:897
+#: includes/admin/settings/register-settings.php:889
 msgid "Agree to Privacy Policy Label"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:898
+#: includes/admin/settings/register-settings.php:890
 msgid "Label shown next to the agree to Privacy Policy checkbox."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:904
+#: includes/admin/settings/register-settings.php:896
 msgid "Show the Privacy Policy on checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:905
+#: includes/admin/settings/register-settings.php:897
 msgid "Display your Privacy Policy on checkout."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:905
+#: includes/admin/settings/register-settings.php:897
 msgid "Set your Privacy Policy here"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:918
+#: includes/admin/settings/register-settings.php:910
 msgid "Payment Status Actions"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:920
+#: includes/admin/settings/register-settings.php:912
 msgid ""
 "When a user requests to be anonymized or removed from a site, these are the "
 "actions that will be taken on payments associated with their customer, by "
 "status."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:921
+#: includes/admin/settings/register-settings.php:913
 msgid "What settings should I use?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:922
+#: includes/admin/settings/register-settings.php:914
 msgid ""
 "By default, Easy Digital Downloads sets suggested actions based on the "
 "Payment Status. These are purely recommendations, and you may need to "
@@ -4243,209 +4229,208 @@ msgid ""
 "leave these settings as is."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:933
+#: includes/admin/settings/register-settings.php:925
 msgid "No Action"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:934
+#: includes/admin/settings/register-settings.php:926
 msgid "Anonymize"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:974
+#: includes/admin/settings/register-settings.php:966
 msgid "Buy Now Disabled"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:975
+#: includes/admin/settings/register-settings.php:967
 msgid ""
 "Buy Now buttons are only available for stores that have a single supported "
 "gateway active and that do not use taxes."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1078
+#: includes/admin/settings/register-settings.php:1070
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1222
+#: includes/admin/settings/register-settings.php:1214
 msgid "Error setting default gateway. No gateways are enabled."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1235
+#: includes/admin/settings/register-settings.php:1227
 msgid "%s could not be set as the default gateway. It must first be enabled."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1334
-#: includes/admin/settings/register-settings.php:1415
+#: includes/admin/settings/register-settings.php:1326
 msgid "Privacy"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1340
+#: includes/admin/settings/register-settings.php:1332
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1343
+#: includes/admin/settings/register-settings.php:1335
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1391
+#: includes/admin/settings/register-settings.php:1383
 #: includes/gateways/functions.php:25 includes/gateways/paypal-standard.php:33
 msgid "PayPal Standard"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1395
+#: includes/admin/settings/register-settings.php:1387
 msgid "Purchase Receipts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1396
+#: includes/admin/settings/register-settings.php:1388
 msgid "New Sale Notifications"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1405
+#: includes/admin/settings/register-settings.php:1397
 msgid "Main"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1410 includes/install.php:92
+#: includes/admin/settings/register-settings.php:1402 includes/install.php:92
 #: templates/widget-cart-checkout.php:6 templates/widget-cart-empty.php:7
 msgid "Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1411
+#: includes/admin/settings/register-settings.php:1403
 msgid "Button Text"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1413
+#: includes/admin/settings/register-settings.php:1405
 msgid "Accounting"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1414
+#: includes/admin/settings/register-settings.php:1406
 msgid "Terms of Agreement"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1419
+#: includes/admin/settings/register-settings.php:1410
 msgid "Export & Erase"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1661
+#: includes/admin/settings/register-settings.php:1652
 msgid ""
 "Don't see what you need? More Payment Gateway options are available <a "
 "href=\"%s\">here</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1882
+#: includes/admin/settings/register-settings.php:1873
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2040
+#: includes/admin/settings/register-settings.php:2031
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2141
+#: includes/admin/settings/register-settings.php:2132
 msgid "Country Wide"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2142
+#: includes/admin/settings/register-settings.php:2133
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2142
+#: includes/admin/settings/register-settings.php:2133
 msgid ""
 "<strong>Regional tax rates: </strong>When a customer enters an address on "
 "checkout that matches the specified region for this tax rate, the cart tax "
 "will adjust automatically. Enter a percentage, such as 6.5 for 6.5%."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2159
-#: includes/admin/settings/register-settings.php:2204
+#: includes/admin/settings/register-settings.php:2150
+#: includes/admin/settings/register-settings.php:2195
 msgid "Choose a country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2174
+#: includes/admin/settings/register-settings.php:2165
 msgid "Choose a state"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2186
-#: includes/admin/settings/register-settings.php:2214
+#: includes/admin/settings/register-settings.php:2177
+#: includes/admin/settings/register-settings.php:2205
 msgid "Apply to whole country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2189
-#: includes/admin/settings/register-settings.php:2217
+#: includes/admin/settings/register-settings.php:2180
+#: includes/admin/settings/register-settings.php:2208
 msgid "Remove Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2222
+#: includes/admin/settings/register-settings.php:2213
 msgid "Add Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2275
+#: includes/admin/settings/register-settings.php:2266
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2288
+#: includes/admin/settings/register-settings.php:2279
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2300
+#: includes/admin/settings/register-settings.php:2291
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2313
+#: includes/admin/settings/register-settings.php:2304
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2325
+#: includes/admin/settings/register-settings.php:2316
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2334
+#: includes/admin/settings/register-settings.php:2325
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2343
+#: includes/admin/settings/register-settings.php:2334
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2351
+#: includes/admin/settings/register-settings.php:2342
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2352
+#: includes/admin/settings/register-settings.php:2343
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2372
+#: includes/admin/settings/register-settings.php:2363
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2379
+#: includes/admin/settings/register-settings.php:2370
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2389
+#: includes/admin/settings/register-settings.php:2380
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2407
+#: includes/admin/settings/register-settings.php:2398
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2420
+#: includes/admin/settings/register-settings.php:2411
 msgid "Deactivate License"
 msgstr ""
 
@@ -7431,121 +7416,121 @@ msgstr ""
 msgid "Payment %d with status %s deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:435
+#: includes/privacy-functions.php:438
 msgid "Payment ID %d successfully anonymized."
 msgstr ""
 
-#: includes/privacy-functions.php:530 includes/privacy-functions.php:574
-#: includes/privacy-functions.php:1118
+#: includes/privacy-functions.php:533 includes/privacy-functions.php:577
+#: includes/privacy-functions.php:1126
 msgid "Customer Record"
 msgstr ""
 
-#: includes/privacy-functions.php:535
+#: includes/privacy-functions.php:538
 msgid "Billing Information"
 msgstr ""
 
-#: includes/privacy-functions.php:546 includes/privacy-functions.php:940
-#: includes/privacy-functions.php:1133
+#: includes/privacy-functions.php:549 includes/privacy-functions.php:949
+#: includes/privacy-functions.php:1141
 msgid "API Access Logs"
 msgstr ""
 
-#: includes/privacy-functions.php:594
+#: includes/privacy-functions.php:597
 msgid "All Email Addresses"
 msgstr ""
 
-#: includes/privacy-functions.php:604
+#: includes/privacy-functions.php:607
 msgid "Agreed to Terms"
 msgstr ""
 
-#: includes/privacy-functions.php:614
+#: includes/privacy-functions.php:617
 msgid "Agreed to Privacy Policy"
 msgstr ""
 
-#: includes/privacy-functions.php:727
+#: includes/privacy-functions.php:732
 msgid "Order ID / Number"
 msgstr ""
 
-#: includes/privacy-functions.php:731
+#: includes/privacy-functions.php:736
 msgid "Order Date"
 msgstr ""
 
-#: includes/privacy-functions.php:735
+#: includes/privacy-functions.php:740
 msgid "Order Completed Date"
 msgstr ""
 
-#: includes/privacy-functions.php:741
+#: includes/privacy-functions.php:746
 msgid "Order Total"
 msgstr ""
 
-#: includes/privacy-functions.php:745
+#: includes/privacy-functions.php:750
 msgid "Order Items"
 msgstr ""
 
-#: includes/privacy-functions.php:770
+#: includes/privacy-functions.php:775
 msgid "Customer Orders"
 msgstr ""
 
-#: includes/privacy-functions.php:836
+#: includes/privacy-functions.php:841
 msgid "Date of Download"
 msgstr ""
 
-#: includes/privacy-functions.php:840
+#: includes/privacy-functions.php:845
 msgid "Product Downloaded"
 msgstr ""
 
-#: includes/privacy-functions.php:844
+#: includes/privacy-functions.php:849
 msgid "Order ID"
 msgstr ""
 
-#: includes/privacy-functions.php:863 includes/privacy-functions.php:1128
+#: includes/privacy-functions.php:870 includes/privacy-functions.php:1136
 msgid "File Download Logs"
 msgstr ""
 
-#: includes/privacy-functions.php:929
+#: includes/privacy-functions.php:936
 msgid "Request"
 msgstr ""
 
-#: includes/privacy-functions.php:1004
+#: includes/privacy-functions.php:1012
 msgid "Possibly Delete Customer"
 msgstr ""
 
-#: includes/privacy-functions.php:1070
+#: includes/privacy-functions.php:1078
 msgid "Customer for %s not deleted, due to remaining payments."
 msgstr ""
 
-#: includes/privacy-functions.php:1088
+#: includes/privacy-functions.php:1096
 msgid "Customer for %s successfully deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:1099
+#: includes/privacy-functions.php:1107
 msgid "Customer for %s failed to be deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:1123
+#: includes/privacy-functions.php:1131
 msgid "Payment Record"
 msgstr ""
 
-#: includes/privacy-functions.php:1166
+#: includes/privacy-functions.php:1174
 msgid "Customer for %s has been anonymized."
 msgstr ""
 
-#: includes/privacy-functions.php:1191
+#: includes/privacy-functions.php:1199
 msgid "No payments found for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1192
+#: includes/privacy-functions.php:1200
 msgid "All eligible payments anonymized or deleted for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1265
+#: includes/privacy-functions.php:1273
 msgid "All eligible file download logs anonymized or deleted for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1314
+#: includes/privacy-functions.php:1322
 msgid "No User found for %s, no access logs to remove."
 msgstr ""
 
-#: includes/privacy-functions.php:1339
+#: includes/privacy-functions.php:1347
 msgid "All API access logs deleted for %s."
 msgstr ""
 
@@ -8400,7 +8385,7 @@ msgctxt "text shown on the Add to Cart Button when the product is already in the
 msgid "Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:963
+#: includes/admin/settings/register-settings.php:955
 msgctxt ""
 "payment status labels for the privacy export & erase settings: Pending "
 "Payments"
