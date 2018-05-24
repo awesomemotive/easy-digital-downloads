@@ -236,10 +236,13 @@ class EDD_Logging {
 			);
 		}
 
-		$log_id = call_user_func( $insert_method, $data );
+		// Get the log ID if method is callable
+		$log_id = is_callable( $insert_method )
+			? call_user_func( $insert_method, $data )
+			: false;
 
 		// Set log meta, if any
-		if ( $log_id && 'edd_add_log' === $insert_method && ! empty( $log_meta ) ) {
+		if ( $log_id && ( 'edd_add_log' === $insert_method ) && ! empty( $log_meta ) ) {
 			$log = edd_get_log( $log_id );
 
 			foreach ( (array) $log_meta as $key => $meta ) {
@@ -342,6 +345,11 @@ class EDD_Logging {
 
 		unset( $data['type'] );
 
+		// Bail if not callable
+		if ( ! is_callable( $update_method ) ) {
+			return;
+		}
+
 		call_user_func( $update_method, $data );
 
 		// Set log meta, if any
@@ -368,41 +376,19 @@ class EDD_Logging {
 	 * @return mixed array Logs fetched, false otherwise.
 	 */
 	public function get_connected_logs( $args = array() ) {
-		$defaults = array(
-			'post_type'      => 'edd_log',
-			'posts_per_page' => 20,
-			'post_status'    => 'publish',
-			'paged'          => get_query_var( 'paged' ),
-			'log_type'       => false,
-		);
 
-		$query_args = wp_parse_args( $args, $defaults );
+		// Parse arguments
+		$r = $this->parse_args( $args );
 
 		// Used to dynamically dispatch the call to the correct class.
-		$log_type = 'logs';
+		$log_type = $this->get_log_table( $r['log_type'] );
+		$func     = "edd_get_{$log_type}";
+		$logs     = is_callable( $func )
+			? call_user_func( $func, $r )
+			: false;
 
-		if ( 'api_request' === $query_args['log_type'] ) {
-			$log_type = 'api_request_logs';
-		} else if ( 'file_download' === $query_args['log_type'] ) {
-			$log_type = 'file_download_logs';
-		}
-
-		$query_args['number'] = $query_args['posts_per_page'];
-
-		if ( ! isset( $query_args['offset'] ) ) {
-			$query_args['offset'] = get_query_var( 'paged' ) > 1
-				? ( ( get_query_var( 'paged' ) - 1 ) * $query_args['number'] )
-				: 0;
-			unset( $query_args['paged'] );
-		}
-
-		$logs = call_user_func( 'edd_get_' . $log_type, $query_args );
-
-		if ( $logs ) {
-			return $logs;
-		} else {
-			return false;
-		}
+		// Return the logs (or false)
+		return $logs;
 	}
 
 	/**
@@ -419,32 +405,30 @@ class EDD_Logging {
 	 * @return int Log count.
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
-		$query_args = array(
+		$r = array(
 			'object_id' => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
-			$query_args['type'] = $type;
+			$r['type'] = $type;
 		}
 
 		if ( ! empty( $meta_query ) ) {
-			$query_args['meta_query'] = $meta_query;
+			$r['meta_query'] = $meta_query;
 		}
 
 		if ( ! empty( $date_query ) ) {
-			$query_args['date_query'] = $date_query;
+			$r['date_query'] = $date_query;
 		}
 
 		// Used to dynamically dispatch the call to the correct class.
-		$log_type = 'logs';
+		$log_type = $this->get_log_table( $type );
 
-		if ( 'api_request' === $type ) {
-			$log_type = 'api_request_logs';
-		} else if ( 'file_download' === $type ) {
-			$log_type = 'file_download_logs';
-		}
-
-		$count = call_user_func( 'edd_count_' . $log_type, $query_args );
+		// Call the func, or not
+		$func  = "edd_count_{$log_type}";
+		$count = is_callable( $func )
+			? call_user_func( $func, $r )
+			: 0;
 
 		return $count;
 	}
@@ -459,34 +443,100 @@ class EDD_Logging {
 	 * @param array  $meta_query Log meta query (default: null).
 	 */
 	public function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
-		$query_args = array(
-			'post_parent' => $object_id,
+		$r = array(
+			'object_id' => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
-			$query_args['type'] = $type;
+			$r['type'] = $type;
 		}
 
 		if ( ! empty( $meta_query ) ) {
-			$query_args['meta_query'] = $meta_query;
+			$r['meta_query'] = $meta_query;
 		}
 
 		// Used to dynamically dispatch the call to the correct class.
-		$log_type = 'log';
+		$log_type = $this->get_log_table( $type );
+
+		// Call the func, or not
+		$func  = "edd_get_{$log_type}";
+		$logs = is_callable( $func )
+			? call_user_func( $func, $r )
+			: array();
+
+		// Bail if no logs
+		if ( empty( $logs ) ) {
+			return;
+		}
+
+		// Maybe bail if delete function does not exist
+		$func = "edd_delete_{$log_type}";
+		if ( ! is_callable( $func ) ) {
+			return;
+		}
+
+		// Loop through and delete logs
+		foreach ( $logs as $log ) {
+			call_user_func( $func, $log->get_id() );
+		}
+	}
+
+	/**
+	 * Get the new log type from the old type.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	private function get_log_table( $type = '' ) {
+		$retval = 'logs';
 
 		if ( 'api_request' === $type ) {
-			$log_type = 'api_request_log';
+			$retval = 'api_request_logs';
 		} else if ( 'file_download' === $type ) {
-			$log_type = 'file_download_log';
+			$retval = 'file_download_logs';
 		}
 
-		$logs = call_user_func( 'edd_get_' . $log_type . 's', $query_args );
+		return $retval;
+	}
 
-		if ( $logs ) {
-			foreach ( $logs as $log ) {
-				call_user_func( 'edd_delete_' . $log_type, $log->get_id() );
-			}
+	private function parse_args( $args = array() ) {
+
+		// Parse args
+		$r = wp_parse_args( $args, array(
+			'log_type'       => false,
+			'post_type'      => 'edd_log',
+			'post_status'    => 'publish',
+			'posts_per_page' => 20,
+			'paged'          => get_query_var( 'paged' ),
+			'order'          => 'id'
+		) );
+
+		// Back-compat for ID ordering
+		if ( 'ID' === $r['order'] ) {
+			$r['order'] = 'id';
 		}
+
+		// Back-compat for log_type
+		if ( ! empty( $r['log_type'] ) ) {
+			$r['type'] = $r['log_type'];
+		}
+
+		// Back compat for posts_per_page
+		$r['number'] = $r['posts_per_page'];
+		unset( $r['posts_per_page'] );
+
+		if ( ! isset( $r['offset'] ) ) {
+			$r['offset'] = get_query_var( 'paged' ) > 1
+				? ( ( get_query_var( 'paged' ) - 1 ) * $r['number'] )
+				: 0;
+			unset( $r['paged'] );
+		}
+
+		// Return parsed args
+		return $r;
 	}
 
 	/**
@@ -526,7 +576,6 @@ class EDD_Logging {
 		$file = '';
 
 		if ( @file_exists( $this->file ) ) {
-
 			if ( ! is_writeable( $this->file ) ) {
 				$this->is_writable = false;
 			}
@@ -534,10 +583,8 @@ class EDD_Logging {
 			$file = @file_get_contents( $this->file );
 
 		} else {
-
 			@file_put_contents( $this->file, '' );
 			@chmod( $this->file, 0664 );
-
 		}
 
 		return $file;
@@ -581,9 +628,7 @@ class EDD_Logging {
 				} else {
 					return false;
 				}
-
 			}
-
 		}
 
 		$this->file = '';

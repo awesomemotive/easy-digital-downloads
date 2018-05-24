@@ -198,27 +198,56 @@ function edd_log_default_views() {
  * Renders the Reports page views drop down
  *
  * @since 1.3
- * @since 3.0 deprecated
+ * @since 3.0 Deprecated, and modified to look like the 3.0 approach
  *
  * @return void
 */
 function edd_log_views() {
+	static $once = false;
+
+	// Only once
+	if ( true === $once ) {
+		return;
+	}
+
+	// Only once
+	$once         = true;
 	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() )
 		? sanitize_text_field( $_GET['view'] )
 		: 'file_downloads'; ?>
 
-	<select id="edd-logs-view" name="view">
-		<?php foreach ( $views as $view_id => $label ) : ?>
-			<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
-		<?php endforeach; ?>
-	</select>
+	<!-- EDD 3.0 Hack -->
+	</div></div>
+	<form method="get" class="edd-old-log-filters" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+		<div class="wp-filter" id="edd-filters">
+			<div class="filter-items">
+				<span id="edd-type-filter">
+					<select id="edd-logs-view" name="view">
+						<?php foreach ( $views as $view_id => $label ) : ?>
+							<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
+						<?php endforeach; ?>
+					</select>
+				</span>
 
-	<?php
-	/**
-	 * Fires immediately after the logs view actions are rendered in the Logs screen.
-	 *
-	 * @since 1.3
-	 */
-	do_action( 'edd_log_view_actions' );
+				<?php
+				/**
+				 * Fires immediately after the logs view actions are rendered in the Logs screen.
+				 *
+				 * @since 1.3
+				 */
+				do_action( 'edd_log_view_actions' ); ?>
+
+				<button type="submit "class="button button-secondary"><?php _e( 'Filter', 'easy-digital-downloads' ); ?></button>
+
+				<input type="hidden" name="post_type" value="download" />
+				<input type="hidden" name="page" value="edd-tools" />
+				<input type="hidden" name="tab" value="logs" />
+			</div>
+		</div>
+	</form>
+	<div class="tablenav top"><div>
+	<!-- EDD 3.0 Hack -->
+
+<?php
 }

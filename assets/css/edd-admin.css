@@ -364,6 +364,11 @@ textarea[name="edd-note"] {
 #edd-filters p {
 	color: #777;
 }
+.edd-old-log-filters {
+	margin-top: -30px;
+	margin-left: 2px;
+}
+
 #edd-date-filters input {
 	vertical-align: middle;
 	max-width: 100px;
