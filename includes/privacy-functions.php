@@ -268,7 +268,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 */
 	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => '' ), $customer );
 
-	if ( ! $should_anonymize_customer['should_anonymize'] ) {
+	if ( empty( $should_anonymize_customer['should_anonymize'] ) ) {
 		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
 	}
 
@@ -364,7 +364,7 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 	 */
 	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array( 'should_anonymize' => true, 'message' => '' ), $payment );
 
-	if ( ! $should_anonymize_payment['should_anonymize'] ) {
+	if ( empty( $should_anonymize_payment['should_anonymize'] ) ) {
 		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
 	}
 
