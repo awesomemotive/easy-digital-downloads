@@ -417,6 +417,9 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 				'post_name'  => sanitize_title( __( 'Anonymized Customer', 'easy-digital-downloads' ) ),
 			) );
 
+			// Because we changed the post_name, WordPress sets a meta on the item for the `old slug`, we need to kill that.
+			delete_post_meta( $payment->ID, '_wp_old_slug' );
+
 			/**
 			 * Run further anonymization on a payment
 			 *
