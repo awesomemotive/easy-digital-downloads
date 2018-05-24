@@ -411,6 +411,12 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 			$payment->last_name  = '';
 
 
+			wp_update_post( array(
+				'ID' => $payment->ID,
+				'post_title' => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+				'post_name'  => sanitize_title( __( 'Anonymized Customer', 'easy-digital-downloads' ) ),
+			) );
+
 			/**
 			 * Run further anonymization on a payment
 			 *
@@ -484,8 +490,7 @@ function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
 	 * @param string      $action  What action will be performed (none, delete, anonymize)
 	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
 	 */
-	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
-
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $payment->status, $action, $payment );
 	return $action;
 
 }
@@ -883,7 +888,7 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 	global $edd_logs;
 
-	$user = get_user_by_email( $email_address );
+	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
 		return array( 'data' => array(), 'done' => true );
@@ -1300,7 +1305,7 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 	global $edd_logs;
 
-	$user = get_user_by_email( $email_address );
+	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
 		return array(
