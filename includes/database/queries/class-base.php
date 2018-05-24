@@ -765,6 +765,16 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function get_item_raw( $column_name = '', $column_value = '' ) {
 
+		// Bail if no name or value
+		if ( empty( $column_name ) || empty( $column_value ) ) {
+			return false;
+		}
+
+		// Bail if values aren't query'able
+		if ( ! is_string( $column_name ) || ! is_scalar( $column_value ) ) {
+			return false;
+		}
+
 		// Query database for row
 		$pattern = $this->get_column_field( array( 'name' => $column_name ), 'pattern', '%s' );
 		$table   = $this->get_table_name();
@@ -1400,8 +1410,8 @@ class Base extends \EDD\Database\Base {
 	private function parse_order( $order  = '' ) {
 
 		// Bail if malformed
-		if ( ! is_string( $order ) || empty( $order ) ) {
-			return 'DESC';
+		if ( empty( $order ) || ! is_string( $order ) ) {
+			return `DESC`;
 		}
 
 		// Ascending or Descending
