@@ -853,14 +853,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms'     => array(
-					array(
-					'id'   => 'terms_settings',
-						'name' => '<h3>' . __( 'Terms and Privacy Policy', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-						'tooltip_title' => __( 'Terms and Privacy Policy Settings', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Depending on legal and regulatory requirements, it may be necessary for your site to show checkboxes for Terms of Agreement and/or Privacy Policy.','easy-digital-downloads' ),
-					),
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
@@ -1412,7 +1404,6 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
-			'privacy'            => __( 'Privacy', 'easy-digital-downloads' ),
 		) ),
 		'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
 			'general'      => __( 'General', 'easy-digital-downloads' ),
