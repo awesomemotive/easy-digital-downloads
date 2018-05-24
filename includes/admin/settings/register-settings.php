@@ -885,7 +885,7 @@ function edd_get_registered_settings() {
 		),
 		'privacy' => apply_filters( 'edd_settings_privacy',
 			array(
-				'privacy_policy' => array(
+				'general' => array(
 					'show_agree_to_privacy_policy' => array(
 						'id'   => 'show_agree_to_privacy_policy',
 						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
@@ -1415,8 +1415,8 @@ function edd_get_registered_settings_sections() {
 			'privacy'            => __( 'Privacy', 'easy-digital-downloads' ),
 		) ),
 		'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
-			'export_erase'   => __( 'Export & Erase', 'easy-digital-downloads' ),
-			'privacy_policy' => __( 'Privacy Policy', 'easy-digital-downloads' ),
+			'general'      => __( 'General', 'easy-digital-downloads' ),
+			'export_erase' => __( 'Export & Erase', 'easy-digital-downloads' ),
 		) ),
 	);
 
