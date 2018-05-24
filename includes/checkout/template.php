@@ -783,7 +783,7 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
 
-			<?php if ( ! edd_get_option( 'show_agree_to_privacy_policy', false ) && edd_get_option( 'show_to_privacy_policy_on_checkout', false ) ) : ?>
+			<?php if ( '1' !== edd_get_option( 'show_agree_to_privacy_policy', false ) && '1' === edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false ) ) : ?>
 				<?php
 				$agree_page      = get_option( 'wp_page_for_privacy_policy' );
 				$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
@@ -829,14 +829,14 @@ add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
  * @return void
  */
 function edd_privacy_agreement() {
-	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) === '1' ) {
 		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
 
 		ob_start();
 		?>
 		<fieldset id="edd-privacy-policy-agreement">
 
-			<?php if ( edd_get_option( 'show_to_privacy_policy_on_checkout', false ) ) : ?>
+			<?php if ( edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false ) ) : ?>
 
 				<?php
 				$agree_page      = get_option( 'wp_page_for_privacy_policy' );
