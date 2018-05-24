@@ -266,7 +266,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
 	 */
-	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => array() ), $customer );
+	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => '' ), $customer );
 
 	if ( ! $should_anonymize_customer['should_anonymize'] ) {
 		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
@@ -362,7 +362,7 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
 	 */
-	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array( 'should_anonymize' => true, 'message' => array() ), $payment );
+	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array( 'should_anonymize' => true, 'message' => '' ), $payment );
 
 	if ( ! $should_anonymize_payment['should_anonymize'] ) {
 		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
@@ -617,6 +617,8 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 		}
 	}
 
+	$export_data = apply_filters( 'edd_privacy_customer_record', $export_data, $customer );
+
 	return array( 'data' => array( $export_data ), 'done' => true );
 }
 
@@ -858,6 +860,8 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 			),
 		);
 
+		$data_points = apply_filters( 'edd_privacy_file_download_log_item', $data_points, $log, $log_meta );
+
 		$export_items[] = array(
 			'group_id'    => 'edd-file-download-logs',
 			'group_label' => __( 'File Download Logs', 'easy-digital-downloads' ),
@@ -935,6 +939,8 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 			),
 		);
 
+		$data_points = apply_filters( 'edd_privacy_api_access_log_item', $data_points, $log );
+
 		$export_items[] = array(
 			'group_id'    => 'edd-api-access-logs',
 			'group_label' => __( 'API Access Logs', 'easy-digital-downloads' ),
@@ -943,7 +949,6 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 		);
 
 	}
-
 
 	// Add the data to the list, and tell the exporter to come back for the next page of payments.
 	return array(
