@@ -64,7 +64,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	 * @covers ::get_logs()
 	 */
 	public function test_get_logs() {
-		$logs = (array) self::$object->get_logs( 1, 'sale' );
+		$logs = (array) self::$object->get_logs( 1, 'gateway_error' );
 
 		$this->assertCount( 1, $logs );
 	}
@@ -75,7 +75,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	public function test_get_connected_logs() {
 		$logs = (array) self::$object->get_connected_logs( array(
 			'post_parent' => 1,
-			'log_type'    => 'sale'
+			'log_type'    => 'gateway_error'
 		) );
 
 		$this->assertCount( 1, $logs );
@@ -94,6 +94,6 @@ class Tests_Logging extends EDD_UnitTestCase {
 	public function test_delete_logs() {
 		self::$object->delete_logs( self::$log_id );
 
-		$this->assertSame( 0, self::$object->get_log_count( 1, 'sale' ) );
+		$this->assertSame( 0, self::$object->get_log_count( 1, 'gateway_error' ) );
 	}
 }

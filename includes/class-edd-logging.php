@@ -106,11 +106,12 @@ class EDD_Logging {
 	 * @return array $terms Log types.
 	 */
 	public function log_types() {
-		$terms = array(
-			'sale', 'file_download', 'gateway_error', 'api_request'
-		);
-
-		return apply_filters( 'edd_log_types', $terms );
+		return apply_filters( 'edd_log_types', array(
+			'sale',
+			'file_download',
+			'gateway_error',
+			'api_request'
+		) );
 	}
 
 	/**
@@ -143,14 +144,12 @@ class EDD_Logging {
 	 * @return int ID of the newly created log item.
 	 */
 	public function add( $title = '', $message = '', $parent = 0, $type = null ) {
-		$log_data = array(
+		return $this->insert_log( array(
 			'post_title'   => $title,
 			'post_content' => $message,
 			'post_parent'  => $parent,
-			'log_type'     => $type,
-		);
-
-		return $this->insert_log( $log_data );
+			'log_type'     => $type
+		) );
 	}
 
 	/**
@@ -165,7 +164,11 @@ class EDD_Logging {
 	 * @return array Array of the connected logs.
 	*/
 	public function get_logs( $object_id = 0, $type = null, $paged = null ) {
-		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
+		return $this->get_connected_logs( array(
+			'post_parent' => $object_id,
+			'paged'       => $paged,
+			'log_type'    => $type
+		) );
 	}
 
 	/**
@@ -179,15 +182,15 @@ class EDD_Logging {
 	 * @return int The ID of the newly created log item.
 	 */
 	public function insert_log( $log_data = array(), $log_meta = array() ) {
-		$defaults = array(
+
+		// Parse args
+		$args = wp_parse_args( $log_data, array(
 			'post_type'    => 'edd_log',
 			'post_status'  => 'publish',
 			'post_parent'  => 0,
 			'post_content' => '',
 			'log_type'     => false,
-		);
-
-		$args = wp_parse_args( $log_data, $defaults );
+		) );
 
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
@@ -195,10 +198,12 @@ class EDD_Logging {
 		$insert_method = 'edd_add_log';
 
 		// Set up variables to hold data to go into the logs table by default
-		$data = array (
+		$data = array(
 			'message'     => $args['post_content'],
 			'object_id'   => $args['post_parent'],
-			'object_type' => isset( $args['object_type'] ) ? $args['object_type'] : 'download',
+			'object_type' => isset( $args['object_type'] )
+				? $args['object_type']
+				: 'download',
 		);
 
 		if ( $type = $args['log_type'] ) {
@@ -377,11 +382,15 @@ class EDD_Logging {
 	 */
 	public function get_connected_logs( $args = array() ) {
 
+		$log_type = isset( $args['log_type'] )
+			? $args['log_type']
+			: false;
+
 		// Parse arguments
 		$r = $this->parse_args( $args );
 
 		// Used to dynamically dispatch the call to the correct class.
-		$log_type = $this->get_log_table( $r['log_type'] );
+		$log_type = $this->get_log_table( $log_type );
 		$func     = "edd_get_{$log_type}";
 		$logs     = is_callable( $func )
 			? call_user_func( $func, $r )
@@ -470,7 +479,7 @@ class EDD_Logging {
 		}
 
 		// Maybe bail if delete function does not exist
-		$func = "edd_delete_{$log_type}";
+		$func = rtrim( "edd_delete_{$log_type}", 's' );
 		if ( ! is_callable( $func ) ) {
 			return;
 		}
@@ -502,6 +511,14 @@ class EDD_Logging {
 		return $retval;
 	}
 
+	/**
+	 * Parse arguments. Contains back-compat argument aliasing.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args
+	 * @return array
+	 */
 	private function parse_args( $args = array() ) {
 
 		// Parse args
@@ -509,14 +526,15 @@ class EDD_Logging {
 			'log_type'       => false,
 			'post_type'      => 'edd_log',
 			'post_status'    => 'publish',
+			'post_parent'    => 0,
 			'posts_per_page' => 20,
 			'paged'          => get_query_var( 'paged' ),
-			'order'          => 'id'
+			'orderby'        => 'id'
 		) );
 
 		// Back-compat for ID ordering
-		if ( 'ID' === $r['order'] ) {
-			$r['order'] = 'id';
+		if ( 'ID' === $r['orderby'] ) {
+			$r['orderby'] = 'id';
 		}
 
 		// Back-compat for log_type
@@ -524,9 +542,22 @@ class EDD_Logging {
 			$r['type'] = $r['log_type'];
 		}
 
+		// Back-compat for post_parent
+		if ( ! empty( $r['post_parent'] ) ) {
+			$r['object_id'] = $r['post_parent'];
+		}
+
 		// Back compat for posts_per_page
 		$r['number'] = $r['posts_per_page'];
-		unset( $r['posts_per_page'] );
+
+		// Unset old keys
+		unset(
+			$r['posts_per_page'],
+			$r['post_parent'],
+			$r['post_status'],
+			$r['post_type'],
+			$r['log_type']
+		);
 
 		if ( ! isset( $r['offset'] ) ) {
 			$r['offset'] = get_query_var( 'paged' ) > 1
