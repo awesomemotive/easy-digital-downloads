@@ -37,7 +37,6 @@ class Logs extends Base {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -48,7 +47,6 @@ class Logs extends Base {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -58,7 +56,6 @@ class Logs extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -68,7 +65,6 @@ class Logs extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -90,7 +86,6 @@ class Logs extends Base {
 			'type'       => 'longtext',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true,
 			'in'         => false,
 			'not_in'     => false
 		),
