@@ -46,6 +46,15 @@ function edd_do_automatic_upgrades() {
 		$tracking->send_checkin( false, true );
 	}
 
+	$fix_show_privacy_policy_setting = edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false );
+	if ( ! empty( $fix_show_privacy_policy_setting ) ) {
+
+		edd_update_option( 'show_privacy_policy_on_checkout', $fix_show_privacy_policy_setting );
+
+		edd_delete_option( 'show_agree_to_privacy_policy_on_checkout' );
+
+	}
+
 }
 add_action( 'admin_init', 'edd_do_automatic_upgrades' );
 

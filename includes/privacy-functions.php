@@ -190,7 +190,7 @@ function edd_log_terms_and_privacy_times( $payment_id, $payment_data ) {
 	}
 
 	if ( ! empty( $payment_data['agree_to_privacy_time'] ) ) {
-		$customer->add_meta( 'agree_to_privacy_time', $payment_data['agree_to_terms_time'] );
+		$customer->add_meta( 'agree_to_privacy_time', $payment_data['agree_to_privacy_time'] );
 	}
 }
 add_action( 'edd_insert_payment', 'edd_log_terms_and_privacy_times', 10, 2 );
