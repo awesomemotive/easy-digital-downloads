@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9.6
-Stable Tag: 2.9.2
+Stable Tag: 2.9.3
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,11 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.3, May 25, 2018 =
+* Fix: Corrected multiple inconsistencies in the Privacy Policy Checkbox at checkout.
+* Fix: Corrected an issue causing "You must agree to the privacy policy" from showing when it wasn't required.
+* Dev: Complete Checkout button is no longer required to be a `submit` input.
 
 = 2.9.2, May 24, 2018 =
 * GDPR: Support for WordPress Core Privacy Exporter and Eraser.
