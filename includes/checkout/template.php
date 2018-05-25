@@ -785,26 +785,31 @@ function edd_terms_agreement() {
 
 			<?php if ( '1' !== edd_get_option( 'show_agree_to_privacy_policy', false ) && '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
 				<?php
+
 				$privacy_page    = get_option( 'wp_page_for_privacy_policy' );
-				$privacy_text    = get_post_field( 'post_content', $privacy_page );
-				?>
 
-				<?php if ( ! empty( $privacy_text ) ) : ?>
-					<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
-						<?php
-						do_action( 'edd_before_privacy_policy' );
-						echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
-						do_action( 'edd_after_privacy_policy' );
+				if ( ! empty( $privacy_page ) ) {
+
+					$privacy_text    = get_post_field( 'post_content', $privacy_page );
+
+					if ( ! empty( $privacy_text  ) ) {
 						?>
-					</div>
-					<div id="edd-show-privacy-policy" class="edd-show-terms">
-						<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
-						<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
-					</div>
-				<?php endif; ?>
+						<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+								<?php
+								do_action( 'edd_before_privacy_policy' );
+								echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
+								do_action( 'edd_after_privacy_policy' );
+								?>
+						</div>
+						<div id="edd-show-privacy-policy" class="edd-show-terms">
+							<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+							<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+						</div>
+						<?php
+					}
 
-			<?php endif; ?>
-
+				}
+			endif ?>
 			<div class="edd-terms-agreement">
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
