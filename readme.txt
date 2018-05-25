@@ -198,7 +198,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: The toggle link to view the Privacy Policy was not working when the Terms of Agreement were not visible.
 * Fix: Email addresses that contained a + would not be removed via [edd_profile_editor].
 * Fix: Searching payments by discount code was not working.
-* New: Added action hook above short code download list.
+* New: Added action hook above shortcode download list.
 * New: Improve File download Log accuracy and remove PII from log meta.
 * New: Allow for target attribute of links in Terms of Service & Privacy Policy labels.
 
