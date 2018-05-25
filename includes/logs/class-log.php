@@ -86,6 +86,15 @@ class Log extends Base_Object {
 	protected $date_created;
 
 	/**
+	 * Date log was last modified.
+	 *
+	 * @since  3.0.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $date_modified;
+
+	/**
 	 * Retrieve ID of the log.
 	 *
 	 * @since 3.0
@@ -160,6 +169,17 @@ class Log extends Base_Object {
 	 */
 	public function get_date_created() {
 		return $this->date_created;
+	}
+
+	/**
+	 * Retrieve the date the log was last modified.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	public function get_date_modified() {
+		return $this->date_modified;
 	}
 
 	/**
