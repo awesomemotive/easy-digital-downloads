@@ -783,18 +783,17 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
 
-			<?php if ( '1' !== edd_get_option( 'show_agree_to_privacy_policy', false ) && '1' === edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false ) ) : ?>
+			<?php if ( '1' !== edd_get_option( 'show_agree_to_privacy_policy', false ) && '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
 				<?php
-				$agree_page      = get_option( 'wp_page_for_privacy_policy' );
-				$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
-				$agreement_text  = get_post_field( 'post_content', $agree_page );
+				$privacy_page    = get_option( 'wp_page_for_privacy_policy' );
+				$privacy_text    = get_post_field( 'post_content', $privacy_page );
 				?>
 
-				<?php if ( ! empty( $agreement_text ) ) : ?>
+				<?php if ( ! empty( $privacy_text ) ) : ?>
 					<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
 						<?php
 						do_action( 'edd_before_privacy_policy' );
-						echo wpautop( do_shortcode( stripslashes( $agreement_text ) ) );
+						echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
 						do_action( 'edd_after_privacy_policy' );
 						?>
 					</div>
@@ -829,14 +828,15 @@ add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
  * @return void
  */
 function edd_privacy_agreement() {
-	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) === '1' ) {
+	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+		echo 'here';
 		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
 
 		ob_start();
 		?>
 		<fieldset id="edd-privacy-policy-agreement">
 
-			<?php if ( edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false ) ) : ?>
+			<?php if ( '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
 
 				<?php
 				$agree_page      = get_option( 'wp_page_for_privacy_policy' );
