@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.2\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.3\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-05-24 22:51:15+00:00\n"
+"POT-Creation-Date: 2018-05-25 16:21:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -80,14 +80,14 @@ msgstr ""
 #: includes/admin/tools/class-edd-tools-reset-stats.php:179
 #: includes/admin/tools.php:1027 includes/admin/tools.php:1033
 #: includes/admin/upgrades/classes/class-file-download-log-migration.php:151
-#: includes/admin/upgrades/upgrade-functions.php:212
-#: includes/admin/upgrades/upgrade-functions.php:528
-#: includes/admin/upgrades/upgrade-functions.php:610
-#: includes/admin/upgrades/upgrade-functions.php:721
-#: includes/admin/upgrades/upgrade-functions.php:818
-#: includes/admin/upgrades/upgrade-functions.php:892
-#: includes/admin/upgrades/upgrade-functions.php:1020
-#: includes/admin/upgrades/upgrade-functions.php:1105
+#: includes/admin/upgrades/upgrade-functions.php:221
+#: includes/admin/upgrades/upgrade-functions.php:537
+#: includes/admin/upgrades/upgrade-functions.php:619
+#: includes/admin/upgrades/upgrade-functions.php:730
+#: includes/admin/upgrades/upgrade-functions.php:827
+#: includes/admin/upgrades/upgrade-functions.php:901
+#: includes/admin/upgrades/upgrade-functions.php:1029
+#: includes/admin/upgrades/upgrade-functions.php:1114
 #: includes/api/class-edd-api.php:1967 includes/api/class-edd-api.php:1972
 #: includes/api/class-edd-api.php:1984 includes/api/class-edd-api.php:1986
 #: includes/cart/class-edd-cart.php:1423 includes/cart/class-edd-cart.php:1437
@@ -1765,7 +1765,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1031
 #: includes/admin/settings/register-settings.php:744
-#: includes/admin/thickbox.php:59 includes/checkout/template.php:965
+#: includes/admin/thickbox.php:59 includes/checkout/template.php:976
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
 msgstr ""
@@ -3992,7 +3992,7 @@ msgid "The button label for completing a free purchase."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:751
-#: includes/checkout/template.php:968
+#: includes/checkout/template.php:979
 msgid "Free Download"
 msgstr ""
 
@@ -4156,8 +4156,8 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:859
 msgid ""
-"Check this to show an agree to terms on the checkout that users must agree "
-"to before purchasing."
+"Check this to show an agree to terms on checkout that users must agree to "
+"before purchasing."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:864
@@ -4165,7 +4165,7 @@ msgid "Agree to Terms Label"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:865
-msgid "Label shown next to the agree to terms check box."
+msgid "Label shown next to the agree to terms checkbox."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:871
@@ -4903,140 +4903,140 @@ msgstr ""
 msgid "File download logs updated successfully."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:78
+#: includes/admin/upgrades/upgrade-functions.php:87
 msgid "The Payment History needs to be updated. %s"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:78
+#: includes/admin/upgrades/upgrade-functions.php:87
 msgid "Click to Upgrade"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:84
+#: includes/admin/upgrades/upgrade-functions.php:93
 msgid ""
 "The Purchase and File Download History in Easy Digital Downloads needs to "
 "be upgraded, click %shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:92
+#: includes/admin/upgrades/upgrade-functions.php:101
 msgid ""
 "Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to "
 "start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:100
-#: includes/admin/upgrades/upgrade-functions.php:108
+#: includes/admin/upgrades/upgrade-functions.php:109
+#: includes/admin/upgrades/upgrade-functions.php:117
 msgid ""
 "Easy Digital Downloads needs to upgrade the database, click %shere%s to "
 "start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:120
+#: includes/admin/upgrades/upgrade-functions.php:129
 msgid ""
 "Easy Digital Downloads needs to complete a database upgrade that was "
 "previously started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:131
+#: includes/admin/upgrades/upgrade-functions.php:140
 msgid ""
 "Easy Digital Downloads needs to upgrade past order numbers to make them "
 "sequential, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:138
+#: includes/admin/upgrades/upgrade-functions.php:147
 msgid ""
 "Easy Digital Downloads needs to upgrade the customer database, click "
 "%shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:146
-#: includes/admin/upgrades/upgrade-functions.php:160
+#: includes/admin/upgrades/upgrade-functions.php:155
+#: includes/admin/upgrades/upgrade-functions.php:169
 msgid ""
 "Easy Digital Downloads needs to upgrade the payment database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:153
+#: includes/admin/upgrades/upgrade-functions.php:162
 msgid ""
 "Easy Digital Downloads needs to upgrade the customer database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:167
+#: includes/admin/upgrades/upgrade-functions.php:176
 msgid ""
 "Easy Digital Downloads needs to upgrade the API Key database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:174
+#: includes/admin/upgrades/upgrade-functions.php:183
 msgid ""
 "Easy Digital Downloads needs to upgrade the payments database, click <a "
 "href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:181
+#: includes/admin/upgrades/upgrade-functions.php:190
 msgid ""
 "Easy Digital Downloads needs to upgrade the file download logs database, "
 "click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:212
-#: includes/admin/upgrades/upgrade-functions.php:528
-#: includes/admin/upgrades/upgrade-functions.php:610
-#: includes/admin/upgrades/upgrade-functions.php:721
-#: includes/admin/upgrades/upgrade-functions.php:818
-#: includes/admin/upgrades/upgrade-functions.php:892
-#: includes/admin/upgrades/upgrade-functions.php:1020
-#: includes/admin/upgrades/upgrade-functions.php:1105
+#: includes/admin/upgrades/upgrade-functions.php:221
+#: includes/admin/upgrades/upgrade-functions.php:537
+#: includes/admin/upgrades/upgrade-functions.php:619
+#: includes/admin/upgrades/upgrade-functions.php:730
+#: includes/admin/upgrades/upgrade-functions.php:827
+#: includes/admin/upgrades/upgrade-functions.php:901
+#: includes/admin/upgrades/upgrade-functions.php:1029
+#: includes/admin/upgrades/upgrade-functions.php:1114
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:381 includes/install.php:129
+#: includes/admin/upgrades/upgrade-functions.php:390 includes/install.php:129
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:382 includes/install.php:130
+#: includes/admin/upgrades/upgrade-functions.php:391 includes/install.php:130
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1181
+#: includes/admin/upgrades/upgrade-functions.php:1190
 msgid ""
 "<strong>Migration complete:</strong> You have already completed the update "
 "to the file download logs."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1189
+#: includes/admin/upgrades/upgrade-functions.php:1198
 msgid ""
 "<strong>Database Upgrade Complete:</strong> All database upgrades have been "
 "completed."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1191
+#: includes/admin/upgrades/upgrade-functions.php:1200
 msgid "You may now leave this page."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1197
+#: includes/admin/upgrades/upgrade-functions.php:1206
 msgid ""
 "<strong>Important:</strong> Please leave this screen open and do not "
 "navigate away until the process completes."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1240
+#: includes/admin/upgrades/upgrade-functions.php:1249
 msgid "Update file download logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1245
+#: includes/admin/upgrades/upgrade-functions.php:1254
 msgid ""
 "This will update the file download logs to remove some <abbr "
 "title=\"Personally Identifiable Information\">PII</abbr> and make file "
 "download counts more accurate."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1254
-#: includes/admin/upgrades/upgrade-functions.php:1257
+#: includes/admin/upgrades/upgrade-functions.php:1263
+#: includes/admin/upgrades/upgrade-functions.php:1266
 msgid "Update File Download Logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1258
+#: includes/admin/upgrades/upgrade-functions.php:1267
 msgid "File download logs have already been updated."
 msgstr ""
 
@@ -5430,8 +5430,7 @@ msgstr ""
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:769 includes/checkout/template.php:789
-#: includes/checkout/template.php:833
+#: includes/checkout/template.php:769 includes/checkout/template.php:837
 msgid "Agree to Terms?"
 msgstr ""
 
@@ -5443,23 +5442,23 @@ msgstr ""
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:802 includes/checkout/template.php:854
+#: includes/checkout/template.php:805 includes/checkout/template.php:862
 msgid "Show Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:803 includes/checkout/template.php:855
+#: includes/checkout/template.php:806 includes/checkout/template.php:863
 msgid "Hide Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:882
+#: includes/checkout/template.php:893
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:908
+#: includes/checkout/template.php:919
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:931
+#: includes/checkout/template.php:942
 msgid "Next"
 msgstr ""
 
