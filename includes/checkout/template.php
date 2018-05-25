@@ -829,7 +829,6 @@ add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
  */
 function edd_privacy_agreement() {
 	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
-		echo 'here';
 		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
 
 		ob_start();
