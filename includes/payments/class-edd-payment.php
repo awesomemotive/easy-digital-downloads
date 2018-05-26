@@ -1847,19 +1847,27 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Update the post meta
+	 * Update the order meta.
 	 *
-	 * @since  2.5
-	 * @param  string $meta_key   The meta key to update
-	 * @param  string $meta_value The meta value
-	 * @param  string $prev_value Previous meta value
-	 * @return int|bool           Meta ID if the key didn't exist, true on successful update, false on failure
+	 * @since 2.5
+	 * @since 3.0 Updated to use the new custom tables.
+	 *
+	 * @param string $meta_key   The meta key to update.
+	 * @param string $meta_value The meta value.
+	 * @param string $prev_value Previous meta value.
+	 *
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $meta_key = '', $meta_value = '', $prev_value = '' ) {
-
 		if ( empty( $meta_key ) ) {
 			return false;
 		}
+
+		// Backwards compatibility meta mapping.
+		switch ( $meta_key ) {
+			
+		}
+
 
 		if( '_edd_payment_purchase_key' == $meta_key ) {
 
