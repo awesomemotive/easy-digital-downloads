@@ -588,6 +588,8 @@ class EDD_Payment {
 				update_option( 'edd_last_payment_number', $number );
 			}
 
+			edd_update_order( $order_id, $order_data );
+
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
 			$this->new = true;
 		}
