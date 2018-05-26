@@ -504,17 +504,6 @@ class EDD_Payment {
 	 * @return int|bool False on failure, the order ID on success.
 	 */
 	private function insert_payment() {
-		// Construct the order title
-		$payment_title = '';
-
-		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
-			$payment_title = $this->first_name . ' ' . $this->last_name;
-		} else if ( ! empty( $this->first_name ) && empty( $this->last_name ) ) {
-			$payment_title = $this->first_name;
-		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
-			$payment_title = $this->email;
-		}
-
 		if ( empty( $this->key ) ) {
 			$auth_key  = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 			$this->key = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
@@ -545,15 +534,6 @@ class EDD_Payment {
 			'status'       => $this->status,
 			'fees'         => $this->fees,
 		);
-
-		$args = apply_filters( 'edd_insert_payment_args', array(
-			'post_title'    => $payment_title,
-			'post_status'   => $this->status,
-			'post_type'     => 'edd_payment',
-			'post_date'     => ! empty( $this->date ) ? $this->date : null,
-			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null,
-			'post_parent'   => $this->parent_payment,
-		), $payment_data );
 
 		// Create an order
 		$order_args = array(
