@@ -140,10 +140,9 @@ function edd_count_orders( $args = array() ) {
  * @return int|false ID of newly created order, false on error.
  */
 function edd_add_order_item( $data = array() ) {
-
-	// A download ID and a payment ID must be supplied for every order that is
+	// An order ID and product ID must be supplied for every order that is
 	// inserted into the database.
-	if ( empty( $data['download_id'] ) || empty( $data['payment_id'] ) ) {
+	if ( empty( $data['order_id'] ) || empty( $data['product_id'] ) ) {
 		return false;
 	}
 
