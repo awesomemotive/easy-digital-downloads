@@ -1062,15 +1062,18 @@ class EDD_Payment {
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
 				// First, update the order.
-				edd_update_order( $this->ID, array(
-					'total'       => $merged_meta['price'],
-					'date'        => $merged_meta['date'],
-					'email'       => $merged_meta['email'],
-					'payment_key' => $merged_meta['purchase_key'],
+				$order_info = array(
+					'payment_key' => $merged_meta['key'],
 					'currency'    => $merged_meta['currency'],
-					'user_id'     => $merged_meta['user_info']['id'],
-					'status'      => $merged_meta['status'],
-				) );
+					'email'       => $merged_meta['email'],
+					'user_id'     => $merged_meta['user_info']['id']
+				);
+
+				if ( ! empty( $merged_meta['date'] ) ) {
+					$order_info['date'] = $merged_meta['date'];
+				}
+
+				edd_update_order( $this->ID, $order_info );
 
 				// We need to check if all of the order items exist in the database.
 				$items = edd_get_order_items( array(
