@@ -146,15 +146,17 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 }
 
 /**
- * Insert Payment
+ * Insert an order into the database.
  *
  * @since 1.0
- * @param array $payment_data Payment data to process
- * @return int|bool Payment ID if payment is inserted, false otherwise
+ * @since 3.0 Updated terminology and updated to insert orders into the new tables.
+ *
+ * @param array $order_data Payment data to process.
+ * @return int|bool Order ID if the order was successfully inserted, false otherwise.
  */
-function edd_insert_payment( $payment_data = array() ) {
+function edd_insert_payment( $order_data = array() ) {
 
-	if ( empty( $payment_data ) ) {
+	if ( empty( $order_data ) ) {
 		return false;
 	}
 
@@ -184,16 +186,16 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment->remove_download( $download['id'], $item_args );
 		}
 
-		if ( strtolower( $payment->email ) !== strtolower( $payment_data['user_info']['email'] ) ) {
+		if ( strtolower( $payment->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
 
 			// Remove the payment from the previous customer.
 			$previous_customer = new EDD_Customer( $payment->customer_id );
 			$previous_customer->remove_payment( $payment->ID, false );
 
 			// Redefine the email frst and last names.
-			$payment->email                 = $payment_data['user_info']['email'];
-			$payment->first_name            = $payment_data['user_info']['first_name'];
-			$payment->last_name             = $payment_data['user_info']['last_name'];
+			$payment->email                 = $order_data['user_info']['email'];
+			$payment->first_name            = $order_data['user_info']['first_name'];
+			$payment->last_name             = $order_data['user_info']['last_name'];
 
 		}
 
@@ -204,9 +206,9 @@ function edd_insert_payment( $payment_data = array() ) {
 		$payment = new EDD_Payment();
 	}
 
-	if( is_array( $payment_data['cart_details'] ) && ! empty( $payment_data['cart_details'] ) ) {
+	if( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
 
-		foreach ( $payment_data['cart_details'] as $item ) {
+		foreach ( $order_data['cart_details'] as $item ) {
 
 			$args = array(
 				'quantity'   => $item['quantity'],
@@ -226,47 +228,47 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	$payment->increase_tax( edd_get_cart_fee_tax() );
 
-	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
+	$gateway = ! empty( $order_data['gateway'] ) ? $order_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
-	$country = ! empty( $payment_data['user_info']['address']['country'] ) ? $payment_data['user_info']['address']['country'] : false;
-	$state   = ! empty( $payment_data['user_info']['address']['state'] )   ? $payment_data['user_info']['address']['state']   : false;
-	$zip     = ! empty( $payment_data['user_info']['address']['zip'] )     ? $payment_data['user_info']['address']['zip']     : false;
+	$country = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
+	$state   = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
+	$zip     = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
 
 
-	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
-	$payment->currency       = ! empty( $payment_data['currency'] ) ? $payment_data['currency'] : edd_get_currency();
-	$payment->user_info      = $payment_data['user_info'];
+	$payment->status         = ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending';
+	$payment->currency       = ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency();
+	$payment->user_info      = $order_data['user_info'];
 	$payment->gateway        = $gateway;
-	$payment->user_id        = $payment_data['user_info']['id'];
-	$payment->first_name     = $payment_data['user_info']['first_name'];
-	$payment->last_name      = $payment_data['user_info']['last_name'];
-	$payment->email          = $payment_data['user_info']['email'];
+	$payment->user_id        = $order_data['user_info']['id'];
+	$payment->first_name     = $order_data['user_info']['first_name'];
+	$payment->last_name      = $order_data['user_info']['last_name'];
+	$payment->email          = $order_data['user_info']['email'];
 	$payment->ip             = edd_get_ip();
-	$payment->key            = $payment_data['purchase_key'];
+	$payment->key            = $order_data['purchase_key'];
 	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
-	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
-	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
+	$payment->parent_payment = ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '';
+	$payment->discounts      = ! empty( $order_data['user_info']['discount'] ) ? $order_data['user_info']['discount'] : array();
 	$payment->tax_rate       = edd_get_cart_tax_rate( $country, $state, $zip );
 
-	if ( isset( $payment_data['post_date'] ) ) {
-		$payment->date = $payment_data['post_date'];
+	if ( isset( $order_data['post_date'] ) ) {
+		$payment->date = $order_data['post_date'];
 	}
 
 	// Clear the user's purchased cache
-	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
+	delete_transient( 'edd_user_' . $order_data['user_info']['id'] . '_purchases' );
 
 	$payment->save();
 
 	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) {
-		$payment_data['agree_to_terms_time'] = current_time( 'timestamp' );
+		$order_data['agree_to_terms_time'] = current_time( 'timestamp' );
 	}
 
 	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) && ! empty( $_POST['edd_agree_to_privacy_policy'] ) ) {
-		$payment_data['agree_to_privacy_time'] = current_time( 'timestamp' );
+		$order_data['agree_to_privacy_time'] = current_time( 'timestamp' );
 	}
 
-	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
+	do_action( 'edd_insert_payment', $payment->ID, $order_data );
 
 	if ( ! empty( $payment->ID ) ) {
 		return $payment->ID;
