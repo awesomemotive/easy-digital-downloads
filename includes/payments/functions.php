@@ -155,7 +155,6 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  * @return int|bool Order ID if the order was successfully inserted, false otherwise.
  */
 function edd_insert_payment( $order_data = array() ) {
-
 	if ( empty( $order_data ) ) {
 		return false;
 	}

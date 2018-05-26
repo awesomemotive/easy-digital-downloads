@@ -498,12 +498,13 @@ class EDD_Payment {
 	/**
 	 * Create the base of a payment.
 	 *
-	 * @since  2.5
-	 * @return int|bool False on failure, the payment ID on success.
+	 * @since 2.5
+	 * @since 3.0 Updated to insert orders to the new custom tables.
+	 *
+	 * @return int|bool False on failure, the order ID on success.
 	 */
 	private function insert_payment() {
-
-		// Construct the payment title
+		// Construct the order title
 		$payment_title = '';
 
 		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
@@ -515,17 +516,14 @@ class EDD_Payment {
 		}
 
 		if ( empty( $this->key ) ) {
-
 			$auth_key  = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 			$this->key = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
 			$this->pending['key'] = $this->key;
 		}
 
 		if ( empty( $this->ip ) ) {
-
 			$this->ip = edd_get_ip();
 			$this->pending['ip'] = $this->ip;
-
 		}
 
 		$payment_data = array(
@@ -557,13 +555,24 @@ class EDD_Payment {
 			'post_parent'   => $this->parent_payment,
 		), $payment_data );
 
-		// Create a blank payment
-		$payment_id = wp_insert_post( $args );
+		// Create an order
+		$order_args = array(
+			'parent'      => $this->parent_payment,
+			'status'      => $this->status,
+			'user_id'     => $this->user_id,
+			'email'       => $this->email,
+			'ip'          => $this->ip,
+			'gateway'     => $this->gateway,
+			'payment_key' => $this->key,
+			'subtotal'    => $this->total,
+			'total'       => $this->total,
+		);
 
-		if ( ! empty( $payment_id ) ) {
+		$order_id = edd_add_order( $order_args );
 
-			$this->ID  = $payment_id;
-			$this->_ID = $payment_id;
+		if ( ! empty( $order_id ) ) {
+			$this->ID  = $order_id;
+			$this->_ID = $order_id;
 
 			$customer = $this->maybe_create_customer();
 
@@ -581,7 +590,7 @@ class EDD_Payment {
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
-				foreach( $this->fees as $fee ) {
+				foreach ( $this->fees as $fee ) {
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
