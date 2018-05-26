@@ -556,14 +556,17 @@ class EDD_Payment {
 
 			$customer = $this->maybe_create_customer();
 
-			$this->customer_id            = $customer->id;
-			$this->pending['customer_id'] = $this->customer_id;
+			$this->customer_id = $customer->id;
 			$customer->attach_payment( $this->ID, false );
 
+			$order_data = array(
+				'customer_id' => $this->customer_id
+			);
+
 			/**
-			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run in the EDD_Payment::save
-			 * method. By keeping this here, it retains compatbility of adding payment meta prior to the payment being inserted, as was previously supported
-			 * by edd_insert_payment().
+			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run
+			 * in the EDD_Payment::save method. By keeping this here, it retains compatibility of adding payment meta
+			 * prior to the payment being inserted, as was previously supported by edd_insert_payment().
 			 *
 			 * @reference: https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5838
 			 */
@@ -578,16 +581,18 @@ class EDD_Payment {
 			if ( edd_get_option( 'enable_sequential' ) ) {
 				$number       = edd_get_next_payment_number();
 				$this->number = edd_format_payment_number( $number );
+
 				$this->update_meta( '_edd_payment_number', $this->number );
+				$order_data['order_number'] = $this->number;
+
 				update_option( 'edd_last_payment_number', $number );
 			}
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
-			$this->new          = true;
+			$this->new = true;
 		}
 
 		return $this->ID;
-
 	}
 
 	/**
