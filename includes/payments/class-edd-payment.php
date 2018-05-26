@@ -869,11 +869,15 @@ class EDD_Payment {
 						break;
 
 					case 'gateway':
-						$this->update_meta( '_edd_payment_gateway', $this->gateway );
+						edd_update_order( $this->ID, array (
+							'gateway' => $this->gateway
+						) );
 						break;
 
 					case 'mode':
-						$this->update_meta( '_edd_payment_mode', $this->mode );
+						edd_update_order( $this->ID, array (
+							'mode' => $this->mode
+						) );
 						break;
 
 					case 'transaction_id':
@@ -881,18 +885,25 @@ class EDD_Payment {
 						break;
 
 					case 'ip':
-
-						$this->update_meta( '_edd_payment_user_ip', $this->ip );
+						edd_update_order( $this->ID, array (
+							'ip' => $this->ip
+						) );
 						break;
 
 					case 'customer_id':
-						$this->update_meta( '_edd_payment_customer_id', $this->customer_id );
+						edd_update_order( $this->ID, array (
+							'$this->customer_id' => $this->customer_id
+						) );
+
 						$customer = new EDD_Customer( $this->customer_id );
 						$customer->attach_payment( $this->ID, false );
 						break;
 
 					case 'user_id':
-						$this->update_meta( '_edd_payment_user_id', $this->user_id );
+						edd_update_order( $this->ID, array (
+							'$this->user_id' => $this->user_id
+						) );
+
 						$this->user_info['id'] = $this->user_id;
 						break;
 
@@ -919,11 +930,16 @@ class EDD_Payment {
 					case 'email':
 						$this->payment_meta['email'] = $this->email;
 						$this->user_info['email']    = $this->email;
-						$this->update_meta( '_edd_payment_user_email', $this->email );
+
+						edd_update_order( $this->ID, array (
+							'email' => $this->email
+						) );
 						break;
 
 					case 'key':
-						$this->update_meta( '_edd_payment_purchase_key', $this->key );
+						edd_update_order( $this->ID, array (
+							'payment_key' => $this->key
+						) );
 						break;
 
 					case 'tax_rate':
@@ -931,25 +947,25 @@ class EDD_Payment {
 						break;
 
 					case 'number':
-						$this->update_meta( '_edd_payment_number', $this->number );
+						edd_update_order( $this->ID, array(
+							'order_number' => $this->number
+						) );
 						break;
 
 					case 'date':
-						$args = array(
-							'ID'        => $this->ID,
-							'post_date' => $this->date,
-							'edit_date' => true,
-						);
-
-						wp_update_post( $args );
+						edd_update_order( $this->ID, array(
+							'date_created' => $this->date
+						) );
 						break;
 
 					case 'completed_date':
-						$this->update_meta( '_edd_completed_date', $this->completed_date );
+						edd_update_order( $this->ID, array(
+							'date_completed' => $this->completed_date
+						) );
 						break;
 
 					case 'has_unlimited_downloads':
-						$this->update_meta( '_edd_payment_unlimited_downloads', $this->has_unlimited_downloads );
+						$this->update_meta( 'unlimited_downloads', $this->has_unlimited_downloads );
 						break;
 
 					case 'parent_payment':
