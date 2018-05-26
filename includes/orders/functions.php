@@ -21,14 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * @return int|false ID of newly created order, false on error.
  */
 function edd_add_order( $data = array() ) {
-
-	// An object ID and object type must be supplied for every order that is
-	// inserted into the database.
-	if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
-		return false;
-	}
-
-	// Instantiate a query object
 	$orders = new EDD\Database\Queries\Order();
 
 	return $orders->add_item( $data );
