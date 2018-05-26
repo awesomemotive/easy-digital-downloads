@@ -591,6 +591,17 @@ class EDD_Payment {
 			edd_update_order( $order_id, $order_data );
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
+
+			$order_meta = array(
+				'tax_rate' => $this->tax_rate,
+				'mode'     => $this->mode,
+				'currency' => $this->currency,
+			);
+
+			foreach ( $order_meta as $key => $value ) {
+				edd_add_order_meta( $order_id, $key, $value );
+			}
+
 			$this->new = true;
 		}
 
@@ -603,13 +614,11 @@ class EDD_Payment {
 	 * @return bool  True of the save occurred, false if it failed or wasn't needed
 	 */
 	public function save() {
-
 		global $edd_logs;
 
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
-
 			$payment_id = $this->insert_payment();
 
 			if ( false === $payment_id ) {
@@ -617,29 +626,25 @@ class EDD_Payment {
 			} else {
 				$this->ID = $payment_id;
 			}
-
 		}
 
-		if( $this->ID !== $this->_ID ) {
+		if ( $this->ID !== $this->_ID ) {
 			$this->ID = $this->_ID;
 		}
 
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id != $customer->id ) {
-
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
-
 		}
 
 		// If we have something pending, let's save it
 		if ( ! empty( $this->pending ) ) {
-
 			$total_increase = 0;
 			$total_decrease = 0;
 
 			foreach ( $this->pending as $key => $value ) {
-				switch( $key ) {
+				switch ( $key ) {
 					case 'downloads':
 						// Update totals for pending downloads
 						foreach ( $this->pending[ $key ] as $item ) {
@@ -672,6 +677,21 @@ class EDD_Payment {
 												$increase_earnings += (float) $fee['amount'];
 											}
 										}
+
+										edd_add_order_item( array(
+											'order_id'   => $this->ID,
+											'product_id' => $item['id'],
+											'price_id'   => $price_id,
+											'cart_index' => 0, // @todo Need to actually get the correct cart index
+											'type'       => '', // @todo ???
+											'status'     => '', // @todo ???
+											'quantity'   => $item['quantity'],
+											'amount'     => $item['item_price'],
+											'subtotal'   => $item['subtotal'],
+											'discount'   => $item['discount'],
+											'tax'        => $item['tax'],
+											'total'      => $item['price']
+										) );
 
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
