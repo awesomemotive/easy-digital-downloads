@@ -1864,45 +1864,69 @@ class EDD_Payment {
 			return false;
 		}
 
-		// Backwards compatibility meta mapping.
-		switch ( $meta_key ) {
-			
-		}
-
-
-		if( '_edd_payment_purchase_key' == $meta_key ) {
-
-			$current_meta = $this->get_meta();
-			$current_meta[ 'key' ] = $meta_value;
-			update_post_meta( $this->ID, '_edd_payment_meta', $current_meta );
-
-		} else if ( $meta_key == 'key' || $meta_key == 'date' ) {
-
-			$current_meta = $this->get_meta();
-			$current_meta[ $meta_key ] = $meta_value;
-
-			$meta_key     = '_edd_payment_meta';
-			$meta_value   = $current_meta;
-
-		} else if ( $meta_key == 'email' || $meta_key == '_edd_payment_user_email' ) {
-
-			$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
-			update_post_meta( $this->ID, '_edd_payment_user_email', $meta_value );
-
-			$current_meta = $this->get_meta( '_edd_payment_meta' );
-
-			if ( is_array( $current_meta ) ){
-				$current_meta['user_info']['email']  = $meta_value;
-			}
-
-			$meta_key     = '_edd_payment_meta';
-			$meta_value   = $current_meta;
-
-		}
-
 		$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 
-		return update_post_meta( $this->ID, $meta_key, $meta_value, $prev_value );
+		switch ( $meta_key ) {
+			case '_edd_completed_date':
+				return edd_update_order( $this->ID, array(
+					'date_completed' => $meta_value
+				) );
+				break;
+			case '_edd_payment_gateway':
+				return edd_update_order( $this->ID, array(
+					'gateway' => $meta_value
+				) );
+				break;
+			case '_edd_payment_user_id':
+				edd_update_order( $this->ID, array(
+					'user_id' => $meta_value
+				) );
+				break;
+			case '_edd_payment_user_email':
+			case 'email':
+				edd_update_order( $this->ID, array(
+					'email' => $meta_value
+				) );
+				break;
+			case '_edd_payment_user_ip':
+				edd_update_order( $this->ID, array(
+					'ip' => $meta_value
+				) );
+				break;
+			case '_edd_payment_purchase_key':
+			case 'key':
+				edd_update_order( $this->ID, array(
+					'payment_key' => $meta_value
+				) );
+				break;
+			case '_edd_payment_mode':
+				edd_update_order( $this->ID, array(
+					'mode' => $meta_value
+				) );
+				break;
+			case '_edd_payment_tax_rate':
+				edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				break;
+			case '_edd_payment_customer_id':
+				edd_update_order( $this->ID, array(
+					'customer_id' => $meta_value
+				) );
+				break;
+			case '_edd_payment_total':
+				edd_update_order( $this->ID, array(
+					'total' => $meta_value
+				) );
+				break;
+			case '_edd_payment_tax':
+				edd_update_order( $this->ID, array(
+					'tax' => $meta_value
+				) );
+				break;
+		}
+
+		$meta_key = str_replace( '_edd_payment_', '', $meta_key );
+		
+		return edd_update_order_meta( $this->ID, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
