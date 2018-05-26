@@ -286,19 +286,15 @@ function edd_insert_payment( $order_data = array() ) {
  * @return bool               If the payment was successfully updated
  */
 function edd_update_payment_status( $payment_id = 0, $new_status = 'publish' ) {
-
 	$updated = false;
 	$payment = new EDD_Payment( $payment_id );
 
-	if( $payment && $payment->ID > 0 ) {
-
+	if ( $payment && $payment->ID > 0 ) {
 		$payment->status = $new_status;
 		$updated = $payment->save();
-
 	}
 
 	return $updated;
-
 }
 
 /**

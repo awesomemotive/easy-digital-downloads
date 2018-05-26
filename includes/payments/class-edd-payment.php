@@ -1738,9 +1738,21 @@ class EDD_Payment {
 
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
-			$update_fields = array( 'ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time( 'mysql' ) );
+			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
+				'post_status' => $status,
+			) );
 
-			$updated = wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
+			/**
+			 * Map the array keys to ones accepted by the new methods.
+			 *
+			 * @since 3.0
+			 */
+			$update_fields['status'] = $update_fields['post_status'];
+
+			unset( $update_fields['ID'] );
+			unset( $update_fields['post_status'] );
+
+			edd_update_order( $this->ID, $update_fields );
 
 			$this->status = $status;
 			$this->post_status = $status;
