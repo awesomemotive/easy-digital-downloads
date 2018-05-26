@@ -538,6 +538,8 @@ class EDD_Payment {
 			'email'       => $this->email,
 			'ip'          => $this->ip,
 			'gateway'     => $this->gateway,
+			'mode'        => $this->mode,
+			'currency'    => $this->currency,
 			'payment_key' => $this->key,
 			'subtotal'    => $this->total,
 			'total'       => $this->total,
@@ -589,8 +591,6 @@ class EDD_Payment {
 
 			$order_meta = array(
 				'tax_rate' => $this->tax_rate,
-				'mode'     => $this->mode,
-				'currency' => $this->currency,
 			);
 
 			foreach ( $order_meta as $key => $value ) {
