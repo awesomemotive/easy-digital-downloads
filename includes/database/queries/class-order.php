@@ -123,6 +123,12 @@ class Order extends Base {
 	 *     @type string       $gateway              Limit results to those affiliated with a given gateway. Default empty.
 	 *     @type array        $gateway__in          Array of gateways to include affiliated orders for. Default empty.
 	 *     @type array        $gateway__not_in      Array of gateways to exclude affiliated orders for. Default empty.
+	 *     @type string       $mode                 Limit results to those affiliated with a given mode. Default empty.
+	 *     @type array        $mode__in             Array of modes to include affiliated orders for. Default empty.
+	 *     @type array        $mode__not_in         Array of modes to exclude affiliated orders for. Default empty.
+	 *     @type string       $currency             Limit results to those affiliated with a given currency. Default empty.
+	 *     @type array        $currency__in         Array of currencies to include affiliated orders for. Default empty.
+	 *     @type array        $currency__not_in     Array of currencies to exclude affiliated orders for. Default empty.
 	 *     @type string       $payment_key          Limit results to those affiliated with a given payment key. Default empty.
 	 *     @type array        $payment_key__in      Array of payment keys to include affiliated orders for. Default empty.
 	 *     @type array        $payment_key__not_in  Array of payment keys to exclude affiliated orders for. Default empty.
