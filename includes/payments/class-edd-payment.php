@@ -1944,7 +1944,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		return add_post_meta( $this->ID, $meta_key, $meta_value, $unique );
+		return edd_add_order_meta( $this->ID, $meta_key, $meta_value, $unique );
 	}
 
 	/**
@@ -1961,7 +1961,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		return delete_post_meta( $this->ID, $meta_key, $meta_value );
+		return edd_delete_order_meta( $this->ID, $meta_key, $meta_value );
 	}
 
 	/**
