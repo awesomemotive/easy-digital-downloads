@@ -969,12 +969,9 @@ class EDD_Payment {
 						break;
 
 					case 'parent_payment':
-						$args = array(
-							'ID'          => $this->ID,
-							'post_parent' => $this->parent_payment,
-						);
-
-						wp_update_post( $args );
+						edd_update_order( $this->ID, array(
+							'parent' => $this->parent_payment,
+						) );
 						break;
 
 					default:
