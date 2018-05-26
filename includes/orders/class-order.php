@@ -31,6 +31,14 @@ class Order extends Base_Object {
 	protected $id;
 
 	/**
+	 * Parent payment.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
+
+	/**
 	 * Order number.
 	 *
 	 * @since 3.0
@@ -167,6 +175,17 @@ class Order extends Base_Object {
 	 */
 	public function get_id() {
 		return $this->id;
+	}
+
+	/**
+	 * Retrieve parent order ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return int Parent order ID.
+	 */
+	public function get_parent() {
+		return $this->parent;
 	}
 
 	/**
