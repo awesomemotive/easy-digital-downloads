@@ -139,6 +139,20 @@ class Orders extends Base {
 			'length'     => '20'
 		),
 
+		// mode
+		array(
+			'name'       => 'mode',
+			'type'       => 'varchar',
+			'length'     => '20'
+		),
+
+		// currency
+		array(
+			'name'       => 'currency',
+			'type'       => 'varchar',
+			'length'     => '20'
+		),
+
 		// payment_key
 		array(
 			'name'       => 'payment_key',
