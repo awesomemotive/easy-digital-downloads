@@ -2129,17 +2129,20 @@ class EDD_Payment {
 	/**
 	 * Setup the payment completed date
 	 *
-	 * @since  2.5
+	 * @since 2.5
+	 * @since 3.0 Updated to use the new custom tables.
+	 *
 	 * @return string The date the payment was completed
 	 */
 	private function setup_completed_date() {
-		$payment = get_post( $this->ID );
+		/** @var EDD\Orders\Order $order */
+		$order = edd_get_order( $this->ID );
 
-		if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status || 'processing' == $payment->post_status ) {
+		if ( 'pending' == $order->get_status() || 'preapproved' == $order->get_status() || 'processing' == $order->get_status() ) {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
+		$date = ( $date = $order->get_date_completed() ) ? $date : $order->get_date_created();
 
 		return $date;
 	}
