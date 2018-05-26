@@ -1063,7 +1063,18 @@ class EDD_Payment {
 
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
+				edd_update_order( $this->ID, array(
+					'total'       => $merged_meta['price'],
+					'date'        => $merged_meta['date'],
+					'email'       => $merged_meta['email'],
+					'payment_key' => $merged_meta['purchase_key'],
+					'currency'    => $merged_meta['currency'],
+					'user_id'     => $merged_meta['user_info']['id'],
+					'status'      => $merged_meta['status'],
+				) );
+
 				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
+
 				if ( false !== $updated ) {
 					$saved = true;
 				}
