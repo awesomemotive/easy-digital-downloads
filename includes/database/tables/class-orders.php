@@ -63,7 +63,7 @@ final class Orders extends Base {
 			payment_key varchar(64) NOT NULL default '',
 			subtotal decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
-			discounts decimal(18,9) NOT NULL default '0',
+			discount decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
 			PRIMARY KEY (id),
 			KEY order_number (order_number({$max_index_length})),

@@ -162,7 +162,7 @@ class Orders extends Base {
 			'default'    => '0'
 		),
 
-		// discounts
+		// discount
 		array(
 			'name'       => 'discount',
 			'type'       => 'decimal',
