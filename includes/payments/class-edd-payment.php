@@ -1026,7 +1026,6 @@ class EDD_Payment {
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
 			if ( ! empty( $this->payment_meta['user_info'] ) ) {
-
 				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
 
 				$new_meta[ 'user_info' ] = array_replace_recursive( (array) $this->payment_meta[ 'user_info' ], $new_meta[ 'user_info' ] );
@@ -1034,7 +1033,6 @@ class EDD_Payment {
 				if ( 'none' !== $stored_discount ) {
 					$new_meta['user_info']['discount'] = $stored_discount;
 				}
-
 			}
 
 			$meta        = $this->get_meta();
@@ -1063,6 +1061,7 @@ class EDD_Payment {
 
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
+				// First, update the order.
 				edd_update_order( $this->ID, array(
 					'total'       => $merged_meta['price'],
 					'date'        => $merged_meta['date'],
@@ -1072,6 +1071,31 @@ class EDD_Payment {
 					'user_id'     => $merged_meta['user_info']['id'],
 					'status'      => $merged_meta['status'],
 				) );
+
+				// We need to check if all of the order items exist in the database.
+				$items = edd_get_order_items( array(
+					'order_id' => $this->ID
+				) );
+
+				// If an empty set was returned, this is a new payment.
+				if ( empty( $items ) ) {
+					foreach ( $merged_meta['cart_details'] as $key => $item ) {
+						edd_add_order_item( array(
+							'order_id'   => $this->ID,
+							'product_id' => $item['id'],
+							'price_id'   => $item['item_number']['options']['price_id'],
+							'cart_index' => $key,
+							'type'       => '', // @todo ???
+							'status'     => '', // @todo ???
+							'quantity'   => $item['quantity'],
+							'amount'     => $item['item_price'],
+							'subtotal'   => $item['subtotal'],
+							'discount'   => $item['discount'],
+							'tax'        => $item['tax'],
+							'total'      => $item['price']
+						) );
+					}
+				}
 
 				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
