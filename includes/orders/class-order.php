@@ -31,7 +31,7 @@ class Order extends Base_Object {
 	protected $id;
 
 	/**
-	 * Parent payment.
+	 * Parent order.
 	 *
 	 * @since 3.0
 	 * @var   int
@@ -103,12 +103,28 @@ class Order extends Base_Object {
 	protected $ip;
 
 	/**
-	 * Payment gateway.
+	 * Order gateway.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
 	protected $gateway;
+
+	/**
+	 * Order mode.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $mode;
+
+	/**
+	 * Order currency.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $currency;
 
 	/**
 	 * Payment key.
@@ -285,6 +301,28 @@ class Order extends Base_Object {
 	 */
 	public function get_gateway() {
 		return $this->gateway;
+	}
+
+	/**
+	 * Retrieve the mode (i.e. test or live) that the order was placed in.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Order mode.
+	 */
+	public function get_mode() {
+		return $this->mode;
+	}
+
+	/**
+	 * Retrieve the currency that was used for the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Order currency.
+	 */
+	public function get_currency() {
+		return $this->currency;
 	}
 
 	/**
