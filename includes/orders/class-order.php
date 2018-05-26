@@ -151,6 +151,14 @@ class Order extends Base_Object {
 	protected $items;
 
 	/**
+	 * Order adjustments.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	protected $adjustments;
+
+	/**
 	 * Retrieve order ID.
 	 *
 	 * @since 3.0
@@ -324,5 +332,16 @@ class Order extends Base_Object {
 	 */
 	public function get_items() {
 		return $this->items;
+	}
+
+	/**
+	 * Retrieve all the adjustments applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order adjustments.
+	 */
+	public function get_adjustments() {
+		return $this->adjustments;
 	}
 }
