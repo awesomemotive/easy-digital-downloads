@@ -61,7 +61,7 @@ function edd_update_order( $order_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $order_id Order ID.
- * @return object
+ * @return EDD\Orders\Order Order object.
  */
 function edd_get_order( $order_id = 0 ) {
 	return edd_get_order_by( 'id', $order_id );

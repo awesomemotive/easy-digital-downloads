@@ -420,9 +420,9 @@ class EDD_Payment {
 			return false;
 		}
 
-		$payment = edd_get_order( $payment_id );
+		$order = edd_get_order( $payment_id );
 
-		if ( ! $payment || is_wp_error( $payment ) ) {
+		if ( ! $order || is_wp_error( $order ) ) {
 			return false;
 		}
 
@@ -439,16 +439,15 @@ class EDD_Payment {
 		$this->payment_meta    = $this->get_meta();
 
 		// Status and Dates
-		$this->date            = $payment->post_date;
+		$this->date            = $order->get_date_created();
 		$this->completed_date  = $this->setup_completed_date();
-		$this->status          = $payment->post_status;
-		$this->post_status     = $this->status;
-		$this->mode            = $this->setup_mode();
-		$this->parent_payment  = $payment->post_parent;
+		$this->status          = $order->get_status();
+		$this->post_status     = $order->get_status();
+		$this->mode            = $order->get_mode();
+		$this->parent_payment  = $order->get_parent();
 
 		$all_payment_statuses  = edd_get_payment_statuses();
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
-
 
 		// Items
 		$this->fees            = $this->setup_fees();
