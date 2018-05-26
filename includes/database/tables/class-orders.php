@@ -60,6 +60,8 @@ final class Orders extends Base {
 			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
 			gateway varchar(20) NOT NULL default '',
+			mode varchar(20) NOT NULL default '',
+			currency varchar(20) NOT NULL default '',
 			payment_key varchar(64) NOT NULL default '',
 			subtotal decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
