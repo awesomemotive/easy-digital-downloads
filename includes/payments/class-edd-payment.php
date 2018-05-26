@@ -426,10 +426,6 @@ class EDD_Payment {
 			return false;
 		}
 
-		if ( 'edd_payment' !== $payment->post_type ) {
-			return false;
-		}
-
 		// Allow extensions to perform actions before the payment is loaded
 		do_action( 'edd_pre_setup_payment', $this, $payment_id );
 
