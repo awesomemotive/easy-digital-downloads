@@ -541,8 +541,6 @@ class EDD_Payment {
 			'mode'        => $this->mode,
 			'currency'    => $this->currency,
 			'payment_key' => $this->key,
-			'subtotal'    => $this->total,
-			'total'       => $this->total,
 		);
 
 		$order_id = edd_add_order( $order_args );
@@ -995,10 +993,13 @@ class EDD_Payment {
 
 			}
 
-			$this->update_meta( '_edd_payment_total', $this->total );
-			$this->update_meta( '_edd_payment_tax', $this->tax );
+			edd_update_order( $this->ID, array(
+				'subtotal' => $this->subtotal,
+				'tax'      => $this->tax,
+				'total'    => $this->total,
+			) );
 
-			$this->downloads    = array_values( $this->downloads );
+			$this->downloads = array_values( $this->downloads );
 
 			$new_meta = array(
 				'downloads'     => $this->downloads,
