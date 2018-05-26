@@ -420,13 +420,13 @@ class EDD_Payment {
 			return false;
 		}
 
-		$payment = get_post( $payment_id );
+		$payment = edd_get_order( $payment_id );
 
-		if( ! $payment || is_wp_error( $payment ) ) {
+		if ( ! $payment || is_wp_error( $payment ) ) {
 			return false;
 		}
 
-		if( 'edd_payment' !== $payment->post_type ) {
+		if ( 'edd_payment' !== $payment->post_type ) {
 			return false;
 		}
 
