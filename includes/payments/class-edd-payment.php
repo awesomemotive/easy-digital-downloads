@@ -1934,47 +1934,47 @@ class EDD_Payment {
 				) );
 				break;
 			case '_edd_payment_user_id':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'user_id' => $meta_value
 				) );
 				break;
 			case '_edd_payment_user_email':
 			case 'email':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'email' => $meta_value
 				) );
 				break;
 			case '_edd_payment_user_ip':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'ip' => $meta_value
 				) );
 				break;
 			case '_edd_payment_purchase_key':
 			case 'key':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'payment_key' => $meta_value
 				) );
 				break;
 			case '_edd_payment_mode':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'mode' => $meta_value
 				) );
 				break;
 			case '_edd_payment_tax_rate':
-				edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				return edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
 				break;
 			case '_edd_payment_customer_id':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'customer_id' => $meta_value
 				) );
 				break;
 			case '_edd_payment_total':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'total' => $meta_value
 				) );
 				break;
 			case '_edd_payment_tax':
-				edd_update_order( $this->ID, array(
+				return edd_update_order( $this->ID, array(
 					'tax' => $meta_value
 				) );
 				break;
