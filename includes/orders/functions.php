@@ -140,6 +140,7 @@ function edd_count_orders( $args = array() ) {
  * @return int|false ID of newly created order, false on error.
  */
 function edd_add_order_item( $data = array() ) {
+
 	// An order ID and product ID must be supplied for every order that is
 	// inserted into the database.
 	if ( empty( $data['order_id'] ) || empty( $data['product_id'] ) ) {
@@ -258,18 +259,18 @@ function edd_count_order_items( $args = array() ) {
 /** Order Adjustments *********************************************************/
 
 /**
- * Add an API request order.
+ * Add an order adjustment.
  *
  * @since 3.0
  *
  * @param array $data
- * @return int|false ID of newly created order, false on error.
+ * @return int|false ID of newly created order adjustment, false on error.
  */
-function edd_add_order_adjustment( $data = array() ) {
+function edd_add_order_adjustment( $data ) {
 
-	// A request is required for every API request order that is inserted into
-	// the database.
-	if ( empty( $data['request'] ) ) {
+	// An object ID and object ID must be supplied for every order that is
+	// inserted into the database.
+	if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
 		return false;
 	}
 
