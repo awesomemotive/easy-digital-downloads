@@ -316,6 +316,14 @@ class EDD_Payment {
 	protected $parent_payment = 0;
 
 	/**
+	 * Order object.
+	 *
+	 * @since 3.0
+	 * @var   EDD\Orders\Order
+	 */
+	protected $order;
+
+	/**
 	 * Setup the EDD Payments class
 	 *
 	 * @since 2.5
@@ -339,7 +347,6 @@ class EDD_Payment {
 		} else {
 			$payment_id = absint( $payment_or_txn_id );
 		}
-
 
 		$this->setup_payment( $payment_id );
 	}
@@ -420,9 +427,9 @@ class EDD_Payment {
 			return false;
 		}
 
-		$order = edd_get_order( $payment_id );
+		$this->order = edd_get_order( $payment_id );
 
-		if ( ! $order || is_wp_error( $order ) ) {
+		if ( ! $this->order || is_wp_error( $this->order ) ) {
 			return false;
 		}
 
@@ -439,12 +446,12 @@ class EDD_Payment {
 		$this->payment_meta    = $this->get_meta();
 
 		// Status and Dates
-		$this->date            = $order->get_date_created();
+		$this->date            = $this->order->get_date_created();
 		$this->completed_date  = $this->setup_completed_date();
-		$this->status          = $order->get_status();
-		$this->post_status     = $order->get_status();
-		$this->mode            = $order->get_mode();
-		$this->parent_payment  = $order->get_parent();
+		$this->status          = $this->order->get_status();
+		$this->post_status     = $this->order->get_status();
+		$this->mode            = $this->order->get_mode();
+		$this->parent_payment  = $this->order->get_parent();
 
 		$all_payment_statuses  = edd_get_payment_statuses();
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
@@ -455,20 +462,20 @@ class EDD_Payment {
 		$this->downloads       = $this->setup_downloads();
 
 		// Currency Based
-		$this->total           = $this->setup_total();
-		$this->tax             = $this->setup_tax();
+		$this->total           = $this->order->get_total();
+		$this->tax             = $this->order->get_tax();
 		$this->tax_rate        = $this->setup_tax_rate();
 		$this->fees_total      = $this->setup_fees_total();
-		$this->subtotal        = $this->setup_subtotal();
+		$this->subtotal        = $this->order->get_subtotal();
 		$this->currency        = $this->setup_currency();
 
 		// Gateway based
-		$this->gateway         = $this->setup_gateway();
+		$this->gateway         = $this->order->get_gateway();
 		$this->transaction_id  = $this->setup_transaction_id();
 
 		// User based
-		$this->ip              = $this->setup_ip();
-		$this->customer_id     = $this->setup_customer_id();
+		$this->ip              = $this->order->get_ip();
+		$this->customer_id     = $this->order->get_customer_id();
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
 		$this->user_info       = $this->setup_user_info();
@@ -478,7 +485,7 @@ class EDD_Payment {
 		$this->last_name       = $this->user_info['last_name'];
 
 		// Other Identifiers
-		$this->key             = $this->setup_payment_key();
+		$this->key             = $this->order->get_payment_key();
 		$this->number          = $this->setup_payment_number();
 
 		// Additional Attributes
@@ -1873,11 +1880,11 @@ class EDD_Payment {
 
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
-				$meta['key'] = $this->setup_payment_key();
+				$meta['key'] = $this->key;
 			}
 
 			if ( empty( $meta['email'] ) ) {
-				$meta['email'] = $this->setup_email();
+				$meta['email'] = $this->email;
 			}
 
 			if ( empty( $meta['date'] ) ) {
@@ -2231,16 +2238,6 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment mode
-	 *
-	 * @since  2.5
-	 * @return string The payment mode
-	 */
-	private function setup_mode() {
-		return $this->get_meta( '_edd_payment_mode' );
-	}
-
-	/**
 	 * Setup the payment total
 	 *
 	 * @since  2.5
@@ -2262,33 +2259,13 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment tax
-	 *
-	 * @since  2.5
-	 * @return float The tax for the payment
-	 */
-	private function setup_tax() {
-		$tax = $this->get_meta( '_edd_payment_tax', true );
-
-		// We don't have tax as it's own meta and no meta was passed
-		if ( '' === $tax ) {
-
-			$tax = isset( $this->payment_meta['tax'] ) ? $this->payment_meta['tax'] : 0;
-
-		}
-
-		return $tax;
-
-	}
-
-	/**
 	 * Setup the payment tax rate
 	 *
 	 * @since  2.7
 	 * @return float The tax rate for the payment
 	 */
 	private function setup_tax_rate() {
-		return $this->get_meta( '_edd_payment_tax_rate', true );
+		return $this->get_meta( 'tax_rate', true );
 	}
 
 	/**
@@ -2362,8 +2339,9 @@ class EDD_Payment {
 	 * @return string              The currency for the payment
 	 */
 	private function setup_currency() {
-		$currency = isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
-		return $currency;
+		return ! empty( $this->order->get_currency() )
+					? $this->order->get_currency()
+					: apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
 	}
 
 	/**
@@ -2375,17 +2353,6 @@ class EDD_Payment {
 	private function setup_fees() {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
 		return $payment_fees;
-	}
-
-	/**
-	 * Setup the gateway used for the payment
-	 *
-	 * @since  2.5
-	 * @return string The gateway
-	 */
-	private function setup_gateway() {
-		$gateway = $this->get_meta( '_edd_payment_gateway', true );
-		return $gateway;
 	}
 
 	/**
@@ -2405,28 +2372,6 @@ class EDD_Payment {
 		}
 
 		return $transaction_id;
-	}
-
-	/**
-	 * Setup the IP Address for the payment
-	 *
-	 * @since  2.5
-	 * @return string The IP address for the payment
-	 */
-	private function setup_ip() {
-		$ip = $this->get_meta( '_edd_payment_user_ip', true );
-		return $ip;
-	}
-
-	/**
-	 * Setup the customer ID
-	 *
-	 * @since  2.5
-	 * @return int The Customer ID
-	 */
-	private function setup_customer_id() {
-		$customer_id = $this->get_meta( '_edd_payment_customer_id', true );
-		return $customer_id;
 	}
 
 	/**
@@ -2459,7 +2404,7 @@ class EDD_Payment {
 	 * @return string The email address for the payment
 	 */
 	private function setup_email() {
-		$email = $this->get_meta( '_edd_payment_user_email', true );
+		$email = $this->order->get_email();
 
 		if ( empty( $email ) ) {
 			$email = EDD()->customers->get_column( 'email', $this->customer_id );
@@ -2561,17 +2506,6 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment key
-	 *
-	 * @since  2.5
-	 * @return string The Payment Key
-	 */
-	private function setup_payment_key() {
-		$key = $this->get_meta( '_edd_payment_purchase_key', true );
-		return $key;
-	}
-
-	/**
 	 * Setup the payment number
 	 *
 	 * @since  2.5
@@ -2581,15 +2515,11 @@ class EDD_Payment {
 		$number = $this->ID;
 
 		if ( edd_get_option( 'enable_sequential' ) ) {
-
-			$number = $this->get_meta( '_edd_payment_number', true );
+			$number = $this->order->get_number();
 
 			if ( ! $number ) {
-
 				$number = $this->ID;
-
 			}
-
 		}
 
 		return $number;
