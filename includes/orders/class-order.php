@@ -183,6 +183,30 @@ class Order extends Base_Object {
 	protected $adjustments;
 
 	/**
+	 * Object constructor.
+	 *
+	 * @access public
+	 * @since  1.9
+	 *
+	 * @param mixed $object Object to populate members for.
+	 */
+	public function __construct( $object = null ) {
+		if ( $object ) {
+			foreach ( get_object_vars( $object ) as $key => $value ) {
+				$this->{$key} = $value;
+			}
+		}
+
+		$this->items = edd_get_order_items( array(
+			'order_id' => $this->get_id()
+		) );
+
+		$this->adjustments = edd_get_order_adjustments( array(
+			'order_id' => $this->get_id()
+		) );
+	}
+
+	/**
 	 * Retrieve order ID.
 	 *
 	 * @since 3.0
