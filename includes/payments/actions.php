@@ -53,17 +53,15 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
 			$price_id      = isset( $download['item_number']['options']['price_id'] ) ? (int) $download['item_number']['options']['price_id'] : false;
+
 			// Increase earnings and fire actions once per quantity number
-			for( $i = 0; $i < $download['quantity']; $i++ ) {
+			for ( $i = 0; $i < $download['quantity']; $i++ ) {
 
 				// Ensure these actions only run once, ever
 				if ( empty( $completed_date ) ) {
-
 					edd_record_sale_in_log( $download['id'], $payment_id, $price_id, $creation_date );
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
-
 				}
-
 			}
 
 			$increase_earnings = $download['price'];
@@ -72,6 +70,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 					if ( $fee['amount'] > 0 ) {
 						continue;
 					}
+
 					$increase_earnings += $fee['amount'];
 				}
 			}
@@ -79,16 +78,15 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			// Increase the earnings for this download ID
 			edd_increase_earnings( $download['id'], $increase_earnings );
 			edd_increase_purchase_count( $download['id'], $download['quantity'] );
-
 		}
 
 		// Clear the total earnings cache
 		delete_transient( 'edd_earnings_total' );
+
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
-
 
 	// Increase the customer's purchase stats
 	$customer = new EDD_Customer( $customer_id );
@@ -99,17 +97,12 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	// Check for discount codes and increment their use counts
 	if ( ! empty( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
-
 		$discounts = array_map( 'trim', explode( ',', $user_info['discount'] ) );
 
-		if( ! empty( $discounts ) ) {
-
-			foreach( $discounts as $code ) {
-
+		if ( ! empty( $discounts ) ) {
+			foreach ( $discounts as $code ) {
 				edd_increase_discount_usage( $code );
-
 			}
-
 		}
 	}
 
@@ -147,7 +140,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			 */
 			do_action( 'edd_after_payment_actions', $payment_id, $payment, $customer );
 		}
-
 	}
 
 	// Empty the shopping cart

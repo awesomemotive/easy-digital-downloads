@@ -158,13 +158,13 @@ function edd_add_order_item( $data = array() ) {
  *
  * @since 3.0
  *
- * @param int $order_id Order ID.
+ * @param int $order_item_id Order item ID.
  * @return int
  */
-function edd_delete_order_item( $order_id = 0 ) {
+function edd_delete_order_item( $order_item_id = 0 ) {
 	$orders = new EDD\Database\Queries\Order_Item();
 
-	return $orders->delete_item( $order_id );
+	return $orders->delete_item( $order_item_id );
 }
 
 /**
