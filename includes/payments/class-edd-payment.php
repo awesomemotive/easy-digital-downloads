@@ -1108,7 +1108,13 @@ class EDD_Payment {
 					}
 				}
 
-				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
+				$this->update_meta( 'user_info', array(
+					'first_name' => $merged_meta['user_info']['first_name'],
+					'last_name'  => $merged_meta['user_info']['last_name'],
+					'address'    => $merged_meta['user_info']['address'],
+				) );
+
+				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
 				if ( false !== $updated ) {
 					$saved = true;
