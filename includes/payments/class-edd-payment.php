@@ -1,35 +1,27 @@
 <?php
 /**
- * Payments
+ * Payments Object.
  *
  * This class is for working with payments in EDD.
  *
  * @package     EDD
- * @subpackage  Classes/Payment
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @subpackage  Payments
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
  */
 
-
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 
 /**
  * EDD_Payment Class
  *
  * @since 2.5
+ * @since 3.0 Updated to work with new custom tables.
  */
 class EDD_Payment {
-
-	/**
-	 * The Payment we are working with
-	 *
-	 * @var int
-	 * @access private
-	 * @since 2.5
-	 */
 
 	/**
 	 * The Payment ID
@@ -992,25 +984,20 @@ class EDD_Payment {
 			}
 
 			if ( ! $this->in_process() ) {
-
 				$customer = new EDD_Customer( $this->customer_id );
 
 				$total_change = $total_increase - $total_decrease;
-				if ( $total_change < 0 ) {
 
+				if ( $total_change < 0 ) {
 					$total_change = -( $total_change );
 					// Decrease the customer's purchase stats
 					$customer->decrease_value( $total_change );
 					edd_decrease_total_earnings( $total_change );
-
 				} else if (  $total_change > 0 ) {
-
 					// Increase the customer's purchase stats
 					$customer->increase_value( $total_change );
 					edd_increase_total_earnings( $total_change );
-
 				}
-
 			}
 
 			edd_update_order( $this->ID, array(
