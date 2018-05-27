@@ -1014,9 +1014,16 @@ class EDD_Payment {
 				}
 			}
 
+			$discount = 0.00;
+
+			foreach ( $this->cart_details as $item ) {
+				$discount += $item['discount'];
+			}
+
 			edd_update_order( $this->ID, array(
 				'subtotal' => $this->subtotal,
 				'tax'      => $this->tax,
+				'discount' => $discount,
 				'total'    => $this->total,
 			) );
 
