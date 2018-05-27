@@ -35,10 +35,7 @@ class EDD_Customers_Export extends EDD_Export {
 	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
-			set_time_limit( 0 );
+		edd_set_time_limit();
 
 		$extra = '';
 
