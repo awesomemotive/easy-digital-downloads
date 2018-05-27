@@ -1773,7 +1773,6 @@ class EDD_Payment {
 	 * @return bool Returns if the status was successfully updated
 	 */
 	public function update_status( $status = false ) {
-
 		if ( $status == 'completed' || $status == 'complete' ) {
 			$status = 'publish';
 		}
@@ -1789,7 +1788,6 @@ class EDD_Payment {
 		$updated = false;
 
 		if ( $do_change ) {
-
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
 			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
@@ -1828,7 +1826,6 @@ class EDD_Payment {
 			}
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
-
 		}
 
 		return $updated;
