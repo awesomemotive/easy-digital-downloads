@@ -337,7 +337,6 @@ function edd_show_gateways() {
  * If the cart amount is zero, no option is shown and the cart uses the manual
  * gateway to emulate a no-gateway-setup for a free download
  *
- * @access public
  * @since 1.3.2
  * @return string $chosen_gateway The slug of the gateway
  */
@@ -373,7 +372,6 @@ function edd_get_chosen_gateway() {
  *
  * A simple wrapper function for edd_record_log()
  *
- * @access public
  * @since 1.3.3
  * @param string $title Title of the log entry (default: empty)
  * @param string $message  Message to store in the log entry (default: empty)

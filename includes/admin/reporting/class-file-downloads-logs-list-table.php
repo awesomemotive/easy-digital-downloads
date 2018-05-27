@@ -73,7 +73,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Show the search field
 	 *
 	 * @since 1.4
-	 * @access public
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
@@ -111,7 +110,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param array $item Contains all the data of the log item
@@ -120,6 +118,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
+		$base_url = remove_query_arg( 'paged' );
 		switch ( $column_name ) {
 			case 'download' :
 				$download      = new EDD_Download( $item[ $column_name ] );
@@ -129,9 +128,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
 				}
 
-				return '<a href="' . add_query_arg( 'download', $download->ID ) . '" >' . $column_value . '</a>';
+				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
 			case 'customer' :
-				return '<a href="' . add_query_arg( 'user', $item[ 'customer' ]->email ) . '">' . $item['customer']->name . '</a>';
+				return '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>';
 			case 'payment_id' :
 				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
 			case 'ip' :
@@ -144,7 +143,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -162,20 +160,18 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieves the user we are filtering logs by, if any
+	 * Retrieves the customer we are filtering logs by, if any
 	 *
-	 * @access public
 	 * @since 1.4
-	 * @return mixed int If User ID, string If Email/Login, false if not present
+	 * @return mixed int If customer ID, string If Email, false if not present
 	 */
-	public function get_filtered_user() {
+	public function get_filtered_customer() {
 		$ret = false;
 
-		if( isset( $_GET['user'] ) ) {
-			if( is_numeric( $_GET['user'] ) ) {
-				$ret = absint( $_GET['user'] );
-			} else {
-				$ret = sanitize_text_field( $_GET['user'] );
+		if( isset( $_GET['customer'] ) ) {
+			$customer = new EDD_Customer( sanitize_text_field( $_GET['customer'] ) );
+			if ( ! empty( $customer->id ) ) {
+				$ret = $customer->id;
 			}
 		}
 
@@ -185,7 +181,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the ID of the download we're filtering logs by
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return int Download ID
 	 */
@@ -196,7 +191,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the ID of the payment we're filtering logs by
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @return int Payment ID
 	 */
@@ -207,7 +201,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieves the search query string
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return String The search string
 	 */
@@ -220,30 +213,13 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * This is used to return log entries that match our search query, user query, or download query
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
-		$user       = $this->get_filtered_user();
-		$payment    = $this->get_filtered_payment();
-		$meta_query = array();
-
-		if ( $user ) {
-			// Show only logs from a specific user
-			if( is_numeric( $user ) ) {
-				$meta_query[] = array(
-					'key'   => '_edd_log_user_id',
-					'value' => $user,
-				);
-			} else {
-				$meta_query[] = array(
-					'key'     => '_edd_log_user_info',
-					'value'   => $user,
-					'compare' => 'LIKE',
-				);
-			}
-		}
+		$customer_id = $this->get_filtered_customer();
+		$payment     = $this->get_filtered_payment();
+		$meta_query  = array();
 
 		if ( $payment ) {
 			// Show only logs from a specific payment
@@ -253,7 +229,11 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			);
 		}
 
-		$search = $this->get_search();
+		if ( ! empty( $customer_id ) ) {
+			$search = $customer_id;
+		} else {
+			$search = $this->get_search();
+		}
 
 		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
@@ -261,40 +241,26 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$key     = '_edd_log_ip';
 				$compare = '=';
 			} else if ( is_email( $search ) ) {
-				// This is an email search. We use this to ensure it works for guest users and logged-in users
-				$key     = '_edd_log_user_info';
-				$compare = 'LIKE';
-			} else {
-				// Look for a user
-				$key = '_edd_log_user_id';
-				$compare = 'LIKE';
-
-				if ( ! is_numeric( $search ) ) {
-					// Searching for user by username
-					$user = get_user_by( 'login', $search );
-
-					if ( $user ) {
-						// Found one, set meta value to user's ID
-						$search = $user->ID;
-					} else {
-						// No user found so let's do a real search query
-						$users = new WP_User_Query( array(
-							'search'         => $search,
-							'search_columns' => array( 'user_url', 'user_nicename' ),
-							'number'         => 1,
-							'fields'         => 'ids',
-						) );
-
-						$found_user = $users->get_results();
-
-						if ( $found_user ) {
-							$search = $found_user[0];
-						} else {
-							// No users were found so let's look for file names instead
-							$this->file_search = true;
-						}
-					}
+				$customer = new EDD_Customer( $search );
+				if ( ! empty( $customer->id ) ) {
+					$key     = '_edd_log_customer_id';
+					$search  = $customer->id;
+					$compare = '=';
 				}
+			} else {
+				if ( is_numeric( $search ) ) {
+					$customer = new EDD_Customer( $search );
+
+					if ( ! empty( $customer->id ) ) {
+						$key     = '_edd_log_customer_id';
+						$search  = $customer->id;
+						$compare = '=';
+					} else {
+						$this->file_search = true;
+					}
+
+				}
+
 			}
 
 			if ( ! $this->file_search ) {
@@ -313,7 +279,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return int Current page number
 	 */
@@ -324,7 +289,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Outputs the log views
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -336,7 +300,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Sets up the downloads filter
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -365,7 +328,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Gets the log entries for the current view
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @global object $edd_logs EDD Logs Object
 	 * @return array $logs_data Array of all the Log entires
@@ -395,11 +357,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			foreach ( $logs as $log ) {
 
 				$meta        = get_post_custom( $log->ID );
-				$user_info   = isset( $meta['_edd_log_user_info'] ) ? maybe_unserialize( $meta['_edd_log_user_info'][0] ) : array();
 				$payment_id  = isset( $meta['_edd_log_payment_id'] ) ? $meta['_edd_log_payment_id'][0] : false;
 				$ip          = $meta['_edd_log_ip'][0];
-				$user_id     = isset( $user_info['id'] ) ? $user_info['id'] : false;
-				$customer_id = edd_get_payment_customer_id( $payment_id );
+				$user_id     = isset( $meta['_edd_log_user_id'] ) ? (int) $meta['_edd_log_user_id'][0] : null;
+				$customer_id = isset( $meta['_edd_log_customer_id'] ) ? (int) $meta['_edd_log_customer_id'][0] : null;
 				$price_id    = edd_has_variable_prices( $log->post_parent ) ? get_post_meta( $log->ID, '_edd_log_price_id', true ) : false;
 
 				if( ! array_key_exists( $log->post_parent, $this->queried_files ) ) {
@@ -441,7 +402,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @global object $edd_logs EDD Logs Object
 	 * @uses EDD_File_Downloads_Log_Table::get_columns()
@@ -473,7 +433,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Since our "bulk actions" are navigational, we want them to always show, not just when there's items
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return bool
 	 */

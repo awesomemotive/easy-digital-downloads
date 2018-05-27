@@ -32,7 +32,6 @@ class EDD_Download_History_Export extends EDD_Export {
 	/**
 	 * Set the export headers
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
@@ -55,7 +54,6 @@ class EDD_Download_History_Export extends EDD_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols All the columns
 	 */
@@ -73,7 +71,6 @@ class EDD_Download_History_Export extends EDD_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 1.4.4
  	 * @global object $edd_logs EDD Logs Object
 	 * @return array $data The data for the CSV file

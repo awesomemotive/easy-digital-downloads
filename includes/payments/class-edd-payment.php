@@ -908,6 +908,8 @@ class EDD_Payment {
 						break;
 
 					case 'email':
+						$this->payment_meta['email'] = $this->email;
+						$this->user_info['email']    = $this->email;
 						$this->update_meta( '_edd_payment_user_email', $this->email );
 						break;
 
@@ -992,8 +994,9 @@ class EDD_Payment {
 				'cart_details'  => $this->cart_details,
 				'fees'          => $this->fees,
 				'currency'      => $this->currency,
-				'user_info'     => is_array( $this->user_info ) ? array_filter( $this->user_info ) : array(),
-				'date'          => $this->date
+				'user_info'     => is_array( $this->user_info ) ? $this->user_info : array(),
+				'date'          => $this->date,
+				'email'         => $this->email,
 			);
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
@@ -2327,7 +2330,7 @@ class EDD_Payment {
 		$customer = new EDD_Customer( $this->customer_id );
 
 		// Make sure it exists, and that it matches that of the associated customer record
-		if( empty( $user_id ) || ( ! empty( $customer->user_id ) && (int) $user_id !== (int) $customer->user_id ) ) {
+		if( !empty( $customer->user_id ) && ( empty( $user_id ) || (int) $user_id !== (int) $customer->user_id ) ) {
 
 			$user_id = $customer->user_id;
 

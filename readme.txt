@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.4
-Stable Tag: 2.8.18
+Tested up to: 4.9.5
+Stable Tag: 2.9.1
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,62 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.1, April 20, 2018 =
+* Fix: Some text field settings were getting emptied when saving a subsection setting.
+* Fix: Stats API Endpoint requests were failing when pseudo-date ranges were used other than yesterday and today.
+* Fix: API key fields were appearing on bbPress forum Edit Profile screen.
+* Fix: There was a typo in Italian provinces. Genova should have been Genoa.
+* Fix: Corrected an issue with showing payment method icons when using EDD in a non-standard installation.
+* Fix: Corrected a CSS conflict in the customer card view for the additional emails section.
+* Fix: The edd_checkout_cart_columns function now properly counts the number of columns in the cart display.
+* Fix: In some cases, the customer list table could throw PHP warnings when calculating the pagination.
+* Fix: Improve the RTL-Compatibility of some translation strings.
+* Fix: Improved PHP 7.2 compatibility with the settings display.
+* Fix: Incorrect or missing textdomains were corrected or added.
+* Fix: There was an unnecessary update of _edd_payment_user_id when constructing EDD_Payment objects.
+* Fix: Corrected the setting title for completing free purchase button.
+* New: Added a confirmation alert when clicking "Disconnect User" on customer card.
+* New: Add support for a new Privacy Policy checkbox.
+* New: Added a class parameter to [downloads] shortcode arguments.
+* New: The debug log view now shows the path to the currently used EDD Debug log file.
+* New: Fields are now auto-mapped during the CSV import.
+* Tweak: Switched all `is_a` checks to use `instanceof` for performance.
+* Dev: Many improvements to the @return and @access tags in DocBlocks.
+* Dev: Updates to our Grunt configuration.
+
+= 2.9, March 15, 2018 =
+
+* New: A message is now displayed on the [edd_register] shortcode when the user is already logged in.
+* New: Support was added for resume and ranged download links.
+* New: The customer name, email, and price ID was added to sales log export.
+* New: Added ability to sort by sales/earnings in the [downloads] shortcode.
+* New: Any page containing the [download_checkout] shortcode returns true for edd_is_checkout().
+* New: Upgraded to the latest version of the Chosen library.
+* New: Added United Kingdom Counties to pre-populated "states" list.
+* New: EDD_Payment::add_note now escapes the HTML provided.
+* New: Added the variable price ID to the download log entries.
+* New: Added a helper to retrieve and filter discount status labels.
+* Fix: Prevent a possible PHP Warning when no tax rate is entered, when taxes are enabled.
+* Fix: PayPal Standard: Totals with discounts could calculate differently between EDD and PayPal, preventing completion of the purchase.
+* Fix: Links would break when using SendGrid's link tracking feature.
+* Fix: Download widget would cause PHP warnings when no tags were attached to a product.
+* Fix: Improved support for payment method icons when not using a standard WP Install directory format.
+* Fix: Prevent a possible corrupted download file by verifying no output buffers exists.
+* Fix: Opt-in telemetry data was sending the incorrect Locale.
+* Fix: Prevent a possible PHP Notice when editing a discount code.
+* Fix: Checkboxes on Advanced Settings of variable prices would not always save on the first try.
+* Fix: Hardcoded 'Checkout' text was not using the 'Add to Cart text' variable.
+* Fix: Prices were possibly incorrect when using the Quick Edit feature.
+* Tweak: The edd_get_download method now returns an `EDD_Download` object instead of a `WP_Post`.
+* Tweak: Corrected some URLs to the EDD site that were using an old URL.
+* Tweak: The customer UI now shows the country and state name, instead of their codes.
+* Tweak: Removed the hyphen and "Go Back" button from discount screens.
+* Tweak: The cart contents method returned boolean false instead of an empty array when the cart was empty.
+* Tweak: Reduced the blocking calls in the opt-in telemetry requests to help with performance.
+* Dev: Added filters for new user notification email.
+* Dev: Added filter and email heading to New Sale Notifications.
+* Dev: Added hooks before and after downloads shortcode grid.
 
 = 2.8.18, February 6, 2018 =
 

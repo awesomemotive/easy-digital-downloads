@@ -47,7 +47,6 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * wp edd details
 	 *
-	 * @access		public
 	 * @param		array $args
 	 * @param		array $assoc_args
 	 * @return		void
@@ -618,7 +617,7 @@ class EDD_CLI extends WP_CLI_Command {
 			// Create the purchases
 			foreach( $products as $key => $download ) {
 
-				if( ! is_a( $download, 'WP_Post' ) ) {
+				if( ! $download instanceof WP_Post ) {
 					continue;
 				}
 
@@ -742,6 +741,133 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
 		return;
+	}
+
+	/**
+	 * Create sample file download log data for your EDD site
+	 *
+	 * ## OPTIONS
+	 *
+	 * --number: The number of download logs to create
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd download_logs create --number=10
+	 */
+	public function download_logs( $args, $assoc_args ) {
+		global $wpdb, $edd_logs;
+
+		$error = false;
+
+		// At some point we'll likely add another action for payments
+		if( ! isset( $args ) ||  count( $args ) == 0 ) {
+			$error = __( 'No action specified, did you mean', 'easy-digital-downloads' );
+		} elseif( isset( $args ) && ! in_array( 'create', $args ) ) {
+			$error = __( 'Invalid action specified, did you mean', 'easy-digital-downloads' );
+		}
+
+		if( $error ) {
+			$query = '';
+			foreach( $assoc_args as $key => $value ) {
+				$query .= ' --' . $key . '=' . $value;
+			}
+
+			WP_CLI::error(
+				sprintf( $error . ' %s?', 'wp edd download_logs create' . $query )
+			);
+
+			return;
+		}
+
+		// Setup some defaults
+		$number     = 1;
+
+		if( count( $assoc_args ) > 0 ) {
+			$number   = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
+		}
+
+
+		// First we need to find all downloads that have files associated.
+		$download_ids_with_file_meta = $wpdb->get_results( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'edd_download_files'" );
+		$download_ids_with_files     = array();
+		foreach ( $download_ids_with_file_meta as $meta_item ) {
+			if ( empty( $meta_item->meta_value ) ) {
+				continue;
+			}
+			$files = maybe_unserialize( $meta_item->meta_value );
+
+			// We have an empty array;
+			if ( empty( $files ) ) {
+				continue;
+			}
+
+			$download_ids_with_files[ $meta_item->post_id ] = array_keys( $files );
+		}
+
+		// Next, find all payment records that exist for the downloads that have files.
+		$sales_logs_args = array(
+			'post_parent'            => array_keys( $download_ids_with_files ),
+			'log_type'               => 'sale',
+			'posts_per_page'         => -1,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		);
+
+		$sales_logs     = $edd_logs->get_connected_logs( $sales_logs_args );
+		$sales_log_meta = array();
+		$payments       = array();
+
+		// Now generate some download logs for the files.
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating File Download Logs', $number );
+		$i = 1;
+		while ( $i <= $number ) {
+			$sales_log_key = array_rand( $sales_logs, 1 );
+			$sales_log     = $sales_logs[ $sales_log_key ];
+			if ( ! empty( $sales_log_meta[ $sales_log->ID ] ) ) {
+				$meta = $sales_log_meta[ $sales_log->ID ];
+			} else {
+				$meta = get_post_meta( $sales_log->ID );
+				$sales_log_meta[ $sales_log->ID ] = $meta;
+			}
+
+
+			$payment_id  = (int) $meta['_edd_log_payment_id'][0];
+			$download_id = (int) $sales_log->post_parent;
+
+			if ( isset( $meta['_edd_log_price_id'] ) ) {
+				$price_id = (int) $meta['_edd_log_price_id'][0];
+			} else {
+				$price_id = false;
+			}
+
+			if ( ! isset( $payments[ $payment_id ] ) ) {
+				$payment                 = edd_get_payment( $payment_id );
+				$payments[ $payment_id ] = $payment;
+			} else {
+				$payment = $payments[ $payment_id ];
+			}
+
+			$customer = new EDD_Customer( $payment->customer_id );
+
+			$user_info = array(
+				'email' => $payment->email,
+				'id'    => $payment->user_id,
+				'name'  => $customer->name,
+			);
+
+			if ( empty( $download_ids_with_files[ $download_id ] ) ) {
+				continue;
+			}
+
+			$file_id_key = array_rand( $download_ids_with_files[ $download_id ], 1 );
+			$file_key    = $download_ids_with_files[ $download_id ][ $file_id_key ];
+			edd_record_download_in_log( $download_id, $file_key, $user_info, edd_get_ip(), $payment_id, $price_id );
+
+			$progress->tick();
+			$i++;
+		}
+		$progress->finish();
+
 	}
 
 	protected function get_fname() {

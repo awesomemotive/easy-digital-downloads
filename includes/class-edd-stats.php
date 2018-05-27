@@ -33,7 +33,6 @@ class EDD_Stats {
 	 * Predefined date options are: today, yesterday, this_week, last_week, this_month, last_month
 	 * this_quarter, last_quarter, this_year, last_year
 	 *
-	 * @access public
 	 * @since 1.8
 	 */
 	public $start_date;
@@ -50,7 +49,6 @@ class EDD_Stats {
 	 *
 	 * The end date is optional
 	 *
-	 * @access public
 	 * @since 1.8
 	 */
 	public $end_date;
@@ -58,14 +56,12 @@ class EDD_Stats {
 	/**
 	 * Flag to determine if current query is based on timestamps
 	 *
-	 * @access public
 	 * @since 1.9
 	 */
 	public $timestamp;
 
 	/**
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -75,7 +71,6 @@ class EDD_Stats {
 	/**
 	 * Get the predefined date periods permitted
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array
 	 */
@@ -100,7 +95,6 @@ class EDD_Stats {
 	 *
 	 * This calls the convert_date() member function to ensure the dates are formatted correctly
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -122,7 +116,6 @@ class EDD_Stats {
 	/**
 	 * Converts a date to a timestamp
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
 	 */
@@ -453,7 +446,6 @@ class EDD_Stats {
 	/**
 	 * Modifies the WHERE flag for payment counts
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return string
 	 */
@@ -496,7 +488,6 @@ class EDD_Stats {
 	/**
 	 * Modifies the WHERE flag for payment queries
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return string
 	 */

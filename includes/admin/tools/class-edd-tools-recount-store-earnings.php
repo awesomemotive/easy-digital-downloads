@@ -44,7 +44,6 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
@@ -184,7 +183,6 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	/**
 	 * Perform the export
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return void
 	 */

@@ -51,6 +51,52 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * Test the default 3 columns used for checkout carts.
+	 */
+	public function test_checkout_cart_columns_default() {
+		$this->assertSame( 3, edd_checkout_cart_columns() );
+	}
+
+	/**
+	 * Test the default 3 columns + 1 column used for checkout carts.
+	 */
+	public function test_checkout_cart_columns_add_one() {
+		add_action( 'edd_checkout_table_header_first', '__return_true' );
+		$this->assertSame( 4, edd_checkout_cart_columns() );
+		remove_action( 'edd_checkout_table_header_first', '__return_true' );
+	}
+
+	/**
+	 * Test the default 3 columns + 2 columns used for checkout carts.
+	 */
+	public function test_checkout_cart_columns_add_two() {
+		add_action( 'edd_checkout_table_header_first', '__return_true' );
+		add_action( 'edd_checkout_table_header_first', '__return_false' );
+		$this->assertSame( 5, edd_checkout_cart_columns() );
+		remove_action( 'edd_checkout_table_header_first', '__return_true' );
+		remove_action( 'edd_checkout_table_header_first', '__return_false' );
+	}
+
+	/**
+	 * Test the filter at the bottom of
+	 */
+	public function test_checkout_cart_columns_filter() {
+		add_filter( 'edd_checkout_cart_columns', array( $this, 'helper_test_checkout_cart_columns_filter' ) );
+		$this->assertSame( 2, edd_checkout_cart_columns() );
+		remove_filter( 'edd_checkout_cart_columns', array( $this, 'helper_test_checkout_cart_columns_filter' ) );
+	}
+
+		/**
+		 * Helper function for the above test, to test the filter in edd_checkout_cart_columns()
+		 * @param $columns
+		 *
+		 * @return int
+		 */
+		public function helper_test_checkout_cart_columns_filter( $columns ) {
+			return 2;
+		}
+
+	/**
      * Test to make sure the checkout form returns the expected HTML
      */
 	public function test_checkout_form() {
@@ -230,5 +276,25 @@ class Tests_Checkout extends EDD_UnitTestCase {
 				$this->assertTrue( $is_valid, $type . ' failed' );
 			}
 		}
+	}
+
+	public function test_edd_is_checkout_setting() {
+		$checkout_page = edd_get_option( 'purchase_page' );
+		$this->go_to( get_permalink( $checkout_page ) );
+		$this->assertTrue( edd_is_checkout() );
+	}
+
+	public function test_edd_is_checkout_shortcode() {
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Page', 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => '[download_checkout]' ) );
+		$this->go_to( get_permalink( $post_id ) );
+		do_action( 'template_redirect' ); // Necessary to trigger correct actions
+		$this->assertTrue( edd_is_checkout() );
+	}
+
+	public function test_edd_is_checkout_fail() {
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Page 2', 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => 'Test Page' ) );
+		$this->go_to( get_permalink( $post_id ) );
+		do_action( 'template_redirect' ); // Necessary to trigger correct actions
+		$this->assertFalse( edd_is_checkout() );
 	}
 }

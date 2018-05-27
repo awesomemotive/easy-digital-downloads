@@ -23,10 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @param int $user User ID or email address
  * @param int $number Number of purchases to retrieve
- * @param bool pagination
+ * @param bool $pagination Page number to retrieve
  * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
- * @return bool|object List of all user purchases
+ * @return WP_Post[]|false List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
@@ -106,7 +106,7 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * @param int    $user User ID or email address
  * @param string $status
  *
- * @return bool|object List of unique products purchased by user
+ * @return WP_Post[]|false List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	if ( empty( $user ) ) {
@@ -197,7 +197,6 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
  *
  * Checks to see if a user has purchased a download.
  *
- * @access      public
  * @since       1.0
  * @param       int $user_id - the ID of the user to check
  * @param       array $downloads - Array of IDs to check if purchased. If an int is passed, it will be converted to an array
@@ -266,7 +265,6 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  *
  * Checks to see if a user has purchased at least one item.
  *
- * @access      public
  * @since       1.0
  * @param       int $user_id - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
@@ -288,7 +286,6 @@ function edd_has_purchases( $user_id = null ) {
  *
  * Retrieves the purchase count and the total amount spent for a specific user
  *
- * @access      public
  * @since       1.6
  * @param       int|string $user - the ID or email of the customer to retrieve stats for
  * @param       string $mode - "test" or "live"
@@ -328,7 +325,6 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
  *
  * Returns total number of purchases a customer has made
  *
- * @access      public
  * @since       1.3
  * @param       mixed $user - ID or email
  * @return      int - the total number of purchases
@@ -346,7 +342,6 @@ function edd_count_purchases_of_customer( $user = null ) {
 /**
  * Calculates the total amount spent by a user
  *
- * @access      public
  * @since       1.3
  * @param       mixed $user - ID or email
  * @return      float - the total amount the user has spent
@@ -359,9 +354,8 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 /**
- * Counts the total number of files a customer has downloaded
+ * Counts the total number of files a user (or customer if an email address is given) has downloaded
  *
- * @access      public
  * @since       1.3
  * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
@@ -370,13 +364,10 @@ function edd_count_file_downloads_of_user( $user ) {
 	global $edd_logs;
 
 	if ( is_email( $user ) ) {
-		$meta_query = array(
-			array(
-				'key'     => '_edd_log_user_info',
-				'value'   => $user,
-				'compare' => 'LIKE'
-			)
-		);
+
+		// If we got an email, look up the customer ID and call the direct query for customer download counts.
+		return edd_count_file_downloads_of_customer( $user );
+
 	} else {
 		$meta_query = array(
 			array(
@@ -390,9 +381,29 @@ function edd_count_file_downloads_of_user( $user ) {
 }
 
 /**
+ * Counts the total number of files a customer has downloaded.
+ *
+ * @param string|int $customer_id_or_email The email address or id of the customer.
+ *
+ * @return int The total number of files the customer has downloaded.
+ */
+function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
+	global $edd_logs;
+
+	$customer = new EDD_Customer( $customer_id_or_email );
+	$meta_query = array(
+		array(
+			'key'   => '_edd_log_customer_id',
+			'value' => $customer->id,
+		)
+	);
+
+	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+}
+
+/**
  * Validate a potential username
  *
- * @access      public
  * @since       1.3.4
  * @param       string $username The username to validate
  * @return      bool
@@ -464,7 +475,6 @@ add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 
  * This is for users that purchased as a guest and then came
  * back and created an account.
  *
- * @access      public
  * @since       1.6
  * @param       int $user_id - the new user's ID
  * @return      void
@@ -501,7 +511,6 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
 /**
  * Counts the total number of customers.
  *
- * @access 		public
  * @since 		1.7
  * @return 		int - The total number of customers.
  */
@@ -513,7 +522,6 @@ function edd_count_total_customers( $args = array() ) {
 /**
  * Returns the saved address for a customer
  *
- * @access 		public
  * @since 		1.8
  * @return 		array - The customer's address, if any
  */
@@ -543,7 +551,6 @@ function edd_get_customer_address( $user_id = 0 ) {
 /**
  * Sends the new user notification email when a user registers during checkout
  *
- * @access      public
  * @since       1.8.8
  * @param int   $user_id
  * @param array $user_data
@@ -658,7 +665,6 @@ function edd_set_user_to_verified( $user_id = 0 ) {
 /**
  * Determines if the user account is pending verification. Pending accounts cannot view purchase history
  *
- * @access  public
  * @since   2.4.4
  * @return  bool
  */
@@ -682,7 +688,6 @@ function edd_user_pending_verification( $user_id = null ) {
 /**
  * Gets the activation URL for the specified user
  *
- * @access  public
  * @since   2.4.4
  * @return  string
  */
@@ -708,7 +713,6 @@ function edd_get_user_verification_url( $user_id = 0 ) {
 /**
  * Gets the URL that triggers a new verification email to be sent
  *
- * @access  public
  * @since   2.4.4
  * @return  string
  */
@@ -729,9 +733,8 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 /**
  * Sends an email to the specified user with a URL to verify their account
  *
- * @access  public
  * @since   2.4.4
- * @return  void
+ * @param int $user_id
  */
 function edd_send_user_verification_email( $user_id = 0 ) {
 
@@ -1032,6 +1035,23 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
 function edd_show_user_api_key_field( $user ) {
 
 	if ( get_current_user_id() !== $user->ID ) {
+		return;
+	}
+
+	/**
+	 * Show API User Key Fields
+	 *
+	 * Allows showing/hiding the user API Key fields. By default will only try to show on admin pages. The filter
+	 * allows for developers to choose to show it in other places that the WordPress profile editor hooks are used
+	 * like bbPress
+	 *
+	 * @since 2.9.1
+	 *
+	 * @param boolean If EDD should attempt to load the user API fields
+	 * @param WP_User The User object currently being viewed.
+	 */
+	$show_fields = apply_filters( 'edd_show_user_api_key_fields', is_admin(), $user );
+	if ( ! $show_fields ) {
 		return;
 	}
 

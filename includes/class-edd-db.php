@@ -17,7 +17,6 @@ abstract class EDD_DB {
 	/**
 	 * The name of our database table
 	 *
-	 * @access  public
 	 * @since   2.1
 	 */
 	public $table_name;
@@ -25,7 +24,6 @@ abstract class EDD_DB {
 	/**
 	 * The version of our database table
 	 *
-	 * @access  public
 	 * @since   2.1
 	 */
 	public $version;
@@ -33,7 +31,6 @@ abstract class EDD_DB {
 	/**
 	 * The name of the primary column
 	 *
-	 * @access  public
 	 * @since   2.1
 	 */
 	public $primary_key;
@@ -41,7 +38,6 @@ abstract class EDD_DB {
 	/**
 	 * Get things started
 	 *
-	 * @access  public
 	 * @since   2.1
 	 */
 	public function __construct() {}
@@ -49,7 +45,6 @@ abstract class EDD_DB {
 	/**
 	 * Whitelist of columns
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  array
 	 */
@@ -60,7 +55,6 @@ abstract class EDD_DB {
 	/**
 	 * Default column values
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  array
 	 */
@@ -71,7 +65,6 @@ abstract class EDD_DB {
 	/**
 	 * Retrieve a row by the primary key
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  object
 	 */
@@ -83,7 +76,6 @@ abstract class EDD_DB {
 	/**
 	 * Retrieve a row by a specific column / value
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  object
 	 */
@@ -96,7 +88,6 @@ abstract class EDD_DB {
 	/**
 	 * Retrieve a specific column's value by the primary key
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  string
 	 */
@@ -109,7 +100,6 @@ abstract class EDD_DB {
 	/**
 	 * Retrieve a specific column's value by the the specified column / value
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  string
 	 */
@@ -123,7 +113,6 @@ abstract class EDD_DB {
 	/**
 	 * Insert a new row
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  int
 	 */
@@ -159,7 +148,6 @@ abstract class EDD_DB {
 	/**
 	 * Update a row
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  bool
 	 */
@@ -201,7 +189,6 @@ abstract class EDD_DB {
 	/**
 	 * Delete a row identified by the primary key
 	 *
-	 * @access  public
 	 * @since   2.1
 	 * @return  bool
 	 */

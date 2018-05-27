@@ -802,7 +802,6 @@ class EDD_Customer {
 	 * @param   bool   $single        Whether to return a single value.
 	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 *
-	 * @access  public
 	 * @since   2.6
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
@@ -817,7 +816,6 @@ class EDD_Customer {
 	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
 	 * @return  bool                  False for failure. True for success.
 	 *
-	 * @access  public
 	 * @since   2.6
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
@@ -832,7 +830,6 @@ class EDD_Customer {
 	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
 	 * @return  bool                  False on failure, true if success.
 	 *
-	 * @access  public
 	 * @since   2.6
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
@@ -846,7 +843,6 @@ class EDD_Customer {
 	 * @param   mixed  $meta_value    Optional. Metadata value.
 	 * @return  bool                  False for failure. True for success.
 	 *
-	 * @access  public
 	 * @since   2.6
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {

@@ -126,7 +126,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
-		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
+		'tax_rate'     => edd_use_taxes() ? edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ) : 0, // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => $purchase_key,
 		'user_email'   => $user['user_email'],
@@ -264,8 +264,14 @@ function edd_purchase_form_validate_fields() {
 	);
 
 	// Validate agree to terms
-	if ( edd_get_option( 'show_agree_to_terms', false ) )
+	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		edd_purchase_form_validate_agree_to_terms();
+	}
+
+	// Validate agree to privacy policy
+	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+		edd_purchase_form_validate_agree_to_privacy_policy();
+	}
 
 	if ( is_user_logged_in() ) {
 		// Collect logged in user data
@@ -392,6 +398,20 @@ function edd_purchase_form_validate_agree_to_terms() {
 	if ( ! isset( $_POST['edd_agree_to_terms'] ) || $_POST['edd_agree_to_terms'] != 1 ) {
 		// User did not agree
 		edd_set_error( 'agree_to_terms', apply_filters( 'edd_agree_to_terms_text', __( 'You must agree to the terms of use', 'easy-digital-downloads' ) ) );
+	}
+}
+
+/**
+ * Purchase Form Validate Agree To Privacy Policy
+ *
+ * @since       2.9.1
+ * @return      void
+ */
+function edd_purchase_form_validate_agree_to_privacy_policy() {
+	// Validate agree to terms
+	if ( ! isset( $_POST['edd_agree_to_privacy_policy'] ) || $_POST['edd_agree_to_privacy_policy'] != 1 ) {
+		// User did not agree
+		edd_set_error( 'agree_to_privacy_policy', apply_filters( 'edd_agree_to_privacy_policy_text', __( 'You must agree to the privacy policy', 'easy-digital-downloads' ) ) );
 	}
 }
 

@@ -32,7 +32,6 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return array $cols All the columns
 	 */
@@ -65,7 +64,6 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 2.5
 	 * @return array $data The data for the CSV file
 	 */

@@ -19,12 +19,12 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @param mixed int|EDD_Payment|WP_Post $payment Payment ID, EDD_Payment object or WP_Post object.
  * @param bool                          $by_txn  Is the ID supplied as the first parameter
- * @return mixed false|object EDD_Payment if a valid payment ID, false otherwise.
+ * @return EDD_Payment|false false|object EDD_Payment if a valid payment ID, false otherwise.
  */
 function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 	global $wpdb;
 
-	if ( is_a( $payment_or_txn_id, 'WP_Post' ) || is_a( $payment_or_txn_id, 'EDD_Payment' ) ) {
+	if ( $payment_or_txn_id instanceof WP_Post || $payment_or_txn_id instanceof EDD_Payment ) {
 		$payment_id = $payment_or_txn_id->ID;
 	} elseif ( $by_txn ) {
 		if ( empty( $payment_or_txn_id ) ) {
@@ -76,7 +76,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  *
  * @since 1.0
  * @param array $args Arguments passed to get payments
- * @return object $payments Payments retrieved from the database
+ * @return EDD_Payment[] $payments Payments retrieved from the database
  */
 function edd_get_payments( $args = array() ) {
 
@@ -715,24 +715,38 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 		return false;
 	}
 
+	if ( true === $return_label ) {
+		return edd_get_payment_status_label( $payment->post_status );
+	} else {
+		$statuses = edd_get_payment_statuses();
+
+		// Account that our 'publish' status is labeled 'Complete'
+		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+
+		// Make sure we're matching cases, since they matter
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
+	}
+
+	return ! empty( $status ) ? $status : false;
+}
+
+/**
+ * Given a payment status string, return the label for that string.
+ *
+ * @since 2.9.2
+ * @param string $status
+ *
+ * @return bool|mixed
+ */
+function edd_get_payment_status_label( $status = '' ) {
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
 		return false;
 	}
 
-	$payment = new EDD_Payment( $payment->ID );
-
-	if ( array_key_exists( $payment->status, $statuses ) ) {
-		if ( true === $return_label ) {
-			return $statuses[ $payment->status ];
-		} else {
-			// Account that our 'publish' status is labeled 'Complete'
-			$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
-
-			// Make sure we're matching cases, since they matter
-			return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
-		}
+	if ( array_key_exists( $status, $statuses ) ) {
+		return $statuses[ $status ];
 	}
 
 	return false;
@@ -1293,7 +1307,6 @@ function edd_payment_amount( $payment_id = 0 ) {
 /**
  * Get the amount associated with a payment
  *
- * @access public
  * @since 1.2
  * @param int $payment_id Payment ID
  * @return float Payment amount
@@ -1665,7 +1678,6 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
 /**
  * Remove EDD Comments from the wp_count_comments function
  *
- * @access public
  * @since 1.5.2
  * @param array $stats (empty from core filter)
  * @param int $post_id Post ID
@@ -1723,7 +1735,6 @@ add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 1
 /**
  * Filter where older than one week
  *
- * @access public
  * @since 1.6
  * @param string $where Where clause
  * @return string $where Modified where clause

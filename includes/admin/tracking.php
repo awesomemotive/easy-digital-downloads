@@ -16,7 +16,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Usage tracking
  *
- * @access public
  * @since  1.8.2
  * @return void
  */
@@ -32,7 +31,6 @@ class EDD_Tracking {
 	/**
 	 * Get things going
 	 *
-	 * @access public
 	 */
 	public function __construct() {
 
@@ -101,7 +99,7 @@ class EDD_Tracking {
 		$data['active_gateways']  = array_keys( edd_get_enabled_payment_gateways() );
 		$data['products']         = wp_count_posts( 'download' )->publish;
 		$data['download_label']   = edd_get_label_singular( true );
-		$data['locale']           = ( $data['wp_version'] >= 4.7 ) ? get_user_locale() : get_locale();
+		$data['locale']           = get_locale();
 
 		$this->data = $data;
 	}
@@ -110,7 +108,11 @@ class EDD_Tracking {
 	 * Send the data to the EDD server
 	 *
 	 * @access private
-	 * @return void
+	 *
+	 * @param  bool $override If we should override the tracking setting.
+	 * @param  bool $ignore_last_checkin If we should ignore when the last check in was.
+	 *
+	 * @return bool
 	 */
 	public function send_checkin( $override = false, $ignore_last_checkin = false ) {
 
@@ -132,19 +134,15 @@ class EDD_Tracking {
 
 		$this->setup_data();
 
-		$request = wp_remote_post( 'https://easydigitaldownloads.com/?edd_action=checkin', array(
+		wp_remote_post( 'https://easydigitaldownloads.com/?edd_action=checkin', array(
 			'method'      => 'POST',
-			'timeout'     => 20,
+			'timeout'     => 8,
 			'redirection' => 5,
 			'httpversion' => '1.1',
-			'blocking'    => true,
+			'blocking'    => false,
 			'body'        => $this->data,
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
 		) );
-
-		if( is_wp_error( $request ) ) {
-			return $request;
-		}
 
 		update_option( 'edd_tracking_last_send', time() );
 
@@ -157,7 +155,6 @@ class EDD_Tracking {
 	 *
 	 * This runs during the sanitation of General settings, thus the return
 	 *
-	 * @access public
 	 * @return array
 	 */
 	public function check_for_settings_optin( $input ) {
@@ -174,7 +171,6 @@ class EDD_Tracking {
 	/**
 	 * Check for a new opt-in via the admin notice
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function check_for_optin( $data ) {
@@ -193,7 +189,6 @@ class EDD_Tracking {
 	/**
 	 * Check for a new opt-in via the admin notice
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function check_for_optout( $data ) {
@@ -222,7 +217,6 @@ class EDD_Tracking {
 	 * We send once a week (while tracking is allowed) to check in, which can be
 	 * used to determine active sites.
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function schedule_send() {
@@ -234,7 +228,6 @@ class EDD_Tracking {
 	/**
 	 * Display the admin notice to users that have not opted-in or out
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function admin_notice() {

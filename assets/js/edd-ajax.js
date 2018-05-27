@@ -380,6 +380,7 @@ jQuery(document).ready(function ($) {
 		}
 	}
 
+	// Process checkout
 	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
 
 		var eddPurchaseform = document.getElementById('edd_purchase_form');
@@ -417,6 +418,7 @@ jQuery(document).ready(function ($) {
 
 	});
 
+	// Update state field
 	$(document.body).on('change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country', update_state_field);
 
 	function update_state_field() {
@@ -492,6 +494,7 @@ jQuery(document).ready(function ($) {
 	});
 });
 
+// Load a payment gateway
 function edd_load_gateway( payment_mode ) {
 
 	// Show the ajax loader

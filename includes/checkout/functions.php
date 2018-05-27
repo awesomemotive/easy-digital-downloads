@@ -27,15 +27,18 @@ function edd_is_checkout() {
 	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
 
 	if( ! $is_object_set ) {
-
 		unset( $wp_query->queried_object );
-
+	} else if ( is_singular() ) {
+		$content = $wp_query->queried_object->post_content;
 	}
 
 	if( ! $is_object_id_set ) {
-
 		unset( $wp_query->queried_object_id );
+	}
 
+	// If we know this isn't the primary checkout page, check other methods.
+	if ( ! $is_checkout && isset( $content ) && has_shortcode( $content, 'download_checkout' ) ) {
+		$is_checkout = true;
 	}
 
 	return apply_filters( 'edd_is_checkout', $is_checkout );
@@ -56,7 +59,6 @@ function edd_can_checkout() {
 /**
  * Retrieve the Success page URI
  *
- * @access      public
  * @since       1.6
  * @return      string
 */
@@ -92,7 +94,6 @@ function edd_is_success_page() {
  * Sends the user to the succes page.
  *
  * @param string $query_string
- * @access      public
  * @since       1.0
  * @return      void
 */
@@ -151,7 +152,6 @@ function edd_get_checkout_uri( $args = array() ) {
  * page if there are errors present.
  *
  * @param array $args
- * @access public
  * @since  1.0
  * @return Void
  */
@@ -205,7 +205,6 @@ function edd_is_failed_transaction_page() {
 /**
  * Mark payments as Failed when returning to the Failed Transaction page
  *
- * @access      public
  * @since       1.9.9
  * @return      void
 */
@@ -234,7 +233,6 @@ add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
  * Check if a field is required
  *
  * @param string $field
- * @access      public
  * @since       1.7
  * @return      bool
 */

@@ -19,7 +19,6 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Get things started
 	 *
-	 * @access  public
 	 * @since   2.6
 	*/
 	public function __construct() {
@@ -36,7 +35,6 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Get table columns and data types
 	 *
-	 * @access  public
 	 * @since   1.7.18
 	*/
 	public function get_columns() {
@@ -51,7 +49,6 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Register the table with $wpdb so the metadata api can find it
 	 *
-	 * @access  public
 	 * @since   2.6
 	*/
 	public function register_table() {
@@ -156,7 +153,6 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	/**
 	 * Create the table
 	 *
-	 * @access  public
 	 * @since   2.6
 	*/
 	public function create_table() {
