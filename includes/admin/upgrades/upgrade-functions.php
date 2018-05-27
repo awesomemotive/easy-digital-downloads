@@ -438,11 +438,7 @@ function edd_v131_upgrades() {
 		return;
 	}
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		set_time_limit( 0 );
-	}
+	edd_set_time_limit();
 
 	$query = new WP_Query( array(
 		'post_type' 		=> 'download',
@@ -614,11 +610,7 @@ function edd_v15_upgrades() {
 function edd_v20_upgrades() {
 	global $edd_options, $wpdb;
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		set_time_limit( 0 );
-	}
+	edd_set_time_limit();
 
 	// Upgrade for the anti-behavior fix - #2188
 	if ( ! empty( $edd_options['disable_ajax_cart'] ) ) {
@@ -645,7 +637,6 @@ function edd_v20_upgrades() {
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_wp_session_expires_%' AND option_value+0 < 2789308218" );
 
 	update_option( 'edd_settings', $edd_options );
-
 }
 
 /**
@@ -660,11 +651,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		set_time_limit( 0 );
-	}
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] )  ? absint( $_GET['step'] )  : 1;
 	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
@@ -735,11 +722,8 @@ function edd_v21_upgrade_customers_db() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		@set_time_limit(0);
-	}
+	edd_set_time_limit();
 
 	if ( ! get_option( 'edd_upgrade_customers_db_version' ) ) {
 		// Create the customers database on the first run
@@ -840,10 +824,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		@set_time_limit(0);
-	}
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$number = 25;
@@ -950,10 +931,7 @@ function edd_v23_upgrade_payment_taxes() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		@set_time_limit(0);
-	}
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$number = 50;
@@ -1025,11 +1003,7 @@ function edd_v23_upgrade_customer_purchases() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		@set_time_limit(0);
-	}
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$number = 50;
@@ -1145,11 +1119,7 @@ function edd_upgrade_user_api_keys() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		@set_time_limit(0);
-	}
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$number = 10;
@@ -1226,11 +1196,7 @@ function edd_remove_refunded_sale_logs() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		@set_time_limit(0);
-	}
+	edd_set_time_limit();
 
 	$step    = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
 	$total   = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
@@ -1292,8 +1258,7 @@ function edd_discounts_migration() {
 		return;
 	}
 
-	ignore_user_abort( true );
-	set_time_limit( 0 );
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
 	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
@@ -1415,8 +1380,7 @@ function edd_remove_legacy_discounts() {
 		return;
 	}
 
-	ignore_user_abort( true );
-	set_time_limit( 0 );
+	edd_set_time_limit();
 
 	$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
 	$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
@@ -1456,8 +1420,7 @@ function edd_notes_migration() {
 		return;
 	}
 
-	ignore_user_abort( true );
-	set_time_limit( 0 );
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
 	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
@@ -1562,8 +1525,7 @@ function edd_remove_legacy_notes() {
 		return;
 	}
 
-	ignore_user_abort( true );
-	set_time_limit( 0 );
+	edd_set_time_limit();
 
 	$note_ids = $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'" );
 	$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
@@ -1602,8 +1564,7 @@ function edd_logs_migration() {
 		return;
 	}
 
-	ignore_user_abort( true );
-	set_time_limit( 0 );
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
 	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
@@ -1769,8 +1730,7 @@ function edd_remove_legacy_logs() {
 		return;
 	}
 
-	ignore_user_abort( true );
-	set_time_limit( 0 );
+	edd_set_time_limit();
 
 	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
 	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;

@@ -1033,11 +1033,7 @@ function edd_tools_import_export_process_export() {
 		'edd_tax_rates' => $edd_tax_rates,
 	);
 
-	ignore_user_abort( true );
-
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-		set_time_limit( 0 );
-	}
+	edd_set_time_limit();
 
 	nocache_headers();
 	header( 'Content-Type: application/json; charset=utf-8' );
