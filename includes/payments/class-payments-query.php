@@ -204,8 +204,6 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		do_action( 'edd_post_get_payments', $this );
 
-		$this->maybe_reset_globals();
-
 		return $this->payments;
 	}
 
@@ -616,24 +614,5 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		$this->__unset( 'download' );
-
-	}
-
-	/**
-	 * Based off the current global variables for $wp_query and $post, we may need to reset some data or just restore it.
-	 *
-	 * @since 2.8
-	 * @access private
-	 * @return void
-	 */
-	private function maybe_reset_globals() {
-		// Based off our pre-iteration, let's reset the globals.
-		if ( $this->existing_query ) {
-			wp_reset_postdata();
-		} elseif ( $this->existing_post ) {
-			$GLOBALS['post'] = $this->existing_post;
-		} else {
-			unset( $GLOBALS['post'] );
-		}
 	}
 }
