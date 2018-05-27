@@ -741,20 +741,6 @@ function _edd_deprecated_hook( $hook, $version, $replacement = null, $message = 
 }
 
 /**
- * Checks whether function is disabled.
- *
- * @since 1.3.5
- *
- * @param string  $function Name of the function.
- * @return bool Whether or not function is disabled.
- */
-function edd_is_func_disabled( $function ) {
-	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
-
-	return in_array( $function, $disabled );
-}
-
-/**
  * EDD Let To Num
  *
  * Does Size Conversions
@@ -1227,4 +1213,68 @@ function edd_doing_cron() {
 
 	// Default to false
 	return false;
+}
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @since 1.3.5
+ * @since 3.0.0 String type-checking the `in_array()` call
+ *
+ * @param string  $function Name of the function.
+ * @return bool Whether or not function is disabled.
+ */
+function edd_is_func_disabled( $function ) {
+	$disabled = explode( ',',  @ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled, true );
+}
+
+/**
+ * Ignore the time limit set by the server (likely from php.ini.)
+ *
+ * This is usually only necessary during upgrades and exports. If you need to
+ * use this function directly, please be careful in doing so.
+ *
+ * The $time_limit parameter is filterable, but infinite values are not allowed
+ * so any erroneous processes are able to terminate normally.
+ *
+ * @since 3.0.0
+ *
+ * @param boolean $ignore_user_abort Whether to call ignore_user_about( true )
+ * @param int     $time_limit        How long to set the time limit to. Cannot be 0. Default 6 hours.
+ */
+function edd_set_time_limit( $ignore_user_abort = true, $time_limit = 21600 ) {
+
+	// Default time limit is 6 hours
+	$default = HOUR_IN_SECONDS * 6;
+
+	// Only abort if true and if function is enabled
+	if ( ( true === $ignore_user_abort ) && ! edd_is_func_disabled( 'ignore_user_abort' ) ) {
+		@ignore_user_abort( true );
+	}
+
+	/**
+	 * Filter the time limit to set for this request.
+	 *
+	 * Infinite (0) values are not allowed so any erroneous processes are able
+	 * to terminate normally.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $time_limit The time limit in nano-seconds. Default 6 hours.
+	 *
+	 * @returns int $time_limit The filtered time limit value. Default 6 hours.
+	 */
+	$time_limit = (int) apply_filters( 'edd_set_time_limit', $time_limit );
+
+	// Disallow infinite values
+	if ( empty( $time_limit ) ) {
+		$time_limit = $default;
+	}
+
+	// Set time limit to non-infinite value if function is enabled
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit( $time_limit );
+	}
 }

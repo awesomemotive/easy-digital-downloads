@@ -264,12 +264,12 @@ function edd_purchase_form_validate_fields() {
 	);
 
 	// Validate agree to terms
-	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+	if ( '1' === edd_get_option( 'show_agree_to_terms', false ) ) {
 		edd_purchase_form_validate_agree_to_terms();
 	}
 
 	// Validate agree to privacy policy
-	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
 		edd_purchase_form_validate_agree_to_privacy_policy();
 	}
 
