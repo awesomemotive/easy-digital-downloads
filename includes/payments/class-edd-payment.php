@@ -567,7 +567,21 @@ class EDD_Payment {
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
-				foreach ( $this->fees as $fee ) {
+				foreach ( $this->fees as $key => $fee ) {
+					$adjustment_id = edd_add_order_adjustment( array(
+						'object_id'   => $this->ID,
+						'object_type' => 'order',
+						'type_id'     => '',
+						'type'        => 'fee',
+						'description' => $fee['label'],
+						'amount'      => $fee['amount'],
+					) );
+
+					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
+					edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
