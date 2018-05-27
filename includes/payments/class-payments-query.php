@@ -3,23 +3,24 @@
  * Payments Query
  *
  * @package     EDD
- * @subpackage  Classes/Stats
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Payments
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * EDD_Payments_Query Class
+ * EDD_Payments_Query Class.
  *
- * This class is for retrieving payments data
+ * This class is for retrieving payments data.
  *
- * Payments can be retrieved for date ranges and pre-defined periods
+ * Payments can be retrieved for date ranges and pre-defined periods.
  *
  * @since 1.8
+ * @since 3.0 Updated to use the new query classes and custom tables.
  */
 class EDD_Payments_Query extends EDD_Stats {
 
@@ -72,6 +73,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * the query is run to convert them to the proper syntax.
 	 *
 	 * @since 1.8
+	 * @since 3.0 Updated to use the new query classes and custom tables.
+	 *
 	 * @param array $args The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
@@ -131,14 +134,11 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Nothing here at the moment.
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function init() {
-
 		// Before we start setting up queries, let's store any existing queries that might be in globals.
 		$this->existing_query = isset( $GLOBALS['wp_query'] ) && isset( $GLOBALS['wp_query']->post );
 		$this->existing_post  = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
-
 	}
 
 	/**
