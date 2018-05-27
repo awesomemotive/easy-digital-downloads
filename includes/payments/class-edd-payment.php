@@ -905,7 +905,7 @@ class EDD_Payment {
 
 					case 'customer_id':
 						edd_update_order( $this->ID, array (
-							'$this->customer_id' => $this->customer_id
+							'customer_id' => $this->customer_id
 						) );
 
 						$customer = new EDD_Customer( $this->customer_id );
