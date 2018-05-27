@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.5
-Stable Tag: 2.9.1
+Tested up to: 4.9.6
+Stable Tag: 2.9.3
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -89,7 +89,7 @@ Full searchable docs can be found at [http://docs.easydigitaldownloads.com/](htt
 
 = Where can I ask for help? =
 
-You can submit a support ticket or pre-sale question from our [support page](http://docs.easydigitaldownloads.com/support?utm_source=docs&utm_medium=faq_tab&utm_content=support&utm_campaign=readme) at anytime.
+You can submit a support ticket or pre-sale question from our [support page](https://easydigitaldownloads.com/support/?utm_source=docs&utm_medium=faq_tab&utm_content=support&utm_campaign=readme) at anytime.
 
 = Is an SSL certificate required? =
 
@@ -189,6 +189,23 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.3, May 25, 2018 =
+* Fix: Corrected multiple inconsistencies in the Privacy Policy Checkbox at checkout.
+* Fix: Corrected an issue causing "You must agree to the privacy policy" from showing when it wasn't required.
+* Dev: Complete Checkout button is no longer required to be a `submit` input.
+
+= 2.9.2, May 24, 2018 =
+* GDPR: Support for WordPress Core Privacy Exporter and Eraser.
+* GDPR: Added Privacy Policy template for WordPress Core Privacy Policy editor.
+* GDPR: Added new "Privacy" tab to the Easy Digital Downloads Settings.
+* Fix: The "button" CSS class was being applied twice to the "Apply Discount" button.
+* Fix: The toggle link to view the Privacy Policy was not working when the Terms of Agreement were not visible.
+* Fix: Email addresses that contained a + would not be removed via [edd_profile_editor].
+* Fix: Searching payments by discount code was not working.
+* New: Added action hook above shortcode download list.
+* New: Improve File download Log accuracy and remove PII from log meta.
+* New: Allow for target attribute of links in Terms of Service & Privacy Policy labels.
 
 = 2.9.1, April 20, 2018 =
 * Fix: Some text field settings were getting emptied when saving a subsection setting.

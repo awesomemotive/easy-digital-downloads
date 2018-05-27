@@ -12,6 +12,51 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Register the EDD template for a privacy policy.
+ *
+ * Note, this is just a suggestion and should be customized to meet your businesses needs.
+ *
+ * @since 2.9.2
+ */
+function edd_register_privacy_policy_template() {
+
+	if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+		return;
+	}
+
+	$content = wp_kses_post( apply_filters( 'edd_privacy_policy_content', __( '
+We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.
+Handling this data also allows us to:
+- Send you important account/order/service information.
+- Respond to your queries, refund requests, or complaints.
+- Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.
+- Set up and administer your account, provide technical and/or customer support, and to verify your identity.
+', 'easy-digital-downloads' ) ) );
+
+	$content .= "\n\n";
+
+	$additional_collection = array(
+		__( 'Location and traffic data (including IP address and browser type) if you place an order, or if we need to estimate taxes and shipping costs based on your location.', 'easy-digital-downloads' ),
+		__( 'Product pages visited and content viewed while your session is active.', 'easy-digital-downloads' ),
+		__( 'Your comments and product reviews if you choose to leave them on our website.', 'easy-digital-downloads' ),
+		__( 'Account email/password to allow you to access your account, if you have one.', 'easy-digital-downloads' ),
+		__( 'If you choose to create an account with us, your name, address, and email address, which will be used to populate the checkout for future orders.', 'easy-digital-downloads' ),
+	);
+
+	$additional_collection = apply_filters( 'edd_privacy_policy_additional_collection', $additional_collection );
+
+	$content .= __( 'Additionally we may also collect the following information:', 'easy-digital-downloads' ) . "\n";
+	if ( ! empty( $additional_collection ) ) {
+		foreach ( $additional_collection as $item ) {
+			$content .= '- ' . $item . "\n";
+		}
+	}
+
+	wp_add_privacy_policy_content( 'Easy Digital Downloads', wpautop( $content ) );
+}
+add_action( 'admin_init', 'edd_register_privacy_policy_template' );
+
 /** Helper Functions */
 
 /**
@@ -120,6 +165,37 @@ function edd_pseudo_mask_email( $email_address ) {
 }
 
 /**
+ * Log the privacy and terms timestamp for the last completed purchase for a customer.
+ *
+ * Stores the timestamp of the last time the user clicked the 'complete purchase' button for the Agree to Terms and/or
+ * Privacy Policy checkboxes during the checkout process.
+ *
+ * @since 2.9.2
+ *
+ * @param $payment_id
+ * @param $payment_data
+ *
+ * @return void
+ */
+function edd_log_terms_and_privacy_times( $payment_id, $payment_data ) {
+	$payment  = edd_get_payment( $payment_id );
+	$customer = new EDD_Customer( $payment->customer_id );
+
+	if ( empty( $customer->id ) ) {
+		return;
+	}
+
+	if ( ! empty( $payment_data['agree_to_terms_time'] ) ) {
+		$customer->add_meta( 'agree_to_terms_time', $payment_data['agree_to_terms_time'] );
+	}
+
+	if ( ! empty( $payment_data['agree_to_privacy_time'] ) ) {
+		$customer->add_meta( 'agree_to_privacy_time', $payment_data['agree_to_privacy_time'] );
+	}
+}
+add_action( 'edd_insert_payment', 'edd_log_terms_and_privacy_times', 10, 2 );
+
+/*
  * Return an anonymized email address.
  *
  * While WP Core supports anonymizing email addresses with the wp_privacy_anonymize_data function,
@@ -190,9 +266,9 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
 	 */
-	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => array() ), $customer );
+	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array( 'should_anonymize' => true, 'message' => '' ), $customer );
 
-	if ( ! $should_anonymize_customer['should_anonymize'] ) {
+	if ( empty( $should_anonymize_customer['should_anonymize'] ) ) {
 		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
 	}
 
@@ -243,8 +319,8 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 */
 	do_action( 'edd_anonymize_customer', $customer );
 
-	$customer->add_note( __( 'Customer anonymized successfully' ) );
-	return array( 'success' => true, 'message' => sprintf( __( 'Customer ID %d successfully anonymized', 'easy-digital-downloads' ), $customer_id ) );
+	$customer->add_note( __( 'Customer anonymized successfully', 'easy-digital-downloads' ) );
+	return array( 'success' => true, 'message' => sprintf( __( 'Customer ID %d successfully anonymized.', 'easy-digital-downloads' ), $customer_id ) );
 
 }
 
@@ -267,7 +343,7 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 
 	$payment = edd_get_payment( $payment_id );
 	if ( false === $payment ) {
-		return array( 'success' => false, 'message' => sprintf( __( 'No payment with ID %d', 'easy-digital-downloads' ), $payment_id ) );
+		return array( 'success' => false, 'message' => sprintf( __( 'No payment with ID %d.', 'easy-digital-downloads' ), $payment_id ) );
 	}
 
 	/**
@@ -286,9 +362,9 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
 	 */
-	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array( 'should_anonymize' => true, 'message' => array() ), $payment );
+	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array( 'should_anonymize' => true, 'message' => '' ), $payment );
 
-	if ( ! $should_anonymize_payment['should_anonymize'] ) {
+	if ( empty( $should_anonymize_payment['should_anonymize'] ) ) {
 		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
 	}
 
@@ -335,6 +411,15 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 			$payment->last_name  = '';
 
 
+			wp_update_post( array(
+				'ID' => $payment->ID,
+				'post_title' => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+				'post_name'  => sanitize_title( __( 'Anonymized Customer', 'easy-digital-downloads' ) ),
+			) );
+
+			// Because we changed the post_name, WordPress sets a meta on the item for the `old slug`, we need to kill that.
+			delete_post_meta( $payment->ID, '_wp_old_slug' );
+
 			/**
 			 * Run further anonymization on a payment
 			 *
@@ -350,7 +435,7 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
 			$payment->save();
 			$return = array(
 				'success' => true,
-				'message' => sprintf( __( 'Payment ID %d successfully anonymized', 'easy-digital-downloads' ), $payment_id )
+				'message' => sprintf( __( 'Payment ID %d successfully anonymized.', 'easy-digital-downloads' ), $payment_id )
 			);
 			break;
 	}
@@ -408,8 +493,7 @@ function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
 	 * @param string      $action  What action will be performed (none, delete, anonymize)
 	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
 	 */
-	$action = apply_filters( 'edd_privacy_payment_status_action_' . $action, $action, $payment );
-
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $payment->status, $action, $payment );
 	return $action;
 
 }
@@ -516,21 +600,27 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 		)
 	);
 
-	$agree_to_terms_time = $customer->get_meta( 'agree_to_terms_time' );
+	$agree_to_terms_time = $customer->get_meta( 'agree_to_terms_time', false );
 	if ( ! empty( $agree_to_terms_time ) ) {
-		$export_data['data'][] = array(
-			'name' => __( 'Agreed to Terms' ),
-			'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_terms_time' ) ) )
-		);
+		foreach ( $agree_to_terms_time as $timestamp ) {
+			$export_data['data'][] = array(
+				'name' => __( 'Agreed to Terms', 'easy-digital-downloads' ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp )
+			);
+		}
 	}
 
-	$agree_to_privacy_time = $customer->get_meta( 'agree_to_privacy_time' );
+	$agree_to_privacy_time = $customer->get_meta( 'agree_to_privacy_time', false );
 	if ( ! empty( $agree_to_privacy_time ) ) {
-		$export_data['data'][] = array(
-			'name' => __( 'Agreed to Privacy Policy' ),
-			'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $customer->get_meta( 'agree_to_privacy_time' ) ) )
-		);
+		foreach ( $agree_to_privacy_time as $timestamp ) {
+			$export_data['data'][] = array(
+				'name' => __( 'Agreed to Privacy Policy', 'easy-digital-downloads' ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp )
+			);
+		}
 	}
+
+	$export_data = apply_filters( 'edd_privacy_customer_record', $export_data, $customer );
 
 	return array( 'data' => array( $export_data ), 'done' => true );
 }
@@ -773,6 +863,8 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 			),
 		);
 
+		$data_points = apply_filters( 'edd_privacy_file_download_log_item', $data_points, $log, $log_meta );
+
 		$export_items[] = array(
 			'group_id'    => 'edd-file-download-logs',
 			'group_label' => __( 'File Download Logs', 'easy-digital-downloads' ),
@@ -803,7 +895,7 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 	global $edd_logs;
 
-	$user = get_user_by_email( $email_address );
+	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
 		return array( 'data' => array(), 'done' => true );
@@ -850,6 +942,8 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 			),
 		);
 
+		$data_points = apply_filters( 'edd_privacy_api_access_log_item', $data_points, $log );
+
 		$export_items[] = array(
 			'group_id'    => 'edd-api-access-logs',
 			'group_label' => __( 'API Access Logs', 'easy-digital-downloads' ),
@@ -858,7 +952,6 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 		);
 
 	}
-
 
 	// Add the data to the list, and tell the exporter to come back for the next page of payments.
 	return array(
@@ -916,6 +1009,11 @@ function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
  */
 function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
 	$erasers[] = array(
+		'eraser_friendly_name' => __( 'Possibly Delete Customer', 'easy-digital-downloads' ),
+		'callback'             => 'edd_privacy_maybe_delete_customer_eraser',
+	);
+
+	$erasers[] = array(
 		'eraser_friendly_name' => 'post-eraser-customer-id-lookup',
 		'callback'             => 'edd_privacy_remove_customer_id',
 	);
@@ -944,6 +1042,75 @@ function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
 }
 
 /**
+ * If after the payment anonymization/erasure methods have been run, and there are no longer payments
+ * for the requested customer, go ahead and delete the customer
+ *
+ * @since 2.9.2
+ *
+ * @param string $email_address The email address requesting anonymization/erasure
+ * @param int    $page          The page (not needed for this query)
+ *
+ * @return array
+ */
+function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
+	$payments = edd_get_payments( array(
+		'customer' => $customer->id,
+		'output'   => 'payments',
+		'page'     => $page,
+	) );
+
+	if ( ! empty( $payments ) ) {
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(
+				sprintf( __( 'Customer for %s not deleted, due to remaining payments.', 'easy-digital-downloads' ), $email_address ),
+			),
+			'done'           => true,
+		);
+	}
+
+	if ( empty( $payments ) ) {
+		global $wpdb;
+
+		$deleted_customer = EDD()->customers->delete( $customer->id );
+		if ( $deleted_customer ) {
+			$customer_meta_table = EDD()->customer_meta->table_name;
+			$deleted_meta = $wpdb->query( "DELETE FROM {$customer_meta_table} WHERE customer_id = {$customer->id}" );
+
+			return array(
+				'items_removed'  => true,
+				'items_retained' => false,
+				'messages'       => array(
+					sprintf( __( 'Customer for %s successfully deleted.', 'easy-digital-downloads' ), $email_address ),
+				),
+				'done'           => true,
+			);
+		}
+	}
+
+		return array(
+			'items_removed'  => false,
+			'items_retained' => false,
+			'messages'       => array(
+				sprintf( __( 'Customer for %s failed to be deleted.', 'easy-digital-downloads' ), $email_address ),
+			),
+			'done'           => true,
+		);
+}
+
+/**
  * Register eraser for EDD Data
  *
  * @param array $erasers
@@ -957,7 +1124,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 
 	$erasers[] = array(
 		'eraser_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
-		'callback'             => 'edd_privacy_customer_eraser',
+		'callback'             => 'edd_privacy_customer_anonymizer',
 	);
 
 	$erasers[] = array(
@@ -988,7 +1155,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 
  *
  * @return array
  */
-function edd_privacy_customer_eraser( $email_address, $page = 1 ) {
+function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
 	$anonymized = _edd_anonymize_customer( $customer->id );
@@ -1029,8 +1196,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	if ( empty( $payments ) ) {
 
 		$message = 1 === $page ?
-			sprintf( __( 'No payments found for %s', 'easy-digital-downloads' ), $email_address ) :
-			sprintf( __( 'All eligible payments anonymized or deleted for %s', 'easy-digital-downloads' ), $email_address );
+			sprintf( __( 'No payments found for %s.', 'easy-digital-downloads' ), $email_address ) :
+			sprintf( __( 'All eligible payments anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address );
 
 		return array(
 			'items_removed'  => false,
@@ -1103,7 +1270,7 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array( sprintf( __( 'All eligible file download logs anonymized or deleted for %s', 'easy-digital-downloads' ), $email_address ) ),
+			'messages'       => array( sprintf( __( 'All eligible file download logs anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);
 	}
@@ -1146,13 +1313,13 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 	global $edd_logs;
 
-	$user = get_user_by_email( $email_address );
+	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array( sprintf( __( 'No User found for %s, no access logs to remove', 'easy-digital-downloads' ), $email_address ) ),
+			'messages'       => array( sprintf( __( 'No User found for %s, no access logs to remove.', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);
 	}
@@ -1177,7 +1344,7 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array( sprintf( __( 'All API access logs deleted for %s', 'easy-digital-downloads' ), $email_address ) ),
+			'messages'       => array( sprintf( __( 'All API access logs deleted for %s.', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);
 	}

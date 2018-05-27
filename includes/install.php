@@ -214,7 +214,8 @@ function edd_run_install() {
 			'upgrade_payment_taxes',
 			'upgrade_customer_payments_association',
 			'upgrade_user_api_keys',
-			'remove_refunded_sale_logs'
+			'remove_refunded_sale_logs',
+			'update_file_download_log_data',
 		);
 
 		foreach ( $upgrade_routines as $upgrade ) {
