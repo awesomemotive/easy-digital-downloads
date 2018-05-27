@@ -14,7 +14,6 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * EDD_Payment Class
  *
