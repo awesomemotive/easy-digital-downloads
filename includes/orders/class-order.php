@@ -269,11 +269,7 @@ class Order extends Base_Object {
 	 * @return string Date order was completed.
 	 */
 	public function get_date_completed() {
-		if ( '0000-00-00 00:00:00' === $this->date_completed ) {
-			return false;
-		} else {
-			return $this->date_completed;
-		}
+		return $this->date_completed;
 	}
 
 	/**

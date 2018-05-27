@@ -114,7 +114,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	}
 
 	// Ensure this action only runs once ever
-	if ( empty( $completed_date ) ) {
+	if ( empty( $completed_date ) || '0000-00-00 00:00:00' === $completed_date ) {
 
 		// Save the completed date
 		$payment->completed_date = current_time( 'mysql' );

@@ -2578,11 +2578,18 @@ class EDD_Payment {
 	/**
 	 * Retrieve payment completion date
 	 *
-	 * @since  2.5.1
+	 * @since 2.5.1
+	 * @since 3.0 Updated for backwards compatibility.
 	 * @return string Date payment was completed
 	 */
 	private function get_completed_date() {
-		return apply_filters( 'edd_payment_completed_date', $this->completed_date, $this->ID, $this );
+		if ( '0000-00-00 00:00:00' === $this->date_completed ) {
+			$date = false;
+		} else {
+			$date = $this->completed_date;
+		}
+
+		return apply_filters( 'edd_payment_completed_date', $date, $this->ID, $this );
 	}
 
 	/**
