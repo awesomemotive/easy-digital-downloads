@@ -337,7 +337,8 @@ textarea[name="edd-note"] {
 #edd-add-discount input.edd-price-field,
 #edd-edit-discount input.edd-price-field {
 	padding: 3px 5px;
-	width: 125px;
+	width: 80%;
+	max-width: 125px;
 }
 
 /* List Tables
@@ -685,7 +686,8 @@ textarea#edd-payment-note {
 }
 input[class*="edd-price-field"] {
 	padding: 3px 5px;
-	width: 125px;
+	width: 80%;
+	max-width: 125px;
 }
 [class*="item_"] [class*="edd-payment-details-download-"][type="number"].small-text,
 #edd-order-download-quantity[type="number"].small-text,
@@ -769,7 +771,7 @@ input[class*="edd-price-field"] {
 	clear: both;
 	padding: 3px 12px;
 	margin: 0;
-	word-break: break-word;
+	word-wrap: break-word;
 }
 .rtl .edd-admin-box-inside {
 	padding: 5px 10px 5px 0;
@@ -1506,9 +1508,9 @@ td.edd_order_price {
 	width: 192px;
 }
 
-/* General styles
--------------------------------------------------------------- */
 
+/* Chosen styles
+-------------------------------------------------------------- */
 
 .chosen-container.chosen-container-multi {
 	width: 100% !important;
@@ -1563,17 +1565,26 @@ td.edd_order_price {
 	border: 1px solid #e5e5e5;
 	border-radius: 0;
 	background: #fff;
-	height: 29px;
 	padding: 2px 5px;
 	outline: none;
+}
+
+.chosen-container-single .chosen-single,
+.chosen-container-single.chosen-container-active.chosen-with-drop .chosen-single {
+	height: 29px;
 }
 
 .chosen-container-active .chosen-single {
 	outline: auto 5px -webkit-focus-ring-color;
 }
 
+.chosen-container-multi .chosen-choices li.search-field {
+	min-width: 100px !important;
+}
+
 .chosen-container-multi .chosen-choices li.search-field input[type=text] {
 	min-height: 29px !important;
+	width: auto !important;
 }
 
 .chosen-container-multi .chosen-choices,
@@ -1803,7 +1814,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	line-height: 150px;
 	color: #bbb;
 	text-transform: uppercase;
-	text-size: 11px;
+	font-size: 11px;
 }
 
 .wp-list-table .type-download .row-actions {
@@ -1862,7 +1873,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 #edd-item-wrapper {
 	background: #f5f5f5;
 	border: 1px solid #e5e5e5;
-	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	max-width: 830px;
 }
