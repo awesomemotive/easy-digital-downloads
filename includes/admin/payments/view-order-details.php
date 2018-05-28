@@ -30,7 +30,6 @@ if ( ! $order ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
-$payment_meta   = $payment->get_meta();
 $transaction_id = esc_attr( $order->get_transaction_id() );
 $cart_items     = $payment->cart_details;
 $user_id        = $order->get_user_id();
@@ -635,7 +634,7 @@ $notes          = edd_get_payment_notes( $order_id );
 
 									<?php
 									// The edd_payment_personal_details_list hook is left here for backwards compatibility
-									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
+									do_action( 'edd_payment_personal_details_list', edd_get_order_meta( $order_id ), $user_info );
 									do_action( 'edd_payment_view_details', $order_id );
 									?>
 								</div><!-- /.inside -->
