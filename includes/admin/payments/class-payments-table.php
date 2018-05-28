@@ -339,7 +339,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @since 1.4
-     * @since 3.0 Updated to use new objects.
+     * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
 	 * @param EDD\Orders\Order $order       Order object.
 	 * @param string           $column_name The name of the column.
@@ -371,7 +371,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the Email column.
 	 *
 	 * @since 1.4
-     * @since 3.0 Updated to use new objects.
+     * @since 3.0 Updated to use the new EDD\Orders\Order class.
      *
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Data shown in the Email column
@@ -408,7 +408,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the checkbox column.
 	 *
 	 * @since 1.4
-     * @since 3.0 Updated to use new objects.
+     * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
@@ -425,12 +425,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the ID column.
 	 *
 	 * @since 2.0
+     * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
-     * @param array $payment Contains all the data for the checkbox column.
+	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
 	 */
-	public function column_ID( $payment ) {
-		return edd_get_payment_number( $payment->ID );
+	public function column_ID( $order ) {
+		return edd_get_option( 'enable_sequential' ) ? $order->get_number() : $order->get_id();
 	}
 
 	/**
