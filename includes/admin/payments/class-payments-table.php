@@ -364,7 +364,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value = method_exists( $order, 'get_' . $column_name ) ? call_user_func( 'get_' . $column_name, $order ) : '';
 				break;
 		}
-		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, $column_name );
+
+		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), $column_name );
 	}
 
 	/**
@@ -393,6 +394,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $order->get_id() ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
+		// This exists for backwards compatibility purposes.
+		$payment = edd_get_payment( $order->get_id() );
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
 		if ( empty( $email ) ) {
