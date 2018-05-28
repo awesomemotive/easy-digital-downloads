@@ -933,6 +933,7 @@ class EDD_Payment {
 								'object_type' => 'order',
 								'type_id'     => $discount_obj->id,
 								'type'        => 'discount',
+								'description' => $discount,
 								'amount'      => $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal )
 							) );
 						}
