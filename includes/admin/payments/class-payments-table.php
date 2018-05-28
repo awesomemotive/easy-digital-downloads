@@ -297,7 +297,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'edd_payments_table_columns', array(
-			'cb'       => '<input type="checkbox" />', //Render a checkbox instead of text
+			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'ID'       => __( 'ID', 'easy-digital-downloads' ),
 			'email'    => __( 'Email', 'easy-digital-downloads' ),
 			'details'  => __( 'Details', 'easy-digital-downloads' ),
@@ -500,50 +500,52 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		}
 
 		foreach ( $ids as $id ) {
-			// Detect when a bulk action is being triggered...
-			if ( 'delete' === $this->current_action() ) {
-				edd_delete_purchase( $id );
-			}
+		    // Detect when a bulk action is being triggered...
+			switch ( $this->current_action() ) {
+				case 'delete':
+					edd_delete_purchase( $id );
+					break;
 
-			if ( 'set-status-publish' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'publish' );
-			}
+				case 'set-status-publish':
+					edd_update_payment_status( $id, 'publish' );
+					break;
 
-			if ( 'set-status-pending' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'pending' );
-			}
+				case 'set-status-pending':
+					edd_update_payment_status( $id, 'pending' );
+					break;
 
-			if ( 'set-status-processing' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'processing' );
-			}
+				case 'set-status-processing':
+					edd_update_payment_status( $id, 'processing' );
+					break;
 
-			if ( 'set-status-refunded' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'refunded' );
-			}
+				case 'set-status-refunded':
+					edd_update_payment_status( $id, 'refunded' );
+					break;
 
-			if ( 'set-status-revoked' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'revoked' );
-			}
+				case 'set-status-revoked':
+					edd_update_payment_status( $id, 'revoked' );
+					break;
 
-			if ( 'set-status-failed' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'failed' );
-			}
+				case 'set-status-failed':
+					edd_update_payment_status( $id, 'failed' );
+					break;
 
-			if ( 'set-status-abandoned' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'abandoned' );
-			}
+				case 'set-status-abandoned':
+					edd_update_payment_status( $id, 'abandoned' );
+					break;
 
-			if ( 'set-status-preapproval' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'preapproval' );
-			}
+				case 'set-status-preapproval':
+					edd_update_payment_status( $id, 'preapproval' );
+					break;
 
-			if ( 'set-status-cancelled' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'cancelled' );
-			}
+				case 'set-status-cancelled':
+					edd_update_payment_status( $id, 'cancelled' );
+					break;
 
-			if( 'resend-receipt' === $this->current_action() ) {
-				edd_email_purchase_receipt( $id, false );
-			}
+				case 'resend-receipt':
+					edd_email_purchase_receipt( $id, false );
+					break;
+            }
 
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
 		}
