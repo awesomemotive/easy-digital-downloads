@@ -112,16 +112,14 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-products"><?php printf( __( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
                     </th>
                     <td>
-                        <p>
-                            <?php echo EDD()->html->product_dropdown( array(
-                                'name'        => 'product_reqs[]',
-                                'id'          => 'edd-products',
-                                'selected'    => $product_requirements,
-                                'multiple'    => true,
-                                'chosen'      => true,
-                                'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() )
-                            ) ); ?><br/>
-                        </p>
+						<?php echo EDD()->html->product_dropdown( array(
+							'name'        => 'product_reqs[]',
+							'id'          => 'edd-products',
+							'selected'    => $product_requirements,
+							'multiple'    => true,
+							'chosen'      => true,
+							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+						) ); ?>
                         <div id="edd-discount-product-conditions"<?php echo $condition_display; ?>>
                             <p>
                                 <select id="edd-product-condition" name="product_condition">
@@ -157,8 +155,8 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                             'selected'    => $excluded_products,
                             'multiple'    => true,
                             'chosen'      => true,
-                            'placeholder' => sprintf( __( 'Select one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() )
-                        ) ); ?><br/>
+                            'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+                        ) ); ?>
                         <p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
                     </td>
                 </tr>
