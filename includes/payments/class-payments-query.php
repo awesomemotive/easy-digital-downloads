@@ -618,8 +618,8 @@ class EDD_Payments_Query extends EDD_Stats {
 		$arguments = array();
 
 		if ( isset( $this->args['start_date'] ) ) {
-			$arguments['date_created_query'][] =
-				'after'     => array(
+			$arguments['date_created_query']['after'] =
+				array(
 					'year'  => date( 'Y', $this->start_date ),
 					'month' => date( 'm', $this->start_date ),
 					'day'   => date( 'd', $this->start_date ),
@@ -630,7 +630,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( isset( $this->args['end_date'] ) ) {
-			$arguments['date_created_query']['end'] = array(
+			$arguments['date_created_query']['before'] = array(
 				'year'  => date( 'Y', $this->end_date ),
 				'month' => date( 'm', $this->end_date ),
 				'day'   => date( 'd', $this->end_date ),
