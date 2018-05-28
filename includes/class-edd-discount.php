@@ -404,6 +404,15 @@ class EDD_Discount {
 	}
 
 	/**
+	 * Magic __toString method.
+	 *
+	 * @since 3.0
+	 */
+	public function __toString() {
+		return $this->code;
+	}
+
+	/**
 	 * Converts the instance of the EDD_Discount object into an array for special cases.
 	 *
 	 * @since 2.7

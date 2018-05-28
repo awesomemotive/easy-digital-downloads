@@ -202,7 +202,8 @@ class Order extends Base_Object {
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
-			'order_id' => $this->get_id()
+			'object_id'   => $this->get_id(),
+			'object_type' => 'order',
 		) );
 	}
 
