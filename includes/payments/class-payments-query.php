@@ -645,6 +645,10 @@ class EDD_Payments_Query extends EDD_Stats {
 			unset( $arguments['number'] );
 		}
 
+		if ( isset( $this->args['post_status'] ) ) {
+			$arguments['status'] = $this->args['post_status'];
+		}
+
 		switch ( $this->args['orderby'] ) {
 			case 'amount':
 				$arguments['orderby'] = 'total';
