@@ -236,7 +236,8 @@ class Order extends Base_Object {
 	 * @return string
 	 */
 	public function get_number() {
-		return $this->number;
+		// An order number is only retrieved if sequential order numbers are enabled, otherwise the order ID is returned.
+		return edd_get_option( 'enable_sequential' ) ? $this->number : $this->id;
 	}
 
 	/**
