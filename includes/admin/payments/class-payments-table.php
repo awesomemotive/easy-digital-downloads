@@ -339,34 +339,30 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @since 1.4
+     * @since 3.0 Updated to use new objects.
 	 *
-	 * @param array  $payment     Contains all the data of the payment.
-	 * @param string $column_name The name of the column.
+	 * @param EDD\Orders\Order $order       Order object.
+	 * @param string           $column_name The name of the column.
 	 *
 	 * @return string Column name.
 	 */
-	public function column_default( $payment, $column_name ) {
+	public function column_default( $order, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount' :
-				$amount  = $payment->total;
-				$amount  = ! empty( $amount ) ? $amount : 0;
-				$value   = edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment->ID ) );
+				$value = edd_currency_filter( edd_format_amount( $order->get_total() ), $order->get_currency() );
 				break;
 			case 'date' :
-				$date    = strtotime( $payment->date );
-				$value   = edd_date_i18n( $date );
+				$value = edd_date_i18n( strtotime( $order->get_date_created() ) );
 				break;
 			case 'status' :
-				$payment = get_post( $payment->ID );
-				$value   = edd_get_payment_status( $payment, true );
+				$value = $order->get_status();
 				break;
 			case 'details' :
-				$value = '<a href="' . add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
+				$value = '<a href="' . add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
 				break;
 			default:
-				$value = isset( $payment->$column_name ) ? $payment->$column_name : '';
+				$value = method_exists( $order, 'get_' . $column_name ) ? call_user_func( 'get_' . $column_name, $order ) : '';
 				break;
-
 		}
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, $column_name );
 	}
