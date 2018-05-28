@@ -63,6 +63,38 @@ class Order_Adjustment extends Base_Object {
 	protected $type;
 
 	/**
+	 * Description.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $description;
+
+	/**
+	 * Amount.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $amount;
+
+	/**
+	 * Date created.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_created;
+
+	/**
+	 * Date modified.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_modified;
+
+	/**
 	 * Retrieve order discount ID.
 	 *
 	 * @since 3.0
@@ -96,24 +128,68 @@ class Order_Adjustment extends Base_Object {
 	}
 
 	/**
-	 * Retrieve discount ID.
+	 * Retrieve type ID.
 	 *
 	 * @since 3.0
 	 *
-	 * @return int Discount ID.
+	 * @return int Type ID.
 	 */
-	public function get_discount_id() {
-		return $this->discount_id;
+	public function get_type_id() {
+		return $this->type_id;
 	}
 
 	/**
-	 * Retrieve discount amount.
+	 * Retrieve type.
 	 *
 	 * @since 3.0
 	 *
-	 * @return float Discount amount.
+	 * @return string Type.
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+	/**
+	 * Retrieve description.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Description.
+	 */
+	public function get_description() {
+		return $this->description;
+	}
+
+	/**
+	 * Retrieve adjustment amount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Adjustment amount.
 	 */
 	public function get_amount() {
 		return $this->amount;
+	}
+
+	/**
+	 * Retrieve date created.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Date created.
+	 */
+	public function get_date_created() {
+		return $this->date_created;
+	}
+
+	/**
+	 * Retrieve date modified.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Date modified.
+	 */
+	public function get_date_modified() {
+		return $this->date_modified;
 	}
 }
