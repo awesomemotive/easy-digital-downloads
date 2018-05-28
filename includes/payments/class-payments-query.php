@@ -706,5 +706,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {
 			$arguments['mode'] = $this->args['mode'];
 		}
+
+		if ( ! empty( $this->args['post_parent'] ) ) {
+			$this->args['parent'] = $this->args['post_parent'];
+		}
 	}
 }
