@@ -702,7 +702,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( isset( $this->args['paged'] ) && isset( $this->args['number'] ) ) {
-
+			$arguments['offset'] = ($this->args['paged'] * $this->args['number']) - $this->args['number'];
 		}
 	}
 }
