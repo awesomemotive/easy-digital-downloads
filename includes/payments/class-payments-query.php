@@ -149,6 +149,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * compatibility).
 	 *
 	 * @since 1.8
+	 * @since 3.0 Updated to use the new query classes and custom tables.
+	 *
 	 * @return EDD_Payment[]
 	 */
 	public function get_payments() {
@@ -171,7 +173,9 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		do_action( 'edd_pre_get_payments', $this );
 
-		$query = new WP_Query( $this->args );
+		$this->remap_args();
+
+		$orders = edd_get_orders( $this->args );
 
 		$custom_output = array(
 			'payments',
@@ -179,25 +183,20 @@ class EDD_Payments_Query extends EDD_Stats {
 		);
 
 		if ( ! in_array( $this->args['output'], $custom_output ) ) {
-			return $query->posts;
+			// We need to return WP_Post objects here for backwards compatibility...
 		}
 
-		if ( $query->have_posts() ) {
+		foreach ( $orders as $order ) {
+			/** @var $order EDD\Orders\Order */
 
-			while ( $query->have_posts() ) {
-				$query->the_post();
+			$payment = edd_get_payment( $order->get_id() );
 
-				$payment_id = get_post()->ID;
-				$payment    = edd_get_payment( $payment_id );
-
-				if ( edd_get_option( 'enable_sequential' ) ) {
-					// Backwards Compatibility, needs to set `payment_number` attribute
-					$payment->payment_number = $payment->number;
-				}
-
-				$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
+			if ( edd_get_option( 'enable_sequential' ) ) {
+				// Backwards compatibility, needs to set `payment_number` attribute
+				$payment->payment_number = $payment->number;
 			}
 
+			$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
 		}
 
 		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
@@ -213,7 +212,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 */
 	public function date_filter_pre() {
-		if( ! ( $this->args['start_date'] || $this->args['end_date'] ) ) {
+		if ( ! ( $this->args['start_date'] || $this->args['end_date'] ) ) {
 			return;
 		}
 
@@ -537,7 +536,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Payment Mode
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function mode() {
 		if ( empty( $this->args['mode'] ) || $this->args['mode'] == 'all' ) {
@@ -555,12 +553,12 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Children
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function children() {
 		if ( empty( $this->args['children'] ) ) {
 			$this->__set( 'post_parent', 0 );
 		}
+
 		$this->__unset( 'children' );
 	}
 
@@ -568,12 +566,11 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Specific Download
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function download() {
-
-		if ( empty( $this->args['download'] ) )
+		if ( empty( $this->args['download'] ) ) {
 			return;
+		}
 
 		global $edd_logs;
 
@@ -597,7 +594,6 @@ class EDD_Payments_Query extends EDD_Stats {
 		$sales = $edd_logs->get_connected_logs( $args );
 
 		if ( ! empty( $sales ) ) {
-
 			$payments = array();
 
 			foreach ( $sales as $sale ) {
@@ -605,14 +601,22 @@ class EDD_Payments_Query extends EDD_Stats {
 			}
 
 			$this->__set( 'post__in', $payments );
-
 		} else {
-
 			// Set post_parent to something crazy so it doesn't find anything
 			$this->__set( 'post_parent', 999999999999999 );
-
 		}
 
 		$this->__unset( 'download' );
+	}
+
+	/**
+	 * As of EDD 3.0, we have introduced new query classes and custom tables so we need to remap the arguments so we can
+	 * pass them to the new query classes.
+	 *
+	 * @since 3.0
+	 * @access private
+	 */
+	private function remap_args() {
+
 	}
 }
