@@ -700,5 +700,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		if ( ! is_null( $this->args['gateway'] ) ) {
 			$arguments['gateway'] = $this->args['gateway'];
 		}
+
+		if ( ! is_null( $this->args['post__in'] ) ) {
+			$arguments['id__in'] = $this->args['post__in'];
+		}
 	}
 }
