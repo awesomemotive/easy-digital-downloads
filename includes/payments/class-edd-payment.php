@@ -1077,7 +1077,7 @@ class EDD_Payment {
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
 				// First, update the order.
 				$order_info = array(
-					'payment_key' => $merged_meta['key'],
+					'payment_key' => $this->key,
 					'currency'    => $merged_meta['currency'],
 					'email'       => $merged_meta['email'],
 					'user_id'     => $merged_meta['user_info']['id']
@@ -1098,16 +1098,17 @@ class EDD_Payment {
 				if ( empty( $items ) ) {
 					foreach ( $merged_meta['cart_details'] as $key => $item ) {
 						edd_add_order_item( array(
-							'order_id'   => $this->ID,
-							'product_id' => $item['id'],
-							'price_id'   => $item['item_number']['options']['price_id'],
-							'cart_index' => $key,
-							'quantity'   => $item['quantity'],
-							'amount'     => $item['item_price'],
-							'subtotal'   => $item['subtotal'],
-							'discount'   => $item['discount'],
-							'tax'        => $item['tax'],
-							'total'      => $item['price']
+							'order_id'     => $this->ID,
+							'product_id'   => $item['id'],
+							'product_name' => $item['name'],
+							'price_id'     => $item['item_number']['options']['price_id'],
+							'cart_index'   => $key,
+							'quantity'     => $item['quantity'],
+							'amount'       => $item['item_price'],
+							'subtotal'     => $item['subtotal'],
+							'discount'     => $item['discount'],
+							'tax'          => $item['tax'],
+							'total'        => $item['price'],
 						) );
 					}
 				}

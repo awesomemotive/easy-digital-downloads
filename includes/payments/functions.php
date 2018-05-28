@@ -1465,10 +1465,11 @@ function edd_get_purchase_id_by_key( $key ) {
 		return $$global_key_string;
 	}
 
-	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_purchase_key' AND meta_value = %s LIMIT 1", $key ) );
+	/** @var EDD\Orders\Order $order */
+	$order = edd_get_order_by( 'payment_key', $key );
 
-	if ( $purchase != NULL ) {
-		$$global_key_string = $purchase;
+	if ( false !== $order ) {
+		$$global_key_string = $order->get_id();
 		return $$global_key_string;
 	}
 
