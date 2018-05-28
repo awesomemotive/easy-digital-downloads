@@ -273,15 +273,13 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function per_page() {
-
-		if( ! isset( $this->args['number'] ) ){
+		if ( ! isset( $this->args['number'] ) ){
 			return;
 		}
 
 		if ( $this->args['number'] == -1 ) {
 			$this->__set( 'nopaging', true );
-		}
-		else{
+		} else {
 			$this->__set( 'posts_per_page', $this->args['number'] );
 		}
 
@@ -639,6 +637,48 @@ class EDD_Payments_Query extends EDD_Stats {
 			);
 
 			$arguments['date_created_query']['inclusive'] = true;
+		}
+
+		$arguments['number'] = $this->args['posts_per_page'];
+
+		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
+			unset( $arguments['number'] );
+		}
+
+		switch ( $this->args['orderby'] ) {
+			case 'amount':
+				$arguments['orderby'] = 'total';
+				break;
+			case 'ID':
+			case 'title':
+			case 'post_title':
+			case 'author':
+			case 'post_author':
+			case 'type':
+			case 'post_type':
+				$arguments['orderby'] = 'id';
+				break;
+			case 'date':
+			case 'post_date':
+				$arguments['orderby'] = 'date_created';
+				break;
+			case 'modified':
+			case 'post_modified':
+				$arguments['orderby'] = 'date_modified';
+				break;
+			case 'parent':
+			case 'post_parent':
+				$arguments['orderby'] = 'parent';
+				break;
+			case 'post__in':
+				$arguments['orderby'] = 'id__in';
+				break;
+			case 'post_parent__in':
+				$arguments['orderby'] = 'parent__in';
+				break;
+			default:
+				$arguments['orderby'] = 'id';
+				break;
 		}
 	}
 }
