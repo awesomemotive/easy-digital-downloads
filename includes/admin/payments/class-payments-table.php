@@ -371,14 +371,15 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the Email column.
 	 *
 	 * @since 1.4
+     * @since 3.0 Updated to use new objects.
      *
-	 * @param array $payment Contains all the data of the payment
+	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Data shown in the Email column
 	 */
-	public function column_email( $payment ) {
+	public function column_email( $order ) {
 		$row_actions = array();
 
-		$email = edd_get_payment_user_email( $payment->ID );
+		$email = $order->get_email();
 
 		// Add search term string back to base URL
 		$search_terms = ( isset( $_GET['s'] ) ? trim( $_GET['s'] ) : '' );
@@ -386,11 +387,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
 		}
 
-		if ( edd_is_payment_complete( $payment->ID ) && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
+		if ( 'publish' === $order->get_status() && ! empty( $email ) ) {
+			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $order->get_id() ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $order->get_id() ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
@@ -400,7 +401,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$value = $email . $this->row_actions( $row_actions );
 
-		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'email' );
+		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), 'email' );
 	}
 
 	/**
