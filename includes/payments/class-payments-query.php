@@ -684,5 +684,13 @@ class EDD_Payments_Query extends EDD_Stats {
 				$arguments['orderby'] = 'id';
 				break;
 		}
+
+		if ( ! is_null( $this->args['user'] ) ) {
+			$argument_key = is_numeric( $this->args['user'] )
+							? 'user_id'
+							: 'email';
+
+			$arguments[ $argument_key ] = $this->args['user'];
+		}
 	}
 }
