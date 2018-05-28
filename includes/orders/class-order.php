@@ -453,6 +453,31 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the fees applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order fees.
+	 */
+	public function get_fees() {
+		if ( empty( $this->adjustments ) ) {
+			return array();
+		}
+
+		$fees = array();
+
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'fee' === $adjustment->get_type() ) {
+				$fees[] = $adjustment;
+			}
+		}
+
+		return $fees;
+	}
+
+	/**
 	 * Retrieve the transaction ID associated with the order.
 	 *
 	 * @since 3.0

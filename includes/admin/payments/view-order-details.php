@@ -121,23 +121,15 @@ $notes          = edd_get_payment_notes( $order_id );
 											<p>
 												<?php
 												$found_discounts = array();
-												if ( 'none' !== $payment->discounts ) {
-													$discounts = $payment->discounts;
-													if ( ! is_array( $discounts ) ) {
-														$discounts = explode( ',', $discounts );
-													}
+                                                foreach ( $order->get_discounts() as $discount ) {
+                                                    $discount_obj = edd_get_discount_by( 'code', $discount );
 
-													foreach ( $discounts as $discount ) {
-														$discount_obj = edd_get_discount_by( 'code', $discount );
-
-														if ( false === $discount_obj ) {
-															$found_discounts[] = $discount;
-														} else {
-															$found_discounts[] = '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>';
-														}
-
-													}
-												}
+                                                    if ( false === $discount_obj ) {
+                                                        $found_discounts[] = $discount;
+                                                    } else {
+                                                        $found_discounts[] = '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>';
+                                                    }
+                                                }
 												?>
 												<span class="label">
 													<?php echo _n( 'Discount Code', 'Discount Codes', count( $found_discounts ), 'easy-digital-downloads' ); ?>:
@@ -160,8 +152,8 @@ $notes          = edd_get_payment_notes( $order_id );
 										<div class="edd-order-fees edd-admin-box-inside">
 											<p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
 											<ul class="edd-payment-fees">
-												<?php foreach( $fees as $fee ) : ?>
-												<li data-fee-id="<?php echo $fee['id']; ?>"><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
+												<?php foreach ( $fees as $fee ) : ?>
+												    <li data-fee-id="<?php echo $fee['id']; ?>"><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
 												<?php endforeach; ?>
 											</ul>
 										</div>
