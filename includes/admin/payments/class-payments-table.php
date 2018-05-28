@@ -590,18 +590,17 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['gateway'] = $_GET['gateway'];
 		}
 
-		var_dump( edd_count_orders_by_type() );
+		$counts = edd_get_order_counts();
 
-		$payment_count          = edd_count_payments( $args );
-		$this->complete_count   = $payment_count->publish;
-		$this->pending_count    = $payment_count->pending;
-		$this->processing_count = $payment_count->processing;
-		$this->refunded_count   = $payment_count->refunded;
-		$this->failed_count     = $payment_count->failed;
-		$this->revoked_count    = $payment_count->revoked;
-		$this->abandoned_count  = $payment_count->abandoned;
+		$this->complete_count   = $counts['publish'];
+		$this->pending_count    = $counts['pending'];
+		$this->processing_count = $counts['processing'];
+		$this->refunded_count   = $counts['refunded'];
+		$this->failed_count     = $counts['failed'];
+		$this->revoked_count    = $counts['revoked'];
+		$this->abandoned_count  = $counts['abandoned'];
 
-		foreach ( $payment_count as $count ) {
+		foreach ( $counts as $count ) {
 			$this->total_count += $count;
 		}
 	}
