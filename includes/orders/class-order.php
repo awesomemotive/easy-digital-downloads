@@ -487,4 +487,15 @@ class Order extends Base_Object {
 	public function get_transaction_id() {
 		return edd_get_order_meta( $this->id, 'transaction_id', true );
 	}
+
+	/**
+	 * Retrieve the tax rate associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Tax rate.
+	 */
+	public function get_tax_rate() {
+		return edd_get_order_meta( $this->id, 'tax_rate', true );
+	}
 }
