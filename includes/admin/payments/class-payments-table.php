@@ -560,11 +560,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function get_payment_counts() {
 		$args = array();
 
-		if( isset( $_GET['user'] ) ) {
+		if ( isset( $_GET['user'] ) ) {
 			$args['user'] = urldecode( $_GET['user'] );
-		} elseif( isset( $_GET['customer'] ) ) {
+		} elseif ( isset( $_GET['customer'] ) ) {
 			$args['customer'] = absint( $_GET['customer'] );
-		} elseif( isset( $_GET['s'] ) ) {
+		} elseif ( isset( $_GET['s'] ) ) {
 			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
 
 			if ( $is_user ) {
