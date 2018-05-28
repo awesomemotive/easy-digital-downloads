@@ -187,7 +187,7 @@ $notes          = edd_get_payment_notes( $order_id );
 										<div class="edd-order-payment edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Total Price', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $payment->currency ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $payment->total ) ); ?>"/>
+												<?php echo edd_currency_symbol( $order->get_currency() ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $order->get_total() ) ); ?>"/>
 											</p>
 										</div>
 
