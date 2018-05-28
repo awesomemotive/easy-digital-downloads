@@ -428,6 +428,31 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the discounts applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order discounts.
+	 */
+	public function get_discounts() {
+		if ( empty( $this->adjustments ) ) {
+			return array();
+		}
+
+		$discounts = array();
+
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'discount' === $adjustment->get_type() ) {
+				$discounts[] = $adjustment;
+			}
+		}
+
+		return $discounts;
+	}
+
+	/**
 	 * Retrieve the transaction ID associated with the order.
 	 *
 	 * @since 3.0
