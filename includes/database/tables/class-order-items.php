@@ -50,6 +50,7 @@ final class Order_Items extends Base {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 			order_id bigint(20) unsigned NOT NULL default '0',
 			product_id bigint(20) unsigned NOT NULL default '0',
+			product_name text NOT NULL default '',
 			price_id bigint(20) unsigned NOT NULL default '0',
 			cart_index bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'download',
