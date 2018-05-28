@@ -434,7 +434,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_ID( $order ) {
-		return edd_get_option( 'enable_sequential' ) ? $order->get_number() : $order->get_id();
+		return $order->get_number();
 	}
 
 	/**
