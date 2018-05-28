@@ -1102,8 +1102,6 @@ class EDD_Payment {
 							'product_id' => $item['id'],
 							'price_id'   => $item['item_number']['options']['price_id'],
 							'cart_index' => $key,
-							'type'       => '', // @todo ???
-							'status'     => '', // @todo ???
 							'quantity'   => $item['quantity'],
 							'amount'     => $item['item_price'],
 							'subtotal'   => $item['subtotal'],
