@@ -43,7 +43,7 @@ class EDD_HTML_Elements {
 			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'data'        => array(
 				'search-type'        => 'download',
-				'search-placeholder' => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+				'search-placeholder' => sprintf( __( 'Search %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 			),
 		);
 
@@ -107,13 +107,12 @@ class EDD_HTML_Elements {
 						$selected_item = substr( $selected_item, 0, $has_variation );
 					}
 
-					$post       = get_post( $selected_item );
+					$post = get_post( $selected_item );
 					if ( ! is_null( $post ) ) {
 						$products[] = $post;
 					}
 				}
 			}
-
 		}
 
 		$options    = array();
@@ -242,7 +241,7 @@ class EDD_HTML_Elements {
 			'number'      => 30,
 			'data'        => array(
 				'search-type'        => 'customer',
-				'search-placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' )
+				'search-placeholder' => __( 'Search Customers', 'easy-digital-downloads' )
 			),
 		);
 
@@ -318,7 +317,7 @@ class EDD_HTML_Elements {
 			'number'      => 30,
 			'data'        => array(
 				'search-type'        => 'user',
-				'search-placeholder' => __( 'Type to search all Users', 'easy-digital-downloads' ),
+				'search-placeholder' => __( 'Search Users', 'easy-digital-downloads' ),
 			),
 		);
 
