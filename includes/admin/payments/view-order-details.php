@@ -147,13 +147,13 @@ $notes          = edd_get_payment_notes( $order_id );
 										</div>
 
 										<?php
-										$fees = $payment->fees;
+										$fees = $order->get_fees();
 										if ( ! empty( $fees ) ) : ?>
 										<div class="edd-order-fees edd-admin-box-inside">
 											<p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
 											<ul class="edd-payment-fees">
-												<?php foreach ( $fees as $fee ) : ?>
-												    <li data-fee-id="<?php echo $fee['id']; ?>"><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
+												<?php foreach ( $fees as $fee ) : /** @var EDD\Orders\Order_Adjustment $fee */ ?>
+												    <li data-fee-id="<?php echo edd_get_order_adjustment_meta( $fee->get_id(), 'fee_id' ) ?>"><span class="fee-label"><?php echo $fee->get_description() . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee->get_amount() ) . '">' . edd_currency_filter( $fee->get_amount(), $currency_code ); ?></span></li>
 												<?php endforeach; ?>
 											</ul>
 										</div>
