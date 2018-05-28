@@ -617,6 +617,28 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @access private
 	 */
 	private function remap_args() {
+		$arguments = array();
 
+		if ( isset( $this->args['start_date'] ) ) {
+			$arguments['date_created_query'][] =
+				'after'     => array(
+					'year'  => date( 'Y', $this->start_date ),
+					'month' => date( 'm', $this->start_date ),
+					'day'   => date( 'd', $this->start_date ),
+				)
+			);
+
+			$arguments['date_created_query']['inclusive'] = true;
+		}
+
+		if ( isset( $this->args['end_date'] ) ) {
+			$arguments['date_created_query']['end'] = array(
+				'year'  => date( 'Y', $this->end_date ),
+				'month' => date( 'm', $this->end_date ),
+				'day'   => date( 'd', $this->end_date ),
+			);
+
+			$arguments['date_created_query']['inclusive'] = true;
+		}
 	}
 }
