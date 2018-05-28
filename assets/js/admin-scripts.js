@@ -5,6 +5,45 @@ jQuery(document).ready(function ($) {
 	var tooltips = $('.edd-help-tip');
 	edd_attach_tooltips( tooltips );
 
+	// Chosen vars
+	var chosen_vars = {
+		disable_search_threshold:  13,
+		search_contains:           true,
+		inherit_select_classes:    true,
+		single_backstroke_delete:  false,
+		placeholder_text_single:   edd_vars.one_option,
+		placeholder_text_multiple: edd_vars.one_or_more_option,
+		no_results_text:           edd_vars.no_results_text
+	};
+
+	// Setup Chosen menus
+	$('.edd-select-chosen').chosen( chosen_vars );
+
+	$('.edd-select-chosen .chosen-search input').each( function() {
+
+		// Bail if placeholder already set
+		if ( $( this ).attr( 'placeholder' ) ) {
+			return;
+		}
+
+		var selectElem  = $( this ).parent().parent().parent().prev('select.edd-select-chosen'),
+			placeholder = selectElem.data('search-placeholder');
+
+		if ( placeholder ) {
+			console.log( placeholder );
+			$( this ).attr( 'placeholder', placeholder );
+		}
+	});
+
+	// Add placeholders for Chosen input fields
+	$( '.chosen-choices' ).on( 'click', function () {
+		var placeholder = $( this ).parent().prev().data('search-placeholder');
+		if ( typeof placeholder === "undefined" ) {
+			placeholder = edd_vars.type_to_search;
+		}
+		$( this ).children('li').children('input').attr( 'placeholder', placeholder );
+	});
+
 	/**
 	 * Download Configuration Metabox
 	 */
@@ -98,19 +137,13 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'click', '.submit .edd_add_repeatable', function(e) {
 				e.preventDefault();
 				var button = $( this ),
-				row = button.parent().parent().prev( '.edd_repeatable_row' ),
-				clone = EDD_Download_Configuration.clone_repeatable(row);
+					row    = button.parent().parent().prev( '.edd_repeatable_row' ),
+					clone  = EDD_Download_Configuration.clone_repeatable(row);
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
 				// Setup chosen fields again if they exist
-				clone.find('.edd-select-chosen').chosen({
-					disable_search_threshold: 13,
-					search_contains: true,
-					inherit_select_classes: true,
-					placeholder_text_single: edd_vars.one_option,
-					placeholder_text_multiple: edd_vars.one_or_more_option
-				});
+				clone.find('.edd-select-chosen').chosen( chosen_vars );
 				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 				clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 			});
@@ -1311,45 +1344,27 @@ jQuery(document).ready(function ($) {
 		$.post( ajaxurl, data );
 	});
 
-	// Setup Chosen menus
-	$('.edd-select-chosen').chosen({
-		disable_search_threshold: 13,
-		search_contains: true,
-		inherit_select_classes: true,
-		placeholder_text_single: edd_vars.one_option,
-		placeholder_text_multiple: edd_vars.one_or_more_option
-	});
-
-	$('.edd-select-chosen .chosen-search input').each( function() {
-		var selectElem = $( this ).parent().parent().parent().prev('select.edd-select-chosen'),
-			type = selectElem.data('search-type'),
-			placeholder = selectElem.data('search-placeholder');
-		$( this ).attr( 'placeholder', placeholder );
-	});
-
-	// Add placeholders for Chosen input fields
-	$( '.chosen-choices' ).on( 'click', function () {
-		var placeholder = $( this ).parent().prev().data('search-placeholder');
-		if ( typeof placeholder === "undefined" ) {
-			placeholder = edd_vars.type_to_search;
-		}
-		$( this ).children('li').children('input').attr( 'placeholder', placeholder );
-	});
-
 	// Variables for setting up the typing timer
-	var typingTimer;               // Timer identifier
-	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+	// Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+	var doneTypingInterval  = 342,
+		typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
+		typingTimer;
 
 	// Replace options with search results
-	$( document.body ).on( 'keyup', '.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input', function(e) {
-		var val         = $( this ).val();
-		var container   = $( this ).closest( '.edd-select-chosen' );
-		var menu_id     = container.attr('id').replace( '_chosen', '' );
-		var select      = container.prev();
-		var no_bundles  = container.hasClass( 'no-bundles' );
-		var variations  = container.hasClass( 'variations' );
-		var lastKey     = e.which;
-		var search_type = 'edd_download_search';
+	$( document.body ).on( 'input', typingTimerElements, function(e) {
+		var	element     = $( this ),
+			val         = element.val(),
+			container   = element.closest( '.edd-select-chosen' ),
+
+			select      = container.prev(),
+			no_bundles  = container.hasClass( 'no-bundles' ),
+			variations  = container.hasClass( 'variations' ),
+
+			lastKey     = e.which,
+			search_type = 'edd_download_search';
+
+		// String replace the chosen container IDs
+		container.attr('id').replace( '_chosen', '' );
 
 		// Detect if we have a defined search type, otherwise default to downloads
 		if ( container.prev().data('search-type') ) {
@@ -1376,47 +1391,58 @@ jQuery(document).ready(function ($) {
 				lastKey === 40
 			)
 		) {
+			container.removeClass( 'searching' );
 			return;
 		}
-		clearTimeout(typingTimer);
-		typingTimer = setTimeout(
-			function(){
-				$.ajax({
-					type: 'GET',
-					url: ajaxurl,
-					data: {
-						action: search_type,
-						s: val,
-						no_bundles: no_bundles,
-						variations: variations
-					},
-					dataType: "json",
-					beforeSend: function(){
-						select.closest('ul.chosen-results').empty();
-					},
-					success: function( data ) {
-						// Remove all options but those that are selected
-						$('option:not(:selected)', select).remove();
-						$.each( data, function( key, item ) {
-							// Add any option that doesn't already exist
-							if ( ! $('option[value="' + item.id + '"]', select).length ) {
-								select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
-							}
-						});
-						// Update the options
-						$('.edd-select-chosen').trigger('chosen:updated');
-						select.next().find('input').val(val);
-					}
-				}).fail(function (response) {
-					if ( window.console && window.console.log ) {
-						console.log( response );
-					}
-				}).done(function (response) {
 
-				});
-			},
-			doneTypingInterval
-		);
+		clearTimeout(typingTimer);
+
+		typingTimer = setTimeout( function() {
+			$.ajax({
+				type:     'GET',
+				dataType: 'json',
+				url:      ajaxurl,
+				data: {
+					s:          val,
+					action:     search_type,
+					no_bundles: no_bundles,
+					variations: variations
+				},
+
+				beforeSend: function(){
+					container.addClass( 'searching' );
+					select.closest('ul.chosen-results').empty();
+				},
+
+				success: function( data ) {
+
+					// Remove all options but those that are selected
+					$('option:not(:selected)', select).remove();
+
+					// Add any option that doesn't already exist
+					$.each( data, function( key, item ) {
+						if ( ! $('option[value="' + item.id + '"]', select).length ) {
+							select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+						}
+					});
+
+					// Get the text immediately before triggering an update.
+					// Any sooner will cause the text to jump around.
+					var val = element.val();
+
+					// Update the options
+					container.trigger('chosen:updated');
+
+					element.val(val);
+				}
+			}).fail(function (response) {
+				if ( window.console && window.console.log ) {
+					console.log( response );
+				}
+			}).done(function (response) {
+				container.removeClass( 'searching' );
+			});
+		}, doneTypingInterval );
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
