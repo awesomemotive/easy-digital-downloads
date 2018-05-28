@@ -167,6 +167,32 @@ function edd_get_order_counts() {
 	return array_merge( $defaults, $o );
 }
 
+/**
+ * Check if an order can be recovered.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return bool Whether or not the order can be recovered.
+ */
+function edd_is_order_recoverable( $order_id = 0 ) {
+	$order = edd_get_order( $order_id );
+
+	if ( ! $order ) {
+		return false;
+	}
+
+	$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+
+	$transaction_id = $order->get_transaction_id();
+
+	if ( in_array( $order->get_status(), $recoverable_statuses ) && empty( $transaction_id ) ) {
+		return true;
+	}
+
+	return false;
+}
+
 /** Order Items ***************************************************************/
 
 /**

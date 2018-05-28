@@ -426,4 +426,15 @@ class Order extends Base_Object {
 	public function get_adjustments() {
 		return $this->adjustments;
 	}
+
+	/**
+	 * Retrieve the transaction ID associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Transaction ID.
+	 */
+	public function get_transaction_id() {
+		return edd_get_order_meta( $this->id, 'transaction_id', true );
+	}
 }

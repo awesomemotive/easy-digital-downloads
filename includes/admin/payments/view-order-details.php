@@ -31,15 +31,15 @@ if ( ! $order ) {
 }
 
 $payment_meta   = $payment->get_meta();
-$transaction_id = esc_attr( $payment->transaction_id );
+$transaction_id = esc_attr( $order->get_transaction_id() );
 $cart_items     = $payment->cart_details;
-$user_id        = $payment->user_id;
-$payment_date   = strtotime( $payment->date );
+$user_id        = $order->get_user_id();
+$order_date     = strtotime( $order->get_date_created() );
 $unlimited      = $payment->has_unlimited_downloads;
 $address        = $payment->address;
 $gateway        = $payment->gateway;
 $currency_code  = $payment->currency;
-$customer       = edd_get_customer( $payment->customer_id );
+$customer       = edd_get_customer( $order->get_customer_id() );
 $user_info      = edd_get_payment_meta_user_info( $order_id );
 $notes          = edd_get_payment_notes( $order_id );
 ?>
@@ -72,7 +72,7 @@ $notes          = edd_get_payment_notes( $order_id );
 												<span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
 												<select name="edd-payment-status" class="medium-text">
 													<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
-														<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $payment->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
+														<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->get_status(), $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 													<?php endforeach; ?>
 												</select>
 
@@ -89,7 +89,7 @@ $notes          = edd_get_payment_notes( $order_id );
 												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; ?>"></span>
 											</p>
 
-											<?php if ( $payment->is_recoverable() ) : ?>
+											<?php if ( edd_is_order_recoverable( $order_id ) ) : ?>
 											<p>
 												<span class="label"><?php _e( 'Recovery URL', 'easy-digital-downloads' ); ?>:</span>
 												<?php $recover_help = __( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>
@@ -103,15 +103,15 @@ $notes          = edd_get_payment_notes( $order_id );
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Date:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'Y-m-d', $payment_date ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+												<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'Y-m-d', $order_date ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 											</p>
 										</div>
 
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Time:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<input type="text" maxlength="2" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
-												<input type="text" maxlength="2" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
+												<input type="text" maxlength="2" name="edd-payment-time-hour" value="<?php echo esc_attr( date_i18n( 'H', $order_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
+												<input type="text" maxlength="2" name="edd-payment-time-min" value="<?php echo esc_attr( date( 'i', $order_date ) ); ?>" class="small-text edd-payment-time-min"/>
 											</p>
 										</div>
 
