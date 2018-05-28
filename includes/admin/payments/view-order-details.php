@@ -400,12 +400,10 @@ $notes          = edd_get_payment_notes( $order_id );
 														<?php if ( ! empty( $download->ID ) ) : ?>
 															<a href="<?php echo admin_url( 'post.php?post=' . $item_id . '&action=edit' ); ?>">
 																<?php echo $download->get_name();
-																if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
-																	$price_options = $cart_items[ $key ]['item_number']['options'];
-																	if ( $download->has_variable_prices() && isset( $price_id ) ) {
-																		echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $order_id );
-																	}
-																}
+																$price_id = $order_item->get_price_id();
+                                                                if ( $download->has_variable_prices() && ! empty( $price_id ) ) {
+                                                                    echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $order_id );
+                                                                }
 																?>
 															</a>
 														<?php else: ?>
