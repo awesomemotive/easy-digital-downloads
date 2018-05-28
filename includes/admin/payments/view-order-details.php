@@ -166,7 +166,7 @@ $notes          = edd_get_payment_notes( $order_id );
                                                 <p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
                                                 <ul class="edd-payment-fees">
 													<?php foreach ( $fees as $fee ) : /** @var EDD\Orders\Order_Adjustment $fee */ ?>
-                                                        <li data-fee-id="<?php echo edd_get_order_adjustment_meta( $fee->get_id(), 'fee_id' ) ?>">
+                                                        <li data-fee-id="<?php echo edd_get_order_adjustment_meta( $fee->get_id(), 'fee_id', true ) ?>">
                                                             <span class="fee-label"><?php echo $fee->get_description() . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee->get_amount() ) . '">' . edd_currency_filter( $fee->get_amount(), $currency_code ); ?></span>
                                                         </li>
 													<?php endforeach; ?>
@@ -407,7 +407,7 @@ $notes          = edd_get_payment_notes( $order_id );
 												$item_price = ! empty( $order_item->get_subtotal() ) ? $order_item->get_subtotal() : $price;
 												$subtotal   = ! empty( $order_item->get_subtotal() ) ? $order_item->get_subtotal() : $price;
 												$item_tax   = ! empty( $order_item->get_tax() ) ? $order_item->get_tax() : 0;
-												$price_id   = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
+												$price_id   = ! empty( $order_item->get_price_id() ) ? $order_item->get_price_id() : null;
 												$quantity   = ! empty( $order_item->get_quantity() ) && $order_item->get_quantity() > 0 ? $order_item->get_quantity() : 1;
 												$download   = new EDD_Download( $item_id );
 
@@ -424,7 +424,7 @@ $notes          = edd_get_payment_notes( $order_id );
 																<?php echo $download->get_name();
 																if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
 																	$price_options = $cart_items[ $key ]['item_number']['options'];
-																	if ( edd_has_variable_prices( $item_id ) && isset( $price_id ) ) {
+																	if ( $download->has_variable_prices() && isset( $price_id ) ) {
 																		echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $order_id );
 																	}
 																}
@@ -702,44 +702,34 @@ $notes          = edd_get_payment_notes( $order_id );
                                         <div class="column">
                                             <strong><?php _e( 'Actions', 'easy-digital-downloads' ); ?>:</strong>
                                             <br/>
-                                            <input type="hidden" id="edd-change-customer" name="edd-change-customer"
-                                                   value="0"/>
-                                            <a href="#cancel"
-                                               class="edd-payment-change-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+                                            <input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
+                                            <a href="#cancel" class="edd-payment-change-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
                                         </div>
                                         <div class="column">
-                                            <small>
-                                                <em>*<?php _e( 'Click "Save Payment" to change the customer', 'easy-digital-downloads' ); ?></em>
-                                            </small>
+                                            <small><em>*<?php _e( 'Click "Save Payment" to change the customer', 'easy-digital-downloads' ); ?></em></small>
                                         </div>
                                     </div>
 
                                     <div class="column-container new-customer" style="display: none">
                                         <div class="column">
                                             <strong><?php _e( 'Name', 'easy-digital-downloads' ); ?>:</strong>&nbsp;
-                                            <input type="text" name="edd-new-customer-name" value=""
-                                                   class="medium-text"/>
+                                            <input type="text" name="edd-new-customer-name" value="" class="medium-text"/>
                                         </div>
 
                                         <div class="column">
                                             <strong><?php _e( 'Email', 'easy-digital-downloads' ); ?>:</strong>&nbsp;
-                                            <input type="email" name="edd-new-customer-email" value=""
-                                                   class="medium-text"/>
+                                            <input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
                                         </div>
 
                                         <div class="column">
                                             <strong><?php _e( 'Actions', 'easy-digital-downloads' ); ?>:</strong>
                                             <br/>
-                                            <input type="hidden" id="edd-new-customer" name="edd-new-customer"
-                                                   value="0"/>
-                                            <a href="#cancel"
-                                               class="edd-payment-new-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+                                            <input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
+                                            <a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
                                         </div>
 
                                         <div class="column">
-                                            <small>
-                                                <em>*<?php _e( 'Click "Save Payment" to create new customer', 'easy-digital-downloads' ); ?></em>
-                                            </small>
+                                            <small><em>*<?php _e( 'Click "Save Payment" to create new customer', 'easy-digital-downloads' ); ?></em></small>
                                         </div>
                                     </div>
 
@@ -752,8 +742,7 @@ $notes          = edd_get_payment_notes( $order_id );
                             </div><!-- /#edd-customer-details -->
 
                             <div id="edd-billing-details" class="postbox">
-                                <h3 class="hndle">
-                                    <span><?php _e( 'Billing Address', 'easy-digital-downloads' ); ?></span></h3>
+                                <h3 class="hndle"><span><?php _e( 'Billing Address', 'easy-digital-downloads' ); ?></span></h3>
 
                                 <div class="inside edd-clearfix">
                                     <div id="edd-order-address">
@@ -762,31 +751,23 @@ $notes          = edd_get_payment_notes( $order_id );
                                                 <div class="column">
                                                     <p>
                                                         <strong class="order-data-address-line"><?php _e( 'Street Address Line 1:', 'easy-digital-downloads' ); ?></strong><br/>
-                                                        <input type="text" name="edd-payment-address[0][line1]"
-                                                               value="<?php echo esc_attr( $address['line1'] ); ?>"
-                                                               class="large-text"/>
+                                                        <input type="text" name="edd-payment-address[0][line1]" value="<?php echo esc_attr( $address['line1'] ); ?>" class="large-text" />
                                                     </p>
                                                     <p>
                                                         <strong class="order-data-address-line"><?php _e( 'Street Address Line 2:', 'easy-digital-downloads' ); ?></strong><br/>
-                                                        <input type="text" name="edd-payment-address[0][line2]"
-                                                               value="<?php echo esc_attr( $address['line2'] ); ?>"
-                                                               class="large-text"/>
+                                                        <input type="text" name="edd-payment-address[0][line2]" value="<?php echo esc_attr( $address['line2'] ); ?>" class="large-text" />
                                                     </p>
                                                 </div>
 
                                                 <div class="column">
                                                     <p>
                                                         <strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></strong><br/>
-                                                        <input type="text" name="edd-payment-address[0][city]"
-                                                               value="<?php echo esc_attr( $address['city'] ); ?>"
-                                                               class="large-text"/>
+                                                        <input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address['city'] ); ?>" class="large-text" />
                                                     </p>
 
                                                     <p>
                                                         <strong class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></strong><br/>
-                                                        <input type="text" name="edd-payment-address[0][zip]"
-                                                               value="<?php echo esc_attr( $address['zip'] ); ?>"
-                                                               class="large-text"/>
+                                                        <input type="text" name="edd-payment-address[0][zip]" value="<?php echo esc_attr( $address['zip'] ); ?>" class="large-text" />
 
                                                     </p>
                                                 </div>
@@ -832,9 +813,7 @@ $notes          = edd_get_payment_notes( $order_id );
 																),
 															) );
 														} else { ?>
-                                                            <input type="text" name="edd-payment-address[0][state]"
-                                                                   value="<?php echo esc_attr( $address['state'] ); ?>"
-                                                                   class="large-text"/>
+                                                            <input type="text" name="edd-payment-address[0][state]" value="<?php echo esc_attr( $address['state'] ); ?>" class="large-text" />
 															<?php
 														} ?>
                                                     </p>
