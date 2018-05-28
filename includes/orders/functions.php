@@ -129,6 +129,44 @@ function edd_count_orders( $args = array() ) {
 	return absint( $orders->found_items );
 }
 
+/**
+ * Query for and return array of order counts, keyed by status.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_order_counts() {
+
+	// Default statuses
+	$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
+
+	// Query for count
+	$counts = edd_get_orders( array(
+		'count'   => true,
+		'groupby' => 'status'
+	) );
+
+	// Default array
+	$o = array();
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts ) ) {
+
+		// Loop through statuses
+		foreach ( $counts as $item ) {
+			if ( empty( $item['status'] ) ) {
+				continue;
+			}
+
+			$o[ $item['status'] ] = absint( $item['count'] );
+		}
+	}
+
+	// Return counts
+	return array_merge( $defaults, $o );
+}
+
 /** Order Items ***************************************************************/
 
 /**
