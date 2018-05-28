@@ -163,12 +163,8 @@ $notes          = edd_get_payment_notes( $order_id );
 										<div class="edd-order-taxes edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Tax', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $payment->tax ) ); ?>"/>
-												<?php if ( ! empty( $payment->tax_rate ) ) : ?>
-													<span class="edd-tax-rate">
-														&nbsp;<?php echo $payment->tax_rate * 100; ?>%
-													</span>
-												<?php endif; ?>
+												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $order->get_tax() ) ); ?>"/>
+                                                <span class="edd-tax-rate"><?php echo $order->get_tax_rate() * 100; ?>%</span>
 											</p>
 										</div>
 										<?php endif; ?>
@@ -195,37 +191,45 @@ $notes          = edd_get_payment_notes( $order_id );
 
 								<div class="edd-order-update-box edd-admin-box">
 									<?php do_action( 'edd_view_order_details_update_before', $order_id ); ?>
+
 									<div id="major-publishing-actions">
 										<div id="delete-action">
 											<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $order_id ), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>" class="edd-delete-payment edd-delete"><?php _e( 'Delete Payment', 'easy-digital-downloads' ); ?></a>
 										</div>
+
 										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'easy-digital-downloads' ); ?>"/>
 										<div class="clear"></div>
 									</div>
+
 									<?php do_action( 'edd_view_order_details_update_after', $order_id ); ?>
 								</div><!-- /.edd-order-update-box -->
 
 							</div><!-- /#edd-order-data -->
 
-							<?php if( edd_is_payment_complete( $order_id ) ) : ?>
+							<?php if ( 'publish' === $order->get_status() ) : ?>
 							<div id="edd-order-resend-receipt" class="postbox edd-order-data">
 								<div class="inside">
 									<div class="edd-order-resend-receipt-box edd-admin-box">
 										<?php do_action( 'edd_view_order_details_resend_receipt_before', $order_id ); ?>
+
 										<a href="<?php echo esc_url( add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $order_id ) ) ); ?>" id="<?php if( count( (array) $customer->emails ) > 1 ) { echo 'edd-select-receipt-email'; } else { echo 'edd-resend-receipt'; } ?>" class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
 										<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
-										<?php if( count( (array) $customer->emails ) > 1 ) : ?>
+
+										<?php if ( count( (array) $customer->emails ) > 1 ) : ?>
 											<div class="clear"></div>
+
 											<div class="edd-order-resend-receipt-addresses" style="display:none;">
 												<select class="edd-order-resend-receipt-email">
 													<option value=""><?php _e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
-													<?php foreach( $customer->emails as $email ) : ?>
+													<?php foreach ( $customer->emails as $email ) : ?>
 														<option value="<?php echo urlencode( sanitize_email( $email ) ); ?>"><?php echo $email; ?></option>
 													<?php endforeach; ?>
 												</select>
 											</div>
 										<?php endif; ?>
+
 										<div class="clear"></div>
+
 										<?php do_action( 'edd_view_order_details_resend_receipt_after', $order_id ); ?>
 									</div><!-- /.edd-order-resend-receipt-box -->
 								</div>
@@ -233,17 +237,13 @@ $notes          = edd_get_payment_notes( $order_id );
 							<?php endif; ?>
 
 							<div id="edd-order-details" class="postbox edd-order-data">
+								<h3 class="hndle"><span><?php _e( 'Order Meta', 'easy-digital-downloads' ); ?></span></h3>
 
-								<h3 class="hndle">
-									<span><?php _e( 'Payment Meta', 'easy-digital-downloads' ); ?></span>
-								</h3>
 								<div class="inside">
 									<div class="edd-admin-box">
-
 										<?php do_action( 'edd_view_order_details_payment_meta_before', $order_id ); ?>
 
-										<?php
-										if ( $gateway ) : ?>
+										<?php if ( $gateway ) : ?>
 											<div class="edd-order-gateway edd-admin-box-inside">
 												<p>
 													<span class="label"><?php _e( 'Gateway:', 'easy-digital-downloads' ); ?></span>&nbsp;
@@ -255,7 +255,7 @@ $notes          = edd_get_payment_notes( $order_id );
 										<div class="edd-order-payment-key edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Key:', 'easy-digital-downloads' ); ?></span>&nbsp;
-												<span><?php echo $payment->key; ?></span>
+												<span><?php echo $order->get_payment_key(); ?></span>
 											</p>
 										</div>
 
