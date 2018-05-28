@@ -348,16 +348,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_default( $order, $column_name ) {
 		switch ( $column_name ) {
-			case 'amount' :
+			case 'amount':
 				$value = edd_currency_filter( edd_format_amount( $order->get_total() ), $order->get_currency() );
 				break;
-			case 'date' :
+			case 'date':
 				$value = edd_date_i18n( strtotime( $order->get_date_created() ) );
 				break;
-			case 'status' :
-				$value = $order->get_status();
+			case 'status':
+				$value = edd_get_payment_status_label( $order->get_status() );
 				break;
-			case 'details' :
+			case 'details':
 				$value = '<a href="' . add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
 				break;
 			default:
