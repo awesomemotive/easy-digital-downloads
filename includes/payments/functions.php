@@ -695,24 +695,27 @@ function edd_check_for_existing_payment( $payment_id ) {
 }
 
 /**
- * Get Payment Status
+ * Get order status.
  *
  * @since 1.0
+ * @since 3.0 Updated to use new EDD\Order\Order class.
  *
- * @param mixed  WP_Post|EDD_Payment|Payment ID $payment Payment post object, EDD_Payment object, or payment/post ID
- * @param bool   $return_label Whether to return the payment status or not
+ * @param WP_Post|EDD_Payment|Payment ID $payment      Payment post object, EDD_Payment object, or payment/post ID.
+ * @param bool                           $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
 function edd_get_payment_status( $payment, $return_label = false ) {
+	if ( is_numeric( $payment ) ) {
+		$order = edd_get_order( $order );
 
-	if( is_numeric( $payment ) ) {
-
-		$payment = new EDD_Payment( $payment );
-
-		if( ! $payment->ID > 0 ) {
+		if ( ! $order ) {
 			return false;
 		}
+	}
+
+	if ( $payment instanceof EDD_Payment ) {
+
 	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {

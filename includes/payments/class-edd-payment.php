@@ -924,6 +924,10 @@ class EDD_Payment {
 							$cart_subtotal += $item['subtotal'];
 						}
 
+						if ( 'none' === $this->discounts[0] ) {
+							break;
+						}
+
 						foreach ( $this->discounts as $discount ) {
 							/** @var EDD_Discount $discount_obj */
 							$discount_obj = edd_get_discount_by( 'code', $discount );
