@@ -130,33 +130,17 @@ $notes          = edd_get_payment_notes( $order_id );
 										<?php do_action( 'edd_view_order_details_update_inner', $order_id ); ?>
 
 										<div class="edd-order-discount edd-admin-box-inside">
-											<p>
-												<?php
-												$found_discounts = array();
-												foreach ( $order->get_discounts() as $discount ) {
-													$discount_obj = edd_get_discount_by( 'code', $discount );
+                                            <p class="strong"><?php _e( 'Discounts', 'easy-digital-downloads' ); ?>:</p>
+                                            <ul class="edd-order-discounts">
+                                                <?php
+                                                foreach ( $order->get_discounts() as $discount ) {
+                                                    /** @var EDD\Orders\Order_Adjustment $discount */
+                                                    $discount_obj = edd_get_discount_by( 'code', $discount->get_description() );
 
-													if ( false === $discount_obj ) {
-														$found_discounts[] = $discount;
-													} else {
-														$found_discounts[] = '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>';
-													}
-												}
-												?>
-												<span class="label">
-													<?php echo _n( 'Discount Code', 'Discount Codes', count( $found_discounts ), 'easy-digital-downloads' ); ?>
-													:
-												</span>&nbsp;
-												<span>
-													<?php
-													if ( ! empty( $found_discounts ) ) {
-														echo implode( ', ', $found_discounts );
-													} else {
-														_e( 'None', 'easy-digital-downloads' );
-													}
-													?>
-												</span>
-											</p>
+                                                    echo '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>' . ': ' . edd_currency_filter( edd_format_amount( $discount->get_amount() ), $currency_code );
+                                                }
+                                                ?>
+                                            </ul>
 										</div>
 
 										<?php
@@ -167,7 +151,7 @@ $notes          = edd_get_payment_notes( $order_id );
 												<ul class="edd-payment-fees">
 													<?php foreach ( $fees as $fee ) : /** @var EDD\Orders\Order_Adjustment $fee */ ?>
 														<li data-fee-id="<?php echo edd_get_order_adjustment_meta( $fee->get_id(), 'fee_id', true ) ?>">
-															<span class="fee-label"><?php echo $fee->get_description() . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee->get_amount() ) . '">' . edd_currency_filter( $fee->get_amount(), $currency_code ); ?></span>
+															<span class="fee-label"><?php echo $fee->get_description() . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee->get_amount() ) . '">' . edd_currency_filter( edd_format_amount( $fee->get_amount() ), $currency_code ); ?></span>
 														</li>
 													<?php endforeach; ?>
 												</ul>

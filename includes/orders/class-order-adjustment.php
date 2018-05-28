@@ -192,4 +192,13 @@ class Order_Adjustment extends Base_Object {
 	public function get_date_modified() {
 		return $this->date_modified;
 	}
+
+	/**
+	 * Magic __toString method.
+	 *
+	 * @since 3.0
+	 */
+	public function __toString() {
+		return $this->description;
+	}
 }
