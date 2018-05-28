@@ -438,22 +438,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the Customer column.
 	 *
 	 * @since 2.4.3
-
-     * @param array $payment Contains all the data of the payment.
+     * @since 3.0 Updated to use the new EDD\Orders\Order class.
+     *
+     * @param EDD\Orders\Order $order Order object.
 	 * @return string Data shown in the Customer column.
 	 */
-	public function column_customer( $payment ) {
-		$customer_id = edd_get_payment_customer_id( $payment->ID );
+	public function column_customer( $order ) {
+		$customer_id = $order->get_customer_id();
 
 		if ( ! empty( $customer_id ) ) {
 			$customer = new EDD_Customer( $customer_id );
 			$name = ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
 			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">#' . $customer->id . ' ' . $name . '</a>';
 		} else {
-			$email = edd_get_payment_user_email( $payment->ID );
+			$email = $order->get_email();
 			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-payment-history&s=$email" ) ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
 		}
-		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
+
+		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), 'user' );
 	}
 
 	/**
