@@ -31,13 +31,14 @@ if ( ! $order ) {
 }
 
 $transaction_id = esc_attr( $order->get_transaction_id() );
+$order_items    = $order->get_items();
 $cart_items     = $payment->cart_details;
 $user_id        = $order->get_user_id();
 $order_date     = strtotime( $order->get_date_created() );
 $unlimited      = $payment->has_unlimited_downloads;
-$address        = $payment->address;
-$gateway        = $payment->gateway;
-$currency_code  = $payment->currency;
+$address        = $order->get_customer_address();
+$gateway        = $order->get_gateway();
+$currency_code  = $order->get_currency();
 $customer       = edd_get_customer( $order->get_customer_id() );
 $user_info      = edd_get_payment_meta_user_info( $order_id );
 $notes          = edd_get_payment_notes( $order_id );

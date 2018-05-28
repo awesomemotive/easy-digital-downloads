@@ -498,4 +498,28 @@ class Order extends Base_Object {
 	public function get_tax_rate() {
 		return edd_get_order_meta( $this->id, 'tax_rate', true );
 	}
+
+	/**
+	 * Retrieve the customer address associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Customer address.
+	 */
+	public function get_customer_address() {
+		$user_info = edd_get_order_meta( $this->id, 'user_info', true );
+
+		$address  = ! empty( $user_info['address'] ) ? $user_info['address'] : array();
+
+		$defaults = array(
+			'line1'   => '',
+			'line2'   => '',
+			'city'    => '',
+			'country' => '',
+			'state'   => '',
+			'zip'     => '',
+		);
+
+		return wp_parse_args( $address, $defaults );
+	}
 }
