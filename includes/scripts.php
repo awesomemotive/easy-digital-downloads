@@ -237,6 +237,7 @@ function edd_load_admin_scripts( $hook ) {
 		'one_download_min'            => __( 'Payments must contain at least one item', 'easy-digital-downloads' ),
 		'one_option'                  => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 		'one_or_more_option'          => sprintf( __( 'Choose one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'no_results_text'             => __( 'No match for:', 'easy-digital-downloads'),
 		'numeric_item_price'          => __( 'Item price must be numeric', 'easy-digital-downloads' ),
 		'numeric_item_tax'            => __( 'Item tax must be numeric', 'easy-digital-downloads' ),
 		'numeric_quantity'            => __( 'Quantity must be numeric', 'easy-digital-downloads' ),

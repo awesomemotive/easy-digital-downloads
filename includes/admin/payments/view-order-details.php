@@ -714,7 +714,7 @@ $notes          = edd_get_payment_notes( $order_id );
 															'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
 															'data'             => array(
 																'search-type'        => 'no_ajax',
-																'search-placeholder' => __( 'Type to search all Countries', 'easy-digital-downloads' ),
+																'search-placeholder' => __( 'Search Countries', 'easy-digital-downloads' ),
 															),
 														) );
 														?>
@@ -736,7 +736,7 @@ $notes          = edd_get_payment_notes( $order_id );
 																'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
 																'data'             => array(
 																	'search-type'        => 'no_ajax',
-																	'search-placeholder' => __( 'Type to search all States/Provinces', 'easy-digital-downloads' ),
+																	'search-placeholder' => __( 'Search States/Provinces', 'easy-digital-downloads' ),
 																),
 															) );
 														} else { ?>

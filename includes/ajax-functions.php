@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Checks whether AJAX is enabled.
@@ -160,7 +160,7 @@ function edd_ajax_remove_from_cart() {
 	}
 	edd_die();
 }
-add_action( 'wp_ajax_edd_remove_from_cart', 'edd_ajax_remove_from_cart' );
+add_action( 'wp_ajax_edd_remove_from_cart',        'edd_ajax_remove_from_cart' );
 add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' );
 
 /**
@@ -227,7 +227,7 @@ function edd_ajax_add_to_cart() {
 	}
 	edd_die();
 }
-add_action( 'wp_ajax_edd_add_to_cart', 'edd_ajax_add_to_cart' );
+add_action( 'wp_ajax_edd_add_to_cart',        'edd_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
 
@@ -243,7 +243,7 @@ function edd_ajax_get_subtotal() {
 	edd_die();
 }
 
-add_action( 'wp_ajax_edd_get_subtotal', 'edd_ajax_get_subtotal' );
+add_action( 'wp_ajax_edd_get_subtotal',        'edd_ajax_get_subtotal' );
 add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 
 /**
@@ -300,7 +300,7 @@ function edd_ajax_apply_discount() {
 	}
 	edd_die();
 }
-add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
+add_action( 'wp_ajax_edd_apply_discount',        'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
 
 /**
@@ -333,7 +333,7 @@ function edd_ajax_update_cart_item_quantity() {
 	}
 	edd_die();
 }
-add_action( 'wp_ajax_edd_update_quantity', 'edd_ajax_update_cart_item_quantity' );
+add_action( 'wp_ajax_edd_update_quantity',        'edd_ajax_update_cart_item_quantity' );
 add_action( 'wp_ajax_nopriv_edd_update_quantity', 'edd_ajax_update_cart_item_quantity' );
 
 /**
@@ -360,7 +360,7 @@ function edd_ajax_remove_discount() {
 	}
 	edd_die();
 }
-add_action( 'wp_ajax_edd_remove_discount', 'edd_ajax_remove_discount' );
+add_action( 'wp_ajax_edd_remove_discount',        'edd_ajax_remove_discount' );
 add_action( 'wp_ajax_nopriv_edd_remove_discount', 'edd_ajax_remove_discount' );
 
 /**
@@ -410,7 +410,7 @@ function edd_ajax_get_download_title() {
 	}
 	edd_die();
 }
-add_action( 'wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title' );
+add_action( 'wp_ajax_edd_get_download_title',        'edd_ajax_get_download_title' );
 add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_title' );
 
 /**
@@ -445,7 +445,7 @@ function edd_ajax_recalculate_taxes() {
 
 	edd_die();
 }
-add_action( 'wp_ajax_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
+add_action( 'wp_ajax_edd_recalculate_taxes',        'edd_ajax_recalculate_taxes' );
 add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
 
 /**
@@ -482,114 +482,137 @@ function edd_ajax_get_states_field() {
 
 	edd_die();
 }
-add_action( 'wp_ajax_edd_get_shop_states', 'edd_ajax_get_states_field' );
+add_action( 'wp_ajax_edd_get_shop_states',        'edd_ajax_get_states_field' );
 add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 
 /**
- * Retrieve a states drop down
+ * Retrieve a downloads drop down
  *
  * @since 1.6
+ * @since 3.0 Use `get_posts()` instead of multiple direct queries (yay caching)
+ *
  * @return void
  */
 function edd_ajax_download_search() {
-	global $wpdb;
 
-	$search   = esc_sql( sanitize_text_field( $_GET['s'] ) );
-	$excludes = ( isset( $_GET['current_id'] ) ? (array) $_GET['current_id'] : array() );
+	// We store the last search in a transient for 30 seconds. This _might_
+	// result in a race condition if 2 users are looking at the exact same time,
+	// but we'll worry about that later if that situation ever happens.
+	$args   = get_transient( 'edd_download_search' );
 
-	$no_bundles = isset( $_GET['no_bundles'] ) ? filter_var( $_GET['no_bundles'], FILTER_VALIDATE_BOOLEAN ) : false;
-	if( true === $no_bundles ) {
-		$bundles  = $wpdb->get_results( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_product_type' AND meta_value = 'bundle';", ARRAY_A );
-		$bundles  = wp_list_pluck( $bundles, 'post_id' );
-		$excludes = array_merge( $excludes, $bundles );
+	// Parse args
+	$search = wp_parse_args( (array) $args, array(
+		'text'    => '',
+		'results' => array()
+	) );
+
+	// Get the search string
+	$new_search = isset( $_GET['s'] )
+		? sanitize_text_field( $_GET['s'] )
+		: '';
+
+	// Bail early if the search text has not changed
+	if ( $search['text'] === $new_search ) {
+		echo json_encode( $search['results'] );
+		edd_die();
 	}
 
-	$variations = isset( $_GET['variations'] ) ? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN ) : false;
+	// Set the local static search variable
+	$search['text'] = $new_search;
 
-	$excludes = array_unique( array_map( 'absint', $excludes ) );
-	$exclude  = implode( ",", $excludes );
+	// Are we excluding the current ID?
+	$excludes = isset( $_GET['current_id'] )
+		? array_unique( array_map( 'absint', (array) $_GET['current_id'] ) )
+		: array();
 
-	$results = array();
+	// Are we excluding bundles?
+	$no_bundles = isset( $_GET['no_bundles'] )
+		? filter_var( $_GET['no_bundles'], FILTER_VALIDATE_BOOLEAN )
+		: false;
 
-	// Setup the SELECT statement
-	$select = "SELECT ID,post_title FROM $wpdb->posts ";
+	// Are we including variations?
+	$variations = isset( $_GET['variations'] )
+		? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN )
+		: false;
 
-	// Setup the WHERE clause
-	$where = "WHERE `post_type` = 'download' and `post_title` LIKE '%s' ";
+	// Are we including all statuses, or only public ones?
+	$status = ! current_user_can( 'edit_products' )
+		? apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) )
+		: apply_filters( 'edd_product_dropdown_status',        array( 'publish', 'draft', 'private', 'future' ) );
 
-	// If we have items to exclude, exclude them
-	if( ! empty( $exclude ) ) {
-		$where .= "AND `ID` NOT IN (" . $exclude . ") ";
+	// Default query arguments
+	$args = array(
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+		'post_type'      => 'download',
+		'posts_per_page' => 50,
+		'post_status'    => implode( ',', $status ), // String
+		'post__not_in'   => $excludes,               // Array
+		's'              => $new_search              // String
+	);
+
+	// Maybe exclude bundles
+	if ( true === $no_bundles ) {
+		$args['meta_query'] = array(
+			'relation' => 'AND',
+				array(
+				'key'     => '_edd_product_type',
+				'value'   => 'bundle',
+				'compare' => 'NOT EXISTS'
+			)
+		);
 	}
 
-	if ( ! current_user_can( 'edit_products' ) ) {
-		$status = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
-	} else {
-		$status = apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
-	}
+	// Get downloads
+	$items = get_posts( $args );
 
-	if ( is_array( $status ) && ! empty( $status ) ) {
+	// Pluck title & ID
+	if ( ! empty( $items ) ) {
+		$items = wp_list_pluck( $items, 'post_title', 'ID' );
 
-		$status     = array_map( 'sanitize_text_field', $status );
-		$status_in  = "'" . join( "', '", $status ) . "'";
-		$where     .= "AND `post_status` IN ({$status_in}) ";
+		// Loop through all items...
+		foreach ( $items as $post_id => $title ) {
 
-	} else {
-
-		$where .= "AND `post_status` = `publish` ";
-
-	}
-
-	// Limit the result sets
-	$limit = "LIMIT 50";
-
-	$sql = $select . $where . $limit;
-
-	$prepared_statement = $wpdb->prepare( $sql, '%' . $search . '%' );
-
-	$items = $wpdb->get_results( $prepared_statement );
-
-	if( $items ) {
-
-		foreach( $items as $item ) {
-
-			$results[] = array(
-				'id'   => $item->ID,
-				'name' => $item->post_title
+			// Add item to results array
+			$search['results'][] = array(
+				'id'   => $post_id,
+				'name' => $title
 			);
 
-			if ( $variations && edd_has_variable_prices( $item->ID ) ) {
-				$prices = edd_get_variable_prices( $item->ID );
+			// Look for variable pricing
+			$prices = edd_get_variable_prices( $post_id );
 
+			// Maybe include variable pricing
+			if ( ! empty( $variations ) && ! empty( $prices ) ) {
 				foreach ( $prices as $key => $value ) {
-					$name   = ! empty( $value['name'] )   ? $value['name']   : '';
-					$amount = ! empty( $value['amount'] ) ? $value['amount'] : '';
-					$index  = ! empty( $value['index'] )  ? $value['index']  : $key;
+					$name  = ! empty( $value['name']  ) ? $value['name']  : '';
+					$index = ! empty( $value['index'] ) ? $value['index'] : $key;
 
-					if ( $name && $index ) {
-						$results[] = array(
-							'id'   => $item->ID . '_' . $key,
-							'name' => esc_html( $item->post_title . ': ' . $name ),
+					if ( ! empty( $name ) && ! empty( $index ) ) {
+						$search['results'][] = array(
+							'id'   => $post_id . '_' . $key,
+							'name' => esc_html( $title . ': ' . $name ),
 						);
 					}
 				}
 			}
 		}
 
+	// Empty the results array
 	} else {
-
-		$results[] = array(
-			'id'   => 0,
-			'name' => __( 'No results found', 'easy-digital-downloads' )
-		);
-
+		$search['results'] = array();
 	}
 
-	echo json_encode( $results );
+	// Update the transient
+	set_transient( 'edd_download_search', $search, 30 );
 
+	// Output the results
+	echo json_encode( $search['results'] );
+
+	// Done!
 	edd_die();
 }
-add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
+add_action( 'wp_ajax_edd_download_search',        'edd_ajax_download_search' );
 add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
 
 /**
