@@ -696,5 +696,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		if ( ! is_null( $this->args['customer'] ) && is_numeric( $this->args['customer'] ) ) {
 			$arguments['customer_id'] = (int) $this->args['customer'];
 		}
+
+		if ( ! is_null( $this->args['gateway'] ) ) {
+			$arguments['gateway'] = $this->args['gateway'];
+		}
 	}
 }
