@@ -78,7 +78,7 @@ class Order_Item extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	protected $item_shape = '';
+	protected $item_shape = '\\EDD\\Orders\\Order_Item';
 
 	/** Cache *****************************************************************/
 
