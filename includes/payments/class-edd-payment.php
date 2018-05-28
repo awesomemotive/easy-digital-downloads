@@ -653,9 +653,7 @@ class EDD_Payment {
 					case 'downloads':
 						// Update totals for pending downloads
 						foreach ( $this->pending[ $key ] as $item ) {
-
-							switch( $item['action'] ) {
-
+							switch ( $item['action'] ) {
 								case 'add':
 									$price = $item['price'];
 									$taxes = $item['tax'];
@@ -707,7 +705,6 @@ class EDD_Payment {
 									break;
 
 									case 'remove':
-
 										$meta_query = array();
 										$meta_query[] = array(
 											'key'     => '_edd_log_payment_id',
@@ -759,9 +756,7 @@ class EDD_Payment {
 										break;
 
 									case 'modify':
-
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-
 											$log_count_change = 0;
 
 											if ( $item['previous_data']['quantity'] != $item['quantity'] ) {
@@ -842,14 +837,11 @@ class EDD_Payment {
 
 										}
 										break;
-
 							}
-
 						}
 						break;
 
 					case 'fees':
-
 						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status && ! $this->is_recoverable() ) {
 							break;
 						}
@@ -859,21 +851,15 @@ class EDD_Payment {
 						}
 
 						foreach ( $this->pending[ $key ] as $fee ) {
-
-							switch( $fee['action'] ) {
-
+							switch ( $fee['action'] ) {
 								case 'add':
 									$total_increase += $fee['amount'];
 									break;
-
 								case 'remove':
 									$total_decrease += $fee['amount'];
 									break;
-
 							}
-
 						}
-
 						break;
 
 					case 'status':
@@ -930,6 +916,25 @@ class EDD_Payment {
 					case 'discounts':
 						if ( ! is_array( $this->discounts ) ) {
 							$this->discounts = explode( ',', $this->discounts );
+						}
+
+						$cart_subtotal = 0.00;
+
+						foreach ( $this->cart_details as $item ) {
+							$cart_subtotal += $item['subtotal'];
+						}
+
+						foreach ( $this->discounts as $discount ) {
+							/** @var EDD_Discount $discount_obj */
+							$discount_obj = edd_get_discount_by( 'code', $discount );
+
+							edd_add_order_adjustment( array(
+								'object_id'   => $this->ID,
+								'object_type' => 'order',
+								'type_id'     => $discount_obj->id,
+								'type'        => 'discount',
+								'amount'      => $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal )
+							) );
 						}
 
 						$this->user_info['discount'] = implode( ',', $this->discounts );
