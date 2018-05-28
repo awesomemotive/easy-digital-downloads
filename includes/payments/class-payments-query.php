@@ -196,7 +196,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$payment->payment_number = $payment->number;
 			}
 
-			$this->payments[] = apply_filters( 'edd_payment', $payment, $payment_id, $this );
+			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->get_id(), $this );
 		}
 
 		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
@@ -699,6 +699,10 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( ! empty( $this->args['post_parent'] ) ) {
 			$this->args['parent'] = $this->args['post_parent'];
+		}
+
+		if ( isset( $this->args['paged'] ) && isset( $this->args['number'] ) ) {
+
 		}
 	}
 }
