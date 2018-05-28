@@ -608,6 +608,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
      * @return array $payment_data Array of all the data for the payments.
 	 */
 	public function payments_data() {
+	    $args = array();
+
 		$per_page   = $this->per_page;
 		$orderby    = isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
 		$order      = isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
@@ -633,7 +635,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		 */
 		$gateway = apply_filters( 'edd_payments_table_search_gateway', $gateway );
 
-		if( ! empty( $search ) ) {
+		if ( ! empty( $search ) ) {
 			$status = 'any'; // Force all payment statuses when searching
 		}
 
@@ -642,34 +644,22 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		}
 
 		$args = array(
-			'output'     => 'payments',
 			'number'     => $per_page,
-			'page'       => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'offset'     => isset( $_GET['paged'] ) ? ( ( $_GET['paged'] * $per_page ) - $per_page ) : null,
 			'orderby'    => $orderby,
 			'order'      => $order,
-			'user'       => $user,
-			'customer'   => $customer,
+			'user_id'    => $user,
+			'customer_id'=> $customer,
 			'status'     => $status,
-			'meta_key'   => $meta_key,
-			'year'       => $year,
-			'month'      => $month,
-			'day'        => $day,
-			's'          => $search,
-			'start_date' => $start_date,
-			'end_date'   => $end_date,
 			'gateway'    => $gateway
 		);
 
-		if( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {
-
+		if ( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {
 			$args['search_in_notes'] = true;
 			$args['s'] = trim( str_replace( 'txn:', '', $args['s'] ) );
-
 		}
 
-		$p_query  = new EDD_Payments_Query( $args );
-
-		return $p_query->get_payments();
+		return edd_get_orders( array_filter( $args ) );
 	}
 
 	/**
