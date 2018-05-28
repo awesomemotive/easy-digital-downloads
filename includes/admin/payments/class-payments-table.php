@@ -408,15 +408,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the checkbox column.
 	 *
 	 * @since 1.4
+     * @since 3.0 Updated to use new objects.
 	 *
-     * @param array $payment Contains all the data for the checkbox column.
+	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
 	 */
-	public function column_cb( $payment ) {
+	public function column_cb( $order ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			'payment',
-			$payment->ID
+			$order->get_id()
 		);
 	}
 
