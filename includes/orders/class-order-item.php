@@ -47,6 +47,14 @@ class Order_Item extends Base_Object {
 	protected $product_id;
 
 	/**
+	 * Product Name.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $product_name;
+
+	/**
 	 * Price ID.
 	 *
 	 * @since 3.0
@@ -151,6 +159,17 @@ class Order_Item extends Base_Object {
 	 */
 	public function get_product_id() {
 		return $this->product_id;
+	}
+
+	/**
+	 * Retrieve the product name.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Product name.
+	 */
+	public function get_product_name() {
+		return $this->product_name;
 	}
 
 	/**
