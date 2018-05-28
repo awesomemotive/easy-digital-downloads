@@ -522,4 +522,15 @@ class Order extends Base_Object {
 
 		return wp_parse_args( $address, $defaults );
 	}
+
+	/**
+	 * Retrieve whether or not unlimited downloads have been enabled on this order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if unlimited downloads are enabled, false otherwise.
+	 */
+	public function has_unlimited_downloads() {
+		return (bool) edd_get_order_meta( $this->id, 'unlimited_downloads', true );
+	}
 }
