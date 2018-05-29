@@ -224,7 +224,15 @@ function edd_build_order( $order_data = array() ) {
 		'payment_key' => $order_data['purchase_key'],
 	);
 
+	// Add order into the edd_orders table
 	$order_id = edd_add_order( $order_args );
+
+	/** Add order meta */
+	edd_add_order_meta( $order_id, 'user_info', array(
+		'first_name' => $order_data['user_info']['first_name'],
+		'last_name'  => $order_data['user_info']['last_name'],
+		'address'    => $order_data['user_info']['address'],
+	) );
 
 	do_action( 'edd_insert_payment', $order_id, $order_data );
 
