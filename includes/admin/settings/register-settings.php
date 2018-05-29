@@ -666,10 +666,13 @@ function edd_get_registered_settings() {
 						'id'            => 'tax_rate',
 						'name'          => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
 						'desc'          => __( 'Customers not in a specific rate will be charged this tax rate. Enter a percentage, such as 6.5 for 6.5%. ', 'easy-digital-downloads' ),
-						'type'          => 'text',
+						'type'          => 'number',
 						'size'          => 'small',
+						'step'          => '0.0001',
+						'min'           => '0',
+						'max'           => '99',
 						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a `default` tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
 					),
 					'prices_include_tax' => array(
 						'id'            => 'prices_include_tax',
@@ -1978,8 +1981,8 @@ function edd_number_callback( $args ) {
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
-	$min  = isset( $args['min'] ) ? $args['min'] : 0;
+	$max  = isset( $args['max']  ) ? $args['max']  : 999999;
+	$min  = isset( $args['min']  ) ? $args['min']  : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
 	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
@@ -2329,7 +2332,7 @@ function edd_tax_rates_callback( $args ) {
             <th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
             <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223"
                                                                                                        class="edd-help-tip dashicons dashicons-editor-help"
-                                                                                                       title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ); ?>"></span>
+                                                                                                       title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span>
             </th>
             <th scope="col"  class="edd_tax_remove"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
         </tr>
@@ -2379,9 +2382,11 @@ function edd_tax_rates_callback( $args ) {
                                value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
                         <label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
                     </td>
-                    <td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99"
-                                                    name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]"
-                                                    value="<?php echo esc_html( $rate['rate'] ); ?>"/></td>
+                    <td class="edd_tax_rate">
+						<input type="number" class="small-text" step="0.0001" min="0.0" max="99"
+                               name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]"
+                               value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off"/>
+					</td>
                     <td class="edd_tax_remove">
                         <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span>
                     </td>
