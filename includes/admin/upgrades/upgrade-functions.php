@@ -377,8 +377,10 @@ function edd_trigger_upgrades() {
 
 	update_option( 'edd_version', EDD_VERSION );
 
-	if ( DOING_AJAX )
-		die( 'complete' ); // Let AJAX know that the upgrade is complete
+	// Let AJAX know that the upgrade is complete
+	if ( DOING_AJAX ) {
+		die( 'complete' );
+	}
 }
 add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
@@ -396,7 +398,6 @@ function edd_maybe_resume_upgrade() {
 	}
 
 	return $doing_upgrade;
-
 }
 
 /**
@@ -504,8 +505,10 @@ function edd_v131_upgrades() {
 function edd_v134_upgrades() {
 	$general_options = get_option( 'edd_settings_general' );
 
-	if ( isset( $general_options['failure_page'] ) )
-		return; // Settings already updated
+	// Settings already updated
+	if ( isset( $general_options['failure_page'] ) ) {
+		return;
+	}
 
 	// Failed Purchase Page
 	$failed = wp_insert_post(
@@ -697,14 +700,15 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 			'custom'      => $number,
 			'total'       => $total
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+
+		edd_redirect( $redirect );
 
 	// No more payments found, finish up
 	} else {
 		EDD()->session->set( 'upgrade_sequential', null );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_upgrade_sequential_payment_numbers', 'edd_v20_upgrade_sequential_payment_numbers' );
@@ -799,14 +803,15 @@ function edd_v21_upgrade_customers_db() {
 			'edd-upgrade' => 'upgrade_customers_db',
 			'step'        => $step
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+
+		edd_redirect( $redirect );
 
 	// No more customers found, finish up
 	} else {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_upgrade_customers_db', 'edd_v21_upgrade_customers_db' );
@@ -837,7 +842,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 			// We had no variable priced products, so go ahead and just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			edd_redirect( admin_url() );
 		}
 	}
 
@@ -908,12 +913,13 @@ function edd_v226_upgrade_payments_price_logs_db() {
 			'edd-upgrade' => 'upgrade_payments_price_logs_db',
 			'step'        => $step
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+
+		edd_redirect( $redirect );
 	} else {
 		// No more payments found, finish up
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		delete_option( 'edd_doing_upgrade' );
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_upgrade_payments_price_logs_db', 'edd_v226_upgrade_payments_price_logs_db' );
@@ -947,7 +953,7 @@ function edd_v23_upgrade_payment_taxes() {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			edd_redirect( admin_url() );
 		}
 	}
 
@@ -978,14 +984,15 @@ function edd_v23_upgrade_payment_taxes() {
 			'number'      => $number,
 			'total'       => $total
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+
+		edd_redirect( $redirect );
 
 	// No more payments found, finish up
 	} else {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 		delete_option( 'edd_doing_upgrade' );
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_upgrade_payment_taxes', 'edd_v23_upgrade_payment_taxes' );
@@ -1019,7 +1026,7 @@ function edd_v23_upgrade_customer_purchases() {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			edd_redirect( admin_url() );
 		}
 	}
 
@@ -1093,7 +1100,7 @@ function edd_v23_upgrade_customer_purchases() {
 			'number'      => $number,
 			'total'       => $total
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		edd_redirect( $redirect );
 
 	// No more customers found, finish up
 	} else {
@@ -1101,7 +1108,7 @@ function edd_v23_upgrade_customer_purchases() {
 		edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_upgrade_customer_payments_association', 'edd_v23_upgrade_customer_purchases' );
@@ -1135,7 +1142,7 @@ function edd_upgrade_user_api_keys() {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			edd_redirect( admin_url() );
 		}
 	}
 
@@ -1170,15 +1177,15 @@ function edd_upgrade_user_api_keys() {
 			'number'      => $number,
 			'total'       => $total
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+
+		edd_redirect( $redirect );
 
 	// No more customers found, finish up
 	} else {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 		delete_option( 'edd_doing_upgrade' );
-
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
@@ -1232,15 +1239,15 @@ function edd_remove_refunded_sale_logs() {
 			'step'        => $step,
 			'total'       => $total
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+
+		edd_redirect( $redirect );
 
 	// No more refunded payments found, finish up
 	} else {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
 		delete_option( 'edd_doing_upgrade' );
-
-		wp_redirect( admin_url() ); exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );
@@ -1350,8 +1357,7 @@ function edd_discounts_migration() {
 			'total'       => $total
 		), admin_url( 'index.php' ) );
 
-		wp_safe_redirect( $redirect );
-		exit;
+		edd_redirect( $redirect );
 
 	// No more discounts found, finish up
 	} else {
@@ -1361,8 +1367,7 @@ function edd_discounts_migration() {
 
 		edd_debug_log( 'All old discounts migrated, upgrade complete.' );
 
-		wp_redirect( admin_url() );
-		exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_discounts_migration', 'edd_discounts_migration' );
@@ -1403,8 +1408,7 @@ function edd_remove_legacy_discounts() {
 
 	edd_debug_log( 'Legacy discounts removed, upgrade complete.' );
 
-	wp_redirect( admin_url() );
-	exit;
+	edd_redirect( admin_url() );
 }
 add_action( 'edd_remove_legacy_discounts', 'edd_remove_legacy_discounts' );
 
@@ -1496,8 +1500,7 @@ function edd_notes_migration() {
 			'total'       => $total
 		), admin_url( 'index.php' ) );
 
-		wp_safe_redirect( $redirect );
-		exit;
+		edd_redirect( $redirect );
 
 	// No more notes found, finish up
 	} else {
@@ -1507,8 +1510,7 @@ function edd_notes_migration() {
 
 		edd_debug_log( 'All old notes migrated, upgrade complete.' );
 
-		wp_redirect( admin_url() );
-		exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_notes_migration', 'edd_notes_migration' );
@@ -1547,8 +1549,7 @@ function edd_remove_legacy_notes() {
 
 	edd_debug_log( 'Legacy notes removed, upgrade complete.' );
 
-	wp_redirect( admin_url() );
-	exit;
+	edd_redirect( admin_url() );
 }
 add_action( 'edd_remove_legacy_notes', 'edd_remove_legacy_notes' );
 
@@ -1703,8 +1704,8 @@ function edd_logs_migration() {
 			'total'       => $total
 		), admin_url( 'index.php' ) );
 
-		wp_safe_redirect( $redirect );
-		exit;
+		edd_redirect( $redirect );
+
 	} else {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'migrate_logs' );
@@ -1712,8 +1713,7 @@ function edd_logs_migration() {
 
 		edd_debug_log( 'All old logs migrated, upgrade complete.' );
 
-		wp_redirect( admin_url() );
-		exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_logs_migration', 'edd_logs_migration' );
@@ -1779,8 +1779,8 @@ function edd_remove_legacy_logs() {
 			'total'       => $total
 		), admin_url( 'index.php' ) );
 
-		wp_safe_redirect( $redirect );
-		exit;
+		edd_redirect( $redirect );
+
 	} else {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'remove_legacy_logs' );
@@ -1788,8 +1788,7 @@ function edd_remove_legacy_logs() {
 
 		edd_debug_log( 'Legacy logs removed, upgrade complete.' );
 
-		wp_redirect( admin_url() );
-		exit;
+		edd_redirect( admin_url() );
 	}
 }
 add_action( 'edd_remove_legacy_logs', 'edd_remove_legacy_logs' );

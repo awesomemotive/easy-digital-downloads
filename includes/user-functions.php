@@ -938,8 +938,7 @@ function edd_process_user_verification_request() {
 		add_query_arg( 'edd-verify-request', '1', edd_get_user_verification_page() )
 	);
 
-	wp_safe_redirect( $redirect );
-	exit;
+	edd_redirect( $redirect );
 
 }
 add_action( 'edd_send_verification_email', 'edd_process_user_verification_request' );
@@ -985,9 +984,7 @@ function edd_process_user_account_verification() {
 		add_query_arg( 'edd-verify-success', '1', edd_get_user_verification_page() )
 	);
 
-	wp_safe_redirect( $redirect );
-	exit;
-
+	edd_redirect( $redirect );
 }
 add_action( 'edd_verify_user', 'edd_process_user_account_verification' );
 

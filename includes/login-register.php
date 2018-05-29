@@ -96,7 +96,7 @@ function edd_process_login_form( $data ) {
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
-			wp_redirect( $redirect );
+			edd_redirect( $redirect );
 			edd_die();
 		}
 	}
@@ -192,7 +192,7 @@ function edd_process_register_form( $data ) {
 			'role'            => get_option( 'default_role' )
 		) );
 
-		wp_redirect( $redirect );
+		edd_redirect( $redirect );
 		edd_die();
 	}
 }

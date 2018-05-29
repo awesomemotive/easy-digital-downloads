@@ -170,7 +170,7 @@ class EDD_Notices {
 
 		// Dismiss notice
 		edd_update_option( $key, 1 );
-		wp_redirect( remove_query_arg( array( 'edd_action', 'edd_notice', '_wpnonce' ) ) );
+		edd_redirect( remove_query_arg( array( 'edd_action', 'edd_notice', '_wpnonce' ) ) );
 		exit;
 	}
 

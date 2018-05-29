@@ -93,7 +93,7 @@ function edd_admin_delete_note( $data = array() ) {
 	// Try to delete
 	edd_delete_note( $data['note_id'] );
 
-	wp_safe_redirect( edd_get_note_delete_redirect_url() );
+	edd_redirect( edd_get_note_delete_redirect_url() );
 }
 add_action( 'edd_delete_note', 'edd_admin_delete_note' );
 

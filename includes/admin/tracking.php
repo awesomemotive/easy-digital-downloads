@@ -206,7 +206,7 @@ class EDD_Tracking {
 
 		edd_delete_option( 'allow_tracking' );
 		update_option( 'edd_tracking_notice', '1' );
-		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
+		edd_redirect( remove_query_arg( 'edd_action' ) );
 	}
 
 	/**

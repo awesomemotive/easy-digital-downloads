@@ -887,7 +887,7 @@ function edd_process_profile_editor_updates( $data ) {
 
 	if( $errors ) {
 		// Send back to the profile editor if there are errors
-		wp_redirect( $data['edd_redirect'] );
+		edd_redirect( $data['edd_redirect'] );
 		edd_die();
 	}
 
@@ -911,7 +911,7 @@ function edd_process_profile_editor_updates( $data ) {
 
 	if ( $updated ) {
 		do_action( 'edd_user_profile_updated', $user_id, $userdata );
-		wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
+		edd_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
 		edd_die();
 	}
 }
@@ -957,7 +957,6 @@ function edd_process_profile_editor_remove_email() {
 		$url = $_GET['redirect'];
 	}
 
-	wp_safe_redirect( $url );
-	exit;
+	edd_redirect( $url );
 }
 add_action( 'edd_profile-remove-email', 'edd_process_profile_editor_remove_email' );
