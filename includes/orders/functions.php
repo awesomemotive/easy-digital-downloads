@@ -193,6 +193,22 @@ function edd_is_order_recoverable( $order_id = 0 ) {
 	return false;
 }
 
+/**
+ * Generate the correct parameters required to insert a new order into the database
+ * based on the order details passed by the gateway.
+ *
+ * @since 3.0
+ *
+ * @param array $order_data Order data.
+ *
+ * @return int|bool Integer of order ID if successful, false otherwise.
+ */
+function edd_build_order( $order_data = array() ) {
+	if (  empty( $order_data ) ) {
+		return false;
+	}
+}
+
 /** Order Items ***************************************************************/
 
 /**
