@@ -208,9 +208,12 @@ function edd_build_order( $order_data = array() ) {
 		return false;
 	}
 
+	/** Setup order information ***************************************************/
+
 	$gateway = ! empty( $order_data['gateway'] ) ? $order_data['gateway'] : '';
 	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
+	// Build order information based on data passed from the gateway.
 	$order_args = array(
 		'parent'      => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
 		'status'      => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
@@ -224,15 +227,57 @@ function edd_build_order( $order_data = array() ) {
 		'payment_key' => $order_data['purchase_key'],
 	);
 
-	// Add order into the edd_orders table
+	/** Setup customer ************************************************************/
+
+	$customer = new stdClass;
+
+	if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
+		$customer = new EDD_Customer( get_current_user_id(), true );
+
+		// Customer is logged in but used a different email to purchase so we need to assign that email address to their customer record.
+		if ( ! empty( $customer->id ) && $order_args['email'] != $customer->email ) {
+			$customer->add_email( $order_args['email'] );
+		}
+	}
+
+	if ( empty( $customer->id ) ) {
+		$customer = new EDD_Customer( $this->email );
+
+		if ( empty( $order_data['user_info']['first_name'] ) && empty( $order_data['user_info']['last_name'] ) ) {
+			$name = $order_args['email'];
+		} else {
+			$name = $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'];
+		}
+
+		$customer->create( array(
+			'name'    => $name,
+			'email'   => $order_args['email'],
+			'user_id' => $order_args['user_id'],
+		) );
+	}
+
+	/** Insert order **************************************************************/
+
+	// Add order into the edd_orders table.
 	$order_id = edd_add_order( $order_args );
 
-	/** Add order meta */
+	/** Insert order meta *********************************************************/
 	edd_add_order_meta( $order_id, 'user_info', array(
 		'first_name' => $order_data['user_info']['first_name'],
 		'last_name'  => $order_data['user_info']['last_name'],
 		'address'    => $order_data['user_info']['address'],
 	) );
+
+	/** Insert order items ********************************************************/
+
+
+	/** Insert order adjustments **************************************************/
+	
+
+	/** Calculate totals **********************************************************/
+	$subtotal = 0.00;
+	$tax = 0.00;
+	$discount = 0.00;
 
 	do_action( 'edd_insert_payment', $order_id, $order_data );
 
