@@ -70,12 +70,6 @@ final class Customers extends Base {
 	 * @since 3.0
 	 */
 	protected function upgrade() {
-
-		/**
-		 * Prior to EDD 3.0, the customers table had a column length of less than 100.
-		 *
-		 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6447
-		 */
 		$query = "
 			ALTER TABLE {$this->table_name} MODIFY `email` VARCHAR(100) NOT NULL default '';
 			ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
