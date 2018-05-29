@@ -6,7 +6,7 @@
  * @subpackage  Orders
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Orders;
 
@@ -29,6 +29,14 @@ class Order extends Base_Object {
 	 * @var   int
 	 */
 	protected $id;
+
+	/**
+	 * Parent order.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
 
 	/**
 	 * Order number.
@@ -95,12 +103,28 @@ class Order extends Base_Object {
 	protected $ip;
 
 	/**
-	 * Payment gateway.
+	 * Order gateway.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
 	protected $gateway;
+
+	/**
+	 * Order mode.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $mode;
+
+	/**
+	 * Order currency.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $currency;
 
 	/**
 	 * Payment key.
@@ -151,6 +175,39 @@ class Order extends Base_Object {
 	protected $items;
 
 	/**
+	 * Order adjustments.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	protected $adjustments;
+
+	/**
+	 * Object constructor.
+	 *
+	 * @access public
+	 * @since  1.9
+	 *
+	 * @param mixed $object Object to populate members for.
+	 */
+	public function __construct( $object = null ) {
+		if ( $object ) {
+			foreach ( get_object_vars( $object ) as $key => $value ) {
+				$this->{$key} = $value;
+			}
+		}
+
+		$this->items = edd_get_order_items( array(
+			'order_id' => $this->get_id()
+		) );
+
+		$this->adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $this->get_id(),
+			'object_type' => 'order',
+		) );
+	}
+
+	/**
 	 * Retrieve order ID.
 	 *
 	 * @since 3.0
@@ -162,6 +219,17 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve parent order ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return int Parent order ID.
+	 */
+	public function get_parent() {
+		return $this->parent;
+	}
+
+	/**
 	 * Retrieve order number.
 	 *
 	 * @since 3.0
@@ -169,7 +237,8 @@ class Order extends Base_Object {
 	 * @return string
 	 */
 	public function get_number() {
-		return $this->number;
+		// An order number is only retrieved if sequential order numbers are enabled, otherwise the order ID is returned.
+		return edd_get_option( 'enable_sequential' ) ? $this->number : $this->id;
 	}
 
 	/**
@@ -261,6 +330,28 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the mode (i.e. test or live) that the order was placed in.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Order mode.
+	 */
+	public function get_mode() {
+		return $this->mode;
+	}
+
+	/**
+	 * Retrieve the currency that was used for the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Order currency.
+	 */
+	public function get_currency() {
+		return $this->currency;
+	}
+
+	/**
 	 * Retrieve payment key.
 	 *
 	 * @since 3.0
@@ -324,5 +415,154 @@ class Order extends Base_Object {
 	 */
 	public function get_items() {
 		return $this->items;
+	}
+
+	/**
+	 * Retrieve all the adjustments applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order adjustments.
+	 */
+	public function get_adjustments() {
+		return $this->adjustments;
+	}
+
+	/**
+	 * Retrieve the discounts applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order discounts.
+	 */
+	public function get_discounts() {
+		if ( empty( $this->adjustments ) ) {
+			return array();
+		}
+
+		$discounts = array();
+
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'discount' === $adjustment->get_type() ) {
+				$discounts[] = $adjustment;
+			}
+		}
+
+		return $discounts;
+	}
+
+	/**
+	 * Retrieve the fees applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order fees.
+	 */
+	public function get_fees() {
+		if ( empty( $this->adjustments ) ) {
+			return array();
+		}
+
+		$fees = array();
+
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'fee' === $adjustment->get_type() ) {
+				$fees[] = $adjustment;
+			}
+		}
+
+		return $fees;
+	}
+
+	/**
+	 * Retrieve the transaction ID associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Transaction ID.
+	 */
+	public function get_transaction_id() {
+		return edd_get_order_meta( $this->id, 'transaction_id', true );
+	}
+
+	/**
+	 * Retrieve the tax rate associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Tax rate.
+	 */
+	public function get_tax_rate() {
+
+		// Default rate
+		$rate = 0;
+
+		// Query for rates
+		$rates = edd_get_order_adjustments( array(
+			'object_id'     => $this->id,
+			'object_type'   => 'order',
+			'type_id'       => 0,
+			'type'          => 'tax',
+			'number'        => 1,
+			'no_found_rows' => true
+		) );
+
+		// Get rate amount
+		if ( ! empty( $rates ) ) {
+			$rate = reset( $rates );
+			$rate = $rate->get_amount();
+		}
+
+		return $rate;
+	}
+
+	/**
+	 * Retrieve the customer information associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array User information.
+	 */
+	public function get_user_info() {
+		return edd_get_order_meta( $this->id, 'user_info', true );
+	}
+
+	/**
+	 * Retrieve the customer address associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Customer address.
+	 */
+	public function get_customer_address() {
+		$user_info = edd_get_order_meta( $this->id, 'user_info', true );
+
+		$address  = ! empty( $user_info['address'] ) ? $user_info['address'] : array();
+
+		$defaults = array(
+			'line1'   => '',
+			'line2'   => '',
+			'city'    => '',
+			'country' => '',
+			'state'   => '',
+			'zip'     => '',
+		);
+
+		return wp_parse_args( $address, $defaults );
+	}
+
+	/**
+	 * Retrieve whether or not unlimited downloads have been enabled on this order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if unlimited downloads are enabled, false otherwise.
+	 */
+	public function has_unlimited_downloads() {
+		return (bool) edd_get_order_meta( $this->id, 'unlimited_downloads', true );
 	}
 }
