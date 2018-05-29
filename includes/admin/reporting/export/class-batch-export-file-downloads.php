@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 
 	/**
-	 * Our export type. Used for export-type specific filters/actions
+	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @var string
 	 * @since 2.4
@@ -30,19 +30,21 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	public $export_type = 'file_downloads';
 
 	/**
-	 * Set the CSV columns
+	 * Set the CSV columns.
 	 *
 	 * @since 2.4
-	 * @return array $cols All the columns
+	 * @since 3.0 Updated to add 'User Agent' column.
+	 *
+	 * @return array $cols All the columns.
 	 */
 	public function csv_cols() {
-
 		$cols = array(
-			'date'     => __( 'Date',   'easy-digital-downloads' ),
-			'user'     => __( 'Downloaded by', 'easy-digital-downloads' ),
-			'ip'       => __( 'IP Address', 'easy-digital-downloads' ),
-			'download' => __( 'Product', 'easy-digital-downloads' ),
-			'file'     => __( 'File', 'easy-digital-downloads' )
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'user'       => __( 'Downloaded by', 'easy-digital-downloads' ),
+			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
+			'download'   => __( 'Product', 'easy-digital-downloads' ),
+			'file'       => __( 'File', 'easy-digital-downloads' ),
 		);
 
 		return $cols;
@@ -108,28 +110,17 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Return the calculated completion percentage
+	 * Return the calculated completion percentage.
 	 *
 	 * @since 2.4
-	 * @return int
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return int Percentage complete.
 	 */
 	public function get_percentage_complete() {
-
-		global $edd_logs;
-
 		$args = array(
-			'post_type'		   => 'edd_log',
-			'posts_per_page'   => -1,
-			'post_status'	   => 'publish',
-			'fields'           => 'ids',
-			'tax_query'        => array(
-				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> 'file_download'
-				)
-			),
-			'date_query'        => array(
+			'fields'     => 'ids',
+			'date_query' => array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
@@ -139,18 +130,17 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		);
 
 		if ( 0 !== $this->download_id ) {
-			$args['post_parent'] = $this->download_id;
+			$args['download_id'] = $this->download_id;
 		}
 
-		$logs       = new WP_Query( $args );
-		$total      = (int) $logs->post_count;
+		$total = edd_count_file_download_logs( $args );
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( 30 * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
