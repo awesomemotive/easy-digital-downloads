@@ -265,6 +265,13 @@ function edd_build_order( $order_data = array() ) {
 	// Attach order to the customer record.
 	$customer->attach_payment( $order_id, false );
 
+	// Declare variables to store amounts for the order.
+	$subtotal       = 0.00;
+	$total_tax      = 0.00;
+	$total_discount = 0.00;
+	$total_fees     = 0.00;
+	$order_total    = 0.00;
+
 	/** Insert order meta *********************************************************/
 	edd_add_order_meta( $order_id, 'user_info', array(
 		'first_name' => $order_data['user_info']['first_name'],
@@ -273,15 +280,111 @@ function edd_build_order( $order_data = array() ) {
 	) );
 
 	/** Insert order items ********************************************************/
+	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
+		foreach ( $order_data['cart_details'] as $key => $item ) {
+			// First, we need to check that what is being added is a valid download.
+			$download = edd_get_download( $item['id'] );
 
+			if ( ! $download || 'download' !== $download->post_type ) {
+				continue;
+			}
+
+			// Build a base array of information for each order item.
+			$order_item_args = array(
+				'order_id'   => $order_id,
+				'product_id' => $item['id'],
+				'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
+				'cart_index' => $key,
+				'quantity'   => $item['quantity'],
+				'amount'     => $item['item_price'],
+				'subtotal'   => $item['subtotal'],
+				'discount'   => $item['discount'],
+				'tax'        => $item['tax'],
+				'total'      => $item['price']
+			);
+
+			// Set up defaults.
+			$defaults = array(
+				'quantity'    => 1,
+				'price_id'    => false,
+				'item_price'  => false,
+				'discount'    => 0.00,
+				'tax'         => 0.00,
+			);
+
+			/**
+			 * Allow the order item arguments to be filtered.
+			 *
+			 * This is here for backwards compatibility purposes.
+			 *
+			 * @since 3.0
+			 *
+			 * @param array $order_item_args Order item arguments.
+			 * @param int   $download->ID    Download ID.
+			 */
+			$order_item_args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $order_item_args, $download->ID ), $defaults );
+
+			if ( false !== $args['item_price'] ) {
+				$item_price = $args['item_price'];
+			} else {
+				// Deal with variable pricing.
+
+				if ( $download->has_variable_prices() ) {
+					$prices = $download->get_prices();
+
+					if ( $args['price_id'] && array_key_exists( $args['price_id'], (array) $prices ) ) {
+						$item_price = $prices[ $args['price_id'] ]['amount'];
+					} else {
+						$item_price       = edd_get_lowest_price_option( $download->ID );
+						$args['price_id'] = edd_get_lowest_price_id( $download->ID );
+					}
+				} else {
+					$item_price = edd_get_download_price( $download->ID );
+				}
+			}
+
+			$item_price = edd_sanitize_amount( $item_price );
+			$quantity   = edd_item_quantities_enabled() ? absint( $args['quantity'] ) : 1;
+			$amount     = round( $item_price * $quantity, edd_currency_decimal_filter() );
+
+			// Subtotal needs to be updated with the sanitized amount.
+			$order_item_args['subtotal'] = $amount;
+
+			if ( edd_prices_include_tax() ) {
+				$order_item_args['subtotal'] -= round( $order_item_args['tax'], edd_currency_decimal_filter() );
+			}
+			
+			$total = $order_item_args['subtotal'] - $order_item_args['discount'] + $order_item_args['tax'];
+
+			// Do not allow totals to go negative
+			if ( $total < 0 ) {
+				$total = 0;
+			}
+
+			// Sanitize all the amounts.
+			$order_item_args['amount']   = round( $item_price, edd_currency_decimal_filter() );
+			$order_item_args['subtotal'] = round( $order_item_args['subtotal'], edd_currency_decimal_filter() );
+			$order_item_args['tax']      = round( $order_item_args['tax'], edd_currency_decimal_filter() );
+			$order_item_args['total']    = round( $total, edd_currency_decimal_filter() );
+
+			edd_add_order_item( $order_item_args );
+
+			$subtotal  += (float) ( $order_item_args['subtotal'] - $order_item_args['discount'] );
+			$total_tax += (float) $order_item_args['tax'];
+		}
+	}
 
 	/** Insert order adjustments **************************************************/
 
+	// Calculate order total.
+	$order_total = $subtotal + $total_tax + $total_fees;
 
-	/** Calculate totals **********************************************************/
-	$subtotal = 0.00;
-	$tax = 0.00;
-	$discount = 0.00;
+	edd_update_order( array(
+		'subtotal' => $subtotal,
+		'tax'      => $total_tax,
+		'discount' => $total_discount,
+		'total'    => $order_total
+	) );
 
 	do_action( 'edd_insert_payment', $order_id, $order_data );
 
