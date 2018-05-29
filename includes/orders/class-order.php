@@ -497,7 +497,27 @@ class Order extends Base_Object {
 	 * @return string Tax rate.
 	 */
 	public function get_tax_rate() {
-		return edd_get_order_meta( $this->id, 'tax_rate', true );
+
+		// Default rate
+		$rate = 0;
+
+		// Query for rates
+		$rates = edd_get_order_adjustments( array(
+			'object_id'     => $this->id,
+			'object_type'   => 'order',
+			'type_id'       => 0,
+			'type'          => 'tax',
+			'number'        => 1,
+			'no_found_rows' => true
+		) );
+
+		// Get rate amount
+		if ( ! empty( $rates ) ) {
+			$rate = reset( $rates );
+			$rate = $rate->get_amount();
+		}
+
+		return $rate;
 	}
 
 	/**

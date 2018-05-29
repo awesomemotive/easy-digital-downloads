@@ -26,15 +26,14 @@ $order_id = absint( $_GET['id'] );
 $order    = edd_get_order( $order_id );
 
 // Check that the order exists in the database.
-if ( ! $order ) {
+if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
 $transaction_id = esc_attr( $order->get_transaction_id() );
-$order_items    = $order->get_items();
-$cart_items     = $payment->cart_details;
-$user_id        = $order->get_user_id();
 $order_date     = strtotime( $order->get_date_created() );
+$order_items    = $order->get_items();
+$user_id        = $order->get_user_id();
 $unlimited      = $order->has_unlimited_downloads();
 $address        = $order->get_customer_address();
 $gateway        = $order->get_gateway();
@@ -42,7 +41,13 @@ $currency_code  = $order->get_currency();
 $customer       = edd_get_customer( $order->get_customer_id() );
 $user_info      = edd_get_payment_meta_user_info( $order_id );
 $notes          = edd_get_payment_notes( $order_id );
-?>
+$cart_fees     = edd_get_order_adjustments( array(
+	'object_id'   => $order_id,
+	'object_type' => 'order',
+	'type_id'     => '',
+	'type'        => 'fee'
+) ); ?>
+
 <div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Order %s', 'easy-digital-downloads' ), $order->get_number() ); ?></h2>
 
@@ -363,14 +368,15 @@ $notes          = edd_get_payment_notes( $order_id );
 										<div class="row">
 											<ul class="edd-purchased-files-list-wrapper">
 												<?php
+
 												// Item ID is checked if isset due to the near-1.0 cart data
-												$item_id    = ! empty( $order_item->get_product_id() ) ? $order_item->get_product_id() : $order_item;
-												$price      = ! empty( $order_item->get_amount() ) ? $order_item->get_amount() : false;
-												$item_price = ! empty( $order_item->get_subtotal() ) ? $order_item->get_subtotal() : $price;
-												$subtotal   = ! empty( $order_item->get_subtotal() ) ? $order_item->get_subtotal() : $price;
-												$item_tax   = ! empty( $order_item->get_tax() ) ? $order_item->get_tax() : 0;
-												$price_id   = ! empty( $order_item->get_price_id() ) ? $order_item->get_price_id() : null;
-												$quantity   = ! empty( $order_item->get_quantity() ) && $order_item->get_quantity() > 0 ? $order_item->get_quantity() : 1;
+												$item_id    = $order_item->get_product_id() ? $order_item->get_product_id() : $order_item;
+												$price      = $order_item->get_amount()     ? $order_item->get_amount()     : false;
+												$item_price = $order_item->get_subtotal()   ? $order_item->get_subtotal()   : $price;
+												$subtotal   = $order_item->get_subtotal()   ? $order_item->get_subtotal()   : $price;
+												$item_tax   = $order_item->get_tax()        ? $order_item->get_tax()        : 0;
+												$price_id   = $order_item->get_price_id()   ? $order_item->get_price_id()   : null;
+												$quantity   = $order_item->get_quantity()  && $order_item->get_quantity() > 0 ? $order_item->get_quantity() : 1;
 												$download   = new EDD_Download( $item_id );
 
 												if ( false === $price ) {

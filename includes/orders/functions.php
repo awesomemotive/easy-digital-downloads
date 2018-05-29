@@ -279,20 +279,28 @@ function edd_build_order( $order_data = array() ) {
 
 	/** Insert order meta *****************************************************/
 
+	// Add user info to order meta
 	edd_add_order_meta( $order_id, 'user_info', array(
 		'first_name' => $order_data['user_info']['first_name'],
 		'last_name'  => $order_data['user_info']['last_name'],
 		'address'    => $order_data['user_info']['address']
 	) );
 
+	// Maybe store order tax
 	if ( edd_use_taxes() ) {
-		$country = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
-		$state   = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
-		$zip     = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
-
+		$country  = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
+		$state    = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
+		$zip      = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
 		$tax_rate = edd_get_cart_tax_rate( $country, $state, $zip );
 
-		edd_add_order_meta( $order_id, 'tax_rate', $tax_rate );
+		// Always store order tax, even if empty
+		edd_add_order_adjustment( array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+			'type_id'     => 0,
+			'type'        => 'tax',
+			'amount'      => $tax_rate
+		) );
 	}
 
 	/** Insert order items ****************************************************/
@@ -354,25 +362,27 @@ function edd_build_order( $order_data = array() ) {
 			$order_item_args['amount'] = $order_item_args['item_price'];
 			unset( $order_item_args['item_price'] );
 
+			// Try to use what's passed in via the args
 			if ( false !== $order_item_args['amount'] ) {
 				$item_price = $order_item_args['amount'];
 
 			// Deal with variable pricing.
-			} else {
-				if ( $download->has_variable_prices() ) {
-					$prices = $download->get_prices();
+			} elseif ( $download->has_variable_prices() ) {
+				$prices = $download->get_prices();
 
-					if ( $order_item_args['price_id'] && array_key_exists( $order_item_args['price_id'], (array) $prices ) ) {
-						$item_price = $prices[ $order_item_args['price_id'] ]['amount'];
-					} else {
-						$item_price                  = edd_get_lowest_price_option( $download->ID );
-						$order_item_args['price_id'] = edd_get_lowest_price_id( $download->ID );
-					}
+				if ( $order_item_args['price_id'] && array_key_exists( $order_item_args['price_id'], (array) $prices ) ) {
+					$item_price = $prices[ $order_item_args['price_id'] ]['amount'];
 				} else {
-					$item_price = edd_get_download_price( $download->ID );
+					$item_price                  = edd_get_lowest_price_option( $download->ID );
+					$order_item_args['price_id'] = edd_get_lowest_price_id( $download->ID );
 				}
+
+			// Fallback to getting it directly
+			} else {
+				$item_price = edd_get_download_price( $download->ID );
 			}
 
+			// Sanitize price & quantity
 			$item_price = edd_sanitize_amount( $item_price );
 			$quantity   = edd_item_quantities_enabled()
 				? absint( $order_item_args['quantity'] )
@@ -388,6 +398,7 @@ function edd_build_order( $order_data = array() ) {
 			$total = $order_item_args['subtotal'] - $order_item_args['discount'] + $order_item_args['tax'];
 
 			// Do not allow totals to go negative
+			// TODO: probably remove for handling returns
 			if ( $total < 0 ) {
 				$total = 0;
 			}
@@ -415,14 +426,14 @@ function edd_build_order( $order_data = array() ) {
 	if ( ! empty( $fees ) ) {
 		foreach ( $fees as $key => $fee ) {
 
-			// Add the adjustemnt
+			// Add the adjustement
 			$adjustment_id = edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type_id'     => '',
 				'type'        => 'fee',
 				'description' => $fee['label'],
-				'amount'      => $fee['amount'],
+				'amount'      => $fee['amount']
 			) );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
@@ -454,6 +465,7 @@ function edd_build_order( $order_data = array() ) {
 
 	if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
 		foreach ( $discounts as $discount ) {
+
 			/** @var EDD_Discount $discount */
 			$discount = edd_get_discount_by( 'code', $discount );
 
@@ -490,7 +502,15 @@ function edd_build_order( $order_data = array() ) {
 		'total'        => $order_total
 	) );
 
-	do_action( 'edd_insert_payment', $order_id, $order_data );
+	/**
+	 * Executes after an order has been fully built from the sum of its parts.
+	 *
+	 * @since 3.0
+	 * 
+	 * @param int   $order_id   ID of the new order
+	 * @param array $order_data Array of original order data
+	 */
+	do_action( 'edd_built_order', $order_id, $order_data );
 
 	// Return order ID, or false
 	return ! empty( $order_id )
