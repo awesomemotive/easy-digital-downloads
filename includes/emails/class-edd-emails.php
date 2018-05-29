@@ -369,6 +369,8 @@ class EDD_Emails {
 
 		if ( 'text/html' == $this->content_type || true === $this->html ) {
 			$message = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
+			$message = apply_filters( 'edd_email_template_make_clickable', true ) ? make_clickable( $message ) : $message;
+			$message = str_replace( '&#038;', '&amp;', $message );
 		}
 
 		return $message;

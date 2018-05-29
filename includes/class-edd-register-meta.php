@@ -460,6 +460,11 @@ class EDD_Register_Meta {
 	function sanitize_files( $files = array() ) {
 		$files = $this->remove_blank_rows( $files );
 
+		// Files should always be in array format, even when there are none.
+		if ( ! is_array( $files ) ) {
+			$files = array();
+		}
+
 		// Clean up filenames to ensure whitespaces are stripped
 		foreach( $files as $id => $file ) {
 

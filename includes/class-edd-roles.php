@@ -37,7 +37,6 @@ class EDD_Roles {
 	/**
 	 * Add new shop roles with default WP caps
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
@@ -97,7 +96,6 @@ class EDD_Roles {
 	/**
 	 * Add new shop-specific capabilities
 	 *
-	 * @access public
 	 * @since  1.4.4
 	 * @global WP_Roles $wp_roles
 	 * @return void
@@ -154,7 +152,6 @@ class EDD_Roles {
 	/**
 	 * Gets the core post type capabilities
 	 *
-	 * @access public
 	 * @since  1.4.4
 	 * @return array $capabilities Core post type capabilities
 	 */
@@ -198,7 +195,6 @@ class EDD_Roles {
 	/**
 	 * Map meta caps to primitive caps
 	 *
-	 * @access public
 	 * @since  2.0
 	 * @return array $caps
 	 */
@@ -231,7 +227,6 @@ class EDD_Roles {
 	/**
 	 * Remove core post type capabilities (called on uninstall)
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @return void
 	 */

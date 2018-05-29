@@ -75,8 +75,7 @@ function edd_resend_purchase_receipt( $data ) {
 		}
 	}
 
-	wp_redirect( add_query_arg( array( 'edd-message' => 'email_sent', 'edd-action' => false, 'purchase_id' => false ) ) );
-	exit;
+	edd_redirect( add_query_arg( array( 'edd-message' => 'email_sent', 'edd-action' => false, 'purchase_id' => false ) ) );
 }
 add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
 
@@ -96,6 +95,6 @@ function edd_send_test_email( $data ) {
 	edd_email_test_purchase_receipt();
 
 	// Remove the test email query arg
-	wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
+	edd_redirect( remove_query_arg( 'edd_action' ) );
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );

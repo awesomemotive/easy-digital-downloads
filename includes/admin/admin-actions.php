@@ -78,9 +78,25 @@ function edd_display_product_tabs() {
 		?>
 
 		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action">
-			<?php _e( 'Add New' ); // No text domain so it just follows what WP Core does ?>
+			<?php _e( 'Add New', 'easy-digital-downloads' ); // No text domain so it just follows what WP Core does ?>
 		</a>
 	</h2>
 	<br />
 	<?php
+}
+
+/**
+ * Return array of query arguments that should be removed from URLs.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_admin_removable_query_args() {
+	return apply_filters( 'edd_admin_removable_query_args', array(
+		'edd-action',
+		'edd-notice',
+		'edd-message',
+		'edd-redirect'
+	) );
 }

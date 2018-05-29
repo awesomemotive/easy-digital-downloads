@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Download_History_Export Class
@@ -32,30 +32,25 @@ class EDD_Download_History_Export extends EDD_Export {
 	/**
 	 * Set the export headers
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
-			set_time_limit( 0 );
+		edd_set_time_limit();
 
 		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
 		$year  = isset( $_POST['year']  ) ? absint( $_POST['year']  ) : date( 'Y' );
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_download_history_export_filename', 'edd-export-' . $this->export_type . '-' . $month . '-' . $year ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="' . apply_filters( 'edd_download_history_export_filename', 'edd-export-' . $this->export_type . '-' . $month . '-' . $year ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols All the columns
 	 */
@@ -73,7 +68,6 @@ class EDD_Download_History_Export extends EDD_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 1.4.4
  	 * @global object $edd_logs EDD Logs Object
 	 * @return array $data The data for the CSV file
