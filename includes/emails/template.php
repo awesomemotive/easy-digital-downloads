@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Gets all the email templates that have been registerd. The list is extendable
@@ -239,13 +239,15 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
  * @author Sunny Ratilal
  */
 function edd_render_receipt_in_browser() {
-	if ( ! isset( $_GET['payment_key'] ) )
+	if ( ! isset( $_GET['payment_key'] ) ) {
 		wp_die( __( 'Missing purchase key.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
+	}
 
 	$key = urlencode( $_GET['payment_key'] );
 
 	ob_start();
-	//Disallows caching of the page
+
+	// Disallows caching of the page
 	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 	header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 	header("Cache-Control: post-check=0, pre-check=0", false);

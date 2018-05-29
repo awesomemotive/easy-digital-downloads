@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_process_gateway_select( $data ) {
 	if( isset( $_POST['gateway_submit'] ) ) {
-		wp_redirect( add_query_arg( 'payment-mode', $_POST['payment-mode'] ) ); exit;
+		edd_redirect( add_query_arg( 'payment-mode', $_POST['payment-mode'] ) );
 	}
 }
 add_action( 'edd_gateway_select', 'edd_process_gateway_select' );

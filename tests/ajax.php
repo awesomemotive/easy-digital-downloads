@@ -21,12 +21,14 @@ class Tests_AJAX extends WP_UnitTestCase {
 		);
 
 		foreach ( $_actions as $action ) {
-			if ( function_exists( 'wp_ajax_' . $action ) )
+			if ( function_exists( 'wp_ajax_' . $action ) ) {
 				add_action( 'wp_ajax_' . $action, $action, 1 );
+			}
 		}
 
-		if ( ! defined( 'DOING_AJAX' ) )
+		if ( ! defined( 'DOING_AJAX' ) ) {
 			define( 'DOING_AJAX', true );
+		}
 		set_current_screen( 'ajax' );
 
 		add_action( 'clear_auth_cookie', array( $this, 'logout' ) );
@@ -48,8 +50,9 @@ class Tests_AJAX extends WP_UnitTestCase {
 	public function logout() {
 		unset( $GLOBALS['current_user'] );
 		$cookies = array(AUTH_COOKIE, SECURE_AUTH_COOKIE, LOGGED_IN_COOKIE, USER_COOKIE, PASS_COOKIE);
-		foreach ( $cookies as $c )
+		foreach ( $cookies as $c ) {
 			unset( $_COOKIE[ $c ] );
+		}
 	}
 
 	protected function _setRole( $role ) {
@@ -74,8 +77,9 @@ class Tests_AJAX extends WP_UnitTestCase {
 		// Save the output
 		$buffer = ob_get_clean();
 
-		if ( ! empty( $buffer ) )
+		if ( ! empty( $buffer ) ) {
 			$this->_last_response = $buffer;
+		}
 
 		return $buffer;
 	}
@@ -136,7 +140,7 @@ class Tests_AJAX extends WP_UnitTestCase {
 			)
 		);
 
-		$out = $this->_handleAjax( 'edd_add_to_cart' );
+		$this->_handleAjax( 'edd_add_to_cart' );
 		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
 	}
 
@@ -239,6 +243,5 @@ class Tests_AJAX extends WP_UnitTestCase {
 		// Should return true but should not set a transient
 		$this->assertTrue( edd_test_ajax_works() );
 		$this->assertEmpty( get_transient( '_edd_ajax_works' ) );
-
 	}
 }

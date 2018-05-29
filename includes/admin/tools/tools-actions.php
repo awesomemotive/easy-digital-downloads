@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Tools Actions
  *
@@ -13,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
  */
+
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Register the recount batch processor

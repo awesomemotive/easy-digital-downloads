@@ -181,7 +181,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				<?php if ( ! empty( $gateways ) ) : ?>
 
-					<span id="edd-payment-gateway-filter">
+					<span id="edd-gateway-filter">
 						<?php echo EDD()->html->select( array(
 							'options'          => $gateways,
 							'name'             => 'gateway',
@@ -194,7 +194,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				<?php endif; ?>
 
-				<span id="edd-payment-after-core-filters">
+				<span id="edd-after-core-filters">
 					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
 					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>

@@ -10,7 +10,7 @@
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Process the payment details edit
@@ -287,8 +287,13 @@ function edd_update_payment_details( $data ) {
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-updated&id=' . $payment_id ) );
-	exit;
+	edd_redirect( add_query_arg( array(
+		'post_type'   => 'download',
+		'page'        => 'edd-payment-history',
+		'view'        => 'view-order-details',
+		'edd-message' => 'payment-updated',
+		'id'          => $payment_id
+	), admin_url( 'edit.php' ) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
@@ -309,7 +314,7 @@ function edd_trigger_purchase_delete( $data ) {
 		}
 
 		edd_delete_purchase( $payment_id );
-		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
 		edd_die();
 	}
 }

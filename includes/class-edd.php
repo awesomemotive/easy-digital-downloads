@@ -420,6 +420,9 @@ final class Easy_Digital_Downloads {
 	 */
 	private function setup_backcompat() {
 
+		// PHP functions
+		require_once EDD_PLUGIN_DIR . 'includes/compat-functions.php';
+
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
