@@ -1096,10 +1096,11 @@ function edd_tools_import_export_process_import() {
 
 	}
 
-
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&edd-message=settings-imported' ) );
-	exit;
-
+	edd_redirect( add_query_arg( array(
+		'post_type'   => 'download',
+		'page'        => 'edd-tools',
+		'edd-message' => 'settings-imported'
+	), admin_url( 'edit.php' ) ) );
 }
 
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
@@ -1172,9 +1173,11 @@ function edd_handle_submit_debug_log() {
 		// Clear the debug log.
 		$edd_logs->clear_log_file();
 
-		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=debug_log' ) );
-		exit;
-
+		edd_redirect( add_query_arg( array(
+			'post_type' => 'download',
+			'page'      => 'edd-tools',
+			'tab'       => 'debug_log'
+		), admin_url( 'edit.php' ) ) );
 	}
 }
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );

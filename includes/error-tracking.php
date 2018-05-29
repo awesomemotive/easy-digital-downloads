@@ -10,8 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Print Errors
