@@ -1395,6 +1395,8 @@ jQuery(document).ready(function ($) {
 			return;
 		}
 
+		container.addClass( 'searching' );
+
 		clearTimeout(typingTimer);
 
 		typingTimer = setTimeout( function() {
@@ -1409,8 +1411,7 @@ jQuery(document).ready(function ($) {
 					variations: variations
 				},
 
-				beforeSend: function(){
-					container.addClass( 'searching' );
+				beforeSend: function() {
 					select.closest('ul.chosen-results').empty();
 				},
 
@@ -1431,7 +1432,7 @@ jQuery(document).ready(function ($) {
 					var val = element.val();
 
 					// Update the options
-					container.trigger('chosen:updated');
+					select.trigger('chosen:updated');
 
 					element.val(val);
 				}
