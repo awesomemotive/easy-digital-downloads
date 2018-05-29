@@ -76,7 +76,13 @@ final class Customers extends Base {
 		 *
 		 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6447
 		 */
-		$query = "ALTER TABLE {$this->table_name} MODIFY COLUMN email VARCHAR(100);";
+		$query = "
+			ALTER TABLE {$this->table_name} MODIFY `email` VARCHAR(100) NOT NULL default '';
+			ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
+			ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'
+			ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
+			ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00';
+		";
 		$this->get_db()->query( $query );
 	}
 }
