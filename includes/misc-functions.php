@@ -1157,6 +1157,56 @@ function edd_doing_cron() {
 }
 
 /**
+ * Abstraction for WordPress AJAX checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific AJAX related requests. You probably won't want to use it until then.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_ajax() {
+
+	// Bail if not doing WordPress AJAX (>4.8.0)
+	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
+		return true;
+
+	// Bail if not doing WordPress AJAX (<4.8.0)
+	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
+}
+
+/**
+ * Abstraction for WordPress autosave checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific autosave related requests. You probably won't want to use it until then.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_autosave() {
+
+	// Bail if not doing WordPress autosave
+	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
+		return true;
+
+	// Bail if not doing WordPress autosave
+	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
+}
+
+/**
  * Get the bot name. Usually "EDD Bot" unless filtered.
  *
  * @since 3.0

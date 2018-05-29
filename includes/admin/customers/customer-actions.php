@@ -162,7 +162,7 @@ function edd_edit_customer( $args = array() ) {
 
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( edd_doing_ajax() ) {
 		wp_send_json( $output );
 	}
 
@@ -175,7 +175,7 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  *
  * @since  2.6
  * @param  array $args  Array of arguments: nonce, customer id, and email address
- * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
+ * @return mixed        Echos JSON if doing AJAX. Returns array of success (bool) and message (string) if not AJAX.
  */
 function edd_add_customer_email( $args = array() ) {
 	$customer_edit_role = edd_get_edit_customers_role();
@@ -199,21 +199,18 @@ function edd_add_customer_email( $args = array() ) {
 		}
 
 	} else if ( ! wp_verify_nonce( $args['_wpnonce'], 'edd-add-customer-email' ) ) {
-
 		$output = array(
 			'success' => false,
 			'message' => __( 'Nonce verification failed.', 'easy-digital-downloads' ),
 		);
 
 	} else if ( ! is_email( $args['email'] ) ) {
-
 		$output = array(
 			'success' => false,
 			'message' => __( 'Invalid email address.', 'easy-digital-downloads' ),
 		);
 
 	} else {
-
 		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
 		$primary     = 'true' === $args['primary'] ? true : false;
@@ -222,14 +219,12 @@ function edd_add_customer_email( $args = array() ) {
 		if ( false === $customer->add_email( $email, $primary ) ) {
 
 			if ( in_array( $email, $customer->emails ) ) {
-
 				$output = array(
 					'success'  => false,
 					'message'  => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),
 				);
 
 			} else {
-
 				$output = array(
 					'success' => false,
 					'message' => __( 'Email address is already associated with another customer.', 'easy-digital-downloads' ),
@@ -237,7 +232,6 @@ function edd_add_customer_email( $args = array() ) {
 			}
 
 		} else {
-
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id . '&edd-message=email-added' );
 			$output = array(
 				'success'  => true,
@@ -259,7 +253,7 @@ function edd_add_customer_email( $args = array() ) {
 
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( edd_doing_ajax() ) {
 		wp_send_json( $output );
 	}
 
@@ -479,7 +473,7 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 
 	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( edd_doing_ajax() ) {
 		wp_send_json( $output );
 	}
 

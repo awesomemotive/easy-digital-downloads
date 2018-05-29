@@ -378,7 +378,7 @@ function edd_trigger_upgrades() {
 	update_option( 'edd_version', EDD_VERSION );
 
 	// Let AJAX know that the upgrade is complete
-	if ( DOING_AJAX ) {
+	if ( edd_doing_ajax() ) {
 		die( 'complete' );
 	}
 }

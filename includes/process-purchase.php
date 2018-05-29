@@ -803,7 +803,7 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Initialize user
 	$user    = false;
-	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$is_ajax = edd_doing_ajax();
 
 	if ( $is_ajax ) {
 		// Do not create or login the user during the ajax submission (check for errors only)

@@ -516,15 +516,15 @@ class EDD_Cart {
  	 * @return string $remove_url URL to remove the cart item
 	 */
 	public function remove_item_url( $cart_key ) {
-		global $wp_query;
 
-		if ( defined( 'DOING_AJAX' ) ) {
-			$current_page = edd_get_checkout_uri();
-		} else {
-			$current_page = edd_get_current_page_url();
-		}
+		$current_page = edd_doing_ajax()
+			? edd_get_checkout_uri()
+			: edd_get_current_page_url();
 
-		$remove_url = edd_add_cache_busting( add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page ) );
+		$remove_url = edd_add_cache_busting( add_query_arg( array(
+			'cart_item'  => $cart_key,
+			'edd_action' => 'remove'
+		), $current_page ) );
 
 		return apply_filters( 'edd_remove_item_url', $remove_url );
 	}
@@ -538,15 +538,16 @@ class EDD_Cart {
 	 * @return string $remove_url URL to remove the cart item
 	 */
 	public function remove_fee_url( $fee_id = '' ) {
-		global $post;
 
-		if ( defined('DOING_AJAX') ) {
-			$current_page = edd_get_checkout_uri();
-		} else {
-			$current_page = edd_get_current_page_url();
-		}
+		$current_page = edd_doing_ajax()
+			? edd_get_checkout_uri()
+			: edd_get_current_page_url();
 
-		$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => 'true' ), $current_page );
+		$remove_url = add_query_arg( array(
+			'fee'        => $fee_id,
+			'edd_action' => 'remove_fee',
+			'nocache'    => 'true'
+		), $current_page );
 
 		return apply_filters( 'edd_remove_fee_url', $remove_url );
 	}
@@ -558,6 +559,7 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function empty_cart() {
+
 		// Remove cart contents.
 		EDD()->session->set( 'edd_cart', NULL );
 

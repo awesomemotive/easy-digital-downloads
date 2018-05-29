@@ -1578,12 +1578,12 @@ class EDD_Discount {
 		if ( $this->exists() ) {
 
 			if ( $this->is_expired( $update ) ) {
-				if ( defined( 'DOING_AJAX' ) && $set_error ) {
+				if ( edd_doing_ajax() && $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 				}
 			} elseif ( $this->status == 'active' ) {
 				$return = true;
-			} elseif( defined( 'DOING_AJAX' ) && $set_error ) {
+			} elseif ( edd_doing_ajax() && $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
 			}
 		}
