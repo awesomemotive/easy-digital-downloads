@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Purchase Link Shortcode
@@ -176,9 +176,8 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	$redirect = '';
 
 	extract( shortcode_atts( array(
-			'redirect' => $redirect
-		), $atts, 'edd_login' )
-	);
+		'redirect' => $redirect
+	), $atts, 'edd_login' ) );
 
 	if ( empty( $redirect ) ) {
 		$login_redirect_page = edd_get_option( 'login_redirect_page', '' );
@@ -224,9 +223,9 @@ function edd_register_form_shortcode( $atts, $content = null ) {
 	}
 
 	extract( shortcode_atts( array(
-			'redirect' => $redirect
-		), $atts, 'edd_register' )
-	);
+		'redirect' => $redirect
+	), $atts, 'edd_register' ) );
+
 	return edd_register_form( $redirect );
 }
 add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
@@ -567,15 +566,17 @@ function edd_downloads_query( $atts, $content = null ) {
 		}
 	}
 
-	if( ! empty( $atts['ids'] ) )
+	if( ! empty( $atts['ids'] ) ) {
 		$query['post__in'] = explode( ',', $atts['ids'] );
+	}
 
-	if ( get_query_var( 'paged' ) )
+	if ( get_query_var( 'paged' ) ) {
 		$query['paged'] = get_query_var('paged');
-	else if ( get_query_var( 'page' ) )
+	} else if ( get_query_var( 'page' ) ) {
 		$query['paged'] = get_query_var( 'page' );
-	else
+	} else {
 		$query['paged'] = 1;
+	}
 
 	// Allow the query to be manipulated by other plugins
 	$query = apply_filters( 'edd_downloads_query', $query, $atts );
@@ -663,7 +664,7 @@ add_shortcode( 'edd_downloads', 'edd_downloads_query' );
  */
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-		'id'       => NULL,
+		'id'       => null,
 		'price_id' => false,
 	), $atts, 'edd_price' ) );
 
@@ -747,9 +748,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	 * Or if user is logged out and purchase was made as a guest, the purchase session is checked for
 	 *
 	 * Or if user is logged in and the user can view sensitive shop data
-	 *
 	 */
-
 
 	if ( ! $user_can_view ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
@@ -892,14 +891,15 @@ function edd_process_profile_editor_updates( $data ) {
 	}
 
 	// Update the user
-	$meta    = update_user_meta( $user_id, '_edd_user_address', $address );
+	update_user_meta( $user_id, '_edd_user_address', $address );
+
 	$updated = wp_update_user( $userdata );
 
 	// Possibly update the customer
 	$customer    = new EDD_Customer( $user_id, true );
 	if ( $customer->email === $email || ( is_array( $customer->emails ) && in_array( $email, $customer->emails ) ) ) {
 		$customer->set_primary_email( $email );
-	};
+	}
 
 	if ( $customer->id > 0 ) {
 		$update_args = array(
@@ -911,8 +911,8 @@ function edd_process_profile_editor_updates( $data ) {
 
 	if ( $updated ) {
 		do_action( 'edd_user_profile_updated', $user_id, $userdata );
+
 		edd_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
-		edd_die();
 	}
 }
 add_action( 'edd_edit_user_profile', 'edd_process_profile_editor_updates' );
@@ -948,7 +948,7 @@ function edd_process_profile_editor_remove_email() {
 		$url = add_query_arg( 'updated', true, $_GET['redirect'] );
 
 		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 

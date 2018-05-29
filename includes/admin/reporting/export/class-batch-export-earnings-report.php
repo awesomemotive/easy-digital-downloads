@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Earnings_Report_Export Class
@@ -39,9 +39,10 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		edd_set_time_limit();
 
 		nocache_headers();
+
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_earnings_report_export_filename', 'edd-export-' . $this->export_type . '-' . date( 'm' ) . '-' . date( 'Y' ) ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="' . apply_filters( 'edd_earnings_report_export_filename', 'edd-export-' . $this->export_type . '-' . date( 'm' ) . '-' . date( 'Y' ) ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 	/**
@@ -67,7 +68,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$cols[] = __( 'Net Activity', 'easy-digital-downloads' );
 
 		return $cols;
-
 	}
 
 	/**
