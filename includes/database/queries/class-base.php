@@ -591,7 +591,7 @@ class Base extends \EDD\Database\Base {
 
 		// Not a count query
 		} elseif ( is_array( $item_ids ) ) {
-			if ( ! empty( $this->query_vars['number'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
+			if ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) {
 				/**
 				 * Filters the query used to retrieve found item count.
 				 *
