@@ -49,7 +49,7 @@ final class Customers extends Base {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) NOT NULL AUTO_INCREMENT,
 			user_id bigint(20) NOT NULL,
-			email varchar(50) NOT NULL,
+			email varchar(100) NOT NULL,
 			name mediumtext NOT NULL,
 			status varchar(20) NOT NULL default '',
 			purchase_value mediumtext NOT NULL,
