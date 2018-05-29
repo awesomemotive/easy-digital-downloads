@@ -37,7 +37,7 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201805290002;
 
 	/**
 	 * Setup the database schema
@@ -68,10 +68,16 @@ final class Customers extends Base {
 	 *
 	 * @access protected
 	 * @since 3.0
-	 * @return void
 	 */
 	protected function upgrade() {
 
+		/**
+		 * Prior to EDD 3.0, the customers table had a column length of less than 100.
+		 *
+		 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6447
+		 */
+		$query = "ALTER TABLE {$this->table_name} MODIFY COLUMN email VARCHAR(100);";
+		$this->get_db()->query( $query );
 	}
 }
 endif;
