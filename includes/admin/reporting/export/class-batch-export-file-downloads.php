@@ -49,26 +49,22 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Get the Export Data
+	 * Get the Export Data.
 	 *
 	 * @since 2.4
- 	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
-
-		global $edd_logs;
-
 		$data = array();
 
 		$args = array(
-			'log_type'       => 'file_download',
-			'posts_per_page' => 30,
-			'paged'          => $this->step
+			'number' => 30,
+			'offset' => ( $this->step * 30 ) - 30
 		);
 
-		if( ! empty( $this->start ) || ! empty( $this->end ) ) {
-
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
@@ -76,41 +72,38 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 					'inclusive' => true
 				)
 			);
-
 		}
 
 		if ( 0 !== $this->download_id ) {
-			$args['post_parent'] = $this->download_id;
+			$args['download_id'] = $this->download_id;
 		}
 
-		$logs = $edd_logs->get_connected_logs( $args );
+		$logs = edd_get_file_download_logs( $args );
 
-		if ( $logs ) {
-			foreach ( $logs as $log ) {
-				$user_info = get_post_meta( $log->ID, '_edd_log_user_info', true );
-				$files     = edd_get_download_files( $log->post_parent );
-				$file_id   = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
-				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-				$user      = get_userdata( $user_info['id'] );
-				$user      = $user ? $user->user_login : $user_info['email'];
+		foreach ( $logs as $log ) {
+			/** @var EDD\Logs\File_Download_Log $log */
 
-				$data[]    = array(
-					'date'     => $log->post_date,
-					'user'     => $user,
-					'ip'       => get_post_meta( $log->ID, '_edd_log_ip', true ),
-					'download' => get_the_title( $log->post_parent ),
-					'file'     => $file_name
-				);
-			}
+			$files     = edd_get_download_files( $log->get_download_id() );
+			$file_id   = $log->get_file_id();
+			$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+			$user      = get_userdata( $log->get_user_id() );
+			$user      = $user ? $user->user_login : $user->user_email;
 
-			$data = apply_filters( 'edd_export_get_data', $data );
-			$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
-
-			return $data;
+			$data[]    = array(
+				'date'     => $log->get_date_created(),
+				'user'     => $user,
+				'ip'       => $log->get_ip(),
+				'download' => get_the_title( $log->get_download_id() ),
+				'file'     => $file_name
+			);
 		}
 
-		return false;
+		$data = apply_filters( 'edd_export_get_data', $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
 
+		return ! empty( $data )
+			? $data
+			: false;
 	}
 
 	/**
