@@ -48,12 +48,12 @@ class Structured_Data {
 	/**
 	 * Get raw data. This data is not formatted in any way.
 	 *
-	 * @access public
+	 * @access private
 	 * @since 3.0
 	 *
 	 * @return array Raw data.
 	 */
-	public function get_data() {
+	private function get_data() {
 		/**
 		 * Allow data to be filtered being returned.
 		 *
@@ -67,14 +67,14 @@ class Structured_Data {
 	/**
 	 * Set structured data. This is then output in `wp_footer`.
 	 *
-	 * @access public
+	 * @access private
 	 * @since 3.0
 	 *
 	 * @param array $data JSON-LD structured data.
 	 *
 	 * @return bool True if data was set, false otherwise.
 	 */
-	public function set_data( $data = null ) {
+	private function set_data( $data = null ) {
 		if ( is_null( $data ) || empty( $data ) || ! is_array( $data ) ) {
 			return false;
 		}
@@ -99,7 +99,7 @@ class Structured_Data {
 	/**
 	 * Generate the structured data for a given context.
 	 *
-	 * @access public
+	 * @access private
 	 * @since 3.0
 	 *
 	 * @param mixed string|false $context Default empty as the class figures out what the context is automatically.
@@ -107,7 +107,7 @@ class Structured_Data {
 	 *
 	 * @return string
 	 */
-	public function generate_structured_data( $context = false, $args = null ) {
+	private function generate_structured_data( $context = false, $args = null ) {
 		if ( is_singular( 'download' ) || 'download' === $context ) {
 			$this->generate_download_data( $args );
 		}
@@ -131,14 +131,14 @@ class Structured_Data {
 	 *
 	 * @param mixed int|EDD_Download Download ID or EDD_Download object to generate data for.
 	 *
-	 * @return bool
+	 * @return bool True if data generated successfully, false otherwise.
 	 */
-	public function generate_download_data( $download = false ) {
+	private function generate_download_data( $download = false ) {
 		if ( false === $download ) {
 			global $post;
-			$download = new EDD_Download( $post->ID );
+			$download = edd_get_download( $post->ID );
 		} elseif ( is_int( $download ) ) {
-			$download = new EDD_Download( $download );
+			$download = edd_get_download( $download );
 		} else {
 			return false;
 		}
@@ -209,6 +209,8 @@ class Structured_Data {
 		$data = apply_filters( 'edd_generate_download_structured_data', $data );
 
 		$this->set_data( $data );
+
+		return true;
 	}
 
 	/**
@@ -222,13 +224,18 @@ class Structured_Data {
 	 * @return array Sanitized data.
 	 */
 	private function sanitize_data( $data ) {
+		$sanitized = array();
+
+		// Bail with an empty array if data does not exist.
 		if ( ! $data || ! is_array( $data ) ) {
-			return array();
+			return $sanitized;
 		}
 
 		foreach ( $data as $key => $value ) {
 			$key               = sanitize_text_field( $key );
-			$sanitized[ $key ] = is_array( $value ) ? $this->sanitize_data( $value ) : sanitize_text_field( $value );
+			$sanitized[ $key ] = is_array( $value )
+				? $this->sanitize_data( $value )
+				: sanitize_text_field( $value );
 		}
 
 		return $sanitized;
@@ -262,6 +269,10 @@ class Structured_Data {
 	 */
 	public function output_structured_data() {
 		$this->data = $this->sanitize_data( $this->data );
+
+		if ( empty( $this->data ) ) {
+			return false;
+		}
 
 		echo '<script type="application/ld+json">' . $this->encoded_data() . '</script>';
 
