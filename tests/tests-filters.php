@@ -15,10 +15,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_before_download_content', $wp_filter['the_content'][10] );
 		$this->assertarrayHasKey( 'edd_after_download_content', $wp_filter['the_content'][10] );
 		$this->assertarrayHasKey( 'edd_filter_success_page_content', $wp_filter['the_content'][99999] );
-		$this->assertarrayHasKey( 'edd_microdata_description', $wp_filter['the_content'][10] );
-		$this->assertarrayHasKey( 'edd_microdata_title', $wp_filter['the_title'][10] );
-		$this->assertArrayHasKey( 'edd_microdata_wrapper_open', $wp_filter['loop_start'][10] );
-		$this->assertArrayHasKey( 'edd_microdata_wrapper_close', $wp_filter['loop_end'][10] );
 	}
 
 	public function test_wp_head() {

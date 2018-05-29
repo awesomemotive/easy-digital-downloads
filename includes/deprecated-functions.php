@@ -697,6 +697,170 @@ function edd_get_paypal_page_style() {
 }
 
 /**
+ * Should we add schema.org microdata?
+ *
+ * @since 1.7
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @return bool
+ */
+function edd_add_schema_microdata() {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	// Don't modify anything until after wp_head() is called
+	$ret = (bool)did_action( 'wp_head' );
+	return apply_filters( 'edd_add_schema_microdata', $ret );
+}
+
+/**
+ * Add Microdata to download titles
+ *
+ * @since 1.5
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @param string $title Post Title
+ * @param int $id Post ID
+ * @return string $title New title
+ */
+function edd_microdata_title( $title, $id = 0 ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	if ( ! edd_add_schema_microdata() || ! is_object( $post ) ) {
+		return $title;
+	}
+
+	if ( $post->ID == $id && is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
+		$title = '<span itemprop="name">' . $title . '</span>';
+	}
+
+	return $title;
+}
+
+/**
+ * Start Microdata to wrapper download
+ *
+ * @since 2.3
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @return void
+ */
+function edd_microdata_wrapper_open( $query ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	static $microdata_open = NULL;
+
+	if ( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $query ) ) {
+		return;
+	}
+
+	if ( $query && ! empty( $query->query['post_type'] ) && $query->query['post_type'] == 'download' && is_singular( 'download' ) && $query->is_main_query() ) {
+		$microdata_open = true;
+		echo '<div itemscope itemtype="http://schema.org/Product">';
+	}
+}
+
+/**
+ * End Microdata to wrapper download
+ *
+ * @since 2.3
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @return void
+ */
+function edd_microdata_wrapper_close() {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	static $microdata_close = NULL;
+
+	if ( ! edd_add_schema_microdata() || true === $microdata_close || ! is_object( $post ) ) {
+		return;
+	}
+
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+		$microdata_close = true;
+		echo '</div>';
+	}
+}
+
+/**
+ * Add Microdata to download description
+ *
+ * @since 1.5
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @param $content
+ * @return mixed|void New title
+ */
+function edd_microdata_description( $content ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	static $microdata_description = NULL;
+
+	if( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
+		return $content;
+	}
+
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+		$microdata_description = true;
+		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
+	}
+	return $content;
+}
+
+/**
+ * Output schema markup for single price products.
+ *
+ * @since  2.6.14
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @param  int $download_id The download being output.
+ * @return void
+ */
+function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	// Bail if the product has variable pricing, or if we aren't showing schema data.
+	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
+		return;
+	}
+
+	// Grab the information we need.
+	$download = new EDD_Download( $download_id );
+	?>
+    <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<meta itemprop="price" content="<?php esc_attr_e( $download->price ); ?>" />
+		<meta itemprop="priceCurrency" content="<?php esc_attr_e( edd_get_currency() ); ?>" />
+	</span>
+	<?php
+}
+
+/**
  * Renders the Logs tab in the Reports screen.
  *
  * @since 1.3
