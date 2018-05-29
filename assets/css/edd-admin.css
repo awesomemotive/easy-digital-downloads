@@ -186,10 +186,6 @@ a.edd-delete:hover {
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 
-#edd-add-ons h2.nav-tab-wrapper {
-	position: relative;
-}
-
 .edd-tab-span {
 	top: -6px;
 	right: 0;
@@ -197,9 +193,6 @@ a.edd-delete:hover {
 }
 .edd-add-ons-footer {
 	padding-top: 10px;
-}
-#edd-add-ons h2 {
-	margin: 0 0 15px;
 }
 .edd-add-ons-view-wrapper {
 	height: 50px;
@@ -379,23 +372,38 @@ textarea[name="edd-note"] {
 	margin: 2px 0 0 0;
 }
 
-/* Payment History Styles
+/* Nav Tab Styles
 -------------------------------------------------------------- */
-.edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-addons .wrap .wp-heading-inline {
-	display: none;
+
+#edd-add-ons {
+	margin-top: 29px;
 }
 
+h2.nav-tab-wrapper.edd-tab-clear {
+	margin: -20px 0 0 0;
+}
+
+.edit-tags-php.post-type-download .wrap > .wp-heading-inline,
+.edit-php.post-type-download .wrap .wp-heading-inline,
+.download_page_edd-addons .wrap .wp-heading-inline,
+.edit-tags-php.post-type-download .wrap > .subtitle,
+.edit-php.post-type-download .wrap > .subtitle,
+.download_page_edd-addons .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .page-title-action,
 .download_page_edd-addons .wrap > .page-title-action {
 	display: none;
 }
 
+.edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
-	top: 7px;
-	margin-left: 5px;
+	top: 3px;
+	margin-left: 10px;
+	line-height: 24px;
 }
+
+/* Payment History Styles
+-------------------------------------------------------------- */
 
 #edd-payments-filter ul.subsubsub {
 	margin-bottom: 8px;
