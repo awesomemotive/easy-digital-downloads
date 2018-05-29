@@ -5,8 +5,8 @@
  * This class handles payment export in batches
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
@@ -83,6 +83,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * Get the Export Data
 	 *
 	 * @since 2.4
+	 * @since 3.0 Updated to use new query methods.
 	 *
 	 * @return array $data The data for the CSV file
 	 */
@@ -90,11 +91,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		$data = array();
 
 		$args = array(
-			'number'   => 30,
-			'page'     => $this->step,
-			'status'   => $this->status,
-			'order'    => 'ASC',
-			'orderby'  => 'date'
+			'number'  => 30,
+			'offset'  => ( $this->step * 30 ) - 30,
+			'status'  => $this->status,
+			'order'   => 'ASC',
+			'orderby' => 'date',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -107,153 +108,141 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			);
 		}
 
-		$payments = edd_get_payments( $args );
+		$orders = edd_get_orders( $args );
 
-		if ( $payments ) {
-			foreach ( $payments as $payment ) {
-				$payment = new EDD_Payment( $payment->ID );
-				$payment_meta   = $payment->payment_meta;
-				$user_info      = $payment->user_info;
-				$downloads      = $payment->cart_details;
-				$total          = $payment->total;
-				$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
-				$products       = '';
-				$products_raw   = '';
-				$skus           = '';
+		foreach ( $orders as $order ) {
+			/** @var EDD\Orders\Order $order */
 
-				if ( $downloads ) {
-					foreach ( $downloads as $key => $download ) {
+			$user_info    = $order->get_user_info();
+			$total        = $order->get_total();
+			$user_id      = $order->get_id() && $order->get_id() != - 1 ? $order->get_id() : $user_info['email'];
+			$products     = '';
+			$products_raw = '';
+			$skus         = '';
 
-						// Download ID
-						$id  = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
-						$qty = isset( $download['quantity'] ) ? $download['quantity'] : 1;
+			$items = $order->get_items();
+			$adjustments = $order->get_adjustments();
 
-						if ( isset( $download['price'] ) ) {
-							$price = $download['price'];
-						} else {
-							// If the download has variable prices, override the default price
-							$price_override = isset( $payment_meta['cart_details'] ) ? $download['price'] : null;
-							$price = edd_get_download_final_price( $id, $user_info, $price_override );
-						}
+			foreach ( $items as $key => $item ) {
+				/** @var EDD\Orders\Order_Item $item */
+				
+				// Setup item information.
+				$id       = $item->get_product_id();
+				$qty      = $item->get_quantity();
+				$price    = $item->get_amount();
+				$tax      = $item->get_tax();
+				$price_id = $item->get_price_id();
+				$skus     = '';
 
-						$download_tax      = isset( $download['tax'] ) ? $download['tax'] : 0;
-						$download_price_id = isset( $download['item_number']['options']['price_id'] ) ? absint( $download['item_number']['options']['price_id'] ) : false;
+				/* Set up verbose product column */
 
-						/* Set up verbose product column */
+				$products .= html_entity_decode( get_the_title( $id ) );
 
-						$products .= html_entity_decode( get_the_title( $id ) );
+				if ( $qty > 1 ) {
+					$products .= html_entity_decode( ' (' . $qty . ')' );
+				}
 
-						if ( $qty > 1 ) {
-							$products .= html_entity_decode( ' (' . $qty . ')' );
-						}
+				$products .= ' - ';
 
-						$products .= ' - ';
+				if ( edd_use_skus() ) {
+					$sku = edd_get_download_sku( $id );
 
-						if ( edd_use_skus() ) {
-							$sku = edd_get_download_sku( $id );
-
-							if ( ! empty( $sku ) ) {
-								$skus .= $sku;
-							}
-						}
-
-						if ( isset( $downloads[ $key ]['item_number'] ) && isset( $downloads[ $key ]['item_number']['options'] ) ) {
-							$price_options = $downloads[ $key ]['item_number']['options'];
-
-							if ( isset( $price_options['price_id'] ) && ! is_null( $price_options['price_id'] ) ) {
-								$products .= html_entity_decode( edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID ) ) . ' - ';
-							}
-						}
-
-						$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
-
-						if ( $key != ( count( $downloads ) -1 ) ) {
-							$products .= ' / ';
-
-							if ( edd_use_skus() ) {
-								$skus .= ' / ';
-							}
-						}
-
-						/* Set up raw products column - Nothing but product names */
-						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $download_tax . '}';
-
-						// if we have a Price ID, include it.
-						if ( false !== $download_price_id ) {
-							$products_raw .= '{' . $download_price_id . '}';
-						}
-
-						if ( $key != ( count( $downloads ) -1 ) ) {
-							$products_raw .= ' / ';
-						}
+					if ( ! empty( $sku ) ) {
+						$skus .= $sku;
 					}
 				}
 
-				if ( is_numeric( $user_id ) ) {
-					$user = get_userdata( $user_id );
-				} else {
-					$user = false;
+				if ( 0 < $item->get_price_id() ) {
+					$products .= html_entity_decode( edd_get_price_option_name( $id, $item->get_price_id(), $order->get_id() ) ) . ' - ';
 				}
 
-				$data[] = array(
-					'id'           => $payment->ID,
-					'seq_id'       => $payment->number,
-					'email'        => $payment_meta['email'],
-					'customer_id'  => $payment->customer_id,
-					'first'        => $user_info['first_name'],
-					'last'         => $user_info['last_name'],
-					'address1'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-					'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-					'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-					'state'        => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
-					'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
-					'zip'          => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
-					'products'     => $products,
-					'products_raw' => $products_raw,
-					'skus'         => $skus,
-					'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
-					'tax'          => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
-					'discount'     => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
-					'gateway'      => edd_get_gateway_admin_label( edd_get_payment_meta( $payment->ID, '_edd_payment_gateway', true ) ),
-					'trans_id'     => $payment->transaction_id,
-					'key'          => $payment_meta['key'],
-					'date'         => $payment->date,
-					'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
-					'currency'     => $payment->currency,
-					'ip'           => $payment->ip,
-					'mode'         => $payment->get_meta( '_edd_payment_mode', true ),
-					'status'       => ( 'publish' === $payment->status ) ? 'complete' : $payment->status,
-					'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
-				);
+				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
 
+				if ( $key != ( count( $items ) -1 ) ) {
+					$products .= ' / ';
+
+					if ( edd_use_skus() ) {
+						$skus .= ' / ';
+					}
+				}
+
+				/* Set up raw products column - Nothing but product names */
+				$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $tax . '}';
+
+				// if we have a Price ID, include it.
+				if ( false !== $price_id ) {
+					$products_raw .= '{' . $price_id . '}';
+				}
+
+				if ( $key != ( count( $items ) -1 ) ) {
+					$products_raw .= ' / ';
+				}
 			}
 
-			$data = apply_filters( 'edd_export_get_data', $data );
-			$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
+			if ( is_numeric( $user_id ) ) {
+				$user = get_userdata( $user_id );
+			} else {
+				$user = false;
+			}
 
-			return $data;
+			$data[] = array(
+				'id'           => $order->get_id(),
+				'seq_id'       => $order->get_number(),
+				'email'        => $order->get_number(),
+				'customer_id'  => $order->get_customer_id(),
+				'first'        => $user_info['first_name'],
+				'last'         => $user_info['last_name'],
+				'address1'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
+				'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
+				'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
+				'state'        => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+				'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+				'zip'          => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+				'products'     => $products,
+				'products_raw' => $products_raw,
+				'skus'         => $skus,
+				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
+				'tax'          => html_entity_decode( edd_format_amount( $order->get_tax() ) ),
+				'discount'     => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
+				'gateway'      => edd_get_gateway_admin_label( $order->get_gateway() ),
+				'trans_id'     => $payment->transaction_id,
+				'key'          => $order->get_payment_key(),
+				'date'         => $order->get_date_created(),
+				'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
+				'currency'     => $order->get_currency(),
+				'ip'           => $order->get_ip(),
+				'mode'         => $order->get_mode(),
+				'status'       => ( 'publish' === $order->get_status() ) ? 'complete' : $order->get_status(),
+				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
+			);
 
 		}
 
-		return false;
+		$data = apply_filters( 'edd_export_get_data', $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
+
+		return ! empty( $data )
+			? $data
+			: false;
 	}
 
 	/**
 	 * Return the calculated completion percentage
 	 *
 	 * @since 2.4
+	 * @since 3.0 Updated to use new query methods.
 	 *
 	 * @return int
 	 */
 	public function get_percentage_complete() {
 		$status = $this->status;
 
-		$args   = array(
+		$args = array(
 			'start-date' => date( 'n/d/Y', strtotime( $this->start ) ),
 			'end-date'   => date( 'n/d/Y', strtotime( $this->end ) ),
 		);
 
-		if ( 'any' == $status ) {
+		if ( 'any' === $status ) {
 			$total = array_sum( (array) edd_count_payments( $args ) );
 		} else {
 			$total = edd_count_payments( $args )->$status;
