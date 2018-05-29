@@ -280,6 +280,16 @@ function edd_build_order( $order_data = array() ) {
 		'address'    => $order_data['user_info']['address'],
 	) );
 
+	if ( edd_use_taxes() ) {
+		$country = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
+		$state   = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
+		$zip     = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
+
+		$tax_rate = edd_get_cart_tax_rate( $country, $state, $zip );
+
+		edd_add_order_meta( $order_id, 'tax_rate', $tax_rate );
+	}
+
 	/** Insert order items ********************************************************/
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
 		foreach ( $order_data['cart_details'] as $key => $item ) {
@@ -404,6 +414,24 @@ function edd_build_order( $order_data = array() ) {
 		}
 
 		$total_fees += (float) $fee['amount'];
+	}
+
+	// Insert discounts.
+	$discounts = ! empty( $order_data['user_info']['discount'] ) ? $order_data['user_info']['discount'] : array();
+	if ( ! empty( $discounts ) && 'none' === $discounts[0] ) {
+		foreach ( $discounts as $discount ) {
+			/** @var EDD_Discount $discount_obj */
+			$discount_obj = edd_get_discount_by( 'code', $discount );
+
+			edd_add_order_adjustment( array(
+				'object_id'   => $order_id,
+				'object_type' => 'order',
+				'type_id'     => $discount_obj->id,
+				'type'        => 'discount',
+				'description' => $discount,
+				'amount'      => $subtotal - $discount_obj->get_discounted_amount( $subtotal )
+			) );
+		}
 	}
 
 	// Calculate order total.
