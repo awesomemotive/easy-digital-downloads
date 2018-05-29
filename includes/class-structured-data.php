@@ -135,7 +135,7 @@ class Structured_Data {
 	 * @return bool True if data generated successfully, false otherwise.
 	 */
 	private function generate_download_data( $download = false ) {
-		if ( false === $download ) {
+		if ( false === $download || is_null( $download ) ) {
 			global $post;
 			$download = edd_get_download( $post->ID );
 		} elseif ( is_int( $download ) ) {
