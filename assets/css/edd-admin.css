@@ -1688,6 +1688,12 @@ td.edd_order_price {
 	color: #aaa;
 }
 
+.chosen-container-multi .spinner {
+	position: absolute;
+	top: 4px;
+	right: -4px;
+}
+
 @media only screen and ( -webkit-min-device-pixel-ratio: 1.5 ),
 only screen and ( min-resolution: 144dpi ),
 only screen and ( min-resolution: 1.5dppx ) {
