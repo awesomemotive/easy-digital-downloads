@@ -313,12 +313,14 @@ function edd_build_order( $order_data = array() ) {
 				'discount'     => $item['discount'],
 				'tax'          => $item['tax'],
 				'total'        => $item['price'],
+				'item_price'   => $item['item_price'], // Added for backwards compatibility
 			);
 
 			// Set up defaults.
 			$defaults = array(
 				'quantity'    => 1,
 				'price_id'    => false,
+				'amount'      => false,
 				'item_price'  => false,
 				'discount'    => 0.00,
 				'tax'         => 0.00,
@@ -336,8 +338,13 @@ function edd_build_order( $order_data = array() ) {
 			 */
 			$order_item_args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $order_item_args, $download->ID ), $defaults );
 
-			if ( false !== $args['item_price'] ) {
-				$item_price = $args['item_price'];
+			// The item_price key could have been changed by a filter.
+			// This exists for backwards compatibility purposes.
+			$order_item_args['amount'] = $order_item_args['item_price'];
+			unset( $order_item_args['item_price'] );
+
+			if ( false !== $order_item_args['amount'] ) {
+				$item_price = $order_item_args['amount'];
 			} else {
 				// Deal with variable pricing.
 
@@ -381,8 +388,9 @@ function edd_build_order( $order_data = array() ) {
 
 			edd_add_order_item( $order_item_args );
 
-			$subtotal  += (float) ( $order_item_args['subtotal'] - $order_item_args['discount'] );
-			$total_tax += (float) $order_item_args['tax'];
+			$subtotal       += (float) $order_item_args['subtotal'];
+			$total_tax      += (float) $order_item_args['tax'];
+			$total_discount += (float) $order_item_args['discount'];
 		}
 	}
 
@@ -419,7 +427,12 @@ function edd_build_order( $order_data = array() ) {
 
 	// Insert discounts.
 	$discounts = ! empty( $order_data['user_info']['discount'] ) ? $order_data['user_info']['discount'] : array();
-	if ( ! empty( $discounts ) && 'none' === $discounts[0] ) {
+
+	if ( ! is_array( $discounts ) ) {
+		$discounts = explode( ',', $discounts );
+	}
+
+	if ( ! empty( $discounts ) && 'none' !== $discounts[0] ) {
 		foreach ( $discounts as $discount ) {
 			/** @var EDD_Discount $discount_obj */
 			$discount_obj = edd_get_discount_by( 'code', $discount );
@@ -436,7 +449,7 @@ function edd_build_order( $order_data = array() ) {
 	}
 
 	// Calculate order total.
-	$order_total = $subtotal + $total_tax + $total_fees;
+	$order_total = $subtotal - $total_discount + $total_tax + $total_fees;
 
 	// Setup order number.
 	if ( edd_get_option( 'enable_sequential' ) ) {
@@ -448,7 +461,7 @@ function edd_build_order( $order_data = array() ) {
 		update_option( 'edd_last_payment_number', $number );
 	}
 
-	edd_update_order( array(
+	edd_update_order( $order_id, array(
 		'order_number' => $order_args['order_number'],
 		'subtotal'     => $subtotal,
 		'tax'          => $total_tax,
