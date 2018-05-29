@@ -251,6 +251,11 @@ class Structured_Data {
 	private function encoded_data() {
 		$this->generate_structured_data();
 
+		// Bail if no data was generated.
+		if ( empty( $this->data ) ) {
+			return;
+		}
+
 		$structured_data = $this->get_data();
 
 		foreach ( $structured_data as $k => $v ) {
