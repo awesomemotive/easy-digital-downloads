@@ -478,6 +478,100 @@ function edd_build_order( $order_data = array() ) {
 	}
 }
 
+/**
+ * Transition order status.
+ *
+ * @since 3.0
+ *
+ * @param int    $order_id Order ID.
+ * @param string $status   New order status.
+ *
+ * @return bool True if the status was updated successfully, false otherwise.
+ */
+function edd_transition_order_status( $order_id = 0, $status = '' ) {
+	if ( empty( $order_id ) || empty( $status ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	if ( ! $order ) {
+		return false;
+	}
+
+	if ( $status == 'completed' || $status == 'complete' ) {
+		$status = 'publish';
+	}
+
+	// We do not allow status changes if the status is the same to that stored in the database.
+	// This prevents the `edd_update_payment_status` action from being triggered unnecessarily.
+	if ( $order->get_status() === $status ) {
+		return false;
+	}
+
+	// Wrap the filter for backwards compatibility.
+	$do_change = apply_filters(
+		'edd_should_update_order_status',
+		apply_filters( 'edd_should_update_payment_status', true, $order_id, $status, $order->get_status() )
+	);
+
+	$updated = false;
+
+	if ( $do_change ) {
+		/**
+		 * Action triggered before updating order status. This is here for backwards compatibility purposes.
+		 */
+		do_action( 'edd_before_payment_status_change', $order_id, $status, $order->get_status() );
+
+		/**
+		 * Action triggered before updating order status.
+		 *
+		 * @since 3.0
+		 *
+		 * @param int    $order_id   Order ID.
+		 * @param string $status     New order status.
+		 * @param string $old_status Old order status.
+		 */
+		do_action( 'edd_before_order_status_change', $order_id, $status, $order->get_status() );
+
+		// Backwards compatibility.
+		$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
+			'post_status' => $status,
+		) );
+
+		edd_update_order( $order_id, array(
+			'status' => $update_fields['post_status']
+		) );
+
+		// Actions need to be triggered based on the new status.
+		switch ( $status ) {
+			case 'refunded':
+				break;
+			case 'failed':
+				break;
+			case 'pending':
+			case 'processing':
+				break;
+		}
+
+		/**
+		 * Action triggered when updating order status. This is here for backwards compatibility purposes.
+		 */
+		do_action( 'edd_update_payment_status', $order_id, $status, $order->get_status() );
+
+		/**
+		 * Action triggered when updating order status.
+		 *
+		 * @since 3.0
+		 *
+		 * @param int    $order_id   Order ID.
+		 * @param string $status     New order status.
+		 * @param string $old_status Old order status.
+		 */
+		do_action( 'edd_transition_order_status', $order_id, $status, $order->get_status() );
+	}
+}
+
 /** Order Items ***************************************************************/
 
 /**

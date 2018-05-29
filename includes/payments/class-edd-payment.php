@@ -1812,9 +1812,7 @@ class EDD_Payment {
 		if ( $do_change ) {
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
-			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
-				'post_status' => $status,
-			) );
+
 
 			/**
 			 * Map the array keys to ones accepted by the new methods.

@@ -501,6 +501,17 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the customer information associated with the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array User information.
+	 */
+	public function get_user_info() {
+		return edd_get_order_meta( $this->id, 'user_info', true );
+	}
+
+	/**
 	 * Retrieve the customer address associated with the order.
 	 *
 	 * @since 3.0

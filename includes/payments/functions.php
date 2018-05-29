@@ -209,21 +209,18 @@ function edd_insert_payment( $order_data = array() ) {
 /**
  * Updates a payment status.
  *
- * @since  1.0
- * @param  int    $payment_id Payment ID
- * @param  string $new_status New Payment Status (default: publish)
- * @return bool               If the payment was successfully updated
+ * @since 1.0
+ * @since 3.0 Updated to use new order methods.
+ *
+ * @param  int    $order_id Order ID.
+ * @param  string $new_status order status (default: publish)
+ *
+ * @return bool True if the status was updated successfully, false otherwise.
  */
-function edd_update_payment_status( $payment_id = 0, $new_status = 'publish' ) {
+function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
 	$updated = false;
-	$payment = new EDD_Payment( $payment_id );
 
-	if ( $payment && $payment->ID > 0 ) {
-		$payment->status = $new_status;
-		$updated = $payment->save();
-	}
-
-	return $updated;
+	return edd_transition_order_status( $order_id, $new_status );
 }
 
 /**
