@@ -260,6 +260,13 @@ function edd_build_order( $order_data = array() ) {
 		) );
 	}
 
+	// If the customer name was initially empty, update the record to store the name used at checkout.
+	if ( empty( $customer->name ) ) {
+		$customer->update( array(
+			'name' => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name']
+		) );
+	}
+
 	$order_args['customer_id'] = $customer->id;
 
 	/** Insert order **********************************************************/
