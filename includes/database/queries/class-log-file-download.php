@@ -126,6 +126,9 @@ class Log_File_Download extends Base {
 	 *     @type string       $ip                   An IP to only return that type. Default empty.
 	 *     @type array        $ip__in               Array of IPs to include. Default empty.
 	 *     @type array        $ip__not_in           Array of IPs to exclude. Default empty.
+	 *     @type string       $user_agent           A user agent to only return that type. Default empty.
+	 *     @type array        $user_agent__in       Array of user agents to include. Default empty.
+	 *     @type array        $user_agent__not_in   Array of user agents to exclude. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
