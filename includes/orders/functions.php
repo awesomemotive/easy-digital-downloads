@@ -215,15 +215,16 @@ function edd_build_order( $order_data = array() ) {
 
 	// Build order information based on data passed from the gateway.
 	$order_args = array(
-		'parent'      => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
-		'status'      => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
-		'user_id'     => $order_data['user_info']['id'],
-		'email'       => $order_data['user_info']['email'],
-		'ip'          => edd_get_ip(),
-		'gateway'     => $gateway,
-		'mode'        => edd_is_test_mode() ? 'test' : 'live',
-		'currency'    => ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency(),
-		'payment_key' => $order_data['purchase_key'],
+		'parent'       => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
+		'order_number' => '',
+		'status'       => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
+		'user_id'      => $order_data['user_info']['id'],
+		'email'        => $order_data['user_info']['email'],
+		'ip'           => edd_get_ip(),
+		'gateway'      => $gateway,
+		'mode'         => edd_is_test_mode() ? 'test' : 'live',
+		'currency'     => ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency(),
+		'payment_key'  => $order_data['purchase_key'],
 	);
 
 	/** Setup customer ************************************************************/
@@ -408,11 +409,22 @@ function edd_build_order( $order_data = array() ) {
 	// Calculate order total.
 	$order_total = $subtotal + $total_tax + $total_fees;
 
+	// Setup order number.
+	if ( edd_get_option( 'enable_sequential' ) ) {
+		$number = edd_get_next_payment_number();
+		$number = edd_format_payment_number( $number );
+
+		$order_args['order_number'] = $number;
+
+		update_option( 'edd_last_payment_number', $number );
+	}
+
 	edd_update_order( array(
-		'subtotal' => $subtotal,
-		'tax'      => $total_tax,
-		'discount' => $total_discount,
-		'total'    => $order_total
+		'order_number' => $order_args['order_number'],
+		'subtotal'     => $subtotal,
+		'tax'          => $total_tax,
+		'discount'     => $total_discount,
+		'total'        => $order_total,
 	) );
 
 	do_action( 'edd_insert_payment', $order_id, $order_data );
