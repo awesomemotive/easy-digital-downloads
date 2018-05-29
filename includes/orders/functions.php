@@ -302,16 +302,17 @@ function edd_build_order( $order_data = array() ) {
 
 			// Build a base array of information for each order item.
 			$order_item_args = array(
-				'order_id'   => $order_id,
-				'product_id' => $item['id'],
-				'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
-				'cart_index' => $key,
-				'quantity'   => $item['quantity'],
-				'amount'     => $item['item_price'],
-				'subtotal'   => $item['subtotal'],
-				'discount'   => $item['discount'],
-				'tax'        => $item['tax'],
-				'total'      => $item['price']
+				'order_id'     => $order_id,
+				'product_id'   => $item['id'],
+				'product_name' => $item['name'],
+				'price_id'     => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
+				'cart_index'   => $key,
+				'quantity'     => $item['quantity'],
+				'amount'       => $item['item_price'],
+				'subtotal'     => $item['subtotal'],
+				'discount'     => $item['discount'],
+				'tax'          => $item['tax'],
+				'total'        => $item['price'],
 			);
 
 			// Set up defaults.
@@ -391,7 +392,7 @@ function edd_build_order( $order_data = array() ) {
 	$fees = edd_get_cart_fees();
 	foreach ( $fees as $key => $fee ) {
 		$adjustment_id = edd_add_order_adjustment( array(
-			'object_id'   => $this->ID,
+			'object_id'   => $order_id,
 			'object_type' => 'order',
 			'type_id'     => '',
 			'type'        => 'fee',
