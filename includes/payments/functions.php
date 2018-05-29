@@ -149,9 +149,9 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  * Insert an order into the database.
  *
  * @since 1.0
- * @since 3.0 Updated terminology and updated to insert orders into the new tables.
+ * @since 3.0 Refactored to add orders using new methods.
  *
- * @param array $order_data Payment data to process.
+ * @param array $order_data Order data to process.
  * @return int|bool Order ID if the order was successfully inserted, false otherwise.
  */
 function edd_insert_payment( $order_data = array() ) {
@@ -201,80 +201,9 @@ function edd_insert_payment( $order_data = array() ) {
 		// Remove any remainders of possible fees from items.
 		$payment->save();
 
-	} else {
-		$payment = new EDD_Payment();
 	}
 
-	if( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
-
-		foreach ( $order_data['cart_details'] as $item ) {
-
-			$args = array(
-				'quantity'   => $item['quantity'],
-				'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
-				'tax'        => $item['tax'],
-				'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
-				'fees'       => isset( $item['fees'] ) ? $item['fees'] : array(),
-				'discount'   => isset( $item['discount'] ) ? $item['discount'] : 0,
-			);
-
-			$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();
-
-			$payment->add_download( $item['id'], $args, $options );
-		}
-
-	}
-
-	$payment->increase_tax( edd_get_cart_fee_tax() );
-
-	$gateway = ! empty( $order_data['gateway'] ) ? $order_data['gateway'] : '';
-	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
-
-	$country = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
-	$state   = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
-	$zip     = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
-
-
-	$payment->status         = ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending';
-	$payment->currency       = ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency();
-	$payment->user_info      = $order_data['user_info'];
-	$payment->gateway        = $gateway;
-	$payment->user_id        = $order_data['user_info']['id'];
-	$payment->first_name     = $order_data['user_info']['first_name'];
-	$payment->last_name      = $order_data['user_info']['last_name'];
-	$payment->email          = $order_data['user_info']['email'];
-	$payment->ip             = edd_get_ip();
-	$payment->key            = $order_data['purchase_key'];
-	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
-	$payment->parent_payment = ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '';
-	$payment->discounts      = ! empty( $order_data['user_info']['discount'] ) ? $order_data['user_info']['discount'] : array();
-	$payment->tax_rate       = edd_get_cart_tax_rate( $country, $state, $zip );
-
-	if ( isset( $order_data['post_date'] ) ) {
-		$payment->date = $order_data['post_date'];
-	}
-
-	// Clear the user's purchased cache
-	delete_transient( 'edd_user_' . $order_data['user_info']['id'] . '_purchases' );
-
-	$payment->save();
-
-	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) {
-		$order_data['agree_to_terms_time'] = current_time( 'timestamp' );
-	}
-
-	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) && ! empty( $_POST['edd_agree_to_privacy_policy'] ) ) {
-		$order_data['agree_to_privacy_time'] = current_time( 'timestamp' );
-	}
-
-	do_action( 'edd_insert_payment', $payment->ID, $order_data );
-
-	if ( ! empty( $payment->ID ) ) {
-		return $payment->ID;
-	}
-
-	// Return false if no payment was inserted
-	return false;
+	return edd_build_order( $order_data );
 }
 
 /**
