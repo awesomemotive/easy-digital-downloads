@@ -207,6 +207,31 @@ function edd_build_order( $order_data = array() ) {
 	if (  empty( $order_data ) ) {
 		return false;
 	}
+
+	$gateway = ! empty( $order_data['gateway'] ) ? $order_data['gateway'] : '';
+	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
+
+	$order_args = array(
+		'parent'      => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
+		'status'      => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
+		'user_id'     => $order_data['user_info']['id'],
+		'customer_id' => '',
+		'email'       => $order_data['user_info']['email'],
+		'ip'          => edd_get_ip(),
+		'gateway'     => $gateway,
+		'mode'        => edd_is_test_mode() ? 'test' : 'live',
+		'currency'    => ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency(),
+	);
+
+	$order_id = edd_add_order( $order_args );
+
+	do_action( 'edd_insert_payment', $order_id, $order_data );
+
+	if ( ! $order_id ) {
+		return false;
+	} else {
+		return $order_id;
+	}
 }
 
 /** Order Items ***************************************************************/
