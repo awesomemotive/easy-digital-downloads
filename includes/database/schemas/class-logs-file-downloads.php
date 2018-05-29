@@ -94,6 +94,15 @@ class Logs_File_Downloads extends Base {
 			'sortable'   => true
 		),
 
+		// ip
+		array(
+			'name'       => 'user_agent',
+			'type'       => 'varchar',
+			'length'     => '200',
+			'default'    => '',
+			'sortable'   => true
+		),
+
 		// date_created
 		array(
 			'name'       => 'date_created',
