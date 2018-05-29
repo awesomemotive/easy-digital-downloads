@@ -376,6 +376,35 @@ function edd_build_order( $order_data = array() ) {
 
 	/** Insert order adjustments **************************************************/
 
+	// Insert fees.
+	$fees = edd_get_cart_fees();
+	foreach ( $fees as $key => $fee ) {
+		$adjustment_id = edd_add_order_adjustment( array(
+			'object_id'   => $this->ID,
+			'object_type' => 'order',
+			'type_id'     => '',
+			'type'        => 'fee',
+			'description' => $fee['label'],
+			'amount'      => $fee['amount'],
+		) );
+
+		edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
+
+		if ( isset( $fee['no_tax'] ) && true === $fee['no_tax'] ) {
+			edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+		}
+
+		if ( isset( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
+			edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+		}
+
+		if ( ! is_null( $fee['price_id'] ) ) {
+			edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+		}
+
+		$total_fees += (float) $fee['amount'];
+	}
+
 	// Calculate order total.
 	$order_total = $subtotal + $total_tax + $total_fees;
 
