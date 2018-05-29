@@ -48,12 +48,13 @@ class Structured_Data {
 	/**
 	 * Get raw data. This data is not formatted in any way.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 3.0
 	 *
 	 * @return array Raw data.
 	 */
-	private function get_data() {
+	public function get_data() {
+
 		/**
 		 * Allow data to be filtered being returned.
 		 *
@@ -99,7 +100,7 @@ class Structured_Data {
 	/**
 	 * Generate the structured data for a given context.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 3.0
 	 *
 	 * @param mixed string|false $context Default empty as the class figures out what the context is automatically.
@@ -107,7 +108,7 @@ class Structured_Data {
 	 *
 	 * @return string
 	 */
-	private function generate_structured_data( $context = false, $args = null ) {
+	public function generate_structured_data( $context = false, $args = null ) {
 		if ( is_singular( 'download' ) || 'download' === $context ) {
 			$this->generate_download_data( $args );
 		}
@@ -268,17 +269,15 @@ class Structured_Data {
 	 * @return bool True by default, false if structured data does not exist.
 	 */
 	public function output_structured_data() {
-		if ( empty( $this->data ) ) {
-			$this->generate_download_data();
-		}
-
 		$this->data = $this->sanitize_data( $this->data );
 
-		if ( empty( $this->data ) ) {
+		$output_data = $this->encoded_data();
+
+		if ( empty( $output_data ) ) {
 			return false;
 		}
 
-		echo '<script type="application/ld+json">' . $this->encoded_data() . '</script>';
+		echo '<script type="application/ld+json">' . $output_data . '</script>';
 
 		return true;
 	}
