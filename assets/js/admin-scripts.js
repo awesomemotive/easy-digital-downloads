@@ -1242,28 +1242,27 @@ jQuery(document).ready(function ($) {
 
 			// Remove tax row
 			$( document.body ).on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
-				if ( confirm( edd_vars.delete_tax_rate ) ) {
-					var tax_rates = $('#edd_tax_rates tbody tr:visible');
-					var count     = tax_rates.length;
+				var tax_rates = $('#edd_tax_rates tbody tr:visible'),
+					count     = tax_rates.length;
 
-					if ( count === 1 ) {
-						$('#edd_tax_rates select').val('');
-						$('#edd_tax_rates input[type="text"]').val('');
-						$('#edd_tax_rates input[type="number"]').val('');
-						$('#edd_tax_rates input[type="checkbox"]').attr('checked', false);
-					} else {
-						$( this ).closest('tr').remove();
-					}
-
-					/* re-index after deleting */
-					$('#edd_tax_rates tr').each( function( rowIndex ) {
-						$( this ).children().find( 'input, select' ).each(function() {
-							var name = $( this ).attr( 'name' );
-							name = name.replace( /\[(\d+)\]/, '[' + ( rowIndex - 1 ) + ']');
-							$( this ).attr( 'name', name ).attr( 'id', name );
-						});
-					});
+				if ( count === 1 ) {
+					$('#edd_tax_rates select').val('');
+					$('#edd_tax_rates input[type="text"]').val('');
+					$('#edd_tax_rates input[type="number"]').val('');
+					$('#edd_tax_rates input[type="checkbox"]').attr('checked', false);
+				} else {
+					$( this ).closest('tr').remove();
 				}
+
+				/* re-index after deleting */
+				$('#edd_tax_rates tr').each( function( rowIndex ) {
+					$( this ).children().find( 'input, select' ).each(function() {
+						var name = $( this ).attr( 'name' );
+						name = name.replace( /\[(\d+)\]/, '[' + ( rowIndex - 1 ) + ']');
+						$( this ).attr( 'name', name ).attr( 'id', name );
+					});
+				});
+
 				return false;
 			});
 		},
