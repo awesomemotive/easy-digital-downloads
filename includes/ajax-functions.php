@@ -48,17 +48,14 @@ function edd_test_ajax_works() {
 
 	// Check if the Airplane Mode plugin is installed
 	if ( class_exists( 'Airplane_Mode_Core' ) ) {
-
 		$airplane = Airplane_Mode_Core::getInstance();
 
 		if ( method_exists( $airplane, 'enabled' ) ) {
-
 			if ( $airplane->enabled() ) {
 				return true;
 			}
 
 		} else {
-
 			if ( $airplane->check_status() == 'on' ) {
 				return true;
 			}
@@ -71,39 +68,35 @@ function edd_test_ajax_works() {
 		return true;
 	}
 
-	$params = array(
+	$works = true;
+	$ajax  = wp_remote_post( edd_get_ajax_url(), array(
 		'sslverify'  => false,
 		'timeout'    => 30,
 		'body'       => array(
 			'action' => 'edd_test_ajax'
 		)
-	);
-
-	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
-	$works = true;
+	) );
 
 	if ( is_wp_error( $ajax ) ) {
-
 		$works = false;
 
 	} else {
 
-		if( empty( $ajax['response'] ) ) {
+		if ( empty( $ajax['response'] ) ) {
 			$works = false;
 		}
 
-		if( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
+		if ( empty( $ajax['response']['code'] ) || 200 !== (int) $ajax['response']['code'] ) {
 			$works = false;
 		}
 
-		if( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
+		if ( empty( $ajax['response']['message'] ) || 'OK' !== $ajax['response']['message'] ) {
 			$works = false;
 		}
 
-		if( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+		if ( ! isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
 			$works = false;
 		}
-
 	}
 
 	if ( $works ) {
@@ -183,13 +176,13 @@ function edd_ajax_add_to_cart() {
 
 		foreach ( $to_add as $options ) {
 
-			if( $_POST['download_id'] == $options['price_id'] ) {
+			if ( $_POST['download_id'] == $options['price_id'] ) {
 				$options = array();
 			}
 
 			parse_str( $_POST['post_data'], $post_data );
 
-			if( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
+			if ( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
 
 				$options['quantity'] = absint( $post_data['edd_download_quantity_' . $options['price_id'] ] );
 
@@ -230,8 +223,6 @@ function edd_ajax_add_to_cart() {
 add_action( 'wp_ajax_edd_add_to_cart',        'edd_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
-
-
 /**
  * Gets the cart's subtotal via AJAX.
  *
@@ -242,7 +233,6 @@ function edd_ajax_get_subtotal() {
 	echo edd_currency_filter( edd_get_cart_subtotal() );
 	edd_die();
 }
-
 add_action( 'wp_ajax_edd_get_subtotal',        'edd_ajax_get_subtotal' );
 add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 
@@ -399,6 +389,7 @@ function edd_ajax_get_download_title() {
 		$post_id   = absint( $_POST['download_id'] );
 		$post_type = get_post_type( $post_id );
 		$title     = 'fail';
+
 		if ( 'download' === $post_type ) {
 			$post_title = get_the_title( $_POST['download_id'] );
 			if ( $post_title ) {
@@ -455,26 +446,28 @@ add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes'
  * @return void
  */
 function edd_ajax_get_states_field() {
-	if( empty( $_POST['country'] ) ) {
-		$_POST['country'] = edd_get_shop_country();
-	}
-	$states = edd_get_shop_states( $_POST['country'] );
 
-	if( ! empty( $states ) ) {
+	// Get country
+	$country = empty( $_POST['country'] )
+		? edd_get_shop_country()
+		: $_POST['country']; // Exactly matched
 
-		$args = array(
+	// Get states for country
+	$states = edd_get_shop_states( $country );
+
+	// Maybe setup the new listbox
+	if ( ! empty( $states ) ) {
+		$response = EDD()->html->select( array(
 			'name'    => $_POST['field_name'],
 			'id'      => $_POST['field_name'],
 			'class'   => $_POST['field_name'] . '  edd-select',
 			'options' => $states,
+			'chosen'           => true,
+			'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
 			'show_option_all'  => false,
 			'show_option_none' => false
-		);
-
-		$response = EDD()->html->select( $args );
-
+		) );
 	} else {
-
 		$response = 'nostates';
 	}
 
@@ -641,7 +634,7 @@ function edd_ajax_customer_search() {
 		$customers = $wpdb->get_results( $select . $where . $limit );
 	}
 
-	if( $customers ) {
+	if ( $customers ) {
 
 		foreach( $customers as $customer ) {
 
@@ -728,24 +721,24 @@ add_action( 'wp_ajax_edd_user_search', 'edd_ajax_user_search' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-	if( ! current_user_can( 'edit_products' ) ) {
+	if ( ! current_user_can( 'edit_products' ) ) {
 		die( '-1' );
 	}
 
 	$download_id = intval( $_POST['download_id'] );
 	$download    = get_post( $download_id );
 
-	if( 'download' != $download->post_type ) {
+	if ( 'download' != $download->post_type ) {
 		die( '-2' );
 	}
 
 	if ( edd_has_variable_prices( $download_id ) ) {
 		$variable_prices = edd_get_variable_prices( $download_id );
 
-		if ( $variable_prices ) {
+		if ( ! empty( $variable_prices ) ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select" name="edd_price_option">';
 
-				if( isset( $_POST['all_prices'] ) ) {
+				if ( isset( $_POST['all_prices'] ) ) {
 					$ajax_response .= '<option value="">' . __( 'All Prices', 'easy-digital-downloads' ) . '</option>';
 				}
 
@@ -753,9 +746,9 @@ function edd_check_for_download_price_variations() {
 					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
 			$ajax_response .= '</select>';
+
 			echo $ajax_response;
 		}
-
 	}
 
 	edd_die();

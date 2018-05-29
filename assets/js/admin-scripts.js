@@ -143,7 +143,7 @@ jQuery(document).ready(function ($) {
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
 				// Setup chosen fields again if they exist
-				clone.find('.edd-select-chosen').chosen( chosen_vars );
+				clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
 				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 				clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 			});
@@ -1065,7 +1065,8 @@ jQuery(document).ready(function ($) {
 
 			// Settings Upload field JS
 			if ( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ) {
-				//Old Thickbox uploader
+
+				// Old Thickbox uploader
 				var edd_settings_upload_button = $( '.edd_settings_upload_button' );
 				if ( edd_settings_upload_button.length > 0 ) {
 					window.formfield = '';
@@ -1167,18 +1168,30 @@ jQuery(document).ready(function ($) {
 
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
-				var $this = $( this ), $tr = $this.closest('tr');
-				var data = {
-					action: 'edd_get_shop_states',
-					country: $( this ).val(),
-					field_name: 'edd_settings[base_state]'
-				};
+				var select = $( this ),
+					tr     = select.closest('tr'),
+					data   = {
+						action: 'edd_get_shop_states',
+						country: $( this ).val(),
+						field_name: 'edd_settings[base_state]'
+					};
+
 				$.post(ajaxurl, data, function (response) {
 					if ( 'nostates' === response ) {
-						$tr.next().addClass('hidden');
+						tr.next().addClass('hidden');
 					} else {
-						$tr.next().removeClass('hidden');
-						$tr.next().find('select').replaceWith( response );
+						var next       = tr.next(),
+							new_select = next.find( 'select' ),
+							old_chosen = next.find( '.chosen-container' );
+
+						old_chosen.remove();
+
+						new_select.replaceWith( response );
+						next.removeClass('hidden');
+
+						setTimeout( function() {
+							next.find( '.edd-select-chosen' ).chosen( chosen_vars );
+						}, 1 );
 					}
 				});
 
@@ -1351,12 +1364,13 @@ jQuery(document).ready(function ($) {
 		typingTimer;
 
 	// Replace options with search results
-	$( document.body ).on( 'input', typingTimerElements, function(e) {
+	$( document.body ).on( 'keyup', typingTimerElements, function(e) {
 		var	element     = $( this ),
 			val         = element.val(),
 			container   = element.closest( '.edd-select-chosen' ),
 
 			select      = container.prev(),
+			select_type = select.data( 'search-type' ),
 			no_bundles  = container.hasClass( 'no-bundles' ),
 			variations  = container.hasClass( 'variations' ),
 
@@ -1367,14 +1381,16 @@ jQuery(document).ready(function ($) {
 		container.attr('id').replace( '_chosen', '' );
 
 		// Detect if we have a defined search type, otherwise default to downloads
-		if ( container.prev().data('search-type') ) {
+		if ( typeof select_type !== 'undefined' ) {
 
 			// Don't trigger AJAX if this select has all options loaded
-			if ( 'no_ajax' === select.data('search-type') ) {
+			if ( 'no_ajax' === select_type ) {
 				return;
 			}
 
-			search_type = 'edd_' + select.data('search-type') + '_search';
+			search_type = 'edd_' + select_type + '_search';
+		} else {
+			return;
 		}
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
@@ -1391,11 +1407,14 @@ jQuery(document).ready(function ($) {
 				lastKey === 40
 			)
 		) {
-			container.removeClass( 'searching' );
+			container.children( '.spinner' ).remove();
 			return;
 		}
 
-		container.addClass( 'searching' );
+		// Maybe append a spinner
+		if ( ! container.children( '.spinner' ).length ) {
+			container.append( '<span class="spinner is-active"></span>' );
+		}
 
 		clearTimeout(typingTimer);
 
@@ -1441,7 +1460,7 @@ jQuery(document).ready(function ($) {
 					console.log( response );
 				}
 			}).done(function (response) {
-				container.removeClass( 'searching' );
+				container.children( '.spinner' ).remove();
 			});
 		}, doneTypingInterval );
 	});
