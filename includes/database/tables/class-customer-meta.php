@@ -37,7 +37,7 @@ final class Customer_Meta extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201805290002;
 
 	/**
 	 * Setup the database schema
@@ -65,7 +65,8 @@ final class Customer_Meta extends Base {
 	 * @return void
 	 */
 	protected function upgrade() {
-
+		$query = "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';";
+		$this->get_db()->query( $query );
 	}
 }
 endif;
