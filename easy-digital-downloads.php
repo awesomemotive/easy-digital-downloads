@@ -209,15 +209,15 @@ final class EDD_Requirements_Check {
 	 */
 	public function plugin_row_notice() {
 		?><tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
-			<th class="check-column">
-				<span class="dashicons dashicons-warning"></span>
-			</th>
-			<td class="column-primary">
-				<?php $this->unmet_requirements_text(); ?>
-			</td>
-			<td class="column-description">
-				<?php $this->unmet_requirements_description(); ?>
-			</td>
+		<th class="check-column">
+			<span class="dashicons dashicons-warning"></span>
+		</th>
+		<td class="column-primary">
+			<?php $this->unmet_requirements_text(); ?>
+		</td>
+		<td class="column-description">
+			<?php $this->unmet_requirements_description(); ?>
+		</td>
 		</tr><?php
 	}
 
@@ -251,7 +251,7 @@ final class EDD_Requirements_Check {
 				'<strong>' . esc_html( $requirement['current'] ) . '</strong>'
 			);
 
-		// Requirement could not be found
+			// Requirement could not be found
 		} else {
 			$text = sprintf(
 				$this->unmet_requirements_missing_text(),
@@ -315,7 +315,7 @@ final class EDD_Requirements_Check {
 		// Add the Requirements link
 		$links['requirements'] =
 			'<a href="' . esc_url( $this->unmet_requirements_url() ) . '" aria-label="' . esc_attr( $this->unmet_requirements_label() ) . '">'
-				. esc_html( $this->unmet_requirements_link() )
+			. esc_html( $this->unmet_requirements_link() )
 			. '</a>';
 
 		// Return links with Requirements link
@@ -459,15 +459,15 @@ final class EDD_Requirements_Check {
 		if ( file_exists( $mofile_global1 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
 
-		// Try to load from next global location
+			// Try to load from next global location
 		} elseif ( file_exists( $mofile_global2 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
 
-		// Try to load from next global location
+			// Try to load from next global location
 		} elseif ( file_exists( $mofile_global3 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 
-		// Load the default language files
+			// Load the default language files
 		} else {
 			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
