@@ -192,11 +192,11 @@ function edd_process_download() {
 		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $args['payment'] );
 
 		nocache_headers();
-		header("Robots: none");
-		header("Content-Type: " . $ctype . "");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ), $args ) . "\"");
-		header("Content-Transfer-Encoding: binary");
+		header('Robots: none');
+		header('Content-Type: ' . $ctype );
+		header('Content-Description: File Transfer');
+		header('Content-Disposition: attachment; filename="' . apply_filters( 'edd_requested_file_name', basename( $requested_file ), $args ) . '"' );
+		header('Content-Transfer-Encoding: binary');
 
 		// If the file isn't locally hosted, process the redirect
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
@@ -256,11 +256,9 @@ function edd_process_download() {
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
-
 					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
-
 					$ignore_x_accel_redirect_header = apply_filters( 'edd_ignore_x_accel_redirect', false );
 
 					if ( ! $ignore_x_accel_redirect_header ) {
@@ -268,11 +266,9 @@ function edd_process_download() {
 						$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
 						header( "X-Accel-Redirect: /$file_path" );
 					}
-
 				}
 
-				if( $direct ) {
-
+				if ( $direct ) {
 					edd_deliver_download( $file_path );
 
 				} else {
@@ -348,16 +344,13 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 		}
 
 	} elseif( $redirect ) {
-
 		header( 'Location: ' . $file );
 
 	} else {
 
 		// Read the file and deliver it in chunks
 		edd_readfile_chunked( $file );
-
 	}
-
 }
 
 /**

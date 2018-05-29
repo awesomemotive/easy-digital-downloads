@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Processes a custom edit
@@ -163,9 +163,7 @@ function edd_edit_customer( $args = array() ) {
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		header( 'Content-Type: application/json' );
-		echo json_encode( $output );
-		wp_die();
+		wp_send_json( $output );
 	}
 
 	return $output;
@@ -248,7 +246,7 @@ function edd_add_customer_email( $args = array() ) {
 			);
 
 			$user          = wp_get_current_user();
-			$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+			$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
@@ -262,9 +260,7 @@ function edd_add_customer_email( $args = array() ) {
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		header( 'Content-Type: application/json' );
-		echo json_encode( $output );
-		wp_die();
+		wp_send_json( $output );
 	}
 
 	return $output;
@@ -300,7 +296,7 @@ function edd_remove_customer_email() {
 	if ( $customer->remove_email( $_GET['email'] ) ) {
 		$url           = add_query_arg( 'edd-message', 'email-removed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
@@ -341,7 +337,7 @@ function edd_set_customer_primary_email() {
 	if ( $customer->set_primary_email( $_GET['email'] ) ) {
 		$url           = add_query_arg( 'edd-message', 'primary-email-updated', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
@@ -484,9 +480,7 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		header( 'Content-Type: application/json' );
-		echo json_encode( $output );
-		wp_die();
+		wp_send_json( $output );
 	}
 
 	return $output;

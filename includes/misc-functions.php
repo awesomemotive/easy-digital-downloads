@@ -942,12 +942,14 @@ function edd_cleanup_file_symlinks() {
 	$dir = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
-		if ( $file == '.' || $file == '..' )
+		if ( $file == '.' || $file == '..' ) {
 			continue;
+		}
 
 		$transient = get_transient( md5( $file ) );
-		if ( $transient === false )
+		if ( $transient === false ) {
 			@unlink( $path . '/' . $file );
+		}
 	}
 }
 add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
@@ -1152,6 +1154,19 @@ function edd_doing_cron() {
 
 	// Default to false
 	return false;
+}
+
+/**
+ * Get the bot name. Usually "EDD Bot" unless filtered.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_bot_name() {
+	$retval = esc_html__( 'EDD Bot', 'easy-digital-downloads' );
+
+	return (string) apply_filters( 'edd_get_bot_name', $retval );
 }
 
 /**

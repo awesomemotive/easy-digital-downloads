@@ -1861,8 +1861,6 @@ class EDD_API {
 	 * @param int $status_code
 	 */
 	public function output( $status_code = 200 ) {
-		global $wp_query;
-
 		$format = $this->get_output_format();
 
 		status_header( $status_code );
@@ -1883,7 +1881,7 @@ class EDD_API {
 
 			case 'json' :
 
-				header( 'Content-Type: application/json' );
+				header( 'Content-Type: application/json charset=' . get_option( 'blog_charset' ) );
 				if ( ! empty( $this->pretty_print ) )
 					echo json_encode( $this->data, $this->pretty_print );
 				else
