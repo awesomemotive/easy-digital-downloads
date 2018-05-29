@@ -221,6 +221,7 @@ function edd_build_order( $order_data = array() ) {
 		'gateway'     => $gateway,
 		'mode'        => edd_is_test_mode() ? 'test' : 'live',
 		'currency'    => ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency(),
+		'payment_key' => $order_data['purchase_key'],
 	);
 
 	$order_id = edd_add_order( $order_args );
