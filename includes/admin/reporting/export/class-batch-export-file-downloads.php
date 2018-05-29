@@ -90,11 +90,12 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 			$user      = $user ? $user->user_login : $user->user_email;
 
 			$data[]    = array(
-				'date'     => $log->get_date_created(),
-				'user'     => $user,
-				'ip'       => $log->get_ip(),
-				'download' => get_the_title( $log->get_download_id() ),
-				'file'     => $file_name
+				'date'       => $log->get_date_created(),
+				'user'       => $user,
+				'ip'         => $log->get_ip(),
+				'user_agent' => $log->get_user_agent(),
+				'download'   => get_the_title( $log->get_download_id() ),
+				'file'       => $file_name,
 			);
 		}
 
