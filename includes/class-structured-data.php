@@ -127,14 +127,14 @@ class Structured_Data {
 	/**
 	 * Generate structured data for a download.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 3.0
 	 *
 	 * @param mixed int|EDD_Download Download ID or EDD_Download object to generate data for.
 	 *
 	 * @return bool True if data generated successfully, false otherwise.
 	 */
-	private function generate_download_data( $download = false ) {
+	public function generate_download_data( $download = false ) {
 		if ( false === $download || is_null( $download ) ) {
 			global $post;
 			$download = edd_get_download( $post->ID );
