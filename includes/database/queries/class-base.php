@@ -2271,9 +2271,16 @@ class Base extends \EDD\Database\Base {
 		// Get cache groups
 		$groups = $this->get_columns( array( 'cache_key' => true ), 'and', 'name' );
 
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
 		// Setup return values
 		foreach ( $groups as $name ) {
-			$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+			if ( $primary !== $name ) {
+				$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+			} else {
+				$cache_groups[ $name ] = $this->cache_group;
+			}
 		}
 
 		// Return cache groups array
