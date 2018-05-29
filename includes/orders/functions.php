@@ -218,7 +218,6 @@ function edd_build_order( $order_data = array() ) {
 		'parent'      => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
 		'status'      => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
 		'user_id'     => $order_data['user_info']['id'],
-		'customer_id' => '',
 		'email'       => $order_data['user_info']['email'],
 		'ip'          => edd_get_ip(),
 		'gateway'     => $gateway,
@@ -256,10 +255,15 @@ function edd_build_order( $order_data = array() ) {
 		) );
 	}
 
+	$order_args['customer_id'] = $customer->id;
+
 	/** Insert order **************************************************************/
 
 	// Add order into the edd_orders table.
 	$order_id = edd_add_order( $order_args );
+
+	// Attach order to the customer record.
+	$customer->attach_payment( $order_id, false );
 
 	/** Insert order meta *********************************************************/
 	edd_add_order_meta( $order_id, 'user_info', array(
@@ -272,7 +276,7 @@ function edd_build_order( $order_data = array() ) {
 
 
 	/** Insert order adjustments **************************************************/
-	
+
 
 	/** Calculate totals **********************************************************/
 	$subtotal = 0.00;
