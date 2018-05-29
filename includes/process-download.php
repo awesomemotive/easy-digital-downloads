@@ -126,7 +126,7 @@ function edd_process_download() {
 
 		$supported_streams = stream_get_wrappers();
 		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' && isset( $file_details['scheme'] ) && ! in_array( $file_details['scheme'], $supported_streams ) ) {
-			wp_die( __( 'Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
+			wp_die( __( 'Error 103: Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
 		}
 
 		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
@@ -256,7 +256,17 @@ function edd_process_download() {
 
 		edd_die();
 	} else {
-		$error_message = __( 'You do not have permission to download this file', 'easy-digital-downloads' );
+		$error_message = '';
+
+		if ( ! $args['payment'] ) {
+			$error_message .= 'Error 101: ';
+		}
+
+		if ( ! $args['has_access'] ) {
+			$error_message .= 'Error 102: ';
+		}
+
+		$error_message .= __( 'You do not have permission to download this file', 'easy-digital-downloads' );
 		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
