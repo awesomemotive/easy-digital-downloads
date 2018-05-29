@@ -268,6 +268,10 @@ class Structured_Data {
 	 * @return bool True by default, false if structured data does not exist.
 	 */
 	public function output_structured_data() {
+		if ( empty( $this->data ) ) {
+			$this->generate_download_data();
+		}
+
 		$this->data = $this->sanitize_data( $this->data );
 
 		if ( empty( $this->data ) ) {
