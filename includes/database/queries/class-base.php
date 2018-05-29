@@ -2253,7 +2253,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Return the group
-		return $group;
+		return $retval;
 	}
 
 	/**
@@ -2354,7 +2354,8 @@ class Base extends \EDD\Database\Base {
 
 		// Maybe query for single item
 		if ( is_numeric( $items ) ) {
-			$items = $this->get_item_raw( $primary, $items );
+			$primary = $this->get_primary_column_name();
+			$items   = $this->get_item_raw( $primary, $items );
 		}
 
 		// Bail if no items to cache
