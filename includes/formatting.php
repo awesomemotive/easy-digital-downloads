@@ -191,12 +191,17 @@ function edd_currency_filter( $price = '', $currency = '' ) {
  * Set the number of decimal places per currency
  *
  * @since 1.4.2
- * @param int $decimals Number of decimal places
- * @return int $decimals
+ * @since 3.0 Updated to allow currency to be passed in.
+ *
+ * @param int    $decimals Number of decimal places.
+ * @param string $currency Currency.
+ *
+ * @return int $decimals Number of decimal places for currency.
 */
-function edd_currency_decimal_filter( $decimals = 2 ) {
-
-	$currency = edd_get_currency();
+function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
+	$currency = empty( $currency )
+		? edd_get_currency()
+		: $currency;
 
 	switch ( $currency ) {
 		case 'RIAL' :
