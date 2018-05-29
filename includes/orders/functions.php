@@ -303,13 +303,14 @@ function edd_build_order( $order_data = array() ) {
 			// First, we need to check that what is being added is a valid download.
 			$download = edd_get_download( $item['id'] );
 
+			// Skip if download is missing or not actually a download
 			if ( empty( $download ) || ( 'download' !== $download->post_type ) ) {
 				continue;
 			}
 
 			// Get price ID
 			$price_id = isset( $item['item_number']['options']['price_id'] )
-				? $item['item_number']['options']['price_id']
+				? absint( $item['item_number']['options']['price_id'] )
 				: 0;
 
 			// Build a base array of information for each order item.
