@@ -24,7 +24,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 	/**
 	 * Process Get Products API Request
 	 *
-	 * @access public
 	 * @since 2.6
 	 * @param array $args Query arguments
 	 * @return array $customers Multidimensional array of the products
@@ -171,7 +170,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 	/**
 	 * Process Get Customers API Request
 	 *
-	 * @access public
 	 * @since 2.6
 	 * @global object $wpdb Used to query the database using the WordPress Database API
 	 * @param array $args Array of arguments for filters customers
@@ -255,7 +253,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		unset( $args['startdate'], $args['enddate'] );
 
-		$customer_query = EDD()->customers->get_customers( $args );
+		$customer_query = edd_get_customers( $args );
 		$customer_count = 0;
 
 		if( $customer_query ) {
@@ -308,7 +306,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 				$customers['customers'][ $customer_count ]['stats']['total_purchases'] = $customer_obj->purchase_count;
 				$customers['customers'][ $customer_count ]['stats']['total_spent']     = $customer_obj->purchase_value;
-				$customers['customers'][ $customer_count ]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
+				$customers['customers'][ $customer_count ]['stats']['total_downloads'] = edd_count_file_downloads_of_customer( $customer_obj->id );
 
 				$customer_count++;
 
@@ -332,7 +330,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 	/**
 	 * Retrieves Recent Sales
 	 *
-	 * @access public
 	 * @since  2.6
 	 * @return array
 	 */

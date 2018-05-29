@@ -23,10 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @param int $user User ID or email address
  * @param int $number Number of purchases to retrieve
- * @param bool pagination
+ * @param bool $pagination Page number to retrieve
  * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
  *
- * @return bool|object List of all user purchases
+ * @return WP_Post[]|false List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
@@ -106,28 +106,41 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  * @param int    $user User ID or email address
  * @param string $status
  *
- * @return bool|object List of unique products purchased by user
+ * @return WP_Post[]|false List of unique products purchased by user
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+
+	// Fall back to user ID
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
+	// Bail if no user
 	if ( empty( $user ) ) {
 		return false;
 	}
 
-	$by_user_id = is_numeric( $user ) ? true : false;
+	// Try to get customer
+	if ( is_numeric( $user ) ) {
+		$customer = edd_get_customer_by( 'user_id', $user );
+	} elseif ( is_email( $user ) ) {
+		$customer = edd_get_customer_by( 'email',   $user );
+	} else {
+		return false;
+	}
 
-	$customer = new EDD_Customer( $user, $by_user_id );
+	if ( empty( $customer ) ) {
+		return false;
+	}
 
-	if ( empty( $customer->payment_ids ) ) {
+	$payment_ids = $customer->get_payment_ids();
+
+	if ( empty( $payment_ids ) ) {
 		return false;
 	}
 
 	// Get all the items purchased
 	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 9999 );
-	$payment_ids    = array_reverse( explode( ',', $customer->payment_ids ) );
 	$payment_args   = array(
 		'output'   => 'payments',
 		'post__in' => $payment_ids,
@@ -197,7 +210,6 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
  *
  * Checks to see if a user has purchased a download.
  *
- * @access      public
  * @since       1.0
  * @param       int $user_id - the ID of the user to check
  * @param       array $downloads - Array of IDs to check if purchased. If an int is passed, it will be converted to an array
@@ -266,7 +278,6 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  *
  * Checks to see if a user has purchased at least one item.
  *
- * @access      public
  * @since       1.0
  * @param       int $user_id - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
@@ -288,7 +299,6 @@ function edd_has_purchases( $user_id = null ) {
  *
  * Retrieves the purchase count and the total amount spent for a specific user
  *
- * @access      public
  * @since       1.6
  * @param       int|string $user - the ID or email of the customer to retrieve stats for
  * @param       string $mode - "test" or "live"
@@ -297,27 +307,20 @@ function edd_has_purchases( $user_id = null ) {
 function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	if ( is_email( $user ) ) {
-
 		$field = 'email';
-
 	} elseif ( is_numeric( $user ) ) {
-
 		$field = 'user_id';
-
+	} else {
+		return;
 	}
 
 	$stats    = array();
-	$customer = EDD()->customers->get_customer_by( $field, $user );
+	$customer = edd_get_customer_by( $field, $user );
 
-	if( $customer ) {
-
-		$customer = new EDD_Customer( $customer->id );
-
+	if ( ! empty( $customer ) ) {
 		$stats['purchases']   = absint( $customer->purchase_count );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
-
 	}
-
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
@@ -328,7 +331,6 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
  *
  * Returns total number of purchases a customer has made
  *
- * @access      public
  * @since       1.3
  * @param       mixed $user - ID or email
  * @return      int - the total number of purchases
@@ -346,7 +348,6 @@ function edd_count_purchases_of_customer( $user = null ) {
 /**
  * Calculates the total amount spent by a user
  *
- * @access      public
  * @since       1.3
  * @param       mixed $user - ID or email
  * @return      float - the total amount the user has spent
@@ -359,9 +360,9 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 /**
- * Counts the total number of files a customer has downloaded
+ * Counts the total number of files a user (or customer if an email address is
+ * given) has downloaded
  *
- * @access      public
  * @since       1.3
  * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
@@ -369,14 +370,11 @@ function edd_purchase_total_of_user( $user = null ) {
 function edd_count_file_downloads_of_user( $user ) {
 	global $edd_logs;
 
+	// If we got an email, look up the customer ID and call the direct query
+	// for customer download counts.
 	if ( is_email( $user ) ) {
-		$meta_query = array(
-			array(
-				'key'     => '_edd_log_user_info',
-				'value'   => $user,
-				'compare' => 'LIKE'
-			)
-		);
+		return edd_count_file_downloads_of_customer( $user );
+
 	} else {
 		$meta_query = array(
 			array(
@@ -390,9 +388,29 @@ function edd_count_file_downloads_of_user( $user ) {
 }
 
 /**
+ * Counts the total number of files a customer has downloaded.
+ *
+ * @param string|int $customer_id_or_email The email address or id of the customer.
+ *
+ * @return int The total number of files the customer has downloaded.
+ */
+function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
+	global $edd_logs;
+
+	$customer   = new EDD_Customer( $customer_id_or_email );
+	$meta_query = array(
+		array(
+			'key'   => '_edd_log_customer_id',
+			'value' => $customer->id,
+		)
+	);
+
+	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+}
+
+/**
  * Validate a potential username
  *
- * @access      public
  * @since       1.3.4
  * @param       string $username The username to validate
  * @return      bool
@@ -464,7 +482,6 @@ add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 
  * This is for users that purchased as a guest and then came
  * back and created an account.
  *
- * @access      public
  * @since       1.6
  * @param       int $user_id - the new user's ID
  * @return      void
@@ -501,19 +518,17 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user', 10, 1 );
 /**
  * Counts the total number of customers.
  *
- * @access 		public
  * @since 		1.7
  * @return 		int - The total number of customers.
  */
 function edd_count_total_customers( $args = array() ) {
-	return EDD()->customers->count( $args );
+	return edd_count_customers();
 }
 
 
 /**
  * Returns the saved address for a customer
  *
- * @access 		public
  * @since 		1.8
  * @return 		array - The customer's address, if any
  */
@@ -543,11 +558,11 @@ function edd_get_customer_address( $user_id = 0 ) {
 /**
  * Sends the new user notification email when a user registers during checkout
  *
- * @access 		public
- * @since 		1.8.8
+ * @since       1.8.8
  * @param int   $user_id
  * @param array $user_data
- * @return 		void
+ *
+ * @return      void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
@@ -559,21 +574,25 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
+	// Setup and send the new user email for Admins.
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 
-	$admin_subject  = sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name );
-	$admin_heading  = __( 'New user registration', 'easy-digital-downloads' );
+	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$admin_heading  = apply_filters( 'edd_user_registration_admin_email_heading', __( 'New user registration', 'easy-digital-downloads' ), $user_data );
 	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
 	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads'), $user_data['user_email'] ) . "\r\n";
+
+	$admin_message = apply_filters( 'edd_user_registration_admin_email_message', $admin_message, $user_data );
 
 	$emails->__set( 'heading', $admin_heading );
 
 	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
 
-	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
-	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
-	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
+	// Setup and send the new user email for the end user.
+	$user_subject  = apply_filters( 'edd_user_registration_email_subject', sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$user_heading  = apply_filters( 'edd_user_registration_email_heading', __( 'Your account info', 'easy-digital-downloads' ), $user_data );
+	$user_message  = apply_filters( 'edd_user_registration_email_username', sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n", $user_data );
 
 	if ( did_action( 'edd_pre_process_purchase' ) ) {
 		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
@@ -581,17 +600,20 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
 	}
 
-	$user_message .= sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n";
+	$user_message .= apply_filters( 'edd_user_registration_email_password', sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n" );
 
+	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
 	if( $emails->html ) {
 
-		$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+		$user_message .= '<a href="' . $login_url . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	} else {
 
-		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), wp_login_url() ) . "\r\n";
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), $login_url ) . "\r\n";
 
 	}
+
+	$user_message = apply_filters( 'edd_user_registration_email_message', $user_message, $user_data );
 
 	$emails->__set( 'heading', $user_heading );
 
@@ -650,7 +672,6 @@ function edd_set_user_to_verified( $user_id = 0 ) {
 /**
  * Determines if the user account is pending verification. Pending accounts cannot view purchase history
  *
- * @access  public
  * @since   2.4.4
  * @return  bool
  */
@@ -674,7 +695,6 @@ function edd_user_pending_verification( $user_id = null ) {
 /**
  * Gets the activation URL for the specified user
  *
- * @access  public
  * @since   2.4.4
  * @return  string
  */
@@ -700,7 +720,6 @@ function edd_get_user_verification_url( $user_id = 0 ) {
 /**
  * Gets the URL that triggers a new verification email to be sent
  *
- * @access  public
  * @since   2.4.4
  * @return  string
  */
@@ -721,9 +740,8 @@ function edd_get_user_verification_request_url( $user_id = 0 ) {
 /**
  * Sends an email to the specified user with a URL to verify their account
  *
- * @access  public
  * @since   2.4.4
- * @return  void
+ * @param int $user_id
  */
 function edd_send_user_verification_email( $user_id = 0 ) {
 
@@ -920,8 +938,7 @@ function edd_process_user_verification_request() {
 		add_query_arg( 'edd-verify-request', '1', edd_get_user_verification_page() )
 	);
 
-	wp_safe_redirect( $redirect );
-	exit;
+	edd_redirect( $redirect );
 
 }
 add_action( 'edd_send_verification_email', 'edd_process_user_verification_request' );
@@ -967,9 +984,7 @@ function edd_process_user_account_verification() {
 		add_query_arg( 'edd-verify-success', '1', edd_get_user_verification_page() )
 	);
 
-	wp_safe_redirect( $redirect );
-	exit;
-
+	edd_redirect( $redirect );
 }
 add_action( 'edd_verify_user', 'edd_process_user_account_verification' );
 
@@ -1024,6 +1039,23 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
 function edd_show_user_api_key_field( $user ) {
 
 	if ( get_current_user_id() !== $user->ID ) {
+		return;
+	}
+
+	/**
+	 * Show API User Key Fields
+	 *
+	 * Allows showing/hiding the user API Key fields. By default will only try to show on admin pages. The filter
+	 * allows for developers to choose to show it in other places that the WordPress profile editor hooks are used
+	 * like bbPress
+	 *
+	 * @since 2.9.1
+	 *
+	 * @param boolean If EDD should attempt to load the user API fields
+	 * @param WP_User The User object currently being viewed.
+	 */
+	$show_fields = apply_filters( 'edd_show_user_api_key_fields', is_admin(), $user );
+	if ( ! $show_fields ) {
 		return;
 	}
 

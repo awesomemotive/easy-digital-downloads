@@ -10,7 +10,7 @@
   */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Process Download
@@ -177,9 +177,8 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			@set_time_limit(0);
-		}
+		edd_set_time_limit( false );
+
 		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
 			set_magic_quotes_runtime(0);
 		}
@@ -193,11 +192,11 @@ function edd_process_download() {
 		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $args['payment'] );
 
 		nocache_headers();
-		header("Robots: none");
-		header("Content-Type: " . $ctype . "");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ), $args ) . "\"");
-		header("Content-Transfer-Encoding: binary");
+		header('Robots: none');
+		header('Content-Type: ' . $ctype );
+		header('Content-Description: File Transfer');
+		header('Content-Disposition: attachment; filename="' . apply_filters( 'edd_requested_file_name', basename( $requested_file ), $args ) . '"' );
+		header('Content-Transfer-Encoding: binary');
 
 		// If the file isn't locally hosted, process the redirect
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
@@ -257,19 +256,19 @@ function edd_process_download() {
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
-
 					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
+					$ignore_x_accel_redirect_header = apply_filters( 'edd_ignore_x_accel_redirect', false );
 
-					// We need a path relative to the domain
-					$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
-					header( "X-Accel-Redirect: /$file_path" );
-
+					if ( ! $ignore_x_accel_redirect_header ) {
+						// We need a path relative to the domain
+						$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
+						header( "X-Accel-Redirect: /$file_path" );
+					}
 				}
 
-				if( $direct ) {
-
+				if ( $direct ) {
 					edd_deliver_download( $file_path );
 
 				} else {
@@ -298,7 +297,6 @@ add_action( 'init', 'edd_process_download', 100 );
  *
  * If enabled, the file is symlinked to better support large file downloads
  *
- * @access   public
  * @param    string    $file
  * @param    bool      $redirect True if we should perform a header redirect instead of calling edd_readfile_chunked()
  * @return   void
@@ -346,16 +344,13 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 		}
 
 	} elseif( $redirect ) {
-
 		header( 'Location: ' . $file );
 
 	} else {
 
 		// Read the file and deliver it in chunks
 		edd_readfile_chunked( $file );
-
 	}
-
 }
 
 /**
@@ -366,10 +361,10 @@ function edd_deliver_download( $file = '', $redirect = false ) {
  * @return bool                   If the file is hosted locally or not
  */
 function edd_is_local_file( $requested_file ) {
-	$home_url       = preg_replace('#^https?://#', '', home_url() );
+	$site_url       = preg_replace('#^https?://#', '', site_url() );
 	$requested_file = preg_replace('#^(https?|file)://#', '', $requested_file );
 
-	$is_local_url  = strpos( $requested_file, $home_url ) === 0;
+	$is_local_url  = strpos( $requested_file, $site_url ) === 0;
 	$is_local_path = strpos( $requested_file, '/' ) === 0;
 
 	return ( $is_local_url || $is_local_path );
@@ -388,7 +383,8 @@ function edd_get_local_path_from_url( $url ) {
 
 	$file       = $url;
 	$upload_dir = wp_upload_dir();
-	$upload_url = $upload_dir['baseurl'] . '/edd';
+	$edd_dir    = edd_get_uploads_base_dir();
+	$upload_url = $upload_dir['baseurl'] . '/' . $edd_dir;
 
 	if( defined( 'UPLOADS' ) && strpos( $file, UPLOADS ) !== false ) {
 
@@ -422,7 +418,6 @@ function edd_get_local_path_from_url( $url ) {
 /**
  * Get the file content type
  *
- * @access   public
  * @param    string    file extension
  * @return   string
  */
@@ -732,34 +727,97 @@ function edd_get_file_ctype( $extension ) {
  * Reads file in chunks so big downloads are possible without changing PHP.INI
  * See http://codeigniter.com/wiki/Download_helper_for_large_files/
  *
- * @access   public
- * @param    string  $file      The file
- * @param    boolean $retbytes  Return the bytes of file
+ * @param    string  $file     The file
+ * @param    boolean $retbytes Return the bytes of file
+ *
  * @return   bool|string        If string, $status || $cnt
  */
 function edd_readfile_chunked( $file, $retbytes = true ) {
+	while ( ob_get_level() > 0 ) {
+		ob_end_clean();
+	}
+
+	ob_start();
+
+	// If output buffers exist, make sure they are closed. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6387
+	if ( ob_get_length() ) {
+		ob_clean();
+	}
 
 	$chunksize = 1024 * 1024;
 	$buffer    = '';
 	$cnt       = 0;
-	$handle    = @fopen( $file, 'rb' );
+	$handle    = @fopen( $file, 'r' );
 
 	if ( $size = @filesize( $file ) ) {
-		header("Content-Length: " . $size );
+		header( "Content-Length: " . $size );
 	}
 
 	if ( false === $handle ) {
 		return false;
 	}
 
+	if ( isset( $_SERVER['HTTP_RANGE'] ) ) {
+		list( $size_unit, $range ) = explode( '=', $_SERVER['HTTP_RANGE'], 2 );
+		if ( 'bytes' === $size_unit ) {
+			if ( strpos( ',', $range ) ) {
+				list( $range ) = explode( ',', $range, 1 );
+			}
+		} else {
+			$range = '';
+			header( 'HTTP/1.1 416 Requested Range Not Satisfiable' );
+			exit;
+		}
+	} else {
+		$range = '';
+	}
+
+	if ( empty( $range ) ) {
+		$seek_start = null;
+		$seek_end   = null;
+	} else {
+		list( $seek_start, $seek_end ) = explode( '-', $range, 2 );
+	}
+
+	$seek_end   = ( empty( $seek_end ) ) ? ( $size - 1 ) : min( abs( intval( $seek_end ) ), ( $size - 1 ) );
+	$seek_start = ( empty( $seek_start ) || $seek_end < abs( intval( $seek_start ) ) ) ? 0 : max( abs( intval( $seek_start ) ), 0 );
+
+	// Only send partial content header if downloading a piece of the file (IE workaround)
+	if ( $seek_start > 0 || $seek_end < ( $size - 1 ) ) {
+		header( 'HTTP/1.1 206 Partial Content' );
+		header( 'Content-Range: bytes ' . $seek_start . '-' . $seek_end . '/' . $size );
+		header( 'Content-Length: ' . ( $seek_end - $seek_start + 1 ) );
+	} else {
+		header( "Content-Length: $size" );
+	}
+
+	header( 'Accept-Ranges: bytes' );
+
+	edd_set_time_limit( false );
+
+	fseek( $handle, $seek_start );
+
 	while ( ! @feof( $handle ) ) {
 		$buffer = @fread( $handle, $chunksize );
 		echo $buffer;
+		ob_flush();
+
+		if ( ob_get_length() ) {
+			ob_flush();
+			flush();
+		}
 
 		if ( $retbytes ) {
 			$cnt += strlen( $buffer );
 		}
+
+		if ( connection_status() != 0 ) {
+			@fclose( $handle );
+			exit;
+		}
 	}
+
+	ob_flush();
 
 	$status = @fclose( $handle );
 

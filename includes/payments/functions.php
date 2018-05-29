@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Retrieves an instance of EDD_Payment for a specified ID.
@@ -19,12 +19,12 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @param mixed int|EDD_Payment|WP_Post $payment Payment ID, EDD_Payment object or WP_Post object.
  * @param bool                          $by_txn  Is the ID supplied as the first parameter
- * @return mixed false|object EDD_Payment if a valid payment ID, false otherwise.
+ * @return EDD_Payment|false false|object EDD_Payment if a valid payment ID, false otherwise.
  */
 function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 	global $wpdb;
 
-	if ( is_a( $payment_or_txn_id, 'WP_Post' ) || is_a( $payment_or_txn_id, 'EDD_Payment' ) ) {
+	if ( $payment_or_txn_id instanceof WP_Post || $payment_or_txn_id instanceof EDD_Payment ) {
 		$payment_id = $payment_or_txn_id->ID;
 	} elseif ( $by_txn ) {
 		if ( empty( $payment_or_txn_id ) ) {
@@ -76,7 +76,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  *
  * @since 1.0
  * @param array $args Arguments passed to get payments
- * @return object $payments Payments retrieved from the database
+ * @return EDD_Payment[] $payments Payments retrieved from the database
  */
 function edd_get_payments( $args = array() ) {
 
@@ -257,6 +257,14 @@ function edd_insert_payment( $payment_data = array() ) {
 	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
 
 	$payment->save();
+
+	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) {
+		$payment_data['agree_to_terms_time'] = current_time( 'timestamp' );
+	}
+
+	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) && ! empty( $_POST['edd_agree_to_privacy_policy'] ) ) {
+		$payment_data['agree_to_privacy_time'] = current_time( 'timestamp' );
+	}
 
 	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
 
@@ -708,31 +716,44 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 		if( ! $payment->ID > 0 ) {
 			return false;
 		}
-
 	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
 		return false;
 	}
 
+	if ( true === $return_label ) {
+		return edd_get_payment_status_label( $payment->post_status );
+	} else {
+		$statuses = edd_get_payment_statuses();
+
+		// Account that our 'publish' status is labeled 'Complete'
+		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+
+		// Make sure we're matching cases, since they matter
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
+	}
+
+	return ! empty( $status ) ? $status : false;
+}
+
+/**
+ * Given a payment status string, return the label for that string.
+ *
+ * @since 2.9.2
+ * @param string $status
+ *
+ * @return bool|mixed
+ */
+function edd_get_payment_status_label( $status = '' ) {
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
 		return false;
 	}
 
-	$payment = new EDD_Payment( $payment->ID );
-
-	if ( array_key_exists( $payment->status, $statuses ) ) {
-		if ( true === $return_label ) {
-			return $statuses[ $payment->status ];
-		} else {
-			// Account that our 'publish' status is labeled 'Complete'
-			$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
-
-			// Make sure we're matching cases, since they matter
-			return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
-		}
+	if ( array_key_exists( $status, $statuses ) ) {
+		return $statuses[ $status ];
 	}
 
 	return false;
@@ -745,17 +766,15 @@ function edd_get_payment_status( $payment, $return_label = false ) {
  * @return array $payment_status All the available payment statuses
  */
 function edd_get_payment_statuses() {
-	$payment_statuses = array(
-		'pending'   => __( 'Pending', 'easy-digital-downloads' ),
-		'publish'   => __( 'Complete', 'easy-digital-downloads' ),
-		'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
-		'failed'    => __( 'Failed', 'easy-digital-downloads' ),
-		'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),
-		'revoked'   => __( 'Revoked', 'easy-digital-downloads' ),
-		'processing' => __( 'Processing', 'easy-digital-downloads' )
-	);
-
-	return apply_filters( 'edd_payment_statuses', $payment_statuses );
+	return apply_filters( 'edd_payment_statuses', array(
+		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
+		'processing' => __( 'Processing', 'easy-digital-downloads' ),
+		'publish'    => __( 'Complete',   'easy-digital-downloads' ),
+		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
+		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
+		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
+		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' )
+	) );
 }
 
 /**
@@ -788,7 +807,6 @@ function edd_is_payment_complete( $payment_id = 0 ) {
 		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
 			$ret = true;
 		}
-
 	}
 
 	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
@@ -1293,7 +1311,6 @@ function edd_payment_amount( $payment_id = 0 ) {
 /**
  * Get the amount associated with a payment
  *
- * @access public
  * @since 1.2
  * @param int $payment_id Payment ID
  * @return float Payment amount
@@ -1485,23 +1502,22 @@ function edd_get_purchase_id_by_transaction_id( $key ) {
  * Retrieve all notes attached to a purchase
  *
  * @since 1.4
- * @param int $payment_id The payment ID to retrieve notes for
- * @param string $search Search for notes that contain a search term
- * @return array $notes Payment Notes
+ * @since 3.0 Updated to use the edd_notes custom table to store notes.
+ *
+ * @param int    $payment_id The payment ID to retrieve notes for.
+ * @param string $search     Search for notes that contain a search term.
+ * @return array|bool $notes Payment Notes, false otherwise.
  */
 function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
-
 	if ( empty( $payment_id ) && empty( $search ) ) {
 		return false;
 	}
 
-	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10 );
-
-	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
-
-	add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
+	$notes = edd_get_notes( array(
+		'object_id' => $payment_id,
+		'order'     => 'ASC',
+		'search'    => '',
+	) );
 
 	return $notes;
 }
@@ -1511,17 +1527,27 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
  * Add a note to a payment
  *
  * @since 1.4
- * @param int $payment_id The payment ID to store a note for
- * @param string $note The note to store
- * @return int The new note ID
+ * @since 3.0 Updated to use the edd_notes custom table to store notes.
+ *
+ * @param int    $payment_id The payment ID to store a note for.
+ * @param string $note       The content of the note.
+ * @return int|false The new note ID, false otherwise.
  */
 function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
-	if ( empty( $payment_id ) )
+
+	// Bail if no payment ID or note
+	if ( empty( $payment_id ) || empty( $note ) ) {
 		return false;
+	}
 
 	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
 
-	$note_id = wp_insert_comment( wp_filter_comment( array(
+	/**
+	 * For backwards compatibility purposes, we need to pass the data to
+	 * wp_filter_comment in the event that the note data is filtered using the
+	 * WordPress Core filters prior to be inserted into the database.
+	 */
+	$filtered_data = wp_filter_comment( array(
 		'comment_post_ID'      => $payment_id,
 		'comment_content'      => $note,
 		'user_id'              => is_admin() ? get_current_user_id() : 0,
@@ -1534,72 +1560,59 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'comment_author_url'   => '',
 		'comment_author_email' => '',
 		'comment_type'         => 'edd_payment_note'
+	) );
 
-	) ) );
+	// Add the note
+	$note_id = edd_add_note( array(
+		'object_id'   => $filtered_data['comment_post_ID'],
+		'content'     => $filtered_data['comment_content'],
+		'user_id'     => $filtered_data['user_id'],
+		'object_type' => 'payment',
+	) );
 
 	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
 
+	// Return the ID of the new note
 	return $note_id;
 }
 
 /**
- * Deletes a payment note
+ * Deletes a payment note.
  *
  * @since 1.6
- * @param int $comment_id The comment ID to delete
- * @param int $payment_id The payment ID the note is connected to
- * @return bool True on success, false otherwise
+ * @since 3.0 Updated to use the edd_notes custom table to store notes.
+ *
+ * @param int $note_id The Note ID to delete.
+ * @param int $payment_id The payment ID the note is connected to.
+ * @return bool True on success, false otherwise.
  */
-function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
-	if( empty( $comment_id ) )
+function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
+	if ( empty( $note_id ) ) {
 		return false;
+	}
 
-	do_action( 'edd_pre_delete_payment_note', $comment_id, $payment_id );
-	$ret = wp_delete_comment( $comment_id, true );
-	do_action( 'edd_post_delete_payment_note', $comment_id, $payment_id );
+	do_action( 'edd_pre_delete_payment_note', $note_id, $payment_id );
+
+	$ret = edd_delete_note( $note_id );
+
+	do_action( 'edd_post_delete_payment_note', $note_id, $payment_id );
 
 	return $ret;
 }
 
 /**
- * Gets the payment note HTML
+ * Gets the payment note HTML.
  *
  * @since 1.9
- * @param object|int $note The comment object or ID
- * @param int $payment_id The payment ID the note is connected to
- * @return string
+ * @since 3.0 Deprecated & unused (use edd_admin_get_note_html())
+ *
+ * @param object|int $note       The note object or ID.
+ * @param int        $payment_id The payment ID the note is connected to.
+ *
+ * @return string Payment note HTML.
  */
 function edd_get_payment_note_html( $note, $payment_id = 0 ) {
-
-	if( is_numeric( $note ) ) {
-		$note = get_comment( $note );
-	}
-
-	if ( ! empty( $note->user_id ) ) {
-		$user = get_userdata( $note->user_id );
-		$user = $user->display_name;
-	} else {
-		$user = __( 'EDD Bot', 'easy-digital-downloads' );
-	}
-
-	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
-
-	$delete_note_url = wp_nonce_url( add_query_arg( array(
-		'edd-action' => 'delete_payment_note',
-		'note_id'    => $note->comment_ID,
-		'payment_id' => $payment_id
-	) ), 'edd_delete_payment_note_' . $note->comment_ID );
-
-	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
-		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
-			$note_html .= make_clickable( $note->comment_content );
-			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		$note_html .= '</p>';
-	$note_html .= '</div>';
-
-	return $note_html;
-
+	return edd_admin_get_note_html( $note );
 }
 
 /**
@@ -1613,9 +1626,9 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 function edd_hide_payment_notes( $query ) {
 	global $wp_version;
 
-	if( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
+	if ( version_compare( floatval( $wp_version ), '4.1', '>=' ) ) {
 		$types = isset( $query->query_vars['type__not_in'] ) ? $query->query_vars['type__not_in'] : array();
-		if( ! is_array( $types ) ) {
+		if ( ! is_array( $types ) ) {
 			$types = array( $types );
 		}
 		$types[] = 'edd_payment_note';
@@ -1665,7 +1678,6 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
 /**
  * Remove EDD Comments from the wp_count_comments function
  *
- * @access public
  * @since 1.5.2
  * @param array $stats (empty from core filter)
  * @param int $post_id Post ID
@@ -1723,7 +1735,6 @@ add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 1
 /**
  * Filter where older than one week
  *
- * @access public
  * @since 1.6
  * @param string $where Where clause
  * @return string $where Modified where clause

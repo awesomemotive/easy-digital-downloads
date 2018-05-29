@@ -441,6 +441,9 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
+	/**
+	 * @expectEDDeprecated edd_undo_purchase_on_refund
+	 */
 	public function test_refund_payment_legacy() {
 		$payment  = edd_get_payment( $this->_payment_id );
 		$payment->status = 'complete';

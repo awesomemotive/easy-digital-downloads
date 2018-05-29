@@ -10,7 +10,7 @@
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Process the payment details edit
@@ -259,14 +259,6 @@ function edd_update_payment_details( $data ) {
 
 	$payment->has_unlimited_downloads = $unlimited;
 
-	// Check for payment notes
-	if ( ! empty( $data['edd-payment-note'] ) ) {
-
-		$note  = wp_kses( $data['edd-payment-note'], array() );
-		edd_insert_payment_note( $payment->ID, $note );
-
-	}
-
 	// Set new status
 	$payment->status = $status;
 
@@ -295,8 +287,13 @@ function edd_update_payment_details( $data ) {
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-updated&id=' . $payment_id ) );
-	exit;
+	edd_redirect( add_query_arg( array(
+		'post_type'   => 'download',
+		'page'        => 'edd-payment-history',
+		'view'        => 'view-order-details',
+		'edd-message' => 'payment-updated',
+		'id'          => $payment_id
+	), admin_url( 'edit.php' ) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
@@ -317,76 +314,11 @@ function edd_trigger_purchase_delete( $data ) {
 		}
 
 		edd_delete_purchase( $payment_id );
-		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
 		edd_die();
 	}
 }
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
-
-function edd_ajax_store_payment_note() {
-
-	$payment_id = absint( $_POST['payment_id'] );
-	$note       = wp_kses( $_POST['note'], array() );
-
-	if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	}
-
-	if( empty( $payment_id ) )
-		die( '-1' );
-
-	if( empty( $note ) )
-		die( '-1' );
-
-	$note_id = edd_insert_payment_note( $payment_id, $note );
-	die( edd_get_payment_note_html( $note_id ) );
-}
-add_action( 'wp_ajax_edd_insert_payment_note', 'edd_ajax_store_payment_note' );
-
-/**
- * Triggers a payment note deletion without ajax
- *
- * @since 1.6
- * @param array $data Arguments passed
- * @return void
-*/
-function edd_trigger_payment_note_deletion( $data ) {
-
-	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note_' . $data['note_id'] ) )
-		return;
-
-	if( ! current_user_can( 'edit_shop_payments', $data['payment_id'] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	}
-
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-note-deleted&id=' . absint( $data['payment_id'] ) );
-
-	edd_delete_payment_note( $data['note_id'], $data['payment_id'] );
-
-	wp_redirect( $edit_order_url );
-}
-add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
-
-/**
- * Delete a payment note deletion with ajax
- *
- * @since 1.6
- * @return void
-*/
-function edd_ajax_delete_payment_note() {
-
-	if( ! current_user_can( 'edit_shop_payments', $_POST['payment_id'] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-	}
-
-	if( edd_delete_payment_note( $_POST['note_id'], $_POST['payment_id'] ) ) {
-		die( '1' );
-	} else {
-		die( '-1' );
-	}
-
-}
-add_action( 'wp_ajax_edd_delete_payment_note', 'edd_ajax_delete_payment_note' );
 
 /**
  * Retrieves a new download link for a purchased file

@@ -104,7 +104,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 		return;
 	}
 
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) ) {
+	if ( edd_doing_autosave() || edd_doing_ajax() || isset( $_REQUEST['bulk_edit'] ) ) {
 		return;
 	}
 

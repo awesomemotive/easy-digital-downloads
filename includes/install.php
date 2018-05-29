@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -31,21 +31,15 @@ function edd_install( $network_wide = false ) {
 	global $wpdb;
 
 	if ( is_multisite() && $network_wide ) {
-
 		foreach ( $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs LIMIT 100" ) as $blog_id ) {
-
 			switch_to_blog( $blog_id );
 			edd_run_install();
 			restore_current_blog();
-
 		}
 
 	} else {
-
 		edd_run_install();
-
 	}
-
 }
 register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 
@@ -56,11 +50,14 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  * @return void
  */
 function edd_run_install() {
-	global $wpdb, $edd_options;
+	global $edd_options;
 
-	if( ! function_exists( 'edd_create_protection_files' ) ) {
+	if ( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 	}
+
+	// Setup the components (customers, discounts, logs, etc...)
+	edd_setup_components();
 
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
@@ -158,25 +155,23 @@ function edd_run_install() {
 	}
 
 	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $sections ) {
-		foreach( $sections as $section => $settings) {
+	$all_settings = edd_get_registered_settings();
+	foreach ( $all_settings as $tab => $sections ) {
+		foreach ( $sections as $section => $settings) {
 
 			// Check for backwards compatibility
 			$tab_sections = edd_get_settings_tab_sections( $tab );
-			if( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
+			if ( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
 				$section = 'main';
 				$settings = $sections;
 			}
 
 			foreach ( $settings as $option ) {
-
-				if( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+				if ( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
 					$options[ $option['id'] ] = '1';
 				}
-
 			}
 		}
-
 	}
 
 	$merged_options = array_merge( $edd_options, $options );
@@ -196,10 +191,6 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customer databases
-	@EDD()->customers->create_table();
-	@EDD()->customer_meta->create_table();
-
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
 
@@ -214,14 +205,14 @@ function edd_run_install() {
 			'upgrade_payment_taxes',
 			'upgrade_customer_payments_association',
 			'upgrade_user_api_keys',
-			'remove_refunded_sale_logs'
+			'remove_refunded_sale_logs',
+			'update_file_download_log_data',
 		);
 
 		foreach ( $upgrade_routines as $upgrade ) {
 			edd_set_upgrade_complete( $upgrade );
 		}
 	}
-
 }
 
 /**
@@ -237,42 +228,13 @@ function edd_run_install() {
  * @return void
  */
 function edd_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-
 	if ( is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
-
 		switch_to_blog( $blog_id );
 		edd_install();
 		restore_current_blog();
-
 	}
-
 }
 add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
-
-
-/**
- * Drop our custom tables when a mu site is deleted
- *
- * @since  2.5
- * @param  array $tables  The tables to drop
- * @param  int   $blog_id The Blog ID being deleted
- * @return array          The tables to drop
- */
-function edd_wpmu_drop_tables( $tables, $blog_id ) {
-
-	switch_to_blog( $blog_id );
-	$customers_db     = new EDD_DB_Customers();
-	$customer_meta_db = new EDD_DB_Customer_Meta();
-	if ( $customers_db->installed() ) {
-		$tables[] = $customers_db->table_name;
-		$tables[] = $customer_meta_db->table_name;
-	}
-	restore_current_blog();
-
-	return $tables;
-
-}
-add_filter( 'wpmu_drop_tables', 'edd_wpmu_drop_tables', 10, 2 );
 
 /**
  * Post-installation
@@ -289,36 +251,14 @@ function edd_after_install() {
 		return;
 	}
 
-	$edd_options     = get_transient( '_edd_installed' );
-	$edd_table_check = get_option( '_edd_table_check', false );
+	$edd_options = get_transient( '_edd_installed' );
 
-	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
-
-		if ( ! @EDD()->customer_meta->installed() ) {
-
-			// Create the customer meta database (this ensures it creates it on multisite instances where it is network activated)
-			@EDD()->customer_meta->create_table();
-
-		}
-
-		if ( ! @EDD()->customers->installed() ) {
-			// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
-			@EDD()->customers->create_table();
-			@EDD()->customer_meta->create_table();
-
-			do_action( 'edd_after_install', $edd_options );
-		}
-
-		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );
-
-	}
+	do_action( 'edd_after_install', $edd_options );
 
 	if ( false !== $edd_options ) {
 		// Delete the transient
 		delete_transient( '_edd_installed' );
 	}
-
-
 }
 add_action( 'admin_init', 'edd_after_install' );
 

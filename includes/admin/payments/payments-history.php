@@ -24,26 +24,36 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_payment_history_page() {
 	$edd_payment = get_post_type_object( 'edd_payment' );
 
-	if ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
+	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
 		$payments_table = new EDD_Payment_History_Table();
-		$payments_table->prepare_items();
-	?>
+		$payments_table->prepare_items(); ?>
+
 	<div class="wrap">
 		<h1><?php echo $edd_payment->labels->menu_name ?></h1>
+
+		<hr class="wp-header-end">
+
 		<?php do_action( 'edd_payments_page_top' ); ?>
+
 		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-payment-history" />
 
-			<?php $payments_table->views() ?>
+			<?php
+			
+			$payments_table->views();
 
-			<?php $payments_table->advanced_filters(); ?>
+			$payments_table->advanced_filters();
 
-			<?php $payments_table->display() ?>
+			$payments_table->display();
+
+			?>
 		</form>
+
 		<?php do_action( 'edd_payments_page_bottom' ); ?>
 	</div>
 <?php

@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Export Class
@@ -30,7 +30,6 @@ class EDD_Export {
 	/**
 	 * Can we export?
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return bool Whether we can export or not
 	 */
@@ -41,26 +40,21 @@ class EDD_Export {
 	/**
 	 * Set the export headers
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
-			set_time_limit( 0 );
+		edd_set_time_limit();
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="edd-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols All the columns
 	 */
@@ -75,7 +69,6 @@ class EDD_Export {
 	/**
 	 * Retrieve the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols Array of the columns
 	 */
@@ -87,7 +80,6 @@ class EDD_Export {
 	/**
 	 * Output the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @uses EDD_Export::get_csv_cols()
 	 * @return void
@@ -106,7 +98,6 @@ class EDD_Export {
 	/**
 	 * Get the data being exported
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $data Data for Export
 	 */
@@ -132,7 +123,6 @@ class EDD_Export {
 	/**
 	 * Output the CSV rows
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
@@ -159,7 +149,6 @@ class EDD_Export {
 	/**
 	 * Perform the export
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @uses EDD_Export::can_export()
 	 * @uses EDD_Export::headers()

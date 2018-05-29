@@ -157,7 +157,6 @@ class EDD_License {
 	/**
 	 * Add license field to settings
 	 *
-	 * @access  public
 	 * @param array   $settings
 	 * @return  array
 	 */
@@ -180,7 +179,6 @@ class EDD_License {
 	/**
 	 * Display help text at the top of the Licenses tag
 	 *
-	 * @access  public
 	 * @since   2.5
 	 * @param   string   $active_tab
 	 * @return  void
@@ -210,7 +208,6 @@ class EDD_License {
 	/**
 	 * Activate the license key
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	public function activate_license() {
@@ -293,7 +290,6 @@ class EDD_License {
 	/**
 	 * Deactivate the license key
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	public function deactivate_license() {
@@ -352,7 +348,6 @@ class EDD_License {
 	/**
 	 * Check if license key is valid once per week
 	 *
-	 * @access  public
 	 * @since   2.5
 	 * @return  void
 	 */
@@ -399,7 +394,6 @@ class EDD_License {
 	/**
 	 * Admin notices for errors
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	public function notices() {
@@ -450,7 +444,6 @@ class EDD_License {
 	/**
 	 * Displays message inline on plugin row that the license key is missing
 	 *
-	 * @access  public
 	 * @since   2.5
 	 * @return  void
 	 */
@@ -471,7 +464,6 @@ class EDD_License {
 	/**
 	 * Adds this plugin to the beta page
 	 *
-	 * @access  public
 	 * @param   array $products
 	 * @since   2.6.11
 	 * @return  void

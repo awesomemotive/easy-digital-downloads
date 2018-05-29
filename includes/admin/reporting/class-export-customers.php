@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Customers_Export Class
@@ -31,15 +31,11 @@ class EDD_Customers_Export extends EDD_Export {
 	/**
 	 * Set the export headers
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
-			set_time_limit( 0 );
+		edd_set_time_limit();
 
 		$extra = '';
 
@@ -49,14 +45,13 @@ class EDD_Customers_Export extends EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_customers_export_filename', 'edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="' . apply_filters( 'edd_customers_export_filename', 'edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return array $cols All the columns
 	 */
@@ -91,7 +86,6 @@ class EDD_Customers_Export extends EDD_Export {
 	/**
 	 * Get the Export Data
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
@@ -99,7 +93,6 @@ class EDD_Customers_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $wpdb;
 
 		$data = array();
 
@@ -141,7 +134,9 @@ class EDD_Customers_Export extends EDD_Export {
 		} else {
 
 			// Export all customers
-			$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
+			$customers = edd_get_customers( array(
+				'limit' => -1
+			) );
 
 			$i = 0;
 

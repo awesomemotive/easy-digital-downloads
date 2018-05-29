@@ -449,7 +449,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			// Make sure we found a customer. Create one if not.
 			if( empty( $customer->id ) ) {
 
-				if ( ! is_a( $customer, 'EDD_Customer' ) ) {
+				if ( ! $customer instanceof EDD_Customer ) {
 					$customer = new EDD_Customer;
 				}
 

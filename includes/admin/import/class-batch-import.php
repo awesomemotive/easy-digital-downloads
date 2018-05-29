@@ -110,7 +110,6 @@ class EDD_Batch_Import {
 	/**
 	 * Can we import?
 	 *
-	 * @access public
 	 * @since 2.6
 	 * @return bool Whether we can iport or not
 	 */
@@ -121,7 +120,6 @@ class EDD_Batch_Import {
 	/**
 	 * Get the CSV columns
 	 *
-	 * @access public
 	 * @since 2.6
 	 * @return array The columns in the CSV
 	 */
@@ -135,7 +133,6 @@ class EDD_Batch_Import {
 	 *
 	 * This is used for showing an example of what the import will look like
 	 *
-	 * @access public
 	 * @since 2.6
 	 * @return array The first row after the header of the CSV
 	 */

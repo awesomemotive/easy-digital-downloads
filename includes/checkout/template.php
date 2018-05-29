@@ -573,7 +573,7 @@ function edd_get_login_fields() {
 				<?php endif; ?>
 			</p>
 			<p id="edd-user-login-submit">
-				<input type="submit" class="edd-submit button <?php echo $color; ?>" name="edd_login_submit" value="<?php _e( 'Login', 'easy-digital-downloads' ); ?>"/>
+				<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" name="edd_login_submit" value="<?php _e( 'Login', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<?php do_action('edd_checkout_login_fields_after'); ?>
 		</fieldset><!--end #edd_login_fields-->
@@ -652,58 +652,59 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 */
 function edd_show_payment_icons() {
 
-	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
+	if ( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
 		return;
 	}
 
 	$payment_methods = edd_get_option( 'accepted_cards', array() );
 
-	if( empty( $payment_methods ) ) {
+	if ( empty( $payment_methods ) ) {
 		return;
+	}
+
+	// Get the icon order option
+	$order = edd_get_option( 'payment_icons_order', '' );
+
+	// If order is set, enforce it
+	if ( ! empty( $order ) ) {
+		$order           = array_flip( explode( ',', $order ) );
+		$order           = array_intersect_key( $order, $payment_methods );
+		$payment_methods = array_merge( $order, $payment_methods );
 	}
 
 	echo '<div class="edd-payment-icons">';
 
-	foreach( $payment_methods as $key => $card ) {
-
-		if( edd_string_is_image_url( $key ) ) {
-
+	foreach ( $payment_methods as $key => $card ) {
+		if ( edd_string_is_image_url( $key ) ) {
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 
 		} else {
-
 			$card = strtolower( str_replace( ' ', '', $card ) );
 
-			if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-
+			if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
 
+			} elseif ( has_filter( 'edd_accepted_payment_' . $key . '_image' ) ) {
+				$image = apply_filters( 'edd_accepted_payment_' . $key  . '_image', '' );
+
 			} else {
+				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
 
-				$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
-				$content_dir = WP_CONTENT_DIR;
+				// Replaces backslashes with forward slashes for Windows systems
+				$plugin_dir  = wp_normalize_path( WP_PLUGIN_DIR );
+				$content_dir = wp_normalize_path( WP_CONTENT_DIR );
+				$image       = wp_normalize_path( $image );
 
-				if( function_exists( 'wp_normalize_path' ) ) {
-
-					// Replaces backslashes with forward slashes for Windows systems
-					$image = wp_normalize_path( $image );
-					$content_dir = wp_normalize_path( $content_dir );
-
-				}
-
-				$image = str_replace( $content_dir, content_url(), $image );
-
+				$image = str_replace( $plugin_dir, WP_PLUGIN_URL, $image );
+				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
 			}
 
-			if( edd_is_ssl_enforced() || is_ssl() ) {
-
+			if ( edd_is_ssl_enforced() || is_ssl() ) {
 				$image = edd_enforced_ssl_asset_filter( $image );
-
 			}
 
 			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 		}
-
 	}
 
 	echo '</div>';
@@ -747,7 +748,7 @@ function edd_discount_field() {
 				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'easy-digital-downloads' ); ?></span>
 				<span class="edd-discount-code-field-wrap">
 					<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'easy-digital-downloads' ); ?>"/>
-					<input type="submit" class="edd-apply-discount edd-submit button <?php echo $color . ' ' . $style; ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'easy-digital-downloads' ); ?>"/>
+					<input type="submit" class="edd-apply-discount edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'easy-digital-downloads' ); ?>"/>
 				</span>
 				<span class="edd-discount-loader edd-loading" id="edd-discount-loader" style="display:none;"></span>
 				<span id="edd-discount-error-wrap" class="edd_error edd-alert edd-alert-error" aria-hidden="true" style="display:none;"></span>
@@ -770,21 +771,49 @@ function edd_terms_agreement() {
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
-		
+
 		ob_start();
 ?>
 		<fieldset id="edd_terms_agreement">
-			<div id="edd_terms" style="display:none;">
+			<div id="edd_terms" class="edd-terms" style="display:none;">
 				<?php
 					do_action( 'edd_before_terms' );
 					echo wpautop( stripslashes( $agree_text ) );
 					do_action( 'edd_after_terms' );
 				?>
 			</div>
-			<div id="edd_show_terms">
+			<div id="edd_show_terms" class="edd-show-terms">
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
+
+			<?php if ( '1' !== edd_get_option( 'show_agree_to_privacy_policy', false ) && '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
+				<?php
+
+				$privacy_page    = get_option( 'wp_page_for_privacy_policy' );
+
+				if ( ! empty( $privacy_page ) ) {
+
+					$privacy_text    = get_post_field( 'post_content', $privacy_page );
+
+					if ( ! empty( $privacy_text  ) ) {
+						?>
+						<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+								<?php
+								do_action( 'edd_before_privacy_policy' );
+								echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
+								do_action( 'edd_after_privacy_policy' );
+								?>
+						</div>
+						<div id="edd-show-privacy-policy" class="edd-show-terms">
+							<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+							<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+						</div>
+						<?php
+					}
+
+				}
+			endif ?>
 			<div class="edd-terms-agreement">
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
@@ -797,6 +826,64 @@ function edd_terms_agreement() {
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
+
+
+/**
+ * Renders the Checkout Agree to Privacy Policy, this displays a checkbox for users to
+ * agree the Privacy Policy set in the EDD Settings. This is only displayed if T&Cs are
+ * set in the EDD Settings.
+ *
+ * @since 2.9.1
+ * @return void
+ */
+function edd_privacy_agreement() {
+	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
+
+		ob_start();
+		?>
+		<fieldset id="edd-privacy-policy-agreement">
+
+			<?php if ( '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
+				<?php
+
+				$privacy_page    = get_option( 'wp_page_for_privacy_policy' );
+
+				if ( ! empty( $privacy_page ) ) {
+
+					$privacy_text    = get_post_field( 'post_content', $privacy_page );
+
+					if ( ! empty( $privacy_text  ) ) {
+						?>
+						<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+							<?php
+							do_action( 'edd_before_privacy_policy' );
+							echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
+							do_action( 'edd_after_privacy_policy' );
+							?>
+						</div>
+						<div id="edd-show-privacy-policy" class="edd-show-terms">
+							<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+							<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+						</div>
+						<?php
+					}
+
+				}
+			endif ?>
+
+			<div class="edd-privacy-policy-agreement">
+				<input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1"/>
+				<label for="edd-agree-to-privacy-policy"><?php echo stripslashes( $agree_label ); ?></label>
+			</div>
+		</fieldset>
+		<?php
+		$html_output = ob_get_clean();
+
+		echo apply_filters( 'edd_checkout_privacy_policy_agreement_html', $html_output );
+	}
+}
+add_action( 'edd_purchase_form_before_submit', 'edd_privacy_agreement' );
 
 /**
  * Shows the final purchase total at the bottom of the checkout page
@@ -856,7 +943,7 @@ function edd_checkout_button_next() {
 ?>
 	<input type="hidden" name="edd_action" value="gateway_select" />
 	<input type="hidden" name="page_id" value="<?php echo absint( $purchase_page ); ?>"/>
-	<input type="submit" name="gateway_submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'easy-digital-downloads' ); ?>"/>
+	<input type="submit" name="gateway_submit" id="edd_next_button" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" value="<?php _e( 'Next', 'easy-digital-downloads' ); ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
 }
@@ -875,7 +962,7 @@ function edd_checkout_button_purchase() {
 
 	ob_start();
 ?>
-	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $label; ?>"/>
+	<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $label; ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
 }
@@ -907,14 +994,14 @@ function edd_get_checkout_button_purchase_label() {
  * @return void
  */
 function edd_agree_to_terms_js() {
-	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+	if ( edd_get_option( 'show_agree_to_terms', false ) || edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
 			$( document.body ).on('click', '.edd_terms_links', function(e) {
 				//e.preventDefault();
-				$('#edd_terms').slideToggle();
-				$('.edd_terms_links').toggle();
+				$(this).parent().prev('.edd-terms').slideToggle();
+				$(this).parent().find('.edd_terms_links').toggle();
 				return false;
 			});
 		});

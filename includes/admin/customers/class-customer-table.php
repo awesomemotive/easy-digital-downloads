@@ -3,7 +3,7 @@
  * Customer Reports Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Reports
+ * @subpackage  Reports
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
@@ -80,7 +80,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * Show the search field
 	 *
 	 * @since 1.7
-	 * @access public
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
@@ -88,18 +87,30 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
+
+		// Bail if no customers and no search
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
+		}
+
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) )
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		if ( ! empty( $_REQUEST['order'] ) )
+		}
+
+		if ( ! empty( $_REQUEST['order'] ) ) {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+
 		?>
+
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
+
 		<?php
 	}
 
@@ -118,7 +129,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.5
 	 *
 	 * @param array $item Contains all the data of the customers
@@ -140,7 +150,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'date_created' :
-				$value = date_i18n( get_option( 'date_format' ), strtotime( $item['date_created'] ) );
+				$value = edd_date_i18n( $item['date_created'] );
 				break;
 
 			default:
@@ -170,7 +180,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return array $columns Array of all the list table columns
 	 */
@@ -190,7 +199,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Get the sortable columns
 	 *
-	 * @access public
 	 * @since 2.1
 	 * @return array Array of all the sortable columns
 	 */
@@ -206,7 +214,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Outputs the reporting views
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return void
 	 */
@@ -217,7 +224,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return int Current page number
 	 */
@@ -228,7 +234,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieves the search query string
 	 *
-	 * @access public
 	 * @since 1.7
 	 * @return mixed string If search is present, false otherwise
 	 */
@@ -239,7 +244,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Build all the reports data
 	 *
-	 * @access public
 	 * @since 1.5
 	  * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
@@ -256,7 +260,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
 
 		$args    = array(
-			'number'  => $this->per_page,
+			'limit'   => $this->per_page,
 			'offset'  => $offset,
 			'order'   => $order,
 			'orderby' => $orderby
@@ -273,7 +277,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		}
 
 		$this->args = $args;
-		$customers  = EDD()->customers->get_customers( $args );
+		$customers  = edd_get_customers( $args );
 
 		if ( $customers ) {
 
@@ -299,7 +303,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Customer_Reports_Table::get_columns()
 	 * @uses WP_List_Table::get_sortable_columns()
@@ -316,13 +319,16 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->items = $this->reports_data();
-
 		$this->total = edd_count_total_customers( $this->args );
+
+		// Add condition to be sure we don't divide by zero.
+		// If $this->per_page is 0, then set total pages to 1.
+		$total_pages = $this->per_page ? ceil( (int) $this->total / (int) $this->per_page ) : 1;
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->total / $this->per_page ),
+			'total_pages' => $total_pages,
 		) );
 	}
 }
