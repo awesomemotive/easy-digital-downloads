@@ -304,9 +304,17 @@ add_action( 'bulk_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
  * @return void
  */
 function edd_price_save_quick_edit( $post_id ) {
-	if ( ! isset( $_POST['post_type']) || 'download' !== $_POST['post_type'] ) return;
-	if ( ! current_user_can( 'edit_post', $post_id ) ) return $post_id;
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
+	if ( ! isset( $_POST['post_type']) || 'download' !== $_POST['post_type'] ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return $post_id;
+	}
+
+	if ( edd_doing_autosave() ) {
+		return $post_id;
+	}
 
 	if ( isset( $_REQUEST['_edd_regprice'] ) ) {
 		update_post_meta( $post_id, 'edd_price', strip_tags( stripslashes( $_REQUEST['_edd_regprice'] ) ) );

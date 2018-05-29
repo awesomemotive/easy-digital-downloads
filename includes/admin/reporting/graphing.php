@@ -764,7 +764,7 @@ function edd_parse_report_dates( $form_data ) {
 
 	if ( ! empty( $form_data['edd_redirect'] ) ) {
 
-		wp_redirect( $form_data['edd_redirect'] );
+		edd_redirect( $form_data['edd_redirect'] );
 
 		edd_die();
 

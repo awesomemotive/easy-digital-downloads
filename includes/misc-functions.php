@@ -942,12 +942,14 @@ function edd_cleanup_file_symlinks() {
 	$dir = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
-		if ( $file == '.' || $file == '..' )
+		if ( $file == '.' || $file == '..' ) {
 			continue;
+		}
 
 		$transient = get_transient( md5( $file ) );
-		if ( $transient === false )
+		if ( $transient === false ) {
 			@unlink( $path . '/' . $file );
+		}
 	}
 }
 add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
@@ -1070,67 +1072,6 @@ function edd_get_completed_upgrades() {
 
 }
 
-
-if ( ! function_exists( 'cal_days_in_month' ) ) {
-	// Fallback in case the calendar extension is not loaded in PHP
-	// Only supports Gregorian calendar
-	function cal_days_in_month( $calendar, $month, $year ) {
-		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
-	}
-}
-
-
-if ( ! function_exists( 'hash_equals' ) ) :
-/**
- * Compare two strings in constant time.
- *
- * This function was added in PHP 5.6.
- * It can leak the length of a string.
- *
- * @since 2.2.1
- *
- * @param string $a Expected string.
- * @param string $b Actual string.
- * @return bool Whether strings are equal.
- */
-function hash_equals( $a, $b ) {
-	$a_length = strlen( $a );
-	if ( $a_length !== strlen( $b ) ) {
-		return false;
-	}
-	$result = 0;
-
-	// Do not attempt to "optimize" this.
-	for ( $i = 0; $i < $a_length; $i++ ) {
-		$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
-	}
-
-	return $result === 0;
-}
-endif;
-
-if ( ! function_exists( 'getallheaders' ) ) :
-
-	/**
-	 * Retrieve all headers
-	 *
-	 * Ensure getallheaders function exists in the case we're using nginx
-	 *
-	 * @since  2.4
-	 * @return array
-	 */
-	function getallheaders() {
-		$headers = array();
-		foreach ( $_SERVER as $name => $value ) {
-			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
-				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
-			}
-		}
-		return $headers;
-	}
-
-endif;
-
 /**
  * Determines the receipt visibility status
  *
@@ -1213,6 +1154,99 @@ function edd_doing_cron() {
 
 	// Default to false
 	return false;
+}
+
+/**
+ * Abstraction for WordPress AJAX checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific AJAX related requests. You probably won't want to use it until then.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_ajax() {
+
+	// Bail if not doing WordPress AJAX (>4.8.0)
+	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
+		return true;
+
+	// Bail if not doing WordPress AJAX (<4.8.0)
+	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
+}
+
+/**
+ * Abstraction for WordPress autosave checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific autosave related requests. You probably won't want to use it until then.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_autosave() {
+
+	// Bail if not doing WordPress autosave
+	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
+		return true;
+
+	// Bail if not doing WordPress autosave
+	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
+}
+
+/**
+ * Get the bot name. Usually "EDD Bot" unless filtered.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_bot_name() {
+	$retval = esc_html__( 'EDD Bot', 'easy-digital-downloads' );
+
+	return (string) apply_filters( 'edd_get_bot_name', $retval );
+}
+
+/**
+ * Perform a safe, local redirect somewhere inside the current site.
+ *
+ * On some setups, passing the value of wp_get_referer() may result in an empty
+ * value for $location, which results in an error on redirection. If $location
+ * is empty, we can safely redirect back to the root. This might change
+ * in a future version, possibly to the site root.
+ *
+ * @since 3.0
+ *
+ * @param string $location The URL to redirect the user to.
+ * @param int    $status   Optional. The numeric code to give in the redirect
+ *                         headers. Default: 302.
+ */
+function edd_redirect( $location = '', $status = 302 ) {
+
+	// Prevent errors from empty $location
+	if ( empty( $location ) ) {
+		$location = is_admin()
+			? admin_url()
+			: home_url();
+	}
+
+	// Setup the safe redirect
+	wp_safe_redirect( $location, $status );
+
+	// Exit so the redirect takes place immediately
+	exit();
 }
 
 /**

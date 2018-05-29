@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Processes a custom edit
@@ -162,10 +162,8 @@ function edd_edit_customer( $args = array() ) {
 
 	do_action( 'edd_post_edit_customer', $customer_id, $customer_data );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		header( 'Content-Type: application/json' );
-		echo json_encode( $output );
-		wp_die();
+	if ( edd_doing_ajax() ) {
+		wp_send_json( $output );
 	}
 
 	return $output;
@@ -177,7 +175,7 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  *
  * @since  2.6
  * @param  array $args  Array of arguments: nonce, customer id, and email address
- * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
+ * @return mixed        Echos JSON if doing AJAX. Returns array of success (bool) and message (string) if not AJAX.
  */
 function edd_add_customer_email( $args = array() ) {
 	$customer_edit_role = edd_get_edit_customers_role();
@@ -201,21 +199,18 @@ function edd_add_customer_email( $args = array() ) {
 		}
 
 	} else if ( ! wp_verify_nonce( $args['_wpnonce'], 'edd-add-customer-email' ) ) {
-
 		$output = array(
 			'success' => false,
 			'message' => __( 'Nonce verification failed.', 'easy-digital-downloads' ),
 		);
 
 	} else if ( ! is_email( $args['email'] ) ) {
-
 		$output = array(
 			'success' => false,
 			'message' => __( 'Invalid email address.', 'easy-digital-downloads' ),
 		);
 
 	} else {
-
 		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
 		$primary     = 'true' === $args['primary'] ? true : false;
@@ -224,14 +219,12 @@ function edd_add_customer_email( $args = array() ) {
 		if ( false === $customer->add_email( $email, $primary ) ) {
 
 			if ( in_array( $email, $customer->emails ) ) {
-
 				$output = array(
 					'success'  => false,
 					'message'  => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),
 				);
 
 			} else {
-
 				$output = array(
 					'success' => false,
 					'message' => __( 'Email address is already associated with another customer.', 'easy-digital-downloads' ),
@@ -239,7 +232,6 @@ function edd_add_customer_email( $args = array() ) {
 			}
 
 		} else {
-
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id . '&edd-message=email-added' );
 			$output = array(
 				'success'  => true,
@@ -248,7 +240,7 @@ function edd_add_customer_email( $args = array() ) {
 			);
 
 			$user          = wp_get_current_user();
-			$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+			$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
@@ -261,10 +253,8 @@ function edd_add_customer_email( $args = array() ) {
 
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		header( 'Content-Type: application/json' );
-		echo json_encode( $output );
-		wp_die();
+	if ( edd_doing_ajax() ) {
+		wp_send_json( $output );
 	}
 
 	return $output;
@@ -300,7 +290,7 @@ function edd_remove_customer_email() {
 	if ( $customer->remove_email( $_GET['email'] ) ) {
 		$url           = add_query_arg( 'edd-message', 'email-removed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
@@ -308,8 +298,7 @@ function edd_remove_customer_email() {
 		$url = add_query_arg( 'edd-message', 'email-remove-failed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 	}
 
-	wp_safe_redirect( $url );
-	exit;
+	edd_redirect( $url );
 }
 add_action( 'edd_customer-remove-email', 'edd_remove_customer_email', 10 );
 
@@ -342,7 +331,7 @@ function edd_set_customer_primary_email() {
 	if ( $customer->set_primary_email( $_GET['email'] ) ) {
 		$url           = add_query_arg( 'edd-message', 'primary-email-updated', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'EDDBot';
+		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
@@ -350,8 +339,7 @@ function edd_set_customer_primary_email() {
 		$url = add_query_arg( 'edd-message', 'primary-email-failed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 	}
 
-	wp_safe_redirect( $url );
-	exit;
+	edd_redirect( $url );
 }
 add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 );
 
@@ -387,8 +375,7 @@ function edd_customer_delete( $args = array() ) {
 	}
 
 	if ( edd_get_errors() ) {
-		wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ) );
-		exit;
+		edd_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ) );
 	}
 
 	$customer = new EDD_Customer( $customer_id );
@@ -431,8 +418,7 @@ function edd_customer_delete( $args = array() ) {
 		$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers' );
 	}
 
-	wp_redirect( $redirect );
-	exit;
+	edd_redirect( $redirect );
 }
 add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
 
@@ -487,10 +473,8 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 
 	do_action( 'edd_post_customer_disconnect_user_id', $customer_id );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		header( 'Content-Type: application/json' );
-		echo json_encode( $output );
-		wp_die();
+	if ( edd_doing_ajax() ) {
+		wp_send_json( $output );
 	}
 
 	return $output;
@@ -523,8 +507,7 @@ function edd_process_admin_user_verification() {
 
 	$url = add_query_arg( 'edd-message', 'user-verified', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 
-	wp_safe_redirect( $url );
-	exit;
+	edd_redirect( $url );
 }
 add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
 

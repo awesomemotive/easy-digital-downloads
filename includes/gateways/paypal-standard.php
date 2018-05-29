@@ -314,10 +314,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
 		// Redirect to PayPal
-		wp_redirect( $paypal_redirect );
-		exit;
+		edd_redirect( $paypal_redirect );
 	}
-
 }
 add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
 

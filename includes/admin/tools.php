@@ -1014,38 +1014,46 @@ add_action( 'edd_tools_tab_import_export', 'edd_tools_import_export_display' );
  * @since 1.7
  */
 function edd_tools_import_export_process_export() {
+
+	// Bail if no nonce
 	if ( empty( $_POST['edd_export_nonce'] ) ) {
 		return;
 	}
 
+	// Bail if nonce does not verify
 	if ( ! wp_verify_nonce( $_POST['edd_export_nonce'], 'edd_export_nonce' ) ) {
 		return;
 	}
 
+	// Bail if user cannot manage shop
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
 
+	/**
+	 * Filter the settings export filename
+	 *
+	 * @since 1.7
+	 *
+	 * @param string $filename The file name to export settings to
+	 */
+	$filename      = apply_filters( 'edd_settings_export_filename', 'edd-settings-export-' . date( 'm-d-Y' ) ) . '.json';
 	$edd_settings  = get_option( 'edd_settings' );
 	$edd_tax_rates = get_option( 'edd_tax_rates' );
-	$settings      = array(
-		'edd_settings'  => $edd_settings,
-		'edd_tax_rates' => $edd_tax_rates,
-	);
 
 	edd_set_time_limit();
 
 	nocache_headers();
-	header( 'Content-Type: application/json; charset=utf-8' );
-	header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_settings_export_filename', 'edd-settings-export-' . date( 'm-d-Y' ) ) . '.json' );
-	header( "Expires: 0" );
 
-	echo json_encode( $settings );
-	exit;
+	header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+	header( 'Expires: 0' );
+
+	wp_send_json( array(
+		'edd_settings'  => $edd_settings,
+		'edd_tax_rates' => $edd_tax_rates
+	) );
 }
-
 add_action( 'edd_export_settings', 'edd_tools_import_export_process_export' );
-
 
 /**
  * Process a settings import from a json file
@@ -1096,14 +1104,13 @@ function edd_tools_import_export_process_import() {
 
 	}
 
-
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&edd-message=settings-imported' ) );
-	exit;
-
+	edd_redirect( add_query_arg( array(
+		'post_type'   => 'download',
+		'page'        => 'edd-tools',
+		'edd-message' => 'settings-imported'
+	), admin_url( 'edit.php' ) ) );
 }
-
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
-
 
 /**
  * Display the debug log tab
@@ -1111,7 +1118,6 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @since       2.8.7
  */
 function edd_tools_debug_log_display() {
-
 	global $edd_logs;
 
 	if ( ! current_user_can( 'manage_shop_settings' ) || ! edd_is_debug_mode() ) {
@@ -1172,9 +1178,11 @@ function edd_handle_submit_debug_log() {
 		// Clear the debug log.
 		$edd_logs->clear_log_file();
 
-		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=debug_log' ) );
-		exit;
-
+		edd_redirect( add_query_arg( array(
+			'post_type' => 'download',
+			'page'      => 'edd-tools',
+			'tab'       => 'debug_log'
+		), admin_url( 'edit.php' ) ) );
 	}
 }
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );

@@ -77,7 +77,7 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	$user_id = $note->get_user_id();
 	$author  = ! empty( $user_id )
 		? get_userdata( $user_id )->display_name
-		: __( 'EDD Bot', 'easy-digital-downloads' );
+		: edd_get_bot_name();
 
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(

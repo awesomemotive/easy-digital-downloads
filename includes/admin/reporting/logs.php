@@ -11,9 +11,7 @@
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 _edd_deprecated_file(
 	__FILE__,
