@@ -48,7 +48,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 		// Increase purchase count and earnings
 		foreach ( $order_items as $item ) {
-		    /** @var EDD\Orders\Order_Item $item */
+			/** @var EDD\Orders\Order_Item $item */
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $item->get_product_id() );
@@ -58,24 +58,44 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 				// Ensure these actions only run once, ever.
 				if ( empty( $completed_date ) ) {
-				    $download = edd_get_download( $item->get_product_id() );
+					// For backwards compatibility purposes, we need to construct an array and pass it
+					// to edd_complete_download_purchase.
+					$cart_details = array(
+						'name'        => $item->get_product_name(),
+						'id'          => $item->get_product_id(),
+						'item_number' => array(
+							'id'         => $item->get_product_id(),
+							'quantity'   => $item->get_quantity(),
+							'options'    => array(
+								'quantity' => $item->get_quantity(),
+								'price_id' => $item->get_price_id(),
+							),
+							'item_price' => $item->get_amount(),
+							'quantity'   => $item->get_quantity(),
+							'discount'   => $item->get_discount(),
+							'subtotal'   => $item->get_subtotal(),
+							'tax'        => $item->get_tax(),
+							'fees'       => array(),
+							'price'      => $item->get_amount(),
+						),
+					);
 
-					do_action( 'edd_complete_download_purchase', $item->get_product_id(), $order_id, $download_type, $download, $item->get_cart_index() );
+					do_action( 'edd_complete_download_purchase', $item->get_product_id(), $order_id, $download_type, $cart_details, $item->get_cart_index() );
 				}
 			}
 
 			$increase_earnings = $item->get_total();
 
 			$fees = $order->get_fees();
-            foreach ( $fees as $fee ) {
-                /** @var EDD\Orders\Order_Adjustment $fee */
+			foreach ( $fees as $fee ) {
+				/** @var EDD\Orders\Order_Adjustment $fee */
 
-                if ( $fee->get_amount() > 0 ) {
-                    continue;
-                }
+				if ( $fee->get_amount() > 0 ) {
+					continue;
+				}
 
-                $increase_earnings += $fee->get_amount();
-            }
+				$increase_earnings += $fee->get_amount();
+			}
 
 			// Increase the earnings for this download ID
 			edd_increase_earnings( $item->get_product_id(), $increase_earnings );
@@ -98,20 +118,20 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 	edd_increase_total_earnings( $amount );
 
 	// Check for discount codes and increment their use counts
-    $discounts = $order->get_discounts();
-    foreach ( $discounts as $adjustment ) {
-        /** @var EDD\Orders\Order_Adjustment $adjustment */
+	$discounts = $order->get_discounts();
+	foreach ( $discounts as $adjustment ) {
+		/** @var EDD\Orders\Order_Adjustment $adjustment */
 
-        edd_increase_discount_usage( $adjustment->get_description() );
-    }
+		edd_increase_discount_usage( $adjustment->get_description() );
+	}
 
 	// Ensure this action only runs once ever
 	if ( empty( $completed_date ) || '0000-00-00 00:00:00' === $completed_date ) {
 
 		// Save the completed date
 		edd_update_order( $order_id, array(
-		    'date_completed' => current_time( 'mysql' ),
-        ) );
+			'date_completed' => current_time( 'mysql' ),
+		) );
 
 		/**
 		 * Runs **when** a purchase is marked as "complete".

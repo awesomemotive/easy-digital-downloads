@@ -108,6 +108,14 @@ class Order_Item extends Base_Object {
 	protected $subtotal;
 
 	/**
+	 * Item discount.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $discount;
+
+	/**
 	 * Item tax.
 	 *
 	 * @since 3.0
@@ -247,6 +255,17 @@ class Order_Item extends Base_Object {
 	 */
 	public function get_subtotal() {
 		return $this->subtotal;
+	}
+
+	/**
+	 * Retrieve item discount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Item discount.
+	 */
+	public function get_discount() {
+		return $this->discount;
 	}
 
 	/**
