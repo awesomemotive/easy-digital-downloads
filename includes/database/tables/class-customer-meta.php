@@ -69,7 +69,7 @@ final class Customer_Meta extends Base {
 
 		$option = get_option( $wpdb->prefix . 'edd_customermeta_version', false );
 
-		if ( $option ) {
+		if ( false !== $option ) {
 
 			// In 3.0 we use new options to store the database version.
 			delete_option( $wpdb->prefix . 'edd_customermeta_version' );
