@@ -90,6 +90,10 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 			'order'          => 'ASC'
 		);
 
+		if ( 0 !== $this->download ) {
+			$args['post__in'] = array( $this->download );
+		}
+
 		$downloads = new WP_Query( $args );
 
 		if ( $downloads->posts ) {
@@ -228,6 +232,10 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 			'fields'           => 'ids',
 		);
 
+		if ( 0 !== $this->download ) {
+			$args['post__in'] = array( $this->download );
+		}
+
 		$downloads  = new WP_Query( $args );
 		$total      = (int) $downloads->post_count;
 		$percentage = 100;
@@ -241,5 +249,16 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 		}
 
 		return $percentage;
+	}
+
+	/**
+	 * Set the properties specific to the downloads export.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $request Form data passed into the batch processor.
+	 */
+	public function set_properties( $request ) {
+		$this->download = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : null;
 	}
 }
