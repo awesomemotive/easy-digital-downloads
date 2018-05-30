@@ -110,7 +110,7 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 		$args = array(
-			'fields'     => 'ids',
+			'fields' => 'ids',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
