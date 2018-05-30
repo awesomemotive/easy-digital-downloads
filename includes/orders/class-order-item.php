@@ -151,6 +151,17 @@ class Order_Item extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the order ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return int Order ID.
+	 */
+	public function get_order_id() {
+		return $this->order_id;
+	}
+
+	/**
 	 * Retrieve the product ID.
 	 *
 	 * @since 3.0
