@@ -376,7 +376,7 @@ textarea[name="edd-note"] {
 -------------------------------------------------------------- */
 
 #edd-add-ons {
-	margin-top: 29px;
+	margin: 29px 20px -9px 2px;
 }
 
 h2.nav-tab-wrapper.edd-tab-clear {
