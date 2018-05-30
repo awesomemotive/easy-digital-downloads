@@ -876,4 +876,15 @@ class EDD_Customer {
 
 		return $data;
 	}
+
+	/**
+	 * Retrieve all of the IP addresses used by the customer.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Array of objects containing IP address.
+	 */
+	public function get_ips() {
+		return edd_get_customer_ip_addresses( $this->id );
+	}
 }
