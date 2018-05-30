@@ -70,10 +70,24 @@ final class Customers extends Base {
 	 * @since 3.0
 	 */
 	protected function upgrade() {
+
+		// 3.0 schema changes.
+		if ( ! version_compare( EDD_VERSION, 3.0, '>=' ) ) {
+			$this->v30_upgrade();
+		}
+	}
+
+	/**
+	 * EDD 3.0 schema changes.
+	 *
+	 * @access private
+	 * @since 3.0
+	 */
+	private function v30_upgrade() {
 		$query = "
 			ALTER TABLE {$this->table_name} MODIFY `email` VARCHAR(100) NOT NULL default '';
 			ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
-			ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'
+			ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
 			ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
 			ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00';
 		";
