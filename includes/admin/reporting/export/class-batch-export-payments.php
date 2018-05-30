@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Payments_Export Class
@@ -22,7 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 	/**
-	 * Our export type. Used for export-type specific filters/actions
+	 * Our export type. Used for export-type specific filters/actions.
+	 *
 	 * @var string
 	 * @since 2.4
 	 */
@@ -32,6 +33,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * Set the CSV columns
 	 *
 	 * @since 2.4
+	 *
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
@@ -66,9 +68,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'country_name' => __( 'Country Name', 'easy-digital-downloads' ),
 		);
 
-		if( ! edd_use_skus() ){
+		if ( ! edd_use_skus() ){
 			unset( $cols['skus'] );
 		}
+
 		if ( ! edd_get_option( 'enable_sequential' ) ) {
 			unset( $cols['seq_id'] );
 		}
@@ -80,13 +83,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * Get the Export Data
 	 *
 	 * @since 2.4
-	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
+	 *
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $wpdb;
-
 		$data = array();
 
 		$args = array(
@@ -97,8 +97,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'orderby'  => 'date'
 		);
 
-		if( ! empty( $this->start ) || ! empty( $this->end ) ) {
-
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d 00:00:00', strtotime( $this->start ) ),
@@ -106,13 +105,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					'inclusive' => true
 				)
 			);
-
 		}
 
 		$payments = edd_get_payments( $args );
 
-		if( $payments ) {
-
+		if ( $payments ) {
 			foreach ( $payments as $payment ) {
 				$payment = new EDD_Payment( $payment->ID );
 				$payment_meta   = $payment->payment_meta;
@@ -171,10 +168,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 						$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
 
 						if ( $key != ( count( $downloads ) -1 ) ) {
-
 							$products .= ' / ';
 
-							if( edd_use_skus() ) {
+							if ( edd_use_skus() ) {
 								$skus .= ' / ';
 							}
 						}
@@ -188,9 +184,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 						}
 
 						if ( $key != ( count( $downloads ) -1 ) ) {
-
 							$products_raw .= ' / ';
-
 						}
 					}
 				}
@@ -242,40 +236,36 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		}
 
 		return false;
-
 	}
 
 	/**
 	 * Return the calculated completion percentage
 	 *
 	 * @since 2.4
+	 *
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$status = $this->status;
+
 		$args   = array(
 			'start-date' => date( 'n/d/Y', strtotime( $this->start ) ),
 			'end-date'   => date( 'n/d/Y', strtotime( $this->end ) ),
 		);
 
-		if( 'any' == $status ) {
-
+		if ( 'any' == $status ) {
 			$total = array_sum( (array) edd_count_payments( $args ) );
-
 		} else {
-
 			$total = edd_count_payments( $args )->$status;
-
 		}
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( 30 * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -286,6 +276,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * Set the properties specific to the payments export
 	 *
 	 * @since 2.4.2
+	 *
 	 * @param array $request The Form Data passed into the batch processing
 	 */
 	public function set_properties( $request ) {

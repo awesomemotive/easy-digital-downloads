@@ -5,8 +5,8 @@
  * This class handles earnings report export.
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2017, Sunny Ratilal
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */

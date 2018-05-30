@@ -5,14 +5,14 @@
  * This class handles file downloads export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_File_Downloads_Export Class
@@ -51,7 +51,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Get the Export Data.
+	 * Get the export data.
 	 *
 	 * @since 2.4
 	 * @since 3.0 Updated to use new query methods.

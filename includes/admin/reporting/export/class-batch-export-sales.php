@@ -5,14 +5,14 @@
  * This class handles Sales logs export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2016, Sunny Ratilal
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Sales_Export Class
