@@ -95,6 +95,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
 			'file'       => __( 'File',       'easy-digital-downloads' ),
 			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
 			'date'       => __( 'Date',       'easy-digital-downloads' ),
 		);
 
@@ -165,6 +166,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 						'price_id'   => $log->get_price_id(),
 						'file'       => $file_name,
 						'ip'         => $log->get_ip(),
+						'user_agent' => $log->get_user_agent(),
 						'date'       => $log->get_date_created(),
 					);
 				}

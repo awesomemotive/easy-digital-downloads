@@ -234,10 +234,18 @@ class Base extends \EDD\Database\Base {
 	protected $request = '';
 
 	/**
+	 * The last updated time.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $last_changed = 0;
+
+	/**
 	 * The last error, if any.
 	 *
 	 * @since 3.0
-	 * @var mixed
+	 * @var   mixed
 	 */
 	protected $last_error = false;
 
@@ -246,7 +254,7 @@ class Base extends \EDD\Database\Base {
 	 * in a date query. This is necessary to work around WordPress filters.
 	 *
 	 * @since 3.0
-	 * @var string
+	 * @var   string
 	 */
 	private $date_query_sql = '';
 
@@ -313,6 +321,17 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/** Private Setters *******************************************************/
+
+	/**
+	 * Set the time when items were last changed.
+	 *
+	 * We set this locally to avoid inconsistencies between method calls.
+	 *
+	 * @since 3.0
+	 */
+	private function set_last_changed() {
+		$this->last_changed = microtime();
+	}
 
 	/**
 	 * Prefix table names, cache groups, and other things.
@@ -553,33 +572,38 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function set_found_items( $item_ids = array() ) {
 
-		// Items were found
-		if ( ! empty( $item_ids ) ) {
+		// Items were not found
+		if ( empty( $item_ids ) ) {
+			return;
+		}
 
-			// Not a count query
-			if ( is_array( $item_ids ) ) {
-				if ( ! empty( $this->query_vars['number'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
-					/**
-					 * Filters the query used to retrieve found item count.
-					 *
-					 * @since 3.0
-					 *
-					 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
-					 * @param object $item_query        The object instance.
-					 */
-					$found_items_query = apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
-					$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
-				} elseif ( ! empty( $item_ids ) ) {
-					$this->found_items = count( $item_ids );
-				}
+		// Count query
+		if ( ! empty( $this->query_vars['count'] ) ) {
 
-			// Count query
-			} elseif ( ! empty( $this->query_vars['count'] ) ) {
-				if ( is_numeric( $item_ids ) && ! empty( $this->query_vars['groupby'] ) ) {
-					$this->found_items = intval( $item_ids );
-				} else {
-					$this->found_items = $item_ids;
-				}
+			// Not grouped
+			if ( is_numeric( $item_ids ) && empty( $this->query_vars['groupby'] ) ) {
+				$this->found_items = intval( $item_ids );
+
+			// Grouped
+			} else {
+				$this->found_items = count( $item_ids );
+			}
+
+		// Not a count query
+		} elseif ( is_array( $item_ids ) ) {
+			if ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) {
+				/**
+				 * Filters the query used to retrieve found item count.
+				 *
+				 * @since 3.0
+				 *
+				 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
+				 * @param object $item_query        The object instance.
+				 */
+				$found_items_query = apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
+				$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
+			} else {
+				$this->found_items = count( $item_ids );
 			}
 		}
 	}
@@ -628,6 +652,7 @@ class Base extends \EDD\Database\Base {
 
 		$date_query = new \WP_Date_Query( $args, $column );
 		$table      = $this->get_table_name();
+
 		$date_query->column = "{$table}.{$column}";
 		$date_query->validate_column( $column );
 		$this->date_query_sql = $date_query->get_sql();
@@ -808,14 +833,17 @@ class Base extends \EDD\Database\Base {
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
-		// $args can include anything. Only use the args defined in the query_var_defaults to compute the key.
-		$slice        = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
-		$key          = md5( serialize( $slice ) );
-		$last_changed = wp_cache_get_last_changed( $this->cache_group );
+		// Never limit, never update item/meta caches when counting
+		if ( ! empty( $this->query_vars['count'] ) ) {
+			$this->query_vars['number']            = false;
+			$this->query_vars['no_found_rows']     = true;
+			$this->query_vars['update_item_cache'] = false;
+			$this->query_vars['update_meta_cache'] = false;
+		}
 
 		// Check the cache
-		$cache_key   = "get_{$this->item_name_plural}:{$key}:{$last_changed}";
-		$cache_value = wp_cache_get( $cache_key, $this->cache_group );
+		$cache_key   = $this->get_cache_key();
+		$cache_value = $this->cache_get( $cache_key, $this->cache_group );
 
 		// No cache value
 		if ( false === $cache_value ) {
@@ -831,7 +859,7 @@ class Base extends \EDD\Database\Base {
 			);
 
 			// Add value to the cache
-			wp_cache_add( $cache_key, $cache_value, $this->cache_group );
+			$this->cache_add( $cache_key, $cache_value, $this->cache_group );
 
 		// Value exists in cache
 		} else {
@@ -844,18 +872,9 @@ class Base extends \EDD\Database\Base {
 			$this->max_num_pages = ceil( $this->found_items / $this->query_vars['number'] );
 		}
 
-		// Return an int of the count
-		if ( ! empty( $this->query_vars['count'] ) ) {
-
-			// Never limit, never update item/meta caches when counting
-			$this->query_vars['number']            = false;
-			$this->query_vars['update_item_cache'] = false;
-			$this->query_vars['update_meta_cache'] = false;
-
-			// Cast to int if not grouping counts
-			if ( empty( $this->query_vars['groupby'] ) ) {
-				$item_ids = intval( $item_ids );
-			}
+		// Cast to int if not grouping counts
+		if ( ! empty( $this->query_vars['count'] ) && empty( $this->query_vars['groupby'] ) ) {
+			$item_ids = intval( $item_ids );
 		}
 
 		// Set items from IDs
@@ -1536,12 +1555,12 @@ class Base extends \EDD\Database\Base {
 			return $retval;
 		}
 
-		// Table
+		// Cache groups
 		$groups = $this->get_cache_groups();
 
 		// Check cache
 		if ( ! empty( $groups[ $column_name ] ) ) {
-			$retval = wp_cache_get( $column_value, $groups[ $column_name ] );
+			$retval = $this->cache_get( $column_value, $groups[ $column_name ] );
 		}
 
 		// Item not cached
@@ -1931,6 +1950,7 @@ class Base extends \EDD\Database\Base {
 	 * Check if the query failed
 	 *
 	 * @since 3.0
+	 *
 	 * @param mixed $result
 	 * @return boolean
 	 */
@@ -2196,6 +2216,47 @@ class Base extends \EDD\Database\Base {
 	/** Cache *****************************************************************/
 
 	/**
+	 * Get cache key from query_vars and query_var_defaults.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	private function get_cache_key( $group = '' ) {
+		$slice        = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
+		$key          = md5( serialize( $slice ) );
+		$last_changed = $this->get_last_changed_cache( $group );
+
+		// Concatenate and return cache key
+		return "get_{$this->item_name_plural}:{$key}:{$last_changed}";
+	}
+
+	/**
+	 * Get the cache group, or fallback to the primary one.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $group
+	 * @return string
+	 */
+	private function get_cache_group( $group = '' ) {
+
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
+		// Default return value
+		$retval  = $this->cache_group;
+
+		// Only allow non-primary groups
+		if ( ! empty( $group ) && ( $group !== $primary ) ) {
+			$retval = $group;
+		}
+
+		// Return the group
+		return $retval;
+	}
+
+	/**
 	 * Get array of which database columns have uniquely cached groups
 	 *
 	 * @since 3.0
@@ -2210,9 +2271,16 @@ class Base extends \EDD\Database\Base {
 		// Get cache groups
 		$groups = $this->get_columns( array( 'cache_key' => true ), 'and', 'name' );
 
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
 		// Setup return values
 		foreach ( $groups as $name ) {
-			$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+			if ( $primary !== $name ) {
+				$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+			} else {
+				$cache_groups[ $name ] = $this->cache_group;
+			}
 		}
 
 		// Return cache groups array
@@ -2250,7 +2318,7 @@ class Base extends \EDD\Database\Base {
 		if ( ! empty( $force ) || ! empty( $this->query_vars['update_item_cache'] ) ) {
 
 			// Look for non-cached IDs
-			$ids = _get_non_cached_ids( $item_ids, $this->cache_group );
+			$ids = $this->get_non_cached_ids( $item_ids, $this->cache_group );
 
 			// Bail if IDs are cached
 			if ( empty( $ids ) ) {
@@ -2314,13 +2382,13 @@ class Base extends \EDD\Database\Base {
 		foreach ( $items as $item ) {
 			if ( is_object( $item ) ) {
 				foreach ( $groups as $key => $group ) {
-					wp_cache_set( $item->{$key}, $item, $group );
+					$this->cache_set( $item->{$key}, $item, $group );
 				}
 			}
 		}
 
 		// Update last changed
-		$this->update_last_changed();
+		$this->update_last_changed_cache();
 	}
 
 	/**
@@ -2346,20 +2414,20 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Make sure items is an array
-		$items = (array) $items;
+		$items  = (array) $items;
 		$groups = $this->get_cache_groups();
 
 		// Loop through all items and cache them
 		foreach ( $items as $item ) {
 			if ( is_object( $item ) ) {
 				foreach ( $groups as $key => $group ) {
-					wp_cache_delete( $item->{$key}, $group );
+					$this->cache_delete( $item->{$key}, $group );
 				}
 			}
 		}
 
 		// Update last changed
-		$this->update_last_changed();
+		$this->update_last_changed_cache();
 	}
 
 	/**
@@ -2367,8 +2435,178 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 */
-	private function update_last_changed() {
-		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+	private function update_last_changed_cache( $group = '' ) {
+
+		// Fallback to microtime
+		if ( empty( $this->last_changed ) ) {
+			$this->set_last_changed();
+		}
+
+		// Set the last changed time for this cache group
+		$this->cache_set( 'last_changed', $this->last_changed, $group );
+
+		// Return the last changed time
+		return $this->last_changed;
+	}
+
+	/**
+	 * Get the last_changed key for a cache group
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $group Cache group. Defaults to $this->cache_group
+	 *
+	 * @return int The last time a cache group was changed
+	 */
+	private function get_last_changed_cache( $group = '' ) {
+
+		// Get the last changed cache value
+		$last_changed = $this->cache_get( 'last_changed', $group );
+
+		// Maybe update the last changed value
+		if ( false === $last_changed ) {
+			$last_changed = $this->update_last_changed_cache( $group );
+		}
+
+		// Return the last changed value for the cache group
+		return $last_changed;
+	}
+
+	/**
+	 * Get array of non-cached item IDs.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array  $item_ids Array of item IDs
+	 * @param string $group    Cache group. Defaults to $this->cache_group
+	 *
+	 * @return array
+	 */
+	private function get_non_cached_ids( $item_ids = array(), $group = '' ) {
+		$retval = array();
+
+		// Loop through item IDs
+		foreach ( $item_ids as $id ) {
+			$id = $this->shape_item_id( $id );
+
+			if ( false === $this->cache_get( $id, $group ) ) {
+				$retval[] = $id;
+			}
+		}
+
+		// Return array of IDs
+		return $retval;
+	}
+
+	/**
+	 * Add a cache value for a key and group.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key    Cache key.
+	 * @param mixed  $value  Cache value.
+	 * @param string $group  Cache group. Defaults to $this->cache_group
+	 * @param int    $expire Expiration.
+	 */
+	private function cache_add( $key = '', $value = '', $group = '', $expire = 0 ) {
+
+		// Bail if cache invalidation is suspended
+		if ( wp_suspend_cache_addition() ) {
+			return;
+		}
+
+		// Bail if no cache key
+		if ( empty( $key ) ) {
+			return;
+		}
+
+		// Get the cache group
+		$group = $this->get_cache_group( $group );
+
+		// Delete the cache
+		wp_cache_add( $key, $value, $group, $expire );
+	}
+
+	/**
+	 * Get a cache value for a key and group.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string  $key   Cache key.
+	 * @param string  $group Cache group. Defaults to $this->cache_group
+	 * @param boolean $force
+	 */
+	private function cache_get( $key = '', $group = '', $force = false ) {
+
+		// Bail if no cache key
+		if ( empty( $key ) ) {
+			return;
+		}
+
+		// Get the cache group
+		$group = $this->get_cache_group( $group );
+
+		// Delete the cache
+		return wp_cache_get( $key, $group, $force );
+	}
+
+	/**
+	 * Set a cache value for a key and group.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key    Cache key.
+	 * @param mixed  $value  Cache value.
+	 * @param string $group  Cache group. Defaults to $this->cache_group
+	 * @param int    $expire Expiration.
+	 */
+	private function cache_set( $key = '', $value = '', $group = '', $expire = 0 ) {
+
+		// Bail if cache invalidation is suspended
+		if ( wp_suspend_cache_addition() ) {
+			return;
+		}
+
+		// Bail if no cache key
+		if ( empty( $key ) ) {
+			return;
+		}
+
+		// Get the cache group
+		$group = $this->get_cache_group( $group );
+
+		// Delete the cache
+		wp_cache_set( $key, $value, $group, $expire );
+	}
+
+	/**
+	 * Delete a cache key for a group.
+	 *
+	 * @since 3.0
+	 *
+	 * @global boolean $_wp_suspend_cache_invalidation
+	 *
+	 * @param string $key   Cache key.
+	 * @param string $group Cache group. Defaults to $this->cache_group
+	 */
+	private function cache_delete( $key = '', $group = '' ) {
+		global $_wp_suspend_cache_invalidation;
+
+		// Bail if cache invalidation is suspended
+		if ( ! empty( $_wp_suspend_cache_invalidation ) ) {
+			return;
+		}
+
+		// Bail if no cache key
+		if ( empty( $key ) ) {
+			return;
+		}
+
+		// Get the cache group
+		$group = $this->get_cache_group( $group );
+
+		// Delete the cache
+		wp_cache_delete( $key, $group );
 	}
 }
 endif;
