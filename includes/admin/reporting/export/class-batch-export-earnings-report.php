@@ -32,8 +32,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Set the export headers.
 	 *
 	 * @since 2.7
-	 *
-	 * @return void
 	 */
 	public function headers() {
 		edd_set_time_limit();
@@ -46,10 +44,11 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Get the column headers for the Earnings Report
+	 * Get the column headers for the Earnings Report.
 	 *
 	 * @since 2.8.18
-	 * @return array
+	 *
+	 * @return array CSV columns.
 	 */
 	public function get_csv_cols() {
 
@@ -74,7 +73,8 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Specifically retrieve the headers for supported order statuses.
 	 *
 	 * @since 2.8.18
-	 * @return array
+	 *
+	 * @return array Order status columns.
 	 */
 	public function get_status_cols() {
 		$status_cols        = edd_get_payment_statuses();
@@ -93,7 +93,8 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Get a list of the statuses supported in this report.
 	 *
 	 * @since 2.8.18
-	 * @return array The status keys supported (not Labels)
+	 *
+	 * @return array The status keys supported (not labels).
 	 */
 	public function get_supported_statuses() {
 		$statuses = edd_get_payment_statuses();
@@ -112,7 +113,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 *
 	 * @since 2.7
 	 *
-	 * @return array $cols CSV header.
+	 * @return string $col_data CSV cols.
 	 */
 	public function print_csv_cols() {
 		$cols     = $this->get_csv_cols();
@@ -121,7 +122,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		for ( $i = 0; $i < count( $cols ); $i++ ) {
 			$col_data .= $cols[ $i ];
 
-			// We don't need an extra space after the first column
+			// We don't need an extra space after the first column.
 			if ( $i == 0 ) {
 				$col_data .= ',';
 				continue;
