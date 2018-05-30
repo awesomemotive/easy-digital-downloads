@@ -885,6 +885,10 @@ class EDD_Customer {
 	 * @return array Array of objects containing IP address.
 	 */
 	public function get_ips() {
-		return edd_get_customer_ip_addresses( $this->id );
+		return edd_get_orders( array(
+			'customer_id' => $this->id,
+			'fields'      => 'ip',
+			'groupby'     => 'ip',
+		) );
 	}
 }
