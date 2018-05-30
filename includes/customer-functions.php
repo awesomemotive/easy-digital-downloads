@@ -152,6 +152,27 @@ function edd_get_edit_customers_role() {
 	return apply_filters( 'edd_edit_customers_role', 'edit_shop_payments' );
 }
 
+/**
+ * Retrieve all of the IP addresses used by a customer.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_id Customer ID.
+ *
+ * @return array Array of objects containing IP address.
+ */
+function edd_get_customer_ip_addresses( $customer_id = 0 ) {
+	if ( empty( $customer_id ) ) {
+		return array();
+	}
+
+	return edd_get_orders( array(
+		'customer_id' => $customer_id,
+		'fields'      => 'ip',
+		'groupby'     => 'ip',
+	) );
+}
+
 /** Meta **********************************************************************/
 
 /**
