@@ -80,12 +80,12 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Get the Export Data
+	 * Get the export data.
 	 *
 	 * @since 2.4
 	 * @since 3.0 Updated to use new query methods.
 	 *
-	 * @return array $data The data for the CSV file
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
 		$data = array();
@@ -113,29 +113,31 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		foreach ( $orders as $order ) {
 			/** @var EDD\Orders\Order $order */
 
+			$items        = $order->get_items();
 			$user_info    = $order->get_user_info();
+			$address      = $order->get_customer_address();
 			$total        = $order->get_total();
 			$user_id      = $order->get_id() && $order->get_id() != - 1 ? $order->get_id() : $user_info['email'];
 			$products     = '';
 			$products_raw = '';
 			$skus         = '';
 
-			$items = $order->get_items();
-			$adjustments = $order->get_adjustments();
+			$discounts = $order->get_discounts();
+			$discounts = ! empty( $discounts )
+				? implode( ', ', $discounts )
+				: __( 'none', 'easy-digital-downloads' );
 
 			foreach ( $items as $key => $item ) {
 				/** @var EDD\Orders\Order_Item $item */
-				
+
 				// Setup item information.
 				$id       = $item->get_product_id();
 				$qty      = $item->get_quantity();
 				$price    = $item->get_amount();
 				$tax      = $item->get_tax();
 				$price_id = $item->get_price_id();
-				$skus     = '';
 
-				/* Set up verbose product column */
-
+				// Set up verbose product column.
 				$products .= html_entity_decode( get_the_title( $id ) );
 
 				if ( $qty > 1 ) {
@@ -166,10 +168,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					}
 				}
 
-				/* Set up raw products column - Nothing but product names */
+				// Set up raw products column; nothing but product names.
 				$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $tax . '}';
 
-				// if we have a Price ID, include it.
+				// If we have a price ID, include it.
 				if ( false !== $price_id ) {
 					$products_raw .= '{' . $price_id . '}';
 				}
@@ -179,11 +181,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				}
 			}
 
-			if ( is_numeric( $user_id ) ) {
-				$user = get_userdata( $user_id );
-			} else {
-				$user = false;
-			}
+			$user = is_numeric( $user_id )
+				? get_userdata( $user_id )
+				: false;
 
 			$data[] = array(
 				'id'           => $order->get_id(),
@@ -192,20 +192,20 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'customer_id'  => $order->get_customer_id(),
 				'first'        => $user_info['first_name'],
 				'last'         => $user_info['last_name'],
-				'address1'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-				'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-				'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-				'state'        => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
-				'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
-				'zip'          => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+				'address1'     => $address['line1'],
+				'address2'     => $address['line2'],
+				'city'         => $address['city'],
+				'state'        => $address['state'],
+				'country'      => $address['country'],
+				'zip'          => $address['zip'],
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
 				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
 				'tax'          => html_entity_decode( edd_format_amount( $order->get_tax() ) ),
-				'discount'     => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
+				'discount'     => $discounts,
 				'gateway'      => edd_get_gateway_admin_label( $order->get_gateway() ),
-				'trans_id'     => $payment->transaction_id,
+				'trans_id'     => $order->get_transaction_id(),
 				'key'          => $order->get_payment_key(),
 				'date'         => $order->get_date_created(),
 				'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
@@ -213,9 +213,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'ip'           => $order->get_ip(),
 				'mode'         => $order->get_mode(),
 				'status'       => ( 'publish' === $order->get_status() ) ? 'complete' : $order->get_status(),
-				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
+				'country_name' => edd_get_country_name( $user_info['address']['country'] ),
 			);
-
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
@@ -235,19 +234,25 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		$status = $this->status;
-
 		$args = array(
-			'start-date' => date( 'n/d/Y', strtotime( $this->start ) ),
-			'end-date'   => date( 'n/d/Y', strtotime( $this->end ) ),
+			'fields' => 'ids',
 		);
 
-		if ( 'any' === $status ) {
-			$total = array_sum( (array) edd_count_payments( $args ) );
-		} else {
-			$total = edd_count_payments( $args )->$status;
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = array(
+				array(
+					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
+					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
+					'inclusive' => true
+				)
+			);
 		}
 
+		if ( 'any' !== $this->status ) {
+			$args['status'] = $this->status;
+		}
+
+		$total = edd_count_orders( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
