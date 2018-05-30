@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Logging
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Logging Class
@@ -231,6 +231,14 @@ class EDD_Logging {
 		} else if ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
+			if ( ! class_exists( 'Browser' ) ) {
+				require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
+			}
+
+			$browser = new Browser();
+
+			$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
+
 			$data = array(
 				'download_id' => $args['post_parent'],
 				'file_id'     => $log_meta['file_id'],
@@ -238,6 +246,7 @@ class EDD_Logging {
 				'price_id'    => $log_meta['price_id'],
 				'user_id'     => $log_meta['user_id'],
 				'ip'          => $log_meta['ip'],
+				'user_agent'  => $user_agent
 			);
 		}
 

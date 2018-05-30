@@ -116,6 +116,14 @@ final class Easy_Digital_Downloads {
 	public $notices;
 
 	/**
+	 * EDD Structured Data Object
+	 *
+	 * @var object|EDD_Structured_Data
+	 * @since 3.0
+	 */
+	public $structured_data;
+
+	/**
 	 * EDD Components array
 	 *
 	 * @var array
@@ -152,17 +160,18 @@ final class Easy_Digital_Downloads {
 			self::$instance->setup_files();
 
 			// APIs
-			self::$instance->roles         = new EDD_Roles();
-			self::$instance->fees          = new EDD_Fees();
-			self::$instance->api           = new EDD_API();
-			self::$instance->utils         = new EDD_Utilities();
-			self::$instance->session       = new EDD_Session();
-			self::$instance->html          = new EDD_HTML_Elements();
-			self::$instance->emails        = new EDD_Emails();
-			self::$instance->email_tags    = new EDD_Email_Template_Tags();
-			self::$instance->payment_stats = new EDD_Payment_Stats();
-			self::$instance->cart          = new EDD_Cart();
-			self::$instance->tracking      = new EDD_Tracking();
+			self::$instance->roles           = new EDD_Roles();
+			self::$instance->fees            = new EDD_Fees();
+			self::$instance->api             = new EDD_API();
+			self::$instance->utils           = new EDD_Utilities();
+			self::$instance->session         = new EDD_Session();
+			self::$instance->html            = new EDD_HTML_Elements();
+			self::$instance->emails          = new EDD_Emails();
+			self::$instance->email_tags      = new EDD_Email_Template_Tags();
+			self::$instance->payment_stats   = new EDD_Payment_Stats();
+			self::$instance->cart            = new EDD_Cart();
+			self::$instance->tracking        = new EDD_Tracking();
+			self::$instance->structured_data = new EDD\Structured_Data();
 
 			// Admin APIs
 			if ( is_admin() ) {
@@ -509,6 +518,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
+
+		// Structured Data
+		require_once EDD_PLUGIN_DIR . 'includes/class-structured-data.php';
 	}
 
 	/**
