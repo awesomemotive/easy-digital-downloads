@@ -108,6 +108,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			);
 		}
 
+
+		if ( 'any' === $args['status'] ) {
+			unset( $args['status'] );
+		}
+
 		$orders = edd_get_orders( $args );
 
 		foreach ( $orders as $order ) {
@@ -188,16 +193,16 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$data[] = array(
 				'id'           => $order->get_id(),
 				'seq_id'       => $order->get_number(),
-				'email'        => $order->get_number(),
+				'email'        => $order->get_email(),
 				'customer_id'  => $order->get_customer_id(),
-				'first'        => $user_info['first_name'],
-				'last'         => $user_info['last_name'],
-				'address1'     => $address['line1'],
-				'address2'     => $address['line2'],
-				'city'         => $address['city'],
-				'state'        => $address['state'],
-				'country'      => $address['country'],
-				'zip'          => $address['zip'],
+				'first'        => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
+				'last'         => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
+				'address1'     => isset( $address['line1'] ) ? $address['line1'] : '',
+				'address2'     => isset( $address['line2'] ) ? $address['line2'] : '',
+				'city'         => isset( $address['city'] ) ? $address['city'] : '',
+				'state'        => isset( $address['state'] ) ? $address['state'] : '',
+				'country'      => isset( $address['country'] ) ? $address['country'] : '',
+				'zip'          => isset( $address['zip'] ) ? $address['zip'] : '',
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
@@ -213,7 +218,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'ip'           => $order->get_ip(),
 				'mode'         => $order->get_mode(),
 				'status'       => ( 'publish' === $order->get_status() ) ? 'complete' : $order->get_status(),
-				'country_name' => edd_get_country_name( $user_info['address']['country'] ),
+				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
 			);
 		}
 
