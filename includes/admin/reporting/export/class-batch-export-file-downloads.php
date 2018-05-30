@@ -119,15 +119,18 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 		$args = array(
-			'fields'     => 'ids',
-			'date_query' => array(
+			'fields' => 'ids',
+		);
+
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
 					'inclusive' => true
 				)
-			)
-		);
+			);
+		}
 
 		if ( 0 !== $this->download_id ) {
 			$args['download_id'] = $this->download_id;
