@@ -111,14 +111,17 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	public function get_percentage_complete() {
 		$args = array(
 			'fields'     => 'ids',
-			'date_query' => array(
+		);
+
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true,
-				),
-			),
-		);
+					'inclusive' => true
+				)
+			);
+		}
 
 		$total = edd_count_api_request_logs( $args );
 		$percentage = 100;
