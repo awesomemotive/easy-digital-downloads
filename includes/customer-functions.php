@@ -166,11 +166,9 @@ function edd_get_customer_ip_addresses( $customer_id = 0 ) {
 		return array();
 	}
 
-	return edd_get_orders( array(
-		'customer_id' => $customer_id,
-		'fields'      => 'ip',
-		'groupby'     => 'ip',
-	) );
+	$customer = edd_get_customer( $customer_id );
+
+	return $customer->get_ips();
 }
 
 /** Meta **********************************************************************/
