@@ -65,6 +65,20 @@ final class Customer_Meta extends Base {
 	 * @return void
 	 */
 	protected function upgrade() {
+
+		// 3.0 schema changes.
+		if ( ! version_compare( EDD_VERSION, 3.0, '>=' ) ) {
+			$this->v30_upgrade();
+		}
+	}
+
+	/**
+	 * EDD 3.0 schema changes.
+	 *
+	 * @access private
+	 * @since 3.0
+	 */
+	private function v30_upgrade() {
 		$query = "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';";
 		$this->get_db()->query( $query );
 	}
