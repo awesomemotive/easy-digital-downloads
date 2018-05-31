@@ -494,8 +494,9 @@ function edd_reports_tab_export() {
 					<div class="postbox edd-export-downloads">
 						<h3><span><?php _e('Export Download Products in CSV','easy-digital-downloads' ); ?></span></h3>
 						<div class="inside">
-							<p><?php _e( 'Download a CSV of download products.', 'easy-digital-downloads' ); ?></p>
+							<p><?php _e( 'Download a CSV of download products. To download a CSV for all download products, leave "Choose a Download" as it is.', 'easy-digital-downloads' ); ?></p>
 							<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
+								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_download_export_download', 'chosen' => true ) ); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
 								<input type="submit" value="<?php _e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>

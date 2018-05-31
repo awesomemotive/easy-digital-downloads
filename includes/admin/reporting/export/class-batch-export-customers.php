@@ -49,15 +49,14 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Get the Export Data
+	 * Get the export data.
 	 *
 	 * @since 2.4
-	 *   Database API
-	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
-
 		$data = array();
 
 		if ( ! empty( $this->download ) ) {
