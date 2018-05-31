@@ -60,6 +60,26 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 				if ( empty( $completed_date ) ) {
 					// For backwards compatibility purposes, we need to construct an array and pass it
 					// to edd_complete_download_purchase.
+                    $item_fees = array();
+
+                    foreach ( $item->get_fees() as $key => $item_fee ) {
+                        /** @var EDD\Orders\Order_Adjustment $item_fee */
+
+                        $fee_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'fee_id', true );
+                        $download_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'download_id', true );
+                        $price_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+	                    $no_tax = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+
+                        $item_fees[ $fee_id ] = array(
+	                        'amount'      => $item_fee->get_amount(),
+	                        'label'       => $item_fee->get_description(),
+	                        'no_tax'      => $no_tax ? $no_tax : false,
+	                        'type'        => 'fee',
+	                        'download_id' => $download_id,
+	                        'price_id'    => $price_id ? $price_id : null,
+                        );
+                    }
+
 					$cart_details = array(
 						'name'        => $item->get_product_name(),
 						'id'          => $item->get_product_id(),
@@ -76,7 +96,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 						'discount'   => $item->get_discount(),
 						'subtotal'   => $item->get_subtotal(),
 						'tax'        => $item->get_tax(),
-						'fees'       => array(),
+						'fees'       => $item_fees,
 						'price'      => $item->get_amount(),
 					);
 
