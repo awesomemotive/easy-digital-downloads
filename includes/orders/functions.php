@@ -286,26 +286,26 @@ function edd_build_order( $order_data = array() ) {
 
 	/** Insert order meta *****************************************************/
 
-	// Add user info to order meta
+	// Add user info to order meta.
 	edd_add_order_meta( $order_id, 'user_info', array(
 		'first_name' => $order_data['user_info']['first_name'],
 		'last_name'  => $order_data['user_info']['last_name'],
 		'address'    => $order_data['user_info']['address']
 	) );
 
-	// Maybe store order tax
+	// Maybe store order tax.
 	if ( edd_use_taxes() ) {
 		$country  = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
 		$state    = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
 		$zip      = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
 		$tax_rate = edd_get_cart_tax_rate( $country, $state, $zip );
 
-		// Always store order tax, even if empty
+		// Always store order tax, even if empty.
 		edd_add_order_adjustment( array(
 			'object_id'   => $order_id,
 			'object_type' => 'order',
 			'type_id'     => 0,
-			'type'        => 'tax',
+			'type'        => 'tax_rate',
 			'amount'      => $tax_rate
 		) );
 	}
@@ -318,12 +318,12 @@ function edd_build_order( $order_data = array() ) {
 			// First, we need to check that what is being added is a valid download.
 			$download = edd_get_download( $item['id'] );
 
-			// Skip if download is missing or not actually a download
+			// Skip if download is missing or not actually a download.
 			if ( empty( $download ) || ( 'download' !== $download->post_type ) ) {
 				continue;
 			}
 
-			// Get price ID
+			// Get price ID.
 			$price_id = isset( $item['item_number']['options']['price_id'] )
 				? absint( $item['item_number']['options']['price_id'] )
 				: 0;
@@ -369,7 +369,7 @@ function edd_build_order( $order_data = array() ) {
 			$order_item_args['amount'] = $order_item_args['item_price'];
 			unset( $order_item_args['item_price'] );
 
-			// Try to use what's passed in via the args
+			// Try to use what's passed in via the args.
 			if ( false !== $order_item_args['amount'] ) {
 				$item_price = $order_item_args['amount'];
 
@@ -384,12 +384,12 @@ function edd_build_order( $order_data = array() ) {
 					$order_item_args['price_id'] = edd_get_lowest_price_id( $download->ID );
 				}
 
-				// Fallback to getting it directly
+				// Fallback to getting it directly.
 			} else {
 				$item_price = edd_get_download_price( $download->ID );
 			}
 
-			// Sanitize price & quantity
+			// Sanitize price & quantity.
 			$item_price = edd_sanitize_amount( $item_price );
 			$quantity   = edd_item_quantities_enabled()
 				? absint( $order_item_args['quantity'] )
@@ -416,7 +416,34 @@ function edd_build_order( $order_data = array() ) {
 			$order_item_args['tax']      = round( $order_item_args['tax'],      edd_currency_decimal_filter() );
 			$order_item_args['total']    = round( $total,                       edd_currency_decimal_filter() );
 
-			edd_add_order_item( $order_item_args );
+			$order_item_id = edd_add_order_item( $order_item_args );
+
+			// Store order item fees as adjustments.
+			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
+				foreach ( $item['fees'] as $fee_id => $fee ) {
+
+					// Add the adjustment.
+					$adjustment_id = edd_add_order_adjustment( array(
+						'object_id'   => $order_item_id,
+						'object_type' => 'order_item',
+						'type_id'     => '',
+						'type'        => 'fee',
+						'description' => $fee['label'],
+						'amount'      => $fee['amount']
+					) );
+
+					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+
+					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+						edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+					}
+
+					if ( ! is_null( $fee['price_id'] ) ) {
+						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+					}
+				}
+			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
 			$total_tax      += (float) $order_item_args['tax'];
@@ -429,28 +456,31 @@ function edd_build_order( $order_data = array() ) {
 	// Insert fees.
 	$fees = edd_get_cart_fees();
 
-	// Process fees
+	// Process fees.
 	if ( ! empty( $fees ) ) {
 		foreach ( $fees as $key => $fee ) {
 
-			// Add the adjustement
-			$adjustment_id = edd_add_order_adjustment( array(
+			// Skip adding fee if it was specific to a download in the cart.
+			if ( isset( $fee['download_id'] ) ) {
+				continue;
+			}
+
+			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type_id'     => '',
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'amount'      => $fee['amount']
-			) );
+			);
+
+			// Add the adjustment.
+			$adjustment_id = edd_add_order_adjustment( $args );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
 
 			if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-			}
-
-			if ( isset( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
 			}
 
 			if ( ! is_null( $fee['price_id'] ) ) {

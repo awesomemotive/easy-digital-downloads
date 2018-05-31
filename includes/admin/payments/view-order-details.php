@@ -25,6 +25,9 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 $order_id = absint( $_GET['id'] );
 $order    = edd_get_order( $order_id );
 
+// For backwards compatibility.
+$payment = edd_get_payment( $order_id );
+
 // Check that the order exists in the database.
 if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
@@ -39,7 +42,7 @@ $address        = $order->get_customer_address();
 $gateway        = $order->get_gateway();
 $currency_code  = $order->get_currency();
 $customer       = edd_get_customer( $order->get_customer_id() );
-$user_info      = edd_get_payment_meta_user_info( $order_id );
+$user_info      = $order->get_user_info();
 $notes          = edd_get_payment_notes( $order_id );
 $cart_fees     = edd_get_order_adjustments( array(
 	'object_id'   => $order_id,
@@ -65,7 +68,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 
                             <div id="edd-order-update" class="postbox edd-order-data">
                                 <h3 class="hndle">
-                                    <span><?php _e( 'Update Payment', 'easy-digital-downloads' ); ?></span>
+                                    <span><?php _e( 'Update Order', 'easy-digital-downloads' ); ?></span>
                                 </h3>
 
                                 <div class="inside">
@@ -83,7 +86,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 
 												<?php
 												$status_help = '<ul>';
-												$status_help .= '<li>' . __( '<strong>Pending</strong>: payment is still processing or was abandoned by customer. Successful payments will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
+												$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
 												$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
 												$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
 												$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
@@ -202,10 +205,10 @@ $cart_fees     = edd_get_order_adjustments( array(
 												'edd-action'  => 'delete_payment',
 												'purchase_id' => $order_id,
 											), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>"
-                                               class="edd-delete-payment edd-delete"><?php _e( 'Delete Payment', 'easy-digital-downloads' ); ?></a>
+                                               class="edd-delete-payment edd-delete"><?php _e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
                                         </div>
 
-                                        <input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'easy-digital-downloads' ); ?>"/>
+                                        <input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
                                         <div class="clear"></div>
                                     </div>
 
@@ -371,7 +374,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 
 												// Item ID is checked if isset due to the near-1.0 cart data
 												$item_id    = $order_item->get_product_id() ? $order_item->get_product_id() : $order_item;
-												$price      = $order_item->get_amount()     ? $order_item->get_amount()     : false;
+												$price      = $order_item->get_total()      ? $order_item->get_total()      : false;
 												$item_price = $order_item->get_subtotal()   ? $order_item->get_subtotal()   : $price;
 												$subtotal   = $order_item->get_subtotal()   ? $order_item->get_subtotal()   : $price;
 												$item_tax   = $order_item->get_tax()        ? $order_item->get_tax()        : 0;
@@ -408,6 +411,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 													</span>
                                                     <input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
                                                     <input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+                                                    <input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][order_item_id]" class="edd-payment-details-download-order-item-id" value="<?php echo esc_attr( $order_item->get_id() ); ?>" />
 
 													<?php if ( ! edd_item_quantities_enabled() ) : ?>
                                                         <input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
@@ -746,11 +750,11 @@ $cart_fees     = edd_get_order_adjustments( array(
 							<?php do_action( 'edd_view_order_details_billing_after', $order_id ); ?>
 
                             <div id="edd-notes" class="postbox">
-                                <h3 class="hndle"><span><?php _e( 'Payment Notes', 'easy-digital-downloads' ); ?></span>
+                                <h3 class="hndle"><span><?php _e( 'Order Notes', 'easy-digital-downloads' ); ?></span>
                                 </h3>
                                 <div class="inside">
 									<?php echo edd_admin_get_notes_html( $notes ); ?>
-									<?php echo edd_admin_get_new_note_form( $order_id, 'payment' ); ?>
+									<?php echo edd_admin_get_new_note_form( $order_id, 'order' ); ?>
                                 </div><!-- /.inside -->
                             </div><!-- /#edd-notes -->
 

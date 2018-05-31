@@ -198,7 +198,9 @@ class Order extends Base_Object {
 		}
 
 		$this->items = edd_get_order_items( array(
-			'order_id' => $this->get_id()
+			'order_id' => $this->get_id(),
+			'orderby'  => 'cart_index',
+			'order'    => 'ASC'
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
@@ -454,7 +456,7 @@ class Order extends Base_Object {
 	}
 
 	/**
-	 * Retrieve the fees applied to the order.
+	 * Retrieve the fees applied to the order. This retrieves the fees applied to the entire order and to individual items.
 	 *
 	 * @since 3.0
 	 *
@@ -467,11 +469,21 @@ class Order extends Base_Object {
 
 		$fees = array();
 
-		foreach ( $this->adjustments as $adjustment ) {
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->get_type() ) {
 				$fees[] = $adjustment;
+			}
+		}
+
+		// Fetch the fees that applied to specific items in the order.
+		foreach ( $this->get_items() as $item ) {
+			/** @var Order_Item $item */
+
+			foreach ( $item->get_fees() as $fee ) {
+				$fees[] = $fee;
 			}
 		}
 
@@ -564,5 +576,22 @@ class Order extends Base_Object {
 	 */
 	public function has_unlimited_downloads() {
 		return (bool) edd_get_order_meta( $this->id, 'unlimited_downloads', true );
+	}
+
+	/**
+	 * Retrieve all the notes for this order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Notes associated with this order.
+	 */
+	public function get_notes() {
+		$notes = edd_get_notes( array(
+			'object_id'   => $this->get_id(),
+			'object_type' => 'order',
+			'order'       => 'ASC',
+		) );
+
+		return $notes;
 	}
 }
