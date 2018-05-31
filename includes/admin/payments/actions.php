@@ -26,18 +26,17 @@ function edd_update_payment_details( $data ) {
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
 
-	// Retrieve the payment ID
-	$payment_id = absint( $data['edd_payment_id'] );
-	$payment    = new EDD_Payment( $payment_id );
+	// Retrieve the order ID and set up the order.
+	$order_id = absint( $data['edd_payment_id'] );
+	$order = edd_get_order( $order_id );
 
 	// Retrieve existing payment meta
-	$meta        = $payment->get_meta();
-	$user_info   = $payment->user_info;
+	$user_info = $order->get_user_info();
 
-	$status      = $data['edd-payment-status'];
-	$unlimited   = isset( $data['edd-unlimited-downloads'] ) ? '1' : '';
-	$date        = sanitize_text_field( $data['edd-payment-date'] );
-	$hour        = sanitize_text_field( $data['edd-payment-time-hour'] );
+	$status    = $data['edd-payment-status'];
+	$unlimited = isset( $data['edd-unlimited-downloads'] ) ? '1' : '';
+	$date      = sanitize_text_field( $data['edd-payment-date'] );
+	$hour      = sanitize_text_field( $data['edd-payment-time-hour'] );
 
 	// Restrict to our high and low
 	if ( $hour > 23 ) {
@@ -57,7 +56,7 @@ function edd_update_payment_details( $data ) {
 
 	$address     = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$curr_total  = edd_sanitize_amount( $payment->total );
+	$curr_total  = edd_sanitize_amount( $order->get_total() );
 	$new_total   = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax         = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
 	$date        = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
@@ -69,15 +68,13 @@ function edd_update_payment_details( $data ) {
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
 
 	if ( $updated_downloads ) {
-
 		foreach ( $updated_downloads as $cart_position => $download ) {
 
-			// If this item doesn't have a log yet, add one for each quantity count
+			// If this item doesn't have a log yet, add one for each quantity count.
 			$has_log = absint( $download['has_log'] );
 			$has_log = empty( $has_log ) ? false : true;
 
 			if ( $has_log ) {
-
 				$quantity   = isset( $download['quantity'] ) ? absint( $download['quantity']) : 1;
 				$item_price = isset( $download['item_price'] ) ? $download['item_price'] : 0;
 				$item_tax   = isset( $download['item_tax'] ) ? $download['item_tax'] : 0;
@@ -93,10 +90,7 @@ function edd_update_payment_details( $data ) {
 				);
 
 				$payment->modify_cart_item( $cart_position, $args );
-
 			} else {
-
-				// This
 				if ( empty( $download['item_price'] ) ) {
 					$download['item_price'] = 0.00;
 				}
@@ -124,12 +118,11 @@ function edd_update_payment_details( $data ) {
 				);
 
 				$payment->add_download( $download_id, $args );
-
 			}
-
 		}
 
 		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
+
 		foreach ( $deleted_downloads as $deleted_download ) {
 			$deleted_download = $deleted_download[0];
 
@@ -155,10 +148,7 @@ function edd_update_payment_details( $data ) {
 			$payment->remove_download( $deleted_download['id'], $args );
 
 			do_action( 'edd_remove_download_from_payment', $payment_id, $deleted_download['id'] );
-
 		}
-
-
 	}
 
 	do_action( 'edd_update_edited_purchase', $payment_id );
@@ -168,7 +158,6 @@ function edd_update_payment_details( $data ) {
 	$customer_changed = false;
 
 	if ( isset( $data['edd-new-customer'] ) && $data['edd-new-customer'] == '1' ) {
-
 		$email      = isset( $data['edd-new-customer-email'] ) ? sanitize_text_field( $data['edd-new-customer-email'] ) : '';
 		$names      = isset( $data['edd-new-customer-name'] ) ? sanitize_text_field( $data['edd-new-customer-name'] ) : '';
 
@@ -193,36 +182,27 @@ function edd_update_payment_details( $data ) {
 		}
 
 		$new_customer_id = $customer->id;
-
 		$previous_customer = new EDD_Customer( $curr_customer_id );
-
 		$customer_changed = true;
-
 	} elseif ( $curr_customer_id !== $new_customer_id ) {
-
 		$customer = new EDD_Customer( $new_customer_id );
 		$email    = $customer->email;
 		$names    = $customer->name;
 
 		$previous_customer = new EDD_Customer( $curr_customer_id );
-
 		$customer_changed = true;
-
 	} else {
-
 		$customer = new EDD_Customer( $curr_customer_id );
 		$email    = $customer->email;
 		$names    = $customer->name;
-
 	}
-
-
 
 	// Setup first and last name from input values
 	$names      = explode( ' ', $names );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
 	$last_name  = '';
-	if( ! empty( $names[1] ) ) {
+
+	if ( ! empty( $names[1] ) ) {
 		unset( $names[0] );
 		$last_name = implode( ' ', $names );
 	}
@@ -235,7 +215,6 @@ function edd_update_payment_details( $data ) {
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
 		if( 'revoked' == $status || 'publish' == $status ) {
-
 			$previous_customer->decrease_purchase_count();
 			$previous_customer->decrease_value( $new_total );
 
@@ -263,19 +242,17 @@ function edd_update_payment_details( $data ) {
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
-
 		if ( $new_total > $curr_total ) {
+
 			// Increase if our new total is higher
 			$difference = $new_total - $curr_total;
 			edd_increase_total_earnings( $difference );
-
 		} elseif ( $curr_total > $new_total ) {
+
 			// Decrease if our new total is lower
 			$difference = $curr_total - $new_total;
 			edd_decrease_total_earnings( $difference );
-
 		}
-
 	}
 
 	$updated = $payment->save();
@@ -291,7 +268,7 @@ function edd_update_payment_details( $data ) {
 		'page'        => 'edd-payment-history',
 		'view'        => 'view-order-details',
 		'edd-message' => 'payment-updated',
-		'id'          => $payment_id
+		'id'          => $order_id
 	), admin_url( 'edit.php' ) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
