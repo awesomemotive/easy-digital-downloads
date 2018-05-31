@@ -218,7 +218,7 @@ class EDD_Customer {
 		$created = false;
 
 		// Add the customer
-		$customer_id = edd_add_customer( $data );
+		$customer_id = edd_add_customer( $args );
 
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
 		if ( ! empty( $customer_id ) ) {
