@@ -40,61 +40,73 @@ function edd_get_tax_rates() {
 }
 
 /**
- * Get taxation rate
+ * Get tax rate for a specific for the current customer.
  *
  * @since 1.3.3
+ * @since 3.0 Updated to pass entire address to tax rate filter.
+ *
  * @param bool $country
  * @param bool $state
- * @return mixed|void
+ *
+ * @return float Tax rate.
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
 	$user_address = edd_get_customer_address();
 
-	if( empty( $country ) ) {
-		if( ! empty( $_POST['billing_country'] ) ) {
+    $address_line_1 = ! empty( $_POST['card_address'] )   ? sanitize_text_field( $_POST['card_address'] )   : '';
+    $address_line_2 = ! empty( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) : '';
+    $city           = ! empty( $_POST['card_city'] )      ? sanitize_text_field( $_POST['card_city'] )      : '';
+    $zip            = ! empty( $_POST['card_zip'] )       ? sanitize_text_field( $_POST['card_zip'] )       : '';
+
+    // Attempt to determine the country.
+	if ( empty( $country ) ) {
+		if ( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
-		} elseif( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
+		} elseif ( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
 			$country = $user_address['country'];
 		}
+
 		$country = ! empty( $country ) ? $country : edd_get_shop_country();
 	}
 
-	if( empty( $state ) ) {
-		if( ! empty( $_POST['state'] ) ) {
+	// Attempt to determine the state.
+	if ( empty( $state ) ) {
+		if ( ! empty( $_POST['state'] ) ) {
 			$state = $_POST['state'];
-		} elseif( ! empty( $_POST['card_state'] ) ) {
+		} elseif ( ! empty( $_POST['card_state'] ) ) {
 			$state = $_POST['card_state'];
-		} elseif( is_user_logged_in() && ! empty( $user_address['state'] ) ) {
+		} elseif ( is_user_logged_in() && ! empty( $user_address['state'] ) ) {
 			$state = $user_address['state'];
 		}
+
 		$state = ! empty( $state ) ? $state : edd_get_shop_state();
 	}
 
-	if( ! empty( $country ) ) {
-		$tax_rates   = edd_get_tax_rates();
+	// Attempt to determine the tax rate based on the country and state.
+	if ( ! empty( $country ) ) {
+		$tax_rates = edd_get_tax_rates();
 
-		if( ! empty( $tax_rates ) ) {
+		if ( ! empty( $tax_rates ) ) {
 
 			// Locate the tax rate for this country / state, if it exists
-			foreach( $tax_rates as $key => $tax_rate ) {
-
-				if( $country != $tax_rate['country'] )
+			foreach ( $tax_rates as $key => $tax_rate ) {
+				if ( $country !== $tax_rate['country'] ) {
 					continue;
+				}
 
-				if( ! empty( $tax_rate['global'] ) ) {
-					if( ! empty( $tax_rate['rate'] ) ) {
+				if ( ! empty( $tax_rate['global'] ) ) {
+				 	if ( ! empty( $tax_rate['rate'] ) ) {
 						$rate = number_format( $tax_rate['rate'], 4 );
 					}
 				} else {
-
-					if( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) ) {
+					if ( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) ) {
 						continue;
 					}
 
 					$state_rate = $tax_rate['rate'];
-					if( ( 0 !== $state_rate || ! empty( $state_rate ) ) && '' !== $state_rate ) {
+					if ( ( 0 !== $state_rate || ! empty( $state_rate ) ) && '' !== $state_rate ) {
 						$rate = number_format( $state_rate, 4 );
 					}
 				}
@@ -102,10 +114,24 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 		}
 	}
 
-	// Convert to a number we can use
+	// Convert the tax rate to a number we can use.
 	$rate = $rate / 100;
 
-	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
+	/**
+	 * Allow the tax rate to be filtered.
+	 *
+	 * @since 1.3.3
+	 * @since 3.0 Added entire customer address.
+	 *
+	 * @param float  $rate           Calculated tax rate.
+	 * @param string $country        Country.
+	 * @param string $state          State.
+	 * @param string $address_line_1 First line of address.
+	 * @param string $address_line_2 Second line of address.
+	 * @param string $city           City.
+	 * @param string $zip            ZIP code.
+	 */
+	return apply_filters( 'edd_tax_rate', $rate, $country, $state, $address_line_1, $address_line_2, $city, $zip );
 }
 
 /**
