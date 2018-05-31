@@ -69,7 +69,10 @@ function edd_add_ons_page() {
 
 		// The link
 		$tab  = '<li class="' . esc_attr( $tab_id ) . '">';
-		$tab .= '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $active ) . '">';
+		$tab .= ( 'all' === $tab_id )
+			? '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $active ) . '" target="_blank">'
+			: '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $active ) . '">';
+
 		$tab .= esc_html( $tab_name );
 		$tab .= ' <span class="count">(' . esc_html( $count ) . ')</span>';
 
