@@ -37,7 +37,7 @@ final class Customer_Meta extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201805290002;
 
 	/**
 	 * Setup the database schema
@@ -58,11 +58,35 @@ final class Customer_Meta extends Base {
 	}
 
 	/**
+	 * Maybe upgrade the database table. Handles creation & schema changes.
+	 *
+	 * Hooked to the "admin_init" action.
+	 *
+	 * @since 3.0
+	 */
+	public function maybe_upgrade() {
+		global $wpdb;
+
+		$option = get_option( $wpdb->prefix . 'edd_customermeta_version', false );
+
+		if ( false !== $option ) {
+
+			// In 3.0 we use new options to store the database version.
+			delete_option( $wpdb->prefix . 'edd_customermeta_version' );
+
+			$query = "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';";
+
+			$this->get_db()->query( $query );
+		}
+
+		parent::maybe_upgrade();
+	}
+
+	/**
 	 * Handle schema changes
 	 *
 	 * @access protected
 	 * @since 3.0
-	 * @return void
 	 */
 	protected function upgrade() {
 

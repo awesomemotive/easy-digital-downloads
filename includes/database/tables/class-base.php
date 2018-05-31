@@ -264,7 +264,7 @@ abstract class Base extends \EDD\Database\Base {
 		return $this->db_version;
 	}
 
-	/** Private ***************************************************************/
+	/** Protected *************************************************************/
 
 	/**
 	 * Return the global database interface
@@ -273,11 +273,13 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @return wpdb
 	 */
-	private static function get_db() {
+	protected static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
 			? $GLOBALS['wpdb']
 			: new stdClass();
 	}
+
+	/** Private ***************************************************************/
 
 	/**
 	 * Setup the necessary table variables
