@@ -591,7 +591,7 @@ class Base extends \EDD\Database\Base {
 
 		// Not a count query
 		} elseif ( is_array( $item_ids ) ) {
-			if ( ! empty( $this->query_vars['number'] ) && ! empty( $this->query_vars['no_found_rows'] ) ) {
+			if ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) {
 				/**
 				 * Filters the query used to retrieve found item count.
 				 *
@@ -2253,7 +2253,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Return the group
-		return $group;
+		return $retval;
 	}
 
 	/**
@@ -2271,9 +2271,16 @@ class Base extends \EDD\Database\Base {
 		// Get cache groups
 		$groups = $this->get_columns( array( 'cache_key' => true ), 'and', 'name' );
 
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
 		// Setup return values
 		foreach ( $groups as $name ) {
-			$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+			if ( $primary !== $name ) {
+				$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+			} else {
+				$cache_groups[ $name ] = $this->cache_group;
+			}
 		}
 
 		// Return cache groups array
@@ -2354,7 +2361,8 @@ class Base extends \EDD\Database\Base {
 
 		// Maybe query for single item
 		if ( is_numeric( $items ) ) {
-			$items = $this->get_item_raw( $primary, $items );
+			$primary = $this->get_primary_column_name();
+			$items   = $this->get_item_raw( $primary, $items );
 		}
 
 		// Bail if no items to cache

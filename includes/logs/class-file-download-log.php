@@ -86,6 +86,15 @@ class File_Download_Log extends Base_Object {
 	protected $ip;
 
 	/**
+	 * User Agent.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $user_agent;
+
+	/**
 	 * Date created.
 	 *
 	 * @since  3.0
@@ -161,7 +170,7 @@ class File_Download_Log extends Base_Object {
 	}
 
 	/**
-	 * Retrieve IP address of client used to download file.
+	 * Retrieve the IP address of the client used to download file.
 	 *
 	 * @since 3.0
 	 *
@@ -169,6 +178,17 @@ class File_Download_Log extends Base_Object {
 	 */
 	public function get_ip() {
 		return $this->ip;
+	}
+
+	/**
+	 * Retrieve the user agent of the client used to download file.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	public function get_user_agent() {
+		return $this->user_agent;
 	}
 
 	/**
