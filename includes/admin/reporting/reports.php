@@ -292,6 +292,22 @@ function edd_register_customer_report( $reports ) {
 				)
 			)
 		) );
+
+		$reports->register_endpoint( 'customer_average_age', array(
+			'label' => __( 'Average Age', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function() use ( $filter ) {
+						global $wpdb;
+						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
+						return $average_value . ' ' . __( 'days', 'easy-digital-downloads' );
+					},
+					'display_args'  => array(
+						'context' => 'tertiary',
+					)
+				)
+			)
+		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
