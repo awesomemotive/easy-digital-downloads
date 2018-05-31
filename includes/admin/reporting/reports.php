@@ -260,6 +260,9 @@ function edd_register_customer_report( $reports ) {
 					'customer_average_age',
 					'most_valuable_customer',
 				),
+				'tables' => array(
+					'top_five_customers'
+				)
 			),
 			'filters'   => array( 'dates' ),
 		) );
@@ -296,8 +299,8 @@ function edd_register_customer_report( $reports ) {
 						return edd_currency_filter( edd_format_amount( $average_value ) );
 					},
 					'display_args'  => array(
-						'context' => 'secondary',
-						'comparison_label' => $label
+						'context'          => 'secondary',
+						'comparison_label' => $label,
 					)
 				)
 			)
@@ -332,6 +335,18 @@ function edd_register_customer_report( $reports ) {
 						'context' => 'primary',
 					)
 				)
+			)
+		) );
+
+		$reports->register_endpoint( 'top_five_customers', array(
+			'label' => __( 'Top Five Customers', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Top_Five_Customers_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-top-five-customers-list-table.php',
+					)
+				),
 			)
 		) );
 	} catch ( \EDD_Exception $exception ) {
