@@ -49,7 +49,7 @@ final class Customers extends Base {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) NOT NULL AUTO_INCREMENT,
 			user_id bigint(20) NOT NULL,
-			email varchar(50) NOT NULL,
+			email varchar(100) NOT NULL,
 			name mediumtext NOT NULL,
 			status varchar(20) NOT NULL default '',
 			purchase_value mediumtext NOT NULL,
@@ -64,11 +64,41 @@ final class Customers extends Base {
 	}
 
 	/**
+	 * Maybe upgrade the database table. Handles creation & schema changes.
+	 *
+	 * Hooked to the "admin_init" action.
+	 *
+	 * @since 3.0
+	 */
+	public function maybe_upgrade() {
+		global $wpdb;
+
+		$option = get_option( $wpdb->prefix . 'edd_customers_version', false );
+
+		if ( false !== $option ) {
+
+			// In 3.0 we use new options to store the database version.
+			delete_option( $wpdb->prefix . 'edd_customers_version' );
+
+			$query = "
+				ALTER TABLE {$this->table_name} MODIFY `email` VARCHAR(100) NOT NULL default '';
+				ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
+				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
+				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
+				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00';
+			";
+
+			$this->get_db()->query( $query );
+		}
+
+		parent::maybe_upgrade();
+	}
+
+	/**
 	 * Handle schema changes
 	 *
 	 * @access protected
 	 * @since 3.0
-	 * @return void
 	 */
 	protected function upgrade() {
 
