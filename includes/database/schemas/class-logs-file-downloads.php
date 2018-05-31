@@ -55,7 +55,8 @@ class Logs_File_Downloads extends Base {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'searchable' => true
 		),
 
 		// payment_id
@@ -82,7 +83,8 @@ class Logs_File_Downloads extends Base {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'searchable' => true
 		),
 
 		// ip
@@ -91,7 +93,18 @@ class Logs_File_Downloads extends Base {
 			'type'       => 'varchar',
 			'length'     => '60',
 			'default'    => '',
-			'sortable'   => true
+			'sortable'   => true,
+			'searchable' => true
+		),
+
+		// ip
+		array(
+			'name'       => 'user_agent',
+			'type'       => 'varchar',
+			'length'     => '200',
+			'default'    => '',
+			'sortable'   => true,
+			'searchable' => true,
 		),
 
 		// date_created

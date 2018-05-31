@@ -54,6 +54,7 @@ final class Logs_File_Downloads extends Base {
 		price_id bigint(20) unsigned NOT NULL default '0',
 		user_id bigint(20) unsigned NOT NULL default '0',
 		ip varchar(60) NOT NULL default '',
+		user_agent varchar(200) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
