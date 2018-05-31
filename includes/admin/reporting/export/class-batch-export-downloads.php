@@ -5,7 +5,7 @@
  * This class handles download products export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
+ * @subpackage  Admin/Reporting/Export
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5

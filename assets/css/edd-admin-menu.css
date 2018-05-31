@@ -22,3 +22,12 @@
 	margin: 0 -13px;
 	content: '';
 }
+
+#adminmenu ul > li:last-child a[href^="edit.php?post_type=download&page=edd-addons"]:before
+{
+	display: block;
+	border-top: 1px solid rgba(255,255,255,0.2);
+	height: 14px;
+	margin: 0 -13px;
+	content: '';
+}

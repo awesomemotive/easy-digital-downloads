@@ -137,12 +137,14 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		$dates = edd_get_report_dates( 'Pacific/Auckland' );
 
+		$auk_date = edd()->utils->date( 'now', 'Pacific/Auckland' );
+
 		$this->assertEquals( $dates['day'], 1 );
-		$this->assertEquals( $dates['m_start'], date( 'n' ) );
-		$this->assertEquals( $dates['year'], date( 'Y' ) );
+		$this->assertEquals( $dates['m_start'], $auk_date->format( 'n' ) );
+		$this->assertEquals( $dates['year'], $auk_date->format( 'Y' ) );
 		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
-		$this->assertEquals( $dates['m_end'], date( 'n' ) );
-		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+		$this->assertEquals( $dates['m_end'], $auk_date->format( 'n' ) );
+		$this->assertEquals( $dates['year_end'], $auk_date->format( 'Y' ) );
 	}
 
 	/**
