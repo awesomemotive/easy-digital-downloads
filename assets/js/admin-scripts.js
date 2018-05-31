@@ -781,6 +781,7 @@ jQuery(document).ready(function ($) {
 				clone.find( 'input.edd-payment-details-download-amount' ).val( item_total );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 				clone.find( 'input.edd-payment-details-download-has-log').val(0);
+				clone.find( 'input.edd-payment-details-download-order-item-id').val(0);
 
 				clone.find( '.edd-copy-download-link-wrapper' ).remove();
 
