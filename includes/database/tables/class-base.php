@@ -207,6 +207,21 @@ abstract class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Create the table
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function create() {
+		$query   = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
+		$created = $this->get_db()->query( $query );
+
+		// Was the table created?
+		return ! empty( $created );
+	}
+
+	/**
 	 * Truncate the database table
 	 *
 	 * @since 3.0
@@ -347,8 +362,6 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Set the database version for the table
 	 *
-	 * Global table version in "_sitemeta" on the main network
-	 *
 	 * @since 3.0
 	 */
 	private function set_db_version() {
@@ -358,21 +371,19 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Update the DB version
 		$this->is_global()
-			? update_network_option( null, $this->db_version_key, $this->version )
-			:         update_option(       $this->db_version_key, $this->version );
+			? update_network_option( get_main_network_id(), $this->db_version_key, $this->version )
+			:         update_option(                        $this->db_version_key, $this->version );
 	}
 
 	/**
 	 * Get the table version from the database
 	 *
-	 * Global table version from "_sitemeta" on the main network
-	 *
 	 * @since 3.0
 	 */
 	private function get_db_version() {
 		$this->db_version = $this->is_global()
-			? get_network_option( null, $this->db_version_key, false )
-			:         get_option(       $this->db_version_key, false );
+			? get_network_option( get_main_network_id(), $this->db_version_key, false )
+			:         get_option(                        $this->db_version_key, false );
 	}
 
 	/**
@@ -409,31 +420,6 @@ abstract class Base extends \EDD\Database\Base {
 
 			// Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
 			function_exists( '_manually_load_plugin' );
-	}
-
-	/**
-	 * Create the table
-	 *
-	 * @since 3.0
-	 */
-	private function create() {
-
-		// Include file with dbDelta() for create/upgrade usages
-		if ( ! function_exists( 'dbDelta' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		}
-
-		// Bail if dbDelta() moved in WordPress core
-		if ( ! function_exists( 'dbDelta' ) ) {
-			return false;
-		}
-
-		// Run CREATE TABLE query
-		$query   = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
-		$created = dbDelta( array( $query ) );
-
-		// Was the table created?
-		return ! empty( $created );
 	}
 
 	/**

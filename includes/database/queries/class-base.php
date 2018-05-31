@@ -298,6 +298,7 @@ class Base extends \EDD\Database\Base {
 		// Setup
 		$this->set_prefix();
 		$this->set_columns();
+		$this->set_item_shape();
 		$this->set_query_var_defaults();
 
 		// Maybe execute a query if arguments were passed
@@ -385,6 +386,17 @@ class Base extends \EDD\Database\Base {
 
 		// Set columns
 		$this->columns = $new_columns;
+	}
+
+	/**
+	 * Set the default item shape if none exists
+	 *
+	 * @since 3.0
+	 */
+	private function set_item_shape() {
+		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
+			$this->item_shape = 'EDD\\Database\\Objects\\Base';
+		}
 	}
 
 	/**
@@ -532,34 +544,11 @@ class Base extends \EDD\Database\Base {
 		// Cast to integers
 		$item_ids = array_map( 'intval', $item_ids );
 
-		// Prime item caches.
+		// Prime item caches
 		$this->prime_item_caches( $item_ids );
 
-		// Return the IDs
-		if ( 'ids' === $this->query_vars['fields'] ) {
-			$this->items = $item_ids;
-
-			return $this->items;
-		}
-
-		// Get item instances from IDs.
-		$_items = $this->shape_items( $item_ids );
-
-		/**
-		 * Filters the object query results.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array        $results An array of items.
-		 * @param EDD_DB_Query &$this   Current instance of EDD_DB_Query, passed by reference.
-		 */
-		$_items = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $_items, &$this ) );
-
-		// Make sure items are still item instances.
-		$this->items = $this->shape_items( $_items );
-
-		// Force lean up these items
-		unset( $_items );
+		// Shape the items
+		$this->items = $this->shape_items( $item_ids );
 	}
 
 	/**
@@ -1295,49 +1284,29 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function parse_fields( $fields = '', $alias = true ) {
 
+		// Default return value
+		$primary = $this->get_primary_column_name();
+		$retval  = ( true === $alias )
+			? "{$this->table_alias}.{$primary}"
+			: $primary;
+
 		// No fields
-		if ( empty( $fields ) ) {
+		if ( empty( $fields ) && ! empty( $this->query_vars['count'] ) ) {
 
-			// Doing count?
-			if ( ! empty( $this->query_vars['count'] ) ) {
+			// Possible fields to group by
+			$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], false );
+			$groupby_names = ! empty( $groupby_names )
+				? "{$groupby_names}"
+				: '';
 
-				// Possible fields to group by
-				$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], false );
-				$groupby_names = ! empty( $groupby_names )
-					? "{$groupby_names}"
-					: '';
-
-				// Group by or total count
-				$fields = ! empty( $groupby_names )
-					? "{$groupby_names}, COUNT(*) as count"
-					: 'COUNT(*)';
-
-			// Not doing a count, so use primary column
-			} else {
-				$primary = $this->get_primary_column_name();
-				$fields  = ( true === $alias )
-					? "{$this->table_alias}.{$primary}"
-					: $primary;
-			}
-
-		// Specific fields are being requested
-		} else {
-			$fields  = (array) $this->query_vars['fields'];
-			$results = array();
-
-			// Maybe alias keys
-			foreach ( $fields as $field ) {
-				$results[] = ( true === $alias )
-					? "{$this->table_alias}.{$field}"
-					: $field;
-			}
-
-			// Implode
-			$fields = implode( ', ', $fields );
+			// Group by or total count
+			$retval = ! empty( $groupby_names )
+				? "{$groupby_names}, COUNT(*) as count"
+				: 'COUNT(*)';
 		}
 
-		// Return string of fields
-		return $fields;
+		// Return fields (or COUNT)
+		return $retval;
 	}
 
 	/**
@@ -1462,6 +1431,9 @@ class Base extends \EDD\Database\Base {
 	 * This will try to use item_shape, but will fallback to a private
 	 * method for querying and caching items.
 	 *
+	 * If using the `fields` parameter, results will have unique shapes based on
+	 * exactly what was requested.
+	 *
 	 * @since 3.0
 	 *
 	 * @param array $items
@@ -1469,16 +1441,77 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function shape_items( $items = array() ) {
 
-		// Default var
-		$results = array();
-
-		// Use foreach because it's faster locally than array_map()
-		foreach ( $items as $item ) {
-			$results[] = $this->shape_item( $item );
+		// Force to stdClass if querying for fields
+		if ( ! empty( $this->query_vars['fields'] ) ) {
+			$this->item_shape = 'stdClass';
 		}
 
-		// Return shaped results
-		return $results;
+		// Default return value
+		$retval = array();
+
+		// Use foreach because it's faster than array_map()
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $item ) {
+				$retval[] = $this->get_item( $item );
+			}
+		}
+
+		/**
+		 * Filters the object query results.
+		 *
+		 * Looks like `edd_get_customers`
+		 *
+		 * @since 3.0
+		 *
+		 * @param array        $retval An array of items.
+		 * @param EDD_DB_Query &$this  Current instance of EDD_DB_Query, passed by reference.
+		 */
+		$retval = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
+
+		// Return filtered results
+		return ! empty( $this->query_vars['fields'] )
+			? $this->get_item_fields( $retval )
+			: $retval;
+	}
+
+	/**
+	 * Get specific item fields based on query_vars['fields'].
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $items
+	 * @return array
+	 */
+	private function get_item_fields( $items = array() ) {
+
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+		$fields  = $this->query_vars['fields'];
+
+		// Strings need to be single columns
+		if ( is_string( $fields ) ) {
+			$field = sanitize_key( $fields );
+			$items = ( 'ids' === $fields )
+				? wp_list_pluck( $items, $primary )
+				: wp_list_pluck( $items, $field, $primary );
+
+		// Arrays could be anything
+		} elseif ( is_array( $fields ) ) {
+			$new_items = array();
+			$fields    = array_flip( $fields );
+
+			// Loop through items and pluck out the fields
+			foreach ( $items as $item_id => $item ) {
+				$new_items[ $item_id ] = (object) array_intersect_key( (array) $item, $fields );
+			}
+
+			// Set the items and unset the new items
+			$items = $new_items;
+			unset( $new_items );
+		}
+
+		// Return the item, possibly reduced
+		return $items;
 	}
 
 	/**
@@ -1795,23 +1828,23 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function shape_item( $item = 0 ) {
 
-		// Callback exists
-		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
-			$this->item_shape = 'EDD\\Database\\Objects\\Base';
-		}
-
-		// Bail early if item is already an object of the correct shape
-		if ( $item instanceof $this->item_shape ) {
-			return $item;
-		}
-
 		// Get the item from an ID
 		if ( is_numeric( $item ) ) {
 			$item = $this->get_item( $item );
 		}
 
-		// Return the newly shaped item
-		return new $this->item_shape( $item );
+		// Return the item if it's already shaped
+		if ( $item instanceof $this->item_shape ) {
+			return $item;
+		}
+
+		// Shape the item as needed
+		$item = ! empty( $this->item_shape )
+			? new $this->item_shape( $item )
+			: (object) $item;
+
+		// Return the item object
+		return $item;
 	}
 
 	/**
@@ -1824,6 +1857,9 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function validate_item( $item = array() ) {
 		foreach ( $item as $key => $value ) {
+
+			// Always strip slashes from all values
+			$value    = stripslashes( $value );
 
 			// Get callback for column
 			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
@@ -1839,6 +1875,10 @@ class Base extends \EDD\Database\Base {
 
 				// Update the value
 				$item[ $key ] = $validated;
+
+			// Include basic stripslashes() call
+			} else {
+				$item[ $key ] = $value;
 			}
 		}
 
@@ -2223,7 +2263,14 @@ class Base extends \EDD\Database\Base {
 	 * @return string
 	 */
 	private function get_cache_key( $group = '' ) {
-		$slice        = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
+
+		// Slice query vars
+		$slice = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
+
+		// Unset `fields` so it does not effect the cache key
+		unset( $slice['fields'] );
+
+		// Setup key & last_changed
 		$key          = md5( serialize( $slice ) );
 		$last_changed = $this->get_last_changed_cache( $group );
 
