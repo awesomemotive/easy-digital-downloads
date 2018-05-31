@@ -374,7 +374,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 
 												// Item ID is checked if isset due to the near-1.0 cart data
 												$item_id    = $order_item->get_product_id() ? $order_item->get_product_id() : $order_item;
-												$price      = $order_item->get_amount()     ? $order_item->get_amount()     : false;
+												$price      = $order_item->get_total()      ? $order_item->get_total()      : false;
 												$item_price = $order_item->get_subtotal()   ? $order_item->get_subtotal()   : $price;
 												$subtotal   = $order_item->get_subtotal()   ? $order_item->get_subtotal()   : $price;
 												$item_tax   = $order_item->get_tax()        ? $order_item->get_tax()        : 0;
