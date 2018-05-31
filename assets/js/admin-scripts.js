@@ -631,11 +631,12 @@ jQuery(document).ready(function ($) {
 				}
 
 				if ( confirm( edd_vars.delete_payment_download ) ) {
-					var key         = $( this ).data('key'),
-						download_id = $('input[name="edd-payment-details-downloads['+key+'][id]"]').val(),
-						price_id    = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val(),
-						quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val(),
-						amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
+					var key           = $( this ).data('key'),
+						download_id   = $('input[name="edd-payment-details-downloads['+key+'][id]"]').val(),
+						price_id      = $('input[name="edd-payment-details-downloads['+key+'][price_id]"]').val(),
+						quantity      = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val(),
+						amount        = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val(),
+						order_item_id = $('input[name="edd-payment-details-downloads['+key+'][order_item_id]"]').val();;
 
 					if ( $('input[name="edd-payment-details-downloads['+key+'][tax]"]') ) {
 						var fees = $('input[name="edd-payment-details-downloads['+key+'][tax]"]').val();
@@ -651,7 +652,7 @@ jQuery(document).ready(function ($) {
 						currently_removed  = {};
 					}
 
-					var removed_item       = [ { 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount, 'cart_index': key } ];
+					var removed_item       = [ { 'order_item_id' : order_item_id, 'id': download_id, 'price_id': price_id, 'quantity': quantity, 'amount': amount, 'cart_index': key } ];
 					currently_removed[key] = removed_item;
 
 					$('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));

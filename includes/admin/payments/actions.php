@@ -159,22 +159,13 @@ function edd_update_payment_details( $data = array() ) {
 				continue;
 			}
 
-			$price_id = false;
+			/** @var EDD\Orders\Order_Item $order_item */
+			$order_item = edd_get_order_item( absint( $deleted_download['order_item_id'] ) );
 
-			if ( edd_has_variable_prices( $deleted_download['id'] ) && isset( $deleted_download['price_id'] ) ) {
-				$price_id = absint( $deleted_download['price_id'] );
-			}
+			$new_subtotal -= (float) $deleted_download['amount'] * $deleted_download['quantity'];
+			$new_tax -= (float) $order_item->get_tax();
 
-			$cart_index = isset( $deleted_download['cart_index'] ) ? absint( $deleted_download['cart_index'] ) : false;
-
-			$args = array(
-				'quantity'   => (int) $deleted_download['quantity'],
-				'price_id'   => $price_id,
-				'item_price' => (float) $deleted_download['amount'],
-				'cart_index' => $cart_index
-			);
-
-			$payment->remove_download( $deleted_download['id'], $args );
+			edd_delete_order_item( absint( $deleted_download['order_item_id'] ) );
 
 			do_action( 'edd_remove_download_from_payment', $order_id, $deleted_download['id'] );
 		}
