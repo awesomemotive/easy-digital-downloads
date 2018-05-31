@@ -227,15 +227,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'customers', array(
-			'label' => __( 'Customers', 'easy-digital-downloads' ),
-			'priority' => 30,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			)
-		) );
-
-
 	} catch ( \EDD_Exception $exception ) {
 
 		edd_debug_log_exception( $exception );
@@ -243,6 +234,35 @@ function edd_register_core_reports( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_core_reports' );
+
+/**
+ * Register customer report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_customer_report( $reports ) {
+	try {
+		$reports->add_report( 'customers', array(
+			'label'     => __( 'Customers', 'easy-digital-downloads' ),
+			'priority'  => 30,
+			'endpoints' => array(
+				'tiles' => array(
+					'lifetime_value_of_customer',
+					'customer_value',
+					'average_number_of_orders_per_customer',
+					'customer_average_age',
+					'most_valuable_customer',
+				),
+			),
+			'filters'   => array( 'dates' ),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_customer_report' );
 
 /**
  * Renders the Reports Downloads Table
