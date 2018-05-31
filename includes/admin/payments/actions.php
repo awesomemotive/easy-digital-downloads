@@ -175,11 +175,11 @@ function edd_update_payment_details( $data = array() ) {
 
 			$payment->remove_download( $deleted_download['id'], $args );
 
-			do_action( 'edd_remove_download_from_payment', $payment_id, $deleted_download['id'] );
+			do_action( 'edd_remove_download_from_payment', $order_id, $deleted_download['id'] );
 		}
 	}
 
-	do_action( 'edd_update_edited_purchase', $payment_id );
+	do_action( 'edd_update_edited_purchase', $order_id );
 
 	$payment->date = $date;
 
@@ -238,8 +238,8 @@ function edd_update_payment_details( $data = array() ) {
 	if ( $customer_changed ) {
 
 		// Remove the stats and payment from the previous customer and attach it to the new customer
-		$previous_customer->remove_payment( $payment_id, false );
-		$customer->attach_payment( $payment_id, false );
+		$previous_customer->remove_payment( $order_id, false );
+		$customer->attach_payment( $order_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
 		if( 'revoked' == $status || 'publish' == $status ) {
@@ -289,7 +289,7 @@ function edd_update_payment_details( $data = array() ) {
 		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 	}
 
-	do_action( 'edd_updated_edited_purchase', $payment_id );
+	do_action( 'edd_updated_edited_purchase', $order_id );
 
 	edd_redirect( add_query_arg( array(
 		'post_type'   => 'download',
