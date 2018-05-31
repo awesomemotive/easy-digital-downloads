@@ -1426,24 +1426,25 @@ function edd_get_purchase_id_by_transaction_id( $key ) {
 }
 
 /**
- * Retrieve all notes attached to a purchase
+ * Retrieve all notes attached to an order.
  *
  * @since 1.4
  * @since 3.0 Updated to use the edd_notes custom table to store notes.
  *
- * @param int    $payment_id The payment ID to retrieve notes for.
+ * @param int    $order_id   The order ID to retrieve notes for.
  * @param string $search     Search for notes that contain a search term.
- * @return array|bool $notes Payment Notes, false otherwise.
+ * @return array|bool $notes Order notes, false otherwise.
  */
-function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
-	if ( empty( $payment_id ) && empty( $search ) ) {
+function edd_get_payment_notes( $order_id = 0, $search = '' ) {
+	if ( empty( $order_id ) && empty( $search ) ) {
 		return false;
 	}
 
 	$notes = edd_get_notes( array(
-		'object_id' => $payment_id,
-		'order'     => 'ASC',
-		'search'    => '',
+		'object_id'   => $order_id,
+		'object_type' => 'order',
+		'order'       => 'ASC',
+		'search'      => '',
 	) );
 
 	return $notes;
@@ -1451,23 +1452,23 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 
 
 /**
- * Add a note to a payment
+ * Add a note to an order.
  *
  * @since 1.4
  * @since 3.0 Updated to use the edd_notes custom table to store notes.
  *
- * @param int    $payment_id The payment ID to store a note for.
- * @param string $note       The content of the note.
+ * @param int    $order_id The order ID to store a note for.
+ * @param string $note     The content of the note.
  * @return int|false The new note ID, false otherwise.
  */
-function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
+function edd_insert_payment_note( $order_id = 0, $note = '' ) {
 
-	// Bail if no payment ID or note
-	if ( empty( $payment_id ) || empty( $note ) ) {
+	// Bail if no order ID or note.
+	if ( empty( $order_id ) || empty( $note ) ) {
 		return false;
 	}
 
-	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
+	do_action( 'edd_pre_insert_payment_note', $order_id, $note );
 
 	/**
 	 * For backwards compatibility purposes, we need to pass the data to
@@ -1475,7 +1476,7 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 	 * WordPress Core filters prior to be inserted into the database.
 	 */
 	$filtered_data = wp_filter_comment( array(
-		'comment_post_ID'      => $payment_id,
+		'comment_post_ID'      => $order_id,
 		'comment_content'      => $note,
 		'user_id'              => is_admin() ? get_current_user_id() : 0,
 		'comment_date'         => current_time( 'mysql' ),
@@ -1497,32 +1498,32 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'object_type' => 'order',
 	) );
 
-	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
+	do_action( 'edd_insert_payment_note', $note_id, $order_id, $note );
 
 	// Return the ID of the new note
 	return $note_id;
 }
 
 /**
- * Deletes a payment note.
+ * Deletes an order note.
  *
  * @since 1.6
  * @since 3.0 Updated to use the edd_notes custom table to store notes.
  *
- * @param int $note_id The Note ID to delete.
- * @param int $payment_id The payment ID the note is connected to.
+ * @param int $note_id  Note ID.
+ * @param int $order_id Order ID.
  * @return bool True on success, false otherwise.
  */
-function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
+function edd_delete_payment_note( $note_id = 0, $order_id = 0 ) {
 	if ( empty( $note_id ) ) {
 		return false;
 	}
 
-	do_action( 'edd_pre_delete_payment_note', $note_id, $payment_id );
+	do_action( 'edd_pre_delete_payment_note', $note_id, $order_id );
 
 	$ret = edd_delete_note( $note_id );
 
-	do_action( 'edd_post_delete_payment_note', $note_id, $payment_id );
+	do_action( 'edd_post_delete_payment_note', $note_id, $order_id );
 
 	return $ret;
 }
