@@ -565,4 +565,21 @@ class Order extends Base_Object {
 	public function has_unlimited_downloads() {
 		return (bool) edd_get_order_meta( $this->id, 'unlimited_downloads', true );
 	}
+
+	/**
+	 * Retrieve all the notes for this order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Notes associated with this order.
+	 */
+	public function get_notes() {
+		$notes = edd_get_notes( array(
+			'object_id'   => $this->get_id(),
+			'object_type' => 'order',
+			'order'       => 'ASC',
+		) );
+
+		return $notes;
+	}
 }
