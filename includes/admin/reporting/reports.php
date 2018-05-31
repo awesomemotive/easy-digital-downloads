@@ -263,6 +263,9 @@ function edd_register_customer_report( $reports ) {
 				'tables' => array(
 					'top_five_customers',
 					'most_valuable_customers'
+				),
+				'charts' => array(
+					'new_customers'
 				)
 			),
 			'filters'   => array( 'dates' ),
@@ -361,6 +364,52 @@ function edd_register_customer_report( $reports ) {
 					)
 				),
 			)
+		) );
+
+		$reports->register_endpoint( 'new_customers', array(
+			'label' => __( 'New Customers', 'easy-digital-downloads' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() use ( $filter ) {
+					    global $wpdb;
+
+						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
+						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+					            "SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, COUNT(edd_c.id) AS new_customers
+					            FROM {$wpdb->edd_customers} edd_c
+					            WHERE ( ( date_created >= %s
+                                AND date_created <= %s ) ) 
+                                GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
+                                ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
+						    $start_date, $end_date) );
+
+						$new_customers = array();
+
+					    $i = 0;
+					    foreach ( $results as $result ) {
+                            $new_customers[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
+                            $new_customers[ $i ][] = $result->new_customers;
+
+					        $i++;
+                        }
+
+						return array( 'customers' => $new_customers );
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'customers' => array(
+								'label'           => __( 'New Customers', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
+					),
+				),
+			),
 		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
