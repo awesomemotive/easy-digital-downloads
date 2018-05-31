@@ -244,6 +244,11 @@ add_action( 'edd_reports_init', 'edd_register_core_reports' );
  */
 function edd_register_customer_report( $reports ) {
 	try {
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
 		$reports->add_report( 'customers', array(
 			'label'     => __( 'Customers', 'easy-digital-downloads' ),
 			'priority'  => 30,
@@ -264,10 +269,26 @@ function edd_register_customer_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function() {
-					    global $wpdb;
-					    $average_value = $wpdb->get_var( "SELECT AVG(purchase_value) AS average FROM {$wpdb->edd_customers}" );
-					    return edd_currency_filter( edd_format_amount( $average_value ) );
+						global $wpdb;
+						$average_value = $wpdb->get_var( "SELECT AVG(purchase_value) AS average FROM {$wpdb->edd_customers}" );
+						return edd_currency_filter( edd_format_amount( $average_value ) );
 					}
+				)
+			)
+		) );
+
+		$reports->register_endpoint( 'average_number_of_orders_per_customer', array(
+			'label' => __( 'Average Number of Orders', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function() use ( $filter ) {
+						global $wpdb;
+						$average_value = $wpdb->get_var( "SELECT AVG(purchase_count) AS average FROM {$wpdb->edd_customers}" );
+						return (int) $average_value;
+					},
+					'display_args'  => array(
+						'context' => 'secondary',
+					)
 				)
 			)
 		) );
