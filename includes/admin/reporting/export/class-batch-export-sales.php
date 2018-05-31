@@ -5,14 +5,14 @@
  * This class handles Sales logs export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2016, Sunny Ratilal
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Sales_Export Class
@@ -56,20 +56,17 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 * Get the Export Data
 	 *
 	 * @since 2.7
- 	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
-		global $edd_logs;
-
 		$data = array();
 
 		$args = array(
-			'log_type'       => 'sale',
-			'posts_per_page' => 30,
-			'paged'          => $this->step,
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
+			'number' => 30,
+			'offset' => ( $this->step * 30 ) - 30,
+			'order'  => 'ASC',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -83,97 +80,67 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		}
 
 		if ( 0 !== $this->download_id ) {
-			$args['post_parent'] = $this->download_id;
+			$args['product_id'] = $this->download_id;
 		}
 
-		$logs = $edd_logs->get_connected_logs( $args );
+		$items = edd_get_order_items( $args );
 
-		if ( $logs ) {
-			foreach ( $logs as $log ) {
-				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-				$payment    = new EDD_Payment( $payment_id );
-				$download    = new EDD_Download( $log->post_parent );
+		foreach ( $items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+			$order = edd_get_order( $item->get_order_id() );
+			$download = edd_get_download( $item->get_product_id() );
+			$user_info = $order->get_user_info();
 
-				if ( ! empty( $payment->ID ) ) {
-					$customer   = new EDD_Customer( $payment->customer_id );
-					$cart_items = $payment->cart_details;
-					$amount     = 0;
-
-					if ( is_array( $cart_items ) ) {
-						foreach ( $cart_items as $item ) {
-							$log_price_id = null;
-							if ( $item['id'] == $log->post_parent ) {
-								if ( isset( $item['item_number']['options']['price_id'] ) ) {
-									$log_price_id = get_post_meta( $log->ID, '_edd_log_price_id', true );
-
-									if ( (int) $item['item_number']['options']['price_id'] !== (int) $log_price_id ) {
-										continue;
-									}
-								}
-
-								$amount = isset( $item['price'] ) ? $item['price'] : $item['item_price'];
-								break;
-							}
-						}
-					}
-				}
-				$data[] = array(
-					'ID'          => $log->ID,
-					'user_id'     => $customer->user_id,
-					'customer_id' => $customer->id,
-					'email'       => $payment->email,
-					'first_name'  => $payment->first_name,
-					'last_name'   => $payment->last_name,
-					'download'    => $download->post_title,
-					'amount'      => $amount,
-					'payment_id'  => $payment->ID,
-					'price_id'    => $log_price_id,
-					'date'        => get_post_field( 'post_date', $payment_id ),
-				);
-			}
-
-			$data = apply_filters( 'edd_export_get_data', $data );
-			$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
-
-			return $data;
+			$data[] = array(
+				'ID'          => $item->get_product_id(),
+				'user_id'     => $order->get_user_id(),
+				'customer_id' => $order->get_customer_id(),
+				'email'       => $order->get_email(),
+				'first_name'  => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
+				'last_name'   => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
+				'download'    => $download->post_title,
+				'amount'      => $order->get_total(),
+				'payment_id'  => $order->get_id(),
+				'price_id'    => $item->get_price_id(),
+				'date'        => $order->get_date_created(),
+			);
 		}
 
-		return false;
+		$data = apply_filters( 'edd_export_get_data', $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
+
+		return ! empty( $data )
+			? $data
+			: false;
 	}
-
 	/**
-	 * Return the calculated completion percentage
+	 * Return the calculated completion percentage.
 	 *
 	 * @since 2.7
+	 * @since 3.0 Updated to use new query methods.
+	 *
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		global $edd_logs;
-
 		$args = array(
-			'post_type'		   => 'edd_log',
-			'posts_per_page'   => -1,
-			'post_status'	   => 'publish',
-			'fields'           => 'ids',
-			'post_parent'      => $this->download_id,
-			'tax_query'        => array(
-				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> 'sale'
-				)
-			),
-			'date_query'        => array(
+			'fields' => 'ids',
+		);
+
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
 					'inclusive' => true
 				)
-			)
-		);
+			);
+		}
 
-		$logs       = new WP_Query( $args );
-		$total      = (int) $logs->post_count;
+		if ( 0 !== $this->download_id ) {
+			$args['product_id'] = $this->download_id;
+		}
+
+		$total = edd_count_order_items( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {

@@ -5,14 +5,14 @@
  * This class handles customer export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Customers_Export Class
@@ -49,46 +49,38 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Get the Export Data
+	 * Get the export data.
 	 *
 	 * @since 2.4
-	 *   Database API
-	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
-
 		$data = array();
 
 		if ( ! empty( $this->download ) ) {
-
 			// Export customers of a specific product
-			global $edd_logs;
 
 			$args = array(
-				'post_parent'    => absint( $this->download ),
-				'log_type'       => 'sale',
-				'posts_per_page' => 30,
-				'paged'          => $this->step
+				'product_id' => absint( $this->download ),
+				'number'     => 30,
+				'offset'     => 30 * ( $this->step - 1 ),
 			);
 
 			if( null !== $this->price_id ) {
-				$args['meta_query'] = array(
-					array(
-						'key'   => '_edd_log_price_id',
-						'value' => (int) $this->price_id
-					)
-				);
+				$args['price_id'] = (int) $this->price_id;
 			}
 
-			$logs = $edd_logs->get_connected_logs( $args );
+			$order_items = edd_get_order_items( $args );
 
-			if ( $logs ) {
-				foreach ( $logs as $log ) {
+			if ( $order_items ) {
+				foreach ( $order_items as $item ) {
+					/** @var EDD\Orders\Order_Item $item */
 
-					$payment_id  = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-					$customer_id = edd_get_payment_customer_id( $payment_id );
-					$customer    = new EDD_Customer( $customer_id );
+					$order = edd_get_order( $item->get_order_id() );
+
+					$customer = new EDD_Customer( $order->get_customer_id() );
 
 					$data[] = array(
 						'id'        => $customer->id,
@@ -99,25 +91,22 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 					);
 				}
 			}
-
 		} else {
 
 			// Export all customers
-			$offset    = 30 * ( $this->step - 1 );
 			$customers = edd_get_customers( array(
 				'number' => 30,
-				'offset' => $offset
+				'offset' => 30 * ( $this->step - 1 )
 			) );
 
 			$i = 0;
 
 			foreach ( $customers as $customer ) {
-
-				$data[$i]['id']        = $customer->id;
-				$data[$i]['name']      = $customer->name;
-				$data[$i]['email']     = $customer->email;
-				$data[$i]['purchases'] = $customer->purchase_count;
-				$data[$i]['amount']    = edd_format_amount( $customer->purchase_value );
+				$data[ $i ]['id']        = $customer->id;
+				$data[ $i ]['name']      = $customer->name;
+				$data[ $i ]['email']     = $customer->email;
+				$data[ $i ]['purchases'] = $customer->purchase_count;
+				$data[ $i ]['amount']    = edd_format_amount( $customer->purchase_value );
 
 				$i++;
 			}
@@ -136,23 +125,18 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$percentage = 0;
 
-		// We can't count the number when getting them for a specific download
-		if( empty( $this->download ) ) {
-
+		// We can't count the number when getting them for a specific download.
+		if ( empty( $this->download ) ) {
 			$total = edd_count_customers();
 
-			if( $total > 0 ) {
-
+			if ( $total > 0 ) {
 				$percentage = ( ( 30 * $this->step ) / $total ) * 100;
-
 			}
-
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
