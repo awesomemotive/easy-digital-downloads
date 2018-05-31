@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
 */
@@ -20,8 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @return      void
 */
 function edd_update_payment_details( $data ) {
-
-	if( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
+	if ( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
@@ -47,7 +46,7 @@ function edd_update_payment_details( $data ) {
 		$hour = 00;
 	}
 
-	$minute      = sanitize_text_field( $data['edd-payment-time-min'] );
+	$minute = sanitize_text_field( $data['edd-payment-time-min'] );
 
 	// Restrict to our high and low
 	if ( $minute > 59 ) {

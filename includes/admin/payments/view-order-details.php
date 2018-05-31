@@ -86,7 +86,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 
 												<?php
 												$status_help = '<ul>';
-												$status_help .= '<li>' . __( '<strong>Pending</strong>: payment is still processing or was abandoned by customer. Successful payments will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
+												$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
 												$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
 												$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
 												$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
@@ -205,10 +205,10 @@ $cart_fees     = edd_get_order_adjustments( array(
 												'edd-action'  => 'delete_payment',
 												'purchase_id' => $order_id,
 											), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>"
-											   class="edd-delete-payment edd-delete"><?php _e( 'Delete Payment', 'easy-digital-downloads' ); ?></a>
+											   class="edd-delete-payment edd-delete"><?php _e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
 										</div>
 
-										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'easy-digital-downloads' ); ?>"/>
+										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
 										<div class="clear"></div>
 									</div>
 
@@ -749,11 +749,11 @@ $cart_fees     = edd_get_order_adjustments( array(
 							<?php do_action( 'edd_view_order_details_billing_after', $order_id ); ?>
 
 							<div id="edd-notes" class="postbox">
-								<h3 class="hndle"><span><?php _e( 'Payment Notes', 'easy-digital-downloads' ); ?></span>
+								<h3 class="hndle"><span><?php _e( 'Order Notes', 'easy-digital-downloads' ); ?></span>
 								</h3>
 								<div class="inside">
 									<?php echo edd_admin_get_notes_html( $notes ); ?>
-									<?php echo edd_admin_get_new_note_form( $order_id, 'payment' ); ?>
+									<?php echo edd_admin_get_new_note_form( $order_id, 'order' ); ?>
 								</div><!-- /.inside -->
 							</div><!-- /#edd-notes -->
 
