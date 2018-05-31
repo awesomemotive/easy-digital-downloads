@@ -130,15 +130,16 @@ function edd_update_payment_details( $data = array() ) {
 
 				// Set some defaults
 				$args = array(
-					'order_id'   => $order_id,
-					'product_id' => $download_id,
-					'price_id'   => $price_id,
-					'cart_index' => $cart_index,
-					'quantity'   => $quantity,
-					'amount'     => $item_price,
-					'subtotal'   => $item_price * $quantity,
-					'tax'        => $tax,
-					'total'      => ( $item_price * $quantity ) + $tax
+					'order_id'     => $order_id,
+					'product_id'   => $download_id,
+					'product_name' => get_the_title( $download_id ),
+					'price_id'     => $price_id,
+					'cart_index'   => $cart_index,
+					'quantity'     => $quantity,
+					'amount'       => $item_price,
+					'subtotal'     => $item_price * $quantity,
+					'tax'          => $tax,
+					'total'        => ( $item_price * $quantity ) + $tax,
 				);
 
 				// Increase running totals.
