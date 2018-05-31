@@ -209,7 +209,7 @@ a.edd-delete:hover {
 	float: left;
 	padding: 14px;
 	position: relative;
-	margin: 0 15px 15px 0;
+	margin: 0 15px 16px 0;
 	width: 320px;
 	height: 315px;
 	opacity: 0.9;
@@ -238,6 +238,7 @@ a.edd-delete:hover {
 	background-color: #85c0e5;
 	border-color: #62a9d7;
 	color: #fff;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
 #edd-add-ons .edd-starter-package h3 {
 	color: #fff;
