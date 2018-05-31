@@ -454,7 +454,7 @@ class Order extends Base_Object {
 	}
 
 	/**
-	 * Retrieve the fees applied to the order.
+	 * Retrieve the fees applied to the order. This retrieves the fees applied to the entire order and to individual items.
 	 *
 	 * @since 3.0
 	 *
@@ -467,11 +467,21 @@ class Order extends Base_Object {
 
 		$fees = array();
 
-		foreach ( $this->adjustments as $adjustment ) {
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->get_type() ) {
 				$fees[] = $adjustment;
+			}
+		}
+
+		// Fetch the fees that applied to specific items in the order.
+		foreach ( $this->get_items() as $item ) {
+			/** @var Order_Item $item */
+
+			foreach ( $item->get_fees() as $fee ) {
+				$fees[] = $fee;
 			}
 		}
 
