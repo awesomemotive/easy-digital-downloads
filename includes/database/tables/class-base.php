@@ -362,8 +362,6 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Set the database version for the table
 	 *
-	 * Global table version in "_sitemeta" on the main network
-	 *
 	 * @since 3.0
 	 */
 	private function set_db_version() {
@@ -373,21 +371,19 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Update the DB version
 		$this->is_global()
-			? update_network_option( null, $this->db_version_key, $this->version )
-			:         update_option(       $this->db_version_key, $this->version );
+			? update_network_option( get_main_network_id(), $this->db_version_key, $this->version )
+			:         update_option(                        $this->db_version_key, $this->version );
 	}
 
 	/**
 	 * Get the table version from the database
 	 *
-	 * Global table version from "_sitemeta" on the main network
-	 *
 	 * @since 3.0
 	 */
 	private function get_db_version() {
 		$this->db_version = $this->is_global()
-			? get_network_option( null, $this->db_version_key, false )
-			:         get_option(       $this->db_version_key, false );
+			? get_network_option( get_main_network_id(), $this->db_version_key, false )
+			:         get_option(                        $this->db_version_key, false );
 	}
 
 	/**
