@@ -258,6 +258,19 @@ function edd_register_customer_report( $reports ) {
 			),
 			'filters'   => array( 'dates' ),
 		) );
+
+		$reports->register_endpoint( 'lifetime_value_of_customer', array(
+			'label' => __( 'Average Lifetime Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function() {
+					    global $wpdb;
+					    $average_value = $wpdb->get_var( "SELECT AVG(purchase_value) AS average FROM {$wpdb->edd_customers}" );
+					    return edd_currency_filter( edd_format_amount( $average_value ) );
+					}
+				)
+			)
+		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
