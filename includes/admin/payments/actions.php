@@ -79,7 +79,7 @@ function edd_update_payment_details( $data = array() ) {
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
 
 	if ( $updated_downloads ) {
-		foreach ( $updated_downloads as $cart_position => $download ) {
+		foreach ( $updated_downloads as $cart_index => $download ) {
 
 			// Check if the item exists in the database.
 			$item_exists = (bool) 0 < absint( $download['order_item_id'] );
@@ -101,9 +101,11 @@ function edd_update_payment_details( $data = array() ) {
 				$new_tax += $item_tax;
 
 				$args = array(
-					'item_price' => $item_price,
+					'cart_index' => $cart_index,
 					'quantity'   => $quantity,
-					'tax'        => $item_tax,
+					'amount'     => $item_price,
+					'subtotal'   => $item_price * $quantity,
+					'tax'        => $item_tax
 				);
 
 				edd_update_order_item( absint( $download['order_item_id']), $args );
