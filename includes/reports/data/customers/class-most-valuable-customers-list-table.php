@@ -43,7 +43,6 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
 
 		$args = array(
-			'number'   => 5,
 			'order'   => 'DESC',
 			'orderby' => 'total',
 			'fields'  => 'customer_id',
