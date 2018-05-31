@@ -54,8 +54,13 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	// Default rate
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
-	// Get the aggress, to try to get the tax rate
+	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
+
+	$address_line_1 = ! empty( $_POST['card_address'] )   ? sanitize_text_field( $_POST['card_address'] )   : '';
+	$address_line_2 = ! empty( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) : '';
+	$city           = ! empty( $_POST['card_city'] )      ? sanitize_text_field( $_POST['card_city'] )      : '';
+	$zip            = ! empty( $_POST['card_zip'] )       ? sanitize_text_field( $_POST['card_zip'] )       : '';
 
 	// Country
 	if ( empty( $country ) ) {
@@ -121,8 +126,21 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	// Convert to a number we can use
 	$rate = $rate / 100;
 
-	// Filter & return
-	return (float) apply_filters( 'edd_tax_rate', $rate, $country, $state );
+	/**
+	 * Allow the tax rate to be filtered.
+	 *
+	 * @since 1.3.3
+	 * @since 3.0 Added entire customer address.
+	 *
+	 * @param float  $rate           Calculated tax rate.
+	 * @param string $country        Country.
+	 * @param string $state          State.
+	 * @param string $address_line_1 First line of address.
+	 * @param string $address_line_2 Second line of address.
+	 * @param string $city           City.
+	 * @param string $zip            ZIP code.
+	 */
+	return apply_filters( 'edd_tax_rate', $rate, $country, $state, $address_line_1, $address_line_2, $city, $zip );
 }
 
 /**
@@ -174,7 +192,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
  * @param $year int The year to retrieve taxes for, i.e. 2012
  * @uses edd_get_sales_tax_for_year()
  * @return void
-*/
+ */
 function edd_sales_tax_for_year( $year = null ) {
 	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
@@ -230,7 +248,7 @@ function edd_is_cart_taxed() {
  *
  * @since 1.5
  * @return bool $include_tax
-*/
+ */
 function edd_prices_include_tax() {
 	$ret = ( edd_get_option( 'prices_include_tax', false ) === 'yes' && edd_use_taxes() );
 
