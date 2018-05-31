@@ -33,7 +33,7 @@ function edd_payment_history_page() {
 		$payments_table->prepare_items(); ?>
 
 	<div class="wrap">
-		<h1><?php echo $edd_payment->labels->menu_name ?></h1>
+		<h1><?php _e( 'Orders', 'easy-digital-downloads' ); ?></h1>
 
 		<hr class="wp-header-end">
 

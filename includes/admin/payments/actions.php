@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
 */
@@ -13,32 +13,40 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Process the payment details edit
+ * Process the changed from the 'View Order Details' page.
  *
- * @access      private
- * @since       1.9
- * @return      void
+ * @since 1.9
+ * @since 3.0 Refactored to use new core objects and query methods.
+ *
+ * @param array $data Order data.
 */
-function edd_update_payment_details( $data ) {
+function edd_update_payment_details( $data = array() ) {
 
-	if( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
+	// Bail if an empty array is passed.
+	if ( empty( $data ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Bail if the user does not have the correct permissions.
+	if ( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
 
-	// Retrieve the payment ID
-	$payment_id = absint( $data['edd_payment_id'] );
-	$payment    = new EDD_Payment( $payment_id );
+	// Retrieve the order ID and set up the order.
+	$order_id = absint( $data['edd_payment_id'] );
+	$order = edd_get_order( $order_id );
+
+	$order_update_args = array();
 
 	// Retrieve existing payment meta
-	$meta        = $payment->get_meta();
-	$user_info   = $payment->user_info;
+	$user_info = $order->get_user_info();
 
-	$status      = $data['edd-payment-status'];
-	$unlimited   = isset( $data['edd-unlimited-downloads'] ) ? '1' : '';
-	$date        = sanitize_text_field( $data['edd-payment-date'] );
-	$hour        = sanitize_text_field( $data['edd-payment-time-hour'] );
+	$status    = $data['edd-payment-status'];
+	$unlimited = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
+	$date      = sanitize_text_field( $data['edd-payment-date'] );
+	$hour      = sanitize_text_field( $data['edd-payment-time-hour'] );
 
 	// Restrict to our high and low
 	if ( $hour > 23 ) {
@@ -47,7 +55,7 @@ function edd_update_payment_details( $data ) {
 		$hour = 00;
 	}
 
-	$minute      = sanitize_text_field( $data['edd-payment-time-min'] );
+	$minute = sanitize_text_field( $data['edd-payment-time-min'] );
 
 	// Restrict to our high and low
 	if ( $minute > 59 ) {
@@ -58,7 +66,7 @@ function edd_update_payment_details( $data ) {
 
 	$address     = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$curr_total  = edd_sanitize_amount( $payment->total );
+	$curr_total  = edd_sanitize_amount( $order->get_total() );
 	$new_total   = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax         = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
 	$date        = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
@@ -66,38 +74,44 @@ function edd_update_payment_details( $data ) {
 	$curr_customer_id  = sanitize_text_field( $data['edd-current-customer'] );
 	$new_customer_id   = sanitize_text_field( $data['customer-id'] );
 
+	$new_subtotal = 0.00;
+	$new_tax      = 0.00;
+
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
 
 	if ( $updated_downloads ) {
+		foreach ( $updated_downloads as $cart_index => $download ) {
 
-		foreach ( $updated_downloads as $cart_position => $download ) {
+			// Check if the item exists in the database.
+			$item_exists = (bool) 0 < absint( $download['order_item_id'] );
 
-			// If this item doesn't have a log yet, add one for each quantity count
-			$has_log = absint( $download['has_log'] );
-			$has_log = empty( $has_log ) ? false : true;
-
-			if ( $has_log ) {
+			if ( $item_exists ) {
+				/** @var EDD\Orders\Order_Item $order_item */
+				$order_item = edd_get_order_item( absint( $download['order_item_id'] ) );
 
 				$quantity   = isset( $download['quantity'] ) ? absint( $download['quantity']) : 1;
 				$item_price = isset( $download['item_price'] ) ? $download['item_price'] : 0;
 				$item_tax   = isset( $download['item_tax'] ) ? $download['item_tax'] : 0;
 
-				// Format any items that are currency.
+				// Format any items that have a currency.
 				$item_price = edd_format_amount( $item_price );
-				$item_tax    = edd_format_amount( $item_tax );
+				$item_tax   = edd_format_amount( $item_tax );
+
+				// Increase running totals.
+				$new_subtotal += ( floatval( $item_price ) * $quantity ) - $order_item->get_discount();
+				$new_tax += $item_tax;
 
 				$args = array(
-					'item_price' => $item_price,
+					'cart_index' => $cart_index,
 					'quantity'   => $quantity,
-					'tax'        => $item_tax,
+					'amount'     => $item_price,
+					'subtotal'   => $item_price * $quantity,
+					'tax'        => $item_tax
 				);
 
-				$payment->modify_cart_item( $cart_position, $args );
-
+				edd_update_order_item( absint( $download['order_item_id']), $args );
 			} else {
-
-				// This
 				if ( empty( $download['item_price'] ) ) {
 					$download['item_price'] = 0.00;
 				}
@@ -109,7 +123,7 @@ function edd_update_payment_details( $data ) {
 				$item_price  = $download['item_price'];
 				$download_id = absint( $download['id'] );
 				$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
-				$price_id    = false;
+				$price_id    = 0;
 				$tax         = $download['item_tax'];
 
 				if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
@@ -118,19 +132,28 @@ function edd_update_payment_details( $data ) {
 
 				// Set some defaults
 				$args = array(
-					'quantity'    => $quantity,
-					'item_price'  => $item_price,
-					'price_id'    => $price_id,
-					'tax'         => $tax,
+					'order_id'     => $order_id,
+					'product_id'   => $download_id,
+					'product_name' => get_the_title( $download_id ),
+					'price_id'     => $price_id,
+					'cart_index'   => $cart_index,
+					'quantity'     => $quantity,
+					'amount'       => $item_price,
+					'subtotal'     => $item_price * $quantity,
+					'tax'          => $tax,
+					'total'        => ( $item_price * $quantity ) + $tax,
 				);
 
-				$payment->add_download( $download_id, $args );
+				// Increase running totals.
+				$new_subtotal += floatval( $item_price ) * $quantity;
+				$new_tax += $tax;
 
+				edd_add_order_item( $args );
 			}
-
 		}
 
 		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
+
 		foreach ( $deleted_downloads as $deleted_download ) {
 			$deleted_download = $deleted_download[0];
 
@@ -138,38 +161,26 @@ function edd_update_payment_details( $data ) {
 				continue;
 			}
 
-			$price_id = false;
+			/** @var EDD\Orders\Order_Item $order_item */
+			$order_item = edd_get_order_item( absint( $deleted_download['order_item_id'] ) );
 
-			if ( edd_has_variable_prices( $deleted_download['id'] ) && isset( $deleted_download['price_id'] ) ) {
-				$price_id = absint( $deleted_download['price_id'] );
-			}
+			$new_subtotal -= (float) $deleted_download['amount'] * $deleted_download['quantity'];
+			$new_tax -= (float) $order_item->get_tax();
 
-			$cart_index = isset( $deleted_download['cart_index'] ) ? absint( $deleted_download['cart_index'] ) : false;
+			edd_delete_order_item( absint( $deleted_download['order_item_id'] ) );
 
-			$args = array(
-				'quantity'   => (int) $deleted_download['quantity'],
-				'price_id'   => $price_id,
-				'item_price' => (float) $deleted_download['amount'],
-				'cart_index' => $cart_index
-			);
-
-			$payment->remove_download( $deleted_download['id'], $args );
-
-			do_action( 'edd_remove_download_from_payment', $payment_id, $deleted_download['id'] );
-
+			do_action( 'edd_remove_download_from_payment', $order_id, $deleted_download['id'] );
 		}
-
-
 	}
 
-	do_action( 'edd_update_edited_purchase', $payment_id );
+	do_action( 'edd_update_edited_purchase', $order_id );
 
-	$payment->date = $date;
+	$order_update_args['date_created'] = $date;
 
 	$customer_changed = false;
 
+	// Create a new customer.
 	if ( isset( $data['edd-new-customer'] ) && $data['edd-new-customer'] == '1' ) {
-
 		$email      = isset( $data['edd-new-customer-email'] ) ? sanitize_text_field( $data['edd-new-customer-email'] ) : '';
 		$names      = isset( $data['edd-new-customer-name'] ) ? sanitize_text_field( $data['edd-new-customer-name'] ) : '';
 
@@ -188,42 +199,34 @@ function edd_update_payment_details( $data ) {
 			if ( ! $customer->create( $customer_data ) ) {
 				// Failed to crete the new customer, assume the previous customer
 				$customer_changed = false;
+
 				$customer = new EDD_Customer( $curr_customer_id );
 				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
 		}
 
 		$new_customer_id = $customer->id;
-
 		$previous_customer = new EDD_Customer( $curr_customer_id );
-
 		$customer_changed = true;
-
 	} elseif ( $curr_customer_id !== $new_customer_id ) {
-
 		$customer = new EDD_Customer( $new_customer_id );
 		$email    = $customer->email;
 		$names    = $customer->name;
 
 		$previous_customer = new EDD_Customer( $curr_customer_id );
-
 		$customer_changed = true;
-
 	} else {
-
 		$customer = new EDD_Customer( $curr_customer_id );
 		$email    = $customer->email;
 		$names    = $customer->name;
-
 	}
 
-
-
-	// Setup first and last name from input values
+	// Setup first and last name from input values.
 	$names      = explode( ' ', $names );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
 	$last_name  = '';
-	if( ! empty( $names[1] ) ) {
+
+	if ( ! empty( $names[1] ) ) {
 		unset( $names[0] );
 		$last_name = implode( ' ', $names );
 	}
@@ -231,12 +234,11 @@ function edd_update_payment_details( $data ) {
 	if ( $customer_changed ) {
 
 		// Remove the stats and payment from the previous customer and attach it to the new customer
-		$previous_customer->remove_payment( $payment_id, false );
-		$customer->attach_payment( $payment_id, false );
+		$previous_customer->remove_payment( $order_id, false );
+		$customer->attach_payment( $order_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
-		if( 'revoked' == $status || 'publish' == $status ) {
-
+		if ( 'revoked' == $status || 'publish' == $status ) {
 			$previous_customer->decrease_purchase_count();
 			$previous_customer->decrease_value( $new_total );
 
@@ -244,55 +246,63 @@ function edd_update_payment_details( $data ) {
 			$customer->increase_value( $new_total );
 		}
 
-		$payment->customer_id = $customer->id;
+		$order_update_args['customer_id'] = $customer->id;
 	}
 
-	// Set new meta values
-	$payment->user_id        = $customer->user_id;
-	$payment->email          = $customer->email;
-	$payment->first_name     = $first_name;
-	$payment->last_name      = $last_name;
-	$payment->address        = $address;
+	// Set new order values.
+	$order_update_args['user_id'] = $customer->user_id;
+	$order_update_args['email']   = $customer->email;
+	$order_update_args['tax']     = $new_tax;
+	$order_update_args['total']   = $new_total;
 
-	$payment->total          = $new_total;
-	$payment->tax            = $tax;
+	$user_info = array(
+		'first_name' => $first_name,
+		'last_name'  => $last_name,
+		'address'    => $address,
+	);
 
-	$payment->has_unlimited_downloads = $unlimited;
+	edd_update_order_meta( $order_id, 'user_info', $user_info );
 
-	// Set new status
-	$payment->status = $status;
+	if ( '1' === $unlimited ) {
+		edd_update_order_meta( $order_id, 'unlimited_downloads', $unlimited );
+	} else {
+		edd_delete_order_meta( $order_id, 'unlimited_downloads' );
+	}
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
-
 		if ( $new_total > $curr_total ) {
+
 			// Increase if our new total is higher
 			$difference = $new_total - $curr_total;
 			edd_increase_total_earnings( $difference );
-
 		} elseif ( $curr_total > $new_total ) {
+
 			// Decrease if our new total is lower
 			$difference = $curr_total - $new_total;
 			edd_decrease_total_earnings( $difference );
-
 		}
-
 	}
 
-	$updated = $payment->save();
+	$updated = edd_update_order( $order_id, $order_update_args );
 
-	if ( 0 === $updated ) {
+	// Check if the status has changed, if so, we need to invoke the pertinent status processing method.
+	if ( $order_update_args['status'] !== $order->get_status() ) {
+		edd_transition_order_status( $order_id, $status );
+	}
+
+	if ( false === $updated ) {
 		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 	}
 
-	do_action( 'edd_updated_edited_purchase', $payment_id );
+	do_action( 'edd_updated_edited_purchase', $order_id );
 
 	edd_redirect( add_query_arg( array(
 		'post_type'   => 'download',
 		'page'        => 'edd-payment-history',
 		'view'        => 'view-order-details',
 		'edd-message' => 'payment-updated',
-		'id'          => $payment_id
+		'id'          => $order_id
 	), admin_url( 'edit.php' ) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );

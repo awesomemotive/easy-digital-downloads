@@ -108,6 +108,14 @@ class Order_Item extends Base_Object {
 	protected $subtotal;
 
 	/**
+	 * Item discount.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $discount;
+
+	/**
 	 * Item tax.
 	 *
 	 * @since 3.0
@@ -261,6 +269,17 @@ class Order_Item extends Base_Object {
 	}
 
 	/**
+	 * Retrieve item discount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Item discount.
+	 */
+	public function get_discount() {
+		return $this->discount;
+	}
+
+	/**
 	 * Retrieve item tax.
 	 *
 	 * @since 3.0
@@ -302,5 +321,22 @@ class Order_Item extends Base_Object {
 	 */
 	public function get_date_modified() {
 		return $this->date_modified;
+	}
+
+	/**
+	 * Retrieve fees applied to this order item.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array $fees Fees applied to this item.
+	 */
+	public function get_fees() {
+		$fees = edd_get_order_adjustments( array(
+			'object_id'   => $this->get_id(),
+			'object_type' => 'order_item',
+			'type'        => 'fee'
+		) );
+
+		return $fees;
 	}
 }
