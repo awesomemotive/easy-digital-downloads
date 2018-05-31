@@ -38,6 +38,8 @@ function edd_update_payment_details( $data = array() ) {
 	$order_id = absint( $data['edd_payment_id'] );
 	$order = edd_get_order( $order_id );
 
+	$order_update_args = array();
+
 	// Retrieve existing payment meta
 	$user_info = $order->get_user_info();
 
@@ -173,10 +175,11 @@ function edd_update_payment_details( $data = array() ) {
 
 	do_action( 'edd_update_edited_purchase', $order_id );
 
-	$payment->date = $date;
+	$order_update_args['date_created'] = $date;
 
 	$customer_changed = false;
 
+	// Create a new customer.
 	if ( isset( $data['edd-new-customer'] ) && $data['edd-new-customer'] == '1' ) {
 		$email      = isset( $data['edd-new-customer-email'] ) ? sanitize_text_field( $data['edd-new-customer-email'] ) : '';
 		$names      = isset( $data['edd-new-customer-name'] ) ? sanitize_text_field( $data['edd-new-customer-name'] ) : '';
@@ -196,6 +199,7 @@ function edd_update_payment_details( $data = array() ) {
 			if ( ! $customer->create( $customer_data ) ) {
 				// Failed to crete the new customer, assume the previous customer
 				$customer_changed = false;
+
 				$customer = new EDD_Customer( $curr_customer_id );
 				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
@@ -217,7 +221,7 @@ function edd_update_payment_details( $data = array() ) {
 		$names    = $customer->name;
 	}
 
-	// Setup first and last name from input values
+	// Setup first and last name from input values.
 	$names      = explode( ' ', $names );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
 	$last_name  = '';
@@ -234,7 +238,7 @@ function edd_update_payment_details( $data = array() ) {
 		$customer->attach_payment( $order_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
-		if( 'revoked' == $status || 'publish' == $status ) {
+		if ( 'revoked' == $status || 'publish' == $status ) {
 			$previous_customer->decrease_purchase_count();
 			$previous_customer->decrease_value( $new_total );
 
@@ -242,23 +246,25 @@ function edd_update_payment_details( $data = array() ) {
 			$customer->increase_value( $new_total );
 		}
 
-		$payment->customer_id = $customer->id;
+		$order_update_args['customer_id'] = $customer->id;
 	}
 
-	// Set new meta values
-	$payment->user_id        = $customer->user_id;
-	$payment->email          = $customer->email;
-	$payment->first_name     = $first_name;
-	$payment->last_name      = $last_name;
-	$payment->address        = $address;
+	// Set new order values.
+	$order_update_args['user_id'] = $customer->user_id;
+	$order_update_args['email']   = $customer->email;
+	$order_update_args['tax']     = $new_tax;
+	$order_update_args['total']   = $new_total;
+	$order_update_args['status']  = $status;
 
-	$payment->total          = $new_total;
-	$payment->tax            = $tax;
+	$user_info = array(
+		'first_name' => $first_name,
+		'last_name'  => $last_name,
+		'address'    => $address,
+	);
 
-	$payment->has_unlimited_downloads = $unlimited;
+	edd_update_order_meta( $order_id, 'user_info', $user_info );
 
-	// Set new status
-	$payment->status = $status;
+//	$payment->has_unlimited_downloads = $unlimited;
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
@@ -275,9 +281,9 @@ function edd_update_payment_details( $data = array() ) {
 		}
 	}
 
-	$updated = $payment->save();
+	$updated = edd_update_order( $order_id, $order_update_args );
 
-	if ( 0 === $updated ) {
+	if ( false === $updated ) {
 		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 	}
 
