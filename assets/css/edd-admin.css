@@ -212,6 +212,11 @@ a.edd-delete:hover {
 	margin: 0 15px 15px 0;
 	width: 320px;
 	height: 315px;
+	opacity: 0.9;
+}
+#edd-add-ons .edd-extension:hover {
+	border: 1px solid #bbb;
+	opacity: 1;
 }
 #edd-add-ons .edd-extension h3 {
 	font-size: 13px;
