@@ -153,7 +153,7 @@ class EDD_Utilities {
 		}
 
 		// Bail if format is not known
-		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'date-attribute', 'date-js' ) ) ) {
+		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'date-attribute', 'date-js', 'date-mysql', 'time-mysql' ) ) ) {
 			return $format;
 		}
 
@@ -168,6 +168,16 @@ class EDD_Utilities {
 			// jQuery UI Datepicker JS variable
 			case 'date-js' :
 				$retval = 'yy-mm-dd';
+				break;
+
+			// Date in MySQL format
+			case 'date-mysql' :
+				$retval = 'Y-m-d';
+				break;
+
+			// Time in MySQL format
+			case 'time-mysql' :
+				$retval = 'H:i:s';
 				break;
 
 			// MySQL datetime columns

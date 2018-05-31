@@ -65,6 +65,8 @@ final class Date extends \Carbon\Carbon {
 			// jQuery UI Datepicker formats
 			case 'date-attribute':
 			case 'date-js':
+			case 'date-mysql':
+			case 'time-mysql':
 
 			// WordPress Formats
 			case 'date':
