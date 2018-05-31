@@ -207,6 +207,21 @@ abstract class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Create the table
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function create() {
+		$query   = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
+		$created = $this->get_db()->query( $query );
+
+		// Was the table created?
+		return ! empty( $created );
+	}
+
+	/**
 	 * Truncate the database table
 	 *
 	 * @since 3.0
@@ -409,31 +424,6 @@ abstract class Base extends \EDD\Database\Base {
 
 			// Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
 			function_exists( '_manually_load_plugin' );
-	}
-
-	/**
-	 * Create the table
-	 *
-	 * @since 3.0
-	 */
-	private function create() {
-
-		// Include file with dbDelta() for create/upgrade usages
-		if ( ! function_exists( 'dbDelta' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		}
-
-		// Bail if dbDelta() moved in WordPress core
-		if ( ! function_exists( 'dbDelta' ) ) {
-			return false;
-		}
-
-		// Run CREATE TABLE query
-		$query   = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
-		$created = dbDelta( array( $query ) );
-
-		// Was the table created?
-		return ! empty( $created );
 	}
 
 	/**
