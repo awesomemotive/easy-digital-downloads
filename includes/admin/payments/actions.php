@@ -121,7 +121,7 @@ function edd_update_payment_details( $data = array() ) {
 				$item_price  = $download['item_price'];
 				$download_id = absint( $download['id'] );
 				$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
-				$price_id    = false;
+				$price_id    = 0;
 				$tax         = $download['item_tax'];
 
 				if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
@@ -130,13 +130,22 @@ function edd_update_payment_details( $data = array() ) {
 
 				// Set some defaults
 				$args = array(
-					'quantity'    => $quantity,
-					'item_price'  => $item_price,
-					'price_id'    => $price_id,
-					'tax'         => $tax,
+					'order_id'   => $order_id,
+					'product_id' => $download_id,
+					'price_id'   => $price_id,
+					'cart_index' => $cart_index,
+					'quantity'   => $quantity,
+					'amount'     => $item_price,
+					'subtotal'   => $item_price * $quantity,
+					'tax'        => $tax,
+					'total'      => ( $item_price * $quantity ) + $tax
 				);
 
-				$payment->add_download( $download_id, $args );
+				// Increase running totals.
+				$new_subtotal += floatval( $item_price ) * $quantity;
+				$new_tax += $tax;
+
+				edd_add_order_item( $args );
 			}
 		}
 
