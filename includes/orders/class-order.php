@@ -198,7 +198,9 @@ class Order extends Base_Object {
 		}
 
 		$this->items = edd_get_order_items( array(
-			'order_id' => $this->get_id()
+			'order_id' => $this->get_id(),
+			'orderby'  => 'cart_index',
+			'order'    => 'ASC'
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
