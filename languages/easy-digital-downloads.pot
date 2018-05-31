@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.0-alpha-2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-05-31 03:59:45+00:00\n"
+"POT-Creation-Date: 2018-05-31 18:58:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -123,36 +123,34 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: includes/admin/add-ons.php:24
+#: includes/admin/add-ons.php:27
 msgid "Popular"
 msgstr ""
 
-#: includes/admin/add-ons.php:24
+#: includes/admin/add-ons.php:28
 msgid "New"
 msgstr ""
 
-#: includes/admin/add-ons.php:24
-msgid "View all Integrations"
+#: includes/admin/add-ons.php:29
+#: includes/admin/discounts/class-discount-codes-table.php:143
+#: includes/admin/payments/class-payments-table.php:277
+msgid "All"
 msgstr ""
 
-#: includes/admin/add-ons.php:37
-msgid "Apps and Integrations for Easy Digital Downloads"
+#: includes/admin/add-ons.php:100
+msgid ""
+"Add <em><strong>awesome</strong></em> new functionality to your Easy "
+"Digital Downloads powered store."
 msgstr ""
 
-#: includes/admin/add-ons.php:39 includes/admin/add-ons.php:88
+#: includes/admin/add-ons.php:101 includes/admin/add-ons.php:110
 msgid "Browse All Integrations"
 msgstr ""
 
-#: includes/admin/add-ons.php:42
+#: includes/admin/add-ons.php:148
 msgid ""
-"These <em><strong>add functionality</strong></em> to your Easy Digital "
-"Downloads powered store."
-msgstr ""
-
-#: includes/admin/add-ons.php:122
-msgid ""
-"There was an error retrieving the extensions list from the server. Please "
-"try again later."
+"These extensions could not be retrieved from the server. Please try again "
+"later."
 msgstr ""
 
 #: includes/admin/admin-actions.php:131
@@ -172,8 +170,9 @@ msgid ""
 "WordPress.org</a>"
 msgstr ""
 
-#: includes/admin/admin-pages.php:37 includes/post-types.php:87
-msgid "Payment History"
+#: includes/admin/admin-pages.php:37
+#: includes/admin/payments/payments-history.php:36
+msgid "Orders"
 msgstr ""
 
 #: includes/admin/admin-pages.php:38
@@ -182,9 +181,8 @@ msgstr ""
 msgid "Customers"
 msgstr ""
 
-#: includes/admin/admin-pages.php:39
-#: includes/admin/discounts/discount-codes.php:36
-msgid "Discount Codes"
+#: includes/admin/admin-pages.php:39 includes/post-types.php:117
+msgid "Discounts"
 msgstr ""
 
 #: includes/admin/admin-pages.php:40
@@ -1217,11 +1215,6 @@ msgstr ""
 msgid "Add Discount Code"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:143
-#: includes/admin/payments/class-payments-table.php:277
-msgid "All"
-msgstr ""
-
 #: includes/admin/discounts/class-discount-codes-table.php:144
 #: includes/admin/discounts/edit-discount.php:220
 #: includes/class-edd-discount.php:587
@@ -1451,6 +1444,10 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:394
 #: includes/admin/discounts/discount-actions.php:437
 msgid "You do not have permission to edit this discount."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:36
+msgid "Discount Codes"
 msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:43
@@ -7535,6 +7532,10 @@ msgstr ""
 msgid "No Payments found in Trash"
 msgstr ""
 
+#: includes/post-types.php:87
+msgid "Payment History"
+msgstr ""
+
 #: includes/post-types.php:110
 msgid "New Discount"
 msgstr ""
@@ -7557,10 +7558,6 @@ msgstr ""
 
 #: includes/post-types.php:115
 msgid "No Discounts found in Trash"
-msgstr ""
-
-#: includes/post-types.php:117
-msgid "Discounts"
 msgstr ""
 
 #: includes/post-types.php:143
