@@ -254,7 +254,6 @@ function edd_update_payment_details( $data = array() ) {
 	$order_update_args['email']   = $customer->email;
 	$order_update_args['tax']     = $new_tax;
 	$order_update_args['total']   = $new_total;
-	$order_update_args['status']  = $status;
 
 	$user_info = array(
 		'first_name' => $first_name,
@@ -282,6 +281,11 @@ function edd_update_payment_details( $data = array() ) {
 	}
 
 	$updated = edd_update_order( $order_id, $order_update_args );
+
+	// Check if the status has changed, if so, we need to invoke the pertinent status processing method.
+	if ( $order_update_args['status'] !== $order->get_status() ) {
+		edd_transition_order_status( $order_id, $status );
+	}
 
 	if ( false === $updated ) {
 		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
