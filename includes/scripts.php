@@ -175,11 +175,6 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-
-	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
-		return;
-	}
-
 	global $post;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
@@ -188,6 +183,15 @@ function edd_load_admin_scripts( $hook ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	$version = edd_admin_get_script_version();
+
+	// Always enqueue the main admin CSS
+	wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $suffix . '.css', array(), $version );
+	wp_enqueue_style( 'edd-admin-menu' );
+
+	// Bail if not an EDD admin page
+	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
+		return;
+	}
 
 	// These have to be global
 	wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), $version );
