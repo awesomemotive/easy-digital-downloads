@@ -277,17 +277,43 @@ function edd_register_customer_report( $reports ) {
 			)
 		) );
 
+		$reports->register_endpoint( 'customer_value', array(
+			'label' => __( 'Customer Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function() use ( $filter ) {
+						global $wpdb;
+
+						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
+						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+
+						$average_value = $wpdb->get_var( $wpdb->prepare(
+							"SELECT AVG(total) AS average
+							FROM {$wpdb->edd_orders}
+							WHERE date_created >= %s AND date_created <= %s",
+						$start_date, $end_date ) );
+
+						return edd_currency_filter( edd_format_amount( $average_value ) );
+					},
+					'display_args'  => array(
+						'context' => 'secondary',
+						'comparison_label' => $label
+					)
+				)
+			)
+		) );
+
 		$reports->register_endpoint( 'average_number_of_orders_per_customer', array(
 			'label' => __( 'Average Number of Orders', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function() use ( $filter ) {
+					'data_callback' => function() {
 						global $wpdb;
 						$average_value = $wpdb->get_var( "SELECT AVG(purchase_count) AS average FROM {$wpdb->edd_customers}" );
 						return (int) $average_value;
 					},
 					'display_args'  => array(
-						'context' => 'secondary',
+						'context' => 'tertiary',
 					)
 				)
 			)
@@ -297,13 +323,13 @@ function edd_register_customer_report( $reports ) {
 			'label' => __( 'Average Age', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function() use ( $filter ) {
+					'data_callback' => function() {
 						global $wpdb;
 						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
 						return $average_value . ' ' . __( 'days', 'easy-digital-downloads' );
 					},
 					'display_args'  => array(
-						'context' => 'tertiary',
+						'context' => 'primary',
 					)
 				)
 			)
