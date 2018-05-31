@@ -1494,7 +1494,7 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'object_id'   => $filtered_data['comment_post_ID'],
 		'content'     => $filtered_data['comment_content'],
 		'user_id'     => $filtered_data['user_id'],
-		'object_type' => 'payment',
+		'object_type' => 'order',
 	) );
 
 	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
