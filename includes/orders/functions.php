@@ -305,7 +305,7 @@ function edd_build_order( $order_data = array() ) {
 			'object_id'   => $order_id,
 			'object_type' => 'order',
 			'type_id'     => 0,
-			'type'        => 'tax',
+			'type'        => 'tax_rate',
 			'amount'      => $tax_rate
 		) );
 	}
