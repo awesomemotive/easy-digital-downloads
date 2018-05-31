@@ -180,7 +180,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'assets/images/colorbox/overlay.png' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/icons/americanexpress.gif' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/icons/discover.gif' ),
-			array( EDD_PLUGIN_DIR . 'templates/images/icons/iphone.png' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/icons/mastercard.gif' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/icons/paypal.gif' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' ),

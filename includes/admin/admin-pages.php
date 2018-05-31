@@ -10,13 +10,63 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Get the admin pages.
+ *
+ * This largely exists for back-compat in edd_is_admin_page(). Maybe eventually
+ * we'll move away from globals for all of these, but who knows what add-ons are
+ * doing, so we're keeping these around until we can formally deprecate them.
+ *
+ * @since 3.0
+ *
+ * @global $edd_discounts_page $edd_discounts_page
+ * @global $edd_payments_page $edd_payments_page
+ * @global $edd_settings_page $edd_settings_page
+ * @global $edd_reports_page $edd_reports_page
+ * @global type $edd_system_info_page
+ * @global $edd_add_ons_page $edd_add_ons_page
+ * @global $edd_settings_export $edd_settings_export
+ * @global $edd_upgrades_screen $edd_upgrades_screen
+ * @global $edd_customers_page $edd_customers_page
+ * @global $edd_reports_page $edd_reports_page
+ *
+ * @return array
+ */
+function edd_get_admin_pages() {
+	global  $edd_discounts_page,
+			$edd_payments_page,
+			$edd_settings_page,
+			$edd_reports_page,
+			$edd_system_info_page,
+			$edd_add_ons_page,
+			$edd_settings_export,
+			$edd_upgrades_screen,
+			$edd_customers_page,
+			$edd_reports_page;
+
+	// Filter & return
+	return (array) apply_filters( 'edd_admin_pages', array(
+		$edd_discounts_page,
+		$edd_payments_page,
+		$edd_settings_page,
+		$edd_reports_page,
+		$edd_system_info_page,
+		$edd_add_ons_page,
+		$edd_settings_export,
+		$edd_upgrades_screen,
+		$edd_customers_page,
+		$edd_reports_page
+	) );
+}
 
 /**
  * Creates the admin submenu pages under the Downloads menu and assigns their
  * links to global variables
  *
  * @since 1.0
+ *
  * @global $edd_discounts_page
  * @global $edd_payments_page
  * @global $edd_customers_page
@@ -25,22 +75,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @global $edd_add_ons_page
  * @global $edd_settings_export
  * @global $edd_upgrades_screen
- * @return void
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
+	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
 
 	// Filter the "View Customers" role
 	$customer_view_role  = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	// Setup pages
-	$edd_payments_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Orders',                                'easy-digital-downloads' ), __( 'Orders',     'easy-digital-downloads' ), 'edit_shop_payments',    'edd-payment-history', 'edd_payment_history_page' );
-	$edd_customers_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Customers',                             'easy-digital-downloads' ), __( 'Customers',  'easy-digital-downloads' ), $customer_view_role,     'edd-customers',       'edd_customers_page'       );
-	$edd_discounts_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Discounts',                             'easy-digital-downloads' ), __( 'Discounts',  'easy-digital-downloads' ), 'manage_shop_discounts', 'edd-discounts',       'edd_discounts_page'       );
-	$edd_reports_page    = add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports',            'easy-digital-downloads' ), __( 'Reports',    'easy-digital-downloads' ), 'view_shop_reports',     'edd-reports',         'edd_reports_page'         );
-	$edd_settings_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Settings',       'easy-digital-downloads' ), __( 'Settings',   'easy-digital-downloads' ), 'manage_shop_settings',  'edd-settings',        'edd_options_page'         );
-	$edd_tools_page      = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Info and Tools', 'easy-digital-downloads' ), __( 'Tools',      'easy-digital-downloads' ), 'manage_shop_settings',  'edd-tools',           'edd_tools_page'           );
-	$edd_add_ons_page    = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Extensions',     'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings',  'edd-addons',          'edd_add_ons_page'         );
+	$edd_payments_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Orders',                                'easy-digital-downloads' ), __( 'Orders',    'easy-digital-downloads' ), 'edit_shop_payments',    'edd-payment-history', 'edd_payment_history_page' );
+	$edd_customers_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Customers',                             'easy-digital-downloads' ), __( 'Customers', 'easy-digital-downloads' ), $customer_view_role,     'edd-customers',       'edd_customers_page'       );
+	$edd_discounts_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Discounts',                             'easy-digital-downloads' ), __( 'Discounts', 'easy-digital-downloads' ), 'manage_shop_discounts', 'edd-discounts',       'edd_discounts_page'       );
+	$edd_reports_page    = add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports',            'easy-digital-downloads' ), __( 'Reports',   'easy-digital-downloads' ), 'view_shop_reports',     'edd-reports',         'edd_reports_page'         );
+	$edd_settings_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Settings',       'easy-digital-downloads' ), __( 'Settings',  'easy-digital-downloads' ), 'manage_shop_settings',  'edd-settings',        'edd_options_page'         );
+	$edd_tools_page      = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Info and Tools', 'easy-digital-downloads' ), __( 'Tools',     'easy-digital-downloads' ), 'manage_shop_settings',  'edd-tools',           'edd_tools_page'           );
 
 	// Setup hidden upgrades page
 	$edd_upgrades_screen = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
@@ -48,20 +96,34 @@ function edd_add_options_link() {
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
 /**
- *  Determines whether the current admin page is a specific EDD admin page.
+ * Create the Extensions submenu page under the "Downloads" menu
  *
- *  Only works after the `wp_loaded` hook, & most effective
- *  starting on `admin_menu` hook. Failure to pass in $view will match all views of $passed_page.
- *  Failure to pass in $passed_page will return true if on any EDD page
+ * @since 3.0
  *
- *  @since 1.9.6
+ * @global $edd_add_ons_page
+ */
+function edd_add_extentions_link() {
+	global $edd_add_ons_page;
+
+	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
+}
+add_action( 'admin_menu', 'edd_add_extentions_link', 99999 );
+
+/**
+ * Determines whether the current admin page is a specific EDD admin page.
  *
- *  @param string $passed_page Optional. Main page's slug.
- *  @param string $passed_view Optional. Page view ( ex: `edit` or `delete` )
- *  @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
+ * Only works after the `wp_loaded` hook, & most effective
+ * starting on `admin_menu` hook. Failure to pass in $view will match all views of $passed_page.
+ * Failure to pass in $passed_page will return true if on any EDD page
+ *
+ * @since 1.9.6
+ *
+ * @param string $passed_page Optional. Main page's slug.
+ * @param string $passed_view Optional. Page view ( ex: `edit` or `delete` )
+ *
+ * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
 function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
-
 	global $pagenow, $typenow;
 
 	$found      = false;
@@ -77,22 +139,22 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'download':
 			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' ) {
 						$found = true;
 					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'post.php' ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'post.php' ) {
 						$found = true;
 					}
 					break;
 				case 'new':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'post-new.php' ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'post-new.php' ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) || 'download' === $post_type || ( 'post-new.php' == $pagenow && 'download' === $post_type ) ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) || 'download' === $post_type || ( 'post-new.php' === $pagenow && 'download' === $post_type ) ) {
 						$found = true;
 					}
 					break;
@@ -102,17 +164,17 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			switch ( $passed_view ) {
 				case 'list-table':
 				case 'new':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' !== $action && 'download_category' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' !== $action && 'download_category' === $taxonomy ) {
 						$found = true;
 					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' === $action && 'download_category' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' === $action && 'download_category' === $taxonomy ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'download_category' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'download_category' === $taxonomy ) {
 						$found = true;
 					}
 					break;
@@ -122,17 +184,17 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			switch ( $passed_view ) {
 				case 'list-table':
 				case 'new':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' !== $action && 'download_tax' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' !== $action && 'download_tax' === $taxonomy ) {
 						$found = true;
 					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'edit' === $action && 'download_tax' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' === $action && 'download_tax' === $taxonomy ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit-tags.php' && 'download_tax' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'download_tax' === $taxonomy ) {
 						$found = true;
 					}
 					break;
@@ -141,17 +203,17 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'payments':
 			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-payment-history' === $page && false === $view  ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page && false === $view  ) {
 						$found = true;
 					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-payment-history' === $page && 'view-order-details' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page && 'view-order-details' === $view ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-payment-history' === $page ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page ) {
 						$found = true;
 					}
 					break;
@@ -160,22 +222,22 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'discounts':
 			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page && false === $edd_action ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-discounts' === $page && false === $edd_action ) {
 						$found = true;
 					}
 					break;
 				case 'edit':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page && 'edit_discount' === $edd_action ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-discounts' === $page && 'edit_discount' === $edd_action ) {
 						$found = true;
 					}
 					break;
 				case 'new':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page && 'add_discount' === $edd_action ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-discounts' === $page && 'add_discount' === $edd_action ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-discounts' === $page ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-discounts' === $page ) {
 						$found = true;
 					}
 					break;
@@ -185,37 +247,37 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			switch ( $passed_view ) {
 				// If you want to do something like enqueue a script on a particular report's duration, look at $_GET[ 'range' ]
 				case 'earnings':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && ( 'earnings' === $view || '-1' === $view || false === $view ) ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page && ( 'earnings' === $view || '-1' === $view || false === $view ) ) {
 						$found = true;
 					}
 					break;
 				case 'downloads':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'downloads' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page && 'downloads' === $view ) {
 						$found = true;
 					}
 					break;
 				case 'customers':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'customers' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page && 'customers' === $view ) {
 						$found = true;
 					}
 					break;
 				case 'gateways':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'gateways' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page && 'gateways' === $view ) {
 						$found = true;
 					}
 					break;
 				case 'taxes':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'taxes' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page && 'taxes' === $view ) {
 						$found = true;
 					}
 					break;
 				case 'export':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page && 'export' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page && 'export' === $view ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page ) {
 						$found = true;
 					}
 					break;
@@ -224,47 +286,47 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'settings':
 			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && ( 'genera' === $tab || false === $tab ) ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && ( 'genera' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
 				case 'gateways':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'gateways' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'gateways' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'emails':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'emails' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'emails' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'styles':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'styles' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'styles' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'taxes':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'taxes' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'taxes' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'extensions':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'extensions' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'extensions' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'licenses':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'licenses' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'licenses' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'misc':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'misc' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'misc' === $tab ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page ) {
 						$found = true;
 					}
 					break;
@@ -273,81 +335,79 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'tools':
 			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && ( 'general' === $tab || false === $tab ) ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-tools' === $page && ( 'general' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
 				case 'api_keys':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'api_keys' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-tools' === $page && 'api_keys' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'system_info':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'system_info' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-tools' === $page && 'system_info' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'logs':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'logs' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-tools' === $page && 'logs' === $tab ) {
 						$found = true;
 					}
 					break;
 				case 'import_export':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page && 'import_export' === $tab ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-tools' === $page && 'import_export' === $tab ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-tools' === $page ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-tools' === $page ) {
 						$found = true;
 					}
 					break;
 			}
 			break;
 		case 'addons':
-			if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-addons' === $page ) {
+			if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-addons' === $page ) {
 				$found = true;
 			}
 			break;
 		case 'customers':
 			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page && false === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-customers' === $page && false === $view ) {
 						$found = true;
 					}
 					break;
 				case 'overview':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page && 'overview' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-customers' === $page && 'overview' === $view ) {
 						$found = true;
 					}
 					break;
 				case 'notes':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page && 'notes' === $view ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-customers' === $page && 'notes' === $view ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-customers' === $page ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-customers' === $page ) {
 						$found = true;
 					}
 					break;
 			}
 			break;
 		case 'reports':
-			if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-reports' === $page ) {
+			if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-reports' === $page ) {
 				$found = true;
 			}
 			break;
 		default:
-			global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_customers_page, $edd_reports_page;
-
-			$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_customers_page, $edd_reports_page ) );
-			if ( 'download' == $typenow || 'index.php' == $pagenow || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
+			$admin_pages = edd_get_admin_pages();
+			if ( 'download' === $typenow || 'index.php' === $pagenow || 'post-new.php' === $pagenow || 'post.php' === $pagenow ) {
 				$found = true;
 				if( 'edd-upgrades' === $page ) {
 					$found = false;
 				}
-			} elseif ( in_array( $pagenow, $admin_pages ) ) {
+			} elseif ( in_array( $pagenow, $admin_pages, true ) ) {
 				$found = true;
 			}
 			break;

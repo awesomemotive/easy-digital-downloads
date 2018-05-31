@@ -373,7 +373,7 @@ function edd_build_order( $order_data = array() ) {
 			if ( false !== $order_item_args['amount'] ) {
 				$item_price = $order_item_args['amount'];
 
-			// Deal with variable pricing.
+				// Deal with variable pricing.
 			} elseif ( $download->has_variable_prices() ) {
 				$prices = $download->get_prices();
 
@@ -384,7 +384,7 @@ function edd_build_order( $order_data = array() ) {
 					$order_item_args['price_id'] = edd_get_lowest_price_id( $download->ID );
 				}
 
-			// Fallback to getting it directly.
+				// Fallback to getting it directly.
 			} else {
 				$item_price = edd_get_download_price( $download->ID );
 			}
@@ -543,7 +543,7 @@ function edd_build_order( $order_data = array() ) {
 	 * Executes after an order has been fully built from the sum of its parts.
 	 *
 	 * @since 3.0
-	 * 
+	 *
 	 * @param int   $order_id   ID of the new order
 	 * @param array $order_data Array of original order data
 	 */
