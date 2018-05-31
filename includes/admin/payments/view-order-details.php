@@ -68,7 +68,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 
 							<div id="edd-order-update" class="postbox edd-order-data">
 								<h3 class="hndle">
-									<span><?php _e( 'Update Payment', 'easy-digital-downloads' ); ?></span>
+									<span><?php _e( 'Update Order', 'easy-digital-downloads' ); ?></span>
 								</h3>
 
 								<div class="inside">
