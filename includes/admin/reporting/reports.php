@@ -227,6 +227,14 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
+		$reports->add_report( 'customers', array(
+			'label' => __( 'Customers', 'easy-digital-downloads' ),
+			'priority' => 30,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			)
+		) );
+
 
 	} catch ( \EDD_Exception $exception ) {
 
