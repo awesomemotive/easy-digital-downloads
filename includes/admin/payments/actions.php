@@ -263,7 +263,11 @@ function edd_update_payment_details( $data = array() ) {
 
 	edd_update_order_meta( $order_id, 'user_info', $user_info );
 
-//	$payment->has_unlimited_downloads = $unlimited;
+	if ( '1' === $unlimited ) {
+		edd_update_order_meta( $order_id, 'unlimited_downloads', $unlimited );
+	} else {
+		edd_delete_order_meta( $order_id, 'unlimited_downloads' );
+	}
 
 	// Adjust total store earnings if the payment total has been changed
 	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
