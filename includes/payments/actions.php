@@ -70,14 +70,14 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 								'quantity' => $item->get_quantity(),
 								'price_id' => $item->get_price_id(),
 							),
-							'item_price' => $item->get_amount(),
-							'quantity'   => $item->get_quantity(),
-							'discount'   => $item->get_discount(),
-							'subtotal'   => $item->get_subtotal(),
-							'tax'        => $item->get_tax(),
-							'fees'       => array(),
-							'price'      => $item->get_amount(),
 						),
+						'item_price' => $item->get_amount(),
+						'quantity'   => $item->get_quantity(),
+						'discount'   => $item->get_discount(),
+						'subtotal'   => $item->get_subtotal(),
+						'tax'        => $item->get_tax(),
+						'fees'       => array(),
+						'price'      => $item->get_amount(),
 					);
 
 					do_action( 'edd_complete_download_purchase', $item->get_product_id(), $order_id, $download_type, $cart_details, $item->get_cart_index() );
