@@ -416,7 +416,34 @@ function edd_build_order( $order_data = array() ) {
 			$order_item_args['tax']      = round( $order_item_args['tax'],      edd_currency_decimal_filter() );
 			$order_item_args['total']    = round( $total,                       edd_currency_decimal_filter() );
 
-			edd_add_order_item( $order_item_args );
+			$order_item_id = edd_add_order_item( $order_item_args );
+
+			// Store order item fees as adjustments.
+			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
+				foreach ( $item['fees'] as $fee_id => $fee ) {
+
+					// Add the adjustment.
+					$adjustment_id = edd_add_order_adjustment( array(
+						'object_id'   => $order_item_id,
+						'object_type' => 'order_item',
+						'type_id'     => '',
+						'type'        => 'fee',
+						'description' => $fee['label'],
+						'amount'      => $fee['amount']
+					) );
+
+					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+
+					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+						edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+					}
+
+					if ( ! is_null( $fee['price_id'] ) ) {
+						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+					}
+				}
+			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
 			$total_tax      += (float) $order_item_args['tax'];
@@ -433,24 +460,27 @@ function edd_build_order( $order_data = array() ) {
 	if ( ! empty( $fees ) ) {
 		foreach ( $fees as $key => $fee ) {
 
-			// Add the adjustment.
-			$adjustment_id = edd_add_order_adjustment( array(
+			// Skip adding fee if it was specific to a download in the cart.
+			if ( isset( $fee['download_id'] ) ) {
+				continue;
+			}
+
+			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type_id'     => '',
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'amount'      => $fee['amount']
-			) );
+			);
+
+			// Add the adjustment.
+			$adjustment_id = edd_add_order_adjustment( $args );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
 
 			if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-			}
-
-			if ( isset( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
 			}
 
 			if ( ! is_null( $fee['price_id'] ) ) {
