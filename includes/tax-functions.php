@@ -11,10 +11,10 @@
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.3
-*/
+ */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Checks if taxes are enabled by using the option set from the EDD Settings.
@@ -25,6 +25,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_use_taxes() {
 	$ret = edd_get_option( 'enable_taxes', false );
+
 	return (bool) apply_filters( 'edd_use_taxes', $ret );
 }
 
@@ -36,31 +37,32 @@ function edd_use_taxes() {
  */
 function edd_get_tax_rates() {
 	$rates = get_option( 'edd_tax_rates', array() );
-	return apply_filters( 'edd_get_tax_rates', $rates );
+
+	return (array) apply_filters( 'edd_get_tax_rates', $rates );
 }
 
 /**
- * Get tax rate for a specific for the current customer.
+ * Get taxation rate
  *
  * @since 1.3.3
- * @since 3.0 Updated to pass entire address to tax rate filter.
- *
  * @param bool $country
  * @param bool $state
- *
- * @return float Tax rate.
+ * @return mixed|void
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
+
+	// Default rate
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
+	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
 
-    $address_line_1 = ! empty( $_POST['card_address'] )   ? sanitize_text_field( $_POST['card_address'] )   : '';
-    $address_line_2 = ! empty( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) : '';
-    $city           = ! empty( $_POST['card_city'] )      ? sanitize_text_field( $_POST['card_city'] )      : '';
-    $zip            = ! empty( $_POST['card_zip'] )       ? sanitize_text_field( $_POST['card_zip'] )       : '';
+	$address_line_1 = ! empty( $_POST['card_address'] )   ? sanitize_text_field( $_POST['card_address'] )   : '';
+	$address_line_2 = ! empty( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) : '';
+	$city           = ! empty( $_POST['card_city'] )      ? sanitize_text_field( $_POST['card_city'] )      : '';
+	$zip            = ! empty( $_POST['card_zip'] )       ? sanitize_text_field( $_POST['card_zip'] )       : '';
 
-    // Attempt to determine the country.
+	// Country
 	if ( empty( $country ) ) {
 		if ( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
@@ -68,10 +70,12 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 			$country = $user_address['country'];
 		}
 
-		$country = ! empty( $country ) ? $country : edd_get_shop_country();
+		$country = empty( $country )
+			? edd_get_shop_country()
+			: $country;
 	}
 
-	// Attempt to determine the state.
+	// State
 	if ( empty( $state ) ) {
 		if ( ! empty( $_POST['state'] ) ) {
 			$state = $_POST['state'];
@@ -81,26 +85,31 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 			$state = $user_address['state'];
 		}
 
-		$state = ! empty( $state ) ? $state : edd_get_shop_state();
+		$state = empty( $state )
+			? edd_get_shop_state()
+			: $state;
 	}
 
-	// Attempt to determine the tax rate based on the country and state.
+	// Get the rate
 	if ( ! empty( $country ) ) {
 		$tax_rates = edd_get_tax_rates();
 
 		if ( ! empty( $tax_rates ) ) {
 
 			// Locate the tax rate for this country / state, if it exists
-			foreach ( $tax_rates as $key => $tax_rate ) {
+			foreach ( $tax_rates as $tax_rate ) {
+
+				// Skip if not this country
 				if ( $country !== $tax_rate['country'] ) {
 					continue;
 				}
 
 				if ( ! empty( $tax_rate['global'] ) ) {
-				 	if ( ! empty( $tax_rate['rate'] ) ) {
+					if ( ! empty( $tax_rate['rate'] ) ) {
 						$rate = number_format( $tax_rate['rate'], 4 );
 					}
 				} else {
+
 					if ( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) ) {
 						continue;
 					}
@@ -114,7 +123,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 		}
 	}
 
-	// Convert the tax rate to a number we can use.
+	// Convert to a number we can use
 	$rate = $rate / 100;
 
 	/**
@@ -143,9 +152,10 @@ function edd_get_tax_rate( $country = false, $state = false ) {
  * @return string Formatted rate
  */
 function edd_get_formatted_tax_rate( $country = false, $state = false ) {
-	$rate = edd_get_tax_rate( $country, $state );
-	$rate = round( $rate * 100, 4 );
+	$rate      = edd_get_tax_rate( $country, $state );
+	$rate      = round( $rate * 100, 4 );
 	$formatted = $rate .= '%';
+
 	return apply_filters( 'edd_formatted_tax_rate', $formatted, $rate, $country, $state );
 }
 
@@ -170,7 +180,6 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 		} else {
 			$tax = $amount * $rate;
 		}
-
 	}
 
 	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $state );
@@ -183,7 +192,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
  * @param $year int The year to retrieve taxes for, i.e. 2012
  * @uses edd_get_sales_tax_for_year()
  * @return void
-*/
+ */
 function edd_sales_tax_for_year( $year = null ) {
 	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
@@ -203,27 +212,23 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	$tax = 0;
 
 	if ( ! empty( $year ) ) {
-
-
-		$args = array(
+		$payments = get_posts( array(
 			'post_type'      => 'edd_payment',
 			'post_status'    => array( 'publish', 'revoked' ),
 			'posts_per_page' => -1,
 			'year'           => $year,
 			'fields'         => 'ids'
-		);
-
-		$payments    = get_posts( $args );
-		$payment_ids = implode( ',', $payments );
+		) );
 
 		if ( count( $payments ) > 0 ) {
-			$sql = "SELECT SUM( meta_value ) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN( $payment_ids )";
-			$tax = $wpdb->get_var( $sql );
+			$payment_ids = implode( ',', $payments );
+			$sql         = "SELECT SUM( meta_value ) FROM {$wpdb->postmeta} WHERE meta_key = '_edd_payment_tax' AND post_id IN( {$payment_ids} )";
+			$tax         = $wpdb->get_var( $sql );
 		}
-
 	}
 
-	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
+	// Filter & return
+	return (float) apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
 }
 
 /**
@@ -243,9 +248,9 @@ function edd_is_cart_taxed() {
  *
  * @since 1.5
  * @return bool $include_tax
-*/
+ */
 function edd_prices_include_tax() {
-	$ret = ( edd_get_option( 'prices_include_tax', false ) == 'yes' && edd_use_taxes() );
+	$ret = ( edd_get_option( 'prices_include_tax', false ) === 'yes' && edd_use_taxes() );
 
 	return apply_filters( 'edd_prices_include_tax', $ret );
 }
@@ -257,7 +262,7 @@ function edd_prices_include_tax() {
  * @return bool $include_tax
  */
 function edd_prices_show_tax_on_checkout() {
-	$ret = ( edd_get_option( 'checkout_include_tax', false ) == 'yes' && edd_use_taxes() );
+	$ret = ( edd_get_option( 'checkout_include_tax', false ) === 'yes' && edd_use_taxes() );
 
 	return apply_filters( 'edd_taxes_on_prices_on_checkout', $ret );
 }
@@ -285,11 +290,11 @@ function edd_display_tax_rate() {
  */
 function edd_cart_needs_tax_address_fields() {
 
-	if( ! edd_is_cart_taxed() )
+	if ( ! edd_is_cart_taxed() ) {
 		return false;
+	}
 
 	return ! did_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
-
 }
 
 /**
@@ -300,5 +305,6 @@ function edd_cart_needs_tax_address_fields() {
  */
 function edd_download_is_tax_exclusive( $download_id = 0 ) {
 	$ret = (bool) get_post_meta( $download_id, '_edd_download_tax_exclusive', true );
+
 	return apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
 }

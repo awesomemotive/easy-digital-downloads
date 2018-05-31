@@ -549,7 +549,7 @@ class EDD_Notices {
 				case 'payment-updated' :
 					$this->add_notice( array(
 						'id'      => 'edd-payment-updated',
-						'message' => __( 'The payment has been updated successfully.', 'easy-digital-downloads' )
+						'message' => __( 'The order has been updated successfully.', 'easy-digital-downloads' )
 					) );
 					break;
 			}

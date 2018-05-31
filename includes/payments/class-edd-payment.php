@@ -1,35 +1,26 @@
 <?php
 /**
- * Payments
+ * Payments Object.
  *
  * This class is for working with payments in EDD.
  *
  * @package     EDD
- * @subpackage  Classes/Payment
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @subpackage  Payments
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
  */
 
-
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) exit;
-
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Payment Class
  *
  * @since 2.5
+ * @since 3.0 Updated to work with new custom tables.
  */
 class EDD_Payment {
-
-	/**
-	 * The Payment we are working with
-	 *
-	 * @var int
-	 * @access private
-	 * @since 2.5
-	 */
 
 	/**
 	 * The Payment ID
@@ -316,6 +307,14 @@ class EDD_Payment {
 	protected $parent_payment = 0;
 
 	/**
+	 * Order object.
+	 *
+	 * @since 3.0
+	 * @var   EDD\Orders\Order
+	 */
+	protected $order;
+
+	/**
 	 * Setup the EDD Payments class
 	 *
 	 * @since 2.5
@@ -339,7 +338,6 @@ class EDD_Payment {
 		} else {
 			$payment_id = absint( $payment_or_txn_id );
 		}
-
 
 		$this->setup_payment( $payment_id );
 	}
@@ -420,13 +418,9 @@ class EDD_Payment {
 			return false;
 		}
 
-		$payment = get_post( $payment_id );
+		$this->order = edd_get_order( $payment_id );
 
-		if( ! $payment || is_wp_error( $payment ) ) {
-			return false;
-		}
-
-		if( 'edd_payment' !== $payment->post_type ) {
+		if ( ! $this->order || is_wp_error( $this->order ) ) {
 			return false;
 		}
 
@@ -443,16 +437,15 @@ class EDD_Payment {
 		$this->payment_meta    = $this->get_meta();
 
 		// Status and Dates
-		$this->date            = $payment->post_date;
+		$this->date            = $this->order->get_date_created();
 		$this->completed_date  = $this->setup_completed_date();
-		$this->status          = $payment->post_status;
-		$this->post_status     = $this->status;
-		$this->mode            = $this->setup_mode();
-		$this->parent_payment  = $payment->post_parent;
+		$this->status          = $this->order->get_status();
+		$this->post_status     = $this->order->get_status();
+		$this->mode            = $this->order->get_mode();
+		$this->parent_payment  = $this->order->get_parent();
 
 		$all_payment_statuses  = edd_get_payment_statuses();
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
-
 
 		// Items
 		$this->fees            = $this->setup_fees();
@@ -460,20 +453,20 @@ class EDD_Payment {
 		$this->downloads       = $this->setup_downloads();
 
 		// Currency Based
-		$this->total           = $this->setup_total();
-		$this->tax             = $this->setup_tax();
+		$this->total           = $this->order->get_total();
+		$this->tax             = $this->order->get_tax();
 		$this->tax_rate        = $this->setup_tax_rate();
 		$this->fees_total      = $this->setup_fees_total();
-		$this->subtotal        = $this->setup_subtotal();
+		$this->subtotal        = $this->order->get_subtotal();
 		$this->currency        = $this->setup_currency();
 
 		// Gateway based
-		$this->gateway         = $this->setup_gateway();
+		$this->gateway         = $this->order->get_gateway();
 		$this->transaction_id  = $this->setup_transaction_id();
 
 		// User based
-		$this->ip              = $this->setup_ip();
-		$this->customer_id     = $this->setup_customer_id();
+		$this->ip              = $this->order->get_ip();
+		$this->customer_id     = $this->order->get_customer_id();
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
 		$this->user_info       = $this->setup_user_info();
@@ -483,7 +476,7 @@ class EDD_Payment {
 		$this->last_name       = $this->user_info['last_name'];
 
 		// Other Identifiers
-		$this->key             = $this->setup_payment_key();
+		$this->key             = $this->order->get_payment_key();
 		$this->number          = $this->setup_payment_number();
 
 		// Additional Attributes
@@ -498,34 +491,21 @@ class EDD_Payment {
 	/**
 	 * Create the base of a payment.
 	 *
-	 * @since  2.5
-	 * @return int|bool False on failure, the payment ID on success.
+	 * @since 2.5
+	 * @since 3.0 Updated to insert orders to the new custom tables.
+	 *
+	 * @return int|bool False on failure, the order ID on success.
 	 */
 	private function insert_payment() {
-
-		// Construct the payment title
-		$payment_title = '';
-
-		if ( ! empty( $this->first_name ) && ! empty( $this->last_name ) ) {
-			$payment_title = $this->first_name . ' ' . $this->last_name;
-		} else if ( ! empty( $this->first_name ) && empty( $this->last_name ) ) {
-			$payment_title = $this->first_name;
-		} else if ( ! empty( $this->email ) && is_email( $this->email ) ) {
-			$payment_title = $this->email;
-		}
-
 		if ( empty( $this->key ) ) {
-
 			$auth_key  = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 			$this->key = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
 			$this->pending['key'] = $this->key;
 		}
 
 		if ( empty( $this->ip ) ) {
-
 			$this->ip = edd_get_ip();
 			$this->pending['ip'] = $this->ip;
-
 		}
 
 		$payment_data = array(
@@ -548,40 +528,59 @@ class EDD_Payment {
 			'fees'         => $this->fees,
 		);
 
-		$args = apply_filters( 'edd_insert_payment_args', array(
-			'post_title'    => $payment_title,
-			'post_status'   => $this->status,
-			'post_type'     => 'edd_payment',
-			'post_date'     => ! empty( $this->date ) ? $this->date : null,
-			'post_date_gmt' => ! empty( $this->date ) ? get_gmt_from_date( $this->date ) : null,
-			'post_parent'   => $this->parent_payment,
-		), $payment_data );
+		// Create an order
+		$order_args = array(
+			'parent'      => $this->parent_payment,
+			'status'      => $this->status,
+			'user_id'     => $this->user_id,
+			'email'       => $this->email,
+			'ip'          => $this->ip,
+			'gateway'     => $this->gateway,
+			'mode'        => $this->mode,
+			'currency'    => $this->currency,
+			'payment_key' => $this->key,
+		);
 
-		// Create a blank payment
-		$payment_id = wp_insert_post( $args );
+		$order_id = edd_add_order( $order_args );
 
-		if ( ! empty( $payment_id ) ) {
-
-			$this->ID  = $payment_id;
-			$this->_ID = $payment_id;
+		if ( ! empty( $order_id ) ) {
+			$this->ID  = $order_id;
+			$this->_ID = $order_id;
 
 			$customer = $this->maybe_create_customer();
 
-			$this->customer_id            = $customer->id;
-			$this->pending['customer_id'] = $this->customer_id;
+			$this->customer_id = $customer->id;
 			$customer->attach_payment( $this->ID, false );
 
+			$order_data = array(
+				'customer_id' => $this->customer_id
+			);
+
 			/**
-			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run in the EDD_Payment::save
-			 * method. By keeping this here, it retains compatbility of adding payment meta prior to the payment being inserted, as was previously supported
-			 * by edd_insert_payment().
+			 * This run of the edd_payment_meta filter is for backwards compatibility purposes. The filter will also run
+			 * in the EDD_Payment::save method. By keeping this here, it retains compatibility of adding payment meta
+			 * prior to the payment being inserted, as was previously supported by edd_insert_payment().
 			 *
 			 * @reference: https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5838
 			 */
 			$this->payment_meta = apply_filters( 'edd_payment_meta', $this->payment_meta, $payment_data );
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
-				foreach( $this->fees as $fee ) {
+				foreach ( $this->fees as $key => $fee ) {
+					$adjustment_id = edd_add_order_adjustment( array(
+						'object_id'   => $this->ID,
+						'object_type' => 'order',
+						'type_id'     => '',
+						'type'        => 'fee',
+						'description' => $fee['label'],
+						'amount'      => $fee['amount'],
+					) );
+
+					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
+					edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
@@ -589,16 +588,29 @@ class EDD_Payment {
 			if ( edd_get_option( 'enable_sequential' ) ) {
 				$number       = edd_get_next_payment_number();
 				$this->number = edd_format_payment_number( $number );
+
 				$this->update_meta( '_edd_payment_number', $this->number );
+				$order_data['order_number'] = $this->number;
+
 				update_option( 'edd_last_payment_number', $number );
 			}
 
+			edd_update_order( $order_id, $order_data );
+
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
-			$this->new          = true;
+
+			$order_meta = array(
+				'tax_rate' => $this->tax_rate,
+			);
+
+			foreach ( $order_meta as $key => $value ) {
+				edd_add_order_meta( $order_id, $key, $value );
+			}
+
+			$this->new = true;
 		}
 
 		return $this->ID;
-
 	}
 
 	/**
@@ -607,13 +619,11 @@ class EDD_Payment {
 	 * @return bool  True of the save occurred, false if it failed or wasn't needed
 	 */
 	public function save() {
-
 		global $edd_logs;
 
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
-
 			$payment_id = $this->insert_payment();
 
 			if ( false === $payment_id ) {
@@ -621,35 +631,29 @@ class EDD_Payment {
 			} else {
 				$this->ID = $payment_id;
 			}
-
 		}
 
-		if( $this->ID !== $this->_ID ) {
+		if ( $this->ID !== $this->_ID ) {
 			$this->ID = $this->_ID;
 		}
 
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id != $customer->id ) {
-
 			$this->customer_id            = $customer->id;
 			$this->pending['customer_id'] = $this->customer_id;
-
 		}
 
 		// If we have something pending, let's save it
 		if ( ! empty( $this->pending ) ) {
-
 			$total_increase = 0;
 			$total_decrease = 0;
 
 			foreach ( $this->pending as $key => $value ) {
-				switch( $key ) {
+				switch ( $key ) {
 					case 'downloads':
 						// Update totals for pending downloads
 						foreach ( $this->pending[ $key ] as $item ) {
-
-							switch( $item['action'] ) {
-
+							switch ( $item['action'] ) {
 								case 'add':
 									$price = $item['price'];
 									$taxes = $item['tax'];
@@ -677,6 +681,21 @@ class EDD_Payment {
 											}
 										}
 
+										edd_add_order_item( array(
+											'order_id'   => $this->ID,
+											'product_id' => $item['id'],
+											'price_id'   => $price_id,
+											'cart_index' => 0, // @todo Need to actually get the correct cart index
+											'type'       => '', // @todo ???
+											'status'     => '', // @todo ???
+											'quantity'   => $item['quantity'],
+											'amount'     => $item['item_price'],
+											'subtotal'   => $item['subtotal'],
+											'discount'   => $item['discount'],
+											'tax'        => $item['tax'],
+											'total'      => $item['price']
+										) );
+
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
 										$download->increase_earnings( $increase_earnings );
@@ -686,7 +705,6 @@ class EDD_Payment {
 									break;
 
 									case 'remove':
-
 										$meta_query = array();
 										$meta_query[] = array(
 											'key'     => '_edd_log_payment_id',
@@ -738,9 +756,7 @@ class EDD_Payment {
 										break;
 
 									case 'modify':
-
 										if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-
 											$log_count_change = 0;
 
 											if ( $item['previous_data']['quantity'] != $item['quantity'] ) {
@@ -821,14 +837,11 @@ class EDD_Payment {
 
 										}
 										break;
-
 							}
-
 						}
 						break;
 
 					case 'fees':
-
 						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status && ! $this->is_recoverable() ) {
 							break;
 						}
@@ -838,21 +851,15 @@ class EDD_Payment {
 						}
 
 						foreach ( $this->pending[ $key ] as $fee ) {
-
-							switch( $fee['action'] ) {
-
+							switch ( $fee['action'] ) {
 								case 'add':
 									$total_increase += $fee['amount'];
 									break;
-
 								case 'remove':
 									$total_decrease += $fee['amount'];
 									break;
-
 							}
-
 						}
-
 						break;
 
 					case 'status':
@@ -860,11 +867,15 @@ class EDD_Payment {
 						break;
 
 					case 'gateway':
-						$this->update_meta( '_edd_payment_gateway', $this->gateway );
+						edd_update_order( $this->ID, array (
+							'gateway' => $this->gateway
+						) );
 						break;
 
 					case 'mode':
-						$this->update_meta( '_edd_payment_mode', $this->mode );
+						edd_update_order( $this->ID, array (
+							'mode' => $this->mode
+						) );
 						break;
 
 					case 'transaction_id':
@@ -872,18 +883,25 @@ class EDD_Payment {
 						break;
 
 					case 'ip':
-
-						$this->update_meta( '_edd_payment_user_ip', $this->ip );
+						edd_update_order( $this->ID, array (
+							'ip' => $this->ip
+						) );
 						break;
 
 					case 'customer_id':
-						$this->update_meta( '_edd_payment_customer_id', $this->customer_id );
+						edd_update_order( $this->ID, array (
+							'customer_id' => $this->customer_id
+						) );
+
 						$customer = new EDD_Customer( $this->customer_id );
 						$customer->attach_payment( $this->ID, false );
 						break;
 
 					case 'user_id':
-						$this->update_meta( '_edd_payment_user_id', $this->user_id );
+						edd_update_order( $this->ID, array (
+							'$this->user_id' => $this->user_id
+						) );
+
 						$this->user_info['id'] = $this->user_id;
 						break;
 
@@ -900,6 +918,30 @@ class EDD_Payment {
 							$this->discounts = explode( ',', $this->discounts );
 						}
 
+						$cart_subtotal = 0.00;
+
+						foreach ( $this->cart_details as $item ) {
+							$cart_subtotal += $item['subtotal'];
+						}
+
+						if ( 'none' === $this->discounts[0] ) {
+							break;
+						}
+
+						foreach ( $this->discounts as $discount ) {
+							/** @var EDD_Discount $discount_obj */
+							$discount_obj = edd_get_discount_by( 'code', $discount );
+
+							edd_add_order_adjustment( array(
+								'object_id'   => $this->ID,
+								'object_type' => 'order',
+								'type_id'     => $discount_obj->id,
+								'type'        => 'discount',
+								'description' => $discount,
+								'amount'      => $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal )
+							) );
+						}
+
 						$this->user_info['discount'] = implode( ',', $this->discounts );
 						break;
 
@@ -910,11 +952,16 @@ class EDD_Payment {
 					case 'email':
 						$this->payment_meta['email'] = $this->email;
 						$this->user_info['email']    = $this->email;
-						$this->update_meta( '_edd_payment_user_email', $this->email );
+
+						edd_update_order( $this->ID, array (
+							'email' => $this->email
+						) );
 						break;
 
 					case 'key':
-						$this->update_meta( '_edd_payment_purchase_key', $this->key );
+						edd_update_order( $this->ID, array (
+							'payment_key' => $this->key
+						) );
 						break;
 
 					case 'tax_rate':
@@ -922,34 +969,31 @@ class EDD_Payment {
 						break;
 
 					case 'number':
-						$this->update_meta( '_edd_payment_number', $this->number );
+						edd_update_order( $this->ID, array(
+							'order_number' => $this->number
+						) );
 						break;
 
 					case 'date':
-						$args = array(
-							'ID'        => $this->ID,
-							'post_date' => $this->date,
-							'edit_date' => true,
-						);
-
-						wp_update_post( $args );
+						edd_update_order( $this->ID, array(
+							'date_created' => $this->date
+						) );
 						break;
 
 					case 'completed_date':
-						$this->update_meta( '_edd_completed_date', $this->completed_date );
+						edd_update_order( $this->ID, array(
+							'date_completed' => $this->completed_date
+						) );
 						break;
 
 					case 'has_unlimited_downloads':
-						$this->update_meta( '_edd_payment_unlimited_downloads', $this->has_unlimited_downloads );
+						$this->update_meta( 'unlimited_downloads', $this->has_unlimited_downloads );
 						break;
 
 					case 'parent_payment':
-						$args = array(
-							'ID'          => $this->ID,
-							'post_parent' => $this->parent_payment,
-						);
-
-						wp_update_post( $args );
+						edd_update_order( $this->ID, array(
+							'parent' => $this->parent_payment,
+						) );
 						break;
 
 					default:
@@ -963,31 +1007,36 @@ class EDD_Payment {
 			}
 
 			if ( ! $this->in_process() ) {
-
 				$customer = new EDD_Customer( $this->customer_id );
 
 				$total_change = $total_increase - $total_decrease;
-				if ( $total_change < 0 ) {
 
+				if ( $total_change < 0 ) {
 					$total_change = -( $total_change );
 					// Decrease the customer's purchase stats
 					$customer->decrease_value( $total_change );
 					edd_decrease_total_earnings( $total_change );
-
 				} else if (  $total_change > 0 ) {
-
 					// Increase the customer's purchase stats
 					$customer->increase_value( $total_change );
 					edd_increase_total_earnings( $total_change );
-
 				}
-
 			}
 
-			$this->update_meta( '_edd_payment_total', $this->total );
-			$this->update_meta( '_edd_payment_tax', $this->tax );
+			$discount = 0.00;
 
-			$this->downloads    = array_values( $this->downloads );
+			foreach ( $this->cart_details as $item ) {
+				$discount += $item['discount'];
+			}
+
+			edd_update_order( $this->ID, array(
+				'subtotal' => $this->subtotal,
+				'tax'      => $this->tax,
+				'discount' => $discount,
+				'total'    => $this->total,
+			) );
+
+			$this->downloads = array_values( $this->downloads );
 
 			$new_meta = array(
 				'downloads'     => $this->downloads,
@@ -1001,7 +1050,6 @@ class EDD_Payment {
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
 			if ( ! empty( $this->payment_meta['user_info'] ) ) {
-
 				$stored_discount = ! empty( $new_meta['user_info']['discount'] ) ? $new_meta['user_info']['discount'] : '';
 
 				$new_meta[ 'user_info' ] = array_replace_recursive( (array) $this->payment_meta[ 'user_info' ], $new_meta[ 'user_info' ] );
@@ -1009,7 +1057,6 @@ class EDD_Payment {
 				if ( 'none' !== $stored_discount ) {
 					$new_meta['user_info']['discount'] = $stored_discount;
 				}
-
 			}
 
 			$meta        = $this->get_meta();
@@ -1038,7 +1085,52 @@ class EDD_Payment {
 
 			// Only save the payment meta if it's changed
 			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta) ) ) {
-				$updated     = $this->update_meta( '_edd_payment_meta', $merged_meta );
+				// First, update the order.
+				$order_info = array(
+					'payment_key' => $this->key,
+					'currency'    => $merged_meta['currency'],
+					'email'       => $merged_meta['email'],
+					'user_id'     => $merged_meta['user_info']['id']
+				);
+
+				if ( ! empty( $merged_meta['date'] ) ) {
+					$order_info['date'] = $merged_meta['date'];
+				}
+
+				edd_update_order( $this->ID, $order_info );
+
+				// We need to check if all of the order items exist in the database.
+				$items = edd_get_order_items( array(
+					'order_id' => $this->ID
+				) );
+
+				// If an empty set was returned, this is a new payment.
+				if ( empty( $items ) ) {
+					foreach ( $merged_meta['cart_details'] as $key => $item ) {
+						edd_add_order_item( array(
+							'order_id'     => $this->ID,
+							'product_id'   => $item['id'],
+							'product_name' => $item['name'],
+							'price_id'     => $item['item_number']['options']['price_id'],
+							'cart_index'   => $key,
+							'quantity'     => $item['quantity'],
+							'amount'       => $item['item_price'],
+							'subtotal'     => $item['subtotal'],
+							'discount'     => $item['discount'],
+							'tax'          => $item['tax'],
+							'total'        => $item['price'],
+						) );
+					}
+				}
+
+				$this->update_meta( 'user_info', array(
+					'first_name' => $merged_meta['user_info']['first_name'],
+					'last_name'  => $merged_meta['user_info']['last_name'],
+					'address'    => $merged_meta['user_info']['address'],
+				) );
+
+				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
+
 				if ( false !== $updated ) {
 					$saved = true;
 				}
@@ -1703,7 +1795,6 @@ class EDD_Payment {
 	 * @return bool Returns if the status was successfully updated
 	 */
 	public function update_status( $status = false ) {
-
 		if ( $status == 'completed' || $status == 'complete' ) {
 			$status = 'publish';
 		}
@@ -1719,12 +1810,21 @@ class EDD_Payment {
 		$updated = false;
 
 		if ( $do_change ) {
-
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
-			$update_fields = array( 'ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time( 'mysql' ) );
 
-			$updated = wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
+
+			/**
+			 * Map the array keys to ones accepted by the new methods.
+			 *
+			 * @since 3.0
+			 */
+			$update_fields['status'] = $update_fields['post_status'];
+
+			unset( $update_fields['ID'] );
+			unset( $update_fields['post_status'] );
+
+			edd_update_order( $this->ID, $update_fields );
 
 			$this->status = $status;
 			$this->post_status = $status;
@@ -1746,7 +1846,6 @@ class EDD_Payment {
 			}
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
-
 		}
 
 		return $updated;
@@ -1798,11 +1897,11 @@ class EDD_Payment {
 
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
-				$meta['key'] = $this->setup_payment_key();
+				$meta['key'] = $this->key;
 			}
 
 			if ( empty( $meta['email'] ) ) {
-				$meta['email'] = $this->setup_email();
+				$meta['email'] = $this->email;
 			}
 
 			if ( empty( $meta['date'] ) ) {
@@ -1824,53 +1923,85 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Update the post meta
+	 * Update the order meta.
 	 *
-	 * @since  2.5
-	 * @param  string $meta_key   The meta key to update
-	 * @param  string $meta_value The meta value
-	 * @param  string $prev_value Previous meta value
-	 * @return int|bool           Meta ID if the key didn't exist, true on successful update, false on failure
+	 * @since 2.5
+	 * @since 3.0 Updated to use the new custom tables.
+	 *
+	 * @param string $meta_key   The meta key to update.
+	 * @param string $meta_value The meta value.
+	 * @param string $prev_value Previous meta value.
+	 *
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $meta_key = '', $meta_value = '', $prev_value = '' ) {
-
 		if ( empty( $meta_key ) ) {
 			return false;
 		}
 
-		if( '_edd_payment_purchase_key' == $meta_key ) {
-
-			$current_meta = $this->get_meta();
-			$current_meta[ 'key' ] = $meta_value;
-			update_post_meta( $this->ID, '_edd_payment_meta', $current_meta );
-
-		} else if ( $meta_key == 'key' || $meta_key == 'date' ) {
-
-			$current_meta = $this->get_meta();
-			$current_meta[ $meta_key ] = $meta_value;
-
-			$meta_key     = '_edd_payment_meta';
-			$meta_value   = $current_meta;
-
-		} else if ( $meta_key == 'email' || $meta_key == '_edd_payment_user_email' ) {
-
-			$meta_value = apply_filters( 'edd_edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
-			update_post_meta( $this->ID, '_edd_payment_user_email', $meta_value );
-
-			$current_meta = $this->get_meta( '_edd_payment_meta' );
-
-			if ( is_array( $current_meta ) ){
-				$current_meta['user_info']['email']  = $meta_value;
-			}
-
-			$meta_key     = '_edd_payment_meta';
-			$meta_value   = $current_meta;
-
-		}
-
 		$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 
-		return update_post_meta( $this->ID, $meta_key, $meta_value, $prev_value );
+		switch ( $meta_key ) {
+			case '_edd_completed_date':
+				return edd_update_order( $this->ID, array(
+					'date_completed' => $meta_value
+				) );
+				break;
+			case '_edd_payment_gateway':
+				return edd_update_order( $this->ID, array(
+					'gateway' => $meta_value
+				) );
+				break;
+			case '_edd_payment_user_id':
+				return edd_update_order( $this->ID, array(
+					'user_id' => $meta_value
+				) );
+				break;
+			case '_edd_payment_user_email':
+			case 'email':
+				return edd_update_order( $this->ID, array(
+					'email' => $meta_value
+				) );
+				break;
+			case '_edd_payment_user_ip':
+				return edd_update_order( $this->ID, array(
+					'ip' => $meta_value
+				) );
+				break;
+			case '_edd_payment_purchase_key':
+			case 'key':
+				return edd_update_order( $this->ID, array(
+					'payment_key' => $meta_value
+				) );
+				break;
+			case '_edd_payment_mode':
+				return edd_update_order( $this->ID, array(
+					'mode' => $meta_value
+				) );
+				break;
+			case '_edd_payment_tax_rate':
+				return edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				break;
+			case '_edd_payment_customer_id':
+				return edd_update_order( $this->ID, array(
+					'customer_id' => $meta_value
+				) );
+				break;
+			case '_edd_payment_total':
+				return edd_update_order( $this->ID, array(
+					'total' => $meta_value
+				) );
+				break;
+			case '_edd_payment_tax':
+				return edd_update_order( $this->ID, array(
+					'tax' => $meta_value
+				) );
+				break;
+		}
+
+		$meta_key = str_replace( '_edd_payment_', '', $meta_key );
+		
+		return edd_update_order_meta( $this->ID, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -1888,7 +2019,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		return add_post_meta( $this->ID, $meta_key, $meta_value, $unique );
+		return edd_add_order_meta( $this->ID, $meta_key, $meta_value, $unique );
 	}
 
 	/**
@@ -1905,7 +2036,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		return delete_post_meta( $this->ID, $meta_key, $meta_value );
+		return edd_delete_order_meta( $this->ID, $meta_key, $meta_value );
 	}
 
 	/**
@@ -2105,29 +2236,22 @@ class EDD_Payment {
 	/**
 	 * Setup the payment completed date
 	 *
-	 * @since  2.5
+	 * @since 2.5
+	 * @since 3.0 Updated to use the new custom tables.
+	 *
 	 * @return string The date the payment was completed
 	 */
 	private function setup_completed_date() {
-		$payment = get_post( $this->ID );
+		/** @var EDD\Orders\Order $order */
+		$order = edd_get_order( $this->ID );
 
-		if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status || 'processing' == $payment->post_status ) {
+		if ( 'pending' == $order->get_status() || 'preapproved' == $order->get_status() || 'processing' == $order->get_status() ) {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
+		$date = ( $date = $order->get_date_completed() ) ? $date : $order->get_date_created();
 
 		return $date;
-	}
-
-	/**
-	 * Setup the payment mode
-	 *
-	 * @since  2.5
-	 * @return string The payment mode
-	 */
-	private function setup_mode() {
-		return $this->get_meta( '_edd_payment_mode' );
 	}
 
 	/**
@@ -2152,33 +2276,13 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment tax
-	 *
-	 * @since  2.5
-	 * @return float The tax for the payment
-	 */
-	private function setup_tax() {
-		$tax = $this->get_meta( '_edd_payment_tax', true );
-
-		// We don't have tax as it's own meta and no meta was passed
-		if ( '' === $tax ) {
-
-			$tax = isset( $this->payment_meta['tax'] ) ? $this->payment_meta['tax'] : 0;
-
-		}
-
-		return $tax;
-
-	}
-
-	/**
 	 * Setup the payment tax rate
 	 *
 	 * @since  2.7
 	 * @return float The tax rate for the payment
 	 */
 	private function setup_tax_rate() {
-		return $this->get_meta( '_edd_payment_tax_rate', true );
+		return $this->get_meta( 'tax_rate', true );
 	}
 
 	/**
@@ -2252,8 +2356,9 @@ class EDD_Payment {
 	 * @return string              The currency for the payment
 	 */
 	private function setup_currency() {
-		$currency = isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
-		return $currency;
+		return ! empty( $this->order->get_currency() )
+					? $this->order->get_currency()
+					: apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
 	}
 
 	/**
@@ -2265,17 +2370,6 @@ class EDD_Payment {
 	private function setup_fees() {
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
 		return $payment_fees;
-	}
-
-	/**
-	 * Setup the gateway used for the payment
-	 *
-	 * @since  2.5
-	 * @return string The gateway
-	 */
-	private function setup_gateway() {
-		$gateway = $this->get_meta( '_edd_payment_gateway', true );
-		return $gateway;
 	}
 
 	/**
@@ -2295,28 +2389,6 @@ class EDD_Payment {
 		}
 
 		return $transaction_id;
-	}
-
-	/**
-	 * Setup the IP Address for the payment
-	 *
-	 * @since  2.5
-	 * @return string The IP address for the payment
-	 */
-	private function setup_ip() {
-		$ip = $this->get_meta( '_edd_payment_user_ip', true );
-		return $ip;
-	}
-
-	/**
-	 * Setup the customer ID
-	 *
-	 * @since  2.5
-	 * @return int The Customer ID
-	 */
-	private function setup_customer_id() {
-		$customer_id = $this->get_meta( '_edd_payment_customer_id', true );
-		return $customer_id;
 	}
 
 	/**
@@ -2349,7 +2421,7 @@ class EDD_Payment {
 	 * @return string The email address for the payment
 	 */
 	private function setup_email() {
-		$email = $this->get_meta( '_edd_payment_user_email', true );
+		$email = $this->order->get_email();
 
 		if ( empty( $email ) ) {
 			$email = EDD()->customers->get_column( 'email', $this->customer_id );
@@ -2451,17 +2523,6 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment key
-	 *
-	 * @since  2.5
-	 * @return string The Payment Key
-	 */
-	private function setup_payment_key() {
-		$key = $this->get_meta( '_edd_payment_purchase_key', true );
-		return $key;
-	}
-
-	/**
 	 * Setup the payment number
 	 *
 	 * @since  2.5
@@ -2471,15 +2532,11 @@ class EDD_Payment {
 		$number = $this->ID;
 
 		if ( edd_get_option( 'enable_sequential' ) ) {
-
-			$number = $this->get_meta( '_edd_payment_number', true );
+			$number = $this->order->get_number();
 
 			if ( ! $number ) {
-
 				$number = $this->ID;
-
 			}
-
 		}
 
 		return $number;
@@ -2540,11 +2597,18 @@ class EDD_Payment {
 	/**
 	 * Retrieve payment completion date
 	 *
-	 * @since  2.5.1
+	 * @since 2.5.1
+	 * @since 3.0 Updated for backwards compatibility.
 	 * @return string Date payment was completed
 	 */
 	private function get_completed_date() {
-		return apply_filters( 'edd_payment_completed_date', $this->completed_date, $this->ID, $this );
+		if ( '0000-00-00 00:00:00' === $this->date_completed ) {
+			$date = false;
+		} else {
+			$date = $this->completed_date;
+		}
+
+		return apply_filters( 'edd_payment_completed_date', $date, $this->ID, $this );
 	}
 
 	/**
