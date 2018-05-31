@@ -245,7 +245,7 @@ function edd_build_order( $order_data = array() ) {
 	}
 
 	if ( empty( $customer->id ) ) {
-		$customer = new EDD_Customer( $this->email );
+		$customer = new EDD_Customer( $order_args['email'] );
 
 		if ( empty( $order_data['user_info']['first_name'] ) && empty( $order_data['user_info']['last_name'] ) ) {
 			$name = $order_args['email'];
