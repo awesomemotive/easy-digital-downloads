@@ -186,20 +186,23 @@ a.edd-delete:hover {
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 
-.edd-tab-span {
-	top: -6px;
-	right: 0;
-	position: absolute;
-}
 .edd-add-ons-footer {
 	padding-top: 10px;
 }
-.edd-add-ons-view-wrapper {
-	height: 50px;
+#edd-add-ons .subsubsub .dashicons {
+	margin-top: 3px;
 }
-#edd-add-ons h2 .button-primary {
-	position: absolute;
+#edd-add-ons .edd-add-ons-container {
+	clear: both;
+	padding-top: 10px;
 }
+
+#edd-add-ons .search-box .button-secondary span {
+	margin: 2px -5px 0 4px;
+	padding: 0;
+	color: #aaa;
+}
+
 #edd-add-ons .edd-extension {
 	background: #fff;
 	border: 1px solid #ccc;
@@ -220,7 +223,7 @@ a.edd-delete:hover {
 	left: 14px;
 }
 #edd-add-ons .edd-browse-all {
-	clear:both;
+	clear: both;
 	width:100%;
 }
 #edd-add-ons .edd-extension .third-party {
@@ -233,6 +236,15 @@ a.edd-delete:hover {
 }
 #edd-add-ons .edd-starter-package h3 {
 	color: #fff;
+}
+/* Mock blue "Primary" styling on Starter Package */
+#edd-add-ons .edd-starter-package .button-secondary {
+	background: #0085ba;
+	border-color: #0073aa #006799 #006799;
+	box-shadow: 0 1px 0 #006799;
+	color: #fff;
+	text-decoration: none;
+	text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
 }
 #edd-add-ons .edd-extension .wp-post-image {
 	width: 100%;
@@ -377,6 +389,10 @@ textarea[name="edd-note"] {
 
 #edd-add-ons {
 	margin: 29px 20px -9px 2px;
+}
+
+.edd-tab-wrap {
+	margin: .10px 20px -12px 2px;
 }
 
 h2.nav-tab-wrapper.edd-tab-clear {
