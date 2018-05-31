@@ -1114,21 +1114,21 @@ function edd_can_view_receipt( $payment_key = '' ) {
 }
 
 /**
- * Given a Payment ID, generate a link to IP address provider (ipinfo.io)
+ * Given an order ID, generate a link to IP address provider (ipinfo.io)
  *
- * @since  2.8.15
- * @param  int		$payment_id The Payment ID
- * @return string	A link to the IP details provider
+ * @since 2.8.15
+ * @since 3.0 Updated to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string A link to the IP details provider
  */
-function edd_payment_get_ip_address_url( $payment_id ) {
-
-	$payment = new EDD_Payment( $payment_id );
+function edd_payment_get_ip_address_url( $order_id ) {
+	$order = edd_get_order( $order_id );
 
 	$base_url = 'https://ipinfo.io/';
-	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->ip ) . '" target="_blank">' . esc_attr( $payment->ip ) . '</a>';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $order->get_ip() ) . '" target="_blank">' . esc_attr( $order->get_ip() ) . '</a>';
 
-	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->ip, $payment_id );
-
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $order->get_ip(), $order->get_id() );
 }
 
 /**

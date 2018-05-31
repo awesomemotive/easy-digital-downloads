@@ -6,7 +6,7 @@
  * @subpackage  Orders
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Orders;
 
@@ -45,6 +45,22 @@ class Order_Item extends Base_Object {
 	 * @var   int
 	 */
 	protected $product_id;
+
+	/**
+	 * Product Name.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $product_name;
+
+	/**
+	 * Price ID.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $price_id;
 
 	/**
 	 * Cart index.
@@ -92,6 +108,14 @@ class Order_Item extends Base_Object {
 	protected $subtotal;
 
 	/**
+	 * Item discount.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $discount;
+
+	/**
 	 * Item tax.
 	 *
 	 * @since 3.0
@@ -106,6 +130,22 @@ class Order_Item extends Base_Object {
 	 * @var   float
 	 */
 	protected $total;
+
+	/**
+	 * Date created.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_created;
+
+	/**
+	 * Date modified.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_modified;
 
 	/**
 	 * Retrieve order item ID.
@@ -127,6 +167,28 @@ class Order_Item extends Base_Object {
 	 */
 	public function get_product_id() {
 		return $this->product_id;
+	}
+
+	/**
+	 * Retrieve the product name.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Product name.
+	 */
+	public function get_product_name() {
+		return $this->product_name;
+	}
+
+	/**
+	 * Retrieve price ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @return int Price ID.
+	 */
+	public function get_price_id() {
+		return $this->price_id;
 	}
 
 	/**
@@ -185,23 +247,85 @@ class Order_Item extends Base_Object {
 	}
 
 	/**
-	 * @return float
+	 * Retrieve item subtotal.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Item subtotal.
 	 */
 	public function get_subtotal() {
 		return $this->subtotal;
 	}
 
 	/**
-	 * @return float
+	 * Retrieve item discount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Item discount.
+	 */
+	public function get_discount() {
+		return $this->discount;
+	}
+
+	/**
+	 * Retrieve item tax.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Item tax.
 	 */
 	public function get_tax() {
 		return $this->tax;
 	}
 
 	/**
-	 * @return float
+	 * Retrieve item total.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Item total.
 	 */
 	public function get_total() {
 		return $this->total;
+	}
+
+	/**
+	 * Retrieve date created.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Date created.
+	 */
+	public function get_date_created() {
+		$this->date_created;
+	}
+
+	/**
+	 * Retrieve date modified.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Date modified.
+	 */
+	public function get_date_modified() {
+		return $this->date_modified;
+	}
+
+	/**
+	 * Retrieve fees applied to this order item.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array $fees Fees applied to this item.
+	 */
+	public function get_fees() {
+		$fees = edd_get_order_adjustments( array(
+			'object_id'   => $this->get_id(),
+			'object_type' => 'order_item',
+			'type'        => 'fee'
+		) );
+
+		return $fees;
 	}
 }

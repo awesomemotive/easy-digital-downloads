@@ -60,6 +60,16 @@ class Order_Items extends Base {
 			'sortable'   => true
 		),
 
+		// product_name
+		array(
+			'name'       => 'product_name',
+			'type'       => 'text',
+			'default'    => '',
+			'searchable' => true,
+			'in'         => false,
+			'not_in'     => false
+		),
+
 		// price_id
 		array(
 			'name'       => 'price_id',

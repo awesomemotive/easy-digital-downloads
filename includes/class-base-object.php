@@ -6,7 +6,7 @@
  * @subpackage  Core
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD;
 
@@ -25,7 +25,7 @@ abstract class Base_Object {
 	 * Object constructor.
 	 *
 	 * @access public
-	 * @since  1.9
+	 * @since  3.0
 	 *
 	 * @param mixed $object Object to populate members for.
 	 */

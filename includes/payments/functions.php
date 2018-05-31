@@ -146,15 +146,16 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 }
 
 /**
- * Insert Payment
+ * Insert an order into the database.
  *
  * @since 1.0
- * @param array $payment_data Payment data to process
- * @return int|bool Payment ID if payment is inserted, false otherwise
+ * @since 3.0 Refactored to add orders using new methods.
+ *
+ * @param array $order_data Order data to process.
+ * @return int|bool Order ID if the order was successfully inserted, false otherwise.
  */
-function edd_insert_payment( $payment_data = array() ) {
-
-	if ( empty( $payment_data ) ) {
+function edd_insert_payment( $order_data = array() ) {
+	if ( empty( $order_data ) ) {
 		return false;
 	}
 
@@ -184,120 +185,42 @@ function edd_insert_payment( $payment_data = array() ) {
 			$payment->remove_download( $download['id'], $item_args );
 		}
 
-		if ( strtolower( $payment->email ) !== strtolower( $payment_data['user_info']['email'] ) ) {
+		if ( strtolower( $payment->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
 
 			// Remove the payment from the previous customer.
 			$previous_customer = new EDD_Customer( $payment->customer_id );
 			$previous_customer->remove_payment( $payment->ID, false );
 
 			// Redefine the email frst and last names.
-			$payment->email                 = $payment_data['user_info']['email'];
-			$payment->first_name            = $payment_data['user_info']['first_name'];
-			$payment->last_name             = $payment_data['user_info']['last_name'];
+			$payment->email                 = $order_data['user_info']['email'];
+			$payment->first_name            = $order_data['user_info']['first_name'];
+			$payment->last_name             = $order_data['user_info']['last_name'];
 
 		}
 
 		// Remove any remainders of possible fees from items.
 		$payment->save();
 
-	} else {
-		$payment = new EDD_Payment();
 	}
 
-	if( is_array( $payment_data['cart_details'] ) && ! empty( $payment_data['cart_details'] ) ) {
-
-		foreach ( $payment_data['cart_details'] as $item ) {
-
-			$args = array(
-				'quantity'   => $item['quantity'],
-				'price_id'   => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null,
-				'tax'        => $item['tax'],
-				'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
-				'fees'       => isset( $item['fees'] ) ? $item['fees'] : array(),
-				'discount'   => isset( $item['discount'] ) ? $item['discount'] : 0,
-			);
-
-			$options = isset( $item['item_number']['options'] ) ? $item['item_number']['options'] : array();
-
-			$payment->add_download( $item['id'], $args, $options );
-		}
-
-	}
-
-	$payment->increase_tax( edd_get_cart_fee_tax() );
-
-	$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
-	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
-
-	$country = ! empty( $payment_data['user_info']['address']['country'] ) ? $payment_data['user_info']['address']['country'] : false;
-	$state   = ! empty( $payment_data['user_info']['address']['state'] )   ? $payment_data['user_info']['address']['state']   : false;
-	$zip     = ! empty( $payment_data['user_info']['address']['zip'] )     ? $payment_data['user_info']['address']['zip']     : false;
-
-
-	$payment->status         = ! empty( $payment_data['status'] ) ? $payment_data['status'] : 'pending';
-	$payment->currency       = ! empty( $payment_data['currency'] ) ? $payment_data['currency'] : edd_get_currency();
-	$payment->user_info      = $payment_data['user_info'];
-	$payment->gateway        = $gateway;
-	$payment->user_id        = $payment_data['user_info']['id'];
-	$payment->first_name     = $payment_data['user_info']['first_name'];
-	$payment->last_name      = $payment_data['user_info']['last_name'];
-	$payment->email          = $payment_data['user_info']['email'];
-	$payment->ip             = edd_get_ip();
-	$payment->key            = $payment_data['purchase_key'];
-	$payment->mode           = edd_is_test_mode() ? 'test' : 'live';
-	$payment->parent_payment = ! empty( $payment_data['parent'] ) ? absint( $payment_data['parent'] ) : '';
-	$payment->discounts      = ! empty( $payment_data['user_info']['discount'] ) ? $payment_data['user_info']['discount'] : array();
-	$payment->tax_rate       = edd_get_cart_tax_rate( $country, $state, $zip );
-
-	if ( isset( $payment_data['post_date'] ) ) {
-		$payment->date = $payment_data['post_date'];
-	}
-
-	// Clear the user's purchased cache
-	delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
-
-	$payment->save();
-
-	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) {
-		$payment_data['agree_to_terms_time'] = current_time( 'timestamp' );
-	}
-
-	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) && ! empty( $_POST['edd_agree_to_privacy_policy'] ) ) {
-		$payment_data['agree_to_privacy_time'] = current_time( 'timestamp' );
-	}
-
-	do_action( 'edd_insert_payment', $payment->ID, $payment_data );
-
-	if ( ! empty( $payment->ID ) ) {
-		return $payment->ID;
-	}
-
-	// Return false if no payment was inserted
-	return false;
+	return edd_build_order( $order_data );
 }
 
 /**
  * Updates a payment status.
  *
- * @since  1.0
- * @param  int    $payment_id Payment ID
- * @param  string $new_status New Payment Status (default: publish)
- * @return bool               If the payment was successfully updated
+ * @since 1.0
+ * @since 3.0 Updated to use new order methods.
+ *
+ * @param  int    $order_id Order ID.
+ * @param  string $new_status order status (default: publish)
+ *
+ * @return bool True if the status was updated successfully, false otherwise.
  */
-function edd_update_payment_status( $payment_id = 0, $new_status = 'publish' ) {
-
+function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
 	$updated = false;
-	$payment = new EDD_Payment( $payment_id );
 
-	if( $payment && $payment->ID > 0 ) {
-
-		$payment->status = $new_status;
-		$updated = $payment->save();
-
-	}
-
-	return $updated;
-
+	return edd_transition_order_status( $order_id, $new_status );
 }
 
 /**
@@ -698,24 +621,27 @@ function edd_check_for_existing_payment( $payment_id ) {
 }
 
 /**
- * Get Payment Status
+ * Get order status.
  *
  * @since 1.0
+ * @since 3.0 Updated to use new EDD\Order\Order class.
  *
- * @param mixed  WP_Post|EDD_Payment|Payment ID $payment Payment post object, EDD_Payment object, or payment/post ID
- * @param bool   $return_label Whether to return the payment status or not
+ * @param WP_Post|EDD_Payment|Payment ID $payment      Payment post object, EDD_Payment object, or payment/post ID.
+ * @param bool                           $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
 function edd_get_payment_status( $payment, $return_label = false ) {
+	if ( is_numeric( $payment ) ) {
+		$order = edd_get_order( $order );
 
-	if( is_numeric( $payment ) ) {
-
-		$payment = new EDD_Payment( $payment );
-
-		if( ! $payment->ID > 0 ) {
+		if ( ! $order ) {
 			return false;
 		}
+	}
+
+	if ( $payment instanceof EDD_Payment ) {
+
 	}
 
 	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
@@ -1468,10 +1394,11 @@ function edd_get_purchase_id_by_key( $key ) {
 		return $$global_key_string;
 	}
 
-	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_purchase_key' AND meta_value = %s LIMIT 1", $key ) );
+	/** @var EDD\Orders\Order $order */
+	$order = edd_get_order_by( 'payment_key', $key );
 
-	if ( $purchase != NULL ) {
-		$$global_key_string = $purchase;
+	if ( false !== $order ) {
+		$$global_key_string = $order->get_id();
 		return $$global_key_string;
 	}
 
@@ -1499,24 +1426,25 @@ function edd_get_purchase_id_by_transaction_id( $key ) {
 }
 
 /**
- * Retrieve all notes attached to a purchase
+ * Retrieve all notes attached to an order.
  *
  * @since 1.4
  * @since 3.0 Updated to use the edd_notes custom table to store notes.
  *
- * @param int    $payment_id The payment ID to retrieve notes for.
+ * @param int    $order_id   The order ID to retrieve notes for.
  * @param string $search     Search for notes that contain a search term.
- * @return array|bool $notes Payment Notes, false otherwise.
+ * @return array|bool $notes Order notes, false otherwise.
  */
-function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
-	if ( empty( $payment_id ) && empty( $search ) ) {
+function edd_get_payment_notes( $order_id = 0, $search = '' ) {
+	if ( empty( $order_id ) && empty( $search ) ) {
 		return false;
 	}
 
 	$notes = edd_get_notes( array(
-		'object_id' => $payment_id,
-		'order'     => 'ASC',
-		'search'    => '',
+		'object_id'   => $order_id,
+		'object_type' => 'order',
+		'order'       => 'ASC',
+		'search'      => '',
 	) );
 
 	return $notes;
@@ -1524,23 +1452,23 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 
 
 /**
- * Add a note to a payment
+ * Add a note to an order.
  *
  * @since 1.4
  * @since 3.0 Updated to use the edd_notes custom table to store notes.
  *
- * @param int    $payment_id The payment ID to store a note for.
- * @param string $note       The content of the note.
+ * @param int    $order_id The order ID to store a note for.
+ * @param string $note     The content of the note.
  * @return int|false The new note ID, false otherwise.
  */
-function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
+function edd_insert_payment_note( $order_id = 0, $note = '' ) {
 
-	// Bail if no payment ID or note
-	if ( empty( $payment_id ) || empty( $note ) ) {
+	// Bail if no order ID or note.
+	if ( empty( $order_id ) || empty( $note ) ) {
 		return false;
 	}
 
-	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
+	do_action( 'edd_pre_insert_payment_note', $order_id, $note );
 
 	/**
 	 * For backwards compatibility purposes, we need to pass the data to
@@ -1548,7 +1476,7 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 	 * WordPress Core filters prior to be inserted into the database.
 	 */
 	$filtered_data = wp_filter_comment( array(
-		'comment_post_ID'      => $payment_id,
+		'comment_post_ID'      => $order_id,
 		'comment_content'      => $note,
 		'user_id'              => is_admin() ? get_current_user_id() : 0,
 		'comment_date'         => current_time( 'mysql' ),
@@ -1567,35 +1495,35 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'object_id'   => $filtered_data['comment_post_ID'],
 		'content'     => $filtered_data['comment_content'],
 		'user_id'     => $filtered_data['user_id'],
-		'object_type' => 'payment',
+		'object_type' => 'order',
 	) );
 
-	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
+	do_action( 'edd_insert_payment_note', $note_id, $order_id, $note );
 
 	// Return the ID of the new note
 	return $note_id;
 }
 
 /**
- * Deletes a payment note.
+ * Deletes an order note.
  *
  * @since 1.6
  * @since 3.0 Updated to use the edd_notes custom table to store notes.
  *
- * @param int $note_id The Note ID to delete.
- * @param int $payment_id The payment ID the note is connected to.
+ * @param int $note_id  Note ID.
+ * @param int $order_id Order ID.
  * @return bool True on success, false otherwise.
  */
-function edd_delete_payment_note( $note_id = 0, $payment_id = 0 ) {
+function edd_delete_payment_note( $note_id = 0, $order_id = 0 ) {
 	if ( empty( $note_id ) ) {
 		return false;
 	}
 
-	do_action( 'edd_pre_delete_payment_note', $note_id, $payment_id );
+	do_action( 'edd_pre_delete_payment_note', $note_id, $order_id );
 
 	$ret = edd_delete_note( $note_id );
 
-	do_action( 'edd_post_delete_payment_note', $note_id, $payment_id );
+	do_action( 'edd_post_delete_payment_note', $note_id, $order_id );
 
 	return $ret;
 }
