@@ -261,7 +261,8 @@ function edd_register_customer_report( $reports ) {
 					'most_valuable_customer',
 				),
 				'tables' => array(
-					'top_five_customers'
+					'top_five_customers',
+					'most_valuable_customers'
 				)
 			),
 			'filters'   => array( 'dates' ),
@@ -339,12 +340,24 @@ function edd_register_customer_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'top_five_customers', array(
-			'label' => __( 'Top Five Customers', 'easy-digital-downloads' ),
+			'label' => __( 'Top Five Customers of All Time', 'easy-digital-downloads' ),
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
-						'class_name' => '\\EDD\\Reports\\Top_Five_Customers_List_Table',
+						'class_name' => '\\EDD\\Reports\\Data\\Customers\\Top_Five_Customers_List_Table',
 						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-top-five-customers-list-table.php',
+					)
+				),
+			)
+		) );
+
+		$reports->register_endpoint( 'most_valuable_customers', array(
+			'label' => __( 'Most Valuable Customers of ', 'easy-digital-downloads' ) . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Customers\\Most_Valuable_Customers_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-most-valuable-customers-list-table.php',
 					)
 				),
 			)
