@@ -713,10 +713,13 @@ class EDD_HTML_Elements {
 	 */
 	public function date_field( $args = array() ) {
 
-		if( empty( $args['class'] ) ) {
-			$args['class'] = 'edd_datepicker';
-		} elseif( ! strpos( $args['class'], 'edd_datepicker' ) ) {
-			$args['class'] .= ' edd_datepicker';
+		if ( empty( $args['class'] ) ) {
+			$args['class']          = 'edd_datepicker';
+			$args['data']['format'] = edd_get_date_picker_format();
+
+		} elseif ( ! strpos( $args['class'], 'edd_datepicker' ) ) {
+			$args['class']          .= ' edd_datepicker';
+			$args['data']['format'] = edd_get_date_picker_format();
 		}
 
 		return $this->text( $args );

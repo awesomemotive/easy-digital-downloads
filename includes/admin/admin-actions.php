@@ -100,6 +100,39 @@ function edd_remove_taxonomy_submenus() {
 add_action( 'admin_menu', 'edd_remove_taxonomy_submenus', 999 );
 
 /**
+ * This tells WordPress to highlight the Downloads > All Downloads submenu,
+ * regardless of which actual Downloads Taxonomy screen we are on.
+ *
+ * The conditional prevents the override when the user is viewing settings or
+ * any third-party plugins.
+ *
+ * @since 3.0.0
+ *
+ * @global string $submenu_file
+ */
+function edd_taxonomies_modify_menu_highlight() {
+	global $submenu_file;
+
+	// Bail if not viewing a taxonomy
+	if ( empty( $_GET['taxonomy'] ) ) {
+		return;
+	}
+
+	// Get taxonomies
+	$taxonomy   = sanitize_key( $_GET['taxonomy'] );
+	$taxonomies = get_object_taxonomies( 'download' );
+
+	// Bail if current taxonomy is not a download taxonomy
+	if ( ! in_array( $taxonomy, $taxonomies, true ) ) {
+		return;
+	}
+
+	// Force the submenu file
+	$submenu_file = 'edit.php?post_type=download';
+}
+add_filter( 'admin_head', 'edd_taxonomies_modify_menu_highlight', 9999 );
+
+/**
  * Displays the product tabs for 'Products' and 'Apps and Integrations'
  *
  * @since 2.8.9
