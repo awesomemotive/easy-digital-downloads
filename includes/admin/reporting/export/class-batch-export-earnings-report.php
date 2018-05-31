@@ -269,21 +269,17 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 		$statuses = $this->get_supported_statuses();
 		$totals   = $wpdb->get_results( $wpdb->prepare(
-			"SELECT SUM(meta_value) AS total, COUNT(DISTINCT posts.ID) AS count, posts.post_status AS status
-			 FROM {$wpdb->posts} AS posts
-			 INNER JOIN {$wpdb->postmeta} ON posts.ID = {$wpdb->postmeta}.post_ID
-			 WHERE posts.post_type IN ('edd_payment')
-			 AND {$wpdb->postmeta}.meta_key = '_edd_payment_total'
-			 AND posts.post_date >= %s
-			 AND posts.post_date < %s
-			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
-			 ORDER by posts.post_date ASC", $start_date, $end_date ), ARRAY_A );
+			"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count, status
+			 FROM {$wpdb->edd_orders}
+			 WHERE date_created >= %s AND date_created < %s
+			 GROUP BY YEAR(date_created), MONTH(date_created), status
+			 ORDER by date_created ASC", $start_date, $end_date ), ARRAY_A );
 
 		$total_data = array();
 		foreach ( $totals as $row ) {
 			$total_data[ $row['status'] ] = array(
 				'count'  => $row['count'],
-				'amount' => $row['total']
+				'amount' => edd_format_amount( $row['total'] )
 			);
 		}
 
