@@ -411,6 +411,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 													</span>
 													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
 													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+                                                    <input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][order_item_id]" class="edd-payment-details-download-order-item-id" value="<?php echo esc_attr( $order_item->get_id() ); ?>" />
 
 													<?php if ( ! edd_item_quantities_enabled() ) : ?>
 														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
