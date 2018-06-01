@@ -122,7 +122,8 @@ class Orders extends Base {
 		array(
 			'name'       => 'email',
 			'type'       => 'varchar',
-			'length'     => '100'
+			'length'     => '100',
+			'searchable' => true
 		),
 
 		// ip
