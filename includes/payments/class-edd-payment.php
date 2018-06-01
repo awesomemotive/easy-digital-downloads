@@ -1090,8 +1090,11 @@ class EDD_Payment {
 					'payment_key' => $this->key,
 					'currency'    => $merged_meta['currency'],
 					'email'       => $merged_meta['email'],
-					'user_id'     => $merged_meta['user_info']['id']
 				);
+
+				if ( isset( $merged_meta['user_info']['id'] ) ) {
+					$order_info['user_id'] = $merged_meta['user_info']['id'];
+				}
 
 				if ( ! empty( $merged_meta['date'] ) ) {
 					$order_info['date'] = $merged_meta['date'];
@@ -1126,7 +1129,7 @@ class EDD_Payment {
 				$this->update_meta( 'user_info', array(
 					'first_name' => $merged_meta['user_info']['first_name'],
 					'last_name'  => $merged_meta['user_info']['last_name'],
-					'address'    => $merged_meta['user_info']['address'],
+					'address'    => isset( $merged_meta['user_info']['address'] ) ? $merged_meta['user_info']['address'] : array(),
 				) );
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
@@ -2602,7 +2605,7 @@ class EDD_Payment {
 	 * @return string Date payment was completed
 	 */
 	private function get_completed_date() {
-		if ( '0000-00-00 00:00:00' === $this->date_completed ) {
+		if ( '0000-00-00 00:00:00' === $this->completed_date ) {
 			$date = false;
 		} else {
 			$date = $this->completed_date;

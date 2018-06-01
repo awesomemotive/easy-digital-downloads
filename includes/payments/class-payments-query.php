@@ -49,24 +49,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	public $payments = array();
 
 	/**
-	 * Holds a boolean to determine if there is an existing $wp_query global.
-	 *
-	 * @var bool
-	 * @access private
-	 * @since 2.8
-	 */
-	private $existing_query;
-
-	/**
-	 * If an existing global $post item exists before we start our query, maintain it for later 'reset'.
-	 *
-	 * @var WP_Post|null
-	 * @access private
-	 * @since 2.8
-	 */
-	private $existing_post;
-
-	/**
 	 * Default query arguments.
 	 *
 	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
@@ -105,8 +87,6 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
 		$this->args = $this->initial_args = wp_parse_args( $args, $defaults );
-
-		$this->init();
 	}
 
 	/**
@@ -128,17 +108,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function __unset( $query_var ) {
 		unset( $this->args[ $query_var ] );
-	}
-
-	/**
-	 * Nothing here at the moment.
-	 *
-	 * @since 1.8
-	 */
-	public function init() {
-		// Before we start setting up queries, let's store any existing queries that might be in globals.
-		$this->existing_query = isset( $GLOBALS['wp_query'] ) && isset( $GLOBALS['wp_query']->post );
-		$this->existing_post  = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
 	}
 
 	/**
@@ -172,17 +141,18 @@ class EDD_Payments_Query extends EDD_Stats {
 		$this->post__in();
 
 		do_action( 'edd_pre_get_payments', $this );
+		
+		$should_out_wp_post_objects = false;
+
+		if ( 'posts' === $this->args['output'] ) {
+			$should_out_wp_post_objects = true;
+		}
 
 		$this->remap_args();
 
 		$orders = edd_get_orders( $this->args );
 
-		$custom_output = array(
-			'payments',
-			'edd_payments',
-		);
-
-		if ( ! in_array( $this->args['output'], $custom_output ) ) {
+		if ( $should_out_wp_post_objects ) {
 			// We need to return WP_Post objects here for backwards compatibility...
 		}
 
@@ -198,8 +168,6 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->get_id(), $this );
 		}
-
-		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
 
 		do_action( 'edd_post_get_payments', $this );
 
@@ -217,23 +185,6 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		$this->setup_dates( $this->args['start_date'], $this->args['end_date'] );
-
-		add_filter( 'posts_where', array( $this, 'payments_where' ) );
-	}
-
-	/**
-	 * If querying a specific date, remove filters after the query has been run
-	 * to avoid affecting future queries.
-	 *
-	 * @since 1.8
-	 * @return void
-	 */
-	public function date_filter_post() {
-		if ( ! ( $this->args['start_date'] || $this->args['end_date'] ) ) {
-			return;
-		}
-
-		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 	}
 
 	/**
@@ -627,7 +578,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['date_created_query']['inclusive'] = true;
 		}
 
-		$arguments['number'] = $this->args['posts_per_page'];
+		$arguments['number'] = isset( $this->args['posts_per_page'] )
+			? $this->args['posts_per_page']
+			: 20;
 
 		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
 			unset( $arguments['number'] );
@@ -704,5 +657,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		if ( isset( $this->args['paged'] ) && isset( $this->args['number'] ) ) {
 			$arguments['offset'] = ($this->args['paged'] * $this->args['number']) - $this->args['number'];
 		}
+
+		$this->args = $arguments;
 	}
 }
