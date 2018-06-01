@@ -109,7 +109,7 @@ $minutes              = edd_get_minute_values();
                         <label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo edd_sanitize_amount( $discount->amount ); ?>" />
+                        <input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_format_amount( $discount->amount ) ); ?>" />
                         <p class="description edd-amount-description flat"<?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
                         <p class="description edd-amount-description percent"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
                     </td>
@@ -260,7 +260,7 @@ $minutes              = edd_get_minute_values();
                         <label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( edd_sanitize_amount( $discount->min_cart_price ) ); ?>" />
+                        <input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( edd_format_amount( $discount->min_cart_price ) ); ?>" />
                         <p class="description"><?php _e( 'The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
