@@ -98,9 +98,9 @@ function edd_admin_add_discount( $data = array() ) {
 	$to_add['end_date']   = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59",     strtotime( sanitize_text_field( $data['end_date']   ), $current_timestamp ) );
 
 	// Meta values.
-	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? $data['product_reqs']      : '';
-	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
-	
+	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
+	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
+
 	$to_add = array_filter( $to_add );
 
 	// Strip out data that should not be sent to the query methods.
@@ -282,7 +282,7 @@ function edd_activate_discount( $data = array() ) {
 	}
 
 	$discount_id = absint( $data['discount'] );
-	$activated   = edd_update_discount_status( $discount_id, 'active' );;
+	$activated   = edd_update_discount_status( $discount_id, 'active' );
 	$arg         = ! empty( $activated )
 		? 'discount_activated'
 		: 'discount_activation_failed';
