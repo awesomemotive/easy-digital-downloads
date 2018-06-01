@@ -82,7 +82,8 @@ class Customers extends Base {
 			'name'       => 'purchase_value',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
 		),
 
 		// purchase_count
