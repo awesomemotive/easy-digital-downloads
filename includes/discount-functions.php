@@ -154,7 +154,8 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
-	// Product requirements and excluded products are handled differently
+
+	// Product requirements
 	if ( isset( $data['product_reqs'] ) ) {
 		if ( is_string( $data['product_reqs'] ) ) {
 			$data['product_reqs'] = maybe_unserialize( $data['product_reqs'] );
@@ -171,6 +172,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		unset( $data['product_reqs'] );
 	}
 
+	// Excluded products are handled differently
 	if ( isset( $data['excluded_products'] ) ) {
 		if ( is_string( $data['excluded_products'] ) ) {
 			$data['excluded_products'] = maybe_unserialize( $data['excluded_products'] );

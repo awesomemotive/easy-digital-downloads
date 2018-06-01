@@ -60,6 +60,7 @@ function edd_admin_add_discount( $data = array() ) {
 
 	foreach ( $data as $column => $value ) {
 		switch ( $column ) {
+
 			// We skip these here as they are handled below.
 			case 'start_date':
 			case 'start':
@@ -79,23 +80,29 @@ function edd_admin_add_discount( $data = array() ) {
 		}
 	}
 
-	// Handle start and end dates a bit differently as they need to be concatenated with the date as of 3.0
-	$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
-		? sanitize_text_field( $data['start_date_hour'] )
-		: '00';
-	$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
-		? sanitize_text_field( $data['start_date_minute'] )
-		: '00';
+	// Start date
+	if ( ! empty( $data['start_date'] ) ) {
+		$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+			? sanitize_text_field( $data['start_date_hour'] )
+			: '00';
+		$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
+			? sanitize_text_field( $data['start_date_minute'] )
+			: '00';
 
-	$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
-		? sanitize_text_field( $data['end_date_hour'] )
-		: '23';
-	$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
-		? sanitize_text_field( $data['end_date_minute'] )
-		: '59';
+		$to_add['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_timestamp ) );
+	}
 
-	$to_add['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_timestamp ) );
-	$to_add['end_date']   = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59",     strtotime( sanitize_text_field( $data['end_date']   ), $current_timestamp ) );
+	// End date
+	if ( ! empty( $data['end_date'] ) ) {
+		$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+			? sanitize_text_field( $data['end_date_hour'] )
+			: '23';
+		$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+			? sanitize_text_field( $data['end_date_minute'] )
+			: '59';
+
+		$to_add['end_date'] = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59", strtotime( sanitize_text_field( $data['end_date'] ), $current_timestamp ) );
+	}
 
 	// Meta values.
 	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
@@ -171,22 +178,45 @@ function edd_admin_edit_discount( $data = array() ) {
 
 	foreach ( $data as $column => $value ) {
 		switch ( $column ) {
+			// We skip these here as they are handled below.
+			case 'start_date':
+			case 'start':
+			case 'end_date':
+			case 'expiration':
+				break;
+
 			case 'discount-id':
 				$to_update['id'] = $value;
-				break;
-
-			case 'start_date':
-				$to_update[ $column ] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_time ) );
-				break;
-
-			case 'end_date':
-				$to_update[ $column ] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $value ), $current_time ) );
 				break;
 
 			default :
 				$to_update[ $column ] = sanitize_text_field( $value );
 				break;
 		}
+	}
+
+	// Start date
+	if ( ! empty( $data['start_date'] ) ) {
+		$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+			? sanitize_text_field( $data['start_date_hour'] )
+			: '00';
+		$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
+			? sanitize_text_field( $data['start_date_minute'] )
+			: '00';
+
+		$to_update['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_time ) );
+	}
+
+	// End date
+	if ( ! empty( $data['end_date'] ) ) {
+		$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+			? sanitize_text_field( $data['end_date_hour'] )
+			: '23';
+		$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+			? sanitize_text_field( $data['end_date_minute'] )
+			: '59';
+
+		$to_update['end_date'] = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59", strtotime( sanitize_text_field( $data['end_date'] ), $current_time ) );
 	}
 
 	// Known & accepted core discount meta
