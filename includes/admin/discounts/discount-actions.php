@@ -81,17 +81,17 @@ function edd_admin_add_discount( $data = array() ) {
 
 	// Handle start and end dates a bit differently as they need to be concatenated with the date as of 3.0
 	$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
-		? $data['start_date_hour']
+		? sanitize_text_field( $data['start_date_hour'] )
 		: '00';
 	$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
-		? $data['start_date_minute']
+		? sanitize_text_field( $data['start_date_minute'] )
 		: '00';
 
 	$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
-		? $data['end_date_hour']
+		? sanitize_text_field( $data['end_date_hour'] )
 		: '23';
 	$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
-		? $data['end_date_minute']
+		? sanitize_text_field( $data['end_date_minute'] )
 		: '59';
 
 	$to_add['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_timestamp ) );
