@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
  */
@@ -16,44 +16,42 @@ defined( 'ABSPATH' ) || exit;
  * Sets up and stores a new discount code.
  *
  * @since 1.0
- * @since 3.0 - Added backwards compatibility for pre-3.0 discount data.
+ * @since 3.0 Added backwards compatibility for pre-3.0 discount data. Added discount start/end time.
  *
  * @param array $data Discount code data.
  */
 function edd_admin_add_discount( $data = array() ) {
 
-	// Bail if no nonce or nonce fails
+	// Bail if no nonce or nonce fails.
 	if ( ! isset( $data['edd-discount-nonce'] ) || ! wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
 		return;
 	}
 
-	// Bail if current user cannot manage shop discounts
+	// Bail if current user cannot manage shop discounts.
 	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	// Bail if discount does not exist
+	// Bail if discount does not exist.
 	if ( edd_get_discount_by( 'code', $data['code'] ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) );
 		edd_die();
 	}
 
-	// Bail if missing important data
+	// Bail if missing important data.
 	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
 		edd_die();
 	}
 
-	// Verify only accepted characters
+	// Verify only accepted characters.
 	$sanitized = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $data['code'] );
 	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 		edd_die();
 	}
 
-	// Convert legacy arguments
-
-	// Setup default discount values
+	// Setup default discount values.
 	$to_add            = array();
 	$to_add['status']  = 'active';
 	$current_timestamp = current_time( 'timestamp' );
@@ -62,14 +60,11 @@ function edd_admin_add_discount( $data = array() ) {
 
 	foreach ( $data as $column => $value ) {
 		switch ( $column ) {
+			// We skip these here as they are handled below.
 			case 'start_date':
 			case 'start':
-				$to_add['start_date'] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
-				break;
-
 			case 'end_date':
 			case 'expiration':
-				$to_add['end_date'] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
 				break;
 
 			case 'product_reqs':
@@ -84,13 +79,31 @@ function edd_admin_add_discount( $data = array() ) {
 		}
 	}
 
-	// Meta values
+	// Handle start and end dates a bit differently as they need to be concatenated with the date as of 3.0
+	$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+		? sanitize_text_field( $data['start_date_hour'] )
+		: '00';
+	$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
+		? sanitize_text_field( $data['start_date_minute'] )
+		: '00';
+
+	$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+		? sanitize_text_field( $data['end_date_hour'] )
+		: '23';
+	$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+		? sanitize_text_field( $data['end_date_minute'] )
+		: '59';
+
+	$to_add['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_timestamp ) );
+	$to_add['end_date']   = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59",     strtotime( sanitize_text_field( $data['end_date']   ), $current_timestamp ) );
+
+	// Meta values.
 	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? $data['product_reqs']      : '';
 	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
 	
 	$to_add = array_filter( $to_add );
 
-	// Strip out known non-columns
+	// Strip out data that should not be sent to the query methods.
 	$to_strip = array(
 		'discount-id',
 		'edd-redirect',
@@ -98,20 +111,20 @@ function edd_admin_add_discount( $data = array() ) {
 		'edd-discount-nonce'
 	);
 
-	// Loop through fields to update, and unset known bad keys
+	// Loop through fields to update, and unset known bad keys.
 	foreach ( $to_add as $key => $value ) {
 		if ( in_array( $key, $to_strip, true ) ) {
 			unset( $to_add[ $key ] );
 		}
 	}
 
-	// Attempt to add
+	// Attempt to add.
 	$created = edd_add_discount( $to_add );
 	$arg     = ! empty( $created )
 		? 'discount_added'
 		: 'discount_add_failed';
 
-	// Redirect
+	// Redirect.
 	edd_redirect( add_query_arg( 'edd-message', $arg, $data['edd-redirect'] ) );
 	edd_die();
 }
