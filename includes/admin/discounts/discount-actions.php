@@ -64,12 +64,8 @@ function edd_admin_add_discount( $data = array() ) {
 		switch ( $column ) {
 			case 'start_date':
 			case 'start':
-				$to_add['start_date'] = date( 'Y-m-d 00:00:00', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
-				break;
-
 			case 'end_date':
 			case 'expiration':
-				$to_add['end_date'] = date( 'Y-m-d 23:59:59', strtotime( sanitize_text_field( $value ), $current_timestamp ) );
 				break;
 
 			case 'product_reqs':
@@ -83,6 +79,24 @@ function edd_admin_add_discount( $data = array() ) {
 				break;
 		}
 	}
+
+	// Handle start and end dates a bit differently as they need to be concatenated with the time as of 3.0
+	$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+		? $data['start_date_hour']
+		: '00';
+	$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
+		? $data['start_date_minute']
+		: '00';
+
+	$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+		? $data['end_date_hour']
+		: '00';
+	$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+		? $data['end_date_minute']
+		: '00';
+
+	$to_add['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_timestamp ) );
+	$to_add['end_date']   = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59",     strtotime( sanitize_text_field( $data['end_date']   ), $current_timestamp ) );
 
 	// Meta values
 	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? $data['product_reqs']      : '';
