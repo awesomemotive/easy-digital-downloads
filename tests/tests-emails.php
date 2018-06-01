@@ -250,7 +250,9 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_date() {
-		$this->assertEquals( date( 'F j, Y', strtotime( get_post_field( 'post_date', self::$payment_id ) ) ), edd_email_tag_date( self::$payment_id ) );
+		$payment = edd_get_payment( self::$payment_id );
+
+		$this->assertEquals( date( 'F j, Y', strtotime( $payment->date ) ), edd_email_tag_date( self::$payment_id ) );
 	}
 
 	public function test_email_tags_subtotal() {
