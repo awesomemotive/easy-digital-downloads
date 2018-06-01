@@ -184,16 +184,20 @@ $minutes              = edd_get_minute_values();
 							'name'             => 'start_date_hour',
 							'options'          => $hours,
 							'selected'         => $start_hour,
+							'chosen'           => true,
+							'class'            => 'edd-time',
 							'show_option_none' => false,
 							'show_option_all'  => false
 						) );
 						?>
-						&nbsp;
+						:
 						<?php
 						echo EDD()->html->select( array(
 							'name'             => 'start_date_minute',
 							'options'          => $minutes,
 							'selected'         => $start_minute,
+							'chosen'           => true,
+							'class'            => 'edd-time',
 							'show_option_none' => false,
 							'show_option_all'  => false
 						) );
@@ -215,16 +219,20 @@ $minutes              = edd_get_minute_values();
 							'name'             => 'end_date_hour',
 							'options'          => $hours,
 							'selected'         => $end_hour,
+							'chosen'           => true,
+							'class'            => 'edd-time',
 							'show_option_none' => false,
 							'show_option_all'  => false
 						) );
 						?>
-						&nbsp;
+						:
 						<?php
 						echo EDD()->html->select( array(
 							'name'             => 'end_date_minute',
 							'options'          => $minutes,
 							'selected'         => $end_minute,
+							'chosen'           => true,
+							'class'            => 'edd-time',
 							'show_option_none' => false,
 							'show_option_all'  => false
 						) );
