@@ -675,10 +675,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		 */
 		$gateway = apply_filters( 'edd_payments_table_search_gateway', $gateway );
 
-		if ( ! empty( $search ) ) {
-			$status = 'any'; // Force all payment statuses when searching
-		}
-
 		if ( $gateway === 'all' ) {
 			$gateway = null;
 		}
@@ -691,12 +687,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'user_id'    => $user,
 			'customer_id'=> $customer,
 			'status'     => $status,
-			'gateway'    => $gateway
+			'gateway'    => $gateway,
+			'search'     => $search
 		);
 
 		if ( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {
 			$args['search_in_notes'] = true;
-			$args['s'] = trim( str_replace( 'txn:', '', $args['s'] ) );
+			$args['search']          = trim( str_replace( 'txn:', '', $args['search'] ) );
 		}
 
 		return edd_get_orders( array_filter( $args ) );
