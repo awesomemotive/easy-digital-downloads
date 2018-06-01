@@ -433,9 +433,6 @@ class EDD_Payment {
 		// Protected ID that can never be changed
 		$this->_ID             = absint( $payment_id );
 
-		// We have a payment, get the generic payment_meta item to reduce calls to it
-		$this->payment_meta    = $this->get_meta();
-
 		// Status and Dates
 		$this->date            = $this->order->get_date_created();
 		$this->completed_date  = $this->setup_completed_date();
@@ -481,6 +478,10 @@ class EDD_Payment {
 
 		// Additional Attributes
 		$this->has_unlimited_downloads = $this->setup_has_unlimited();
+
+		// We have a payment, get the generic payment_meta item to reduce calls to it
+		// This only exists for backwards compatibility purposes.
+		$this->payment_meta    = $this->get_meta();
 
 		// Allow extensions to add items to this object via hook
 		do_action( 'edd_setup_payment', $this, $payment_id );
@@ -1878,8 +1879,8 @@ class EDD_Payment {
 	 * @return mixed             The value from the post meta
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
-
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
+
 		if ( $meta_key === '_edd_payment_meta' ) {
 
 			if ( empty( $meta ) ) {
@@ -1911,6 +1912,15 @@ class EDD_Payment {
 				$meta['date'] = get_post_field( 'post_date', $this->ID );
 			}
 
+			// We need to back fill the returned meta for backwards compatibility purposes.
+			$meta['key']          = $this->key;
+			$meta['email']        = $this->email;
+			$meta['date']         = $this->date;
+			$meta['user_info']    = $this->user_info;
+			$meta['downloads']    = $this->downloads;
+			$meta['cart_details'] = $this->cart_details;
+			$meta['fees']         = $this->fees;
+			$meta['currency']     = $this->currency;
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
@@ -2563,7 +2573,23 @@ class EDD_Payment {
 	 * @return array               Downloads associated with this payment
 	 */
 	private function setup_downloads() {
-		$downloads = isset( $this->payment_meta['downloads'] ) ? maybe_unserialize( $this->payment_meta['downloads'] ) : array();
+		$order_items = $this->order->get_items();
+
+		$downloads = array();
+
+		foreach ( $order_items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+
+			$downloads[ $item->get_cart_index() ] = array(
+				'id'       => $item->get_product_id(),
+				'quantity' => $item->get_quantity(),
+				'options'  => array(
+					'quantity' => $item->get_quantity(),
+					'price_id' => $item->get_price_id()
+				)
+			);
+		}
+
 		return $downloads;
 	}
 
@@ -2574,7 +2600,7 @@ class EDD_Payment {
 	 * @return bool If this payment has unlimited downloads
 	 */
 	private function setup_has_unlimited() {
-		$unlimited = (bool) $this->get_meta( '_edd_payment_unlimited_downloads', true );
+		$unlimited = (bool) $this->order->has_unlimited_downloads();
 		return $unlimited;
 	}
 
