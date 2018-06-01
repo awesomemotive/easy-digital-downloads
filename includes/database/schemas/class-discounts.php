@@ -107,6 +107,7 @@ class Discounts extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true
 		),
 
@@ -149,7 +150,8 @@ class Discounts extends Base {
 			'name'       => 'min_cart_price',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
 		),
 
 		// product_condition
