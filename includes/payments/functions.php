@@ -218,8 +218,6 @@ function edd_insert_payment( $order_data = array() ) {
  * @return bool True if the status was updated successfully, false otherwise.
  */
 function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
-	$updated = false;
-
 	return edd_transition_order_status( $order_id, $new_status );
 }
 
@@ -643,6 +641,11 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	if ( $order instanceof EDD_Payment ) {
 		/** @var EDD_Payment $order */
 		$order = edd_get_order( $order->id );
+	}
+
+	if ( $order instanceof WP_Post ) {
+		/** @var WP_Post $order */
+		$order = edd_get_order( $order->ID );
 	}
 
 	if ( ! is_object( $order ) || empty( $order->get_status() ) ) {
@@ -1102,6 +1105,11 @@ function edd_get_payment_key( $payment_id = 0 ) {
  * @return string $number Payment order number
  */
 function edd_get_payment_number( $payment_id = 0 ) {
+
+	if ( $payment_id instanceof EDD_Payment ) {
+		return $payment_id->number;
+	}
+
 	$payment = new EDD_Payment( $payment_id );
 	return $payment->number;
 }
@@ -1167,11 +1175,11 @@ function edd_get_next_payment_number() {
 
 		if ( ! empty( $last_payment ) ) {
 
-			$number = edd_get_payment_number( $last_payment[0] );
+			$number = edd_get_payment_number( $last_payment[0]->ID );
 
 		}
 
-		if( ! empty( $number ) && $number !== (int) $last_payment[0] ) {
+		if( ! empty( $number ) && $number !== (int) $last_payment[0]->ID ) {
 
 			$number = edd_remove_payment_prefix_postfix( $number );
 
