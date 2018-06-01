@@ -99,47 +99,40 @@ function edd_get_payments( $args = array() ) {
  * @return      mixed
  */
 function edd_get_payment_by( $field = '', $value = '' ) {
-
 	$payment = false;
 
-	if( ! empty( $field ) && ! empty( $value ) ) {
-
-		switch( strtolower( $field ) ) {
-
+	if ( ! empty( $field ) && ! empty( $value ) ) {
+		switch ( strtolower( $field ) ) {
 			case 'id':
-
 				$payment = edd_get_payment( $value );
 
-				if( ! $payment->ID > 0 ) {
+				if ( ! $payment->ID > 0 ) {
 					$payment = false;
 				}
-
 				break;
-
 			case 'key':
-			case 'payment_number':
+				$order = edd_get_order_by( 'payment_key', $value );
 
-				global $wpdb;
+				if ( $order ) {
+					$payment = edd_get_payment( $order->get_id() );
 
-				$meta_key   = ( 'key' == $field ) ? '_edd_payment_purchase_key' : '_edd_payment_number';
-				$payment_id = $wpdb->get_var( $wpdb->prepare(
-					"SELECT post_ID FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value=%s",
-					$meta_key, $value
-				) );
-
-				if ( $payment_id ) {
-
-					$payment = edd_get_payment( $payment_id );
-
-					if( ! $payment->ID > 0 ) {
+					if ( ! $payment->ID > 0 ) {
 						$payment = false;
 					}
-
 				}
+				break;
+			case 'payment_number':
+				$order = edd_get_order_by( 'order_number', $value );
 
+				if ( $order ) {
+					$payment = edd_get_payment( $order->get_id() );
+
+					if ( ! $payment->ID > 0 ) {
+						$payment = false;
+					}
+				}
 				break;
 		}
-
 	}
 
 	return $payment;
@@ -1174,21 +1167,17 @@ function edd_get_next_payment_number() {
 		$last_payment = $payments->get_payments();
 
 		if ( ! empty( $last_payment ) ) {
-
 			$number = edd_get_payment_number( $last_payment[0]->ID );
-
 		}
 
-		if( ! empty( $number ) && $number !== (int) $last_payment[0]->ID ) {
+		var_dump( $last_payment );
 
+		if ( ! empty( $number ) && $number !== (int) $last_payment[0]->ID ) {
 			$number = edd_remove_payment_prefix_postfix( $number );
-
 		} else {
-
 			$number = $start;
 			$increment_number = false;
 		}
-
 	}
 
 	$increment_number = apply_filters( 'edd_increment_payment_number', $increment_number, $number );
