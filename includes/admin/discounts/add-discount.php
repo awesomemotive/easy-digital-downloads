@@ -141,6 +141,21 @@ defined( 'ABSPATH' ) || exit;
 					</th>
 					<td>
 						<input name="start_date" id="edd-start" type="text" value="" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+						<select name="start_date_hour">
+							<?php
+							for ( $i = 0; $i <= 23; $i++ ) {
+								echo '<option value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
+							}
+							?>
+						</select>
+
+						<select name="start_date_minute">
+							<?php
+							for ( $i = 0; $i <= 59; $i++ ) {
+								echo '<option value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
+							}
+							?>
+						</select>
 						<p class="description"><?php _e( 'Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
@@ -153,6 +168,23 @@ defined( 'ABSPATH' ) || exit;
 					</th>
 					<td>
 						<input name="end_date" id="edd-expiration" type="text" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+
+						<select name="end_date_hour">
+							<?php
+							for ( $i = 0; $i <= 23; $i++ ) {
+								echo '<option ' . selected( $i, 23 ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
+							}
+							?>
+						</select>
+
+						<select name="end_date_minute">
+							<?php
+							for ( $i = 0; $i <= 59; $i++ ) {
+								echo '<option ' . selected( $i, 59 ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
+							}
+							?>
+						</select>
+
 						<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
