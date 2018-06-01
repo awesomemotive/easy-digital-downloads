@@ -641,17 +641,23 @@ function edd_get_payment_status( $order, $return_label = false ) {
 		$order = edd_get_order( $order->ID );
 	}
 
-	if ( ! is_object( $order ) || empty( $order->get_status() ) ) {
+	if ( ! is_object( $order ) ) {
+		return false;
+	}
+	
+	$status = $order->get_status();
+
+	if ( empty( $status ) ) {
 		return false;
 	}
 
 	if ( true === $return_label ) {
-		return edd_get_payment_status_label( $order->get_status() );
+		return edd_get_payment_status_label( $status );
 	} else {
 		$statuses = edd_get_payment_statuses();
 
 		// Account that our 'publish' status is labeled 'Complete'
-		$post_status = 'publish' == $order->get_status() ? 'Complete' : $order->get_status();
+		$post_status = 'publish' == $status ? 'Complete' : $status;
 
 		// Make sure we're matching cases, since they matter
 		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
