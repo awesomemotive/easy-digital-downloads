@@ -418,6 +418,7 @@ class Column {
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
+			'validate'   => array( $this, 'sanitize_validation'   ),
 			'caps'       => array( $this, 'sanitize_capabilities' ),
 			'aliases'    => array( $this, 'sanitize_aliases'      )
 		);
@@ -565,7 +566,7 @@ class Column {
 	public function validate_datetime( $value = '0000-00-00 00:00:00' ) {
 
 		// Fallback for empty values
-		if ( empty( $value ) ) {
+		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
 			$value = ! empty( $this->default )
 				? $this->default
 				: '0000-00-00 00:00:00';
