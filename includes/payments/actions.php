@@ -153,6 +153,9 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 			'date_completed' => current_time( 'mysql' ),
 		) );
 
+		// Required for backwards compatibility.
+		$payment = edd_get_payment( $order_id );
+
 		/**
 		 * Runs **when** a purchase is marked as "complete".
 		 *

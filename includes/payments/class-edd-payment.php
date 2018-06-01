@@ -350,15 +350,14 @@ class EDD_Payment {
 	 * @return mixed        The value
 	 */
 	public function __get( $key ) {
-
 		if ( method_exists( $this, "get_{$key}" ) ) {
-
 			$value = call_user_func( array( $this, "get_{$key}" ) );
-
+		} else if ( 'id' === $key ) {
+			$value = $this->ID;
+		} else if ( 'post_type' === $key ) {
+			$value = 'edd_payment';
 		} else {
-
 			$value = $this->$key;
-
 		}
 
 		return $value;
@@ -433,9 +432,6 @@ class EDD_Payment {
 		// Protected ID that can never be changed
 		$this->_ID             = absint( $payment_id );
 
-		// We have a payment, get the generic payment_meta item to reduce calls to it
-		$this->payment_meta    = $this->get_meta();
-
 		// Status and Dates
 		$this->date            = $this->order->get_date_created();
 		$this->completed_date  = $this->setup_completed_date();
@@ -481,6 +477,10 @@ class EDD_Payment {
 
 		// Additional Attributes
 		$this->has_unlimited_downloads = $this->setup_has_unlimited();
+
+		// We have a payment, get the generic payment_meta item to reduce calls to it
+		// This only exists for backwards compatibility purposes.
+		$this->payment_meta    = $this->get_meta();
 
 		// Allow extensions to add items to this object via hook
 		do_action( 'edd_setup_payment', $this, $payment_id );
@@ -1090,8 +1090,11 @@ class EDD_Payment {
 					'payment_key' => $this->key,
 					'currency'    => $merged_meta['currency'],
 					'email'       => $merged_meta['email'],
-					'user_id'     => $merged_meta['user_info']['id']
 				);
+
+				if ( isset( $merged_meta['user_info']['id'] ) ) {
+					$order_info['user_id'] = $merged_meta['user_info']['id'];
+				}
 
 				if ( ! empty( $merged_meta['date'] ) ) {
 					$order_info['date'] = $merged_meta['date'];
@@ -1126,7 +1129,7 @@ class EDD_Payment {
 				$this->update_meta( 'user_info', array(
 					'first_name' => $merged_meta['user_info']['first_name'],
 					'last_name'  => $merged_meta['user_info']['last_name'],
-					'address'    => $merged_meta['user_info']['address'],
+					'address'    => isset( $merged_meta['user_info']['address'] ) ? $merged_meta['user_info']['address'] : array(),
 				) );
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
@@ -1812,7 +1815,9 @@ class EDD_Payment {
 		if ( $do_change ) {
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
-
+			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
+				'post_status' => $status
+			) );
 
 			/**
 			 * Map the array keys to ones accepted by the new methods.
@@ -1875,8 +1880,23 @@ class EDD_Payment {
 	 * @return mixed             The value from the post meta
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
-
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
+
+		// Backwards compatibility.
+		switch ( $meta_key ) {
+			case '_edd_payment_purchase_key':
+				$meta = $this->order->get_payment_key();
+				break;
+
+			case '_edd_payment_transaction_id':
+				$meta = $this->order->get_transaction_id();
+				break;
+
+			case '_edd_payment_user_email':
+				$meta = $this->order->get_email();
+				break;
+		}
+
 		if ( $meta_key === '_edd_payment_meta' ) {
 
 			if ( empty( $meta ) ) {
@@ -1908,6 +1928,16 @@ class EDD_Payment {
 				$meta['date'] = get_post_field( 'post_date', $this->ID );
 			}
 
+			// We need to back fill the returned meta for backwards compatibility purposes.
+			$meta['key']          = $this->key;
+			$meta['email']        = $this->email;
+			$meta['date']         = $this->date;
+			$meta['user_info']    = $this->user_info;
+			$meta['downloads']    = $this->downloads;
+			$meta['cart_details'] = $this->cart_details;
+			$meta['fees']         = $this->fees;
+			$meta['currency']     = $this->currency;
+			$meta['tax']          = $this->tax;
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
@@ -1942,6 +1972,14 @@ class EDD_Payment {
 		$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 
 		switch ( $meta_key ) {
+			case '_edd_payment_meta':
+				// TODO: Add in rest of _edd_payment_meta keys.
+				if ( isset( $meta_value['tax'] ) ) {
+					return edd_update_order( $this->ID, array(
+						'tax' => $meta_value['tax']
+					) );
+				}
+				break;
 			case '_edd_completed_date':
 				return edd_update_order( $this->ID, array(
 					'date_completed' => $meta_value
@@ -2550,7 +2588,55 @@ class EDD_Payment {
 	 * @return array               The cart details
 	 */
 	private function setup_cart_details() {
-		$cart_details = isset( $this->payment_meta['cart_details'] ) ? maybe_unserialize( $this->payment_meta['cart_details'] ) : array();
+		$order_items = $this->order->get_items();
+
+		$cart_details = array();
+
+		foreach ( $order_items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+
+			$item_fees = array();
+
+			foreach ( $item->get_fees() as $key => $item_fee ) {
+				/** @var EDD\Orders\Order_Adjustment $item_fee */
+
+				$fee_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'fee_id', true );
+				$download_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'download_id', true );
+				$price_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+				$no_tax = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+
+				$item_fees[ $fee_id ] = array(
+					'amount'      => $item_fee->get_amount(),
+					'label'       => $item_fee->get_description(),
+					'no_tax'      => $no_tax ? $no_tax : false,
+					'type'        => 'fee',
+					'download_id' => $download_id,
+					'price_id'    => $price_id ? $price_id : null,
+				);
+			}
+
+			$cart_details[ $item->get_cart_index() ] = array(
+				'name'        => $item->get_product_name(),
+				'id'          => $item->get_product_id(),
+				'item_number' => array(
+					'id'         => $item->get_product_id(),
+					'quantity'   => $item->get_quantity(),
+					'options'    => array(
+						'quantity' => $item->get_quantity(),
+						'price_id' => $item->get_price_id(),
+					),
+				),
+				'item_price' => $item->get_amount(),
+				'quantity'   => $item->get_quantity(),
+				'discount'   => $item->get_discount(),
+				'subtotal'   => $item->get_subtotal(),
+				'tax'        => $item->get_tax(),
+				'fees'       => $item_fees,
+				'price'      => $item->get_amount(),
+			);
+		}
+
+
 		return $cart_details;
 	}
 
@@ -2561,7 +2647,23 @@ class EDD_Payment {
 	 * @return array               Downloads associated with this payment
 	 */
 	private function setup_downloads() {
-		$downloads = isset( $this->payment_meta['downloads'] ) ? maybe_unserialize( $this->payment_meta['downloads'] ) : array();
+		$order_items = $this->order->get_items();
+
+		$downloads = array();
+
+		foreach ( $order_items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+
+			$downloads[ $item->get_cart_index() ] = array(
+				'id'       => $item->get_product_id(),
+				'quantity' => $item->get_quantity(),
+				'options'  => array(
+					'quantity' => $item->get_quantity(),
+					'price_id' => $item->get_price_id()
+				)
+			);
+		}
+
 		return $downloads;
 	}
 
@@ -2572,7 +2674,7 @@ class EDD_Payment {
 	 * @return bool If this payment has unlimited downloads
 	 */
 	private function setup_has_unlimited() {
-		$unlimited = (bool) $this->get_meta( '_edd_payment_unlimited_downloads', true );
+		$unlimited = (bool) $this->order->has_unlimited_downloads();
 		return $unlimited;
 	}
 
@@ -2603,7 +2705,7 @@ class EDD_Payment {
 	 * @return string Date payment was completed
 	 */
 	private function get_completed_date() {
-		if ( '0000-00-00 00:00:00' === $this->date_completed ) {
+		if ( '0000-00-00 00:00:00' === $this->completed_date ) {
 			$date = false;
 		} else {
 			$date = $this->completed_date;
