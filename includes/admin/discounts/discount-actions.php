@@ -89,10 +89,10 @@ function edd_admin_add_discount( $data = array() ) {
 
 	$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
 		? $data['end_date_hour']
-		: '00';
+		: '23';
 	$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
 		? $data['end_date_minute']
-		: '00';
+		: '59';
 
 	$to_add['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_timestamp ) );
 	$to_add['end_date']   = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59",     strtotime( sanitize_text_field( $data['end_date']   ), $current_timestamp ) );
