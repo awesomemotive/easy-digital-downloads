@@ -354,6 +354,8 @@ class EDD_Payment {
 			$value = call_user_func( array( $this, "get_{$key}" ) );
 		} else if ( 'id' === $key ) {
 			$value = $this->ID;
+		} else if ( 'post_type' === $key ) {
+			$value = 'edd_payment';
 		} else {
 			$value = $this->$key;
 		}
@@ -1813,7 +1815,9 @@ class EDD_Payment {
 		if ( $do_change ) {
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
-
+			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
+				'post_status' => $status
+			) );
 
 			/**
 			 * Map the array keys to ones accepted by the new methods.
@@ -1933,6 +1937,7 @@ class EDD_Payment {
 			$meta['cart_details'] = $this->cart_details;
 			$meta['fees']         = $this->fees;
 			$meta['currency']     = $this->currency;
+			$meta['tax']          = $this->tax;
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
@@ -1967,6 +1972,14 @@ class EDD_Payment {
 		$meta_value = apply_filters( 'edd_update_payment_meta_' . $meta_key, $meta_value, $this->ID );
 
 		switch ( $meta_key ) {
+			case '_edd_payment_meta':
+				// TODO: Add in rest of _edd_payment_meta keys.
+				if ( isset( $meta_value['tax'] ) ) {
+					return edd_update_order( $this->ID, array(
+						'tax' => $meta_value['tax']
+					) );
+				}
+				break;
 			case '_edd_completed_date':
 				return edd_update_order( $this->ID, array(
 					'date_completed' => $meta_value
