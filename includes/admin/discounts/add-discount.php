@@ -172,11 +172,7 @@ defined( 'ABSPATH' ) || exit;
 						<select name="end_date_hour">
 							<?php
 							for ( $i = 0; $i <= 23; $i++ ) {
-								$selected = $i === 23
-									? ' selected="selected"'
-									: '';
-
-								echo '<option ' . $selected . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
+								echo '<option ' . selected( $i, 23 ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
 							}
 							?>
 						</select>
@@ -184,11 +180,7 @@ defined( 'ABSPATH' ) || exit;
 						<select name="end_date_minute">
 							<?php
 							for ( $i = 0; $i <= 59; $i++ ) {
-								$selected = $i === 59
-									? ' selected="selected"'
-									: '';
-
-								echo '<option ' . $selected . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
+								echo '<option ' . selected( $i, 59 ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
 							}
 							?>
 						</select>
