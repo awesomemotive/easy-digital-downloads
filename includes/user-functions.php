@@ -108,9 +108,9 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  *
  * @return WP_Post[]|false List of unique products purchased by user
  */
-function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
 
-	// Fall back to user ID
+    // Fall back to user ID
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
