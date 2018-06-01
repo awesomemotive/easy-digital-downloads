@@ -631,8 +631,8 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
-function edd_get_payment_status( $payment, $return_label = false ) {
-	if ( is_numeric( $payment ) ) {
+function edd_get_payment_status( $order, $return_label = false ) {
+	if ( is_numeric( $order ) ) {
 		$order = edd_get_order( $order );
 
 		if ( ! $order ) {
@@ -640,21 +640,22 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 		}
 	}
 
-	if ( $payment instanceof EDD_Payment ) {
-
+	if ( $order instanceof EDD_Payment ) {
+		/** @var EDD_Payment $order */
+		$order = edd_get_order( $order->id );
 	}
 
-	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
+	if ( ! is_object( $order ) || empty( $order->get_status() ) ) {
 		return false;
 	}
 
 	if ( true === $return_label ) {
-		return edd_get_payment_status_label( $payment->post_status );
+		return edd_get_payment_status_label( $order->get_status() );
 	} else {
 		$statuses = edd_get_payment_statuses();
 
 		// Account that our 'publish' status is labeled 'Complete'
-		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+		$post_status = 'publish' == $order->get_status() ? 'Complete' : $order->get_status();
 
 		// Make sure we're matching cases, since they matter
 		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );

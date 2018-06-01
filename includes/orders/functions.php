@@ -286,6 +286,10 @@ function edd_build_order( $order_data = array() ) {
 
 	/** Insert order meta *****************************************************/
 
+	$order_data['user_info']['address'] = isset( $order_data['user_info']['address'] )
+		? $order_data['user_info']['address']
+		: array();
+	
 	// Add user info to order meta.
 	edd_add_order_meta( $order_id, 'user_info', array(
 		'first_name' => $order_data['user_info']['first_name'],
@@ -329,6 +333,14 @@ function edd_build_order( $order_data = array() ) {
 				: 0;
 
 			// Build a base array of information for each order item.
+			$item['discount'] = isset( $item['discount'] )
+				? $item['discount']
+				: 0.00;
+
+			$item['subtotal'] = isset( $item['subtotal'] )
+				? $item['subtotal']
+				: (float) $item['quantity'] * $item['item_price'];
+			
 			$order_item_args = array(
 				'order_id'     => $order_id,
 				'product_id'   => $item['id'],
