@@ -118,7 +118,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_update_payment_status_with_invalid_id() {
-		$updated = edd_update_payment_status( 1212121212121212121212112, 'publish' );
+		$updated = edd_update_payment_status( 12121212, 'publish' );
 		$this->assertFalse( $updated );
 	}
 
