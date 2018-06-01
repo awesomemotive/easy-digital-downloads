@@ -98,6 +98,25 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 }
 
 /**
+ * Get a field from a customer object.
+ *
+ * @since 3.0
+ *
+ * @param int    $customer_id
+ * @param string $field
+ *
+ * @return mixed Null if customer does not exist. Value of Customer if exists
+ */
+function edd_get_customer_field( $customer_id = 0, $field = '' ) {
+	$customer = edd_get_customer( $customer_id );
+
+	// Check that field exists
+	return isset( $customer->{$field} )
+		? $customer->{$field}
+		: null;
+}
+
+/**
  * Query for customers
  *
  * @since 3.0
