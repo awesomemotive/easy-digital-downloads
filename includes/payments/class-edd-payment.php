@@ -350,15 +350,12 @@ class EDD_Payment {
 	 * @return mixed        The value
 	 */
 	public function __get( $key ) {
-
 		if ( method_exists( $this, "get_{$key}" ) ) {
-
 			$value = call_user_func( array( $this, "get_{$key}" ) );
-
+		} else if ( 'id' === $key ) {
+			$value = $this->ID;
 		} else {
-
 			$value = $this->$key;
-
 		}
 
 		return $value;
@@ -1880,6 +1877,21 @@ class EDD_Payment {
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
+
+		// Backwards compatibility.
+		switch ( $meta_key ) {
+			case '_edd_payment_purchase_key':
+				$meta = $this->order->get_payment_key();
+				break;
+
+			case '_edd_payment_transaction_id':
+				$meta = $this->order->get_transaction_id();
+				break;
+
+			case '_edd_payment_user_email':
+				$meta = $this->order->get_email();
+				break;
+		}
 
 		if ( $meta_key === '_edd_payment_meta' ) {
 
