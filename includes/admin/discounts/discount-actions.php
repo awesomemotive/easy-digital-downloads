@@ -190,8 +190,8 @@ function edd_admin_edit_discount( $data = array() ) {
 	}
 
 	// Known & accepted core discount meta
-	$to_update['product_reqs']      = isset( $data['product_reqs']      ) ? $data['product_reqs']      : '';
-	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? $data['excluded_products'] : '';
+	$to_update['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
+	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
 
 	// Strip out known non-columns
 	$to_strip = array(
