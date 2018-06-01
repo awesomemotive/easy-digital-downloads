@@ -41,6 +41,16 @@ $percent_display      = ( 'percent' === $discount->get_type() ) ? '' : ' style="
 $no_notes_display     =   empty( $notes                )        ? '' : ' style="display:none;"';
 $condition_display    = ! empty( $product_requirements )        ? '' : ' style="display:none;"';
 
+// Dates & times
+$start_date           = empty( $discount->start_date ) ? ''   : date( 'Y-m-d', strtotime( $discount->start_date ) );
+$start_hour           = empty( $discount->start_date ) ? '00' : date( 'H',     strtotime( $discount->start_date ) );
+$start_minute         = empty( $discount->start_date ) ? '00' : date( 'i',     strtotime( $discount->start_date ) );
+$end_date             = empty( $discount->end_date   ) ? ''   : date( 'Y-m-d', strtotime( $discount->end_date   ) );
+$end_hour             = empty( $discount->end_date   ) ? '23' : date( 'H',     strtotime( $discount->end_date   ) );
+$end_minute           = empty( $discount->end_date   ) ? '59' : date( 'i',     strtotime( $discount->end_date   ) );
+$hours                = edd_get_hour_values();
+$minutes              = edd_get_minute_values();
+
 // Output
 ?><div class="wrap">
 	<h1><?php _e( 'Edit Discount', 'easy-digital-downloads' ); ?></h1>
@@ -168,21 +178,26 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input name="start_date" id="edd-start" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->start_date ? '' : esc_attr( date( 'Y-m-d', strtotime( $discount->start_date ) ) ); ?>" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
-                        <select name="start_date_hour">
-		                    <?php
-		                    for ( $i = 0; $i <= 23; $i++ ) {
-			                    echo '<option ' . selected( $i, esc_attr( date( 'H', strtotime( $discount->start_date ) ) ) ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
-		                    }
-		                    ?>
-                        </select>
-                        <select name="start_date_minute">
-		                    <?php
-		                    for ( $i = 0; $i <= 59; $i++ ) {
-			                    echo '<option ' . selected( $i, esc_attr( date( 'i', strtotime( $discount->start_date ) ) ) ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
-		                    }
-		                    ?>
-                        </select>
+                        <input name="start_date" id="edd-start" type="text" value="<?php echo esc_attr( $start_date ); ?>" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+						<?php
+						echo EDD()->html->select( array(
+							'name'             => 'start_date_hour',
+							'options'          => $hours,
+							'selected'         => $start_hour,
+							'show_option_none' => false,
+							'show_option_all'  => false
+						) );
+						?>
+						&nbsp;
+						<?php
+						echo EDD()->html->select( array(
+							'name'             => 'start_date_minute',
+							'options'          => $minutes,
+							'selected'         => $start_minute,
+							'show_option_none' => false,
+							'show_option_all'  => false
+						) );
+						?>
                         <p class="description"><?php _e( 'Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
@@ -194,21 +209,26 @@ $condition_display    = ! empty( $product_requirements )        ? '' : ' style="
                         <label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input name="end_date" id="edd-expiration" type="text" value="<?php echo '0000-00-00 00:00:00' == $discount->end_date ? '' : esc_attr( date( 'Y-m-d', strtotime( $discount->end_date ) ) ); ?>"  class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
-                        <select name="end_date_hour">
-		                    <?php
-		                    for ( $i = 0; $i <= 23; $i++ ) {
-			                    echo '<option ' . selected( $i, esc_attr( date( 'H', strtotime( $discount->end_date ) ) ) ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
-		                    }
-		                    ?>
-                        </select>
-                        <select name="end_date_minute">
-		                    <?php
-		                    for ( $i = 0; $i <= 59; $i++ ) {
-			                    echo '<option ' . selected( $i, esc_attr( date( 'i', strtotime( $discount->end_date ) ) ) ) . ' value="' . sprintf( '%02d', $i ) . '">' . sprintf( '%02d', $i ) . '</option>';
-		                    }
-		                    ?>
-                        </select>
+                        <input name="end_date" id="edd-expiration" type="text" value="<?php esc_attr( $end_date ); ?>"  class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+						<?php
+						echo EDD()->html->select( array(
+							'name'             => 'end_date_hour',
+							'options'          => $hours,
+							'selected'         => $end_hour,
+							'show_option_none' => false,
+							'show_option_all'  => false
+						) );
+						?>
+						&nbsp;
+						<?php
+						echo EDD()->html->select( array(
+							'name'             => 'end_date_minute',
+							'options'          => $minutes,
+							'selected'         => $end_minute,
+							'show_option_none' => false,
+							'show_option_all'  => false
+						) );
+						?>
                         <p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>

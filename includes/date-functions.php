@@ -107,3 +107,112 @@ function edd_get_date_picker_format( $context = 'display' ) {
 	 */
 	return apply_filters( 'edd_get_date_picker_format', $retval, $context );
 }
+
+/**
+ * Return an array of values used to populate an hour dropdown
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_hour_values() {
+	return (array) apply_filters( 'edd_get_hour_values', array(
+		'00',
+		'01',
+		'02',
+		'03',
+		'04',
+		'05',
+		'06',
+		'07',
+		'08',
+		'09',
+		'10',
+		'11',
+		'12',
+		'13',
+		'14',
+		'15',
+		'16',
+		'17',
+		'18',
+		'19',
+		'20',
+		'21',
+		'22',
+		'23',
+		'24'
+	) );
+}
+
+/**
+ * Return an array of values used to populate a minute dropdown
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_minute_values() {
+	return (array) apply_filters( 'edd_get_minute_values', array(
+		'00',
+		'01',
+		'02',
+		'03',
+		'04',
+		'05',
+		'06',
+		'07',
+		'08',
+		'09',
+		'10',
+		'11',
+		'12',
+		'13',
+		'14',
+		'15',
+		'16',
+		'17',
+		'18',
+		'19',
+		'20',
+		'21',
+		'22',
+		'23',
+		'24',
+		'25',
+		'26',
+		'27',
+		'28',
+		'29',
+		'30',
+		'31',
+		'32',
+		'33',
+		'34',
+		'35',
+		'36',
+		'37',
+		'38',
+		'39',
+		'40',
+		'41',
+		'42',
+		'43',
+		'44',
+		'45',
+		'46',
+		'47',
+		'48',
+		'49',
+		'50',
+		'51',
+		'52',
+		'53',
+		'54',
+		'55',
+		'56',
+		'57',
+		'58',
+		'59'
+	) );
+}
