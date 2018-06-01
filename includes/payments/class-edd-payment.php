@@ -2437,13 +2437,10 @@ class EDD_Payment {
 	 * @return array               The user info associated with the payment
 	 */
 	private function setup_user_info() {
-		$defaults = array(
-			'first_name' => $this->first_name,
-			'last_name'  => $this->last_name,
-			'discount'   => $this->discounts,
-		);
 
-		$user_info    = isset( $this->payment_meta['user_info'] ) ? $this->payment_meta['user_info'] : array();
+		$user_info = isset( $this->payment_meta['user_info'] )
+			? $this->payment_meta['user_info']
+			: array();
 
 		if ( is_serialized( $user_info ) ) {
 			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
@@ -2453,7 +2450,11 @@ class EDD_Payment {
 		}
 
 		// As per Github issue #4248, we need to run maybe_unserialize here still.
-		$user_info    = wp_parse_args( maybe_unserialize( $user_info ), $defaults );
+		$user_info = wp_parse_args( maybe_unserialize( $user_info ), array(
+			'first_name' => $this->first_name,
+			'last_name'  => $this->last_name,
+			'discount'   => $this->discounts
+		) );
 
 		// Ensure email index is in the old user info array
 		if( empty( $user_info['email'] ) ) {

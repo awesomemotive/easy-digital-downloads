@@ -298,13 +298,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_payments_table_columns', array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
-			'ID'       => __( 'ID', 'easy-digital-downloads' ),
-			'email'    => __( 'Email', 'easy-digital-downloads' ),
-			'details'  => __( 'Details', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
-			'date'     => __( 'Date', 'easy-digital-downloads' ),
+			'ID'       => __( 'ID',       'easy-digital-downloads' ),
+			'email'    => __( 'Email',    'easy-digital-downloads' ),
+			'amount'   => __( 'Amount',   'easy-digital-downloads' ),
+			'date'     => __( 'Date',     'easy-digital-downloads' ),
 			'customer' => __( 'Customer', 'easy-digital-downloads' ),
-			'status'   => __( 'Status', 'easy-digital-downloads' ),
+			'status'   => __( 'Status',   'easy-digital-downloads' ),
 		) );
 	}
 
@@ -317,9 +316,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
-			'ID'     => array( 'ID', true ),
+			'ID'     => array( 'ID',     true  ),
 			'amount' => array( 'amount', false ),
-			'date'   => array( 'date', false ),
+			'date'   => array( 'date',   false )
 		) );
 	}
 
@@ -357,9 +356,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			case 'status':
 				$value = edd_get_payment_status_label( $order->get_status() );
 				break;
-			case 'details':
-				$value = '<a href="' . add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
-				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name ) ? call_user_func( 'get_' . $column_name, $order ) : '';
 				break;
@@ -378,21 +374,34 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Data shown in the Email column
 	 */
 	public function column_email( $order ) {
+
+		// Always include the "View" link
 		$row_actions = array();
 
-		$email = $order->get_email();
-
 		// Add search term string back to base URL
-		$search_terms = ( isset( $_GET['s'] ) ? trim( $_GET['s'] ) : '' );
+		$search_terms = isset( $_GET['s'] )
+			? trim( $_GET['s'] )
+			: '';
+
 		if ( ! empty( $search_terms ) ) {
 			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
 		}
 
+		$email = $order->get_email();
+
+		// Resend
 		if ( 'publish' === $order->get_status() && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $order->get_id() ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
+				'edd-action'  => 'email_links',
+				'purchase_id' => $order->get_id()
+			), $this->base_url ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $order->get_id() ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		// Delete
+		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array(
+			'edd-action'  => 'delete_payment',
+			'purchase_id' => $order->get_id()
+		), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// This exists for backwards compatibility purposes.
 		$payment = edd_get_payment( $order->get_id() );
@@ -402,8 +411,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$email = __( '(unknown)', 'easy-digital-downloads' );
 		}
 
+		// Concatenate the results
 		$value = $email . $this->row_actions( $row_actions );
 
+		// Filter & return
 		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), 'email' );
 	}
 
@@ -434,7 +445,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_ID( $order ) {
-		return $order->get_number();
+		$view = add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) );
+		$link = '<a href="' . esc_url( $view ) . '">' . $order->get_number() . '</a>';
+
+		// Concatenate the results
+		$actions = $this->row_actions( array(
+			'view' => '<a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
+		) );
+
+		// Concatenate & return the results
+		return $link . $actions;
 	}
 
 	/**
@@ -448,17 +468,32 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_customer( $order ) {
 		$customer_id = $order->get_customer_id();
+		$customer    = edd_get_customer( $customer_id );
 
-		if ( ! empty( $customer_id ) ) {
-			$customer = new EDD_Customer( $customer_id );
-			$name = ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
-			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">#' . $customer->id . ' ' . $name . '</a>';
+		// Actions if exists
+		if ( ! empty( $customer ) ) {
+
+			// Use customer name, if exists
+			$name = ! empty( $customer->name )
+				? $customer->name
+				: '&mdash;';
+
+			// Link to View Customer
+			$url = add_query_arg( array(
+				'post_type' => 'download',
+				'page'      => 'edd-customers',
+				'view'      => 'overview',
+				'id'        => $customer_id
+			), admin_url( 'edit.php' ) );
+
+			$actions = $this->row_actions( array(
+				'view' => '<a href="' . esc_url( $url ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
+			) );
 		} else {
-			$email = $order->get_email();
-			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-payment-history&s=$email" ) ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
+			$name = __( 'Missing or Removed', 'easy-digital-downloads' );
 		}
 
-		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), 'user' );
+		return $name . $actions;
 	}
 
 	/**

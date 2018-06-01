@@ -385,6 +385,23 @@ textarea[name="edd-note"] {
 	width: 11%;
 }
 
+.wp-list-table.downloads .column-primary {
+	width: 5%;
+}
+
+.wp-list-table.downloads .column-email {
+	width: 30%;
+}
+
+.wp-list-table.downloads .column-customer {
+	width: 15%;
+}
+.wp-list-table.downloads .column-amount,
+.wp-list-table.downloads .column-date,
+.wp-list-table.downloads .column-status {
+	width: 10%;
+}
+
 /* Filter Bar Styles
 -------------------------------------------------------------- */
 
@@ -453,18 +470,7 @@ tr.status-refunded td {
 	background: #cecece;
 	border-top-color: #ccc;
 }
-.wp-list-table.downloads th#ID {
-	width: 80px;
-}
-.wp-list-table.downloads th#details {
-	width: 130px;
-}
-.wp-list-table.downloads th#date {
-	width: 140px;
-}
-.wp-list-table.downloads th#user {
-	width: 130px;
-}
+
 marquee {
 	padding: 0;
 	margin: 0;
