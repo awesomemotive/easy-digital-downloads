@@ -1206,24 +1206,40 @@ function edd_display_cart_discount( $formatted = false, $echo = false ) {
  * @return void
  */
 function edd_remove_cart_discount() {
-	if ( ! isset( $_GET['discount_id'] ) || ! isset( $_GET['discount_code'] ) ) {
+
+	// Get ID
+	$discount_id = isset( $_GET['discount_id'] )
+		? absint( $_GET['discount_id'] )
+		: 0;
+
+	// Get code
+	$discount_code = isset( $_GET['discount_code'] )
+		? urldecode( $_GET['discount_code'] )
+		: '';
+
+	// Bail if either ID or code are empty
+	if ( empty( $discount_id ) || empty( $discount_code ) ) {
 		return;
 	}
 
-	do_action( 'edd_pre_remove_cart_discount', absint( $_GET['discount_id'] ) );
+	// Pre-3.0 pre action
+	do_action( 'edd_pre_remove_cart_discount', $discount_id );
 
-	edd_unset_cart_discount( urldecode( $_GET['discount_code'] ) );
+	edd_unset_cart_discount( $discount_code );
 
-	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
+	// Pre-3.0 post action
+	do_action( 'edd_post_remove_cart_discount', $discount_id );
 
-	edd_redirect( edd_get_checkout_uri() ); edd_die();
+	// Redirect
+	edd_redirect( edd_get_checkout_uri() );
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
 
 /**
  * Checks whether discounts are still valid when removing items from the cart
  *
- * If a discount requires a certain product, and that product is no longer in the cart, the discount is removed
+ * If a discount requires a certain product, and that product is no longer in
+ * the cart, the discount is removed.
  *
  * @since 1.5.2
  *
@@ -1233,7 +1249,7 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 
 	$discounts = edd_get_cart_discounts();
 
-	if ( ! $discounts ) {
+	if ( empty( $discounts ) ) {
 		return;
 	}
 
@@ -1241,7 +1257,6 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 		if ( ! edd_is_discount_valid( $discount ) ) {
 			edd_unset_cart_discount( $discount );
 		}
-
 	}
 }
 add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
@@ -1286,7 +1301,7 @@ function edd_apply_preset_discount() {
 
 	$code = sanitize_text_field( EDD()->session->get( 'preset_discount' ) );
 
-	if ( ! $code ) {
+	if ( empty( $code ) ) {
 		return;
 	}
 
@@ -1331,7 +1346,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		'_edd_discount_max_uses'
 	) );
 
-	if ( ! in_array( $meta_key, $meta_keys ) ) {
+	if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 		return $value;
 	}
 
@@ -1497,9 +1512,9 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 		case '_edd_discount_product_condition':
 		case '_edd_discount_min_price':
 		case '_edd_discount_max_uses':
-			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$key            = str_replace( '_edd_discount_', '', $meta_key );
 			$discount->$key = $meta_value;
-			$check = $discount->save();
+			$check          = $discount->save();
 
 			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 			if ( $show_notice ) {
@@ -1512,9 +1527,9 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 
 			break;
 		case '_edd_discount_is_single_use':
-			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$key                         = str_replace( '_edd_discount_', '', $meta_key );
 			$discount->once_per_customer = $meta_value;
-			$check = $discount->save();
+			$check                       = $discount->save();
 
 			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 			if ( $show_notice ) {
@@ -1527,9 +1542,9 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 
 			break;
 		case '_edd_discount_is_not_global':
-			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$key             = str_replace( '_edd_discount_', '', $meta_key );
 			$discount->scope = $meta_value;
-			$check = $discount->save();
+			$check           = $discount->save();
 
 			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 			if ( $show_notice ) {
@@ -1720,7 +1735,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 						/**
 						 * Check that the key exists as a column in the table.
 						 * Note: there is no backwards compatibility support for product requirements and excluded
-						 * products as these would be serialised under the old schema.
+						 * products as these would be serialized under the old schema.
 						 */
 				 		if ( in_array( $query['key'], array_keys( EDD()->discounts->get_columns() ) ) && array_key_exists( 'value', $query ) ) {
 							$meta_compare = $query['compare'];
