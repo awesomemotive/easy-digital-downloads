@@ -2562,7 +2562,55 @@ class EDD_Payment {
 	 * @return array               The cart details
 	 */
 	private function setup_cart_details() {
-		$cart_details = isset( $this->payment_meta['cart_details'] ) ? maybe_unserialize( $this->payment_meta['cart_details'] ) : array();
+		$order_items = $this->order->get_items();
+
+		$cart_details = array();
+
+		foreach ( $order_items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+
+			$item_fees = array();
+
+			foreach ( $item->get_fees() as $key => $item_fee ) {
+				/** @var EDD\Orders\Order_Adjustment $item_fee */
+
+				$fee_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'fee_id', true );
+				$download_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'download_id', true );
+				$price_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+				$no_tax = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+
+				$item_fees[ $fee_id ] = array(
+					'amount'      => $item_fee->get_amount(),
+					'label'       => $item_fee->get_description(),
+					'no_tax'      => $no_tax ? $no_tax : false,
+					'type'        => 'fee',
+					'download_id' => $download_id,
+					'price_id'    => $price_id ? $price_id : null,
+				);
+			}
+
+			$cart_details[ $item->get_cart_index() ] = array(
+				'name'        => $item->get_product_name(),
+				'id'          => $item->get_product_id(),
+				'item_number' => array(
+					'id'         => $item->get_product_id(),
+					'quantity'   => $item->get_quantity(),
+					'options'    => array(
+						'quantity' => $item->get_quantity(),
+						'price_id' => $item->get_price_id(),
+					),
+				),
+				'item_price' => $item->get_amount(),
+				'quantity'   => $item->get_quantity(),
+				'discount'   => $item->get_discount(),
+				'subtotal'   => $item->get_subtotal(),
+				'tax'        => $item->get_tax(),
+				'fees'       => $item_fees,
+				'price'      => $item->get_amount(),
+			);
+		}
+
+
 		return $cart_details;
 	}
 
