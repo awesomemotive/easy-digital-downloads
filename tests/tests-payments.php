@@ -206,7 +206,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_get_payment_number() {
-		$this->markTestSkipped( 'EDD_Payments_Query does not handle back-compat for passing in `fields`.' );
+		$this->markTestSkipped( 'EDD_Payments_Query does not handle back-compat when passing in `fields` as an argument.' );
 
 		// Reset all items and start from scratch
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
