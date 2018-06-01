@@ -340,9 +340,10 @@ textarea[name="edd-note"] {
 	width: 300px;
 }
 
-#edd-add-discount .edd_datepicker,
-#edd-edit-discount .edd_datepicker {
+#edd-add-discount input[type="text"].edd_datepicker,
+#edd-edit-discount input[type="text"].edd_datepicker {
 	height: 29px;
+	width: 183px;
 	vertical-align: middle;
 }
 
@@ -1637,7 +1638,7 @@ td.edd_order_price {
 .chosen-container-multi .chosen-choices,
 .chosen-container-single .chosen-single,
 .chosen-container-active.chosen-with-drop .chosen-single {
-	border: 1px solid #e5e5e5;
+	border: 1px solid #ddd;
 	border-radius: 0;
 	background: #fff;
 	padding: 2px 5px;
