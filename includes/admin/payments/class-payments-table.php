@@ -688,19 +688,41 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'search'     => $search
 		);
 
+		// Search
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
 			$args['search_in_notes'] = true;
 			$args['search']          = trim( str_replace( 'txn:', '', $args['search'] ) );
+		}
+
+		// Date query
+		if ( ! empty( $start_date ) || ! empty( $end_date ) ) {
+
+			// start AND end
+			$args['date_query'] = array(
+				'relation'  => 'AND'
+			);
+
+			// Start (of day)
+			if ( ! empty( $start_date ) ) {
+				$args['date_query'][] = array(
+					'column' => 'date_created',
+					'after'  => date( 'Y-m-d 00:00:00', strtotime( $start_date ) )
+				);
+			}
+
+			// End (of day)
+			if ( ! empty( $end_date ) ) {
+				$args['date_query'][] = array(
+					'column' => 'date_created',
+					'before'  => date( 'Y-m-d 23:59:59', strtotime( $end_date ) )
+				);
+			}
 		}
 
 		// No empties
 		$args = array_filter( $args );
 
 		return edd_get_orders( $args );
-	}
-
-	private function parse_args() {
-		
 	}
 
 	/**
