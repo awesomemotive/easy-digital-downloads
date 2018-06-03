@@ -368,9 +368,7 @@ textarea[name="edd-note"] {
 	width: 10%;
 }
 
-.wp-list-table.discounts .column-code,
-.wp-list-table.discounts .column-start-date,
-.wp-list-table.discounts .column-end-date {
+.wp-list-table.discounts .column-code {
 	width: 15%;
 }
 
@@ -397,9 +395,29 @@ textarea[name="edd-note"] {
 	width: 15%;
 }
 .wp-list-table.downloads .column-amount,
-.wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-status {
 	width: 10%;
+}
+
+.wp-list-table.customers .column-id {
+	width: 5%;
+}
+
+.wp-list-table.customers .column-name,
+.wp-list-table.customers .column-email {
+	width: 20%;
+}
+
+.wp-list-table.customers .column-order_count,
+.wp-list-table.customers .column-spent,
+.wp-list-table.customers .column-status {
+	width: 10%;
+}
+.wp-list-table.discounts .column-start-date,
+.wp-list-table.discounts .column-end-date,
+.wp-list-table.customers .column-date_created,
+.wp-list-table.downloads .column-date {
+	width: 15%;
 }
 
 /* Filter Bar Styles

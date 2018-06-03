@@ -298,9 +298,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'id'       => __( 'ID',       'easy-digital-downloads' ),
 			'email'    => __( 'Email',    'easy-digital-downloads' ),
+			'customer' => __( 'Customer', 'easy-digital-downloads' ),
 			'amount'   => __( 'Amount',   'easy-digital-downloads' ),
 			'date'     => __( 'Date',     'easy-digital-downloads' ),
-			'customer' => __( 'Customer', 'easy-digital-downloads' ),
 			'status'   => __( 'Status',   'easy-digital-downloads' )
 		) );
 	}
