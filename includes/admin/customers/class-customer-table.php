@@ -65,15 +65,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
-			'singular' => __( 'Customer', 'easy-digital-downloads' ),
+			'singular' => __( 'Customer',  'easy-digital-downloads' ),
 			'plural'   => __( 'Customers', 'easy-digital-downloads' ),
-			'ajax'     => false,
+			'ajax'     => false
 		) );
-
 	}
 
 	/**
@@ -184,16 +180,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'name'          => __( 'Name', 'easy-digital-downloads' ),
+		return apply_filters( 'edd_report_customer_columns', array(
+			'name'          => __( 'Name',          'easy-digital-downloads' ),
 			'email'         => __( 'Primary Email', 'easy-digital-downloads' ),
-			'num_purchases' => __( 'Purchases', 'easy-digital-downloads' ),
-			'amount_spent'  => __( 'Total Spent', 'easy-digital-downloads' ),
-			'date_created'  => __( 'Date Created', 'easy-digital-downloads' ),
-		);
-
-		return apply_filters( 'edd_report_customer_columns', $columns );
-
+			'num_purchases' => __( 'Orders',        'easy-digital-downloads' ),
+			'amount_spent'  => __( 'Total Spent',   'easy-digital-downloads' ),
+			'date_created'  => __( 'Date Created',  'easy-digital-downloads' )
+		) );
 	}
 
 	/**
@@ -204,10 +197,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date_created'  => array( 'date_created', true ),
-			'name'          => array( 'name', true ),
+			'date_created'  => array( 'date_created',   true  ),
+			'name'          => array( 'name',           true  ),
 			'num_purchases' => array( 'purchase_count', false ),
-			'amount_spent'  => array( 'purchase_value', false ),
+			'amount_spent'  => array( 'purchase_value', false )
 		);
 	}
 
@@ -215,10 +208,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * Outputs the reporting views
 	 *
 	 * @since 1.5
-	 * @return void
+	 * @return string Empty. No bulk actions for Customers (yet!)
 	 */
 	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
+		$which = '';
+		return $which;
 	}
 
 	/**
@@ -228,7 +222,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return int Current page number
 	 */
 	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		return isset( $_GET['paged'] )
+			? absint( $_GET['paged'] )
+			: 1;
 	}
 
 	/**
@@ -238,7 +234,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return mixed string If search is present, false otherwise
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+		return ! empty( $_GET['s'] )
+			? urldecode( trim( $_GET['s'] ) )
+			: false;
 	}
 
 	/**
@@ -250,8 +248,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
-		global $wpdb;
-
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
