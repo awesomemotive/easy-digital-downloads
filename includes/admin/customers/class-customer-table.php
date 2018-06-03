@@ -184,7 +184,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'name'          => __( 'Name',          'easy-digital-downloads' ),
 			'email'         => __( 'Primary Email', 'easy-digital-downloads' ),
 			'num_purchases' => __( 'Orders',        'easy-digital-downloads' ),
-			'amount_spent'  => __( 'Total Spent',   'easy-digital-downloads' ),
+			'amount_spent'  => __( 'Spent',         'easy-digital-downloads' ),
 			'date_created'  => __( 'Date Created',  'easy-digital-downloads' )
 		) );
 	}
