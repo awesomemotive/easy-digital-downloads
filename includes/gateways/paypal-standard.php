@@ -1,4 +1,4 @@
-<?php
+Attempting to verify PayPal payment with PDT<?php
 /**
  * PayPal Standard Gateway
  *
@@ -339,6 +339,18 @@ function edd_listen_for_paypal_ipn() {
 		edd_debug_log( 'PayPal IPN endpoint loaded' );
 
 		do_action( 'edd_verify_paypal_ipn' );
+
+		/**
+		 * This is necessary to delay execution of PayPal PDT and to avoid a race condition causing the order status
+		 * updates to be triggered twice.
+         *
+         * @since 2.9.4
+         * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6605
+		 */
+		$token = edd_get_option( 'paypal_identity_token' );
+		if ( $token ) {
+		    sleep( 5 );
+        }
 	}
 }
 add_action( 'init', 'edd_listen_for_paypal_ipn' );
