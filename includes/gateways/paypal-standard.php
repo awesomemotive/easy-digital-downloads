@@ -1,4 +1,4 @@
-Attempting to verify PayPal payment with PDT<?php
+<?php
 /**
  * PayPal Standard Gateway
  *
