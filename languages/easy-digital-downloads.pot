@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.0-beta-1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-06-01 22:45:38+00:00\n"
+"POT-Creation-Date: 2018-06-05 08:20:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -172,12 +172,13 @@ msgid ""
 msgstr ""
 
 #: includes/admin/admin-pages.php:86
+#: includes/admin/customers/class-customer-table.php:196
 #: includes/admin/payments/payments-history.php:36
 msgid "Orders"
 msgstr ""
 
 #: includes/admin/admin-pages.php:87
-#: includes/admin/customers/class-customer-table.php:73
+#: includes/admin/customers/class-customer-table.php:70
 #: includes/admin/customers/customers.php:58
 msgid "Customers"
 msgstr ""
@@ -466,46 +467,62 @@ msgstr ""
 msgid "Failed to set primary email"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:72
+#: includes/admin/customers/class-customer-table.php:69
 #: includes/admin/customers/customer-functions.php:120
-#: includes/admin/payments/class-payments-table.php:305
+#: includes/admin/payments/class-payments-table.php:301
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:94
 #: includes/admin/reporting/class-sales-logs-list-table.php:110
 msgid "Customer"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:165
-#: includes/admin/customers/customer-functions.php:142
-#: includes/admin/reporting/class-sales-logs-list-table.php:77
-msgid "Unnamed Customer"
+#: includes/admin/customers/class-customer-table.php:159
+#: includes/admin/payments/class-payments-table.php:280
+#: includes/payments/functions.php:699
+msgid "Pending"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:169
-#: includes/admin/payments/class-payments-table.php:453
-#: includes/admin/payments/class-payments-table.php:490
+#: includes/admin/customers/class-customer-table.php:160
+#: includes/admin/discounts/class-discount-codes-table.php:144
+#: includes/admin/discounts/edit-discount.php:276
+#: includes/class-edd-discount.php:596
+msgid "Active"
+msgstr ""
+
+#: includes/admin/customers/class-customer-table.php:177
+#: includes/admin/payments/class-payments-table.php:451
+#: includes/admin/payments/class-payments-table.php:488
 msgid "View"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:170
-msgid "Download log"
+#: includes/admin/customers/class-customer-table.php:178
+#: includes/admin/payments/view-order-details.php:313
+#: includes/admin/tools.php:80
+msgid "Logs"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:171
+#: includes/admin/customers/class-customer-table.php:179
 #: includes/admin/customers/customers.php:666
 #: includes/admin/discounts/class-discount-codes-table.php:316
 #: includes/admin/discounts/class-discount-codes-table.php:397
 #: includes/admin/notes/note-functions.php:97
-#: includes/admin/payments/class-payments-table.php:404
-#: includes/admin/payments/class-payments-table.php:508
+#: includes/admin/payments/class-payments-table.php:402
+#: includes/admin/payments/class-payments-table.php:506
 #: includes/admin/settings/register-settings.php:287
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:175
-msgid "(Pending Verification)"
+#: includes/admin/customers/class-customer-table.php:193
+#: includes/admin/customers/customers.php:541
+#: includes/admin/payments/class-payments-table.php:299
+#: includes/admin/reporting/class-export-payments.php:56
+#: includes/admin/reporting/class-export.php:63
+#: includes/admin/reporting/export/class-batch-export-customers.php:41
+#: includes/admin/reporting/export/class-batch-export-downloads.php:41
+#: templates/history-purchases.php:18
+msgid "ID"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:188
+#: includes/admin/customers/class-customer-table.php:194
 #: includes/admin/discounts/add-discount.php:40
 #: includes/admin/discounts/class-discount-codes-table.php:163
 #: includes/admin/discounts/edit-discount.php:70
@@ -518,23 +535,40 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:189
-#: includes/privacy-functions.php:576
-msgid "Primary Email"
+#: includes/admin/customers/class-customer-table.php:195
+#: includes/admin/customers/customers.php:478
+#: includes/admin/payments/class-payments-table.php:300
+#: includes/admin/payments/view-order-details.php:642
+#: includes/admin/reporting/class-export-customers.php:63
+#: includes/admin/reporting/class-export-customers.php:74
+#: includes/admin/reporting/class-export-payments.php:58
+#: includes/admin/reporting/export/class-batch-export-customers.php:43
+#: includes/admin/reporting/export/class-batch-export-payments.php:43
+#: includes/admin/reporting/export/class-batch-export-sales.php:42
+#: includes/admin/tools.php:505 templates/shortcode-register.php:25
+msgid "Email"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:190
-msgid "Purchases"
+#: includes/admin/customers/class-customer-table.php:197
+msgid "Spent"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:191
-msgid "Total Spent"
-msgstr ""
-
-#: includes/admin/customers/class-customer-table.php:192
+#: includes/admin/customers/class-customer-table.php:198
 #: includes/admin/reporting/export/class-batch-export-downloads.php:44
 #: includes/privacy-functions.php:584
 msgid "Date Created"
+msgstr ""
+
+#: includes/admin/customers/class-customer-table.php:199
+#: includes/admin/customers/customers.php:544
+#: includes/admin/discounts/class-discount-codes-table.php:169
+#: includes/admin/discounts/edit-discount.php:272
+#: includes/admin/payments/class-payments-table.php:304
+#: includes/admin/reporting/class-export-payments.php:77
+#: includes/admin/reporting/export/class-batch-export-downloads.php:48
+#: includes/admin/reporting/export/class-batch-export-payments.php:67
+#: includes/admin/tools.php:633 includes/privacy-functions.php:757
+msgid "Status"
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:24
@@ -653,6 +687,11 @@ msgstr ""
 
 #: includes/admin/customers/customer-functions.php:97
 msgid "Account Pending Verification"
+msgstr ""
+
+#: includes/admin/customers/customer-functions.php:142
+#: includes/admin/reporting/class-sales-logs-list-table.php:77
+msgid "Unnamed Customer"
 msgstr ""
 
 #: includes/admin/customers/customers.php:66
@@ -810,19 +849,6 @@ msgid ""
 "purchases."
 msgstr ""
 
-#: includes/admin/customers/customers.php:478
-#: includes/admin/payments/class-payments-table.php:302
-#: includes/admin/payments/view-order-details.php:642
-#: includes/admin/reporting/class-export-customers.php:63
-#: includes/admin/reporting/class-export-customers.php:74
-#: includes/admin/reporting/class-export-payments.php:58
-#: includes/admin/reporting/export/class-batch-export-customers.php:43
-#: includes/admin/reporting/export/class-batch-export-payments.php:43
-#: includes/admin/reporting/export/class-batch-export-sales.php:42
-#: includes/admin/tools.php:505 templates/shortcode-register.php:25
-msgid "Email"
-msgstr ""
-
 #: includes/admin/customers/customers.php:479
 #: includes/admin/customers/customers.php:545
 #: includes/admin/customers/customers.php:578
@@ -868,21 +894,11 @@ msgstr ""
 msgid "Recent Payments"
 msgstr ""
 
-#: includes/admin/customers/customers.php:541
-#: includes/admin/payments/class-payments-table.php:301
-#: includes/admin/reporting/class-export-payments.php:56
-#: includes/admin/reporting/class-export.php:63
-#: includes/admin/reporting/export/class-batch-export-customers.php:41
-#: includes/admin/reporting/export/class-batch-export-downloads.php:41
-#: templates/history-purchases.php:18
-msgid "ID"
-msgstr ""
-
 #: includes/admin/customers/customers.php:542
 #: includes/admin/discounts/add-discount.php:79
 #: includes/admin/discounts/class-discount-codes-table.php:165
 #: includes/admin/discounts/edit-discount.php:109
-#: includes/admin/payments/class-payments-table.php:303
+#: includes/admin/payments/class-payments-table.php:302
 #: includes/admin/reporting/class-export-payments.php:69
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
 #: templates/history-purchases.php:20
@@ -891,7 +907,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:543
 #: includes/admin/downloads/dashboard-columns.php:37
-#: includes/admin/payments/class-payments-table.php:304
+#: includes/admin/payments/class-payments-table.php:303
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:46
 #: includes/admin/reporting/class-export-download-history.php:59
 #: includes/admin/reporting/class-export-payments.php:75
@@ -907,17 +923,6 @@ msgstr ""
 #: includes/reports/reports-functions.php:385
 #: templates/history-purchases.php:19 templates/shortcode-receipt.php:59
 msgid "Date"
-msgstr ""
-
-#: includes/admin/customers/customers.php:544
-#: includes/admin/discounts/class-discount-codes-table.php:169
-#: includes/admin/discounts/edit-discount.php:272
-#: includes/admin/payments/class-payments-table.php:306
-#: includes/admin/reporting/class-export-payments.php:77
-#: includes/admin/reporting/export/class-batch-export-downloads.php:48
-#: includes/admin/reporting/export/class-batch-export-payments.php:67
-#: includes/admin/tools.php:633 includes/privacy-functions.php:757
-msgid "Status"
 msgstr ""
 
 #: includes/admin/customers/customers.php:558
@@ -1217,12 +1222,6 @@ msgstr ""
 
 #: includes/admin/discounts/add-discount.php:258
 msgid "Add Discount Code"
-msgstr ""
-
-#: includes/admin/discounts/class-discount-codes-table.php:144
-#: includes/admin/discounts/edit-discount.php:276
-#: includes/class-edd-discount.php:596
-msgid "Active"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:145
@@ -2035,11 +2034,6 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:280
-#: includes/payments/functions.php:699
-msgid "Pending"
-msgstr ""
-
 #: includes/admin/payments/class-payments-table.php:281
 #: includes/payments/functions.php:700
 msgid "Processing"
@@ -2065,56 +2059,56 @@ msgstr ""
 msgid "Abandoned"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:397
+#: includes/admin/payments/class-payments-table.php:395
 #: includes/admin/payments/view-order-details.php:234
 msgid "Resend Receipt"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:411
+#: includes/admin/payments/class-payments-table.php:409
 msgid "(unknown)"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:493
+#: includes/admin/payments/class-payments-table.php:491
 msgid "Missing or Removed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:509
+#: includes/admin/payments/class-payments-table.php:507
 msgid "Set To Completed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:510
+#: includes/admin/payments/class-payments-table.php:508
 msgid "Set To Pending"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:511
+#: includes/admin/payments/class-payments-table.php:509
 msgid "Set To Processing"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:512
+#: includes/admin/payments/class-payments-table.php:510
 msgid "Set To Refunded"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:513
+#: includes/admin/payments/class-payments-table.php:511
 msgid "Set To Revoked"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:514
+#: includes/admin/payments/class-payments-table.php:512
 msgid "Set To Failed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:515
+#: includes/admin/payments/class-payments-table.php:513
 msgid "Set To Abandoned"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:516
+#: includes/admin/payments/class-payments-table.php:514
 msgid "Set To Preapproval"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:517
+#: includes/admin/payments/class-payments-table.php:515
 msgid "Set To Cancelled"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:518
+#: includes/admin/payments/class-payments-table.php:516
 msgid "Resend Email Receipts"
 msgstr ""
 
@@ -2378,11 +2372,6 @@ msgid ""
 "<strong>Unlimited file downloads</strong>: checking this box will override "
 "all other file download limits for this purchase, granting the customer "
 "unliimited downloads of all files included on the purchase."
-msgstr ""
-
-#: includes/admin/payments/view-order-details.php:313
-#: includes/admin/tools.php:80
-msgid "Logs"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:318
@@ -7815,6 +7804,10 @@ msgstr ""
 #: includes/privacy-functions.php:540 includes/privacy-functions.php:937
 #: includes/privacy-functions.php:1131
 msgid "API Access Logs"
+msgstr ""
+
+#: includes/privacy-functions.php:576
+msgid "Primary Email"
 msgstr ""
 
 #: includes/privacy-functions.php:588
