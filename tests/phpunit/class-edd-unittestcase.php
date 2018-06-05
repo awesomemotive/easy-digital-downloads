@@ -105,9 +105,17 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 
 
 		if ( in_array( $type, $standard_types, true ) ) {
-			$constraint = new \PHPUnit_Framework_Constraint_IsType( $type );
+			if ( class_exists( 'PHPUnit\Framework\Constraint\isType' ) ) {
+				$constraint = new \PHPUnit\Framework\Constraint\isType( $type );
+			} else {
+				$constraint = new \PHPUnit_Framework_Constraint_IsType( $type );
+			}
 		} else {
-			$constraint = new \PHPUnit_Framework_Constraint_IsInstanceOf( $type );
+			if ( class_exists( 'PHPUnit\Framework\Constraint\IsInstanceOf' ) ) {
+				$constraint = new \PHPUnit\Framework\Constraint\IsInstanceOf( $type );
+			} else {
+				$constraint = new \PHPUnit_Framework_Constraint_IsInstanceOf( $type );
+			}
 		}
 
 		foreach ( $actual as $item ) {
