@@ -137,7 +137,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_url() {
-		return 'https://easydigitaldownloads.com/requirements';
+		return 'https://docs.easydigitaldownloads.com/article/2051-minimum-requirements-for-edd-3-0';
 	}
 
 	/**
