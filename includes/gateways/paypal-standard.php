@@ -334,7 +334,7 @@ add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
  */
 function edd_listen_for_paypal_ipn() {
 	// Regular PayPal IPN
-	if ( isset( $_GET['edd-listener'] ) && 'IPN' === $_GET['edd-listener'] ) {
+	if ( isset( $_GET['edd-listener'] ) && 'ipn' === strtolower( $_GET['edd-listener'] ) ) {
 
 		edd_debug_log( 'PayPal IPN endpoint loaded' );
 
