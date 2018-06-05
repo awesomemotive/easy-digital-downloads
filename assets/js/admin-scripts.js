@@ -539,7 +539,7 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on('click', '.edd-delete-note', function(e) {
 				e.preventDefault();
 
-				var edd_notes      = $('.edd-notes'),
+				var edd_notes      = $('.edd-note'),
 					edd_no_notes   = $('.edd-no-notes'),
 					edd_note_nonce = $('#edd_note_nonce');
 
