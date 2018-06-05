@@ -2394,8 +2394,9 @@ class EDD_Payment {
 	 * @return string              The currency for the payment
 	 */
 	private function setup_currency() {
-		return ! empty( $this->order->get_currency() )
-					? $this->order->get_currency()
+		$currency = $this->order->get_currency();
+		return ! empty( $currency )
+					? $currency
 					: apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
 	}
 
