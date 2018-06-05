@@ -157,7 +157,7 @@ final class Table_Endpoint extends Endpoint {
 	 * @param string $file Class file.
 	 */
 	private function set_class_file( $file ) {
-		if ( 0 === validate_file( $file ) ) {
+		if ( false === strpos( $file, '..' ) && false === strpos( $file, './' ) ) {
 			$this->class_file = $file;
 		}
 	}
