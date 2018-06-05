@@ -316,7 +316,7 @@ $cart_fees     = edd_get_order_adjustments( array(
                                     <div class="edd-admin-box">
                                         <div class="edd-admin-box-inside">
                                             <p><a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order_id ); ?>"><?php _e( 'View file download log for purchase', 'easy-digital-downloads' ); ?></a></p>
-                                            <p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&user=' . $user_id ); ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a></p>
+                                            <p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $customer->id ); ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a></p>
                                             <p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order_id ) ) ); ?>"><?php _e( 'View all purchases of customer', 'easy-digital-downloads' ); ?></a></p>
                                         </div>
 
