@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 
 		cssmin: {
 			options: {
-				mergeIntoShorthands: false,
+				mergeIntoShorthands: false
 			},
 			target: {
 				files: [
@@ -28,13 +28,13 @@ module.exports = function(grunt) {
 						dest: 'templates',
 						ext: '.min.css'
 					}
-				],
+				]
 			}
 		},
 
 		uglify: {
 			options: {
-				mangle: false,
+				mangle: false
 			},
 			target: {
 				files: [{
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
 					src: [ '*.js', '!*.min.js', '!*jquery*.js' ],
 					dest: 'assets/js',
 					ext: '.min.js',
-					extDot: 'last',
+					extDot: 'last'
 				}]
 			}
 		},
@@ -153,8 +153,7 @@ module.exports = function(grunt) {
 				src: ['**/*'],
 				dest: '<%= pkg.name %>/'
 			}
-		},
-
+		}
 	});
 
 	// Build task(s).
