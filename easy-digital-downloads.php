@@ -369,7 +369,6 @@ final class EDD_Requirements_Check {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $dependency
 	 * @return boolean
 	 */
 	public function met() {
@@ -443,7 +442,7 @@ final class EDD_Requirements_Check {
 		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 		 *                  otherwise uses `get_locale()`.
 		 */
-		$locale = apply_filters( 'plugin_locale',  $get_locale, 'easy-digital-downloads' );
+		$locale = apply_filters( 'plugin_locale', $get_locale, 'easy-digital-downloads' );
 		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
