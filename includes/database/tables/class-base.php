@@ -166,10 +166,10 @@ abstract class Base extends \EDD\Database\Base {
 	public function maybe_upgrade() {
 
 		// Is an upgrade needed?
-		$needs_upgrade = version_compare( (int) $this->db_version, (int) $this->version, '>=' );
+		$is_current = version_compare( $this->db_version, $this->version, '>=' );
 
-		// Bail if no upgrade needed
-		if ( true === $needs_upgrade ) {
+		// Bail if database table is current
+		if ( true === $is_current ) {
 			return;
 		}
 
@@ -406,7 +406,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * This is primarily used to skip 'admin_init' and force-install tables.
 	 *
-	 * @since 1.4.0
+	 * @since 3.0
 	 *
 	 * @return bool
 	 */
