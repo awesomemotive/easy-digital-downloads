@@ -151,7 +151,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$expected = array(
 			'pending'    => 'Pending',
-			'publish'    => 'Complete',
+			'publish'    => 'Completed',
 			'refunded'   => 'Refunded',
 			'failed'     => 'Failed',
 			'revoked'    => 'Revoked',
