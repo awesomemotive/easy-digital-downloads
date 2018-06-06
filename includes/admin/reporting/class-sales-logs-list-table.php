@@ -106,12 +106,12 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',      'easy-digital-downloads' ),
-			'customer'   => __( 'Customer',    'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
+			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID',  'easy-digital-downloads' ),
-			'date'       => __( 'Date',        'easy-digital-downloads' ),
+			'amount'     => __( 'Item Amount',  'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
+			'date'       => __( 'Date',         'easy-digital-downloads' ),
 		);
 	}
 

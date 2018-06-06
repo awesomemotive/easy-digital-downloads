@@ -103,7 +103,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	public function get_columns() {
 		return array(
 			'ID'         => __( 'Log ID',        'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID',    'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number',  'easy-digital-downloads' ),
 			'error'      => __( 'Error',         'easy-digital-downloads' ),
 			'message'    => __( 'Error Message', 'easy-digital-downloads' ),
 			'gateway'    => __( 'Gateway',       'easy-digital-downloads' ),

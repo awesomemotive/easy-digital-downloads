@@ -88,18 +88,16 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'ID'         => __( 'Log ID',     'easy-digital-downloads' ),
+		return array(
+			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'customer'   => __( 'Customer',   'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'file'       => __( 'File',       'easy-digital-downloads' ),
-			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
-			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
-			'date'       => __( 'Date',       'easy-digital-downloads' ),
+			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
+			'file'       => __( 'File',         'easy-digital-downloads' ),
+			'ip'         => __( 'IP Address',   'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent',   'easy-digital-downloads' ),
+			'date'       => __( 'Date',         'easy-digital-downloads' )
 		);
-
-		return $columns;
 	}
 
 	/**
