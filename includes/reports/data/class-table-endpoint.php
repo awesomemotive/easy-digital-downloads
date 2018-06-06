@@ -81,10 +81,10 @@ final class Table_Endpoint extends Endpoint {
 			$list_table = $this->get_list_table();
 
 			if ( null === $list_table ) {
-				$endpoint;
+				return $endpoint;
 			}
 
-			$endpoint['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $view_atts, $list_table );;
+			$endpoint['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $view_atts, $list_table );
 		}
 
 		return $endpoint;

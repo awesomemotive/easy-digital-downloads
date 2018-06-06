@@ -428,7 +428,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 					$c++;
 				}
 
-				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );;
+				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );
 				$sales['sales'][ $i ]['products']  = $cart_items;
 
 				$i++;
