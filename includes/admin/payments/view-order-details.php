@@ -137,11 +137,14 @@ $cart_fees     = edd_get_order_adjustments( array(
 
 										<?php do_action( 'edd_view_order_details_update_inner', $order_id ); ?>
 
+										<?php
+										$discounts = $order->get_discounts();
+										if ( ! empty( $discounts ) ) : ?>
                                         <div class="edd-order-discount edd-admin-box-inside">
                                             <p class="strong"><?php _e( 'Discounts', 'easy-digital-downloads' ); ?>:</p>
                                             <ul class="edd-order-discounts">
 												<?php
-												foreach ( $order->get_discounts() as $discount ) {
+												foreach ( $discounts as $discount ) {
 													/** @var EDD\Orders\Order_Adjustment $discount */
 													$discount_obj = edd_get_discount_by( 'code', $discount->get_description() );
 
@@ -150,6 +153,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 												?>
                                             </ul>
                                         </div>
+										<?php endif; ?>
 
 										<?php
 										$fees = $order->get_fees();
