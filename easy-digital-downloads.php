@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.9.1
+ * Version: 2.9.3
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.9.1
+ * @version 2.9.3
  */
 
 // Exit if accessed directly.
@@ -206,7 +206,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.9.1' );
+			define( 'EDD_VERSION', '2.9.3' );
 		}
 
 		// Plugin Folder Path.
@@ -311,6 +311,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
+		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
