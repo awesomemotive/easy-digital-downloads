@@ -1206,6 +1206,24 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
+
+		// Create the tables if they do not exist.
+		$components = array(
+			array( 'order', 'table' ),
+			array( 'order', 'meta' ),
+			array( 'order_item', 'table' ),
+			array( 'order_item', 'meta' ),
+			array( 'order_adjustment', 'table' ),
+			array( 'order_adjustment', 'meta' ),
+		);
+
+		foreach ( $components as $component ) {
+			$table = edd_get_component_interface( $component[0], $component[1] );
+
+			if ( ! $table->exists() ) {
+				@$table->create();
+			}
+		}
 	}
 
 	/*
