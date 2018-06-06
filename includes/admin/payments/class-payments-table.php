@@ -503,17 +503,17 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return apply_filters( 'edd_payments_table_bulk_actions', array(
-			'delete'                 => __( 'Delete',                'easy-digital-downloads' ),
-			'set-status-publish'     => __( 'Set To Completed',      'easy-digital-downloads' ),
-			'set-status-pending'     => __( 'Set To Pending',        'easy-digital-downloads' ),
-			'set-status-processing'  => __( 'Set To Processing',     'easy-digital-downloads' ),
-			'set-status-refunded'    => __( 'Set To Refunded',       'easy-digital-downloads' ),
-			'set-status-revoked'     => __( 'Set To Revoked',        'easy-digital-downloads' ),
-			'set-status-failed'      => __( 'Set To Failed',         'easy-digital-downloads' ),
-			'set-status-abandoned'   => __( 'Set To Abandoned',      'easy-digital-downloads' ),
-			'set-status-preapproval' => __( 'Set To Preapproval',    'easy-digital-downloads' ),
-			'set-status-cancelled'   => __( 'Set To Cancelled',      'easy-digital-downloads' ),
-			'resend-receipt'         => __( 'Resend Email Receipts', 'easy-digital-downloads' )
+			'set-status-publish'     => __( 'Mark Completed',   'easy-digital-downloads' ),
+			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
+			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
+			'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
+			'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
+			'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
+			'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
+			'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
+			'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
+			'resend-receipt'         => __( 'Resend  Receipts', 'easy-digital-downloads' ),
+			'delete'                 => __( 'Delete',           'easy-digital-downloads' )
 		) );
 	}
 
