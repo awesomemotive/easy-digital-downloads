@@ -41,10 +41,11 @@ $unlimited      = $order->has_unlimited_downloads();
 $address        = $order->get_customer_address();
 $gateway        = $order->get_gateway();
 $currency_code  = $order->get_currency();
-$customer       = edd_get_customer( $order->get_customer_id() );
 $user_info      = $order->get_user_info();
+$customer_id    = $order->get_customer_id();
+$customer       = edd_get_customer( $customer_id );
 $notes          = edd_get_payment_notes( $order_id );
-$cart_fees     = edd_get_order_adjustments( array(
+$cart_fees      = edd_get_order_adjustments( array(
 	'object_id'   => $order_id,
 	'object_type' => 'order',
 	'type_id'     => '',
@@ -230,7 +231,7 @@ $cart_fees     = edd_get_order_adjustments( array(
                                             <a href="<?php echo esc_url( add_query_arg( array(
 												'edd-action'  => 'email_links',
 												'purchase_id' => $order_id,
-											) ) ); ?>" id="<?php if ( count( (array) $customer->emails ) > 1 ) {
+											) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
 												echo 'edd-select-receipt-email';
 											} else {
 												echo 'edd-resend-receipt';
@@ -238,7 +239,7 @@ $cart_fees     = edd_get_order_adjustments( array(
                                                class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
                                             <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
 
-											<?php if ( count( (array) $customer->emails ) > 1 ) : ?>
+											<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
                                                 <div class="clear"></div>
 
                                                 <div class="edd-order-resend-receipt-addresses" style="display:none;">
@@ -320,7 +321,7 @@ $cart_fees     = edd_get_order_adjustments( array(
                                     <div class="edd-admin-box">
                                         <div class="edd-admin-box-inside">
                                             <p><a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order_id ); ?>"><?php _e( 'View file download log for purchase', 'easy-digital-downloads' ); ?></a></p>
-                                            <p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $customer->id ); ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a></p>
+                                            <p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $customer_id ); ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a></p>
                                             <p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order_id ) ) ); ?>"><?php _e( 'View all purchases of customer', 'easy-digital-downloads' ); ?></a></p>
                                         </div>
 
@@ -345,7 +346,7 @@ $cart_fees     = edd_get_order_adjustments( array(
                                 <div id="edd-purchased-files"
                                      class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
                                     <h3 class="hndle edd-payment-details-label-mobile">
-                                        <span><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></span>
+                                        <span><?php _e( 'Order Items', 'easy-digital-downloads' ); ?></span>
                                     </h3>
 
                                     <div class="edd-purchased-files-header row header">
@@ -595,12 +596,14 @@ $cart_fees     = edd_get_order_adjustments( array(
                                 <div class="inside edd-clearfix">
                                     <div class="column-container customer-info">
                                         <div class="column">
-											<?php if ( ! empty( $customer->id ) ) : ?>
-                                                <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>"><?php echo $customer->name; ?>
+											<?php if ( ! empty( $customer_id ) ) : ?>
+                                                <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ); ?>"><?php echo $customer->name; ?>
                                                     - <?php echo $customer->email; ?></a>
+												<input type="hidden" name="edd-current-customer"
+													   value="<?php echo $customer_id; ?>"/>
+											<?php else : ?>
+												&mdash;
 											<?php endif; ?>
-                                            <input type="hidden" name="edd-current-customer"
-                                                   value="<?php echo $customer->id; ?>"/>
                                         </div>
                                         <div class="column">
                                             <a href="#change"
@@ -618,7 +621,7 @@ $cart_fees     = edd_get_order_adjustments( array(
 											<?php
 											echo EDD()->html->customer_dropdown( array(
 												'class'       => 'edd-payment-change-customer-input',
-												'selected'    => $customer->id,
+												'selected'    => $customer_id,
 												'name'        => 'customer-id',
 												'placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' ),
 											) );
