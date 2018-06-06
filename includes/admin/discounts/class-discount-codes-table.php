@@ -181,11 +181,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'name'       => array( 'name', false ),
-			'code'       => array( 'code', false ),
-			'use_count'  => array( 'use_count', false ),
+			'name'       => array( 'name',       false ),
+			'code'       => array( 'code',       false ),
+			'use_count'  => array( 'use_count',  false ),
 			'start_date' => array( 'start_date', false ),
-			'end_date'   => array( 'end_date', false ),
+			'end_date'   => array( 'end_date',   false )
 		);
 	}
 
@@ -244,7 +244,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		if ( $start_date ) {
 			$display = edd_date_i18n( $start_date );
 		} else {
-			$display = __( 'No start date', 'easy-digital-downloads' );
+			$display = '&mdash;';
 		}
 
 		return $display;
@@ -265,7 +265,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		if ( $expiration ) {
 			$display = date( 'F j, Y', strtotime( $expiration ) );
 		} else {
-			$display = __( 'No expiration', 'easy-digital-downloads' );
+			$display = '&dash;';
 		}
 
 		return $display;
@@ -392,13 +392,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return array $actions Array of the bulk actions
 	 */
 	public function get_bulk_actions() {
-		$actions = array(
-			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
+		return array(
+			'activate'   => __( 'Activate',   'easy-digital-downloads' ),
 			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
-			'delete'     => __( 'Delete', 'easy-digital-downloads' ),
+			'delete'     => __( 'Delete',     'easy-digital-downloads' )
 		);
-
-		return $actions;
 	}
 
 	/**
@@ -500,33 +498,16 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$status = isset( $_GET['status'] )
 			? sanitize_key( $_GET['status'] )
-			: 'any';
+			: 'total';
 
 		// Switch statuses
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->counts['active'];
-				break;
-
-			case 'inactive':
-				$total_items = $this->counts['inactive'];
-				break;
-
-			case 'expired':
-				$total_items = $this->counts['expired'];
-				break;
-
-			case 'any':
-			default:
-				$total_items = $this->counts['total'];
-				break;
-		}
+		$total_items = $this->counts['total'];
 
 		// Setup pagination
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
 	}
 }
