@@ -1412,6 +1412,33 @@ class EDD_CLI extends WP_CLI_Command {
 					'amount'      => $tax_rate
 				) );
 
+				if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
+					foreach ( $payment_meta['fees'] as $fee ) {
+						// Add the adjustment.
+						$adjustment_id = edd_add_order_adjustment( array(
+							'object_id'   => $order_id,
+							'object_type' => 'order',
+							'type_id'     => '',
+							'type'        => 'fee',
+							'description' => $fee['label'],
+							'amount'      => $fee['amount']
+						) );
+
+						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+						edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+
+						if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+							edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+						}
+
+						if ( ! is_null( $fee['price_id'] ) ) {
+							edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+						}
+					}
+				}
+
+				/** Create order meta ****************************************/
+
 				$core_meta_keys = array(
 					'_edd_payment_user_email',
 					'_edd_payment_customer_id',
