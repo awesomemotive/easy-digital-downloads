@@ -1290,8 +1290,6 @@ class EDD_CLI extends WP_CLI_Command {
 					'total'          => $total,
 				);
 
-				var_dump( $order_data );
-
 				$order_id = edd_add_order( $order_data );
 
 				/** Create order items ***************************************/
