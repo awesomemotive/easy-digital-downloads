@@ -61,6 +61,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			'ajax'     => false,
 		) );
 
+		$this->process_bulk_action();
 		$this->get_counts();
 	}
 
@@ -416,21 +417,25 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['discount'] ) ? $_GET['discount'] : false;
+		$ids = isset( $_GET['discount'] )
+			? $_GET['discount']
+			: false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
 
 		foreach ( $ids as $id ) {
-			if ( 'delete' === $this->current_action() ) {
-				edd_delete_discount( $id );
-			}
-			if ( 'activate' === $this->current_action() ) {
-				edd_update_discount_status( $id, 'active' );
-			}
-			if ( 'deactivate' === $this->current_action() ) {
-				edd_update_discount_status( $id, 'inactive' );
+			switch ( $this->current_action() ) {
+				case 'delete' :
+					edd_delete_discount( $id );
+					break;
+				case 'activate' :
+					edd_update_discount_status( $id, 'active' );
+					break;
+				case 'deactivate' :
+					edd_update_discount_status( $id, 'inactive' );
+					break;
 			}
 		}
 	}
@@ -480,7 +485,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since 1.4
 	 * @uses EDD_Discount_Codes_Table::get_columns()
 	 * @uses EDD_Discount_Codes_Table::get_sortable_columns()
-	 * @uses EDD_Discount_Codes_Table::process_bulk_action()
 	 * @uses EDD_Discount_Codes_Table::discount_codes_data()
 	 * @uses WP_List_Table::get_pagenum()
 	 * @uses WP_List_Table::set_pagination_args()
@@ -492,10 +496,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->items           = $this->discount_codes_data();
 
-		$this->process_bulk_action();
-
-		$data   = $this->discount_codes_data();
 		$status = isset( $_GET['status'] )
 			? sanitize_key( $_GET['status'] )
 			: 'any';
@@ -520,13 +522,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				break;
 		}
 
-		$this->items = $data;
-
 		// Setup pagination
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page ),
+			'total_pages' => ceil( $total_items / $this->per_page )
 		) );
 	}
 }

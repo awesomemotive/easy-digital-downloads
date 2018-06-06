@@ -35,20 +35,17 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public $per_page = 30;
 
 	/**
-	 * Number of customers found
+	 * Discount counts, keyed by status
 	 *
-	 * @var int
-	 * @since 1.7
+	 * @var array
+	 * @since 3.0
 	 */
-	public $count = 0;
-
-	/**
-	 * Total customers
-	 *
-	 * @var int
-	 * @since 1.95
-	 */
-	public $total = 0;
+	public $counts = array(
+		'active'   => 0,
+		'inactive' => 0,
+		'expired'  => 0,
+		'total'    => 0
+	);
 
 	/**
 	 * The arguments for the data set
@@ -70,6 +67,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'plural'   => __( 'Customers', 'easy-digital-downloads' ),
 			'ajax'     => false
 		) );
+
+
+		$this->get_counts();
 	}
 
 	/**
@@ -180,6 +180,40 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		);
 
 		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $this->row_actions( $actions );
+	}
+
+	/**
+	 * Retrieve the customer counts
+	 *
+	 * @access public
+	 * @since 3.0
+	 * @return void
+	 */
+	public function get_counts() {
+		$this->counts = edd_get_customer_counts();
+	}
+
+	/**
+	 * Retrieve the view types
+	 *
+	 * @access public
+	 * @since 1.4
+	 *
+	 * @return array $views All the views available
+	 */
+	public function get_views() {
+		$base          = $this->get_base_url();
+		$current       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$is_all        = empty( $current ) || ( 'all' === $current );
+		$total_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
+		$active_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']  ) . ')</span>';
+		$pending_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
+
+		return array(
+			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',     'easy-digital-downloads' ) . $total_count   ),
+			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Active',  'easy-digital-downloads' ) . $active_count  ),
+			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending', 'easy-digital-downloads' ) . $pending_count )
+		);
 	}
 
 	/**
@@ -324,18 +358,33 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->items            = $this->reports_data();
 
-		$this->items = $this->reports_data();
-		$this->total = edd_count_customers( $this->args );
+		$status = isset( $_GET['status'] )
+			? sanitize_key( $_GET['status'] )
+			: 'any';
 
-		// Add condition to be sure we don't divide by zero.
-		// If $this->per_page is 0, then set total pages to 1.
-		$total_pages = $this->per_page ? ceil( (int) $this->total / (int) $this->per_page ) : 1;
+		// Switch statuses
+		switch ( $status ) {
+			case 'active':
+				$total_items = $this->counts['active'];
+				break;
 
+			case 'pending':
+				$total_items = $this->counts['pending'];
+				break;
+
+			case 'any':
+			default:
+				$total_items = $this->counts['total'];
+				break;
+		}
+
+		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_items' => $this->total,
+			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => $total_pages,
+			'total_pages' => ceil( $total_items / $this->per_page )
 		) );
 	}
 }
