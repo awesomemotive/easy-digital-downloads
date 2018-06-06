@@ -1292,7 +1292,24 @@ class EDD_CLI extends WP_CLI_Command {
 
 				$order_id = edd_add_order( $order_data );
 
-				edd_add_order_meta( $order_id, 'user_info', $user_info );
+				// Add user info to order meta.
+				edd_add_order_meta( $order_id, 'user_info', array(
+					'first_name' => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
+					'last_name'  => isset( $user_info['last_name']  ) ? $user_info['last_name']  : '',
+					'address'    => isset( $user_info['address']    ) ? $user_info['address']    : ''
+				) );
+
+				// Tax rate is no longer stored in meta.
+				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] ) ? $meta['_edd_payment_tax_rate'][0] : null;
+				if ( null !== $tax_rate ) {
+					edd_add_order_adjustment( array(
+						'object_id'   => $order_id,
+						'object_type' => 'order',
+						'type_id'     => 0,
+						'type'        => 'tax_rate',
+						'amount'      => $tax_rate
+					) );
+				}
 
 				/** Create order items ***************************************/
 
