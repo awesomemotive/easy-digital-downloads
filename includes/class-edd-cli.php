@@ -1184,6 +1184,30 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 	}
 
+	/**
+	 * Migrate payments to the custom tables.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_payments
+	 * wp edd migrate_payments --force
+	 */
+	public function migrate_payments( $args, $assoc_args ) {
+		global $wpdb;
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_payments' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+	}
+
 	/*
 	 * Create sample file download log data for your EDD site
 	 *
