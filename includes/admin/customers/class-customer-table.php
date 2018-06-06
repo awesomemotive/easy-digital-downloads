@@ -154,10 +154,19 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'status' :
-				$customer = edd_get_customer( $item['id'] );
-				$value  = edd_user_pending_verification( $customer->user_id )
-						? '<em>' . __( 'Pending', 'easy-digital-downloads' ) . '</em>'
-						: __( 'Active', 'easy-digital-downloads' );
+				$status = ! empty( $item['status'] )
+					? $item['status']
+					: '';
+
+				switch ( $status ) {
+					case 'active' :
+					case '' :
+						$value = __( 'Active', 'easy-digital-downloads' );
+						break;
+					default :
+						$value = '&mdash;';
+						break;
+				}
 				break;
 
 			default:
@@ -179,7 +188,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $this->row_actions( $actions );
+		return '<a href="' . esc_url( $view_url ) . '"><strong>' . $name . '</strong></a>' . $this->row_actions( $actions );
 	}
 
 	/**
@@ -224,7 +233,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
-			'id'            => __( 'ID',            'easy-digital-downloads' ),
+			'cb'            => '',
+			//'id'            => __( 'ID',            'easy-digital-downloads' ),
 			'name'          => __( 'Name',          'easy-digital-downloads' ),
 			'email'         => __( 'Email',         'easy-digital-downloads' ),
 			'order_count'   => __( 'Orders',        'easy-digital-downloads' ),
@@ -297,14 +307,16 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
-		$order   = isset( $_GET['order'] )   ? sanitize_text_field( $_GET['order'] )   : 'DESC';
+		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : '';
+		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
 
 		$args    = array(
 			'limit'   => $this->per_page,
 			'offset'  => $offset,
 			'order'   => $order,
-			'orderby' => $orderby
+			'orderby' => $orderby,
+			'status'  => $status
 		);
 
 		if( is_email( $search ) ) {
@@ -323,12 +335,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		if ( $customers ) {
 
 			foreach ( $customers as $customer ) {
-
-				$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
-
 				$data[] = array(
 					'id'            => $customer->id,
-					'user_id'       => $user_id,
+					'user_id'       => $customer->user_id,
 					'name'          => $customer->name,
 					'email'         => $customer->email,
 					'order_count'   => $customer->purchase_count,

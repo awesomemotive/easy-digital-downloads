@@ -296,9 +296,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_payments_table_columns', array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
-			'id'       => __( 'ID',       'easy-digital-downloads' ),
-			'email'    => __( 'Email',    'easy-digital-downloads' ),
+			'number'   => __( 'Number',   'easy-digital-downloads' ),
 			'customer' => __( 'Customer', 'easy-digital-downloads' ),
+			'gateway'  => __( 'Gateway',  'easy-digital-downloads' ),
 			'amount'   => __( 'Amount',   'easy-digital-downloads' ),
 			'date'     => __( 'Date',     'easy-digital-downloads' ),
 			'status'   => __( 'Status',   'easy-digital-downloads' )
@@ -314,9 +314,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
-			'id'     => array( 'id',     true  ),
-			'amount' => array( 'amount', false ),
-			'date'   => array( 'date',   false )
+			'number'   => array( 'number',   true  ),
+			'customer' => array( 'customer', false ),
+			'gateway'  => array( 'gateway',  false ),
+			'amount'   => array( 'amount',   false ),
+			'date'     => array( 'date',     false )
 		) );
 	}
 
@@ -351,11 +353,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			case 'date':
 				$value = edd_date_i18n( $order->get_date_created() );
 				break;
+			case 'gateway':
+				$value = edd_get_gateway_admin_label( $order->get_gateway() );
+				break;
 			case 'status':
 				$value = edd_get_payment_status_label( $order->get_status() );
 				break;
 			default:
-				$value = method_exists( $order, 'get_' . $column_name ) ? call_user_func( 'get_' . $column_name, $order ) : '';
+				$value = method_exists( $order, 'get_' . $column_name )
+					? call_user_func( array( $order, 'get_' . $column_name ) )
+					: '';
 				break;
 		}
 
@@ -394,12 +401,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				'purchase_id' => $order->get_id()
 			), $this->base_url ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
-
-		// Delete
-		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array(
-			'edd-action'  => 'delete_payment',
-			'purchase_id' => $order->get_id()
-		), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// This exists for backwards compatibility purposes.
 		$payment     = edd_get_payment( $order->get_id() );
@@ -442,13 +443,17 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
 	 */
-	public function column_ID( $order ) {
+	public function column_number( $order ) {
 		$view = add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) );
-		$link = '<a href="' . esc_url( $view ) . '">' . $order->get_number() . '</a>';
+		$link = '<a href="' . esc_url( $view ) . '"><strong>' . $order->get_number() . '</strong></a>';
 
 		// Concatenate the results
 		$actions = $this->row_actions( array(
-			'view' => '<a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
+			'view'   => '<a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'delete_payment',
+				'purchase_id' => $order->get_id()
+			), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		) );
 
 		// Concatenate & return the results
@@ -474,7 +479,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			// Use customer name, if exists
 			$name = ! empty( $customer->name )
 				? $customer->name
-				: '&mdash;';
+				: __( 'No Name', 'easy-digital-downloads' );
 
 			// Link to View Customer
 			$url = add_query_arg( array(
@@ -484,14 +489,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				'id'        => $customer_id
 			), admin_url( 'edit.php' ) );
 
-			$actions = $this->row_actions( array(
-				'view' => '<a href="' . esc_url( $url ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
-			) );
+			$name = '<a href="' . esc_url( $url ) . '">' . $name . '</a>';
 		} else {
-			$name = __( 'Missing or Removed', 'easy-digital-downloads' );
+			$name = '&mdash;';
 		}
 
-		return $name . $actions;
+		return $name;
 	}
 
 	/**

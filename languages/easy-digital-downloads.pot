@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.0-beta-1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-06-06 05:27:17+00:00\n"
+"POT-Creation-Date: 2018-06-06 06:17:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -133,7 +133,7 @@ msgid "New"
 msgstr ""
 
 #: includes/admin/add-ons.php:29
-#: includes/admin/customers/class-customer-table.php:213
+#: includes/admin/customers/class-customer-table.php:222
 #: includes/admin/discounts/class-discount-codes-table.php:144
 #: includes/admin/payments/class-payments-table.php:278
 msgid "All"
@@ -173,7 +173,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/admin-pages.php:86
-#: includes/admin/customers/class-customer-table.php:230
+#: includes/admin/customers/class-customer-table.php:240
 #: includes/admin/payments/payments-history.php:36
 msgid "Orders"
 msgstr ""
@@ -470,62 +470,49 @@ msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:66
 #: includes/admin/customers/customer-functions.php:120
-#: includes/admin/payments/class-payments-table.php:301
+#: includes/admin/payments/class-payments-table.php:300
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:94
 #: includes/admin/reporting/class-sales-logs-list-table.php:110
 msgid "Customer"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:159
-#: includes/admin/customers/class-customer-table.php:215
-#: includes/admin/payments/class-payments-table.php:280
-#: includes/payments/functions.php:699
-msgid "Pending"
-msgstr ""
-
-#: includes/admin/customers/class-customer-table.php:160
-#: includes/admin/customers/class-customer-table.php:214
+#: includes/admin/customers/class-customer-table.php:164
+#: includes/admin/customers/class-customer-table.php:223
 #: includes/admin/discounts/class-discount-codes-table.php:145
 #: includes/admin/discounts/edit-discount.php:276
 #: includes/class-edd-discount.php:596
 msgid "Active"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:177
+#: includes/admin/customers/class-customer-table.php:186
 #: includes/admin/payments/class-payments-table.php:451
-#: includes/admin/payments/class-payments-table.php:488
 msgid "View"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:178
+#: includes/admin/customers/class-customer-table.php:187
 #: includes/admin/payments/view-order-details.php:313
 #: includes/admin/tools.php:80
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:179
+#: includes/admin/customers/class-customer-table.php:188
 #: includes/admin/customers/customers.php:667
 #: includes/admin/discounts/class-discount-codes-table.php:317
 #: includes/admin/discounts/class-discount-codes-table.php:398
 #: includes/admin/notes/note-functions.php:97
-#: includes/admin/payments/class-payments-table.php:402
-#: includes/admin/payments/class-payments-table.php:516
+#: includes/admin/payments/class-payments-table.php:455
+#: includes/admin/payments/class-payments-table.php:518
 #: includes/admin/settings/register-settings.php:287
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:227
-#: includes/admin/customers/customers.php:542
-#: includes/admin/payments/class-payments-table.php:299
-#: includes/admin/reporting/class-export-payments.php:56
-#: includes/admin/reporting/class-export.php:63
-#: includes/admin/reporting/export/class-batch-export-customers.php:41
-#: includes/admin/reporting/export/class-batch-export-downloads.php:41
-#: templates/history-purchases.php:18
-msgid "ID"
+#: includes/admin/customers/class-customer-table.php:224
+#: includes/admin/payments/class-payments-table.php:280
+#: includes/payments/functions.php:699
+msgid "Pending"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:228
+#: includes/admin/customers/class-customer-table.php:238
 #: includes/admin/discounts/add-discount.php:40
 #: includes/admin/discounts/class-discount-codes-table.php:164
 #: includes/admin/discounts/edit-discount.php:70
@@ -538,9 +525,8 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:229
+#: includes/admin/customers/class-customer-table.php:239
 #: includes/admin/customers/customers.php:479
-#: includes/admin/payments/class-payments-table.php:300
 #: includes/admin/payments/view-order-details.php:642
 #: includes/admin/reporting/class-export-customers.php:63
 #: includes/admin/reporting/class-export-customers.php:74
@@ -552,17 +538,17 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:231
+#: includes/admin/customers/class-customer-table.php:241
 msgid "Spent"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:232
+#: includes/admin/customers/class-customer-table.php:242
 #: includes/admin/reporting/export/class-batch-export-downloads.php:44
 #: includes/privacy-functions.php:584
 msgid "Date Created"
 msgstr ""
 
-#: includes/admin/customers/class-customer-table.php:233
+#: includes/admin/customers/class-customer-table.php:243
 #: includes/admin/customers/customers.php:545
 #: includes/admin/discounts/class-discount-codes-table.php:170
 #: includes/admin/discounts/edit-discount.php:272
@@ -895,6 +881,15 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:533
 msgid "Recent Payments"
+msgstr ""
+
+#: includes/admin/customers/customers.php:542
+#: includes/admin/reporting/class-export-payments.php:56
+#: includes/admin/reporting/class-export.php:63
+#: includes/admin/reporting/export/class-batch-export-customers.php:41
+#: includes/admin/reporting/export/class-batch-export-downloads.php:41
+#: templates/history-purchases.php:18
+msgid "ID"
 msgstr ""
 
 #: includes/admin/customers/customers.php:543
@@ -2062,7 +2057,17 @@ msgstr ""
 msgid "Abandoned"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:395
+#: includes/admin/payments/class-payments-table.php:299
+msgid "Number"
+msgstr ""
+
+#: includes/admin/payments/class-payments-table.php:301
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:109
+#: includes/admin/reporting/class-gateways-reports-table.php:83
+msgid "Gateway"
+msgstr ""
+
+#: includes/admin/payments/class-payments-table.php:401
 #: includes/admin/payments/view-order-details.php:234
 msgid "Resend Receipt"
 msgstr ""
@@ -2071,47 +2076,47 @@ msgstr ""
 msgid "(unknown)"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:491
-msgid "Missing or Removed"
-msgstr ""
-
-#: includes/admin/payments/class-payments-table.php:506
-msgid "Mark Completed"
-msgstr ""
-
-#: includes/admin/payments/class-payments-table.php:507
-msgid "Mark Pending"
+#: includes/admin/payments/class-payments-table.php:481
+msgid "No Name"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:508
-msgid "Mark Processing"
+msgid "Mark Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:509
-msgid "Mark Refunded"
+msgid "Mark Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:510
-msgid "Mark Revoked"
+msgid "Mark Processing"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:511
-msgid "Mark Failed"
+msgid "Mark Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:512
-msgid "Mark Abandoned"
+msgid "Mark Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:513
-msgid "Mark Preapproved"
+msgid "Mark Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:514
-msgid "Mark Cancelled"
+msgid "Mark Abandoned"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:515
+msgid "Mark Preapproved"
+msgstr ""
+
+#: includes/admin/payments/class-payments-table.php:516
+msgid "Mark Cancelled"
+msgstr ""
+
+#: includes/admin/payments/class-payments-table.php:517
 msgid "Resend  Receipts"
 msgstr ""
 
@@ -2749,11 +2754,6 @@ msgstr ""
 
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:108
 msgid "Error Message"
-msgstr ""
-
-#: includes/admin/reporting/class-gateway-error-logs-list-table.php:109
-#: includes/admin/reporting/class-gateways-reports-table.php:83
-msgid "Gateway"
 msgstr ""
 
 #: includes/admin/reporting/class-gateways-reports-table.php:84
