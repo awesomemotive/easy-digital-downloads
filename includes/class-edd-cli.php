@@ -1304,18 +1304,48 @@ class EDD_CLI extends WP_CLI_Command {
 				$cart_items = $payment_meta['cart_details'];
 
 				foreach ( $cart_items as $key => $cart_item ) {
+					// Get product name.
+					$product_name = isset( $cart_item['name'] )
+						? $cart_item['name']
+						: '';
+
+					// Get price ID.
+					$price_id = isset( $cart_item['item_number']['options']['price_id'] )
+						? absint( $cart_item['item_number']['options']['price_id'] )
+						: 0;
+
+					// Get quantity.
+					$cart_item['quantity'] = isset( $cart_item['quantity'] )
+						? $cart_item['quantity']
+						: 1;
+
+					// Get subtotal.
+					$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
+						? (float) $cart_item['subtotal']
+						: (float) $cart_item['quantity'] * $cart_item['item_price'];
+
+					// Get discount.
+					$cart_item['discount'] = isset( $cart_item['discount'] )
+						? (float) $cart_item['discount']
+						: 0.00;
+
+					// Get tax.
+					$cart_item['tax'] = isset( $cart_item['tax'] )
+						? (float) $cart_item['tax']
+						: 0.00;
+
 					$order_item_args = array(
 						'order_id'      => $order_id,
 						'product_id'    => $cart_item['id'],
-						'product_name'  => isset( $cart_item['name'] ) ? $cart_item['name'] : '',
-						'price_id'      => isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : 0,
+						'product_name'  => $product_name,
+						'price_id'      => $price_id,
 						'cart_index'    => $key,
 						'type'          => 'download',
-						'quantity'      => isset( $cart_item['quantity'] ) ? $cart_item['quantity'] : 1,
+						'quantity'      => $cart_item['quantity'],
 						'amount'        => (float) $cart_item['item_price'],
-						'subtotal'      => (float) $cart_item['subtotal'],
-						'discount'      => (float) $cart_item['discount'],
-						'tax'           => (float) $cart_item['tax'],
+						'subtotal'      => $cart_item['subtotal'],
+						'discount'      => $cart_item['discount'],
+						'tax'           => $cart_item['tax'],
 						'total'         => (float) $cart_item['price'],
 						'date_created'  => $result->post_date_gmt, // Use the same date as the payment to allow for date queries to work correctly.
 						'date_modified' => $result->post_modified_gmt,
@@ -1326,9 +1356,12 @@ class EDD_CLI extends WP_CLI_Command {
 
 				/** Create order adjustments *********************************/
 
-				// Tax rate is no longer stored in meta.
-				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] ) ? $meta['_edd_payment_tax_rate'][0] : null;
+				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
+					? $meta['_edd_payment_tax_rate'][0]
+					: null;
+
 				if ( null !== $tax_rate ) {
+					// Tax rate is no longer stored in meta.
 					edd_add_order_adjustment( array(
 						'object_id'   => $order_id,
 						'object_type' => 'order',
