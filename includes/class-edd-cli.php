@@ -1452,6 +1452,10 @@ class EDD_CLI extends WP_CLI_Command {
 						/** @var EDD_Discount $discount */
 						$discount = edd_get_discount_by( 'code', $discount );
 
+						if ( false === $discount ) {
+							continue;
+						}
+
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_id,
 							'object_type' => 'order',
