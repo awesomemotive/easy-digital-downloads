@@ -71,7 +71,7 @@ class Customers extends Base {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => '',
+			'default'    => 'active',
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
