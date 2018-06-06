@@ -1238,7 +1238,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
 
 			foreach ( $results as $result ) {
-				// Create a new order object.
+				/** Create a new order ***************************************/
 
 				$meta = get_post_custom( $result->ID );
 
@@ -1257,6 +1257,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'parent'         => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
 					'order_number'   => '',
 					'status'         => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
+					'date_created'   => $result->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
+					'date_modified'  => $result->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_completed' => $date_completed,
 					'user_id'        => $user_id,
 					'customer_id'    => $customer_id,
@@ -1267,6 +1269,10 @@ class EDD_CLI extends WP_CLI_Command {
 					'currency'       => $payment_meta['currency'],
 					'payment_key'    => $payment_meta['key'],
 				);
+
+				$order_id = edd_add_order( $order_data );
+
+				/** Create order items ***************************************/
 			}
 
 			$progress->finish();
