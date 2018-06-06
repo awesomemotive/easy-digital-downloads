@@ -1165,11 +1165,12 @@ class EDD_CLI extends WP_CLI_Command {
 
 			foreach ( $results as $old_note ) {
 				$note_data = array(
-					'object_id'    => $old_note->comment_post_ID,
-					'object_type'  => 'payment',
-					'date_created' => $old_note->comment_date,
-					'content'      => $old_note->comment_content,
-					'user_id'      => $old_note->user_id,
+					'object_id'     => $old_note->comment_post_ID,
+					'object_type'   => 'payment',
+					'date_created'  => $old_note->comment_date_gmt,
+					'date_modified' => $old_note->comment_date_gmt,
+					'content'       => $old_note->comment_content,
+					'user_id'       => $old_note->user_id,
 				);
 
 				$id = edd_add_note( $note_data );
