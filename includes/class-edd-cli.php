@@ -1413,7 +1413,7 @@ class EDD_CLI extends WP_CLI_Command {
 				) );
 
 				if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
-					foreach ( $payment_meta['fees'] as $fee ) {
+					foreach ( $payment_meta['fees'] as $fee_id => $fee ) {
 						// Add the adjustment.
 						$adjustment_id = edd_add_order_adjustment( array(
 							'object_id'   => $order_id,
