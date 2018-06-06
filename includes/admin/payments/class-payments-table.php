@@ -641,7 +641,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	    $args = array();
 
 		$per_page   = $this->per_page;
-		$paged      = isset( $_GET['paged'] )      ? ( $_GET['paged'] * $per_page ) - $per_page : null;
+		$paged      = isset( $_GET['paged'] )      ? ( absint( $_GET['paged'] ) * $per_page ) - $per_page : null;
 		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
 		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
 		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'id';
