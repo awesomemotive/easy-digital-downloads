@@ -907,6 +907,8 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 
 				$args['status'] = get_post_status( $old_discount->ID );
+				$args['date_created'] = $old_discount->post_date_gmt;
+				$args['date_modified'] = $old_discount->post_modified_gmt;
 
 				// Use edd_store_discount() so any legacy data is handled correctly
 				$discount_id = edd_store_discount( $args );
