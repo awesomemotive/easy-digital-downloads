@@ -1218,11 +1218,62 @@ class EDD_CLI extends WP_CLI_Command {
 		);
 
 		foreach ( $components as $component ) {
+			/** @var EDD\Database\Tables\Base $table */
 			$table = edd_get_component_interface( $component[0], $component[1] );
 
 			if ( ! $table->exists() ) {
 				@$table->create();
 			}
+		}
+
+		$sql = "
+			SELECT *
+			FROM {$wpdb->posts}
+			WHERE post_type = 'edd_payment'
+		";
+		$results = $wpdb->get_results( $sql );
+		$total   = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
+
+			foreach ( $results as $result ) {
+				// Create a new order object.
+
+				$meta = get_post_custom( $result->ID );
+
+				$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
+				$user_info = $payment_meta['user_info'];
+
+				$user_id = isset( $meta['_edd_payment_user_id'][0] ) && ! empty ( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
+				$ip = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
+				$mode = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
+				$gateway = isset( $meta['_edd_payment_gateway'] ) && ! empty( $meta['_edd_payment_gateway'] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
+				$customer_id = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
+
+				$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
+
+				$order_data = array(
+					'parent'         => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
+					'order_number'   => '',
+					'status'         => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
+					'date_completed' => $date_completed,
+					'user_id'        => $user_id,
+					'customer_id'    => $customer_id,
+					'email'          => $payment_meta['email'],
+					'ip'             => $ip,
+					'gateway'        => $gateway,
+					'mode'           => $mode,
+					'currency'       => $payment_meta['currency'],
+					'payment_key'    => $payment_meta['key'],
+				);
+			}
+
+			$progress->finish();
+		} else {
+			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
 	}
 
