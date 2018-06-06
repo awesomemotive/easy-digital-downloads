@@ -1437,6 +1437,32 @@ class EDD_CLI extends WP_CLI_Command {
 					}
 				}
 
+				// Insert discounts.
+				$discounts = ! empty( $user_info['discount'] )
+					? $user_info['discount']
+					: array();
+
+				if ( ! is_array( $discounts ) ) {
+					$discounts = explode( ',', $discounts );
+				}
+
+				if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
+					foreach ( $discounts as $discount ) {
+
+						/** @var EDD_Discount $discount */
+						$discount = edd_get_discount_by( 'code', $discount );
+
+						edd_add_order_adjustment( array(
+							'object_id'   => $order_id,
+							'object_type' => 'order',
+							'type_id'     => $discount->id,
+							'type'        => 'discount',
+							'description' => $discount,
+							'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal )
+						) );
+					}
+				}
+
 				/** Create order meta ****************************************/
 
 				$core_meta_keys = array(
