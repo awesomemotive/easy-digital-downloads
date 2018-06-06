@@ -1241,6 +1241,22 @@ class EDD_CLI extends WP_CLI_Command {
 				/** Create a new order ***************************************/
 
 				$meta         = get_post_custom( $result->ID );
+
+				$core_meta_keys = array(
+					'_edd_payment_user_email',
+					'_edd_payment_customer_id',
+					'_edd_payment_user_id',
+					'_edd_payment_user_ip',
+					'_edd_payment_purchase_key',
+					'_edd_payment_total',
+					'_edd_payment_mode',
+					'_edd_payment_gateway',
+					'_edd_payment_meta',
+					'_edd_payment_tax',
+					'_edd_payment_tax_rate',
+					'_edd_completed_date'
+				);
+
 				$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
 				$user_info    = $payment_meta['user_info'];
 
@@ -1384,18 +1400,40 @@ class EDD_CLI extends WP_CLI_Command {
 				/** Create order adjustments *********************************/
 
 				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
-					? $meta['_edd_payment_tax_rate'][0]
-					: null;
+					? (float) $meta['_edd_payment_tax_rate'][0]
+					: 0.00;
 
-				if ( null !== $tax_rate ) {
-					// Tax rate is no longer stored in meta.
-					edd_add_order_adjustment( array(
-						'object_id'   => $order_id,
-						'object_type' => 'order',
-						'type_id'     => 0,
-						'type'        => 'tax_rate',
-						'amount'      => $tax_rate
-					) );
+				// Tax rate is no longer stored in meta.
+				edd_add_order_adjustment( array(
+					'object_id'   => $order_id,
+					'object_type' => 'order',
+					'type_id'     => 0,
+					'type'        => 'tax_rate',
+					'amount'      => $tax_rate
+				) );
+
+				$core_meta_keys = array(
+					'_edd_payment_user_email',
+					'_edd_payment_customer_id',
+					'_edd_payment_user_id',
+					'_edd_payment_user_ip',
+					'_edd_payment_purchase_key',
+					'_edd_payment_total',
+					'_edd_payment_mode',
+					'_edd_payment_gateway',
+					'_edd_payment_meta',
+					'_edd_payment_tax',
+					'_edd_payment_tax_rate',
+					'_edd_completed_date'
+				);
+
+				$remaining_meta = array_diff_key( $meta, array_flip( $core_meta_keys ) );
+
+				// Migrate additional payment meta.
+				foreach ( $remaining_meta as $meta_key => $meta_value ) {
+					$meta_value = $meta_value[0];
+					
+					edd_add_order_meta( $order_id, $meta_key, $meta_value );
 				}
 
 				edd_debug_log( $result->ID . ' successfully migrated to ' . $order_id );
