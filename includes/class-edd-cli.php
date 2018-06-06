@@ -1299,18 +1299,6 @@ class EDD_CLI extends WP_CLI_Command {
 					'address'    => isset( $user_info['address']    ) ? $user_info['address']    : ''
 				) );
 
-				// Tax rate is no longer stored in meta.
-				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] ) ? $meta['_edd_payment_tax_rate'][0] : null;
-				if ( null !== $tax_rate ) {
-					edd_add_order_adjustment( array(
-						'object_id'   => $order_id,
-						'object_type' => 'order',
-						'type_id'     => 0,
-						'type'        => 'tax_rate',
-						'amount'      => $tax_rate
-					) );
-				}
-
 				/** Create order items ***************************************/
 
 				$cart_items = $payment_meta['cart_details'];
@@ -1334,6 +1322,20 @@ class EDD_CLI extends WP_CLI_Command {
 					);
 
 					edd_add_order_item( $order_item_args );
+				}
+
+				/** Create order adjustments *********************************/
+
+				// Tax rate is no longer stored in meta.
+				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] ) ? $meta['_edd_payment_tax_rate'][0] : null;
+				if ( null !== $tax_rate ) {
+					edd_add_order_adjustment( array(
+						'object_id'   => $order_id,
+						'object_type' => 'order',
+						'type_id'     => 0,
+						'type'        => 'tax_rate',
+						'amount'      => $tax_rate
+					) );
 				}
 
 				edd_debug_log( $result->ID . ' successfully migrated to ' . $order_id );
