@@ -1240,23 +1240,39 @@ class EDD_CLI extends WP_CLI_Command {
 			foreach ( $results as $result ) {
 				/** Create a new order ***************************************/
 
-				$meta = get_post_custom( $result->ID );
-
+				$meta         = get_post_custom( $result->ID );
 				$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
-				$user_info = $payment_meta['user_info'];
+				$user_info    = $payment_meta['user_info'];
 
-				$user_id = isset( $meta['_edd_payment_user_id'][0] ) && ! empty ( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
-				$ip = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
-				$mode = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
-				$gateway = isset( $meta['_edd_payment_gateway'] ) && ! empty( $meta['_edd_payment_gateway'] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
-				$customer_id = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
-
+				$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
+				$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty ( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
+				$ip             = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
+				$mode           = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
+				$gateway        = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
+				$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 				$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
 
+				// Calculate totals.
+				$subtotal = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ), function( $carry, $item ) {
+					return $carry += $item;
+				} );
+
+				$tax = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'tax' ), function( $carry, $item ) {
+					return $carry += $item;
+				} );
+
+				$discount = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'discount' ), function( $carry, $item ) {
+					return $carry += $item;
+				} );
+
+				$total = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'price' ), function( $carry, $item ) {
+					return $carry += $item;
+				} );
+
 				$order_data = array(
-					'parent'         => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
-					'order_number'   => '',
-					'status'         => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
+					'parent'         => $result->post_parent,
+					'order_number'   => $order_number,
+					'status'         => $result->post_status,
 					'date_created'   => $result->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_modified'  => $result->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_completed' => $date_completed,
@@ -1268,7 +1284,13 @@ class EDD_CLI extends WP_CLI_Command {
 					'mode'           => $mode,
 					'currency'       => $payment_meta['currency'],
 					'payment_key'    => $payment_meta['key'],
+					'subtotal'       => $subtotal,
+					'tax'            => $tax,
+					'discount'       => $discount,
+					'total'          => $total,
 				);
+
+				var_dump( $order_data );
 
 				$order_id = edd_add_order( $order_data );
 
