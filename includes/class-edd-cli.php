@@ -1268,6 +1268,11 @@ class EDD_CLI extends WP_CLI_Command {
 				$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 				$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
 
+				// Do not use -1 as the user ID.
+				$user_id = ( -1 === $user_id )
+					? 0
+					: $user_id;
+
 				// Calculate totals.
 				$subtotal = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ), function( $carry, $item ) {
 					return $carry += $item;
