@@ -63,6 +63,7 @@ function edd_customers_list() {
 
         <form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
 			<?php
+			$customers_table->views();
 			$customers_table->search_box( __( 'Search Customers', 'easy-digital-downloads' ), 'edd-customers' );
 			$customers_table->display();
 			?>
