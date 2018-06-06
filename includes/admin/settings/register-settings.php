@@ -13,6 +13,82 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Remove the admin bar edit profile link when the user is not verified
+ *
+ * @since 3.0
+ */
+function edd_maybe_add_test_mode_admin_bar_link( $wp_admin_bar ) {
+
+	// Bail if no admin bar
+	if ( empty( $wp_admin_bar ) ) {
+		return;
+	}
+
+	// Bail if user cannot manage shop settings
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	// String
+	$text = ! edd_is_test_mode()
+		? __( 'Live',      'easy-digital-downloads' )
+		: __( 'Test Mode', 'easy-digital-downloads' );
+
+	// Mode
+	$mode = ! edd_is_test_mode()
+		? 'live'
+		: 'test';
+
+	// Add the menu
+    $wp_admin_bar->add_menu( array(
+        'id'     => 'edd-store-menu',
+        'title'  => sprintf( __( 'Store Status: %s', 'easy-digital-downloads' ), '<span class="edd-mode edd-mode-' . esc_attr( $mode ) . '">' . $text . '</span>' ),
+        'parent' => false,
+        'href'   => add_query_arg( array(
+			'post_type' => 'download',
+			'page'      => 'edd-settings',
+			'tab'       => 'gateways'
+		), admin_url( 'edit.php' ) )
+	) );
+}
+add_action( 'admin_bar_menu', 'edd_maybe_add_test_mode_admin_bar_link', 9999 );
+
+/**
+ * Styling for text-mode button
+ *
+ * @since 3.0
+ */
+function edd_test_mode_admin_bar_link_styles() {
+
+	// Bail if user cannot manage shop settings
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	} ?>
+
+	<style type="text/css" id="edd-store-menu-styling">
+		#wp-admin-bar-edd-store-menu .edd-mode {
+			color: #fff;
+			background-color: #0073aa;
+			font-size: 10px;
+			padding: 3px 7px;
+			font-weight: 600;
+			border-radius: 4px;
+			line-height: 10px;
+		}
+		#wp-admin-bar-edd-store-menu .edd-mode-live {
+			background-color: #32CD32;
+		}
+		#wp-admin-bar-edd-store-menu .edd-mode-test {
+			background-color: #FF8C00;
+		}
+	</style>
+
+<?php
+}
+add_action( 'wp_head',    'edd_test_mode_admin_bar_link_styles' );
+add_action( 'admin_head', 'edd_test_mode_admin_bar_link_styles' );
+
+/**
  * Get an option
  *
  * Looks to see if the specified setting exists, returns default if not

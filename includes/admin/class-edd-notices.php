@@ -231,14 +231,6 @@ class EDD_Notices {
 	 */
 	private function add_reports_notices() {
 
-		// Test mode
-		if ( ! empty( $_GET['page'] ) && ( 'edd-payment-history' === $_GET['page'] ) && edd_is_test_mode() ) {
-			$this->add_notice( array(
-				'id'             => 'edd-payment-history-test-mode',
-				'message'        => sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) ),
-				'is_dismissible' => false
-			) );
-		}
 	}
 
 	/**
