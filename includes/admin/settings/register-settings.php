@@ -350,7 +350,9 @@ function edd_get_registered_settings() {
 						'options'     => $pages,
 						'chosen'      => true,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
-					),
+					)
+				),
+				'location' => array(
 					'locale_settings' => array(
 						'id'            => 'locale_settings',
 						'name'          => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
@@ -377,25 +379,16 @@ function edd_get_registered_settings() {
 						'chosen'      => true,
 						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
 					),
-					'tracking_settings' => array(
-						'id'   => 'tracking_settings',
-						'name' => '<h3>' . __( 'Tracking', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-					),
-					'allow_tracking' => array(
-						'id'    => 'allow_tracking',
-						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
-						'check' => __( 'Allow',          'easy-digital-downloads' ),
-						'desc'  => sprintf(
-							__( 'Anonymously track how Easy Digital Downloads is used, helping us make it better. <a href="%s" target="_blank">Here is what we track</a>.<br>Opt-in here (and to our newsletter) and we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/tracking/',
-							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
-						),
-						'type' => 'checkbox_description',
-					),
 				),
 				'currency' => array(
+					'currency_settings' => array(
+						'id'            => 'currency_settings',
+						'name'          => '<h3>' . __( 'Currency', 'easy-digital-downloads' ) . '</h3>',
+						'desc'          => '',
+						'type'          => 'header',
+						'tooltip_title' => __( 'Currency Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Different countries use different formatting for their currency. You will want to pick what most of your users will expect to use.', 'easy-digital-downloads' ),
+					),
 					'currency' => array(
 						'id'      => 'currency',
 						'name'    => __( 'Currency', 'easy-digital-downloads' ),
@@ -431,6 +424,25 @@ function edd_get_registered_settings() {
 						'size' => 'small',
 						'std'  => '.',
 					),
+				),
+				'tracking' => array(
+					'tracking_settings' => array(
+						'id'   => 'tracking_settings',
+						'name' => '<h3>' . __( 'Tracking', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'allow_tracking' => array(
+						'id'    => 'allow_tracking',
+						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
+						'check' => __( 'Allow',          'easy-digital-downloads' ),
+						'desc'  => sprintf(
+							__( 'Anonymously track how Easy Digital Downloads is used, helping us make it better. <a href="%s" target="_blank">Here is what we track</a>.<br>Opt-in here (and to our newsletter) and we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/tracking/',
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+						),
+						'type' => 'checkbox_description',
+					)
 				),
 				'api' => array(
 					'api_settings' => array(
@@ -613,13 +625,9 @@ function edd_get_registered_settings() {
 						'type'          => 'checkbox_description',
 						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
-					),
-					'button_header'  => array(
-						'id'   => 'button_header',
-						'name' => '<h3>' . __( 'Buttons', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => __( 'Options for add to cart and purchase buttons', 'easy-digital-downloads' ),
-						'type' => 'header',
-					),
+					)
+				),
+				'buttons' => array(
 					'button_style'   => array(
 						'id'      => 'button_style',
 						'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
@@ -635,8 +643,8 @@ function edd_get_registered_settings() {
 						'type'    => 'color_select',
 						'chosen'  => true,
 						'options' => edd_get_button_colors(),
-					),
-				),
+					)
+				)
 			) ),
 
 			// Taxes Settings
@@ -645,7 +653,7 @@ function edd_get_registered_settings() {
 					'tax_help' => array(
 						'id'   => 'tax_help',
 						'name' => __( 'Need Help?', 'easy-digital-downloads' ),
-						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. If you need VAT support, there are options listed on the documentation page.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/238-tax-settings' ),
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. <p class="description">If you need VAT support, there are options listed on the documentation page.</p>', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/238-tax-settings' ),
 						'type' => 'descriptive_text',
 					),
 					'enable_taxes' => array(
@@ -1457,8 +1465,10 @@ function edd_get_registered_settings_sections() {
 		$sections = array(
 			'general'    => apply_filters( 'edd_settings_sections_general', array(
 				'main'               => __( 'General',  'easy-digital-downloads' ),
+				'location'           => __( 'Location', 'easy-digital-downloads' ),
 				'currency'           => __( 'Currency', 'easy-digital-downloads' ),
-				'api'                => __( 'API',      'easy-digital-downloads' )
+				'api'                => __( 'API',      'easy-digital-downloads' ),
+				'tracking'           => __( 'Tracking', 'easy-digital-downloads' )
 			) ),
 			'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
 				'main'               => __( 'General',         'easy-digital-downloads' ),
@@ -1470,7 +1480,8 @@ function edd_get_registered_settings_sections() {
 				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' )
 			) ),
 			'styles'     => apply_filters( 'edd_settings_sections_styles', array(
-				'main'               => __( 'General', 'easy-digital-downloads' )
+				'main'               => __( 'General', 'easy-digital-downloads' ),
+				'buttons'            => __( 'Buttons', 'easy-digital-downloads' )
 			) ),
 			'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
 				'main'               => __( 'General', 'easy-digital-downloads' ),
