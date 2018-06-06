@@ -278,7 +278,9 @@ function edd_get_discount_counts() {
 	) );
 
 	// Default array
-	$r = array();
+	$r = array(
+		'total' => 0
+	);
 
 	// Loop through counts and shape return value
 	if ( ! empty( $counts->items ) ) {

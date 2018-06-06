@@ -148,19 +148,20 @@ function edd_get_order_counts() {
 	) );
 
 	// Default array
-	$o = array();
+	$o = array(
+		'total' => 0
+	);
 
 	// Loop through counts and shape return value
 	if ( ! empty( $counts ) ) {
 
 		// Loop through statuses
 		foreach ( $counts as $item ) {
-			if ( empty( $item['status'] ) ) {
-				continue;
-			}
-
 			$o[ $item['status'] ] = absint( $item['count'] );
 		}
+
+		// Total
+		$o['total'] = array_sum( $o );
 	}
 
 	// Return counts

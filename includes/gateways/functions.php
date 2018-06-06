@@ -10,7 +10,31 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Returns a list of all available modes.
+ *
+ * @since 3.0
+ * @return array $modes All the available modes
+ */
+function edd_get_payment_modes() {
+	static $modes = null;
+
+	// Default, built-in gateways
+	if ( is_null( $modes ) ) {
+		$modes = array(
+			'live' => array(
+				'admin_label' => __( 'Live', 'easy-digital-downloads' )
+			),
+			'test' => array(
+				'admin_label' => __( 'Test', 'easy-digital-downloads' )
+			)
+		);
+	}
+
+	return (array) apply_filters( 'edd_payment_modes', $modes );
+}
 
 /**
  * Returns a list of all available gateways.
@@ -26,7 +50,7 @@ function edd_get_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
 				'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
-				'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
+				'checkout_label' => __( 'PayPal',          'easy-digital-downloads' ),
 				'supports'       => array( 'buy_now' )
 			),
 			'manual' => array(
@@ -36,7 +60,7 @@ function edd_get_payment_gateways() {
 		);
 	}
 
-	return apply_filters( 'edd_payment_gateways', $gateways );
+	return (array) apply_filters( 'edd_payment_gateways', $gateways );
 }
 
 /**
