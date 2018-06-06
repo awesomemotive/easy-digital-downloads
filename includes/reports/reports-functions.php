@@ -937,8 +937,9 @@ function default_display_tiles_group( $report ) {
  * @param Data\Report $report Report object.
  */
 function default_display_tables_group( $report ) {
+
 	if ( $report->has_endpoints( 'tables' ) ) :
-		$tables = $report->get_endpoints( 'tables' );
+		$tables = array();//$report->get_endpoints( 'tables' );
 		?>
 		<div id="edd-reports-tables-wrap">
 
