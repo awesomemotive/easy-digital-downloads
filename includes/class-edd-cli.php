@@ -1292,6 +1292,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 				$order_id = edd_add_order( $order_data );
 
+				edd_add_order_meta( $order_id, 'user_info', $user_info );
+
 				/** Create order items ***************************************/
 
 				$cart_items = $payment_meta['cart_details'];
