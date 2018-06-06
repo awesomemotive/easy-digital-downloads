@@ -1024,13 +1024,14 @@ class EDD_CLI extends WP_CLI_Command {
 					}
 
 					$log_data = array(
-						'download_id'  => $old_log->post_parent,
-						'file_id'      => $post_meta['_edd_log_file_id'],
-						'payment_id'   => $post_meta['_edd_log_payment_id'],
-						'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-						'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-						'ip'           => $post_meta['_edd_log_ip'],
-						'date_created' => $old_log->post_date,
+						'download_id'   => $old_log->post_parent,
+						'file_id'       => $post_meta['_edd_log_file_id'],
+						'payment_id'    => $post_meta['_edd_log_payment_id'],
+						'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+						'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+						'ip'            => $post_meta['_edd_log_ip'],
+						'date_created'  => $old_log->post_date_gmt,
+						'date_modified' => $old_log->post_modified_gmt,
 					);
 
 					$new_log_id = edd_add_file_download_log( $log_data );
@@ -1044,15 +1045,16 @@ class EDD_CLI extends WP_CLI_Command {
 					}
 
 					$log_data = array(
-						'ip'           => $post_meta['_edd_log_request_ip'],
-						'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-						'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-						'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
-						'version'      => $post_meta['_edd_log_version'],
-						'time'         => $post_meta['_edd_log_time'],
-						'request'      => $old_log->post_excerpt,
-						'error'        => $old_log->post_content,
-						'date_created' => $old_log->post_date,
+						'ip'            => $post_meta['_edd_log_request_ip'],
+						'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
+						'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
+						'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+						'version'       => $post_meta['_edd_log_version'],
+						'time'          => $post_meta['_edd_log_time'],
+						'request'       => $old_log->post_excerpt,
+						'error'         => $old_log->post_content,
+						'date_created'  => $old_log->post_date_gmt,
+						'date_modified' => $old_log->post_modified_gmt,
 					);
 
 					$new_log_id = edd_add_api_request_log( $log_data );
@@ -1060,11 +1062,13 @@ class EDD_CLI extends WP_CLI_Command {
 					$post = new WP_Post( $old_log->ID );
 
 					$log_data = array(
-						'object_id'   => $post->post_parent,
-						'object_type' => 'download',
-						'type'        => $old_log->slug,
-						'title'       => $old_log->post_title,
-						'message'     => $old_log->post_content
+						'object_id'     => $post->post_parent,
+						'object_type'   => 'download',
+						'type'          => $old_log->slug,
+						'title'         => $old_log->post_title,
+						'message'       => $old_log->post_content,
+						'date_created'  => $old_log->post_date_gmt,
+						'date_modified' => $old_log->post_modified_gmt,
 					);
 
 					$meta            = get_post_custom( $old_log->ID );
