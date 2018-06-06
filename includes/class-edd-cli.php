@@ -1293,6 +1293,32 @@ class EDD_CLI extends WP_CLI_Command {
 				$order_id = edd_add_order( $order_data );
 
 				/** Create order items ***************************************/
+
+				$cart_items = $payment_meta['cart_details'];
+
+				foreach ( $cart_items as $key => $cart_item ) {
+					$order_item_args = array(
+						'order_id'      => $order_id,
+						'product_id'    => $cart_item['id'],
+						'product_name'  => isset( $cart_item['name'] ) ? $cart_item['name'] : '',
+						'price_id'      => isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : 0,
+						'cart_index'    => $key,
+						'type'          => 'download',
+						'quantity'      => isset( $cart_item['quantity'] ) ? $cart_item['quantity'] : 1,
+						'amount'        => (float) $cart_item['item_price'],
+						'subtotal'      => (float) $cart_item['subtotal'],
+						'discount'      => (float) $cart_item['discount'],
+						'tax'           => (float) $cart_item['tax'],
+						'total'         => (float) $cart_item['price'],
+						'date_created'  => $result->post_date_gmt, // Use the same date as the payment to allow for date queries to work correctly.
+						'date_modified' => $result->post_modified_gmt,
+					);
+
+					edd_add_order_item( $order_item_args );
+				}
+
+				edd_debug_log( $result->ID . ' successfully migrated to ' . $order_id );
+				$progress->tick();
 			}
 
 			$progress->finish();
