@@ -1921,7 +1921,7 @@ class EDD_Payment {
 			}
 
 			if ( empty( $meta['date'] ) ) {
-				$meta['date'] = get_post_field( 'post_date', $this->ID );
+				$meta['date'] = $this->date;
 			}
 
 			// We need to back fill the returned meta for backwards compatibility purposes.
