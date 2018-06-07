@@ -885,10 +885,9 @@ function edd_process_profile_editor_updates( $data ) {
 	// Check for errors
 	$errors = edd_get_errors();
 
-	if( $errors ) {
-		// Send back to the profile editor if there are errors
+	// Send back to the profile editor if there are errors
+	if ( ! empty( $errors ) ) {
 		edd_redirect( $data['edd_redirect'] );
-		edd_die();
 	}
 
 	// Update the user

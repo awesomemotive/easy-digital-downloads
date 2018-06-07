@@ -324,8 +324,8 @@ function edd_trigger_purchase_delete( $data ) {
 		}
 
 		edd_delete_purchase( $payment_id );
+
 		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
-		edd_die();
 	}
 }
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
