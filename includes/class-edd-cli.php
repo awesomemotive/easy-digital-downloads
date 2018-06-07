@@ -1329,83 +1329,101 @@ class EDD_CLI extends WP_CLI_Command {
 
 				/** Create order items ***************************************/
 
-				$cart_items = $payment_meta['cart_details'];
+				// The cart_items array key did not exist in earlier versions of EDD.
+				$cart_items = isset ( $payment_meta['cart_details'] )
+					? $payment_meta['cart_details']
+					: array();
 
-				foreach ( $cart_items as $key => $cart_item ) {
-					// Get product name.
-					$product_name = isset( $cart_item['name'] )
-						? $cart_item['name']
-						: '';
+				if ( ! empty( $cart_items ) ) {
+					foreach ( $cart_items as $key => $cart_item ) {
+						// Get product name.
+						$product_name = isset( $cart_item['name'] )
+							? $cart_item['name']
+							: '';
 
-					// Get price ID.
-					$price_id = isset( $cart_item['item_number']['options']['price_id'] )
-						? absint( $cart_item['item_number']['options']['price_id'] )
-						: 0;
+						// Get price ID.
+						$price_id = isset( $cart_item['item_number']['options']['price_id'] )
+							? absint( $cart_item['item_number']['options']['price_id'] )
+							: 0;
 
-					// Get quantity.
-					$cart_item['quantity'] = isset( $cart_item['quantity'] )
-						? $cart_item['quantity']
-						: 1;
+						// Get item price.
+						$cart_item['item_price'] = isset( $cart_item['item_price'] )
+							? (float) $cart_item['item_price']
+							: (float) $cart_item['price'];
 
-					// Get subtotal.
-					$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
-						? (float) $cart_item['subtotal']
-						: (float) $cart_item['quantity'] * $cart_item['item_price'];
+						// Get quantity.
+						$cart_item['quantity'] = isset( $cart_item['quantity'] )
+							? $cart_item['quantity']
+							: 1;
 
-					// Get discount.
-					$cart_item['discount'] = isset( $cart_item['discount'] )
-						? (float) $cart_item['discount']
-						: 0.00;
+						// Get subtotal.
+						$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
+							? (float) $cart_item['subtotal']
+							: (float) $cart_item['quantity'] * $cart_item['item_price'];
 
-					// Get tax.
-					$cart_item['tax'] = isset( $cart_item['tax'] )
-						? (float) $cart_item['tax']
-						: 0.00;
+						// Get discount.
+						$cart_item['discount'] = isset( $cart_item['discount'] )
+							? (float) $cart_item['discount']
+							: 0.00;
 
-					$order_item_args = array(
-						'order_id'      => $order_id,
-						'product_id'    => $cart_item['id'],
-						'product_name'  => $product_name,
-						'price_id'      => $price_id,
-						'cart_index'    => $key,
-						'type'          => 'download',
-						'quantity'      => $cart_item['quantity'],
-						'amount'        => (float) $cart_item['item_price'],
-						'subtotal'      => $cart_item['subtotal'],
-						'discount'      => $cart_item['discount'],
-						'tax'           => $cart_item['tax'],
-						'total'         => (float) $cart_item['price'],
-						'date_created'  => $result->post_date_gmt, // Use the same date as the payment to allow for date queries to work correctly.
-						'date_modified' => $result->post_modified_gmt,
-					);
+						// Get tax.
+						$cart_item['tax'] = isset( $cart_item['tax'] )
+							? (float) $cart_item['tax']
+							: 0.00;
 
-					$order_item_id = edd_add_order_item( $order_item_args );
+						$order_item_args = array(
+							'order_id'      => $order_id,
+							'product_id'    => $cart_item['id'],
+							'product_name'  => $product_name,
+							'price_id'      => $price_id,
+							'cart_index'    => $key,
+							'type'          => 'download',
+							'quantity'      => $cart_item['quantity'],
+							'amount'        => (float) $cart_item['item_price'],
+							'subtotal'      => $cart_item['subtotal'],
+							'discount'      => $cart_item['discount'],
+							'tax'           => $cart_item['tax'],
+							'total'         => (float) $cart_item['price'],
+							'date_created'  => $result->post_date_gmt,
+							// Use the same date as the payment to allow for date queries to work correctly.
+							'date_modified' => $result->post_modified_gmt,
+						);
 
-					// Store order item fees as adjustments.
-					if ( isset( $cart_item['fees'] ) && ! empty( $cart_item['fees'] ) ) {
-						foreach ( $cart_item['fees'] as $fee_id => $fee ) {
+						$order_item_id = edd_add_order_item( $order_item_args );
 
-							// Add the adjustment.
-							$adjustment_id = edd_add_order_adjustment( array(
-								'object_id'   => $order_item_id,
-								'object_type' => 'order_item',
-								'type_id'     => '',
-								'type'        => 'fee',
-								'description' => $fee['label'],
-								'amount'      => $fee['amount']
-							) );
+						// Store order item fees as adjustments.
+						if ( isset( $cart_item['fees'] ) && ! empty( $cart_item['fees'] ) ) {
+							foreach ( $cart_item['fees'] as $fee_id => $fee ) {
 
-							edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-							edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+								// Add the adjustment.
+								$adjustment_id = edd_add_order_adjustment( array(
+									'object_id'   => $order_item_id,
+									'object_type' => 'order_item',
+									'type_id'     => '',
+									'type'        => 'fee',
+									'description' => $fee['label'],
+									'amount'      => $fee['amount']
+								) );
 
-							if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-								edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-							}
+								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+								edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
 
-							if ( ! is_null( $fee['price_id'] ) ) {
-								edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+								}
+
+								if ( ! is_null( $fee['price_id'] ) ) {
+									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+								}
 							}
 						}
+					}
+
+					// Compatibility with older versions of EDD.
+					// Older versions stored a single dimension array of download IDs.
+				} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downlaods'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
+					foreach ( $payment_meta['downloads'] as $cart_index => $key ) {
+
 					}
 				}
 
