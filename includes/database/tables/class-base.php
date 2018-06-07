@@ -69,6 +69,11 @@ abstract class Base extends \EDD\Database\Base {
 	protected $db_version = 0;
 
 	/**
+	 * @var string Table prefix
+	 */
+	protected $prefix = '';
+
+	/**
 	 * @var string Table name
 	 */
 	protected $table_name = '';
@@ -334,14 +339,14 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Global
 		if ( $this->is_global() ) {
-			$prefix                             = $this->get_db()->get_blog_prefix( 0 );
-			$this->get_db()->{$this->name}      = "{$prefix}{$this->name}";
+			$this->prefix                       = $this->get_db()->get_blog_prefix( 0 );
+			$this->get_db()->{$this->name}      = "{$this->prefix}{$this->name}";
 			$this->get_db()->ms_global_tables[] = $this->name;
 
-			// Site
+		// Site
 		} else {
-			$prefix                        = $this->get_db()->get_blog_prefix( null );
-			$this->get_db()->{$this->name} = "{$prefix}{$this->name}";
+			$this->prefix                  = $this->get_db()->get_blog_prefix( null );
+			$this->get_db()->{$this->name} = "{$this->prefix}{$this->name}";
 			$this->get_db()->tables[]      = $this->name;
 		}
 
@@ -451,8 +456,11 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	private function sanitize_table_name( $name = '' ) {
 
+		// Trim spaces off the ends
+		$unspace = trim( $name );
+
 		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $name );
+		$accents = remove_accents( $unspace );
 
 		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
 		$lower   = sanitize_key( $accents );
