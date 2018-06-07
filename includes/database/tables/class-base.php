@@ -456,8 +456,11 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	private function sanitize_table_name( $name = '' ) {
 
+		// Trim spaces off the ends
+		$unspace = trim( $name );
+
 		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $name );
+		$accents = remove_accents( $unspace );
 
 		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
 		$lower   = sanitize_key( $accents );
