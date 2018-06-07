@@ -352,12 +352,6 @@ class EDD_Payment {
 	public function __get( $key ) {
 		if ( method_exists( $this, "get_{$key}" ) ) {
 			$value = call_user_func( array( $this, "get_{$key}" ) );
-		} elseif ( 'id' === $key ) {
-			$value = $this->ID;
-		} elseif ( 'post_type' === $key ) {
-			$value = 'edd_payment';
-		} elseif ( 'post_date' === $key ) {
-			$value = $this->date;
 		} else {
 			$value = $this->$key;
 		}
@@ -1927,7 +1921,7 @@ class EDD_Payment {
 			}
 
 			if ( empty( $meta['date'] ) ) {
-				$meta['date'] = get_post_field( 'post_date', $this->ID );
+				$meta['date'] = $this->date;
 			}
 
 			// We need to back fill the returned meta for backwards compatibility purposes.
