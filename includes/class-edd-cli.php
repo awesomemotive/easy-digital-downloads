@@ -1420,10 +1420,30 @@ class EDD_CLI extends WP_CLI_Command {
 					}
 
 					// Compatibility with older versions of EDD.
-					// Older versions stored a single dimension array of download IDs.
+					// Older versions stored a single dimensional array of download IDs.
 				} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downlaods'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
-					foreach ( $payment_meta['downloads'] as $cart_index => $key ) {
+					foreach ( $payment_meta['downloads'] as $cart_index => $download_id ) {
+						$download = edd_get_download( $download_id );
 
+						$order_item_args = array(
+							'order_id'      => $order_id,
+							'product_id'    => $download_id,
+							'product_name'  => $download->post_name,
+							'price_id'      => 0,
+							'cart_index'    => $cart_index,
+							'type'          => 'download',
+							'quantity'      => 1,
+							'amount'        => (float) $payment_meta['amount'],
+							'subtotal'      => (float) $payment_meta['amount'],
+							'discount'      => 0.00,
+							'tax'           => 0.00,
+							'total'         => (float) $payment_meta['amount'],
+							'date_created'  => $result->post_date_gmt,
+							// Use the same date as the payment to allow for date queries to work correctly.
+							'date_modified' => $result->post_modified_gmt,
+						);
+
+						edd_add_order_item( $order_item_args );
 					}
 				}
 
