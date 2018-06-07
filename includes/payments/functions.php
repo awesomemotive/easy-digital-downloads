@@ -266,8 +266,8 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	}
 
-	// Remove the payment
-	edd_delete_order( $payment_id, true );
+	// Remove the order.
+	edd_delete_order( $payment_id );
 
 	// Remove related sale log entries
 	$edd_logs->delete_logs(
