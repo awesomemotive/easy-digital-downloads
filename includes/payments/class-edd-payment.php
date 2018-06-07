@@ -621,7 +621,9 @@ class EDD_Payment {
 	/**
 	 * One items have been set, an update is needed to save them to the database.
 	 *
-	 * @return bool  True of the save occurred, false if it failed or wasn't needed
+	 * @since 3.0 Refactored to work with the new query methods.
+	 *
+	 * @return bool True of the save occurred, false if it failed or wasn't needed.
 	 */
 	public function save() {
 		global $edd_logs;

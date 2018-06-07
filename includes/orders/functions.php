@@ -290,7 +290,7 @@ function edd_build_order( $order_data = array() ) {
 	$order_data['user_info']['address'] = isset( $order_data['user_info']['address'] )
 		? $order_data['user_info']['address']
 		: array();
-	
+
 	// Add user info to order meta.
 	edd_add_order_meta( $order_id, 'user_info', array(
 		'first_name' => $order_data['user_info']['first_name'],
@@ -341,7 +341,7 @@ function edd_build_order( $order_data = array() ) {
 			$item['subtotal'] = isset( $item['subtotal'] )
 				? $item['subtotal']
 				: (float) $item['quantity'] * $item['item_price'];
-			
+
 			$order_item_args = array(
 				'order_id'     => $order_id,
 				'product_id'   => $item['id'],
@@ -369,12 +369,12 @@ function edd_build_order( $order_data = array() ) {
 			 */
 			$order_item_args = apply_filters( 'edd_payment_add_download_args', $order_item_args, $download->ID );
 			$order_item_args = wp_parse_args( $order_item_args, array(
-				'quantity'    => 1,
-				'price_id'    => false,
-				'amount'      => false,
-				'item_price'  => false,
-				'discount'    => 0.00,
-				'tax'         => 0.00
+				'quantity'   => 1,
+				'price_id'   => false,
+				'amount'     => false,
+				'item_price' => false,
+				'discount'   => 0.00,
+				'tax'        => 0.00,
 			) );
 
 			// The item_price key could have been changed by a filter.
@@ -585,11 +585,17 @@ function edd_transition_order_status( $order_id = 0, $status = '' ) {
 
 	$order = edd_get_order( $order_id );
 
+	/**
+	 * For backwards compatibility purposes, we need an instance of EDD_Payment so that the correct actions
+	 * are invoked.
+	 */
+	$payment = edd_get_payment( $order_id );
+
 	if ( ! $order ) {
 		return false;
 	}
 
-	if ( $status == 'completed' || $status == 'complete' ) {
+	if ( 'completed' === $status || 'complete' === $status ) {
 		$status = 'publish';
 	}
 
@@ -609,11 +615,6 @@ function edd_transition_order_status( $order_id = 0, $status = '' ) {
 
 	if ( $do_change ) {
 		/**
-		 * Action triggered before updating order status. This is here for backwards compatibility purposes.
-		 */
-		do_action( 'edd_before_payment_status_change', $order_id, $status, $order->get_status() );
-
-		/**
 		 * Action triggered before updating order status.
 		 *
 		 * @since 3.0
@@ -624,30 +625,12 @@ function edd_transition_order_status( $order_id = 0, $status = '' ) {
 		 */
 		do_action( 'edd_before_order_status_change', $order_id, $status, $order->get_status() );
 
-		// Backwards compatibility.
-		$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
-			'post_status' => $status,
-		) );
-
-		edd_update_order( $order_id, array(
-			'status' => $update_fields['post_status']
-		) );
-
-		// Actions need to be triggered based on the new status.
-		switch ( $status ) {
-			case 'refunded':
-				break;
-			case 'failed':
-				break;
-			case 'pending':
-			case 'processing':
-				break;
-		}
-
 		/**
-		 * Action triggered when updating order status. This is here for backwards compatibility purposes.
+		 * We need to update the status on the EDD_Payment instance so that the correct actions are invoked if the status
+		 * is changing to something that requires interception by the payment gateway (e.g. refunds).
 		 */
-		do_action( 'edd_update_payment_status', $order_id, $status, $order->get_status() );
+		$payment->status = $status;
+		$updated = $payment->save();
 
 		/**
 		 * Action triggered when updating order status.
@@ -660,6 +643,8 @@ function edd_transition_order_status( $order_id = 0, $status = '' ) {
 		 */
 		do_action( 'edd_transition_order_status', $order_id, $status, $order->get_status() );
 	}
+
+	return $updated;
 }
 
 /** Order Items ***************************************************************/
