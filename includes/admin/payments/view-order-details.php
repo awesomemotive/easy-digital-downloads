@@ -127,12 +127,29 @@ $cart_fees      = edd_get_order_adjustments( array(
                                         <div class="edd-admin-box-inside">
                                             <p>
                                                 <span class="label"><?php _e( 'Time:', 'easy-digital-downloads' ); ?></span>&nbsp;
-                                                <input type="text" maxlength="2" name="edd-payment-time-hour"
-                                                       value="<?php echo esc_attr( date_i18n( 'H', $order_date ) ); ?>"
-                                                       class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
-                                                <input type="text" maxlength="2" name="edd-payment-time-min"
-                                                       value="<?php echo esc_attr( date( 'i', $order_date ) ); ?>"
-                                                       class="small-text edd-payment-time-min"/>
+												<?php
+												echo EDD()->html->select( array(
+													'name'             => 'edd-payment-time-hour',
+													'options'          => edd_get_hour_values(),
+													'selected'         => date( 'G', $order_date ),
+													'chosen'           => true,
+													'class'            => 'edd-time',
+													'show_option_none' => false,
+													'show_option_all'  => false
+												) );
+												?>
+												:
+												<?php
+												echo EDD()->html->select( array(
+													'name'             => 'edd-payment-time-min',
+													'options'          => edd_get_minute_values(),
+													'selected'         => date( 'i', $order_date ),
+													'chosen'           => true,
+													'class'            => 'edd-time',
+													'show_option_none' => false,
+													'show_option_all'  => false
+												) );
+												?>
                                             </p>
                                         </div>
 
@@ -183,7 +200,7 @@ $cart_fees      = edd_get_order_adjustments( array(
 
                                         <div class="edd-order-payment edd-admin-box-inside">
                                             <p>
-                                                <span class="label"><?php _e( 'Total Price', 'easy-digital-downloads' ); ?>:</span>&nbsp;
+                                                <span class="label"><?php _e( 'Total', 'easy-digital-downloads' ); ?>:</span>&nbsp;
 												<?php echo edd_currency_symbol( $order->get_currency() ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $order->get_total() ) ); ?>"/>
                                             </p>
                                         </div>
@@ -261,7 +278,7 @@ $cart_fees      = edd_get_order_adjustments( array(
 							<?php endif; ?>
 
                             <div id="edd-order-details" class="postbox edd-order-data">
-                                <h3 class="hndle"><span><?php _e( 'Order Meta', 'easy-digital-downloads' ); ?></span>
+                                <h3 class="hndle"><span><?php _e( 'Order Extras', 'easy-digital-downloads' ); ?></span>
                                 </h3>
 
                                 <div class="inside">
@@ -271,7 +288,7 @@ $cart_fees      = edd_get_order_adjustments( array(
 										<?php if ( $gateway ) : ?>
                                             <div class="edd-order-gateway edd-admin-box-inside">
                                                 <p>
-                                                    <span class="label"><?php _e( 'Gateway:', 'easy-digital-downloads' ); ?></span>&nbsp;
+                                                    <span class="label"><?php _e( 'Gateway', 'easy-digital-downloads' ); ?>:</span>&nbsp;
 													<?php echo edd_get_gateway_admin_label( $gateway ); ?>
                                                 </p>
                                             </div>
@@ -279,14 +296,14 @@ $cart_fees      = edd_get_order_adjustments( array(
 
                                         <div class="edd-order-payment-key edd-admin-box-inside">
                                             <p>
-                                                <span class="label"><?php _e( 'Key:', 'easy-digital-downloads' ); ?></span>&nbsp;
-                                                <span><?php echo $order->get_payment_key(); ?></span>
+                                                <span class="label"><?php _e( 'Key', 'easy-digital-downloads' ); ?>:</span>&nbsp;
+                                                <input type="text" disabled value="<?php echo $order->get_payment_key(); ?>" />
                                             </p>
                                         </div>
 
                                         <div class="edd-order-ip edd-admin-box-inside">
                                             <p>
-                                                <span class="label"><?php _e( 'IP:', 'easy-digital-downloads' ); ?></span>&nbsp;
+                                                <span class="label"><?php _e( 'IP', 'easy-digital-downloads' ); ?>:</span>&nbsp;
                                                 <span><?php echo edd_payment_get_ip_address_url( $order_id ); ?></span>
                                             </p>
                                         </div>
@@ -294,7 +311,7 @@ $cart_fees      = edd_get_order_adjustments( array(
 										<?php if ( $transaction_id ) : ?>
                                             <div class="edd-order-tx-id edd-admin-box-inside">
                                                 <p>
-                                                    <span class="label"><?php _e( 'Transaction ID:', 'easy-digital-downloads' ); ?></span>&nbsp;
+                                                    <span class="label"><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?>:</span>&nbsp;
                                                     <span><?php echo apply_filters( 'edd_payment_details_transaction_id-' . $gateway, $transaction_id, $order_id ); ?></span>
                                                 </p>
                                             </div>
@@ -302,10 +319,10 @@ $cart_fees      = edd_get_order_adjustments( array(
 
                                         <div class="edd-unlimited-downloads edd-admin-box-inside">
                                             <p>
-                                                <span class="label"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
+                                                <span class="label"><?php _e( 'Downloads', 'easy-digital-downloads' ); ?>:</span>
                                                 <input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
-                                                <label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited file downloads', 'easy-digital-downloads' ); ?></label>
-                                                <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited file downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+                                                <label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited', 'easy-digital-downloads' ); ?></label>
+                                                <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
                                             </p>
                                         </div>
 
@@ -583,7 +600,6 @@ $cart_fees      = edd_get_order_adjustments( array(
 									<?php endif; ?>
 
                                 </div><!-- /.inside -->
-
                             </div>
 
 							<?php do_action( 'edd_view_order_details_files_after', $order_id ); ?>
@@ -596,11 +612,11 @@ $cart_fees      = edd_get_order_adjustments( array(
                                 <div class="inside edd-clearfix">
                                     <div class="column-container customer-info">
                                         <div class="column">
-											<?php if ( ! empty( $customer_id ) ) : ?>
-                                                <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ); ?>"><?php echo $customer->name; ?>
+											<?php if ( ! empty( $customer ) ) : ?>
+                                                <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ); ?>"><?php echo esc_html( $customer->name ); ?>
                                                     - <?php echo $customer->email; ?></a>
 												<input type="hidden" name="edd-current-customer"
-													   value="<?php echo $customer_id; ?>"/>
+													   value="<?php echo esc_attr( $customer_id ); ?>"/>
 											<?php else : ?>
 												&mdash;
 											<?php endif; ?>
