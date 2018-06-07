@@ -68,7 +68,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'ajax'     => false
 		) );
 
-
+		$this->process_bulk_action();
 		$this->get_counts();
 	}
 
@@ -192,6 +192,24 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render the checkbox column
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param EDD_Customer $item Customer object.
+	 *
+	 * @return string Displays a checkbox
+	 */
+	public function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ 'customer',
+			/*$2%s*/ $item['id']
+		);
+	}
+
+	/**
 	 * Retrieve the customer counts
 	 *
 	 * @access public
@@ -233,7 +251,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
-			'cb'            => '',
+			'cb'            => '<input type="checkbox" />',
 			//'id'            => __( 'ID',            'easy-digital-downloads' ),
 			'name'          => __( 'Name',          'easy-digital-downloads' ),
 			'email'         => __( 'Email',         'easy-digital-downloads' ),
@@ -260,14 +278,48 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Outputs the reporting views
+	 * Retrieve the bulk actions
 	 *
-	 * @since 1.5
-	 * @return string Empty. No bulk actions for Customers (yet!)
+	 * @access public
+	 * @since 3.0
+	 * @return array Array of the bulk actions
 	 */
-	public function bulk_actions( $which = '' ) {
-		$which = '';
-		return $which;
+	public function get_bulk_actions() {
+		return array(
+			'delete' => __( 'Delete', 'easy-digital-downloads' )
+		);
+	}
+
+	/**
+	 * Process the bulk actions
+	 *
+	 * @access public
+	 * @since 3.0
+	 */
+	public function process_bulk_action() {
+		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+			return;
+		}
+
+		$ids = isset( $_GET['customer'] )
+			? $_GET['customer']
+			: false;
+
+		if ( ! is_array( $ids ) ) {
+			$ids = array( $ids );
+		}
+
+		foreach ( $ids as $id ) {
+			switch ( $this->current_action() ) {
+				case 'delete' :
+					edd_delete_customer( $id );
+					break;
+			}
+		}
 	}
 
 	/**

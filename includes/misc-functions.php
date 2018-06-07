@@ -1246,7 +1246,7 @@ function edd_redirect( $location = '', $status = 302 ) {
 	wp_safe_redirect( $location, $status );
 
 	// Exit so the redirect takes place immediately
-	exit();
+	edd_die();
 }
 
 /**

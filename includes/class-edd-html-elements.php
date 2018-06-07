@@ -510,7 +510,8 @@ class EDD_HTML_Elements {
 	 * @return string
 	 */
 	public function select( $args = array() ) {
-		$defaults = array(
+
+		$args = wp_parse_args( $args, array(
 			'options'          => array(),
 			'name'             => null,
 			'class'            => '',
@@ -524,9 +525,7 @@ class EDD_HTML_Elements {
 			'data'             => array(),
 			'readonly'         => false,
 			'disabled'         => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
+		) );
 
 		$data_elements = '';
 		foreach ( $args['data'] as $key => $value ) {

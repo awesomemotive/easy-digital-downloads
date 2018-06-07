@@ -266,8 +266,8 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	}
 
-	// Remove the payment
-	wp_delete_post( $payment_id, true );
+	// Remove the order.
+	edd_delete_order( $payment_id );
 
 	// Remove related sale log entries
 	$edd_logs->delete_logs(
@@ -699,7 +699,7 @@ function edd_get_payment_statuses() {
 	return apply_filters( 'edd_payment_statuses', array(
 		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
 		'processing' => __( 'Processing', 'easy-digital-downloads' ),
-		'publish'    => __( 'Complete',   'easy-digital-downloads' ),
+		'publish'    => __( 'Completed',  'easy-digital-downloads' ),
 		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
 		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
 		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
