@@ -70,16 +70,5 @@ final class Discounts extends Base {
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;
