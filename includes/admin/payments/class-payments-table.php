@@ -272,7 +272,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		foreach ( $counts as $status => $count ) {
 			$url              = add_query_arg( array( 'status' => $status, 'paged' => false ) );
 			$class            = ( $current === $status ) ? ' class="current"' : '';
-			$count            = '&nbsp;<span class="count">(' . $this->counts['total'] . ')</span>';
+			$count            = '&nbsp;<span class="count">(' . $this->counts[ $status ] . ')</span>';
 			$label            = edd_get_payment_status_label( $status ) . $count;
 			$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label );
 		}
@@ -620,11 +620,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		}
 
 		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
-			$args['gateway'] = $_GET['gateway'];
+			$args['gateway'] = sanitize_key( $_GET['gateway'] );
 		}
 
 		if ( ! empty( $_GET['mode'] ) && $_GET['mode'] !== 'all' ) {
-			$args['mode'] = $_GET['mode'];
+			$args['mode'] = sanitize_key( $_GET['mode'] );
 		}
 
 		$this->counts = edd_get_order_counts( $args );
@@ -641,7 +641,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	    $args = array();
 
 		$per_page   = $this->per_page;
-		$paged      = isset( $_GET['paged'] )      ? ( $_GET['paged'] * $per_page ) - $per_page : null;
+		$paged      = isset( $_GET['paged'] )      ? ( absint( $_GET['paged'] ) * $per_page ) - $per_page : null;
 		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
 		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
 		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'id';

@@ -107,7 +107,6 @@ function edd_send_to_success_page( $query_string = null ) {
 	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
 
 	edd_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
-	edd_die();
 }
 
 /**
@@ -172,7 +171,6 @@ function edd_send_back_to_checkout( $args = array() ) {
 	}
 
 	edd_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
-	edd_die();
 }
 
 /**
