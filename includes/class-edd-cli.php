@@ -1327,6 +1327,10 @@ class EDD_CLI extends WP_CLI_Command {
 					'address'    => isset( $user_info['address']    ) ? $user_info['address']    : ''
 				) );
 
+				if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
+					edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );
+				}
+
 				/** Create order items ***************************************/
 
 				// The cart_items array key did not exist in earlier versions of EDD.
@@ -1421,7 +1425,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 					// Compatibility with older versions of EDD.
 					// Older versions stored a single dimensional array of download IDs.
-				} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downlaods'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
+				} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downloads'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
 					foreach ( $payment_meta['downloads'] as $cart_index => $download_id ) {
 						$download = edd_get_download( $download_id );
 
@@ -1531,7 +1535,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'_edd_payment_meta',
 					'_edd_payment_tax',
 					'_edd_payment_tax_rate',
-					'_edd_completed_date'
+					'_edd_completed_date',
+					'_edd_payment_unlimited_downloads'
 				);
 
 				$remaining_meta = array_diff_key( $meta, array_flip( $core_meta_keys ) );
