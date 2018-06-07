@@ -366,7 +366,7 @@ class EDD_Customer {
 		}
 
 		// Query all customer meta values
-		$query      = "SELECT email FROM {$wpdb->customermeta} WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1";
+		$query      = "SELECT email FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1";
 		$additional = $wpdb->get_var( $wpdb->prepare( $query, $email ) );
 
 		// Return true if found in additional email addresses
