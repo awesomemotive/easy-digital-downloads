@@ -1247,7 +1247,7 @@ class EDD_CLI extends WP_CLI_Command {
 			foreach ( $results as $result ) {
 				/** Create a new order ***************************************/
 
-				$meta         = get_post_custom( $result->ID );
+				$meta = get_post_custom( $result->ID );
 
 				$core_meta_keys = array(
 					'_edd_payment_user_email',
