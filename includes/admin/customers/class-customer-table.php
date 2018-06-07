@@ -68,7 +68,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'ajax'     => false
 		) );
 
-
+		$this->process_bulk_action();
 		$this->get_counts();
 	}
 
@@ -192,6 +192,24 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render the checkbox column
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param EDD_Customer $item Customer object.
+	 *
+	 * @return string Displays a checkbox
+	 */
+	public function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ 'customer',
+			/*$2%s*/ $item['id']
+		);
+	}
+
+	/**
 	 * Retrieve the customer counts
 	 *
 	 * @access public
@@ -233,7 +251,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
-			'cb'            => '',
+			'cb'            => '<input type="checkbox" />',
 			//'id'            => __( 'ID',            'easy-digital-downloads' ),
 			'name'          => __( 'Name',          'easy-digital-downloads' ),
 			'email'         => __( 'Email',         'easy-digital-downloads' ),
@@ -283,7 +301,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
 			return;
 		}
 
