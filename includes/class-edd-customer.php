@@ -296,18 +296,9 @@ class EDD_Customer {
 			return false;
 		}
 
-		$existing = new EDD_Customer( $email );
-
-		if ( $existing->id > 0 ) {
-			// Email address already belongs to a customer
+		// Bail if email exists in the universe
+		if ( $this->email_exists( $email ) ) {
 			return false;
-		}
-
-		if ( email_exists( $email ) ) {
-			$user = get_user_by( 'email', $email );
-			if ( $user->ID != $this->user_id ) {
-				return false;
-			}
 		}
 
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
@@ -344,6 +335,47 @@ class EDD_Customer {
 		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
 
 		return $ret;
+	}
+
+	/**
+	 * Check if an email address already exists somewhere in the known universe
+	 * of WordPress Users, EDD Customers, or additional customer email addresses.
+	 *
+	 * @since 3.0
+	 *
+	 * @global wpdb $wpdb
+	 * @param string $email
+	 * @return boolean
+	 */
+	public function email_exists( $email = '' ) {
+		global $wpdb;
+
+		// Bail if not an email address
+		if ( ! is_email( $email ) ) {
+			return false;
+		}
+
+		// Return true if found in users table
+		if ( email_exists( $email ) ) {
+			return true;
+		}
+
+		// Return true if found in customers table
+		if ( edd_get_customer_by( 'email', $email ) ) {
+			return true;
+		}
+
+		// Query all customer meta values
+		$query      = "SELECT email FROM {$wpdb->customermeta} WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1";
+		$additional = $wpdb->get_var( $wpdb->prepare( $query, $email ) );
+
+		// Return true if found in additional email addresses
+		if ( ! empty( $additional ) && ! is_wp_error( $additional ) ) {
+			return true;
+		}
+
+		// Not found
+		return false;
 	}
 
 	/**

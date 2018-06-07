@@ -1598,7 +1598,7 @@ function edd_logs_migration() {
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
+		$total     = $results->total_logs;
 		edd_debug_log( $total . ' to migrate' );
 	}
 
@@ -1620,72 +1620,80 @@ function edd_logs_migration() {
 
 	if ( ! empty( $logs ) ) {
 		foreach ( $logs as $old_log ) {
-			if ( 'file_download' === $old_log->slug ) {
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
+			foreach ( $results as $old_log ) {
+			    $new_log_id = 0;
 
-				$post_meta = array();
+				if ( 'file_download' === $old_log->slug ) {
+					$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
 
-				foreach ( $meta as $meta_item ) {
-					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-				}
+					$post_meta = array();
 
-				$log_data = array(
-					'download_id'  => $old_log->post_parent,
-					'file_id'      => $post_meta['_edd_log_file_id'],
-					'payment_id'   => $post_meta['_edd_log_payment_id'],
-					'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-					'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-					'ip'           => $post_meta['_edd_log_ip'],
-					'date_created' => $old_log->post_date,
-				);
+					foreach ( $meta as $meta_item ) {
+						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+					}
 
-				$new_log_id = edd_add_file_download_log( $log_data );
-			} else if ( 'api_request' === $old_log->slug ) {
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
+					$log_data = array(
+						'download_id'   => $old_log->post_parent,
+						'file_id'       => $post_meta['_edd_log_file_id'],
+						'payment_id'    => $post_meta['_edd_log_payment_id'],
+						'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+						'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+						'ip'            => $post_meta['_edd_log_ip'],
+						'date_created'  => $old_log->post_date_gmt,
+						'date_modified' => $old_log->post_modified_gmt,
+					);
 
-				$post_meta = array();
+					$new_log_id = edd_add_file_download_log( $log_data );
+				} elseif ( 'api_request' === $old_log->slug ) {
+					$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
 
-				foreach ( $meta as $meta_item ) {
-					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-				}
+					$post_meta = array();
 
-				$log_data = array(
-					'ip'           => $post_meta['_edd_log_request_ip'],
-					'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-					'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-					'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
-					'version'      => $post_meta['_edd_log_version'],
-					'time'         => $post_meta['_edd_log_time'],
-					'request'      => $old_log->post_excerpt,
-					'error'        => $old_log->post_content,
-					'date_created' => $old_log->post_date,
-				);
+					foreach ( $meta as $meta_item ) {
+						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+					}
 
-				$new_log_id = edd_add_api_request_log( $log_data );
-			} else {
-				$post = new WP_Post( $old_log->ID );
+					$log_data = array(
+						'ip'            => $post_meta['_edd_log_request_ip'],
+						'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
+						'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
+						'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+						'version'       => $post_meta['_edd_log_version'],
+						'time'          => $post_meta['_edd_log_time'],
+						'request'       => $old_log->post_excerpt,
+						'error'         => $old_log->post_content,
+						'date_created'  => $old_log->post_date_gmt,
+						'date_modified' => $old_log->post_modified_gmt,
+					);
 
-				$log_data = array(
-					'object_id'   => $post->post_parent,
-					'object_type' => 'download',
-					'type'        => $old_log->slug,
-					'title'       => $old_log->post_title,
-					'message'     => $old_log->post_content
-				);
+					$new_log_id = edd_add_api_request_log( $log_data );
+				} else {
+					$post = new WP_Post( $old_log->ID );
 
-				$meta            = get_post_custom( $old_log->ID );
-				$meta_to_migrate = array();
+					$log_data = array(
+						'object_id'     => $post->post_parent,
+						'object_type'   => 'download',
+						'type'          => $old_log->slug,
+						'title'         => $old_log->post_title,
+						'message'       => $old_log->post_content,
+						'date_created'  => $old_log->post_date_gmt,
+						'date_modified' => $old_log->post_modified_gmt,
+					);
 
-				foreach ( $meta as $key => $value ) {
-					$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-				}
+					$meta            = get_post_custom( $old_log->ID );
+					$meta_to_migrate = array();
 
-				$new_log_id = edd_add_log( $log_data );
-				$new_log = new EDD\Logs\Log( $new_log_id );
+					foreach ( $meta as $key => $value ) {
+						$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+					}
 
-				if ( ! empty( $meta_to_migrate ) ) {
-					foreach ( $meta_to_migrate as $key => $value ) {
-						$new_log->add_meta( $key, $value );
+					$new_log_id = edd_add_log( $log_data );
+					$new_log    = new EDD\Logs\Log( $new_log_id );
+
+					if ( ! empty( $meta_to_migrate ) ) {
+						foreach ( $meta_to_migrate as $key => $value ) {
+							$new_log->add_meta( $key, $value );
+						}
 					}
 				}
 			}
@@ -1743,7 +1751,7 @@ function edd_remove_legacy_logs() {
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
+		$total     = $results->total_logs;
 		edd_debug_log( $total . ' to remove' );
 	}
 
