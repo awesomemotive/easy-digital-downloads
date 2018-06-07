@@ -76,16 +76,5 @@ final class Orders extends Base {
 			KEY payment_key (payment_key(64)),
 			KEY date_created_completed (date_created,date_completed)";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;
