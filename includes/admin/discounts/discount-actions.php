@@ -35,20 +35,17 @@ function edd_admin_add_discount( $data = array() ) {
 	// Bail if discount does not exist.
 	if ( edd_get_discount_by( 'code', $data['code'] ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) );
-		edd_die();
 	}
 
 	// Bail if missing important data.
 	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
-		edd_die();
 	}
 
 	// Verify only accepted characters.
 	$sanitized = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $data['code'] );
 	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
-		edd_die();
 	}
 
 	// Setup default discount values.
@@ -133,7 +130,6 @@ function edd_admin_add_discount( $data = array() ) {
 
 	// Redirect.
 	edd_redirect( add_query_arg( 'edd-message', $arg, $data['edd-redirect'] ) );
-	edd_die();
 }
 add_action( 'edd_add_discount', 'edd_admin_add_discount' );
 
@@ -246,7 +242,6 @@ function edd_admin_edit_discount( $data = array() ) {
 
 	// Redirect
 	edd_redirect( add_query_arg( 'edd-message', $arg, $data['edd-redirect'] ) );
-	edd_die();
 }
 add_action( 'edd_edit_discount', 'edd_admin_edit_discount' );
 
@@ -285,7 +280,6 @@ function edd_admin_delete_discount( $data = array() ) {
 
 	// Redirect
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
-	edd_die();
 }
 add_action( 'edd_delete_discount', 'edd_admin_delete_discount' );
 
@@ -319,7 +313,6 @@ function edd_activate_discount( $data = array() ) {
 
 	// Redirect
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
-	edd_die();
 }
 add_action( 'edd_activate_discount', 'edd_activate_discount' );
 
@@ -353,7 +346,6 @@ function edd_deactivate_discount( $data = array() ) {
 
 	// Redirect
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
-	edd_die();
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
 

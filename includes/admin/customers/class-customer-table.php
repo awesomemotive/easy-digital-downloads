@@ -260,14 +260,48 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Outputs the reporting views
+	 * Retrieve the bulk actions
 	 *
-	 * @since 1.5
-	 * @return string Empty. No bulk actions for Customers (yet!)
+	 * @access public
+	 * @since 3.0
+	 * @return array Array of the bulk actions
 	 */
-	public function bulk_actions( $which = '' ) {
-		$which = '';
-		return $which;
+	public function get_bulk_actions() {
+		return array(
+			'delete' => __( 'Delete', 'easy-digital-downloads' )
+		);
+	}
+
+	/**
+	 * Process the bulk actions
+	 *
+	 * @access public
+	 * @since 3.0
+	 */
+	public function process_bulk_action() {
+		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
+			return;
+		}
+
+		$ids = isset( $_GET['customer'] )
+			? $_GET['customer']
+			: false;
+
+		if ( ! is_array( $ids ) ) {
+			$ids = array( $ids );
+		}
+
+		foreach ( $ids as $id ) {
+			switch ( $this->current_action() ) {
+				case 'delete' :
+					edd_delete_customer( $id );
+					break;
+			}
+		}
 	}
 
 	/**
