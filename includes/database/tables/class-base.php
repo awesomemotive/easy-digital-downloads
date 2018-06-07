@@ -296,6 +296,11 @@ abstract class Base extends \EDD\Database\Base {
 		// Try to do all known upgrades
 		foreach ( $this->upgrades as $version => $method ) {
 			$result = $this->upgrade_to( $version, $method );
+
+			// Bail if an error occurs, to avoid skipping ahead
+			if ( ! $this->is_success( $result ) ) {
+				return false;
+			}
 		}
 
 		// Success/fail
