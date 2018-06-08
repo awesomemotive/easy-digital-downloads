@@ -315,11 +315,13 @@ class EDD_Payment {
 	protected $order;
 
 	/**
-	 * Setup the EDD Payments class
+	 * Constructor.
 	 *
 	 * @since 2.5
+	 * @since 3.0 Updated to fetch transaction ID from edd_ordermeta table.
 	 *
-	 * @param int $payment_id A given payment
+	 * @param mixed $payment_or_txn_id Payment ID or transaction ID. Default false.
+	 * @param bool  $by_txn            Whether the constructor should retrieve the order ID from the transaction ID. Default false.
 	 *
 	 * @return mixed void|false
 	 */
@@ -331,8 +333,10 @@ class EDD_Payment {
 		}
 
 		if ( $by_txn ) {
-			$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
-			$payment_id = $wpdb->get_var( $query );
+			$payment_id = $wpdb->get_var( $wpdb->prepare(
+				"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = '%s'",
+				$payment_or_txn_id
+			) );
 
 			if ( empty( $payment_id ) ) {
 				return false;
