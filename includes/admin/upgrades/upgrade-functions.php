@@ -1667,7 +1667,7 @@ function edd_logs_migration() {
 
                 $new_log_id = edd_add_api_request_log( $log_data );
             } else {
-                $post = new WP_Post( $old_log->ID );
+                $post = WP_Post::get_instance( $old_log->ID );
 
                 $log_data = array(
                     'object_id'     => $post->post_parent,
