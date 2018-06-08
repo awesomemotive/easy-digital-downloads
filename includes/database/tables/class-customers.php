@@ -64,7 +64,7 @@ final class Customers extends Base {
 			name mediumtext NOT NULL,
 			status varchar(20) NOT NULL default '',
 			purchase_value decimal(18,9) NOT NULL default '0',
-			purchase_count bigint(20) unsigned NOT NULL default '0,
+			purchase_count bigint(20) unsigned NOT NULL default '0',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
