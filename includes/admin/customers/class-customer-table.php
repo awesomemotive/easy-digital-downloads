@@ -140,9 +140,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'order_count' :
-				$value = '<a href="' .
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
-				) . '">' . esc_html( $item['order_count'] ) . '</a>';
+				$url = add_query_arg( array(
+					'post_type' => 'download',
+					'page'      => 'edd-payment-history',
+					'customer'  => $item['id']
+				), admin_url( 'edit.php' ) );
+				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $item['order_count'] ) . '</a>';
 				break;
 
 			case 'spent' :

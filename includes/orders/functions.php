@@ -774,6 +774,46 @@ function edd_count_order_items( $args = array() ) {
 	return absint( $orders->found_items );
 }
 
+/**
+ * Query for and return array of order item counts, keyed by status.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_order_item_counts( $order_id = 0 ) {
+
+	// Default statuses
+	$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
+
+	// Query for count
+	$counts = edd_get_order_items( array(
+		'order_id' => $order_id,
+		'count'    => true,
+		'groupby'  => 'status'
+	) );
+
+	// Default array
+	$o = array(
+		'total' => 0
+	);
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts ) ) {
+
+		// Loop through statuses
+		foreach ( $counts as $item ) {
+			$o[ $item['status'] ] = absint( $item['count'] );
+		}
+
+		// Total
+		$o['total'] = array_sum( $o );
+	}
+
+	// Return counts
+	return array_merge( $defaults, $o );
+}
+
 /** Order Adjustments *********************************************************/
 
 /**
@@ -897,4 +937,44 @@ function edd_count_order_adjustments( $args = array() ) {
 
 	// Return count(s)
 	return absint( $orders->found_items );
+}
+
+/**
+ * Query for and return array of order item counts, keyed by status.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_order_adjustment_counts( $order_id = 0 ) {
+
+	// Default statuses
+	$defaults = array( 'tax_rate', 'fee', 'discount' );
+
+	// Query for count
+	$counts = edd_get_order_adjustments( array(
+		'order_id' => $order_id,
+		'count'    => true,
+		'groupby'  => 'type'
+	) );
+
+	// Default array
+	$o = array(
+		'total' => 0
+	);
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts ) ) {
+
+		// Loop through statuses
+		foreach ( $counts as $item ) {
+			$o[ $item['status'] ] = absint( $item['count'] );
+		}
+
+		// Total
+		$o['total'] = array_sum( $o );
+	}
+
+	// Return counts
+	return array_merge( $defaults, $o );
 }
