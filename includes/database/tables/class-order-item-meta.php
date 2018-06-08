@@ -56,16 +56,5 @@ final class Order_Item_Meta extends Base {
 			KEY edd_order_item_id (edd_order_item_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;

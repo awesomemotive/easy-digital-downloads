@@ -218,7 +218,7 @@ function edd_add_customer_email( $args = array() ) {
 
 		if ( false === $customer->add_email( $email, $primary ) ) {
 
-			if ( in_array( $email, $customer->emails ) ) {
+			if ( in_array( $email, $customer->emails, true ) ) {
 				$output = array(
 					'success'  => false,
 					'message'  => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),

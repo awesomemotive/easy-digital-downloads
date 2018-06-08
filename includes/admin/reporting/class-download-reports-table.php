@@ -45,12 +45,10 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-
-		// Set parent defaults
 		parent::__construct( array(
 			'singular' => 'report-' . edd_get_label_singular(),
 			'plural'   => 'report-' . edd_get_label_plural(),
-			'ajax'     => false,
+			'ajax'     => false
 		) );
 
 		add_action( 'edd_report_view_actions', array( $this, 'category_filter' ) );
@@ -102,7 +100,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
+		return array(
 			'title'            => edd_get_label_singular(),
 			'sales'            => __( 'Sales',                    'easy-digital-downloads' ),
 			'earnings'         => __( 'Earnings',                 'easy-digital-downloads' ),
@@ -110,8 +108,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'average_earnings' => __( 'Monthly Average Earnings', 'easy-digital-downloads' ),
 			'details'          => __( 'Detailed Report',          'easy-digital-downloads' )
 		);
-
-		return $columns;
 	}
 
 	/**
@@ -135,7 +131,9 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return int Current page number
 	 */
 	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		return isset( $_GET['paged'] )
+			? absint( $_GET['paged'] )
+			: 1;
 	}
 
 	/**
@@ -145,7 +143,9 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return int Category ID
 	 */
 	public function get_category() {
-		return isset( $_GET['category'] ) ? absint( $_GET['category'] ) : 0;
+		return isset( $_GET['category'] )
+			? absint( $_GET['category'] )
+			: 0;
 	}
 
 	/**
@@ -157,20 +157,24 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	public function get_total_downloads() {
 		$total  = 0;
 		$counts = wp_count_posts( 'download', 'readable' );
+
 		foreach( $counts as $count ) {
 			$total += $count;
 		}
+
 		return $total;
 	}
 
 	/**
 	 * Outputs the reporting views
 	 *
+	 * These aren't really bulk actions but this outputs the markup in the
+	 * right place.
+	 *
 	 * @since 1.5
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
 
@@ -181,7 +185,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function category_filter() {
-		if( get_terms( 'download_category' ) ) {
+		if ( get_terms( 'download_category' ) ) {
 			echo EDD()->html->category_dropdown( 'category', $this->get_category() );
 		}
 	}
@@ -195,7 +199,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	public function query() {
 
 		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$order    = isset( $_GET['order']   ) ? $_GET['order']   : 'DESC';
 		$category = $this->get_category();
 
 		$args = array(
@@ -208,7 +212,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'suppress_filters' => true
 		);
 
-		if( ! empty( $category ) ) {
+		if ( ! empty( $category ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => 'download_category',
@@ -278,19 +282,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$columns = $this->get_columns();
-
-		$hidden = array(); // No hidden columns
-
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$data = $this->reports_data();
+		$this->_column_headers = array(
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns()
+		);
 
 		$total_items = $this->get_total_downloads();
-
-		$this->items = $data;
+		$this->items = $this->reports_data();
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.0-beta-1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-06-07 05:31:56+00:00\n"
+"POT-Creation-Date: 2018-06-08 04:42:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -174,6 +174,7 @@ msgstr ""
 
 #: includes/admin/admin-pages.php:86
 #: includes/admin/customers/class-customer-table.php:258
+#: includes/admin/payments/class-payments-table.php:66
 #: includes/admin/payments/payments-history.php:36
 msgid "Orders"
 msgstr ""
@@ -230,46 +231,46 @@ msgstr ""
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:52
+#: includes/admin/class-api-keys-table.php:43
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:43
 msgid "API Key"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:53 includes/admin/tools.php:73
+#: includes/admin/class-api-keys-table.php:44 includes/admin/tools.php:73
 msgid "API Keys"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:142
+#: includes/admin/class-api-keys-table.php:133
 msgid "View API Log"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:149
+#: includes/admin/class-api-keys-table.php:140
 msgid "Reissue"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:154
+#: includes/admin/class-api-keys-table.php:146
 msgid "Revoke"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:170
+#: includes/admin/class-api-keys-table.php:162
 #: includes/checkout/template.php:484 includes/checkout/template.php:490
 #: templates/shortcode-register.php:20
 msgid "Username"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:171
+#: includes/admin/class-api-keys-table.php:163
 msgid "Public Key"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:172
+#: includes/admin/class-api-keys-table.php:164
 msgid "Token"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:173
+#: includes/admin/class-api-keys-table.php:165
 msgid "Secret Key"
 msgstr ""
 
-#: includes/admin/class-api-keys-table.php:198
+#: includes/admin/class-api-keys-table.php:193
 msgid "Generate New API Keys"
 msgstr ""
 
@@ -988,7 +989,7 @@ msgstr ""
 #: includes/admin/dashboard-widgets.php:85
 #: includes/admin/dashboard-widgets.php:111
 #: includes/admin/downloads/dashboard-columns.php:36
-#: includes/admin/reporting/class-download-reports-table.php:108
+#: includes/admin/reporting/class-download-reports-table.php:106
 #: includes/admin/reporting/export/class-batch-export-downloads.php:58
 #: includes/admin/reporting/graphing.php:295
 #: includes/admin/reporting/graphing.php:596
@@ -1017,7 +1018,7 @@ msgstr ""
 
 #: includes/admin/dashboard-widgets.php:119
 #: includes/admin/downloads/dashboard-columns.php:35
-#: includes/admin/reporting/class-download-reports-table.php:107
+#: includes/admin/reporting/class-download-reports-table.php:105
 #: includes/admin/reporting/export/class-batch-export-downloads.php:57
 #: includes/admin/reporting/graphing.php:296
 #: includes/admin/reporting/graphing.php:597 includes/admin/tools/logs.php:191
@@ -1438,7 +1439,7 @@ msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:43
 #: includes/admin/payments/class-payments-table.php:194
-#: includes/admin/reporting/class-base-logs-list-table.php:453
+#: includes/admin/reporting/class-base-logs-list-table.php:465
 msgid "Search"
 msgstr ""
 
@@ -1993,6 +1994,10 @@ msgstr ""
 msgid "Error Updating Payment"
 msgstr ""
 
+#: includes/admin/payments/class-payments-table.php:65
+msgid "Order"
+msgstr ""
+
 #: includes/admin/payments/class-payments-table.php:111
 msgid "All modes"
 msgstr ""
@@ -2002,14 +2007,14 @@ msgid "All gateways"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:179
-#: includes/admin/reporting/class-base-logs-list-table.php:443
+#: includes/admin/reporting/class-base-logs-list-table.php:455
 #: includes/admin/reporting/graphing.php:694 includes/admin/tools/logs.php:241
 #: includes/reports/reports-functions.php:1110
 msgid "Filter"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:183
-#: includes/admin/reporting/class-base-logs-list-table.php:447
+#: includes/admin/reporting/class-base-logs-list-table.php:459
 msgid "Clear Filter"
 msgstr ""
 
@@ -2501,11 +2506,11 @@ msgstr ""
 msgid "Request Date:"
 msgstr ""
 
-#: includes/admin/reporting/class-base-logs-list-table.php:266
+#: includes/admin/reporting/class-base-logs-list-table.php:278
 msgid "All Downloads"
 msgstr ""
 
-#: includes/admin/reporting/class-base-logs-list-table.php:490
+#: includes/admin/reporting/class-base-logs-list-table.php:502
 msgid "Search logs..."
 msgstr ""
 
@@ -2533,19 +2538,19 @@ msgstr ""
 msgid "No earnings for dates provided."
 msgstr ""
 
-#: includes/admin/reporting/class-download-reports-table.php:92
+#: includes/admin/reporting/class-download-reports-table.php:90
 msgid "View Detailed Report"
 msgstr ""
 
-#: includes/admin/reporting/class-download-reports-table.php:109
+#: includes/admin/reporting/class-download-reports-table.php:107
 msgid "Monthly Average Sales"
 msgstr ""
 
-#: includes/admin/reporting/class-download-reports-table.php:110
+#: includes/admin/reporting/class-download-reports-table.php:108
 msgid "Monthly Average Earnings"
 msgstr ""
 
-#: includes/admin/reporting/class-download-reports-table.php:111
+#: includes/admin/reporting/class-download-reports-table.php:109
 msgid "Detailed Report"
 msgstr ""
 
@@ -5192,45 +5197,45 @@ msgstr ""
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1807
+#: includes/admin/upgrades/upgrade-functions.php:1813
 msgid ""
 "<strong>Migration complete:</strong> You have already completed the update "
 "to the file download logs."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1818
+#: includes/admin/upgrades/upgrade-functions.php:1824
 msgid ""
 "<strong>Database Upgrade Complete:</strong> All database upgrades have been "
 "completed."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1820
+#: includes/admin/upgrades/upgrade-functions.php:1826
 msgid "You may now leave this page."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1826
+#: includes/admin/upgrades/upgrade-functions.php:1832
 msgid ""
 "<strong>Important:</strong> Please leave this screen open and do not "
 "navigate away until the process completes."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1869
+#: includes/admin/upgrades/upgrade-functions.php:1875
 msgid "Update file download logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1874
+#: includes/admin/upgrades/upgrade-functions.php:1880
 msgid ""
 "This will update the file download logs to remove some <abbr "
 "title=\"Personally Identifiable Information\">PII</abbr> and make file "
 "download counts more accurate."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1883
-#: includes/admin/upgrades/upgrade-functions.php:1886
+#: includes/admin/upgrades/upgrade-functions.php:1889
+#: includes/admin/upgrades/upgrade-functions.php:1892
 msgid "Update File Download Logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1887
+#: includes/admin/upgrades/upgrade-functions.php:1893
 msgid "File download logs have already been updated."
 msgstr ""
 
@@ -8736,7 +8741,7 @@ msgid "Customer %s"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:152
-#: includes/admin/reporting/class-base-logs-list-table.php:427
+#: includes/admin/reporting/class-base-logs-list-table.php:439
 #: includes/admin/reporting/graphing.php:670
 #: includes/reports/reports-functions.php:1013
 msgctxt "date filter"
@@ -8744,7 +8749,7 @@ msgid "From"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:156
-#: includes/admin/reporting/class-base-logs-list-table.php:431
+#: includes/admin/reporting/class-base-logs-list-table.php:443
 #: includes/admin/reporting/graphing.php:677
 #: includes/reports/reports-functions.php:1022
 msgctxt "date filter"

@@ -413,7 +413,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-
 		$columns  = $this->get_columns();
 		$hidden   = array(); // No hidden columns
 		$sortable = $this->get_sortable_columns();
@@ -423,29 +422,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$status = isset( $_GET['status'] )
 			? sanitize_key( $_GET['status'] )
-			: 'any';
-
-		// Switch statuses
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->counts['active'];
-				break;
-
-			case 'pending':
-				$total_items = $this->counts['pending'];
-				break;
-
-			case 'any':
-			default:
-				$total_items = $this->counts['total'];
-				break;
-		}
+			: 'total';
 
 		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_items' => $total_items,
+			'total_items' => $this->counts[ $status ],
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
 	}
 }
