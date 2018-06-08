@@ -348,7 +348,7 @@ function edd_customers_view( $customer = '' ) {
                         <input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $customer->user_id ); ?>" />
 					</span>
                     <span class="customer-user-id info-item editable">
-						<?php if ( intval( $customer->user_id ) > 0 ) : ?>
+						<?php if ( intval( $customer->user_id ) > 0 && ! empty( $userdata ) ) : ?>
                             <span data-key="user_id">
 								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo esc_html( $userdata->user_login ); ?></a>
 							</span>
