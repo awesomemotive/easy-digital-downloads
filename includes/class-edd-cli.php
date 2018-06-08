@@ -1548,6 +1548,8 @@ class EDD_CLI extends WP_CLI_Command {
 					edd_add_order_meta( $order_id, $meta_key, $meta_value );
 				}
 
+				edd_add_order_meta( $order_id, 'legacy_payment_id', $result->ID );
+
 				edd_debug_log( $result->ID . ' successfully migrated to ' . $order_id );
 				$progress->tick();
 			}
