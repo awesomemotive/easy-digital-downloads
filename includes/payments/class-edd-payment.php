@@ -2001,8 +2001,6 @@ class EDD_Payment {
 				}
 
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
-					// We need to check that the fee does not already exist in the database.
-
 					foreach ( $meta_value['fees'] as $fee_id => $fee ) {
 						if ( ! empty( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
 							$order_item_id = edd_get_order_items( array(
@@ -2115,6 +2113,50 @@ class EDD_Payment {
 									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 								}
 							}
+						}
+					}
+				}
+
+				if ( isset( $meta_value['cart_details'] ) && ! empty( $meta_value['cart_details'] ) ) {
+					foreach ( $meta_value['cart_details'] as $key => $item ) {
+						$order_item_id = edd_get_order_items( array(
+							'number'       => 1,
+							'fields'       => 'ids',
+							'order_id'     => $this->ID,
+							'product_id'   => $item['id'],
+							'product_name' => $item['name'],
+						) );
+
+						if ( is_array( $order_item_id ) && ! empty( $order_item_id ) ) {
+							$order_item_id = $order_item_id[0];
+
+							edd_update_order_item( $order_item_id, array(
+								'order_id'     => $this->ID,
+								'product_id'   => $item['id'],
+								'product_name' => $item['name'],
+								'price_id'     => $item['item_number']['options']['price_id'],
+								'cart_index'   => $key,
+								'quantity'     => $item['quantity'],
+								'amount'       => $item['item_price'],
+								'subtotal'     => $item['subtotal'],
+								'discount'     => $item['discount'],
+								'tax'          => $item['tax'],
+								'total'        => $item['price'],
+							) );
+						} else {
+							edd_add_order_item( array(
+								'order_id'     => $this->ID,
+								'product_id'   => $item['id'],
+								'product_name' => $item['name'],
+								'price_id'     => $item['item_number']['options']['price_id'],
+								'cart_index'   => $key,
+								'quantity'     => $item['quantity'],
+								'amount'       => $item['item_price'],
+								'subtotal'     => $item['subtotal'],
+								'discount'     => $item['discount'],
+								'tax'          => $item['tax'],
+								'total'        => $item['price'],
+							) );
 						}
 					}
 				}
