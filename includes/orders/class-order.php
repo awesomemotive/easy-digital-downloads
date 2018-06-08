@@ -191,16 +191,12 @@ class Order extends Base_Object {
 	 * @param mixed $object Object to populate members for.
 	 */
 	public function __construct( $object = null ) {
-		if ( $object ) {
-			foreach ( get_object_vars( $object ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
-		}
+		parent::__construct( $object );
 
 		$this->items = edd_get_order_items( array(
 			'order_id' => $this->get_id(),
 			'orderby'  => 'cart_index',
-			'order'    => 'ASC'
+			'order'    => 'ASC',
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
