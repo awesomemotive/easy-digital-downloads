@@ -501,23 +501,20 @@ function edd_get_registered_settings() {
 						'std'  => '.',
 					),
 				),
-				'tracking' => array(
-					'tracking_settings' => array(
-						'id'   => 'tracking_settings',
-						'name' => '<h3>' . __( 'Tracking', 'easy-digital-downloads' ) . '</h3>',
+				'moderation' => array(
+					'moderation_settings' => array(
+						'id'   => 'moderation_settings',
+						'name' => '<h3>' . __( 'Moderation', 'easy-digital-downloads' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
+						'tooltip_title' => __( 'Moderation', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'It is sometimes necessary to temporarily prevent certain potential customers from checking out. Use these settings to control who can make purchases.', 'easy-digital-downloads' ),
 					),
-					'allow_tracking' => array(
-						'id'    => 'allow_tracking',
-						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
-						'check' => __( 'Allow',          'easy-digital-downloads' ),
-						'desc'  => sprintf(
-							__( 'Anonymously track how Easy Digital Downloads is used, helping us make it better. <a href="%s" target="_blank">Here is what we track</a>.<br>Opt-in here (and to our newsletter) and we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/tracking/',
-							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
-						),
-						'type' => 'checkbox_description',
+					'banned_emails' => array(
+						'id'    => 'banned_emails',
+						'name'  => __( 'Prevent Sales To', 'easy-digital-downloads' ),
+						'desc'  => __( 'Enter (one per line) emails, domains starting with <code>@</code>, or TLDs starting with <code>.</code>.', 'easy-digital-downloads' ),
+						'type'  => 'textarea'
 					)
 				),
 				'api' => array(
@@ -541,6 +538,25 @@ function edd_get_registered_settings() {
 						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1131-edd-rest-api-introduction' ),
 						'type' => 'descriptive_text',
 					),
+				),
+				'tracking' => array(
+					'tracking_settings' => array(
+						'id'   => 'tracking_settings',
+						'name' => '<h3>' . __( 'Tracking', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+					),
+					'allow_tracking' => array(
+						'id'    => 'allow_tracking',
+						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
+						'check' => __( 'Allow',          'easy-digital-downloads' ),
+						'desc'  => sprintf(
+							__( 'Anonymously track how Easy Digital Downloads is used, helping us make it better. <a href="%s" target="_blank">Here is what we track</a>.<br>Opt-in here (and to our newsletter) and we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/tracking/',
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+						),
+						'type' => 'checkbox_description',
+					)
 				),
 			) ),
 
@@ -677,7 +693,7 @@ function edd_get_registered_settings() {
 					'admin_notice_emails' => array(
 						'id'   => 'admin_notice_emails',
 						'name' => __( 'Sale Notification Emails', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line.', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter (one per line) the email address(es) that should receive a notification anytime a sale is made. One per line.', 'easy-digital-downloads' ),
 						'type' => 'textarea',
 						'std'  => get_bloginfo( 'admin_email' ),
 					),
@@ -1471,6 +1487,32 @@ function edd_sanitize_html_class( $class = '' ) {
 	return $class;
 }
 
+
+/**
+ * Save banned emails.
+ *
+ * @since 2.0
+ */
+function edd_sanitize_banned_emails( $value = '' ) {
+
+	if ( ! empty( $_POST['banned_emails'] ) ) {
+		// Sanitize the input
+		$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
+		$emails = array_unique( $emails );
+		$emails = array_map( 'sanitize_text_field', $emails );
+
+		foreach ( $emails as $id => $email ) {
+			if ( ! is_email( $email ) && $email[0] != '@' && $email[0] != '.' ) {
+				unset( $emails[ $id ] );
+			}
+		}
+	} else {
+		$emails = '';
+	}
+
+	return $emails;
+}
+
 /**
  * Retrieve settings tabs
  *
@@ -1540,11 +1582,12 @@ function edd_get_registered_settings_sections() {
 	if ( null === $sections ) {
 		$sections = array(
 			'general'    => apply_filters( 'edd_settings_sections_general', array(
-				'main'               => __( 'General',  'easy-digital-downloads' ),
-				'location'           => __( 'Location', 'easy-digital-downloads' ),
-				'currency'           => __( 'Currency', 'easy-digital-downloads' ),
-				'api'                => __( 'API',      'easy-digital-downloads' ),
-				'tracking'           => __( 'Tracking', 'easy-digital-downloads' )
+				'main'               => __( 'General',    'easy-digital-downloads' ),
+				'location'           => __( 'Location',   'easy-digital-downloads' ),
+				'currency'           => __( 'Currency',   'easy-digital-downloads' ),
+				'moderation'         => __( 'Moderation', 'easy-digital-downloads' ),
+				'api'                => __( 'API',        'easy-digital-downloads' ),
+				'tracking'           => __( 'Tracking',   'easy-digital-downloads' )
 			) ),
 			'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
 				'main'               => __( 'General',         'easy-digital-downloads' ),
@@ -2094,14 +2137,18 @@ function edd_textarea_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
 	if ( $edd_option ) {
-		$value = $edd_option;
+		if ( is_array( $edd_option ) ) {
+			$value = implode( "\n", maybe_unserialize( $edd_option ) );
+		} else {
+			$value = $edd_option;
+		}
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$html  = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$html  = '<textarea class="' . $class . '" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );

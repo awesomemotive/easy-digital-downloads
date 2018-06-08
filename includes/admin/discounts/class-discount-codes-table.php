@@ -320,7 +320,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
 		// Wrap discount title in strong anchor
-		$discount_title = '<strong><a href="' . add_query_arg( array(
+		$discount_title = '<strong><a class="row-title" href="' . add_query_arg( array(
 				'edd-action' => 'edit_discount',
 				'discount'   => $discount->id,
 			), $base ) . '">' . stripslashes( $discount->name ) . '</a></strong>';

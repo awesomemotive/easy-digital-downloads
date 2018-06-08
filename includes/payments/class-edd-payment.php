@@ -2071,11 +2071,7 @@ class EDD_Payment {
 	public function is_recoverable() {
 		$recoverable = false;
 
-		$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array(
-			'pending',
-			'abandoned',
-			'failed',
-		) );
+		$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
 
 		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->transaction_id ) ) {
 			$recoverable = true;

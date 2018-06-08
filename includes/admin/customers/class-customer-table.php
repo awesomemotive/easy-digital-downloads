@@ -188,7 +188,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		return '<a href="' . esc_url( $view_url ) . '"><strong>' . $name . '</strong></a>' . $this->row_actions( $actions );
+		return '<a class="row-title" href="' . esc_url( $view_url ) . '"><strong>' . $name . '</strong></a>' . $this->row_actions( $actions );
 	}
 
 	/**
