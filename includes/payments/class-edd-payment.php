@@ -673,7 +673,6 @@ class EDD_Payment {
 							switch ( $item['action'] ) {
 								case 'add':
 									$price = $item['price'];
-									$taxes = $item['tax'];
 
 									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
 										$price_id = isset( $item['item_number']['options']['price_id'] )
