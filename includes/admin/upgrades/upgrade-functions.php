@@ -1436,7 +1436,7 @@ function edd_notes_migration() {
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(comment_ID) as total_notes FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
+		$total     = $results->total_notes;
 		edd_debug_log( $total . ' to migrate' );
 	}
 
