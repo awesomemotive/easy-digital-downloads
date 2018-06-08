@@ -1249,22 +1249,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 				$meta = get_post_custom( $result->ID );
 
-				$core_meta_keys = array(
-					'_edd_payment_user_email',
-					'_edd_payment_customer_id',
-					'_edd_payment_user_id',
-					'_edd_payment_user_ip',
-					'_edd_payment_purchase_key',
-					'_edd_payment_total',
-					'_edd_payment_mode',
-					'_edd_payment_gateway',
-					'_edd_payment_meta',
-					'_edd_payment_tax',
-					'_edd_payment_tax_rate',
-					'_edd_completed_date',
-					'_edd_payment_transaction_id'
-				);
-
 				$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
 				$user_info    = $payment_meta['user_info'];
 
@@ -1334,6 +1318,27 @@ class EDD_CLI extends WP_CLI_Command {
 
 				if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
 					edd_add_order_meta( $order_id, 'transaction_id', $meta['_edd_payment_transaction_id'][0] );
+				}
+
+				/** Migrate edd_payment_meta *********************************/
+
+				// By default, this is what is stored in payment meta.
+				$payment_meta_core_keys = array(
+					'fees',
+					'key',
+					'email',
+					'date',
+					'user_info',
+					'downloads',
+					'cart_details',
+					'currency',
+				);
+
+				$remaining_payment_meta = array_diff_key( $meta['_edd_payment_meta'], array_flip( $payment_meta_core_keys ) );
+
+				// If we have extra payment meta, it needs to be migrated across.
+				if ( 0 < count( $remaining_payment_meta ) ) {
+					edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
 				}
 
 				/** Create order items ***************************************/
