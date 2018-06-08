@@ -176,11 +176,17 @@ function edd_get_default_gateway() {
  */
 function edd_get_gateway_admin_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
-	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
-	$payment  = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : false;
 
-	if ( $gateway == 'manual' && $payment ) {
-		if ( edd_get_payment_amount( $payment ) == 0 ) {
+	$label    = isset( $gateways[ $gateway ] )
+		? $gateways[ $gateway ]['admin_label']
+		: ucwords( $gateway );
+
+	$payment  = isset( $_GET['id'] )
+		? absint( $_GET['id'] )
+		: false;
+
+	if ( $gateway === 'manual' && $payment ) {
+		if ( ! edd_get_payment_amount( $payment ) ) {
 			$label = __( 'Free Purchase', 'easy-digital-downloads' );
 		}
 	}
