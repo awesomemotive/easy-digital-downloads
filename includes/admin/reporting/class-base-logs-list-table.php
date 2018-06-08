@@ -43,7 +43,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		parent::__construct( array(
 			'singular' => edd_get_label_singular(),
 			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
+			'ajax'     => false
 		) );
 	}
 
@@ -56,19 +56,19 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
-		?>
-	<div class="tablenav <?php echo esc_attr( $which ); ?>">
+	?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+			<?php if ( $this->has_items() ) : ?>
+				<div class="alignleft actions bulkactions">
+					<?php $this->bulk_actions( $which ); ?>
+				</div>
+			<?php endif;
 
-		<?php if ( $this->has_items() ) : ?>
-		<div class="alignleft actions bulkactions">
-			<?php $this->bulk_actions( $which ); ?>
-		</div>
-		<?php endif;
-		$this->extra_tablenav( $which );
-		$this->pagination( $which );?>
+			$this->extra_tablenav( $which );
+			$this->pagination( $which ); ?>
 
-		<br class="clear" />
-	</div><?php
+			<br class="clear" />
+		</div><?php
 	}
 
 	/**
@@ -132,7 +132,9 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_start_date() {
-		return ! empty( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
+		return ! empty( $_GET['start-date'] )
+			? sanitize_text_field( $_GET['start-date'] )
+			: null;
 	}
 
 	/**
@@ -143,7 +145,9 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_end_date() {
-		return ! empty( $_GET['end-date'] ) ? sanitize_text_field( $_GET['end-date'] ) : null;
+		return ! empty( $_GET['end-date'] )
+			? sanitize_text_field( $_GET['end-date'] )
+			: null;
 	}
 
 	/**
@@ -154,7 +158,9 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return int Download ID.
 	 */
 	public function get_filtered_download() {
-		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+		return ! empty( $_GET['download'] )
+			? absint( $_GET['download'] )
+			: false;
 	}
 
 	/**
@@ -165,7 +171,9 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return int Payment ID.
 	 */
 	public function get_filtered_payment() {
-		return ! empty( $_GET['payment'] ) ? absint( $_GET['payment'] ) : false;
+		return ! empty( $_GET['payment'] )
+			? absint( $_GET['payment'] )
+			: false;
 	}
 
 	/**
@@ -176,7 +184,9 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return String The search string.
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
+		return ! empty( $_GET['s'] )
+			? urldecode( trim( $_GET['s'] ) )
+			: '';
 	}
 
 	/**
@@ -200,7 +210,9 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return int Current page number.
 	 */
 	function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		return isset( $_GET['paged'] )
+			? absint( $_GET['paged'] )
+			: 1;
 	}
 
 	/**

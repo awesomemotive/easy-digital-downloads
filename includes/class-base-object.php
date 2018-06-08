@@ -30,10 +30,16 @@ abstract class Base_Object {
 	 * @param mixed $object Object to populate members for.
 	 */
 	public function __construct( $object = null ) {
-		if ( ! empty( $object ) ) {
-			foreach ( get_object_vars( $object ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
+		if ( empty( $object ) ) {
+			return;
+		}
+
+		if ( ! is_object( $object ) ) {
+			$object = (object) $object;
+		}
+
+		foreach ( get_object_vars( $object ) as $key => $value ) {
+			$this->{$key} = $value;
 		}
 	}
 

@@ -62,8 +62,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
+			'singular' => __( 'Order',  'easy-digital-downloads' ),
+			'plural'   => __( 'Orders', 'easy-digital-downloads' ),
 			'ajax'     => false
 		) );
 
@@ -72,8 +72,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'page'      => 'edd-payment-history'
 		), admin_url( 'edit.php' ) );
 
-		$this->get_payment_counts();
 		$this->process_bulk_action();
+		$this->get_payment_counts();
 	}
 
 	public function get_status() {
@@ -259,7 +259,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$url   = remove_query_arg( array( 'status', 'paged' ) );
 		$class = in_array( $current, array( '', 'all' ) ) ? ' class="current"' : '';
-		$count = '&nbsp;<span class="count">(' . $this->counts['total'] . ')</span>';
+		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
 		$label = __( 'All',  'easy-digital-downloads' ) . $count;
 		$views = array(
 			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label )
@@ -326,7 +326,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'id';
+		return 'number';
 	}
 
 	/**
@@ -740,7 +740,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->set_pagination_args( array(
-			'total_items' => $this->counts['total'],
+			'total_items' => $this->counts[ $status ],
 			'per_page'    => $this->per_page,
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
