@@ -1698,6 +1698,8 @@ function edd_logs_migration() {
 				}
 			}
 
+			edd_add_order_meta( $order_id, 'legacy_payment_id', $result->ID );
+
 			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $new_log_id );
 		}
 
