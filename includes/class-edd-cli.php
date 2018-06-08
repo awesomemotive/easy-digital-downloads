@@ -1261,7 +1261,8 @@ class EDD_CLI extends WP_CLI_Command {
 					'_edd_payment_meta',
 					'_edd_payment_tax',
 					'_edd_payment_tax_rate',
-					'_edd_completed_date'
+					'_edd_completed_date',
+					'_edd_payment_transaction_id'
 				);
 
 				$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
@@ -1329,6 +1330,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 				if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
 					edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );
+				}
+
+				if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
+					edd_add_order_meta( $order_id, 'transaction_id', $meta['_edd_payment_transaction_id'][0] );
 				}
 
 				/** Create order items ***************************************/
