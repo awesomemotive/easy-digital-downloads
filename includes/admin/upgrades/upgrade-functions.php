@@ -218,12 +218,12 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="notice notice-warning">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads finished migrating <strong>discounts</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
-				__( '<strong>Removing legacy data:</strong><br />All discounts records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
-				'<br /><br />' .
-				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				__( 'All discounts were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
+				'<br />' .
+				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_discounts' ) ),
@@ -247,9 +247,9 @@ function edd_show_upgrade_notices() {
 					'</p>' .
 					'<p style="display: none;">' .
 					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all logs records and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_logs</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
@@ -263,12 +263,12 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="notice notice-warning">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating log</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads finished migrating <strong>logs</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
-				__( '<strong>Removing legacy data:</strong><br />All logs records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
-				'<br /><br />' .
-				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				__( 'All logs were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
+				'<br />' .
+				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_logs' ) ),
@@ -291,9 +291,9 @@ function edd_show_upgrade_notices() {
 					'</p>' .
 					'<p style="display: none;">' .
 					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all notes and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_notes</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
@@ -307,12 +307,12 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="notice notice-warning">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating note</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads finished migrating <strong>notes</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
-				__( '<strong>Removing legacy data:</strong><br />All note records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
-				'<br /><br />' .
-				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				__( 'All notes were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
+				'<br />' .
+				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_notes' ) ),
