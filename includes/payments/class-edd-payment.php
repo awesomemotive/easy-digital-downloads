@@ -1984,6 +1984,12 @@ class EDD_Payment {
 					) );
 				}
 
+				if ( isset( $meta_value['currency'] ) && ! empty( $meta_value['currency'] ) ) {
+					return edd_update_order( $this->ID, array(
+						'currency' => $meta_value['currency'],
+					) );
+				}
+
 				if ( isset( $meta_value['user_info'] ) && ! empty( $meta_value['user_info'] ) ) {
 					$user_info = array(
 						'first_name' => $meta_value['user_info']['first_name'],
@@ -1992,6 +1998,52 @@ class EDD_Payment {
 					);
 
 					return edd_update_order_meta( $this->ID, 'user_info', $user_info );
+				}
+
+				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
+					// We need to check that the fee does not already exist in the database.
+
+					foreach ( $meta_value['fees'] as $fee_id => $fee ) {
+						if ( ! empty( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
+							$order_item_id = edd_get_order_items( array(
+								'number'     => 1,
+								'order_id'   => $this->ID,
+								'product_id' => $fee['download_id'],
+								'fields'     => 'ids',
+							) );
+
+							if ( is_array( $order_item_id ) ) {
+								$order_item_id = (int) $order_item_id[0];
+							}
+
+							$adjustment_id = edd_get_order_adjustments( array(
+								'number'      => 1,
+								'object_id'   => $order_item_id,
+								'object_type' => 'order_item',
+								'type'        => 'fee',
+								'fields'      => 'ids',
+							) );
+
+							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
+								$adjustment_id = $adjustment_id[0];
+
+								edd_update_order_adjustment( $adjustment_id, array(
+									'description' => $fee['label'],
+
+								) );
+							} else {
+								$adjustment_id = edd_add_order_adjustment( array(
+									'object_id'   => $order_item_id,
+									'object_type' => 'order_item',
+									'type'        => 'fee',
+									'description' => $fee['label'],
+									'amount'      => (float) $fee['amount'],
+								) );
+
+								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+							}
+						}
+					}
 				}
 
 				break;
