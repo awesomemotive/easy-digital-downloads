@@ -2022,6 +2022,13 @@ class EDD_Payment {
 								'object_type' => 'order_item',
 								'type'        => 'fee',
 								'fields'      => 'ids',
+								'meta_query'  => array(
+									array(
+										'key'     => 'fee_id',
+										'value'   => $fee_id,
+										'compare' => '=',
+									),
+								),
 							) );
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
@@ -2029,8 +2036,16 @@ class EDD_Payment {
 
 								edd_update_order_adjustment( $adjustment_id, array(
 									'description' => $fee['label'],
-
+									'amount'      => (float) $fee['amount'],
 								) );
+
+								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+									edd_update_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+								}
+
+								if ( ! is_null( $fee['price_id'] ) ) {
+									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
+								}
 							} else {
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $order_item_id,
@@ -2041,6 +2056,64 @@ class EDD_Payment {
 								) );
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+
+								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+								}
+
+								if ( ! is_null( $fee['price_id'] ) ) {
+									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
+								}
+							}
+						} else {
+							$adjustment_id = edd_get_order_adjustments( array(
+								'number'      => 1,
+								'object_id'   => $this->ID,
+								'object_type' => 'order',
+								'type'        => 'fee',
+								'fields'      => 'ids',
+								'meta_query'  => array(
+									array(
+										'key'     => 'fee_id',
+										'value'   => $fee_id,
+										'compare' => '=',
+									),
+								),
+							) );
+
+							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
+								$adjustment_id = $adjustment_id[0];
+
+								edd_update_order_adjustment( $adjustment_id, array(
+									'description' => $fee['label'],
+									'amount'      => (float) $fee['amount'],
+								) );
+
+								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+									edd_update_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+								}
+
+								if ( ! is_null( $fee['price_id'] ) ) {
+									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
+								}
+							} else {
+								$adjustment_id = edd_add_order_adjustment( array(
+									'object_id'   => $this->ID,
+									'object_type' => 'order',
+									'type'        => 'fee',
+									'description' => $fee['label'],
+									'amount'      => (float) $fee['amount'],
+								) );
+
+								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+
+								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+								}
+
+								if ( ! is_null( $fee['price_id'] ) ) {
+									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
+								}
 							}
 						}
 					}
