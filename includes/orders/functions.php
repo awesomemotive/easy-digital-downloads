@@ -187,7 +187,7 @@ function edd_is_order_recoverable( $order_id = 0 ) {
 
 	$transaction_id = $order->get_transaction_id();
 
-	if ( in_array( $order->get_status(), $recoverable_statuses ) && empty( $transaction_id ) ) {
+	if ( in_array( $order->get_status(), $recoverable_statuses, true ) && empty( $transaction_id ) ) {
 		return true;
 	}
 
