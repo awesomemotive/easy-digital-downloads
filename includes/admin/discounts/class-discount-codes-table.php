@@ -265,7 +265,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		if ( $expiration ) {
 			$display = date( 'F j, Y', strtotime( $expiration ) );
 		} else {
-			$display = '&dash;';
+			$display = '&mdash;';
 		}
 
 		return $display;
@@ -500,12 +500,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			? sanitize_key( $_GET['status'] )
 			: 'total';
 
-		// Switch statuses
-		$total_items = $this->counts['total'];
-
 		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_items' => $total_items,
+			'total_items' => $this->counts[ $status ],
 			'per_page'    => $this->per_page,
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
