@@ -2214,6 +2214,8 @@ class EDD_Payment {
 				return edd_update_order( $this->ID, array(
 					'order_number' => $meta_value,
 				) );
+			case '_edd_payment_transaction_id':
+				return edd_update_order_meta( $this->ID, 'transaction_id', $meta_value );
 		}
 
 		$meta_key = str_replace( '_edd_payment_', '', $meta_key );
