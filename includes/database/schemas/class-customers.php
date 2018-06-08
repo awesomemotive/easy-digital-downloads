@@ -83,6 +83,8 @@ class Customers extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
+			'searchable' => true,
 			'validate'   => 'edd_sanitize_amount',
 		),
 
