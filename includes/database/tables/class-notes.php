@@ -59,16 +59,5 @@ final class Notes extends Base {
 			KEY user_id (user_id),
 			KEY date_created (date_created)";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;

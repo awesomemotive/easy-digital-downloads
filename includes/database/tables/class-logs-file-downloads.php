@@ -62,16 +62,5 @@ final class Logs_File_Downloads extends Base {
 		KEY download_id (download_id),
 		KEY date_created (date_created)";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;
