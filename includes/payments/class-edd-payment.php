@@ -2171,7 +2171,8 @@ class EDD_Payment {
 					}
 				}
 
-				break;
+				// If the above checks fall through, store anything else in a "payment_meta" meta key.
+				return edd_update_order_meta( $this->ID, 'payment_meta', $meta_value );
 			case '_edd_completed_date':
 				$meta_value = empty( $meta_value )
 					? '0000-00-00 00:00:00'
