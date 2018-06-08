@@ -1633,11 +1633,11 @@ function edd_logs_migration() {
 
                 $log_data = array(
                     'download_id'   => $old_log->post_parent,
-                    'file_id'       => $post_meta['_edd_log_file_id'],
-                    'payment_id'    => $post_meta['_edd_log_payment_id'],
+                    'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
+                    'payment_id'    => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
                     'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
                     'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-                    'ip'            => $post_meta['_edd_log_ip'],
+                    'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
                     'date_created'  => $old_log->post_date_gmt,
                     'date_modified' => $old_log->post_modified_gmt,
                 );
@@ -1653,12 +1653,12 @@ function edd_logs_migration() {
                 }
 
                 $log_data = array(
-                    'ip'            => $post_meta['_edd_log_request_ip'],
+                    'ip'            => isset( $post_meta['_edd_log_request_ip'] ) ? $post_meta['_edd_log_request_ip'] : '',
                     'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
                     'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
                     'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
-                    'version'       => $post_meta['_edd_log_version'],
-                    'time'          => $post_meta['_edd_log_time'],
+                    'version'       => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_version'] : '',
+                    'time'          => isset( $post_meta['_edd_log_time'] ) ? $post_meta['_edd_log_time'] : '',
                     'request'       => $old_log->post_excerpt,
                     'error'         => $old_log->post_content,
                     'date_created'  => $old_log->post_date_gmt,
