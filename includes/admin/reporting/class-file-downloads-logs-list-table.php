@@ -70,9 +70,15 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
 			case 'customer' :
-				return '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>';
+				return ! empty( $item[ 'customer' ]->id )
+					? '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>'
+					: '&mdash;';
+
 			case 'payment_id' :
-				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
+				$number = edd_get_payment_number( $item['payment_id'] );
+				return ! empty( $number )
+					? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . esc_html( $number ) . '</a>'
+					: '&mdash;';
 			case 'ip' :
 				return '<a href="https://ipinfo.io/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';
 			default:
@@ -129,13 +135,18 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 				}
 
 				// For backwards compatibility purposes
-				$user = get_userdata( $log->get_user_id() );
-				$meta = array(
-					'_edd_log_user_info'  => array(
+				$user = edd_get_customer( $log->get_user_id() );
+
+				$user_info = ! empty( $user )
+					? array(
 						'id'    => $user->ID,
 						'email' => $user->user_email,
 						'name'  => $user->display_name,
-					),
+					)
+					: array();
+
+				$meta = array(
+					'_edd_log_user_info'  => $user_info,
 					'_edd_log_user_id'    => $log->get_user_id(),
 					'_edd_log_file_id'    => $log->get_file_id(),
 					'_edd_log_ip'         => $log->get_id(),
