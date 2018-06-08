@@ -440,7 +440,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_number( $order ) {
 		$view = add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) );
-		$link = '<a href="' . esc_url( $view ) . '"><strong>' . $order->get_number() . '</strong></a>';
+		$link = '<a class="row-title" href="' . esc_url( $view ) . '"><strong>' . $order->get_number() . '</strong></a>';
 
 		// Concatenate the results
 		$actions = $this->row_actions( array(
