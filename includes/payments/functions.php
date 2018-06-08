@@ -31,8 +31,10 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 			return false;
 		}
 
-		$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
-		$payment_id = $wpdb->get_var( $query );
+		$payment_id = $wpdb->get_var( $wpdb->prepare(
+			"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = '%s'",
+			$payment_or_txn_id
+		) );
 
 		if ( empty( $payment_id ) ) {
 			return false;
@@ -382,11 +384,13 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
  * Returns the total number of payments recorded.
  *
  * @since 1.0
- * @param array $args List of arguments to base the payments count on
- * @return array $count Number of payments sorted by payment status
+ * @since 3.0 Refactored to work with edd_orders table.
+ *
+ * @param array $args List of arguments to base the payments count on.
+ *
+ * @return array $count Number of payments sorted by payment status.
  */
 function edd_count_payments( $args = array() ) {
-
 	global $wpdb;
 
 	$defaults = array(
