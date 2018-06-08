@@ -338,8 +338,6 @@ function edd_listen_for_paypal_ipn() {
 
 		edd_debug_log( 'PayPal IPN endpoint loaded' );
 
-		do_action( 'edd_verify_paypal_ipn' );
-
 		/**
 		 * This is necessary to delay execution of PayPal PDT and to avoid a race condition causing the order status
 		 * updates to be triggered twice.
@@ -351,6 +349,8 @@ function edd_listen_for_paypal_ipn() {
 		if ( $token ) {
 			sleep( 5 );
 		}
+
+		do_action( 'edd_verify_paypal_ipn' );
 	}
 }
 add_action( 'init', 'edd_listen_for_paypal_ipn' );
