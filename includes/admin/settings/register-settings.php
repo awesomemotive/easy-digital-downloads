@@ -512,9 +512,8 @@ function edd_get_registered_settings() {
 					),
 					'banned_emails' => array(
 						'id'    => 'banned_emails',
-						'name'  => __( 'Banned Emails', 'easy-digital-downloads' ),
-						'check' => __( 'Allow',         'easy-digital-downloads' ),
-						'desc'  => __( 'Enter (one per line) emails and/or domains (starting with "@") and/or TLDs (starting with ".") to block.', 'easy-digital-downloads' ),
+						'name'  => __( 'Prevent Sales To', 'easy-digital-downloads' ),
+						'desc'  => __( 'Enter (one per line) emails, domains starting with <code>@</code>, or TLDs starting with <code>.</code>.', 'easy-digital-downloads' ),
 						'type'  => 'textarea'
 					)
 				),
