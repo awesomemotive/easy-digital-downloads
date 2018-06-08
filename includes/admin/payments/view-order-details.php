@@ -17,6 +17,10 @@ if ( ! class_exists( 'EDD_Order_Item_Table' ) ) {
 	require_once 'class-order-items-table.php';
 }
 
+if ( ! class_exists( 'EDD_Order_Adjustemnt_Table' ) ) {
+	require_once 'class-order-adjustments-table.php';
+}
+
 /**
  * View Order Details Page
  *
@@ -38,9 +42,9 @@ if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
-$transaction_id = esc_attr( $order->get_transaction_id() );
 $order_date     = strtotime( $order->get_date_created() );
 $order_items    = $order->get_items();
+$transaction_id = $order->get_transaction_id();
 $user_id        = $order->get_user_id();
 $unlimited      = $order->has_unlimited_downloads();
 $address        = $order->get_customer_address();
@@ -61,6 +65,10 @@ $cart_fees      = edd_get_order_adjustments( array(
 
 <div class="wrap edd-wrap">
     <h2><?php printf( __( 'Edit Order - %s', 'easy-digital-downloads' ), $order->get_number() ); ?></h2>
+
+	<div class="notice notice-info">
+		<p>Testers: This page is newly refreshed and non-functioning for this beta.</p>
+	</div>
 
 	<?php do_action( 'edd_view_order_details_before', $order_id ); ?>
 
@@ -163,41 +171,6 @@ $cart_fees      = edd_get_order_adjustments( array(
 
 										<?php do_action( 'edd_view_order_details_update_inner', $order_id ); ?>
 
-										<?php
-										if ( ! empty( $discounts ) ) : ?>
-											<div class="edd-order-discount edd-admin-box-inside">
-												<p>
-													<span class="label"><?php _e( 'Discounts', 'easy-digital-downloads' ); ?>:</span>
-													<span class="edd-order-discounts">
-														<?php
-														foreach ( $discounts as $discount ) {
-															/** @var EDD\Orders\Order_Adjustment $discount */
-															$discount_obj = edd_get_discount_by( 'code', $discount->get_description() );
-
-															echo '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>' . ': ' . edd_currency_filter( edd_format_amount( $discount->get_amount() ), $currency_code );
-														}
-														?>
-													</span>
-												</p>
-											</div>
-										<?php endif; ?>
-
-										<?php
-										if ( ! empty( $fees ) ) : ?>
-                                            <div class="edd-order-fees edd-admin-box-inside">
-                                                <p>
-													<span class="label"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</span>
-													<span class="edd-payment-fees">
-														<?php foreach ( $fees as $fee ) : /** @var EDD\Orders\Order_Adjustment $fee */ ?>
-															<span data-fee-id="<?php echo edd_get_order_adjustment_meta( $fee->get_id(), 'fee_id', true ) ?>">
-																<span class="fee-label"><?php echo $fee->get_description() . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee->get_amount() ) . '">' . edd_currency_filter( edd_format_amount( $fee->get_amount() ), $currency_code ); ?></span>
-															</span>
-														<?php endforeach; ?>
-													</span>
-												</p>
-                                            </div>
-										<?php endif; ?>
-
 										<?php if ( edd_use_taxes() ) : ?>
                                             <div class="edd-order-taxes edd-admin-box-inside">
                                                 <p>
@@ -247,44 +220,6 @@ $cart_fees      = edd_get_order_adjustments( array(
                                 </div><!-- /.edd-order-update-box -->
 
                             </div><!-- /#edd-order-data -->
-
-							<?php if ( 'publish' === $order->get_status() ) : ?>
-                                <div id="edd-order-resend-receipt" class="postbox edd-order-data">
-                                    <div class="inside">
-                                        <div class="edd-order-resend-receipt-box edd-admin-box">
-											<?php do_action( 'edd_view_order_details_resend_receipt_before', $order_id ); ?>
-
-                                            <a href="<?php echo esc_url( add_query_arg( array(
-												'edd-action'  => 'email_links',
-												'purchase_id' => $order_id,
-											) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
-												echo 'edd-select-receipt-email';
-											} else {
-												echo 'edd-resend-receipt';
-											} ?>"
-                                               class="button-secondary alignleft"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-                                            <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"></span>
-
-											<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
-                                                <div class="clear"></div>
-
-                                                <div class="edd-order-resend-receipt-addresses" style="display:none;">
-                                                    <select class="edd-order-resend-receipt-email">
-                                                        <option value=""><?php _e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
-														<?php foreach ( $customer->emails as $email ) : ?>
-                                                            <option value="<?php echo urlencode( sanitize_email( $email ) ); ?>"><?php echo $email; ?></option>
-														<?php endforeach; ?>
-                                                    </select>
-                                                </div>
-											<?php endif; ?>
-
-                                            <div class="clear"></div>
-
-											<?php do_action( 'edd_view_order_details_resend_receipt_after', $order_id ); ?>
-                                        </div><!-- /.edd-order-resend-receipt-box -->
-                                    </div>
-                                </div>
-							<?php endif; ?>
 
                             <div id="edd-order-details" class="postbox edd-order-data">
                                 <h3 class="hndle"><span><?php _e( 'Order Extras', 'easy-digital-downloads' ); ?></span>
@@ -367,8 +302,9 @@ $cart_fees      = edd_get_order_adjustments( array(
 							<div id="edd-purchased-files" class="postbox edd-edit-purchase-element">
 								<h3 class="hndle">
 									<span><?php _e( 'Order Items', 'easy-digital-downloads' ); ?></span>
+									<a href="#" class="edd-metabox-title-action"><?php _e( 'Add Item', 'easy-digital-downloads' ); ?></a>
 								</h3>
-								<div class="edd-order-items-wrapper">
+								<div class="edd-order-children-wrapper">
 								<?php
 									$order_items = new EDD_Order_Item_Table();
 									$order_items->prepare_items();
@@ -377,7 +313,21 @@ $cart_fees      = edd_get_order_adjustments( array(
 								</div>
 							</div>
 
-                            <div class="postbox edd-edit-purchase-element">
+							<div id="edd-purchased-files" class="postbox edd-edit-purchase-element">
+								<h3 class="hndle">
+									<span><?php _e( 'Order Adjustments', 'easy-digital-downloads' ); ?></span>
+									<a href="#" class="edd-metabox-title-action"><?php _e( 'Add Adjustment', 'easy-digital-downloads' ); ?></a>
+								</h3>
+								<div class="edd-order-children-wrapper">
+								<?php
+									$order_adjustments = new EDD_Order_Adjustment_Table();
+									$order_adjustments->prepare_items();
+									$order_adjustments->display();
+								?>
+								</div>
+							</div>
+
+                            <div class="postbox edd-edit-purchase-element" style="display: none;">
 								<h3 class="hndle">
 									<span><?php _e( 'Add Product to Order', 'easy-digital-downloads' ); ?></span>
 								</h3>
@@ -464,7 +414,37 @@ $cart_fees      = edd_get_order_adjustments( array(
 							<?php do_action( 'edd_view_order_details_billing_before', $order_id ); ?>
 
                             <div id="edd-customer-details" class="postbox">
-                                <h3 class="hndle"><span><?php _e( 'Customer Details', 'easy-digital-downloads' ); ?></span></h3>
+                                <h3 class="hndle">
+									<span><?php _e( 'Customer Details', 'easy-digital-downloads' ); ?></span>
+
+									<?php if ( 'publish' === $order->get_status() ) : ?>
+
+										<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
+
+											<span class="edd-order-resend-receipt-addresses" style="display:none;">
+												<select class="edd-order-resend-receipt-email">
+													<option value=""><?php _e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
+													<?php foreach ( $customer->emails as $email ) : ?>
+														<option value="<?php echo urlencode( sanitize_email( $email ) ); ?>"><?php echo $email; ?></option>
+													<?php endforeach; ?>
+												</select>
+											</span>
+
+										<?php endif; ?>
+
+										<a href="<?php echo esc_url( add_query_arg( array(
+											'edd-action'  => 'email_links',
+											'purchase_id' => $order_id,
+										) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
+											echo 'edd-select-receipt-email';
+										} else {
+											echo 'edd-resend-receipt';
+										} ?>"
+										   class="edd-metabox-title-action edd-help-tip" title="<?php _e( '<strong>Resend Receipt</strong>: This will send a new copy of the purchase receipt to the customer&#8217;s email address. If download URLs are included in the receipt, new file download URLs will also be included with the receipt.', 'easy-digital-downloads' ); ?>"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+
+										<?php do_action( 'edd_view_order_details_resend_receipt_after', $order_id ); ?>
+									<?php endif; ?>
+								</h3>
 
                                 <div class="inside edd-clearfix">
                                     <div class="column-container customer-info">
