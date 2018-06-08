@@ -250,7 +250,12 @@ function edd_field_is_required( $field = '' ) {
  * @return      array
  */
 function edd_get_banned_emails() {
-	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
+	$banned = edd_get_option( 'banned_emails', array() );
+	$emails = ! is_array( $banned )
+		? explode( "\n", $banned )
+		: $banned;
+
+	$emails = array_map( 'trim', $emails );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
 }
