@@ -124,8 +124,6 @@ function edd_tools_banned_emails_display() {
 	do_action( 'edd_tools_after' );
 }
 
-add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
-
 /**
  * Display the recount stats.
  *
