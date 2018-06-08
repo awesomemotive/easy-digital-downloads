@@ -413,12 +413,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$columns  = $this->get_columns();
-		$hidden   = array(); // No hidden columns
-		$sortable = $this->get_sortable_columns();
+		$this->_column_headers = array(
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns()
+		);
 
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items            = $this->reports_data();
+		$this->items = $this->reports_data();
 
 		$status = isset( $_GET['status'] )
 			? sanitize_key( $_GET['status'] )
@@ -426,9 +427,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		// Setup pagination
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
+			'per_page'    => $this->per_page
 		) );
 	}
 }
