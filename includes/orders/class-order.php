@@ -516,7 +516,7 @@ class Order extends Base_Object {
 			'type_id'       => 0,
 			'type'          => 'tax',
 			'number'        => 1,
-			'no_found_rows' => true
+			'no_found_rows' => true,
 		) );
 
 		// Get rate amount
@@ -549,7 +549,9 @@ class Order extends Base_Object {
 	public function get_customer_address() {
 		$user_info = edd_get_order_meta( $this->id, 'user_info', true );
 
-		$address  = ! empty( $user_info['address'] ) ? $user_info['address'] : array();
+		$address = ! empty( $user_info['address'] )
+			? $user_info['address']
+			: array();
 
 		$defaults = array(
 			'line1'   => '',
