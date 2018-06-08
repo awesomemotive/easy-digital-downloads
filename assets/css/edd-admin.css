@@ -912,8 +912,8 @@ input[class*="edd-price-field"] {
 	border-bottom: none;
 }
 .edd-admin-box-inside .edd_datepicker,
-.edd-order-payment-key input {
-	max-width: 150px;
+.edd-admin-box-inside input[type="text"] {
+	max-width: 130px;
 	width: 100%;
 }
 .edd-admin-box-inside span.label {
