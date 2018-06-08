@@ -1966,12 +1966,34 @@ class EDD_Payment {
 
 		switch ( $meta_key ) {
 			case '_edd_payment_meta':
-				// TODO: Add in rest of _edd_payment_meta keys.
-				if ( isset( $meta_value['tax'] ) ) {
+				if ( isset( $meta_value['tax'] ) && ! empty( $meta_value['tax'] ) ) {
 					return edd_update_order( $this->ID, array(
 						'tax' => $meta_value['tax'],
 					) );
 				}
+
+				if ( isset( $meta_value['key'] ) && ! empty( $meta_value['key'] ) ) {
+					return edd_update_order( $this->ID, array(
+						'key' => $meta_value['key'],
+					) );
+				}
+
+				if ( isset( $meta_value['email'] ) && ! empty( $meta_value['email'] ) ) {
+					return edd_update_order( $this->ID, array(
+						'email' => $meta_value['email'],
+					) );
+				}
+
+				if ( isset( $meta_value['user_info'] ) && ! empty( $meta_value['user_info'] ) ) {
+					$user_info = array(
+						'first_name' => $meta_value['user_info']['first_name'],
+						'last_name'  => $meta_value['user_info']['last_name'],
+						'address'    => $meta_value['user_info']['address'],
+					);
+
+					return edd_update_order_meta( $this->ID, 'user_info', $user_info );
+				}
+
 				break;
 			case '_edd_completed_date':
 				return edd_update_order( $this->ID, array(
