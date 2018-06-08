@@ -1935,6 +1935,12 @@ class EDD_Payment {
 			$meta['fees']         = $this->fees;
 			$meta['currency']     = $this->currency;
 			$meta['tax']          = $this->tax;
+
+			$migrated_payment_meta = edd_get_order_meta( $this->ID, 'payment_meta', true );
+
+			if ( is_array( $migrated_payment_meta ) && 0 < count( $migrated_payment_meta ) ) {
+				$meta = array_merge( $meta, $migrated_payment_meta );
+			}
 		}
 
 		$meta = apply_filters( 'edd_get_payment_meta_' . $meta_key, $meta, $this->ID );
