@@ -2163,6 +2163,10 @@ class EDD_Payment {
 
 				break;
 			case '_edd_completed_date':
+				$meta_value = empty( $meta_value )
+					? '0000-00-00 00:00:00'
+					: $meta_value;
+
 				return edd_update_order( $this->ID, array(
 					'date_completed' => $meta_value,
 				) );
