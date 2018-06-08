@@ -452,7 +452,7 @@ function edd_build_order( $order_data = array() ) {
 						edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 					}
 
-					if ( ! is_null( $fee['price_id'] ) ) {
+					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 					}
 				}
@@ -496,7 +496,7 @@ function edd_build_order( $order_data = array() ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 			}
 
-			if ( ! is_null( $fee['price_id'] ) ) {
+			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 			}
 
