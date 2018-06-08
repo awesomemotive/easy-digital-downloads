@@ -405,10 +405,13 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-end_date,
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
-.wp-list-table.orders .column-date,
-.wp-list-table.orders .column-customer,
-.wp-list-table.orders .column-gateway {
+.wp-list-table.orders .column-date {
 	width: 15%;
+}
+
+.wp-list-table.orders .column-gateway,
+.wp-list-table.orders .column-customer {
+	width: 18%;
 }
 
 .wp-list-table.customers .column-email {
