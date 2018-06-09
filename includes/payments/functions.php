@@ -1302,30 +1302,54 @@ function edd_remove_payment_prefix_postfix( $number ) {
 }
 
 /**
- * Get the fully formatted payment amount. The payment amount is retrieved using
+ * Get the fully formatted order amount. The order amount is retrieved using
  * edd_get_payment_amount() and is then sent through edd_currency_filter() and
  * edd_format_amount() to format the amount correctly.
  *
  * @since 1.4
- * @param int $payment_id Payment ID
+ * @since 3.0 Parameter renamed to $order_id.
+ *
+ * @param int $order_id Order ID.
+ *
  * @return string $amount Fully formatted payment amount
  */
-function edd_payment_amount( $payment_id = 0 ) {
-	$amount = edd_get_payment_amount( $payment_id );
-	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment_id ) );
+function edd_payment_amount( $order_id = 0 ) {
+	$amount = edd_get_payment_amount( $order_id );
+
+	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
- * Get the amount associated with a payment
+ * Get the amount associated with an order.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @return float Payment amount
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return float Order amount.
  */
-function edd_get_payment_amount( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
+function edd_get_payment_amount( $order_id = 0 ) {
 
-	return apply_filters( 'edd_payment_amount', floatval( $payment->total ), $payment_id );
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	$total = $order
+		? $order->get_total()
+		: 0.00;
+
+	/**
+	 * Filter the order amount.
+	 *
+	 * @since 1.2
+	 *
+	 * @param float $total    Order total.
+	 * @param int   $order_id Order ID.
+	 */
+	return apply_filters( 'edd_payment_amount', floatval( $total ), $order_id );
 }
 
 /**
