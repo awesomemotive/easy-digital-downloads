@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Retrieves an instance of EDD_Payment for a specified ID.
@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @param mixed int|EDD_Payment|WP_Post $payment Payment ID, EDD_Payment object or WP_Post object.
  * @param bool                          $by_txn  Is the ID supplied as the first parameter
+ *
  * @return EDD_Payment|false false|object EDD_Payment if a valid payment ID, false otherwise.
  */
 function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
@@ -31,10 +32,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 			return false;
 		}
 
-		$payment_id = $wpdb->get_var( $wpdb->prepare(
-			"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = '%s'",
-			$payment_or_txn_id
-		) );
+		$payment_id = edd_get_order_id_from_transaction_id( $payment_or_txn_id );
 
 		if ( empty( $payment_id ) ) {
 			return false;

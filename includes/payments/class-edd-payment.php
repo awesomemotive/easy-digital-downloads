@@ -333,10 +333,7 @@ class EDD_Payment {
 		}
 
 		if ( $by_txn ) {
-			$payment_id = $wpdb->get_var( $wpdb->prepare(
-				"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = '%s'",
-				$payment_or_txn_id
-			) );
+			$payment_id = edd_get_order_id_from_transaction_id( $payment_or_txn_id );
 
 			if ( empty( $payment_id ) ) {
 				return false;
