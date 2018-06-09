@@ -47,7 +47,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 	$payment   = wp_cache_get( $cache_key, 'payments' );
 
 	if ( false === $payment ) {
-		$payment = new EDD_Payment( $payment_id );
+		$payment = edd_get_payment( $payment_id );
 		if ( empty( $payment->ID ) || ( ! $by_txn && (int) $payment->ID !== (int) $payment_id ) ) {
 			return false;
 		} else {
@@ -87,12 +87,14 @@ function edd_get_payments( $args = array() ) {
 }
 
 /**
- * Retrieve payment by a given field
+ * Retrieve payment by a given field.
  *
- * @since       2.0
- * @param       string $field The field to retrieve the payment with
- * @param       mixed $value The value for $field
- * @return      mixed
+ * @since 2.0
+ *
+ * @param string $field The field to retrieve the payment with.
+ * @param mixed  $value The value for $field.
+ *
+ * @return mixed
  */
 function edd_get_payment_by( $field = '', $value = '' ) {
 	$payment = false;
@@ -801,93 +803,129 @@ function edd_decrease_total_earnings( $amount = 0 ) {
 }
 
 /**
- * Get Payment Meta for a specific Payment
+ * Retrieve order meta field for an order.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @param string $meta_key The meta key to pull
- * @param bool $single Pull single meta entry or as an object
- * @return mixed $meta Payment Meta
+ *
+ * @internal This needs to continue making a call to EDD_Payment::get_meta() as it handles the backwards compatibility for
+ *           _edd_payment_meta if requested.
+ *
+ * @param int     $payment_id Payment ID.
+ * @param string  $key        Optional. The meta key to retrieve. By default, returns data for all keys. Default '_edd_payment_meta'.
+ * @param bool    $single     Optional, default is false. If true, return only the first value of the specified meta_key.
+ *                            This parameter has no effect if meta_key is not specified.
+ *
+ * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
-function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta', $single = true ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->get_meta( $meta_key, $single );
+function edd_get_payment_meta( $payment_id = 0, $key = '_edd_payment_meta', $single = true ) {
+	$payment = edd_get_payment( $payment_id );
+
+	return $payment->get_meta( $key, $single );
 }
 
 /**
- * Update the meta for a payment
- * @param  integer $payment_id Payment ID
- * @param  string  $meta_key   Meta key to update
- * @param  string  $meta_value Value to update to
- * @param  string  $prev_value Previous value
- * @return mixed               Meta ID if successful, false if unsuccessful
+ * Update order meta field based on order ID.
+ *
+ * Use the $prev_value parameter to differentiate between meta fields with the
+ * same key and order ID.
+ *
+ * If the meta field for the order does not exist, it will be added.
+ *
+ * @since 1.2
+ *
+ * @internal This needs to continue making a call to EDD_Payment::update_meta() as it handles the backwards compatibility for
+ *           _edd_payment_meta.
+ *
+ * @param int     $payment_id Payment ID.
+ * @param string  $meta_key   Meta data key.
+ * @param mixed   $meta_value Meta data value. Must be serializable if non-scalar.
+ * @param mixed   $prev_value Optional. Previous value to check before removing. Default empty.
+ *
+ * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */
 function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
-	$payment = new EDD_Payment( $payment_id );
+	$payment = edd_get_payment( $payment_id );
+
 	return $payment->update_meta( $meta_key, $meta_value, $prev_value );
 }
 
 /**
- * Get the user_info Key from Payment Meta
+ * Retrieve the user information associated with an order.
+ *
+ * This method exists for backwards compatibility; in future, the order query methods should be used.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @return array $user_info User Info Meta Values
+ *
+ * @internal This needs to continue retrieving from EDD_Payment as it handles backwards compatibility.
+ *
+ * @param int $payment_id Payment ID.
+ * @return array User Information.
  */
 function edd_get_payment_meta_user_info( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
+	$payment = edd_get_payment( $payment_id );
+
 	return $payment->user_info;
 }
 
 /**
- * Get the downloads Key from Payment Meta
+ * Retrieve the downloads associated with an order.
+ *
+ * This method exists for backwards compatibility; in future, the order query methods should be used.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @return array $downloads Downloads Meta Values
+ *
+ * @param int $payment_id Payment ID.
+ * @return array Downloads.
  */
 function edd_get_payment_meta_downloads( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
+	$payment = edd_get_payment( $payment_id );
+
 	return $payment->downloads;
 }
 
 /**
- * Get the cart_details Key from Payment Meta
+ * Retrieve the cart details.
+ *
+ * This method exists for backwards compatibility; in future, the order query methods should be used.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
+ *
+ * @internal This needs to continue retrieving from EDD_Payment as it handles backwards compatibility.
+ *
+ * @param int  $payment_id           Payment ID
  * @param bool $include_bundle_files Whether to retrieve product IDs associated with a bundled product and return them in the array
+ *
  * @return array $cart_details Cart Details Meta Values
  */
 function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files = false ) {
-	$payment      = new EDD_Payment( $payment_id );
+	$payment      = edd_get_payment( $payment_id );
 	$cart_details = $payment->cart_details;
 
 	$payment_currency = $payment->currency;
 
 	if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
-
 		foreach ( $cart_details as $key => $cart_item ) {
 			$cart_details[ $key ]['currency'] = $payment_currency;
 
-			// Ensure subtotal is set, for pre-1.9 orders
+			// Ensure subtotal is set, for pre-1.9 orders.
 			if ( ! isset( $cart_item['subtotal'] ) ) {
 				$cart_details[ $key ]['subtotal'] = $cart_item['price'];
 			}
 
 			if ( $include_bundle_files ) {
-
-				if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
+				if ( 'bundle' !== edd_get_download_type( $cart_item['id'] ) ) {
 					continue;
+				}
 
 				$price_id = edd_get_cart_item_price_id( $cart_item );
 				$products = edd_get_bundled_products( $cart_item['id'], $price_id );
 
-				if ( empty( $products ) )
+				if ( empty( $products ) ) {
 					continue;
+				}
 
 				foreach ( $products as $product_id ) {
-					$cart_details[]   = array(
+					$cart_details[] = array(
 						'id'          => $product_id,
 						'name'        => get_the_title( $product_id ),
 						'item_number' => array(
@@ -901,13 +939,14 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 						'in_bundle'   => 1,
 						'parent'      => array(
 							'id'      => $cart_item['id'],
-							'options' => isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : array()
-						)
+							'options' => isset( $cart_item['item_number']['options'] )
+								? $cart_item['item_number']['options']
+								: array(),
+						),
 					);
 				}
 			}
 		}
-
 	}
 
 	return apply_filters( 'edd_payment_meta_cart_details', $cart_details, $payment_id );
