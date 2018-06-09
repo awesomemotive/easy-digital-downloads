@@ -1399,29 +1399,42 @@ function edd_get_payment_subtotal( $order_id = 0 ) {
  * This function essentially calls edd_get_payment_tax()
  *
  * @since 1.3.3
- * @see edd_get_payment_tax()
- * @param int $payment_id Payment ID
- * @param bool $payment_meta Payment Meta provided? (default: false)
- * @return string $subtotal Fully formatted payment subtotal
+ * @since 3.0 Parameter renamed to $order_id.
+ *
+ * @param int  $order_id     Order ID.
+ * @param bool $payment_meta Parameter no longer used.
+ *
+ * @return string $tax Fully formatted tax amount.
  */
-function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
-	$tax = edd_get_payment_tax( $payment_id, $payment_meta );
+function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
+	$tax = edd_get_payment_tax( $order_id, false );
 
-	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $payment_id ) );
+	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
  * Retrieves taxed amount for payment and then returns a non formatted amount
  *
  * @since 1.3.3
- * @param int $payment_id Payment ID
- * @param bool $payment_meta Get payment meta?
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int  $order_id     Order ID.
+ * @param bool $payment_meta Parameter no longer used.
+ *
  * @return float $tax Tax for payment (non formatted)
  */
-function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
-	$payment = new EDD_Payment( $payment_id );
+function edd_get_payment_tax( $order_id = 0, $payment_meta = null ) {
 
-	return $payment->tax;
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return 0.00;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_tax()
+		: 0.00;
 }
 
 /**
