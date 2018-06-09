@@ -954,7 +954,7 @@ function edd_is_guest_payment( $order_id = 0 ) {
 
 	// Bail if nothing was passed.
 	if ( empty( $order_id ) ) {
-		return '';
+		return false;
 	}
 
 	$order   = edd_get_order( $order_id );
@@ -980,7 +980,7 @@ function edd_get_payment_user_id( $order_id = 0 ) {
 
 	// Bail if nothing was passed.
 	if ( empty( $order_id ) ) {
-		return '';
+		return 0;
 	}
 
 	$order = edd_get_order( $order_id );
@@ -1003,7 +1003,7 @@ function edd_get_payment_customer_id( $order_id = 0 ) {
 
 	// Bail if nothing was passed.
 	if ( empty( $order_id ) ) {
-		return '';
+		return 0;
 	}
 
 	$order = edd_get_order( $order_id );
@@ -1017,12 +1017,23 @@ function edd_get_payment_customer_id( $order_id = 0 ) {
  * Get the status of the unlimited downloads flag
  *
  * @since 2.0
- * @param int $payment_id Payment ID
- * @return bool $unlimited
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if the payment has unlimited downloads, false otherwise.
  */
-function edd_payment_has_unlimited_downloads( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->has_unlimited_downloads;
+function edd_payment_has_unlimited_downloads( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->has_unlimited_downloads()
+		: false;
 }
 
 /**
