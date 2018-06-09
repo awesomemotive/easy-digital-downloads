@@ -1060,14 +1060,15 @@ function edd_get_payment_user_ip( $order_id = 0 ) {
 }
 
 /**
- * Get the date a payment was completed
+ * Get the date an order was completed.
  *
  * @since 2.0
- * @param int $payment_id Payment ID
- * @return string $date The date the payment was completed
+ *
+ * @param int $order_id Order ID.
+ * @return string $date The date the order was completed.
  */
-function edd_get_payment_completed_date( $payment_id = 0 ) {
-	$payment = new EDD_Payment( $payment_id );
+function edd_get_payment_completed_date( $order_id = 0 ) {
+	$payment = edd_get_payment( $order_id );
 	return $payment->completed_date;
 }
 
