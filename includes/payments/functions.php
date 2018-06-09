@@ -1217,16 +1217,16 @@ function edd_format_payment_number( $number ) {
 }
 
 /**
- * Gets the next available order number
+ * Gets the next available order number.
  *
- * This is used when inserting a new payment
+ * This is used when inserting a new order.
  *
  * @since 2.0
- * @return string $number The next available payment number
+ *
+ * @return string $number The next available order number.
  */
 function edd_get_next_payment_number() {
-
-	if( ! edd_get_option( 'enable_sequential' ) ) {
+	if ( ! edd_get_option( 'enable_sequential' ) ) {
 		return false;
 	}
 
@@ -1235,25 +1235,26 @@ function edd_get_next_payment_number() {
 	$increment_number = true;
 
 	if ( false !== $number ) {
-
 		if ( empty( $number ) ) {
-
 			$number = $start;
 			$increment_number = false;
-
 		}
-
 	} else {
 
 		// This case handles the first addition of the new option, as well as if it get's deleted for any reason
-		$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
+		$payments = new EDD_Payments_Query( array(
+			'number'  => 1,
+			'order'   => 'DESC',
+			'orderby' => 'ID',
+			'output'  => 'posts',
+			'fields'  => 'ids',
+		) );
+
 		$last_payment = $payments->get_payments();
 
 		if ( ! empty( $last_payment ) ) {
 			$number = edd_get_payment_number( $last_payment[0]->ID );
 		}
-
-		var_dump( $last_payment );
 
 		if ( ! empty( $number ) && $number !== (int) $last_payment[0]->ID ) {
 			$number = edd_remove_payment_prefix_postfix( $number );
