@@ -23,8 +23,6 @@ defined( 'ABSPATH' ) || exit;
  * @return EDD_Payment|false false|object EDD_Payment if a valid payment ID, false otherwise.
  */
 function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
-	global $wpdb;
-
 	if ( $payment_or_txn_id instanceof WP_Post || $payment_or_txn_id instanceof EDD_Payment ) {
 		$payment_id = $payment_or_txn_id->ID;
 	} elseif ( $by_txn ) {
