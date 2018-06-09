@@ -655,17 +655,17 @@ function edd_transition_order_status( $order_id = 0, $status = '' ) {
  * @param string $transaction_id Transaction ID.
  * @return int $order_id Order ID.
  */
-function edd_get_order_id_from_transaction_id( $trasaction_id = '' ) {
+function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
 	global $wpdb;
 
 	// Bail if no transaction ID passed.
-	if ( empty( $trasaction_id ) ) {
+	if ( empty( $transaction_id ) ) {
 		return 0;
 	}
 
 	$order_id = $wpdb->get_var( $wpdb->prepare(
 		"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = '%s'",
-		$trasaction_id
+		$transaction_id
 	) );
 
 	return empty( $order_id )
