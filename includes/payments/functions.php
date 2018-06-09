@@ -374,6 +374,7 @@ function edd_undo_purchase( $download_id = 0, $payment_id ) {
 function edd_count_payments( $args = array() ) {
 	global $wpdb;
 
+	// Setup defaults.
 	$defaults = array(
 		'user'       => null,
 		'customer'   => null,
@@ -386,163 +387,75 @@ function edd_count_payments( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$select = '';
-	$join   = '';
-	$where  = '';
+	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
+	$from    = "FROM {$wpdb->edd_orders} edd_o";
+	$join    = '';
+	$where   = '1=1';
+	$orderby = '';
+	$groupby = 'GROUP BY edd_o.status';
 
-	// Count payments for a specific user
+	// Hold the query arguments passed to edd_count_orders().
+	$query_args = array();
+
+	// Count orders for a specific user.
 	if ( ! empty( $args['user'] ) ) {
 		if ( is_email( $args['user'] ) ) {
-			$field = 'email';
+			$where .= $wpdb->prepare( ' AND edd_o.email = %s', sanitize_email( $args['user'] ) );
 		} elseif ( is_numeric( $args['user'] ) ) {
-			$field = 'user_id';
-		} else {
-			$field = '';
+			$where .= $wpdb->prepare( ' AND edd_o.user_id = %d', absint( $args['user'] ) );
 		}
 
-		if ( ! empty( $field ) ) {
-			$where .= " AND {$field} = '{$args['user']}'";
-		}
+		// Count orders for a specific customer.
 	} elseif ( ! empty( $args['customer'] ) ) {
-			$where .= " AND customer_id = '{$args['customer']}'";
+		$where .= $wpdb->prepare( ' AND edd_o.customer_id = %d', absint( $args['customer'] ) );
 
 		// Count payments for a search
 	} elseif ( ! empty( $args['s'] ) ) {
 		$args['s'] = sanitize_text_field( $args['s'] );
 
-		if ( is_email( $args['s'] ) || 32 === strlen( $args['s'] ) ) {
-			if ( is_email( $args['s'] ) ) {
-				$field = 'email';
-			} else {
-				$field = 'payment_key';
-			}
+		// Filter by email address
+		if ( is_email( $args['s'] ) ) {
+			$where .= $wpdb->prepare( ' AND edd_o.email = %s', sanitize_email( $args['s'] ) );
 
-			$where .= $wpdb->prepare( " {$field} = '%s'", $args['s'] );
-		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
+			// Filter by payment key.
+		} elseif ( 32 === strlen( $args['s'] ) ) {
+			$where .= $wpdb->prepare( ' AND edd_o.payment_key = %s', sanitize_email( $args['s'] ) );
+
+			// Filter by download ID.
+		} elseif ( '#' === substr( $args['s'], 0, 1 ) ) {
 			$search = str_replace( '#:', '', $args['s'] );
 			$search = str_replace( '#', '', $search );
 
-			$select = "SELECT p2.post_status,count( * ) AS num_posts ";
-			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
-			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
-			$where  = "WHERE p.post_type = 'edd_log' ";
-			$where .= $wpdb->prepare( "AND p.post_parent = %d ", $search );
+			$join   = "INNER JOIN {$wpdb->edd_order_items} edd_oi ON edd_o.id = edd_oi.order_id";
+			$where .= $wpdb->prepare( ' AND edd_oi.product_id = %d', $search );
+
+			// Filter by user ID.
 		} elseif ( is_numeric( $args['s'] ) ) {
-			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= $wpdb->prepare( "
-				AND m.meta_key = '_edd_payment_user_id'
-				AND m.meta_value = %d",
-				$args['s']
-			);
+			$query_args['user_id'] = absint( $args['s'] );
+
+			// Filter by discount code.
 		} elseif ( 0 === strpos( $args['s'], 'discount:' ) ) {
 			$search = str_replace( 'discount:', '', $args['s'] );
-			$search = 'discount.*' . $search;
 
-			$join   = "LEFT JOIN {$wpdb->edd_order_adjustments} oa ON (o.id = oa.order_id)";
-			$where .= $wpdb->prepare( "
-				AND m.meta_key = '_edd_payment_meta'
-				AND m.meta_value REGEXP %s",
-				$search
-			);
-		} else {
-			$search = $wpdb->esc_like( $args['s'] );
-			$search = '%' . $search . '%';
-
-			$where .= $wpdb->prepare( "AND ((p.post_title LIKE %s) OR (p.post_content LIKE %s))", $search, $search );
+			$join   = "INNER JOIN {$wpdb->edd_order_adjustments} edd_oa ON edd_o.id = edd_oa.order_id";
+			$where .= $wpdb->prepare( " AND edd_oa.description = %s AND edd_oa.type = 'discount'", $search );
 		}
 	}
 
 	if ( ! empty( $args['download'] ) && is_numeric( $args['download'] ) ) {
-		$where .= $wpdb->prepare( " AND p.post_parent = %d", $args['download'] );
+		$join   = "INNER JOIN {$wpdb->edd_order_items} edd_oi ON edd_o.id = edd_oi.order_id";
+		$where .= $wpdb->prepare( ' AND edd_oi.product_id = %d', absint( $args['download'] ) );
 	}
 
-	// Limit payments count by gateway
 	if ( ! empty( $args['gateway'] ) ) {
-		$where .= $wpdb->prepare( " AND gateway = '%s'", $args['gateway'] );
+		$where .= $wpdb->prepare( ' AND edd_o.gateway = %s', sanitize_text_field( $args['gateway'] ) );
 	}
 
-	// Limit payments count by date
 	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 
-		$date_parts = explode( '/', $args['start-date'] );
-		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
-		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
-		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
-
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-
-			$date   = new DateTime( $args['start-date'] );
-			$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
-
-		}
-
-		// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class)
-		if ( empty( $args['end-date'] ) ) {
-			$args['end-date'] = $args['start-date'];
-		}
-
 	}
 
-	if ( ! empty ( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
-
-		$date_parts = explode( '/', $args['end-date'] );
-
-		$month      = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
-		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
-		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
-
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-			$date = date( 'Y-m-d', strtotime( '+1 day', mktime( 0, 0, 0, $month, $day, $year ) ) );
-
-			$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date );
-		}
-
-	}
-
-	$where = apply_filters( 'edd_count_payments_where', $where );
-	$join  = apply_filters( 'edd_count_payments_join', $join );
-
-	$query = "
-		{$select}
-		FROM {$wpdb->edd_orders} o
-		{$join}
-		{$where}
-		GROUP BY o.status
-	";
-
-	$cache_key = md5( $query );
-
-	$count = wp_cache_get( $cache_key, 'counts');
-	if ( false !== $count ) {
-		return $count;
-	}
-
-	$count = $wpdb->get_results( $query, ARRAY_A );
-
-	$stats    = array();
-	$statuses = get_post_stati();
-	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
-		unset( $statuses['private'] );
-	}
-
-	foreach ( $statuses as $state ) {
-		$stats[$state] = 0;
-	}
-
-	foreach ( (array) $count as $row ) {
-		if ( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
-			continue;
-		}
-
-		$stats[ $row['post_status'] ] = $row['num_posts'];
-	}
-
-	$stats = (object) $stats;
-	wp_cache_set( $cache_key, $stats, 'counts' );
-
-	return $stats;
+	$counts = $wpdb->query( "{$select} {$from} {$join} {$where} {$orderby} {$groupby}" );
 }
 
 
