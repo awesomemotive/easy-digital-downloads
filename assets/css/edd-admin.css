@@ -409,6 +409,7 @@ textarea[name="edd-note"] {
 	width: 15%;
 }
 
+.wp-list-table.orderadjustments .column-amount,
 .wp-list-table.orderitems .column-status,
 .wp-list-table.orderitems .column-amount,
 .wp-list-table.orderitems .column-discount,
@@ -426,6 +427,9 @@ textarea[name="edd-note"] {
 	width: 25%;
 }
 
+.wp-list-table.orderadjustments .column-desc {
+	width: 34%;
+}
 
 /* Filter Bar Styles
 -------------------------------------------------------------- */
@@ -844,11 +848,36 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column {
 	width: 32%;
 }
+#poststuff .edd-metabox-title-action {
+	margin: 0;
+	float: right;
+	padding: 4px 8px;
+	position: relative;
+	top: -1px;
+	text-decoration: none;
+	border: none;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	background: #f7f7f7;
+	text-shadow: none;
+	font-weight: 600;
+	font-size: 10px;
+	line-height: normal;
+	color: #0073aa;
+	cursor: pointer;
+	outline: 0;
+}
+#poststuff .edd-metabox-title-action:hover {
+	border-color: #008EC2;
+	background: #00a0d2;
+	color: #fff;
+}
+
 .edd-edit-purchase-element .tablenav {
 	padding: 2px 10px 8px 10px;
 }
 
-.edd-edit-purchase-element .edd-order-items-wrapper {
+.edd-edit-purchase-element .edd-order-children-wrapper {
 	margin: 0 -1px;
 }
 
