@@ -942,17 +942,29 @@ function edd_get_payment_user_email( $order_id = 0 ) {
 }
 
 /**
- * Is the payment provided associated with a user account
+ * Check if the order is associated with a user.
  *
- * @since  2.4.4
- * @param  int $payment_id The payment ID
- * @return bool            If the payment is associated with a user (false) or not (true)
+ * @since 2.4.4
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if the payment is **not** associated with a user, false otherwise.
  */
-function edd_is_guest_payment( $payment_id ) {
-	$payment_user_id  = edd_get_payment_user_id( $payment_id );
-	$is_guest_payment = ! empty( $payment_user_id ) && $payment_user_id > 0 ? false : true;
+function edd_is_guest_payment( $order_id = 0 ) {
 
-	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $payment_id );
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order   = edd_get_order( $order_id );
+	$user_id = $order->get_user_id();
+
+	$is_guest_payment = ! empty( $user_id ) && $user_id > 0
+		? false
+		: true;
+
+	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $order_id );
 }
 
 /**
