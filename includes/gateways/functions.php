@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -454,34 +454,19 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 }
 
 /**
- * Counts the number of purchases made with a gateway
+ * Counts the number of orders made with a specific gateway.
  *
  * @since 1.6
+ * @since 3.0 Use edd_count_orders().
  *
- * @param string $gateway_id
- * @param string $status
- * @return int
+ * @param string $gateway_label Gateway label.
+ * @param string $status        Order status.
+ *
+ * @return int Number of orders placed based on the gateway.
  */
-function edd_count_sales_by_gateway( $gateway_id = 'paypal', $status = 'publish' ) {
-
-	// Default return value
-	$retval   = 0;
-
-	// Query for sales by gateway
-	$payments = new WP_Query( array(
-		'meta_key'    => '_edd_payment_gateway',
-		'meta_value'  => $gateway_id,
-		'nopaging'    => true,
-		'post_type'   => 'edd_payment',
-		'post_status' => $status,
-		'fields'      => 'ids'
+function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'publish' ) {
+	return edd_count_orders( array(
+		'gateway' => $gateway_label,
+		'status'  => $status,
 	) );
-
-	// Use the post count
-	if ( ! empty( $payments->post_count ) ) {
-		$retval = $payments->post_count;
-	}
-
-	// Return the sales count
-	return (int) $retval;
 }
