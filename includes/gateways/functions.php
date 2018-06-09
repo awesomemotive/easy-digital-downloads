@@ -13,10 +13,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Returns a list of all available modes.
+ * Returns a list of all available payment modes.
  *
  * @since 3.0
- * @return array $modes All the available modes
+ *
+ * @return array $modes All the available payment modes.
  */
 function edd_get_payment_modes() {
 	static $modes = null;
@@ -40,7 +41,8 @@ function edd_get_payment_modes() {
  * Returns a list of all available gateways.
  *
  * @since 1.0
- * @return array $gateways All the available gateways
+ *
+ * @return array $gateways All the available gateways.
  */
 function edd_get_payment_gateways() {
 	static $gateways = null;
@@ -64,7 +66,7 @@ function edd_get_payment_gateways() {
 }
 
 /**
- * Enforce the gateway order (from the sortable admin area UI)
+ * Enforce the gateway order (from the sortable admin area UI).
  *
  * @since 3.0
  *
@@ -103,7 +105,7 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateway_list = array();
 
 	foreach ( $gateways as $key => $gateway ) {
-		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
+		if ( isset( $enabled[ $key ] ) && 1 === $enabled[ $key ] ) {
 			$gateway_list[ $key ] = $gateway;
 		}
 	}
@@ -125,7 +127,7 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
 
 		// Only put default on top if it's active
 		if ( edd_is_gateway_active( $default_gateway_id ) ) {
-			$default_gateway    = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
+			$default_gateway = array( $default_gateway_id => $gateway_list[ $default_gateway_id ] );
 			unset( $gateway_list[ $default_gateway_id ] );
 
 			$gateway_list = array_merge( $default_gateway, $gateway_list );
@@ -139,20 +141,23 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
  * Checks whether a specified gateway is activated.
  *
  * @since 1.0
- * @param string $gateway Name of the gateway to check for
- * @return boolean true if enabled, false otherwise
+ *
+ * @param string $gateway Name of the gateway to check for.
+ * @return boolean true if enabled, false otherwise.
 */
 function edd_is_gateway_active( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
 	$retval   = array_key_exists( $gateway, $gateways );
+
 	return apply_filters( 'edd_is_gateway_active', $retval, $gateway, $gateways );
 }
 
 /**
- * Gets the default payment gateway selected from the EDD Settings
+ * Gets the default payment gateway selected from the EDD Settings.
  *
  * @since 1.5
- * @return string Gateway ID
+ *
+ * @return string $default Default gateway ID.
  */
 function edd_get_default_gateway() {
 	$default = edd_get_option( 'default_gateway', 'paypal' );
@@ -171,21 +176,22 @@ function edd_get_default_gateway() {
  * Returns the admin label for the specified gateway
  *
  * @since 1.0.8.3
+ *
  * @param string $gateway Name of the gateway to retrieve a label for
  * @return string Gateway admin label
  */
 function edd_get_gateway_admin_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
 
-	$label    = isset( $gateways[ $gateway ] )
+	$label = isset( $gateways[ $gateway ] )
 		? $gateways[ $gateway ]['admin_label']
 		: ucwords( $gateway );
 
-	$payment  = isset( $_GET['id'] )
+	$payment = isset( $_GET['id'] )
 		? absint( $_GET['id'] )
 		: false;
 
-	if ( $gateway === 'manual' && $payment ) {
+	if ( 'manual' === $gateway && $payment ) {
 		if ( ! edd_get_payment_amount( $payment ) ) {
 			$label = __( 'Free Purchase', 'easy-digital-downloads' );
 		}
@@ -195,11 +201,12 @@ function edd_get_gateway_admin_label( $gateway ) {
 }
 
 /**
- * Returns the checkout label for the specified gateway
+ * Returns the checkout label for the specified gateway.
  *
  * @since 1.0.8.5
- * @param string $gateway Name of the gateway to retrieve a label for
- * @return string Checkout label for the gateway
+ *
+ * @param string $gateway Name of the gateway to retrieve a label for.
+ * @return string Checkout label for the gateway.
  */
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
@@ -213,43 +220,48 @@ function edd_get_gateway_checkout_label( $gateway ) {
 }
 
 /**
- * Returns the options a gateway supports
+ * Returns the options a gateway supports.
  *
  * @since 1.8
- * @param string $gateway ID of the gateway to retrieve a label for
- * @return array Options the gateway supports
+ *
+ * @param string $gateway ID of the gateway to retrieve a label for.
+ * @return array Options the gateway supports.
  */
 function edd_get_gateway_supports( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
 	$supports = isset( $gateways[ $gateway ]['supports'] ) ? $gateways[ $gateway ]['supports'] : array();
+
 	return apply_filters( 'edd_gateway_supports', $supports, $gateway );
 }
 
 /**
- * Checks if a gateway supports buy now
+ * Checks if a gateway supports buy now.
  *
  * @since 1.8
- * @param string $gateway ID of the gateway to retrieve a label for
- * @return bool
+ *
+ * @param string $gateway ID of the gateway to retrieve a label for.
+ * @return bool True if the gateway supports buy now, false otherwise.
  */
 function edd_gateway_supports_buy_now( $gateway ) {
 	$supports = edd_get_gateway_supports( $gateway );
-	$ret = in_array( 'buy_now', $supports );
+	$ret      = in_array( 'buy_now', $supports, true );
+
 	return apply_filters( 'edd_gateway_supports_buy_now', $ret, $gateway );
 }
 
 /**
- * Checks if an enabled gateway supports buy now
+ * Checks if an enabled gateway supports buy now.
  *
  * @since 1.8
- * @return bool
+ *
+ * @return bool True if the shop supports buy now, false otherwise.
  */
 function edd_shop_supports_buy_now() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$ret      = false;
 
 	if ( ! edd_use_taxes() && $gateways && 1 === count( $gateways ) ) {
-		foreach( $gateways as $gateway_id => $gateway ) {
+		foreach ( $gateways as $gateway_id => $gateway ) {
 			if ( edd_gateway_supports_buy_now( $gateway_id ) ) {
 				$ret = true;
 				break;
@@ -268,10 +280,10 @@ function edd_shop_supports_buy_now() {
  * @param int   $download_id
  * @param array $options
  * @param int   $quantity
+ *
  * @return mixed|void
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $quantity = 1 ) {
-
 	$price_options = array();
 
 	if ( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
@@ -364,12 +376,11 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
  * Sends all the payment data to the specified gateway
  *
  * @since 1.0
- * @param string $gateway Name of the gateway
- * @param array $payment_data All the payment data to be sent to the gateway
- * @return void
+ *
+ * @param string $gateway     Name of the gateway.
+ * @param array $payment_data All the payment data to be sent to the gateway.
 */
 function edd_send_to_gateway( $gateway, $payment_data ) {
-
 	$payment_data['gateway_nonce'] = wp_create_nonce( 'edd-gateway' );
 
 	// $gateway must match the ID used when registering the gateway
@@ -383,6 +394,7 @@ function edd_send_to_gateway( $gateway, $payment_data ) {
  * to emulate a no-gateway-setup for a free download
  *
  * @since 1.3.2
+ *
  * @return bool $show_gateways Whether or not to show the gateways
  */
 function edd_show_gateways() {
@@ -421,11 +433,11 @@ function edd_get_chosen_gateway() {
 
 	// Sanitize the gateway
 	if ( false !== $chosen ) {
-		$chosen = preg_replace('/[^a-zA-Z0-9-_]+/', '', $chosen );
+		$chosen = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $chosen );
 		$chosen = urldecode( $chosen );
 
 		// Set return value if gateway is active
-		if ( ! empty ( $chosen ) && edd_is_gateway_active( $chosen ) ) {
+		if ( ! empty( $chosen ) && edd_is_gateway_active( $chosen ) ) {
 			$retval = $chosen;
 		}
 	}
@@ -444,10 +456,12 @@ function edd_get_chosen_gateway() {
  * A simple wrapper function for edd_record_log()
  *
  * @since 1.3.3
- * @param string $title Title of the log entry (default: empty)
- * @param string $message  Message to store in the log entry (default: empty)
- * @param int $parent Parent log entry (default: 0)
- * @return int ID of the new log entry
+ *
+ * @param string $title   Title of the log entry (default: empty)
+ * @param string $message Message to store in the log entry (default: empty)
+ * @param int    $parent  Parent log entry (default: 0)
+ *
+ * @return int ID of the new log entry.
  */
 function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
