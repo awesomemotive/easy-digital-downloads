@@ -922,12 +922,23 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
  * Get the user email associated with a payment
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @return string $email User Email
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string $email User email.
  */
-function edd_get_payment_user_email( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->email;
+function edd_get_payment_user_email( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_email()
+		: '';
 }
 
 /**
