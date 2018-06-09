@@ -1438,25 +1438,35 @@ function edd_get_payment_tax( $order_id = 0, $payment_meta = null ) {
 }
 
 /**
- * Retrieve the tax for a cart item by the cart key
+ * Retrieve the tax for a cart item by the cart key.
  *
- * @since  2.5
- * @param  integer $payment_id The Payment ID
- * @param  int     $cart_key   The cart key
- * @return float               The item tax amount
+ * @since 2.5
+ * @since 3.0 Refactored to use EDD\Orders\Order_Item.
+ *
+ * @param  int $order_id   Order ID.
+ * @param  int $cart_index Cart index.
+ *
+ * @return float Cart item tax amount.
  */
-function edd_get_payment_item_tax( $payment_id = 0, $cart_key = false ) {
-	$payment = new EDD_Payment( $payment_id );
-	$item_tax = 0;
+function edd_get_payment_item_tax( $order_id = 0, $cart_index = 0 ) {
 
-	$cart_details = $payment->cart_details;
-
-	if ( false !== $cart_key && ! empty( $cart_details ) && array_key_exists( $cart_key, $cart_details ) ) {
-		$item_tax = ! empty( $cart_details[ $cart_key ]['tax'] ) ? $cart_details[ $cart_key ]['tax'] : 0;
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return 0.00;
 	}
 
-	return $item_tax;
+	$order_item_tax = edd_get_order_items( array(
+		'number'     => 1,
+		'order_id'   => $order_id,
+		'cart_index' => $cart_index,
+		'fields'     => 'tax',
+	) );
 
+	$order_item_tax = ( $order_item_tax && ! empty( $order_item_tax ) )
+		? $order_item_tax[0]
+		: 0.00;
+
+	return (float) $order_item_tax;
 }
 
 /**
