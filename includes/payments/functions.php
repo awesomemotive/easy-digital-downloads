@@ -1073,15 +1073,26 @@ function edd_get_payment_completed_date( $order_id = 0 ) {
 }
 
 /**
- * Get the gateway associated with a payment
+ * Get the gateway associated with an order.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @return string $gateway Gateway
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string $gateway Payment gateway used for the order.
  */
-function edd_get_payment_gateway( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->gateway;
+function edd_get_payment_gateway( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_gateway()
+		: '';
 }
 
 /**
