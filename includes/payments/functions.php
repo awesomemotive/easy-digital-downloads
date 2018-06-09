@@ -1043,7 +1043,7 @@ function edd_payment_has_unlimited_downloads( $order_id = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  *
  * @param int $order_id Order ID.
- * @return string $ip User's IP address.
+ * @return string User's IP address.
  */
 function edd_get_payment_user_ip( $order_id = 0 ) {
 
@@ -1063,9 +1063,10 @@ function edd_get_payment_user_ip( $order_id = 0 ) {
  * Get the date an order was completed.
  *
  * @since 2.0
+ * @since 3.0 Parameter renamed to $order_id.
  *
  * @param int $order_id Order ID.
- * @return string $date The date the order was completed.
+ * @return string The date the order was completed.
  */
 function edd_get_payment_completed_date( $order_id = 0 ) {
 	$payment = edd_get_payment( $order_id );
@@ -1079,7 +1080,7 @@ function edd_get_payment_completed_date( $order_id = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  *
  * @param int $order_id Order ID.
- * @return string $gateway Payment gateway used for the order.
+ * @return string Payment gateway used for the order.
  */
 function edd_get_payment_gateway( $order_id = 0 ) {
 
@@ -1122,6 +1123,7 @@ function edd_get_payment_currency_code( $order_id = 0 ) {
  * Get the currency name a payment was made in.
  *
  * @since 2.2
+ * @since 3.0 Parameter renamed to $order_id.
  *
  * @param int $order_id Order ID.
  * @return string $currency The currency name.
@@ -1141,15 +1143,26 @@ function edd_get_payment_currency( $order_id = 0 ) {
 }
 
 /**
- * Get the purchase key for a purchase
+ * Get the payment key for an order.
  *
  * @since 1.2
- * @param int $payment_id Payment ID
- * @return string $key Purchase key
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string $key Purchase key.
  */
-function edd_get_payment_key( $payment_id = 0 ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->key;
+function edd_get_payment_key( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_payment_key()
+		: '';
 }
 
 /**
