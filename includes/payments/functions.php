@@ -1191,15 +1191,15 @@ function edd_get_payment_number( $order_id = 0 ) {
 }
 
 /**
- * Formats the payment number with the prefix and postfix
+ * Formats the order number with the prefix and postfix.
  *
- * @since  2.4
- * @param  int $number The payment number to format
- * @return string      The formatted payment number
+ * @since 2.4
+ *
+ * @param int $number The order number to format.
+ * @return string The formatted order number
  */
 function edd_format_payment_number( $number ) {
-
-	if( ! edd_get_option( 'enable_sequential' ) ) {
+	if ( ! edd_get_option( 'enable_sequential' ) ) {
 		return $number;
 	}
 
