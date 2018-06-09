@@ -369,7 +369,7 @@ function edd_undo_purchase( $download_id = 0, $payment_id ) {
  *
  * @param array $args List of arguments to base the payments count on.
  *
- * @return array $count Number of payments sorted by payment status.
+ * @return object $stats Number of orders grouped by order status.
  */
 function edd_count_payments( $args = array() ) {
 	global $wpdb;
@@ -386,14 +386,14 @@ function edd_count_payments( $args = array() ) {
 	);
 
 	// Default statuses
-	$counts = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
+	$stats = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
 
 	$args = wp_parse_args( $args, $defaults );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
 	$from    = "FROM {$wpdb->edd_orders} edd_o";
 	$join    = '';
-	$where   = '1=1';
+	$where   = 'WHERE 1=1';
 	$orderby = '';
 	$groupby = 'GROUP BY edd_o.status';
 
@@ -455,10 +455,74 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
+		$date_parts = explode( '/', $args['start-date'] );
+		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
+		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
+		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
 
+		$is_date = checkdate( $month, $day, $year );
+		if ( false !== $is_date ) {
+			$date   = new DateTime( $args['start-date'] );
+			$where .= $wpdb->prepare( ' AND edd_o.date_created >= %s', $date->format( 'Y-m-d 00:00:00' ) );
+		}
+
+		// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class).
+		if ( empty( $args['end-date'] ) ) {
+			$args['end-date'] = $args['start-date'];
+		}
 	}
 
-	$counts = $wpdb->query( "{$select} {$from} {$join} {$where} {$orderby} {$groupby}" );
+	if ( ! empty( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
+		$date_parts = explode( '/', $args['end-date'] );
+
+		$month = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
+		$day   = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
+		$year  = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
+
+		$is_date = checkdate( $month, $day, $year );
+		if ( false !== $is_date ) {
+			$date   = date( 'Y-m-d', strtotime( '+1 day', mktime( 0, 0, 0, $month, $day, $year ) ) );
+			$where .= $wpdb->prepare( ' AND edd_o.date_created < %s', $date );
+		}
+	}
+
+	$where = apply_filters( 'edd_count_payments_where', $where );
+	$join  = apply_filters( 'edd_count_payments_join', $join );
+
+	$query = "{$select} {$from} {$join} {$where} {$orderby} {$groupby}";
+
+	$cache_key = md5( $query );
+
+	$count = wp_cache_get( $cache_key, 'counts' );
+	if ( false !== $count ) {
+		return $count;
+	}
+
+	$counts = $wpdb->get_results( $query, ARRAY_A );
+
+	// Here for backwards compatibility.
+	$stats    = array();
+	$statuses = get_post_stati();
+	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
+		unset( $statuses['private'] );
+	}
+
+	foreach ( $statuses as $state ) {
+		$stats[ $state ] = 0;
+	}
+
+	foreach ( (array) $counts as $row ) {
+		if ( 'private' === $count['status'] && empty( $args['s'] ) ) {
+			continue;
+		}
+
+		$stats[ $row['status'] ] = absint( $row['count'] );
+	}
+
+	$stats = (object) $stats;
+	wp_cache_set( $cache_key, $stats, 'counts' );
+
+	return $stats;
 }
 
 
