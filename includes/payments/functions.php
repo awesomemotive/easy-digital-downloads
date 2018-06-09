@@ -1470,16 +1470,26 @@ function edd_get_payment_item_tax( $order_id = 0, $cart_index = 0 ) {
 }
 
 /**
- * Retrieves arbitrary fees for the payment
+ * Retrieves arbitrary fees for the order.
  *
  * @since 1.5
- * @param int $payment_id Payment ID
- * @param string $type Fee type
- * @return mixed array if payment fees found, false otherwise
+ * @since 3.0 Parameter renamed to $order_id.
+ *
+ * @param int    $order_id Order ID.
+ * @param string $type     Fee type. Default all.
+ *
+ * @return array Order fees.
  */
-function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->get_fees( $type );
+function edd_get_payment_fees( $order_id = 0, $type = 'all' ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return array();
+	}
+
+	$order = edd_get_payment( $order_id );
+
+	return $order->get_fees( $type );
 }
 
 /**
