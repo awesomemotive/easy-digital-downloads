@@ -61,8 +61,6 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 }
 
 /**
- * Get Payments
- *
  * Retrieve payments from the database.
  *
  * Since 1.2, this function takes an array of arguments, instead of individual
@@ -72,16 +70,16 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  * $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC',
  * $user = null, $status = 'any', $meta_key = null
  *
- * As of EDD 1.8 this simply wraps EDD_Payments_Query
- *
  * @since 1.0
- * @param array $args Arguments passed to get payments
- * @return EDD_Payment[] $payments Payments retrieved from the database
+ * @since 1.8 Refactored to be a wrapper for EDD_Payments_Query.
+ *
+ * @param array $args Arguments passed to get payments.
+ * @return EDD_Payment[] $payments Payments retrieved from the database.
  */
 function edd_get_payments( $args = array() ) {
 
-	// Fallback to post objects to ensure backwards compatibility
-	if( ! isset( $args['output'] ) ) {
+	// Fallback to post objects to ensure backwards compatibility.
+	if ( ! isset( $args['output'] ) ) {
 		$args['output'] = 'posts';
 	}
 
@@ -156,7 +154,7 @@ function edd_insert_payment( $order_data = array() ) {
 	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
 
 	if ( ! empty( $existing_payment ) ) {
-		$payment = new EDD_Payment( $existing_payment );
+		$payment        = edd_get_payment( $existing_payment );
 		$resume_payment = $payment->is_recoverable();
 	}
 
@@ -184,16 +182,15 @@ function edd_insert_payment( $order_data = array() ) {
 			$previous_customer = new EDD_Customer( $payment->customer_id );
 			$previous_customer->remove_payment( $payment->ID, false );
 
-			// Redefine the email frst and last names.
-			$payment->email                 = $order_data['user_info']['email'];
-			$payment->first_name            = $order_data['user_info']['first_name'];
-			$payment->last_name             = $order_data['user_info']['last_name'];
+			// Redefine the email first and last names.
+			$payment->email      = $order_data['user_info']['email'];
+			$payment->first_name = $order_data['user_info']['first_name'];
+			$payment->last_name  = $order_data['user_info']['last_name'];
 
 		}
 
 		// Remove any remainders of possible fees from items.
 		$payment->save();
-
 	}
 
 	return edd_build_order( $order_data );
@@ -231,7 +228,7 @@ function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
 function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_download_logs = false ) {
 	global $edd_logs;
 
-	$payment   = new EDD_Payment( $payment_id );
+	$payment = edd_get_payment( $payment_id );
 
 	// Update sale counts and earnings for all purchased products
 	edd_undo_purchase( false, $payment_id );
@@ -242,45 +239,33 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	$customer = new EDD_Customer( $customer_id );
 
-	if( $status == 'revoked' || $status == 'publish' ) {
-		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
+	if ( 'revoked' === $status || 'publish' === $status ) {
+
+		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
 		edd_decrease_total_earnings( $amount );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer->id && $update_customer ) {
+		if ( $customer->id && $update_customer ) {
 
 			// Decrement the stats for the customer
 			$customer->decrease_purchase_count();
 			$customer->decrease_value( $amount );
-
 		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer->id && $update_customer ) {
+	if ( $customer->id && $update_customer ) {
 
 		// Remove the payment ID from the customer
 		$customer->remove_payment( $payment_id );
-
 	}
 
 	// Remove the order.
 	edd_delete_order( $payment_id );
 
-	// Remove related sale log entries
-	$edd_logs->delete_logs(
-		null,
-		'sale',
-		array(
-			array(
-				'key'   => '_edd_log_payment_id',
-				'value' => $payment_id
-			)
-		)
-	);
-
+	// Delete file download loags.
 	if ( $delete_download_logs ) {
 		$edd_logs->delete_logs(
 			null,
@@ -298,15 +283,15 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 }
 
 /**
- * Undos a purchase, including the decrease of sale and earning stats. Used for
- * when refunding or deleting a purchase
+ * Undo a purchase, including the decrease of sale and earning stats. Used for
+ * when refunding or deleting a purchase.
  *
  * @since 1.0.8.1
- * @param int $download_id Download (Post) ID
- * @param int $payment_id Payment ID
- * @return void
+ *
+ * @param int $download_id Download (Post) ID.
+ * @param int $payment_id  Payment ID.
  */
-function edd_undo_purchase( $download_id = false, $payment_id ) {
+function edd_undo_purchase( $download_id = 0, $payment_id ) {
 
 	/**
 	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
@@ -318,37 +303,36 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
 		_edd_deprected_argument( 'download_id', 'edd_undo_purchase', '2.5.7' );
 	}
 
-	$payment = new EDD_Payment( $payment_id );
+	$payment = edd_get_payment( $payment_id );
 
 	$cart_details = $payment->cart_details;
 	$user_info    = $payment->user_info;
 
 	if ( is_array( $cart_details ) ) {
-
 		foreach ( $cart_details as $item ) {
 
 			// get the item's price
 			$amount = isset( $item['price'] ) ? $item['price'] : false;
 
 			// Decrease earnings/sales and fire action once per quantity number
-			for( $i = 0; $i < $item['quantity']; $i++ ) {
+			for ( $i = 0; $i < $item['quantity']; $i++ ) {
 
-				// variable priced downloads
+				// Variable priced downloads.
 				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $item['id'], $price_id ) : $item['price'];
 				}
 
 				if ( ! $amount ) {
-					// This function is only used on payments with near 1.0 cart data structure
+					// This function is only used on payments with near 1.0 cart data structure.
 					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
 				}
-
 			}
 
 			if ( ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee ) {
-					// Only let negative fees affect the earnings
+
+					// Only let negative fees affect the earnings.
 					if ( $fee['amount'] > 0 ) {
 						continue;
 					}
@@ -359,22 +343,20 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
 
 			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
 			if ( true === $maybe_decrease_earnings ) {
-				// decrease earnings
+
+				// Decrease earnings.
 				edd_decrease_earnings( $item['id'], $amount );
 			}
 
 			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
 			if ( true === $maybe_decrease_sales ) {
-				// decrease purchase count
+
+				// Decrease purchase count.
 				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
 			}
-
 		}
-
 	}
-
 }
-
 
 /**
  * Count Payments
@@ -565,17 +547,20 @@ function edd_count_payments( $args = array() ) {
 
 
 /**
- * Check For Existing Payment
+ * Check for existing payment.
  *
  * @since 1.0
- * @param int $payment_id Payment ID
- * @return bool true if payment exists, false otherwise
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if payment exists, false otherwise.
  */
-function edd_check_for_existing_payment( $payment_id ) {
-	$exists  = false;
-	$payment = new EDD_Payment( $payment_id );
+function edd_check_for_existing_payment( $order_id ) {
+	$exists = false;
 
-	if ( $payment_id === $payment->ID && 'publish' === $payment->status ) {
+	$order = edd_get_order( $order_id );
+
+	if ( $order_id === $order->get_id() && 'publish' === $order->get_status() ) {
 		$exists = true;
 	}
 
