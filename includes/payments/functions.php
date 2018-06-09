@@ -385,6 +385,9 @@ function edd_count_payments( $args = array() ) {
 		'gateway'    => null,
 	);
 
+	// Default statuses
+	$counts = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
+
 	$args = wp_parse_args( $args, $defaults );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
