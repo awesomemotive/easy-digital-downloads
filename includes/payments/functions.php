@@ -646,7 +646,9 @@ function edd_get_payment_status_label( $status = '' ) {
  * Retrieves all available statuses for payments.
  *
  * @since 1.0.8.1
- * @return array $payment_status All the available payment statuses
+ * @since 3.0 Updated 'publish' status to be 'Completed' for consistency with other statuses.
+ *
+ * @return array $payment_status All the available payment statuses.
  */
 function edd_get_payment_statuses() {
 	return apply_filters( 'edd_payment_statuses', array(
