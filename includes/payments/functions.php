@@ -711,36 +711,31 @@ function edd_get_total_sales() {
 }
 
 /**
- * Get Total Earnings
+ * Calculate the total earnings of the store.
  *
  * @since 1.2
- * @return float $total Total earnings
+ * @since 3.0 Refactored to work with new tables.
+ *
+ * @return float $total Total earnings.
  */
 function edd_get_total_earnings() {
-
 	$total = get_option( 'edd_earnings_total', false );
 
-	// If no total stored in DB, use old method of calculating total earnings
-	if( false === $total ) {
-
-		global $wpdb;
-
+	// If no total stored in the database, use old method of calculating total earnings.
+	if ( false !== $total ) {
 		$total = get_transient( 'edd_earnings_total' );
 
-		if( false === $total ) {
-
+		if ( false !== $total ) {
 			$total = (float) 0;
 
 			$args = apply_filters( 'edd_get_total_earnings_args', array(
-				'offset' => 0,
-				'number' => -1,
-				'status' => array( 'publish', 'revoked' ),
-				'fields' => 'ids'
+				'status__in' => array( 'publish', 'revoked' ),
+				'fields'     => 'total',
 			) );
 
+			$orders = edd_get_orders( $args );
 
-			$payments = edd_get_payments( $args );
-			if ( $payments ) {
+			if ( $orders ) {
 
 				/*
 				 * If performing a purchase, we need to skip the very last payment in the database, since it calls
@@ -748,15 +743,14 @@ function edd_get_total_earnings() {
 				 * first purchase
 				 */
 
-				if( did_action( 'edd_update_payment_status' ) ) {
-					array_pop( $payments );
+				if ( did_action( 'edd_update_payment_status' ) ) {
+					array_pop( $orders );
 				}
 
-				if( ! empty( $payments ) ) {
-					$payments = implode( ',', $payments );
-					$total += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$payments})" );
-				}
-
+				$total = array_reduce( $orders, function( $carry, $item ) {
+					$carry += $item;
+					return $carry;
+				} );
 			}
 
 			// Cache results for 1 day. This cache is cleared automatically when a payment is made
@@ -767,8 +761,9 @@ function edd_get_total_earnings() {
 		}
 	}
 
-	if( $total < 0 ) {
-		$total = 0; // Don't ever show negative earnings
+	// Don't ever show negative earnings.
+	if ( $total < 0 ) {
+		$total = 0;
 	}
 
 	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
