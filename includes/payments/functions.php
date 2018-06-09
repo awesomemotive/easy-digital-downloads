@@ -47,7 +47,8 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 	$payment   = wp_cache_get( $cache_key, 'payments' );
 
 	if ( false === $payment ) {
-		$payment = edd_get_payment( $payment_id );
+		$payment = new EDD_Payment( $payment_id );
+
 		if ( empty( $payment->ID ) || ( ! $by_txn && (int) $payment->ID !== (int) $payment_id ) ) {
 			return false;
 		} else {
