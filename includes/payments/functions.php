@@ -501,14 +501,13 @@ function edd_count_payments( $args = array() ) {
 	$counts = $wpdb->get_results( $query, ARRAY_A );
 
 	// Here for backwards compatibility.
-	$stats    = array();
 	$statuses = get_post_stati();
 	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
 		unset( $statuses['private'] );
 	}
 
-	foreach ( $statuses as $state ) {
-		$stats[ $state ] = 0;
+	foreach ( $statuses as $status ) {
+		$stats[ $status ] = 0;
 	}
 
 	foreach ( (array) $counts as $row ) {
