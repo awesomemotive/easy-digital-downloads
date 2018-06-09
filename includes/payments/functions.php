@@ -1037,15 +1037,26 @@ function edd_payment_has_unlimited_downloads( $order_id = 0 ) {
 }
 
 /**
- * Get the IP address used to make a purchase
+ * Get the IP address used to make a purchase.
  *
  * @since 1.9
- * @param int $payment_id Payment ID
- * @return string $ip User IP
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string $ip User's IP address.
  */
-function edd_get_payment_user_ip( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->ip;
+function edd_get_payment_user_ip( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_ip()
+		: '';
 }
 
 /**
