@@ -592,4 +592,15 @@ class Order extends Base_Object {
 
 		return $notes;
 	}
+
+	/**
+	 * Check if an order is complete.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if the order is complete, false otherwise.
+	 */
+	public function is_complete() {
+		return ( 'publish' === $this->status );
+	}
 }
