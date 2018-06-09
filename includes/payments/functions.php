@@ -311,13 +311,13 @@ function edd_undo_purchase( $download_id = 0, $payment_id ) {
 	if ( is_array( $cart_details ) ) {
 		foreach ( $cart_details as $item ) {
 
-			// get the item's price
+			// Get the item's price.
 			$amount = isset( $item['price'] ) ? $item['price'] : false;
 
-			// Decrease earnings/sales and fire action once per quantity number
+			// Decrease earnings/sales and fire action once per quantity number.
 			for ( $i = 0; $i < $item['quantity']; $i++ ) {
 
-				// Variable priced downloads.
+				// Handle variable priced downloads.
 				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $item['id'], $price_id ) : $item['price'];
@@ -573,8 +573,8 @@ function edd_check_for_existing_payment( $order_id ) {
  * @since 1.0
  * @since 3.0 Updated to use new EDD\Order\Order class.
  *
- * @param WP_Post|EDD_Payment|Payment ID $payment      Payment post object, EDD_Payment object, or payment/post ID.
- * @param bool                           $return_label Whether to return the payment status or not
+ * @param WP_Post|EDD_Payment|int $order        Payment post object, EDD_Payment object, or payment/post ID.
+ * @param bool                    $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
@@ -600,7 +600,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	if ( ! is_object( $order ) ) {
 		return false;
 	}
-	
+
 	$status = $order->get_status();
 
 	if ( empty( $status ) ) {
@@ -613,13 +613,13 @@ function edd_get_payment_status( $order, $return_label = false ) {
 		$statuses = edd_get_payment_statuses();
 
 		// Account that our 'publish' status is labeled 'Complete'
-		$post_status = 'publish' == $status ? 'Complete' : $status;
+		$post_status = 'publish' === $status
+			? 'Completed'
+			: $status;
 
 		// Make sure we're matching cases, since they matter
-		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ), true );
 	}
-
-	return ! empty( $status ) ? $status : false;
 }
 
 /**
