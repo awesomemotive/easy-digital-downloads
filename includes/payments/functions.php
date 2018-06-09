@@ -1545,17 +1545,16 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
 }
 
 /**
- * Retrieve the purchase ID based on the purchase key
+ * Retrieve the order ID based on the payment key.
  *
  * @since 1.3.2
- * @global object $wpdb Used to query the database using the WordPress
- *   Database API
- * @param string $key the purchase key to search for
- * @return int $purchase Purchase ID
+ * @since 3.0 Updated to use new query methods. Renamed parameter to $payment_key.
+ *
+ * @param string $payment_key Payment key to search for.
+ * @return int Order ID.
  */
-function edd_get_purchase_id_by_key( $key ) {
-	global $wpdb;
-	$global_key_string = 'edd_purchase_id_by_key' . $key;
+function edd_get_purchase_id_by_key( $payment_key ) {
+	$global_key_string = 'edd_purchase_id_by_key' . $payment_key;
 	global $$global_key_string;
 
 	if ( null !== $$global_key_string ) {
@@ -1563,7 +1562,7 @@ function edd_get_purchase_id_by_key( $key ) {
 	}
 
 	/** @var EDD\Orders\Order $order */
-	$order = edd_get_order_by( 'payment_key', $key );
+	$order = edd_get_order_by( 'payment_key', $payment_key );
 
 	if ( false !== $order ) {
 		$$global_key_string = $order->get_id();
