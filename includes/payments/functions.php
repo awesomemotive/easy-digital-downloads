@@ -237,7 +237,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	$status      = $payment->post_status;
 	$customer_id = edd_get_payment_customer_id( $payment_id );
 
-	$customer = new EDD_Customer( $customer_id );
+	$customer = edd_get_customer( $customer_id );
 
 	if ( 'revoked' === $status || 'publish' === $status ) {
 
@@ -522,7 +522,7 @@ function edd_count_payments( $args = array() ) {
 
 	$stats    = array();
 	$statuses = get_post_stati();
-	if( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
+	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
 		unset( $statuses['private'] );
 	}
 
@@ -531,12 +531,11 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	foreach ( (array) $count as $row ) {
-
-		if( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
+		if ( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
 			continue;
 		}
 
-		$stats[$row['post_status']] = $row['num_posts'];
+		$stats[ $row['post_status'] ] = $row['num_posts'];
 	}
 
 	$stats = (object) $stats;
@@ -560,7 +559,7 @@ function edd_check_for_existing_payment( $order_id ) {
 
 	$order = edd_get_order( $order_id );
 
-	if ( $order_id === $order->get_id() && 'publish' === $order->get_status() ) {
+	if ( $order_id === $order->get_id() && $order->is_complete() ) {
 		$exists = true;
 	}
 
@@ -613,7 +612,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 		$statuses = edd_get_payment_statuses();
 
 		// Account that our 'publish' status is labeled 'Complete'
-		$post_status = 'publish' === $status
+		$post_status = $order->is_complete()
 			? 'Completed'
 			: $status;
 
