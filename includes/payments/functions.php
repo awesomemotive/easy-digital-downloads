@@ -1514,22 +1514,34 @@ function edd_get_payment_transaction_id( $order_id = 0 ) {
 }
 
 /**
- * Sets a Transaction ID in post meta for the given Payment ID
+ * Sets a transaction ID for a given order.
  *
- * @since  2.1
- * @param int $payment_id Payment ID
- * @param string $transaction_id The transaction ID from the gateway
- * @return mixed Meta ID if successful, false if unsuccessful
+ * @since 2.1
+ * @since 3.0 Updated to use new methods and store data in the new tables.
+ *
+ * @param int    $order_id       Order ID.
+ * @param string $transaction_id Transaction ID from the gateway.
+ *
+ * @return mixed Meta ID if successful, false if unsuccessful.
  */
-function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
+function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
 
-	if ( empty( $payment_id ) || empty( $transaction_id ) ) {
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) || empty( $transaction_id ) ) {
 		return false;
 	}
 
-	$transaction_id = apply_filters( 'edd_set_payment_transaction_id', $transaction_id, $payment_id );
+	/**
+	 * Filter the transaction ID before being stored in the database.
+	 *
+	 * @since 2.1
+	 *
+	 * @param string $transaction_id Transaction ID.
+	 * @param int    $order_id       Order ID.
+	 */
+	$transaction_id = apply_filters( 'edd_set_payment_transaction_id', $transaction_id, $order_id );
 
-	return edd_update_payment_meta( $payment_id, '_edd_payment_transaction_id', $transaction_id );
+	return edd_update_order_meta( $order_id, 'transaction_id', $transaction_id );
 }
 
 /**
