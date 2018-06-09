@@ -1353,36 +1353,45 @@ function edd_get_payment_amount( $order_id = 0 ) {
 }
 
 /**
- * Retrieves subtotal for payment (this is the amount before taxes) and then
+ * Retrieves subtotal for an order (this is the amount before taxes) and then
  * returns a full formatted amount. This function essentially calls
- * edd_get_payment_subtotal()
+ * edd_get_payment_subtotal().
  *
  * @since 1.3.3
+ * @since 3.0 Parameter renamed to $order_id.
  *
- * @param int $payment_id Payment ID
+ * @param int $order_id Order ID.
  *
- * @see edd_get_payment_subtotal()
- *
- * @return array Fully formatted payment subtotal
+ * @return string Fully formatted order subtotal.
  */
-function edd_payment_subtotal( $payment_id = 0 ) {
-	$subtotal = edd_get_payment_subtotal( $payment_id );
+function edd_payment_subtotal( $order_id = 0 ) {
+	$subtotal = edd_get_payment_subtotal( $order_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $payment_id ) );
+	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
- * Retrieves subtotal for payment (this is the amount before taxes) and then
+ * Retrieves subtotal for an order (this is the amount before taxes) and then
  * returns a non formatted amount.
  *
  * @since 1.3.3
- * @param int $payment_id Payment ID
- * @return float $subtotal Subtotal for payment (non formatted)
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return float $subtotal Subtotal for the order (non formatted).
  */
-function edd_get_payment_subtotal( $payment_id = 0) {
-	$payment = new EDD_Payment( $payment_id );
+function edd_get_payment_subtotal( $order_id = 0 ) {
 
-	return $payment->subtotal;
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return 0.00;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_subtotal()
+		: 0.00;
 }
 
 /**
