@@ -1096,15 +1096,26 @@ function edd_get_payment_gateway( $order_id = 0 ) {
 }
 
 /**
- * Get the currency code a payment was made in
+ * Get the currency code an order was made in.
  *
  * @since 2.2
- * @param int $payment_id Payment ID
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
  * @return string $currency The currency code
  */
-function edd_get_payment_currency_code( $payment_id = 0 ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->currency;
+function edd_get_payment_currency_code( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_currency()
+		: '';
 }
 
 /**
