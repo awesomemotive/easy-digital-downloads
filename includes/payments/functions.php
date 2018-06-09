@@ -1493,15 +1493,26 @@ function edd_get_payment_fees( $order_id = 0, $type = 'all' ) {
 }
 
 /**
- * Retrieves the transaction ID for the given payment
+ * Retrieves the transaction ID for an order.
  *
- * @since  2.1
- * @param int $payment_id Payment ID
- * @return string The Transaction ID
+ * @since 2.1
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string Transaction ID.
  */
-function edd_get_payment_transaction_id( $payment_id = 0 ) {
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->transaction_id;
+function edd_get_payment_transaction_id( $order_id = 0 ) {
+
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return '';
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_transaction_id()
+		: '';
 }
 
 /**
