@@ -1119,15 +1119,25 @@ function edd_get_payment_currency_code( $order_id = 0 ) {
 }
 
 /**
- * Get the currency name a payment was made in
+ * Get the currency name a payment was made in.
  *
  * @since 2.2
- * @param int $payment_id Payment ID
- * @return string $currency The currency name
+ *
+ * @param int $order_id Order ID.
+ * @return string $currency The currency name.
  */
-function edd_get_payment_currency( $payment_id = 0 ) {
-	$currency = edd_get_payment_currency_code( $payment_id );
-	return apply_filters( 'edd_payment_currency', edd_get_currency_name( $currency ), $payment_id );
+function edd_get_payment_currency( $order_id = 0 ) {
+	$currency = edd_get_payment_currency_code( $order_id );
+
+	/**
+	 * Allow the currency to be filtered.
+	 *
+	 * @since 2.2
+	 *
+	 * @param string $currency Currency name.
+	 * @param int    $order_id Order ID.
+	 */
+	return apply_filters( 'edd_payment_currency', edd_get_currency_name( $currency ), $order_id );
 }
 
 /**
