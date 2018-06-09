@@ -1274,14 +1274,14 @@ function edd_get_next_payment_number() {
 }
 
 /**
- * Given a given a number, remove the pre/postfix
+ * Given a given a number, remove the pre/postfix.
  *
- * @since  2.4
- * @param  string $number  The formatted Current Number to increment
- * @return string          The new Payment number without prefix and postfix
+ * @since 2.4
+ *
+ * @param string $number The formatted number to increment.
+ * @return string  The new order number without prefix and postfix.
  */
 function edd_remove_payment_prefix_postfix( $number ) {
-
 	$prefix  = edd_get_option( 'sequential_prefix' );
 	$postfix = edd_get_option( 'sequential_postfix' );
 
@@ -1292,14 +1292,13 @@ function edd_remove_payment_prefix_postfix( $number ) {
 	$length      = strlen( $number );
 	$postfix_pos = strrpos( $number, $postfix );
 	if ( false !== $postfix_pos ) {
-		$number      = substr_replace( $number, '', $postfix_pos, $length );
+		$number = substr_replace( $number, '', $postfix_pos, $length );
 	}
 
 	// Ensure it's a whole number
 	$number = intval( $number );
 
 	return apply_filters( 'edd_remove_payment_prefix_postfix', $number, $prefix, $postfix );
-
 }
 
 /**
