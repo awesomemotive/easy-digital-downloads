@@ -664,10 +664,11 @@ function edd_get_payment_statuses() {
 }
 
 /**
- * Retrieves keys for all available statuses for payments
+ * Retrieves keys for all available statuses for payments.
  *
  * @since 2.3
- * @return array $payment_status All the available payment statuses
+ *
+ * @return array $payment_status All the available payment statuses.
  */
 function edd_get_payment_status_keys() {
 	$statuses = array_keys( edd_get_payment_statuses() );
@@ -680,22 +681,23 @@ function edd_get_payment_status_keys() {
  * Checks whether a payment has been marked as complete.
  *
  * @since 1.0.8
- * @param int $payment_id Payment ID to check against
- * @return bool true if complete, false otherwise
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID to check against.
+ * @return bool True if complete, false otherwise.
  */
-function edd_is_payment_complete( $payment_id = 0 ) {
-	$payment = new EDD_Payment( $payment_id );
+function edd_is_payment_complete( $order_id = 0 ) {
+	$order = edd_get_order( $order_id );
 
 	$ret = false;
 
-	if( $payment->ID > 0 ) {
-
-		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
+	if ( $order ) {
+		if ( (int) $order_id === $order->get_id() && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
 
-	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
+	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $order->get_status() );
 }
 
 /**
