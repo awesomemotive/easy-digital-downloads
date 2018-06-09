@@ -970,18 +970,22 @@ function edd_count_order_adjustments( $args = array() ) {
  *
  * @since 3.0
  *
+ * @param int    $object_id   ID of the object
+ * @param string $object_type Type of object. Default `order`.
+ *
  * @return array
  */
-function edd_get_order_adjustment_counts( $order_id = 0 ) {
+function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order' ) {
 
 	// Default statuses
-	$defaults = array( 'tax_rate', 'fee', 'discount' );
+	$defaults = array_fill_keys( array( 'tax_rate', 'fee', 'discount' ), 0 );
 
 	// Query for count
 	$counts = edd_get_order_adjustments( array(
-		'order_id' => $order_id,
-		'count'    => true,
-		'groupby'  => 'type'
+		'object_id'   => $object_id,
+		'object_type' => $object_type,
+		'count'       => true,
+		'groupby'     => 'type'
 	) );
 
 	// Default array
@@ -994,7 +998,7 @@ function edd_get_order_adjustment_counts( $order_id = 0 ) {
 
 		// Loop through statuses
 		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
+			$o[ $item['type'] ] = absint( $item['count'] );
 		}
 
 		// Total

@@ -313,7 +313,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'customer' => array( 'customer', false ),
 			'gateway'  => array( 'gateway',  false ),
 			'amount'   => array( 'amount',   false ),
-			'date'     => array( 'date',     false )
+			'date'     => array( 'date',     false ),
+			'status'   => array( 'status',   false )
 		) );
 	}
 

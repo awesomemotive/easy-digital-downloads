@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Items Table Class
+ * Order Adjustments Table Class
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
@@ -18,13 +18,13 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * EDD_Order_Item_Table Class
+ * EDD_Order_Adjustment_Table Class
  *
- * Renders the Order Items table on the Order Items page
+ * Renders the Order Adjustments table on the Order Adjustments page
  *
  * @since 3.0
  */
-class EDD_Order_Item_Table extends WP_List_Table {
+class EDD_Order_Adjustment_Table extends WP_List_Table {
 
 	/**
 	 * Number of results to show per page
@@ -41,9 +41,9 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @since 3.0
 	 */
 	public $counts = array(
-		'active'   => 0,
-		'inactive' => 0,
-		'expired'  => 0,
+		'tax_rate' => 0,
+		'discount' => 0,
+		'fee'      => 0,
 		'total'    => 0
 	);
 
@@ -55,8 +55,8 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Order Item',  'easy-digital-downloads' ),
-			'plural'   => __( 'Order Items', 'easy-digital-downloads' ),
+			'singular' => __( 'Order Adjustment',  'easy-digital-downloads' ),
+			'plural'   => __( 'Order Adjustments', 'easy-digital-downloads' ),
 			'ajax'     => false,
 		) );
 
@@ -76,7 +76,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	public function search_box( $text, $input_id ) {
 
 		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_adjustments() ) {
 			return;
 		}
 
@@ -102,7 +102,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Get the base URL for the order_item list table
+	 * Get the base URL for the order_adjustment list table
 	 *
 	 * @since 3.0
 	 *
@@ -148,11 +148,11 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'       => '<input type="checkbox" />',
-			'name'     => __( 'Product',  'easy-digital-downloads' ),
-			'status'   => __( 'Status',   'easy-digital-downloads' ),
-			'quantity' => __( 'Quantity', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount',   'easy-digital-downloads' )
+			'cb'     => '<input type="checkbox" />',
+			'name'   => __( 'Name',        'easy-digital-downloads' ),
+			'type'   => __( 'Type',        'easy-digital-downloads' ),
+			'desc'   => __( 'Description', 'easy-digital-downloads' ),
+			'amount' => __( 'Amount',      'easy-digital-downloads' )
 		);
 	}
 
@@ -166,10 +166,10 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'name'     => array( 'product_name',  false ),
-			'status'   => array( 'status',        false ),
-			'quantity' => array( 'quantity',      false ),
-			'amount'   => array( 'amount',        false )
+			'name'     => array( 'name',        false ),
+			'type'     => array( 'type',        false ),
+			'desc'     => array( 'descirption', false ),
+			'amount'   => array( 'amount',      false )
 		);
 	}
 
@@ -191,14 +191,14 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
-	public function column_default( $order_item, $column_name ) {
-		return property_exists( $order_item, $column_name )
-			? $order_item->{$column_name}
+	public function column_default( $order_adjustment, $column_name ) {
+		return property_exists( $order_adjustment, $column_name )
+			? $order_adjustment->{$column_name}
 			: '';
 	}
 
@@ -208,13 +208,13 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Data for the order_item code.
+	 * @param EDD_Order_Adjustment $order_adjustment Data for the order_adjustment code.
 	 * @return string Formatted amount.
 	 */
-	public function column_amount( $order_item ) {
-		$currency = edd_get_order( $order_item->order_id )->get_currency();
+	public function column_amount( $order_adjustment ) {
+		$currency = edd_get_order( $order_adjustment->object_id )->get_currency();
 
-		return edd_currency_symbol( $currency ) . edd_format_amount( $order_item->amount );
+		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->amount );
 	}
 
 	/**
@@ -223,63 +223,50 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
 	 * @return string Data shown in the Name column
 	 */
-	public function column_name( $order_item ) {
+	public function column_name( $order_adjustment ) {
 		$base         = $this->get_base_url();
-		$status       = strtolower( $order_item->status );
 		$row_actions  = array();
 
 		// Edit
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-			'edd-action' => 'edit_order_item',
-			'order_item' => $order_item->id,
+			'edd-action'       => 'edit_order_adjustment',
+			'order_adjustment' => $order_adjustment->id,
 		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
-
-		// Active, so add "deactivate" action
-		if ( empty( $status ) ) {
-			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'complete_order_item',
-				'order_item' => $order_item->id,
-			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
-
-		} elseif ( 'publish' === $status ) {
-
-			if ( edd_get_download_files( $order_item->id, $order_item->price_id ) ) {
-				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->id ) . '" data-price-id="' . esc_attr( $order_item->id ) . '">' . __( 'Link', 'easy-digital-downloads' ) . '</a>';
-			}
-
-			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'refund_order_item',
-				'order_item' => $order_item->id,
-			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
-
-		// Inactive, so add "activate" action
-		} elseif ( 'refunded' === $status ) {
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'publish_order_item',
-				'order_item' => $order_item->id,
-			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Put Back', 'easy-digital-downloads' ) . '</a>';
-		}
 
 		// Delete
 		$row_actions['remove'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action' => 'remove_order_item',
-			'order_item' => $order_item->id,
-		), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Remove', 'easy-digital-downloads' ) . '</a>';
+			'edd-action'       => 'remove_order_adjustment',
+			'order_adjustment' => $order_adjustment->id,
+		), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Remove', 'easy-digital-downloads' ) . '</a>';
 
-		// Filter all order_item row actions
-		$row_actions = apply_filters( 'edd_order_item_row_actions', $row_actions, $order_item );
+		// Filter all order_adjustment row actions
+		$row_actions = apply_filters( 'edd_order_adjustment_row_actions', $row_actions, $order_adjustment );
 
-		// Wrap order_item title in strong anchor
-		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-			'edd-action' => 'edit_order_item',
-			'order_item' => $order_item->id,
-		), $base ) . '">' . stripslashes( $order_item->product_name ) . '</a></strong>';
+		// Update name based on type
+		if ( 'discount' === $order_adjustment->type ) {
+			$name = edd_get_discount_field( $order_adjustment->type_id, 'name' );
 
-		// Return order_item title & row actions
-		return $order_item_title . $this->row_actions( $row_actions );
+		} elseif ( 'tax_rate' === $order_adjustment->type ) {
+			$name = __( 'Tax', 'easy-digital-downloads' );
+
+		} elseif ( 'fee' === $order_adjustment->type ) {
+			$name = __( 'Fee', 'easy-digital-downloads' );
+
+		} else {
+			$name = '&mdash;';
+		}
+
+		// Wrap order_adjustment title in strong anchor
+		$order_adjustment_title = '<strong><a class="row-title" href="' . add_query_arg( array(
+			'edd-action'       => 'edit_order_adjustment',
+			'order_adjustment' => $order_adjustment->id,
+		), $base ) . '">' . esc_html( $name ) . '</a></strong>';
+
+		// Return order_adjustment title & row actions
+		return $order_adjustment_title . $this->row_actions( $row_actions );
 	}
 
 	/**
@@ -288,42 +275,71 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
 	 *
 	 * @return string Displays a checkbox
 	 */
-	public function column_cb( $order_item ) {
+	public function column_cb( $order_adjustment ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ 'order_item',
-			/*$2%s*/ $order_item->id
+			/*$1%s*/ 'order_adjustment',
+			/*$2%s*/ $order_adjustment->id
 		);
 	}
 
 	/**
-	 * Render the status column
+	 * Render the checkbox column
 	 *
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
 	 *
-	 * @return string Displays the order_item status
+	 * @return string Displays the order type
 	 */
-	public function column_status( $order_item ) {
-		return ! empty( $order_item->status )
-			? ucwords( $order_item->status )
+	public function column_type( $order_adjustment ) {
+		return ! empty( $order_adjustment->get_type() )
+			? ucwords( $order_adjustment->get_type() )
 			: '&mdash;';
 	}
 
+
 	/**
-	 * Message to be displayed when there are no items
+	 * Render the checkbox column
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
+	 *
+	 * @return string Displays the order type
+	 */
+	public function column_desc( $order_adjustment ) {
+		$desc  = '&mdash;';
+		$value = $order_adjustment->get_description();
+
+		// Update desc based on type
+		if ( 'discount' === $order_adjustment->type ) {
+			$desc = '<code>' . sanitize_key( $value ) . '</code>';
+
+		} elseif ( 'tax_rate' === $order_adjustment->type ) {
+			$desc = $value;
+
+		} elseif ( 'fee' === $order_adjustment->type ) {
+			$desc = edd_get_order_adjustment_meta( $order_adjustment->get_id(), 'fee_id', true );
+		}
+
+		return $desc;
+	}
+
+	/**
+	 * Message to be displayed when there are no adjustments
 	 *
 	 * @since 3.0
 	 * @access public
 	 */
 	public function no_items() {
-		_e( 'No order items found.', 'easy-digital-downloads' );
+		_e( 'No order adjustments found.', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -335,7 +351,6 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'refund' => __( 'Refund', 'easy-digital-downloads' ),
 			'remove' => __( 'Remove', 'easy-digital-downloads' )
 		);
 	}
@@ -351,12 +366,12 @@ class EDD_Order_Item_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-order_items' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-order_adjustments' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['order_item'] )
-			? $_GET['order_item']
+		$ids = isset( $_GET['order_adjustment'] )
+			? $_GET['order_adjustment']
 			: false;
 
 		if ( ! is_array( $ids ) ) {
@@ -365,59 +380,50 @@ class EDD_Order_Item_Table extends WP_List_Table {
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'remove' :
-					edd_delete_order_item( $id );
-					break;
-				case 'refund' :
-					edd_update_order_item( $id, array(
-						'status' => 'refunded'
-					) );
-					break;
-				case 'complete' :
-					edd_update_order_item( $id, array(
-						'status' => 'publish'
-					) );
+				case 'delete' :
+					edd_delete_order_adjustment( $id );
 					break;
 			}
 		}
 	}
 
 	/**
-	 * Retrieve the order_item code counts
+	 * Retrieve the order_adjustment code counts
 	 *
 	 * @access public
 	 * @since 3.0
 	 */
 	public function get_counts() {
-		$this->counts = edd_get_order_item_counts( $_GET['id'] );
+		$this->counts = edd_get_order_adjustment_counts( $_GET['id'] );
 	}
 
 	/**
-	 * Retrieve all the data for all the order_item codes
+	 * Retrieve all the data for all the order_adjustment codes
 	 *
 	 * @access public
 	 * @since 3.0
-	 * @return array $order_items_data Array of all the data for the order_item codes
+	 * @return array $order_adjustments_data Array of all the data for the order_adjustment codes
 	 */
-	public function order_items_data() {
+	public function order_adjustments_data() {
 
 		// Query args
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby']  ) : 'id';
 		$order   = isset( $_GET['order']   ) ? sanitize_key( $_GET['order']    ) : 'DESC';
-		$status  = isset( $_GET['status']  ) ? sanitize_key( $_GET['status']   ) : '';
+		$type    = isset( $_GET['type']    ) ? sanitize_key( $_GET['type']     ) : '';
 		$search  = isset( $_GET['s']       ) ? sanitize_text_field( $_GET['s'] ) : null;
 		$paged   = isset( $_GET['paged']   ) ? absint( $_GET['paged']          ) : 1;
 		$id      = isset( $_GET['id']      ) ? absint( $_GET['id']             ) : 0;
 
-		// Get order_items
-		return edd_get_order_items( array(
-			'order_id' => $id,
-			'number'   => $this->per_page,
-			'paged'    => $paged,
-			'orderby'  => $orderby,
-			'order'    => $order,
-			'status'   => $status,
-			'search'   => $search
+		// Get order_adjustments
+		return edd_get_order_adjustments( array(
+			'object_id'   => $id,
+			'object_type' => 'order',
+			'number'      => $this->per_page,
+			'paged'       => $paged,
+			'orderby'     => $orderby,
+			'order'       => $order,
+			'type'        => $type,
+			'search'      => $search
 		) );
 	}
 
@@ -426,9 +432,9 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 3.0
-	 * @uses EDD_Order_Item_Table::get_columns()
-	 * @uses EDD_Order_Item_Table::get_sortable_columns()
-	 * @uses EDD_Order_Item_Table::order_items_data()
+	 * @uses EDD_Order_Adjustment_Table::get_columns()
+	 * @uses EDD_Order_Adjustment_Table::get_sortable_columns()
+	 * @uses EDD_Order_Adjustment_Table::order_adjustments_data()
 	 * @uses WP_List_Table::get_pagenum()
 	 * @uses WP_List_Table::set_pagination_args()
 	 */
@@ -439,17 +445,17 @@ class EDD_Order_Item_Table extends WP_List_Table {
 			$this->get_sortable_columns()
 		);
 
-		$this->items = $this->order_items_data();
+		$this->items = $this->order_adjustments_data();
 
-		$status = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
+		$type = isset( $_GET['type'] )
+			? sanitize_key( $_GET['type'] )
 			: 'total';
 
 		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_items' => $this->counts[ $status ],
+			'total_items' => $this->counts[ $type ],
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
+			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page )
 		) );
 	}
 }
