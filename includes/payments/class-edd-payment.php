@@ -2786,23 +2786,15 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment number
+	 * Setup the payment number.
 	 *
-	 * @since  2.5
-	 * @return int|string Integer by default, or string if sequential order numbers is enabled
+	 * @since 2.5
+	 * @since 3.0 Refactor to use EDD\Orders\Order.
+	 *
+	 * @return int|string Integer by default, or string if sequential order numbers is enabled.
 	 */
 	private function setup_payment_number() {
-		$number = $this->ID;
-
-		if ( edd_get_option( 'enable_sequential' ) ) {
-			$number = $this->order->get_number();
-
-			if ( ! $number ) {
-				$number = $this->ID;
-			}
-		}
-
-		return $number;
+		return $this->order->get_number();
 	}
 
 	/**

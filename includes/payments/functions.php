@@ -1166,22 +1166,28 @@ function edd_get_payment_key( $order_id = 0 ) {
 }
 
 /**
- * Get the payment order number
+ * Get the payment order number.
  *
- * This will return the payment ID if sequential order numbers are not enabled or the order number does not exist
+ * This will return the order ID if sequential order numbers are not enabled or the order number does not exist.
  *
  * @since 2.0
- * @param int $payment_id Payment ID
- * @return string $number Payment order number
+ * @since 3.0 Refactored to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return int|string Payment order number.
  */
-function edd_get_payment_number( $payment_id = 0 ) {
+function edd_get_payment_number( $order_id = 0 ) {
 
-	if ( $payment_id instanceof EDD_Payment ) {
-		return $payment_id->number;
+	// Bail if nothing was passed.
+	if ( empty( $order_id ) ) {
+		return 0;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
-	return $payment->number;
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->get_number()
+		: 0;
 }
 
 /**
