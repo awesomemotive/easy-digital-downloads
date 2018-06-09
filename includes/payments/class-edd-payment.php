@@ -2698,7 +2698,6 @@ class EDD_Payment {
 	 * @return array               The user info associated with the payment
 	 */
 	private function setup_user_info() {
-
 		$user_info = isset( $this->payment_meta['user_info'] )
 			? $this->payment_meta['user_info']
 			: array();
