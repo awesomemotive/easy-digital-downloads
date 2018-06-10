@@ -552,8 +552,9 @@ function edd_get_registered_settings() {
 						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
 						'check' => __( 'Allow',          'easy-digital-downloads' ),
 						'desc'  => sprintf(
-							__( 'Anonymously track how Easy Digital Downloads is used, helping us make it better. <a href="%s" target="_blank">Here is what we track</a>.<br>Opt-in here (and to our newsletter) and we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
+							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%s">our newsletter</a>, we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/tracking/',
+							'https://easydigitaldownloads.com/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking#footer-newsletter',
 							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox_description',
