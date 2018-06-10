@@ -288,7 +288,7 @@ function edd_update_payment_details( $data = array() ) {
 
 	// Check if the status has changed, if so, we need to invoke the pertinent status processing method.
 	if ( $order_update_args['status'] !== $order->get_status() ) {
-		edd_transition_order_status( $order_id, $status );
+		edd_update_order_status( $order_id, $status );
 	}
 
 	if ( false === $updated ) {

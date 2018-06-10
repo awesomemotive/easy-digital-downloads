@@ -209,7 +209,7 @@ function edd_insert_payment( $order_data = array() ) {
  * @return bool True if the status was updated successfully, false otherwise.
  */
 function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
-	return edd_transition_order_status( $order_id, $new_status );
+	return edd_update_order_status( $order_id, $new_status );
 }
 
 /**
