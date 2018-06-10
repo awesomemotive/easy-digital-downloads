@@ -480,8 +480,8 @@ function edd_get_registered_settings() {
 						'type'    => 'select',
 						'chosen'  => true,
 						'options' => array(
-							'before' => __( 'Before - $10', 'easy-digital-downloads' ),
-							'after'  => __( 'After - 10$', 'easy-digital-downloads' ),
+							'before' => __( 'Before ($10)', 'easy-digital-downloads' ),
+							'after'  => __( 'After (10$)',  'easy-digital-downloads' )
 						),
 					),
 					'thousands_separator' => array(
