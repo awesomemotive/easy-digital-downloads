@@ -12,13 +12,19 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+// Database layer
+use EDD\Database\Objects\Discount;
+
 /**
  * EDD_Discount Class
  *
+ * Application layer
+ *
  * @since 2.7
- * @since 3.0 No longer extends EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Objects\Discount instead of EDD_DB_Discount
  */
-class EDD_Discount {
+class EDD_Discount extends Discount {
+
 	/**
 	 * Discount ID.
 	 *
