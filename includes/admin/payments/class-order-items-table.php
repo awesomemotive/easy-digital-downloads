@@ -212,7 +212,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @return string Formatted amount.
 	 */
 	public function column_amount( $order_item ) {
-		$currency = edd_get_order( $order_item->order_id )->get_currency();
+		$currency = edd_get_order( $order_item->order_id )->currency;
 
 		return edd_currency_symbol( $currency ) . edd_format_amount( $order_item->amount );
 	}
