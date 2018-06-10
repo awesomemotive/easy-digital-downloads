@@ -19,6 +19,18 @@ defined( 'ABSPATH' ) || exit;
  * API Request Log Class.
  *
  * @since 3.0
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $api_key
+ * @property string $token
+ * @property string $version
+ * @property string $request
+ * @property string $error
+ * @property string $ip
+ * @property string $time
+ * @property string $date_created
+ * @property string $date_modified
  */
 class Api_Request_Log extends Base_Object {
 
@@ -113,112 +125,11 @@ class Api_Request_Log extends Base_Object {
 	protected $date_created;
 
 	/**
-	 * Retrieve the API request log ID.
+	 * Date modified.
 	 *
-	 * @since 3.0
-	 *
-	 * @return int
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
 	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Retrieve the user ID of the user making the API request.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_user_id() {
-		return $this->user_id;
-	}
-
-	/**
-	 * Retrieve the API key of the user.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_api_key() {
-		return $this->api_key;
-	}
-
-	/**
-	 * Retrieve the token of the user.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_token() {
-		return $this->token;
-	}
-
-	/**
-	 * Retrieve the version of the API used.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_version() {
-		return $this->version;
-	}
-
-	/**
-	 * Retrieve the API request.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_request() {
-		return $this->request;
-	}
-
-	/**
-	 * Retrieve any errors for the API request.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_error() {
-		return $this->error;
-	}
-
-	/**
-	 * Retrieve IP address of the client making the API request.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_ip() {
-		return $this->ip;
-	}
-
-	/**
-	 * Retrieve speed of the API request.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float
-	 */
-	public function get_time() {
-		return $this->time;
-	}
-
-	/**
-	 * Retrieve the date the API request was created.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_date_created() {
-		return $this->date_created;
-	}
+	protected $date_modified;
 }

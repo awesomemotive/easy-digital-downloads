@@ -344,16 +344,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_default( $order, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount':
-				$value = edd_currency_filter( edd_format_amount( $order->get_total() ), $order->get_currency() );
+				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
 				break;
 			case 'date':
-				$value = edd_date_i18n( $order->get_date_created() );
+				$value = edd_date_i18n( $order->date_created );
 				break;
 			case 'gateway':
-				$value = edd_get_gateway_admin_label( $order->get_gateway() );
+				$value = edd_get_gateway_admin_label( $order->gateway );
 				break;
 			case 'status':
-				$value = edd_get_payment_status_label( $order->get_status() );
+				$value = edd_get_payment_status_label( $order->status );
 				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
@@ -362,7 +362,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				break;
 		}
 
-		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), $column_name );
+		return apply_filters( 'edd_payments_table_column', $value, $order->id, $column_name );
 	}
 
 	/**
@@ -388,18 +388,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
 		}
 
-		$email = $order->get_email();
+		$email = $order->email;
 
 		// Resend
-		if ( 'publish' === $order->get_status() && ! empty( $email ) ) {
+		if ( 'publish' === $order->status && ! empty( $email ) ) {
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
 				'edd-action'  => 'email_links',
-				'purchase_id' => $order->get_id()
+				'purchase_id' => $order->id
 			), $this->base_url ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// This exists for backwards compatibility purposes.
-		$payment     = edd_get_payment( $order->get_id() );
+		$payment     = edd_get_payment( $order->id );
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
 		if ( empty( $email ) ) {
@@ -410,7 +410,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$value = $email . $this->row_actions( $row_actions );
 
 		// Filter & return
-		return apply_filters( 'edd_payments_table_column', $value, $order->get_id(), 'email' );
+		return apply_filters( 'edd_payments_table_column', $value, $order->id, 'email' );
 	}
 
 	/**
@@ -426,7 +426,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			'payment',
-			$order->get_id()
+			$order->id
 		);
 	}
 
@@ -440,7 +440,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_number( $order ) {
-		$view = add_query_arg( 'id', $order->get_id(), admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) );
+		$view = add_query_arg( 'id', $order->id, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) );
 		$link = '<a class="row-title" href="' . esc_url( $view ) . '"><strong>' . $order->get_number() . '</strong></a>';
 
 		// Concatenate the results
@@ -448,7 +448,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'view'   => '<a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>',
 			'delete' => '<a href="' . wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'delete_payment',
-				'purchase_id' => $order->get_id()
+				'purchase_id' => $order->id
 			), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		) );
 
@@ -466,7 +466,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Data shown in the Customer column.
 	 */
 	public function column_customer( $order ) {
-		$customer_id = $order->get_customer_id();
+		$customer_id = $order->customer_id;
 		$customer    = edd_get_customer( $customer_id );
 
 		// Actions if exists

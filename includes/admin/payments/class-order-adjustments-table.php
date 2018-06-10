@@ -191,7 +191,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
+	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -208,11 +208,11 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Adjustment $order_adjustment Data for the order_adjustment code.
+	 * @param EDD\Orders\Order_Adjustment $order_adjustment Data for the order_adjustment code.
 	 * @return string Formatted amount.
 	 */
 	public function column_amount( $order_adjustment ) {
-		$currency = edd_get_order( $order_adjustment->object_id )->get_currency();
+		$currency = edd_get_order( $order_adjustment->object_id )->currency;
 
 		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->amount );
 	}
@@ -223,7 +223,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
+	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $order_adjustment ) {
@@ -275,7 +275,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
+	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
 	 *
 	 * @return string Displays a checkbox
 	 */
@@ -293,13 +293,13 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
+	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
 	 *
 	 * @return string Displays the order type
 	 */
 	public function column_type( $order_adjustment ) {
-		return ! empty( $order_adjustment->get_type() )
-			? ucwords( $order_adjustment->get_type() )
+		return ! empty( $order_adjustment->type )
+			? ucwords( $order_adjustment->type )
 			: '&mdash;';
 	}
 
@@ -310,13 +310,13 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Adjustment $order_adjustment Discount object.
+	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
 	 *
 	 * @return string Displays the order type
 	 */
 	public function column_desc( $order_adjustment ) {
 		$desc  = '&mdash;';
-		$value = $order_adjustment->get_description();
+		$value = $order_adjustment->description;
 
 		// Update desc based on type
 		if ( 'discount' === $order_adjustment->type ) {
@@ -326,7 +326,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 			$desc = $value;
 
 		} elseif ( 'fee' === $order_adjustment->type ) {
-			$desc = edd_get_order_adjustment_meta( $order_adjustment->get_id(), 'fee_id', true );
+			$desc = edd_get_order_adjustment_meta( $order_adjustment->id, 'fee_id', true );
 		}
 
 		return $desc;

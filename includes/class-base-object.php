@@ -72,7 +72,7 @@ abstract class Base_Object {
 			$key = 'id';
 		}
 
-		// Try the mothod first
+		// Try the method first
 		if ( method_exists( $this, "get_{$key}" ) ) {
 			$retval = call_user_func( array( $this, "get_{$key}" ) );
 

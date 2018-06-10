@@ -59,9 +59,9 @@ class Logs_File_Downloads extends Base {
 			'searchable' => true
 		),
 
-		// payment_id
+		// order_id
 		array(
-			'name'       => 'payment_id',
+			'name'       => 'order_id',
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,

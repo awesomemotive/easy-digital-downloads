@@ -176,15 +176,15 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 				/** @var $log EDD\Logs\Api_Request_Log */
 
 				$logs_data[] = array(
-					'ID'      => $log->get_id(),
-					'version' => $log->get_version(),
-					'speed'   => $log->get_time(),
-					'ip'      => $log->get_ip(),
-					'date'    => $log->get_date_created(),
-					'api_key' => $log->get_api_key(),
-					'request' => $log->get_request(),
-					'error'   => $log->get_error(),
-					'user_id' => $log->get_user_id(),
+					'ID'      => $log->id,
+					'version' => $log->version,
+					'speed'   => $log->time,
+					'ip'      => $log->ip,
+					'date'    => $log->date_created,
+					'api_key' => $log->api_key,
+					'request' => $log->request,
+					'error'   => $log->error,
+					'user_id' => $log->user_id,
 				);
 			}
 		}

@@ -188,7 +188,7 @@ class Tests_Notes extends Ajax_UnitTestCase {
 		$this->_setRole( 'shop_manager' );
 
 		$_POST['nonce']   = wp_create_nonce( 'edd_note' );
-		$_POST['note_id'] = self::$note->get_id();
+		$_POST['note_id'] = self::$note->id;
 
 		try {
 			$this->_handleAjax( 'edd_delete_note' );
