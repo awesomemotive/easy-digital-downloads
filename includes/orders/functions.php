@@ -569,97 +569,104 @@ function edd_build_order( $order_data = array() ) {
 }
 
 /**
- * Transition order status.
+ * Update the status of an entire order.
  *
  * @since 3.0
  *
- * @param int    $order_id Order ID.
- * @param string $status   New order status.
+ * @param int    $order_id   Order ID.
+ * @param string $new_status New order status.
  *
  * @return bool True if the status was updated successfully, false otherwise.
  */
-function edd_transition_order_status( $order_id = 0, $status = '' ) {
-	if ( empty( $order_id ) || empty( $status ) ) {
+function edd_update_order_status( $order_id = 0, $new_status = '' ) {
+
+	// Bail if order and status are empty
+	if ( empty( $order_id ) || empty( $new_status ) ) {
 		return false;
 	}
 
+	// Get the order
 	$order = edd_get_order( $order_id );
 
-	if ( ! $order ) {
+	// Bail if order not found
+	if ( empty( $order ) ) {
 		return false;
 	}
 
-	if ( $status == 'completed' || $status == 'complete' ) {
-		$status = 'publish';
+	// Override to `publish`
+	if ( in_array( $new_status, array( 'completed', 'complete' ), true ) ) {
+		$new_status = 'publish';
 	}
+
+	// Get the old (current) status
+	$old_status = $order->get_status();
 
 	// We do not allow status changes if the status is the same to that stored in the database.
 	// This prevents the `edd_update_payment_status` action from being triggered unnecessarily.
-	if ( $order->get_status() === $status ) {
+	if ( $old_status === $new_status ) {
 		return false;
 	}
 
-	// Wrap the filter for backwards compatibility.
-	$do_change = apply_filters(
-		'edd_should_update_order_status',
-		apply_filters( 'edd_should_update_payment_status', true, $order_id, $status, $order->get_status() )
-	);
+	// Backwards compatibility
+	$do_change = apply_filters( 'edd_should_update_payment_status', true,       $order_id, $new_status, $old_status );
 
-	$updated = false;
+	// New 3.0 filter
+	$do_change = apply_filters( 'edd_should_update_order_status',   $do_change, $order_id, $new_status, $old_status );
 
-	if ( $do_change ) {
-		/**
-		 * Action triggered before updating order status. This is here for backwards compatibility purposes.
-		 */
-		do_action( 'edd_before_payment_status_change', $order_id, $status, $order->get_status() );
-
-		/**
-		 * Action triggered before updating order status.
-		 *
-		 * @since 3.0
-		 *
-		 * @param int    $order_id   Order ID.
-		 * @param string $status     New order status.
-		 * @param string $old_status Old order status.
-		 */
-		do_action( 'edd_before_order_status_change', $order_id, $status, $order->get_status() );
-
-		// Backwards compatibility.
-		$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
-			'post_status' => $status,
-		) );
-
-		edd_update_order( $order_id, array(
-			'status' => $update_fields['post_status']
-		) );
-
-		// Actions need to be triggered based on the new status.
-		switch ( $status ) {
-			case 'refunded':
-				break;
-			case 'failed':
-				break;
-			case 'pending':
-			case 'processing':
-				break;
-		}
-
-		/**
-		 * Action triggered when updating order status. This is here for backwards compatibility purposes.
-		 */
-		do_action( 'edd_update_payment_status', $order_id, $status, $order->get_status() );
-
-		/**
-		 * Action triggered when updating order status.
-		 *
-		 * @since 3.0
-		 *
-		 * @param int    $order_id   Order ID.
-		 * @param string $status     New order status.
-		 * @param string $old_status Old order status.
-		 */
-		do_action( 'edd_transition_order_status', $order_id, $status, $order->get_status() );
+	// Bail if not updating order status
+	if ( empty( $do_change ) ) {
+		return false;
 	}
+
+	/**
+	 * Action triggered before updating order status. This is here for backwards compatibility purposes.
+	 */
+	do_action( 'edd_before_payment_status_change', $order_id, $new_status, $old_status );
+
+	/**
+	 * Action triggered before updating order status.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int    $order_id   Order ID.
+	 * @param string $new_status     New order status.
+	 * @param string $old_status Old order status.
+	 */
+	do_action( 'edd_before_order_status_change', $order_id, $new_status, $old_status );
+
+	// Backwards compatibility.
+	$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
+		'post_status' => $new_status
+	) );
+
+	// Use the filtered status
+	$new_status = $update_fields['post_status'];
+
+	// Update the order
+	$updated = edd_update_order( $order_id, array(
+		'status' => $new_status
+	) );
+
+	// Bail if not updated
+	if ( empty( $updated ) ) {
+		return false;
+	}
+
+	/**
+	 * Action triggered when updating order status. This is here for backwards compatibility purposes.
+	 */
+	do_action( 'edd_update_payment_status', $order_id, $new_status, $old_status );
+
+	/**
+	 * Action triggered when updating order status.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int    $order_id   Order ID.
+	 * @param string $new_status New order status.
+	 * @param string $old_status Old order status.
+	 */
+	do_action( 'edd_update_order_status', $order_id, $new_status, $old_status );
 }
 
 /** Order Items ***************************************************************/
@@ -705,14 +712,14 @@ function edd_delete_order_item( $order_item_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int   $order_id API request order ID.
- * @param array $data   Updated file download order data.
+ * @param int   $order_item_id Order item ID.
+ * @param array $data          Updated file download order data.
  * @return bool Whether or not the file download order was updated.
  */
-function edd_update_order_item( $order_id = 0, $data = array() ) {
+function edd_update_order_item( $order_item_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order_Item();
 
-	return $orders->update_item( $order_id, $data );
+	return $orders->update_item( $order_item_id, $data );
 }
 
 /**
@@ -720,11 +727,11 @@ function edd_update_order_item( $order_id = 0, $data = array() ) {
  *
  * @since 3.0
  *
- * @param int $order_id Order ID.
+ * @param int $order_item_id Order item ID.
  * @return object
  */
-function edd_get_order_item( $order_id = 0 ) {
-	return edd_get_order_item_by( 'id', $order_id );
+function edd_get_order_item( $order_item_id = 0 ) {
+	return edd_get_order_item_by( 'id', $order_item_id );
 }
 
 /**
@@ -858,13 +865,13 @@ function edd_add_order_adjustment( $data ) {
  *
  * @since 3.0
  *
- * @param int $order_id API request order ID.
+ * @param int $adjustment_id Order adjustment ID.
  * @return int
  */
-function edd_delete_order_adjustment( $order_id = 0 ) {
+function edd_delete_order_adjustment( $adjustment_id = 0 ) {
 	$orders = new EDD\Database\Queries\Order_Adjustment();
 
-	return $orders->delete_item( $order_id );
+	return $orders->delete_item( $adjustment_id );
 }
 
 /**
@@ -872,14 +879,14 @@ function edd_delete_order_adjustment( $order_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int   $order_id API request order ID.
- * @param array $data   Updated API request order data.
+ * @param int   $adjustment_id Order adjustment ID.
+ * @param array $data          Updated API request order data.
  * @return bool Whether or not the API request order was updated.
  */
-function edd_update_order_adjustment( $order_id = 0, $data = array() ) {
+function edd_update_order_adjustment( $adjustment_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order_Adjustment();
 
-	return $orders->update_item( $order_id, $data );
+	return $orders->update_item( $adjustment_id, $data );
 }
 
 /**
@@ -887,11 +894,11 @@ function edd_update_order_adjustment( $order_id = 0, $data = array() ) {
  *
  * @since 3.0
  *
- * @param int $order_id API request order ID.
+ * @param int $adjustment_id Order adjustment ID.
  * @return object
  */
-function edd_get_order_adjustment( $order_id = 0 ) {
-	return edd_get_order_adjustment_by( 'id', $order_id );
+function edd_get_order_adjustment( $adjustment_id = 0 ) {
+	return edd_get_order_adjustment_by( 'id', $adjustment_id );
 }
 
 /**
