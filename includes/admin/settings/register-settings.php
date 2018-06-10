@@ -512,9 +512,10 @@ function edd_get_registered_settings() {
 					),
 					'banned_emails' => array(
 						'id'    => 'banned_emails',
-						'name'  => __( 'Prevent Sales To', 'easy-digital-downloads' ),
-						'desc'  => __( 'Enter (one per line) emails, domains starting with <code>@</code>, or TLDs starting with <code>.</code>.', 'easy-digital-downloads' ),
-						'type'  => 'textarea'
+						'name'  => __( 'Order Blocking', 'easy-digital-downloads' ),
+						'desc'  => __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
+						'type'  => 'textarea',
+						'placeholder' => __( '@example.com', 'easy-digital-downloads' )
 					)
 				),
 				'api' => array(
@@ -693,7 +694,7 @@ function edd_get_registered_settings() {
 					'admin_notice_emails' => array(
 						'id'   => 'admin_notice_emails',
 						'name' => __( 'Sale Notification Emails', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter (one per line) the email address(es) that should receive a notification anytime a sale is made. One per line.', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made. One per line.', 'easy-digital-downloads' ),
 						'type' => 'textarea',
 						'std'  => get_bloginfo( 'admin_email' ),
 					),
@@ -2146,9 +2147,12 @@ function edd_textarea_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
 
-	$class = edd_sanitize_html_class( $args['field_class'] );
+	$class       = edd_sanitize_html_class( $args['field_class'] );
+	$placeholder = ! empty( $args['placeholder'] )
+		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
+		: '';
 
-	$html  = '<textarea class="' . $class . '" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
