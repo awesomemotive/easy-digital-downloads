@@ -85,11 +85,19 @@ $cart_fees      = edd_get_order_adjustments( array(
                             <div id="edd-order-update" class="postbox edd-order-data">
                                 <h3 class="hndle">
                                     <span><?php _e( 'Update Order', 'easy-digital-downloads' ); ?></span>
+									<a href="" id="edd-order-recalc-total" class="edd-metabox-title-action"><?php _e( 'Recalculate', 'easy-digital-downloads' ); ?></a>
                                 </h3>
 
                                 <div class="inside">
                                     <div class="edd-order-update-box edd-admin-box">
 										<?php do_action( 'edd_view_order_details_totals_before', $order_id ); ?>
+
+                                        <div class="edd-order-payment edd-admin-box-inside">
+                                            <p>
+                                                <span class="label"><?php _e( 'Total', 'easy-digital-downloads' ); ?>:</span>&nbsp;
+												<?php echo edd_currency_symbol( $order->get_currency() ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $order->get_total() ) ); ?>"/>
+                                            </p>
+                                        </div>
 
                                         <div class="edd-admin-box-inside">
                                             <p>
@@ -180,20 +188,6 @@ $cart_fees      = edd_get_order_adjustments( array(
                                                 </p>
                                             </div>
 										<?php endif; ?>
-
-                                        <div class="edd-order-payment edd-admin-box-inside">
-                                            <p>
-                                                <span class="label"><?php _e( 'Total', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $order->get_currency() ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $order->get_total() ) ); ?>"/>
-                                            </p>
-                                        </div>
-
-                                        <div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
-                                            <p>
-                                                <span class="label"><?php _e( 'Changes', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-                                                <a href="" id="edd-order-recalc-total" class="button button-secondary"><?php _e( 'Recalculate', 'easy-digital-downloads' ); ?></a>
-                                            </p>
-                                        </div>
 
 										<?php do_action( 'edd_view_order_details_totals_after', $order_id ); ?>
 
