@@ -187,7 +187,7 @@ function edd_is_order_recoverable( $order_id = 0 ) {
 
 	$transaction_id = $order->get_transaction_id();
 
-	if ( in_array( $order->get_status(), $recoverable_statuses, true ) && empty( $transaction_id ) ) {
+	if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $transaction_id ) ) {
 		return true;
 	}
 
@@ -599,7 +599,7 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 	}
 
 	// Get the old (current) status
-	$old_status = $order->get_status();
+	$old_status = $order->status;
 
 	// We do not allow status changes if the status is the same to that stored in the database.
 	// This prevents the `edd_update_payment_status` action from being triggered unnecessarily.

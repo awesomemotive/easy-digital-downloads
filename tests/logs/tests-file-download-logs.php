@@ -48,7 +48,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 
 		$log = edd_get_file_download_log( self::$logs[0] );
 
-		$this->assertEquals( '10.0.0.1', $log->get_ip() );
+		$this->assertEquals( '10.0.0.1', $log->ip );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_download_id() < $logs[1]->get_download_id() );
+		$this->assertTrue( $logs[0]->download_id < $logs[1]->download_id );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_download_id() > $logs[1]->get_download_id() );
+		$this->assertTrue( $logs[0]->download_id > $logs[1]->download_id );
 	}
 
 	/**
@@ -136,7 +136,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_file_id() < $logs[1]->get_file_id() );
+		$this->assertTrue( $logs[0]->file_id < $logs[1]->file_id );
 	}
 
 	/**
@@ -148,7 +148,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_file_id() > $logs[1]->get_file_id() );
+		$this->assertTrue( $logs[0]->file_id > $logs[1]->file_id );
 	}
 
 	/**
@@ -159,7 +159,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 			'order' => 'asc',
 		) );
 
-		$this->assertTrue( $logs[0]->get_id() < $logs[1]->get_id() );
+		$this->assertTrue( $logs[0]->id < $logs[1]->id );
 	}
 
 	/**
@@ -170,7 +170,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 			'order' => 'desc',
 		) );
 
-		$this->assertTrue( $logs[0]->get_id() > $logs[1]->get_id() );
+		$this->assertTrue( $logs[0]->id > $logs[1]->id );
 	}
 
 	/**
@@ -198,9 +198,9 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_invalid_payment_id_should_return_true() {
+	public function test_get_logs_with_invalid_order_id_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'payment_id' => 99999,
+			'order_id' => 99999,
 		) );
 
 		$this->assertCount( 0, $logs );

@@ -36,10 +36,10 @@ $single_use           = $discount->get_once_per_customer();
 $notes                = edd_get_discount_notes( $discount->id );
 
 // Show/Hide
-$flat_display         = ( 'flat'    === $discount->get_type() ) ? '' : ' style="display:none;"';
-$percent_display      = ( 'percent' === $discount->get_type() ) ? '' : ' style="display:none;"';
-$no_notes_display     =   empty( $notes                )        ? '' : ' style="display:none;"';
-$condition_display    = ! empty( $product_requirements )        ? '' : ' style="display:none;"';
+$flat_display         = ( 'flat'    === $discount->type() ) ? '' : ' style="display:none;"';
+$percent_display      = ( 'percent' === $discount->type() ) ? '' : ' style="display:none;"';
+$no_notes_display     =   empty( $notes                )    ? '' : ' style="display:none;"';
+$condition_display    = ! empty( $product_requirements )    ? '' : ' style="display:none;"';
 
 // Dates & times
 $start_date           = empty( $discount->start_date ) ? ''   : date( 'Y-m-d', strtotime( $discount->start_date ) );

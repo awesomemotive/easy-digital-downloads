@@ -85,18 +85,18 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		foreach ( $logs as $log ) {
 			/** @var EDD\Logs\File_Download_Log $log */
 
-			$files     = edd_get_download_files( $log->get_download_id() );
-			$file_id   = $log->get_file_id();
+			$files     = edd_get_download_files( $log->download_id );
+			$file_id   = $log->file_id;
 			$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-			$user      = get_userdata( $log->get_user_id() );
+			$user      = get_userdata( $log->user_id );
 			$user      = $user ? $user->user_login : $user->user_email;
 
 			$data[]    = array(
-				'date'       => $log->get_date_created(),
+				'date'       => $log->date_created,
 				'user'       => $user,
-				'ip'         => $log->get_ip(),
-				'user_agent' => $log->get_user_agent(),
-				'download'   => get_the_title( $log->get_download_id() ),
+				'ip'         => $log->ip,
+				'user_agent' => $log->user_agent,
+				'download'   => get_the_title( $log->download_id ),
 				'file'       => $file_name,
 			);
 		}

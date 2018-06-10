@@ -87,22 +87,22 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 		foreach ( $items as $item ) {
 			/** @var EDD\Orders\Order_Item $item */
-			$order = edd_get_order( $item->get_order_id() );
-			$download = edd_get_download( $item->get_product_id() );
+			$order = edd_get_order( $item->order_id );
+			$download = edd_get_download( $item->product_id );
 			$user_info = $order->get_user_info();
 
 			$data[] = array(
-				'ID'          => $item->get_product_id(),
-				'user_id'     => $order->get_user_id(),
-				'customer_id' => $order->get_customer_id(),
-				'email'       => $order->get_email(),
+				'ID'          => $item->product_id,
+				'user_id'     => $order->user_id(),
+				'customer_id' => $order->customer_id,
+				'email'       => $order->email,
 				'first_name'  => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
 				'last_name'   => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
 				'download'    => $download->post_title,
-				'amount'      => $order->get_total(),
-				'payment_id'  => $order->get_id(),
-				'price_id'    => $item->get_price_id(),
-				'date'        => $order->get_date_created(),
+				'amount'      => $order->total,
+				'payment_id'  => $order->id,
+				'price_id'    => $item->price_id,
+				'date'        => $order->date_created,
 			);
 		}
 

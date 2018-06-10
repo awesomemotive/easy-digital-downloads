@@ -114,7 +114,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 				$order = edd_get_order_by( 'payment_key', $value );
 
 				if ( $order ) {
-					$payment = edd_get_payment( $order->get_id() );
+					$payment = edd_get_payment( $order->id );
 
 					if ( ! $payment->ID > 0 ) {
 						$payment = false;
@@ -125,7 +125,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 				$order = edd_get_order_by( 'order_number', $value );
 
 				if ( $order ) {
-					$payment = edd_get_payment( $order->get_id() );
+					$payment = edd_get_payment( $order->id );
 
 					if ( ! $payment->ID > 0 ) {
 						$payment = false;
@@ -645,7 +645,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 		return false;
 	}
 	
-	$status = $order->get_status();
+	$status = $order->status;
 
 	if ( empty( $status ) ) {
 		return false;
@@ -1403,7 +1403,7 @@ function edd_get_purchase_id_by_key( $key ) {
 	$order = edd_get_order_by( 'payment_key', $key );
 
 	if ( false !== $order ) {
-		$$global_key_string = $order->get_id();
+		$$global_key_string = $order->id;
 		return $$global_key_string;
 	}
 

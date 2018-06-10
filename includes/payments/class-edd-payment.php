@@ -435,12 +435,12 @@ class EDD_Payment {
 		$this->_ID             = absint( $payment_id );
 
 		// Status and Dates
-		$this->date            = $this->order->get_date_created();
+		$this->date            = $this->order->date_created;
 		$this->completed_date  = $this->setup_completed_date();
-		$this->status          = $this->order->get_status();
-		$this->post_status     = $this->order->get_status();
-		$this->mode            = $this->order->get_mode();
-		$this->parent_payment  = $this->order->get_parent();
+		$this->status          = $this->order->status;
+		$this->post_status     = $this->order->status;
+		$this->mode            = $this->order->mode;
+		$this->parent_payment  = $this->order->parent;
 
 		$all_payment_statuses  = edd_get_payment_statuses();
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
@@ -451,20 +451,20 @@ class EDD_Payment {
 		$this->downloads       = $this->setup_downloads();
 
 		// Currency Based
-		$this->total           = $this->order->get_total();
-		$this->tax             = $this->order->get_tax();
+		$this->total           = $this->order->total;
+		$this->tax             = $this->order->tax;
 		$this->tax_rate        = $this->setup_tax_rate();
 		$this->fees_total      = $this->setup_fees_total();
-		$this->subtotal        = $this->order->get_subtotal();
+		$this->subtotal        = $this->order->subtotal;
 		$this->currency        = $this->setup_currency();
 
 		// Gateway based
-		$this->gateway         = $this->order->get_gateway();
+		$this->gateway         = $this->order->gateway;
 		$this->transaction_id  = $this->setup_transaction_id();
 
 		// User based
-		$this->ip              = $this->order->get_ip();
-		$this->customer_id     = $this->order->get_customer_id();
+		$this->ip              = $this->order->ip;
+		$this->customer_id     = $this->order->customer_id;
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
 		$this->user_info       = $this->setup_user_info();
@@ -474,7 +474,7 @@ class EDD_Payment {
 		$this->last_name       = $this->user_info['last_name'];
 
 		// Other Identifiers
-		$this->key             = $this->order->get_payment_key();
+		$this->key             = $this->order->payment_key;
 		$this->number          = $this->setup_payment_number();
 
 		// Additional Attributes
@@ -1887,15 +1887,15 @@ class EDD_Payment {
 		// Backwards compatibility.
 		switch ( $meta_key ) {
 			case '_edd_payment_purchase_key':
-				$meta = $this->order->get_payment_key();
+				$meta = $this->order->payment_key;
 				break;
 
 			case '_edd_payment_transaction_id':
-				$meta = $this->order->get_transaction_id();
+				$meta = $this->order->transaction_id;
 				break;
 
 			case '_edd_payment_user_email':
-				$meta = $this->order->get_email();
+				$meta = $this->order->email;
 				break;
 		}
 
@@ -2285,11 +2285,11 @@ class EDD_Payment {
 		/** @var EDD\Orders\Order $order */
 		$order = edd_get_order( $this->ID );
 
-		if ( 'pending' == $order->get_status() || 'preapproved' == $order->get_status() || 'processing' == $order->get_status() ) {
+		if ( 'pending' == $order->status || 'preapproved' == $order->status || 'processing' == $order->status ) {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $order->get_date_completed() ) ? $date : $order->get_date_created();
+		$date = ( $date = $order->date_completed ) ? $date : $order->date_created;
 
 		return $date;
 	}
@@ -2396,7 +2396,7 @@ class EDD_Payment {
 	 * @return string              The currency for the payment
 	 */
 	private function setup_currency() {
-		$currency = $this->order->get_currency();
+		$currency = $this->order->currency;
 		return ! empty( $currency )
 					? $currency
 					: apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
@@ -2462,7 +2462,7 @@ class EDD_Payment {
 	 * @return string The email address for the payment
 	 */
 	private function setup_email() {
-		$email = $this->order->get_email();
+		$email = $this->order->email;
 
 		if ( empty( $email ) ) {
 			$email = EDD()->customers->get_column( 'email', $this->customer_id );
@@ -2574,7 +2574,7 @@ class EDD_Payment {
 		$number = $this->ID;
 
 		if ( edd_get_option( 'enable_sequential' ) ) {
-			$number = $this->order->get_number();
+			$number = $this->order->number;
 
 			if ( ! $number ) {
 				$number = $this->ID;
@@ -2591,7 +2591,7 @@ class EDD_Payment {
 	 * @return array               The cart details
 	 */
 	private function setup_cart_details() {
-		$order_items = $this->order->get_items();
+		$order_items = $this->order->items;
 
 		$cart_details = array();
 
@@ -2600,17 +2600,17 @@ class EDD_Payment {
 
 			$item_fees = array();
 
-			foreach ( $item->get_fees() as $key => $item_fee ) {
+			foreach ( $item->fees as $key => $item_fee ) {
 				/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-				$fee_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'fee_id', true );
-				$download_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'download_id', true );
-				$price_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
-				$no_tax = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+				$fee_id = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
+				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
+				$price_id = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$no_tax = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
 
 				$item_fees[ $fee_id ] = array(
-					'amount'      => $item_fee->get_amount(),
-					'label'       => $item_fee->get_description(),
+					'amount'      => $item_fee->amount,
+					'label'       => $item_fee->description,
 					'no_tax'      => $no_tax ? $no_tax : false,
 					'type'        => 'fee',
 					'download_id' => $download_id,
@@ -2618,24 +2618,24 @@ class EDD_Payment {
 				);
 			}
 
-			$cart_details[ $item->get_cart_index() ] = array(
-				'name'        => $item->get_product_name(),
-				'id'          => $item->get_product_id(),
+			$cart_details[ $item->cart_index ] = array(
+				'name'        => $item->product_name,
+				'id'          => $item->product_id,
 				'item_number' => array(
-					'id'         => $item->get_product_id(),
-					'quantity'   => $item->get_quantity(),
+					'id'         => $item->product_id,
+					'quantity'   => $item->quantity,
 					'options'    => array(
-						'quantity' => $item->get_quantity(),
-						'price_id' => $item->get_price_id(),
+						'quantity' => $item->quantity,
+						'price_id' => $item->price_id,
 					),
 				),
-				'item_price' => $item->get_amount(),
-				'quantity'   => $item->get_quantity(),
-				'discount'   => $item->get_discount(),
-				'subtotal'   => $item->get_subtotal(),
-				'tax'        => $item->get_tax(),
+				'item_price' => $item->amount,
+				'quantity'   => $item->quantity,
+				'discount'   => $item->discount,
+				'subtotal'   => $item->subtotal,
+				'tax'        => $item->tax,
 				'fees'       => $item_fees,
-				'price'      => $item->get_amount(),
+				'price'      => $item->amount,
 			);
 		}
 
@@ -2650,19 +2650,19 @@ class EDD_Payment {
 	 * @return array               Downloads associated with this payment
 	 */
 	private function setup_downloads() {
-		$order_items = $this->order->get_items();
+		$order_items = $this->order->items;
 
 		$downloads = array();
 
 		foreach ( $order_items as $item ) {
 			/** @var EDD\Orders\Order_Item $item */
 
-			$downloads[ $item->get_cart_index() ] = array(
-				'id'       => $item->get_product_id(),
-				'quantity' => $item->get_quantity(),
+			$downloads[ $item->cart_index ] = array(
+				'id'       => $item->product_id,
+				'quantity' => $item->quantity,
 				'options'  => array(
-					'quantity' => $item->get_quantity(),
-					'price_id' => $item->get_price_id()
+					'quantity' => $item->quantity,
+					'price_id' => $item->price_id,
 				)
 			);
 		}

@@ -43,17 +43,17 @@ if ( empty( $order ) ) {
 }
 
 $unlimited      = $order->has_unlimited_downloads();
-$user_id        = $order->get_user_id();
-$customer_id    = $order->get_customer_id();
+$user_id        = $order->user_id();
+$customer_id    = $order->customer_id;
 $transaction_id = $order->get_transaction_id();
 $address        = $order->get_customer_address();
-$gateway        = $order->get_gateway();
-$currency_code  = $order->get_currency();
+$gateway        = $order->gateway;
+$currency_code  = $order->currency;
 $user_info      = $order->get_user_info();
 $fees           = $order->get_fees();
 $discounts      = $order->get_discounts();
 $order_items    = $order->get_items();
-$order_date     = strtotime( $order->get_date_created() );
+$order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $customer_id );
 $notes          = edd_get_payment_notes( $order_id );
 $cart_fees      = edd_get_order_adjustments( array(
@@ -95,7 +95,7 @@ $cart_fees      = edd_get_order_adjustments( array(
                                         <div class="edd-order-payment edd-admin-box-inside">
                                             <p>
                                                 <span class="label"><?php _e( 'Total', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-												<?php echo edd_currency_symbol( $order->get_currency() ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $order->get_total() ) ); ?>"/>
+												<?php echo edd_currency_symbol( $order->currency ); ?>&nbsp;<input name="edd-payment-total" type="text" class="med-text" value="<?php echo esc_attr( edd_format_amount( $order->total ) ); ?>"/>
                                             </p>
                                         </div>
 
@@ -104,7 +104,7 @@ $cart_fees      = edd_get_order_adjustments( array(
                                                 <span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
                                                 <select name="edd-payment-status" class="edd-select-chosen">
 													<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
-                                                        <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->get_status(), $key, true ); ?>><?php echo esc_html( $status ); ?></option>
+                                                        <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 													<?php endforeach; ?>
                                                 </select>
 
@@ -183,7 +183,7 @@ $cart_fees      = edd_get_order_adjustments( array(
                                             <div class="edd-order-taxes edd-admin-box-inside">
                                                 <p>
                                                     <span class="label"><?php _e( 'Tax', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-                                                    <input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $order->get_tax() ) ); ?>"/>
+                                                    <input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $order->tax ) ); ?>"/>
                                                     <span class="edd-tax-rate"><?php echo $order->get_tax_rate() * 100; ?>%</span>
                                                 </p>
                                             </div>
@@ -235,7 +235,7 @@ $cart_fees      = edd_get_order_adjustments( array(
                                         <div class="edd-order-payment-key edd-admin-box-inside">
                                             <p>
                                                 <span class="label"><?php _e( 'Key', 'easy-digital-downloads' ); ?>:</span>&nbsp;
-                                                <input type="text" disabled value="<?php echo $order->get_payment_key(); ?>" />
+                                                <input type="text" disabled value="<?php echo $order->payment_key; ?>" />
                                             </p>
                                         </div>
 
@@ -410,7 +410,7 @@ $cart_fees      = edd_get_order_adjustments( array(
                                 <h3 class="hndle">
 									<span><?php _e( 'Customer Details', 'easy-digital-downloads' ); ?></span>
 
-									<?php if ( 'publish' === $order->get_status() ) : ?>
+									<?php if ( 'publish' === $order->status ) : ?>
 
 										<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
 

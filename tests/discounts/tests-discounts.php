@@ -253,7 +253,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_type()
 	 */
 	public function test_get_discount_type_by_method() {
-		$this->assertEquals( 'percent', self::$discount->get_type() );
+		$this->assertEquals( 'percent', self::$discount->type );
 	}
 
 	/**
@@ -261,7 +261,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 */
 	public function test_get_discount_type_of_flat_discount() {
 		$d = new \EDD_Discount( self::$flatdiscount_id );
-		$this->assertEquals( 'flat', $d->get_type() );
+		$this->assertEquals( 'flat', $d->type );
 	}
 
 	/**
@@ -275,7 +275,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_amount()
 	 */
 	public function test_get_discount_amount_by_method() {
-		$this->assertEquals( '20', self::$discount->get_amount() );
+		$this->assertEquals( '20', self::$discount->amount );
 	}
 
 	/**

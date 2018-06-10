@@ -130,11 +130,11 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 				/** @var $log EDD\Logs\Log */
 
 				$logs_data[] = array(
-					'ID'         => $log->get_id(),
-					'payment_id' => $log->get_object_id(),
+					'ID'         => $log->id,
+					'payment_id' => $log->object_id,
 					'error'      => 'error',
-					'gateway'    => edd_get_payment_gateway( $log->get_object_id() ),
-					'date'       => $log->get_date_created(),
+					'gateway'    => edd_get_payment_gateway( $log->object_id ),
+					'date'       => $log->date_created,
 				);
 			}
 		}

@@ -66,7 +66,7 @@ function edd_update_payment_details( $data = array() ) {
 
 	$address     = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$curr_total  = edd_sanitize_amount( $order->get_total() );
+	$curr_total  = edd_sanitize_amount( $order->total );
 	$new_total   = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax         = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
 	$date        = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
@@ -99,7 +99,7 @@ function edd_update_payment_details( $data = array() ) {
 				$item_tax   = edd_format_amount( $item_tax );
 
 				// Increase running totals.
-				$new_subtotal += ( floatval( $item_price ) * $quantity ) - $order_item->get_discount();
+				$new_subtotal += ( floatval( $item_price ) * $quantity ) - $order_item->discount;
 				$new_tax += $item_tax;
 
 				$args = array(
@@ -165,7 +165,7 @@ function edd_update_payment_details( $data = array() ) {
 			$order_item = edd_get_order_item( absint( $deleted_download['order_item_id'] ) );
 
 			$new_subtotal -= (float) $deleted_download['amount'] * $deleted_download['quantity'];
-			$new_tax -= (float) $order_item->get_tax();
+			$new_tax -= (float) $order_item->tax;
 
 			edd_delete_order_item( absint( $deleted_download['order_item_id'] ) );
 
@@ -287,7 +287,7 @@ function edd_update_payment_details( $data = array() ) {
 	$updated = edd_update_order( $order_id, $order_update_args );
 
 	// Check if the status has changed, if so, we need to invoke the pertinent status processing method.
-	if ( $order_update_args['status'] !== $order->get_status() ) {
+	if ( $order_update_args['status'] !== $order->status ) {
 		edd_update_order_status( $order_id, $status );
 	}
 

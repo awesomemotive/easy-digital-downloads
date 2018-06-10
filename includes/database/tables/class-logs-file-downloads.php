@@ -50,7 +50,7 @@ final class Logs_File_Downloads extends Base {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 		download_id bigint(20) unsigned NOT NULL default '0',
 		file_id bigint(20) unsigned NOT NULL default '0',
-		payment_id bigint(20) unsigned NOT NULL default '0',
+		order_id bigint(20) unsigned NOT NULL default '0',
 		price_id bigint(20) unsigned NOT NULL default '0',
 		user_id bigint(20) unsigned NOT NULL default '0',
 		ip varchar(60) NOT NULL default '',
