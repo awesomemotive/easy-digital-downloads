@@ -12,7 +12,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
+// Load list tables if not already loaded
 if ( ! class_exists( 'EDD_Order_Item_Table' ) ) {
 	require_once 'class-order-items-table.php';
 }
@@ -42,18 +42,18 @@ if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
-$order_date     = strtotime( $order->get_date_created() );
-$order_items    = $order->get_items();
-$transaction_id = $order->get_transaction_id();
-$user_id        = $order->get_user_id();
 $unlimited      = $order->has_unlimited_downloads();
+$user_id        = $order->get_user_id();
+$customer_id    = $order->get_customer_id();
+$transaction_id = $order->get_transaction_id();
 $address        = $order->get_customer_address();
 $gateway        = $order->get_gateway();
 $currency_code  = $order->get_currency();
+$user_info      = $order->get_user_info();
 $fees           = $order->get_fees();
 $discounts      = $order->get_discounts();
-$user_info      = $order->get_user_info();
-$customer_id    = $order->get_customer_id();
+$order_items    = $order->get_items();
+$order_date     = strtotime( $order->get_date_created() );
 $customer       = edd_get_customer( $customer_id );
 $notes          = edd_get_payment_notes( $order_id );
 $cart_fees      = edd_get_order_adjustments( array(
@@ -354,9 +354,8 @@ $cart_fees      = edd_get_order_adjustments( array(
 												'id'    => 'edd-order-download-price',
 												'class' => 'medium-text edd-price-field edd-order-download-price edd-add-download-field',
 											) );
-											?>
 
-											<?php if ( edd_item_quantities_enabled() ) : ?>
+											if ( edd_item_quantities_enabled() ) : ?>
                                                 &nbsp;&times;&nbsp;
                                                 <input type="number" id="edd-order-download-quantity"
                                                        name="edd-order-download-quantity"
