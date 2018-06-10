@@ -326,8 +326,6 @@ class EDD_Payment {
 	 * @return mixed void|false
 	 */
 	public function __construct( $payment_or_txn_id = false, $by_txn = false ) {
-		global $wpdb;
-
 		if ( empty( $payment_or_txn_id ) ) {
 			return false;
 		}
