@@ -458,11 +458,11 @@ class Order extends Base_Object {
 	}
 
 	/**
-	 * Retrieve the discounts applied to the order.
+	 * Retrieve the tax rates applied to the order.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order discounts.
+	 * @return array Order tax rates.
 	 */
 	public function get_taxes() {
 		$taxes = array();
