@@ -12,13 +12,15 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Objects\Discount;
+
 /**
  * EDD_Discount Class
  *
  * @since 2.7
  * @since 3.0 No longer extends EDD_DB_Discount
  */
-class EDD_Discount {
+class EDD_Discount extends Discount {
 	/**
 	 * Discount ID.
 	 *
