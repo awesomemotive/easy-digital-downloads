@@ -43,7 +43,7 @@ if ( empty( $order ) ) {
 }
 
 $unlimited      = $order->has_unlimited_downloads();
-$user_id        = $order->user_id();
+$user_id        = $order->user_id;
 $customer_id    = $order->customer_id;
 $transaction_id = $order->get_transaction_id();
 $address        = $order->get_customer_address();
