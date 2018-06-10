@@ -911,7 +911,7 @@ input[class*="edd-price-field"] {
 	font-weight: 600;
 }
 .edd-admin-box-inside {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #f1f1f1;
 	clear: both;
 	padding: 3px 12px;
 	margin: 0;
@@ -941,6 +941,9 @@ input[class*="edd-price-field"] {
 #edd-order-details .inside {
 	margin: 0;
 	padding: 0;
+}
+#edd-order-update .edd-select-chosen {
+	width: 130px !important;
 }
 #edd-order-update input.edd_datepicker {
 	width: 180px;
@@ -1519,15 +1522,25 @@ td.edd_order_price {
 #edd_tax_rates .edd_tax_global {
 	width: 20%;
 }
+#edd_tax_rates .edd_tax_actions,
 #edd_tax_rates .edd_tax_rate {
-	width: 12%;
-}
-#edd_tax_rates .edd_tax_remove {
-	width: 18%;
+	width: 8%;
 }
 #edd_tax_rates th {
-	padding: 15px 10px;
+	padding: 8px;
 }
+#edd_tax_rates td {
+	vertical-align: top;
+	padding: 10px;
+}
+.edd-tax-whole-country {
+	display: inline-block;
+	margin: 8px 0 3px 5px;
+}
+.edd-tax-whole-country input {
+	margin-top: 1px;
+}
+
 @media screen and ( max-width: 782px ) {
 	#edd_tax_rates thead {
 		display: none;

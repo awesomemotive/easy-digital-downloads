@@ -1210,6 +1210,15 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Update tax rate state field based on selected rate country
+			$( document.body ).on('click', '.edd-tax-whole-country input', function() {
+				var states = $( this ).parent().parent().children( '.edd-select' ),
+					text   = $( this ).parent().parent().children( 'input[type="text"]' );
+
+				states.attr( 'disabled', this.checked );
+				text.attr( 'disabled', this.checked );
+			} );
+
+			// Update tax rate state field based on selected rate country
 			$( document.body ).on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var select = $( this ),
 					data  = {
@@ -1223,8 +1232,8 @@ jQuery(document).ready(function ($) {
 						var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
 						select.parent().next().find('select').replaceWith( text_field );
 					} else {
-						select.parent().next().find('input,select').show();
-						select.parent().next().find('input,select').replaceWith( response );
+						select.parent().next().find('input[type="text"],select').show();
+						select.parent().next().find('input[type="text"],select').replaceWith( response );
 					}
 				});
 
