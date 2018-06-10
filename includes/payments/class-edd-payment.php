@@ -2396,6 +2396,7 @@ class EDD_Payment {
 	 * Process when a payment is set to failed, decrement discount usages and other stats.
 	 *
 	 * @since 2.5.7
+	 * @access private
 	 */
 	private function process_failure() {
 		$discounts = $this->discounts;
@@ -2417,6 +2418,7 @@ class EDD_Payment {
 	 * Process when a payment moves to pending.
 	 *
 	 * @since 2.5.10
+	 * @access private
 	 */
 	private function process_pending() {
 		$process_pending = true;
@@ -2450,6 +2452,7 @@ class EDD_Payment {
 	 * Used during the process of moving to refunded or pending, to decrement stats
 	 *
 	 * @since 2.5.10
+	 * @access private
 	 *
 	 * @param bool $alter_store_earnings          If the method should alter the store earnings
 	 * @param bool $alter_customer_value          If the method should reduce the customer value
@@ -2497,12 +2500,12 @@ class EDD_Payment {
 	 */
 
 	/**
-	 * Setup the payment completed date
+	 * Setup the payment completed date.
 	 *
 	 * @since 2.5
 	 * @since 3.0 Updated to use the new custom tables.
 	 *
-	 * @return string The date the payment was completed
+	 * @return string The date the payment was completed.
 	 */
 	private function setup_completed_date() {
 		/** @var EDD\Orders\Order $order */
@@ -2520,10 +2523,11 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment total
+	 * Setup the payment total.
 	 *
-	 * @since  2.5
-	 * @return float The payment total
+	 * @since 2.5
+	 *
+	 * @return float Payment total.
 	 */
 	private function setup_total() {
 		$amount = $this->get_meta( '_edd_payment_total', true );
@@ -2541,20 +2545,22 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment tax rate
+	 * Setup the payment tax rate.
 	 *
-	 * @since  2.7
-	 * @return float The tax rate for the payment
+	 * @since 2.7
+	 *
+	 * @return float Tax rate for the payment.
 	 */
 	private function setup_tax_rate() {
 		return $this->get_meta( 'tax_rate', true );
 	}
 
 	/**
-	 * Setup the payment fees
+	 * Setup the total fee amount applied to the payment.
 	 *
-	 * @since  2.5.10
-	 * @return float The fees total for the payment
+	 * @since 2.5.10
+	 *
+	 * @return float Total fee amount applied to the payment.
 	 */
 	private function setup_fees_total() {
 		$fees_total = (float) 0.00;
@@ -2571,10 +2577,11 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payment subtotal
+	 * Setup the payment subtotal.
 	 *
-	 * @since  2.5
-	 * @return float The subtotal of the payment
+	 * @since 2.5
+	 *
+	 * @return float Payment subtotal.
 	 */
 	private function setup_subtotal() {
 		$subtotal     = 0;
@@ -2596,13 +2603,16 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the payments discount codes
+	 * Setup the payments discount codes.
 	 *
-	 * @since  2.5
-	 * @return array               Array of discount codes on this payment
+	 * @since 2.5
+	 *
+	 * @return array Array of discount codes on this payment.
 	 */
 	private function setup_discounts() {
-		$discounts = ! empty( $this->payment_meta['user_info']['discount'] ) ? $this->payment_meta['user_info']['discount'] : array();
+		$discounts = ! empty( $this->payment_meta['user_info']['discount'] )
+			? $this->payment_meta['user_info']['discount']
+			: array();
 
 		return $discounts;
 	}
@@ -2610,8 +2620,9 @@ class EDD_Payment {
 	/**
 	 * Setup the currency code
 	 *
-	 * @since  2.5
-	 * @return string              The currency for the payment
+	 * @since 2.5
+	 *
+	 * @return string The currency for the payment.
 	 */
 	private function setup_currency() {
 		$currency = $this->order->get_currency();
@@ -2622,41 +2633,43 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup any fees associated with the payment
+	 * Setup any fees associated with the payment.
 	 *
-	 * @since  2.5
-	 * @return array               The Fees
+	 * @since 2.5
+	 * @return array Payment fees.
 	 */
 	private function setup_fees() {
-		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
+		$payment_fees = isset( $this->payment_meta['fees'] )
+			? $this->payment_meta['fees']
+			: array();
 
 		return $payment_fees;
 	}
 
 	/**
-	 * Setup the transaction ID
+	 * Setup the transaction ID.
 	 *
-	 * @since  2.5
-	 * @return string The transaction ID for the payment
+	 * @since 2.5
+	 *
+	 * @return string The transaction ID for the payment.
 	 */
 	private function setup_transaction_id() {
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
 
 		if ( empty( $transaction_id ) || (int) $transaction_id === (int) $this->ID ) {
-
 			$gateway        = $this->gateway;
 			$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $this->ID );
-
 		}
 
 		return $transaction_id;
 	}
 
 	/**
-	 * Setup the User ID associated with the purchase
+	 * Setup the User ID associated with the purchase.
 	 *
-	 * @since  2.5
-	 * @return int The User ID
+	 * @since 2.5
+	 *
+	 * @return int User ID.
 	 */
 	private function setup_user_id() {
 		$user_id  = $this->get_meta( '_edd_payment_user_id', true );
@@ -2692,10 +2705,11 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the user info
+	 * Setup the user info.
 	 *
-	 * @since  2.5
-	 * @return array               The user info associated with the payment
+	 * @since 2.5
+	 *
+	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
 		$user_info = isset( $this->payment_meta['user_info'] )
@@ -2770,10 +2784,11 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the Address for the payment
+	 * Setup the address for the payment.
 	 *
-	 * @since  2.5
-	 * @return array               The Address information for the payment
+	 * @since 2.5
+	 *
+	 * @return array The address information for the payment.
 	 */
 	private function setup_address() {
 		$address  = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array();
@@ -2861,10 +2876,13 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Setup the downloads array
+	 * Setup the downloads array.
 	 *
-	 * @since  2.5
-	 * @return array               Downloads associated with this payment
+	 * @since 2.5
+	 *
+	 * @internal This exists for backwards compatibility purposes.
+	 *
+	 * @return array Downloads associated with this payment.
 	 */
 	private function setup_downloads() {
 		$order_items = $this->order->get_items();
@@ -2900,19 +2918,20 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Converts this ojbect into an array for special cases
+	 * Converts this object into an array for special cases.
 	 *
-	 * @return array The payment object as an array
+	 * @return array The payment object as an array.
 	 */
 	public function array_convert() {
 		return get_object_vars( $this );
 	}
 
 	/**
-	 * Retrieve payment cart details
+	 * Retrieve payment cart details.
 	 *
-	 * @since  2.5.1
-	 * @return array Cart details array
+	 * @since 2.5.1
+	 *
+	 * @return array Cart details array.
 	 */
 	private function get_cart_details() {
 		return apply_filters( 'edd_payment_cart_details', $this->cart_details, $this->ID, $this );
@@ -2923,7 +2942,8 @@ class EDD_Payment {
 	 *
 	 * @since 2.5.1
 	 * @since 3.0 Updated for backwards compatibility.
-	 * @return string Date payment was completed
+	 *
+	 * @return string Date payment was completed.
 	 */
 	private function get_completed_date() {
 		if ( '0000-00-00 00:00:00' === $this->completed_date ) {
@@ -2936,9 +2956,10 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Retrieve payment tax
+	 * Retrieve payment tax.
 	 *
-	 * @since  2.5.1
+	 * @since 2.5.1
+	 *
 	 * @return float Payment tax
 	 */
 	private function get_tax() {
@@ -2946,20 +2967,22 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Retrieve payment subtotal
+	 * Retrieve payment subtotal.
 	 *
-	 * @since  2.5.1
-	 * @return float Payment subtotal
+	 * @since 2.5.1
+	 *
+	 * @return float Payment subtotal.
 	 */
 	private function get_subtotal() {
 		return apply_filters( 'edd_get_payment_subtotal', $this->subtotal, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment discounts
+	 * Retrieve payment discounts.
 	 *
-	 * @since  2.5.1
-	 * @return array Discount codes on payment
+	 * @since 2.5.1
+	 *
+	 * @return array Discount codes on payment.
 	 */
 	private function get_discounts() {
 		return apply_filters( 'edd_payment_discounts', $this->discounts, $this->ID, $this );
@@ -2969,7 +2992,8 @@ class EDD_Payment {
 	 * Return the discounted amount of the payment.
 	 *
 	 * @since 2.8.7
-	 * @return float
+	 *
+	 * @return float Discounted amount.
 	 */
 	private function get_discounted_amount() {
 		$total = $this->total;
@@ -2980,130 +3004,143 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Retrieve payment currency
+	 * Retrieve payment currency.
 	 *
-	 * @since  2.5.1
-	 * @return string Payment currency code
+	 * @since 2.5.1
+	 *
+	 * @return string Payment currency code.
 	 */
 	private function get_currency() {
 		return apply_filters( 'edd_payment_currency_code', $this->currency, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment gateway
+	 * Retrieve payment gateway.
 	 *
-	 * @since  2.5.1
-	 * @return string Gateway used
+	 * @since 2.5.1
+	 *
+	 * @return string Payment gateway used.
 	 */
 	private function get_gateway() {
 		return apply_filters( 'edd_payment_gateway', $this->gateway, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment transaction ID
+	 * Retrieve payment transaction ID.
 	 *
-	 * @since  2.5.1
-	 * @return string Transaction ID from merchant processor
+	 * @since 2.5.1
+	 *
+	 * @return string Transaction ID from merchant processor.
 	 */
 	private function get_transaction_id() {
 		return apply_filters( 'edd_get_payment_transaction_id', $this->transaction_id, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment IP
+	 * Retrieve payment IP.
 	 *
-	 * @since  2.5.1
-	 * @return string Payment IP address
+	 * @since 2.5.1
+	 *
+	 * @return string Payment IP address.
 	 */
 	private function get_ip() {
 		return apply_filters( 'edd_payment_user_ip', $this->ip, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment customer ID
+	 * Retrieve payment customer ID.
 	 *
-	 * @since  2.5.1
-	 * @return int Payment customer ID
+	 * @since 2.5.1
+	 *
+	 * @return int Payment customer ID.
 	 */
 	private function get_customer_id() {
 		return apply_filters( 'edd_payment_customer_id', $this->customer_id, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment user ID
+	 * Retrieve payment user ID.
 	 *
-	 * @since  2.5.1
-	 * @return int Payment user ID
+	 * @since 2.5.1
+	 *
+	 * @return int Payment user ID.
 	 */
 	private function get_user_id() {
 		return apply_filters( 'edd_payment_user_id', $this->user_id, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment email
+	 * Retrieve payment email.
 	 *
-	 * @since  2.5.1
-	 * @return string Payment customer email
+	 * @since 2.5.1
+	 *
+	 * @return string Payment customer email.
 	 */
 	private function get_email() {
 		return apply_filters( 'edd_payment_user_email', $this->email, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment user info
+	 * Retrieve payment user info.
 	 *
-	 * @since  2.5.1
-	 * @return array Payment user info
+	 * @since 2.5.1
+	 *
+	 * @return array Payment user info.
 	 */
 	private function get_user_info() {
 		return apply_filters( 'edd_payment_meta_user_info', $this->user_info, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment billing address
+	 * Retrieve payment billing address.
 	 *
-	 * @since  2.5.1
-	 * @return array Payment billing address
+	 * @since 2.5.1
+	 *
+	 * @return array Payment billing address.
 	 */
 	private function get_address() {
 		return apply_filters( 'edd_payment_address', $this->address, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment key
+	 * Retrieve payment key.
 	 *
-	 * @since  2.5.1
-	 * @return string Payment key
+	 * @since 2.5.1
+	 *
+	 * @return string Payment key.
 	 */
 	private function get_key() {
 		return apply_filters( 'edd_payment_key', $this->key, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve payment number
+	 * Retrieve payment number.
 	 *
-	 * @since  2.5.1
-	 * @return int|string Payment number
+	 * @since 2.5.1
+	 *
+	 * @return int|string Payment number.
 	 */
 	private function get_number() {
 		return apply_filters( 'edd_payment_number', $this->number, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve downloads on payment
+	 * Retrieve downloads on payment.
 	 *
-	 * @since  2.5.1
-	 * @return array Payment downloads
+	 * @since 2.5.1
+	 *
+	 * @return array Payment downloads.
 	 */
 	private function get_downloads() {
 		return apply_filters( 'edd_payment_meta_downloads', $this->downloads, $this->ID, $this );
 	}
 
 	/**
-	 * Retrieve unlimited file downloads status
+	 * Retrieve unlimited file downloads status.
 	 *
-	 * @since  2.5.1
-	 * @return bool Is unlimited
+	 * @since 2.5.1
+	 *
+	 * @return bool True if unlimited downloads are enabled, false otherwise.
 	 */
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );
