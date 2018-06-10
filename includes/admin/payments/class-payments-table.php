@@ -440,17 +440,37 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_number( $order ) {
-		$view = add_query_arg( 'id', $order->id, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) );
-		$link = '<a class="row-title" href="' . esc_url( $view ) . '"><strong>' . $order->get_number() . '</strong></a>';
+		// View URL
+		$view_url = add_query_arg( array(
+			'post_type' => 'download',
+			'page'      => 'edd-payment-history',
+			'view'      => 'view-order-details',
+			'id'        => $order->id
+		), admin_url( 'edit.php' ) );
+		
+		// Default row actions
+		$row_actions = array(
+			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
+		);
 
-		// Concatenate the results
-		$actions = $this->row_actions( array(
-			'view'   => '<a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . wp_nonce_url( add_query_arg( array(
-				'edd-action'  => 'delete_payment',
-				'purchase_id' => $order->id
-			), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
-		) );
+		// Refund
+		if ( 'publish' === $order->get_status() ) {
+			$refund_url = add_query_arg( array(), admin_url( 'edit.php' ) );
+			$row_actions['refund'] = '<a href="' . esc_url( $refund_url ) . '">' . esc_html__( 'Refund', 'easy-digital-downloads' ) . '</a>';
+		}
+
+		// Keep Delete at the end
+		$delete_url = wp_nonce_url( add_query_arg( array(
+			'edd-action'  => 'delete_payment',
+			'purchase_id' => $order->get_id()
+		), $this->base_url ), 'edd_payment_nonce' );
+		$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+
+		// Row actions
+		$actions = $this->row_actions( $row_actions );
+
+		// Primary link
+		$link = '<a class="row-title" href="' . esc_url( $view_url ) . '"><strong>' . esc_html( $order->number ) . '</strong></a>';
 
 		// Concatenate & return the results
 		return $link . $actions;
