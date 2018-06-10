@@ -431,6 +431,14 @@ textarea[name="edd-note"] {
 	width: 34%;
 }
 
+.wp-list-table.orders .row-actions span.refund a {
+	color: #cc8c00;
+}
+
+.wp-list-table.orders .row-actions span.refund a:hover {
+	color: #ff8c00;
+}
+
 /* Filter Bar Styles
 -------------------------------------------------------------- */
 
