@@ -102,7 +102,7 @@ $cart_fees      = edd_get_order_adjustments( array(
                                         <div class="edd-admin-box-inside">
                                             <p>
                                                 <span class="label"><?php _e( 'Status:', 'easy-digital-downloads' ); ?></span>&nbsp;
-                                                <select name="edd-payment-status" class="medium-text">
+                                                <select name="edd-payment-status" class="edd-select-chosen">
 													<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
                                                         <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->get_status(), $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 													<?php endforeach; ?>
