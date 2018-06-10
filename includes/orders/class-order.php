@@ -191,21 +191,19 @@ class Order extends Base_Object {
 	 * @param mixed $object Object to populate members for.
 	 */
 	public function __construct( $object = null ) {
-		if ( $object ) {
-			foreach ( get_object_vars( $object ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
-		}
+		parent::__construct( $object );
 
 		$this->items = edd_get_order_items( array(
-			'order_id' => $this->get_id(),
-			'orderby'  => 'cart_index',
-			'order'    => 'ASC'
+			'order_id'      => $this->get_id(),
+			'orderby'       => 'cart_index',
+			'order'         => 'ASC',
+			'no_found_rows' => true
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
-			'object_id'   => $this->get_id(),
-			'object_type' => 'order',
+			'object_id'     => $this->get_id(),
+			'object_type'   => 'order',
+			'no_found_rows' => true
 		) );
 	}
 
@@ -234,13 +232,17 @@ class Order extends Base_Object {
 	/**
 	 * Retrieve order number.
 	 *
+	 * An order number is only retrieved if sequential order numbers are enabled,
+	 * otherwise the order ID is returned.
+	 *
 	 * @since 3.0
 	 *
 	 * @return string
 	 */
 	public function get_number() {
-		// An order number is only retrieved if sequential order numbers are enabled, otherwise the order ID is returned.
-		return edd_get_option( 'enable_sequential' ) ? $this->number : $this->id;
+		return edd_get_option( 'enable_sequential' )
+			? $this->number
+			: $this->id;
 	}
 
 	/**
@@ -438,11 +440,11 @@ class Order extends Base_Object {
 	 * @return array Order discounts.
 	 */
 	public function get_discounts() {
-		if ( empty( $this->adjustments ) ) {
-			return array();
-		}
-
 		$discounts = array();
+
+		if ( empty( $this->adjustments ) ) {
+			return $discounts;
+		}
 
 		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
@@ -456,6 +458,31 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the discounts applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order discounts.
+	 */
+	public function get_taxes() {
+		$taxes = array();
+
+		if ( empty( $this->adjustments ) ) {
+			return $taxes;
+		}
+
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'tax_rate' === $adjustment->get_type() ) {
+				$taxes[] = $adjustment;
+			}
+		}
+
+		return $taxes;
+	}
+
+	/**
 	 * Retrieve the fees applied to the order. This retrieves the fees applied to the entire order and to individual items.
 	 *
 	 * @since 3.0
@@ -463,14 +490,17 @@ class Order extends Base_Object {
 	 * @return array Order fees.
 	 */
 	public function get_fees() {
-		if ( empty( $this->adjustments ) ) {
-			return array();
-		}
 
+		// Default values
 		$fees = array();
 
+		// Bail if no adjustments
+		if ( empty( $this->adjustments ) ) {
+			return $fees;
+		}
+
 		// Fetch the fees that applied to the entire order.
-		foreach ( $this->get_adjustments() as $adjustment ) {
+		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->get_type() ) {
@@ -479,10 +509,10 @@ class Order extends Base_Object {
 		}
 
 		// Fetch the fees that applied to specific items in the order.
-		foreach ( $this->get_items() as $item ) {
+		foreach ( $this->items as $item ) {
 			/** @var Order_Item $item */
 
-			foreach ( $item->get_fees() as $fee ) {
+			foreach ( $item->fees as $fee ) {
 				$fees[] = $fee;
 			}
 		}
@@ -513,17 +543,10 @@ class Order extends Base_Object {
 		// Default rate
 		$rate = 0;
 
-		// Query for rates
-		$rates = edd_get_order_adjustments( array(
-			'object_id'     => $this->id,
-			'object_type'   => 'order',
-			'type_id'       => 0,
-			'type'          => 'tax',
-			'number'        => 1,
-			'no_found_rows' => true
-		) );
+		// Get rates from adjustments
+		$rates = $this->get_taxes();
 
-		// Get rate amount
+		// Get a single rate amount
 		if ( ! empty( $rates ) ) {
 			$rate = reset( $rates );
 			$rate = $rate->get_amount();
@@ -551,20 +574,19 @@ class Order extends Base_Object {
 	 * @return string Customer address.
 	 */
 	public function get_customer_address() {
-		$user_info = edd_get_order_meta( $this->id, 'user_info', true );
+		$user_info = $this->get_user_info();
+		$address   = ! empty( $user_info['address'] )
+			? (array) $user_info['address']
+			: array();
 
-		$address  = ! empty( $user_info['address'] ) ? $user_info['address'] : array();
-
-		$defaults = array(
+		return wp_parse_args( $address, array(
 			'line1'   => '',
 			'line2'   => '',
 			'city'    => '',
 			'country' => '',
 			'state'   => '',
-			'zip'     => '',
-		);
-
-		return wp_parse_args( $address, $defaults );
+			'zip'     => ''
+		) );
 	}
 
 	/**
@@ -586,12 +608,10 @@ class Order extends Base_Object {
 	 * @return array Notes associated with this order.
 	 */
 	public function get_notes() {
-		$notes = edd_get_notes( array(
+		return edd_get_notes( array(
 			'object_id'   => $this->get_id(),
 			'object_type' => 'order',
 			'order'       => 'ASC',
 		) );
-
-		return $notes;
 	}
 }
