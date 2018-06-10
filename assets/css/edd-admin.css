@@ -911,7 +911,7 @@ input[class*="edd-price-field"] {
 	font-weight: 600;
 }
 .edd-admin-box-inside {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #f1f1f1;
 	clear: both;
 	padding: 3px 12px;
 	margin: 0;
@@ -941,6 +941,9 @@ input[class*="edd-price-field"] {
 #edd-order-details .inside {
 	margin: 0;
 	padding: 0;
+}
+#edd-order-update .edd-select-chosen {
+	width: 130px !important;
 }
 #edd-order-update input.edd_datepicker {
 	width: 180px;
