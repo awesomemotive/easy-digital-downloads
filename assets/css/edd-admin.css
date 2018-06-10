@@ -1519,15 +1519,25 @@ td.edd_order_price {
 #edd_tax_rates .edd_tax_global {
 	width: 20%;
 }
+#edd_tax_rates .edd_tax_actions,
 #edd_tax_rates .edd_tax_rate {
-	width: 12%;
-}
-#edd_tax_rates .edd_tax_remove {
-	width: 18%;
+	width: 8%;
 }
 #edd_tax_rates th {
-	padding: 15px 10px;
+	padding: 8px;
 }
+#edd_tax_rates td {
+	vertical-align: top;
+	padding: 10px;
+}
+.edd-tax-whole-country {
+	display: inline-block;
+	margin: 8px 0 3px 5px;
+}
+.edd-tax-whole-country input {
+	margin-top: 1px;
+}
+
 @media screen and ( max-width: 782px ) {
 	#edd_tax_rates thead {
 		display: none;

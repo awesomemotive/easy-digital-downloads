@@ -744,37 +744,20 @@ function edd_get_registered_settings() {
 			// Taxes Settings
 			'taxes' => apply_filters( 'edd_settings_taxes', array(
 				'main' => array(
-					'tax_help' => array(
-						'id'   => 'tax_help',
-						'name' => __( 'Need Help?', 'easy-digital-downloads' ),
-						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. <p class="description">If you need VAT support, there are options listed on the documentation page.</p>', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/238-tax-settings' ),
-						'type' => 'descriptive_text',
-					),
 					'enable_taxes' => array(
 						'id'            => 'enable_taxes',
-						'name'          => __( 'Enable Taxes', 'easy-digital-downloads' ),
+						'name'          => __( 'Taxes', 'easy-digital-downloads' ),
+						'check'         => __( 'Enabled', 'easy-digital-downloads' ),
 						'desc'          => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
-						'type'          => 'checkbox',
+						'type'          => 'checkbox_description',
 						'tooltip_title' => __( 'Enabling Taxes', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'With taxes enabled, Easy Digital Downloads will use the rules below to charge tax to customers. With taxes enabled, customers are required to input their address on checkout so that taxes can be properly calculated.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'With taxes enabled, customers will be taxed based on the rates you define, and are required to input their address on checkout so rates can be calculated accordingly.', 'easy-digital-downloads' ),
 					),
-					'tax_rates' => array(
-						'id'   => 'tax_rates',
-						'name' => '<strong>' . __( 'Tax Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-						'type' => 'tax_rates',
-					),
-					'tax_rate' => array(
-						'id'            => 'tax_rate',
-						'name'          => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-						'desc'          => __( 'Customers not in a specific rate will be charged this tax rate. Enter a percentage, such as 6.5 for 6.5%. ', 'easy-digital-downloads' ),
-						'type'          => 'number',
-						'size'          => 'small',
-						'step'          => '0.0001',
-						'min'           => '0',
-						'max'           => '99',
-						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+					'tax_help' => array(
+						'id'   => 'tax_help',
+						'name' => '',
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. <p class="description">If you need VAT support, there are options listed on the documentation page.</p>', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/238-tax-settings' ),
+						'type' => 'descriptive_text',
 					),
 					'prices_include_tax' => array(
 						'id'            => 'prices_include_tax',
@@ -790,10 +773,11 @@ function edd_get_registered_settings() {
 						'tooltip_desc'  => __( 'When using prices inclusive of tax, you will be entering your prices as the total amount you want a customer to pay for the download, including tax. Easy Digital Downloads will calculate the proper amount to tax the customer for the defined total price.', 'easy-digital-downloads' ),
 					),
 					'display_tax_rate' => array(
-						'id'   => 'display_tax_rate',
-						'name' => __( 'Show Tax Rate on Prices', 'easy-digital-downloads' ),
-						'desc' => __( 'Some countries require a notice when product prices include tax.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
+						'id'    => 'display_tax_rate',
+						'name'  => __( 'Show Tax Rate on Prices', 'easy-digital-downloads' ),
+						'check' => __( 'Show', 'easy-digital-downloads' ),
+						'desc'  => __( 'Some countries require a notice that product prices include tax.', 'easy-digital-downloads' ),
+						'type' => 'checkbox_description',
 					),
 					'checkout_include_tax' => array(
 						'id'            => 'checkout_include_tax',
@@ -810,6 +794,26 @@ function edd_get_registered_settings() {
 						'tooltip_desc'  => __( 'This option will determine whether the product price displays with or without tax on checkout.', 'easy-digital-downloads' ),
 					),
 				),
+				'rates' => array(
+					'tax_rates' => array(
+						'id'   => 'tax_rates',
+						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
+						'desc' => __( 'Add tax rates for specific regions. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+						'type' => 'tax_rates',
+					),
+					'tax_rate' => array(
+						'id'            => 'tax_rate',
+						'name'          => __( 'General Rate', 'easy-digital-downloads' ),
+						'desc'          => __( 'Customers not in a region above will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
+						'type'          => 'number',
+						'size'          => 'small',
+						'step'          => '0.0001',
+						'min'           => '0',
+						'max'           => '99',
+						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+					)
+				)
 			) ),
 
 			// Extension Settings
@@ -1606,6 +1610,7 @@ function edd_get_registered_settings_sections() {
 			) ),
 			'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
 				'main'               => __( 'General', 'easy-digital-downloads' ),
+				'rates'              => __( 'Rates',   'easy-digital-downloads' ),
 			) ),
 			'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
 				'main'               => __( 'Privacy Policy',     'easy-digital-downloads' ),
@@ -2458,22 +2463,21 @@ function edd_shop_states_callback( $args ) {
  */
 function edd_tax_rates_callback( $args ) {
 	$rates = edd_get_tax_rates();
-
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
+
     <p><?php echo $args['desc']; ?></p>
-    <table id="edd_tax_rates" class="wp-list-table widefat fixed posts <?php echo $class; ?>">
+    <table id="edd_tax_rates" class="wp-list-table widefat striped fixed posts <?php echo $class; ?>">
         <thead>
         <tr>
             <th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
             <th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
-            <th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
             <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223"
                                                                                                        class="edd-help-tip dashicons dashicons-editor-help"
                                                                                                        title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span>
             </th>
-            <th scope="col"  class="edd_tax_remove"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
+            <th scope="col"  class="edd_tax_actions"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
         </tr>
         </thead>
 		<?php if ( ! empty( $rates ) ) : ?>
@@ -2500,7 +2504,8 @@ function edd_tax_rates_callback( $args ) {
 							echo EDD()->html->select( array(
 								'options'          => $states,
 								'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								'selected'         => $rate['state'],
+								'selected'         => ! empty( $rate['state'] ) ? $rate['state'] : '',
+								'disabled'         => ! empty( $rate['global'] ),
 								'show_option_all'  => false,
 								'show_option_none' => false,
 								'chosen'           => false,
@@ -2514,26 +2519,26 @@ function edd_tax_rates_callback( $args ) {
 							) );
 						}
 						?>
-                    </td>
-                    <td class="edd_tax_global">
-                        <input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
-                               id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
-                               value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
-                        <label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
+						<span class="edd-tax-whole-country">
+							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
+								   id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
+								   value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+							<label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
+						</span>
                     </td>
                     <td class="edd_tax_rate">
 						<input type="number" class="small-text" step="0.0001" min="0.0" max="99"
                                name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]"
-                               value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off"/>
+                               value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off" />
 					</td>
                     <td class="edd_tax_remove">
-                        <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span>
+                        <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
                     </td>
                 </tr>
 			<?php endforeach; ?>
 		<?php else : ?>
-            <tr>
-                <td class="edd_tax_country">
+			<tr>
+				<td class="edd_tax_country">
 					<?php
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
@@ -2545,22 +2550,22 @@ function edd_tax_rates_callback( $args ) {
 						'chosen'           => false,
 						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
 					) ); ?>
-                </td>
-                <td class="edd_tax_state">
+				</td>
+				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( array(
 						'name' => 'tax_rates[0][state]',
 					) ); ?>
-                </td>
-                <td class="edd_tax_global">
-                    <input type="checkbox" name="tax_rates[0][global]" value="1"/>
-                    <label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
-                </td>
-                <td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0"
-                                                name="tax_rates[0][rate]" value=""/></td>
-                <td>
-                    <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span>
-                </td>
-            </tr>
+					<span class="edd-tax-whole-country">
+						<input type="checkbox" name="tax_rates[0][global]" value="1"/>
+						<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
+					</span>
+				</td>
+				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0"
+												name="tax_rates[0][rate]" value=""/></td>
+				<td>
+					<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
+				</td>
+			</tr>
 		<?php endif; ?>
     </table>
     <p>
