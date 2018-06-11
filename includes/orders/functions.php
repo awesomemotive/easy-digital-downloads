@@ -41,6 +41,51 @@ function edd_delete_order( $order_id = 0 ) {
 }
 
 /**
+ * Destroy an order.
+ *
+ * Completely deletes an order, and the items and adjustments withi it.
+ *
+ * @todo switch to _destroy_ for items & adjustments
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return int
+ */
+function edd_destroy_order( $order_id = 0 ) {
+
+	// Get items
+	$items = edd_get_order_items( array(
+		'order_id'      => $order_id,
+		'no_found_rows' => true
+	) );
+
+	// Destroy items (and their adjustments)
+	if ( ! empty( $items ) ) {
+		foreach ( $items as $item ) {
+			edd_delete_order_item( $item->id );
+		}
+	}
+
+	// Get adjustments
+	$adjustments = edd_get_order_adjustments( array(
+		'object_id'     => $order_id,
+		'object_type'   => 'order',
+		'no_found_rows' => true
+	) );
+
+	// Destroy adjustments
+	if ( ! empty( $adjustments ) ) {
+		foreach ( $adjustments as $adjustment ) {
+			edd_delete_order_adjustment( $adjustment->id );
+		}
+	}
+
+	// Delete the order
+	edd_delete_order( $order_id );
+}
+
+/**
  * Update an order.
  *
  * @since 3.0
@@ -187,7 +232,7 @@ function edd_is_order_recoverable( $order_id = 0 ) {
 
 	$transaction_id = $order->get_transaction_id();
 
-	if ( in_array( $order->get_status(), $recoverable_statuses, true ) && empty( $transaction_id ) ) {
+	if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $transaction_id ) ) {
 		return true;
 	}
 
@@ -605,7 +650,7 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 	}
 
 	// Get the old (current) status
-	$old_status = $order->get_status();
+	$old_status = $order->status;
 
 	// We do not allow status changes if the status is the same to that stored in the database.
 	// This prevents the `edd_update_payment_status` action from being triggered unnecessarily.

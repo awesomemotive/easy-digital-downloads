@@ -894,7 +894,7 @@ class Base extends \EDD\Database\Base {
 		$offset  = absint( $this->query_vars['offset'] );
 
 		// Limits
-		if ( ! empty( $limit ) && ( '-1' != $limit ) ) {
+		if ( ! empty( $limit ) ) {
 			$limits = ! empty( $offset )
 				? "LIMIT {$offset}, {$limit}"
 				: "LIMIT {$limit}";

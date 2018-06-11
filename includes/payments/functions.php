@@ -113,7 +113,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 				$order = edd_get_order_by( 'payment_key', $value );
 
 				if ( $order ) {
-					$payment = edd_get_payment( $order->get_id() );
+					$payment = edd_get_payment( $order->id );
 
 					if ( ! $payment->ID > 0 ) {
 						$payment = false;
@@ -124,7 +124,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
 				$order = edd_get_order_by( 'order_number', $value );
 
 				if ( $order ) {
-					$payment = edd_get_payment( $order->get_id() );
+					$payment = edd_get_payment( $order->id );
 
 					if ( ! $payment->ID > 0 ) {
 						$payment = false;
@@ -240,10 +240,10 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	$customer = edd_get_customer( $customer_id );
 
+	// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
 	if ( 'revoked' === $status || 'publish' === $status ) {
-
-		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
 		edd_decrease_total_earnings( $amount );
+
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
@@ -511,7 +511,7 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	foreach ( (array) $counts as $row ) {
-		if ( 'private' === $count['status'] && empty( $args['s'] ) ) {
+		if ( 'private' === $row['post_status'] && empty( $args['s'] ) ) {
 			continue;
 		}
 
@@ -539,7 +539,7 @@ function edd_check_for_existing_payment( $order_id ) {
 
 	$order = edd_get_order( $order_id );
 
-	if ( $order_id === $order->get_id() && $order->is_complete() ) {
+	if ( $order_id === $order->id && $order->is_complete() ) {
 		$exists = true;
 	}
 
@@ -580,7 +580,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 		return false;
 	}
 
-	$status = $order->get_status();
+	$status = $order->status;
 
 	if ( empty( $status ) ) {
 		return false;
@@ -673,12 +673,12 @@ function edd_is_payment_complete( $order_id = 0 ) {
 	$ret = false;
 
 	if ( $order ) {
-		if ( (int) $order_id === $order->get_id() && $order->is_complete() ) {
+		if ( (int) $order_id === $order->id && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
 
-	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $order->get_status() );
+	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $order->status );
 }
 
 /**
@@ -775,7 +775,7 @@ function edd_increase_total_earnings( $amount = 0 ) {
 function edd_decrease_total_earnings( $amount = 0 ) {
 	$total = edd_get_total_earnings();
 	$total -= $amount;
-	if( $total < 0 ) {
+	if ( $total < 0 ) {
 		$total = 0;
 	}
 	update_option( 'edd_earnings_total', $total );
@@ -1581,7 +1581,7 @@ function edd_get_purchase_id_by_key( $payment_key ) {
 	$order = edd_get_order_by( 'payment_key', $payment_key );
 
 	if ( false !== $order ) {
-		$$global_key_string = $order->get_id();
+		$$global_key_string = $order->id;
 		return $$global_key_string;
 	}
 
@@ -1618,14 +1618,12 @@ function edd_get_payment_notes( $order_id = 0, $search = '' ) {
 		return false;
 	}
 
-	$notes = edd_get_notes( array(
+	return edd_get_notes( array(
 		'object_id'   => $order_id,
 		'object_type' => 'order',
 		'order'       => 'ASC',
-		'search'      => '',
+		'search'      => ''
 	) );
-
-	return $notes;
 }
 
 /**
@@ -1843,6 +1841,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 
 		if ( isset( $approved[ $row['comment_approved'] ] ) ) {
 			$stats[ $approved[ $row['comment_approved'] ] ] = $row['num_comments'];
+
 		}
 	}
 

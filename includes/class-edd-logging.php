@@ -495,7 +495,7 @@ class EDD_Logging {
 
 		// Loop through and delete logs
 		foreach ( $logs as $log ) {
-			call_user_func( $func, $log->get_id() );
+			call_user_func( $func, $log->id );
 		}
 	}
 

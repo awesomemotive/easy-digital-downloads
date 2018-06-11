@@ -37,9 +37,9 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	$order = edd_get_order( $order_id );
 
-	$completed_date = '0000-00-00 00:00:00' === $order->get_date_completed() ? '' : $order->get_date_completed();
-	$customer_id    = $order->get_customer_id();
-	$amount         = $order->get_total();
+	$completed_date = '0000-00-00 00:00:00' === $order->date_completed ? '' : $order->date_completed;
+	$customer_id    = $order->customer_id;
+	$amount         = $order->total;
 	$order_items    = $order->get_items();
 
 	do_action( 'edd_pre_complete_purchase', $order_id );
@@ -51,75 +51,75 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 			/** @var EDD\Orders\Order_Item $item */
 
 			// "bundle" or "default"
-			$download_type = edd_get_download_type( $item->get_product_id() );
+			$download_type = edd_get_download_type( $item->product_id );
 
 			// Increase earnings and fire actions once per quantity number
-			for ( $i = 0; $i < $item->get_quantity(); $i++ ) {
+			for ( $i = 0; $i < $item->quantity; $i++ ) {
 
 				// Ensure these actions only run once, ever.
 				if ( empty( $completed_date ) ) {
 					// For backwards compatibility purposes, we need to construct an array and pass it
 					// to edd_complete_download_purchase.
-                    $item_fees = array();
+					$item_fees = array();
 
-                    foreach ( $item->get_fees() as $key => $item_fee ) {
-                        /** @var EDD\Orders\Order_Adjustment $item_fee */
+					foreach ( $item->get_fees() as $key => $item_fee ) {
+						/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-                        $fee_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'fee_id', true );
-                        $download_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'download_id', true );
-                        $price_id = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
-	                    $no_tax = edd_get_order_adjustment_meta( $item_fee->get_id(), 'price_id', true );
+						$fee_id = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
+						$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
+						$price_id = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+						$no_tax = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
 
-                        $item_fees[ $fee_id ] = array(
-	                        'amount'      => $item_fee->get_amount(),
-	                        'label'       => $item_fee->get_description(),
-	                        'no_tax'      => $no_tax ? $no_tax : false,
-	                        'type'        => 'fee',
-	                        'download_id' => $download_id,
-	                        'price_id'    => $price_id ? $price_id : null,
-                        );
-                    }
+						$item_fees[ $fee_id ] = array(
+							'amount'      => $item_fee->amount,
+							'label'       => $item_fee->description,
+							'no_tax'      => $no_tax ? $no_tax : false,
+							'type'        => 'fee',
+							'download_id' => $download_id,
+							'price_id'    => $price_id ? $price_id : null,
+						);
+					}
 
 					$cart_details = array(
-						'name'        => $item->get_product_name(),
-						'id'          => $item->get_product_id(),
+						'name'        => $item->product_name,
+						'id'          => $item->product_id,
 						'item_number' => array(
-							'id'         => $item->get_product_id(),
-							'quantity'   => $item->get_quantity(),
+							'id'         => $item->product_id,
+							'quantity'   => $item->quantity,
 							'options'    => array(
-								'quantity' => $item->get_quantity(),
-								'price_id' => $item->get_price_id(),
+								'quantity' => $item->quantity,
+								'price_id' => $item->price_id,
 							),
 						),
-						'item_price' => $item->get_amount(),
-						'quantity'   => $item->get_quantity(),
-						'discount'   => $item->get_discount(),
-						'subtotal'   => $item->get_subtotal(),
-						'tax'        => $item->get_tax(),
+						'item_price' => $item->amount,
+						'quantity'   => $item->quantity,
+						'discount'   => $item->discount,
+						'subtotal'   => $item->subtotal,
+						'tax'        => $item->tax,
 						'fees'       => $item_fees,
-						'price'      => $item->get_amount(),
+						'price'      => $item->amount,
 					);
 
-					do_action( 'edd_complete_download_purchase', $item->get_product_id(), $order_id, $download_type, $cart_details, $item->get_cart_index() );
+					do_action( 'edd_complete_download_purchase', $item->product_id, $order_id, $download_type, $cart_details, $item->cart_index );
 				}
 			}
 
-			$increase_earnings = $item->get_total();
+			$increase_earnings = $item->total;
 
 			$fees = $order->get_fees();
 			foreach ( $fees as $fee ) {
 				/** @var EDD\Orders\Order_Adjustment $fee */
 
-				if ( $fee->get_amount() > 0 ) {
+				if ( $fee->amount > 0 ) {
 					continue;
 				}
 
-				$increase_earnings += $fee->get_amount();
+				$increase_earnings += $fee->amount;
 			}
 
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $item->get_product_id(), $increase_earnings );
-			edd_increase_purchase_count( $item->get_product_id(), $item->get_quantity() );
+			edd_increase_earnings( $item->product_id, $increase_earnings );
+			edd_increase_purchase_count( $item->product_id, $item->get_quantity );
 		}
 
 		// Clear the total earnings cache
@@ -142,7 +142,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 	foreach ( $discounts as $adjustment ) {
 		/** @var EDD\Orders\Order_Adjustment $adjustment */
 
-		edd_increase_discount_usage( $adjustment->get_description() );
+		edd_increase_discount_usage( $adjustment->description );
 	}
 
 	// Ensure this action only runs once ever
