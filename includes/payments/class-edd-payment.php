@@ -1018,8 +1018,7 @@ class EDD_Payment {
 				}
 			}
 
-			$meta        = $this->get_meta();
-			$merged_meta = array_merge( $meta, $new_meta );
+			$merged_meta = array_merge( $this->payment_meta, $new_meta );
 
 			$payment_data = array(
 				'price'        => $this->total,
@@ -1043,7 +1042,7 @@ class EDD_Payment {
 			$merged_meta  = apply_filters( 'edd_payment_meta', $merged_meta, $payment_data );
 
 			// Only save the payment meta if it's changed
-			if ( md5( serialize( $meta ) ) !== md5( serialize( $merged_meta ) ) ) {
+			if ( md5( serialize( $this->payment_meta ) ) !== md5( serialize( $merged_meta ) ) ) {
 				// First, update the order.
 				$order_info = array(
 					'payment_key' => $this->key,
@@ -1075,6 +1074,58 @@ class EDD_Payment {
 							'product_name' => $item['name'],
 							'price_id'     => $item['item_number']['options']['price_id'],
 							'cart_index'   => $key,
+							'quantity'     => $item['quantity'],
+							'amount'       => $item['item_price'],
+							'subtotal'     => $item['subtotal'],
+							'discount'     => $item['discount'],
+							'tax'          => $item['tax'],
+							'total'        => $item['price'],
+						) );
+					}
+
+					/**
+					 * Re-fetch the order with the new items from the database as it is used for the synchronization
+					 * between cart_details and the database.
+					 */
+					$this->order = edd_get_order( $this->ID );
+				}
+
+				/**
+				 * As of 3.0, the cart details array is no longer used for payments; it's purpose is for backwards compatibility
+				 * purposes only. Due to the way EDD_Payment, the cart_details array needs to be synchronized with the data
+				 * stored in the database as it could be different to the other class vars in the instance of EDD_Payment.
+				 */
+				foreach ( $merged_meta['cart_details'] as $cart_index => $item ) {
+
+					// Search for an order item with the same cart index.
+					$found_order_item = array_filter( $this->order->items, function ( $i ) use ( $cart_index, $item ) {
+						/** @var EDD\Orders\Order_Item $i */
+
+						return (int) $i->cart_index === (int) $cart_index;
+					} );
+
+					// Order item exists so update it.
+					if ( 1 === count( $found_order_item ) ) {
+						edd_update_order_item( $found_order_item[0]->id, array(
+							'product_id'   => $item['id'],
+							'product_name' => $item['name'],
+							'price_id'     => $item['item_number']['options']['price_id'],
+							'quantity'     => $item['quantity'],
+							'amount'       => $item['item_price'],
+							'subtotal'     => $item['subtotal'],
+							'discount'     => $item['discount'],
+							'tax'          => $item['tax'],
+							'total'        => $item['price'],
+						) );
+
+						// Nothing was found, so add it to the database.
+					} elseif ( 0 === count( $found_order_item ) ) {
+						edd_add_order_item( array(
+							'order_id'     => $this->ID,
+							'product_id'   => $item['id'],
+							'product_name' => $item['name'],
+							'price_id'     => $item['item_number']['options']['price_id'],
+							'cart_index'   => $cart_index,
 							'quantity'     => $item['quantity'],
 							'amount'       => $item['item_price'],
 							'subtotal'     => $item['subtotal'],
