@@ -114,8 +114,6 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 
 		$new_download = \EDD_Helper_Download::create_simple_download();
 
-		$this->payment->update_status( 'publish' );
-
 		$this->payment->add_download( $new_download->ID );
 		$this->payment->save();
 
@@ -134,8 +132,6 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 		$args = array(
 			'item_price' => 0,
 		);
-
-		$this->payment->update_status( 'publish' );
 
 		$this->payment->add_download( $new_download->ID, $args );
 		$this->payment->save();
@@ -156,12 +152,8 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 
 		$new_download = \EDD_Helper_Download::create_simple_download();
 
-		$this->payment->update_status( 'publish' );
-
 		$this->payment->add_download( $new_download->ID, $args );
 		$this->payment->save();
-
-//		var_dump( $this->payment->cart_details );
 
 		$this->assertFalse( empty( $this->payment->cart_details[2]['fees'] ) );
 	}
@@ -176,8 +168,6 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 			'quantity' => $quantity,
 		);
 
-		$this->payment->update_status( 'publish' );
-
 		$this->payment->remove_download( $download_id, $remove_args );
 		$this->payment->save();
 
@@ -185,6 +175,49 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 		$this->assertEquals( 100.00, $this->payment->total );
 	}
 
+	public function test_remove_download_by_index() {
+		$download_id = $this->payment->cart_details[1]['id'];
+
+		$remove_args = array(
+			'cart_index' => 1,
+		);
+
+		$this->payment->remove_download( $download_id, $remove_args );
+		$this->payment->save();
+
+		$this->assertEquals( 1, count( $this->payment->downloads ) );
+		$this->assertEquals( 20.00, $this->payment->total );
+	}
+
+	public function test_remove_download_with_quantity() {
+		global $edd_options;
+
+		$edd_options['item_quantities'] = true;
+
+		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_quantity_tax();
+
+		$payment = edd_get_payment( $payment_id );
+
+		$testing_index = 1;
+		$download_id   = $payment->cart_details[ $testing_index ]['id'];
+
+		$remove_args = array(
+			'quantity' => 1,
+		);
+
+		$payment->remove_download( $download_id, $remove_args );
+		$payment->save();
+
+		$payment = edd_get_payment( $payment_id );
+		$this->assertEquals( 2, count( $payment->downloads ) );
+		$this->assertEquals( 1, $payment->cart_details[ $testing_index ]['quantity'] );
+		$this->assertEquals( 140.00, $payment->subtotal );
+		$this->assertEquals( 12, $payment->tax );
+		$this->assertEquals( 152.00, $payment->total );
+
+		EDD_Helper_Payment::delete_payment( $payment_id );
+		unset( $edd_options['item_quantities'] );
+	}
 
 	public function test_modify_amount() {
 		$args = array(
