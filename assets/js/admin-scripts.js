@@ -719,6 +719,11 @@ jQuery(document).ready(function ($) {
 
 		add_download : function() {
 
+			$('#edd-purchased-files').on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+				e.preventDefault();
+				$( '#edd-purchased-files' ).children( '.edd-add-download-to-purchase' ).slideToggle();
+			} );
+
 			// Add a New Download from the Add Downloads to Purchase Box
 			$('.edd-edit-purchase-element').on('click', '#edd-order-add-download', function(e) {
 				e.preventDefault();
