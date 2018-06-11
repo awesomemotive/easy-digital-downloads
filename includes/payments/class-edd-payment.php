@@ -775,6 +775,21 @@ class EDD_Payment {
 										$download->decrease_earnings( $decrease_amount );
 
 										$total_decrease += $item['amount'];
+
+										$found_item = null;
+
+										foreach ( $this->order->items as $order_item ) {
+											/** @var EDD\Orders\Order_Item $order_item */
+
+											if ( (int) $item['id'] === (int) $order_item->product_id ) {
+												$found_item = $order_item;
+												break;
+											}
+										}
+
+										if ( $found_item instanceof EDD\Orders\Order_Item ) {
+											edd_delete_order_item( $found_item->id );
+										}
 									}
 									break;
 
@@ -1458,13 +1473,14 @@ class EDD_Payment {
 			unset( $this->cart_details[ $found_cart_key ] );
 		}
 
-		$pending_args             = $args;
-		$pending_args['id']       = $download_id;
-		$pending_args['amount']   = $total_reduced;
-		$pending_args['price_id'] = false !== $args['price_id'] ? $args['price_id'] : false;
-		$pending_args['quantity'] = $args['quantity'];
-		$pending_args['action']   = 'remove';
-		$pending_args['fees']     = isset( $found_fees ) ? $found_fees : array();
+		$pending_args               = $args;
+		$pending_args['id']         = $download_id;
+		$pending_args['amount']     = $total_reduced;
+		$pending_args['price_id']   = false !== $args['price_id'] ? $args['price_id'] : false;
+		$pending_args['quantity']   = $args['quantity'];
+		$pending_args['action']     = 'remove';
+		$pending_args['fees']       = isset( $found_fees ) ? $found_fees : array();
+		$pending_args['cart_index'] = $found_cart_key;
 
 		$this->pending['downloads'][] = $pending_args;
 
