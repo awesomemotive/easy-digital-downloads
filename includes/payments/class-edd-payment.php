@@ -713,21 +713,6 @@ class EDD_Payment {
 										$download->decrease_earnings( $decrease_amount );
 
 										$total_decrease += $item['amount'];
-
-										$found_item = null;
-
-										foreach ( $this->order->items as $order_item ) {
-											/** @var EDD\Orders\Order_Item $order_item */
-
-											if ( (int) $item['id'] === (int) $order_item->product_id ) {
-												$found_item = $order_item;
-												break;
-											}
-										}
-
-										if ( $found_item instanceof EDD\Orders\Order_Item ) {
-											edd_delete_order_item( $found_item->id );
-										}
 									}
 									break;
 
