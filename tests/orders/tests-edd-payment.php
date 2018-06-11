@@ -1,10 +1,10 @@
 <?php
 /**
- * EDD_Payment Tests.
+ * \EDD_Payment Tests.
  *
  * @group edd_payments
  *
- * @coversDefaultClass \EDD_Payment
+ * @coversDefaultClass \\EDD_Payment
  */
 namespace EDD\Orders;
 
@@ -15,56 +15,64 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 	 *
 	 * @var \EDD_Payment
 	 */
-	protected static $payment;
-
-	/**
-	 * Set up fixtures once.
-	 */
-	public static function wpSetUpBeforeClass() {
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
-
-		self::$payment = edd_get_payment( $payment_id );
-	}
+	protected $payment;
 
 	public function setUp() {
 		parent::setUp();
 
-		self::$payment->update_status( 'publish' );
+		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+
+		$this->payment = edd_get_payment( $payment_id );
+
+		// Make sure we're working off a clean object caching in WP Core.
+		// Prevents some payment_meta from not being present.
+		clean_post_cache( $payment_id );
+		update_postmeta_cache( array( $payment_id ) );
 	}
 
-	public function test_IDs_should_be_same() {
-		$this->assertSame( self::$payment->ID, self::$payment->_ID );
+	public function tearDown() {
+		parent::tearDown();
+
+		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
+
+		$this->payment = null;
 	}
 
-	public function test_IDs_are_the_same_after_saving_should_be_same() {
-		$payment = edd_get_payment( self::$payment->ID );
-
-		$payment->ID = 12121222;
-		$payment->save();
-
-		$this->assertSame( $payment->ID, self::$payment->ID );
+	public function test_IDs() {
+		$this->assertSame( $this->payment->_ID, $this->payment->ID );
 	}
 
-	public function test_get_payment_by_transaction_ID_should_return_true() {
+	public function test_saving_updated_ID() {
+		$expected = $this->payment->ID;
+
+		$this->payment->ID = 12121222;
+		$this->payment->save();
+
+		$this->assertSame( $expected, $this->payment->ID );
+	}
+
+	public function test_EDD_Payment_total() {
+		$this->assertEquals( 120.00, $this->payment->total );
+	}
+
+	public function test_edd_get_payment_by_transaction_ID_should_be_true() {
 		$payment = edd_get_payment( 'FIR3SID3', true );
 
-		$this->assertEquals( self::$payment->ID, $payment->ID );
+		$this->assertEquals( $payment->ID, $this->payment->ID );
 	}
 
 	public function test_instantiating_EDD_Payment_with_no_args_should_be_null() {
 		$payment = new \EDD_Payment();
-
-		$this->assertEquals( null, $payment->ID );
-		$this->assertSame( 0, $payment->ID );
+		$this->assertEquals( NULL, $payment->ID );
 	}
-
+	
 	public function test_edd_get_payment_with_no_args_should_be_false() {
 		$payment = edd_get_payment();
 
 		$this->assertFalse( $payment );
 	}
 
-	public function test_edd_get_payment_with_invalid_id_shuould_be_false() {
+	public function test_edd_get_payment_with_invalid_id_should_be_false() {
 		$payment = edd_get_payment( 99999999999 );
 
 		$this->assertFalse( $payment );
@@ -74,65 +82,72 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 		$payment = new \EDD_Payment( 'false-txn', true );
 
 		$this->assertEquals( NULL, $payment->ID );
-		$this->assertSame( 0, $payment->ID );
 	}
 
-	public function test_edd_get_payment_with_invalid_transaction_id_shuould_be_false() {
+	public function test_edd_get_payment_with_invalid_transaction_id_should_be_false() {
 		$payment = edd_get_payment( 'false-txn', true );
 
 		$this->assertFalse( $payment );
 	}
 
-	public function test_payment_update_status_should_be_pending() {
-		self::$payment->update_status( 'pending' );
-
-		$this->assertSame( 'pending', self::$payment->status );
-		$this->assertSame( 'Pending', self::$payment->status_nicename );
+	public function test_updating_payment_status_to_pending() {
+		$this->payment->update_status( 'pending' );
+		$this->assertEquals( 'pending', $this->payment->status );
+		$this->assertEquals( 'Pending', $this->payment->status_nicename );
 	}
 
-	public function test_edd_update_payment_status() {
-		edd_update_payment_status( self::$payment->ID, 'publish' );
+	public function test_updating_payment_status_to_publish() {
+		// Test backwards compat
+		edd_update_payment_status( $this->payment->ID, 'publish' );
 
-		self::$payment = edd_get_payment( self::$payment->ID );
-
-		$this->assertSame( 'publish', self::$payment->status );
-		$this->assertSame( 'Completed', self::$payment->status_nicename );
-	}
-
-	public function test_EDD_Payment_class_vars() {
-		$this->assertCount( 2, self::$payment->downloads );
-		$this->assertEquals( 120.00, self::$payment->total );
-		$this->assertSame( '120.000000000', self::$payment->total ); // Total is stored as BIGINT in the database.
+		// Need to get the payment again since it's been updated
+		$this->payment = edd_get_payment( $this->payment->ID );
+		$this->assertEquals( 'publish', $this->payment->status );
+		$this->assertEquals( 'Completed', $this->payment->status_nicename );
 	}
 
 	public function test_add_download() {
+
+		// Test class vars prior to adding a download.
+		$this->assertEquals( 2, count( $this->payment->downloads ) );
+		$this->assertEquals( 120.00, $this->payment->total );
+
 		$new_download = \EDD_Helper_Download::create_simple_download();
 
-		self::$payment->add_download( $new_download->ID );
-		self::$payment->save();
+		$this->payment->update_status( 'publish' );
 
-		$this->assertCount( 3, self::$payment->downloads );
-		$this->assertEquals( 140.00, self::$payment->total );
+		$this->payment->add_download( $new_download->ID );
+		$this->payment->save();
+
+		$this->assertEquals( 3, count( $this->payment->downloads ) );
+		$this->assertEquals( 140.00, $this->payment->total );
 	}
 
-	public function test_add_download_with_item_price_of_0() {
+	public function test_add_download_with_an_item_price_of_0() {
+
+		// Test class vars prior to adding a download.
+		$this->assertEquals( 2, count( $this->payment->downloads ) );
+		$this->assertEquals( 120.00, $this->payment->total );
+
 		$new_download = \EDD_Helper_Download::create_simple_download();
 
 		$args = array(
 			'item_price' => 0,
 		);
 
-		self::$payment->add_download( $new_download->ID, $args );
-		self::$payment->save();
+		$this->payment->update_status( 'publish' );
 
-		$this->assertCount( 3, self::$payment->downloads );
-		$this->assertEquals( 140.00, self::$payment->total );
+		$this->payment->add_download( $new_download->ID, $args );
+		$this->payment->save();
+
+		$this->assertEquals( 3, count( $this->payment->downloads ) );
+		$this->assertEquals( 120.00, $this->payment->total );
 	}
 
 	public function test_add_download_with_fee() {
 		$args = array(
 			'fees' => array(
-				'test_fee' => array(
+				array(
 					'amount' => 5,
 					'label'  => 'Test Fee',
 				),
@@ -141,124 +156,76 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 
 		$new_download = \EDD_Helper_Download::create_simple_download();
 
-		self::$payment->add_download( $new_download->ID, $args );
-		self::$payment->save();
+		$this->payment->update_status( 'publish' );
 
-		$this->assertFalse( empty( self::$payment->cart_details[4]['fees'] ) );
+		$this->payment->add_download( $new_download->ID, $args );
+		$this->payment->save();
+
+//		var_dump( $this->payment->cart_details );
+
+		$this->assertFalse( empty( $this->payment->cart_details[2]['fees'] ) );
 	}
 
 	public function test_remove_download() {
+		$download_id = $this->payment->cart_details[0]['id'];
+		$amount      = $this->payment->cart_details[0]['price'];
+		$quantity    = $this->payment->cart_details[0]['quantity'];
 
+		$remove_args = array(
+			'amount'   => $amount,
+			'quantity' => $quantity,
+		);
+
+		$this->payment->update_status( 'publish' );
+
+		$this->payment->remove_download( $download_id, $remove_args );
+		$this->payment->save();
+
+		$this->assertEquals( 1, count( $this->payment->downloads ) );
+		$this->assertEquals( 100.00, $this->payment->total );
 	}
 
-	public function test_remove_download_by_index() {
 
+	public function test_modify_amount() {
+		$args = array(
+			'item_price' => '1,001.95',
+		);
+
+		$this->payment->modify_cart_item( 0, $args );
+		$this->payment->save();
+
+		$this->assertEquals( 1001.95, $this->payment->cart_details[0]['price'] );
 	}
 
-	public function test_remove_download_with_quantity() {
+	/* Helpers ***************************************************************/
 
+	public function alter_payment_meta( $meta, $payment_data ) {
+		$meta['user_info']['address']['country'] = 'PL';
+
+		return $meta;
 	}
 
-	public function test_payment_add_fee() {
-
+	public function add_meta() {
+		$this->assertTrue( $this->payment->add_meta( '_test_add_payment_meta', 'test' ) );
 	}
 
-	public function test_payment_remove_fee() {
-
+	public function add_meta_false_empty_key() {
+		$this->assertFalse( $this->payment->add_meta( '', 'test' ) );
 	}
 
-	public function test_payment_remove_fee_by_label() {
-
+	public function add_meta_unique_false() {
+		$this->assertFalse( $this->payment->add_meta( '_edd_payment_key', 'test', true ) );
 	}
 
-	public function test_payment_remove_fee_by_label_w_multi_no_global() {
-
+	public function delete_meta() {
+		$this->assertTrue( $this->payment->delete_meta( '_edd_payment_key' ) );
 	}
 
-	public function test_payment_remove_fee_by_label_w_multi_w_global() {
-
+	public function delete_meta_no_key() {
+		$this->assertFalse( $this->payment->delete_meta( '' ) );
 	}
 
-	public function test_payment_remove_fee_by_index() {
-
-	}
-
-	public function test_user_info() {
-		$this->markTestIncomplete();
-
-		$this->assertSame( 'Admin', self::$payment->first_name );
-		$this->assertSame( 'User', self::$payment->last_name );
-	}
-
-	public function test_for_serialized_user_info() {
-		// Issue #4248
-		self::$payment->user_info = serialize( array( 'first_name' => 'John', 'last_name' => 'Doe' ) );
-		self::$payment->save();
-
-		$this->assertInternalType( 'array', self::$payment->user_info );
-
-		foreach ( self::$payment->user_info as $key => $value ) {
-			$this->assertFalse( is_serialized( $value ), $key . ' returned a searlized value' );
-		}
-	}
-
-	public function test_payment_with_initial_fee() {
-		add_filter( 'edd_cart_contents', '__return_true' );
-		add_filter( 'edd_item_quantities_enabled', '__return_true' );
-
-		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_fee();
-
-		$payment = edd_get_payment( $payment_id );
-
-		$this->assertFalse( empty( $payment->fees ) );
-		$this->assertEquals( 47, $payment->total );
-
-		remove_filter( 'edd_cart_contents', '__return_true' );
-		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
-	}
-
-	public function test_update_date_future() {
-		$new_date = strtotime( self::$payment->date ) + DAY_IN_SECONDS;
-
-		self::$payment->date = date( 'Y-m-d H:i:s', $new_date );
-		self::$payment->save();
-
-		$date2 = strtotime( self::$payment->date );
-
-		$this->assertEquals( $new_date, $date2 );
-	}
-
-	public function test_update_date_past() {
-		$new_date = strtotime( self::$payment->date ) - DAY_IN_SECONDS;
-
-		self::$payment->date = date( 'Y-m-d H:i:s', $new_date );
-		self::$payment->save();
-
-		$date2 = strtotime( self::$payment->date );
-
-		$this->assertEquals( $new_date, $date2 );
-	}
-
-	public function test_refund_payment() {
-		$download = new \EDD_Download( self::$payment->downloads[0]['id'] );
-		$earnings = $download->earnings;
-		$sales    = $download->sales;
-
-		$store_earnings = edd_get_total_earnings();
-		$store_sales    = edd_get_total_sales();
-
-		self::$payment->refund();
-
-		wp_cache_flush();
-
-		$this->assertEquals( 'refunded', self::$payment->status );
-
-		$download2 = new \EDD_Download( $download->ID );
-
-		$this->assertEquals( $earnings - $download->price, $download2->earnings );
-		$this->assertEquals( $sales - 1, $download2->sales );
-
-		$this->assertEquals( $store_earnings - self::$payment->total, edd_get_total_earnings() );
-		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+	public function delete_meta_missing_key() {
+		$this->assertFalse( $this->payment->delete_meta( '_edd_nonexistant_key' ) );
 	}
 }

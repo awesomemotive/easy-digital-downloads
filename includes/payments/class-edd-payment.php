@@ -900,7 +900,7 @@ class EDD_Payment {
 						break;
 
 					case 'transaction_id':
-						$this->update_meta( '_edd_payment_transaction_id', $this->transaction_id );
+						$this->update_meta( 'transaction_id', $this->transaction_id );
 						break;
 
 					case 'ip':
@@ -1328,7 +1328,8 @@ class EDD_Payment {
 			'price_id'   => false,
 			'cart_index' => false,
 		);
-		$args     = wp_parse_args( $args, $defaults );
+
+		$args = wp_parse_args( $args, $defaults );
 
 		$download = new EDD_Download( $download_id );
 

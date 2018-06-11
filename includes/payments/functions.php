@@ -511,7 +511,9 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	foreach ( (array) $counts as $row ) {
-		if ( 'private' === $row['post_status'] && empty( $args['s'] ) ) {
+
+		// Here for backwards compatibility.
+		if ( 'private' === $row['status'] && empty( $args['s'] ) ) {
 			continue;
 		}
 
@@ -951,7 +953,7 @@ function edd_get_payment_user_email( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_email()
+		? $order->email
 		: '';
 }
 
@@ -972,7 +974,7 @@ function edd_is_guest_payment( $order_id = 0 ) {
 	}
 
 	$order   = edd_get_order( $order_id );
-	$user_id = $order->get_user_id();
+	$user_id = $order->user_id;
 
 	$is_guest_payment = ! empty( $user_id ) && $user_id > 0
 		? false
@@ -1000,7 +1002,7 @@ function edd_get_payment_user_id( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_user_id()
+		? $order->user_id
 		: 0;
 }
 
@@ -1023,7 +1025,7 @@ function edd_get_payment_customer_id( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_customer_id()
+		? $order->customer_id
 		: 0;
 }
 
@@ -1069,7 +1071,7 @@ function edd_get_payment_user_ip( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_ip()
+		? $order->ip
 		: '';
 }
 
@@ -1106,7 +1108,7 @@ function edd_get_payment_gateway( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_gateway()
+		? $order->gateway
 		: '';
 }
 
@@ -1129,7 +1131,7 @@ function edd_get_payment_currency_code( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_currency()
+		? $order->currency
 		: '';
 }
 
@@ -1175,7 +1177,7 @@ function edd_get_payment_key( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_payment_key()
+		? $order->payment_key
 		: '';
 }
 
@@ -1352,7 +1354,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	$total = $order
-		? $order->get_total()
+		? $order->total
 		: 0.00;
 
 	/**
@@ -1404,7 +1406,7 @@ function edd_get_payment_subtotal( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_subtotal()
+		? $order->subtotal
 		: 0.00;
 }
 
@@ -1447,7 +1449,7 @@ function edd_get_payment_tax( $order_id = 0, $payment_meta = null ) {
 	$order = edd_get_order( $order_id );
 
 	return $order
-		? $order->get_tax()
+		? $order->tax
 		: 0.00;
 }
 

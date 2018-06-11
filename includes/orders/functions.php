@@ -715,7 +715,7 @@ function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
 	}
 
 	$order_id = $wpdb->get_var( $wpdb->prepare(
-		"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = '%s'",
+		"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = %s",
 		$transaction_id
 	) );
 
