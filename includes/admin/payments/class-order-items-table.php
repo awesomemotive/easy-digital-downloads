@@ -3,7 +3,7 @@
  * Order Items Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Discounts
+ * @subpackage  Admin/Orders
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
@@ -35,17 +35,12 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	public $per_page = 30;
 
 	/**
-	 * Discount counts, keyed by status
+	 * Order Item counts, keyed by status
 	 *
 	 * @var array
 	 * @since 3.0
 	 */
-	public $counts = array(
-		'active'   => 0,
-		'inactive' => 0,
-		'expired'  => 0,
-		'total'    => 0
-	);
+	public $counts = array();
 
 	/**
 	 * Get things started
@@ -70,7 +65,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param string $text Label for the search box
+	 * @param string $text     Label for the search box
 	 * @param string $input_id ID of the search box
 	 */
 	public function search_box( $text, $input_id ) {
@@ -147,13 +142,28 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		return array(
+		$columns = array(
 			'cb'       => '<input type="checkbox" />',
 			'name'     => __( 'Product',  'easy-digital-downloads' ),
-			'status'   => __( 'Status',   'easy-digital-downloads' ),
-			'quantity' => __( 'Quantity', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount',   'easy-digital-downloads' )
+			'amount'   => __( 'Amount',   'easy-digital-downloads' ),
+			'discount' => __( 'Discount', 'easy-digital-downloads' )
 		);
+
+		// Maybe add quantity column
+		if ( edd_item_quantities_enabled() ) {
+			$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
+		}
+
+		// Maybe add tax column
+		if ( edd_use_taxes() ) {
+			$columns['tax'] = __( 'Tax', 'easy-digital-downloads' );
+		}
+
+		// Total at the end
+		$columns['total'] = __( 'Total', 'easy-digital-downloads' );
+
+		// Return columns
+		return $columns;
 	}
 
 	/**
@@ -169,7 +179,10 @@ class EDD_Order_Item_Table extends WP_List_Table {
 			'name'     => array( 'product_name',  false ),
 			'status'   => array( 'status',        false ),
 			'quantity' => array( 'quantity',      false ),
-			'amount'   => array( 'amount',        false )
+			'amount'   => array( 'amount',        false ),
+			'discount' => array( 'discount',      false ),
+			'tax'      => array( 'tax',           false ),
+			'total'    => array( 'total',         false )
 		);
 	}
 
@@ -191,30 +204,44 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $order_item, $column_name ) {
-		return property_exists( $order_item, $column_name )
-			? $order_item->{$column_name}
-			: '';
+		switch ( $column_name ) {
+			case 'amount' :
+			case 'discount' :
+			case 'tax' :
+			case 'subtotal' :
+			case 'total' :
+				return $this->format_currency( $order_item, $column_name );
+			default :
+				return property_exists( $order_item, $column_name )
+					? $order_item->{$column_name}
+					: '';
+		}
 	}
 
 	/**
-	 * This function renders the amount column.
+	 * This private function formats a column value for currency.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Data for the order_item code.
+	 * @param EDD\Orders\Order_Item $order_item  Data for the order_item code.
+	 * @param string                $column_name String to
 	 * @return string Formatted amount.
 	 */
-	public function column_amount( $order_item ) {
-		$currency = edd_get_order( $order_item->order_id )->get_currency();
+	private function format_currency( $order_item, $column_name ) {
+		static $symbol = null;
 
-		return edd_currency_symbol( $currency ) . edd_format_amount( $order_item->amount );
+		if ( is_null( $symbol ) ) {
+			$currency = edd_get_order( $order_item->order_id )->currency;
+			$symbol   = edd_currency_symbol( $currency );
+		}
+
+		return $symbol . edd_format_amount( $order_item->{$column_name} );
 	}
 
 	/**
@@ -223,7 +250,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $order_item ) {
@@ -237,46 +264,58 @@ class EDD_Order_Item_Table extends WP_List_Table {
 			'order_item' => $order_item->id,
 		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
+		// No state
+		$state = '';
+
 		// Active, so add "deactivate" action
 		if ( empty( $status ) ) {
 			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'complete_order_item',
+				'edd-action' => 'handle_order_item_change',
+				'status'     => 'inherit',
 				'order_item' => $order_item->id,
 			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
 
-		} elseif ( 'publish' === $status ) {
+		} elseif ( in_array( $status, array( 'inherit', 'publish' ), true ) ) {
 
 			if ( edd_get_download_files( $order_item->id, $order_item->price_id ) ) {
 				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->id ) . '" data-price-id="' . esc_attr( $order_item->id ) . '">' . __( 'Link', 'easy-digital-downloads' ) . '</a>';
 			}
 
 			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'refund_order_item',
+				'edd-action' => 'handle_order_item_change',
+				'status'     => 'refunded',
 				'order_item' => $order_item->id,
 			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
 		// Inactive, so add "activate" action
 		} elseif ( 'refunded' === $status ) {
+			$state = __( 'Refunded', 'easy-digital-downloads' );
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'publish_order_item',
+				'edd-action' => 'handle_order_item_change',
+				'status'     => 'inherit',
 				'order_item' => $order_item->id,
-			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Put Back', 'easy-digital-downloads' ) . '</a>';
+			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Delete
-		$row_actions['remove'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action' => 'remove_order_item',
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+			'edd-action' => 'delete_order_item',
 			'order_item' => $order_item->id,
-		), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Remove', 'easy-digital-downloads' ) . '</a>';
+		), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all order_item row actions
 		$row_actions = apply_filters( 'edd_order_item_row_actions', $row_actions, $order_item );
+
+		// Format order item state
+		if ( ! empty( $state ) ) {
+			$state = ' &mdash; <span class="order-item-state">' . $state . '</span>';
+		}
 
 		// Wrap order_item title in strong anchor
 		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
 			'edd-action' => 'edit_order_item',
 			'order_item' => $order_item->id,
-		), $base ) . '">' . stripslashes( $order_item->product_name ) . '</a></strong>';
+		), $base ) . '">' . stripslashes( $order_item->product_name ) . '</a>' . $state . '</strong>';
 
 		// Return order_item title & row actions
 		return $order_item_title . $this->row_actions( $row_actions );
@@ -288,7 +327,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 *
 	 * @return string Displays a checkbox
 	 */
@@ -306,7 +345,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Discount object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 *
 	 * @return string Displays the order_item status
 	 */
@@ -336,7 +375,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	public function get_bulk_actions() {
 		return array(
 			'refund' => __( 'Refund', 'easy-digital-downloads' ),
-			'remove' => __( 'Remove', 'easy-digital-downloads' )
+			'delete' => __( 'Delete', 'easy-digital-downloads' )
 		);
 	}
 
@@ -365,7 +404,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'remove' :
+				case 'delete' :
 					edd_delete_order_item( $id );
 					break;
 				case 'refund' :
@@ -451,5 +490,31 @@ class EDD_Order_Item_Table extends WP_List_Table {
 			'per_page'    => $this->per_page,
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
+	}
+
+	/**
+	 * Generates content for a single row of the table
+	 *
+	 * @since 3.0
+	 * @access public
+	 *
+	 * @param object $item The current item
+	 */
+	public function single_row( $item ) {
+
+		// Status
+		$classes = array_map( 'sanitize_html_class', array(
+			'order-'. $item->order_id,
+			$item->status
+		) );
+
+		// Turn into a string
+		$class = implode( ' ', $classes ); ?>
+
+		<tr id="order-item-<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
+			<?php $this->single_row_columns( $item ); ?>
+		</tr>
+
+		<?php
 	}
 }

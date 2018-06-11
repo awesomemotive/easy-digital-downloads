@@ -122,20 +122,20 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 			foreach ( $logs as $log ) {
 				/** @var $log EDD\Logs\File_Download_Log */
 
-				$meta        = get_post_custom( $log->get_payment_id() );
+				$meta        = get_post_custom( $log->order_id );
 				$customer_id = (int) isset( $meta['_edd_log_customer_id'] )
 					? $meta['_edd_log_customer_id'][0]
-					: edd_get_payment_customer_id( $log->get_payment_id() );
+					: edd_get_payment_customer_id( $log->order_id );
 
-				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
-					$files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
-					$this->queried_files[ $log->get_download_id() ] = $files;
+				if ( ! array_key_exists( $log->download_id, $this->queried_files ) ) {
+					$files = get_post_meta( $log->download_id, 'edd_download_files', true );
+					$this->queried_files[ $log->download_id ] = $files;
 				} else {
-					$files = $this->queried_files[ $log->get_download_id() ];
+					$files = $this->queried_files[ $log->download_id ];
 				}
 
 				// For backwards compatibility purposes
-				$user = edd_get_customer( $log->get_user_id() );
+				$user = edd_get_customer( $log->user_id );
 
 				$user_info = ! empty( $user )
 					? array(
@@ -147,17 +147,17 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 				$meta = array(
 					'_edd_log_user_info'  => $user_info,
-					'_edd_log_user_id'    => $log->get_user_id(),
-					'_edd_log_file_id'    => $log->get_file_id(),
-					'_edd_log_ip'         => $log->get_id(),
-					'_edd_log_payment_id' => $log->get_payment_id(),
-					'_edd_log_price_id'   => $log->get_price_id(),
+					'_edd_log_user_id'    => $log->user_id,
+					'_edd_log_file_id'    => $log->file_id,
+					'_edd_log_ip'         => $log->id,
+					'_edd_log_payment_id' => $log->order_id,
+					'_edd_log_price_id'   => $log->price_id,
 				);
 
 				// Filter the download files
 				$files = apply_filters( 'edd_log_file_download_download_files', $files, $log, $meta );
 
-				$file_id = $log->get_file_id();
+				$file_id = $log->file_id;
 
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
@@ -168,15 +168,15 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
-						'ID'         => $log->get_id(),
-						'download'   => $log->get_download_id(),
+						'ID'         => $log->id,
+						'download'   => $log->download_id,
 						'customer'   => new EDD_Customer( $customer_id ),
-						'payment_id' => $log->get_payment_id(),
-						'price_id'   => $log->get_price_id(),
+						'payment_id' => $log->order_id,
+						'price_id'   => $log->price_id,
 						'file'       => $file_name,
-						'ip'         => $log->get_ip(),
-						'user_agent' => $log->get_user_agent(),
-						'date'       => $log->get_date_created(),
+						'ip'         => $log->ip,
+						'user_agent' => $log->user_agent,
+						'date'       => $log->date_created,
 					);
 				}
 			}

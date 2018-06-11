@@ -121,8 +121,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$items        = $order->get_items();
 			$user_info    = $order->get_user_info();
 			$address      = $order->get_customer_address();
-			$total        = $order->get_total();
-			$user_id      = $order->get_id() && $order->get_id() != - 1 ? $order->get_id() : $user_info['email'];
+			$total        = $order->total;
+			$user_id      = $order->id && $order->id != - 1 ? $order->id : $user_info['email'];
 			$products     = '';
 			$products_raw = '';
 			$skus         = '';
@@ -136,11 +136,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				/** @var EDD\Orders\Order_Item $item */
 
 				// Setup item information.
-				$id       = $item->get_product_id();
-				$qty      = $item->get_quantity();
-				$price    = $item->get_amount();
-				$tax      = $item->get_tax();
-				$price_id = $item->get_price_id();
+				$id       = $item->product_id;
+				$qty      = $item->quantity;
+				$price    = $item->amount;
+				$tax      = $item->tax;
+				$price_id = $item->price_id;
 
 				// Set up verbose product column.
 				$products .= html_entity_decode( get_the_title( $id ) );
@@ -159,8 +159,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					}
 				}
 
-				if ( 0 < $item->get_price_id() ) {
-					$products .= html_entity_decode( edd_get_price_option_name( $id, $item->get_price_id(), $order->get_id() ) ) . ' - ';
+				if ( 0 < $item->price_id ) {
+					$products .= html_entity_decode( edd_get_price_option_name( $id, $item->price_id, $order->id ) ) . ' - ';
 				}
 
 				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
@@ -191,10 +191,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				: false;
 
 			$data[] = array(
-				'id'           => $order->get_id(),
+				'id'           => $order->id,
 				'seq_id'       => $order->get_number(),
-				'email'        => $order->get_email(),
-				'customer_id'  => $order->get_customer_id(),
+				'email'        => $order->email,
+				'customer_id'  => $order->customer_id,
 				'first'        => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
 				'last'         => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
 				'address1'     => isset( $address['line1'] ) ? $address['line1'] : '',
@@ -207,17 +207,17 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
 				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
-				'tax'          => html_entity_decode( edd_format_amount( $order->get_tax() ) ),
+				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
 				'discount'     => $discounts,
-				'gateway'      => edd_get_gateway_admin_label( $order->get_gateway() ),
+				'gateway'      => edd_get_gateway_admin_label( $order->gateway ),
 				'trans_id'     => $order->get_transaction_id(),
-				'key'          => $order->get_payment_key(),
-				'date'         => $order->get_date_created(),
+				'key'          => $order->payment_key,
+				'date'         => $order->date_created,
 				'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
-				'currency'     => $order->get_currency(),
-				'ip'           => $order->get_ip(),
-				'mode'         => $order->get_mode(),
-				'status'       => ( 'publish' === $order->get_status() ) ? 'complete' : $order->get_status(),
+				'currency'     => $order->currency,
+				'ip'           => $order->ip,
+				'mode'         => $order->mode(),
+				'status'       => ( 'publish' === $order->status ) ? 'complete' : $order->status,
 				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
 			);
 		}

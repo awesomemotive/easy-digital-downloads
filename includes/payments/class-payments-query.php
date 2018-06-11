@@ -159,14 +159,14 @@ class EDD_Payments_Query extends EDD_Stats {
 		foreach ( $orders as $order ) {
 			/** @var $order EDD\Orders\Order */
 
-			$payment = edd_get_payment( $order->get_id() );
+			$payment = edd_get_payment( $order->id );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
 				// Backwards compatibility, needs to set `payment_number` attribute
 				$payment->payment_number = $payment->number;
 			}
 
-			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->get_id(), $this );
+			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->id, $this );
 		}
 
 		do_action( 'edd_post_get_payments', $this );
@@ -530,7 +530,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			foreach ( $orders as $order ) {
 				/** @var $order EDD\Orders\Order */
-				$order_ids[] = $order->get_id();
+				$order_ids[] = $order->id;
 			}
 		} else {
 			$orders = edd_get_order_items( array(
@@ -539,7 +539,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			foreach ( $orders as $order ) {
 				/** @var $order EDD\Orders\Order */
-				$order_ids[] = $order->get_id();
+				$order_ids[] = $order->id;
 			}
 		}
 

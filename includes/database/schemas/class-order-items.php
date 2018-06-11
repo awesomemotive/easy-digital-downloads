@@ -104,7 +104,7 @@ class Order_Items extends Base {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => '',
+			'default'    => 'inherit',
 			'sortable'   => true,
 			'transition' => true
 		),

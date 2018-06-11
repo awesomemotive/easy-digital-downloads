@@ -10,8 +10,6 @@
  */
 namespace EDD\Orders;
 
-use EDD\Base_Object;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -19,8 +17,18 @@ defined( 'ABSPATH' ) || exit;
  * Order_Adjustment Class.
  *
  * @since 3.0
+ *
+ * @property int    $id
+ * @property int    $object_id
+ * @property string $object_type
+ * @property int    $type_id
+ * @property string $type
+ * @property string $description
+ * @property float  $amount
+ * @property string $date_completed
+ * @property string $date_modified
  */
-class Order_Adjustment extends Base_Object {
+class Order_Adjustment extends \EDD\Database\Objects\Order_Adjustment {
 
 	/**
 	 * Order Discount ID.
@@ -93,105 +101,6 @@ class Order_Adjustment extends Base_Object {
 	 * @var   string
 	 */
 	protected $date_modified;
-
-	/**
-	 * Retrieve order discount ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Order discount ID.
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Retrieve object ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Object ID.
-	 */
-	public function get_object_id() {
-		return $this->object_id;
-	}
-
-	/**
-	 * Retrieve object type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Object type.
-	 */
-	public function get_object_type() {
-		return $this->object_type;
-	}
-
-	/**
-	 * Retrieve type ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Type ID.
-	 */
-	public function get_type_id() {
-		return $this->type_id;
-	}
-
-	/**
-	 * Retrieve type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Type.
-	 */
-	public function get_type() {
-		return $this->type;
-	}
-
-	/**
-	 * Retrieve description.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Description.
-	 */
-	public function get_description() {
-		return $this->description;
-	}
-
-	/**
-	 * Retrieve adjustment amount.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Adjustment amount.
-	 */
-	public function get_amount() {
-		return $this->amount;
-	}
-
-	/**
-	 * Retrieve date created.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Date created.
-	 */
-	public function get_date_created() {
-		return $this->date_created;
-	}
-
-	/**
-	 * Retrieve date modified.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Date modified.
-	 */
-	public function get_date_modified() {
-		return $this->date_modified;
-	}
 
 	/**
 	 * Magic __toString method.

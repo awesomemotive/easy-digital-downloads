@@ -127,20 +127,20 @@ class Order_Item extends Base {
 	 *     @type array        $quantity__in         Array of quantities to include. Default empty.
 	 *     @type array        $quantity__not_in     Array of quantities to exclude. Default empty.
 	 *     @type string       $amount               Limit results to those affiliated with a given amount. Default empty.
-	 *     @type array        $amount__in           Array of amounts to include affiliated orders for. Default empty.
-	 *     @type array        $amount__not_in       Array of amounts to exclude affiliated orders for. Default empty.
+	 *     @type array        $amount__in           Array of amounts to include affiliated order items for. Default empty.
+	 *     @type array        $amount__not_in       Array of amounts to exclude affiliated order items for. Default empty.
 	 *     @type string       $subtotal             Limit results to those affiliated with a given subtotal. Default empty.
-	 *     @type array        $subtotal__in         Array of subtotals to include affiliated orders for. Default empty.
-	 *     @type array        $subtotal__not_in     Array of subtotals to exclude affiliated orders for. Default empty.
+	 *     @type array        $subtotal__in         Array of subtotals to include affiliated order items for. Default empty.
+	 *     @type array        $subtotal__not_in     Array of subtotals to exclude affiliated order items for. Default empty.
 	 *     @type string       $discount             Limit results to those affiliated with a given discount. Default empty.
-	 *     @type array        $discount__in         Array of discounts to include affiliated orders for. Default empty.
-	 *     @type array        $discount__not_in     Array of discounts to exclude affiliated orders for. Default empty.
+	 *     @type array        $discount__in         Array of discounts to include affiliated order items for. Default empty.
+	 *     @type array        $discount__not_in     Array of discounts to exclude affiliated order items for. Default empty.
 	 *     @type string       $tax                  Limit results to those affiliated with a given tax. Default empty.
-	 *     @type array        $tax__in              Array of taxes to include affiliated orders for. Default empty.
-	 *     @type array        $tax__not_in          Array of taxes to exclude affiliated orders for. Default empty.
+	 *     @type array        $tax__in              Array of taxes to include affiliated order items for. Default empty.
+	 *     @type array        $tax__not_in          Array of taxes to exclude affiliated order items for. Default empty.
 	 *     @type string       $total                Limit results to those affiliated with a given total. Default empty.
-	 *     @type array        $total__in            Array of totals to include affiliated orders for. Default empty.
-	 *     @type array        $total__not_in        Array of totals to exclude affiliated orders for. Default empty.
+	 *     @type array        $total__in            Array of totals to include affiliated order items for. Default empty.
+	 *     @type array        $total__not_in        Array of totals to exclude affiliated order items for. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
@@ -148,10 +148,10 @@ class Order_Item extends Base {
 	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a order count (true) or array of order objects.
 	 *                                              Default false.
-	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of order IDs)
+	 *     @type string       $fields               Item fields to return. Accepts any column known names
 	 *                                              or empty (returns an array of complete order objects). Default empty.
-	 *     @type int          $number               Limit number of orders to retrieve. Default null (no limit).
-	 *     @type int          $offset               Number of orders to offset the query. Used to build LIMIT clause.
+	 *     @type int          $number               Limit number of order items to retrieve. Default 100.
+	 *     @type int          $offset               Number of order items to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
 	 *     @type string|array $orderby              Accepts 'id', 'order_id', 'product_id', 'price_id', 'cart_index', 'type'
@@ -160,9 +160,9 @@ class Order_Item extends Base {
 	 *                                              'amount__in', 'subtotal__in', 'discount__in', 'tax__in', 'total__in'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'DESC'.
-	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
-	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
+	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type string       $search               Search term(s) to retrieve matching order items for. Default empty.
+	 *     @type bool         $update_cache         Whether to prime the cache for found order items. Default false.
 	 * }
 	 */
 	public function __construct( $query = array() ) {

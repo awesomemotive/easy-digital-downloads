@@ -172,18 +172,18 @@ class Orders extends Base {
 			'validate'   => 'edd_sanitize_amount'
 		),
 
-		// tax
+		// discount
 		array(
-			'name'       => 'tax',
+			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
 			'validate'   => 'edd_sanitize_amount'
 		),
 
-		// discount
+		// tax
 		array(
-			'name'       => 'discount',
+			'name'       => 'tax',
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
