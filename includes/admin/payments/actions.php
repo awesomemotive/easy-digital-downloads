@@ -39,9 +39,8 @@ function edd_handle_order_item_change( $request = array() ) {
 	// Default data
 	$data = array();
 
-	// Maybe add status
-	// todo: verify status against registered statii
-	if ( ! empty( $request['status'] ) ) {
+	// Maybe add status to data to update
+	if ( ! empty( $request['status'] ) && ( 'inherit' === $request['status'] ) || in_array( $request['status'], array_keys( edd_get_payment_statuses() ), true )) {
 		$data['status'] = sanitize_key( $request['status'] );
 	}
 
