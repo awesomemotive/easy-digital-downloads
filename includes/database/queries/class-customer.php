@@ -125,7 +125,7 @@ class Customer extends Base {
 	 *                                              Default false.
 	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of customer IDs)
 	 *                                              or empty (returns an array of complete customer objects). Default empty.
-	 *     @type int          $number               Limit number of customers to retrieve. Default null (no limit).
+	 *     @type int          $number               Limit number of customers to retrieve. Default 100.
 	 *     @type int          $offset               Number of customers to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
