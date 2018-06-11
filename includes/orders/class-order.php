@@ -10,8 +10,6 @@
  */
 namespace EDD\Orders;
 
-use EDD\Base_Object;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -41,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
  * @property array $items
  * @property array $adjustments
  */
-class Order extends Base_Object {
+class Order extends \EDD\Database\Objects\Order {
 
 	/**
 	 * Order ID.

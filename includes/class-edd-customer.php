@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 2.3
  * @since 3.0 No longer extends EDD_DB_Customer.
  */
-class EDD_Customer {
+class EDD_Customer extends \EDD\Database\Objects\Customer {
 
 	/**
 	 * The customer ID

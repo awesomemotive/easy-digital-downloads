@@ -12,18 +12,13 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Database layer
-use EDD\Database\Objects\Discount;
-
 /**
  * EDD_Discount Class
- *
- * Application layer
  *
  * @since 2.7
  * @since 3.0 Extends EDD\Database\Objects\Discount instead of EDD_DB_Discount
  */
-class EDD_Discount extends Discount {
+class EDD_Discount extends \EDD\Database\Objects\Discount {
 
 	/**
 	 * Discount ID.
@@ -386,22 +381,6 @@ class EDD_Discount extends Discount {
 		}
 	}
 
-	/**
-	 * Magic __isset method to allow empty checks on protected elements
-	 *
-	 * @since 2.7
-	 *
-	 * @param string $key The attribute to get
-	 * @return boolean If the item is set or not
-	 */
-	public function __isset( $key ) {
-		if ( property_exists( $this, $key ) ) {
-			return false === empty( $this->{$key} );
-		} else {
-			return null;
-		}
-	}
-
 	public function __call( $method, $args ) {
 		$property = str_replace( 'setup_', '', $method );
 		if( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
@@ -448,7 +427,7 @@ class EDD_Discount extends Discount {
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @param string $code Discount name.
+	 * @param string $name Discount name.
 	 * @return object WP_Post instance of the discount.
 	 */
 	private function find_by_name( $name = '' ) {
@@ -465,7 +444,7 @@ class EDD_Discount extends Discount {
 	 * @return bool Object initialization successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
-		if ( null == $discount ) {
+		if ( is_null( $discount ) ) {
 			return false;
 		}
 
@@ -493,30 +472,30 @@ class EDD_Discount extends Discount {
 			switch ( $key ) {
 				case 'start_date' :
 				case 'end_date' :
-					if ( '0000-00-00 00:00:00' == $value ) {
-						$this->$key = false;
+					if ( '0000-00-00 00:00:00' === $value ) {
+						$this->{$key} = false;
 						break;
 					}
 
 				case 'notes' :
 					if ( ! empty( $value ) ) {
-						$this->$key = $value;
+						$this->{$key} = $value;
 					}
 					break;
 
 				case 'id' :
-					$this->$key = (int) $value;
+					$this->{$key} = (int) $value;
 					break;
 
 				default:
 					if ( is_string( $value ) ) {
 						@json_decode( $value );
 						if ( json_last_error() != JSON_ERROR_NONE ) {
-							$this->$key = json_decode( $value );
+							$this->{$key} = json_decode( $value );
 						}
 					}
 
-					$this->$key = $value;
+					$this->{$key} = $value;
 					break;
 			}
 		}
@@ -968,7 +947,7 @@ class EDD_Discount extends Discount {
 			do_action( 'edd_pre_insert_discount', $args );
 
 			foreach ( $args as $key => $value ) {
-				$this->$key = $value;
+				$this->{$key} = $value;
 			}
 
 			// We have to ensure an ID is not passed to edd_add_discount()
