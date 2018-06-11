@@ -10,8 +10,6 @@
  */
 namespace EDD\Orders;
 
-use EDD\Base_Object;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -20,17 +18,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @property int $id
- * @property int $object_id
+ * @property int    $id
+ * @property int    $object_id
  * @property string $object_type
- * @property int $type_id
+ * @property int    $type_id
  * @property string $type
  * @property string $description
- * @property float $amount
+ * @property float  $amount
  * @property string $date_completed
  * @property string $date_modified
  */
-class Order_Adjustment extends Base_Object {
+class Order_Adjustment extends \EDD\Database\Objects\Order_Adjustment {
 
 	/**
 	 * Order Discount ID.
