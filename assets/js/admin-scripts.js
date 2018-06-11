@@ -1336,8 +1336,22 @@ jQuery(document).ready(function ($) {
 
 	EDD_Settings.init();
 
-	$('.download_page_edd-payment-history .row-actions .delete a, a.edd-delete-payment').on('click', function() {
+	$('.download_page_edd-payment-history table.orders .row-actions .delete a, a.edd-delete-payment').on('click', function() {
 		if ( confirm( edd_vars.delete_payment ) ) {
+			return true;
+		}
+		return false;
+	});
+
+	$('.download_page_edd-payment-history table.orderitems .row-actions .delete a').on('click', function() {
+		if ( confirm( edd_vars.delete_order_item ) ) {
+			return true;
+		}
+		return false;
+	});
+
+	$('.download_page_edd-payment-history table.orderadjustments .row-actions .delete a').on('click', function() {
+		if ( confirm( edd_vars.delete_order_adjustment ) ) {
 			return true;
 		}
 		return false;

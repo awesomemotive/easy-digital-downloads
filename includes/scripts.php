@@ -228,6 +228,8 @@ function edd_load_admin_scripts( $hook ) {
 		'use_this_file'               => __( 'Use This File', 'easy-digital-downloads' ),
 		'quick_edit_warning'          => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
 		'delete_payment'              => __( 'Are you sure you wish to delete this payment?', 'easy-digital-downloads' ),
+		'delete_order_item'           => __( 'Are you sure you wish to delete this item?', 'easy-digital-downloads' ),
+		'delete_order_adjustment'     => __( 'Are you sure you wish to delete this adjustment?', 'easy-digital-downloads' ),
 		'delete_note'                 => __( 'Are you sure you wish to delete this note?', 'easy-digital-downloads' ),
 		'delete_tax_rate'             => __( 'Are you sure you wish to delete this tax rate?', 'easy-digital-downloads' ),
 		'revoke_api_key'              => __( 'Are you sure you wish to revoke this API key?', 'easy-digital-downloads' ),

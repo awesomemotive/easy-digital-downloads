@@ -3,7 +3,7 @@
  * Order Adjustments Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Discounts
+ * @subpackage  Admin/OrderAdjustments
  * @copyright   Copyright (c) 2018, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
@@ -35,7 +35,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	public $per_page = 30;
 
 	/**
-	 * Discount counts, keyed by status
+	 * Order Adjustment counts, keyed by status
 	 *
 	 * @var array
 	 * @since 3.0
@@ -237,10 +237,10 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Delete
-		$row_actions['remove'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action'       => 'remove_order_adjustment',
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+			'edd-action'       => 'delete_order_adjustment',
 			'order_adjustment' => $order_adjustment->id,
-		), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Remove', 'easy-digital-downloads' ) . '</a>';
+		), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all order_adjustment row actions
 		$row_actions = apply_filters( 'edd_order_adjustment_row_actions', $row_actions, $order_adjustment );
@@ -299,7 +299,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 */
 	public function column_type( $order_adjustment ) {
 		return ! empty( $order_adjustment->type )
-			? ucwords( $order_adjustment->type )
+			? ucwords( str_replace( array( '_', '-' ), ' ', $order_adjustment->type ) )
 			: '&mdash;';
 	}
 
@@ -315,7 +315,6 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * @return string Displays the order type
 	 */
 	public function column_desc( $order_adjustment ) {
-		$desc  = '&mdash;';
 		$value = $order_adjustment->description;
 
 		// Update desc based on type
@@ -329,7 +328,9 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 			$desc = edd_get_order_adjustment_meta( $order_adjustment->id, 'fee_id', true );
 		}
 
-		return $desc;
+		return ! empty( $desc )
+			? $desc
+			: '&mdash;';
 	}
 
 	/**
@@ -351,7 +352,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'remove' => __( 'Remove', 'easy-digital-downloads' )
+			'delete' => __( 'Delete', 'easy-digital-downloads' )
 		);
 	}
 
@@ -457,5 +458,31 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 			'per_page'    => $this->per_page,
 			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page )
 		) );
+	}
+
+	/**
+	 * Generates content for a single row of the table
+	 *
+	 * @since 3.0
+	 * @access public
+	 *
+	 * @param object $item The current item
+	 */
+	public function single_row( $item ) {
+
+		// Status
+		$classes = array_map( 'sanitize_html_class', array(
+			'order-'. $item->order_id,
+			$item->type
+		) );
+
+		// Turn into a string
+		$class = implode( ' ', $classes ); ?>
+
+		<tr id="order-item-<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
+			<?php $this->single_row_columns( $item ); ?>
+		</tr>
+
+		<?php
 	}
 }
