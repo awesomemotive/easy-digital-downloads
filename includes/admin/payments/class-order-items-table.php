@@ -204,7 +204,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Order Item object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -229,8 +229,8 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item  Data for the order_item code.
-	 * @param string         $column_name String to
+	 * @param EDD\Orders\Order_Item $order_item  Data for the order_item code.
+	 * @param string                $column_name String to
 	 * @return string Formatted amount.
 	 */
 	private function format_currency( $order_item, $column_name ) {
@@ -250,7 +250,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Order Item object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $order_item ) {
@@ -327,7 +327,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Order Item object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 *
 	 * @return string Displays a checkbox
 	 */
@@ -345,7 +345,7 @@ class EDD_Order_Item_Table extends WP_List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Order_Item $order_item Order Item object.
+	 * @param EDD\Orders\Order_Item $order_item Order Item object.
 	 *
 	 * @return string Displays the order_item status
 	 */
