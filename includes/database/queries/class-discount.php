@@ -121,8 +121,8 @@ class Discount extends Base {
 	 *     @type array        $amount__in           Array of discount amounts to include. Default empty.
 	 *     @type array        $amount__not_in       Array of discount amounts to exclude. Default empty.
 	 *     @type int          $max_uses             A discount max_uses to only return that discount. Default empty.
-	 *     @type array        $max_uses__in         Array of discount max_usess to include. Default empty.
-	 *     @type array        $max_uses__not_in     Array of discount max_usess to exclude. Default empty.
+	 *     @type array        $max_uses__in         Array of discount max_uses to include. Default empty.
+	 *     @type array        $max_uses__not_in     Array of discount max_uses to exclude. Default empty.
 	 *     @type int          $use_count            A discount use_count to only return that discount. Default empty.
 	 *     @type array        $use_count__in        Array of discount use_counts to include. Default empty.
 	 *     @type array        $use_count__not_in    Array of discount use_counts to exclude. Default empty.
@@ -139,7 +139,7 @@ class Discount extends Base {
 	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a discount count (true) or array of discount objects.
 	 *                                              Default false.
-	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of discount IDs)
+	 *     @type string       $fields               Item fields to return. Accepts any column known names
 	 *                                              or empty (returns an array of complete discount objects). Default empty.
 	 *     @type int          $number               Limit number of discounts to retrieve. Default 100.
 	 *     @type int          $offset               Number of discounts to offset the query. Used to build LIMIT clause.
@@ -148,7 +148,7 @@ class Discount extends Base {
 	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to discount retrieved discounts. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching discounts for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found discounts. Default false.
 	 * }

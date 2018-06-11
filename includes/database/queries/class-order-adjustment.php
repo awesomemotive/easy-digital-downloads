@@ -127,10 +127,10 @@ class Order_Adjustment extends Base {
 	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a order count (true) or array of order objects.
 	 *                                              Default false.
-	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of order IDs)
+	 *     @type string       $fields               Item fields to return. Accepts any column known names
 	 *                                              or empty (returns an array of complete order objects). Default empty.
-	 *     @type int          $number               Limit number of orders to retrieve. Default 100.
-	 *     @type int          $offset               Number of orders to offset the query. Used to build LIMIT clause.
+	 *     @type int          $number               Limit number of order adjustments to retrieve. Default 100.
+	 *     @type int          $offset               Number of order adjustments to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
 	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'discount_id', 'amount'
@@ -138,9 +138,9 @@ class Order_Adjustment extends Base {
 	 *                                              'discount_id__in', 'amount__in', 'status__in', 'quantity__in'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'DESC'.
-	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
-	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
+	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type string       $search               Search term(s) to retrieve matching order adjustments for. Default empty.
+	 *     @type bool         $update_cache         Whether to prime the cache for found order adjustments. Default false.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
