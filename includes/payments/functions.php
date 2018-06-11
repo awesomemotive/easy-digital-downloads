@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Retrieves an instance of EDD_Payment for a specified ID.
@@ -81,7 +81,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 function edd_get_payments( $args = array() ) {
 
 	// Fallback to post objects to ensure backwards compatibility
-	if( ! isset( $args['output'] ) ) {
+	if ( ! isset( $args['output'] ) ) {
 		$args['output'] = 'posts';
 	}
 
@@ -185,9 +185,9 @@ function edd_insert_payment( $order_data = array() ) {
 			$previous_customer->remove_payment( $payment->ID, false );
 
 			// Redefine the email frst and last names.
-			$payment->email                 = $order_data['user_info']['email'];
-			$payment->first_name            = $order_data['user_info']['first_name'];
-			$payment->last_name             = $order_data['user_info']['last_name'];
+			$payment->email      = $order_data['user_info']['email'];
+			$payment->first_name = $order_data['user_info']['first_name'];
+			$payment->last_name  = $order_data['user_info']['last_name'];
 
 		}
 
@@ -242,28 +242,26 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	$customer = new EDD_Customer( $customer_id );
 
-	if( $status == 'revoked' || $status == 'publish' ) {
+	if ( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
 		edd_decrease_total_earnings( $amount );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if( $customer->id && $update_customer ) {
+		if ( $customer->id && $update_customer ) {
 
 			// Decrement the stats for the customer
 			$customer->decrease_purchase_count();
 			$customer->decrease_value( $amount );
-
 		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if( $customer->id && $update_customer ) {
+	if ( $customer->id && $update_customer ) {
 
 		// Remove the payment ID from the customer
 		$customer->remove_payment( $payment_id );
-
 	}
 
 	// Remove the order.
@@ -406,11 +404,11 @@ function edd_count_payments( $args = array() ) {
 	$where = "WHERE p.post_type = 'edd_payment'";
 
 	// Count payments for a specific user
-	if( ! empty( $args['user'] ) ) {
+	if ( ! empty( $args['user'] ) ) {
 
-		if( is_email( $args['user'] ) )
+		if ( is_email( $args['user'] ) )
 			$field = 'email';
-		elseif( is_numeric( $args['user'] ) )
+		elseif ( is_numeric( $args['user'] ) )
 			$field = 'id';
 		else
 			$field = '';
@@ -431,11 +429,11 @@ function edd_count_payments( $args = array() ) {
 			AND m.meta_value = '{$args['customer']}'";
 
 	// Count payments for a search
-	} elseif( ! empty( $args['s'] ) ) {
+	} elseif ( ! empty( $args['s'] ) ) {
 
 		if ( is_email( $args['s'] ) || strlen( $args['s'] ) == 32 ) {
 
-			if( is_email( $args['s'] ) )
+			if ( is_email( $args['s'] ) )
 				$field = '_edd_payment_user_email';
 			else
 				$field = '_edd_payment_purchase_key';
@@ -569,7 +567,7 @@ function edd_count_payments( $args = array() ) {
 
 	$stats    = array();
 	$statuses = get_post_stati();
-	if( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
+	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
 		unset( $statuses['private'] );
 	}
 
@@ -579,7 +577,7 @@ function edd_count_payments( $args = array() ) {
 
 	foreach ( (array) $count as $row ) {
 
-		if( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
+		if ( 'private' == $row['post_status'] && empty( $args['s'] ) ) {
 			continue;
 		}
 
@@ -732,7 +730,7 @@ function edd_is_payment_complete( $payment_id = 0 ) {
 
 	$ret = false;
 
-	if( $payment->ID > 0 ) {
+	if ( $payment->ID > 0 ) {
 
 		if ( (int) $payment_id === (int) $payment->ID && 'publish' == $payment->status ) {
 			$ret = true;
@@ -764,13 +762,13 @@ function edd_get_total_earnings() {
 	$total = get_option( 'edd_earnings_total', false );
 
 	// If no total stored in DB, use old method of calculating total earnings
-	if( false === $total ) {
+	if ( false === $total ) {
 
 		global $wpdb;
 
 		$total = get_transient( 'edd_earnings_total' );
 
-		if( false === $total ) {
+		if ( false === $total ) {
 
 			$total = (float) 0;
 
@@ -791,11 +789,11 @@ function edd_get_total_earnings() {
 				 * first purchase
 				 */
 
-				if( did_action( 'edd_update_payment_status' ) ) {
+				if ( did_action( 'edd_update_payment_status' ) ) {
 					array_pop( $payments );
 				}
 
-				if( ! empty( $payments ) ) {
+				if ( ! empty( $payments ) ) {
 					$payments = implode( ',', $payments );
 					$total += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$payments})" );
 				}
@@ -810,7 +808,7 @@ function edd_get_total_earnings() {
 		}
 	}
 
-	if( $total < 0 ) {
+	if ( $total < 0 ) {
 		$total = 0; // Don't ever show negative earnings
 	}
 
@@ -841,7 +839,7 @@ function edd_increase_total_earnings( $amount = 0 ) {
 function edd_decrease_total_earnings( $amount = 0 ) {
 	$total = edd_get_total_earnings();
 	$total -= $amount;
-	if( $total < 0 ) {
+	if ( $total < 0 ) {
 		$total = 0;
 	}
 	update_option( 'edd_earnings_total', $total );
@@ -925,14 +923,16 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 			if ( $include_bundle_files ) {
 
-				if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
+				if ( 'bundle' != edd_get_download_type( $cart_item['id'] ) ) {
 					continue;
+				}
 
 				$price_id = edd_get_cart_item_price_id( $cart_item );
 				$products = edd_get_bundled_products( $cart_item['id'], $price_id );
 
-				if ( empty( $products ) )
+				if ( empty( $products ) ) {
 					continue;
+				}
 
 				foreach ( $products as $product_id ) {
 					$cart_details[]   = array(
@@ -1123,7 +1123,7 @@ function edd_get_payment_number( $payment_id = 0 ) {
  */
 function edd_format_payment_number( $number ) {
 
-	if( ! edd_get_option( 'enable_sequential' ) ) {
+	if ( ! edd_get_option( 'enable_sequential' ) ) {
 		return $number;
 	}
 
@@ -1150,7 +1150,7 @@ function edd_format_payment_number( $number ) {
  */
 function edd_get_next_payment_number() {
 
-	if( ! edd_get_option( 'enable_sequential' ) ) {
+	if ( ! edd_get_option( 'enable_sequential' ) ) {
 		return false;
 	}
 
@@ -1385,13 +1385,10 @@ function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' )
  * Retrieve the purchase ID based on the purchase key
  *
  * @since 1.3.2
- * @global object $wpdb Used to query the database using the WordPress
- *   Database API
  * @param string $key the purchase key to search for
  * @return int $purchase Purchase ID
  */
 function edd_get_purchase_id_by_key( $key ) {
-	global $wpdb;
 	$global_key_string = 'edd_purchase_id_by_key' . $key;
 	global $$global_key_string;
 
@@ -1424,8 +1421,9 @@ function edd_get_purchase_id_by_transaction_id( $key ) {
 
 	$purchase = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = %s LIMIT 1", $key ) );
 
-	if ( $purchase != NULL )
+	if ( $purchase != NULL ) {
 		return $purchase;
+	}
 
 	return 0;
 }
@@ -1445,14 +1443,12 @@ function edd_get_payment_notes( $order_id = 0, $search = '' ) {
 		return false;
 	}
 
-	$notes = edd_get_notes( array(
+	return edd_get_notes( array(
 		'object_id'   => $order_id,
 		'object_type' => 'order',
 		'order'       => 'ASC',
-		'search'      => '',
+		'search'      => ''
 	) );
-
-	return $notes;
 }
 
 
@@ -1580,9 +1576,9 @@ add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
  * @return array $clauses Updated comment clauses
  */
 function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
-	global $wpdb, $wp_version;
+	global $wp_version;
 
-	if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
+	if ( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
 		$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
 	}
 
@@ -1620,24 +1616,27 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	global $wpdb, $pagenow;
 
 	$array_excluded_pages = array( 'index.php', 'edit-comments.php' );
-	if( ! in_array( $pagenow, $array_excluded_pages )  ) {
+	if ( ! in_array( $pagenow, $array_excluded_pages )  ) {
 		return $stats;
 	}
 
 	$post_id = (int) $post_id;
 
-	if ( apply_filters( 'edd_count_payment_notes_in_comments', false ) )
+	if ( apply_filters( 'edd_count_payment_notes_in_comments', false ) ) {
 		return $stats;
+	}
 
 	$stats = wp_cache_get( "comments-{$post_id}", 'counts' );
 
-	if ( false !== $stats )
+	if ( false !== $stats ) {
 		return $stats;
+	}
 
 	$where = 'WHERE comment_type != "edd_payment_note"';
 
-	if ( $post_id > 0 )
+	if ( $post_id > 0 ) {
 		$where .= $wpdb->prepare( " AND comment_post_ID = %d", $post_id );
+	}
 
 	$count = $wpdb->get_results( "SELECT comment_approved, COUNT( * ) AS num_comments FROM {$wpdb->comments} {$where} GROUP BY comment_approved", ARRAY_A );
 
@@ -1645,16 +1644,20 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	$approved = array( '0' => 'moderated', '1' => 'approved', 'spam' => 'spam', 'trash' => 'trash', 'post-trashed' => 'post-trashed' );
 	foreach ( (array) $count as $row ) {
 		// Don't count post-trashed toward totals
-		if ( 'post-trashed' != $row['comment_approved'] && 'trash' != $row['comment_approved'] )
+		if ( 'post-trashed' != $row['comment_approved'] && 'trash' != $row['comment_approved'] ) {
 			$total += $row['num_comments'];
-		if ( isset( $approved[$row['comment_approved']] ) )
+		}
+
+		if ( isset( $approved[$row['comment_approved']] ) ) {
 			$stats[$approved[$row['comment_approved']]] = $row['num_comments'];
+		}
 	}
 
 	$stats['total_comments'] = $total;
 	foreach ( $approved as $key ) {
-		if ( empty($stats[$key]) )
+		if ( empty($stats[$key]) ) {
 			$stats[$key] = 0;
+		}
 	}
 
 	$stats = (object) $stats;
@@ -1674,7 +1677,7 @@ add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 1
 */
 function edd_filter_where_older_than_week( $where = '' ) {
 	// Payments older than one week
-	$start = date( 'Y-m-d', strtotime( '-7 days' ) );
+	$start  = date( 'Y-m-d', strtotime( '-7 days' ) );
 	$where .= " AND post_date <= '{$start}'";
 	return $where;
 }

@@ -13,7 +13,53 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Process the changed from the 'View Order Details' page.
+ * Handle order item changes
+ *
+ * @since 3.0
+ *
+ * @param array $request
+ * @return boolean
+ */
+function edd_handle_order_item_change( $request = array() ) {
+
+	// Bail if missing necessary properties
+	if (
+		empty( $request['_wpnonce']   ) ||
+		empty( $request['id']         ) ||
+		empty( $request['order_item'] )
+	) {
+		return false;
+	}
+
+	// Bail if nonce check fails
+	if ( ! wp_verify_nonce( $request['_wpnonce'], 'edd_order_item_nonce' ) ) {
+		return false;
+	}
+
+	// Default data
+	$data = array();
+
+	// Maybe add status
+	// todo: verify status against registered statii
+	if ( ! empty( $request['status'] ) ) {
+		$data['status'] = sanitize_key( $request['status'] );
+	}
+
+	// Update order item
+	if ( ! empty( $data ) ) {
+		edd_update_order_item( $request['order_item'], $data );
+		edd_redirect( add_query_arg( array(
+			'post_type' => 'download',
+			'page'      => 'edd-payment-history',
+			'view'      => 'view-order-details',
+			'id'        => absint( $request['id'] )
+		), admin_url( 'edit.php' ) ) );
+	}
+}
+add_action( 'edd_handle_order_item_change', 'edd_handle_order_item_change' );
+
+/**
+ * Process the changes from the `View Order Details` page.
  *
  * @since 1.9
  * @since 3.0 Refactored to use new core objects and query methods.
@@ -319,7 +365,7 @@ function edd_trigger_purchase_delete( $data ) {
 
 		$payment_id = absint( $data['purchase_id'] );
 
-		if( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
+		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
 			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
@@ -347,11 +393,13 @@ function edd_ajax_generate_file_download_link() {
 	$download_id = absint( $_POST['download_id'] );
 	$price_id    = absint( $_POST['price_id'] );
 
-	if( empty( $payment_id ) )
+	if ( empty( $payment_id ) ) {
 		die( '-2' );
+	}
 
-	if( empty( $download_id ) )
+	if ( empty( $download_id ) ) {
 		die( '-3' );
+	}
 
 	$payment_key = edd_get_payment_key( $payment_id );
 	$email       = edd_get_payment_user_email( $payment_id );
@@ -363,20 +411,17 @@ function edd_ajax_generate_file_download_link() {
 	}
 
 	$files = edd_get_download_files( $download_id, $price_id );
-	if( ! $files ) {
+	if ( ! $files ) {
 		die( '-4' );
 	}
 
 	$file_urls = '';
 
 	foreach( $files as $file_key => $file ) {
-
 		$file_urls .= edd_get_download_file_url( $payment_key, $email, $file_key, $download_id, $price_id );
 		$file_urls .= "\n\n";
-
 	}
 
 	die( $file_urls );
-
 }
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );
