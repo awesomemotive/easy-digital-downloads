@@ -687,68 +687,6 @@ class EDD_Payment {
 											}
 										}
 
-										$order_item_id = edd_add_order_item( array(
-											'order_id'     => $this->ID,
-											'product_id'   => $item['id'],
-											'product_name' => get_the_title( $item['id'] ),
-											'price_id'     => $price_id,
-											'cart_index'   => $item['cart_index'],
-											'type'         => 'download',
-											'quantity'     => $item['quantity'],
-											'amount'       => $item['item_price'],
-											'subtotal'     => $item['subtotal'],
-											'discount'     => $item['discount'],
-											'tax'          => $item['tax'],
-											'total'        => $item['price'],
-										) );
-
-										if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
-											foreach ( $item['fees'] as $fee_id => $fee ) {
-
-												// Fee applies to download item only.
-												if ( isset( $fee['download_id'] ) && $item['id'] === $fee['download_id'] ) {
-													$adjustment_id = edd_add_order_adjustment( array(
-														'object_id'   => $order_item_id,
-														'object_type' => 'order_item',
-														'type_id'     => '',
-														'type'        => 'fee',
-														'description' => $fee['label'],
-														'amount'      => $fee['amount']
-													) );
-
-													edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-													edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-													if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-														edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-													}
-
-													if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-														edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-													}
-												} elseif ( ! isset( $this->fees[ $fee_id ] ) ) {
-													$adjustment_id = edd_add_order_adjustment( array(
-														'object_id'   => $this->ID,
-														'object_type' => 'order',
-														'type_id'     => '',
-														'type'        => 'fee',
-														'description' => $fee['label'],
-														'amount'      => $fee['amount']
-													) );
-
-													edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
-													if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-														edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-													}
-
-													if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-														edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-													}
-												}
-											}
-										}
-
 										$download = new EDD_Download( $item['id'] );
 										$download->increase_sales( $item['quantity'] );
 										$download->increase_earnings( $increase_earnings );
