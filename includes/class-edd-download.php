@@ -55,6 +55,13 @@ class EDD_Download {
 	private $file_download_limit;
 
 	/**
+	 * The download's refund window
+	 *
+	 * @since 2.2
+	 */
+	private $refund_window;
+
+	/**
 	 * The download type, default or bundle
 	 *
 	 * @since 2.2
@@ -448,6 +455,40 @@ class EDD_Download {
 
 		return absint( apply_filters( 'edd_file_download_limit', $this->file_download_limit, $this->ID ) );
 
+	}
+
+	/**
+	 * Retrieve the refund window
+	 *
+	 * @since 3.0
+	 * @return int Number of days
+	 */
+	public function get_refund_window() {
+
+		if ( ! isset( $this->refund_window ) ) {
+			$window = get_post_meta( $this->ID, '_edd_refund_window', true );
+			$global = edd_get_option( 'refund_window', 0 );
+
+			// Download specific window
+			if ( is_numeric( $window ) ) {
+				$retval = absint( $window );
+
+			} elseif ( empty( $window ) ) {
+				$retval = '';
+
+			// Global limit
+			} elseif ( ! empty( $global ) ) {
+				$retval = absint( $global );
+
+			// Default
+			} else {
+				$retval = 0;
+			}
+
+			$this->refund_window = $retval;
+		}
+
+		return absint( apply_filters( 'edd_refund_window', $this->refund_window, $this->ID ) );
 	}
 
 	/**
