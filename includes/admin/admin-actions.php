@@ -82,7 +82,7 @@ add_action( 'admin_notices', 'edd_taxonomies_tabs', 10, 1 );
  *
  * @since 3.0
  */
-function edd_remove_taxonomy_submenus() {
+function edd_admin_adjust_submenus() {
 
 	// Get taxonomies
 	$taxonomies = get_object_taxonomies( 'download' );
@@ -96,8 +96,11 @@ function edd_remove_taxonomy_submenus() {
 	foreach ( $taxonomies as $taxonomy ) {
 		remove_submenu_page( 'edit.php?post_type=download', 'edit-tags.php?taxonomy=' . $taxonomy . '&amp;post_type=download' );
 	}
+
+	// Remove the "Add New" link for downloads
+	remove_submenu_page( 'edit.php?post_type=download', 'post-new.php?post_type=download' );
 }
-add_action( 'admin_menu', 'edd_remove_taxonomy_submenus', 999 );
+add_action( 'admin_menu', 'edd_admin_adjust_submenus', 999 );
 
 /**
  * This tells WordPress to highlight the Downloads > All Downloads submenu,

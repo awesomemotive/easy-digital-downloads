@@ -31,7 +31,7 @@ function edd_setup_edd_post_types() {
 		'add_new_item'          => __( 'Add New %1$s', 'easy-digital-downloads' ),
 		'edit_item'             => __( 'Edit %1$s', 'easy-digital-downloads' ),
 		'new_item'              => __( 'New %1$s', 'easy-digital-downloads' ),
-		'all_items'             => __( 'All %2$s', 'easy-digital-downloads' ),
+		'all_items'             => __( '%2$s', 'easy-digital-downloads' ),
 		'view_item'             => __( 'View %1$s', 'easy-digital-downloads' ),
 		'search_items'          => __( 'Search %2$s', 'easy-digital-downloads' ),
 		'not_found'             => __( 'No %2$s found', 'easy-digital-downloads' ),
