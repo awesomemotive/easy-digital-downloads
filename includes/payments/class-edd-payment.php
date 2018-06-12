@@ -2778,6 +2778,7 @@ class EDD_Payment {
 
 		// As per Github issue #4248, we need to run maybe_unserialize here still.
 		$user_info = wp_parse_args( maybe_unserialize( $user_info ), array(
+			'id'         => $this->user_id,
 			'first_name' => $this->first_name,
 			'last_name'  => $this->last_name,
 			'discount'   => $this->discounts,
