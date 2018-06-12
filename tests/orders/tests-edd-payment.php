@@ -346,6 +346,32 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $new_date, $date2 );
 	}
 
+	public function test_refund_payment() {
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
+		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+		$earnings = $download->earnings;
+		$sales    = $download->sales;
+
+		$store_earnings = edd_get_total_earnings();
+		$store_sales    = edd_get_total_sales();
+
+		$this->payment->refund();
+
+		wp_cache_flush();
+
+		$this->assertEquals( 'refunded', $this->payment->status );
+
+		$download2 = new \EDD_Download( $download->ID );
+
+		$this->assertEquals( $earnings - $download->price, $download2->earnings );
+		$this->assertEquals( $sales - 1, $download2->sales );
+
+		$this->assertEquals( $store_earnings - $this->payment->total, edd_get_total_earnings() );
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {
