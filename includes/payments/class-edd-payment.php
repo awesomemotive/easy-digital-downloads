@@ -2023,6 +2023,54 @@ class EDD_Payment {
 				}
 
 				if ( isset( $meta_value['user_info'] ) && ! empty( $meta_value['user_info'] ) ) {
+
+					// Handle discounts.
+					$discounts = isset( $meta_value['user_info']['discount'] ) && ! empty( $meta_value['user_info']['discount'] )
+						? $meta_value['user_info']['discount']
+						: array();
+
+					if ( ! is_array( $discounts ) ) {
+						$discounts = explode( ',', $discounts );
+					}
+
+					if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
+						foreach ( $discounts as $discount ) {
+
+							/** @var EDD_Discount $discount */
+							$discount = edd_get_discount_by( 'code', $discount );
+
+							$adjustments = $this->order->adjustments;
+
+							$found_discount = array_filter( $adjustments, function( $adjustment ) use ( $discount ) {
+								/** @var EDD\Orders\Order_Adjustment $adjustment */
+
+								return (string) $adjustment->description === (string) $discount->code;
+							} );
+
+							// Discount exists so update the amount.
+							if ( 1 === count( $found_discount ) ) {
+								$found_discount = $found_discount[0];
+
+								/** @var EDD\Orders\Order_Adjustment $found_discount */
+
+								edd_update_order_adjustment( $found_discount->id, array(
+									'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+								) );
+
+								// Add the discount as an adjustment.
+							} else {
+								edd_add_order_adjustment( array(
+									'object_id'   => $this->ID,
+									'object_type' => 'order',
+									'type_id'     => $discount->id,
+									'type'        => 'discount',
+									'description' => $discount->code,
+									'amount'      => $this->subtotal - $discount->get_discounted_amount( $this->subtotal )
+								) );
+							}
+						}
+					}
+
 					$user_info = array_filter( $meta_value['user_info'], function( $k ) {
 						return ! in_array( $k, array( 'id', 'email', 'discount' ) );
 					}, ARRAY_FILTER_USE_KEY );
