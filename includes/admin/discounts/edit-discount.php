@@ -33,13 +33,14 @@ $product_requirements = $discount->get_product_reqs();
 $excluded_products    = $discount->get_excluded_products();
 $condition            = $discount->get_product_condition();
 $single_use           = $discount->get_once_per_customer();
+$type                 = $discount->get_type();
 $notes                = edd_get_discount_notes( $discount->id );
 
 // Show/Hide
-$flat_display         = ( 'flat'    === $discount->get_type() ) ? '' : ' style="display:none;"';
-$percent_display      = ( 'percent' === $discount->get_type() ) ? '' : ' style="display:none;"';
-$no_notes_display     =   empty( $notes                )        ? '' : ' style="display:none;"';
-$condition_display    = ! empty( $product_requirements )        ? '' : ' style="display:none;"';
+$flat_display         = ( 'flat'    === $type          ) ? '' : ' style="display:none;"';
+$percent_display      = ( 'percent' === $type          ) ? '' : ' style="display:none;"';
+$no_notes_display     =   empty( $notes                ) ? '' : ' style="display:none;"';
+$condition_display    = ! empty( $product_requirements ) ? '' : ' style="display:none;"';
 
 // Dates & times
 $start_date           = empty( $discount->start_date ) ? ''   : date( 'Y-m-d', strtotime( $discount->start_date ) );
@@ -94,9 +95,9 @@ $minutes              = edd_get_minute_values();
                         <label for="edd-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <select name="type" id="edd-type">
-                            <option value="percent" <?php selected( $discount->type, 'percent' ); ?>><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
-                            <option value="flat"<?php selected( $discount->type, 'flat' ); ?>><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
+                        <select name="amount_type" id="edd-type">
+                            <option value="percent" <?php selected( $type, 'percent' ); ?>><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
+                            <option value="flat"<?php selected( $type, 'flat' ); ?>><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
                         </select>
                         <p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'easy-digital-downloads' ); ?></p>
                     </td>
