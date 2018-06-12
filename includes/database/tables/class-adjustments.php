@@ -1,6 +1,6 @@
 <?php
 /**
- * Discounts Table.
+ * Adjustments Table.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
- * Setup the global "edd_discounts" database table
+ * Setup the global "edd_adjustments" database table
  *
  * @since 3.0
  */
-final class Discounts extends Base {
+final class Adjustments extends Base {
 
 	/**
 	 * Table name
@@ -28,7 +28,7 @@ final class Discounts extends Base {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_discounts';
+	protected $name = 'edd_adjustments';
 
 	/**
 	 * Database version
@@ -54,6 +54,7 @@ final class Discounts extends Base {
 			status varchar(20) NOT NULL default '',
 			type varchar(20) NOT NULL default '',
 			scope varchar(20) NOT NULL default 'all',
+			amount_type varchar(20) NOT NULL default '',
 			amount decimal(18,9) NOT NULL default '0',
 			description longtext NOT NULL default '',
 			max_uses bigint(20) unsigned NOT NULL default '0',
@@ -66,7 +67,7 @@ final class Discounts extends Base {
 			start_date datetime NOT NULL default '0000-00-00 00:00:00',
 			end_date datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
-			KEY code_status_type_scope (code(50),status(20),type(20),scope(20)),
+			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20),amount_type(20)),
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
 	}

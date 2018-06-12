@@ -38,7 +38,7 @@ function edd_admin_add_discount( $data = array() ) {
 	}
 
 	// Bail if missing important data.
-	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
+	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['amount_type'] ) || empty( $data['amount'] ) ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
 	}
 

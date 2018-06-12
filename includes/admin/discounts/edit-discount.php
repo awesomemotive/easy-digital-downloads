@@ -310,6 +310,7 @@ $minutes              = edd_get_minute_values();
 		<?php do_action( 'edd_edit_discount_form_bottom', $discount->id, $discount ); ?>
 
 		<p class="submit">
+			<input type="hidden" name="type" value="discount" />
 			<input type="hidden" name="edd-action" value="edit_discount" />
 			<input type="hidden" name="discount-id" value="<?php echo esc_attr( $discount->id ); ?>" />
 			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $discount->id ) ); ?>" />

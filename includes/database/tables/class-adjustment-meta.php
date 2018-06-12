@@ -1,6 +1,6 @@
 <?php
 /**
- * Discount Meta Table.
+ * Adjustment Meta Table.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
- * Setup the global "edd_discountmeta" database table
+ * Setup the global "edd_adjustmentmeta" database table
  *
  * @since 3.0
  */
-final class Discount_Meta extends Base {
+final class Adjustment_Meta extends Base {
 
 	/**
 	 * Table name
@@ -28,7 +28,7 @@ final class Discount_Meta extends Base {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_discountmeta';
+	protected $name = 'edd_adjustmentmeta';
 
 	/**
 	 * Database version
@@ -37,7 +37,7 @@ final class Discount_Meta extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201806110001;
 
 	/**
 	 * Setup the database schema
@@ -49,11 +49,11 @@ final class Discount_Meta extends Base {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_discount_id bigint(20) unsigned NOT NULL default '0',
+			edd_adjustment_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
-			KEY edd_discount_id (edd_discount_id),
+			KEY edd_adjustment_id (edd_adjustment_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 }
