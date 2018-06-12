@@ -488,10 +488,21 @@ function edd_build_order( $order_data = array() ) {
 
 			// Maybe store order tax.
 			if ( edd_use_taxes() ) {
-				$country  = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
-				$state    = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
-				$zip      = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
-				$tax_rate = edd_get_cart_tax_rate( $country, $state, $zip );
+				$country = ! empty( $order_data['user_info']['address']['country'] )
+					? $order_data['user_info']['address']['country']
+					: false;
+
+				$state = ! empty( $order_data['user_info']['address']['state'] )
+					? $order_data['user_info']['address']['state']
+					: false;
+
+				$zip = ! empty( $order_data['user_info']['address']['zip'] )
+					? $order_data['user_info']['address']['zip']
+					: false;
+
+				$tax_rate = isset( $item['tax_rate'] )
+					? (float) $item['tax_rate']
+					: edd_get_cart_tax_rate( $country, $state, $zip );
 
 				// Always store order tax, even if empty.
 				edd_add_order_adjustment( array(
