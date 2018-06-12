@@ -307,6 +307,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		edd_update_payment_meta( $this->_payment_id, '_edd_payment_tax', 10 );
 
 		$meta_array = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+
 		$this->assertEquals( 10, $meta_array['tax'] );
 		$this->assertEquals( 10, edd_get_payment_tax( $this->_payment_id ) );
 
