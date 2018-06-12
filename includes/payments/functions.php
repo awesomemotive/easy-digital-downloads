@@ -216,20 +216,21 @@ function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
  * Deletes a Purchase
  *
  * @since 1.0
- * @global $edd_logs
+ * @since 3.0 Added logic to bail early if order not found in database.
  *
- * @uses EDD_Logging::delete_logs()
- *
- * @param int $payment_id Payment ID (default: 0)
- * @param bool $update_customer If we should update the customer stats (default:true)
- * @param bool $delete_download_logs If we should remove all file download logs associated with the payment (default:false)
- *
- * @return void
+ * @param int  $payment_id           Payment ID. Default 0.
+ * @param bool $update_customer      If we should update the customer stats. Default true.
+ * @param bool $delete_download_logs If we should remove all file download logs associated with the payment. Default false.
  */
 function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_download_logs = false ) {
 	global $edd_logs;
 
 	$payment = edd_get_payment( $payment_id );
+
+	// Bail if an order does not exist.
+	if ( ! $payment ) {
+		return;
+	}
 
 	// Update sale counts and earnings for all purchased products
 	edd_undo_purchase( false, $payment_id );
@@ -266,18 +267,17 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	// Remove the order.
 	edd_delete_order( $payment_id );
 
-	// Delete file download loags.
+	// Delete file download logs.
 	if ( $delete_download_logs ) {
-		$edd_logs->delete_logs(
-			null,
-			'file_download',
-			array(
-				array(
-					'key'   => '_edd_log_payment_id',
-					'value' => $payment_id
-				)
-			)
-		);
+		$logs = edd_get_file_download_logs( array(
+			'order_id' => $payment_id,
+		) );
+
+		if ( $logs ) {
+			foreach ( $logs as $log ) {
+				edd_delete_file_download_log( $log->id );
+			}
+		}
 	}
 
 	do_action( 'edd_payment_deleted', $payment_id );
@@ -684,13 +684,15 @@ function edd_is_payment_complete( $order_id = 0 ) {
 }
 
 /**
- * Get Total Sales
+ * Retrieve total number of orders.
  *
  * @since 1.2.2
+ *
  * @return int $count Total sales
  */
 function edd_get_total_sales() {
 	$payments = edd_count_payments();
+
 	return $payments->revoked + $payments->publish;
 }
 
@@ -754,33 +756,40 @@ function edd_get_total_earnings() {
 }
 
 /**
- * Increase the Total Earnings
+ * Increase the store's total earnings.
  *
  * @since 1.8.4
+ *
  * @param $amount int The amount you would like to increase the total earnings by.
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
-	$total = floatval( edd_get_total_earnings() );
+	$total  = floatval( edd_get_total_earnings() );
 	$total += floatval( $amount );
+
 	update_option( 'edd_earnings_total', $total );
+
 	return $total;
 }
 
 /**
- * Decrease the Total Earnings
+ * Decrease the store's total earnings.
  *
  * @since 1.8.4
+ *
  * @param $amount int The amount you would like to decrease the total earnings by.
- * @return float $total Total earnings
+ * @return float $total Total earnings.
  */
 function edd_decrease_total_earnings( $amount = 0 ) {
-	$total = edd_get_total_earnings();
+	$total  = edd_get_total_earnings();
 	$total -= $amount;
+
 	if ( $total < 0 ) {
 		$total = 0;
 	}
+
 	update_option( 'edd_earnings_total', $total );
+
 	return $total;
 }
 
@@ -802,7 +811,9 @@ function edd_decrease_total_earnings( $amount = 0 ) {
 function edd_get_payment_meta( $payment_id = 0, $key = '_edd_payment_meta', $single = true ) {
 	$payment = edd_get_payment( $payment_id );
 
-	return $payment->get_meta( $key, $single );
+	return $payment
+		? $payment->get_meta( $key, $single )
+		: false;
 }
 
 /**
@@ -828,7 +839,9 @@ function edd_get_payment_meta( $payment_id = 0, $key = '_edd_payment_meta', $sin
 function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
 	$payment = edd_get_payment( $payment_id );
 
-	return $payment->update_meta( $meta_key, $meta_value, $prev_value );
+	return $payment
+		? $payment->update_meta( $meta_key, $meta_value, $prev_value )
+		: false;
 }
 
 /**
@@ -846,7 +859,9 @@ function edd_update_payment_meta( $payment_id = 0, $meta_key = '', $meta_value =
 function edd_get_payment_meta_user_info( $payment_id ) {
 	$payment = edd_get_payment( $payment_id );
 
-	return $payment->user_info;
+	return $payment
+		? $payment->user_info
+		: array();
 }
 
 /**
@@ -862,7 +877,9 @@ function edd_get_payment_meta_user_info( $payment_id ) {
 function edd_get_payment_meta_downloads( $payment_id ) {
 	$payment = edd_get_payment( $payment_id );
 
-	return $payment->downloads;
+	return $payment
+		? $payment->downloads
+		: array();
 }
 
 /**
@@ -1503,9 +1520,11 @@ function edd_get_payment_fees( $order_id = 0, $type = 'all' ) {
 		return array();
 	}
 
-	$order = edd_get_payment( $order_id );
+	$payment = edd_get_payment( $order_id );
 
-	return $order->get_fees( $type );
+	return $payment
+		? $payment->get_fees( $type )
+		: array();
 }
 
 /**
