@@ -859,6 +859,17 @@ function edd_get_registered_settings() {
 						'desc'  => __( 'Redirect all customers to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description',
 					),
+					'refund_window' => array(
+						'id'   => 'refund_window',
+						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
+						'desc' => __( 'Number of days refunds are allowed to be given. Default 0 for infinity.<br>Can be overridden on a per-product basis.', 'easy-digital-downloads' ),
+						'std'  => 0,
+						'type' => 'number',
+						'size' => 'small',
+						'max'  => 3650, // Ten year maximum, because why explicitly support longer
+						'min'  => 0,
+						'step' => 1
+					),
 					'logged_in_only' => array(
 						'id'            => 'logged_in_only',
 						'name'          => __( 'Require Login', 'easy-digital-downloads' ),
