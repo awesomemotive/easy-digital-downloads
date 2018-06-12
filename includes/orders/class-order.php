@@ -280,7 +280,7 @@ class Order extends \EDD\Database\Objects\Order {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order discounts.
+	 * @return Order_Adjustment[] Order discounts.
 	 */
 	public function get_discounts() {
 		$discounts = array();

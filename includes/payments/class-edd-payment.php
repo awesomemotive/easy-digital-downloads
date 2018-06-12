@@ -454,9 +454,9 @@ class EDD_Payment {
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
 
 		// Items
-		$this->fees         = $this->setup_fees();
-		$this->cart_details = $this->setup_cart_details();
-		$this->downloads    = $this->setup_downloads();
+		$this->fees            = $this->setup_fees();
+		$this->cart_details    = $this->setup_cart_details();
+		$this->downloads       = $this->setup_downloads();
 
 		// Currency Based
 		$this->total           = $this->order->total;
@@ -477,7 +477,7 @@ class EDD_Payment {
 		$this->email           = $this->setup_email();
 		$this->user_info       = $this->setup_user_info();
 		$this->address         = $this->setup_address();
-		$this->discounts       = $this->user_info['discount'];
+		$this->discounts       = $this->setup_discounts();
 		$this->first_name      = $this->user_info['first_name'];
 		$this->last_name       = $this->user_info['last_name'];
 
@@ -2663,9 +2663,13 @@ class EDD_Payment {
 	 * @return array Array of discount codes on this payment.
 	 */
 	private function setup_discounts() {
-		$discounts = ! empty( $this->payment_meta['user_info']['discount'] )
-			? $this->payment_meta['user_info']['discount']
-			: array();
+		$discounts = array();
+
+		$order_discounts = $this->order->get_discounts();
+
+		foreach ( $order_discounts as $discount ) {
+			$discounts[] = $discount->description;
+		}
 
 		return $discounts;
 	}
