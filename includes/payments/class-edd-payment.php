@@ -2618,14 +2618,11 @@ class EDD_Payment {
 	 * @return float Total fee amount applied to the payment.
 	 */
 	private function setup_fees_total() {
-		$fees_total = (float) 0.00;
+		$fees_total = array_reduce( $this->fees, function( $carry, $item ) {
+			$carry += (float) $item['amount'];
 
-		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
-		if ( ! empty( $payment_fees ) ) {
-			foreach ( $payment_fees as $fee ) {
-				$fees_total += (float) $fee['amount'];
-			}
-		}
+			return $carry;
+		}, (float) 0.00 );
 
 		return $fees_total;
 
@@ -2698,11 +2695,51 @@ class EDD_Payment {
 	 * @return array Payment fees.
 	 */
 	private function setup_fees() {
-		$payment_fees = isset( $this->payment_meta['fees'] )
-			? $this->payment_meta['fees']
-			: array();
+		$fees = array();
 
-		return $payment_fees;
+		foreach ( $this->order->get_fees() as $order_fee ) {
+			$fee_id   = edd_get_order_adjustment_meta( $order_fee->id, 'fee_id', true );
+			$price_id = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
+			$no_tax   = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
+
+			$fees[ $fee_id ] = array(
+				'amount'   => $order_fee->amount,
+				'label'    => $order_fee->description,
+				'no_tax'   => $no_tax ? $no_tax : false,
+				'type'     => 'fee',
+				'price_id' => $price_id ? $price_id : null,
+				'download_id' => 0,
+			);
+		}
+
+		foreach ( $this->order->items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+
+			foreach ( $item->get_fees() as $item_fee ) {
+				/** @var EDD\Orders\Order_Adjustment $item_fee */
+
+				$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
+				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
+				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+
+				$fees[ $fee_id ] = array(
+					'amount'   => $item_fee->amount,
+					'label'    => $item_fee->description,
+					'no_tax'   => $no_tax ? $no_tax : false,
+					'type'     => 'fee',
+					'price_id' => $price_id ? $price_id : null,
+				);
+
+				if ( $download_id ) {
+					$fees[ $fee_id ]['download_id'] = $download_id;
+				} else {
+					$fees[ $fee_id ]['download_id'] = 0;
+				}
+			}
+		}
+
+		return $fees;
 	}
 
 	/**
@@ -2908,6 +2945,8 @@ class EDD_Payment {
 
 				if ( $download_id ) {
 					$item_fees[ $fee_id ]['download_id'] = $download_id;
+				} else {
+					$item_fees[ $fee_id ]['download_id'] = 0;
 				}
 			}
 
