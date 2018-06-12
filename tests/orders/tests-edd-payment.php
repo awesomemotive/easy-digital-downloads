@@ -65,7 +65,7 @@ class Tests_EDD_Payment extends \EDD_UnitTestCase {
 		$payment = new \EDD_Payment();
 		$this->assertEquals( NULL, $payment->ID );
 	}
-	
+
 	public function test_edd_get_payment_with_no_args_should_be_false() {
 		$payment = edd_get_payment();
 
