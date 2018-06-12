@@ -236,7 +236,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 125, $this->payment->total );
 
 		// Test backwards compatibility with _edd_payment_meta.
-		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
 		$this->assertArrayHasKey( 'fees', $payment_meta );
 
 		$fees = $payment_meta['fees'];
