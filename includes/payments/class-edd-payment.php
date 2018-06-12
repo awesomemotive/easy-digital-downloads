@@ -1243,7 +1243,6 @@ class EDD_Payment {
 		$this->increase_tax( $tax );
 
 		return true;
-
 	}
 
 	/**

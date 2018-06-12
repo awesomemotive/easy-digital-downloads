@@ -1,14 +1,15 @@
 <?php
-/**
- * \EDD_Payment Tests.
- *
- * @group edd_payments
- *
- * @coversDefaultClass \\EDD_Payment
- */
 namespace EDD\Orders;
 
-class Tests_EDD_Payment extends \EDD_UnitTestCase {
+/**
+ * EDD_Payment Tests.
+ *
+ * @group edd_orders
+ *
+ * @coversDefaultClass \EDD_Payment
+ */
+
+class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Payment test fixture.
