@@ -201,6 +201,8 @@ function edd_admin_edit_discount( $data = array() ) {
 			: '00';
 
 		$to_update['start_date'] = date( "Y-m-d {$start_date_hour}:{$start_date_minute}:00", strtotime( sanitize_text_field( $data['start_date'] ), $current_time ) );
+	} else {
+		$to_update['start_date'] = false;
 	}
 
 	// End date
@@ -213,6 +215,8 @@ function edd_admin_edit_discount( $data = array() ) {
 			: '59';
 
 		$to_update['end_date'] = date( "Y-m-d {$end_date_hour}:{$end_date_minute}:59", strtotime( sanitize_text_field( $data['end_date'] ), $current_time ) );
+	} else {
+		$to_update['end_date'] = false;
 	}
 
 	// Known & accepted core discount meta
@@ -221,10 +225,21 @@ function edd_admin_edit_discount( $data = array() ) {
 
 	// Strip out known non-columns
 	$to_strip = array(
+
+		// Legacy
 		'discount-id',
+
+		// Redirect
 		'edd-redirect',
 		'edd-action',
-		'edd-discount-nonce'
+		'edd-discount-nonce',
+		'_wp_http_referer',
+
+		// Time
+		'start_date_minute',
+		'start_date_hour',
+		'end_date_minute',
+		'end_date_hour'
 	);
 
 	// Loop through fields to update, and unset known bad keys
