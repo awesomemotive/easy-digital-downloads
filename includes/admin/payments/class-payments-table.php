@@ -295,8 +295,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'customer' => __( 'Customer', 'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',  'easy-digital-downloads' ),
 			'amount'   => __( 'Amount',   'easy-digital-downloads' ),
-			'date'     => __( 'Date',     'easy-digital-downloads' ),
-			'status'   => __( 'Status',   'easy-digital-downloads' )
+			'date'     => __( 'Date',     'easy-digital-downloads' )
 		) );
 	}
 
@@ -313,8 +312,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'customer' => array( 'customer', false ),
 			'gateway'  => array( 'gateway',  false ),
 			'amount'   => array( 'amount',   false ),
-			'date'     => array( 'date',     false ),
-			'status'   => array( 'status',   false )
+			'date'     => array( 'date',     false )
 		) );
 	}
 
@@ -351,9 +349,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
-				break;
-			case 'status':
-				$value = edd_get_payment_status_label( $order->status );
 				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
@@ -440,6 +435,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_number( $order ) {
+		$state  = '';
+		$status = $this->get_status();
+
+		// State
+		if ( ( ! empty( $status ) && ( $status !== $order->status ) ) || ( empty( $status ) && ( $order->status !== 'publish' ) ) ) {
+			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
+		}
+
 		// View URL
 		$view_url = add_query_arg( array(
 			'post_type' => 'download',
@@ -447,7 +450,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'view'      => 'view-order-details',
 			'id'        => $order->id
 		), admin_url( 'edit.php' ) );
-		
+
 		// Default row actions
 		$row_actions = array(
 			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
@@ -470,7 +473,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$link = '<a class="row-title" href="' . esc_url( $view_url ) . '"><strong>' . esc_html( $order->number ) . '</strong></a>';
+		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->number ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Concatenate & return the results
 		return $link . $actions;
