@@ -57,7 +57,12 @@ $address        = $order->get_customer_address();
 $user_info      = $order->get_user_info();
 $order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $order->customer_id );
-$notes          = edd_get_payment_notes( $order->id ); ?>
+$notes          = edd_get_payment_notes( $order->id );
+
+// Filter the transaction ID (back-compat)
+if ( ! empty( $transaction_id ) ) {
+	$transaction_id = apply_filters( 'edd_payment_details_transaction_id-' . $order->gateway, $transaction_id, $order->id );
+} ?>
 
 <div class="wrap edd-wrap">
     <h2><?php printf( __( 'Edit Order - %s', 'easy-digital-downloads' ), $order->number ); ?></h2>
@@ -119,7 +124,7 @@ $notes          = edd_get_payment_notes( $order->id ); ?>
 											<div class="edd-admin-box-inside">
 												<span class="label"><?php _e( 'Recover', 'easy-digital-downloads' ); ?>:</span>
 												<input type="text" readonly="readonly"
-													   value="<?php echo $payment->get_recovery_url(); ?>"/>
+													   value="<?php echo esc_attr( $payment->get_recovery_url() ); ?>"/>
 												<span alt="f223"
 													  class="edd-help-tip dashicons dashicons-editor-help"
 													  title="<?php _e( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>"></span>
@@ -214,7 +219,7 @@ $notes          = edd_get_payment_notes( $order->id ); ?>
 
                                         <div class="edd-order-payment-key edd-admin-box-inside">
 											<span class="label"><?php _e( 'Key', 'easy-digital-downloads' ); ?>:</span>
-											<input type="text" disabled value="<?php echo $order->payment_key; ?>" />
+											<input type="text" readonly value="<?php echo esc_attr( $order->payment_key ); ?>" />
                                         </div>
 
                                         <div class="edd-order-ip edd-admin-box-inside">
@@ -225,7 +230,7 @@ $notes          = edd_get_payment_notes( $order->id ); ?>
 										<?php if ( $transaction_id ) : ?>
                                             <div class="edd-order-tx-id edd-admin-box-inside">
 												<span class="label"><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?>:</span>
-												<span><?php echo apply_filters( 'edd_payment_details_transaction_id-' . $order->gateway, $transaction_id, $order->id ); ?></span>
+												<span><?php echo esc_html( $transaction_id ); ?></span>
                                             </div>
 										<?php endif; ?>
 
