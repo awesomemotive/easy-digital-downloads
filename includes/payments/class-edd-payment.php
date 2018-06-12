@@ -1136,11 +1136,16 @@ class EDD_Payment {
 					}
 				}
 
-				$this->update_meta( 'user_info', array(
-					'first_name' => $merged_meta['user_info']['first_name'],
-					'last_name'  => $merged_meta['user_info']['last_name'],
-					'address'    => isset( $merged_meta['user_info']['address'] ) ? $merged_meta['user_info']['address'] : array(),
-				) );
+				// Update user info.
+				if ( isset( $merged_meta['user_info'] ) && ! empty( $merged_meta['user_info'] ) ) {
+
+					// User info needs to be filtered.
+					$user_info = array_filter( $merged_meta['user_info'], function( $k ) {
+						return ! in_array( $k, array( 'id', 'email', 'discount' ) );
+					}, ARRAY_FILTER_USE_KEY );
+
+					edd_update_order_meta( $this->ID, 'user_info', $user_info );
+				}
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
