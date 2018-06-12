@@ -156,22 +156,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = edd_date_i18n( $item['date_created'] );
 				break;
 
-			case 'status' :
-				$status = ! empty( $item['status'] )
-					? $item['status']
-					: '';
-
-				switch ( $status ) {
-					case 'active' :
-					case '' :
-						$value = __( 'Active', 'easy-digital-downloads' );
-						break;
-					default :
-						$value = '&mdash;';
-						break;
-				}
-				break;
-
 			default:
 				$value = isset( $item[ $column_name ] )
 					? $item[ $column_name ]
@@ -182,6 +166,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
+		$state    = '';
+		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 		$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions  = array(
@@ -190,7 +176,27 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		return '<a class="row-title" href="' . esc_url( $view_url ) . '"><strong>' . $name . '</strong></a>' . $this->row_actions( $actions );
+		$item_status = ! empty( $item->status )
+			? $item->status
+			: 'active';
+
+		// State
+		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
+			switch ( $status ) {
+				case 'pending' :
+					$value = __( 'Pending', 'easy-digital-downloads' );
+					break;
+				case 'active' :
+				case '' :
+				default :
+					$value = __( 'Active', 'easy-digital-downloads' );
+					break;
+			}
+
+			$state = ' &mdash; ' . $value;
+		}
+
+		return '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
 	}
 
 	/**
@@ -254,13 +260,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
 			'cb'            => '<input type="checkbox" />',
-			//'id'            => __( 'ID',            'easy-digital-downloads' ),
 			'name'          => __( 'Name',          'easy-digital-downloads' ),
 			'email'         => __( 'Email',         'easy-digital-downloads' ),
 			'order_count'   => __( 'Orders',        'easy-digital-downloads' ),
 			'spent'         => __( 'Spent',         'easy-digital-downloads' ),
-			'date_created'  => __( 'Date Created',  'easy-digital-downloads' ),
-			'status'        => __( 'Status',        'easy-digital-downloads' )
+			'date_created'  => __( 'Date Created',  'easy-digital-downloads' )
 		) );
 	}
 

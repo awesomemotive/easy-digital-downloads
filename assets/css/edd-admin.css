@@ -433,6 +433,9 @@ textarea[name="edd-note"] {
 	width: 34%;
 }
 
+.wp-list-table.customers .column-primary strong,
+.wp-list-table.discounts .column-primary strong,
+.wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
