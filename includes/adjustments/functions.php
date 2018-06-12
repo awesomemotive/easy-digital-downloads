@@ -46,7 +46,7 @@ function edd_delete_adjustment( $adjustment_id = 0 ) {
  * @since 3.0
  *
  * @param int   $adjustment_id Adjustment ID.
- * @param array $data    Updated adjustment data.
+ * @param array $data          Updated adjustment data.
  * @return bool Whether or not the adjustment was updated.
  */
 function edd_update_adjustment( $adjustment_id = 0, $data = array() ) {
