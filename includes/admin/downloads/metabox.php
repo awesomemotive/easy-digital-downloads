@@ -121,27 +121,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 	$fields = edd_download_metabox_fields();
 
 	foreach ( $fields as $field ) {
-
-		// Accept blank or "0"
-		if ( '_edd_download_limit' == $field ) {
-			if ( ! empty( $_POST[ $field ] ) || ( isset( $_POST[ $field ] ) && strlen( $_POST[ $field ] ) === 0 ) || ( isset( $_POST[ $field ] ) && "0" === $_POST[ $field ] ) ) {
-
-				$global_limit = edd_get_option( 'file_download_limit' );
-				$new_limit    = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
-
-				// Only update the new limit if it is not the same as the global limit
-				if ( $global_limit == $new_limit ) {
-
-					delete_post_meta( $post_id, '_edd_download_limit' );
-
-				} else {
-
-					update_post_meta( $post_id, '_edd_download_limit', $new_limit );
-
-				}
-			}
-
-		} elseif ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
+		if ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
 
 			if ( isset( $_POST[ $field ] ) ) {
 				$new_default_price_id = ( ! empty( $_POST[ $field ] ) && is_numeric( $_POST[ $field ] ) ) || ( 0 === (int) $_POST[ $field ] ) ? (int) $_POST[ $field ] : 1;
@@ -153,7 +133,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		} else {
 
-			if ( ! empty( $_POST[ $field ] ) ) {
+			if ( isset( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 				update_post_meta( $post_id, $field, $new );
 			} else {

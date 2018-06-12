@@ -431,30 +431,31 @@ class EDD_Download {
 	 */
 	public function get_file_download_limit() {
 
-		if( ! isset( $this->file_download_limit ) ) {
-
-			$ret    = 0;
+		if ( ! isset( $this->file_download_limit ) ) {
 			$limit  = get_post_meta( $this->ID, '_edd_download_limit', true );
 			$global = edd_get_option( 'file_download_limit', 0 );
 
-			if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
+			// Download specific limit
+			if ( is_numeric( $limit ) ) {
+				$retval = absint( $limit );
 
-				// Download specific limit
-				$ret = absint( $limit );
+			// Use global
+			} elseif ( '' === $limit ) {
+				$retval = '';
 
+			// Global limit
+			} elseif ( ! empty( $global ) ) {
+				$retval = absint( $global );
+
+			// Default
 			} else {
-
-				// Global limit
-				$ret = strlen( $limit ) == 0  || $global ? $global : 0;
-
+				$retval = 0;
 			}
 
-			$this->file_download_limit = $ret;
-
+			$this->file_download_limit = $retval;
 		}
 
-		return absint( apply_filters( 'edd_file_download_limit', $this->file_download_limit, $this->ID ) );
-
+		return apply_filters( 'edd_file_download_limit', $this->file_download_limit, $this->ID );
 	}
 
 	/**
@@ -473,7 +474,8 @@ class EDD_Download {
 			if ( is_numeric( $window ) ) {
 				$retval = absint( $window );
 
-			} elseif ( empty( $window ) ) {
+			// Use global
+			} elseif ( '' === $window ) {
 				$retval = '';
 
 			// Global limit
@@ -488,7 +490,7 @@ class EDD_Download {
 			$this->refund_window = $retval;
 		}
 
-		return absint( apply_filters( 'edd_refund_window', $this->refund_window, $this->ID ) );
+		return apply_filters( 'edd_refund_window', $this->refund_window, $this->ID );
 	}
 
 	/**
@@ -880,7 +882,7 @@ class EDD_Download {
 
 		global $wpdb;
 
-		if ( empty( $meta_key ) || empty( $meta_value ) ) {
+		if ( empty( $meta_key ) ) {
 			return false;
 		}
 
@@ -911,7 +913,7 @@ class EDD_Download {
 	 * NOTE: Currently only checks on edd_get_cart_contents() and edd_add_to_cart()
 	 *
 	 * @since  2.6.4
-	 * @return bool If the current user can purcahse the download ID
+	 * @return bool If the current user can purchase the download ID
 	 */
 	public function can_purchase() {
 		$can_purchase = true;
