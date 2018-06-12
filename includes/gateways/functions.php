@@ -105,7 +105,7 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateway_list = array();
 
 	foreach ( $gateways as $key => $gateway ) {
-		if ( isset( $enabled[ $key ] ) && 1 === $enabled[ $key ] ) {
+		if ( isset( $enabled[ $key ] ) && 1 === (int) $enabled[ $key ] ) {
 			$gateway_list[ $key ] = $gateway;
 		}
 	}
@@ -212,7 +212,7 @@ function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 
-	if ( $gateway == 'manual' ) {
+	if ( 'manual' === $gateway ) {
 		$label = __( 'Free Purchase', 'easy-digital-downloads' );
 	}
 
