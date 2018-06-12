@@ -2089,7 +2089,7 @@ class EDD_Payment {
 									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 								}
 
-								if ( ! is_null( $fee['price_id'] ) ) {
+								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 								}
 							}
@@ -2121,7 +2121,7 @@ class EDD_Payment {
 									edd_update_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 								}
 
-								if ( ! is_null( $fee['price_id'] ) ) {
+								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 								}
 							} else {
@@ -2139,7 +2139,7 @@ class EDD_Payment {
 									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 								}
 
-								if ( ! is_null( $fee['price_id'] ) ) {
+								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 								}
 							}
@@ -2184,7 +2184,7 @@ class EDD_Payment {
 								'total'        => $item['price'],
 							) );
 						} else {
-							edd_add_order_item( array(
+							$order_item_id = edd_add_order_item( array(
 								'order_id'     => $this->ID,
 								'product_id'   => $item['id'],
 								'product_name' => $item['name'],
@@ -2197,6 +2197,28 @@ class EDD_Payment {
 								'tax'          => $item['tax'],
 								'total'        => $item['price'],
 							) );
+
+							if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
+								foreach ( $item['fees'] as $fee_id => $fee ) {
+									$adjustment_id = edd_add_order_adjustment( array(
+										'object_id'   => $order_item_id,
+										'object_type' => 'order_item',
+										'type'        => 'fee',
+										'description' => $fee['label'],
+										'amount'      => (float) $fee['amount'],
+									) );
+
+									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
+
+									if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+										edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
+									}
+
+									if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
+										edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
+									}
+								}
+							}
 						}
 					}
 				}
