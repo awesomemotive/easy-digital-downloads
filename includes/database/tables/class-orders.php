@@ -37,7 +37,18 @@ final class Orders extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201806110001;
+
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201806110001' => 201806110001
+	);
 
 	/**
 	 * Setup the database schema
@@ -55,6 +66,7 @@ final class Orders extends Base {
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
+			date_refundable datetime NOT NULL default '0000-00-00 00:00:00',
 			user_id bigint(20) unsigned NOT NULL default '0',
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
@@ -75,6 +87,25 @@ final class Orders extends Base {
 			KEY email (email(100)),
 			KEY payment_key (payment_key(64)),
 			KEY date_created_completed (date_created,date_completed)";
+	}
+
+	/**
+	 * Upgrade to version 201806110001
+	 * - Add the `date_refundable` datetime column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201806110001() {
+
+		// Alter the database
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00';
+		" );
+
+		// Return success/fail
+		return $this->is_success( $result );
 	}
 }
 endif;
