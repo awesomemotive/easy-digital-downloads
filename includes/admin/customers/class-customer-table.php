@@ -153,7 +153,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'date_created' :
-				$value = edd_date_i18n( $item['date_created'] );
+				$value = edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' );
 				break;
 
 			default:

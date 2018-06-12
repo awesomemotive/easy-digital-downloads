@@ -372,6 +372,7 @@ textarea[name="edd-note"] {
 	width: 5%;
 }
 
+.wp-list-table.posts .column-sales,
 .wp-list-table.customers .column-order_count,
 .wp-list-table.discounts .column-use_count {
 	width: 10%;
@@ -388,7 +389,6 @@ textarea[name="edd-note"] {
 	width: 11%;
 }
 
-.wp-list-table.posts .column-sales,
 .wp-list-table.posts .column-earnings {
 	width: 11%;
 }
@@ -406,7 +406,7 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
 .wp-list-table.orders .column-date {
-	width: 15%;
+	width: 14%;
 }
 
 .wp-list-table.orderadjustments .column-amount,
