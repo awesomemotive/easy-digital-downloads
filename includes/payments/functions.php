@@ -541,7 +541,12 @@ function edd_check_for_existing_payment( $order_id ) {
 
 	$order = edd_get_order( $order_id );
 
-	if ( $order_id === $order->id && $order->is_complete() ) {
+	// Bail if an order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
+	if ( (int) $order_id === (int) $order->id && $order->is_complete() ) {
 		$exists = true;
 	}
 
