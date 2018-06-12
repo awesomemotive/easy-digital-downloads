@@ -1090,63 +1090,6 @@ class EDD_Payment {
 					$this->order = edd_get_order( $this->ID );
 				}
 
-				/**
-				 * As of 3.0, the cart details array is no longer used for payments; it's purpose is for backwards compatibility
-				 * purposes only. Due to the way EDD_Payment, the cart_details array needs to be synchronized with the data
-				 * stored in the database as it could be different to the other class vars in the instance of EDD_Payment.
-				 */
-				foreach ( $merged_meta['cart_details'] as $cart_index => $item ) {
-
-					// Search for an order item with the same cart index.
-					$found_order_item = array_filter( $this->order->items, function ( $i ) use ( $cart_index, $item ) {
-						/** @var EDD\Orders\Order_Item $i */
-
-						return (int) $i->cart_index === (int) $cart_index;
-					} );
-
-					// Order item exists so update it.
-					if ( 1 === count( $found_order_item ) ) {
-						edd_update_order_item( $found_order_item[0]->id, array(
-							'product_id'   => $item['id'],
-							'product_name' => $item['name'],
-							'price_id'     => $item['item_number']['options']['price_id'],
-							'quantity'     => $item['quantity'],
-							'amount'       => $item['item_price'],
-							'subtotal'     => $item['subtotal'],
-							'discount'     => $item['discount'],
-							'tax'          => $item['tax'],
-							'total'        => $item['price'],
-						) );
-
-						// Nothing was found, so add it to the database.
-					} elseif ( 0 === count( $found_order_item ) ) {
-						edd_add_order_item( array(
-							'order_id'     => $this->ID,
-							'product_id'   => $item['id'],
-							'product_name' => $item['name'],
-							'price_id'     => $item['item_number']['options']['price_id'],
-							'cart_index'   => $cart_index,
-							'quantity'     => $item['quantity'],
-							'amount'       => $item['item_price'],
-							'subtotal'     => $item['subtotal'],
-							'discount'     => $item['discount'],
-							'tax'          => $item['tax'],
-							'total'        => $item['price'],
-						) );
-					}
-				}
-
-				// Update user info.
-				if ( isset( $merged_meta['user_info'] ) && ! empty( $merged_meta['user_info'] ) ) {
-
-					// User info needs to be filtered.
-					$user_info = array_filter( $merged_meta['user_info'], function( $k ) {
-						return ! in_array( $k, array( 'id', 'email', 'discount' ) );
-					}, ARRAY_FILTER_USE_KEY );
-
-					edd_update_order_meta( $this->ID, 'user_info', $user_info );
-				}
-
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
 				if ( false !== $updated ) {
@@ -2018,37 +1961,35 @@ class EDD_Payment {
 		switch ( $meta_key ) {
 			case '_edd_payment_meta':
 				if ( isset( $meta_value['tax'] ) && ! empty( $meta_value['tax'] ) ) {
-					return edd_update_order( $this->ID, array(
+					edd_update_order( $this->ID, array(
 						'tax' => $meta_value['tax'],
 					) );
 				}
 
 				if ( isset( $meta_value['key'] ) && ! empty( $meta_value['key'] ) ) {
-					return edd_update_order( $this->ID, array(
+					edd_update_order( $this->ID, array(
 						'key' => $meta_value['key'],
 					) );
 				}
 
 				if ( isset( $meta_value['email'] ) && ! empty( $meta_value['email'] ) ) {
-					return edd_update_order( $this->ID, array(
+					edd_update_order( $this->ID, array(
 						'email' => $meta_value['email'],
 					) );
 				}
 
 				if ( isset( $meta_value['currency'] ) && ! empty( $meta_value['currency'] ) ) {
-					return edd_update_order( $this->ID, array(
+					edd_update_order( $this->ID, array(
 						'currency' => $meta_value['currency'],
 					) );
 				}
 
 				if ( isset( $meta_value['user_info'] ) && ! empty( $meta_value['user_info'] ) ) {
-					$user_info = array(
-						'first_name' => $meta_value['user_info']['first_name'],
-						'last_name'  => $meta_value['user_info']['last_name'],
-						'address'    => $meta_value['user_info']['address'],
-					);
+					$user_info = array_filter( $meta_value['user_info'], function( $k ) {
+						return ! in_array( $k, array( 'id', 'email', 'discount' ) );
+					}, ARRAY_FILTER_USE_KEY );
 
-					return edd_update_order_meta( $this->ID, 'user_info', $user_info );
+					edd_update_order_meta( $this->ID, 'user_info', $user_info );
 				}
 
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
@@ -2167,6 +2108,12 @@ class EDD_Payment {
 						}
 					}
 				}
+
+				/**
+				 * As of 3.0, the cart details array is no longer used for payments; it's purpose is for backwards compatibility
+				 * purposes only. Due to the way EDD_Payment, the cart_details array needs to be synchronized with the data
+				 * stored in the database as it could be different to the other class vars in the instance of EDD_Payment.
+				 */
 
 				if ( isset( $meta_value['cart_details'] ) && ! empty( $meta_value['cart_details'] ) ) {
 					foreach ( $meta_value['cart_details'] as $key => $item ) {
