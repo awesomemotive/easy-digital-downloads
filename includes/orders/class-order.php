@@ -222,7 +222,8 @@ class Order extends \EDD\Database\Objects\Order {
 		$this->adjustments = edd_get_order_adjustments( array(
 			'object_id'     => $this->id,
 			'object_type'   => 'order',
-			'no_found_rows' => true
+			'no_found_rows' => true,
+			'order'         => 'ASC',
 		) );
 	}
 

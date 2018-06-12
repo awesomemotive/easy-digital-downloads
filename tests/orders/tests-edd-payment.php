@@ -276,6 +276,76 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1001.95, $this->payment->cart_details[0]['price'] );
 	}
 
+	public function test_payment_remove_fee() {
+		for ( $i = 0; $i <= 2; $i++ ) {
+			$this->payment->add_fee( array(
+				'amount' => 5,
+				'label'  => 'Test Fee ' . $i,
+				'type'   => 'fee',
+			) );
+		}
+
+		$this->payment->save();
+
+		$this->assertEquals( 3, count( $this->payment->fees ) );
+		$this->assertEquals( 'Test Fee 1', $this->payment->fees[1]['label'] );
+		$this->assertEquals( 135, $this->payment->total );
+
+		$this->payment->remove_fee( 1 );
+		$this->payment->save();
+
+		$this->assertEquals( 2, count( $this->payment->fees ) );
+		$this->assertEquals( 130, $this->payment->total );
+		$this->assertEquals( 'Test Fee 2', $this->payment->fees[1]['label'] );
+
+		// Test that it saves to the DB
+		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
+
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+
+		$fees = $payment_meta['fees'];
+
+		$this->assertEquals( 2, count( $fees ) );
+		$this->assertEquals( 'Test Fee 3', $fees[1]['label'] );
+	}
+
+	public function test_payment_with_initial_fee() {
+		add_filter( 'edd_cart_contents', '__return_true' );
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+
+		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_fee();
+
+		$payment = edd_get_payment( $payment_id );
+
+		$this->assertFalse( empty( $payment->fees ) );
+		$this->assertEquals( 47, $payment->total );
+
+		remove_filter( 'edd_cart_contents', '__return_true' );
+		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
+	}
+
+	public function test_update_date_future() {
+		$current_date = $this->payment->date;
+
+		$new_date = strtotime( $this->payment->date ) + DAY_IN_SECONDS;
+		$this->payment->date = date( 'Y-m-d H:i:s', $new_date );
+		$this->payment->save();
+
+		$date2 = strtotime( $this->payment->date );
+		$this->assertEquals( $new_date, $date2 );
+	}
+
+	public function test_update_date_past() {
+		$current_date = $this->payment->date;
+
+		$new_date = strtotime( $this->payment->date ) - DAY_IN_SECONDS;
+		$this->payment->date = date( 'Y-m-d H:i:s', $new_date );
+		$this->payment->save();
+
+		$date2    = strtotime( $this->payment->date );
+		$this->assertEquals( $new_date, $date2 );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {

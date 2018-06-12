@@ -173,7 +173,8 @@ class Order_Item extends \EDD\Database\Objects\Order_Item {
 		return edd_get_order_adjustments( array(
 			'object_id'   => $this->id,
 			'object_type' => 'order_item',
-			'type'        => 'fee'
+			'type'        => 'fee',
+			'order'       => 'ASC',
 		) );
 	}
 
