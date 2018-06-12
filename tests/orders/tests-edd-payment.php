@@ -243,6 +243,28 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, count( $fees ) );
 	}
 
+	public function test_user_info() {
+		$this->assertSame( 'Admin', $this->payment->first_name );
+		$this->assertSame( 'User', $this->payment->last_name );
+	}
+
+	public function test_for_serialized_user_info() {
+
+		// Issue #4248
+		$this->payment->user_info = serialize( array(
+			'first_name' => 'John',
+			'last_name' => 'Doe',
+		) );
+
+		$this->payment->save();
+
+		$this->assertInternalType( 'array', $this->payment->user_info );
+
+		foreach ( $this->payment->user_info as $key => $value ) {
+			$this->assertFalse( is_serialized( $value ), $key . ' returned a searlized value' );
+		}
+	}
+
 	public function test_modify_amount() {
 		$args = array(
 			'item_price' => '1,001.95',
