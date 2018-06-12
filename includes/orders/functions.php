@@ -530,7 +530,7 @@ function edd_build_order( $order_data = array() ) {
 		foreach ( $fees as $key => $fee ) {
 
 			// Skip adding fee if it was specific to a download in the cart.
-			if ( isset( $fee['download_id'] ) ) {
+			if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
 				continue;
 			}
 
