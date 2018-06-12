@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @param array $request
+ *
  * @return boolean
  */
 function edd_handle_order_item_change( $request = array() ) {

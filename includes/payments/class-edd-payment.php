@@ -1406,6 +1406,44 @@ class EDD_Payment {
 
 		$this->pending['downloads'][] = $pending_args;
 
+		/**
+		 * Remove/modify the order item from the database at this point in lieu of having to synchronise with cart_details
+		 * later on in update_meta().
+		 */
+
+		// Find the order item based on the cart index.
+		$order_item = array_filter( $this->order->items, function ( $i ) use ( $found_cart_key ) {
+			/** @var EDD\Orders\Order_Item $i */
+
+			return (int) $i->cart_index === (int) $found_cart_key;
+		} );
+
+		$order_item = ( 1 === count( $order_item ) )
+			? $order_item[0]
+			: null;
+
+		/** @var EDD\Orders\Order_Item $order_item */
+
+		// Ensure an order item exists in the database.
+		if ( ! is_null( $order_item ) ) {
+
+			// Update the order item if the quantity is being modified.
+			if ( isset( $this->cart_details[ $found_cart_key ] ) ) {
+				edd_update_order_item( $order_item->id, array(
+					'quantity' => $this->cart_details[ $found_cart_key ]['quantity'],
+					'amount'   => $this->cart_details[ $found_cart_key ]['item_price'],
+					'subtotal' => $this->cart_details[ $found_cart_key ]['subtotal'],
+					'discount' => $this->cart_details[ $found_cart_key ]['discount'],
+					'tax'      => $this->cart_details[ $found_cart_key ]['tax'],
+					'total'    => $this->cart_details[ $found_cart_key ]['price'],
+				) );
+
+				// Remove the order item.
+			} else {
+				edd_delete_order_item( $order_item->id );
+			}
+		}
+
 		$this->decrease_subtotal( $total_reduced );
 		$this->decrease_tax( $tax_reduced );
 
