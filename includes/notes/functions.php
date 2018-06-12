@@ -76,7 +76,7 @@ function edd_get_note( $note_id = 0 ) {
 }
 
 /**
- * Get a note by a specific field's value.
+ * Get a note by a specific field value.
  *
  * @since 3.0
  *
