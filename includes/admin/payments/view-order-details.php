@@ -42,22 +42,22 @@ if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
+// List tables
+$order_items       = new EDD_Order_Item_Table();
+$order_adjustments = new EDD_Order_Adjustment_Table();
+
+// Prepare items
+$order_items->prepare_items();
+$order_adjustments->prepare_items();
+
+// Order
 $unlimited      = $order->has_unlimited_downloads();
 $transaction_id = $order->get_transaction_id();
 $address        = $order->get_customer_address();
 $user_info      = $order->get_user_info();
-$fees           = $order->get_fees();
-$discounts      = $order->get_discounts();
-$order_items    = $order->get_items();
 $order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $order->customer_id );
-$notes          = edd_get_payment_notes( $order->id );
-$cart_fees      = edd_get_order_adjustments( array(
-	'object_id'   => $order->id,
-	'object_type' => 'order',
-	'type_id'     => '',
-	'type'        => 'fee'
-) ); ?>
+$notes          = edd_get_payment_notes( $order->id ); ?>
 
 <div class="wrap edd-wrap">
     <h2><?php printf( __( 'Edit Order - %s', 'easy-digital-downloads' ), $order->number ); ?></h2>
@@ -344,12 +344,8 @@ $cart_fees      = edd_get_order_adjustments( array(
 									<?php endif; ?>
 
                                 </div>
-								<div class="edd-order-children-wrapper">
-								<?php
-									$order_items = new EDD_Order_Item_Table();
-									$order_items->prepare_items();
-									$order_items->display();
-								?>
+								<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_items->items ); ?>">
+									<?php $order_items->display(); ?>
 								</div>
 							</div>
 
@@ -358,12 +354,8 @@ $cart_fees      = edd_get_order_adjustments( array(
 									<span><?php _e( 'Order Adjustments', 'easy-digital-downloads' ); ?></span>
 									<a href="#" class="edd-metabox-title-action"><?php _e( 'Add Adjustment', 'easy-digital-downloads' ); ?></a>
 								</h3>
-								<div class="edd-order-children-wrapper">
-								<?php
-									$order_adjustments = new EDD_Order_Adjustment_Table();
-									$order_adjustments->prepare_items();
-									$order_adjustments->display();
-								?>
+								<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_adjustments->items ); ?>"">
+									<?php $order_adjustments->display(); ?>
 								</div>
 							</div>
 
@@ -475,8 +467,8 @@ $cart_fees      = edd_get_order_adjustments( array(
 
 									<?php
 									// The edd_payment_personal_details_list hook is left here for backwards compatibility
-									do_action( 'edd_payment_personal_details_list', edd_get_order_meta( $order->id ), $user_info );
-									do_action( 'edd_payment_view_details', $order->id );
+									do_action( 'edd_payment_personal_details_list', $user_info );
+									do_action( 'edd_payment_view_details',          $order->id );
 									?>
                                 </div><!-- /.inside -->
                             </div><!-- /#edd-customer-details -->
