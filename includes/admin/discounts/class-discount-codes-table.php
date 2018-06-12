@@ -241,7 +241,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$start_date = $discount->start_date;
 
 		if ( $start_date ) {
-			$display = edd_date_i18n( $start_date );
+			$display = edd_date_i18n( $start_date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $start_date, 'H:i' );
 		} else {
 			$display = '&mdash;';
 		}
@@ -262,7 +262,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$expiration = $discount->end_date;
 
 		if ( $expiration ) {
-			$display = date( 'F j, Y', strtotime( $expiration ) );
+			$display = edd_date_i18n( $expiration, 'M. d, Y' ) . '<br>' . edd_date_i18n( $expiration, 'H:i' );
 		} else {
 			$display = '&mdash;';
 		}
