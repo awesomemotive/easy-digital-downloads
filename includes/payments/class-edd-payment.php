@@ -1418,6 +1418,9 @@ class EDD_Payment {
 			return (int) $i->cart_index === (int) $found_cart_key;
 		} );
 
+		// Reset array index.
+		$order_item = array_values( $order_item );
+
 		$order_item = ( 1 === count( $order_item ) )
 			? $order_item[0]
 			: null;
