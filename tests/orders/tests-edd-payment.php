@@ -220,6 +220,29 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		unset( $edd_options['item_quantities'] );
 	}
 
+	public function test_payment_add_fee() {
+		$this->payment->add_fee( array(
+			'amount' => 5,
+			'label'  => 'Test Fee 1',
+		) );
+
+		$this->assertEquals( 1, count( $this->payment->fees ) );
+		$this->assertEquals( 125, $this->payment->total );
+
+		$this->payment->save();
+
+		$this->payment = edd_get_payment( $this->payment->ID );
+		$this->assertEquals( 5, $this->payment->fees_total );
+		$this->assertEquals( 125, $this->payment->total );
+
+		// Test backwards compatibility with _edd_payment_meta.
+		$payment_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+
+		$fees = $payment_meta['fees'];
+		$this->assertEquals( 1, count( $fees ) );
+	}
+
 	public function test_modify_amount() {
 		$args = array(
 			'item_price' => '1,001.95',
