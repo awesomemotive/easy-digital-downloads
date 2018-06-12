@@ -2163,6 +2163,10 @@ class EDD_Payment {
 							'product_name' => $item['name'],
 						) );
 
+						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] )
+							? $item['item_number']['options']['price_id']
+							: 0;
+
 						if ( is_array( $order_item_id ) && ! empty( $order_item_id ) ) {
 							$order_item_id = $order_item_id[0];
 
