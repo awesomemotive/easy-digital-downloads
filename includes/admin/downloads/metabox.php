@@ -10,9 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
-/** All Downloads *****************************************************************/
+/** All Downloads *************************************************************/
 
 /**
  * Register all the meta boxes for the Download custom post type
@@ -60,27 +60,28 @@ add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 function edd_download_metabox_fields() {
 
 	$fields = array(
-			'_edd_product_type',
-			'edd_price',
-			'_variable_pricing',
-			'_edd_price_options_mode',
-			'edd_variable_prices',
-			'edd_download_files',
-			'_edd_purchase_text',
-			'_edd_purchase_style',
-			'_edd_purchase_color',
-			'_edd_bundled_products',
-			'_edd_hide_purchase_link',
-			'_edd_download_tax_exclusive',
-			'_edd_button_behavior',
-			'_edd_quantities_disabled',
-			'edd_product_notes',
-			'_edd_default_price_id',
-			'_edd_bundled_products_conditions'
-		);
+		'_edd_product_type',
+		'edd_price',
+		'_variable_pricing',
+		'_edd_price_options_mode',
+		'edd_variable_prices',
+		'edd_download_files',
+		'_edd_purchase_text',
+		'_edd_purchase_style',
+		'_edd_purchase_color',
+		'_edd_bundled_products',
+		'_edd_hide_purchase_link',
+		'_edd_download_tax_exclusive',
+		'_edd_button_behavior',
+		'_edd_quantities_disabled',
+		'edd_product_notes',
+		'_edd_default_price_id',
+		'_edd_bundled_products_conditions'
+	);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
 		$fields[] = '_edd_download_limit';
+		$fields[] = '_edd_refund_window';
 	}
 
 	if ( edd_use_skus() ) {
@@ -129,7 +130,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				$new_limit    = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 
 				// Only update the new limit if it is not the same as the global limit
-				if( $global_limit == $new_limit ) {
+				if ( $global_limit == $new_limit ) {
 
 					delete_post_meta( $post_id, '_edd_download_limit' );
 
@@ -188,7 +189,7 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 
 	$self = array_search( $post->ID, $products );
 
-	if( $self !== false )
+	if ( $self !== false )
 		unset( $products[ $self ] );
 
 	return array_values( array_unique( $products ) );
@@ -215,7 +216,7 @@ function edd_metabox_save_check_blank_rows( $new ) {
 	return $new;
 }
 
-/** Download Configuration *****************************************************************/
+/** Download Configuration ****************************************************/
 
 /**
  * Download Metabox
@@ -464,7 +465,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			?>
 
 			<span class="edd-price-input-group">
-				<?php if( $currency_position == 'before' ) : ?>
+				<?php if ( $currency_position == 'before' ) : ?>
 					<span><?php echo edd_currency_filter( '' ); ?></span>
 					<?php echo EDD()->html->text( $price_args ); ?>
 				<?php else : ?>
@@ -908,6 +909,37 @@ function edd_download_media_strings( $strings ) {
 }
 add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
 
+/**
+ * Refund Window
+ *
+ * The refund window is the maximum number of days each
+ * can be downloaded by the buyer
+ *
+ * @since 3.0
+ * @param int $post_id Download (Post) ID
+ * @return void
+ */
+function edd_render_refund_window_row( $post_id ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	$edd_refund_window = edd_get_file_refund_window( $post_id ); ?>
+
+	<div id="edd_refund_window_wrap">
+		<p><strong><?php _e( 'Refund Window:', 'easy-digital-downloads' ); ?></strong></p>
+		<label for="edd_download_limit">
+			<input class="small-text" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr ( $edd_refund_window ); ?>" />
+			<?php _e( 'Days', 'easy-digital-downloads' ); ?>
+		</label>
+		<p>
+			<?php _e( 'Empty for global. 0 for unlimited', 'easy-digital-downloads' ); ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ); ?>"></span>
+		</p>
+	</div>
+<?php
+}
+add_action( 'edd_meta_box_settings_fields', 'edd_render_refund_window_row', 25 );
 
 /**
  * File Download Limit Row
@@ -920,7 +952,7 @@ add_filter( 'media_view_strings', 'edd_download_media_strings', 10, 1 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-	if( ! current_user_can( 'manage_shop_settings' ) ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
 
@@ -930,14 +962,12 @@ function edd_render_download_limit_row( $post_id ) {
 	<div id="edd_download_limit_wrap"<?php echo $display; ?>>
 		<p><strong><?php _e( 'File Download Limit:', 'easy-digital-downloads' ); ?></strong></p>
 		<label for="edd_download_limit">
-			<?php echo EDD()->html->text( array(
-				'name'  => '_edd_download_limit',
-				'value' => $edd_download_limit,
-				'class' => 'small-text'
-			) ); ?>
-			<?php _e( 'Leave blank for global setting or 0 for unlimited', 'easy-digital-downloads' ); ?>
+			<input class="small-text" name="_edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		</label>
-		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
+		<p>
+			<?php _e( 'Empty for global. 0 for unlimited', 'easy-digital-downloads' ); ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
+		</p>
 	</div>
 <?php
 }
@@ -967,7 +997,7 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
  * @return void
  */
 function edd_render_down_tax_options( $post_id = 0 ) {
-	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() ) {
 		return;
 	}
 
@@ -995,7 +1025,7 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_down_tax_options', 30 );
  * @return void
  */
 function edd_render_download_quantity_option( $post_id = 0 ) {
-	if( ! current_user_can( 'manage_shop_settings' ) || ! edd_item_quantities_enabled() ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) || ! edd_item_quantities_enabled() ) {
 		return;
 	}
 
@@ -1024,7 +1054,7 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_download_quantity_option
 function edd_render_meta_box_shortcode() {
 	global $post;
 
-	if( $post->post_type != 'download' ) {
+	if ( $post->post_type != 'download' ) {
 		return;
 	}
 
@@ -1036,9 +1066,9 @@ function edd_render_meta_box_shortcode() {
 ?>
 	<p>
 		<strong><?php _e( 'Purchase Shortcode:', 'easy-digital-downloads' ); ?></strong>
-		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchse Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
 	</p>
-	<input type="text" id="edd-purchase-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+	<input type="text" id="edd-purchase-shortcode" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+	<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchse Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
 <?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_meta_box_shortcode', 35 );
@@ -1051,7 +1081,7 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_meta_box_shortcode', 35 
  * @return void
  */
 function edd_render_accounting_options( $post_id ) {
-	if( ! edd_use_skus() ) {
+	if ( ! edd_use_skus() ) {
 		return;
 	}
 
@@ -1091,7 +1121,7 @@ function edd_render_disable_button( $post_id ) {
 				'name'    => '_edd_hide_purchase_link',
 				'current' => $hide_button
 			) ); ?>
-			<?php _e( 'Disable the automatic output of the purchase button', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Hide purchase button', 'easy-digital-downloads' ); ?>
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Automatic Output</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' ); ?>"></span>
 		</label>
 	</p>
@@ -1116,21 +1146,22 @@ function edd_render_disable_button( $post_id ) {
 			}
 			?>
 			<?php echo EDD()->html->select( $args ); ?>
-			<?php _e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-			<?php if ( $supports_buy_now ) : ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' ); ?>"></span>
-			<?php else: ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
-			<?php endif; ?>
-
 		</label>
+	</p>
+	<p>
+		<?php _e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
+		<?php if ( $supports_buy_now ) : ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' ); ?>"></span>
+		<?php else: ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Button Behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' ); ?>"></span>
+		<?php endif; ?>
 	</p>
 <?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
 
 
-/** Product Notes *****************************************************************/
+/** Product Notes *************************************************************/
 
 /**
  * Product Notes Meta Box
@@ -1164,7 +1195,7 @@ function edd_render_product_notes_field( $post_id ) {
 add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field' );
 
 
-/** Stats *****************************************************************/
+/** Stats *********************************************************************/
 
 /**
  * Render Stats Meta Box
@@ -1176,7 +1207,7 @@ add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field
 function edd_render_stats_meta_box() {
 	global $post;
 
-	if( ! current_user_can( 'view_product_stats', $post->ID ) ) {
+	if ( ! current_user_can( 'view_product_stats', $post->ID ) ) {
 		return;
 	}
 
