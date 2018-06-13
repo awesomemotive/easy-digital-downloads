@@ -1662,10 +1662,6 @@ class EDD_Payment {
 			}
 		}
 
-		if ( true === $removed ) {
-			$this->fees = array_values( $this->fees );
-		}
-
 		return $removed;
 	}
 
