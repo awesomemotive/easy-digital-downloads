@@ -791,8 +791,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multi_price_points_by_price_id() {
-		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
-
 		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
@@ -823,8 +821,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multi_price_points_by_cart_index() {
-		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
-
 		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
@@ -853,8 +849,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multiple_same_price_by_price_id_different_prices() {
-		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
-
 		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
@@ -895,6 +889,50 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, $payment->downloads[1]['options']['price_id'] );
 		$this->assertEquals( 0, $payment->cart_details[2]['item_number']['options']['price_id'] );
 		$this->assertEquals( 30, $payment->cart_details[2]['item_price'] );
+	}
+
+	public function test_remove_with_multiple_same_price_by_price_id_same_prices() {
+		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$payment  = new \EDD_Payment();
+
+		$payment->add_download( $download->ID, array(
+			'price_id'   => 0,
+			'item_price' => 10,
+		) );
+
+		$payment->add_download( $download->ID, array(
+			'price_id'   => 0,
+			'item_price' => 10,
+		) );
+
+		$payment->add_download( $download->ID, array(
+			'price_id'   => 0,
+			'item_price' => 10,
+		) );
+
+		$this->assertEquals( 3, count( $payment->downloads ) );
+		$this->assertEquals( 30, $payment->total );
+
+		$payment->status = 'complete';
+		$payment->save();
+
+		$payment->remove_download( $download->ID, array(
+			'price_id'   => 0,
+			'item_price' => 10,
+		) );
+
+		$payment->save();
+
+		$this->assertEquals( 2, count( $payment->downloads ) );
+
+		$this->assertEquals( 0, $payment->downloads[0]['options']['price_id'] );
+		$this->assertEquals( 0, $payment->cart_details[1]['item_number']['options']['price_id'] );
+		$this->assertEquals( 10, $payment->cart_details[1]['item_price'] );
+
+		$this->assertEquals( 0, $payment->downloads[1]['options']['price_id'] );
+		$this->assertEquals( 0, $payment->cart_details[2]['item_number']['options']['price_id'] );
+		$this->assertEquals( 10, $payment->cart_details[2]['item_price'] );
+
 	}
 
 	/* Helpers ***************************************************************/
