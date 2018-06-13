@@ -525,18 +525,30 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'header',
 						'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide if and how refunds will work in your shop.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
 					),
 					'refund_window' => array(
 						'id'   => 'refund_window',
 						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
-						'desc' => __( 'Number of days after a purchase when refunds can be processed. Default 0 for infinity.<br>Can be overridden on a per-product basis.', 'easy-digital-downloads' ),
-						'std'  => 0,
+						'desc' => __( 'Number of days (after a purchase) when refunds can be processed.<br>Set to <code>0</code> for infinity. Default is <code>30</code> days. Overridable on a per-product basis.', 'easy-digital-downloads' ),
+						'std'  => 30,
 						'type' => 'number',
 						'size' => 'small',
 						'max'  => 3650, // Ten year maximum, because why explicitly support longer
 						'min'  => 0,
 						'step' => 1
+					),
+					'refundable_default' => array(
+						'id'      => 'refundable_default',
+						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
+						'desc'    => __( 'By default, products without an explicit setting will fallback to this.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'refundable',
+						'chosen'  => true,
+						'options' => array(
+							'refundable'    => __( 'Refundable',     'easy-digital-downloads' ),
+							'nonrefundable' => __( 'Non-Refundable', 'easy-digital-downloads' )
+						),
 					)
 				),
 				'api' => array(
