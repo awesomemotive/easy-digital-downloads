@@ -755,70 +755,20 @@ class EDD_Payment {
 
 								case 'modify':
 									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-										$log_count_change = 0;
+										$quantity_difference = 0;
 
 										if ( $item['previous_data']['quantity'] !== $item['quantity'] ) {
-											$log_count_change = $item['previous_data']['quantity'] - $item['quantity'];
-
-											// Find existing logs.
-											$meta_query   = array();
-											$meta_query[] = array(
-												'key'     => '_edd_log_payment_id',
-												'value'   => $this->ID,
-												'compare' => '=',
-											);
-
-											if ( isset( $item['price_id'] ) ) {
-												if ( ! empty( $item['price_id'] ) || 0 === (int) $item['price_id'] ) {
-													$meta_query[] = array(
-														'key'     => '_edd_log_price_id',
-														'value'   => (int) $item['price_id'],
-														'compare' => '=',
-													);
-												}
-											}
-
-											$log_args = array(
-												'post_parent' => $item['id'],
-												'meta_query'  => $meta_query,
-												'log_type'    => 'sale',
-											);
-
-											$existing_logs = $edd_logs->get_connected_logs( $log_args );
-
-											if ( count( $existing_logs ) > $item['quantity'] ) {
-
-												// We have to remove some logs, since quantity has been reduced.
-												$number_of_logs = count( $existing_logs ) - $item['quantity'];
-												$logs_to_remove = array_slice( $existing_logs, 0, $number_of_logs );
-												foreach ( $logs_to_remove as $log ) {
-													wp_delete_post( $log->ID );
-												}
-											} elseif ( count( $existing_logs ) < $item['quantity'] ) {
-
-												// We have to add some logs, since quantity has been increased.
-												$log_date = date_i18n( 'Y-m-d G:i:s', strtotime( $this->completed_date ) );
-												$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0;
-
-												$number_of_logs = $item['quantity'] - count( $existing_logs );
-												$y              = 0;
-												while ( $y < $number_of_logs ) {
-													edd_record_sale_in_log( $item['id'], $this->ID, $price_id, $log_date );
-													$y ++;
-												}
-
-											}
-
+											$quantity_difference = $item['previous_data']['quantity'] - $item['quantity'];
 										}
 
 										$download = new EDD_Download( $item['id'] );
 
 										// Change the number of sales for the download.
-										if ( $log_count_change > 0 ) {
-											$download->decrease_sales( $log_count_change );
-										} elseif ( $log_count_change < 0 ) {
-											$log_count_change = absint( $log_count_change );
-											$download->increase_sales( $log_count_change );
+										if ( $quantity_difference > 0 ) {
+											$download->decrease_sales( $quantity_difference );
+										} elseif ( $quantity_difference < 0 ) {
+											$quantity_difference = absint( $quantity_difference );
+											$download->increase_sales( $quantity_difference );
 										}
 
 										// Change the earnings for the product.
@@ -3074,7 +3024,7 @@ class EDD_Payment {
 				'subtotal'   => $item->subtotal,
 				'tax'        => $item->tax,
 				'fees'       => $item_fees,
-				'price'      => $item->amount,
+				'price'      => $item->total,
 			);
 		}
 
@@ -3203,11 +3153,7 @@ class EDD_Payment {
 	 * @return float Discounted amount.
 	 */
 	private function get_discounted_amount() {
-		$total = $this->total;
-		$fees  = $this->fees_total;
-		$tax   = $this->tax;
-
-		return floatval( apply_filters( 'edd_payment_discounted_amount', $total - ( $fees + $tax ), $this ) );
+		return floatval( apply_filters( 'edd_payment_discounted_amount', $this->order->discount, $this ) );
 	}
 
 	/**
