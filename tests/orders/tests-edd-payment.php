@@ -678,6 +678,41 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		remove_filter( 'edd_decrease_store_earnings_on_pending', '__return_false ' );
 	}
 
+	public function test_pending_affecting_stats() {
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
+		$customer = new \EDD_Customer( $this->payment->customer_id );
+		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
+		$download_sales    = $download->sales;
+		$download_earnings = $download->earnings;
+
+		$store_earnings = edd_get_total_earnings();
+		$store_sales    = edd_get_total_sales();
+
+		$this->payment->status = 'pending';
+		$this->payment->save();
+		wp_cache_flush();
+
+		$this->assertEmpty( $this->payment->completed_date );
+
+		$customer = new \EDD_Customer( $this->payment->customer_id );
+		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+
+		$this->assertEquals( $customer_earnings - $this->payment->total, $customer->purchase_value );
+		$this->assertEquals( $customer_sales - 1, $customer->purchase_count );
+
+		$this->assertEquals( $download_earnings - $this->payment->cart_details[0]['price'], $download->earnings );
+		$this->assertEquals( $download_sales - $this->payment->downloads[0]['quantity'], $download->sales );
+
+		$this->assertEquals( $store_earnings - $this->payment->total, edd_get_total_earnings() );
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {
