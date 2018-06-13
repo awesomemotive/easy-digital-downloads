@@ -1156,7 +1156,7 @@ class EDD_CLI extends WP_CLI_Command {
 			@$note_meta_db->create();
 		}
 
-		$sql = "SELECT * FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
+		$sql = "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' ORDER BY comment_ID ASC";
 		$results = $wpdb->get_results( $sql );
 		$total = count( $results );
 
@@ -1174,12 +1174,11 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 
 				$id = edd_add_note( $note_data );
-				$note = edd_get_note( $id );
 
 				$meta = get_comment_meta( $old_note->comment_ID );
 				if ( ! empty( $meta ) ) {
 					foreach ( $meta as $key => $value ) {
-						$note->add_meta( $key, $value );
+						edd_add_note_meta( $id, $key, $value );
 					}
 				}
 

@@ -14,7 +14,7 @@ namespace EDD\Database\Queries;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class used for querying order discounts.
+ * Class used for querying order order adjustments.
  *
  * @since 3.0
  *
@@ -133,9 +133,8 @@ class Order_Adjustment extends Base {
 	 *     @type int          $offset               Number of order adjustments to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'discount_id', 'amount'
-	 *                                              'date_created', 'id__in', 'object_id__in', 'object_type__in',
-	 *                                              'discount_id__in', 'amount__in', 'status__in', 'quantity__in'.
+	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'amount'
+	 *                                              'date_created', 'id__in', 'object_id__in', 'object_type__in', 'amount__in'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.

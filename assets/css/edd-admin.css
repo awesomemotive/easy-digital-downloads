@@ -372,6 +372,7 @@ textarea[name="edd-note"] {
 	width: 5%;
 }
 
+.wp-list-table.posts .column-sales,
 .wp-list-table.customers .column-order_count,
 .wp-list-table.discounts .column-use_count {
 	width: 10%;
@@ -388,7 +389,6 @@ textarea[name="edd-note"] {
 	width: 11%;
 }
 
-.wp-list-table.posts .column-sales,
 .wp-list-table.posts .column-earnings {
 	width: 11%;
 }
@@ -406,7 +406,7 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
 .wp-list-table.orders .column-date {
-	width: 15%;
+	width: 14%;
 }
 
 .wp-list-table.orderadjustments .column-amount,
@@ -433,6 +433,9 @@ textarea[name="edd-note"] {
 	width: 34%;
 }
 
+.wp-list-table.customers .column-primary strong,
+.wp-list-table.discounts .column-primary strong,
+.wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
@@ -912,6 +915,14 @@ input[class*="edd-price-field"] {
 
 .edd-edit-purchase-element .edd-order-children-wrapper {
 	margin: 0 -1px;
+}
+
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 table {
+	border-top: none;
+	border-bottom: none;
+}
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 .tablenav {
+	display: none;
 }
 
 .edd-edit-purchase-element[class*="columns-"] ul li {
