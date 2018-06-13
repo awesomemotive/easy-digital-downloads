@@ -1547,15 +1547,41 @@ class EDD_Payment {
 		$this->pending['downloads'][] = $modified_download;
 
 		if ( $new_subtotal > $current_args['subtotal'] ) {
-			$this->increase_subtotal( ( $new_subtotal - $modified_download['discount'] ) - $current_args['subtotal'] );
+			$this->increase_subtotal( ( $new_subtotal - (float) $modified_download['discount'] ) - (float) $current_args['subtotal'] );
 		} else {
-			$this->decrease_subtotal( $current_args['subtotal'] - ( $new_subtotal - $modified_download['discount'] ) );
+			$this->decrease_subtotal( (float) $current_args['subtotal'] - ( $new_subtotal - (float) $modified_download['discount'] ) );
 		}
 
-		if ( $modified_download['tax'] > $current_args['tax'] ) {
-			$this->increase_tax( $modified_download['tax'] - $current_args['tax'] );
+		if ( (float) $modified_download['tax'] > (float) $current_args['tax'] ) {
+			$this->increase_tax( (float) $modified_download['tax'] - (float) $current_args['tax'] );
 		} else {
-			$this->increase_tax( $current_args['tax'] - $modified_download['tax'] );
+			$this->increase_tax( (float) $current_args['tax'] - (float) $modified_download['tax'] );
+		}
+
+		/**
+		 * Remove/modify the order item from the database at this point in lieu of having to synchronise with cart_details
+		 * later on in update_meta().
+		 */
+
+		// Find the order item.
+		$order_item_id = 0;
+
+		foreach ( $this->order->items as $item ) {
+			if ( (int) $item->cart_index === (int) $cart_index ) {
+				$order_item_id = $item->id;
+				break;
+			}
+		}
+
+		if ( $order_item_id ) {
+			edd_update_order_item( $order_item_id, array(
+				'quantity' => $modified_download['quantity'],
+				'amount'   => (float) $modified_download['item_price'],
+				'subtotal' => (float) $new_subtotal,
+				'tax'      => (float) $modified_download['tax'],
+				'discount' => (float) $modified_download['discount'],
+				'total'    => (float) $modified_download['price'],
+			) );
 		}
 
 		return true;
@@ -1658,6 +1684,34 @@ class EDD_Payment {
 					if ( false === $global ) {
 						break;
 					}
+				}
+			}
+		}
+
+		/**
+		 * Remove the fee from the database at this point in lieu of having to synchronise with payment meta
+		 * later on in update_meta()/save().
+		 */
+		if ( true === $removed ) {
+			$fee = end( $this->pending['fees'] );
+
+			$fee_id = 'index' === $key
+				? $value
+				: null;
+
+			// Find by fee ID, if set.
+			if ( ! is_null( $fee_id ) ) {
+				$fee = null;
+
+				foreach ( $this->order->get_fees() as $id => $f ) {
+					if ( $id === $fee_id ) {
+						$fee = $f;
+						break;
+					}
+				}
+
+				if ( $fee instanceof EDD\Orders\Order_Adjustment ) {
+					edd_delete_order_adjustment( $fee->id );
 				}
 			}
 		}
@@ -2291,6 +2345,7 @@ class EDD_Payment {
 							) );
 
 							$new_tax += $item['tax'];
+							$new_subtotal += $item['subtotal'];
 
 							if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 								foreach ( $item['fees'] as $fee_id => $fee ) {
@@ -2315,11 +2370,6 @@ class EDD_Payment {
 							}
 						}
 					}
-
-					edd_update_order( $this->ID, array(
-						'subtotal' => (float) $new_subtotal,
-						'tax'      => (float) $new_tax,
-					) );
 				}
 
 				// If the above checks fall through, store anything else in a "payment_meta" meta key.

@@ -306,7 +306,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$fees = $payment_meta['fees'];
 
 		$this->assertEquals( 2, count( $fees ) );
-		$this->assertEquals( 'Test Fee 3', $fees[1]['label'] );
+		$this->assertEquals( 'Test Fee 2', $fees[2]['label'] );
 	}
 
 	public function test_payment_with_initial_fee() {

@@ -36,8 +36,8 @@ defined( 'ABSPATH' ) || exit;
  * @property float $tax
  * @property float $discount
  * @property float $total
- * @property array $items
- * @property array $adjustments
+ * @property Order_Item[] $items
+ * @property Order_Adjustment[] $adjustments
  */
 class Order extends \EDD\Database\Objects\Order {
 
@@ -259,7 +259,7 @@ class Order extends \EDD\Database\Objects\Order {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order items.
+	 * @return Order_Item[] Order items.
 	 */
 	public function get_items() {
 		return $this->items;
@@ -348,7 +348,9 @@ class Order extends \EDD\Database\Objects\Order {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->type ) {
-				$fees[] = $adjustment;
+				$fee_id = edd_get_order_adjustment_meta( $adjustment->id, 'fee_id', true );
+
+				$fees[ $fee_id ] = $adjustment;
 			}
 		}
 
@@ -356,8 +358,12 @@ class Order extends \EDD\Database\Objects\Order {
 		foreach ( $this->items as $item ) {
 			/** @var Order_Item $item */
 
-			foreach ( $item->fees as $fee ) {
-				$fees[] = $fee;
+			foreach ( $item->get_fees() as $fee ) {
+				/** @var Order_Adjustment $fee */
+
+				$fee_id = edd_get_order_adjustment_meta( $fee->id, 'fee_id', true );
+
+				$fees[ $fee_id ] = $fee;
 			}
 		}
 
