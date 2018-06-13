@@ -80,4 +80,78 @@ class Orders_Tests extends \EDD_UnitTestCase {
 
 		$this->assertCount( 1, $orders );
 	}
+
+	public function test_get_orders_with_orderby_id_and_order_asc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'id',
+			'order'   => 'asc',
+		) );
+
+		$this->assertTrue( $orders[0]->id < $orders[1]->id );
+	}
+
+	public function test_get_orders_with_orderby_id_and_order_desc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'id',
+			'order'   => 'desc',
+		) );
+
+		$this->assertTrue( $orders[0]->id > $orders[1]->id );
+	}
+
+	public function test_get_orders_with_orderby_user_id_and_order_asc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'user_id',
+			'order'   => 'asc',
+		) );
+
+		$this->assertTrue( $orders[0]->user_id < $orders[1]->user_id );
+	}
+
+	public function test_get_orders_with_orderby_user_id_and_order_desc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'user_id',
+			'order'   => 'desc',
+		) );
+
+		$this->assertTrue( $orders[0]->user_id > $orders[1]->user_id );
+	}
+
+	public function test_get_orders_with_orderby_customer_id_and_order_asc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'customer_id',
+			'order'   => 'asc',
+		) );
+
+		$this->assertTrue( $orders[0]->customer_id < $orders[1]->customer_id );
+	}
+
+	public function test_get_orders_with_orderby_customer_id_and_order_desc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'customer_id',
+			'order'   => 'desc',
+		) );
+
+		$this->assertTrue( $orders[0]->customer_id > $orders[1]->customer_id );
+	}
+
+	public function test_get_orders_with_orderby_email_and_order_asc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'email',
+			'order'   => 'asc',
+		) );
+
+		$this->assertTrue( $orders[0]->email < $orders[1]->email );
+	}
+
+	public function test_get_orders_with_orderby_email_and_order_desc_should_return_true() {
+		$orders = edd_get_orders( array(
+			'orderby' => 'email',
+			'order'   => 'desc',
+		) );
+
+		$this->assertTrue( $orders[0]->email > $orders[1]->email );
+	}
+
+
 }

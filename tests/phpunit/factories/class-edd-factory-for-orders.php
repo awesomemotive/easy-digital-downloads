@@ -7,18 +7,20 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$this->default_generation_definitions = array(
-			'user_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'customer_id' => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'email'       => new \WP_UnitTest_Generator_Sequence( 'user%d@edd.test' ),
-			'ip'          => '10.1.1.1',
-			'gateway'     => 'manual',
-			'mode'        => 'live',
-			'currency'    => 'USD',
-			'payment_key' => md5( 'edd' ),
-			'subtotal'    => 100,
-			'tax'         => 25,
-			'discount'    => 5,
-			'total'       => 120,
+			'date_created'   => date( 'Y-m-d h:i:s', mt_rand( 1, time() ) ),
+			'date_completed' => date( 'Y-m-d h:i:s', mt_rand( 1, time() ) ),
+			'user_id'        => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'customer_id'    => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'email'          => new \WP_UnitTest_Generator_Sequence( 'user%d@edd.test' ),
+			'ip'             => '10.1.1.1',
+			'gateway'        => 'manual',
+			'mode'           => 'live',
+			'currency'       => 'USD',
+			'payment_key'    => md5( 'edd' ),
+			'subtotal'       => 100,
+			'tax'            => 25,
+			'discount'       => 5,
+			'total'          => 120,
 		);
 	}
 
@@ -31,6 +33,9 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD\Orders\Order|false
 	 */
 	public function create_and_get( $args = array(), $generation_definitions = null ) {
+		$this->default_generation_definitions['date_created']   = date( 'Y-m-d h:i:s', mt_rand( 1, time() ) );
+		$this->default_generation_definitions['date_completed'] = date( 'Y-m-d h:i:s', mt_rand( 1, time() ) );
+
 		return parent::create_and_get( $args, $generation_definitions );
 	}
 
