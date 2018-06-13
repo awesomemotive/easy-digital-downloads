@@ -1027,10 +1027,10 @@ class EDD_Payment {
 			}
 
 			edd_update_order( $this->ID, array(
-				'subtotal' => $this->subtotal,
-				'tax'      => $this->tax,
+				'subtotal' => (float) $this->subtotal,
+				'tax'      => (float) $this->tax,
 				'discount' => $discount,
-				'total'    => $this->total,
+				'total'    => (float) $this->total,
 			) );
 
 			$this->downloads = array_values( $this->downloads );
@@ -1043,6 +1043,7 @@ class EDD_Payment {
 				'user_info'    => is_array( $this->user_info ) ? $this->user_info : array(),
 				'date'         => $this->date,
 				'email'        => $this->email,
+				'tax'          => $this->tax,
 			);
 
 			// Do some merging of user_info before we merge it all, to honor the edd_payment_meta filter
@@ -1076,6 +1077,7 @@ class EDD_Payment {
 				'cart_details' => $this->cart_details,
 				'status'       => $this->status,
 				'fees'         => $this->fees,
+				'tax'          => $this->tax,
 			);
 			$merged_meta  = apply_filters( 'edd_payment_meta', $merged_meta, $payment_data );
 
@@ -1375,7 +1377,7 @@ class EDD_Payment {
 					}
 				}
 
-				$found_cart_key = $cart_key;
+				$found_cart_key = (int) $cart_key;
 				break;
 			}
 		} else {
