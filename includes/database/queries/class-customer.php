@@ -117,7 +117,7 @@ class Customer extends Base {
 	 *     @type decimal      $purchase_value       An 18,9 numeric value. Default empty.
 	 *     @type int          $purchase_count       A numeric value. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
-	 *     @type array        $date_created_query   Date query clauses to limit discounts by. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit customers by. See WP_Date_Query.
 	 *                                              Default null.
 	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.

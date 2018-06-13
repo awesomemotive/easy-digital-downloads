@@ -63,6 +63,13 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	public $name;
 
 	/**
+	 * The customer's status
+	 *
+	 * @since 3.0
+	 */
+	public $status;
+
+	/**
 	 * The customer's creation date
 	 *
 	 * @since 2.3
