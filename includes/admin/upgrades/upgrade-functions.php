@@ -1477,12 +1477,11 @@ function edd_notes_migration() {
 			);
 
 			$id = edd_add_note( $note_data );
-			$note = new EDD\Notes\Note( $id );
 
 			$meta = get_comment_meta( $old_note->comment_ID );
 			if ( ! empty( $meta ) ) {
 				foreach ( $meta as $key => $value ) {
-					$note->add_meta( $key, $value );
+					edd_add_note_meta( $id, $key, $value );
 				}
 			}
 
