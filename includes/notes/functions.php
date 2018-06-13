@@ -69,7 +69,7 @@ function edd_update_note( $note_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $note_id Note ID.
- * @return object
+ * @return EDD\Notes\Note
  */
 function edd_get_note( $note_id = 0 ) {
 	return edd_get_note_by( 'id', $note_id );
@@ -82,7 +82,7 @@ function edd_get_note( $note_id = 0 ) {
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
- * @return object
+ * @return EDD\Notes\Note
  */
 function edd_get_note_by( $field = '', $value = '' ) {
 	$notes = new EDD\Database\Queries\Note();
