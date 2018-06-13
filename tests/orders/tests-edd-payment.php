@@ -343,6 +343,86 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'Test Fee 2', $fees[2]['label'] );
 	}
 
+	public function test_payment_remove_fee_by_label() {
+		$this->payment->add_fee( array(
+			'amount' => 5,
+			'label'  => 'Test Fee',
+			'type'   => 'fee',
+		) );
+
+		$this->assertEquals( 1, count( $this->payment->fees ) );
+		$this->assertEquals( 'Test Fee', $this->payment->fees[0]['label'] );
+		$this->payment->save();
+
+		$this->payment->remove_fee_by( 'label', 'Test Fee' );
+		$this->assertEmpty( $this->payment->fees );
+		$this->assertEquals( 120, $this->payment->total );
+		$this->payment->save();
+
+		// Test that it saves to the DB
+		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+
+		$fees = $payment_meta['fees'];
+		$this->assertEmpty( $fees );
+	}
+
+	public function test_payment_remove_fee_by_label_w_multi_no_global() {
+		$this->payment->add_fee( array(
+			'amount' => 5,
+			'label'  => 'Test Fee',
+			'type'   => 'fee',
+		) );
+
+		$this->payment->add_fee( array(
+			'amount' => 5,
+			'label'  => 'Test Fee',
+			'type'   => 'fee',
+		) );
+
+		$this->assertEquals( 2, count( $this->payment->fees ) );
+		$this->assertEquals( 'Test Fee', $this->payment->fees[0]['label'] );
+		$this->payment->save();
+
+		$this->payment->remove_fee_by( 'label', 'Test Fee' );
+		$this->assertEquals( 1, count( $this->payment->fees ) );
+		$this->assertEquals( 125, $this->payment->total );
+		$this->payment->save();
+
+		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+
+		$fees = $payment_meta['fees'];
+		$this->assertEquals( 1, count( $fees ) );
+	}
+
+	public function test_payment_remove_fee_by_label_w_multi_w_global() {
+		$this->payment->add_fee( array(
+			'amount' => 5,
+			'label'  => 'Test Fee',
+			'type'   => 'fee',
+		) );
+
+		$this->payment->add_fee( array(
+			'amount' => 5,
+			'label'  => 'Test Fee',
+			'type'   => 'fee',
+		) );
+
+		$this->assertEquals( 2, count( $this->payment->fees ) );
+		$this->assertEquals( 'Test Fee', $this->payment->fees[0]['label'] );
+		$this->payment->save();
+
+		$this->payment->remove_fee_by( 'label', 'Test Fee', true );
+		$this->assertEmpty( $this->payment->fees );
+		$this->assertEquals( 120, $this->payment->total );
+		$this->payment->save();
+
+		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+		$this->assertEmpty( $payment_meta['fees'] );
+	}
+
 	public function test_payment_with_initial_fee() {
 		add_filter( 'edd_cart_contents', '__return_true' );
 		add_filter( 'edd_item_quantities_enabled', '__return_true' );
@@ -370,13 +450,12 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_update_date_past() {
-		$current_date = $this->payment->date;
-
 		$new_date = strtotime( $this->payment->date ) - DAY_IN_SECONDS;
+
 		$this->payment->date = date( 'Y-m-d H:i:s', $new_date );
 		$this->payment->save();
 
-		$date2    = strtotime( $this->payment->date );
+		$date2 = strtotime( $this->payment->date );
 		$this->assertEquals( $new_date, $date2 );
 	}
 
@@ -406,6 +485,30 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
+	/**
+	 * @expectEDDeprecated edd_undo_purchase_on_refund
+	 */
+	public function test_refund_payment_legacy() {
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
+		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+		$earnings = $download->earnings;
+		$sales    = $download->sales;
+
+		edd_undo_purchase_on_refund( $this->payment->ID, 'refunded', 'publish' );
+
+		wp_cache_flush();
+
+		$payment = edd_get_payment( $this->payment->ID );
+		$this->assertEquals( 'refunded', $payment->status );
+
+		$download2 = new \EDD_Download( $download->ID );
+
+		$this->assertEquals( $earnings - $download->price, $download2->earnings );
+		$this->assertEquals( $sales - 1, $download2->sales );
+	}
+
 	public function test_modifying_address() {
 		$this->payment->address = array(
 			'line1'   => '123 Main St',
@@ -433,6 +536,23 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, $download->get_earnings() );
 	}
 
+	public function test_modify_cart_item_quantity() {
+		$this->payment->status = 'publish';
+		$this->payment->save();
+
+		$this->payment->modify_cart_item( 0, array(
+			'quantity'   => 3,
+			'item_price' => 1,
+		) );
+		$this->payment->save();
+
+		$this->assertEquals( 3, $this->payment->cart_details[0]['quantity'] );
+		$this->assertEquals( 3, $this->payment->cart_details[0]['price'] );
+
+		$download = new \EDD_Download( $this->payment->cart_details[0]['id'] );
+		$this->assertEquals( 3, $download->get_earnings() );
+	}
+
 	public function test_modify_cart_item_tax() {
 		$this->payment->status = 'publish';
 		$this->payment->save();
@@ -442,6 +562,19 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$this->assertEquals( 2, $this->payment->cart_details[0]['tax'] );
 		$this->assertEquals( 2, $this->payment->tax );
+	}
+
+	public function test_modify_cart_item_discount() {
+		$this->payment->status = 'publish';
+		$this->payment->save();
+
+		$original_total = $this->payment->cart_details[0]['price'];
+		$this->payment->modify_cart_item( 0, array( 'discount' => 1 ) );
+		$this->payment->save();
+
+		$this->assertEquals( 1, $this->payment->cart_details[0]['discount'] );
+		$this->assertEquals( $original_total - 1, $this->payment->cart_details[0]['price'] );
+		$this->assertSame( 1, $this->payment->discounted_amount );
 	}
 
 	public function test_modify_cart_item_with_disallowed_changes_should_return_false() {
@@ -454,6 +587,95 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertFalse( $change_permitted );
+	}
+
+	public function test_filtering_payment_meta() {
+		add_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
+
+		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+
+		remove_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
+
+		$payment = edd_get_payment( $payment_id );
+		$this->assertEquals( 'PL', $payment->payment_meta['user_info']['address']['country'] );
+	}
+
+	/**
+	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5228
+	 */
+	public function test_issue_5228_data() {
+		$meta = $this->payment->get_meta();
+
+		$meta[0]['test'] = 'Test Value';
+
+		update_post_meta( $this->payment->ID, '_edd_payment_meta', $meta );
+
+		$direct_meta = get_post_meta( $this->payment->ID, '_edd_payment_meta', $meta );
+		$this->assertTrue( isset( $direct_meta[0] ) );
+
+		$payment = edd_get_payment( $this->payment->ID );
+		$meta    = $payment->get_meta();
+
+		$this->assertFalse( isset( $meta[0] ) );
+		$this->assertTrue( isset( $meta['test'] ) );
+		$this->assertEquals( 'Test Value', $meta['test'] );
+	}
+
+	public function test_user_id_mismatch() {
+		update_post_meta( $this->payment->ID, '_edd_payment_user_id', 99999 );
+		$payment  = edd_get_payment( $this->payment->ID );
+		$customer = edd_get_customer( $payment->customer_id );
+
+		$this->assertEquals( $payment->user_id, $customer->user_id );
+	}
+
+	public function test_pending_without_affecting_stats() {
+		add_filter( 'edd_decrease_earnings_on_undo', '__return_false' );
+		add_filter( 'edd_decrease_sales_on_undo', '__return_false' );
+		add_filter( 'edd_decrease_customer_value_on_pending', '__return_false' );
+		add_filter( 'edd_decrease_customer_purchase_count_on_pending', '__return_false' );
+		add_filter( 'edd_decrease_store_earnings_on_pending', '__return_false' );
+
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
+		$customer = new \EDD_Customer( $this->payment->customer_id );
+		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
+		$download_sales    = $download->sales;
+		$download_earnings = $download->earnings;
+
+		$store_earnings = edd_get_total_earnings();
+		$store_sales    = edd_get_total_sales();
+
+		$this->payment->status = 'pending';
+		$this->payment->save();
+		wp_cache_flush();
+
+		$this->assertEmpty( $this->payment->completed_date );
+
+		$customer = new \EDD_Customer( $this->payment->customer_id );
+		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+
+		$this->assertEquals( $customer_earnings, $customer->purchase_value );
+		$this->assertEquals( $customer_sales, $customer->purchase_count );
+
+		$this->assertEquals( $download_earnings, $download->earnings );
+		$this->assertEquals( $download_sales, $download->sales );
+
+		$this->assertEquals( $store_earnings, edd_get_total_earnings() );
+
+		// Store sales are based off 'publish' & 'revoked' status. So it reduces this count
+		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
+
+		remove_filter( 'edd_decrease_earnings_on_undo', '__return_false' );
+		remove_filter( 'edd_decrease_sales_on_undo', '__return_false' );
+		remove_filter( 'edd_decrease_customer_value_on_pending', '__return_false' );
+		remove_filter( 'edd_decrease_customer_purchase_count_on_pending', '__return_false' );
+		remove_filter( 'edd_decrease_store_earnings_on_pending', '__return_false ' );
 	}
 
 	/* Helpers ***************************************************************/
