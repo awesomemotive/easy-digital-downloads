@@ -905,6 +905,14 @@ input[class*="edd-price-field"] {
 	margin: 0 -1px;
 }
 
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 table {
+	border-top: none;
+	border-bottom: none;
+}
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 .tablenav {
+	display: none;
+}
+
 .edd-edit-purchase-element[class*="columns-"] ul li {
 	padding-right: 1%;
 }
