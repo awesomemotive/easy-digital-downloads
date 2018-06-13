@@ -1311,7 +1311,7 @@ class EDD_Payment {
 
 		if ( false === $args['cart_index'] ) {
 			foreach ( $this->cart_details as $cart_key => $item ) {
-				if ( $download_id !== $item['id'] ) {
+				if ( (int) $download_id !== (int) $item['id'] ) {
 					continue;
 				}
 
@@ -3049,7 +3049,7 @@ class EDD_Payment {
 		foreach ( $order_items as $item ) {
 			/** @var EDD\Orders\Order_Item $item */
 
-			$downloads[ $item->cart_index ] = array(
+			$downloads[] = array(
 				'id'       => $item->product_id,
 				'quantity' => $item->quantity,
 				'options'  => array(
