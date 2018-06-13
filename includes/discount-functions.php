@@ -760,7 +760,11 @@ function edd_discount_is_min_met( $discount_id = 0, $set_error = true ) {
  * @return bool Whether the discount is single use or not.
  */
 function edd_discount_is_single_use( $discount_id = 0 ) {
-	return null === edd_get_discount_field( $discount_id, 'once_per_customer' ) ? false : true;
+	$once_per_customer = edd_get_discount_field( $discount_id, 'once_per_customer' );
+
+	return null === $once_per_customer
+		? false
+		: $once_per_customer;
 }
 
 /**
