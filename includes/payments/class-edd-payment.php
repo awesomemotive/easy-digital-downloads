@@ -1539,8 +1539,12 @@ class EDD_Payment {
 		// Format the item_price correctly now
 		$merged_item['item_price'] = edd_sanitize_amount( $merged_item['item_price'] );
 
+		$discount = isset( $merged_item['discount'] )
+			? (float) $merged_item['discount']
+			: 0.00;
+
 		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
-		$merged_item['price']               = $new_subtotal + $merged_item['tax'];
+		$merged_item['price']               = $new_subtotal + $merged_item['tax'] - $discount;
 		$this->cart_details[ $cart_index ]  = $merged_item;
 		$modified_download                  = $merged_item;
 		$modified_download['action']        = 'modify';
