@@ -2006,6 +2006,11 @@ class EDD_Payment {
 
 			$migrated_payment_meta = edd_get_order_meta( $this->ID, 'payment_meta', true );
 
+			// This is no longer stored in _edd_payment_meta.
+			$core_meta_keys = array( 'key', 'email', 'date', 'user_info', 'downloads', 'cart_details', 'quantity', 'discount', 'subtotal', 'tax', 'fees', 'currency' );
+
+			$migrated_payment_meta = array_diff_key( $migrated_payment_meta, array_flip( $core_meta_keys ) );
+
 			if ( is_array( $migrated_payment_meta ) && 0 < count( $migrated_payment_meta ) ) {
 				$meta = array_merge( $meta, $migrated_payment_meta );
 			}
@@ -2327,6 +2332,11 @@ class EDD_Payment {
 						}
 					}
 				}
+
+				// This is no longer stored in _edd_payment_meta.
+				$core_meta_keys = array( 'key', 'email', 'date', 'user_info', 'downloads', 'cart_details', 'quantity', 'discount', 'subtotal', 'tax', 'fees', 'currency' );
+
+				$meta_value = array_diff_key( $meta_value, array_flip( $core_meta_keys ) );
 
 				// If the above checks fall through, store anything else in a "payment_meta" meta key.
 				return edd_update_order_meta( $this->ID, 'payment_meta', $meta_value );
