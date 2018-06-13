@@ -210,13 +210,14 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$payment->save();
 
 		$payment = edd_get_payment( $payment_id );
+
 		$this->assertEquals( 2, count( $payment->downloads ) );
 		$this->assertEquals( 1, $payment->cart_details[ $testing_index ]['quantity'] );
 		$this->assertEquals( 140.00, $payment->subtotal );
 		$this->assertEquals( 12, $payment->tax );
 		$this->assertEquals( 152.00, $payment->total );
 
-		EDD_Helper_Payment::delete_payment( $payment_id );
+		\EDD_Helper_Payment::delete_payment( $payment_id );
 		unset( $edd_options['item_quantities'] );
 	}
 
@@ -292,6 +293,39 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 135, $this->payment->total );
 
 		$this->payment->remove_fee( 1 );
+		$this->payment->save();
+
+		$this->assertEquals( 2, count( $this->payment->fees ) );
+		$this->assertEquals( 130, $this->payment->total );
+		$this->assertEquals( 'Test Fee 2', $this->payment->fees[1]['label'] );
+
+		// Test that it saves to the DB
+		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
+
+		$this->assertArrayHasKey( 'fees', $payment_meta );
+
+		$fees = $payment_meta['fees'];
+
+		$this->assertEquals( 2, count( $fees ) );
+		$this->assertEquals( 'Test Fee 2', $fees[2]['label'] );
+	}
+
+	public function test_payment_remove_fee_by_index() {
+		for ( $i = 0; $i <= 2; $i++ ) {
+			$this->payment->add_fee( array(
+				'amount' => 5,
+				'label'  => 'Test Fee ' . $i,
+				'type'   => 'fee',
+			) );
+		}
+
+		$this->payment->save();
+
+		$this->assertEquals( 3, count( $this->payment->fees ) );
+		$this->assertEquals( 'Test Fee 1', $this->payment->fees[1]['label'] );
+		$this->assertEquals( 135, $this->payment->total );
+
+		$this->payment->remove_fee_by( 'index', 1, true );
 		$this->payment->save();
 
 		$this->assertEquals( 2, count( $this->payment->fees ) );
