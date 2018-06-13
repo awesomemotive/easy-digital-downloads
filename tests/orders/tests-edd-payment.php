@@ -372,6 +372,56 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
+	public function test_modifying_address() {
+		$this->payment->address = array(
+			'line1'   => '123 Main St',
+			'line2'   => '',
+			'city'    => 'New York City',
+			'state'   => 'New York',
+			'zip'     => '10010',
+			'country' => 'US',
+		);
+		$this->payment->save();
+
+		$this->assertEquals( $this->payment->address, $this->payment->user_info['address'] );
+	}
+
+	public function test_modify_cart_item_price() {
+		$this->payment->status = 'publish';
+		$this->payment->save();
+
+		$this->payment->modify_cart_item( 0, array( 'item_price' => 1 ) );
+		$this->payment->save();
+
+		$this->assertEquals( 1, $this->payment->cart_details[0]['item_price'] );
+
+		$download = new \EDD_Download( $this->payment->cart_details[0]['id'] );
+		$this->assertEquals( 1, $download->get_earnings() );
+	}
+
+	public function test_modify_cart_item_tax() {
+		$this->payment->status = 'publish';
+		$this->payment->save();
+
+		$this->payment->modify_cart_item( 0, array( 'tax' => 2 ) );
+		$this->payment->save();
+
+		$this->assertEquals( 2, $this->payment->cart_details[0]['tax'] );
+		$this->assertEquals( 2, $this->payment->tax );
+	}
+
+	public function test_modify_cart_item_with_disallowed_changes_should_return_false() {
+		$this->payment->status = 'publish';
+		$this->payment->save();
+
+		$change_permitted = $this->payment->modify_cart_item( 0, array(
+			'quantity'   => $this->payment->cart_details[0]['quantity'],
+			'item_price' => $this->payment->cart_details[0]['price'],
+		) );
+
+		$this->assertFalse( $change_permitted );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {

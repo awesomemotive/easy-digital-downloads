@@ -823,6 +823,7 @@ class EDD_Payment {
 
 										// Change the earnings for the product.
 										$price_change = $item['previous_data']['price'] - $item['price'];
+
 										if ( $price_change > 0 ) {
 											$download->decrease_earnings( $price_change );
 											$total_increase -= $price_change;
@@ -1119,15 +1120,15 @@ class EDD_Payment {
 							'total'        => $item['price'],
 						) );
 					}
-
-					/**
-					 * Re-fetch the order with the new items from the database as it is used for the synchronization
-					 * between cart_details and the database.
-					 */
-					$this->order = edd_get_order( $this->ID );
 				}
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
+
+				/**
+				 * Re-fetch the order with the new items from the database as it is used for the synchronization
+				 * between cart_details and the database.
+				 */
+				$this->order = edd_get_order( $this->ID );
 
 				if ( false !== $updated ) {
 					$saved = true;
@@ -2241,6 +2242,11 @@ class EDD_Payment {
 				 */
 
 				if ( isset( $meta_value['cart_details'] ) && ! empty( $meta_value['cart_details'] ) ) {
+
+					// Totals need to be updated based on cart details.
+					$new_tax = 0.00;
+					$new_subtotal = 0.00;
+
 					foreach ( $meta_value['cart_details'] as $key => $item ) {
 						$order_item_id = edd_get_order_items( array(
 							'number'       => 1,
@@ -2270,6 +2276,9 @@ class EDD_Payment {
 								'tax'          => $item['tax'],
 								'total'        => $item['price'],
 							) );
+
+							$new_subtotal = $item['subtotal'];
+							$new_tax += $item['tax'];
 						} else {
 							$order_item_id = edd_add_order_item( array(
 								'order_id'     => $this->ID,
@@ -2284,6 +2293,8 @@ class EDD_Payment {
 								'tax'          => $item['tax'],
 								'total'        => $item['price'],
 							) );
+
+							$new_tax += $item['tax'];
 
 							if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 								foreach ( $item['fees'] as $fee_id => $fee ) {
@@ -2308,6 +2319,11 @@ class EDD_Payment {
 							}
 						}
 					}
+
+					edd_update_order( $this->ID, array(
+						'subtotal' => (float) $new_subtotal,
+						'tax'      => (float) $new_tax,
+					) );
 				}
 
 				// If the above checks fall through, store anything else in a "payment_meta" meta key.
@@ -2845,8 +2861,10 @@ class EDD_Payment {
 	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
-		$user_info = isset( $this->payment_meta['user_info'] )
-			? $this->payment_meta['user_info']
+		$user_info = edd_get_order_meta( $this->ID, 'user_info', true );
+
+		$user_info = $user_info
+			? $user_info
 			: array();
 
 		if ( is_serialized( $user_info ) ) {
@@ -2925,7 +2943,7 @@ class EDD_Payment {
 	 * @return array The address information for the payment.
 	 */
 	private function setup_address() {
-		$address  = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array();
+		$address  = ! empty( $this->user_info['address'] ) ? $this->user_info['address'] : array();
 		$defaults = array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 
 		$address = wp_parse_args( $address, $defaults );
