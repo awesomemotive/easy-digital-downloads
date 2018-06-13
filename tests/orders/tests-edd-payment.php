@@ -791,7 +791,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multi_price_points_by_price_id() {
-		\EDD_Helper_Payment::delete_payment( $this->_payment_id );
+		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
 
 		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
