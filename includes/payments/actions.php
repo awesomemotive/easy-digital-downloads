@@ -26,12 +26,14 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @param string $old_status Old order status.
 */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
-	if ( $old_status == 'publish' || $old_status == 'complete' ) {
-		return; // Make sure that payments are only completed once
+
+	// Make sure that payments are only completed once.
+	if ( 'publish' === $old_status || 'complete' === $old_status || 'completed' === $old_status ) {
+		return;
 	}
 
-	// Make sure the payment completion is only processed when new status is complete
-	if ( $new_status != 'publish' && $new_status != 'complete' ) {
+	// Make sure the payment completion is only processed when new status is complete.
+	if ( 'publish' !== $new_status && 'complete' !== $new_status && 'completed' !== $new_status ) {
 		return;
 	}
 
@@ -46,7 +48,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	if ( is_array( $order_items ) ) {
 
-		// Increase purchase count and earnings
+	    // Increase purchase count and earnings
 		foreach ( $order_items as $item ) {
 			/** @var EDD\Orders\Order_Item $item */
 
@@ -65,10 +67,10 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					foreach ( $item->get_fees() as $key => $item_fee ) {
 						/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-						$fee_id = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
+						$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 						$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
-						$price_id = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-						$no_tax = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+						$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+						$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
 
 						$item_fees[ $fee_id ] = array(
 							'amount'      => $item_fee->amount,
@@ -84,20 +86,20 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 						'name'        => $item->product_name,
 						'id'          => $item->product_id,
 						'item_number' => array(
-							'id'         => $item->product_id,
-							'quantity'   => $item->quantity,
-							'options'    => array(
+							'id'       => $item->product_id,
+							'quantity' => $item->quantity,
+							'options'  => array(
 								'quantity' => $item->quantity,
 								'price_id' => $item->price_id,
 							),
 						),
-						'item_price' => $item->amount,
-						'quantity'   => $item->quantity,
-						'discount'   => $item->discount,
-						'subtotal'   => $item->subtotal,
-						'tax'        => $item->tax,
-						'fees'       => $item_fees,
-						'price'      => $item->amount,
+						'item_price'  => $item->amount,
+						'quantity'    => $item->quantity,
+						'discount'    => $item->discount,
+						'subtotal'    => $item->subtotal,
+						'tax'         => $item->tax,
+						'fees'        => $item_fees,
+						'price'       => $item->amount,
 					);
 
 					do_action( 'edd_complete_download_purchase', $item->product_id, $order_id, $download_type, $cart_details, $item->cart_index );
@@ -119,7 +121,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 			// Increase the earnings for this download ID
 			edd_increase_earnings( $item->product_id, $increase_earnings );
-			edd_increase_purchase_count( $item->product_id, $item->get_quantity );
+			edd_increase_purchase_count( $item->product_id, $item->quantity );
 		}
 
 		// Clear the total earnings cache

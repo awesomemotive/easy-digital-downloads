@@ -22,10 +22,12 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $order_id
  * @property int    $product_id
  * @property string $product_name
+ * @property int    $price_id
  * @property int    $cart_index
  * @property string $type
  * @property string $status
  * @property int    $quantity
+ * @property int    $amount
  * @property float  $subtotal
  * @property float  $tax
  * @property float  $discount
@@ -171,7 +173,32 @@ class Order_Item extends \EDD\Database\Objects\Order_Item {
 		return edd_get_order_adjustments( array(
 			'object_id'   => $this->id,
 			'object_type' => 'order_item',
-			'type'        => 'fee'
+			'type'        => 'fee',
+			'order'       => 'ASC',
 		) );
+	}
+
+	/**
+	 * Retrieve the tax rate for the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Tax rate.
+	 */
+	public function get_tax_rate() {
+		$rate = edd_get_order_adjustments( array(
+			'number'      => 1,
+			'object_id'   => $this->id,
+			'object_type' => 'order_item',
+			'type'        => 'tax_rate',
+		) );
+
+		if ( $rate ) {
+			$rate = $rate[0];
+
+			return $rate->amount * 100;
+		}
+
+		return 0.00;
 	}
 }
