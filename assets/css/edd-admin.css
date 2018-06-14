@@ -1250,11 +1250,6 @@ input[class*="edd-price-field"] {
 /** Stats */
 #edd_product_stats .label {
 	display: inline-block;
-	}
-#edd_product_stats hr {
-	border-style: solid;
-	border-width: 1px;
-	border-color: #ccc #fff #fff #ccc;
 }
 #edd_product_stats .product-sales-stats:before,
 #edd_product_stats .product-earnings-stats:before {
