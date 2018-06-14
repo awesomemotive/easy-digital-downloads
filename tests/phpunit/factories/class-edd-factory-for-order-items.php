@@ -7,8 +7,8 @@ class Order_Item extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$this->default_generation_definitions = array(
-			'order_id'     => 1,
-			'product_id'   => 1,
+			'order_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'product_id'   => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'product_name' => 'Test Product',
 			'price_id'     => 0,
 			'cart_index'   => 0,
