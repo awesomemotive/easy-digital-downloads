@@ -82,7 +82,7 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_items
 	 */
-	public function test_get_orders_with_number_should_return_true() {
+	public function test_get_order_items_with_number_should_return_true() {
 		$orders = edd_get_order_items( array(
 			'number' => 10,
 		) );
@@ -93,7 +93,7 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_items
 	 */
-	public function test_get_orders_with_offset_should_return_true() {
+	public function test_get_order_items_with_offset_should_return_true() {
 		$orders = edd_get_order_items( array(
 			'number' => 10,
 			'offset' => 4,
