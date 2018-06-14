@@ -1657,17 +1657,26 @@ class EDD_Payment {
 
 			// Find by fee ID, if set.
 			if ( ! is_null( $fee_id ) ) {
-				$fee = null;
-
 				foreach ( $this->order->get_fees() as $id => $f ) {
 					if ( $id === $fee_id ) {
-						$fee = $f;
-						break;
+						edd_delete_order_adjustment( $f->id );
+
+						if ( false === $global ) {
+							break;
+						}
 					}
 				}
 
-				if ( $fee instanceof EDD\Orders\Order_Adjustment ) {
-					edd_delete_order_adjustment( $fee->id );
+				// Find by fee label.
+			} else {
+				foreach ( $this->order->get_fees() as $f ) {
+					if ( $fee['label'] === $f->description ) {
+						edd_delete_order_adjustment( $f->id );
+
+						if ( false === $global ) {
+							break;
+						}
+					}
 				}
 			}
 		}
