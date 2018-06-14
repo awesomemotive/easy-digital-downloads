@@ -909,12 +909,12 @@ function edd_render_refund_row( $post_id ) {
 		<p><strong><?php _e( 'Refundability:', 'easy-digital-downloads' ); ?></strong></p>
 		<p><?php echo EDD()->html->select( array(
 			'name'     => '_edd_refundability',
-			'options'  => edd_get_refundability_types(),
+			'options'  => $types,
 			'selected' => $edd_refundability,
 			'chosen'   => true,
 
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => '&mdash; ' . __( 'Use default', 'easy-digital-downloads' ) . ' &mdash;'
 		) ); ?></p>
 		<p>
 			<?php printf( __( 'Overrides default: %s', 'easy-digital-downloads' ), $refundability ); ?>
