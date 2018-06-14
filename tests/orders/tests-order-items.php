@@ -78,4 +78,27 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 
 		$this->assertFalse( $success );
 	}
+
+	/**
+	 * @covers ::edd_get_order_items
+	 */
+	public function test_get_orders_with_number_should_return_true() {
+		$orders = edd_get_order_items( array(
+			'number' => 10,
+		) );
+
+		$this->assertCount( 5, $orders );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items
+	 */
+	public function test_get_orders_with_offset_should_return_true() {
+		$orders = edd_get_order_items( array(
+			'number' => 10,
+			'offset' => 4,
+		) );
+
+		$this->assertCount( 1, $orders );
+	}
 }
