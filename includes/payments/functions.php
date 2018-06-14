@@ -43,17 +43,10 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
 		return false;
 	}
 
-	$cache_key = md5( 'edd_payment' . $payment_id );
-	$payment   = wp_cache_get( $cache_key, 'payments' );
+	$payment = new EDD_Payment( $payment_id );
 
-	if ( false === $payment ) {
-		$payment = new EDD_Payment( $payment_id );
-
-		if ( empty( $payment->ID ) || ( ! $by_txn && (int) $payment->ID !== (int) $payment_id ) ) {
-			return false;
-		} else {
-			wp_cache_set( $cache_key, $payment, 'payments' );
-		}
+	if ( empty( $payment->ID ) || ( ! $by_txn && (int) $payment->ID !== (int) $payment_id ) ) {
+		return false;
 	}
 
 	return $payment;

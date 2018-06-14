@@ -343,7 +343,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'Test Fee 2', $fees[2]['label'] );
 	}
 
-	public function test_payment_remove_fee_by_label() {
+	public function test_payment_remove_fee_by_label_should_be_empty() {
 		$this->payment->add_fee( array(
 			'amount' => 5,
 			'label'  => 'Test Fee',
