@@ -538,17 +538,14 @@ function edd_get_registered_settings() {
 						'min'  => 0,
 						'step' => 1
 					),
-					'refundable_default' => array(
-						'id'      => 'refundable_default',
+					'refundability' => array(
+						'id'      => 'refundability',
 						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
 						'desc'    => __( 'By default, products without an explicit setting will fallback to this.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'std'     => 'refundable',
 						'chosen'  => true,
-						'options' => array(
-							'refundable'    => __( 'Refundable',     'easy-digital-downloads' ),
-							'nonrefundable' => __( 'Non-Refundable', 'easy-digital-downloads' )
-						),
+						'options' => edd_get_refundability_types()
 					)
 				),
 				'api' => array(

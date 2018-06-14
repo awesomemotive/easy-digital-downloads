@@ -874,6 +874,21 @@ function edd_get_file_refund_window( $download_id = 0 ) {
 }
 
 /**
+ * Gets the file refund window for a particular download
+ *
+ * This window refers to the maximum number of days it can be refunded after
+ * it has been purchased.
+ *
+ * @since 3.0
+ * @param int $download_id Download ID
+ * @return int $limit File download limit
+ */
+function edd_get_file_refundability( $download_id = 0 ) {
+	$download = new EDD_Download( $download_id );
+	return $download->get_refundability();
+}
+
+/**
  * Gets the file download file limit override for a particular download
  *
  * The override allows the main file download limit to be bypassed
