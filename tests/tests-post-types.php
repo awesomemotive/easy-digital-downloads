@@ -33,7 +33,7 @@ class Tests_Post_Types extends EDD_UnitTestCase {
 		$this->assertEquals( 'Search Downloads', $wp_post_types['download']->labels->search_items );
 		$this->assertEquals( 'No Downloads found', $wp_post_types['download']->labels->not_found );
 		$this->assertEquals( 'No Downloads found in Trash', $wp_post_types['download']->labels->not_found_in_trash );
-		$this->assertEquals( 'All Downloads', $wp_post_types['download']->labels->all_items );
+		$this->assertEquals( 'Downloads', $wp_post_types['download']->labels->all_items );
 		$this->assertEquals( 'Downloads', $wp_post_types['download']->labels->menu_name );
 		$this->assertEquals( 'Download', $wp_post_types['download']->labels->name_admin_bar );
 		$this->assertEquals( 1, $wp_post_types['download']->publicly_queryable );
