@@ -707,11 +707,8 @@ class EDD_Payment {
 									$price = $item['price'];
 
 									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-										$price_id = isset( $item['item_number']['options']['price_id'] )
-											? $item['item_number']['options']['price_id']
-											: 0;
-
 										$increase_earnings = $price;
+
 										if ( ! empty( $item['fees'] ) ) {
 											foreach ( $item['fees'] as $fee ) {
 

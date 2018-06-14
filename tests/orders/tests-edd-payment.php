@@ -533,7 +533,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, $this->payment->cart_details[0]['item_price'] );
 
 		$download = new \EDD_Download( $this->payment->cart_details[0]['id'] );
-		$this->assertEquals( 1, $download->get_earnings() );
+		$this->assertEquals( 41, $download->get_earnings() );
 	}
 
 	public function test_modify_cart_item_quantity() {
