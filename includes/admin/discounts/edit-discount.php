@@ -214,7 +214,7 @@ $minutes              = edd_get_minute_values();
                         <label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <input name="end_date" id="edd-expiration" type="text" value="<?php esc_attr( $end_date ); ?>"  class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
+                        <input name="end_date" id="edd-expiration" type="text" value="<?php echo esc_attr( $end_date ); ?>"  class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 						<?php
 						echo EDD()->html->select( array(
 							'name'             => 'end_date_hour',

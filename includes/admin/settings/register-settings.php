@@ -518,6 +518,36 @@ function edd_get_registered_settings() {
 						'placeholder' => __( '@example.com', 'easy-digital-downloads' )
 					)
 				),
+				'refunds' => array(
+					'refunds_settings' => array(
+						'id'   => 'refunds_settings',
+						'name' => '<h3>' . __( 'Refunds', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+						'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
+					),
+					'refund_window' => array(
+						'id'   => 'refund_window',
+						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
+						'desc' => __( 'Number of days (after a purchase) when refunds can be processed.<br>Set to <code>0</code> for infinity. Default is <code>30</code> days. Overridable on a per-product basis.', 'easy-digital-downloads' ),
+						'std'  => 30,
+						'type' => 'number',
+						'size' => 'small',
+						'max'  => 3650, // Ten year maximum, because why explicitly support longer
+						'min'  => 0,
+						'step' => 1
+					),
+					'refundability' => array(
+						'id'      => 'refundability',
+						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
+						'desc'    => __( 'By default, products without an explicit setting will fallback to this.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'refundable',
+						'chosen'  => true,
+						'options' => edd_get_refundability_types()
+					)
+				),
 				'api' => array(
 					'api_settings' => array(
 						'id'            => 'api_settings',
@@ -1592,6 +1622,7 @@ function edd_get_registered_settings_sections() {
 				'location'           => __( 'Location',   'easy-digital-downloads' ),
 				'currency'           => __( 'Currency',   'easy-digital-downloads' ),
 				'moderation'         => __( 'Moderation', 'easy-digital-downloads' ),
+				'refunds'            => __( 'Refunds',    'easy-digital-downloads' ),
 				'api'                => __( 'API',        'easy-digital-downloads' ),
 				'tracking'           => __( 'Tracking',   'easy-digital-downloads' )
 			) ),
