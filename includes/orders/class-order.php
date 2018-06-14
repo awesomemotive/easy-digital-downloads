@@ -331,7 +331,7 @@ class Order extends \EDD\Database\Objects\Order {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order fees.
+	 * @return Order_Adjustment[] Order fees.
 	 */
 	public function get_fees() {
 
