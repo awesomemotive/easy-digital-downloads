@@ -64,7 +64,7 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<select name="type" id="edd-type">
+						<select name="amount_type" id="edd-type">
 							<option value="percent"><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
 							<option value="flat"><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
 						</select>
@@ -252,6 +252,7 @@ $minutes      = edd_get_minute_values();
 		<?php do_action( 'edd_add_discount_form_bottom' ); ?>
 
 		<p class="submit">
+			<input type="hidden" name="type" value="discount" />
 			<input type="hidden" name="edd-action" value="add_discount"/>
 			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
 			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>

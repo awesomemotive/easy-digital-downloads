@@ -12,7 +12,7 @@
  * Some examples of EDD components are:
  *
  * - Customer
- * - Discount
+ * - Adjustment
  * - Order
  * - Order Item
  * - Note
@@ -30,7 +30,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register a new EDD component (customer, discount, order, etc...)
+ * Register a new EDD component (customer, adjustment, order, etc...)
  *
  * @since 3.0
  *
@@ -123,13 +123,13 @@ function edd_setup_components() {
 		'object' => 'EDD_Customer'
 	) );
 
-	// Register discount
-	edd_register_component( 'discount', array(
-		'schema' => '\\EDD\\Database\\Schema\\Discounts',
-		'table'  => '\\EDD\\Database\\Tables\\Discounts',
-		'meta'   => '\\EDD\\Database\\Tables\\Discount_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Discount',
-		'object' => 'EDD_Discount'
+	// Register Adjustment
+	edd_register_component( 'adjustment', array(
+		'schema' => '\\EDD\\Database\\Schema\\Adjustments',
+		'table'  => '\\EDD\\Database\\Tables\\Adjustments',
+		'meta'   => '\\EDD\\Database\\Tables\\Adjustment_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Adjustment',
+		'object' => '\\EDD\\Adjustments\\Adjustment'
 	) );
 
 	// Register note

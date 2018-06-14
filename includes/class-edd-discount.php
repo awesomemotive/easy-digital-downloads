@@ -16,9 +16,9 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0 Extends EDD\Database\Objects\Discount instead of EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
  */
-class EDD_Discount extends \EDD\Database\Objects\Discount {
+class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 
 	/**
 	 * Discount ID.
@@ -59,11 +59,11 @@ class EDD_Discount extends \EDD\Database\Objects\Discount {
 	/**
 	 * Discount Type (Percentage or Flat Amount).
 	 *
-	 * @since 2.7
+	 * @since 3.0
 	 * @access protected
 	 * @var string
 	 */
-	protected $type = null;
+	protected $amount_type = null;
 
 	/**
 	 * Discount Amount.
@@ -610,7 +610,7 @@ class EDD_Discount extends \EDD\Database\Objects\Discount {
 		 * @param string $code Discount type (percent or flat amount).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_type', $this->type, $this->id );
+		return apply_filters( 'edd_get_discount_type', $this->amount_type, $this->id );
 	}
 
 	/**
