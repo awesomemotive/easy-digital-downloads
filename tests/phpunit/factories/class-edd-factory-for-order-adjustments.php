@@ -31,15 +31,15 @@ class Order_Adjustment extends \WP_UnitTest_Factory_For_Thing {
 	}
 
 	public function create_object( $args ) {
-		return edd_add_order_item( $args );
+		return edd_add_order_adjustment( $args );
 	}
 
 	public function update_object( $order_adjustment_id, $fields ) {
-		return edd_update_order_item( $order_adjustment_id, $fields );
+		return edd_update_order_adjustment( $order_adjustment_id, $fields );
 	}
 
 	public function delete( $order_adjustment_id ) {
-		edd_delete_order( $order_adjustment_id );
+		edd_delete_order_adjustment( $order_adjustment_id );
 	}
 
 	public function delete_many( $order_adjustments ) {
