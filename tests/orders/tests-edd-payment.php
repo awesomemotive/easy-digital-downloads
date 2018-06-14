@@ -430,9 +430,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$this->assertFalse( empty( $payment->fees ) );
 		$this->assertEquals( 47, $payment->total );
-
-		remove_filter( 'edd_cart_contents', '__return_true' );
-		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 	}
 
 	public function test_update_date_future() {
