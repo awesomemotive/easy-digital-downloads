@@ -1977,18 +1977,6 @@ class EDD_Payment {
 				$meta = array();
 			}
 
-			// #5228 Fix possible data issue introduced in 2.6.12
-			if ( is_array( $meta ) && isset( $meta[0] ) ) {
-				$bad_meta = $meta[0];
-				unset( $meta[0] );
-
-				if ( is_array( $bad_meta ) ) {
-					$meta = array_merge( $meta, $bad_meta );
-				}
-
-				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
-			}
-
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
 				$meta['key'] = $this->key;
@@ -2022,6 +2010,18 @@ class EDD_Payment {
 
 			if ( is_array( $migrated_payment_meta ) && 0 < count( $migrated_payment_meta ) ) {
 				$meta = array_merge( $meta, $migrated_payment_meta );
+			}
+
+			// #5228 Fix possible data issue introduced in 2.6.12
+			if ( is_array( $meta ) && isset( $meta[0] ) ) {
+				$bad_meta = $meta[0];
+				unset( $meta[0] );
+
+				if ( is_array( $bad_meta ) ) {
+					$meta = array_merge( $meta, $bad_meta );
+				}
+
+				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
 			}
 		}
 

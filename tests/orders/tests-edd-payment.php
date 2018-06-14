@@ -606,6 +606,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_issue_5228_data() {
 		$meta = $this->payment->get_meta();
 
+		$meta[0]         = array();
 		$meta[0]['test'] = 'Test Value';
 
 		update_post_meta( $this->payment->ID, '_edd_payment_meta', $meta );
