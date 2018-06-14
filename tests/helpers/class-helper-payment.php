@@ -464,6 +464,16 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		$simple_download   = EDD_Helper_Download::create_simple_download();
 
+		add_filter( 'edd_cart_contents', function( $cart ) use ( $simple_download ) {
+			return array( 0 => array(
+				'id' => $simple_download->ID,
+				'options' => array(),
+				'quantity' => 1
+			) );
+		}, 10 );
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
+
 		/** Generate some sales */
 		$user      = get_userdata(1);
 		$user_info = array(
@@ -539,6 +549,9 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment->save();
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
+
+		remove_all_filters( 'edd_cart_contents' );
+		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		return $payment_id;
 
