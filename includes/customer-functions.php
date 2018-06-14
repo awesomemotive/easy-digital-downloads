@@ -81,7 +81,7 @@ function edd_get_customer( $customer_id = 0 ) {
 }
 
 /**
- * Get a customer item by a specific field's value.
+ * Get a customer item by a specific field value.
  *
  * @since 3.0
  * @param array $args
