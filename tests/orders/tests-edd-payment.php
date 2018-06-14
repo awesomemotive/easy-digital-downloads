@@ -57,9 +57,10 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_by_transaction_ID_should_be_true() {
-		$payment = edd_get_payment( 'FIR3SID3', true );
+		$payment = edd_get_payment( 'EDD_ORDER', true );
 
-		$this->assertSame( 'FIR3SID3', $payment->transaction_id );
+		$this->assertSame( $payment->ID, $this->payment->ID );
+		$this->assertSame( 'EDD_ORDER', $payment->transaction_id );
 	}
 
 	public function test_edd_get_payment_by_transaction_ID_for_guest_payment_should_be_true() {
