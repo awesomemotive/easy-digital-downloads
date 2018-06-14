@@ -101,6 +101,15 @@ class Orders extends Base {
 			'sortable'   => true
 		),
 
+		// date_refundable
+		array(
+			'name'       => 'date_refundable',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'sortable'   => true
+		),
+
 		// user_id
 		array(
 			'name'       => 'user_id',
