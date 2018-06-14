@@ -401,6 +401,14 @@ function edd_ajax_add_discount_note() {
 		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
+	// Does discount exist?
+	$discount = edd_get_discount( $discount_id );
+
+	// Bail if discount is not found
+	if ( empty( $discount ) ) {
+		wp_die( -1 );
+	}
+
 	// Add the note
 	$note_id = edd_add_note( array(
 		'object_id'   => $discount_id,
@@ -444,11 +452,25 @@ function edd_delete_discount_note( $data ) {
 		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$edit_discount_url = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&edd-message=discount-note-deleted&discount=' . absint( $data['discount_id'] ) );
+	// Does discount exist?
+	$discount = edd_get_discount( $data['discount_id'] );
 
+	// Bail if discount is not found
+	if ( empty( $discount ) ) {
+		wp_die( -1 );
+	}
+
+	// Delete the note
 	edd_delete_note( $data['note_id'] );
 
-	edd_redirect( $edit_discount_url );
+	// Redirect on delete
+	edd_redirect( add_query_arg( array(
+		'post_type'   => 'download',
+		'page'        => 'edd-discounts',
+		'edd-action'  => 'edit_discount',
+		'edd-message' => 'discount-note-deleted',
+		'discount'    => absint( $data['discount_id'] )
+	), admin_url( 'edit.php' ) ) );
 }
 add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
 
@@ -485,6 +507,14 @@ function edd_ajax_delete_discount_note() {
 	// Bail if user not capable
 	if ( ! current_user_can( 'manage_shop_discounts', $discount_id ) ) {
 		wp_die( __( 'You do not have permission to edit this discount.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Does discount exist?
+	$discount = edd_get_discount( $discount_id );
+
+	// Bail if discount is not found
+	if ( empty( $discount ) ) {
+		wp_die( -1 );
 	}
 
 	// Delete note
