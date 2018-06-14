@@ -77,9 +77,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_edd_get_payment_by_transaction_ID_for_guest_payment_should_be_true() {
 		$payment_id = \EDD_Helper_Payment::create_simple_guest_payment();
 
-		$payment = edd_get_payment( 'GUESTPURCHASE', true );
+		$payment = edd_get_payment( 'EDD_GUEST_ORDER', true );
 
-		$this->assertSame( 'GUESTPURCHASE', $payment->transaction_id );
+		$this->assertSame( 'EDD_GUEST_ORDER', $payment->transaction_id );
 
 		\EDD_Helper_Payment::delete_payment( $payment_id );
 	}
