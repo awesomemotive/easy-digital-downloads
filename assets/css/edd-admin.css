@@ -1238,7 +1238,7 @@ input[class*="edd-price-field"] {
 /** Stats */
 #edd_product_stats .label {
 	display: inline-block;
-	}
+}
 #edd_product_stats .product-sales-stats:before,
 #edd_product_stats .product-earnings-stats:before {
 	color: #82878c;
