@@ -24,17 +24,17 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$payment_id = \EDD_Helper_Payment::create_simple_payment();
 
 		$this->payment = edd_get_payment( $payment_id );
-
-		// Make sure we're working off a clean object caching in WP Core.
-		// Prevents some payment_meta from not being present.
-		clean_post_cache( $payment_id );
-		update_postmeta_cache( array( $payment_id ) );
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 
 		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
+
+		// Make sure we're working off a clean object caching in WP Core.
+		// Prevents some payment_meta from not being present.
+		clean_post_cache( $this->payment->ID );
+		update_postmeta_cache( array( $this->payment->ID ) );
 
 		$this->payment = null;
 	}
@@ -59,7 +59,17 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_edd_get_payment_by_transaction_ID_should_be_true() {
 		$payment = edd_get_payment( 'FIR3SID3', true );
 
-		$this->assertEquals( $payment->ID, $this->payment->ID );
+		$this->assertSame( 'FIR3SID3', $payment->transaction_id );
+	}
+
+	public function test_edd_get_payment_by_transaction_ID_for_guest_payment_should_be_true() {
+		$payment_id = \EDD_Helper_Payment::create_simple_guest_payment();
+
+		$payment = edd_get_payment( 'GUESTPURCHASE', true );
+
+		$this->assertSame( 'GUESTPURCHASE', $payment->transaction_id );
+
+		\EDD_Helper_Payment::delete_payment( $payment_id );
 	}
 
 	public function test_instantiating_EDD_Payment_with_no_args_should_be_null() {
