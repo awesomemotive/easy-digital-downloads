@@ -285,7 +285,7 @@ function edd_render_price_field( $post_id ) {
 	</p>
 
 	<p>
-		<label for="edd_variable_pricing">
+		<label>
 			<input type="checkbox" name="_variable_pricing" id="edd_variable_pricing" value="1" <?php checked( 1, $variable_pricing ); ?> />
 			<?php echo apply_filters( 'edd_variable_pricing_toggle_text', __( 'Enable variable pricing', 'easy-digital-downloads' ) ); ?>
 		</label>
@@ -898,6 +898,9 @@ function edd_render_refund_row( $post_id ) {
 		return;
 	}
 
+	$types             = edd_get_refundability_types();
+	$global_ability    = edd_get_option( 'refundability', 'refundable' );
+	$refundability     = isset( $types[ $global_ability ] ) ? $types[ $global_ability ] : __( 'Unknown', 'easy-digital-downloads' );
 	$global_window     = edd_get_option( 'refund_window', 30 );
 	$edd_refundability = edd_get_file_refundability( $post_id );
 	$edd_refund_window = edd_get_file_refund_window( $post_id ); ?>
@@ -913,11 +916,15 @@ function edd_render_refund_row( $post_id ) {
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) ); ?></p>
+		<p>
+			<?php printf( __( 'Overrides default: %s', 'easy-digital-downloads' ), $refundability ); ?>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refundability</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.', 'easy-digital-downloads' ); ?>"></span>
+		</p>
 	</div>
 	<div class="edd-product-options-wrapper">
 		<p><strong><?php _e( 'Refund Window:', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
-			<label for="edd_download_limit">
+			<label>
 				<input class="small-text" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
 				<?php _e( 'Days', 'easy-digital-downloads' ); ?>
 			</label>
@@ -951,7 +958,7 @@ function edd_render_download_limit_row( $post_id ) {
 ?>
 	<div class="edd-product-settings-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>
 		<p><strong><?php _e( 'File Download Limit:', 'easy-digital-downloads' ); ?></strong></p>
-		<label for="edd_download_limit">
+		<label>
 			<input class="small-text" name="_edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		</label>
 		<p>
@@ -995,7 +1002,7 @@ function edd_render_down_tax_options( $post_id = 0 ) {
 
 	<div class="edd-product-options-wrapper">
 		<p><strong><?php _e( 'Ignore Tax:', 'easy-digital-downloads' ); ?></strong></p>
-		<label for="_edd_download_tax_exclusive">
+		<label>
 			<?php echo EDD()->html->checkbox( array(
 				'name'    => '_edd_download_tax_exclusive',
 				'current' => $exclusive
@@ -1027,7 +1034,7 @@ function edd_render_download_quantity_option( $post_id = 0 ) {
 	<div class="edd-product-options-wrapper">
 		<p><strong><?php _e( 'Item Quantities:', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
-			<label for="_edd_quantities_disabled">
+			<label>
 				<?php echo EDD()->html->checkbox( array(
 					'name'    => '_edd_quantities_disabled',
 					'current' => $disabled
@@ -1091,7 +1098,7 @@ function edd_render_accounting_options( $post_id ) {
 	<div class="edd-product-options-wrapper">
 		<p><strong><?php _e( 'Accounting Options:', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
-			<label for="edd_sku">
+			<label>
 				<?php echo EDD()->html->text( array(
 					'name'  => 'edd_sku',
 					'value' => $edd_sku,
@@ -1121,7 +1128,7 @@ function edd_render_disable_button( $post_id ) {
 	<div class="edd-product-options-wrapper">
 		<p><strong><?php _e( 'Button Options:', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
-			<label for="_edd_hide_purchase_link">
+			<label>
 				<?php echo EDD()->html->checkbox( array(
 					'name'    => '_edd_hide_purchase_link',
 					'current' => $hide_button
@@ -1131,7 +1138,7 @@ function edd_render_disable_button( $post_id ) {
 			</label>
 		</p>
 		<p>
-			<label for="_edd_button_behavior">
+			<label>
 				<?php
 				$args = array(
 					'name'     => '_edd_button_behavior',
