@@ -343,23 +343,6 @@ function edd_build_order( $order_data = array() ) {
 		'address'    => $order_data['user_info']['address']
 	) );
 
-	// Maybe store order tax.
-	if ( edd_use_taxes() ) {
-		$country  = ! empty( $order_data['user_info']['address']['country'] ) ? $order_data['user_info']['address']['country'] : false;
-		$state    = ! empty( $order_data['user_info']['address']['state'] )   ? $order_data['user_info']['address']['state']   : false;
-		$zip      = ! empty( $order_data['user_info']['address']['zip'] )     ? $order_data['user_info']['address']['zip']     : false;
-		$tax_rate = edd_get_cart_tax_rate( $country, $state, $zip );
-
-		// Always store order tax, even if empty.
-		edd_add_order_adjustment( array(
-			'object_id'   => $order_id,
-			'object_type' => 'order',
-			'type_id'     => 0,
-			'type'        => 'tax_rate',
-			'amount'      => $tax_rate
-		) );
-	}
-
 	/** Insert order items ****************************************************/
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
@@ -414,12 +397,12 @@ function edd_build_order( $order_data = array() ) {
 			 */
 			$order_item_args = apply_filters( 'edd_payment_add_download_args', $order_item_args, $download->ID );
 			$order_item_args = wp_parse_args( $order_item_args, array(
-				'quantity'    => 1,
-				'price_id'    => false,
-				'amount'      => false,
-				'item_price'  => false,
-				'discount'    => 0.00,
-				'tax'         => 0.00
+				'quantity'   => 1,
+				'price_id'   => false,
+				'amount'     => false,
+				'item_price' => false,
+				'discount'   => 0.00,
+				'tax'        => 0.00,
 			) );
 
 			// The item_price key could have been changed by a filter.
@@ -497,10 +480,38 @@ function edd_build_order( $order_data = array() ) {
 						edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 					}
 
-					if ( ! is_null( $fee['price_id'] ) ) {
+					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 					}
 				}
+			}
+
+			// Maybe store order tax.
+			if ( edd_use_taxes() ) {
+				$country = ! empty( $order_data['user_info']['address']['country'] )
+					? $order_data['user_info']['address']['country']
+					: false;
+
+				$state = ! empty( $order_data['user_info']['address']['state'] )
+					? $order_data['user_info']['address']['state']
+					: false;
+
+				$zip = ! empty( $order_data['user_info']['address']['zip'] )
+					? $order_data['user_info']['address']['zip']
+					: false;
+
+				$tax_rate = isset( $item['tax_rate'] )
+					? (float) $item['tax_rate']
+					: edd_get_cart_tax_rate( $country, $state, $zip );
+
+				// Always store order tax, even if empty.
+				edd_add_order_adjustment( array(
+					'object_id'   => $order_item_id,
+					'object_type' => 'order_item',
+					'type_id'     => 0,
+					'type'        => 'tax_rate',
+					'amount'      => $tax_rate,
+				) );
 			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
@@ -519,7 +530,7 @@ function edd_build_order( $order_data = array() ) {
 		foreach ( $fees as $key => $fee ) {
 
 			// Skip adding fee if it was specific to a download in the cart.
-			if ( isset( $fee['download_id'] ) ) {
+			if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
 				continue;
 			}
 
@@ -541,7 +552,7 @@ function edd_build_order( $order_data = array() ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 			}
 
-			if ( ! is_null( $fee['price_id'] ) ) {
+			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 			}
 
@@ -638,6 +649,12 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 		return false;
 	}
 
+	/**
+	 * For backwards compatibility purposes, we need an instance of EDD_Payment so that the correct actions
+	 * are invoked.
+	 */
+	$payment = edd_get_payment( $order_id );
+
 	// Override to `publish`
 	if ( in_array( $new_status, array( 'completed', 'complete' ), true ) ) {
 		$new_status = 'publish';
@@ -654,64 +671,68 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 
 	// Backwards compatibility
 	$do_change = apply_filters( 'edd_should_update_payment_status', true,       $order_id, $new_status, $old_status );
-
-	// New 3.0 filter
 	$do_change = apply_filters( 'edd_should_update_order_status',   $do_change, $order_id, $new_status, $old_status );
 
-	// Bail if not updating order status
-	if ( empty( $do_change ) ) {
-		return false;
+	$updated = false;
+
+	if ( ! empty( $do_change ) ) {
+		/**
+		 * Action triggered before updating order status.
+		 *
+		 * @since 3.0
+		 *
+		 * @param int    $order_id   Order ID.
+		 * @param string $new_status New order status.
+		 * @param string $old_status Old order status.
+		 */
+		do_action( 'edd_before_order_status_change', $order_id, $new_status, $old_status );
+
+		/**
+		 * We need to update the status on the EDD_Payment instance so that the correct actions are invoked if the status
+		 * is changing to something that requires interception by the payment gateway (e.g. refunds).
+		 */
+		$payment->status = $new_status;
+		$updated = $payment->save();
+
+		/**
+		 * Action triggered when updating order status.
+		 *
+		 * @since 3.0
+		 *
+		 * @param int    $order_id   Order ID.
+		 * @param string $new_status New order status.
+		 * @param string $old_status Old order status.
+		 */
+		do_action( 'edd_transition_order_status', $order_id, $new_status, $old_status );
 	}
 
-	/**
-	 * Action triggered before updating order status. This is here for backwards compatibility purposes.
-	 */
-	do_action( 'edd_before_payment_status_change', $order_id, $new_status, $old_status );
+	return $updated;
+}
 
-	/**
-	 * Action triggered before updating order status.
-	 *
-	 * @since 3.0
-	 *
-	 * @param int    $order_id   Order ID.
-	 * @param string $new_status     New order status.
-	 * @param string $old_status Old order status.
-	 */
-	do_action( 'edd_before_order_status_change', $order_id, $new_status, $old_status );
+/**
+ * Retrieve order ID based on the transaction ID.
+ *
+ * @since 3.0
+ *
+ * @param string $transaction_id Transaction ID.
+ * @return int $order_id Order ID.
+ */
+function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
+	global $wpdb;
 
-	// Backwards compatibility.
-	$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
-		'post_status' => $new_status
-	) );
-
-	// Use the filtered status
-	$new_status = $update_fields['post_status'];
-
-	// Update the order
-	$updated = edd_update_order( $order_id, array(
-		'status' => $new_status
-	) );
-
-	// Bail if not updated
-	if ( empty( $updated ) ) {
-		return false;
+	// Bail if no transaction ID passed.
+	if ( empty( $transaction_id ) ) {
+		return 0;
 	}
 
-	/**
-	 * Action triggered when updating order status. This is here for backwards compatibility purposes.
-	 */
-	do_action( 'edd_update_payment_status', $order_id, $new_status, $old_status );
+	$order_id = $wpdb->get_var( $wpdb->prepare(
+		"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = %s",
+		$transaction_id
+	) );
 
-	/**
-	 * Action triggered when updating order status.
-	 *
-	 * @since 3.0
-	 *
-	 * @param int    $order_id   Order ID.
-	 * @param string $new_status New order status.
-	 * @param string $old_status Old order status.
-	 */
-	do_action( 'edd_update_order_status', $order_id, $new_status, $old_status );
+	return empty( $order_id )
+		? 0
+		: $order_id;
 }
 
 /** Order Items ***************************************************************/
@@ -773,7 +794,7 @@ function edd_update_order_item( $order_item_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $order_item_id Order item ID.
- * @return object
+ * @return EDD\Orders\Order_Item
  */
 function edd_get_order_item( $order_item_id = 0 ) {
 	return edd_get_order_item_by( 'id', $order_item_id );

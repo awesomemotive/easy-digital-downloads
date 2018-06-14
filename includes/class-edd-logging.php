@@ -476,24 +476,24 @@ class EDD_Logging {
 		// Used to dynamically dispatch the call to the correct class.
 		$log_type = $this->get_log_table( $type );
 
-		// Call the func, or not
-		$func  = "edd_get_{$log_type}";
+		// Call the func, or not.
+		$func = "edd_get_{$log_type}";
 		$logs = is_callable( $func )
 			? call_user_func( $func, $r )
 			: array();
 
-		// Bail if no logs
+		// Bail if no logs.
 		if ( empty( $logs ) ) {
 			return;
 		}
 
-		// Maybe bail if delete function does not exist
+		// Maybe bail if delete function does not exist.
 		$func = rtrim( "edd_delete_{$log_type}", 's' );
 		if ( ! is_callable( $func ) ) {
 			return;
 		}
 
-		// Loop through and delete logs
+		// Loop through and delete logs.
 		foreach ( $logs as $log ) {
 			call_user_func( $func, $log->id );
 		}

@@ -300,6 +300,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		// Test backwards compat bug in issue/3324
 		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
 		$current_meta = edd_get_payment_meta( $this->_payment_id );
+
 		edd_update_payment_meta( $this->_payment_id, '_edd_payment_meta', $current_meta );
 		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
 
@@ -307,6 +308,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		edd_update_payment_meta( $this->_payment_id, '_edd_payment_tax', 10 );
 
 		$meta_array = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+
 		$this->assertEquals( 10, $meta_array['tax'] );
 		$this->assertEquals( 10, edd_get_payment_tax( $this->_payment_id ) );
 

@@ -36,8 +36,8 @@ defined( 'ABSPATH' ) || exit;
  * @property float $tax
  * @property float $discount
  * @property float $total
- * @property array $items
- * @property array $adjustments
+ * @property Order_Item[] $items
+ * @property Order_Adjustment[] $adjustments
  */
 class Order extends \EDD\Database\Objects\Order {
 
@@ -216,13 +216,14 @@ class Order extends \EDD\Database\Objects\Order {
 			'order_id'      => $this->id,
 			'orderby'       => 'cart_index',
 			'order'         => 'ASC',
-			'no_found_rows' => true
+			'no_found_rows' => true,
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
 			'object_id'     => $this->id,
 			'object_type'   => 'order',
-			'no_found_rows' => true
+			'no_found_rows' => true,
+			'order'         => 'ASC',
 		) );
 	}
 
@@ -243,22 +244,11 @@ class Order extends \EDD\Database\Objects\Order {
 	}
 
 	/**
-	 * Retrieve the discounted amount that was applied to the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Order discount.
-	 */
-	public function get_discount() {
-		return $this->discount;
-	}
-
-	/**
 	 * Retrieve all the items in the order.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order items.
+	 * @return Order_Item[] Order items.
 	 */
 	public function get_items() {
 		return $this->items;
@@ -280,7 +270,7 @@ class Order extends \EDD\Database\Objects\Order {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order discounts.
+	 * @return Order_Adjustment[] Order discounts.
 	 */
 	public function get_discounts() {
 		$discounts = array();
@@ -330,7 +320,7 @@ class Order extends \EDD\Database\Objects\Order {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order fees.
+	 * @return Order_Adjustment[] Order fees.
 	 */
 	public function get_fees() {
 
@@ -347,7 +337,9 @@ class Order extends \EDD\Database\Objects\Order {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->type ) {
-				$fees[] = $adjustment;
+				$fee_id = edd_get_order_adjustment_meta( $adjustment->id, 'fee_id', true );
+
+				$fees[ $fee_id ] = $adjustment;
 			}
 		}
 
@@ -355,8 +347,12 @@ class Order extends \EDD\Database\Objects\Order {
 		foreach ( $this->items as $item ) {
 			/** @var Order_Item $item */
 
-			foreach ( $item->fees as $fee ) {
-				$fees[] = $fee;
+			foreach ( $item->get_fees() as $fee ) {
+				/** @var Order_Adjustment $fee */
+
+				$fee_id = edd_get_order_adjustment_meta( $fee->id, 'fee_id', true );
+
+				$fees[ $fee_id ] = $fee;
 			}
 		}
 
@@ -456,5 +452,16 @@ class Order extends \EDD\Database\Objects\Order {
 			'object_type' => 'order',
 			'order'       => 'ASC',
 		) );
+	}
+
+	/**
+	 * Check if an order is complete.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if the order is complete, false otherwise.
+	 */
+	public function is_complete() {
+		return ( 'publish' === $this->status );
 	}
 }
