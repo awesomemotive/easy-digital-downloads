@@ -2128,9 +2128,7 @@ class EDD_Payment {
 						}
 					}
 
-					$user_info = array_filter( $meta_value['user_info'], function( $k ) {
-						return ! in_array( $k, array( 'id', 'email', 'discount' ) );
-					}, ARRAY_FILTER_USE_KEY );
+					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array( 'id', 'email', 'discount' ) ) );
 
 					edd_update_order_meta( $this->ID, 'user_info', $user_info );
 				}
