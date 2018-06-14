@@ -103,7 +103,7 @@ function edd_admin_adjust_submenus() {
 add_action( 'admin_menu', 'edd_admin_adjust_submenus', 999 );
 
 /**
- * This tells WordPress to highlight the Downloads > All Downloads submenu,
+ * This tells WordPress to highlight the Downloads > Downloads submenu,
  * regardless of which actual Downloads Taxonomy screen we are on.
  *
  * The conditional prevents the override when the user is viewing settings or
@@ -134,6 +134,35 @@ function edd_taxonomies_modify_menu_highlight() {
 	$submenu_file = 'edit.php?post_type=download';
 }
 add_filter( 'admin_head', 'edd_taxonomies_modify_menu_highlight', 9999 );
+
+/**
+ * This tells WordPress to highlight the Downloads > Downloads submenu when
+ * adding a new product.
+ *
+ * @since 3.0.0
+ *
+ * @global string $submenu_file
+ */
+function edd_add_new_modify_menu_highlight() {
+	global $submenu_file, $pagenow;
+
+	// Bail if not viewing the right page or post type
+	if ( empty( $_GET['post_type'] ) || ( 'post-new.php' !== $pagenow ) ) {
+		return;
+	}
+
+	// Get post_type
+	$post_type = sanitize_key( $_GET['post_type'] );
+
+	// Bail if current post type is not download
+	if ( 'download' !== $post_type ) {
+		return;
+	}
+
+	// Force the submenu file
+	$submenu_file = 'edit.php?post_type=download';
+}
+add_filter( 'admin_head', 'edd_add_new_modify_menu_highlight', 9999 );
 
 /**
  * Displays the product tabs for 'Products' and 'Apps and Integrations'
