@@ -334,9 +334,21 @@ add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
  */
 function edd_listen_for_paypal_ipn() {
 	// Regular PayPal IPN
-	if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'IPN' ) {
+	if ( isset( $_GET['edd-listener'] ) && 'ipn' === strtolower( $_GET['edd-listener'] ) ) {
 
 		edd_debug_log( 'PayPal IPN endpoint loaded' );
+
+		/**
+		 * This is necessary to delay execution of PayPal PDT and to avoid a race condition causing the order status
+		 * updates to be triggered twice.
+		 *
+		 * @since 2.9.4
+		 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6605
+		 */
+		$token = edd_get_option( 'paypal_identity_token' );
+		if ( $token ) {
+			sleep( 5 );
+		}
 
 		do_action( 'edd_verify_paypal_ipn' );
 	}
