@@ -794,7 +794,7 @@ function edd_update_order_item( $order_item_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $order_item_id Order item ID.
- * @return object
+ * @return EDD\Orders\Order_Item
  */
 function edd_get_order_item( $order_item_id = 0 ) {
 	return edd_get_order_item_by( 'id', $order_item_id );
