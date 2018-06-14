@@ -906,7 +906,7 @@ function edd_render_refund_row( $post_id ) {
 	$edd_refund_window = edd_get_file_refund_window( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Refundable:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Refundability:', 'easy-digital-downloads' ); ?></strong></p>
 		<p><?php echo EDD()->html->select( array(
 			'name'     => '_edd_refundability',
 			'options'  => edd_get_refundability_types(),
