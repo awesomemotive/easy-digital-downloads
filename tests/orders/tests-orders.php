@@ -260,4 +260,30 @@ class Orders_Tests extends \EDD_UnitTestCase {
 
 		$this->assertTrue( $orders[0]->email > $orders[1]->email );
 	}
+
+	/**
+	 * @covers ::edd_get_orders
+	 */
+	public function test_get_orders_with_email__in_should_return_1() {
+		$orders = edd_get_orders( array(
+			'email__in' => array(
+				'user' . \WP_UnitTest_Generator_Sequence::$incr . '@edd.test',
+			),
+		) );
+
+		$this->assertCount( 1, $orders );
+	}
+
+	/**
+	 * @covers ::edd_get_orders
+	 */
+	public function test_get_orders_with_email__not_in_should_return_5() {
+		$orders = edd_get_orders( array(
+			'email__not_in' => array(
+				'user999@edd.test',
+			),
+		) );
+
+		$this->assertCount( 5, $orders );
+	}
 }
