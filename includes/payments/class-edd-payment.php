@@ -1961,7 +1961,7 @@ class EDD_Payment {
 				break;
 
 			case '_edd_payment_transaction_id':
-				$meta = $this->order->transaction_id;
+				$meta = $this->order->get_transaction_id();
 				break;
 
 			case '_edd_payment_user_email':

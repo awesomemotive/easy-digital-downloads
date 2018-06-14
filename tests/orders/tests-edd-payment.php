@@ -27,9 +27,20 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function tearDown() {
+		global $wpdb;
+
 		parent::tearDown();
 
 		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
+
+		edd_destroy_order( $this->payment->ID );
+
+		$component = edd_get_component_interface( 'order', 'meta' );
+
+		if ( $component instanceof \EDD\Database\Tables\Base ) {
+			$component->delete_all();
+			$component->truncate();
+		}
 
 		// Make sure we're working off a clean object caching in WP Core.
 		// Prevents some payment_meta from not being present.
