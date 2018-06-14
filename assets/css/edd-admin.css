@@ -512,6 +512,18 @@ h2.nav-tab-wrapper.edd-tab-clear {
 	line-height: 24px;
 }
 
+#edd_product_settings .inside strong {
+	border-top: 1px solid #eee;
+	display: block;
+	margin: 0 -12px 0;
+	padding: 10px 12px 0;
+}
+
+#edd_product_settings .inside div:first-child strong {
+	margin-top: -14px;
+}
+
+
 /* Payment History Styles
 -------------------------------------------------------------- */
 

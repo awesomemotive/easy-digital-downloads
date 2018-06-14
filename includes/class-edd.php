@@ -557,6 +557,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/refund-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
