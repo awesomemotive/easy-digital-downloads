@@ -152,6 +152,32 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_orders
 	 */
+	public function test_get_orders_with_user_id__in_should_return_1() {
+		$orders = edd_get_orders( array(
+			'user_id__in' => array(
+				\WP_UnitTest_Generator_Sequence::$incr,
+			),
+		) );
+
+		$this->assertCount( 1, $orders );
+	}
+
+	/**
+	 * @covers ::edd_get_orders
+	 */
+	public function test_get_orders_with_user_id__not_in_should_return_5() {
+		$orders = edd_get_orders( array(
+			'user_id__not_in' => array(
+				999,
+			),
+		) );
+
+		$this->assertCount( 5, $orders );
+	}
+
+	/**
+	 * @covers ::edd_get_orders
+	 */
 	public function test_get_orders_with_orderby_user_id_and_order_desc_should_return_true() {
 		$orders = edd_get_orders( array(
 			'orderby' => 'user_id',
