@@ -43,6 +43,11 @@ class Factory extends \WP_UnitTest_Factory {
 	 */
 	public $order;
 
+	/**
+	 * @var Factory\Order_Item
+	 */
+	public $order_item;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -53,5 +58,6 @@ class Factory extends \WP_UnitTest_Factory {
 		$this->log               = new Factory\Log( $this );
 		$this->note              = new Factory\Note( $this );
 		$this->order             = new Factory\Order( $this );
+		$this->order_item        = new Factory\Order_Item( $this );
 	}
 }
