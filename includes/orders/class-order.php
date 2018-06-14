@@ -216,7 +216,7 @@ class Order extends \EDD\Database\Objects\Order {
 			'order_id'      => $this->id,
 			'orderby'       => 'cart_index',
 			'order'         => 'ASC',
-			'no_found_rows' => true
+			'no_found_rows' => true,
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
@@ -241,17 +241,6 @@ class Order extends \EDD\Database\Objects\Order {
 		return edd_get_option( 'enable_sequential' )
 			? $this->number
 			: $this->id;
-	}
-
-	/**
-	 * Retrieve the discounted amount that was applied to the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Order discount.
-	 */
-	public function get_discount() {
-		return $this->discount;
 	}
 
 	/**
