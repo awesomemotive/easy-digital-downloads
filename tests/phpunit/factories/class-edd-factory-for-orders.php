@@ -53,9 +53,9 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 		edd_delete_order( $order_id );
 	}
 
-	public function delete_many( $notes ) {
-		foreach ( $notes as $note ) {
-			$this->delete( $note );
+	public function delete_many( $orders ) {
+		foreach ( $orders as $order ) {
+			$this->delete( $order );
 		}
 	}
 
@@ -67,6 +67,6 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD\Orders\Order|false
 	 */
 	public function get_object_by_id( $order_id ) {
-		return edd_get_note( $order_id );
+		return edd_get_order( $order_id );
 	}
 }
