@@ -825,7 +825,10 @@ class EDD_CLI extends WP_CLI_Command {
 	 */
 	public function migrate_discounts( $args, $assoc_args ) {
 		global $wpdb;
-		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_discounts' );
 
@@ -833,17 +836,17 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
-		$discounts_db = edd_get_component_interface( 'discount', 'table' );
-		if ( ! $discounts_db->exists() ) {
-			@$discounts_db->create();
+		$adjustments_db = edd_get_component_interface( 'adjustment', 'table' );
+		if ( ! $adjustments_db->exists() ) {
+			@$adjustments_db->create();
 		}
 
-		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
+		$discount_meta = edd_get_component_interface( 'adjustment', 'meta' );
 		if ( ! $discount_meta->exists() ) {
 			@$discount_meta->create();
 		}
 
-		$sql     = "SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount'";
+		$sql     = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'edd_discount'";
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
 
@@ -878,8 +881,8 @@ class EDD_CLI extends WP_CLI_Command {
 					$args['name'] = $old_discount->post_title;
 				}
 
-				$args['status'] = get_post_status( $old_discount->ID );
-				$args['date_created'] = $old_discount->post_date_gmt;
+				$args['status']        = get_post_status( $old_discount->ID );
+				$args['date_created']  = $old_discount->post_date_gmt;
 				$args['date_modified'] = $old_discount->post_modified_gmt;
 
 				// Use edd_store_discount() so any legacy data is handled correctly
@@ -904,7 +907,7 @@ class EDD_CLI extends WP_CLI_Command {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'migrate_discounts' );
 
-			WP_CLI::confirm( __( 'Remove legacy discount records?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::confirm( __( 'Remove legacy discount records?', 'easy-digital-downloads' ), array() );
 			WP_CLI::line( __( 'Removing old discount data.', 'easy-digital-downloads' ) );
 
 			$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
@@ -1075,7 +1078,7 @@ class EDD_CLI extends WP_CLI_Command {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'migrate_logs' );
 
-			WP_CLI::confirm( __( 'Remove legacy logs?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::confirm( __( 'Remove legacy logs?', 'easy-digital-downloads' ), array() );
 			WP_CLI::line( __( 'Removing old logs.', 'easy-digital-downloads' ) );
 
 			$log_ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_log'" );
@@ -1169,7 +1172,7 @@ class EDD_CLI extends WP_CLI_Command {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'migrate_notes' );
 
-			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), $remove_args = array() );
+			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), array() );
 			WP_CLI::line( __( 'Removing old notes.', 'easy-digital-downloads' ) );
 
 			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'" );

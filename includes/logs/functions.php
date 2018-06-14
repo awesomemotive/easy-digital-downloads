@@ -76,7 +76,7 @@ function edd_get_log( $log_id = 0 ) {
 }
 
 /**
- * Get a log by a specific field's value.
+ * Get a log by a specific field value.
  *
  * @since 3.0
  *
@@ -330,7 +330,7 @@ function edd_get_api_request_log( $log_id = 0 ) {
 }
 
 /**
- * Get an API request log by a specific field's value.
+ * Get an API request log by a specific field value.
  *
  * @since 3.0
  *
