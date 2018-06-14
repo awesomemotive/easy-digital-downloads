@@ -216,8 +216,6 @@ function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
  * @param bool $delete_download_logs If we should remove all file download logs associated with the payment. Default false.
  */
 function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_download_logs = false ) {
-	global $edd_logs;
-
 	$payment = edd_get_payment( $payment_id );
 
 	// Bail if an order does not exist.
