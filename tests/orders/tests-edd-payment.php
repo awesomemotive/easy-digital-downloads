@@ -424,9 +424,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_with_initial_fee() {
-		add_filter( 'edd_cart_contents', '__return_true' );
-		add_filter( 'edd_item_quantities_enabled', '__return_true' );
-
 		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_fee();
 
 		$payment = edd_get_payment( $payment_id );
