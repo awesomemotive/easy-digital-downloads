@@ -141,6 +141,17 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_orders
 	 */
+	public function test_get_orders_with_user_id_should_return_1() {
+		$orders = edd_get_orders( array(
+			'user_id' => \WP_UnitTest_Generator_Sequence::$incr,
+		) );
+
+		$this->assertCount( 1, $orders );
+	}
+
+	/**
+	 * @covers ::edd_get_orders
+	 */
 	public function test_get_orders_with_orderby_user_id_and_order_desc_should_return_true() {
 		$orders = edd_get_orders( array(
 			'orderby' => 'user_id',
@@ -197,6 +208,4 @@ class Orders_Tests extends \EDD_UnitTestCase {
 
 		$this->assertTrue( $orders[0]->email > $orders[1]->email );
 	}
-
-
 }
