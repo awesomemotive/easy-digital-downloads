@@ -256,10 +256,6 @@ class EDD_Discount extends Adjustment {
 		if ( 'discount_id' === $key || 'ID' === $key ) {
 			return (int) $this->id;
 
-		// Back compat for type
-		} elseif ( in_array( $key, array( 'type', 'amount_type' ), true ) ) {
-			return $this->get_type();
-
 		// Method
 		} elseif ( method_exists( $this, "get_{$key}" ) ) {
 			return call_user_func( array( $this, "get_{$key}" ) );

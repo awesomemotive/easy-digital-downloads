@@ -66,7 +66,7 @@ class Discount extends Adjustment {
 	private function swap_types( $args = array() ) {
 
 		// Switch `type` to `amount_type`
-		if ( ! isset( $args['amount_type'] ) && ! empty( $args['type'] ) ) {
+		if ( empty( $args['amount_type'] ) && ! empty( $args['type'] ) ) {
 			$args['amount_type'] = $args['type'];
 		}
 
