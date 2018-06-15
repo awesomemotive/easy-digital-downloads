@@ -501,7 +501,8 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 		}
 
 		/**
-		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
+		 * Some object vars need to be setup manually as the values need to be
+		 * pulled in from the `edd_adjustmentmeta` table.
 		 */
 		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
 		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
