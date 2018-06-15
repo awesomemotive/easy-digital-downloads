@@ -666,26 +666,25 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		}
 	}
 
-	$payments = new EDD_Payments_Query( array(
+	$orders = edd_get_orders( array(
 		'number' => 100,
-		'page'   => $step,
-		'status' => 'any',
-		'order'  => 'ASC'
+		'offset' => $step == 1 ? 0 : ( $step - 1 ) * 100,
+		'order'  => 'asc',
 	) );
-	$payments = $payments->get_payments();
 
-	if ( $payments ) {
-
+	if ( $orders ) {
 		$prefix  = edd_get_option( 'sequential_prefix' );
 		$postfix = edd_get_option( 'sequential_postfix' );
 		$number  = ! empty( $_GET['custom'] ) ? absint( $_GET['custom'] ) : intval( edd_get_option( 'sequential_start', 1 ) );
 
-		foreach ( $payments as $payment ) {
+		foreach ( $orders as $order ) {
 
 			// Re-add the prefix and postfix
 			$payment_number = $prefix . $number . $postfix;
 
-			edd_update_payment_meta( $payment->ID, '_edd_payment_number', $payment_number );
+			edd_update_order( $order->id, array(
+				'order_number' => $payment_number
+            ) );
 
 			// Increment the payment number
 			$number++;
