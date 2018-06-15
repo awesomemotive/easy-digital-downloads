@@ -41,8 +41,30 @@ class Payment extends Base {
 	 * @access protected
 	 */
 	protected function hooks() {
-
+		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
 	}
 
+	/**
+	 * Backwards compatibility layer for wp_count_posts().
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $query SQL request.
+	 *
+	 * @return string $request Rewritten SQL query.
+	 */
+	public function wp_count_posts( $query ) {
+		global $wpdb;
+
+		$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_payment' GROUP BY post_status";
+
+		if ( $expected === $query ) {
+			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_orders} GROUP BY post_status";
+		}
+
+		return $query;
+	}
 
 }
