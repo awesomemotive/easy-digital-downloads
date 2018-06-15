@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $name
  * @property string $status
  * @property string $date_created
- * @property array $payment_ids
+ * @property string $payment_ids
  * @property int $user_id
  * @property string $notes
  */
@@ -35,34 +35,30 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * Customer ID.
 	 *
 	 * @since 2.3
-	 * @since 3.0 Visibility set to `protected`.
 	 * @var int
 	 */
-	protected $id = 0;
+	public $id = 0;
 
 	/**
 	 * The customer's purchase count
 	 *
 	 * @since 2.3
-	 * @since 3.0 Visibility set to `protected`.
 	 * @var int
 	 */
-	protected $purchase_count = 0;
+	public $purchase_count = 0;
 
 	/**
 	 * Lifetime value of a customer.
 	 *
 	 * @since 2.3
-	 * @since 3.0 Visibility set to `protected`.
 	 * @var float
 	 */
-	protected $purchase_value = 0;
+	public $purchase_value = 0;
 
 	/**
 	 * Customer's primary email.
 	 *
 	 * @since 2.3
-	 * @since 3.0 Visibility set to `protected`.
 	 * @var string
 	 */
 	public $email;
@@ -73,7 +69,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 2.6
 	 * @var array
 	 */
-	protected $emails;
+	public $emails;
 
 	/**
 	 * Customer's name.
@@ -82,7 +78,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 3.0 Visibility set to `protected`.
 	 * @var string
 	 */
-	protected $name;
+	public $name;
 
 	/**
 	 * The customer's status
@@ -91,7 +87,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 3.0 Visibility set to `protected`.
 	 * @var string
 	 */
-	protected $status;
+	public $status;
 
 	/**
 	 * The customer's creation date
@@ -100,15 +96,15 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 3.0 Visibility set to `protected`.
 	 * @var string
 	 */
-	protected $date_created;
+	public $date_created;
 
 	/**
 	 * The payment IDs associated with the customer
 	 *
 	 * @since 2.3
-	 * @var array
+	 * @var string
 	 */
-	protected $payment_ids;
+	public $payment_ids;
 
 	/**
 	 * The user ID associated with the customer
@@ -117,7 +113,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 3.0 Visibility set to `protected`.
 	 * @var int
 	 */
-	protected $user_id;
+	public $user_id;
 
 	/**
 	 * Notes attached to the customer record.
@@ -215,34 +211,6 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 				return isset( $this->{$key} )
 					? $this->{$key}
 					: edd_get_customer_meta( $this->id, $key );
-		}
-	}
-
-	/**
-	 * Magic __set method to dispatch a call to update a protected property.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $key   Property name.
-	 * @param mixed  $value Property value.
-	 *
-	 * @return mixed Return value of setter being dispatched to.
-	 */
-	public function __set( $key, $value ) {
-		$key = sanitize_key( $key );
-
-		// Only real properties can be saved.
-		$keys = array_keys( get_class_vars( get_called_class() ) );
-
-		if ( ! in_array( $key, $keys, true ) ) {
-			return false;
-		}
-
-		// Dispatch to setter method if value needs to be sanitized.
-		if ( method_exists( $this, 'set_' . $key ) ) {
-			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
-		} else {
-			$this->{$key} = $value;
 		}
 	}
 
