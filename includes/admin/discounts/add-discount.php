@@ -61,10 +61,10 @@ $minutes      = edd_get_minute_values();
 
 				<tr>
 					<th scope="row" valign="top">
-						<label for="edd-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
+						<label for="edd-amount-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<select name="amount_type" id="edd-type">
+						<select name="amount_type" id="edd-amount-type">
 							<option value="percent"><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
 							<option value="flat"><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
 						</select>
