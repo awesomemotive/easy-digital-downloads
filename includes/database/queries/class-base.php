@@ -569,33 +569,33 @@ class Base extends \EDD\Database\Base {
 			return;
 		}
 
+		// Default to number of item IDs
+		$this->found_items = count( $item_ids );
+
 		// Count query
 		if ( ! empty( $this->query_vars['count'] ) ) {
 
 			// Not grouped
 			if ( is_numeric( $item_ids ) && empty( $this->query_vars['groupby'] ) ) {
 				$this->found_items = intval( $item_ids );
-
-			// Grouped
-			} else {
-				$this->found_items = count( $item_ids );
 			}
 
 		// Not a count query
-		} elseif ( is_array( $item_ids ) ) {
-			if ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) {
-				/**
-				 * Filters the query used to retrieve found item count.
-				 *
-				 * @since 3.0
-				 *
-				 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
-				 * @param object $item_query        The object instance.
-				 */
-				$found_items_query = apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
+		} elseif ( is_array( $item_ids ) && ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) ) {
+
+			/**
+			 * Filters the query used to retrieve found item count.
+			 *
+			 * @since 3.0
+			 *
+			 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
+			 * @param object $item_query        The object instance.
+			 */
+			$found_items_query = (string) apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
+
+			// Maybe query for found items
+			if ( ! empty( $found_items_query ) ) {
 				$this->found_items = (int) $this->get_db()->get_var( $found_items_query );
-			} else {
-				$this->found_items = count( $item_ids );
 			}
 		}
 	}
@@ -1236,7 +1236,7 @@ class Base extends \EDD\Database\Base {
 			 * @param string       $search         Text being searched.
 			 * @param \EDD\Database\Queries\Base $this           The current \EDD\Database\Queries\Base instance.
 			 */
-			$search_columns = apply_filters( $this->apply_prefix( 'item_search_columns' ), $search_columns, $this->query_vars['search'], $this );
+			$search_columns = (array) apply_filters( $this->apply_prefix( 'item_search_columns' ), $search_columns, $this->query_vars['search'], $this );
 
 			// Add search query clause
 			$where['search'] = $this->get_search_sql( $this->query_vars['search'], $search_columns );
@@ -1832,7 +1832,7 @@ class Base extends \EDD\Database\Base {
 	 * @return array
 	 */
 	public function filter_item( $item = array() ) {
-		return apply_filters( $this->apply_prefix( "filter_{$this->item_name}_item" ), $item );
+		return (array) apply_filters( $this->apply_prefix( "filter_{$this->item_name}_item" ), $item );
 	}
 
 	/**

@@ -347,13 +347,16 @@ function edd_customers_view( $customer = '' ) {
 							'data'  => $data_atts,
 						);
 
+						// Maybe get user data
 						if ( ! empty( $user_id ) ) {
 							$userdata = get_userdata( $user_id );
-							$user_args['value'] = $userdata->user_login;
+
+							if ( ! empty( $userdata ) ) {
+								$user_args['value'] = $userdata->user_login;
+							}
 						}
 
-						echo EDD()->html->ajax_user_search( $user_args );
-						?>
+						echo EDD()->html->ajax_user_search( $user_args ); ?>
                         <input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $customer->user_id ); ?>" />
 					</span>
                     <span class="customer-user-id info-item editable">
