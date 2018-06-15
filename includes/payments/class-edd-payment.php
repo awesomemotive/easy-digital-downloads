@@ -1952,7 +1952,7 @@ class EDD_Payment {
 	 * @return mixed             The value from the post meta
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
-		$meta = get_post_meta( $this->ID, $meta_key, $single );
+		$meta = edd_get_order_meta( $this->ID, $meta_key, $single );
 
 		// Backwards compatibility.
 		switch ( $meta_key ) {
@@ -2018,7 +2018,7 @@ class EDD_Payment {
 					$meta = array_merge( $meta, $bad_meta );
 				}
 
-				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
+				edd_update_order_meta( $this->ID, 'payment_meta', $meta );
 			}
 		}
 

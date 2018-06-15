@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int $id
  * @property int $parent
- * @property string $number
+ * @property string $order_number
  * @property string $status
  * @property string $date_created
  * @property string $date_completed
