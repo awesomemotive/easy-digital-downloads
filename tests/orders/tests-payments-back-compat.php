@@ -23,8 +23,7 @@ class Payment_Back_Compat_Tests extends \EDD_UnitTestCase {
 		self::$orders = parent::edd()->order->create_many( 5 );
 	}
 
-	function test_wp_count_posts() {
+	public function test_wp_count_posts() {
 		$this->assertSame( 5, (int) wp_count_posts( 'edd_payment' )->publish );
 	}
-
 }
