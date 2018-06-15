@@ -72,9 +72,8 @@ function edd_update_customer( $customer_id = 0, $data = array() ) {
  *
  * @since 3.0
  * @param int $customer_id Customer ID.
- * @param array $data
  *
- * @return int
+ * @return EDD_Customer
  */
 function edd_get_customer( $customer_id = 0 ) {
 	return edd_get_customer_by( 'id', $customer_id );
@@ -84,9 +83,11 @@ function edd_get_customer( $customer_id = 0 ) {
  * Get a customer item by a specific field value.
  *
  * @since 3.0
- * @param array $args
  *
- * @return object
+ * @param string $field
+ * @param string $value
+ *
+ * @return EDD_Customer
  */
 function edd_get_customer_by( $field = '', $value = '' ) {
 
