@@ -2106,6 +2106,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	max-width: 830px;
+	position: relative;
 }
 #edd-item-wrapper:after {
 	content: "";
@@ -2208,7 +2209,17 @@ only screen and ( min-resolution: 1.5dppx ) {
 	margin-bottom: 10px;
 }
 #edd-item-card-wrapper .customer-id {
-	font-size: 24px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 10px;
+	background-color: #fafafa;
+	border: 1px solid #eee;
+	border-bottom-left-radius: 20%;
+	border-top: none;
+	border-right: none;
+	font-family: monospace;
+	font-size: 18px;
 	font-weight: 600;
 }
 #edit-customer-info input,
@@ -2432,13 +2443,13 @@ only screen and ( min-resolution: 1.5dppx ) {
 		float: none;
 		position: absolute;
 		top: 84px;
-		left: 110px;
+		left: 165px;
 		max-width: 200px;
 	}
 	#edd-item-card-wrapper .customer-main-wrapper {
 		float: none;
 		position: absolute;
-		left: 110px;
+		left: 165px;
 	}
 	.customer-info .customer-name {
 		font-size: 16px;
@@ -2458,7 +2469,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 		overflow: hidden;
 	}
 	#edd-item-card-wrapper .customer-id {
-		font-size: 16px;
+		display: none;
 	}
 }
 @media screen and ( max-width: 480px ) {
