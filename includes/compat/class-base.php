@@ -53,8 +53,8 @@ abstract class Base {
 	public function __construct() {
 		$this->hooks();
 
-		$this->show_notices   = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! edd_is_checkout() ) );
-		$this->show_backtrace = apply_filters( 'edd_show_backtrace', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! edd_is_checkout() ) && ! defined( 'EDD_DOING_TESTS' ) );
+		$this->show_notices   = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) );
+		$this->show_backtrace = apply_filters( 'edd_show_backtrace', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) && ! defined( 'EDD_DOING_TESTS' ) );
 	}
 
 	/**
