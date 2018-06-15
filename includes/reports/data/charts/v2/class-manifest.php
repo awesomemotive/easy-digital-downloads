@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Reports\Data\Charts
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */namespace EDD\Reports\Data\Charts\v2;
