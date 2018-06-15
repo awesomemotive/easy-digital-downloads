@@ -176,8 +176,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		$item_status = ! empty( $item->status )
-			? $item->status
+		$item_status = ! empty( $item['status'] )
+			? $item['status']
 			: 'active';
 
 		// State
@@ -196,7 +196,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$state = ' &mdash; ' . $value;
 		}
 
-		return '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		// Get the customer's avatar
+		$avatar = get_avatar( $item['email'], 32 );
+
+		// Concatenate and return
+		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
 	}
 
 	/**
