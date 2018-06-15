@@ -310,6 +310,9 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Queries the database and retrieves items or counts.
 	 *
+	 * This method is public to allow subclasses to perform JIT manipulation
+	 * of the parameters passed into it.
+	 *
 	 * @since 3.0
 	 *
 	 * @param string|array $query Array or URL query string of parameters.
@@ -1818,6 +1821,21 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Filter an item before it is inserted of updated in the database.
+	 *
+	 * This method is public to allow subclasses to perform JIT manipulation
+	 * of the parameters passed into it.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return array
+	 */
+	public function filter_item( $item = array() ) {
+		return apply_filters( $this->apply_prefix( "filter_{$this->item_name}_item" ), $item );
+	}
+
+	/**
 	 * Shape an item from the database into the type of object it always wanted
 	 * to be when it grew up (EDD_Customer, EDD_Discount, EDD_Payment, etc...)
 	 *
@@ -1883,7 +1901,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Return the validated item
-		return $item;
+		return $this->filter_item( $item );
 	}
 
 	/**
