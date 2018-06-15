@@ -27,6 +27,14 @@ function edd_add_discount( $data = array() ) {
 	$excluded_products    = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : null;
 	unset( $data['product_reqs'], $data['excluded_products'] );
 
+	// Switch `type` to `amount_type`
+	if ( ! isset( $data['amount_type'] ) && ! empty( $data['type'] ) && 'discount' !== $data['type'] ) {
+		$data['amount_type'] = $data['type'];
+	}
+
+	// Force `type` to `discount`
+	$data['type'] = 'discount';
+
 	// Setup the discounts query
 	$discounts = new EDD\Database\Queries\Discount();
 
