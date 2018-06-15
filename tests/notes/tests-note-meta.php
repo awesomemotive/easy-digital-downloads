@@ -4,7 +4,7 @@ namespace EDD\Notes;
 /**
  * Note Meta DB Tests
  *
- * @covers EDD_DB_Note_Meta
+ * @covers EDD\Database\Queries\Notes
  * @group edd_notes_db
  * @group database
  * @group edd_notes
@@ -33,7 +33,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Notes::add_meta()
 	 * @covers Note::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_return_false() {
@@ -49,7 +49,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Notes::update_meta()
 	 * @covers Note::update_meta()
 	 */
 	public function test_update_metadata_with_empty_key_value_should_return_false() {
@@ -57,7 +57,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Notes::update_meta()
 	 * @covers Note::update_meta()
 	 */
 	public function test_update_metadata_with_empty_value_should_not_be_empty() {
@@ -65,7 +65,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Notes::update_meta()
 	 * @covers Note::update_meta()
 	 */
 	public function test_update_metadata_with_key_value_should_not_be_empty() {
@@ -73,7 +73,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Notes::get_meta()
 	 * @covers Note::get_meta()
 	 */
 	public function test_get_metadata_with_no_args_should_be_empty() {
@@ -81,7 +81,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Notes::get_meta()
 	 * @covers Note::get_meta()
 	 */
 	public function test_get_metadata_with_invalid_key_should_be_empty() {
@@ -92,7 +92,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Notes::get_meta()
 	 * @covers Note::get_meta()
 	 */
 	public function test_get_metadata_after_update_should_return_1_and_be_of_type_array() {
@@ -103,7 +103,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::delete_meta()
+	 * @covers \EDD\Database\Queries\Notes::delete_meta()
 	 * @covers Note::delete_meta()
 	 */
 	public function test_delete_metadata_after_update() {

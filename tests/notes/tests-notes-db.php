@@ -8,7 +8,7 @@ namespace EDD\Notes;
  * @group database
  * @group edd_notes
  *
- * @coversDefaultClass \EDD_DB_Notes
+ * @coversDefaultClass \EDD\Database\Queries\Notes
  */
 class Tests_Notes_DB extends \EDD_UnitTestCase {
 

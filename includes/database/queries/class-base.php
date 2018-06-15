@@ -63,7 +63,7 @@ class Base extends \EDD\Database\Base {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $table_schema = 'EDD_DB_Schema';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Base';
 
 	/** Item ******************************************************************/
 
@@ -94,14 +94,14 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Name of class used to turn IDs into first-class objects.
 	 *
-	 * I.E. `EDD_DB_Object` or `EDD_Customer`
+	 * I.E. `\\EDD\\Database\\Object` or `\\EDD\\Database\\Objects\\Customer`
 	 *
 	 * This is used when looping through return values to guarantee their shape.
 	 *
 	 * @since 3.0
 	 * @var   mixed
 	 */
-	protected $item_shape = 'EDD_DB_Object';
+	protected $item_shape = '\\EDD\\Database\\Objects\\Base';
 
 	/** Cache *****************************************************************/
 
@@ -721,7 +721,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed EDD_DB_Column object, or false
+	 * @return mixed \EDD\Database\Schemas\Column object, or false
 	 */
 	private function get_column_field( $args = array(), $field = '', $default = false ) {
 
@@ -739,7 +739,7 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed EDD_DB_Column object, or false
+	 * @return mixed \EDD\Database\Schemas\Column object, or false
 	 */
 	private function get_column_by( $args = array() ) {
 
@@ -818,7 +818,7 @@ class Base extends \EDD\Database\Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param EDD_DB_Query &$this Current instance of EDD_DB_Query, passed by reference.
+		 * @param \EDD\Database\Queries\Base &$this Current instance of \EDD\Database\Queries\Base, passed by reference.
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
@@ -1066,9 +1066,9 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @see EDD_DB_Query::__construct()
+	 * @see \EDD\Database\Queries\Base::__construct()
 	 *
-	 * @param string|array $query Array or string of EDD_DB_Query arguments. See EDD_DB_Query::__construct().
+	 * @param string|array $query Array or string of \EDD\Database\Queries\Base arguments. See \EDD\Database\Queries\Base::__construct().
 	 */
 	private function parse_query( $query = array() ) {
 
@@ -1086,7 +1086,7 @@ class Base extends \EDD\Database\Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param EDD_DB_Query &$this The EDD_DB_Query instance (passed by reference).
+		 * @param \EDD\Database\Queries\Base &$this The \EDD\Database\Queries\Base instance (passed by reference).
 		 */
 		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
@@ -1225,13 +1225,13 @@ class Base extends \EDD\Database\Base {
 			}
 
 			/**
-			 * Filters the columns to search in a EDD_DB_Query search.
+			 * Filters the columns to search in a \EDD\Database\Queries\Base search.
 			 *
 			 * @since 3.0
 			 *
 			 * @param array        $search_columns Array of column names to be searched.
 			 * @param string       $search         Text being searched.
-			 * @param EDD_DB_Query $this           The current EDD_DB_Query instance.
+			 * @param \EDD\Database\Queries\Base $this           The current \EDD\Database\Queries\Base instance.
 			 */
 			$search_columns = apply_filters( $this->apply_prefix( 'item_search_columns' ), $search_columns, $this->query_vars['search'], $this );
 
@@ -1464,7 +1464,7 @@ class Base extends \EDD\Database\Base {
 		 * @since 3.0
 		 *
 		 * @param array        $retval An array of items.
-		 * @param EDD_DB_Query &$this  Current instance of EDD_DB_Query, passed by reference.
+		 * @param \EDD\Database\Queries\Base &$this  Current instance of \EDD\Database\Queries\Base, passed by reference.
 		 */
 		$retval = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
