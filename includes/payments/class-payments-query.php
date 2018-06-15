@@ -143,18 +143,29 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		do_action( 'edd_pre_get_payments', $this );
 
-		$should_out_wp_post_objects = false;
+		$should_output_wp_post_objects = false;
+		$should_output_order_objects = false;
 
 		if ( 'posts' === $this->args['output'] ) {
-			$should_out_wp_post_objects = true;
+			$should_output_wp_post_objects = true;
+		} elseif ( 'orders' === $this->args['output'] ) {
+			$should_output_order_objects = true;
 		}
 
 		$this->remap_args();
 
 		$orders = edd_get_orders( $this->args );
 
-		if ( $should_out_wp_post_objects ) {
+		if ( $should_output_order_objects ) {
+			return $orders;
+		}
+
+		if ( $should_output_wp_post_objects ) {
 			// TODO: We need to return WP_Post objects here for backwards compatibility...
+		}
+
+		if ( $should_output_order_objects ) {
+			return $orders;
 		}
 
 		foreach ( $orders as $order ) {

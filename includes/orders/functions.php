@@ -267,8 +267,10 @@ function edd_build_order( $order_data = array() ) {
 		if ( $order ) {
 			$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
 
-			if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $order->get_transaction_id() ) ) {
-				$payment = edd_get_payment( $existing_order );
+			$transaction_id = $order->get_transaction_id();
+
+			if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $transaction_id ) ) {
+				$payment      = edd_get_payment( $existing_order );
 				$resume_order = true;
 			}
 		}
