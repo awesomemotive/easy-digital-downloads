@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Processes all EDD actions sent via POST and GET by looking for the 'edd-action'

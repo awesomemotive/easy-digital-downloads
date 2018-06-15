@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Adds an "Insert Download" button above the TinyMCE Editor on add/edit screens.
