@@ -38,11 +38,10 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function tearDown() {
-
 		parent::tearDown();
+
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 		wp_cache_flush();
-
 	}
 
 	public function test_get_payments() {
@@ -119,8 +118,6 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_update_payment_status() {
-		$this->markTestSkipped( 'Weird caching issue in Beta 1.' );
-
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 
 		$out = edd_get_payments();
