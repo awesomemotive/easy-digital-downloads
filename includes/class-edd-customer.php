@@ -69,7 +69,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 2.6
 	 * @var array
 	 */
-	public $emails;
+	protected $emails;
 
 	/**
 	 * Customer's name.
@@ -104,7 +104,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @since 2.3
 	 * @var string
 	 */
-	public $payment_ids;
+	protected $payment_ids;
 
 	/**
 	 * The user ID associated with the customer
@@ -211,6 +211,34 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 				return isset( $this->{$key} )
 					? $this->{$key}
 					: edd_get_customer_meta( $this->id, $key );
+		}
+	}
+
+	/**
+	 * Magic __set method to dispatch a call to update a protected property.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key   Property name.
+	 * @param mixed  $value Property value.
+	 *
+	 * @return mixed Return value of setter being dispatched to.
+	 */
+	public function __set( $key, $value ) {
+		$key = sanitize_key( $key );
+
+		// Only real properties can be saved.
+		$keys = array_keys( get_class_vars( get_called_class() ) );
+
+		if ( ! in_array( $key, $keys, true ) ) {
+			return false;
+		}
+
+		// Dispatch to setter method if value needs to be sanitized.
+		if ( method_exists( $this, 'set_' . $key ) ) {
+			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
+		} else {
+			$this->{$key} = $value;
 		}
 	}
 
