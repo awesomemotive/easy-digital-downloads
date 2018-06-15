@@ -859,12 +859,16 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_get_discount()
 	 */
 	public function test_deletion_of_discount() {
-		$this->markTestSkipped( 'Broken test' );
-
 		edd_delete_discount( self::$discount_id );
+
+		wp_cache_flush();
+
 		$this->assertFalse( edd_get_discount( self::$discount_id ) );
 
 		edd_delete_discount( self::$negativediscount_id );
+
+		wp_cache_flush();
+
 		$this->assertFalse( edd_get_discount( self::$negativediscount_id ) );
 	}
 
