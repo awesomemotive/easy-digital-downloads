@@ -52,14 +52,14 @@ class EDD_Logging {
 		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 0 );
 
 		// Backwards compatibility for API request logs
-		add_filter( 'get_post_metadata', array( $this, '_api_request_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'get_post_metadata',    array( $this, '_api_request_log_get_meta_backcompat'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata',    array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
 
 		// Backwards compatibility for file download logs
-		add_filter( 'get_post_metadata', array( $this, '_file_download_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'get_post_metadata',    array( $this, '_file_download_log_get_meta_backcompat'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata',    array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
 	}
 
 	/**

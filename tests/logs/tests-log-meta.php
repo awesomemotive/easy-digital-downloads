@@ -8,7 +8,7 @@ namespace EDD\Logs;
  * @group database
  * @group edd_logs
  *
- * @coversDefaultClass \EDD_DB_Log_Meta
+ * @coversDefaultClass \EDD\Database\Queries\Logs
  */
 class Log_Meta_Tests extends \EDD_UnitTestCase {
 
@@ -34,7 +34,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Logs::add_meta()
 	 * @covers \EDD\Logs\Log::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_return_false() {
@@ -42,7 +42,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Logs::add_meta()
 	 * @covers \EDD\Logs\Log::add_meta()
 	 */
 	public function test_add_metadata_with_empty_value_should_be_empty() {
@@ -50,7 +50,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Logs::add_meta()
 	 * @covers \EDD\Logs\Log::add_meta()
 	 */
 	public function test_add_metadata_with_key_value_should_not_be_empty() {
@@ -58,7 +58,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Logs::update_meta()
 	 * @covers \EDD\Logs\Log::update_meta()
 	 */
 	public function test_update_metadata_with_empty_key_value_should_be_empty() {
@@ -66,7 +66,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Logs::update_meta()
 	 * @covers \EDD\Logs\Log::update_meta()
 	 */
 	public function test_update_metadata_with_empty_value_should_not_be_empty() {
@@ -74,7 +74,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Logs::update_meta()
 	 * @covers \EDD\Logs\Log::update_meta()
 	 */
 	public function test_update_metadata_with_key_value_should_not_be_empty() {
@@ -82,7 +82,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Logs::get_meta()
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
 	public function test_get_metadata_with_no_args_should_be_empty() {
@@ -90,7 +90,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Logs::get_meta()
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
 	public function test_get_metadata_with_invalid_key_should_be_empty() {
@@ -98,7 +98,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Logs::get_meta()
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
 	public function test_get_metadata_after_update_should_return_that_value() {
@@ -107,7 +107,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::delete_meta()
+	 * @covers \EDD\Database\Queries\Logs::delete_meta()
 	 * @covers \EDD\Logs\Log::delete_meta()
 	 */
 	public function test_delete_metadata_with_valid_key_should_return_true() {
@@ -116,7 +116,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Log_Meta::delete_meta()
+	 * @covers \EDD\Database\Queries\Logs::delete_meta()
 	 * @covers \EDD\Logs\Log::delete_meta()
 	 */
 	public function test_delete_metadata_with_invalid_key_should_return_false() {

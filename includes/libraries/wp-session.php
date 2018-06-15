@@ -1,9 +1,9 @@
 <?php
 /**
- * WordPress session managment.
+ * WordPress session management.
  *
- * Standardizes WordPress session data and uses either database transients or in-memory caching
- * for storing user session information.
+ * Standardizes WordPress session data and uses either database transients or
+ * in-memory caching for storing user session information.
  *
  * @package WordPress
  * @subpackage Session

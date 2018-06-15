@@ -8,7 +8,7 @@ namespace EDD\Logs;
  * @group database
  * @group edd_logs
  *
- * @coversDefaultClass \EDD_DB_Logs_File_Downloads
+ * @coversDefaultClass \EDD\Database\Queries\Logs_File_Downloads
  */
 class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 
@@ -52,7 +52,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Logs::update()
+	 * @covers \EDD\Database\Queries\Logs::update()
 	 */
 	public function test_update_without_id_should_fail() {
 		$success = edd_update_file_download_log( null, array(
