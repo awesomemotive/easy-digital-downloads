@@ -1094,6 +1094,14 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 			}
 		}
 
+		// Switch `type` to `amount_type`
+		if ( ! isset( $args['amount_type'] ) && ! empty( $args['type'] ) && 'discount' !== $args['type'] ) {
+			$args['amount_type'] = $args['type'];
+		}
+
+		// Force `type` to `discount`
+		$args['type'] = 'discount';
+
 		/**
 		 * Fires before the discount has been updated in the database.
 		 *

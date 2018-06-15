@@ -348,7 +348,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 */
 	public function test_discount_update_type() {
 		$args = array(
-			'type' => 'flat',
+			'type'   => 'flat',
 			'amount' => 50,
 		);
 
