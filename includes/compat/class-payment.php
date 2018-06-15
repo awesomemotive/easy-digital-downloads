@@ -47,6 +47,7 @@ class Payment extends Base {
 
 		/* Filters ***********************************************************/
 		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
+		add_filter( 'query', array( $this, 'get_post' ), 10, 1 );
 		add_filter( 'get_post_metadata', array( $this, 'get_post_metadata' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
 		add_filter( 'add_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
@@ -70,6 +71,49 @@ class Payment extends Base {
 
 		if ( $expected === $query ) {
 			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_orders} GROUP BY post_status";
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Backwards compatibility layer for get_post().
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $query SQL request.
+	 *
+	 * @return string $request Rewritten SQL query.
+	 */
+	public function get_post( $query ) {
+		global $wpdb;
+
+		$expected = "/^SELECT \* FROM {$wpdb->posts} WHERE ID = (\d*) LIMIT 1$/";
+
+		if ( preg_match( $expected, $query, $matches, PREG_OFFSET_CAPTURE ) ) {
+
+			$object_id = 0;
+
+			if ( isset( $matches[1] ) ) {
+				$object_id = (int) $matches[1][0];
+			}
+
+			// Check if the ID matches a legacy ID.
+			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
+
+			$object_id = $wpdb->get_var( $wpdb->prepare(
+				"
+				SELECT edd_order_id
+				FROM {$table_name}
+				WHERE meta_key = %s AND meta_value = %d
+				", 'legacy_payment_id', $object_id
+			) );
+
+			if ( ! empty( $object_id ) ) {
+				$query = str_replace( $matches[1][0], $object_id, $query );
+			}
 		}
 
 		return $query;
