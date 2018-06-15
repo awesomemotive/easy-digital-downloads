@@ -200,11 +200,11 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 			$discount = $_id_or_code_or_name;
 
 			// Code
-		} else if ( $by_code ) {
+		} elseif ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
 
 			// Name
-		} else if ( $by_name ) {
+		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
 			// Default to ID
@@ -232,19 +232,27 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 	public function __get( $key = '' ) {
 		$key = sanitize_key( $key );
 
+		// Back compat for ID
 		if ( 'discount_id' === $key || 'ID' == $key ) {
 			return (int) $this->id;
 
-		} else if ( method_exists( $this, "get_{$key}" ) ) {
+		// Back compat for type
+		} elseif ( in_array( $key, array( 'type', 'amount_type' ), true ) ) {
+			return $this->get_type();
+
+		// Method
+		} elseif ( method_exists( $this, "get_{$key}" ) ) {
 			return call_user_func( array( $this, "get_{$key}" ) );
 
-		} else if ( property_exists( $this, $key ) ) {
+		// Property
+		} elseif ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 
+		// Other...
 		} else {
 
 			// Account for old property keys from pre 3.0
-			switch( $key ) {
+			switch ( $key ) {
 				case 'post_author' :
 					break;
 
@@ -341,7 +349,7 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 
 		} elseif( in_array( $key, $old_keys ) ) {
 
-			switch( $key ) {
+			switch ( $key ) {
 
 				case 'expiration' :
 
@@ -570,7 +578,7 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 	 * @return string Status label for the current discount.
 	 */
 	public function get_status_label() {
-		switch( $this->status ) {
+		switch ( $this->status ) {
 			case 'expired' :
 				$label = __( 'Expired', 'easy-digital-downloads' );
 				break;
@@ -1606,7 +1614,7 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 		// Start off setting the amount as the base price.
 		$amount = $base_price;
 
-		if ( 'flat' == $this->type ) {
+		if ( 'flat' === $this->amount_type ) {
 			$amount = $base_price - $this->amount;
 
 			if ( $amount < 0 ) {
@@ -1731,7 +1739,7 @@ class EDD_Discount extends \EDD\Database\Objects\Adjustment {
 				continue;
 			}
 
-			switch( $type ) {
+			switch ( $type ) {
 
 				case '%s':
 					if ( 'email' == $key ) {
