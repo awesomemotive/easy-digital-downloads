@@ -1967,6 +1967,42 @@ class EDD_Payment {
 			case '_edd_payment_user_email':
 				$meta = $this->order->email;
 				break;
+
+			case '_edd_completed_date':
+				$meta = $this->completed_date;
+				break;
+
+			case '_edd_payment_gateway':
+				$meta = $this->order->gateway;
+				break;
+
+			case '_edd_payment_user_id':
+				$meta = $this->order->user_id;
+				break;
+
+			case '_edd_payment_user_ip':
+				$meta = $this->order->ip;
+				break;
+
+			case '_edd_payment_mode':
+				$meta = $this->order->mode;
+				break;
+
+			case '_edd_payment_tax_rate':
+				$meta = $this->order->get_tax_rate();
+				break;
+
+			case '_edd_payment_customer_id':
+				$meta = $this->order->customer_id;
+				break;
+
+			case '_edd_payment_tax':
+				$meta = $this->order->tax;
+				break;
+
+			case '_edd_payment_number':
+				$meta = $this->order->get_number();
+				break;
 		}
 
 		if ( '_edd_payment_meta' === $meta_key ) {

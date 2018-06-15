@@ -48,6 +48,8 @@ class Payment extends Base {
 		/* Filters ***********************************************************/
 		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
 		add_filter( 'get_post_metadata', array( $this, 'get_post_metadata' ), 99, 4 );
+		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
 	}
 
 	/**
@@ -125,8 +127,6 @@ class Payment extends Base {
 	 * @return mixed The value to return.
 	 */
 	public function get_post_metadata( $value, $object_id, $meta_key, $single ) {
-		global $wpdb;
-
 		if ( 'get_post_metadata' !== current_filter() ) {
 			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
 			_doing_it_wrong( __FUNCTION__, $message, 'EDD 3.0' );
@@ -205,16 +205,70 @@ class Payment extends Base {
 				break;
 		}
 
-		// Throw deprecated notice if WP_DEBUG is defined and on.
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! edd_is_checkout() ) {
+		if ( $this->show_notices ) {
 			_doing_it_wrong( 'get_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_order()</code> instead.', 'EDD 3.0' );
 
-			if ( ! defined( 'EDD_DOING_TESTS' ) && ! EDD_DOING_TESTS ) {
+			if ( $this->show_backtrace ) {
 				$backtrace = debug_backtrace();
 				trigger_error( print_r( $backtrace, 1 ) );
 			}
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Backwards compatibility filters for add/update_post_meta() calls on payments.
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table.
+	 * @param int    $object_id  The object ID post meta was requested for.
+	 * @param string $meta_key   The meta key requested.
+	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
+	 * @param mixed  $prev_value The previous value of the meta
+	 *
+	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
+	 */
+	function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		$meta_keys = array(
+			'_edd_payment_purchase_key',
+			'_edd_payment_transaction_id',
+			'_edd_payment_meta',
+			'_edd_completed_date',
+			'_edd_payment_gateway',
+			'_edd_payment_user_id',
+			'_edd_payment_user_email',
+			'_edd_payment_user_ip',
+			'_edd_payment_mode',
+			'_edd_payment_tax_rate',
+			'_edd_payment_customer_id',
+			'_edd_payment_total',
+			'_edd_payment_tax',
+			'_edd_payment_number',
+		);
+
+		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
+			return $check;
+		}
+
+		$p = edd_get_payment( $object_id );
+
+		if ( ! $p ) {
+			return $check;
+		}
+
+		$check = $p->update_meta( $meta_key, $meta_value );
+
+		if ( $this->show_notices ) {
+			_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_order_meta()/edd_update_order_meta()()</code> instead.', 'EDD 3.0' );
+
+			if ( $this->show_backtrace ) {
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+		}
+
+		return $check;
 	}
 }

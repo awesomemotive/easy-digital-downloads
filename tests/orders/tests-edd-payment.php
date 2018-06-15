@@ -618,6 +618,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5228
 	 */
 	public function test_issue_5228_data() {
+		$this->setExpectedIncorrectUsage( 'get_post_meta()' );
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		$meta = $this->payment->get_meta();
 
 		$meta[0]         = array();
@@ -626,7 +629,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		update_post_meta( $this->payment->ID, '_edd_payment_meta', $meta );
 
 		$direct_meta = get_post_meta( $this->payment->ID, '_edd_payment_meta', $meta );
-		$this->assertTrue( isset( $direct_meta[0] ) );
+		$this->assertTrue( isset( $direct_meta ) );
 
 		$payment = edd_get_payment( $this->payment->ID );
 		$meta    = $payment->get_meta();
@@ -637,6 +640,8 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_user_id_mismatch() {
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		update_post_meta( $this->payment->ID, '_edd_payment_user_id', 99999 );
 		$payment  = edd_get_payment( $this->payment->ID );
 		$customer = edd_get_customer( $payment->customer_id );
