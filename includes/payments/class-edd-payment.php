@@ -2728,7 +2728,7 @@ class EDD_Payment {
 	 *
 	 * @since 2.5
 	 *
-	 * @return array Array of discount codes on this payment.
+	 * @return string Discount codes on this payment.
 	 */
 	private function setup_discounts() {
 		$discounts = array();
@@ -2738,6 +2738,8 @@ class EDD_Payment {
 		foreach ( $order_discounts as $discount ) {
 			$discounts[] = $discount->description;
 		}
+
+		$discounts = implode( ', ', $discounts );
 
 		return $discounts;
 	}

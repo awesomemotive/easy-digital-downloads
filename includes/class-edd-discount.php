@@ -1430,9 +1430,11 @@ class EDD_Discount extends Adjustment {
 	 * Has the discount code been used.
 	 *
 	 * @since 2.7
+	 * @since 3.0 Refactored to use new query methods.
 	 *
 	 * @param string $user User info.
 	 * @param bool $set_error Whether an error message be set in session.
+	 *
 	 * @return bool Whether the discount has been used or not.
 	 */
 	public function is_used( $user = '', $set_error = true ) {
@@ -1441,8 +1443,9 @@ class EDD_Discount extends Adjustment {
 		if ( $this->is_single_use ) {
 			$payments = array();
 
-			if ( EDD()->customers->installed() ) {
-				$by_user_id = is_email( $user ) ? false : true;
+			if ( edd_get_component_interface( 'customer', 'table' )->exists() ) {
+				$by_user_id = ! is_email( $user );
+
 				$customer = new EDD_Customer( $user, $by_user_id );
 
 				$payments = explode( ',', $customer->payment_ids );

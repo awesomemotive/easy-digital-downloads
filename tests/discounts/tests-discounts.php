@@ -682,8 +682,6 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::is_used()
 	 */
 	public function test_is_used_case_insensitive() {
-		$this->markTestSkipped( 'EDD_Payment back comapt not implemented yet.' );
-
 		$payment_id         = \EDD_Helper_Payment::create_simple_payment();
 		$payment            = edd_get_payment( $payment_id );
 		$payment->discounts = '20off';
