@@ -92,10 +92,10 @@ $minutes              = edd_get_minute_values();
 
                 <tr>
                     <th scope="row" valign="top">
-                        <label for="edd-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
+                        <label for="edd-amount-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-                        <select name="amount_type" id="edd-type">
+                        <select name="amount_type" id="edd-amount-type">
                             <option value="percent" <?php selected( $type, 'percent' ); ?>><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
                             <option value="flat"<?php selected( $type, 'flat' ); ?>><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
                         </select>
@@ -111,8 +111,8 @@ $minutes              = edd_get_minute_values();
                     </th>
                     <td>
                         <input type="text" class="edd-price-field" required="required" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_format_amount( $discount->amount ) ); ?>" />
-                        <p class="description edd-amount-description flat"<?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
-                        <p class="description edd-amount-description percent"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
+                        <p class="description edd-amount-description flat" <?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
+                        <p class="description edd-amount-description percent" <?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 5.5 = 5.5%', 'easy-digital-downloads' ); ?></p>
                     </td>
                 </tr>
 

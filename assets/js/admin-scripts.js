@@ -973,11 +973,9 @@ jQuery(document).ready(function ($) {
 		},
 
 		type_select : function() {
-
-			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
-				var val = $( this ).val();
+			$('#edd-amount-type').change(function() {
 				$('.edd-amount-description').hide();
-				$('.edd-amount-description.' + val + '-discount').show();
+				$('.edd-amount-description.' + $( this ).val()).show();
 			});
 		},
 
