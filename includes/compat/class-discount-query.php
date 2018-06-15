@@ -32,26 +32,48 @@ class Discount extends Adjustment {
 	protected $item_shape = 'EDD_Discount';
 
 	/**
-	 * Queries the database and retrieves items or counts.
-	 *
-	 * This method exists for backwards compatibility with `discount->type`
-	 * properties, which is now `discount->amount_type`.
+	 * Swap out types in a query.
 	 *
 	 * @since 3.0
 	 *
-	 * @param string|array $query Array or URL query string of parameters.
-	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
+	 * @param array $query Array of query arguments
+	 * @return array
 	 */
 	public function query( $query = array() ) {
+		return parent::query( $this->swap_types( $query ) );
+	}
+
+	/**
+	 * Swap out types in an item.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item Array of item arguments
+	 * @return array
+	 */
+	public function filter_item( $item = array() ) {
+		return parent::filter_item( $this->swap_types( $item ) );
+	}
+
+	/**
+	 * Swap out the type arguments.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	private function swap_types( $args = array() ) {
 
 		// Switch `type` to `amount_type`
-		if ( ! empty( $query['type'] ) ) {
-			$query['amount_type'] = $query['type'];
+		if ( ! isset( $args['amount_type'] ) && ! empty( $args['type'] ) ) {
+			$args['amount_type'] = $args['type'];
 		}
 
 		// Force `type` to `discount`
-		$query['type'] = 'discount';
+		$args['type'] = 'discount';
 
-		return parent::query( $query );
+		// Return swapped arguments
+		return $args;
 	}
 }
