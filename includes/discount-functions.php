@@ -1875,8 +1875,7 @@ function _edd_discounts_bc_wp_count_posts( $query ) {
 	$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
 
 	if ( $expected === $query ) {
-		$discounts_table = edd_get_component_interface( 'discount', 'table' )->table_name;
-		$query           = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$discounts_table} GROUP BY post_status";
+		$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_adjustments} WHERE type = 'discount' GROUP BY post_status";
 	}
 
 	return $query;
