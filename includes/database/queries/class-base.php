@@ -570,7 +570,7 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Default to number of item IDs
-		$this->found_items = count( $item_ids );
+		$this->found_items = count( (array) $item_ids );
 
 		// Count query
 		if ( ! empty( $this->query_vars['count'] ) ) {
