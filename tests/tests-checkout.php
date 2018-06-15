@@ -1,10 +1,14 @@
 <?php
-
-
 /**
+ * Checkout tests.
+ *
  * @group edd_checkout
  */
 class Tests_Checkout extends EDD_UnitTestCase {
+
+	/**
+	 * Set up fixtures once.
+	 */
 	public static function wpSetUpBeforeClass() {
 		global $wp_rewrite;
 		$GLOBALS['wp_rewrite']->init();
