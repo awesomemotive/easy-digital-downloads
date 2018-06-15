@@ -455,6 +455,13 @@ textarea[name="edd-note"] {
 	color: #ff8c00;
 }
 
+.wp-list-table.customers .column-primary .avatar {
+	float: left;
+	margin-right: 10px;
+	margin-top: 1px;
+	border-radius: 20%;
+}
+
 /* Filter Bar Styles
 -------------------------------------------------------------- */
 
