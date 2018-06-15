@@ -41,8 +41,13 @@ class Payment extends Base {
 	 * @access protected
 	 */
 	protected function hooks() {
-		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
+
+		/* Actions ***********************************************************/
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 99, 1 );
+
+		/* Filters ***********************************************************/
+		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
+		add_filter( 'get_post_metadata', array( $this, 'get_post_metadata' ), 99, 4 );
 	}
 
 	/**
@@ -105,5 +110,111 @@ class Payment extends Base {
 		);
 
 		_doing_it_wrong( 'get_posts()/get_post()/WP_Query', $message, 'EDD 3.0' );
+	}
+
+	/**
+	 * Backwards compatibility filters for get_post_meta() calls on payments.
+	 *
+	 * @since 3.0
+	 *
+	 * @param  mixed  $value       The value get_post_meta would return if we don't filter.
+	 * @param  int    $object_id   The object ID post meta was requested for.
+	 * @param  string $meta_key    The meta key requested.
+	 * @param  bool   $single      If a single value or an array of the value is requested.
+	 *
+	 * @return mixed The value to return.
+	 */
+	public function get_post_metadata( $value, $object_id, $meta_key, $single ) {
+		global $wpdb;
+
+		if ( 'get_post_metadata' !== current_filter() ) {
+			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+			_doing_it_wrong( __FUNCTION__, $message, 'EDD 3.0' );
+		}
+
+		$meta_keys = array(
+			'_edd_payment_purchase_key',
+			'_edd_payment_transaction_id',
+			'_edd_payment_meta',
+			'_edd_completed_date',
+			'_edd_payment_gateway',
+			'_edd_payment_user_id',
+			'_edd_payment_user_email',
+			'_edd_payment_user_ip',
+			'_edd_payment_mode',
+			'_edd_payment_tax_rate',
+			'_edd_payment_customer_id',
+			'_edd_payment_total',
+			'_edd_payment_tax',
+			'_edd_payment_number',
+		);
+
+		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
+			return $value;
+		}
+
+		$order = edd_get_order( $object_id );
+
+		if ( ! $order ) {
+			return $value;
+		}
+
+		switch ( $meta_key ) {
+			case '_edd_payment_purchase_key':
+				$value = $order->payment_key;
+				break;
+			case '_edd_payment_transaction_id':
+				$value = $order->get_transaction_id();
+				break;
+			case '_edd_payment_user_email':
+				$value = $order->email;
+				break;
+			case '_edd_payment_meta':
+				$p = edd_get_payment( $object_id );
+				$value = array( $p->get_meta( '_edd_payment_meta' ) );
+				break;
+			case '_edd_completed_date':
+				$value = $order->date_completed;
+				break;
+			case '_edd_payment_gateway':
+				$value = $order->gateway;
+				break;
+			case '_edd_payment_user_id':
+				$value = $order->user_id;
+				break;
+			case '_edd_payment_user_ip':
+				$value = $order->ip;
+				break;
+			case '_edd_payment_mode':
+				$value = $order->mode;
+				break;
+			case '_edd_payment_tax_rate':
+				$value = $order->get_tax_rate();
+				break;
+			case '_edd_payment_customer_id':
+				$value = $order->customer_id;
+				break;
+			case '_edd_payment_total':
+				$value = $order->total;
+				break;
+			case '_edd_payment_tax':
+				$value = $order->tax;
+				break;
+			case '_edd_payment_number':
+				$value = $order->get_number();
+				break;
+		}
+
+		// Throw deprecated notice if WP_DEBUG is defined and on.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! edd_is_checkout() ) {
+			_doing_it_wrong( 'get_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_order()</code> instead.', 'EDD 3.0' );
+
+			if ( ! defined( 'EDD_DOING_TESTS' ) && ! EDD_DOING_TESTS ) {
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+		}
+
+		return $value;
 	}
 }
