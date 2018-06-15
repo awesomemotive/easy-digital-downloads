@@ -582,7 +582,7 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount,
-					'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal )
+					'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
 				) );
 			}
 		}
@@ -594,9 +594,8 @@ function edd_build_order( $order_data = array() ) {
 	// Setup order number.
 	if ( edd_get_option( 'enable_sequential' ) ) {
 		$number = edd_get_next_payment_number();
-		$number = edd_format_payment_number( $number );
 
-		$order_args['order_number'] = $number;
+		$order_args['order_number'] = edd_format_payment_number( $number );
 
 		update_option( 'edd_last_payment_number', $number );
 	}

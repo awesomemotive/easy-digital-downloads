@@ -1269,23 +1269,17 @@ function edd_get_next_payment_number() {
 			$increment_number = false;
 		}
 	} else {
-
-		// This case handles the first addition of the new option, as well as if it get's deleted for any reason
-		$payments = new EDD_Payments_Query( array(
+		$last_order = edd_get_orders( array(
 			'number'  => 1,
-			'order'   => 'DESC',
-			'orderby' => 'ID',
-			'output'  => 'posts',
-			'fields'  => 'ids',
+			'orderby' => 'id',
+			'order'   => 'desc',
 		) );
 
-		$last_payment = $payments->get_payments();
-
-		if ( ! empty( $last_payment ) ) {
-			$number = edd_get_payment_number( $last_payment[0]->ID );
+		if ( ! empty( $last_order ) && $last_order[0] instanceof EDD\Orders\Order ) {
+			$number = (int) $last_order[0]->get_number();
 		}
 
-		if ( ! empty( $number ) && $number !== (int) $last_payment[0]->ID ) {
+		if ( ! empty( $number ) && $number !== (int) $last_order[0]->id ) {
 			$number = edd_remove_payment_prefix_postfix( $number );
 		} else {
 			$number = $start;
