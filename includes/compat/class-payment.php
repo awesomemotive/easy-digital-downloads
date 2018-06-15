@@ -171,6 +171,8 @@ class Payment extends Base {
 	 * @return mixed The value to return.
 	 */
 	public function get_post_metadata( $value, $object_id, $meta_key, $single ) {
+		global $wpdb;
+
 		if ( 'get_post_metadata' !== current_filter() ) {
 			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
 			_doing_it_wrong( __FUNCTION__, $message, 'EDD 3.0' );
@@ -200,7 +202,23 @@ class Payment extends Base {
 		$order = edd_get_order( $object_id );
 
 		if ( ! $order ) {
-			return $value;
+
+			// Check if the ID matches a legacy ID.
+			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
+
+			$object_id = $wpdb->get_var( $wpdb->prepare(
+				"
+				SELECT edd_order_id
+				FROM {$table_name}
+				WHERE meta_key = %s AND meta_value = %d
+				", 'legacy_payment_id', $object_id
+			) );
+
+			$order = edd_get_order( $object_id );
+
+			if ( ! $order ) {
+				return $value;
+			}
 		}
 
 		switch ( $meta_key ) {
@@ -274,7 +292,9 @@ class Payment extends Base {
 	 *
 	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
 	 */
-	function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+	public function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		global $wpdb;
+
 		$meta_keys = array(
 			'_edd_payment_purchase_key',
 			'_edd_payment_transaction_id',
@@ -299,7 +319,23 @@ class Payment extends Base {
 		$p = edd_get_payment( $object_id );
 
 		if ( ! $p ) {
-			return $check;
+
+			// Check if the ID matches a legacy ID.
+			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
+
+			$object_id = $wpdb->get_var( $wpdb->prepare(
+				"
+				SELECT edd_order_id
+				FROM {$table_name}
+				WHERE meta_key = %s AND meta_value = %d
+				", 'legacy_payment_id', $object_id
+			) );
+
+			$p = edd_get_payment( $object_id );
+
+			if ( ! $p ) {
+				return $check;
+			}
 		}
 
 		$check = $p->update_meta( $meta_key, $meta_value );
