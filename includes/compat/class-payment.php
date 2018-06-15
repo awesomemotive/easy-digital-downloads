@@ -43,6 +43,7 @@ class Payment extends Base {
 	protected function hooks() {
 		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 99, 1 );
+		add_action( 'pre_get_posts', '_edd_discounts_bc_force_filters', 10, 1 );
 	}
 
 	/**
@@ -70,6 +71,9 @@ class Payment extends Base {
 
 	/**
 	 * Add a message for anyone to trying to get payments via get_post/get_posts/WP_Query.
+	 * Force filters to run for all queries that have `edd_discount` as the post type.
+	 *
+	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
 	 *
 	 * @since 3.0
 	 *
@@ -78,10 +82,18 @@ class Payment extends Base {
 	public function pre_get_posts( $query ) {
 		global $wpdb;
 
+		if ( 'pre_get_posts' !== current_filter() ) {
+			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
+			_doing_it_wrong( __FUNCTION__, $message, 'EDD 3.0' );
+		}
+
 		// Bail if not a payment
 		if ( 'edd_payment' !== $query->get( 'post_type' ) ) {
 			return;
 		}
+
+		// Force filters to run
+		$query->set( 'suppress_filters', false );
 
 		// Setup doing-it-wrong message
 		$message = sprintf(
