@@ -1961,7 +1961,7 @@ class EDD_Payment {
 				break;
 
 			case '_edd_payment_transaction_id':
-				$meta = $this->order->get_transaction_id();
+				$meta = edd_get_order_meta( $this->ID, 'transaction_id', true );
 				break;
 
 			case '_edd_payment_user_email':
@@ -2349,53 +2349,65 @@ class EDD_Payment {
 					? '0000-00-00 00:00:00'
 					: $meta_value;
 
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'date_completed' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_gateway':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'gateway' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_user_id':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'user_id' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_user_email':
 			case 'email':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'email' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_user_ip':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'ip' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_purchase_key':
 			case 'key':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'payment_key' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_mode':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'mode' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_tax_rate':
-				return edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				return true;
 			case '_edd_payment_customer_id':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'customer_id' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_total':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'total' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_tax':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'tax' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_number':
-				return edd_update_order( $this->ID, array(
+				edd_update_order( $this->ID, array(
 					'order_number' => $meta_value,
 				) );
+				return true;
 			case '_edd_payment_transaction_id':
 				return edd_update_order_meta( $this->ID, 'transaction_id', $meta_value );
 		}

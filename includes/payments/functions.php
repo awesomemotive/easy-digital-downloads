@@ -144,49 +144,6 @@ function edd_insert_payment( $order_data = array() ) {
 		return false;
 	}
 
-	$resume_payment   = false;
-	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
-
-	if ( ! empty( $existing_payment ) ) {
-		$payment        = edd_get_payment( $existing_payment );
-		$resume_payment = $payment->is_recoverable();
-	}
-
-	if ( $resume_payment ) {
-		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
-
-		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
-
-		// Since things could have been added/removed since we first crated this...rebuild the cart details.
-		foreach ( $payment->fees as $fee_index => $fee ) {
-			$payment->remove_fee_by( 'index', $fee_index, true );
-		}
-
-		foreach ( $payment->downloads as $cart_index => $download ) {
-			$item_args = array(
-				'quantity'   => isset( $download['quantity'] ) ? $download['quantity'] : 1,
-				'cart_index' => $cart_index,
-			);
-			$payment->remove_download( $download['id'], $item_args );
-		}
-
-		if ( strtolower( $payment->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
-
-			// Remove the payment from the previous customer.
-			$previous_customer = new EDD_Customer( $payment->customer_id );
-			$previous_customer->remove_payment( $payment->ID, false );
-
-			// Redefine the email first and last names.
-			$payment->email      = $order_data['user_info']['email'];
-			$payment->first_name = $order_data['user_info']['first_name'];
-			$payment->last_name  = $order_data['user_info']['last_name'];
-
-		}
-
-		// Remove any remainders of possible fees from items.
-		$payment->save();
-	}
-
 	return edd_build_order( $order_data );
 }
 

@@ -88,6 +88,13 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 				$thing->delete_all();
 				$thing->truncate();
 			}
+
+			$thing = $component->get_interface( 'meta' );
+
+			if ( $thing instanceof \EDD\Database\Tables\Base ) {
+				$thing->delete_all();
+				$thing->truncate();
+			}
 		}
 	}
 

@@ -15,11 +15,30 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	 */
 	protected static $payment;
 
-	/**
-	 * Set up fixtures once.
-	 */
-	public static function wpSetUpBeforeClass() {
+	public function setUp() {
 		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+
+		\EDD_Helper_Payment::delete_payment( self::$payment->ID );
+
+		edd_destroy_order( self::$payment->ID );
+
+		$component = edd_get_component_interface( 'order', 'meta' );
+
+		if ( $component instanceof \EDD\Database\Tables\Base ) {
+			$component->delete_all();
+			$component->truncate();
+		}
+
+		// Make sure we're working off a clean object caching in WP Core.
+		// Prevents some payment_meta from not being present.
+		clean_post_cache( self::$payment->ID );
+		update_postmeta_cache( array( self::$payment->ID ) );
+
+		self::$payment = null;
 	}
 
 	public function test_get_payments() {
@@ -262,9 +281,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_update_payment_meta_bc() {
-		$this->markTestSkipped( 'edd_update_payment_meta() does not return a standardised value as of Beta 1.' );
-
-		$old_value = $this->_payment_key;
+		$old_value = self::$payment->key;
 		$this->assertEquals( $old_value, edd_get_payment_meta( self::$payment->ID, '_edd_payment_purchase_key' ) );
 
 		$new_value = 'test12345';
@@ -356,8 +373,6 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_recovering_payment_guest_to_guest() {
-		$this->markTestSkipped( 'Payment recovery has not been implemented in Beta 1.' );
-
 		$initial_purchase_data = array(
 			'price'        => 299.0,
 			'date'         => date( 'Y-m-d H:i:s' ),
