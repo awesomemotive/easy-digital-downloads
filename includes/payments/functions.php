@@ -1635,12 +1635,20 @@ function edd_get_payment_notes( $order_id = 0, $search = '' ) {
 		return false;
 	}
 
-	return edd_get_notes( array(
-		'object_id'   => $order_id,
+	$args = array(
 		'object_type' => 'order',
 		'order'       => 'ASC',
-		'search'      => ''
-	) );
+	);
+
+	if ( ! empty( $order_id ) ) {
+		$args['order_id'] = $order_id;
+	}
+
+	if ( ! empty( $search ) ) {
+		$args['search'] = sanitize_text_field( $search );
+	}
+
+	return edd_get_notes( $args );
 }
 
 /**
