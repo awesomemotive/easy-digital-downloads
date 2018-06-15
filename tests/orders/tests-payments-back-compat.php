@@ -26,4 +26,10 @@ class Payment_Back_Compat_Tests extends \EDD_UnitTestCase {
 	public function test_wp_count_posts() {
 		$this->assertSame( 5, (int) wp_count_posts( 'edd_payment' )->publish );
 	}
+
+	public function test_get_posts() {
+		$this->setExpectedIncorrectUsage( 'get_posts()/get_post()/WP_Query' );
+
+		get_posts( array( 'post_type' => 'edd_payment' ) );
+	}
 }

@@ -42,6 +42,7 @@ class Payment extends Base {
 	 */
 	protected function hooks() {
 		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
+		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 99, 1 );
 	}
 
 	/**
@@ -67,4 +68,31 @@ class Payment extends Base {
 		return $query;
 	}
 
+	/**
+	 * Add a message for anyone to trying to get payments via get_post/get_posts/WP_Query.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \WP_Query $query
+	 */
+	public function pre_get_posts( $query ) {
+		global $wpdb;
+
+		// Bail if not a payment
+		if ( 'edd_payment' !== $query->get( 'post_type' ) ) {
+			return;
+		}
+
+		// Setup doing-it-wrong message
+		$message = sprintf(
+			__( 'As of Easy Digital Downloads 3.0, orders no longer exist in the %1$s table. They have been migrated to %2$s. Orders should be accessed using %3$s or %4$s. See %5$s for more information.', 'easy-digital-downloads' ),
+			'<code>' . $wpdb->posts . '</code>',
+			'<code>' . edd_get_component_interface( 'order', 'table' )->table_name . '</code>',
+			'<code>edd_get_orders()</code>',
+			'<code>edd_get_order()</code>',
+			'https://easydigitaldownloads.com/development/'
+		);
+
+		_doing_it_wrong( 'get_posts()/get_post()/WP_Query', $message, 'EDD 3.0' );
+	}
 }
