@@ -253,7 +253,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_type()
 	 */
 	public function test_get_discount_type_by_method() {
-		$this->assertEquals( 'percent', self::$discount->type );
+		$this->assertEquals( 'percent', self::$discount->get_type() );
 	}
 
 	/**
@@ -275,35 +275,35 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_amount()
 	 */
 	public function test_get_discount_amount_by_method() {
-		$this->assertEquals( '20', self::$discount->amount );
+		$this->assertEquals( '20', self::$discount->get_amount() );
 	}
 
 	/**
 	 * @covers ::get_product_reqs()
 	 */
 	public function test_get_discount_product_requirements_by_method() {
-		$this->assertSame( array(), self::$discount->product_reqs );
+		$this->assertSame( array(), self::$discount->get_product_reqs() );
 	}
 
 	/**
 	 * @covers ::get_product_reqs()
 	 */
 	public function test_get_discount_product_requirements_by_property() {
-		$this->assertSame( array(), self::$discount->get_product_reqs() );
+		$this->assertSame( array(), self::$discount->product_reqs );
 	}
 
 	/**
 	 * @covers ::get_excluded_products()
 	 */
 	public function test_get_discount_excluded_products_by_method() {
-		$this->assertSame( array(), self::$discount->excluded_products );
+		$this->assertSame( array(), self::$discount->get_excluded_products() );
 	}
 
 	/**
 	 * @covers ::get_excluded_products()
 	 */
 	public function test_get_discount_excluded_products_by_property() {
-		$this->assertSame( array(), self::$discount->get_excluded_products() );
+		$this->assertSame( array(), self::$discount->excluded_products );
 	}
 
 	/**
