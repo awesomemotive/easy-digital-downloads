@@ -234,11 +234,11 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_first_name() {
-		$this->assertEquals( 'Admin', edd_email_tag_first_name( self::$payment_id ) );
+		$this->assertEquals( 'Network', edd_email_tag_first_name( self::$payment_id ) );
 	}
 
 	public function test_email_tags_fullname() {
-		$this->assertEquals( 'Admin User', edd_email_tag_fullname( self::$payment_id ) );
+		$this->assertEquals( 'Network Administrator', edd_email_tag_fullname( self::$payment_id ) );
 	}
 
 	public function test_email_tags_username() {
