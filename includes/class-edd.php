@@ -180,6 +180,7 @@ final class Easy_Digital_Downloads {
 
 			// Register backwards compatibility hooks
 			new EDD\Compat\Customer();
+			new EDD\Compat\Payment();
 		}
 
 		return self::$instance;
@@ -436,6 +437,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-payment.php';
 
 		// Original Classes
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
