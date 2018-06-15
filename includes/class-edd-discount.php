@@ -9,6 +9,8 @@
  * @since       2.7
  */
 
+use EDD\Database\Objects\Adjustment;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -17,8 +19,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.7
  * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $code
+ * @property string $status
+ * @property string $amount_type
+ * @property float $amount
+ * @property array $product_reqs
+ * @property string $scope
+ * @property array $excluded_products
+ * @property string $product_condition
+ * @property string $date_created
+ * @property string $start_date
+ * @property string $end_date
+ * @property int $use_count
+ * @property int $max_uses
+ * @property float $min_cart_price
+ * @property bool $once_per_customer
  */
-class EDD_Discount extends \EDD\Database\Objects\Adjustment {
+class EDD_Discount extends Adjustment {
 
 	/**
 	 * Discount ID.
