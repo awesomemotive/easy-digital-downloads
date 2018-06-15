@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-actions.php';
