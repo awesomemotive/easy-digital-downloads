@@ -43,7 +43,6 @@ class Payment extends Base {
 	protected function hooks() {
 		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 99, 1 );
-		add_action( 'pre_get_posts', '_edd_discounts_bc_force_filters', 10, 1 );
 	}
 
 	/**
