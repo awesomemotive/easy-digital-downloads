@@ -6,6 +6,10 @@
  */
 class Tests_Register_Meta extends EDD_UnitTestCase {
 
+	protected $payment_id;
+
+	protected $download_id;
+
 	public function setUp() {
 		parent::setUp();
 		$this->payment_id  = EDD_Helper_Payment::create_simple_payment();

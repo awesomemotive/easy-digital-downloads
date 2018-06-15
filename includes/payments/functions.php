@@ -196,7 +196,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
-		if ( $customer->id && $update_customer ) {
+		if ( $customer && $customer->id && $update_customer ) {
 
 			// Decrement the stats for the customer
 			$customer->decrease_purchase_count();
@@ -206,7 +206,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	do_action( 'edd_payment_delete', $payment_id );
 
-	if ( $customer->id && $update_customer ) {
+	if ( $customer && $customer->id && $update_customer ) {
 
 		// Remove the payment ID from the customer
 		$customer->remove_payment( $payment_id );
