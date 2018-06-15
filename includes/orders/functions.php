@@ -136,7 +136,7 @@ function edd_get_order_by( $field = '', $value = '' ) {
  * @since 3.0
  *
  * @param array $args
- * @return array
+ * @return EDD\Orders\Order[]
  */
 function edd_get_orders( $args = array() ) {
 

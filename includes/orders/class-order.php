@@ -63,7 +63,7 @@ class Order extends \EDD\Database\Objects\Order {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $number;
+	protected $order_number;
 
 	/**
 	 * Order status.
@@ -238,8 +238,8 @@ class Order extends \EDD\Database\Objects\Order {
 	 * @return string
 	 */
 	public function get_number() {
-		return edd_get_option( 'enable_sequential' )
-			? $this->number
+		return $this->order_number && edd_get_option( 'enable_sequential' )
+			? $this->order_number
 			: $this->id;
 	}
 
