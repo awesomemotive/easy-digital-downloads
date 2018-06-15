@@ -575,14 +575,16 @@ function edd_build_order( $order_data = array() ) {
 			/** @var EDD_Discount $discount */
 			$discount = edd_get_discount_by( 'code', $discount );
 
-			edd_add_order_adjustment( array(
-				'object_id'   => $order_id,
-				'object_type' => 'order',
-				'type_id'     => $discount->id,
-				'type'        => 'discount',
-				'description' => $discount,
-				'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal )
-			) );
+			if ( $discount instanceof EDD_Discount ) {
+				edd_add_order_adjustment( array(
+					'object_id'   => $order_id,
+					'object_type' => 'order',
+					'type_id'     => $discount->id,
+					'type'        => 'discount',
+					'description' => $discount,
+					'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal )
+				) );
+			}
 		}
 	}
 
