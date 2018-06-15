@@ -355,6 +355,17 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payments_date_query() {
+		/**
+		 * @internal There's a caching issue when running the test suite so we have to clear everything at the beginning
+		 *           of this test.
+		 */
+		$component = edd_get_component_interface( 'order', 'table' );
+
+		if ( $component instanceof \EDD\Database\Tables\Base ) {
+			$component->delete_all();
+			$component->truncate();
+		}
+
 		$payment_id_1 = \EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ) );
 		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-4 days' ) ) );
 		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-5 days' ) ) );
@@ -363,13 +374,15 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$payments_query = new \EDD_Payments_Query( array(
 			'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
 			'end_date'   => date( 'Y-m-d H:i:s' ),
+			'output'     => 'orders',
 		) );
 
 		$payments = $payments_query->get_payments();
 
-		$this->assertEquals( 2, count( $payments ) );
+		$this->assertEquals( 1, count( $payments ) );
 		$this->assertEquals( $payment_id_1, $payments[0]->ID );
-		$this->assertEquals( self::$payment->ID, $payments[1]->ID );
+
+		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
 	}
 
 	public function test_recovering_payment_guest_to_guest() {
