@@ -356,88 +356,62 @@ class EDD_Payments_Query extends EDD_Stats {
 			$notes = edd_get_payment_notes( 0, $search );
 
 			if ( ! empty( $notes ) ) {
-				$payment_ids = wp_list_pluck( (array) $notes, 'comment_post_ID' );
+				$payment_ids = wp_list_pluck( (array) $notes, 'object_id' );
 
+				// Set post__in for backwards compatibility purposes.
 				$this->__set( 'post__in', $payment_ids );
 			}
 
 			$this->__unset( 's' );
 		} elseif ( $is_email || 32 === strlen( $search ) ) {
-			$key         = $is_email ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
-			$search_meta = array(
-				'key'     => $key,
-				'value'   => $search,
-				'compare' => 'LIKE',
-			);
+			$key = $is_email
+				? 'email'
+				: 'payment_key';
 
-			$this->__set( 'meta_query', $search_meta );
+			if ( 'email' === $key ) {
+				$this->__set( 'user', $search );
+			} else {
+				$this->__set( 'payment_key', $search );
+			}
+
 			$this->__unset( 's' );
 		} elseif ( $is_user ) {
-			$search_meta = array(
-				'key'   => '_edd_payment_user_id',
-				'value' => trim( str_replace( 'user:', '', strtolower( $search ) ) ),
-			);
-
-			$this->__set( 'meta_query', $search_meta );
-
-			if ( edd_get_option( 'enable_sequential' ) ) {
-				$search_meta = array(
-					'key'     => '_edd_payment_number',
-					'value'   => $search,
-					'compare' => 'LIKE',
-				);
-
-				$this->__set( 'meta_query', $search_meta );
-
-				$this->args['meta_query']['relation'] = 'OR';
-			}
+			$this->__set( 'user', trim( str_replace( 'user:', '', strtolower( $search ) ) ) );
 
 			$this->__unset( 's' );
 		} elseif ( edd_get_option( 'enable_sequential' ) && ( false !== strpos( $search, edd_get_option( 'sequential_prefix' ) ) || false !== strpos( $search, edd_get_option( 'sequential_postfix' ) ) ) ) {
-			$search_meta = array(
-				'key'     => '_edd_payment_number',
-				'value'   => $search,
-				'compare' => 'LIKE',
-			);
-
-			$this->__set( 'meta_query', $search_meta );
+			$this->__set( 'order_number', $search );
 			$this->__unset( 's' );
 		} elseif ( is_numeric( $search ) ) {
-			$post = get_post( $search );
-
-			if ( is_object( $post ) && 'edd_payment' === $post->post_type ) {
-				$arr   = array();
-				$arr[] = $search;
-				$this->__set( 'post__in', $arr );
-				$this->__unset( 's' );
-			}
+			$this->__set( 'post__in', array( $search ) );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
-				$search_meta = array(
-					'key'     => '_edd_payment_number',
-					'value'   => $search,
-					'compare' => 'LIKE',
-				);
-
-				$this->__set( 'meta_query', $search_meta );
-				$this->__unset( 's' );
+				$this->__set( 'order_number', $search );
 			}
+
+			$this->__unset( 's' );
 		} elseif ( '#' === substr( $search, 0, 1 ) ) {
 			$search = str_replace( '#:', '', $search );
 			$search = str_replace( '#', '', $search );
-			$this->__set( 'download', $search );
+
+			$ids = edd_get_order_items( array(
+				'fields'     => 'order_id',
+				'product_id' => $search,
+			) );
+
+			$this->__set( 'post__in', array_values( $ids ) );
+
 			$this->__unset( 's' );
 		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
 			$search = trim( str_replace( 'discount:', '', $search ) );
-			$search = 'discount.*' . $search;
 
-			$search_meta = array(
-				'key'     => '_edd_payment_meta',
-				'value'   => $search,
-				'compare' => 'REGEXP',
-			);
+			$ids = edd_get_order_adjustments( array(
+				'fields'      => 'object_id',
+				'type'        => 'discount',
+				'description' => $search,
+			) );
 
-			$this->__set( 'meta_query', $search_meta );
+			$this->__set( 'post__in', array_values( $ids ) );
 			$this->__unset( 's' );
 		} else {
 			$this->__set( 's', $search );

@@ -6,12 +6,16 @@
 class Tests_Payments extends EDD_UnitTestCase {
 
 	protected $_payment_id = null;
+
 	protected $_key = null;
+
 	protected $_post = null;
+
+	protected $_transaction_id = null;
+
 	protected $_payment_key = null;
 
 	public function setUp() {
-
 		global $edd_options;
 
 		parent::setUp();
@@ -21,11 +25,11 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->_payment_key = edd_get_payment_key( $payment_id );
 
 		$this->_payment_id = $payment_id;
-		$this->_key = $this->_payment_key;
+		$this->_key        = $this->_payment_key;
 
 		$this->_transaction_id = 'FIR3SID3';
 		edd_set_payment_transaction_id( $payment_id, $this->_transaction_id );
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $this->_transaction_id ) );
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $this->_transaction_id ) );
 
 		// Make sure we're working off a clean object caching in WP Core.
 		// Prevents some payment_meta from not being present.
@@ -50,7 +54,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	public function test_payments_query_edd_payments() {
 		$payments = new EDD_Payments_Query( array( 'output' => 'edd_payments' ) );
-		$out = $payments->get_payments();
+		$out      = $payments->get_payments();
 		$this->assertTrue( is_object( $out[0] ) );
 		$this->assertTrue( property_exists( $out[0], 'ID' ) );
 		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
@@ -59,7 +63,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	public function test_payments_query_payments() {
 		$payments = new EDD_Payments_Query( array( 'output' => 'payments' ) );
-		$out = $payments->get_payments();
+		$out      = $payments->get_payments();
 		$this->assertTrue( is_object( $out[0] ) );
 		$this->assertTrue( property_exists( $out[0], 'ID' ) );
 		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
@@ -67,8 +71,9 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_payments_query_default() {
-		$payments = new EDD_Payments_Query;
-		$out = $payments->get_payments();
+		$payments = new EDD_Payments_Query();
+		$out      = $payments->get_payments();
+
 		$this->assertTrue( is_object( $out[0] ) );
 		$this->assertTrue( property_exists( $out[0], 'ID' ) );
 		$this->assertTrue( property_exists( $out[0], 'cart_details' ) );
@@ -76,19 +81,21 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_payments_query_search_discount() {
-		$this->markTestSkipped( 'EDD_Payments_Query does not implement searching for Beta 1.' );
+		$discount = edd_get_discount( EDD_Helper_Discount::create_simple_percent_discount() );
 
-		$payment_id = EDD_Helper_Payment::create_simple_payment( array( 'discount' => 'ZERO' ) );
+		$payment_id = EDD_Helper_Payment::create_simple_payment( array( 'discount' => $discount->code ) );
 
-		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:ZERO' ) );
-		$out = $payments_query->get_payments();
+		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:' . $discount->code ) );
+		$out            = $payments_query->get_payments();
+
 		$this->assertEquals( 1, count( $out ) );
 		$this->assertEquals( $payment_id, $out[0]->ID );
 
 		EDD_Helper_Payment::delete_payment( $payment_id );
 
-		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:ZERO' ) );
-		$out = $payments_query->get_payments();
+		$payments_query = new EDD_Payments_Query( array( 's' => 'discount:' . $discount->code ) );
+		$out            = $payments_query->get_payments();
+
 		$this->assertEquals( 0, count( $out ) );
 	}
 
@@ -117,7 +124,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 
 		$out = edd_get_payments();
-		
+
 		$this->assertEquals( 'publish', $out[0]->post_status );
 	}
 
@@ -172,7 +179,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 			'processing',
 			'publish',
 			'refunded',
-			'revoked'
+			'revoked',
 		);
 
 		$this->assertInternalType( 'array', $out );
@@ -180,29 +187,25 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_delete_purchase() {
-		$this->markTestSkipped( 'Beta 1 does not include back compat for edd_delete_purchase().' );
 		edd_delete_purchase( $this->_payment_id );
-		// This returns an empty array(), so empty makes it false
-		$cart = edd_get_payments();
-		$this->assertTrue( empty( $cart ) );
+
+		$this->assertEmpty( edd_get_payments() );
 	}
 
 	public function test_get_payment_completed_date() {
-
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$payment = new EDD_Payment( $this->_payment_id );
+
 		$this->assertInternalType( 'string', $payment->completed_date );
 		$this->assertEquals( date( 'Y-m-d H:i' ), date( 'Y-m-d H:i', strtotime( $payment->completed_date ) ) );
-
 	}
 
 	public function test_get_payment_completed_date_bc() {
-
 		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+
 		$this->assertInternalType( 'string', $completed_date );
 		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
-
 	}
 
 	public function test_get_payment_number() {
@@ -248,7 +251,6 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_get_payment_meta() {
-
 		$payment = new EDD_Payment( $this->_payment_id );
 
 		// Test by getting the payment key with three different methods
@@ -260,11 +262,9 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( $this->_transaction_id, $payment->get_meta( '_edd_payment_transaction_id' ) );
 
 		$this->assertEquals( $payment->email, $payment->get_meta( '_edd_payment_user_email' ) );
-
 	}
 
 	public function test_get_payment_meta_bc() {
-
 		// Test by getting the payment key with three different methods
 		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key' ) );
 		$this->assertEquals( $this->_payment_key, edd_get_payment_meta( $this->_payment_id, '_edd_payment_purchase_key', true ) );
@@ -275,11 +275,9 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$user_info = edd_get_payment_meta_user_info( $this->_payment_id );
 		$this->assertEquals( $user_info['email'], edd_get_payment_meta( $this->_payment_id, '_edd_payment_user_email' ) );
-
 	}
 
 	public function test_update_payment_meta() {
-
 		$payment = new EDD_Payment( $this->_payment_id );
 		$this->assertEquals( $payment->key, $payment->get_meta( '_edd_payment_purchase_key' ) );
 
@@ -287,18 +285,17 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertNotEquals( $payment->key, $new_value );
 
 		$payment->key = $new_value;
-		$ret = $payment->save();
+		$ret          = $payment->save();
 
 		$this->assertTrue( $ret );
 		$this->assertEquals( $new_value, $payment->key );
 
 		$payment->email = 'test@test.com';
-		$ret = $payment->save();
+		$ret            = $payment->save();
 
 		$this->assertTrue( $ret );
 
 		$this->assertEquals( 'test@test.com', $payment->email );
-
 	}
 
 	public function test_update_payment_meta_bc() {
@@ -326,19 +323,15 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_update_payment_data() {
-
-		$payment = new EDD_Payment( $this->_payment_id );
+		$payment       = new EDD_Payment( $this->_payment_id );
 		$payment->date = date( 'Y-m-d H:i:s' );
 		$payment->save();
 		$meta = $payment->get_meta();
 
 		$this->assertSame( $payment->date, $meta['date'] );
-
-
 	}
 
 	public function test_get_payment_currency_code() {
-
 		$payment = new EDD_Payment( $this->_payment_id );
 
 		$this->assertEquals( 'USD', $payment->currency );
@@ -349,11 +342,9 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$this->assertEquals( '&#36;120.00', $total1 );
 		$this->assertEquals( '&#36;120.00', $total2 );
-
 	}
 
 	public function test_get_payment_currency_code_bc() {
-
 		$this->assertEquals( 'USD', edd_get_payment_currency_code( $this->_payment_id ) );
 		$this->assertEquals( 'US Dollars (&#36;)', edd_get_payment_currency( $this->_payment_id ) );
 
@@ -362,21 +353,16 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$this->assertEquals( '&#36;120.00', $total1 );
 		$this->assertEquals( '&#36;120.00', $total2 );
-
 	}
 
 	public function test_is_guest_payment() {
-		// setUp defines a payment with a known user, use this
 		$this->assertFalse( edd_is_guest_payment( $this->_payment_id ) );
 
-		// Create a guest payment
-		$guest_payment_id   = EDD_Helper_Payment::create_simple_guest_payment();
+		$guest_payment_id = EDD_Helper_Payment::create_simple_guest_payment();
 		$this->assertTrue( edd_is_guest_payment( $guest_payment_id ) );
 	}
 
 	public function test_get_payment() {
-		$this->markTestSkipped( 'Beta 1 does not include back compat to query orders by transaction ID.' );
-
 		$payment = edd_get_payment( $this->_payment_id );
 		$this->assertTrue( property_exists( $payment, 'ID' ) );
 		$this->assertTrue( property_exists( $payment, 'cart_details' ) );
@@ -393,13 +379,16 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_payments_date_query() {
-		$payment_id_1 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-1 day' ) ) );
-		$payment_id_2 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-4 days' ) ) );
-		$payment_id_3 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-5 days' ) ) );
-		$payment_id_4 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime('-1 month' ) ) );
+		$payment_id_1 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ) );
+		$payment_id_2 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-4 days' ) ) );
+		$payment_id_3 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-5 days' ) ) );
+		$payment_id_4 = EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 month' ) ) );
 
-		$payments_query = new EDD_Payments_Query( array( 'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ), 'end_date' => date( 'Y-m-d H:i:s' ) ) );
-		$payments = $payments_query->get_payments();
+		$payments_query = new EDD_Payments_Query( array(
+			'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'end_date'   => date( 'Y-m-d H:i:s' ),
+		) );
+		$payments       = $payments_query->get_payments();
 
 		$this->assertEquals( 2, count( $payments ) );
 		$this->assertEquals( $payment_id_1, $payments[0]->ID );
@@ -409,125 +398,121 @@ class Tests_Payments extends EDD_UnitTestCase {
 	public function test_recovering_payment_guest_to_guest() {
 		$this->markTestSkipped( 'Payment recovery has not been implemented in Beta 1.' );
 
-		$initial_purchase_data = array (
-			'price' => 299.0,
-			'date' => date( 'Y-m-d H:i:s' ),
-			'user_email' => 'bruce@waynefoundation.org',
+		$initial_purchase_data = array(
+			'price'        => 299.0,
+			'date'         => date( 'Y-m-d H:i:s' ),
+			'user_email'   => 'bruce@waynefoundation.org',
 			'purchase_key' => '186c2fb5402d756487bd4b6192d59bc2',
-			'currency' => 'USD',
-			'downloads' =>
-				array (
+			'currency'     => 'USD',
+			'downloads'    =>
+				array(
 					0 =>
-						array (
-							'id' => '1906',
-							'options' =>
-								array (
+						array(
+							'id'       => '1906',
+							'options'  =>
+								array(
 									'price_id' => '1',
 								),
 							'quantity' => 1,
 						),
 				),
-			'user_info' =>
-				array (
-					'id' => 0,
-					'email' => 'bruce@waynefoundation.org',
+			'user_info'    =>
+				array(
+					'id'         => 0,
+					'email'      => 'bruce@waynefoundation.org',
 					'first_name' => 'Bruce',
-					'last_name' => 'Wayne',
-					'discount' => 'none',
-					'address' =>
-						array (
-						),
+					'last_name'  => 'Wayne',
+					'discount'   => 'none',
+					'address'    =>
+						array(),
 				),
 			'cart_details' =>
-				array (
+				array(
 					0 =>
-						array (
-							'name' => 'Test Product 1',
-							'id' => '1906',
+						array(
+							'name'        => 'Test Product 1',
+							'id'          => '1906',
 							'item_number' =>
-								array (
-									'id' => '1906',
-									'options' =>
-										array (
+								array(
+									'id'       => '1906',
+									'options'  =>
+										array(
 											'price_id' => '1',
 										),
 									'quantity' => 1,
 								),
-							'item_price' => 299.0,
-							'quantity' => 1,
-							'discount' => 0.0,
-							'subtotal' => 299.0,
-							'tax' => 0.0,
-							'fees' =>
-								array (
-								),
-							'price' => 299.0,
+							'item_price'  => 299.0,
+							'quantity'    => 1,
+							'discount'    => 0.0,
+							'subtotal'    => 299.0,
+							'tax'         => 0.0,
+							'fees'        =>
+								array(),
+							'price'       => 299.0,
 						),
 				),
-			'gateway' => 'paypal',
-			'status' => 'pending',
+			'gateway'      => 'paypal',
+			'status'       => 'pending',
 		);
 
 		$initial_payment_id = edd_insert_payment( $initial_purchase_data );
 		EDD()->session->set( 'edd_resume_payment', $initial_payment_id );
 
-		$recovery_purchase_data = array (
-			'price' => 299.0,
-			'date' => '2017-08-15 18:10:37',
-			'user_email' => 'batman@thebatcave.co',
+		$recovery_purchase_data = array(
+			'price'        => 299.0,
+			'date'         => '2017-08-15 18:10:37',
+			'user_email'   => 'batman@thebatcave.co',
 			'purchase_key' => '4f2b5cda76c2a997996f4cf8b68255ed',
-			'currency' => 'USD',
-			'downloads' =>
-				array (
+			'currency'     => 'USD',
+			'downloads'    =>
+				array(
 					0 =>
-						array (
-							'id' => '1906',
-							'options' =>
-								array (
+						array(
+							'id'       => '1906',
+							'options'  =>
+								array(
 									'price_id' => '1',
 								),
 							'quantity' => 1,
 						),
 				),
-			'user_info' =>
-				array (
-					'id' => 0,
-					'email' => 'batman@thebatcave.co',
+			'user_info'    =>
+				array(
+					'id'         => 0,
+					'email'      => 'batman@thebatcave.co',
 					'first_name' => 'Batman',
-					'last_name' => '',
-					'discount' => 'none',
-					'address' =>
-						array (
-						),
+					'last_name'  => '',
+					'discount'   => 'none',
+					'address'    =>
+						array(),
 				),
 			'cart_details' =>
-				array (
+				array(
 					0 =>
-						array (
-							'name' => 'Test Product 1',
-							'id' => '1906',
+						array(
+							'name'        => 'Test Product 1',
+							'id'          => '1906',
 							'item_number' =>
-								array (
-									'id' => '1906',
-									'options' =>
-										array (
+								array(
+									'id'       => '1906',
+									'options'  =>
+										array(
 											'price_id' => '1',
 										),
 									'quantity' => 1,
 								),
-							'item_price' => 299.0,
-							'quantity' => 1,
-							'discount' => 0.0,
-							'subtotal' => 299.0,
-							'tax' => 0.0,
-							'fees' =>
-								array (
-								),
-							'price' => 299.0,
+							'item_price'  => 299.0,
+							'quantity'    => 1,
+							'discount'    => 0.0,
+							'subtotal'    => 299.0,
+							'tax'         => 0.0,
+							'fees'        =>
+								array(),
+							'price'       => 299.0,
 						),
 				),
-			'gateway' => 'paypal',
-			'status' => 'pending',
+			'gateway'      => 'paypal',
+			'status'       => 'pending',
 		);
 
 		$recovery_payment_id = edd_insert_payment( $recovery_purchase_data );
@@ -539,5 +524,4 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 		$this->assertSame( $payment_customer->id, $recovery_customer->id );
 	}
-
 }
