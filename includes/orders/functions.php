@@ -256,6 +256,58 @@ function edd_build_order( $order_data = array() ) {
 		return false;
 	}
 
+	/* Order recovery ********************************************************/
+
+	$resume_order   = false;
+	$existing_order = EDD()->session->get( 'edd_resume_payment' );
+
+	if ( ! empty( $existing_order ) ) {
+		$order = edd_get_order( $existing_order );
+
+		if ( $order ) {
+			$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+
+			if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $order->get_transaction_id() ) ) {
+				$payment = edd_get_payment( $existing_order );
+				$resume_order = true;
+			}
+		}
+	}
+
+	if ( $resume_order ) {
+		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
+
+		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
+
+		// Since things could have been added/removed since we first crated this...rebuild the cart details.
+		foreach ( $payment->fees as $fee_index => $fee ) {
+			$payment->remove_fee_by( 'index', $fee_index, true );
+		}
+
+		foreach ( $payment->downloads as $cart_index => $download ) {
+			$item_args = array(
+				'quantity'   => isset( $download['quantity'] ) ? $download['quantity'] : 1,
+				'cart_index' => $cart_index,
+			);
+			$payment->remove_download( $download['id'], $item_args );
+		}
+
+		if ( strtolower( $payment->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
+
+			// Remove the payment from the previous customer.
+			$previous_customer = new EDD_Customer( $payment->customer_id );
+			$previous_customer->remove_payment( $payment->ID, false );
+
+			// Redefine the email first and last names.
+			$payment->email      = $order_data['user_info']['email'];
+			$payment->first_name = $order_data['user_info']['first_name'];
+			$payment->last_name  = $order_data['user_info']['last_name'];
+		}
+
+		// Remove any remainders of possible fees from items.
+		$payment->save();
+	}
+
 	/** Setup order information ***********************************************/
 
 	$gateway = ! empty( $order_data['gateway'] ) ? $order_data['gateway'] : '';
@@ -318,7 +370,9 @@ function edd_build_order( $order_data = array() ) {
 	/** Insert order **********************************************************/
 
 	// Add order into the edd_orders table.
-	$order_id = edd_add_order( $order_args );
+	$order_id = true === $resume_order
+		? $payment->ID
+		: edd_add_order( $order_args );
 
 	// Attach order to the customer record.
 	$customer->attach_payment( $order_id, false );

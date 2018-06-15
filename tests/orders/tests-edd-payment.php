@@ -27,8 +27,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function tearDown() {
-		global $wpdb;
-
 		parent::tearDown();
 
 		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
