@@ -32,12 +32,29 @@ abstract class Base {
 	protected $component;
 
 	/**
+	 * Whether or not to show deprecated notices.
+	 *
+	 * @var bool
+	 */
+	protected $show_notices;
+
+	/**
+	 * Whether or not to show backtrace.
+	 *
+	 * @var bool
+	 */
+	protected $show_backtrace;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0
 	 */
 	public function __construct() {
 		$this->hooks();
+
+		$this->show_notices   = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) );
+		$this->show_backtrace = apply_filters( 'edd_show_backtrace', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) && ! defined( 'EDD_DOING_TESTS' ) );
 	}
 
 	/**
