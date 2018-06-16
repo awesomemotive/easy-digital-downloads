@@ -126,4 +126,19 @@ class Stats {
 	public function get_most_valuable_customers() {
 
 	}
+
+	/** Private Getters *******************************************************/
+
+	/**
+	 * Return the global database interface
+	 *
+	 * @since 3.0
+	 *
+	 * @return \wpdb|object
+	 */
+	private static function get_db() {
+		return isset( $GLOBALS['wpdb'] )
+			? $GLOBALS['wpdb']
+			: new stdClass();
+	}
 }
