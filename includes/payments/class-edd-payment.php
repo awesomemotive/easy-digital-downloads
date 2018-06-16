@@ -1952,7 +1952,7 @@ class EDD_Payment {
 	 * @return mixed             The value from the post meta
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
-		$meta = get_post_meta( $this->ID, $meta_key, $single );
+		$meta = edd_get_order_meta( $this->ID, $meta_key, $single );
 
 		// Backwards compatibility.
 		switch ( $meta_key ) {
@@ -1966,6 +1966,42 @@ class EDD_Payment {
 
 			case '_edd_payment_user_email':
 				$meta = $this->order->email;
+				break;
+
+			case '_edd_completed_date':
+				$meta = $this->completed_date;
+				break;
+
+			case '_edd_payment_gateway':
+				$meta = $this->order->gateway;
+				break;
+
+			case '_edd_payment_user_id':
+				$meta = $this->order->user_id;
+				break;
+
+			case '_edd_payment_user_ip':
+				$meta = $this->order->ip;
+				break;
+
+			case '_edd_payment_mode':
+				$meta = $this->order->mode;
+				break;
+
+			case '_edd_payment_tax_rate':
+				$meta = $this->order->get_tax_rate();
+				break;
+
+			case '_edd_payment_customer_id':
+				$meta = $this->order->customer_id;
+				break;
+
+			case '_edd_payment_tax':
+				$meta = $this->order->tax;
+				break;
+
+			case '_edd_payment_number':
+				$meta = $this->order->get_number();
 				break;
 		}
 
@@ -2018,7 +2054,7 @@ class EDD_Payment {
 					$meta = array_merge( $meta, $bad_meta );
 				}
 
-				update_post_meta( $this->ID, '_edd_payment_meta', $meta );
+				edd_update_order_meta( $this->ID, 'payment_meta', $meta );
 			}
 		}
 
