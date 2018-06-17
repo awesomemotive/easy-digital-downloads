@@ -1452,6 +1452,52 @@ class Stats {
 		}
 	}
 
+	/**
+	 * Format the data if requested via the query parameter.
+	 *
+	 * @since 3.0
+	 * @access private
+	 *
+	 * @param array|object $data Data to format.
+	 *
+	 * @return mixed Raw or formatted data depending on query parameter.
+	 */
+	private function maybe_format( $data = null ) {
+
+		// Bail if nothing was passed.
+		if ( empty( $data ) || null === $data ) {
+			return $data;
+		}
+
+		$allowed_output_formats = array( 'raw', 'formatted' );
+
+		// Output format. Default raw.
+		$output = isset( $this->query_vars['output'] ) && in_array( $this->query_vars['format'], $allowed_output_formats, true )
+			? $this->query_vars['output']
+			: 'raw';
+
+		// Return data as is if the format is raw.
+		if ( 'raw' === $output ) {
+			return $data;
+		}
+
+		if ( is_object( $data ) ) {
+			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
+				if ( is_numeric( $data->{$field} ) ) {
+					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ) );
+				}
+			}
+		} elseif ( is_array( $data ) ) {
+			foreach ( array_keys( $data ) as $field ) {
+				if ( is_numeric( $data[ $field ] ) ) {
+					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ) );
+				}
+			}
+		}
+
+		return $data;
+	}
+
 	/** Private Getters *******************************************************/
 
 	/**
