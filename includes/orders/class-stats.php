@@ -443,6 +443,18 @@ class Stats {
 
 	private function get_gateway_data( $query = array() ) {
 
+		// Set up default values.
+		$gateways = edd_get_payment_gateways();
+		$defaults = array();
+
+		foreach ( $gateways as $id => $data ) {
+			$object          = new \stdClass();
+			$object->gateway = $id;
+			$object->count   = 0;
+
+			$defaults[] = $object;
+		}
+
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
 		$this->query_vars['column']            = 'total';
@@ -481,6 +493,21 @@ class Stats {
 			} );
 		}
 
+		$results = array();
+
+		// Merge defaults with values returned from the database.
+		foreach ( $defaults as $key => $value ) {
+
+			// Filter based on gateway.
+			$filter = wp_filter_object_list( $result, array( 'gateway' => $value->gateway ) );
+
+			if ( ! empty( $filter ) ) {
+				$results[] = $filter[0];
+			} else {
+				$results[] = $defaults[ $key ];
+			}
+		}
+
 		if ( ! empty( $gateway ) ) {
 
 			// Filter based on gateway if passed.
@@ -491,7 +518,7 @@ class Stats {
 		}
 
 		// Return array of objects with gateway name and count.
-		return $result;
+		return $results;
 	}
 
 	public function get_gateway_sales( $query = array() ) {
@@ -519,8 +546,16 @@ class Stats {
 		return $result;
 	}
 
-	public function get_gateway_refund_amount() {
+	public function get_gateway_refund_amount( $query = array() ) {
 
+		// Ensure orders are refunded.
+		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
+
+		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		$result = $this->get_gateway_earnings( $query );
+
+		// Return array of objects with gateway name and amount from refunded orders.
+		return $result;
 	}
 
 	public function get_gateway_average_value() {
