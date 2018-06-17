@@ -67,6 +67,15 @@ class Stats {
 
 	/** Orders ***************************************************************/
 
+	/**
+	 * Calculate order earnings.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query
+	 *
+	 * @return string Formatted order earnings based on query vars passed.
+	 */
 	public function get_order_earnings( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -78,7 +87,7 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM{$this->query_vars['column']}";
 
-		// Run pre-query checks.
+		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
 		$sql = "SELECT {$function} FROM {$this->query_vars['table']} {$this->query_vars['date_query_sql']}";
