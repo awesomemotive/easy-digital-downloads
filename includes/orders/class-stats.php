@@ -395,6 +395,50 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	public function get_ratio_of_discounted_orders( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT COUNT(id) AS total, o.discounted_orders
+				FROM {$this->query_vars['table']}
+				CROSS JOIN (
+					SELECT COUNT(id) AS discounted_orders
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 AND discount > 0 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				) o
+				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_row( $sql );
+
+		// No need to calculate the ratio if there are no discounted orders.
+		if ( 0 === (int) $result->discounted_orders ) {
+			return $result->discounted_orders . ':' . $result->total;
+		}
+
+		// Calculate GCD.
+		$result->total             = absint( $result->total );
+		$result->discounted_orders = absint( $result->discounted_orders );
+
+		$original_result = clone $result;
+
+		while ( 0 !== $result->total ) {
+			$remainder                 = $result->discounted_orders % $result->total;
+			$result->discounted_orders = $result->total;
+			$result->total             = $remainder;
+		}
+
+		$ratio = absint( $result->discounted_orders );
+
+		// Return ratio.
+		return ( $original_result->discounted_orders / $ratio ) . ':' . ( $original_result->total / $ratio );
+	}
+
 	/** Gateways *************************************************************/
 
 	public function get_gateway_sales() {
