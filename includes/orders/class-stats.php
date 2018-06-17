@@ -316,8 +316,31 @@ class Stats {
 
 	/** Discounts ************************************************************/
 
-	public function get_discount_usage_count() {
+	public function get_discount_usage_count( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$discount_code = isset( $this->query_vars['discount_code'] )
+			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
+			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
+
+		$sql = "SELECT COUNT(id)
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$discount_code} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0
+			: absint( $result );
+
+		return $total;
 	}
 
 	public function get_customer_savings() {
