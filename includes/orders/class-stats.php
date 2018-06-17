@@ -44,31 +44,23 @@ class Stats {
 	 * Constructor.
 	 *
 	 * @since 3.0
-	 */
-	public function __construct() {
-
-		// Start the Reports API.
-		new Reports\Init();
-
-		// Set date ranges.
-		$this->set_date_ranges();
-	}
-
-	/**
-	 * Retrieve data.
-	 *
-	 * @since 3.0
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
 	 *     Default empty.
 	 * }
 	 */
-	public function get_data( $query = array() ) {
+	public function __construct( $query = array() ) {
+
+		// Start the Reports API.
+		new Reports\Init();
 
 		if ( ! empty( $query ) ) {
 			$this->parse_query( $query );
 		}
+
+		// Set date ranges.
+		$this->set_date_ranges();
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -177,9 +169,9 @@ class Stats {
 	 * @since 3.0
 	 * @access private
 	 *
-	 * @see \EDD\Orders\Stats::get_data()
+	 * @see \EDD\Orders\Stats::__construct()
 	 *
-	 * @param array $query Array of arguments. See \EDD\Orders\Stats::get_data().
+	 * @param array $query Array of arguments. See \EDD\Orders\Stats::__construct().
 	 */
 	private function parse_query( $query = array() ) {
 		$this->query_vars = $query;
@@ -225,6 +217,11 @@ class Stats {
 
 		foreach ( $date_filters as $range => $label ) {
 			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $date, $range );
+		}
+
+		if ( array_key_exists( 'range', $this->query_vars ) && array_key_exists( $this->query_vars['range'], $this->date_ranges ) ) {
+			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
+			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 		}
 	}
 }
