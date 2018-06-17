@@ -10,7 +10,6 @@
  */
 namespace EDD\Orders;
 
-use EDD\Compat\Payment;
 use EDD\Reports as Reports;
 
 // Exit if accessed directly
