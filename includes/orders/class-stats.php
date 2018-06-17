@@ -90,7 +90,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 AND {$this->query_vars['date_query_sql']}";
+		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -125,7 +125,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 AND {$this->query_vars['date_query_sql']}";
+		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -136,12 +136,30 @@ class Stats {
 		return $total;
 	}
 
-	public function get_order_refund_count() {
+	/**
+	 * Calculate number of refunded orders.
+	 *
+	 * @param array $query
+	 *
+	 * @return int
+	 */
+	public function get_order_refund_count( $query = array() ) {
+		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
 
+		return $this->get_order_count( $query );
 	}
 
-	public function get_order_refund_amount() {
+	/**
+	 * Calculate total amount for refunded orders.
+	 *
+	 * @param array $query
+	 *
+	 * @return string Formatted amount from refunded orders.
+	 */
+	public function get_order_refund_amount( $query = array() ) {
+		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
 
+		return $this->get_order_earnings( $query );
 	}
 
 	public function get_average_refund_time() {
