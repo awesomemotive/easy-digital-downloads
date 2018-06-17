@@ -610,6 +610,18 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	public function get_tax_by_location( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'tax';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+	}
+
 	/** Customers ************************************************************/
 
 	public function get_customer_lifetime_value() {
