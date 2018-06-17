@@ -248,7 +248,7 @@ class Stats {
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
-		$this->pre_query( $query )
+		$this->pre_query( $query );
 
 		// Only `COUNT` and `AVG` are accepted by this method.
 		$accepted_functions = array( 'COUNT', 'AVG' );
@@ -732,7 +732,7 @@ class Stats {
 		$email = isset( $this->query_vars['email'] )
 			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
 			: '';
-		
+
 		$query['where_sql'] = "{$user} {$customer} {$email}";
 
 		// Dispatch to \EDD\Orders\Stats::get_order_count().
@@ -764,8 +764,41 @@ class Stats {
 			: round( $result, 2 );
 	}
 
-	public function get_most_valuable_customers() {
+	public function get_customer_value( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// By default, the most valuable customer is returned.
+		$number = isset( $this->query_vars['vars'] )
+			? absint( $this->query_vars['number'] )
+			: 1;
+
+		$sql = "SELECT customer_id, SUM(total) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				GROUP BY customer_id
+				ORDER BY total DESC
+				LIMIT {$number}";
+
+		$result = $this->get_db()->get_results( $sql );
+
+		array_walk( $result, function ( &$value ) {
+
+			// Format resultant object.
+			$value->customer_id = absint( $value->customer_id );
+			$value->total       = edd_currency_filter( edd_format_amount( $value->total ) );
+
+			// Add instance of EDD_Download to resultant object.
+			$value->object = edd_get_customer( $value->customer_id );
+		} );
+
+		return $result;
 	}
 
 	/** Private Methods ******************************************************/
