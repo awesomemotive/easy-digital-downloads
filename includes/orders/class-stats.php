@@ -21,12 +21,29 @@ defined( 'ABSPATH' ) || exit;
 class Stats {
 
 	/**
+	 * Parsed query vars.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $query_vars = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 * }
 	 */
-	public function __construct() {
+	public function __construct( $query = array() ) {
 
+		if ( ! empty( $query ) ) {
+			$this->parse_query();
+		}
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -127,12 +144,28 @@ class Stats {
 
 	}
 
+	/** Private Parsers *******************************************************/
+
+	/**
+	 * Parse query vars to be passed to the calculation methods.
+	 *
+	 * @since 3.0
+	 * @access private
+	 */
+	private function parse_query() {
+
+		// Reset query vars each time arguments are parsed.
+		$this->query_vars = array();
+
+	}
+
 	/** Private Getters *******************************************************/
 
 	/**
 	 * Return the global database interface
 	 *
 	 * @since 3.0
+	 * @access private
 	 *
 	 * @return \wpdb|object
 	 */
