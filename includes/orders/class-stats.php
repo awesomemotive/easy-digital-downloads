@@ -739,8 +739,29 @@ class Stats {
 		return $this->get_order_count( $query );
 	}
 
-	public function get_customer_age() {
+	public function get_customer_age( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_customers;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$function = isset( $this->query_vars['function'] ) && 'AVG' === strtoupper( $this->query_vars['function'] )
+			? 'AVG(DATEDIFF(NOW(), date_created))'
+			: 'DATEDIFF(NOW(), date_created)';
+
+		$sql = "SELECT {$function}
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		return null === $result
+			? 0
+			: round( $result, 2 );
 	}
 
 	public function get_most_valuable_customers() {
