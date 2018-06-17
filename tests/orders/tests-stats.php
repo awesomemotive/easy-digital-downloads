@@ -33,4 +33,12 @@ class Stats_Tests extends \EDD_UnitTestCase {
 		self::$orders = parent::edd()->order->create_many( 5 );
 	}
 
+	/**
+	 * @covers ::get_order_earnings
+	 */
+	public function test_get_order_earnings() {
+		$earnings = self::$stats->get_order_earnings();
+
+		$this->assertSame( 600.0, $earnings );
+	}
 }
