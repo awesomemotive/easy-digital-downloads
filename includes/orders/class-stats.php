@@ -55,20 +55,23 @@ class Stats {
 		// Start the Reports API.
 		new Reports\Init();
 
+		// Set date ranges.
+		$this->set_date_ranges();
+
 		if ( ! empty( $query ) ) {
 			$this->parse_query( $query );
 		}
-
-		// Set date ranges.
-		$this->set_date_ranges();
 	}
 
 	/** Calculation Methods ***************************************************/
 
 	/** Orders ***************************************************************/
 
-	public function get_order_earnings() {
-		
+	public function get_order_earnings( $query = array() ) {
+		$this->pre_query( $query );
+
+		$this->table_name = 'edd_orders';
+		$column_name = 'total';
 	}
 
 	public function get_order_count() {
@@ -176,6 +179,12 @@ class Stats {
 	private function parse_query( $query = array() ) {
 		$this->query_vars = $query;
 
+		// Use Carbon to set up start and end date based on range passed.
+		if ( isset( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
+			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
+			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
+		}
+
 		/**
 		 * Fires after the item query vars have been parsed.
 		 *
@@ -186,6 +195,20 @@ class Stats {
 		do_action_ref_array( 'edd_order_stats_parse_query', array( &$this ) );
 	}
 
+	/**
+	 * Ensures arguments exist before going ahead and calculating statistics.
+	 *
+	 * @since 3.0
+	 * @access private
+	 *
+	 * @param array $query
+	 */
+	private function pre_query( $query = array() ) {
+		if ( ! empty( $query ) ) {
+			$this->parse_query( $query );
+		}
+	}
+
 	/** Private Getters *******************************************************/
 
 	/**
@@ -193,6 +216,7 @@ class Stats {
 	 *
 	 * @since 3.0
 	 * @access private
+	 * @static
 	 *
 	 * @return \wpdb|object
 	 */
@@ -217,11 +241,6 @@ class Stats {
 
 		foreach ( $date_filters as $range => $label ) {
 			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $date, $range );
-		}
-
-		if ( array_key_exists( 'range', $this->query_vars ) && array_key_exists( $this->query_vars['range'], $this->date_ranges ) ) {
-			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
-			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 		}
 	}
 }
