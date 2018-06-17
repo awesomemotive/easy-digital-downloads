@@ -258,9 +258,20 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$product_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		// Calculating an average requires a subquery.
+		if ( 'AVG' === $this->query_vars['function'] ) {
+			$sql = "SELECT AVG(id)
+					FROM (
+						SELECT COUNT(id) AS id
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$product_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						GROUP BY order_id
+					) AS counts";
+		} else {
+			$sql = "SELECT {$function}
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$product_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		}
 
 		$result = $this->get_db()->get_var( $sql );
 
