@@ -397,7 +397,7 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
-		return edd_currency_filter( edd_format_amount( $total ) );
+		return $this->maybe_format( $total );
 	}
 
 	/**
@@ -525,7 +525,7 @@ class Stats {
 
 		// Format resultant object.
 		$result->product_id = absint( $result->product_id );
-		$result->total      = edd_currency_filter( edd_format_amount( $result->total ) );
+		$result->total      = $this->maybe_format( $result->total );
 
 		// Add instance of EDD_Download to resultant object.
 		$result->object = edd_get_download( $result->product_id );
@@ -639,7 +639,7 @@ class Stats {
 			? 0.00
 			: floatval( $result );
 
-		return edd_currency_filter( edd_format_amount( $total ) );
+		return $this->maybe_format( $total );
 	}
 
 	/**
@@ -689,7 +689,7 @@ class Stats {
 			? 0.00
 			: floatval( $result );
 
-		return edd_currency_filter( edd_format_amount( $total ) );
+		return $this->maybe_format( $total );
 	}
 
 	/**
@@ -916,7 +916,7 @@ class Stats {
 		// Rename object var.
 		array_walk( $result, function( &$value ) {
 			$value->earnings = $value->count;
-			$value->earnings = edd_currency_filter( edd_format_amount( $value->earnings ) );
+			$value->earnings = $this->maybe_format( $value->earnings );
 			unset( $value->count );
 		} );
 
@@ -971,7 +971,7 @@ class Stats {
 		// Rename object var.
 		array_walk( $result, function( &$value ) {
 			$value->earnings = $value->count;
-			$value->earnings = edd_currency_filter( edd_format_amount( $value->earnings ) );
+			$value->earnings = $this->maybe_format( $value->earnings );
 			unset( $value->count );
 		} );
 
@@ -1030,7 +1030,7 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
-		return edd_currency_filter( edd_format_amount( $total ) );
+		return $this->maybe_format( $total );
 	}
 
 	/**
@@ -1197,7 +1197,7 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
-		return edd_currency_filter( edd_format_amount( $total ) );
+		return $this->maybe_format( $total );
 	}
 
 	/**
@@ -1352,7 +1352,7 @@ class Stats {
 
 			// Format resultant object.
 			$value->customer_id = absint( $value->customer_id );
-			$value->total       = edd_currency_filter( edd_format_amount( $value->total ) );
+			$value->total       = $this->maybe_format( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
 			$value->object = edd_get_customer( $value->customer_id );
