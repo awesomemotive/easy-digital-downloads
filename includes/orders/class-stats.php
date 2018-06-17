@@ -90,7 +90,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 {$this->query_vars['date_query_sql']}";
+		$sql = "SELECT {$function}
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -125,7 +127,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		$sql = "SELECT {$function}
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -281,8 +285,33 @@ class Stats {
 		return $total;
 	}
 
-	public function get_most_valuable_order_item() {
+	public function get_most_valuable_order_item( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_order_items;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT product_id, SUM(total) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				GROUP BY product_id
+				ORDER BY total DESC
+				LIMIT 1";
+
+		$result = $this->get_db()->get_row( $sql );
+
+		// Format resultant object.
+		$result->product_id = absint( $result->product_id );
+		$result->total      = edd_currency_filter( edd_format_amount( $result->total ) );
+
+		// Add instance of EDD_Download to resultant object.
+		$result->object = edd_get_download( $result->product_id );
+
+		return $result;
 	}
 
 	/** Discounts ************************************************************/
@@ -438,12 +467,12 @@ class Stats {
 	 * @access private
 	 * @static
 	 *
-	 * @return \wpdb|object
+	 * @return \wpdb|\stdClass
 	 */
 	private static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
 			? $GLOBALS['wpdb']
-			: new stdClass();
+			: new \stdClass();
 	}
 
 	/** Private Setters ******************************************************/
