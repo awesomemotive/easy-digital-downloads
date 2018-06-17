@@ -1427,9 +1427,7 @@ class Stats {
 	 * @param array $query
 	 */
 	private function pre_query( $query = array() ) {
-		if ( ! empty( $query ) ) {
-			$this->parse_query( $query );
-		}
+		$this->parse_query( $query );
 
 		// Generate date query SQL if dates have been set.
 		if ( isset( $this->query_vars['start'] ) || isset( $this->query_vars['end'] ) ) {
