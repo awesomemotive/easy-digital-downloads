@@ -501,6 +501,10 @@ class Stats {
 			// Filter based on gateway.
 			$filter = wp_filter_object_list( $result, array( 'gateway' => $value->gateway ) );
 
+			$filter = ! empty( $filter )
+				? array_values( $filter )
+				: array();
+
 			if ( ! empty( $filter ) ) {
 				$results[] = $filter[0];
 			} else {
@@ -530,7 +534,7 @@ class Stats {
 	public function get_gateway_earnings( $query = array() ) {
 
 		// Summation is required as we are returning earnings.
-		$this->query_vars['function'] = 'SUM';
+		$query['function'] = 'SUM';
 
 		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
 		$result = $this->get_gateway_data( $query );
@@ -558,8 +562,23 @@ class Stats {
 		return $result;
 	}
 
-	public function get_gateway_average_value() {
+	public function get_gateway_average_value( $query = array() ) {
 
+		// Function needs to be `AVG`.
+		$query['function'] = 'AVG';
+
+		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		$result = $this->get_gateway_data( $query );
+
+		// Rename object var.
+		array_walk( $result, function( &$value ) {
+			$value->earnings = $value->count;
+			$value->earnings = edd_currency_filter( edd_format_amount( $value->earnings ) );
+			unset( $value->count );
+		} );
+
+		// Return array of objects with gateway name and earnings.
+		return $result;
 	}
 
 	/** Tax ******************************************************************/
