@@ -674,8 +674,50 @@ class Stats {
 
 	/** Customers ************************************************************/
 
-	public function get_customer_lifetime_value() {
+	public function get_customer_lifetime_value( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'total';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// Only `AVG` and `SUM` are accepted by this method.
+		$accepted_functions = array( 'AVG', 'SUM' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: "SUM({$this->query_vars['column']})";
+
+		$user = isset( $this->query_vars['user_id'] )
+			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
+			: '';
+
+		$customer = isset( $this->query_vars['customer'] )
+			? $this->get_db()->prepare( 'AND customer_id = %d', absint( $this->query_vars['customer'] ) )
+			: '';
+
+		$email = isset( $this->query_vars['email'] )
+			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
+			: '';
+
+		$sql = "SELECT {$function}
+				FROM (
+					SELECT SUM(total) AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+				  	GROUP BY customer_id
+				) o";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0.00
+			: (float) $result;
+
+		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
 	public function get_customer_orders() {
