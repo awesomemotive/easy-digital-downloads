@@ -237,8 +237,38 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
-	public function get_order_item_count() {
+	public function get_order_item_count( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_order_items;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: 'COUNT(id)';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$product_id = isset( $this->query_vars['product_id'] )
+			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
+			: '';
+
+		$sql = "SELECT {$function}
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$product_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0
+			: absint( $result );
+
+		return $total;
 	}
 
 	public function get_most_valuable_order_item() {
@@ -334,6 +364,15 @@ class Stats {
 		if ( isset( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
+		}
+
+		// Correctly format functions and column names.
+		if ( isset( $this->query_vars['function'] ) ) {
+			$this->query_vars['function'] = strtoupper( $this->query_vars['function'] );
+		}
+
+		if ( isset( $this->query_vars['column'] ) ) {
+			$this->query_vars['column'] = strtolower( $this->query_vars['column'] );
 		}
 
 		/**
