@@ -441,8 +441,54 @@ class Stats {
 
 	/** Gateways *************************************************************/
 
-	public function get_gateway_sales() {
+	public function get_gateway_sales( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: 'COUNT(id)';
+
+		$gateway = isset( $this->query_vars['gateway'] )
+			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
+			: '';
+
+		$groupby = empty( $gateway )
+			? 'GROUP BY gateway'
+			: '';
+
+		$sql = "SELECT gateway, {$function} AS count
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				{$groupby}";
+
+		$result = $this->get_db()->get_results( $sql );
+
+		// Ensure count values are always valid integers.
+		array_walk( $result, function( &$value ) {
+			$value->count = absint( $value->count );
+		} );
+
+		if ( ! empty( $gateway ) ) {
+
+			// Filter based on gateway if passed.
+			$filter = wp_filter_object_list( $result, array( 'gateway' => $this->query_vars['gateway'] ) );
+
+			// Return number of sales for gateway passed.
+			return absint( $filter[0]->count );
+		}
+
+		// Return array of objects with gateway name and count.
+		return $result;
 	}
 
 	public function get_gateway_earnings() {
@@ -497,6 +543,7 @@ class Stats {
 		$query_var_defaults = array(
 			'start'             => '',
 			'end'               => '',
+			'where_sql'         => '',
 			'date_query_sql'    => '',
 			'date_query_column' => '',
 			'column'            => '',
