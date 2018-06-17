@@ -70,11 +70,18 @@ class Stats {
 	public function get_order_earnings( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
-		$this->query_vars['table']  = $this->get_db()->edd_orders;
-		$this->query_vars['column'] = 'total';
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'total';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		$function = isset( $this->query_vars['function'] )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: "SUM{$this->query_vars['column']}";
 
 		// Run pre-query checks.
 		$this->pre_query( $query );
+
+		$sql = "SELECT {$function} FROM {$this->query_vars['table']} {$this->query_vars['date_query_sql']}";
 	}
 
 	public function get_order_count() {
@@ -167,7 +174,7 @@ class Stats {
 
 	}
 
-	/** Private Parsers *******************************************************/
+	/** Private Methods ******************************************************/
 
 	/**
 	 * Parse query vars to be passed to the calculation methods.
@@ -180,7 +187,17 @@ class Stats {
 	 * @param array $query Array of arguments. See \EDD\Orders\Stats::__construct().
 	 */
 	private function parse_query( $query = array() ) {
-		$this->query_vars = $query;
+		$query_var_defaults = array(
+			'start'             => '',
+			'end'               => '',
+			'date_query_sql'    => '',
+			'date_query_column' => '',
+			'column'            => '',
+			'table'             => '',
+			'function'          => 'SUM',
+		);
+
+		$this->query_vars = wp_parse_args( $query, $query_var_defaults );
 
 		// Use Carbon to set up start and end date based on range passed.
 		if ( isset( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
@@ -213,8 +230,22 @@ class Stats {
 
 		// Generate date query SQL if dates have been set.
 		if ( isset( $this->query_vars['start'] ) || isset( $this->query_vars['end'] ) ) {
-			$date_query_sql = '';
+			$date_query_sql = "WHERE {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
 
+			if ( isset( $this->query_vars['start'] ) ) {
+				$date_query_sql .= ">= {$this->query_vars['start']}";
+			}
+
+			// Join dates with `AND` if start and end date set.
+			if ( isset( $this->query_vars['start'] ) && isset( $this->query_vars['end'] ) ) {
+				$date_query_sql .= ' AND ';
+			}
+
+			if ( isset( $this->query_vars['end'] ) ) {
+				$date_query_sql .= "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= {$this->query_vars['end']}";
+			}
+
+			$this->query_vars['date_query_sql'] = $date_query_sql;
 		}
 	}
 
