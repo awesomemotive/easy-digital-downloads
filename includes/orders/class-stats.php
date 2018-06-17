@@ -82,6 +82,14 @@ class Stats {
 		$this->pre_query( $query );
 
 		$sql = "SELECT {$function} FROM {$this->query_vars['table']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0.00
+			: (float) $result;
+
+		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
 	public function get_order_count() {
@@ -233,7 +241,7 @@ class Stats {
 			$date_query_sql = "WHERE {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
 
 			if ( isset( $this->query_vars['start'] ) ) {
-				$date_query_sql .= ">= {$this->query_vars['start']}";
+				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['start'] );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -242,7 +250,7 @@ class Stats {
 			}
 
 			if ( isset( $this->query_vars['end'] ) ) {
-				$date_query_sql .= "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= {$this->query_vars['end']}";
+				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $this->query_vars['end'] );
 			}
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;
