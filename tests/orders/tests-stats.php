@@ -41,4 +41,14 @@ class Stats_Tests extends \EDD_UnitTestCase {
 
 		$this->assertSame( 600.0, $earnings );
 	}
+
+	/**
+	 * @covers ::get_order_count
+	 */
+	public function test_get_order_count() {
+		$count = self::$stats->get_order_count();
+
+		$this->assertSame( 5, $count );
+	}
+
 }

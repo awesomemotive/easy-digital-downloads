@@ -72,8 +72,24 @@ class Stats {
 		// Set date ranges.
 		$this->set_date_ranges();
 
+		// Maybe parse query.
 		if ( ! empty( $query ) ) {
 			$this->parse_query( $query );
+
+		// Set defaults.
+		} else {
+			$this->query_vars = array(
+				'start'             => '',
+				'end'               => '',
+				'range'             => '',
+				'where_sql'         => '',
+				'date_query_sql'    => '',
+				'date_query_column' => '',
+				'column'            => '',
+				'table'             => '',
+				'function'          => 'SUM',
+				'output'            => 'raw',
+			);
 		}
 	}
 
@@ -1394,17 +1410,17 @@ class Stats {
 		}
 
 		// Use Carbon to set up start and end date based on range passed.
-		if ( isset( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
+		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 		}
 
 		// Correctly format functions and column names.
-		if ( isset( $this->query_vars['function'] ) ) {
+		if ( ! empty( $this->query_vars['function'] ) ) {
 			$this->query_vars['function'] = strtoupper( $this->query_vars['function'] );
 		}
 
-		if ( isset( $this->query_vars['column'] ) ) {
+		if ( ! empty( $this->query_vars['column'] ) ) {
 			$this->query_vars['column'] = strtolower( $this->query_vars['column'] );
 		}
 
@@ -1427,28 +1443,30 @@ class Stats {
 	 * @param array $query
 	 */
 	private function pre_query( $query = array() ) {
-		$this->parse_query( $query );
+
+		// Maybe parse query.
+		if ( ! empty( $query ) ) {
+			$this->parse_query( $query );
+		}
 
 		// Generate date query SQL if dates have been set.
-		if ( isset( $this->query_vars['start'] ) || isset( $this->query_vars['end'] ) ) {
+		if ( ! empty( $this->query_vars['start'] ) || ! empty( $this->query_vars['end'] ) ) {
 			$date_query_sql = "AND {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
 
-			if ( isset( $this->query_vars['start'] ) ) {
+			if ( ! empty( $this->query_vars['start'] ) ) {
 				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['start'] );
 			}
 
 			// Join dates with `AND` if start and end date set.
-			if ( isset( $this->query_vars['start'] ) && isset( $this->query_vars['end'] ) ) {
+			if ( ! empty( $this->query_vars['start'] ) && ! empty( $this->query_vars['end'] ) ) {
 				$date_query_sql .= ' AND ';
 			}
 
-			if ( isset( $this->query_vars['end'] ) ) {
+			if ( ! empty( $this->query_vars['end'] ) ) {
 				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $this->query_vars['end'] );
 			}
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;
-		} else {
-			$this->query_vars['date_query_sql'] = '';
 		}
 	}
 
