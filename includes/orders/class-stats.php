@@ -74,7 +74,7 @@ class Stats {
 	 *
 	 * @param array $query
 	 *
-	 * @return string Formatted order earnings based on query vars passed.
+	 * @return string Formatted order earnings.
 	 */
 	public function get_order_earnings( $query = array() ) {
 
@@ -85,7 +85,7 @@ class Stats {
 
 		$function = isset( $this->query_vars['function'] )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM{$this->query_vars['column']}";
+			: "SUM({$this->query_vars['column']})";
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
@@ -101,8 +101,39 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
-	public function get_order_count() {
+	/**
+	 * Calculate the number of orders.
+	 *
+	 * @param array $query
+	 *
+	 * @return int Number of orders.
+	 */
+	public function get_order_count( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: 'COUNT(id)';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT {$function} FROM {$this->query_vars['table']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0
+			: absint( $result );
+
+		return $total;
 	}
 
 	public function get_order_refund_count() {
