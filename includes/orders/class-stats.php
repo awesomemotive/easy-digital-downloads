@@ -68,10 +68,13 @@ class Stats {
 	/** Orders ***************************************************************/
 
 	public function get_order_earnings( $query = array() ) {
-		$this->pre_query( $query );
 
-		$this->table_name = 'edd_orders';
-		$column_name = 'total';
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']  = $this->get_db()->edd_orders;
+		$this->query_vars['column'] = 'total';
+
+		// Run pre-query checks.
+		$this->pre_query( $query );
 	}
 
 	public function get_order_count() {
@@ -206,6 +209,12 @@ class Stats {
 	private function pre_query( $query = array() ) {
 		if ( ! empty( $query ) ) {
 			$this->parse_query( $query );
+		}
+
+		// Generate date query SQL if dates have been set.
+		if ( isset( $this->query_vars['start'] ) || isset( $this->query_vars['end'] ) ) {
+			$date_query_sql = '';
+
 		}
 	}
 
