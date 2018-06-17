@@ -620,6 +620,26 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
+		$country_list = edd_get_country_list();
+
+		$country = isset( $this->query_vars['country'] )
+			? sanitize_text_field( $this->query_vars['country'] )
+			: edd_get_shop_country();
+
+		// Maybe convert country code to country name.
+		$country = in_array( $country, array_flip( $country_list ), true )
+			? $country_list[ $country ]
+			: $country;
+
+		// Ensure a valid county has been passed.
+		$country = in_array( $country, $country_list, true )
+			? $country
+			: null;
+
+		// Bail early if country does not exist.
+		if ( is_null( $country ) ) {
+			return 0.00;
+		}
 	}
 
 	/** Customers ************************************************************/
