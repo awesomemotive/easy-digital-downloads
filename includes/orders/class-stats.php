@@ -441,18 +441,19 @@ class Stats {
 
 	/** Gateways *************************************************************/
 
-	public function get_gateway_sales( $query = array() ) {
+	private function get_gateway_data( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = 'id';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['function']          = 'COUNT';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
+		// Only `COUNT`, `AVG` and `SUM` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG', 'SUM' );
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
@@ -473,10 +474,12 @@ class Stats {
 
 		$result = $this->get_db()->get_results( $sql );
 
-		// Ensure count values are always valid integers.
-		array_walk( $result, function( &$value ) {
-			$value->count = absint( $value->count );
-		} );
+		// Ensure count values are always valid integers if counting sales.
+		if ( 'COUNT' === $this->query_vars['function'] ) {
+			array_walk( $result, function ( &$value ) {
+				$value->count = absint( $value->count );
+			} );
+		}
 
 		if ( ! empty( $gateway ) ) {
 
@@ -491,8 +494,29 @@ class Stats {
 		return $result;
 	}
 
-	public function get_gateway_earnings() {
+	public function get_gateway_sales( $query = array() ) {
 
+		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		return $this->get_gateway_data( $query );
+	}
+
+	public function get_gateway_earnings( $query = array() ) {
+
+		// Summation is required as we are returning earnings.
+		$this->query_vars['function'] = 'SUM';
+
+		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		$result = $this->get_gateway_data( $query );
+
+		// Rename object var.
+		array_walk( $result, function( &$value ) {
+			$value->earnings = $value->count;
+			$value->earnings = edd_currency_filter( edd_format_amount( $value->earnings ) );
+			unset( $value->count );
+		} );
+
+		// Return array of objects with gateway name and earnings.
+		return $result;
 	}
 
 	public function get_gateway_refund_amount() {
