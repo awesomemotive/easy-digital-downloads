@@ -620,7 +620,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$country_list = edd_get_country_list();
+		/** Parse country ****************************************************/
+
+		$country_list = array_filter( edd_get_country_list() );
 
 		$country = isset( $this->query_vars['country'] )
 			? sanitize_text_field( $this->query_vars['country'] )
@@ -638,6 +640,34 @@ class Stats {
 
 		// Bail early if country does not exist.
 		if ( is_null( $country ) ) {
+			return 0.00;
+		}
+
+		/** Parse state ******************************************************/
+
+		$state = isset( $this->query_vars['state'] )
+			? sanitize_text_field( $this->query_vars['state'] )
+			: edd_get_shop_state();
+
+		// Only parse state if one was passed.
+		if ( $state ) {
+			$country_codes = array_flip( $country_list );
+
+			$state_list = array_filter( edd_get_shop_states( $country_codes[ $country ] ) );
+
+			// Maybe convert state code to state name.
+			$state = in_array( $state, array_flip( $state_list ), true )
+				? $state_list[ $state ]
+				: $state;
+
+			// Ensure a valid county has been passed.
+			$state = in_array( $state, $state_list, true )
+				? $state
+				: null;
+		}
+
+		// Bail early if state does not exist.
+		if ( null === $state ) {
 			return 0.00;
 		}
 	}
