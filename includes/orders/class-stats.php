@@ -162,12 +162,45 @@ class Stats {
 		return $this->get_order_earnings( $query );
 	}
 
-	public function get_average_refund_time() {
-
+	public function get_average_refund_time( $query = array() ) {
+		// TODO: Implement as per partial refunds
 	}
 
-	public function get_refund_rate() {
+	/**
+	 * Calculate refund rate.
+	 *
+	 * @param array $query
+	 *
+	 * @return float|int Rate of refunded orders.
+	 */
+	public function get_refund_rate( $query ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$status_sql = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
+
+		$sql = "SELECT COUNT(id) / o.total * 100 AS `refund_rate`
+				FROM {$this->query_vars['table']}
+				CROSS JOIN (
+					SELECT COUNT(id) AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				) o
+				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0
+			: round( $result, 2 );
+
+		return $total;
 	}
 
 	/** Order Item ************************************************************/
