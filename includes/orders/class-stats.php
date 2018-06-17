@@ -130,7 +130,7 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
-		return edd_currency_filter( edd_format_amount( $total ) );
+		return $this->maybe_format( $total );
 	}
 
 	/**
@@ -1458,7 +1458,7 @@ class Stats {
 	 * @since 3.0
 	 * @access private
 	 *
-	 * @param array|object $data Data to format.
+	 * @param mixed $data Data to format.
 	 *
 	 * @return mixed Raw or formatted data depending on query parameter.
 	 */
@@ -1472,7 +1472,7 @@ class Stats {
 		$allowed_output_formats = array( 'raw', 'formatted' );
 
 		// Output format. Default raw.
-		$output = isset( $this->query_vars['output'] ) && in_array( $this->query_vars['format'], $allowed_output_formats, true )
+		$output = isset( $this->query_vars['output'] ) && in_array( $this->query_vars['output'], $allowed_output_formats, true )
 			? $this->query_vars['output']
 			: 'raw';
 
@@ -1492,6 +1492,10 @@ class Stats {
 				if ( is_numeric( $data[ $field ] ) ) {
 					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ) );
 				}
+			}
+		} else {
+			if ( is_numeric( $data ) ) {
+				$data = edd_currency_filter( edd_format_amount( $data ) );
 			}
 		}
 
