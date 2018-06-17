@@ -583,8 +583,31 @@ class Stats {
 
 	/** Tax ******************************************************************/
 
-	public function get_tax() {
+	public function get_tax( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'tax';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		$function = isset( $this->query_vars['function'] )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: "SUM({$this->query_vars['column']})";
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT {$function}
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0.00
+			: (float) $result;
+
+		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
 	/** Customers ************************************************************/
