@@ -90,7 +90,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$sql = "SELECT {$function} FROM {$this->query_vars['table']} {$this->query_vars['date_query_sql']}";
+		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 AND {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -125,7 +125,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$sql = "SELECT {$function} FROM {$this->query_vars['table']} {$this->query_vars['date_query_sql']}";
+		$sql = "SELECT {$function} FROM {$this->query_vars['table']} WHERE 1=1 AND {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -278,7 +278,7 @@ class Stats {
 
 		// Generate date query SQL if dates have been set.
 		if ( isset( $this->query_vars['start'] ) || isset( $this->query_vars['end'] ) ) {
-			$date_query_sql = "WHERE {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
+			$date_query_sql = "AND {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
 
 			if ( isset( $this->query_vars['start'] ) ) {
 				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['start'] );
