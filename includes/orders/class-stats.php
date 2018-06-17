@@ -61,6 +61,7 @@ class Stats {
 	 *                             a list of accepted SQL functions.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -100,6 +101,7 @@ class Stats {
 	 *     @type string $function  SQL function. Default `SUM`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted order earnings.
@@ -151,6 +153,7 @@ class Stats {
 	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return int Number of orders.
@@ -207,6 +210,7 @@ class Stats {
 	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return int Number of refunded orders.
@@ -239,6 +243,7 @@ class Stats {
 	 *     @type string $function  SQL function. Default `SUM`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted amount from refunded orders.
@@ -271,6 +276,7 @@ class Stats {
 	 *     @type string $function  SQL function. Accepts `AVG` only. Default `AVG`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Average time for an order to be refunded.
@@ -299,6 +305,7 @@ class Stats {
 	 *     @type string $function  This method does not allow any SQL functions to be passed.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return float|int Rate of refunded orders.
@@ -357,6 +364,7 @@ class Stats {
 	 *                              query.
 	 *     @type int    $product_id Product ID. If empty, an aggregation of the values in the `total` column in the
 	 *                              `edd_order_items` table will be returned.
+	 *     @type string $output     The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return float|int Formatted order item earnings.
@@ -414,6 +422,7 @@ class Stats {
 	 *                              query.
 	 *     @type int    $product_id Product ID. If empty, an aggregation of the values in the `total` column in the
 	 *                              `edd_order_items` table will be returned.
+	 *     @type string $output     The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return int Number of times a specific item has been purchased.
@@ -484,6 +493,7 @@ class Stats {
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
 	 *     @type int    $number    Number of order items to fetch. Default 1.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return array Array of objects with most valuable order items. Each object has the product ID, total earnings,
@@ -546,6 +556,7 @@ class Stats {
 	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                                 to the query.
 	 *     @type string $discount_code Discount code to fetch the usage count for.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return int Number of times a discount code has been used.
@@ -599,6 +610,7 @@ class Stats {
 	 *                                 to the query.
 	 *     @type string $discount_code Discount code to fetch the savings amount for. Default empty. If empty, the amount
 	 *                                 saved from using any discount will be returned.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return float Savings from using a discount code.
@@ -650,6 +662,7 @@ class Stats {
 	 *     @type string $function  This method does not allow any SQL functions to be passed.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return float Average discount amount applied to an order.
@@ -699,6 +712,7 @@ class Stats {
 	 *     @type string $function  This method does not allow any SQL functions to be passed.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Ratio of discounted to non-discounted orders. Format is A:B where A and B are integers.
@@ -775,6 +789,7 @@ class Stats {
 	 *     @type string $gateway   Gateway name. This is checked against a list of registered payment gateways.
 	 *                             If a gateway is not passed, a list of objects are returned for each gateway and the
 	 *                             number of orders processed with that gateway.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return array List of objects containing data pertinent to the query parameters passed.
@@ -986,6 +1001,7 @@ class Stats {
 	 *     @type string $function  SQL function. Default `COUNT`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted amount of total tax collected.
@@ -1041,6 +1057,7 @@ class Stats {
 	 *                             to the query.
 	 *     @type string $country   Country name. Defaults to store's base country.
 	 *     @type string $state     State name. Defaults to store's base state.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted amount of total tax collected for country and state passed.
@@ -1132,6 +1149,7 @@ class Stats {
 	 *     @type int    $customer_id Customer ID. Default empty.
 	 *     @type int    $user_id     User ID. Default empty.
 	 *     @type string $email       Email address.
+	 *     @type string $output      The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted lifetime value of a customer.
@@ -1207,6 +1225,7 @@ class Stats {
 	 *     @type int    $customer_id Customer ID. Default empty.
 	 *     @type int    $user_id     User ID. Default empty.
 	 *     @type string $email       Email address.
+	 *     @type string $output      The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return int Number of orders made by a customer.
@@ -1252,6 +1271,7 @@ class Stats {
 	 *     @type string $function    This method does not allow any SQL functions to be passed.
 	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                               to the query.
+	 *     @type string $output      The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return int|float Average age of a customer.
@@ -1298,6 +1318,7 @@ class Stats {
 	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                               to the query.
 	 *     @type int    $number      Number of customers to fetch. Default 1.
+	 *     @type string $output      The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return array Array of objects with most valuable customers. Each object has the customer ID, total amount spent
@@ -1363,6 +1384,7 @@ class Stats {
 			'column'            => '',
 			'table'             => '',
 			'function'          => 'SUM',
+			'output'            => 'raw',
 		);
 
 		if ( empty( $this->query_vars ) ) {
