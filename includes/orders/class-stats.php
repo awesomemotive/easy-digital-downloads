@@ -10,6 +10,7 @@
  */
 namespace EDD\Orders;
 
+use EDD\Compat\Payment;
 use EDD\Reports as Reports;
 
 // Exit if accessed directly
@@ -205,8 +206,35 @@ class Stats {
 
 	/** Order Item ************************************************************/
 
-	public function get_order_item_earnings() {
+	public function get_order_item_earnings( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_order_items;
+		$this->query_vars['column']            = 'total';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		$function = isset( $this->query_vars['function'] )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: "SUM({$this->query_vars['column']})";
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$product_id = isset( $this->query_vars['product_id'] )
+			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
+			: '';
+
+		$sql = "SELECT {$function}
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$product_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0.00
+			: (float) $result;
+
+		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
 	public function get_order_item_count() {
@@ -296,7 +324,11 @@ class Stats {
 			'function'          => 'SUM',
 		);
 
-		$this->query_vars = wp_parse_args( $query, $query_var_defaults );
+		if ( empty( $this->query_vars ) ) {
+			$this->query_vars = wp_parse_args( $query, $query_var_defaults );
+		} else {
+			$this->query_vars = wp_parse_args( $query, $this->query_vars );
+		}
 
 		// Use Carbon to set up start and end date based on range passed.
 		if ( isset( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
