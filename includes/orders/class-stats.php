@@ -85,7 +85,22 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $query
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Default `SUM`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 * }
 	 *
 	 * @return string Formatted order earnings.
 	 */
@@ -96,12 +111,12 @@ class Stats {
 		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
 		$function = isset( $this->query_vars['function'] )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
-
-		// Run pre-query checks and maybe generate SQL.
-		$this->pre_query( $query );
 
 		$sql = "SELECT {$function}
 				FROM {$this->query_vars['table']}
@@ -119,7 +134,24 @@ class Stats {
 	/**
 	 * Calculate the number of orders.
 	 *
-	 * @param array $query
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 * }
 	 *
 	 * @return int Number of orders.
 	 */
@@ -156,9 +188,28 @@ class Stats {
 	/**
 	 * Calculate number of refunded orders.
 	 *
-	 * @param array $query
+	 * @since 3.0
 	 *
-	 * @return int
+	 * @see \EDD\Orders\Stats::get_order_count()
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 * }
+	 *
+	 * @return int Number of refunded orders.
 	 */
 	public function get_order_refund_count( $query = array() ) {
 		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
@@ -169,7 +220,26 @@ class Stats {
 	/**
 	 * Calculate total amount for refunded orders.
 	 *
-	 * @param array $query
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_order_earnings()
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Default `SUM`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 * }
 	 *
 	 * @return string Formatted amount from refunded orders.
 	 */
@@ -179,14 +249,57 @@ class Stats {
 		return $this->get_order_earnings( $query );
 	}
 
+	/**
+	 * Calculate average time for an order to be refunded.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_order_earnings()
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `AVG` only. Default `AVG`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 * }
+	 *
+	 * @return string Average time for an order to be refunded.
+	 */
 	public function get_average_refund_time( $query = array() ) {
-		// TODO: Implement as per partial refunds
+		// TODO: Implement as per partial refunds.
 	}
 
 	/**
 	 * Calculate refund rate.
 	 *
-	 * @param array $query
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 * }
 	 *
 	 * @return float|int Rate of refunded orders.
 	 */
@@ -222,6 +335,32 @@ class Stats {
 
 	/** Order Item ************************************************************/
 
+	/**
+	 * Calculate order item earnings.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start      Start day and time (based on the beginning of the given day).
+	 *     @type string $end        End day and time (based on the end of the given day).
+	 *     @type string $range      Date range. If a range is passed, this will override and `start` and `end`
+	 *                              values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function   SQL function. Default `SUM`.
+	 *     @type string $where_sql  Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                              query.
+	 *     @type int    $product_id Product ID. If empty, an aggregation of the values in the `total` column in the
+	 *                              `edd_order_items` table will be returned.
+	 * }
+	 *
+	 * @return float|int Formatted order item earnings.
+	 */
 	public function get_order_item_earnings( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -253,6 +392,32 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	/**
+	 * Calculate the number of times a specific item has been purchased.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start      Start day and time (based on the beginning of the given day).
+	 *     @type string $end        End day and time (based on the end of the given day).
+	 *     @type string $range      Date range. If a range is passed, this will override and `start` and `end`
+	 *                              values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function   SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql  Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                              query.
+	 *     @type int    $product_id Product ID. If empty, an aggregation of the values in the `total` column in the
+	 *                              `edd_order_items` table will be returned.
+	 * }
+	 *
+	 * @return int Number of times a specific item has been purchased.
+	 */
 	public function get_order_item_count( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -268,7 +433,7 @@ class Stats {
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';;
+			: 'COUNT(id)';
 
 		$product_id = isset( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -298,7 +463,33 @@ class Stats {
 		return $total;
 	}
 
-	public function get_most_valuable_order_item( $query = array() ) {
+	/**
+	 * Calculate most valuable order items.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 *     @type int    $number    Number of order items to fetch. Default 1.
+	 * }
+	 *
+	 * @return array Array of objects with most valuable order items. Each object has the product ID, total earnings,
+	 *               and an instance of EDD_Download.
+	 */
+	public function get_most_valuable_order_items( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
@@ -308,12 +499,17 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
+		// By default, the most valuable customer is returned.
+		$number = isset( $this->query_vars['number'] )
+			? absint( $this->query_vars['number'] )
+			: 1;
+
 		$sql = "SELECT product_id, SUM(total) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY product_id
 				ORDER BY total DESC
-				LIMIT 1";
+				LIMIT {$number}";
 
 		$result = $this->get_db()->get_row( $sql );
 
@@ -329,6 +525,31 @@ class Stats {
 
 	/** Discounts ************************************************************/
 
+	/**
+	 * Calculate the usage count of discount codes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function      This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                                 to the query.
+	 *     @type string $discount_code Discount code to fetch the usage count for.
+	 * }
+	 *
+	 * @return int Number of times a discount code has been used.
+	 */
 	public function get_discount_usage_count( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -356,6 +577,32 @@ class Stats {
 		return $total;
 	}
 
+	/**
+	 * Calculate the savings from using a discount code.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function      This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                                 to the query.
+	 *     @type string $discount_code Discount code to fetch the savings amount for. Default empty. If empty, the amount
+	 *                                 saved from using any discount will be returned.
+	 * }
+	 *
+	 * @return float Savings from using a discount code.
+	 */
 	public function get_discount_savings( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -383,6 +630,30 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	/**
+	 * Calculate the average discount amount applied to an order.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 * }
+	 *
+	 * @return float Average discount amount applied to an order.
+	 */
 	public function get_average_discount_amount( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -408,6 +679,30 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	/**
+	 * Calculate the ratio of discounted to non-discounted orders.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 * }
+	 *
+	 * @return string Ratio of discounted to non-discounted orders. Format is A:B where A and B are integers.
+	 */
 	public function get_ratio_of_discounted_orders( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -448,18 +743,49 @@ class Stats {
 
 		$ratio = absint( $result->discounted_orders );
 
-		// Return ratio.
+		// Return the formatted ratio.
 		return ( $original_result->discounted_orders / $ratio ) . ':' . ( $original_result->total / $ratio );
 	}
 
 	/** Gateways *************************************************************/
 
+	/**
+	 * Perform gateway calculations based on data passed.
+	 *
+	 * @internal This method must remain `private`, it exists to reduce duplicated code.
+	 *
+	 * @since 3.0
+	 * @access private
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT`, `AVG`, and `SUM`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $gateway   Gateway name. This is checked against a list of registered payment gateways.
+	 *                             If a gateway is not passed, a list of objects are returned for each gateway and the
+	 *                             number of orders processed with that gateway.
+	 * }
+	 *
+	 * @return array List of objects containing data pertinent to the query parameters passed.
+	 */
 	private function get_gateway_data( $query = array() ) {
 
 		// Set up default values.
 		$gateways = edd_get_payment_gateways();
 		$defaults = array();
 
+		// Set up an object for each gateway.
 		foreach ( $gateways as $id => $data ) {
 			$object          = new \stdClass();
 			$object->gateway = $id;
@@ -488,14 +814,10 @@ class Stats {
 			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
 			: '';
 
-		$groupby = empty( $gateway )
-			? 'GROUP BY gateway'
-			: '';
-
 		$sql = "SELECT gateway, {$function} AS count
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				{$groupby}";
+				GROUP BY gateway";
 
 		$result = $this->get_db()->get_results( $sql );
 
@@ -538,12 +860,36 @@ class Stats {
 		return $results;
 	}
 
+	/**
+	 * Calculate the number of processed by a gateway.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_gateway_data()
+	 *
+	 * @param array $query See \EDD\Orders\Stats::get_gateway_data().
+	 *
+	 * @return array List of objects containing the number of sales processed either for every gateway or the gateway
+	 *               passed as a query parameter.
+	 */
 	public function get_gateway_sales( $query = array() ) {
 
 		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
 		return $this->get_gateway_data( $query );
 	}
 
+	/**
+	 * Calculate the total order amount of processed by a gateway.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_gateway_data()
+	 *
+	 * @param array $query See \EDD\Orders\Stats::get_gateway_data().
+	 *
+	 * @return array List of objects containing the amount processed either for every gateway or the gateway
+	 *               passed as a query parameter.
+	 */
 	public function get_gateway_earnings( $query = array() ) {
 
 		// Summation is required as we are returning earnings.
@@ -563,6 +909,18 @@ class Stats {
 		return $result;
 	}
 
+	/**
+	 * Calculate the amount for refunded orders processed by a gateway.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_gateway_earnings()
+	 *
+	 * @param array $query See \EDD\Orders\Stats::get_gateway_earnings().
+	 *
+	 * @return array List of objects containing the amount for refunded orders processed either for every
+	 *               gateway or the gateway passed as a query parameter.
+	 */
 	public function get_gateway_refund_amount( $query = array() ) {
 
 		// Ensure orders are refunded.
@@ -575,6 +933,18 @@ class Stats {
 		return $result;
 	}
 
+	/**
+	 * Calculate the average order amount of processed by a gateway.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_gateway_data()
+	 *
+	 * @param array $query See \EDD\Orders\Stats::get_gateway_data().
+	 *
+	 * @return array List of objects containing the average order value processed either for every gateway
+	 *               pr the gateway passed as a query parameter.
+	 */
 	public function get_gateway_average_value( $query = array() ) {
 
 		// Function needs to be `AVG`.
@@ -596,6 +966,30 @@ class Stats {
 
 	/** Tax ******************************************************************/
 
+	/**
+	 * Calculate total tax collected.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 * }
+	 *
+	 * @return string Formatted amount of total tax collected.
+	 */
 	public function get_tax( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -603,12 +997,12 @@ class Stats {
 		$this->query_vars['column']            = 'tax';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
 		$function = isset( $this->query_vars['function'] )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
-
-		// Run pre-query checks and maybe generate SQL.
-		$this->pre_query( $query );
 
 		$sql = "SELECT {$function}
 				FROM {$this->query_vars['table']}
@@ -623,6 +1017,34 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	/**
+	 * Calculate total tax collected for country and state passed.
+	 *
+	 * TODO: Finish implementation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $country   Country name. Defaults to store's base country.
+	 *     @type string $state     State name. Defaults to store's base state.
+	 * }
+	 *
+	 * @return string Formatted amount of total tax collected for country and state passed.
+	 */
 	public function get_tax_by_location( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -687,6 +1109,33 @@ class Stats {
 
 	/** Customers ************************************************************/
 
+	/**
+	 * Calculate the lifetime value of a customer.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start       Start day and time (based on the beginning of the given day).
+	 *     @type string $end         End day and time (based on the end of the given day).
+	 *     @type string $range       Date range. If a range is passed, this will override and `start` and `end`
+	 *                               values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function    SQL function. Accepts `AVG` and `SUM`. Default `SUM`.
+	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                               to the query.
+	 *     @type int    $customer_id Customer ID. Default empty.
+	 *     @type int    $user_id     User ID. Default empty.
+	 *     @type string $email       Email address.
+	 * }
+	 *
+	 * @return string Formatted lifetime value of a customer.
+	 */
 	public function get_customer_lifetime_value( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -733,6 +1182,35 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
+	/**
+	 * Calculate the number of orders made by a customer.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_order_count()
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start       Start day and time (based on the beginning of the given day).
+	 *     @type string $end         End day and time (based on the end of the given day).
+	 *     @type string $range       Date range. If a range is passed, this will override and `start` and `end`
+	 *                               values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function    SQL function. Accepts `AVG` and `SUM`. Default `SUM`.
+	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                               to the query.
+	 *     @type int    $customer_id Customer ID. Default empty.
+	 *     @type int    $user_id     User ID. Default empty.
+	 *     @type string $email       Email address.
+	 * }
+	 *
+	 * @return int Number of orders made by a customer.
+	 */
 	public function get_customer_order_count( $query = array() ) {
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
@@ -752,6 +1230,32 @@ class Stats {
 		return $this->get_order_count( $query );
 	}
 
+	/**
+	 * Calculate the average age of a customer.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_order_count()
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start       Start day and time (based on the beginning of the given day).
+	 *     @type string $end         End day and time (based on the end of the given day).
+	 *     @type string $range       Date range. If a range is passed, this will override and `start` and `end`
+	 *                               values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function    This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                               to the query.
+	 * }
+	 *
+	 * @return int|float Average age of a customer.
+	 */
 	public function get_customer_age( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
@@ -762,11 +1266,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = isset( $this->query_vars['function'] ) && 'AVG' === strtoupper( $this->query_vars['function'] )
-			? 'AVG(DATEDIFF(NOW(), date_created))'
-			: 'DATEDIFF(NOW(), date_created)';
-
-		$sql = "SELECT {$function}
+		$sql = "SELECT AVG(DATEDIFF(NOW(), date_created))
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['date_query_sql']}";
 
@@ -777,7 +1277,33 @@ class Stats {
 			: round( $result, 2 );
 	}
 
-	public function get_customer_value( $query = array() ) {
+	/**
+	 * Calculate the most valuable customers.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start       Start day and time (based on the beginning of the given day).
+	 *     @type string $end         End day and time (based on the end of the given day).
+	 *     @type string $range       Date range. If a range is passed, this will override and `start` and `end`
+	 *                               values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function    This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                               to the query.
+	 *     @type int    $number      Number of customers to fetch. Default 1.
+	 * }
+	 *
+	 * @return array Array of objects with most valuable customers. Each object has the customer ID, total amount spent
+	 *               by that customer and an instance of EDD_Customer.
+	 */
+	public function get_most_valuable_customers( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
@@ -788,7 +1314,7 @@ class Stats {
 		$this->pre_query( $query );
 
 		// By default, the most valuable customer is returned.
-		$number = isset( $this->query_vars['vars'] )
+		$number = isset( $this->query_vars['number'] )
 			? absint( $this->query_vars['number'] )
 			: 1;
 
