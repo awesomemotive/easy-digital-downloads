@@ -44,21 +44,30 @@ class Stats {
 	 * Constructor.
 	 *
 	 * @since 3.0
+	 */
+	public function __construct() {
+
+		// Start the Reports API.
+		new Reports\Init();
+
+		// Set date ranges.
+		$this->set_date_ranges();
+	}
+
+	/**
+	 * Retrieve data.
+	 *
+	 * @since 3.0
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
 	 *     Default empty.
 	 * }
 	 */
-	public function __construct( $query = array() ) {
+	public function get_data( $query = array() ) {
 
 		if ( ! empty( $query ) ) {
-
-			// Start the Reports API.
-			new Reports\Init();
-
-			// Parse the query.
-			$this->parse_query();
+			$this->parse_query( $query );
 		}
 	}
 
@@ -167,15 +176,22 @@ class Stats {
 	 *
 	 * @since 3.0
 	 * @access private
+	 *
+	 * @see \EDD\Orders\Stats::get_data()
+	 *
+	 * @param array $query Array of arguments. See \EDD\Orders\Stats::get_data().
 	 */
-	private function parse_query() {
+	private function parse_query( $query = array() ) {
+		$this->query_vars = $query;
 
-		// Reset query vars each time arguments are parsed.
-		$this->query_vars = array();
-
-		// Populate date ranges
-		$this->set_date_ranges();
-
+		/**
+		 * Fires after the item query vars have been parsed.
+		 *
+		 * @since 3.0
+		 *
+		 * @param \EDD\Orders\Stats &$this The \EDD\Orders\Stats (passed by reference).
+		 */
+		do_action_ref_array( 'edd_order_stats_parse_query', array( &$this ) );
 	}
 
 	/** Private Getters *******************************************************/
