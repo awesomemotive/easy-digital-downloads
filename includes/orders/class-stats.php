@@ -117,15 +117,15 @@ class Stats {
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
 		// Only `COUNT` and `AVG` are accepted by this method.
 		$accepted_functions = array( 'COUNT', 'AVG' );
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
-
-		// Run pre-query checks and maybe generate SQL.
-		$this->pre_query( $query );
 
 		$sql = "SELECT {$function}
 				FROM {$this->query_vars['table']}
@@ -216,12 +216,12 @@ class Stats {
 		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
 		$function = isset( $this->query_vars['function'] )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
-
-		// Run pre-query checks and maybe generate SQL.
-		$this->pre_query( $query );
 
 		$product_id = isset( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -247,15 +247,15 @@ class Stats {
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query )
+
 		// Only `COUNT` and `AVG` are accepted by this method.
 		$accepted_functions = array( 'COUNT', 'AVG' );
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
-
-		// Run pre-query checks and maybe generate SQL.
-		$this->pre_query( $query );
+			: 'COUNT(id)';;
 
 		$product_id = isset( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -720,7 +720,7 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
-	public function get_customer_orders() {
+	public function get_customer_order_count() {
 
 	}
 
