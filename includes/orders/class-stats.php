@@ -370,8 +370,29 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
-	public function get_average_discount_amount() {
+	public function get_average_discount_amount( $query = array() ) {
 
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
+		$this->query_vars['column']            = 'amount';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
+
+		$sql = "SELECT AVG({$this->query_vars['column']})
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$type_discount} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0.00
+			: floatval( $result );
+
+		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
 	/** Gateways *************************************************************/
