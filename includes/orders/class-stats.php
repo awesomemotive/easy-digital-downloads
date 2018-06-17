@@ -1449,6 +1449,8 @@ class Stats {
 			}
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;
+		} else {
+			$this->query_vars['date_query_sql'] = '';
 		}
 	}
 
