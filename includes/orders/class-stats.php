@@ -720,8 +720,23 @@ class Stats {
 		return edd_currency_filter( edd_format_amount( $total ) );
 	}
 
-	public function get_customer_order_count() {
+	public function get_customer_order_count( $query = array() ) {
+		$user = isset( $this->query_vars['user_id'] )
+			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
+			: '';
 
+		$customer = isset( $this->query_vars['customer'] )
+			? $this->get_db()->prepare( 'AND customer_id = %d', absint( $this->query_vars['customer'] ) )
+			: '';
+
+		$email = isset( $this->query_vars['email'] )
+			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
+			: '';
+		
+		$query['where_sql'] = "{$user} {$customer} {$email}";
+
+		// Dispatch to \EDD\Orders\Stats::get_order_count().
+		return $this->get_order_count( $query );
 	}
 
 	public function get_customer_age() {
