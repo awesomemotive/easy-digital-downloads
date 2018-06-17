@@ -10,6 +10,8 @@
  */
 namespace EDD\Orders;
 
+use EDD\Reports as Reports;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -30,6 +32,15 @@ class Stats {
 	protected $query_vars = array();
 
 	/**
+	 * Date ranges.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $date_ranges = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0
@@ -42,6 +53,11 @@ class Stats {
 	public function __construct( $query = array() ) {
 
 		if ( ! empty( $query ) ) {
+
+			// Start the Reports API.
+			new Reports\Init();
+
+			// Parse the query.
 			$this->parse_query();
 		}
 	}
@@ -157,12 +173,15 @@ class Stats {
 		// Reset query vars each time arguments are parsed.
 		$this->query_vars = array();
 
+		// Populate date ranges
+		$this->set_date_ranges();
+
 	}
 
 	/** Private Getters *******************************************************/
 
 	/**
-	 * Return the global database interface
+	 * Return the global database interface.
 	 *
 	 * @since 3.0
 	 * @access private
@@ -173,5 +192,23 @@ class Stats {
 		return isset( $GLOBALS['wpdb'] )
 			? $GLOBALS['wpdb']
 			: new stdClass();
+	}
+
+	/** Private Setters ******************************************************/
+
+	/**
+	 * Set up the date ranges available.
+	 *
+	 * @since 3.0
+	 * @access private
+	 */
+	private function set_date_ranges() {
+		$date = EDD()->utils->date( 'now' );
+
+		$date_filters = Reports\get_dates_filter_options();
+
+		foreach ( $date_filters as $range => $label ) {
+			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $date, $range );
+		}
 	}
 }
