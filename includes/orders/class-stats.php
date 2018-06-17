@@ -48,6 +48,19 @@ class Stats {
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
 	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class. Some methods will not allow parameters to be overridden as it could lead to inaccurate calculations.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Certain methods will only accept certain functions. See each method for
+	 *                             a list of accepted SQL functions.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -817,6 +830,7 @@ class Stats {
 		$query_var_defaults = array(
 			'start'             => '',
 			'end'               => '',
+			'range'             => '',
 			'where_sql'         => '',
 			'date_query_sql'    => '',
 			'date_query_column' => '',
