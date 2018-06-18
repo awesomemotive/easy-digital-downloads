@@ -41,6 +41,15 @@ class Stats {
 	protected $date_ranges = array();
 
 	/**
+	 * Query var originals. These hold query vars passed to the constructor.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $query_var_originals = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0
@@ -78,7 +87,7 @@ class Stats {
 
 		// Set defaults.
 		} else {
-			$this->query_vars = array(
+			$this->query_var_originals = $this->query_vars = array(
 				'start'             => '',
 				'end'               => '',
 				'range'             => '',
@@ -146,6 +155,9 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
+		// Reset query vars.
+		$this->post_query();
+
 		return $this->maybe_format( $total );
 	}
 
@@ -200,6 +212,9 @@ class Stats {
 		$total = null === $result
 			? 0
 			: absint( $result );
+
+		// Reset query vars.
+		$this->post_query();
 
 		return $total;
 	}
@@ -353,6 +368,9 @@ class Stats {
 			? 0
 			: round( $result, 2 );
 
+		// Reset query vars.
+		$this->post_query();
+
 		return $total;
 	}
 
@@ -412,6 +430,9 @@ class Stats {
 		$total = null === $result
 			? 0.00
 			: (float) $result;
+
+		// Reset query vars.
+		$this->post_query();
 
 		return $this->maybe_format( $total );
 	}
@@ -485,6 +506,9 @@ class Stats {
 			? 0
 			: absint( $result );
 
+		// Reset query vars.
+		$this->post_query();
+
 		return $total;
 	}
 
@@ -546,6 +570,9 @@ class Stats {
 		// Add instance of EDD_Download to resultant object.
 		$result->object = edd_get_download( $result->product_id );
 
+		// Reset query vars.
+		$this->post_query();
+
 		return $result;
 	}
 
@@ -601,6 +628,9 @@ class Stats {
 			? 0
 			: absint( $result );
 
+		// Reset query vars.
+		$this->post_query();
+
 		return $total;
 	}
 
@@ -655,6 +685,9 @@ class Stats {
 			? 0.00
 			: floatval( $result );
 
+		// Reset query vars.
+		$this->post_query();
+
 		return $this->maybe_format( $total );
 	}
 
@@ -704,6 +737,9 @@ class Stats {
 		$total = null === $result
 			? 0.00
 			: floatval( $result );
+
+		// Reset query vars.
+		$this->post_query();
 
 		return $this->maybe_format( $total );
 	}
@@ -772,6 +808,9 @@ class Stats {
 		}
 
 		$ratio = absint( $result->discounted_orders );
+
+		// Reset query vars.
+		$this->post_query();
 
 		// Return the formatted ratio.
 		return ( $original_result->discounted_orders / $ratio ) . ':' . ( $original_result->total / $ratio );
@@ -887,6 +926,9 @@ class Stats {
 			return absint( $filter[0]->count );
 		}
 
+		// Reset query vars.
+		$this->post_query();
+
 		// Return array of objects with gateway name and count.
 		return $results;
 	}
@@ -936,6 +978,9 @@ class Stats {
 			unset( $value->count );
 		} );
 
+		// Reset query vars.
+		$this->post_query();
+
 		// Return array of objects with gateway name and earnings.
 		return $result;
 	}
@@ -959,6 +1004,9 @@ class Stats {
 
 		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
 		$result = $this->get_gateway_earnings( $query );
+
+		// Reset query vars.
+		$this->post_query();
 
 		// Return array of objects with gateway name and amount from refunded orders.
 		return $result;
@@ -990,6 +1038,9 @@ class Stats {
 			$value->earnings = $this->maybe_format( $value->earnings );
 			unset( $value->count );
 		} );
+
+		// Reset query vars.
+		$this->post_query();
 
 		// Return array of objects with gateway name and earnings.
 		return $result;
@@ -1045,6 +1096,9 @@ class Stats {
 		$total = null === $result
 			? 0.00
 			: (float) $result;
+
+		// Reset query vars.
+		$this->post_query();
 
 		return $this->maybe_format( $total );
 	}
@@ -1134,6 +1188,9 @@ class Stats {
 				: null;
 		}
 
+		// Reset query vars.
+		$this->post_query();
+
 		// Bail early if state does not exist.
 		if ( null === $state ) {
 			return 0.00;
@@ -1212,6 +1269,9 @@ class Stats {
 		$total = null === $result
 			? 0.00
 			: (float) $result;
+
+		// Reset query vars.
+		$this->post_query();
 
 		return $this->maybe_format( $total );
 	}
@@ -1308,6 +1368,9 @@ class Stats {
 
 		$result = $this->get_db()->get_var( $sql );
 
+		// Reset query vars.
+		$this->post_query();
+
 		return null === $result
 			? 0
 			: round( $result, 2 );
@@ -1373,6 +1436,9 @@ class Stats {
 			// Add instance of EDD_Download to resultant object.
 			$value->object = edd_get_customer( $value->customer_id );
 		} );
+
+		// Reset query vars.
+		$this->post_query();
 
 		return $result;
 	}
@@ -1468,6 +1534,16 @@ class Stats {
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;
 		}
+	}
+
+	/**
+	 * Runs after a query. Resets query vars back to the originals passed in via the constructor.
+	 *
+	 * @since 3.0
+	 * @access private
+	 */
+	private function post_query() {
+		$this->query_vars = $this->query_var_originals;
 	}
 
 	/**
