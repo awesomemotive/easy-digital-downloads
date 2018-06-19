@@ -655,9 +655,12 @@ function edd_get_total_sales() {
  * @since 1.2
  * @since 3.0 Refactored to work with new tables.
  *
+ * @param bool $include_taxes Whether taxes should be included. Default true.
  * @return float $total Total earnings.
  */
-function edd_get_total_earnings() {
+function edd_get_total_earnings( $include_taxes = true ) {
+	global $wpdb;
+
 	$total = get_option( 'edd_earnings_total', false );
 
 	// If no total stored in the database, use old method of calculating total earnings.
@@ -665,32 +668,17 @@ function edd_get_total_earnings() {
 		$total = get_transient( 'edd_earnings_total' );
 
 		if ( false === $total ) {
-			$total = (float) 0;
+			$exclude_taxes_sql = false === $include_taxes
+				? ' - SUM(tax)'
+				: '';
 
-			$args = apply_filters( 'edd_get_total_earnings_args', array(
-				'status__in' => array( 'publish', 'revoked' ),
-				'fields'     => 'total',
-			) );
+			$total = $wpdb->get_var( "
+				SELECT SUM(total) {$exclude_taxes_sql} AS total
+				FROM {$wpdb->edd_orders}
+				WHERE status IN ('publish', 'revoked')
+			" );
 
-			$orders = edd_get_orders( $args );
-
-			if ( $orders ) {
-
-				/*
-				 * If performing a purchase, we need to skip the very last payment in the database, since it calls
-				 * edd_increase_total_earnings() on completion, which results in duplicated earnings for the very
-				 * first purchase
-				 */
-
-				if ( did_action( 'edd_update_payment_status' ) ) {
-					array_pop( $orders );
-				}
-
-				$total = array_reduce( $orders, function( $carry, $item ) {
-					$carry += $item;
-					return $carry;
-				} );
-			}
+			$total = (float) edd_number_not_negative( (float) $total );
 
 			// Cache results for 1 day. This cache is cleared automatically when a payment is made
 			set_transient( 'edd_earnings_total', $total, 86400 );
