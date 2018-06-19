@@ -2226,7 +2226,7 @@ class EDD_API {
 		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today', null, $args['include_tax'] );
 		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month', null, $args['include_tax'] );
 		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month', null, $args['include_tax'] );
-		$earnings['earnings']['totals']        = edd_get_total_earnings();
+		$earnings['earnings']['totals']        = edd_get_total_earnings( $args['include_tax'] );
 
 		return $earnings;
 	}
