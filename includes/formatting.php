@@ -243,3 +243,41 @@ function edd_sanitize_key( $key = '' ) {
 	 */
 	return apply_filters( 'edd_sanitize_key', $key, $raw_key );
 }
+
+/**
+ * Never let a numeric value be less than zero.
+ *
+ * Adapted from bbPress.
+ *
+ * @since 3.0
+ *
+ * @param int $number Default 0.
+ * @return int.
+ */
+function edd_number_not_negative( $number = 0 ) {
+
+	// Protect against formatted strings
+	if ( is_string( $number ) ) {
+		$number = strip_tags( $number );                    // No HTML
+		$number = preg_replace( '/[^0-9-]/', '', $number ); // No number-format
+		// Protect against objects, arrays, scalars, etc...
+	} elseif ( ! is_numeric( $number ) ) {
+		$number = 0;
+	}
+
+	// Make the number an integer
+	$casted_number = is_float( $number )
+		? floatval( $number )
+		: intval( $number );
+
+	$max_value = is_float( $number )
+		? 0.00
+		: 0;
+
+	// Pick the maximum value, never less than zero
+	$not_less_than_zero = max( $max_value, $casted_number );
+
+	// Filter & return
+	return (int) apply_filters( 'edd_number_not_negative', $not_less_than_zero, $casted_number, $number );
+}
+
