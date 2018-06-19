@@ -608,6 +608,14 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['offset'] = ( $this->args['paged'] * $this->args['number'] ) - $this->args['number'];
 		}
 
+		if ( isset( $this->args['count'] ) ) {
+			$arguments['count'] = (bool) $this->args['count'];
+		}
+
+		if ( isset( $this->args['groupby'] ) ) {
+			$arguments['groupby'] = $this->args['groupby'];
+		}
+
 		$this->args = $arguments;
 	}
 }
