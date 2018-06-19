@@ -651,7 +651,33 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['mode'] = sanitize_key( $_GET['mode'] );
 		}
 
-		$this->counts = edd_get_order_counts( $args );
+		// No empties
+		$r = wp_parse_args( array_filter( $args ) );
+
+		// Force EDD\Orders\Order objects to be returned
+		$r['output'] = 'orders';
+
+		$r['count']   = true;
+		$r['groupby'] = 'status';
+
+		$p = new EDD_Payments_Query( $r );
+		$counts = $p->get_payments();
+
+		$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
+
+		$o = array(
+			'total' => 0
+		);
+
+		if ( ! empty( $counts ) ) {
+			foreach ( $counts as $item ) {
+				$o[ $item['status'] ] = absint( $item['count'] );
+			}
+
+			$o['total'] = array_sum( $o );
+		}
+
+		$this->counts = array_merge( $defaults, $o );
 	}
 
 	/**
