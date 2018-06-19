@@ -665,7 +665,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	    $args = array();
 
 		$per_page   = $this->per_page;
-		$paged      = isset( $_GET['paged'] )      ? ( absint( $_GET['paged'] ) * $per_page ) - $per_page : null;
+		$paged      = isset( $_GET['paged'] )      ? absint( $_GET['paged'] )                   : null;
 		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
 		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
 		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'id';
@@ -696,16 +696,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		}
 
 		$args = array(
-			'number'     => $per_page,
-			'offset'     => $paged,
-			'orderby'    => $orderby,
-			'order'      => $order,
-			'user_id'    => $user,
-			'customer_id'=> $customer,
-			'status'     => $status,
-			'gateway'    => $gateway,
-			'mode'       => $mode,
-			'search'     => $search
+			'number'   => $per_page,
+			'paged'    => $paged,
+			'orderby'  => $orderby,
+			'order'    => $order,
+			'user'     => $user,
+			'customer' => $customer,
+			'status'   => $status,
+			'gateway'  => $gateway,
+			'mode'     => $mode,
+			's'        => $search,
 		);
 
 		// Search
@@ -742,7 +742,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		// No empties
 		$r = wp_parse_args( array_filter( $args ) );
 
-		return edd_get_orders( $r );
+		// Force EDD\Orders\Order objects to be returned
+		$r['output'] = 'orders';
+		
+		$p = new EDD_Payments_Query( $r );
+
+		return $p->get_payments();
 	}
 
 	/**
