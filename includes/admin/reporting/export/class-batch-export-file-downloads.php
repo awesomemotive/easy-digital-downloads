@@ -87,16 +87,19 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				$user_info = get_post_meta( $log->ID, '_edd_log_user_info', true );
-				$files     = edd_get_download_files( $log->post_parent );
-				$file_id   = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
-				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-				$user      = get_userdata( $user_info['id'] );
-				$user      = $user ? $user->user_login : $user_info['email'];
+				$customer_id = get_post_meta( $log->ID, '_edd_log_customer_id', true );
+				$customer    = false;
+				if ( ! empty( $customer_id ) ) {
+					$customer = new EDD_Customer( $customer_id );
+				}
+
+				$files       = edd_get_download_files( $log->post_parent );
+				$file_id     = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
+				$file_name   = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
 				$data[]    = array(
 					'date'     => $log->post_date,
-					'user'     => $user,
+					'user'     => ! empty( $customer ) && ! empty( $customer->name ) ? $customer->name : edd_get_payment_user_email( $log->post_parent ),
 					'ip'       => get_post_meta( $log->ID, '_edd_log_ip', true ),
 					'download' => get_the_title( $log->post_parent ),
 					'file'     => $file_name
