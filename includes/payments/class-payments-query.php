@@ -121,7 +121,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 * @since 3.0 Updated to use the new query classes and custom tables.
 	 *
-	 * @return EDD_Payment[]
+	 * @return EDD_Payment[]|EDD\Orders\Order[]
 	 */
 	public function get_payments() {
 
@@ -144,7 +144,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		do_action( 'edd_pre_get_payments', $this );
 
 		$should_output_wp_post_objects = false;
-		$should_output_order_objects = false;
+		$should_output_order_objects   = false;
 
 		if ( 'posts' === $this->args['output'] ) {
 			$should_output_wp_post_objects = true;
@@ -363,6 +363,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
+
 		if ( ! empty( $this->args['search_in_notes'] ) ) {
 			$notes = edd_get_payment_notes( 0, $search );
 
@@ -571,7 +572,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$arguments['orderby'] = 'parent__in';
 				break;
 			default:
-				$arguments['orderby'] = 'id';
+				$arguments['orderby'] = $this->args['orderby'];
 				break;
 		}
 
