@@ -30,15 +30,83 @@ a.edd-delete:hover {
 /* General Settings Styles
 -------------------------------------------------------------- */
 
-.download_page_edd-settings .form-table label {
-	color: #666;
-	font-size: 14px;
-	font-style: italic;
-	margin: 4px 0 0;
+.edd-settings-sub-nav {
+	margin: 0 0px 10px 0;
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
-.download_page_edd-settings .form-table input.small-text ~ label,
-.download_page_edd-settings .form-table input[type="checkbox"] + label { display: inline; }
+.edd-settings-sub-nav a {
+	padding: 13px;
+	display: block;
+}
+
+.edd-settings-sub-nav a.current {
+	border-bottom: 4px solid #000;
+	padding-bottom: 9px;
+}
+
+.admin-color-fresh .edd-settings-sub-nav a.current {
+	border-bottom-color: #00a0d2;
+}
+
+/* Blue */
+.admin-color-blue .edd-settings-sub-nav a.current {
+	border-bottom-color: #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .edd-settings-sub-nav a.current {
+	border-bottom-color: #096484;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .edd-settings-sub-nav a.current {
+	border-bottom-color: #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .edd-settings-sub-nav a.current {
+	border-bottom-color: #26292c;
+}
+
+/* Ocean */
+.admin-color-ocean .edd-settings-sub-nav a.current {
+	border-bottom-color: #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .edd-settings-sub-nav a.current {
+	border-bottom-color: #be3631;
+}
+
+/* Light */
+.admin-color-light .edd-settings-sub-nav a.current {
+	border-bottom-color: #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .edd-settings-sub-nav a.current {
+	border-bottom-color: #36533f;
+}
+
+/* Mint */
+.admin-color-mint .edd-settings-sub-nav a.current {
+	border-bottom-color: #4f6d59;
+}
+
+.download_page_edd-settings .edd-check-wrapper {
+	clear: both;
+}
+.download_page_edd-settings .edd-check-wrapper label {
+	margin: -2px 0 3px 0;
+	display: inline-block;
+	vertical-align: initial;
+}
+
 .download_page_edd-settings .form-table tr > th > strong,
 .download_page_edd-settings .form-table tr > th > h3 {
 	font-size: 1.2em;
@@ -46,9 +114,64 @@ a.edd-delete:hover {
 	margin: 0 auto;
 }
 
+.edd-sortable-list {
+	margin: 0;
+	width: 300px;
+	position: relative;
+}
+
+.edd-sortable-list li {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	height: 28px;
+	cursor: move;
+	opacity: 0.8;
+}
+
+.edd-sortable-list li:hover {
+	opacity: 1;
+}
+
+.edd-sortable-list li label * {
+	vertical-align: middle;
+}
+
+.edd-sortable-list li label:after {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 6px;
+	top: 0px;
+	color: #aaa;
+	font-family: dashicons;
+	font-size: 17px;
+	content: '\f228';
+}
+
+.form-table .edd-sortable-list li label {
+	display: block;
+	height: 28px;
+	padding: 0;
+	margin: 0;
+	cursor: move;
+}
+
+.edd-sortable-list .payment-icon {
+	width: 32px;
+	height: 24px;
+	position: relative;
+	top: -2px;
+	margin-right: 5px;
+}
+
 /* Tooltips */
 .edd-help-tip {
 	cursor: help;
+	margin-top: -2px;
+	font-size: 24px;
+	color: grey;
 }
 
 .edd-ui-tooltip {
@@ -64,46 +187,41 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
-.download_page_edd-settings .edd-settings-payment-icon-wrapper {
-	margin-right:10px;
-	line-height:16px;
-	height:16px;
-	display: table;
-}
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 
-#edd-add-ons h2.nav-tab-wrapper {
-	position: relative;
-}
-
-.edd-tab-span {
-	top: -6px;
-	right: 0;
-	position: absolute;
-}
 .edd-add-ons-footer {
 	padding-top: 10px;
 }
-#edd-add-ons h2 {
-	margin: 0 0 15px;
+#edd-add-ons .subsubsub .dashicons {
+	margin-top: 3px;
 }
-.edd-add-ons-view-wrapper {
-	height: 50px;
+#edd-add-ons .edd-add-ons-container {
+	clear: both;
+	padding-top: 10px;
 }
-#edd-add-ons h2 .button-primary {
-	position: absolute;
+
+#edd-add-ons .search-box .button-secondary span {
+	margin: 2px -5px 0 4px;
+	padding: 0;
+	color: #aaa;
 }
+
 #edd-add-ons .edd-extension {
 	background: #fff;
 	border: 1px solid #ccc;
 	float: left;
 	padding: 14px;
 	position: relative;
-	margin: 0 15px 15px 0;
+	margin: 0 15px 16px 0;
 	width: 320px;
 	height: 315px;
+	opacity: 0.9;
+}
+#edd-add-ons .edd-extension:hover {
+	border: 1px solid #bbb;
+	opacity: 1;
 }
 #edd-add-ons .edd-extension h3 {
 	font-size: 13px;
@@ -115,7 +233,7 @@ a.edd-delete:hover {
 	left: 14px;
 }
 #edd-add-ons .edd-browse-all {
-	clear:both;
+	clear: both;
 	width:100%;
 }
 #edd-add-ons .edd-extension .third-party {
@@ -125,13 +243,94 @@ a.edd-delete:hover {
 	background-color: #85c0e5;
 	border-color: #62a9d7;
 	color: #fff;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
 #edd-add-ons .edd-starter-package h3 {
 	color: #fff;
 }
+/* Mock blue "Primary" styling on Starter Package */
+#edd-add-ons .edd-starter-package .button-secondary {
+	background: #0085ba;
+	border-color: #0073aa #006799 #006799;
+	box-shadow: 0 1px 0 #006799;
+	color: #fff;
+	text-decoration: none;
+	text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
 #edd-add-ons .edd-extension .wp-post-image {
 	width: 100%;
 	height: auto;
+}
+
+/* Note Styles
+-------------------------------------------------------------- */
+
+.edd-notes .edd-note {
+	background-color: #ffffee;
+	border-left: 5px solid #cccc00;
+	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	width: 80%;
+	position: relative;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.edd-notes .edd-note div {
+	padding: 5px 10px;
+	margin: 0;
+}
+
+.edd-notes .edd-note .edd-note-author {
+	padding: 2px 2px 2px 0;
+	float: left;
+}
+
+.edd-notes .edd-note time {
+	float: left;
+	font-size: 11px;
+	line-height: 11px;
+	color: #aaa;
+	padding: 5px 0;
+	vertical-align: middle;
+}
+
+.edd-notes .edd-note p {
+	clear: both;
+	padding: 5px 0;
+	margin: 0;
+}
+
+.edd-notes .edd-note .edd-note-author {
+	margin-right: 5px;
+}
+
+.edd-notes .edd-note .edd-delete-note {
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 10px;
+	font-size: 10px;
+	line-height: 10px;
+	text-decoration: none;
+	color: #aaa;
+	z-index: 1;
+}
+
+.edd-notes .edd-note .edd-delete-note:hover {
+	color: #888;
+}
+
+.edd-notes .edd-no-notes {
+	margin: 4px 0 10px 0;
+}
+
+textarea[name="edd-note"] {
+	width: 80%;
+	min-height: 70px;
+}
+
+#edd-customer-notes {
+	margin-bottom: 50px;
 }
 
 /* Discount Code Styles
@@ -146,81 +345,239 @@ a.edd-delete:hover {
 	width: 300px;
 }
 
+#edd-add-discount input[type="text"].edd_datepicker,
+#edd-edit-discount input[type="text"].edd_datepicker {
+	height: 29px;
+	width: 183px;
+	vertical-align: middle;
+}
+
+#edd-edit-discount textarea {
+	width: 80%;
+	height: 100px;
+}
+
 #edd-add-discount input.edd-price-field,
 #edd-edit-discount input.edd-price-field {
 	padding: 3px 5px;
-	width: 75px;
+	width: 80%;
+	max-width: 125px;
 }
 
-/* Payment History Styles
+/* List Tables
 -------------------------------------------------------------- */
-.edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-addons .wrap .wp-heading-inline {
-	display: none;
+
+.wp-list-table.customers .column-id,
+.wp-list-table.downloads .column-primary {
+	width: 5%;
 }
 
+.wp-list-table.posts .column-sales,
+.wp-list-table.customers .column-order_count,
+.wp-list-table.discounts .column-use_count {
+	width: 10%;
+}
+
+.wp-list-table.customers .column-spent,
+.wp-list-table.customers .column-status,
+.wp-list-table.downloads .column-amount,
+.wp-list-table.downloads .column-status,
+.wp-list-table.discounts .column-amount,
+.wp-list-table.discounts .column-status,
+.wp-list-table.orders .column-amount,
+.wp-list-table.orders .column-status {
+	width: 11%;
+}
+
+.wp-list-table.posts .column-earnings {
+	width: 11%;
+}
+
+.wp-list-table.posts .column-download_category,
+.wp-list-table.posts .column-download_tag,
+.wp-list-table.posts .column-price {
+	width: 13%
+}
+
+.wp-list-table.customers .column-date_created,
+.wp-list-table.discounts .column-code,
+.wp-list-table.discounts .column-start_date,
+.wp-list-table.discounts .column-end_date,
+.wp-list-table.downloads .column-date,
+.wp-list-table.downloads .column-customer,
+.wp-list-table.orders .column-date {
+	width: 14%;
+}
+
+.wp-list-table.orderadjustments .column-amount,
+.wp-list-table.orderitems .column-status,
+.wp-list-table.orderitems .column-quantity,
+.wp-list-table.orderitems .column-amount,
+.wp-list-table.orderitems .column-discount,
+.wp-list-table.orderitems .column-tax,
+.wp-list-table.orderitems .column-total,
+.wp-list-table.orderitems .column-subtotal {
+	width: 17%;
+}
+
+.wp-list-table.orders .column-gateway,
+.wp-list-table.orders .column-customer {
+	width: 18%;
+}
+
+.wp-list-table.customers .column-email {
+	width: 25%;
+}
+
+.wp-list-table.orderadjustments .column-desc {
+	width: 34%;
+}
+
+.wp-list-table.customers .column-primary strong,
+.wp-list-table.discounts .column-primary strong,
+.wp-list-table.orders .column-primary strong,
+.wp-list-table.orderitems .column-primary strong,
+.wp-list-table.orderadjustments .column-primary strong {
+	font-size: 14px;
+}
+
+.wp-list-table.orders tr.refunded td,
+.wp-list-table.orders tr.refunded th,
+.wp-list-table.orderitems tr.refunded td,
+.wp-list-table.orderitems tr.refunded th {
+	background: #ffddee;
+}
+.wp-list-table .row-actions span.refund a {
+	color: #cc8c00;
+}
+
+.wp-list-table .row-actions span.refund a:hover {
+	color: #ff8c00;
+}
+
+.wp-list-table.customers .column-primary .avatar {
+	float: left;
+	margin-right: 10px;
+	margin-top: 1px;
+	border-radius: 20%;
+}
+
+/* Filter Bar Styles
+-------------------------------------------------------------- */
+
+#edd-filters .filter-items {
+	padding: 10px;
+}
+#edd-filters p {
+	color: #777;
+}
+.edd-old-log-filters {
+	margin-top: -30px;
+	margin-left: 2px;
+}
+
+#edd-date-filters input {
+	vertical-align: middle;
+	max-width: 100px;
+	padding: 5px;
+}
+#edd-after-core-filters .button-secondary {
+	margin: 2px 0 0 0;
+}
+
+/* Nav Tab Styles
+-------------------------------------------------------------- */
+
+#edd-add-ons {
+	margin: 29px 20px -9px 2px;
+}
+
+.edd-tab-wrap {
+	margin: .10px 20px -12px 2px;
+}
+
+h2.nav-tab-wrapper.edd-tab-clear {
+	margin: -20px 0 0 0;
+}
+
+.edit-tags-php.post-type-download .wrap > .wp-heading-inline,
+.edit-php.post-type-download .wrap .wp-heading-inline,
+.download_page_edd-addons .wrap .wp-heading-inline,
+.edit-tags-php.post-type-download .wrap > .subtitle,
+.edit-php.post-type-download .wrap > .subtitle,
+.download_page_edd-addons .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .page-title-action,
 .download_page_edd-addons .wrap > .page-title-action {
 	display: none;
 }
 
+.edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
-	top: 7px;
-	margin-left: 5px;
+	top: 3px;
+	margin-left: 10px;
+	line-height: 24px;
 }
 
-#edd-payment-filters {
-	background: #f5f5f5;
-	clear: both;
-	background-image: -webkit-gradient(linear, left bottom, left top, from(#f5f5f5), to(#fafafa));
-	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image:    -moz-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image:      -o-linear-gradient(bottom, #f5f5f5, #fafafa);
-	background-image: linear-gradient(to top, #f5f5f5, #fafafa);
-	border-color: #dfdfdf;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 3px;
-	font-size: 13px;
-	line-height: 2.1em;
-	overflow: auto;
-	padding: 12px;
-	margin: 8px 0;
+#edd_product_settings .inside strong {
+	border-top: 1px solid #eee;
+	display: block;
+	margin: 0 -12px 0;
+	padding: 10px 12px 0;
 }
+
+#edd_product_settings .inside div:first-child strong {
+	margin-top: -14px;
+}
+
+
+/* Payment History Styles
+-------------------------------------------------------------- */
+
 #edd-payments-filter ul.subsubsub {
 	margin-bottom: 8px;
 }
-#edd-payment-filters p {
-	color: #777;
-}
-#edd-payment-date-filters input {
-	vertical-align: middle;
-}
+
 tr.status-refunded td {
 	background: #cecece;
 	border-top-color: #ccc;
 }
-.wp-list-table.downloads th#ID {
-	width: 80px;
-}
-.wp-list-table.downloads th#details {
-	width: 130px;
-}
-.wp-list-table.downloads th#date {
-	width: 140px;
-}
-.wp-list-table.downloads th#user {
-	width: 130px;
+
+marquee {
+	padding: 0;
+	margin: 0;
 }
 .edd-mobile-link {
 	line-height: 32px;
 	vertical-align: middle;
+	background: #fff;
+	border-left: 4px solid #fff;
+	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	margin: 25px 0;
+	padding: 5px 8px;
+	background-image: url('../images/edd-peeking.png');
+	background-repeat: no-repeat;
+	background-position-x: 99%;
+	background-position-y: -90%;
 }
-.edd-mobile-link img {
-	max-width: 80%;
-	height: auto;
-	float: left;
+.edd-mobile-link a {
+	text-decoration: none;
+}
+.edd-mobile-link a:before,
+.edd-mobile-link a:after {
+	display: inline-block;
+	-webkit-font-smoothing: antialiased;
+	font: normal 20px/30px "dashicons";
+	vertical-align: top;
+	margin: 0;
+	padding: 0;
+}
+.edd-mobile-link a:before {
+	content: "\f470";
+	color: #656a6f;
+}
+.edd-mobile-link a:after {
+	content: "\f504";
 }
 
 @media handheld, only screen and (max-width: 640px) {
@@ -482,7 +839,8 @@ textarea#edd-payment-note {
 }
 input[class*="edd-price-field"] {
 	padding: 3px 5px;
-	width: 75px;
+	width: 80%;
+	max-width: 125px;
 }
 [class*="item_"] [class*="edd-payment-details-download-"][type="number"].small-text,
 #edd-order-download-quantity[type="number"].small-text,
@@ -495,7 +853,8 @@ input[class*="edd-price-field"] {
 }
 .item_tax .edd-payment-details-download-item-tax[type="number"].small-text,
 #edd-order-download-tax[type="text"].small-text {
-	width: 75px;
+	width: 80%;
+	max-width: 125px;
 }
 .edd_repeatable_upload_wrapper .pricing select,
 .edd_repeatable_product_wrapper .edd-select {
@@ -532,6 +891,47 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column {
 	width: 32%;
 }
+#poststuff .edd-metabox-title-action {
+	margin: 0;
+	float: right;
+	padding: 4px 8px;
+	position: relative;
+	top: -1px;
+	text-decoration: none;
+	border: none;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	background: #f7f7f7;
+	text-shadow: none;
+	font-weight: 600;
+	font-size: 10px;
+	line-height: normal;
+	color: #0073aa;
+	cursor: pointer;
+	outline: 0;
+}
+#poststuff .edd-metabox-title-action:hover {
+	border-color: #008EC2;
+	background: #00a0d2;
+	color: #fff;
+}
+
+.edd-edit-purchase-element .tablenav {
+	padding: 2px 10px 8px 10px;
+}
+
+.edd-edit-purchase-element .edd-order-children-wrapper {
+	margin: 0 -1px;
+}
+
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 table {
+	border-top: none;
+	border-bottom: none;
+}
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 .tablenav {
+	display: none;
+}
+
 .edd-edit-purchase-element[class*="columns-"] ul li {
 	padding-right: 1%;
 }
@@ -562,14 +962,17 @@ input[class*="edd-price-field"] {
 	font-weight: 600;
 }
 .edd-admin-box-inside {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 3px 12px;
+	padding: 10px 12px;
 	margin: 0;
-	word-break: break-word;
+	word-wrap: break-word;
 }
 .rtl .edd-admin-box-inside {
 	padding: 5px 10px 5px 0;
+}
+.edd-admin-box-inside > p {
+	margin: 8px 3px;
 }
 .edd-admin-box-inside .strong {
 	font-weight: 600;
@@ -585,10 +988,14 @@ input[class*="edd-price-field"] {
 	float: left;
 	margin-left: 10px;
 }
+#edd-order-logs .inside,
 #edd-order-update .inside,
 #edd-order-details .inside {
 	margin: 0;
 	padding: 0;
+}
+#edd-order-update .edd-select-chosen {
+	width: 130px !important;
 }
 #edd-order-update input.edd_datepicker {
 	width: 180px;
@@ -600,6 +1007,22 @@ input[class*="edd-price-field"] {
 #edd-order-update .edd-tax-rate {
 	color: #9c9c9c;
 	font-style: italic;
+}
+#edd-order-logs ul {
+	margin: 0;
+	padding: 0;
+}
+.edd-admin-box-inside .edd_datepicker,
+.edd-admin-box-inside input[type="text"] {
+	max-width: 130px;
+	width: 100%;
+}
+.edd-admin-box-inside span.label {
+	display: inline-block;
+	width: 70px;
+	white-space: nowrap;
+	text-align: right;
+	margin-right: 10px;
 }
 #edd-order-resend-receipt .inside {
 	margin-top: 11px;
@@ -615,6 +1038,9 @@ input[class*="edd-price-field"] {
 }
 .edd-order-update-box #major-publishing-actions .button-secondary {
 	margin-right: 10px;
+}
+.edd-order-update-box .button-primary {
+	margin-right: 0;
 }
 .edd-edit-purchase-element .edd-select-chosen {
 	width: 196px;
@@ -639,13 +1065,6 @@ input[class*="edd-price-field"] {
 .edd-order-data input.med-text {
 	margin: 0;
 	width: 100px;
-}
-#edd-order-update span.label {
-	display: inline;
-	width: 50px;
-}
-.edd-order-update-box .button-primary {
-	margin-right: 0;
 }
 #edd-edit-order-form .column .description {
 	padding-right: 10px;
@@ -712,9 +1131,6 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element .edd-purchased-download-actions .edd-order-remove-download:hover {
 	color: #f00;
 }
-#edd-order-recalc-total {
-	float: right;
-}
 .edd_repeatable_upload_wrapper .pricing select,
 .edd_repeatable_product_wrapper .edd-select,
 #edd_products .edd-select {
@@ -728,12 +1144,22 @@ input[class*="edd-price-field"] {
 	display: none;
 }
 
+.edd-add-download-to-purchase {
+	padding: 15px 15px 20px 15px;
+	border-bottom: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
+}
+.edd-add-download-to-purchase .chosen-container {
+	width: 90% !important;
+	max-width: 220px !important;
+}
+
+.edd-add-download-to-purchase .edd-add-download-to-purchase-actions {
+	float: right;
+}
+
 @media screen and ( max-width: 1284px ) {
 
-	.edd-edit-purchase-element ul li.download {
-		padding-bottom: 15px;
-		width: 100%;
-	}
 	.edd-edit-purchase-element .edd-purchased-download-title {
 		font-size: 16px;
 	}
@@ -752,16 +1178,11 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-purchased-files-header,
-	.edd-add-download-to-purchase-header {
-		display: none;
-	}
 	.edd-payment-details-label-mobile {
 		display: block;
 		font-weight: 500;
 		padding-bottom: 6px;
 	}
-
 }
 
 @media screen and ( max-width: 1024px ) {
@@ -810,7 +1231,6 @@ input[class*="edd-price-field"] {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
 	}
-
 }
 
 @media screen and ( max-width: 600px ) {
@@ -832,17 +1252,11 @@ input[class*="edd-price-field"] {
 	#edd-edit-order-form .column {
 		width: 100%;
 	}
-
 }
 
 /** Stats */
 #edd_product_stats .label {
 	display: inline-block;
-	}
-#edd_product_stats hr {
-	border-style: solid;
-	border-width: 1px;
-	border-color: #ccc #fff #fff #ccc;
 }
 #edd_product_stats .product-sales-stats:before,
 #edd_product_stats .product-earnings-stats:before {
@@ -893,8 +1307,6 @@ input[class*="edd-price-field"] {
 	vertical-align: middle;
 }
 .edd_dashboard_widget .b {
-	font-size: 14px;
-	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 	padding-right: 6px;
 	width: auto;
 }
@@ -958,11 +1370,11 @@ td.edd_order_price {
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-#edd-graphs-date-options,
-#edd-date-range-options {
+.edd-graphs-date-options,
+.edd-date-range-options {
 	float: left;
 }
-#edd-date-range-options span {
+.edd-date-range-options span {
 	float: left;
 	line-height: 24px;
 	height: 24px;
@@ -1072,6 +1484,85 @@ td.edd_order_price {
 	width: 80%;
 }
 
+#edd-reports-tiles-wrap #dashboard-widgets {
+	overflow: auto;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container {
+	width: 33.3%;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container {
+	margin-top: 1px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
+	margin-left: 0;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #tertiary-sortables {
+	margin-right: 0;
+}
+
+#edd-reports-tiles-wrap .metabox-holder .empty-container {
+	height: 127px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox,
+#edd-reports-tiles-wrap #dashboard-widgets .meta-box-sortables {
+	min-height: 127px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
+	min-height: 0;
+}
+
+#edd-reports-tiles-wrap h2.hndle {
+	margin-left: 25px;
+	text-align: center;
+	font-weight: normal;
+	color: #999;
+}
+
+#edd-reports-tiles-wrap .postbox .inside {
+	text-align: center;
+}
+
+#edd-reports-tiles-wrap .inside span {
+	display: block;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value {
+	color: #21759b;
+	font-size: 3em;
+	line-height: 1;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value.tile-no-data {
+	color: #888;
+	font-size: 1.5em;
+	line-height: 1;
+}
+
+#edd-reports-tiles-wrap .inside .tile-value.tile-url {
+	font-size: 1.5em;
+}
+
+#edd-reports-tiles-wrap .inside .tile-compare {
+	color: #333;
+	padding-top: 10px;
+	font-size: 1.1em;
+}
+
+.edd-reports-chart-pie,
+.edd-reports-chart-doughnut {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	float: left;
+	width: 50%;
+}
+
 /* Upgrades page styles
 -------------------------------------------------------------- */
 
@@ -1086,14 +1577,42 @@ td.edd_order_price {
 	max-width: 100%;
 }
 #edd_tax_rates .edd_tax_country,
-#edd_tax_rates .edd_tax_state {
-	width: 180px;
+#edd_tax_rates .edd_tax_state,
+#edd_tax_rates .edd_tax_global {
+	width: 20%;
 }
+#edd_tax_rates .edd_tax_actions,
 #edd_tax_rates .edd_tax_rate {
-	width: 80px;
+	width: 8%;
 }
 #edd_tax_rates th {
-	padding: 15px 10px;
+	padding: 8px;
+}
+#edd_tax_rates td {
+	vertical-align: top;
+	padding: 10px;
+}
+.edd-tax-whole-country {
+	display: inline-block;
+	margin: 8px 0 3px 5px;
+}
+.edd-tax-whole-country input {
+	margin-top: 1px;
+}
+
+@media screen and ( max-width: 782px ) {
+	#edd_tax_rates thead {
+		display: none;
+	}
+	#edd_tax_rates td {
+		padding: 8px 8px 8px 8px;
+	}
+	#edd_tax_rates td:before {
+		font-weight: 600;
+	}
+	#edd_tax_rates tbody tr:not(:first-child) .edd_tax_country {
+		border-top: 1px solid #e5e5e5;
+	}
 }
 .wrap-licenses .form-table,
 .wrap-licenses thead,
@@ -1182,19 +1701,6 @@ td.edd_order_price {
 	clear: both;
 }
 
-/* System Info page styles
--------------------------------------------------------------- */
-
-#system-info-textarea {
-	background: none;
-	font-family: Menlo, Monaco, monospace;
-	display: block;
-	overflow: auto;
-	white-space: pre;
-	width: 800px;
-	height: 400px;
-}
-
 /* Button styles
 -------------------------------------------------------------- */
 
@@ -1221,46 +1727,268 @@ td.edd_order_price {
 	width: 192px;
 }
 
-/* General styles
+
+/* Chosen styles
 -------------------------------------------------------------- */
+
+.chosen-container.chosen-container-multi {
+	width: 100% !important;
+}
+
+.chosen-container {
+	font-size: 14px;
+}
+
+.chosen-container-single .chosen-single div b {
+	background-image: none;
+}
+
+.chosen-container-single .chosen-single div b:before {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 2px;
+	top: 0px;
+	font-family: dashicons;
+	font-size: 15px;
+	content: '\f140';
+	color: #555;
+	margin-top: 1px;
+}
+
+.chosen-container-single .chosen-search input[type=text]:before {
+	display: block;
+	width: 20px;
+	height: 20px;
+	font-family: dashicons;
+	content: '\f140';
+}
+
+.chosen-container-single .chosen-search:after {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	color: #aaa;
+	font-family: dashicons;
+	font-size: 17px;
+	content: '\f179';
+}
+
+.chosen-container-multi .chosen-choices,
+.chosen-container-single .chosen-single,
+.chosen-container-active.chosen-with-drop .chosen-single {
+	border: 1px solid #ddd;
+	border-radius: 0;
+	background: #fff;
+	padding: 2px 5px;
+	outline: none;
+}
+
+.chosen-container-single .chosen-single,
+.chosen-container-single.chosen-container-active.chosen-with-drop .chosen-single {
+	height: 29px;
+}
+
+.chosen-container-active .chosen-single {
+	outline: auto 5px -webkit-focus-ring-color;
+}
+
+.chosen-container-multi .chosen-choices li.search-field {
+	min-width: 100px !important;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type=text] {
+	min-height: 29px !important;
+	width: auto !important;
+}
+
+.chosen-container-multi .chosen-choices,
+.chosen-container-single .chosen-single {
+	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
+}
+
+.chosen-container-multi.chosen-with-drop .chosen-choices,
+.chosen-container-active.chosen-with-drop .chosen-single {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.chosen-container-multi.chosen-with-drop .chosen-choices {
+	border-bottom-color: transparent;
+}
+
+.chosen-container-single .chosen-single div {
+	width: 17px;
+}
+.chosen-container-single .chosen-single span {
+	margin-right: 13px;
+}
+
+.chosen-container .chosen-drop {
+	font-size: 13px;
+	position: absolute;
+	top: 100%;
+	z-index: 1010;
+	width: 100%;
+	border: 1px solid #e5e5e5;
+	border-top: 0;
+	border-radius: 0;
+	background: #fff;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.chosen-container-single .chosen-search input[type=text] {
+	margin: 1px 0;
+	padding: 4px 20px 4px 5px;
+	width: 100% !important;
+	height: auto;
+	outline: 0;
+	border: 1px solid #ddd;
+	border-radius: 0;
+	font-size: 13px;
+	line-height: normal;
+	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
+}
+
+.chosen-container .chosen-results {
+	color: #444;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: auto;
+	margin: 0 4px 4px 0 !important;
+	padding: 0 0 0 4px;
+	max-height: 240px;
+}
+
+.chosen-container .chosen-results li.highlighted {
+	background-image: none;
+	color: #fff;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice {
+	margin: 3px 5px 3px 0;
+	padding: 5px 22px 5px 5px;
+	border: 1px solid #ddd;
+	max-width: 100%;
+	border-radius: 0;
+	background: #f4f4f4;
+	box-shadow: none;
+	color: #333;
+	cursor: default;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+	position: absolute;
+	top: 4px;
+	right: 3px;
+	display: block;
+	width: 15px;
+	height: 15px;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close:before {
+	height: 15px;
+	width: 15px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #555;
+	font-family: 'dashicons';
+	content: '\f158';
+	font-size: 15px;
+	line-height: 15px;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover:before {
+	color: #aaa;
+}
+
+.chosen-container-multi .spinner {
+	position: absolute;
+	top: 4px;
+	right: -4px;
+}
+
+@media only screen and ( -webkit-min-device-pixel-ratio: 1.5 ),
+only screen and ( min-resolution: 144dpi ),
+only screen and ( min-resolution: 1.5dppx ) {
+	.chosen-rtl .chosen-search input[type=text],
+	.chosen-container-single .chosen-single abbr,
+	.chosen-container-single .chosen-single div b,
+	.chosen-container-single .chosen-search input[type=text],
+	.chosen-container-multi .chosen-choices .search-choice .search-choice-close,
+	.chosen-container .chosen-results-scroll-down span,
+	.chosen-container .chosen-results-scroll-up span {
+		background-image: none !important;
+	}
+}
+
+/* WordPress Color Schemes */
+
+/* Fresh */
+
+.admin-color-fresh .chosen-container .chosen-results li.highlighted {
+	background-color: #00a0d2;
+}
+
+/* Blue */
+.admin-color-blue .chosen-container .chosen-results li.highlighted {
+	background-color: #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .chosen-container .chosen-results li.highlighted {
+	background-color: #096484;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .chosen-container .chosen-results li.highlighted {
+	background-color: #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .chosen-container .chosen-results li.highlighted {
+	background-color: #26292c;
+}
+
+/* Ocean */
+.admin-color-ocean .chosen-container .chosen-results li.highlighted {
+	background-color: #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .chosen-container .chosen-results li.highlighted {
+	background-color: #be3631;
+}
+
+/* Light */
+.admin-color-light .chosen-container .chosen-results li.highlighted {
+	background-color: #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .chosen-container .chosen-results li.highlighted {
+	background-color: #36533f;
+}
+
+/* Mint */
+.admin-color-mint .chosen-container .chosen-results li.highlighted {
+	background-color: #4f6d59;
+}
 
 .edd-select-chosen {
 	width: 100%;
 	max-width: 300px;
 }
-.chosen-container-multi .chosen-choices {
-	background-image: none;
-	border-color: #dfdfdf;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-}
-.chosen-container-multi .chosen-choices input {
-	border-color: #dfdfdf;
-	height:27px!important;
-	margin:2px;
-}
-.chosen-container .chosen-drop {
-	border-color: #aaa;
-	-webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-.chosen-container .search-field {
-	float: none!important;
-}
-.chosen-container .search-field input {
-	width: 90%!important;
-}
-.chosen-container-active .chosen-choices {
-	border-color: #aaa;
-	-webkit-border-top-left-radius: 3px;
-	border-top-left-radius: 3px;
-	-webkit-border-top-right-radius: 3px;
-	border-top-right-radius: 3px;
-	-webkit-border-bottom-left-radius: 0;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-	-webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+
+.edd-select-chosen.edd-time {
+	width: 55px;
+	max-width: 50px;
 }
 
 .download_page_edd-tools .tablenav .actions {
@@ -1269,6 +1997,14 @@ td.edd_order_price {
 .edd_user_search_wrap {
 	position: relative;
 	overflow: visible;
+}
+.edd_user_search_wrap .spinner {
+	position: absolute;
+	right: -9px;
+	top: -6px;
+}
+.edd_user_search_wrap.loading .spinner {
+	visibility: visible;
 }
 .edd_user_search_results {
 	position: absolute;
@@ -1281,13 +2017,34 @@ td.edd_order_price {
 	top: 2px;
 }
 .edd_user_search_results ul {
-	background: #f0f0f0;
+	background: #fafafa;
 	border: 1px solid #dfdfdf;
 	overflow-y: scroll;
-	padding: 10px 10px 4px;
+	padding: 0;
 	margin: 0;
-	max-height: 200px;
+	height: 150px;
 	width: 300px;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+}
+.edd_user_search_results li {
+	margin: 0;
+}
+.edd_user_search_results li a {
+	display: block;
+	text-decoration: none;
+	padding: 6px 10px;
+}
+.edd_user_search_results li a:hover {
+	background: #f5f5f5;
+}
+.edd_user_search_results li.no-users {
+	text-align: center;
+	vertical-align: middle;
+	display: block;
+	line-height: 150px;
+	color: #bbb;
+	text-transform: uppercase;
+	font-size: 11px;
 }
 
 .wp-list-table .type-download .row-actions {
@@ -1346,9 +2103,10 @@ td.edd_order_price {
 #edd-item-wrapper {
 	background: #f5f5f5;
 	border: 1px solid #e5e5e5;
-	webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	max-width: 830px;
+	position: relative;
 }
 #edd-item-wrapper:after {
 	content: "";
@@ -1361,7 +2119,8 @@ td.edd_order_price {
 #edd-item-tab-wrapper {
 	float:left;
 	width: 18%;
-	z-index: 1;
+	z-index: 3;
+	position: relative;
 }
 #edd-item-tab-wrapper-list {
 	background: #fff;
@@ -1373,6 +2132,7 @@ td.edd_order_price {
 	color: #444;
 	font-size: 12px;
 	border-bottom: 1px solid #e5e5e5;
+	border-right: 1px solid #e5e5e5;
 	margin-bottom: 0;
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
@@ -1388,6 +2148,7 @@ td.edd_order_price {
 	display: block;
 	background-color: #fff;
 	padding: 8px 10px 8px 6px;
+	border-right-color: #fff;
 }
 #edd-item-tab-wrapper-list .inactive a,
 #edd-item-tab-wrapper-list .inactive a:visited {
@@ -1410,9 +2171,6 @@ td.edd_order_price {
 #edd-item-card-wrapper .right {
 	float: right;
 }
-#edd-item-card-wrapper input {
-	font-weight: normal;
-}
 #edd-item-card-wrapper {
 	background-color: #fff;
 	border: 1px solid #e5e5e5;
@@ -1428,8 +2186,6 @@ td.edd_order_price {
 }
 #edd-item-card-wrapper .customer-section {
 	border-bottom: 1px solid #eee;
-	margin-bottom: 10px;
-	overflow: auto;
 }
 #edd-item-card-wrapper .customer-section table {
 	margin-bottom: 20px;
@@ -1438,33 +2194,53 @@ td.edd_order_price {
 	padding: 0px 20px;
 }
 #edd-item-card-wrapper > div:first-child {
-	padding-top: 20px;
+	padding: 20px;
 }
 #edd-item-card-wrapper > div:last-child {
 	border: none;
 	padding-bottom: 20px;
 }
 #edd-item-card-wrapper .avatar-wrap {
-	padding-right: 10px;
+	padding-right: 20px;
 	text-align: center;
 }
+#edd-item-card-wrapper img.avatar {
+	border-radius: 22%;
+	margin-bottom: 10px;
+}
 #edd-item-card-wrapper .customer-id {
-	font-size: 24px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 10px;
+	background-color: #fafafa;
+	border: 1px solid #eee;
+	border-bottom-left-radius: 20%;
+	border-top: none;
+	border-right: none;
+	font-family: monospace;
+	font-size: 18px;
 	font-weight: 600;
 }
-#edd-item-card-wrapper .customer-main-wrapper input {
+#edit-customer-info input,
+#edit-customer-info select {
 	width: 200px;
+	box-shadow: none;
+	transition: none;
+	border: 1px solid #ddd;
+	margin: -5px 0 4px -2px;
+	font-size: 13px;
+	padding: 2px 4px;
 }
+#edd-item-card-wrapper .customer-main-wrapper input[name="customerinfo[name]"] {
+	font-size: 24px;
+}
+
 #edd-item-card-wrapper .customer-address-wrapper {
-	margin-right: 25px;
-	max-width: 33%;
+	margin-right: 30px;
 	width: 202px;
 }
-#edd-item-card-wrapper .customer-address-wrapper select {
-	width: 200px;
-}
 #edd-item-card-wrapper .customer-info {
-	margin-top: 5px;
 	margin-bottom: 10px;
 	min-height: 185px;
 }
@@ -1481,37 +2257,44 @@ td.edd_order_price {
 	font-size: 24px;
 	font-weight: 600;
 }
-.customer-edit-link a,
-.disconnect-user a {
-	font-size: 12px;
+.customer-info .customer-name.editable {
+	margin-bottom: 6px;
+}
+.customer-edit-link a {
 	font-weight: normal;
 	text-decoration: none;
 }
+.disconnect-user a {
+	color: #aaa;
+	font-size: 20px;
+}
 #customer-edit-actions {
+	padding: 3px;
 	line-height: 28px;
-	margin-bottom: 20px;
 	text-align: center;
 }
 #customer-edit-actions .button-secondary {
-	margin-right: 10px;
+	margin-right: 5px;
+}
+#customer-edit-actions .cancel {
+	padding: 5px;
 }
 #edd-item-card-wrapper .row-title {
 	width: 30%;
 }
-#edd-item-card-wrapper .info-item {
+#edd-item-card-wrapper .editable {
 	display: block;
-	line-height: 16px;
-	padding-bottom: 5px;
+	padding: 3px;
 }
 #edd-item-card-wrapper .edit-item {
 	display: none;
 }
 #edd-item-card-wrapper .edd_user_search_results {
-	left: 1px;
-	top: 16px;
+	left: -2px;
+	top: 18px;
 }
 #edd-item-card-wrapper .edd_user_search_results ul {
-	width: 200px;
+	width: 198px;
 }
 #edd-item-stats-wrapper {
 	margin: 0 auto;
@@ -1521,7 +2304,7 @@ td.edd_order_price {
 #edd-item-stats-wrapper li {
 	font-size: 14px;
 	float: left;
-	line-height: 22px;
+	vertical-align: middle;
 	width: 50%;
 }
 #edd-item-stats-wrapper a {
@@ -1529,6 +2312,7 @@ td.edd_order_price {
 }
 #edd-item-stats-wrapper .dashicons {
 	color: #888;
+	margin-top: -2px;
 }
 #edd-item-tables-wrapper table {
 	text-align: center;
@@ -1565,8 +2349,13 @@ td.edd_order_price {
 #edd-item-notes-wrapper {
 	min-height: 50px;
 }
-.edd-item-notes-header span,
-.edd-item-notes-header img {
+.edd-item-header-small {
+	height: 30px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #e5e5e5;
+}
+.edd-item-header-small span,
+.edd-item-header-small img {
 	font-weight: 600;
 	line-height: 30px;
 	vertical-align: middle;
@@ -1574,9 +2363,6 @@ td.edd_order_price {
 .customer-note-input {
 	margin-bottom: 5px;
 	width: 100%;
-}
-#edd-customer-notes div:nth-of-type(even) {
-	background-color: #fcfcfc;
 }
 .customer-note-wrapper {
 	border-bottom: 1px solid #f9f9f9;
@@ -1592,11 +2378,14 @@ td.edd_order_price {
 .delete-customer {
 	text-align: center;
 }
-#edd-item-card-wrapper .notice-wrap {
+#edd-item-card-wrapper .notice-container {
 	padding-left: 20px;
 	padding-right: 20px;
 	margin-left: -20px;
 	margin-right: -20px;
+}
+#edd-item-card-wrapper .add-customer-email-wrapper > #add-customer-email {
+	vertical-align: middle;
 }
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
@@ -1619,7 +2408,8 @@ td.edd_order_price {
 		background: #fff;
 		margin: 0;
 	}
-	#edd-item-tab-wrapper-list li {
+	#edd-item-tab-wrapper-list li,
+	#edd-item-tab-wrapper-list li.active {
 		float: left;
 		display: inline;
 		font-size: 14px;
@@ -1653,13 +2443,13 @@ td.edd_order_price {
 		float: none;
 		position: absolute;
 		top: 84px;
-		left: 110px;
+		left: 165px;
 		max-width: 200px;
 	}
 	#edd-item-card-wrapper .customer-main-wrapper {
 		float: none;
 		position: absolute;
-		left: 110px;
+		left: 165px;
 	}
 	.customer-info .customer-name {
 		font-size: 16px;
@@ -1679,7 +2469,7 @@ td.edd_order_price {
 		overflow: hidden;
 	}
 	#edd-item-card-wrapper .customer-id {
-		font-size: 16px;
+		display: none;
 	}
 }
 @media screen and ( max-width: 480px ) {
@@ -1721,12 +2511,12 @@ td.edd_order_price {
 		padding: 0;
 	}
 
-	#edd-payment-filters span {
+	#edd-filters span {
 		display: block;
 		margin: 2px 0;
 	}
 
-	#edd-payment-filters a,
+	#edd-filters a,
 	.download_page_edd-reports .button {
 		text-align: center;
 	}
@@ -1754,9 +2544,9 @@ td.edd_order_price {
 	#system-info-textarea,
 	#edd-add-discount input[type="text"],
 	#edd-edit-discount input[type="text"],
-	#edd-payment-filters input:not([type='radio']),
-	#edd-payment-filters select,
-	#edd-payment-filters a {
+	#edd-filters input:not([type='radio']),
+	#edd-filters select,
+	#edd-filters a {
 		width: 100%;
 	}
 
@@ -1776,6 +2566,32 @@ td.edd_order_price {
 
 }
 
+/* System Info page styles
+-------------------------------------------------------------- */
+
+.inside .edd-tools-textarea {
+	background: #32373c;
+	color: rgba(240,245,250,0.7);
+	font-size: 12px;
+	font-family: Menlo, Monaco, monospace;
+	display: block;
+	overflow: auto;
+	white-space: pre;
+	width: 100%;
+	height: 450px;
+	padding: 10px;
+	outline: none;
+}
+
+#system-info-textarea::selection {
+	background: #555;
+	color: #fff;
+}
+
+#edd-system-info .edd-inline-button {
+	margin-left: 5px;
+}
+
 /* Tools Styles
 -------------------------------------------------------------- */
 
@@ -1785,11 +2601,6 @@ td.edd_order_price {
 .edd-recount-stats-descriptions span {
 	display: none;
 	line-height: 24px;
-}
-
-#edd-debug-log p.submit {
-	margin:  20px 0 0;
-	padding: 0;
 }
 
 #edd-debug-log .edd-inline-button {

@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Export
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Export Class
@@ -150,7 +150,6 @@ class EDD_Batch_Export extends EDD_Export {
 	/**
 	 * Output the CSV columns
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @uses EDD_Export::get_csv_cols()
 	 * @return string
@@ -176,7 +175,6 @@ class EDD_Batch_Export extends EDD_Export {
 	/**
 	 * Print the CSV rows for the current step
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @return string|false
 	 */
@@ -273,7 +271,6 @@ class EDD_Batch_Export extends EDD_Export {
 	/**
 	 * Perform the export
 	 *
-	 * @access public
 	 * @since 2.4
 	 * @return void
 	 */
@@ -302,7 +299,6 @@ class EDD_Batch_Export extends EDD_Export {
 	/**
 	 * Allow for prefetching of data for the remainder of the exporter
 	 *
-	 * @access public
 	 * @since  2.5
 	 * @return void
 	 */

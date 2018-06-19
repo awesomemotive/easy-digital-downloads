@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Roles Class
@@ -37,7 +37,6 @@ class EDD_Roles {
 	/**
 	 * Add new shop roles with default WP caps
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @return void
 	 */
@@ -97,7 +96,6 @@ class EDD_Roles {
 	/**
 	 * Add new shop-specific capabilities
 	 *
-	 * @access public
 	 * @since  1.4.4
 	 * @global WP_Roles $wp_roles
 	 * @return void
@@ -154,7 +152,6 @@ class EDD_Roles {
 	/**
 	 * Gets the core post type capabilities
 	 *
-	 * @access public
 	 * @since  1.4.4
 	 * @return array $capabilities Core post type capabilities
 	 */
@@ -198,17 +195,15 @@ class EDD_Roles {
 	/**
 	 * Map meta caps to primitive caps
 	 *
-	 * @access public
 	 * @since  2.0
 	 * @return array $caps
 	 */
 	public function meta_caps( $caps, $cap, $user_id, $args ) {
 
-		switch( $cap ) {
-
+		switch ( $cap ) {
 			case 'view_product_stats' :
 
-				if( empty( $args[0] ) ) {
+				if ( empty( $args[0] ) ) {
 					break;
 				}
 
@@ -217,7 +212,13 @@ class EDD_Roles {
 					break;
 				}
 
-				if( user_can( $user_id, 'view_shop_reports' ) || $user_id == $download->post_author ) {
+				// No stats for auto-drafts
+				if ( $download->post_status === 'auto-draft' ) {
+					$caps = array( 'do_not_allow' );
+					break;
+				}
+
+				if ( user_can( $user_id, 'view_shop_reports' ) || $user_id == $download->post_author ) {
 					$caps = array();
 				}
 
@@ -231,7 +232,6 @@ class EDD_Roles {
 	/**
 	 * Remove core post type capabilities (called on uninstall)
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @return void
 	 */

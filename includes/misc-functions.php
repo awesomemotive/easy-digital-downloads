@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Is Test Mode
@@ -73,7 +73,6 @@ function edd_straight_to_checkout() {
 /**
  * Disable Redownload
  *
- * @access public
  * @since 1.0.8.2
  * @return bool True if redownloading of files is disabled, false otherwise
  */
@@ -585,19 +584,160 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 	}
 }
 
+/**
+ * Marks an argument in a function deprecated and informs when it's been used
+ *
+ * There is a hook edd_deprecated_argument_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that has an argument being deprecated.
+ *
+ * @uses do_action() Calls 'edd_deprecated_argument_run' and passes the argument, function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $file        The file that was included.
+ * @param string $version     The version of EDD that deprecated the file.
+ * @param string $replacement Optional. The file that should have been included based on EDD_PLUGIN_DIR.
+ *                            Default null.
+ * @param string $message     Optional. A message regarding the change. Default empty.
+ */
+function _edd_deprecated_file( $file, $version, $replacement = null, $message = '' ) {
+	/**
+	 * Fires immediately before a deprecated file notice is output.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $file        The file that was included.
+	 * @param string $replacement The file that should have been included based on EDD_PLUGIN_DIR.
+	 * @param string $version     The version of EDD that deprecated the file.
+	 */
+	do_action( 'edd_deprecated_file_run', $file, $replacement, $version );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	/**
+	 * Filters whether to trigger the error output for deprecated EDD files.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $show_errors Whether to trigger errors for deprecated files.
+	 */
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_file_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
+		if ( ! is_null( $replacement ) ) {
+			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative file name */
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $file, $version, $replacement ) . $message );
+		} else {
+			/* translators: 1: PHP file name, 2: EDD version number */
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $file, $version ) . $message );
+		}
+	}
+}
 
 /**
- * Checks whether function is disabled.
+ * Fires functions attached to a deprecated EDD filter hook.
  *
- * @since 1.3.5
+ * When a filter hook is deprecated, the apply_filters() call is replaced with
+ * edd_apply_filters_deprecated(), which triggers a deprecation notice and then fires
+ * the original filter hook.
  *
- * @param string  $function Name of the function.
- * @return bool Whether or not function is disabled.
+ * @param string $tag         The name of the filter hook.
+ * @param array  $args        Array of additional function arguments to be passed to apply_filters().
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used. Default false.
+ * @param string $message     Optional. A message regarding the change. Default null.
  */
-function edd_is_func_disabled( $function ) {
-	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
+function edd_apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+	if ( ! has_filter( $tag ) ) {
+		return $args[0];
+	}
 
-	return in_array( $function, $disabled );
+	_edd_deprecated_hook( $tag, $version, $replacement, $message );
+
+	return apply_filters_ref_array( $tag, $args );
+}
+
+/**
+ * Fires functions attached to a deprecated EDD action hook.
+ *
+ * When an action hook is deprecated, the do_action() call is replaced with
+ * edd_do_action_deprecated(), which triggers a deprecation notice and then fires
+ * the original hook.
+ *
+ * @param string $tag         The name of the action hook.
+ * @param array  $args        Array of additional function arguments to be passed to do_action().
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used.
+ * @param string $message     Optional. A message regarding the change.
+ */
+function edd_do_action_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+	if ( ! has_action( $tag ) ) {
+		return;
+	}
+
+	_edd_deprecated_hook( $tag, $version, $replacement, $message );
+
+	do_action_ref_array( $tag, $args );
+}
+
+/**
+ * Marks a deprecated EDD action or filter hook as deprecated and throws a notice.
+ *
+ * Use the {@see 'edd_deprecated_hook_run'} action to get the backtrace describing where
+ * the deprecated hook was called.
+ *
+ * Default behavior is to trigger a user error if `WP_DEBUG` is true.
+ *
+ * This function is called by the edd_do_action_deprecated() and edd_apply_filters_deprecated()
+ * functions, and so generally does not need to be called directly.
+ *
+ * @since 3.0
+ *
+ * @param string $hook        The hook that was used.
+ * @param string $version     The version of WordPress that deprecated the hook.
+ * @param string $replacement Optional. The hook that should have been used.
+ * @param string $message     Optional. A message regarding the change.
+ */
+function _edd_deprecated_hook( $hook, $version, $replacement = null, $message = null ) {
+	/**
+	 * Fires when a deprecated EDD hook is called.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $hook        The hook that was called.
+	 * @param string $replacement The hook that should be used as a replacement.
+	 * @param string $version     The version of WordPress that deprecated the argument used.
+	 * @param string $message     A message regarding the change.
+	 */
+	do_action( 'edd_deprecated_hook_run', $hook, $replacement, $version, $message );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	/**
+	 * Filters whether to trigger deprecated EDD hook errors.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $trigger Whether to trigger deprecated hook errors. Requires
+	 *                      `WP_DEBUG` to be defined true.
+	 */
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_hook_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
+		if ( ! is_null( $replacement ) ) {
+			/* translators: 1: PHP file name, 2: EDD version number, 3: alternative hook name */
+			trigger_error( sprintf( __( 'The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use the %3$s hook instead.', 'easy-digital-downloads' ), $hook, $version, $replacement ) . $message );
+		} else {
+			/* translators: 1: PHP file name, 2: EDD version number */
+			trigger_error( sprintf( __( 'The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $hook, $version ) . $message );
+		}
+	}
 }
 
 /**
@@ -632,16 +772,34 @@ function edd_let_to_num( $v ) {
 }
 
 /**
+ * Return the name of base uploads directory.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_uploads_base_dir() {
+	return 'edd'; // No filter, for now
+}
+
+/**
  * Retrieve the URL of the symlink directory
  *
  * @since 1.5
  * @return string $url URL of the symlink directory
  */
 function edd_get_symlink_url() {
-	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$url = $wp_upload_dir['baseurl'] . '/edd/symlinks';
 
+	// Make sure the symlink directory exists
+	edd_get_symlink_dir();
+
+	// Get the URL
+	$wp_upload_dir = wp_upload_dir();
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = '/' . $edd_dir . '/symlinks';
+	$url           = $wp_upload_dir['baseurl'] . $path;
+
+	// Filter & return
 	return apply_filters( 'edd_get_symlink_url', $url );
 }
 
@@ -653,10 +811,15 @@ function edd_get_symlink_url() {
  */
 function edd_get_symlink_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
-	$path = $wp_upload_dir['basedir'] . '/edd/symlinks';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir . '/symlinks';
+	$retval        = apply_filters( 'edd_get_symlink_dir', $path );
 
-	return apply_filters( 'edd_get_symlink_dir', $path );
+	// Make sure the directory exists
+	wp_mkdir_p( $retval );
+
+	// Return, possibly filtered
+	return $retval;
 }
 
 /**
@@ -667,10 +830,97 @@ function edd_get_symlink_dir() {
  */
 function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
-	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
-	$path = $wp_upload_dir['basedir'] . '/edd';
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
+	$retval        =  apply_filters( 'edd_get_upload_dir', $path );
 
-	return apply_filters( 'edd_get_upload_dir', $path );
+	// Make sure the directory exists
+	wp_mkdir_p( $retval );
+
+	// Return, possibly filtered
+	return $retval;
+}
+
+/**
+ * Retrieve the URL to the file upload directory without the trailing slash
+ *
+ * @since  3.0
+ * @return string $purl URL to the EDD upload directory
+ */
+function edd_get_upload_url() {
+
+	// Make sure the symlink directory exists
+	edd_get_upload_dir();
+
+	// Get the URL
+	$wp_upload_dir = wp_upload_dir();
+	$edd_dir       = edd_get_uploads_base_dir();
+	$url           = $wp_upload_dir['baseurl'] . '/' . $edd_dir;
+
+	return apply_filters( 'edd_get_upload_url', $url );
+}
+
+/**
+ * Determine if the uploads directory is protected, and not publicly accessible.
+ *
+ * @since 3.0
+ *
+ * @return bool True if URL returns 200, False if anything else
+ */
+function edd_is_uploads_url_protected() {
+	$transient_key = 'edd_is_uploads_url_protected';
+	$protected     = get_transient( $transient_key );
+
+	// No transient
+	if ( false === $protected ) {
+
+		// Get the upload path
+		$upload_path = edd_get_upload_dir();
+
+		// The upload path is writeable
+		if ( wp_is_writable( $upload_path ) ) {
+
+			// Get the file path
+			$file_name = wp_unique_filename( $upload_path, 'edd-temp.jpg' );
+			$file_path = trailingslashit( $upload_path ) . $file_name;
+
+			// Save a temporary file - we will try to access it
+			if ( ! file_exists( $file_path ) ) {
+				@file_put_contents( $file_path, 'Just testing!' );
+			}
+
+			// Setup vars for request
+			$upload_url = edd_get_upload_url() . '/' . $file_name;
+			$url        = esc_url_raw( $upload_url );
+			$args       = array(
+				'sslverify'   => false,
+				'timeout'     => 2,
+				'redirection' => 0
+			);
+
+			// Send the request
+			$response   = wp_remote_get( $url, $args );
+			$code       = wp_remote_retrieve_response_code( $response );
+			$protected  = (int) ( 200 !== (int) $code );
+
+			// Delete the temporary file
+			if ( file_exists( $file_path ) ) {
+				@unlink( $file_path );
+			}
+		}
+
+		// Set the transient
+		set_transient( $transient_key, $protected, 12 * HOUR_IN_SECONDS );
+	}
+
+	/**
+	 * Filter whether the uploads directory is public or not.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $protected Response code from remote get request
+	 */
+	return (bool) apply_filters( 'edd_is_uploads_url_protected', $protected );
 }
 
 /**
@@ -678,7 +928,6 @@ function edd_get_upload_dir() {
  *
  * This function is only intended to be used by WordPress cron.
  *
- * @access public
  * @since  1.5
  * @return void
  */
@@ -693,12 +942,14 @@ function edd_cleanup_file_symlinks() {
 	$dir = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
-		if ( $file == '.' || $file == '..' )
+		if ( $file == '.' || $file == '..' ) {
 			continue;
+		}
 
 		$transient = get_transient( md5( $file ) );
-		if ( $transient === false )
+		if ( $transient === false ) {
 			@unlink( $path . '/' . $file );
+		}
 	}
 }
 add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
@@ -713,42 +964,6 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
 function edd_use_skus() {
 	$ret = edd_get_option( 'enable_skus', false );
 	return (bool) apply_filters( 'edd_use_skus', $ret );
-}
-
-/**
- * Retrieve timezone
- *
- * @since 1.6
- * @return string $timezone The timezone ID
- */
-function edd_get_timezone_id() {
-
-	// if site timezone string exists, return it
-	if ( $timezone = get_option( 'timezone_string' ) )
-		return $timezone;
-
-	// get UTC offset, if it isn't set return UTC
-	if ( ! ( $utc_offset = 3600 * get_option( 'gmt_offset', 0 ) ) )
-		return 'UTC';
-
-	// attempt to guess the timezone string from the UTC offset
-	$timezone = timezone_name_from_abbr( '', $utc_offset );
-
-	// last try, guess timezone string manually
-	if ( $timezone === false ) {
-
-		$is_dst = date( 'I' );
-
-		foreach ( timezone_abbreviations_list() as $abbr ) {
-			foreach ( $abbr as $city ) {
-				if ( $city['dst'] == $is_dst &&  $city['offset'] == $utc_offset )
-					return $city['timezone_id'];
-			}
-		}
-	}
-
-	// fallback
-	return 'UTC';
 }
 
 /**
@@ -768,7 +983,7 @@ function edd_object_to_array( $object = array() ) {
 	if ( is_array( $object ) ) {
 		$return = array();
 		foreach ( $object as $item ) {
-			if ( is_a( $object, 'EDD_Payment' ) ) {
+			if ( $object instanceof EDD_Payment ) {
 				$return[] = $object->array_convert();
 			} else {
 				$return[] = edd_object_to_array( $item );
@@ -776,7 +991,7 @@ function edd_object_to_array( $object = array() ) {
 
 		}
 	} else {
-		if ( is_a( $object, 'EDD_Payment' ) ) {
+		if ( $object instanceof EDD_Payment ) {
 			$return = $object->array_convert();
 		} else {
 			$return = get_object_vars( $object );
@@ -813,7 +1028,8 @@ function edd_set_upload_dir( $upload ) {
 		$upload['subdir'] = "/$y/$m";
 	}
 
-	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$edd_dir          = edd_get_uploads_base_dir();
+	$upload['subdir'] = '/' . $edd_dir . $upload['subdir'];
 	$upload['path']   = $upload['basedir'] . $upload['subdir'];
 	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;
@@ -855,68 +1071,6 @@ function edd_get_completed_upgrades() {
 	return $completed_upgrades;
 
 }
-
-
-if ( ! function_exists( 'cal_days_in_month' ) ) {
-	// Fallback in case the calendar extension is not loaded in PHP
-	// Only supports Gregorian calendar
-	function cal_days_in_month( $calendar, $month, $year ) {
-		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
-	}
-}
-
-
-if ( ! function_exists( 'hash_equals' ) ) :
-/**
- * Compare two strings in constant time.
- *
- * This function was added in PHP 5.6.
- * It can leak the length of a string.
- *
- * @since 2.2.1
- *
- * @param string $a Expected string.
- * @param string $b Actual string.
- * @return bool Whether strings are equal.
- */
-function hash_equals( $a, $b ) {
-	$a_length = strlen( $a );
-	if ( $a_length !== strlen( $b ) ) {
-		return false;
-	}
-	$result = 0;
-
-	// Do not attempt to "optimize" this.
-	for ( $i = 0; $i < $a_length; $i++ ) {
-		$result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
-	}
-
-	return $result === 0;
-}
-endif;
-
-if ( ! function_exists( 'getallheaders' ) ) :
-
-	/**
-	 * Retrieve all headers
-	 *
-	 * Ensure getallheaders function exists in the case we're using nginx
-	 *
-	 * @access public
-	 * @since  2.4
-	 * @return array
-	 */
-	function getallheaders() {
-		$headers = array();
-		foreach ( $_SERVER as $name => $value ) {
-			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
-				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
-			}
-		}
-		return $headers;
-	}
-
-endif;
 
 /**
  * Determines the receipt visibility status
@@ -960,23 +1114,23 @@ function edd_can_view_receipt( $payment_key = '' ) {
 }
 
 /**
- * Given a Payment ID, generate a link to IP address provider (ipinfo.io)
+ * Given an order ID, generate a link to IP address provider (ipinfo.io)
  *
- * @since  2.8.15
- * @param  int		$payment_id The Payment ID
- * @return string	A link to the IP details provider
+ * @since 2.8.15
+ * @since 3.0 Updated to use EDD\Orders\Order.
+ *
+ * @param int $order_id Order ID.
+ * @return string A link to the IP details provider
  */
-function edd_payment_get_ip_address_url( $payment_id ) {
-	
-	$payment = new EDD_Payment( $payment_id );
-  
+function edd_payment_get_ip_address_url( $order_id ) {
+	$order = edd_get_order( $order_id );
+
 	$base_url = 'https://ipinfo.io/';
-	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $payment->ip ) . '" target="_blank">' . esc_attr( $payment->ip ) . '</a>';
+	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $order->ip ) . '" target="_blank">' . esc_attr( $order->ip ) . '</a>';
 
-	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $payment->ip, $payment_id );
-
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $order->ip, $order->id );
 }
-  
+
 /**
  * Abstraction for WordPress cron checking, to avoid code duplication.
  *
@@ -1000,4 +1154,161 @@ function edd_doing_cron() {
 
 	// Default to false
 	return false;
+}
+
+/**
+ * Abstraction for WordPress AJAX checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific AJAX related requests. You probably won't want to use it until then.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_ajax() {
+
+	// Bail if not doing WordPress AJAX (>4.8.0)
+	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
+		return true;
+
+	// Bail if not doing WordPress AJAX (<4.8.0)
+	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
+}
+
+/**
+ * Abstraction for WordPress autosave checking, to avoid code duplication.
+ *
+ * In future versions of EDD, this function will be changed to only refer to
+ * EDD specific autosave related requests. You probably won't want to use it until then.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_autosave() {
+
+	// Bail if not doing WordPress autosave
+	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
+		return true;
+
+	// Bail if not doing WordPress autosave
+	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
+		return true;
+	}
+
+	// Default to false
+	return false;
+}
+
+/**
+ * Get the bot name. Usually "EDD Bot" unless filtered.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_bot_name() {
+	$retval = esc_html__( 'EDD Bot', 'easy-digital-downloads' );
+
+	return (string) apply_filters( 'edd_get_bot_name', $retval );
+}
+
+/**
+ * Perform a safe, local redirect somewhere inside the current site.
+ *
+ * On some setups, passing the value of wp_get_referer() may result in an empty
+ * value for $location, which results in an error on redirection. If $location
+ * is empty, we can safely redirect back to the root. This might change
+ * in a future version, possibly to the site root.
+ *
+ * @since 3.0
+ *
+ * @param string $location The URL to redirect the user to.
+ * @param int    $status   Optional. The numeric code to give in the redirect
+ *                         headers. Default: 302.
+ */
+function edd_redirect( $location = '', $status = 302 ) {
+
+	// Prevent errors from empty $location
+	if ( empty( $location ) ) {
+		$location = is_admin()
+			? admin_url()
+			: home_url();
+	}
+
+	// Setup the safe redirect
+	wp_safe_redirect( $location, $status );
+
+	// Exit so the redirect takes place immediately
+	edd_die();
+}
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @since 1.3.5
+ * @since 3.0.0 String type-checking the `in_array()` call
+ *
+ * @param string  $function Name of the function.
+ * @return bool Whether or not function is disabled.
+ */
+function edd_is_func_disabled( $function ) {
+	$disabled = explode( ',',  @ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled, true );
+}
+
+/**
+ * Ignore the time limit set by the server (likely from php.ini.)
+ *
+ * This is usually only necessary during upgrades and exports. If you need to
+ * use this function directly, please be careful in doing so.
+ *
+ * The $time_limit parameter is filterable, but infinite values are not allowed
+ * so any erroneous processes are able to terminate normally.
+ *
+ * @since 3.0.0
+ *
+ * @param boolean $ignore_user_abort Whether to call ignore_user_about( true )
+ * @param int     $time_limit        How long to set the time limit to. Cannot be 0. Default 6 hours.
+ */
+function edd_set_time_limit( $ignore_user_abort = true, $time_limit = 21600 ) {
+
+	// Default time limit is 6 hours
+	$default = HOUR_IN_SECONDS * 6;
+
+	// Only abort if true and if function is enabled
+	if ( ( true === $ignore_user_abort ) && ! edd_is_func_disabled( 'ignore_user_abort' ) ) {
+		@ignore_user_abort( true );
+	}
+
+	/**
+	 * Filter the time limit to set for this request.
+	 *
+	 * Infinite (0) values are not allowed so any erroneous processes are able
+	 * to terminate normally.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $time_limit The time limit in nano-seconds. Default 6 hours.
+	 *
+	 * @returns int $time_limit The filtered time limit value. Default 6 hours.
+	 */
+	$time_limit = (int) apply_filters( 'edd_set_time_limit', $time_limit );
+
+	// Disallow infinite values
+	if ( empty( $time_limit ) ) {
+		$time_limit = $default;
+	}
+
+	// Set time limit to non-infinite value if function is enabled
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit( $time_limit );
+	}
 }

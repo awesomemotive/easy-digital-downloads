@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.6
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 
 /**
@@ -405,7 +405,6 @@ function edd_get_country_list() {
 /**
  * Get States List
  *
- * @access      public
  * @since       1.2
  * @return      array
  */
@@ -518,7 +517,6 @@ function edd_get_angola_provinces_list() {
 /**
  * Get Provinces List
  *
- * @access      public
  * @since       1.2
  * @return      array
  */
@@ -1375,7 +1373,7 @@ function edd_get_italian_states_list() {
 		'FG' => 'Foggia',
 		'FC' => 'Forli-Cesena',
 		'FR' => 'Frosinone',
-		'GE' => 'Genova',
+		'GE' => 'Genoa',
 		'GO' => 'Gorizia',
 		'GR' => 'Grosseto',
 		'IM' => 'Imperia',

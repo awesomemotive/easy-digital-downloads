@@ -238,30 +238,4 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 		// Clear errors for other test
 		edd_clear_errors();
 	}
-
-	/**
-	 * Test that the registration success.
-	 *
-	 * @since 2.2.3
-	 */
-	public function test_process_register_form_success() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= 'password';
-		$_POST['edd_user_pass2'] 		= 'password';
-		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> 'random_username',
-			'edd_user_email' 		=> 'random_username@example.org',
-			'edd_payment_email' 	=> 'random_username@example.org',
-			'edd_user_pass' 		=> 'password',
-			'edd_redirect' 			=> '/',
-		) );
-
-		// Clear errors for other test
-		edd_clear_errors();
-		*/
-	}
-
 }

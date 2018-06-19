@@ -7,9 +7,7 @@
 	"quotmark": "single",
 	"undef": true,
 	"unused": true,
-
 	"browser": true,
-
 	"globals": {
 		"jQuery": false,
 		"edd_scripts": false

@@ -3,14 +3,14 @@
  * Customer Reports Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Reports
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -35,20 +35,17 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public $per_page = 30;
 
 	/**
-	 * Number of customers found
+	 * Discount counts, keyed by status
 	 *
-	 * @var int
-	 * @since 1.7
+	 * @var array
+	 * @since 3.0
 	 */
-	public $count = 0;
-
-	/**
-	 * Total customers
-	 *
-	 * @var int
-	 * @since 1.95
-	 */
-	public $total = 0;
+	public $counts = array(
+		'active'   => 0,
+		'inactive' => 0,
+		'expired'  => 0,
+		'total'    => 0
+	);
 
 	/**
 	 * The arguments for the data set
@@ -65,22 +62,20 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
-			'singular' => __( 'Customer', 'easy-digital-downloads' ),
+			'singular' => __( 'Customer',  'easy-digital-downloads' ),
 			'plural'   => __( 'Customers', 'easy-digital-downloads' ),
-			'ajax'     => false,
+			'ajax'     => false
 		) );
 
+		$this->process_bulk_action();
+		$this->get_counts();
 	}
 
 	/**
 	 * Show the search field
 	 *
 	 * @since 1.7
-	 * @access public
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
@@ -88,18 +83,30 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
+
+		// Bail if no customers and no search
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
+		}
+
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) )
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		if ( ! empty( $_REQUEST['order'] ) )
+		}
+
+		if ( ! empty( $_REQUEST['order'] ) ) {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+
 		?>
+
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
+
 		<?php
 	}
 
@@ -118,7 +125,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.5
 	 *
 	 * @param array $item Contains all the data of the customers
@@ -129,137 +135,250 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 
-			case 'num_purchases' :
-				$value = '<a href="' .
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
-				) . '">' . esc_html( $item['num_purchases'] ) . '</a>';
+			case 'id' :
+				$value = $item['id'];
 				break;
 
-			case 'amount_spent' :
+			case 'order_count' :
+				$url = add_query_arg( array(
+					'post_type' => 'download',
+					'page'      => 'edd-payment-history',
+					'customer'  => $item['id']
+				), admin_url( 'edit.php' ) );
+				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $item['order_count'] ) . '</a>';
+				break;
+
+			case 'spent' :
 				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 				break;
 
 			case 'date_created' :
-				$value = date_i18n( get_option( 'date_format' ), strtotime( $item['date_created'] ) );
+				$value = edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' );
 				break;
 
 			default:
-				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
+				$value = isset( $item[ $column_name ] )
+					? $item[ $column_name ]
+					: null;
 				break;
 		}
 		return apply_filters( 'edd_customers_column_' . $column_name, $value, $item['id'] );
 	}
 
 	public function column_name( $item ) {
-		$name        = '#' . $item['id'] . ' ';
-		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
-		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
-		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
-		$actions     = array(
-			'view'   => '<a href="' . $view_url . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
-			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) . '">' . __( 'Download log', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
+		$state    = '';
+		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
+		$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
+		$actions  = array(
+			'view'   => '<a href="' . $view_url . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
+			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $item['id'] ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		$customer = new EDD_Customer( $item['id'] );
-		$pending  = edd_user_pending_verification( $customer->user_id ) ? ' <em>' . __( '(Pending Verification)', 'easy-digital-downloads' ) . '</em>' : '';
+		$item_status = ! empty( $item['status'] )
+			? $item['status']
+			: 'active';
 
-		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $pending . $this->row_actions( $actions );
+		// State
+		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
+			switch ( $status ) {
+				case 'pending' :
+					$value = __( 'Pending', 'easy-digital-downloads' );
+					break;
+				case 'active' :
+				case '' :
+				default :
+					$value = __( 'Active', 'easy-digital-downloads' );
+					break;
+			}
+
+			$state = ' &mdash; ' . $value;
+		}
+
+		// Get the customer's avatar
+		$avatar = get_avatar( $item['email'], 32 );
+
+		// Concatenate and return
+		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+	}
+
+	/**
+	 * Render the checkbox column
+	 *
+	 * @access public
+	 * @since 3.0
+	 *
+	 * @param EDD_Customer $item Customer object.
+	 *
+	 * @return string Displays a checkbox
+	 */
+	public function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ 'customer',
+			/*$2%s*/ $item['id']
+		);
+	}
+
+	/**
+	 * Retrieve the customer counts
+	 *
+	 * @access public
+	 * @since 3.0
+	 * @return void
+	 */
+	public function get_counts() {
+		$this->counts = edd_get_customer_counts();
+	}
+
+	/**
+	 * Retrieve the view types
+	 *
+	 * @access public
+	 * @since 1.4
+	 *
+	 * @return array $views All the views available
+	 */
+	public function get_views() {
+		$base          = $this->get_base_url();
+		$current       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$is_all        = empty( $current ) || ( 'all' === $current );
+		$total_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
+		$active_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']  ) . ')</span>';
+		$pending_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
+
+		return array(
+			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',     'easy-digital-downloads' ) . $total_count   ),
+			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Active',  'easy-digital-downloads' ) . $active_count  ),
+			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending', 'easy-digital-downloads' ) . $pending_count )
+		);
 	}
 
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'name'          => __( 'Name', 'easy-digital-downloads' ),
-			'email'         => __( 'Primary Email', 'easy-digital-downloads' ),
-			'num_purchases' => __( 'Purchases', 'easy-digital-downloads' ),
-			'amount_spent'  => __( 'Total Spent', 'easy-digital-downloads' ),
-			'date_created'  => __( 'Date Created', 'easy-digital-downloads' ),
-		);
-
-		return apply_filters( 'edd_report_customer_columns', $columns );
-
+		return apply_filters( 'edd_report_customer_columns', array(
+			'cb'            => '<input type="checkbox" />',
+			'name'          => __( 'Name',          'easy-digital-downloads' ),
+			'email'         => __( 'Email',         'easy-digital-downloads' ),
+			'order_count'   => __( 'Orders',        'easy-digital-downloads' ),
+			'spent'         => __( 'Spent',         'easy-digital-downloads' ),
+			'date_created'  => __( 'Date Created',  'easy-digital-downloads' )
+		) );
 	}
 
 	/**
 	 * Get the sortable columns
 	 *
-	 * @access public
 	 * @since 2.1
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date_created'  => array( 'date_created', true ),
-			'name'          => array( 'name', true ),
-			'num_purchases' => array( 'purchase_count', false ),
-			'amount_spent'  => array( 'purchase_value', false ),
+			'date_created'  => array( 'date_created',   true  ),
+			'name'          => array( 'name',           true  ),
+			'order_count'   => array( 'purchase_count', false ),
+			'spent'         => array( 'purchase_value', false )
 		);
 	}
 
 	/**
-	 * Outputs the reporting views
+	 * Retrieve the bulk actions
 	 *
 	 * @access public
-	 * @since 1.5
-	 * @return void
+	 * @since 3.0
+	 * @return array Array of the bulk actions
 	 */
-	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
+	public function get_bulk_actions() {
+		return array(
+			'delete' => __( 'Delete', 'easy-digital-downloads' )
+		);
+	}
+
+	/**
+	 * Process the bulk actions
+	 *
+	 * @access public
+	 * @since 3.0
+	 */
+	public function process_bulk_action() {
+		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+			return;
+		}
+
+		$ids = isset( $_GET['customer'] )
+			? $_GET['customer']
+			: false;
+
+		if ( ! is_array( $ids ) ) {
+			$ids = array( $ids );
+		}
+
+		foreach ( $ids as $id ) {
+			switch ( $this->current_action() ) {
+				case 'delete' :
+					edd_delete_customer( $id );
+					break;
+			}
+		}
 	}
 
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @return int Current page number
 	 */
 	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		return isset( $_GET['paged'] )
+			? absint( $_GET['paged'] )
+			: 1;
 	}
 
 	/**
 	 * Retrieves the search query string
 	 *
-	 * @access public
 	 * @since 1.7
 	 * @return mixed string If search is present, false otherwise
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+		return ! empty( $_GET['s'] )
+			? urldecode( trim( $_GET['s'] ) )
+			: false;
 	}
 
 	/**
 	 * Build all the reports data
 	 *
-	 * @access public
 	 * @since 1.5
 	  * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
-		global $wpdb;
-
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
-		$order   = isset( $_GET['order'] )   ? sanitize_text_field( $_GET['order'] )   : 'DESC';
+		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : '';
+		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
 
 		$args    = array(
-			'number'  => $this->per_page,
+			'limit'   => $this->per_page,
 			'offset'  => $offset,
 			'order'   => $order,
-			'orderby' => $orderby
+			'orderby' => $orderby,
+			'status'  => $status
 		);
 
 		if( is_email( $search ) ) {
@@ -273,22 +392,19 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		}
 
 		$this->args = $args;
-		$customers  = EDD()->customers->get_customers( $args );
+		$customers  = edd_get_customers( $args );
 
 		if ( $customers ) {
 
 			foreach ( $customers as $customer ) {
-
-				$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
-
 				$data[] = array(
 					'id'            => $customer->id,
-					'user_id'       => $user_id,
+					'user_id'       => $customer->user_id,
 					'name'          => $customer->name,
 					'email'         => $customer->email,
-					'num_purchases' => $customer->purchase_count,
-					'amount_spent'  => $customer->purchase_value,
-					'date_created'  => $customer->date_created,
+					'order_count'   => $customer->purchase_count,
+					'spent'         => $customer->purchase_value,
+					'date_created'  => $customer->date_created
 				);
 			}
 		}
@@ -299,7 +415,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Customer_Reports_Table::get_columns()
 	 * @uses WP_List_Table::get_sortable_columns()
@@ -308,21 +423,23 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-
-		$columns  = $this->get_columns();
-		$hidden   = array(); // No hidden columns
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = array(
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns()
+		);
 
 		$this->items = $this->reports_data();
 
-		$this->total = edd_count_total_customers( $this->args );
+		$status = isset( $_GET['status'] )
+			? sanitize_key( $_GET['status'] )
+			: 'total';
 
+		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_items' => $this->total,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->total / $this->per_page ),
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+			'total_items' => $this->counts[ $status ],
+			'per_page'    => $this->per_page
 		) );
 	}
 }
