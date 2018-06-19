@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get the contents of the cart
@@ -205,15 +205,19 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
  */
 function edd_get_price_name( $download_id = 0, $options = array() ) {
 	$return = false;
-	if( edd_has_variable_prices( $download_id ) && ! empty( $options ) ) {
+
+	if ( edd_has_variable_prices( $download_id ) && ! empty( $options ) ) {
 		$prices = edd_get_variable_prices( $download_id );
 		$name   = false;
-		if( $prices ) {
-			if( isset( $prices[ $options['price_id'] ] ) )
+
+		if ( $prices ) {
+			if ( isset( $prices[ $options['price_id'] ] ) ) {
 				$name = $prices[ $options['price_id'] ]['name'];
+			}
 		}
 		$return = $name;
 	}
+
 	return apply_filters( 'edd_get_price_name', $return, $download_id, $options );
 }
 
@@ -431,7 +435,8 @@ function edd_get_cart_tax() {
  */
 function edd_get_cart_tax_rate( $country = '', $state = '', $postal_code = '' ) {
 	$rate = edd_get_tax_rate( $country, $state );
-	return apply_filters( 'edd_get_cart_tax_rate', floatval( $rate ), $country, $state, $postal_code );
+
+	return (float) apply_filters( 'edd_get_cart_tax_rate', $rate, $country, $state, $postal_code );
 }
 
 /**
@@ -456,32 +461,36 @@ function edd_cart_tax( $echo = false ) {
  *
  * @since 1.0.6
  * @param string $taxonomy Name of the taxonomy
- * @param mixed $terms Slug or ID of the term from which to add ites | An array of terms
+ * @param mixed $terms Slug or ID of the term from which to add | An array of terms
  * @return array Array of IDs for each item added to the cart
  */
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
-	if ( ! is_string( $taxonomy ) ) return false;
 
-	if( is_numeric( $terms ) ) {
+	// Bail if taxonomy is not a string
+	if ( ! is_string( $taxonomy ) ) {
+		return false;
+	}
+
+	if ( is_numeric( $terms ) ) {
 		$terms = get_term( $terms, $taxonomy );
 		$terms = $terms->slug;
 	}
 
 	$cart_item_ids = array();
 
-	$args = array(
-		'post_type' => 'download',
+	$items = get_posts( array(
+		'post_type'      => 'download',
 		'posts_per_page' => -1,
-		$taxonomy => $terms
-	);
+		$taxonomy        => $terms
+	) );
 
-	$items = get_posts( $args );
-	if ( $items ) {
+	if ( ! empty( $items ) ) {
 		foreach ( $items as $item ) {
 			edd_add_to_cart( $item->ID );
 			$cart_item_ids[] = $item->ID;
 		}
 	}
+
 	return $cart_item_ids;
 }
 

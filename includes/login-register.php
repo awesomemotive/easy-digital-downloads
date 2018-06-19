@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions/Login
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Login Form
@@ -96,8 +96,7 @@ function edd_process_login_form( $data ) {
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
-			wp_redirect( $redirect );
-			edd_die();
+			edd_redirect( $redirect );
 		}
 	}
 }
@@ -192,8 +191,7 @@ function edd_process_register_form( $data ) {
 			'role'            => get_option( 'default_role' )
 		) );
 
-		wp_redirect( $redirect );
-		edd_die();
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_user_register', 'edd_process_register_form' );

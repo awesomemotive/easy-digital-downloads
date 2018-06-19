@@ -5,14 +5,14 @@
  * This class handles earnings report export.
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2017, Sunny Ratilal
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Earnings_Report_Export Class
@@ -24,7 +24,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @var string
 	 */
 	public $export_type = 'earnings_report';
@@ -33,28 +32,23 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Set the export headers.
 	 *
 	 * @since 2.7
-	 * @access public
-	 *
-	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			set_time_limit( 0 );
-		}
+		edd_set_time_limit();
 
 		nocache_headers();
+
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_earnings_report_export_filename', 'edd-export-' . $this->export_type . '-' . date( 'm' ) . '-' . date( 'Y' ) ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="' . apply_filters( 'edd_earnings_report_export_filename', 'edd-export-' . $this->export_type . '-' . date( 'm' ) . '-' . date( 'Y' ) ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 	/**
-	 * Get the column headers for the Earnings Report
+	 * Get the column headers for the Earnings Report.
 	 *
 	 * @since 2.8.18
-	 * @return array
+	 *
+	 * @return array CSV columns.
 	 */
 	public function get_csv_cols() {
 
@@ -73,14 +67,14 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$cols[] = __( 'Net Activity', 'easy-digital-downloads' );
 
 		return $cols;
-
 	}
 
 	/**
 	 * Specifically retrieve the headers for supported order statuses.
 	 *
 	 * @since 2.8.18
-	 * @return array
+	 *
+	 * @return array Order status columns.
 	 */
 	public function get_status_cols() {
 		$status_cols        = edd_get_payment_statuses();
@@ -99,7 +93,8 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Get a list of the statuses supported in this report.
 	 *
 	 * @since 2.8.18
-	 * @return array The status keys supported (not Labels)
+	 *
+	 * @return array The status keys supported (not labels).
 	 */
 	public function get_supported_statuses() {
 		$statuses = edd_get_payment_statuses();
@@ -116,10 +111,9 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 *
 	 * We make use of this function to set up the header of the earnings report.
 	 *
-	 * @access public
 	 * @since 2.7
 	 *
-	 * @return array $cols CSV header.
+	 * @return string $col_data CSV cols.
 	 */
 	public function print_csv_cols() {
 		$cols     = $this->get_csv_cols();
@@ -128,7 +122,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		for ( $i = 0; $i < count( $cols ); $i++ ) {
 			$col_data .= $cols[ $i ];
 
-			// We don't need an extra space after the first column
+			// We don't need an extra space after the first column.
 			if ( $i == 0 ) {
 				$col_data .= ',';
 				continue;
@@ -164,7 +158,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Print the CSV rows for the current step.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return mixed string|false
 	 */
@@ -244,7 +237,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Get the Export Data.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return array $data The data for the CSV file
 	 */
@@ -277,21 +269,17 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 
 		$statuses = $this->get_supported_statuses();
 		$totals   = $wpdb->get_results( $wpdb->prepare(
-			"SELECT SUM(meta_value) AS total, COUNT(DISTINCT posts.ID) AS count, posts.post_status AS status
-			 FROM {$wpdb->posts} AS posts
-			 INNER JOIN {$wpdb->postmeta} ON posts.ID = {$wpdb->postmeta}.post_ID
-			 WHERE posts.post_type IN ('edd_payment')
-			 AND {$wpdb->postmeta}.meta_key = '_edd_payment_total'
-			 AND posts.post_date >= %s
-			 AND posts.post_date < %s
-			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
-			 ORDER by posts.post_date ASC", $start_date, $end_date ), ARRAY_A );
+			"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count, status
+			 FROM {$wpdb->edd_orders}
+			 WHERE date_created >= %s AND date_created < %s
+			 GROUP BY YEAR(date_created), MONTH(date_created), status
+			 ORDER by date_created ASC", $start_date, $end_date ), ARRAY_A );
 
 		$total_data = array();
 		foreach ( $totals as $row ) {
 			$total_data[ $row['status'] ] = array(
 				'count'  => $row['count'],
-				'amount' => $row['total']
+				'amount' => edd_format_amount( $row['total'] )
 			);
 		}
 
@@ -333,7 +321,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Return the calculated completion percentage
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return int Percentage of batch processing complete.
 	 */
@@ -357,7 +344,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * Set the properties specific to the earnings report.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $request The Form Data passed into the batch processing
 	 * @return void

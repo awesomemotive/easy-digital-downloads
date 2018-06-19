@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Retrieve a download by a given field
@@ -82,30 +82,42 @@ function edd_get_download_by( $field = '', $value = '' ) {
  * Retrieves a download post object by ID or slug.
  *
  * @since 1.0
- * @param int $download Download ID
- * @return WP_Post $download Entire download data
+ * @since 2.9 - Return an EDD_Download object.
+ *
+ * @param int $download_id Download ID.
+ *
+ * @return EDD_Download $download Entire download data.
  */
-function edd_get_download( $download = 0 ) {
-	if ( is_numeric( $download ) ) {
-		$download = get_post( $download );
-		if ( ! $download || 'download' !== $download->post_type )
-			return null;
-		return $download;
+function edd_get_download( $download_id = 0 ) {
+	$download = null;
+
+	if ( is_numeric( $download_id ) ) {
+
+		$found_download = new EDD_Download( $download_id );
+
+		if ( ! empty( $found_download->ID ) ) {
+			$download = $found_download;
+		}
+
+	} else { // Support getting a download by name.
+		$args = array(
+			'post_type'     => 'download',
+			'name'          => $download_id,
+			'post_per_page' => 1,
+			'fields'        => 'ids',
+		);
+
+		$downloads = new WP_Query( $args );
+		if ( is_array( $downloads->posts ) && ! empty( $downloads->posts ) ) {
+
+			$download_id = $downloads->posts[0];
+
+			$download = new EDD_Download( $download_id );
+
+		}
 	}
 
-	$args = array(
-		'post_type'   => 'download',
-		'name'        => $download,
-		'numberposts' => 1
-	);
-
-	$download = get_posts($args);
-
-	if ( $download ) {
-		return $download[0];
-	}
-
-	return null;
+	return $download;
 }
 
 /**
@@ -623,7 +635,7 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
  * @global $edd_logs
  * @param int $download_id Download ID
  * @param int $file_id ID of the file downloaded
- * @param array $user_info User information
+ * @param array $user_info User information (Deprecated)
  * @param string $ip IP Address
  * @param int $payment_id Payment ID
  * @param int $price_id Price ID, if any
@@ -633,19 +645,19 @@ function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip
 	global $edd_logs;
 
 	$log_data = array(
-		'post_parent'	=> $download_id,
-		'log_type'		=> 'file_download'
+		'post_parent' => $download_id,
+		'log_type'    => 'file_download',
 	);
 
-	$user_id = isset( $user_info['id'] ) ? $user_info['id'] : (int) -1;
+	$payment = new EDD_Payment( $payment_id );
 
 	$log_meta = array(
-		'user_info'	=> $user_info,
-		'user_id'	=> $user_id,
-		'file_id'	=> (int) $file_id,
-		'ip'		=> $ip,
-		'payment_id'=> $payment_id,
-		'price_id'  => (int) $price_id
+		'customer_id' => $payment->customer_id,
+		'user_id'     => $payment->user_id,
+		'file_id'     => (int) $file_id,
+		'ip'          => $ip,
+		'payment_id'  => $payment_id,
+		'price_id'    => (int) $price_id,
 	);
 
 	$edd_logs->insert_log( $log_data, $log_meta );
@@ -844,6 +856,36 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
 function edd_get_file_download_limit( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->get_file_download_limit();
+}
+
+/**
+ * Gets the file refund window for a particular download
+ *
+ * This window refers to the maximum number of days it can be refunded after
+ * it has been purchased.
+ *
+ * @since 3.0
+ * @param int $download_id Download ID
+ * @return int $limit File download limit
+ */
+function edd_get_file_refund_window( $download_id = 0 ) {
+	$download = new EDD_Download( $download_id );
+	return $download->get_refund_window();
+}
+
+/**
+ * Gets the file refund window for a particular download
+ *
+ * This window refers to the maximum number of days it can be refunded after
+ * it has been purchased.
+ *
+ * @since 3.0
+ * @param int $download_id Download ID
+ * @return int $limit File download limit
+ */
+function edd_get_file_refundability( $download_id = 0 ) {
+	$download = new EDD_Download( $download_id );
+	return $download->get_refundability();
 }
 
 /**

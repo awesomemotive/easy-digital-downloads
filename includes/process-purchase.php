@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Process Purchase Form
@@ -126,7 +126,7 @@ function edd_process_purchase_form() {
 		'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
-		'tax_rate'     => edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ), // Tax rate
+		'tax_rate'     => edd_use_taxes() ? edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ) : 0, // Tax rate
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => $purchase_key,
 		'user_email'   => $user['user_email'],
@@ -223,7 +223,7 @@ function edd_process_purchase_login() {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
 		} else {
-			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+			edd_redirect( $_SERVER['HTTP_REFERER'] );
 		}
 	}
 
@@ -233,7 +233,7 @@ function edd_process_purchase_login() {
 		echo 'success';
 		edd_die();
 	} else {
-		wp_redirect( edd_get_checkout_uri( $_SERVER['QUERY_STRING'] ) );
+		edd_redirect( edd_get_checkout_uri( $_SERVER['QUERY_STRING'] ) );
 	}
 }
 add_action( 'wp_ajax_edd_process_checkout_login', 'edd_process_purchase_login' );
@@ -264,8 +264,14 @@ function edd_purchase_form_validate_fields() {
 	);
 
 	// Validate agree to terms
-	if ( edd_get_option( 'show_agree_to_terms', false ) )
+	if ( '1' === edd_get_option( 'show_agree_to_terms', false ) ) {
 		edd_purchase_form_validate_agree_to_terms();
+	}
+
+	// Validate agree to privacy policy
+	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+		edd_purchase_form_validate_agree_to_privacy_policy();
+	}
 
 	if ( is_user_logged_in() ) {
 		// Collect logged in user data
@@ -392,6 +398,20 @@ function edd_purchase_form_validate_agree_to_terms() {
 	if ( ! isset( $_POST['edd_agree_to_terms'] ) || $_POST['edd_agree_to_terms'] != 1 ) {
 		// User did not agree
 		edd_set_error( 'agree_to_terms', apply_filters( 'edd_agree_to_terms_text', __( 'You must agree to the terms of use', 'easy-digital-downloads' ) ) );
+	}
+}
+
+/**
+ * Purchase Form Validate Agree To Privacy Policy
+ *
+ * @since       2.9.1
+ * @return      void
+ */
+function edd_purchase_form_validate_agree_to_privacy_policy() {
+	// Validate agree to terms
+	if ( ! isset( $_POST['edd_agree_to_privacy_policy'] ) || $_POST['edd_agree_to_privacy_policy'] != 1 ) {
+		// User did not agree
+		edd_set_error( 'agree_to_privacy_policy', apply_filters( 'edd_agree_to_privacy_policy_text', __( 'You must agree to the privacy policy', 'easy-digital-downloads' ) ) );
 	}
 }
 
@@ -783,7 +803,7 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Initialize user
 	$user    = false;
-	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$is_ajax = edd_doing_ajax();
 
 	if ( $is_ajax ) {
 		// Do not create or login the user during the ajax submission (check for errors only)
@@ -1165,8 +1185,7 @@ function edd_process_straight_to_gateway( $data ) {
 		}
 
 		edd_set_error( 'edd-straight-to-gateway-error', __( 'There was an error completing your purchase. Please try again.', 'easy-digital-downloads' ) );
-		wp_redirect( edd_get_checkout_uri() );
-		exit;
+		edd_redirect( edd_get_checkout_uri() );
 	}
 
 	edd_set_purchase_session( $purchase_data );

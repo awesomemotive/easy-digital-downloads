@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Processes gateway select on checkout. Only for users without ajax / javascript
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_process_gateway_select( $data ) {
 	if( isset( $_POST['gateway_submit'] ) ) {
-		wp_redirect( add_query_arg( 'payment-mode', $_POST['payment-mode'] ) ); exit;
+		edd_redirect( add_query_arg( 'payment-mode', $_POST['payment-mode'] ) );
 	}
 }
 add_action( 'edd_gateway_select', 'edd_process_gateway_select' );

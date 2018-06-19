@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Checkout
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Determines if we're currently on the Checkout page
@@ -27,15 +27,18 @@ function edd_is_checkout() {
 	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
 
 	if( ! $is_object_set ) {
-
 		unset( $wp_query->queried_object );
-
+	} else if ( is_singular() ) {
+		$content = $wp_query->queried_object->post_content;
 	}
 
 	if( ! $is_object_id_set ) {
-
 		unset( $wp_query->queried_object_id );
+	}
 
+	// If we know this isn't the primary checkout page, check other methods.
+	if ( ! $is_checkout && isset( $content ) && has_shortcode( $content, 'download_checkout' ) ) {
+		$is_checkout = true;
 	}
 
 	return apply_filters( 'edd_is_checkout', $is_checkout );
@@ -56,7 +59,6 @@ function edd_can_checkout() {
 /**
  * Retrieve the Success page URI
  *
- * @access      public
  * @since       1.6
  * @return      string
 */
@@ -92,20 +94,19 @@ function edd_is_success_page() {
  * Sends the user to the succes page.
  *
  * @param string $query_string
- * @access      public
  * @since       1.0
  * @return      void
 */
 function edd_send_to_success_page( $query_string = null ) {
 	$redirect = edd_get_success_page_uri();
 
-	if ( $query_string )
+	if ( $query_string ) {
 		$redirect .= $query_string;
+	}
 
 	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
 
-	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
-	edd_die();
+	edd_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
 }
 
 /**
@@ -121,8 +122,9 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	if ( ! empty( $args ) ) {
 		// Check for backward compatibility
-		if ( is_string( $args ) )
+		if ( is_string( $args ) ) {
 			$args = str_replace( '?', '', $args );
+		}
 
 		$args = wp_parse_args( $args );
 
@@ -151,7 +153,6 @@ function edd_get_checkout_uri( $args = array() ) {
  * page if there are errors present.
  *
  * @param array $args
- * @access public
  * @since  1.0
  * @return Void
  */
@@ -160,16 +161,16 @@ function edd_send_back_to_checkout( $args = array() ) {
 
 	if ( ! empty( $args ) ) {
 		// Check for backward compatibility
-		if ( is_string( $args ) )
+		if ( is_string( $args ) ) {
 			$args = str_replace( '?', '', $args );
+		}
 
 		$args = wp_parse_args( $args );
 
 		$redirect = add_query_arg( $args, $redirect );
 	}
 
-	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
-	edd_die();
+	edd_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
 }
 
 /**
@@ -183,8 +184,9 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 	$uri = edd_get_option( 'failure_page', '' );
 	$uri = ! empty( $uri ) ? trailingslashit( get_permalink( $uri ) ) : home_url();
 
-	if ( $extras )
+	if ( $extras ) {
 		$uri .= $extras;
+	}
 
 	return apply_filters( 'edd_get_failed_transaction_uri', $uri );
 }
@@ -205,7 +207,6 @@ function edd_is_failed_transaction_page() {
 /**
  * Mark payments as Failed when returning to the Failed Transaction page
  *
- * @access      public
  * @since       1.9.9
  * @return      void
 */
@@ -234,7 +235,6 @@ add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
  * Check if a field is required
  *
  * @param string $field
- * @access      public
  * @since       1.7
  * @return      bool
 */
@@ -250,7 +250,12 @@ function edd_field_is_required( $field = '' ) {
  * @return      array
  */
 function edd_get_banned_emails() {
-	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
+	$banned = edd_get_option( 'banned_emails', array() );
+	$emails = ! is_array( $banned )
+		? explode( "\n", $banned )
+		: $banned;
+
+	$emails = array_map( 'trim', $emails );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
 }
@@ -329,14 +334,13 @@ function edd_enforced_ssl_redirect_handler() {
 		return;
 	}
 
-	if( edd_is_checkout() && false !== strpos( edd_get_current_page_url(), 'https://' ) ) {
+	if ( edd_is_checkout() && false !== strpos( edd_get_current_page_url(), 'https://' ) ) {
 		return;
 	}
 
-	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	$uri = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 
-	wp_safe_redirect( $uri );
-	exit;
+	edd_redirect( $uri );
 }
 add_action( 'template_redirect', 'edd_enforced_ssl_redirect_handler' );
 
@@ -383,7 +387,6 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
 function edd_enforced_ssl_asset_filter( $content ) {
 
 	if ( is_array( $content ) ) {
-
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
 
 	} else {
@@ -411,19 +414,16 @@ function edd_enforced_ssl_asset_filter( $content ) {
 			'ru',
 		);
 
-		if( ! in_array( $extension, $suffixes ) ) {
-
+		if ( ! in_array( $extension, $suffixes ) ) {
 			$content = str_replace( 'http:', 'https:', $content );
-
 		}
-
 	}
 
 	return $content;
 }
 
 /**
- * Given a number and algorithem, determine if we have a valid credit card format
+ * Given a number and algorithm, determine if we have a valid credit card format
  *
  * @since  2.4
  * @param  integer $number The Credit Card Number to validate
@@ -577,9 +577,7 @@ function edd_detect_cc_type( $number ) {
 				$return = $card_type['name'];
 				break;
 			}
-
 		}
-
 	}
 
 	return apply_filters( 'edd_cc_found_card_type', $return, $number, $card_types );
@@ -599,5 +597,4 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
 	$expiration = strtotime( date( 't', strtotime( $month_name . ' ' . $exp_year ) ) . ' ' . $month_name . ' ' . $exp_year . ' 11:59:59PM' );
 
 	return $expiration >= time();
-
 }

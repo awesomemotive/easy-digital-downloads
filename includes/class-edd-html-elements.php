@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/HTML
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_HTML_Elements Class
@@ -24,7 +24,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param array $args Arguments for the dropdown
 	 * @return string $output Product dropdown
@@ -44,7 +43,7 @@ class EDD_HTML_Elements {
 			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'data'        => array(
 				'search-type'        => 'download',
-				'search-placeholder' => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+				'search-placeholder' => sprintf( __( 'Search %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 			),
 		);
 
@@ -108,13 +107,12 @@ class EDD_HTML_Elements {
 						$selected_item = substr( $selected_item, 0, $has_variation );
 					}
 
-					$post       = get_post( $selected_item );
+					$post = get_post( $selected_item );
 					if ( ! is_null( $post ) ) {
 						$products[] = $post;
 					}
 				}
 			}
-
 		}
 
 		$options    = array();
@@ -226,7 +224,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all customers
 	 *
-	 * @access public
 	 * @since 2.2
 	 * @param array $args
 	 * @return string $output Customer dropdown
@@ -244,13 +241,13 @@ class EDD_HTML_Elements {
 			'number'      => 30,
 			'data'        => array(
 				'search-type'        => 'customer',
-				'search-placeholder' => __( 'Type to search all Customers', 'easy-digital-downloads' )
+				'search-placeholder' => __( 'Search Customers', 'easy-digital-downloads' )
 			),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$customers = EDD()->customers->get_customers( array(
+		$customers = edd_get_customers( array(
 			'number' => $args['number']
 		) );
 
@@ -303,7 +300,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Users
 	 *
-	 * @access public
 	 * @since 2.6.9
 	 * @param array $args
 	 * @return string $output User dropdown
@@ -321,7 +317,7 @@ class EDD_HTML_Elements {
 			'number'      => 30,
 			'data'        => array(
 				'search-type'        => 'user',
-				'search-placeholder' => __( 'Type to search all Users', 'easy-digital-downloads' ),
+				'search-placeholder' => __( 'Search Users', 'easy-digital-downloads' ),
 			),
 		);
 
@@ -379,7 +375,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Discount to select automatically
@@ -389,15 +384,16 @@ class EDD_HTML_Elements {
 	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
 		$args = array( 'nopaging' => true );
 
-		if ( ! empty( $status ) )
+		if ( ! empty( $status ) ) {
 			$args['post_status'] = $status;
+		}
 
 		$discounts = edd_get_discounts( $args );
 		$options   = array();
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
-				$options[ absint( $discount->ID ) ] = esc_html( get_the_title( $discount->ID ) );
+				$options[ absint( $discount->id ) ] = esc_html( $discount->name );
 			}
 		} else {
 			$options[0] = __( 'No discounts found', 'easy-digital-downloads' );
@@ -417,7 +413,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of all the Categories
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Category to select automatically
@@ -446,7 +441,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of years
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Year to select automatically
@@ -480,7 +474,6 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown of months
 	 *
-	 * @access public
 	 * @since 1.5.2
 	 * @param string $name Name attribute of the dropdown
 	 * @param int    $selected Month to select automatically
@@ -517,7 +510,8 @@ class EDD_HTML_Elements {
 	 * @return string
 	 */
 	public function select( $args = array() ) {
-		$defaults = array(
+
+		$args = wp_parse_args( $args, array(
 			'options'          => array(),
 			'name'             => null,
 			'class'            => '',
@@ -531,9 +525,7 @@ class EDD_HTML_Elements {
 			'data'             => array(),
 			'readonly'         => false,
 			'disabled'         => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
+		) );
 
 		$data_elements = '';
 		foreach ( $args['data'] as $key => $value ) {
@@ -578,7 +570,7 @@ class EDD_HTML_Elements {
 			$selected = "";
 		}
 
-		if ( $args['show_option_all'] ) {
+		if ( ! empty( $args['show_option_all'] ) ) {
 			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
 				$selected = selected( true, in_array( 0, $args['selected'] ), false );
 			} else {
@@ -720,10 +712,13 @@ class EDD_HTML_Elements {
 	 */
 	public function date_field( $args = array() ) {
 
-		if( empty( $args['class'] ) ) {
-			$args['class'] = 'edd_datepicker';
-		} elseif( ! strpos( $args['class'], 'edd_datepicker' ) ) {
-			$args['class'] .= ' edd_datepicker';
+		if ( empty( $args['class'] ) ) {
+			$args['class']          = 'edd_datepicker';
+			$args['data']['format'] = edd_get_date_picker_format();
+
+		} elseif ( ! strpos( $args['class'], 'edd_datepicker' ) ) {
+			$args['class']          .= ' edd_datepicker';
+			$args['data']['format'] = edd_get_date_picker_format();
 		}
 
 		return $this->text( $args );
@@ -800,10 +795,10 @@ class EDD_HTML_Elements {
 
 		$output  = '<span class="edd_user_search_wrap">';
 			$output .= $this->text( $args );
-			$output .= '<span class="edd_user_search_results hidden"><a class="edd-ajax-user-cancel" aria-label="' . __( 'Cancel', 'easy-digital-downloads' ) . '" href="#">x</a><span></span></span>';
+			$output .= '<span class="edd_user_search_results hidden"><span></span></span>';
+			$output .= '<span class="spinner"></span>';
 		$output .= '</span>';
 
 		return $output;
 	}
-
 }

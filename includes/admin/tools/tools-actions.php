@@ -1,18 +1,16 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Tools Actions
  *
  * @package     EDD
  * @subpackage  Admin/Tools
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
  */
+
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Register the recount batch processor
