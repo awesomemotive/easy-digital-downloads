@@ -43,6 +43,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			'first_name'  => __( 'First Name', 'easy-digital-downloads' ),
 			'last_name'   => __( 'Last Name', 'easy-digital-downloads' ),
 			'download'    => edd_get_label_singular(),
+			'quantity'    => __( 'Quantity', 'easy-digital-downloads' ),
 			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
 			'payment_id'  => __( 'Payment ID', 'easy-digital-downloads' ),
 			'price_id'    => __( 'Price ID', 'easy-digital-downloads' ),
@@ -58,7 +59,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 * @since 2.7
 	 * @since 3.0 Updated to use new query methods.
 	 *
-	 * @return array $data The data for the CSV file.
+	 * @return array|bool The data for the CSV file, false if no data to return.
 	 */
 	public function get_data() {
 		$data = array();
@@ -74,8 +75,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
@@ -87,18 +88,30 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 		foreach ( $items as $item ) {
 			/** @var EDD\Orders\Order_Item $item */
-			$order = edd_get_order( $item->order_id );
-			$download = edd_get_download( $item->product_id );
+			$order     = edd_get_order( $item->order_id );
+			$download  = edd_get_download( $item->product_id );
 			$user_info = $order->get_user_info();
+
+			$download_title = $item->product_name;
+
+			// Maybe append variable price name.
+			if ( $download->has_variable_prices() ) {
+				$price_option = edd_get_price_option_name( $item->product_id, $item->price_id, $order->id );
+
+				$download_title .= ! empty( $price_option )
+					? ' - ' . $price_option
+					: '';
+			}
 
 			$data[] = array(
 				'ID'          => $item->product_id,
-				'user_id'     => $order->user_id(),
+				'user_id'     => $order->user_id,
 				'customer_id' => $order->customer_id,
 				'email'       => $order->email,
 				'first_name'  => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
 				'last_name'   => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
-				'download'    => $download->post_title,
+				'download'    => $download_title,
+				'quantity'    => $item->quantity,
 				'amount'      => $order->total,
 				'payment_id'  => $order->id,
 				'price_id'    => $item->price_id,
