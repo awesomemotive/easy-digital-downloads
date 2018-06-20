@@ -50,6 +50,14 @@ class EDD_Export {
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="edd-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv"' );
 		header( 'Expires: 0' );
+
+		/**
+		 * We need to append a BOM to the export so that Microsoft Excel knows
+		 * that the file is in Unicode.
+		 *
+		 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/4859
+		 */
+		echo "\xEF\xBB\xBF";
 	}
 
 	/**
