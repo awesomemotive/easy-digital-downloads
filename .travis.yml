@@ -45,7 +45,7 @@ matrix:
       dist: precise
   exclude:
     - php: 7.1
-      evn: WP_VERSION=4.6.8 WP_MULTISITE=0
+      env: WP_VERSION=4.6.8 WP_MULTISITE=0
     - php: 7.1
       env: WP_VERSION=4.5.11 WP_MULTISITE=0
     - php: 7.1
