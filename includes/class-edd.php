@@ -150,39 +150,40 @@ final class Easy_Digital_Downloads {
 	 * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads
 	 */
 	public static function instance( $file = '' ) {
-		if ( ! empty( $file ) && ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
 
-			// Setup the singleton
-			self::setup_instance( $file );
-
-			// Bootstrap
-			self::$instance->setup_constants();
-			self::$instance->setup_files();
-
-			// APIs
-			self::$instance->roles           = new EDD_Roles();
-			self::$instance->fees            = new EDD_Fees();
-			self::$instance->api             = new EDD_API();
-			self::$instance->utils           = new EDD_Utilities();
-			self::$instance->session         = new EDD_Session();
-			self::$instance->html            = new EDD_HTML_Elements();
-			self::$instance->emails          = new EDD_Emails();
-			self::$instance->email_tags      = new EDD_Email_Template_Tags();
-			self::$instance->payment_stats   = new EDD_Payment_Stats();
-			self::$instance->cart            = new EDD_Cart();
-			self::$instance->tracking        = new EDD_Tracking();
-			self::$instance->structured_data = new EDD\Structured_Data();
-
-			// Admin APIs
-			if ( is_admin() ) {
-				self::$instance->notices   = new EDD_Notices();
-			}
-
-			// Register backwards compatibility hooks
-			new EDD\Compat\Customer();
-			new EDD\Compat\Payment();
+		// Return if already instantiated
+		if ( self::is_instantiated() ) {
+			return self::$instance;
 		}
 
+		// Setup the singleton
+		self::setup_instance( $file );
+
+		// Bootstrap
+		self::$instance->setup_constants();
+		self::$instance->setup_files();
+		self::$instance->setup_compat();
+
+		// APIs
+		self::$instance->roles           = new EDD_Roles();
+		self::$instance->fees            = new EDD_Fees();
+		self::$instance->api             = new EDD_API();
+		self::$instance->utils           = new EDD_Utilities();
+		self::$instance->session         = new EDD_Session();
+		self::$instance->html            = new EDD_HTML_Elements();
+		self::$instance->emails          = new EDD_Emails();
+		self::$instance->email_tags      = new EDD_Email_Template_Tags();
+		self::$instance->payment_stats   = new EDD_Payment_Stats();
+		self::$instance->cart            = new EDD_Cart();
+		self::$instance->tracking        = new EDD_Tracking();
+		self::$instance->structured_data = new EDD\Structured_Data();
+
+		// Admin APIs
+		if ( is_admin() ) {
+			self::$instance->notices = new EDD_Notices();
+		}
+
+		// Return the instance
 		return self::$instance;
 	}
 
@@ -235,6 +236,24 @@ final class Easy_Digital_Downloads {
 					? $this->{$key}
 					: null;
 		}
+	}
+
+	/**
+	 * Return whether the main loading class has been instantiated or not.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean True if instantiated. False if not.
+	 */
+	private static function is_instantiated() {
+
+		// Return true if instance is correct class
+		if ( ! empty( self::$instance ) && ( self::$instance instanceof Easy_Digital_Downloads ) ) {
+			return true;
+		}
+
+		// Return false if not instantiated correctly
+		return false;
 	}
 
 	/**
@@ -310,6 +329,21 @@ final class Easy_Digital_Downloads {
 		} else {
 			$this->setup_frontend();
 		}
+	}
+
+	/**
+	 * Setup backwards compatibility hooks
+	 *
+	 * This method exists to setup the bridges between EDD versions, most
+	 * notably between versions less than 2.9 and greater than 3.0.
+	 *
+	 * @access private
+	 * @since 3.0
+	 * @return void
+	 */
+	private function setup_compat() {
+		new EDD\Compat\Customer();
+		new EDD\Compat\Payment();
 	}
 
 	/**
