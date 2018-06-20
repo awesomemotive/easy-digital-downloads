@@ -585,6 +585,12 @@ class EDD_Discount extends Adjustment {
 	 */
 	public function get_status_label() {
 		switch ( $this->status ) {
+			case '':
+				$label = __( 'None', 'easy-digital-downloads' );
+				break;
+			case 'draft':
+				$label = __( 'Draft', 'easy-digital-downloads' );
+				break;
 			case 'expired':
 				$label = __( 'Expired', 'easy-digital-downloads' );
 				break;
@@ -592,8 +598,10 @@ class EDD_Discount extends Adjustment {
 				$label = __( 'Inactive', 'easy-digital-downloads' );
 				break;
 			case 'active':
-			default:
 				$label = __( 'Active', 'easy-digital-downloads' );
+				break;
+			default:
+				$label = ucwords( $this->status );
 				break;
 		}
 
