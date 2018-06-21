@@ -142,6 +142,7 @@ function add_report( $report_id, $attributes ) {
  * @return Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
 function get_report( $report_id, $build_endpoints = true ) {
+
 	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
@@ -188,6 +189,7 @@ function get_tabs() {
 		foreach ( $legacy_views as $report_id => $label ) {
 			$reports[ $report_id ] = array(
 				'label'    => $label,
+				'icon'     => 'info',
 				'priority' => 10,
 			);
 		}
@@ -195,11 +197,6 @@ function get_tabs() {
 
 	// Re-sort by priority.
 	uasort( $reports, array( $registry, 'priority_sort' ) );
-
-	// Convert to slug/label pairs.
-	foreach ( $reports as $report_id => $attributes ) {
-		$reports[ $report_id ] = $attributes['label'];
-	}
 
 	/**
 	 * Filters the list of report tab slug/label pairs.
@@ -223,7 +220,9 @@ function get_active_tab() {
 	$tabs = get_tabs();
 
 	// If not set, default the active tab to the first one.
-	return isset( $_REQUEST['tab'] ) ? sanitize_key( $_REQUEST['tab'] ) : key( $tabs );
+	return isset( $_REQUEST['view'] )
+		? sanitize_key( $_REQUEST['view'] )
+		: key( $tabs );
 }
 
 //
@@ -907,7 +906,7 @@ function default_display_tile( $report, $tile ) {
 function default_display_tiles_group( $report ) {
 	if ( $report->has_endpoints( 'tiles' ) ) : ?>
 
-		<div id="edd-reports-tiles-wrap">
+		<div id="edd-reports-tiles-wrap" class="edd-report-wrap">
 			<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
 
 			<div id="dashboard-widgets" class="metabox-holder">
@@ -939,9 +938,9 @@ function default_display_tiles_group( $report ) {
 function default_display_tables_group( $report ) {
 
 	if ( $report->has_endpoints( 'tables' ) ) :
-		$tables = array();//$report->get_endpoints( 'tables' );
-		?>
-		<div id="edd-reports-tables-wrap">
+		$tables = array();//$report->get_endpoints( 'tables' ); ?>
+
+		<div id="edd-reports-tables-wrap" class="edd-report-wrap">
 
 			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
 				<div class="edd-reports-table">
@@ -964,10 +963,9 @@ function default_display_tables_group( $report ) {
  */
 function default_display_charts_group( $report ) {
 	if ( $report->has_endpoints( 'charts' ) ) :
+		$charts = $report->get_endpoints( 'charts' ); ?>
 
-		$charts = $report->get_endpoints( 'charts' );
-		?>
-		<div id="edd-reports-charts-wrap">
+		<div id="edd-reports-charts-wrap" class="edd-report-wrap">
 			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
 				<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>">
 					<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
@@ -1087,7 +1085,7 @@ function display_filters( $report ) {
 	), 'edit.php' ) );
 
 	if ( ! empty( $filters ) ) : ?>
-		<div id="edd-reports-filters-wrap">
+		<div id="edd-reports-filters-wrap" class="edd-report-wrap">
 			<h3><?php _e( 'Filters', 'easy-digital-downloads' ); ?></h3>
 
 			<form id="edd-graphs-filter" method="get">
