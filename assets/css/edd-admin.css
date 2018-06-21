@@ -126,6 +126,11 @@ a.edd-delete:hover {
 	position: relative;
 	height: 28px;
 	cursor: move;
+	opacity: 0.8;
+}
+
+.edd-sortable-list li:hover {
+	opacity: 1;
 }
 
 .edd-sortable-list li label * {
@@ -340,6 +345,13 @@ textarea[name="edd-note"] {
 	width: 300px;
 }
 
+#edd-add-discount input[type="text"].edd_datepicker,
+#edd-edit-discount input[type="text"].edd_datepicker {
+	height: 29px;
+	width: 183px;
+	vertical-align: middle;
+}
+
 #edd-edit-discount textarea {
 	width: 80%;
 	height: 100px;
@@ -355,16 +367,30 @@ textarea[name="edd-note"] {
 /* List Tables
 -------------------------------------------------------------- */
 
-.wp-list-table.discounts .column-amount,
-.wp-list-table.discounts .column-status,
+.wp-list-table.customers .column-id,
+.wp-list-table.downloads .column-primary {
+	width: 5%;
+}
+
+.wp-list-table.posts .column-sales,
+.wp-list-table.customers .column-order_count,
 .wp-list-table.discounts .column-use_count {
 	width: 10%;
 }
 
-.wp-list-table.discounts .column-code,
-.wp-list-table.discounts .column-start-date,
-.wp-list-table.discounts .column-end-date {
-	width: 15%;
+.wp-list-table.customers .column-spent,
+.wp-list-table.customers .column-status,
+.wp-list-table.downloads .column-amount,
+.wp-list-table.downloads .column-status,
+.wp-list-table.discounts .column-amount,
+.wp-list-table.discounts .column-status,
+.wp-list-table.orders .column-amount,
+.wp-list-table.orders .column-status {
+	width: 11%;
+}
+
+.wp-list-table.posts .column-earnings {
+	width: 11%;
 }
 
 .wp-list-table.posts .column-download_category,
@@ -373,9 +399,67 @@ textarea[name="edd-note"] {
 	width: 13%
 }
 
-.wp-list-table.posts .column-sales,
-.wp-list-table.posts .column-earnings {
-	width: 11%;
+.wp-list-table.customers .column-date_created,
+.wp-list-table.discounts .column-code,
+.wp-list-table.discounts .column-start_date,
+.wp-list-table.discounts .column-end_date,
+.wp-list-table.downloads .column-date,
+.wp-list-table.downloads .column-customer,
+.wp-list-table.orders .column-date {
+	width: 14%;
+}
+
+.wp-list-table.orderadjustments .column-amount,
+.wp-list-table.orderitems .column-status,
+.wp-list-table.orderitems .column-quantity,
+.wp-list-table.orderitems .column-amount,
+.wp-list-table.orderitems .column-discount,
+.wp-list-table.orderitems .column-tax,
+.wp-list-table.orderitems .column-total,
+.wp-list-table.orderitems .column-subtotal {
+	width: 17%;
+}
+
+.wp-list-table.orders .column-gateway,
+.wp-list-table.orders .column-customer {
+	width: 18%;
+}
+
+.wp-list-table.customers .column-email {
+	width: 25%;
+}
+
+.wp-list-table.orderadjustments .column-desc {
+	width: 34%;
+}
+
+.wp-list-table.customers .column-primary strong,
+.wp-list-table.discounts .column-primary strong,
+.wp-list-table.orders .column-primary strong,
+.wp-list-table.orderitems .column-primary strong,
+.wp-list-table.orderadjustments .column-primary strong {
+	font-size: 14px;
+}
+
+.wp-list-table.orders tr.refunded td,
+.wp-list-table.orders tr.refunded th,
+.wp-list-table.orderitems tr.refunded td,
+.wp-list-table.orderitems tr.refunded th {
+	background: #ffddee;
+}
+.wp-list-table .row-actions span.refund a {
+	color: #cc8c00;
+}
+
+.wp-list-table .row-actions span.refund a:hover {
+	color: #ff8c00;
+}
+
+.wp-list-table.customers .column-primary .avatar {
+	float: left;
+	margin-right: 10px;
+	margin-top: 1px;
+	border-radius: 20%;
 }
 
 /* Filter Bar Styles
@@ -435,6 +519,18 @@ h2.nav-tab-wrapper.edd-tab-clear {
 	line-height: 24px;
 }
 
+#edd_product_settings .inside strong {
+	border-top: 1px solid #eee;
+	display: block;
+	margin: 0 -12px 0;
+	padding: 10px 12px 0;
+}
+
+#edd_product_settings .inside div:first-child strong {
+	margin-top: -14px;
+}
+
+
 /* Payment History Styles
 -------------------------------------------------------------- */
 
@@ -446,18 +542,7 @@ tr.status-refunded td {
 	background: #cecece;
 	border-top-color: #ccc;
 }
-.wp-list-table.downloads th#ID {
-	width: 80px;
-}
-.wp-list-table.downloads th#details {
-	width: 130px;
-}
-.wp-list-table.downloads th#date {
-	width: 140px;
-}
-.wp-list-table.downloads th#user {
-	width: 130px;
-}
+
 marquee {
 	padding: 0;
 	margin: 0;
@@ -806,6 +891,47 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form .column {
 	width: 32%;
 }
+#poststuff .edd-metabox-title-action {
+	margin: 0;
+	float: right;
+	padding: 4px 8px;
+	position: relative;
+	top: -1px;
+	text-decoration: none;
+	border: none;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	background: #f7f7f7;
+	text-shadow: none;
+	font-weight: 600;
+	font-size: 10px;
+	line-height: normal;
+	color: #0073aa;
+	cursor: pointer;
+	outline: 0;
+}
+#poststuff .edd-metabox-title-action:hover {
+	border-color: #008EC2;
+	background: #00a0d2;
+	color: #fff;
+}
+
+.edd-edit-purchase-element .tablenav {
+	padding: 2px 10px 8px 10px;
+}
+
+.edd-edit-purchase-element .edd-order-children-wrapper {
+	margin: 0 -1px;
+}
+
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 table {
+	border-top: none;
+	border-bottom: none;
+}
+.edd-edit-purchase-element .edd-order-children-wrapper.child-count-0 .tablenav {
+	display: none;
+}
+
 .edd-edit-purchase-element[class*="columns-"] ul li {
 	padding-right: 1%;
 }
@@ -836,14 +962,17 @@ input[class*="edd-price-field"] {
 	font-weight: 600;
 }
 .edd-admin-box-inside {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 3px 12px;
+	padding: 10px 12px;
 	margin: 0;
 	word-wrap: break-word;
 }
 .rtl .edd-admin-box-inside {
 	padding: 5px 10px 5px 0;
+}
+.edd-admin-box-inside > p {
+	margin: 8px 3px;
 }
 .edd-admin-box-inside .strong {
 	font-weight: 600;
@@ -859,10 +988,14 @@ input[class*="edd-price-field"] {
 	float: left;
 	margin-left: 10px;
 }
+#edd-order-logs .inside,
 #edd-order-update .inside,
 #edd-order-details .inside {
 	margin: 0;
 	padding: 0;
+}
+#edd-order-update .edd-select-chosen {
+	width: 130px !important;
 }
 #edd-order-update input.edd_datepicker {
 	width: 180px;
@@ -874,6 +1007,22 @@ input[class*="edd-price-field"] {
 #edd-order-update .edd-tax-rate {
 	color: #9c9c9c;
 	font-style: italic;
+}
+#edd-order-logs ul {
+	margin: 0;
+	padding: 0;
+}
+.edd-admin-box-inside .edd_datepicker,
+.edd-admin-box-inside input[type="text"] {
+	max-width: 130px;
+	width: 100%;
+}
+.edd-admin-box-inside span.label {
+	display: inline-block;
+	width: 70px;
+	white-space: nowrap;
+	text-align: right;
+	margin-right: 10px;
 }
 #edd-order-resend-receipt .inside {
 	margin-top: 11px;
@@ -889,6 +1038,9 @@ input[class*="edd-price-field"] {
 }
 .edd-order-update-box #major-publishing-actions .button-secondary {
 	margin-right: 10px;
+}
+.edd-order-update-box .button-primary {
+	margin-right: 0;
 }
 .edd-edit-purchase-element .edd-select-chosen {
 	width: 196px;
@@ -913,13 +1065,6 @@ input[class*="edd-price-field"] {
 .edd-order-data input.med-text {
 	margin: 0;
 	width: 100px;
-}
-#edd-order-update span.label {
-	display: inline;
-	width: 50px;
-}
-.edd-order-update-box .button-primary {
-	margin-right: 0;
 }
 #edd-edit-order-form .column .description {
 	padding-right: 10px;
@@ -986,9 +1131,6 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element .edd-purchased-download-actions .edd-order-remove-download:hover {
 	color: #f00;
 }
-#edd-order-recalc-total {
-	float: right;
-}
 .edd_repeatable_upload_wrapper .pricing select,
 .edd_repeatable_product_wrapper .edd-select,
 #edd_products .edd-select {
@@ -1002,12 +1144,22 @@ input[class*="edd-price-field"] {
 	display: none;
 }
 
+.edd-add-download-to-purchase {
+	padding: 15px 15px 20px 15px;
+	border-bottom: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
+}
+.edd-add-download-to-purchase .chosen-container {
+	width: 90% !important;
+	max-width: 220px !important;
+}
+
+.edd-add-download-to-purchase .edd-add-download-to-purchase-actions {
+	float: right;
+}
+
 @media screen and ( max-width: 1284px ) {
 
-	.edd-edit-purchase-element ul li.download {
-		padding-bottom: 15px;
-		width: 100%;
-	}
 	.edd-edit-purchase-element .edd-purchased-download-title {
 		font-size: 16px;
 	}
@@ -1026,16 +1178,11 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-purchased-files-header,
-	.edd-add-download-to-purchase-header {
-		display: none;
-	}
 	.edd-payment-details-label-mobile {
 		display: block;
 		font-weight: 500;
 		padding-bottom: 6px;
 	}
-
 }
 
 @media screen and ( max-width: 1024px ) {
@@ -1084,7 +1231,6 @@ input[class*="edd-price-field"] {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
 	}
-
 }
 
 @media screen and ( max-width: 600px ) {
@@ -1106,17 +1252,11 @@ input[class*="edd-price-field"] {
 	#edd-edit-order-form .column {
 		width: 100%;
 	}
-
 }
 
 /** Stats */
 #edd_product_stats .label {
 	display: inline-block;
-	}
-#edd_product_stats hr {
-	border-style: solid;
-	border-width: 1px;
-	border-color: #ccc #fff #fff #ccc;
 }
 #edd_product_stats .product-sales-stats:before,
 #edd_product_stats .product-earnings-stats:before {
@@ -1441,15 +1581,25 @@ td.edd_order_price {
 #edd_tax_rates .edd_tax_global {
 	width: 20%;
 }
+#edd_tax_rates .edd_tax_actions,
 #edd_tax_rates .edd_tax_rate {
-	width: 12%;
-}
-#edd_tax_rates .edd_tax_remove {
-	width: 18%;
+	width: 8%;
 }
 #edd_tax_rates th {
-	padding: 15px 10px;
+	padding: 8px;
 }
+#edd_tax_rates td {
+	vertical-align: top;
+	padding: 10px;
+}
+.edd-tax-whole-country {
+	display: inline-block;
+	margin: 8px 0 3px 5px;
+}
+.edd-tax-whole-country input {
+	margin-top: 1px;
+}
+
 @media screen and ( max-width: 782px ) {
 	#edd_tax_rates thead {
 		display: none;
@@ -1631,7 +1781,7 @@ td.edd_order_price {
 .chosen-container-multi .chosen-choices,
 .chosen-container-single .chosen-single,
 .chosen-container-active.chosen-with-drop .chosen-single {
-	border: 1px solid #e5e5e5;
+	border: 1px solid #ddd;
 	border-radius: 0;
 	background: #fff;
 	padding: 2px 5px;
@@ -1836,6 +1986,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	max-width: 300px;
 }
 
+.edd-select-chosen.edd-time {
+	width: 55px;
+	max-width: 50px;
+}
+
 .download_page_edd-tools .tablenav .actions {
 	overflow: visible;
 }
@@ -1951,6 +2106,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	max-width: 830px;
+	position: relative;
 }
 #edd-item-wrapper:after {
 	content: "";
@@ -2038,18 +2194,32 @@ only screen and ( min-resolution: 1.5dppx ) {
 	padding: 0px 20px;
 }
 #edd-item-card-wrapper > div:first-child {
-	padding-top: 20px;
+	padding: 20px;
 }
 #edd-item-card-wrapper > div:last-child {
 	border: none;
 	padding-bottom: 20px;
 }
 #edd-item-card-wrapper .avatar-wrap {
-	padding-right: 10px;
+	padding-right: 20px;
 	text-align: center;
 }
+#edd-item-card-wrapper img.avatar {
+	border-radius: 22%;
+	margin-bottom: 10px;
+}
 #edd-item-card-wrapper .customer-id {
-	font-size: 24px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 10px;
+	background-color: #fafafa;
+	border: 1px solid #eee;
+	border-bottom-left-radius: 20%;
+	border-top: none;
+	border-right: none;
+	font-family: monospace;
+	font-size: 18px;
 	font-weight: 600;
 }
 #edit-customer-info input,
@@ -2071,7 +2241,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	width: 202px;
 }
 #edd-item-card-wrapper .customer-info {
-	margin-top: 5px;
 	margin-bottom: 10px;
 	min-height: 185px;
 }
@@ -2100,12 +2269,15 @@ only screen and ( min-resolution: 1.5dppx ) {
 	font-size: 20px;
 }
 #customer-edit-actions {
+	padding: 3px;
 	line-height: 28px;
-	margin-bottom: 20px;
 	text-align: center;
 }
 #customer-edit-actions .button-secondary {
-	margin-right: 10px;
+	margin-right: 5px;
+}
+#customer-edit-actions .cancel {
+	padding: 5px;
 }
 #edd-item-card-wrapper .row-title {
 	width: 30%;
@@ -2271,13 +2443,13 @@ only screen and ( min-resolution: 1.5dppx ) {
 		float: none;
 		position: absolute;
 		top: 84px;
-		left: 110px;
+		left: 165px;
 		max-width: 200px;
 	}
 	#edd-item-card-wrapper .customer-main-wrapper {
 		float: none;
 		position: absolute;
-		left: 110px;
+		left: 165px;
 	}
 	.customer-info .customer-name {
 		font-size: 16px;
@@ -2297,7 +2469,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 		overflow: hidden;
 	}
 	#edd-item-card-wrapper .customer-id {
-		font-size: 16px;
+		display: none;
 	}
 }
 @media screen and ( max-width: 480px ) {

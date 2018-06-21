@@ -231,7 +231,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 
 		$log = edd_get_api_request_log( self::$logs[0] );
 
-		$this->assertEquals( '10.0.0.1', $log->get_ip() );
+		$this->assertEquals( '10.0.0.1', $log->ip );
 	}
 
 	/**
@@ -317,7 +317,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'orderby' => 'api_key',
 		) );
 
-		$this->assertTrue( $logs[0]->get_api_key() > $logs[1]->get_api_key() );
+		$this->assertTrue( $logs[0]->api_key > $logs[1]->api_key );
 	}
 
 	/**
@@ -330,7 +330,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_api_key() > $logs[1]->get_api_key() );
+		$this->assertTrue( $logs[0]->api_key > $logs[1]->api_key );
 	}
 
 	/**
@@ -343,7 +343,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_api_key() < $logs[1]->get_api_key() );
+		$this->assertTrue( $logs[0]->api_key < $logs[1]->api_key );
 	}
 
 	/**
@@ -366,7 +366,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_api_key() < $logs[1]->get_api_key() );
+		$this->assertTrue( $logs[0]->api_key < $logs[1]->api_key );
 	}
 
 	/**
@@ -378,7 +378,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_api_key() > $logs[1]->get_api_key() );
+		$this->assertTrue( $logs[0]->api_key > $logs[1]->api_key );
 	}
 
 	/**
@@ -390,7 +390,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_token() < $logs[1]->get_token() );
+		$this->assertTrue( $logs[0]->token < $logs[1]->token );
 	}
 
 	/**
@@ -402,7 +402,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_token() > $logs[1]->get_token() );
+		$this->assertTrue( $logs[0]->token > $logs[1]->token );
 	}
 
 	/**
@@ -414,7 +414,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_request() < $logs[1]->get_request() );
+		$this->assertTrue( $logs[0]->request < $logs[1]->request );
 	}
 
 	/**
@@ -426,7 +426,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_request() > $logs[1]->get_request() );
+		$this->assertTrue( $logs[0]->request > $logs[1]->request );
 	}
 
 	/**
@@ -438,7 +438,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'asc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_time() < $logs[1]->get_time() );
+		$this->assertTrue( $logs[0]->time < $logs[1]->time );
 	}
 
 	/**
@@ -450,7 +450,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order'   => 'desc'
 		) );
 
-		$this->assertTrue( $logs[0]->get_time() > $logs[1]->get_time() );
+		$this->assertTrue( $logs[0]->time > $logs[1]->time );
 	}
 
 	/**
@@ -461,7 +461,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order' => 'asc',
 		) );
 
-		$this->assertTrue( $logs[0]->get_id() < $logs[1]->get_id() );
+		$this->assertTrue( $logs[0]->id < $logs[1]->id );
 	}
 
 	/**
@@ -472,7 +472,7 @@ class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
 			'order' => 'desc',
 		) );
 
-		$this->assertTrue( $logs[0]->get_id() > $logs[1]->get_id() );
+		$this->assertTrue( $logs[0]->id > $logs[1]->id );
 	}
 
 	/**

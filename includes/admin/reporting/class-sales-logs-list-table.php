@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -106,12 +106,12 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',      'easy-digital-downloads' ),
-			'customer'   => __( 'Customer',    'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
+			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID',  'easy-digital-downloads' ),
-			'date'       => __( 'Date',        'easy-digital-downloads' ),
+			'amount'     => __( 'Item Amount',  'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
+			'date'       => __( 'Date',         'easy-digital-downloads' ),
 		);
 	}
 
@@ -212,7 +212,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 					if ( is_array( $cart_items ) ) {
 						foreach ( $cart_items as $item ) {
 							// If the item has variable pricing, make sure it's the right variation
-							if ( $item['id'] == $log->get_object_id() ) {
+							if ( $item['id'] == $log->object_id ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
 									$log_price_id = $log->get_meta( 'price_id' );
 
@@ -227,10 +227,10 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 						}
 
 						$logs_data[] = array(
-							'ID'         => $log->get_id(),
+							'ID'         => $log->id,
 							'payment_id' => $payment->ID,
 							'customer'   => $customer,
-							'download'   => $log->get_object_id(),
+							'download'   => $log->object_id,
 							'price_id'   => isset( $log_price_id ) ? $log_price_id : null,
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,

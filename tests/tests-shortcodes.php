@@ -130,7 +130,9 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 		add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
 
-		update_post_meta( $payment_id, '_edd_payment_user_id', $user->ID );
+		edd_update_order( $payment_id, array(
+			'user_id' => $user->ID
+		) );
 
 		self::$payment_key = $purchase_data['purchase_key'];
 

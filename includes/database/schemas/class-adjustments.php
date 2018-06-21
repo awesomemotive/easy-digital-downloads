@@ -1,6 +1,6 @@
 <?php
 /**
- * Discounts Schema Class.
+ * Adjustments Schema Class.
  *
  * @package     EDD
  * @subpackage  Database\Schemas
@@ -14,11 +14,11 @@ namespace EDD\Database\Schemas;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Discounts Schema Class.
+ * Adjustments Schema Class.
  *
  * @since 3.0
  */
-class Discounts extends Base {
+class Adjustments extends Base {
 
 	/**
 	 * Array of database column objects
@@ -101,12 +101,23 @@ class Discounts extends Base {
 			'transition' => true
 		),
 
+		// amount_type
+		array(
+			'name'       => 'amount_type',
+			'type'       => 'varchar',
+			'length'     => '20',
+			'default'    => '',
+			'sortable'   => true,
+			'transition' => true
+		),
+
 		// amount
 		array(
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true
 		),
 
@@ -149,7 +160,8 @@ class Discounts extends Base {
 			'name'       => 'min_cart_price',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// product_condition

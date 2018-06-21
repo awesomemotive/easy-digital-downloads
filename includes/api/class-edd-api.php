@@ -10,13 +10,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/API
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_API Class
@@ -1536,21 +1536,20 @@ class EDD_API {
 	 */
 	public function get_discounts( $discount = null ) {
 
-		$discount_list = array();
+		$discount_list = $error = array();
 
-		if( ! user_can( $this->user_id, 'manage_shop_discounts' ) && ! $this->override ) {
+		if ( ! user_can( $this->user_id, 'manage_shop_discounts' ) && ! $this->override ) {
 			return $discount_list;
 		}
-		$error = array();
 
 		if ( empty( $discount ) ) {
-
-			global $wpdb;
-
+			$count     = 0;
 			$paged     = $this->get_paged();
 			$per_page  = $this->per_page();
-			$discounts = edd_get_discounts( array( 'posts_per_page' => $per_page, 'paged' => $paged ) );
-			$count     = 0;
+			$discounts = edd_get_discounts( array(
+				'posts_per_page' => $per_page,
+				'paged'          => $paged
+			) );
 
 			if ( empty( $discounts ) ) {
 				$error['error'] = __( 'No discounts found!', 'easy-digital-downloads' );
@@ -1558,7 +1557,6 @@ class EDD_API {
 			}
 
 			foreach ( $discounts as $discount ) {
-
 				$discount_list['discounts'][$count]['ID']                    = $discount->ID;
 				$discount_list['discounts'][$count]['name']                  = $discount->post_title;
 				$discount_list['discounts'][$count]['code']                  = edd_get_discount_code( $discount->ID );
@@ -1579,9 +1577,7 @@ class EDD_API {
 			}
 
 		} else {
-
 			if ( is_numeric( $discount ) && get_post( $discount ) ) {
-
 				$discount_list['discounts'][0]['ID']                         = $discount;
 				$discount_list['discounts'][0]['name']                       = get_post_field( 'post_title', $discount );
 				$discount_list['discounts'][0]['code']                       = edd_get_discount_code( $discount );
@@ -1597,14 +1593,10 @@ class EDD_API {
 				$discount_list['discounts'][0]['requirement_condition']      = edd_get_discount_product_condition( $discount );
 				$discount_list['discounts'][0]['global_discount']            = edd_is_discount_not_global( $discount );
 				$discount_list['discounts'][0]['single_use']                 = edd_discount_is_single_use( $discount );
-
 			} else {
-
 				$error['error'] = sprintf( __( 'Discount %s not found!', 'easy-digital-downloads' ), $discount );
 				return $error;
-
 			}
-
 		}
 
 		return apply_filters( 'edd_api_discounts', $discount_list, $this );

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Logs
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
@@ -76,7 +76,7 @@ function edd_get_log( $log_id = 0 ) {
 }
 
 /**
- * Get a log by a specific field's value.
+ * Get a log by a specific field value.
  *
  * @since 3.0
  *
@@ -330,7 +330,7 @@ function edd_get_api_request_log( $log_id = 0 ) {
 }
 
 /**
- * Get an API request log by a specific field's value.
+ * Get an API request log by a specific field value.
  *
  * @since 3.0
  *

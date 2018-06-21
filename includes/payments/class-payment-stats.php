@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Stats
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Stats Class
@@ -188,7 +188,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 					$payment_ids = array();
 					
 					foreach ( $logs as $log ) {
-						$payment_ids[] = edd_get_log_meta( $log->get_id(), 'payment_id', true );
+						$payment_ids[] = edd_get_log_meta( $log->id, 'payment_id', true );
 					}
 
 					foreach ( $payment_ids as $payment_id ) {

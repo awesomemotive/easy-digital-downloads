@@ -78,9 +78,9 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 				foreach ( $order_items as $item ) {
 					/** @var EDD\Orders\Order_Item $item */
 
-					$order = edd_get_order( $item->get_order_id() );
+					$order = edd_get_order( $item->order_id );
 
-					$customer = new EDD_Customer( $order->get_customer_id() );
+					$customer = new EDD_Customer( $order->customer_id );
 
 					$data[] = array(
 						'id'        => $customer->id,

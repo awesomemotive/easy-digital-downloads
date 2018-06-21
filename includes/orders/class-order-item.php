@@ -10,8 +10,6 @@
  */
 namespace EDD\Orders;
 
-use EDD\Base_Object;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -19,8 +17,25 @@ defined( 'ABSPATH' ) || exit;
  * Order_Item Class.
  *
  * @since 3.0
+ *
+ * @property int    $id
+ * @property int    $order_id
+ * @property int    $product_id
+ * @property string $product_name
+ * @property int    $price_id
+ * @property int    $cart_index
+ * @property string $type
+ * @property string $status
+ * @property int    $quantity
+ * @property int    $amount
+ * @property float  $subtotal
+ * @property float  $tax
+ * @property float  $discount
+ * @property float  $total
+ * @property string $date_created
+ * @property string $date_modified
  */
-class Order_Item extends Base_Object {
+class Order_Item extends \EDD\Database\Objects\Order_Item {
 
 	/**
 	 * Order Item ID.
@@ -108,20 +123,20 @@ class Order_Item extends Base_Object {
 	protected $subtotal;
 
 	/**
-	 * Item discount.
-	 *
-	 * @since 3.0
-	 * @var   float
-	 */
-	protected $discount;
-
-	/**
 	 * Item tax.
 	 *
 	 * @since 3.0
 	 * @var   float
 	 */
 	protected $tax;
+
+	/**
+	 * Item discount.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $discount;
 
 	/**
 	 * Item total.
@@ -148,182 +163,6 @@ class Order_Item extends Base_Object {
 	protected $date_modified;
 
 	/**
-	 * Retrieve order item ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Order item ID.
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Retrieve the order ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Order ID.
-	 */
-	public function get_order_id() {
-		return $this->order_id;
-	}
-
-	/**
-	 * Retrieve the product ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Product ID.
-	 */
-	public function get_product_id() {
-		return $this->product_id;
-	}
-
-	/**
-	 * Retrieve the product name.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Product name.
-	 */
-	public function get_product_name() {
-		return $this->product_name;
-	}
-
-	/**
-	 * Retrieve price ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Price ID.
-	 */
-	public function get_price_id() {
-		return $this->price_id;
-	}
-
-	/**
-	 * Retrieve cart index.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Cart index.
-	 */
-	public function get_cart_index() {
-		return $this->cart_index;
-	}
-
-	/**
-	 * Retrieve item type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Item type.
-	 */
-	public function get_type() {
-		return $this->type;
-	}
-
-	/**
-	 * Retrieve item status.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Item status.
-	 */
-	public function get_status() {
-		return $this->status;
-	}
-
-	/**
-	 * Retrieve item quantity.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Item quantity.
-	 */
-	public function get_quantity() {
-		return $this->quantity;
-	}
-
-	/**
-	 * Retrieve item amount.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Item amount.
-	 */
-	public function get_amount() {
-		return $this->amount;
-	}
-
-	/**
-	 * Retrieve item subtotal.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Item subtotal.
-	 */
-	public function get_subtotal() {
-		return $this->subtotal;
-	}
-
-	/**
-	 * Retrieve item discount.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Item discount.
-	 */
-	public function get_discount() {
-		return $this->discount;
-	}
-
-	/**
-	 * Retrieve item tax.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Item tax.
-	 */
-	public function get_tax() {
-		return $this->tax;
-	}
-
-	/**
-	 * Retrieve item total.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Item total.
-	 */
-	public function get_total() {
-		return $this->total;
-	}
-
-	/**
-	 * Retrieve date created.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Date created.
-	 */
-	public function get_date_created() {
-		$this->date_created;
-	}
-
-	/**
-	 * Retrieve date modified.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Date modified.
-	 */
-	public function get_date_modified() {
-		return $this->date_modified;
-	}
-
-	/**
 	 * Retrieve fees applied to this order item.
 	 *
 	 * @since 3.0
@@ -331,12 +170,35 @@ class Order_Item extends Base_Object {
 	 * @return array $fees Fees applied to this item.
 	 */
 	public function get_fees() {
-		$fees = edd_get_order_adjustments( array(
-			'object_id'   => $this->get_id(),
+		return edd_get_order_adjustments( array(
+			'object_id'   => $this->id,
 			'object_type' => 'order_item',
-			'type'        => 'fee'
+			'type'        => 'fee',
+			'order'       => 'ASC',
+		) );
+	}
+
+	/**
+	 * Retrieve the tax rate for the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Tax rate.
+	 */
+	public function get_tax_rate() {
+		$rate = edd_get_order_adjustments( array(
+			'number'      => 1,
+			'object_id'   => $this->id,
+			'object_type' => 'order_item',
+			'type'        => 'tax_rate',
 		) );
 
-		return $fees;
+		if ( $rate ) {
+			$rate = $rate[0];
+
+			return $rate->amount * 100;
+		}
+
+		return 0.00;
 	}
 }

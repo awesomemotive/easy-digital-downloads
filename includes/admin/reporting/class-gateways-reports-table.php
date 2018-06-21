@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -40,9 +40,9 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
+			'singular' => 'report-gateway',
+			'plural'   => 'report-gateways',
+			'ajax'     => false
 		) );
 	}
 
@@ -80,10 +80,10 @@ class EDD_Gateway_Reports_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
-			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
+			'label'          => __( 'Gateway',                'easy-digital-downloads' ),
+			'complete_sales' => __( 'Complete Sales',         'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
+			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' )
 		);
 	}
 

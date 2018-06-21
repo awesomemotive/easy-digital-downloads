@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Customers Page
@@ -63,6 +63,7 @@ function edd_customers_list() {
 
         <form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
 			<?php
+			$customers_table->views();
 			$customers_table->search_box( __( 'Search Customers', 'easy-digital-downloads' ), 'edd-customers' );
 			$customers_table->display();
 			?>
@@ -219,15 +220,24 @@ function edd_customers_view( $customer = '' ) {
 
     <div class="info-wrapper customer-section">
         <form id="edit-customer-info" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>">
+			<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo esc_html( $customer->id ); ?>" />
+			<input type="hidden" name="edd_action" value="edit-customer" />
+			<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
+
             <div class="edd-item-info customer-info">
                 <div class="avatar-wrap left" id="customer-avatar">
-					<?php echo get_avatar( $customer->email ); ?><br />
-					<?php if ( current_user_can( $customer_edit_role ) ): ?>
+					<?php echo get_avatar( $customer->email, 150 ); ?><br />
+					<?php if ( current_user_can( $customer_edit_role ) ) : ?>
                         <span class="info-item editable customer-edit-link">
-							<a href="#" id="edit-customer"><?php _e( 'Edit Customer', 'easy-digital-downloads' ); ?></a>
+							<a href="#" class="button-secondary" id="edit-customer"><?php _e( 'Edit Profile', 'easy-digital-downloads' ); ?></a>
 						</span>
 						<?php do_action( 'edd_after_customer_edit_link', $customer ); ?>
 					<?php endif; ?>
+
+					<span id="customer-edit-actions" class="edit-item">
+						<a id="edd-edit-customer-cancel" href="" class="cancel"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+						<button id="edd-edit-customer-save" class="button button-secondary"><?php _e( 'Update', 'easy-digital-downloads' ); ?></button>
+					</span>
                 </div>
 
                 <div class="customer-id right">
@@ -337,17 +347,20 @@ function edd_customers_view( $customer = '' ) {
 							'data'  => $data_atts,
 						);
 
+						// Maybe get user data
 						if ( ! empty( $user_id ) ) {
 							$userdata = get_userdata( $user_id );
-							$user_args['value'] = $userdata->user_login;
+
+							if ( ! empty( $userdata ) ) {
+								$user_args['value'] = $userdata->user_login;
+							}
 						}
 
-						echo EDD()->html->ajax_user_search( $user_args );
-						?>
+						echo EDD()->html->ajax_user_search( $user_args ); ?>
                         <input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $customer->user_id ); ?>" />
 					</span>
                     <span class="customer-user-id info-item editable">
-						<?php if ( intval( $customer->user_id ) > 0 ) : ?>
+						<?php if ( intval( $customer->user_id ) > 0 && ! empty( $userdata ) ) : ?>
                             <span data-key="user_id">
 								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo esc_html( $userdata->user_login ); ?></a>
 							</span>
@@ -365,14 +378,6 @@ function edd_customers_view( $customer = '' ) {
 					</span>
                 </div>
             </div>
-
-            <span id="customer-edit-actions" class="edit-item">
-				<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo esc_html( $customer->id ); ?>" />
-				<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
-                <input type="hidden" name="edd_action" value="edit-customer" />
-				<button id="edd-edit-customer-save" class="button button-secondary"><?php _e( 'Update Customer', 'easy-digital-downloads' ); ?></button>
-				<a id="edd-edit-customer-cancel" href="" class="cancel"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
-			</span>
         </form>
     </div>
 

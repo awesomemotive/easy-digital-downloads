@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/HTML
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_HTML_Elements Class
@@ -510,7 +510,8 @@ class EDD_HTML_Elements {
 	 * @return string
 	 */
 	public function select( $args = array() ) {
-		$defaults = array(
+
+		$args = wp_parse_args( $args, array(
 			'options'          => array(),
 			'name'             => null,
 			'class'            => '',
@@ -524,9 +525,7 @@ class EDD_HTML_Elements {
 			'data'             => array(),
 			'readonly'         => false,
 			'disabled'         => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
+		) );
 
 		$data_elements = '';
 		foreach ( $args['data'] as $key => $value ) {
@@ -571,7 +570,7 @@ class EDD_HTML_Elements {
 			$selected = "";
 		}
 
-		if ( $args['show_option_all'] ) {
+		if ( ! empty( $args['show_option_all'] ) ) {
 			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
 				$selected = selected( true, in_array( 0, $args['selected'] ), false );
 			} else {

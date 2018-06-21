@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  * @since       3.0 Updated to use the custom tables.
@@ -70,9 +70,15 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
 			case 'customer' :
-				return '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>';
+				return ! empty( $item[ 'customer' ]->id )
+					? '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>'
+					: '&mdash;';
+
 			case 'payment_id' :
-				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
+				$number = edd_get_payment_number( $item['payment_id'] );
+				return ! empty( $number )
+					? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . esc_html( $number ) . '</a>'
+					: '&mdash;';
 			case 'ip' :
 				return '<a href="https://ipinfo.io/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';
 			default:
@@ -88,18 +94,16 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'ID'         => __( 'Log ID',     'easy-digital-downloads' ),
+		return array(
+			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'customer'   => __( 'Customer',   'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID', 'easy-digital-downloads' ),
-			'file'       => __( 'File',       'easy-digital-downloads' ),
-			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
-			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
-			'date'       => __( 'Date',       'easy-digital-downloads' ),
+			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
+			'file'       => __( 'File',         'easy-digital-downloads' ),
+			'ip'         => __( 'IP Address',   'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent',   'easy-digital-downloads' ),
+			'date'       => __( 'Date',         'easy-digital-downloads' )
 		);
-
-		return $columns;
 	}
 
 	/**
@@ -118,37 +122,42 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 			foreach ( $logs as $log ) {
 				/** @var $log EDD\Logs\File_Download_Log */
 
-				$meta        = get_post_custom( $log->get_payment_id() );
+				$meta        = get_post_custom( $log->order_id );
 				$customer_id = (int) isset( $meta['_edd_log_customer_id'] )
 					? $meta['_edd_log_customer_id'][0]
-					: edd_get_payment_customer_id( $log->get_payment_id() );
+					: edd_get_payment_customer_id( $log->order_id );
 
-				if ( ! array_key_exists( $log->get_download_id(), $this->queried_files ) ) {
-					$files = get_post_meta( $log->get_download_id(), 'edd_download_files', true );
-					$this->queried_files[ $log->get_download_id() ] = $files;
+				if ( ! array_key_exists( $log->download_id, $this->queried_files ) ) {
+					$files = get_post_meta( $log->download_id, 'edd_download_files', true );
+					$this->queried_files[ $log->download_id ] = $files;
 				} else {
-					$files = $this->queried_files[ $log->get_download_id() ];
+					$files = $this->queried_files[ $log->download_id ];
 				}
 
 				// For backwards compatibility purposes
-				$user = get_userdata( $log->get_user_id() );
-				$meta = array(
-					'_edd_log_user_info'  => array(
+				$user = edd_get_customer( $log->user_id );
+
+				$user_info = ! empty( $user )
+					? array(
 						'id'    => $user->ID,
 						'email' => $user->user_email,
 						'name'  => $user->display_name,
-					),
-					'_edd_log_user_id'    => $log->get_user_id(),
-					'_edd_log_file_id'    => $log->get_file_id(),
-					'_edd_log_ip'         => $log->get_id(),
-					'_edd_log_payment_id' => $log->get_payment_id(),
-					'_edd_log_price_id'   => $log->get_price_id(),
+					)
+					: array();
+
+				$meta = array(
+					'_edd_log_user_info'  => $user_info,
+					'_edd_log_user_id'    => $log->user_id,
+					'_edd_log_file_id'    => $log->file_id,
+					'_edd_log_ip'         => $log->id,
+					'_edd_log_payment_id' => $log->order_id,
+					'_edd_log_price_id'   => $log->price_id,
 				);
 
 				// Filter the download files
 				$files = apply_filters( 'edd_log_file_download_download_files', $files, $log, $meta );
 
-				$file_id = $log->get_file_id();
+				$file_id = $log->file_id;
 
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
@@ -159,15 +168,15 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
-						'ID'         => $log->get_id(),
-						'download'   => $log->get_download_id(),
+						'ID'         => $log->id,
+						'download'   => $log->download_id,
 						'customer'   => new EDD_Customer( $customer_id ),
-						'payment_id' => $log->get_payment_id(),
-						'price_id'   => $log->get_price_id(),
+						'payment_id' => $log->order_id,
+						'price_id'   => $log->price_id,
 						'file'       => $file_name,
-						'ip'         => $log->get_ip(),
-						'user_agent' => $log->get_user_agent(),
-						'date'       => $log->get_date_created(),
+						'ip'         => $log->ip,
+						'user_agent' => $log->user_agent,
+						'date'       => $log->date_created,
 					);
 				}
 			}

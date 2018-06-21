@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Reports
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
@@ -81,10 +81,10 @@ final class Table_Endpoint extends Endpoint {
 			$list_table = $this->get_list_table();
 
 			if ( null === $list_table ) {
-				$endpoint;
+				return $endpoint;
 			}
 
-			$endpoint['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $view_atts, $list_table );;
+			$endpoint['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $view_atts, $list_table );
 		}
 
 		return $endpoint;
@@ -157,7 +157,7 @@ final class Table_Endpoint extends Endpoint {
 	 * @param string $file Class file.
 	 */
 	private function set_class_file( $file ) {
-		if ( 0 === validate_file( $file ) ) {
+		if ( false === strpos( $file, '..' ) && false === strpos( $file, './' ) ) {
 			$this->class_file = $file;
 		}
 	}

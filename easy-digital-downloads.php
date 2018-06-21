@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 3.0.0-alpha-2
+ * Version: 3.0.0-beta-1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 3.0.0-alpha-2
+ * @version 3.0.0-beta-1
  */
 
 // Exit if accessed directly.
@@ -137,7 +137,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_url() {
-		return 'https://easydigitaldownloads.com/requirements';
+		return 'https://docs.easydigitaldownloads.com/article/2051-minimum-requirements-for-edd-3-0';
 	}
 
 	/**
@@ -369,7 +369,6 @@ final class EDD_Requirements_Check {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $dependency
 	 * @return boolean
 	 */
 	public function met() {
@@ -443,7 +442,7 @@ final class EDD_Requirements_Check {
 		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 		 *                  otherwise uses `get_locale()`.
 		 */
-		$locale = apply_filters( 'plugin_locale',  $get_locale, 'easy-digital-downloads' );
+		$locale = apply_filters( 'plugin_locale', $get_locale, 'easy-digital-downloads' );
 		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo

@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions/Login
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Login Form
@@ -97,7 +97,6 @@ function edd_process_login_form( $data ) {
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
 			edd_redirect( $redirect );
-			edd_die();
 		}
 	}
 }
@@ -193,7 +192,6 @@ function edd_process_register_form( $data ) {
 		) );
 
 		edd_redirect( $redirect );
-		edd_die();
 	}
 }
 add_action( 'edd_user_register', 'edd_process_register_form' );

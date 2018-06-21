@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -12,7 +12,7 @@
 use EDD\Reports;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Show report graphs
@@ -762,11 +762,7 @@ function edd_parse_report_dates( $form_data ) {
 	}
 
 	if ( ! empty( $form_data['edd_redirect'] ) ) {
-
 		edd_redirect( $form_data['edd_redirect'] );
-
-		edd_die();
-
 	}
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );

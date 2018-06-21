@@ -139,9 +139,9 @@ class Order extends Base {
 	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a order count (true) or array of order objects.
 	 *                                              Default false.
-	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of order IDs)
+	 *     @type string       $fields               Item fields to return. Accepts any column known names
 	 *                                              or empty (returns an array of complete order objects). Default empty.
-	 *     @type int          $number               Limit number of orders to retrieve. Default null (no limit).
+	 *     @type int          $number               Limit number of orders to retrieve. Default 100.
 	 *     @type int          $offset               Number of orders to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.

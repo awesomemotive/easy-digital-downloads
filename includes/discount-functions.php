@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -21,41 +21,49 @@ defined( 'ABSPATH' ) || exit;
  * @return int
  */
 function edd_add_discount( $data = array() ) {
-	$product_requirements = isset( $data['product_reqs'] ) ? $data['product_reqs'] : null;
-	$excluded_products = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
 
-	unset( $data['product_reqs'] );
-	unset( $data['excluded_products'] );
+	// Juggle requirements and products
+	$product_requirements = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : null;
+	$excluded_products    = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : null;
+	unset( $data['product_reqs'], $data['excluded_products'] );
 
+	// Setup the discounts query
 	$discounts = new EDD\Database\Queries\Discount();
 
+	// Attempt to add the discount
 	$discount_id = $discounts->add_item( $data );
 
-	// Product requirements and excluded products are handled differently
-	if ( ! is_null( $product_requirements ) ) {
-		if ( is_string( $product_requirements ) ) {
-			$product_requirements = maybe_unserialize( $product_requirements );
+	// Maybe add requiremnets & exclusions
+	if ( ! empty( $discount_id ) ) {
+
+		// Product requirements
+		if ( ! is_null( $product_requirements ) ) {
+			if ( is_string( $product_requirements ) ) {
+				$product_requirements = maybe_unserialize( $product_requirements );
+			}
+
+			if ( is_array( $product_requirements ) ) {
+				foreach ( $product_requirements as $product_requirement ) {
+					edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+				}
+			}
 		}
 
-		if ( is_array( $product_requirements ) ) {
-			foreach ( $product_requirements as $product_requirement ) {
-				edd_add_discount_meta( $discount_id, 'product_requirement', $product_requirement );
+		// Excluded products
+		if ( ! is_null( $excluded_products ) ) {
+			if ( is_string( $excluded_products ) ) {
+				$excluded_products = maybe_unserialize( $excluded_products );
+			}
+
+			if ( is_array( $excluded_products ) ) {
+				foreach ( $excluded_products as $excluded_product ) {
+					edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
+				}
 			}
 		}
 	}
 
-	if ( ! is_null( $excluded_products ) ) {
-		if ( is_string( $excluded_products ) ) {
-			$excluded_products = maybe_unserialize( $excluded_products );
-		}
-
-		if ( is_array( $excluded_products ) ) {
-			foreach ( $excluded_products as $excluded_product ) {
-				edd_add_discount_meta( $discount_id, 'excluded_product', $excluded_product );
-			}
-		}
-	}
-
+	// Return the new discount ID
 	return $discount_id;
 }
 
@@ -70,10 +78,12 @@ function edd_add_discount( $data = array() ) {
 function edd_delete_discount( $discount_id = 0 ) {
 	$discounts = new EDD\Database\Queries\Discount();
 
+	// Pre-3.0 pre action
 	do_action( 'edd_pre_delete_discount', $discount_id );
 
 	$retval = $discounts->delete_item( $discount_id );
 
+	// Pre-3.0 post action
 	do_action( 'edd_post_delete_discount', $discount_id );
 
 	return $retval;
@@ -154,7 +164,8 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
-	// Product requirements and excluded products are handled differently
+
+	// Product requirements
 	if ( isset( $data['product_reqs'] ) ) {
 		if ( is_string( $data['product_reqs'] ) ) {
 			$data['product_reqs'] = maybe_unserialize( $data['product_reqs'] );
@@ -171,6 +182,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		unset( $data['product_reqs'] );
 	}
 
+	// Excluded products are handled differently
 	if ( isset( $data['excluded_products'] ) ) {
 		if ( is_string( $data['excluded_products'] ) ) {
 			$data['excluded_products'] = maybe_unserialize( $data['excluded_products'] );
@@ -266,7 +278,9 @@ function edd_get_discount_counts() {
 	) );
 
 	// Default array
-	$r = array();
+	$r = array(
+		'total' => 0
+	);
 
 	// Loop through counts and shape return value
 	if ( ! empty( $counts->items ) ) {
@@ -746,7 +760,7 @@ function edd_discount_is_min_met( $discount_id = 0, $set_error = true ) {
  * @return bool Whether the discount is single use or not.
  */
 function edd_discount_is_single_use( $discount_id = 0 ) {
-	return null === edd_get_discount_field( $discount_id, 'once_per_customer' ) ? false : true;
+	return (bool) edd_get_discount_field( $discount_id, 'once_per_customer' );
 }
 
 /**
@@ -910,7 +924,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  * @return int|false Meta ID on success, false on failure.
  */
 function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = false ) {
-	return add_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $unique );
+	return add_metadata( 'edd_adjustment', $discount_id, $meta_key, $meta_value, $unique );
 }
 
 /**
@@ -930,7 +944,7 @@ function edd_add_discount_meta( $discount_id, $meta_key, $meta_value, $unique = 
  * @return bool True on success, false on failure.
  */
 function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
-	return delete_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value );
+	return delete_metadata( 'edd_adjustment', $discount_id, $meta_key, $meta_value );
 }
 
 /**
@@ -949,7 +963,7 @@ function edd_delete_discount_meta( $discount_id, $meta_key, $meta_value = '' ) {
  *               field if $single is true.
  */
 function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
-	return get_metadata( 'edd_discount', $discount_id, $key, $single );
+	return get_metadata( 'edd_adjustment', $discount_id, $key, $single );
 }
 
 /**
@@ -972,7 +986,7 @@ function edd_get_discount_meta( $discount_id, $key = '', $single = false ) {
  *                  false on failure.
  */
 function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_value = '' ) {
-	return update_metadata( 'edd_discount', $discount_id, $meta_key, $meta_value, $prev_value );
+	return update_metadata( 'edd_adjustment', $discount_id, $meta_key, $meta_value, $prev_value );
 }
 
 /**
@@ -985,7 +999,7 @@ function edd_update_discount_meta( $discount_id, $meta_key, $meta_value, $prev_v
  * @return bool Whether the discount meta key was deleted from the database.
  */
 function delete_discount_meta_by_key( $discount_meta_key ) {
-	return delete_metadata( 'edd_discount', null, $discount_meta_key, '', true );
+	return delete_metadata( 'edd_adjustment', null, $discount_meta_key, '', true );
 }
 
 /** Cart **********************************************************************/
@@ -1194,24 +1208,40 @@ function edd_display_cart_discount( $formatted = false, $echo = false ) {
  * @return void
  */
 function edd_remove_cart_discount() {
-	if ( ! isset( $_GET['discount_id'] ) || ! isset( $_GET['discount_code'] ) ) {
+
+	// Get ID
+	$discount_id = isset( $_GET['discount_id'] )
+		? absint( $_GET['discount_id'] )
+		: 0;
+
+	// Get code
+	$discount_code = isset( $_GET['discount_code'] )
+		? urldecode( $_GET['discount_code'] )
+		: '';
+
+	// Bail if either ID or code are empty
+	if ( empty( $discount_id ) || empty( $discount_code ) ) {
 		return;
 	}
 
-	do_action( 'edd_pre_remove_cart_discount', absint( $_GET['discount_id'] ) );
+	// Pre-3.0 pre action
+	do_action( 'edd_pre_remove_cart_discount', $discount_id );
 
-	edd_unset_cart_discount( urldecode( $_GET['discount_code'] ) );
+	edd_unset_cart_discount( $discount_code );
 
-	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
+	// Pre-3.0 post action
+	do_action( 'edd_post_remove_cart_discount', $discount_id );
 
-	edd_redirect( edd_get_checkout_uri() ); edd_die();
+	// Redirect
+	edd_redirect( edd_get_checkout_uri() );
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
 
 /**
  * Checks whether discounts are still valid when removing items from the cart
  *
- * If a discount requires a certain product, and that product is no longer in the cart, the discount is removed
+ * If a discount requires a certain product, and that product is no longer in
+ * the cart, the discount is removed.
  *
  * @since 1.5.2
  *
@@ -1221,7 +1251,7 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 
 	$discounts = edd_get_cart_discounts();
 
-	if ( ! $discounts ) {
+	if ( empty( $discounts ) ) {
 		return;
 	}
 
@@ -1229,7 +1259,6 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 		if ( ! edd_is_discount_valid( $discount ) ) {
 			edd_unset_cart_discount( $discount );
 		}
-
 	}
 }
 add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
@@ -1274,7 +1303,7 @@ function edd_apply_preset_discount() {
 
 	$code = sanitize_text_field( EDD()->session->get( 'preset_discount' ) );
 
-	if ( ! $code ) {
+	if ( empty( $code ) ) {
 		return;
 	}
 
@@ -1319,7 +1348,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		'_edd_discount_max_uses'
 	) );
 
-	if ( ! in_array( $meta_key, $meta_keys ) ) {
+	if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 		return $value;
 	}
 
@@ -1329,8 +1358,9 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 	if ( empty( $discount->id ) ) {
 
-		// We didn't find a discount record with this ID...so let's check and see if it was a migrated one
-		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_discountmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
+		// We didn't find a discount record with this ID...so let's check and
+		// see if it was a migrated one.
+		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_adjustmentmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
 
 		if ( ! empty( $object_id ) ) {
 			$discount = new EDD_Discount( $object_id );
@@ -1485,9 +1515,9 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 		case '_edd_discount_product_condition':
 		case '_edd_discount_min_price':
 		case '_edd_discount_max_uses':
-			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$key            = str_replace( '_edd_discount_', '', $meta_key );
 			$discount->$key = $meta_value;
-			$check = $discount->save();
+			$check          = $discount->save();
 
 			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 			if ( $show_notice ) {
@@ -1500,9 +1530,9 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 
 			break;
 		case '_edd_discount_is_single_use':
-			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$key                         = str_replace( '_edd_discount_', '', $meta_key );
 			$discount->once_per_customer = $meta_value;
-			$check = $discount->save();
+			$check                       = $discount->save();
 
 			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 			if ( $show_notice ) {
@@ -1515,9 +1545,9 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 
 			break;
 		case '_edd_discount_is_not_global':
-			$key = str_replace( '_edd_discount_', '', $meta_key );
+			$key             = str_replace( '_edd_discount_', '', $meta_key );
 			$discount->scope = $meta_value;
-			$check = $discount->save();
+			$check           = $discount->save();
 
 			// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 			if ( $show_notice ) {
@@ -1708,7 +1738,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 						/**
 						 * Check that the key exists as a column in the table.
 						 * Note: there is no backwards compatibility support for product requirements and excluded
-						 * products as these would be serialised under the old schema.
+						 * products as these would be serialized under the old schema.
 						 */
 				 		if ( in_array( $query['key'], array_keys( EDD()->discounts->get_columns() ) ) && array_key_exists( 'value', $query ) ) {
 							$meta_compare = $query['compare'];
@@ -1837,8 +1867,7 @@ function _edd_discounts_bc_wp_count_posts( $query ) {
 	$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
 
 	if ( $expected === $query ) {
-		$discounts_table = edd_get_component_interface( 'discount', 'table' )->table_name;
-		$query           = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$discounts_table} GROUP BY post_status";
+		$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_adjustments} WHERE type = 'discount' GROUP BY post_status";
 	}
 
 	return $query;

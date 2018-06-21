@@ -100,7 +100,8 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 */
 
 	public function test_get_earnings_by_date() {
-
+		$this->markTestIncomplete( 'EDD_Payment_Stats needs to be rewritten.' );
+		
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( 0, 'this_month' );
 		$this->assertEquals( 131, $earnings );
@@ -110,6 +111,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 	}
 
 	public function test_get_sales_by_date() {
+		$this->markTestIncomplete( 'EDD_Payment_Stats needs to be rewritten.' );
 
 		$stats = new EDD_Payment_Stats;
 		$sales = $stats->get_sales( 0, 'this_month' );
@@ -118,6 +120,8 @@ class Tests_Stats extends EDD_UnitTestCase {
 	}
 
 	public function test_get_earnings_by_date_of_download() {
+		$this->markTestIncomplete( 'EDD_Payment_Stats needs to be rewritten.' );
+
 		$payment = new EDD_Payment( $this->_payment_id );
 		$download_id = $payment->downloads[0]['id'];
 
@@ -130,6 +134,8 @@ class Tests_Stats extends EDD_UnitTestCase {
 	}
 
 	public function test_get_sales_by_date_of_download() {
+		$this->markTestIncomplete( 'EDD_Payment_Stats needs to be rewritten.' );
+
 		$payment = new EDD_Payment( $this->_payment_id );
 		$download_id = $payment->downloads[0]['id'];
 

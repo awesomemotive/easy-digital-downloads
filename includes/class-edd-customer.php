@@ -17,13 +17,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.3
  * @since 3.0 No longer extends EDD_DB_Customer.
+ *
+ * @property int $id
+ * @property int $purchase_count
+ * @property float $purchase_value
+ * @property array $emails
+ * @property string $name
+ * @property string $status
+ * @property string $date_created
+ * @property string $payment_ids
+ * @property int $user_id
+ * @property string $notes
  */
-class EDD_Customer {
+class EDD_Customer extends \EDD\Database\Objects\Customer {
 
 	/**
-	 * The customer ID
+	 * Customer ID.
 	 *
 	 * @since 2.3
+	 * @var int
 	 */
 	public $id = 0;
 
@@ -31,62 +43,83 @@ class EDD_Customer {
 	 * The customer's purchase count
 	 *
 	 * @since 2.3
+	 * @var int
 	 */
 	public $purchase_count = 0;
 
 	/**
-	 * The customer's lifetime value
+	 * Lifetime value of a customer.
 	 *
 	 * @since 2.3
+	 * @var float
 	 */
 	public $purchase_value = 0;
 
 	/**
-	 * The customer's primary email
+	 * Customer's primary email.
 	 *
 	 * @since 2.3
+	 * @var string
 	 */
 	public $email;
 
 	/**
-	 * The customer's emails
+	 * Email addresses associated with customer.
 	 *
 	 * @since 2.6
+	 * @var array
 	 */
 	protected $emails;
 
 	/**
-	 * The customer's name
+	 * Customer's name.
 	 *
 	 * @since 2.3
+	 * @since 3.0 Visibility set to `protected`.
+	 * @var string
 	 */
 	public $name;
+
+	/**
+	 * The customer's status
+	 *
+	 * @since 3.0
+	 * @since 3.0 Visibility set to `protected`.
+	 * @var string
+	 */
+	public $status;
 
 	/**
 	 * The customer's creation date
 	 *
 	 * @since 2.3
+	 * @since 3.0 Visibility set to `protected`.
+	 * @var string
 	 */
 	public $date_created;
 
 	/**
 	 * The payment IDs associated with the customer
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @var string
 	 */
 	protected $payment_ids;
 
 	/**
 	 * The user ID associated with the customer
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @since 3.0 Visibility set to `protected`.
+	 * @var int
 	 */
 	public $user_id;
 
 	/**
-	 * Customer Notes
+	 * Notes attached to the customer record.
 	 *
-	 * @since  2.3
+	 * @since 2.3
+	 * @var string
 	 */
 	protected $notes;
 
@@ -96,7 +129,7 @@ class EDD_Customer {
 	 * @since 2.3
 	 */
 	public function __construct( $_id_or_email = false, $by_user_id = false ) {
-		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
+		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && absint( $_id_or_email ) !== (int) $_id_or_email ) ) {
 			return false;
 		}
 
@@ -125,11 +158,11 @@ class EDD_Customer {
 	 * Given the customer data, let's set the variables
 	 *
 	 * @since  2.3
-	 * @param  object $customer The Customer Object
-	 * @return bool             If the setup was successful or not
+	 *
+	 * @param  object $customer Customer object.
+	 * @return bool True if the object was setup correctly, false otherwise.
 	 */
 	private function setup_customer( $customer ) {
-
 		if ( ! is_object( $customer ) ) {
 			return false;
 		}
@@ -139,11 +172,9 @@ class EDD_Customer {
 				case 'purchase_value':
 					$this->$key = floatval( $value );
 					break;
-
 				case 'purchase_count':
 					$this->$key = absint( $value );
 					break;
-
 				default:
 					$this->$key = $value;
 					break;
@@ -159,7 +190,7 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Magic getter for deprecated properties
+	 * Magic __get method to dispatch a call to retrieve a protected property.
 	 *
 	 * @since 3.0
 	 *
@@ -168,12 +199,11 @@ class EDD_Customer {
 	 */
 	public function __get( $key = '' ) {
 		switch ( $key ) {
-			case 'emails' :
+			case 'emails':
 				$emails   = (array) edd_get_customer_meta( $this->id, 'additional_email', false );
 				$emails[] = $this->email;
 				return $emails;
-
-			case 'payment_ids' :
+			case 'payment_ids':
 				$payment_ids = $this->get_payment_ids();
 				$payment_ids = implode( ',', $payment_ids );
 				return $payment_ids;
@@ -185,20 +215,48 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Creates a customer
+	 * Magic __set method to dispatch a call to update a protected property.
 	 *
-	 * @since  2.3
+	 * @since 3.0
+	 *
+	 * @param string $key   Property name.
+	 * @param mixed  $value Property value.
+	 *
+	 * @return mixed Return value of setter being dispatched to.
+	 */
+	public function __set( $key, $value ) {
+		$key = sanitize_key( $key );
+
+		// Only real properties can be saved.
+		$keys = array_keys( get_class_vars( get_called_class() ) );
+
+		if ( ! in_array( $key, $keys, true ) ) {
+			return false;
+		}
+
+		// Dispatch to setter method if value needs to be sanitized.
+		if ( method_exists( $this, 'set_' . $key ) ) {
+			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
+		} else {
+			$this->{$key} = $value;
+		}
+	}
+
+	/**
+	 * Creates a customer based on class vars.
+	 *
+	 * @since 2.3
+	 *
 	 * @param  array  $data Array of attributes for a customer
 	 * @return mixed        False if not a valid creation, Customer ID if user is found or valid creation
 	 */
 	public function create( $data = array() ) {
-
-		if ( $this->id != 0 || empty( $data ) ) {
+		if ( 0 !== $this->id || empty( $data ) ) {
 			return false;
 		}
 
 		$defaults = array(
-			'payment_ids' => ''
+			'payment_ids' => '',
 		);
 
 		$args = wp_parse_args( $data, $defaults );
@@ -252,14 +310,14 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Update a customer record
+	 * Update a customer record.
 	 *
-	 * @since  2.3
-	 * @param  array  $data Array of data attributes for a customer (checked via whitelist)
-	 * @return bool         If the update was successful or not
+	 * @since 2.3
+	 *
+	 * @param array $data Array of data attributes for a customer (checked via whitelist)
+	 * @return bool True if update was successful, false otherwise.
 	 */
 	public function update( $data = array() ) {
-
 		if ( empty( $data ) ) {
 			return false;
 		}
@@ -272,7 +330,7 @@ class EDD_Customer {
 
 		if ( edd_update_customer( $this->id, $data ) ) {
 			$customer = edd_get_customer( $this->id );
-			$this->setup_customer( $customer);
+			$this->setup_customer( $customer );
 
 			$updated = true;
 		}
@@ -283,36 +341,28 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Attach an email to the customer
+	 * Attach an email address to the customer.
 	 *
-	 * @since  2.6
-	 * @param  string $email The email address to remove from the customer
-	 * @param  bool   $primary Allows setting the email added as the primary
-	 * @return bool   If the email was added successfully
+	 * @since 2.6
+	 *
+	 * @param string $email The email address to remove from the customer.
+	 * @param bool   $primary Allows setting the email added as the primary.
+	 *
+	 * @return bool True if the email was added successfully, false otherwise.
 	 */
 	public function add_email( $email = '', $primary = false ) {
-
 		if ( ! is_email( $email ) ) {
 			return false;
 		}
 
-		$existing = new EDD_Customer( $email );
-
-		if ( $existing->id > 0 ) {
-			// Email address already belongs to a customer
+		// Bail if email exists in the universe.
+		if ( $this->email_exists( $email ) ) {
 			return false;
-		}
-
-		if ( email_exists( $email ) ) {
-			$user = get_user_by( 'email', $email );
-			if ( $user->ID != $this->user_id ) {
-				return false;
-			}
 		}
 
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
 
-		// Update is used to ensure duplicate emails are not added
+		// Update is used to ensure duplicate emails are not added.
 		$ret = (bool) edd_add_customer_meta( $this->id, 'additional_email', $email );
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
@@ -325,14 +375,14 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Remove an email from the customer
+	 * Remove an email address from the customer.
 	 *
-	 * @since  2.6
-	 * @param  string $email The email address to remove from the customer
-	 * @return bool   If the email was removed successfully
+	 * @since 2.6
+	 *
+	 * @param string $email The email address to remove from the customer.
+	 * @return bool True if the email was removed successfully, false otherwise.
 	 */
 	public function remove_email( $email = '' ) {
-
 		if ( ! is_email( $email ) ) {
 			return false;
 		}
@@ -347,16 +397,55 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Set an email address as the customer's primary email
+	 * Check if an email address already exists somewhere in the known universe
+	 * of WordPress Users, EDD Customers, or additional customer email addresses.
 	 *
-	 * This will move the customer's previous primary email to an additional email
+	 * @since 3.0
 	 *
-	 * @since  2.6
-	 * @param  string $new_primary_email The email address to remove from the customer
-	 * @return bool                      If the email was set as primary successfully
+	 * @param string $email Email address to check.
+	 * @return boolean True if assigned to existing customer, false otherwise.
+	 */
+	public function email_exists( $email = '' ) {
+		global $wpdb;
+
+		// Bail if not an email address
+		if ( ! is_email( $email ) ) {
+			return false;
+		}
+
+		// Return true if found in users table
+		if ( email_exists( $email ) ) {
+			return true;
+		}
+
+		// Return true if found in customers table
+		if ( edd_get_customer_by( 'email', $email ) ) {
+			return true;
+		}
+
+		// Query all customer meta values
+		$query      = "SELECT meta_value FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1";
+		$additional = $wpdb->get_var( $wpdb->prepare( $query, $email ) );
+
+		// Return true if found in additional email addresses
+		if ( ! empty( $additional ) && ! is_wp_error( $additional ) ) {
+			return true;
+		}
+
+		// Not found
+		return false;
+	}
+
+	/**
+	 * Set an email address as the customer's primary email.
+	 *
+	 * This will move the customer's previous primary email to an additional email.
+	 *
+	 * @since 2.6
+	 * @param string $new_primary_email The email address to remove from the customer.
+	 * @return bool True if the email was set as primary successfully, false otherwise.
 	 */
 	public function set_primary_email( $new_primary_email = '' ) {
-
 		if ( ! is_email( $new_primary_email ) ) {
 			return false;
 		}
@@ -385,15 +474,14 @@ class EDD_Customer {
 		$ret = $update && $remove && $add;
 
 		if ( $ret ) {
-
 			$this->email = $new_primary_email;
 
 			$payment_ids = $this->get_payment_ids();
 
 			if ( $payment_ids ) {
 
-				// Update payment emails to primary email
-				foreach( $payment_ids as $payment_id ) {
+				// Update payment emails to primary email.
+				foreach ( $payment_ids as $payment_id ) {
 					edd_update_payment_meta( $payment_id, 'email', $new_primary_email );
 				}
 			}
@@ -404,10 +492,11 @@ class EDD_Customer {
 		return $ret;
 	}
 
-	/*
+	/**
 	 * Get the payment ids of the customer in an array.
 	 *
 	 * @since 2.6
+	 *
 	 * @return array An array of payment IDs for the customer, or an empty array if none exist.
 	 */
 	public function get_payment_ids() {
@@ -420,12 +509,13 @@ class EDD_Customer {
 		return array_map( 'absint', (array) edd_get_customer_meta( $this->id, 'payment_id' ) );
 	}
 
-	/*
-	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer
+	/**
+	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer.
 	 *
-	 * @since  2.6
-	 * @param  array|string  $status A single status as a string or an array of statuses
-	 * @return array                 An array of EDD_Payment objects or an empty array
+	 * @since 2.6
+	 *
+	 * @param  array|string  $status A single status as a string or an array of statuses.
+	 * @return array An array of EDD_Payment objects or an empty array.
 	 */
 	public function get_payments( $status = array() ) {
 
@@ -446,12 +536,14 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Attach payment to the customer then triggers increasing stats
+	 * Attach payment to the customer then triggers increasing statistics.
 	 *
-	 * @since  2.3
-	 * @param  int  $payment_id   The payment ID to attach to the customer
-	 * @param  bool $update_stats For backwards compatibility, if we should increase the stats or not
-	 * @return bool If the attachment was successfully
+	 * @since 2.3
+	 *
+	 * @param int  $payment_id   The payment ID to attach to the customer.
+	 * @param bool $update_stats For backwards compatibility, if we should increase the stats or not.
+	 *
+	 * @return bool True if the attachment was successfully, false otherwise.
 	 */
 	public function attach_payment( $payment_id = 0, $update_stats = true ) {
 
@@ -461,7 +553,7 @@ class EDD_Customer {
 		}
 
 		// Get payment
-		$payment = new EDD_Payment( $payment_id );
+		$payment = edd_get_payment( $payment_id );
 
 		// Bail if payment does not exist
 		if ( empty( $payment ) ) {
@@ -502,10 +594,12 @@ class EDD_Customer {
 	/**
 	 * Remove a payment from this customer, then triggers reducing stats
 	 *
-	 * @since  2.3
-	 * @param  integer $payment_id The Payment ID to remove
-	 * @param  bool $update_stats For backwards compatibility, if we should increase the stats or not
-	 * @return boolean             If the removal was successful
+	 * @since 2.3
+	 *
+	 * @param integer $payment_id   The Payment ID to remove.
+	 * @param bool    $update_stats For backwards compatibility, if we should increase the stats or not.
+	 *
+	 * @return bool $detached True if removed successfully, false otherwise.
 	 */
 	public function remove_payment( $payment_id = 0, $update_stats = true ) {
 
@@ -515,7 +609,7 @@ class EDD_Customer {
 		}
 
 		// Get payment
-		$payment = new EDD_Payment( $payment_id );
+		$payment = edd_get_payment( $payment_id );
 
 		// Bail if payment does not exist
 		if ( empty( $payment ) ) {
@@ -537,10 +631,10 @@ class EDD_Customer {
 
 		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id, $this );
 
-		$deleted   = edd_delete_customer_meta( $this->id, 'payment_id', $payment_id );
-		$dettached = ! empty( $deleted );
+		$deleted  = edd_delete_customer_meta( $this->id, 'payment_id', $payment_id );
+		$detached = ! empty( $deleted );
 
-		if ( ! empty( $dettached ) ) {
+		if ( ! empty( $detached ) ) {
 
 			// We added this payment successfully, increment the stats
 			if ( ! empty( $update_stats ) ) {
@@ -553,22 +647,23 @@ class EDD_Customer {
 			}
 		}
 
-		do_action( 'edd_customer_post_remove_payment', $dettached, $payment->ID, $this->id, $this );
+		do_action( 'edd_customer_post_remove_payment', $detached, $payment->ID, $this->id, $this );
 
-		return $dettached;
+		return $detached;
 	}
 
 	/**
-	 * Increase the purchase count of a customer
+	 * Increase the purchase count of a customer.
 	 *
-	 * @since  2.3
-	 * @param  integer $count The number to increment by
-	 * @return int            The purchase count
+	 * @since 2.3
+	 *
+	 * @param int $count The number to increment purchase count by. Default 1.
+	 * @return int New purchase count.
 	 */
 	public function increase_purchase_count( $count = 1 ) {
 
 		// Make sure it's numeric and not negative
-		if ( ! is_numeric( $count ) || $count != absint( $count ) ) {
+		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
 			return false;
 		}
 
@@ -586,16 +681,17 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Decrease the customer purchase count
+	 * Decrease the customer's purchase count.
 	 *
-	 * @since  2.3
-	 * @param  integer $count The amount to decrease by
-	 * @return mixed          If successful, the new count, otherwise false
+	 * @since 2.3
+	 *
+	 * @param int $count The number to decrement purchase count by. Default 1.
+	 * @return mixed New purchase count if successful, false otherwise.
 	 */
 	public function decrease_purchase_count( $count = 1 ) {
 
 		// Make sure it's numeric and not negative
-		if ( ! is_numeric( $count ) || $count != absint( $count ) ) {
+		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
 			return false;
 		}
 
@@ -617,11 +713,12 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Increase the customer's lifetime value
+	 * Increase the customer's lifetime value.
 	 *
-	 * @since  2.3
-	 * @param  float  $value The value to increase by
-	 * @return mixed         If successful, the new value, otherwise false
+	 * @since 2.3
+	 *
+	 * @param float $value The value to increase by.
+	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function increase_value( $value = 0.00 ) {
 		$value     = floatval( apply_filters( 'edd_customer_increase_value', $value, $this ) );
@@ -639,11 +736,12 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Decrease a customer's lifetime value
+	 * Decrease a customer's lifetime value.
 	 *
-	 * @since  2.3
-	 * @param  float  $value The value to decrease by
-	 * @return mixed         If successful, the new value, otherwise false
+	 * @since 2.3
+	 *
+	 * @param float $value The value to decrease by.
+	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function decrease_value( $value = 0.00 ) {
 		$value = apply_filters( 'edd_customer_decrease_value', $value, $this );
@@ -666,15 +764,15 @@ class EDD_Customer {
 	}
 
 	/**
-	 * Get the parsed notes for a customer as an array
+	 * Get the parsed notes for a customer as an array.
 	 *
 	 * @since 2.3
-	 * @since 3.0 Use the new Notes component & API
+	 * @since 3.0 Use the new Notes component & API.
 	 *
-	 * @param integer $length The number of notes to get
-	 * @param integer $paged What note to start at
+	 * @param integer $length The number of notes to get.
+	 * @param integer $paged What note to start at.
 	 *
-	 * @return array The notes requested
+	 * @return array The notes requested.
 	 */
 	public function get_notes( $length = 20, $paged = 1 ) {
 
@@ -684,7 +782,7 @@ class EDD_Customer {
 			: 20;
 
 		// Offset
-		$offset = is_numeric( $paged ) && ( $paged !== 1 )
+		$offset = is_numeric( $paged ) && ( 1 !== $paged )
 			? ( ( absint( $paged ) - 1 ) * $length )
 			: 0;
 
@@ -694,27 +792,27 @@ class EDD_Customer {
 			'object_type' => 'customer',
 			'number'      => $length,
 			'offset'      => $offset,
-			'order'       => 'asc'
+			'order'       => 'asc',
 		) );
 	}
 
 	/**
-	 * Get the total number of notes we have after parsing
+	 * Get the total number of notes we have after parsing.
 	 *
 	 * @since 2.3
-	 * @since 3.0 Use the new Notes component & API
+	 * @since 3.0 Use the new Notes component & API.
 	 *
-	 * @return int The number of notes for the customer
+	 * @return int The number of notes for the customer.
 	 */
 	public function get_notes_count() {
 		return edd_count_notes( array(
 			'object_id'   => $this->id,
-			'object_type' => 'customer'
+			'object_type' => 'customer',
 		) );
 	}
 
 	/**
-	 * Add a note for the customer
+	 * Add a customer note.
 	 *
 	 * @since 2.3
 	 * @since 3.0 Use the new Notes component & API
@@ -770,25 +868,28 @@ class EDD_Customer {
 	/**
 	 * Retrieve customer meta field for a customer.
 	 *
-	 * @param   string $meta_key      The meta key to retrieve.
-	 * @param   bool   $single        Whether to return a single value.
-	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 * @since 2.6
 	 *
-	 * @since   2.6
+	 * @param string  $key    Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
+	 * @param bool    $single Optional, default is false. If true, return only the first value of the specified meta_key.
+	 *                        This parameter has no effect if meta_key is not specified.
+	 *
+	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
-	public function get_meta( $meta_key = '', $single = true ) {
-		return edd_get_customer_meta( $this->id, $meta_key, $single );
+	public function get_meta( $key = '', $single = true ) {
+		return edd_get_customer_meta( $this->id, $key, $single );
 	}
 
 	/**
 	 * Add meta data field to a customer.
 	 *
-	 * @param   string $meta_key      Metadata name.
-	 * @param   mixed  $meta_value    Metadata value.
-	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
-	 * @return  bool                  False for failure. True for success.
+	 * @since 2.6
 	 *
-	 * @since   2.6
+	 * @param string $meta_key   Meta data name.
+	 * @param mixed  $meta_value Meta data value. Must be serializable if non-scalar.
+	 * @param bool   $unique     Optional. Whether the same key should not be added. Default false.
+	 *
+	 * @return int|false Meta ID on success, false on failure.
 	 */
 	public function add_meta( $meta_key = '', $meta_value = '', $unique = false ) {
 		return edd_add_customer_meta( $this->id, $meta_key, $meta_value, $unique );
@@ -797,39 +898,49 @@ class EDD_Customer {
 	/**
 	 * Update customer meta field based on customer ID.
 	 *
-	 * @param   string $meta_key      Metadata key.
-	 * @param   mixed  $meta_value    Metadata value.
-	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
-	 * @return  bool                  False on failure, true if success.
+	 * Use the $prev_value parameter to differentiate between meta fields with the
+	 * same key and order ID.
 	 *
-	 * @since   2.6
+	 * If the meta field for the order does not exist, it will be added.
+	 *
+	 * @since 2.6
+	 *
+	 * @param string $meta_key   Meta data key.
+	 * @param mixed  $meta_value Meta data value. Must be serializable if non-scalar.
+	 * @param mixed  $prev_value Optional. Previous value to check before removing. Default empty.
+	 *
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $meta_key = '', $meta_value = '', $prev_value = '' ) {
 		return edd_update_customer_meta( $this->id, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
-	 * Remove metadata matching criteria from a customer.
+	 * Remove meta data matching criteria from a customer.
 	 *
-	 * @param   string $meta_key      Metadata name.
-	 * @param   mixed  $meta_value    Optional. Metadata value.
-	 * @return  bool                  False for failure. True for success.
+	 * You can match based on the key, or key and value. Removing based on key and value, will keep from removing duplicate
+	 * meta data with the same key. It also allows removing all meta data matching key, if needed.
 	 *
-	 * @since   2.6
+	 * @since 2.6
+	 *
+	 * @param string $meta_key   Meta data name.
+	 * @param mixed  $meta_value Optional. Meta data value. Must be serializable if non-scalar. Default empty.
+	 *
+	 * @return bool True on success, false on failure.
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
 		return edd_delete_customer_meta( $this->id, $meta_key, $meta_value );
 	}
 
 	/**
-	 * Sanitize the data for update/create
+	 * Sanitize the data for update/create.
 	 *
-	 * @since  2.3
-	 * @param  array $data The data to sanitize
-	 * @return array       The sanitized data, based off column defaults
+	 * @since 2.3
+	 *
+	 * @param array $data The data to sanitize.
+	 * @return array The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data = array() ) {
-
 		$default_values = array();
 
 		foreach ( $data as $key => $type ) {
@@ -839,37 +950,36 @@ class EDD_Customer {
 				continue;
 			}
 
-			switch( $type ) {
-
+			switch ( $type ) {
 				case '%s':
-					if ( 'email' == $key ) {
-						$data[$key] = sanitize_email( $data[$key] );
+					if ( 'email' === $key ) {
+						$data[ $key ] = sanitize_email( $data[ $key ] );
 					} else {
-						$data[$key] = sanitize_text_field( $data[$key] );
+						$data[ $key ] = sanitize_text_field( $data[ $key ] );
 					}
 					break;
 
 				case '%d':
-					if ( ! is_numeric( $data[$key] ) || (int) $data[$key] !== absint( $data[$key] ) ) {
-						$data[$key] = $default_values[$key];
+					if ( ! is_numeric( $data[ $key ] ) || absint( $data[ $key ] ) !== (int) $data[ $key ] ) {
+						$data[ $key ] = $default_values[ $key ];
 					} else {
-						$data[$key] = absint( $data[$key] );
+						$data[ $key ] = absint( $data[ $key ] );
 					}
 					break;
 
 				case '%f':
 					// Convert what was given to a float
-					$value = floatval( $data[$key] );
+					$value = floatval( $data[ $key ] );
 
 					if ( ! is_float( $value ) ) {
-						$data[$key] = $default_values[$key];
+						$data[ $key ] = $default_values[ $key ];
 					} else {
-						$data[$key] = $value;
+						$data[ $key ] = $value;
 					}
 					break;
 
 				default:
-					$data[$key] = sanitize_text_field( $data[$key] );
+					$data[ $key ] = sanitize_text_field( $data[ $key ] );
 					break;
 			}
 		}

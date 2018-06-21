@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Session
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Session Class
@@ -351,11 +351,6 @@ class EDD_Session {
 			}
 
 			if( false !== strpos( $uri, 'feed=' ) ) {
-				$start_session = false;
-			}
-
-			if( is_admin() && false === strpos( $uri, 'wp-admin/admin-ajax.php' ) ) {
-				// We do not want to start sessions in the admin unless we're processing an ajax request
 				$start_session = false;
 			}
 

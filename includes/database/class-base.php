@@ -25,6 +25,37 @@ defined( 'ABSPATH' ) || exit;
 class Base {
 
 	/**
+	 * Magic isset'ter for immutability.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __isset( $key = '' ) {
+
+		// No more uppercase ID properties ever
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
+
+		// Class method to try and call
+		$method = "get_{$key}";
+
+		// Return property if exists
+		if ( method_exists( $this, $method ) ) {
+			return true;
+
+		// Return get method results if exists
+		} elseif ( property_exists( $this, $key ) ) {
+			return true;
+		}
+
+		// Return false if not exists
+		return false;
+	}
+
+	/**
 	 * Magic getter for immutability.
 	 *
 	 * @since 3.0
@@ -47,12 +78,11 @@ class Base {
 			return call_user_func( array( $this, $method ) );
 
 		// Return get method results if exists
-		} elseif ( isset( $this->{$key} ) ) {
+		} elseif ( property_exists( $this, $key ) ) {
 			return $this->{$key};
+		}
 
 		// Return null if not exists
-		} else {
-			return null;
-		}
+		return null;
 	}
 }

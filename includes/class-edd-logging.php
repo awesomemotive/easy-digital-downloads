@@ -52,14 +52,14 @@ class EDD_Logging {
 		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 0 );
 
 		// Backwards compatibility for API request logs
-		add_filter( 'get_post_metadata', array( $this, '_api_request_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'get_post_metadata',    array( $this, '_api_request_log_get_meta_backcompat'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata',    array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
 
 		// Backwards compatibility for file download logs
-		add_filter( 'get_post_metadata', array( $this, '_file_download_log_get_meta_backcompat' ), 99, 4 );
+		add_filter( 'get_post_metadata',    array( $this, '_file_download_log_get_meta_backcompat'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
+		add_filter( 'add_post_metadata',    array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
 	}
 
 	/**
@@ -476,26 +476,26 @@ class EDD_Logging {
 		// Used to dynamically dispatch the call to the correct class.
 		$log_type = $this->get_log_table( $type );
 
-		// Call the func, or not
-		$func  = "edd_get_{$log_type}";
+		// Call the func, or not.
+		$func = "edd_get_{$log_type}";
 		$logs = is_callable( $func )
 			? call_user_func( $func, $r )
 			: array();
 
-		// Bail if no logs
+		// Bail if no logs.
 		if ( empty( $logs ) ) {
 			return;
 		}
 
-		// Maybe bail if delete function does not exist
+		// Maybe bail if delete function does not exist.
 		$func = rtrim( "edd_delete_{$log_type}", 's' );
 		if ( ! is_callable( $func ) ) {
 			return;
 		}
 
-		// Loop through and delete logs
+		// Loop through and delete logs.
 		foreach ( $logs as $log ) {
-			call_user_func( $func, $log->get_id() );
+			call_user_func( $func, $log->id );
 		}
 	}
 

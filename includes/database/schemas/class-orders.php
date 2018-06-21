@@ -37,7 +37,8 @@ class Orders extends Base {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'searchable' => true
 		),
 
 		// parent
@@ -100,6 +101,15 @@ class Orders extends Base {
 			'sortable'   => true
 		),
 
+		// date_refundable
+		array(
+			'name'       => 'date_refundable',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'sortable'   => true
+		),
+
 		// user_id
 		array(
 			'name'       => 'user_id',
@@ -115,14 +125,16 @@ class Orders extends Base {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// email
 		array(
 			'name'       => 'email',
 			'type'       => 'varchar',
-			'length'     => '100'
+			'length'     => '100',
+			'searchable' => true
 		),
 
 		// ip
@@ -165,15 +177,8 @@ class Orders extends Base {
 			'name'       => 'subtotal',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
-		),
-
-		// tax
-		array(
-			'name'       => 'tax',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// discount
@@ -181,7 +186,17 @@ class Orders extends Base {
 			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// tax
+		array(
+			'name'       => 'tax',
+			'type'       => 'decimal',
+			'length'     => '18,9',
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -189,7 +204,9 @@ class Orders extends Base {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'searchable' => true,
+			'validate'   => 'edd_sanitize_amount'
 		)
 	);
 }

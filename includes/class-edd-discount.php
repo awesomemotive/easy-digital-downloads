@@ -9,6 +9,8 @@
  * @since       2.7
  */
 
+use EDD\Database\Objects\Adjustment;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -16,9 +18,28 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0 No longer extends EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $code
+ * @property string $status
+ * @property string $amount_type
+ * @property float $amount
+ * @property array $product_reqs
+ * @property string $scope
+ * @property array $excluded_products
+ * @property string $product_condition
+ * @property string $date_created
+ * @property string $start_date
+ * @property string $end_date
+ * @property int $use_count
+ * @property int $max_uses
+ * @property float $min_cart_price
+ * @property bool $once_per_customer
  */
-class EDD_Discount {
+class EDD_Discount extends Adjustment {
+
 	/**
 	 * Discount ID.
 	 *
@@ -58,11 +79,11 @@ class EDD_Discount {
 	/**
 	 * Discount Type (Percentage or Flat Amount).
 	 *
-	 * @since 2.7
+	 * @since 3.0
 	 * @access protected
 	 * @var string
 	 */
-	protected $type = null;
+	protected $amount_type = null;
 
 	/**
 	 * Discount Amount.
@@ -92,7 +113,7 @@ class EDD_Discount {
 	 *
 	 * @since 3.0
 	 * @access protected
-	 * @var bool
+	 * @var string
 	 */
 	protected $scope = null;
 
@@ -199,11 +220,11 @@ class EDD_Discount {
 			$discount = $_id_or_code_or_name;
 
 			// Code
-		} else if ( $by_code ) {
+		} elseif ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
 
 			// Name
-		} else if ( $by_name ) {
+		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
 			// Default to ID
@@ -231,73 +252,77 @@ class EDD_Discount {
 	public function __get( $key = '' ) {
 		$key = sanitize_key( $key );
 
-		if ( 'discount_id' === $key || 'ID' == $key ) {
+		// Back compat for ID
+		if ( 'discount_id' === $key || 'ID' === $key ) {
 			return (int) $this->id;
 
-		} else if ( method_exists( $this, "get_{$key}" ) ) {
+		// Method
+		} elseif ( method_exists( $this, "get_{$key}" ) ) {
 			return call_user_func( array( $this, "get_{$key}" ) );
 
-		} else if ( property_exists( $this, $key ) ) {
+		// Property
+		} elseif ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 
+		// Other...
 		} else {
 
 			// Account for old property keys from pre 3.0
-			switch( $key ) {
-				case 'post_author' :
+			switch ( $key ) {
+				case 'post_author':
 					break;
 
-				case 'post_date' :
-				case 'post_date_gmt' :
+				case 'post_date':
+				case 'post_date_gmt':
 					return $this->date_created;
 
-				case 'post_content' :
-				case 'post_title' :
+				case 'post_content':
+				case 'post_title':
 					return $this->name;
 
-				case 'post_excerpt' :
-				case 'post_status' :
+				case 'post_excerpt':
+				case 'post_status':
 					return $this->status;
 
-				case 'comment_status' :
-				case 'ping_status' :
-				case 'post_password' :
-				case 'post_name' :
-				case 'to_ping' :
-				case 'pinged' :
-				case 'post_modified' :
-				case 'post_modified_gmt' :
-				case 'post_content_filtered' :
-				case 'post_parent' :
-				case 'guid' :
-				case 'menu_order' :
-				case 'post_mime_type' :
-				case 'comment_count' :
-				case 'filter' :
+				case 'comment_status':
+				case 'ping_status':
+				case 'post_password':
+				case 'post_name':
+				case 'to_ping':
+				case 'pinged':
+				case 'post_modified':
+				case 'post_modified_gmt':
+				case 'post_content_filtered':
+				case 'post_parent':
+				case 'guid':
+				case 'menu_order':
+				case 'post_mime_type':
+				case 'comment_count':
+				case 'filter':
 					return '';
 
-				case 'post_type' :
+				case 'post_type':
 					return 'edd_discount';
 
-				case 'expiration' :
+				case 'expiration':
 					return $this->end_date;
 
-				case 'start' :
+				case 'start':
 					return $this->start_date;
 
-				case 'min_price' :
+				case 'min_price':
 					return $this->min_cart_price;
 
-				case 'use_once' :
-				case 'is_single_use' :
-				case 'once_per_customer' :
+				case 'use_once':
+				case 'is_single_use':
+				case 'once_per_customer':
 					return $this->get_is_single_use();
 
-				case 'uses' :
+				case 'uses':
 					return $this->use_count;
 
-				case 'is_not_global' :
-					return $this->scope === 'global' ? false : true;
+				case 'is_not_global':
+					return 'global' === $this->scope ? false : true;
 			}
 
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
@@ -313,12 +338,14 @@ class EDD_Discount {
 	 *
 	 * @param string $key   Property name.
 	 * @param mixed  $value Property value.
+	 *
+	 * @return mixed Value of setter being dispatched to.
 	 */
 	public function __set( $key, $value ) {
 		$key = sanitize_key( $key );
 
 		// Only real properties can be saved.
-		$keys = array_keys( get_class_vars( get_called_class() ) );
+		$keys     = array_keys( get_class_vars( get_called_class() ) );
 		$old_keys = array(
 			'is_single_use',
 			'uses',
@@ -329,76 +356,51 @@ class EDD_Discount {
 			'is_not_global',
 		);
 
-		if ( ! in_array( $key, $keys ) && ! in_array( $key, $old_keys ) ) {
+		if ( ! in_array( $key, $keys, true ) && ! in_array( $key, $old_keys, true ) ) {
 			return false;
 		}
 
 		// Dispatch to setter method if value needs to be sanitized
 		if ( method_exists( $this, 'set_' . $key ) ) {
-
 			return call_user_func( array( $this, 'set_' . $key ), $key, $value );
-
-		} elseif( in_array( $key, $old_keys ) ) {
-
-			switch( $key ) {
-
-				case 'expiration' :
-
+		} elseif ( in_array( $key, $old_keys, true ) ) {
+			switch ( $key ) {
+				case 'expiration':
 					$this->end_date = $value;
 					break;
-
-				case 'start' :
-
+				case 'start':
 					$this->start_date = $value;
 					break;
-
-				case 'min_price' :
-
+				case 'min_price':
 					$this->min_cart_price = $value;
 					break;
-
-				case 'use_once' :
-				case 'is_single_use' :
-
+				case 'use_once':
+				case 'is_single_use':
 					$this->once_per_customer = $value;
 					break;
-
-				case 'uses' :
-
+				case 'uses':
 					$this->use_count = $value;
 					break;
-
-				case 'is_not_global' :
-
+				case 'is_not_global':
 					$this->scope = $value ? 'not_global' : 'global';
 					break;
 			}
 		} else {
-
 			$this->{$key} = $value;
-
 		}
 	}
 
 	/**
-	 * Magic __isset method to allow empty checks on protected elements
+	 * Handle method dispatch dynamically.
 	 *
-	 * @since 2.7
+	 * @param string $method Method name.
+	 * @param array $args Arguments to be passed to method.
 	 *
-	 * @param string $key The attribute to get
-	 * @return boolean If the item is set or not
+	 * @return mixed
 	 */
-	public function __isset( $key ) {
-		if ( property_exists( $this, $key ) ) {
-			return false === empty( $this->{$key} );
-		} else {
-			return null;
-		}
-	}
-
 	public function __call( $method, $args ) {
 		$property = str_replace( 'setup_', '', $method );
-		if( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
+		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
 			return $this->{$property( $args )};
 		}
 	}
@@ -442,7 +444,7 @@ class EDD_Discount {
 	 * @since 2.7
 	 * @access private
 	 *
-	 * @param string $code Discount name.
+	 * @param string $name Discount name.
 	 * @return object WP_Post instance of the discount.
 	 */
 	private function find_by_name( $name = '' ) {
@@ -459,7 +461,7 @@ class EDD_Discount {
 	 * @return bool Object initialization successful or not.
 	 */
 	private function setup_discount( $discount = null ) {
-		if ( null == $discount ) {
+		if ( is_null( $discount ) ) {
 			return false;
 		}
 
@@ -485,38 +487,36 @@ class EDD_Discount {
 
 		foreach ( $vars as $key => $value ) {
 			switch ( $key ) {
-				case 'start_date' :
-				case 'end_date' :
-					if ( '0000-00-00 00:00:00' == $value ) {
-						$this->$key = false;
+				case 'start_date':
+				case 'end_date':
+					if ( '0000-00-00 00:00:00' === $value ) {
+						$this->{$key} = false;
 						break;
 					}
-
-				case 'notes' :
+				case 'notes':
 					if ( ! empty( $value ) ) {
-						$this->$key = $value;
+						$this->{$key} = $value;
 					}
 					break;
-
-				case 'id' :
-					$this->$key = (int) $value;
+				case 'id':
+					$this->{$key} = (int) $value;
 					break;
-
 				default:
 					if ( is_string( $value ) ) {
 						@json_decode( $value );
-						if ( json_last_error() != JSON_ERROR_NONE ) {
-							$this->$key = json_decode( $value );
+						if ( json_last_error() !== JSON_ERROR_NONE ) {
+							$this->{$key} = json_decode( $value );
 						}
 					}
 
-					$this->$key = $value;
+					$this->{$key} = $value;
 					break;
 			}
 		}
 
 		/**
-		 * Some object vars need to be setup manually as the values need to be pulled in from the `edd_discountmeta` table.
+		 * Some object vars need to be setup manually as the values need to be
+		 * pulled in from the `edd_adjustmentmeta` table.
 		 */
 		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
 		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
@@ -584,15 +584,15 @@ class EDD_Discount {
 	 * @return string Status label for the current discount.
 	 */
 	public function get_status_label() {
-		switch( $this->status ) {
-			case 'expired' :
+		switch ( $this->status ) {
+			case 'expired':
 				$label = __( 'Expired', 'easy-digital-downloads' );
 				break;
-			case 'inactive' :
+			case 'inactive':
 				$label = __( 'Inactive', 'easy-digital-downloads' );
 				break;
-			case 'active' :
-			default :
+			case 'active':
+			default:
 				$label = __( 'Active', 'easy-digital-downloads' );
 				break;
 		}
@@ -625,7 +625,7 @@ class EDD_Discount {
 		 * @param string $code Discount type (percent or flat amount).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_type', $this->type, $this->id );
+		return apply_filters( 'edd_get_discount_type', $this->amount_type, $this->id );
 	}
 
 	/**
@@ -908,7 +908,7 @@ class EDD_Discount {
 			if ( ! empty( $args['end_date'] ) ) {
 				$args['end_date'] = date( 'Y-m-d H:i:s', strtotime( $args['end_date'], current_time( 'timestamp' ) ) );
 
-				if ( strtotime( $args['end_date'], current_time( 'timestamp' ) )  < current_time( 'timestamp' ) ) {
+				if ( strtotime( $args['end_date'], current_time( 'timestamp' ) ) < current_time( 'timestamp' ) ) {
 					$args['status'] = 'expired';
 				}
 			}
@@ -962,7 +962,7 @@ class EDD_Discount {
 			do_action( 'edd_pre_insert_discount', $args );
 
 			foreach ( $args as $key => $value ) {
-				$this->$key = $value;
+				$this->{$key} = $value;
 			}
 
 			// We have to ensure an ID is not passed to edd_add_discount()
@@ -1068,17 +1068,15 @@ class EDD_Discount {
 		}
 
 		if ( isset( $args['excluded_products'] ) ) {
-
 			if ( is_array( $args['excluded_products'] ) ) {
 
 				// Reset meta
 				$this->delete_meta( 'excluded_product' );
 
 				// Now add each newly excluded product
-				foreach( $args['excluded_products'] as $product ) {
+				foreach ( $args['excluded_products'] as $product ) {
 					$this->add_meta( 'excluded_product', absint( $product ) );
 				}
-
 			} else {
 				$this->delete_meta( 'excluded_product' );
 			}
@@ -1091,14 +1089,21 @@ class EDD_Discount {
 				$this->delete_meta( 'product_requirement' );
 
 				// Now add each newly required product
-				foreach( $args['product_reqs'] as $product ) {
+				foreach ( $args['product_reqs'] as $product ) {
 					$this->add_meta( 'product_requirement', absint( $product ) );
 				}
-
 			} else {
 				$this->delete_meta( 'product_requirement' );
 			}
 		}
+
+		// Switch `type` to `amount_type`
+		if ( ! isset( $args['amount_type'] ) && ! empty( $args['type'] ) && 'discount' !== $args['type'] ) {
+			$args['amount_type'] = $args['type'];
+		}
+
+		// Force `type` to `discount`
+		$args['type'] = 'discount';
 
 		/**
 		 * Fires before the discount has been updated in the database.
@@ -1184,7 +1189,7 @@ class EDD_Discount {
 			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
 				$return = true;
-			} elseif( $set_error ) {
+			} elseif ( $set_error ) {
 				edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error shown when attempting to use a discount before its start date', 'easy-digital-downloads' ) );
 			}
 		} else {
@@ -1283,12 +1288,12 @@ class EDD_Discount {
 
 		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
 			$return = true;
-		} elseif( $set_error ) {
+		} elseif ( $set_error ) {
 			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
 		}
 
 		/**
-		 * Filters if the minimum cart amount has been met to satisify the discount.
+		 * Filters if the minimum cart amount has been met to satisfy the discount.
 		 *
 		 * @since 2.7
 		 *
@@ -1346,30 +1351,27 @@ class EDD_Discount {
 		$product_reqs = array_filter( array_values( $product_reqs ) );
 
 
-		$excluded_ps  = array_map( 'absint', $excluded_ps );
+		$excluded_ps = array_map( 'absint', $excluded_ps );
 		asort( $excluded_ps );
-		$excluded_ps  = array_filter( array_values( $excluded_ps ) );
+		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
-		$cart_ids     = array_map( 'absint', $cart_ids );
+		$cart_ids = array_map( 'absint', $cart_ids );
 		asort( $cart_ids );
-		$cart_ids     = array_values( $cart_ids );
+		$cart_ids = array_values( $cart_ids );
 
 		// Ensure we have requirements before proceeding
 		if ( ! $return && ! empty( $product_reqs ) ) {
 			switch ( $this->product_condition ) {
-				case 'all' :
-
+				case 'all':
 					// Default back to true
 					$return = true;
 
 					foreach ( $product_reqs as $download_id ) {
-
 						if ( empty( $download_id ) ) {
 							continue;
 						}
 
 						if ( ! edd_item_in_cart( $download_id ) ) {
-
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 							}
@@ -1377,17 +1379,12 @@ class EDD_Discount {
 							$return = false;
 
 							break;
-
 						}
-
 					}
-
 					break;
 
-				default :
-
+				default:
 					foreach ( $product_reqs as $download_id ) {
-
 						if ( empty( $download_id ) ) {
 							continue;
 						}
@@ -1396,25 +1393,19 @@ class EDD_Discount {
 							$return = true;
 							break;
 						}
-
 					}
 
 					if ( ! $return && $set_error ) {
 						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
 					}
-
 					break;
-
 			}
-
 		} else {
-
 			$return = true;
-
 		}
 
 		if ( ! empty( $excluded_ps ) ) {
-			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) == count( $cart_ids ) ) {
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) === count( $cart_ids ) ) {
 				$return = false;
 
 				if ( $set_error ) {
@@ -1439,9 +1430,11 @@ class EDD_Discount {
 	 * Has the discount code been used.
 	 *
 	 * @since 2.7
+	 * @since 3.0 Refactored to use new query methods.
 	 *
 	 * @param string $user User info.
 	 * @param bool $set_error Whether an error message be set in session.
+	 *
 	 * @return bool Whether the discount has been used or not.
 	 */
 	public function is_used( $user = '', $set_error = true ) {
@@ -1450,8 +1443,9 @@ class EDD_Discount {
 		if ( $this->is_single_use ) {
 			$payments = array();
 
-			if ( EDD()->customers->installed() ) {
-				$by_user_id = is_email( $user ) ? false : true;
+			if ( edd_get_component_interface( 'customer', 'table' )->exists() ) {
+				$by_user_id = ! is_email( $user );
+
 				$customer = new EDD_Customer( $user, $by_user_id );
 
 				$payments = explode( ',', $customer->payment_ids );
@@ -1474,15 +1468,15 @@ class EDD_Discount {
 
 				if ( $user_found ) {
 					$query_args = array(
-						'post_type'       => 'edd_payment',
-						'meta_query'      => array(
+						'post_type'  => 'edd_payment',
+						'meta_query' => array(
 							array(
 								'key'     => $key,
 								'value'   => $value,
-								'compare' => '='
-							)
+								'compare' => '=',
+							),
 						),
-						'fields'          => 'ids'
+						'fields'     => 'ids',
 					);
 
 					$payments = get_posts( $query_args ); // Get all payments with matching email
@@ -1497,7 +1491,7 @@ class EDD_Discount {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ) ) ) {
+					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ), true ) ) {
 						continue;
 					}
 
@@ -1505,7 +1499,8 @@ class EDD_Discount {
 
 					if ( is_array( $discounts ) ) {
 						$discounts = array_map( 'strtoupper', $discounts );
-						$key       = array_search( strtoupper( $this->code ), $discounts );
+						$key       = array_search( strtoupper( $this->code ), $discounts, true );
+
 						if ( false !== $key ) {
 							if ( $set_error ) {
 								edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
@@ -1542,7 +1537,7 @@ class EDD_Discount {
 	 */
 	public function is_valid( $user = '', $set_error = true ) {
 		$return = false;
-		$user = trim( $user );
+		$user   = trim( $user );
 
 		if ( edd_get_cart_contents() && $this->id ) {
 			if (
@@ -1555,7 +1550,7 @@ class EDD_Discount {
 			) {
 				$return = true;
 			}
-		} elseif( $set_error ) {
+		} elseif ( $set_error ) {
 			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration' , 'easy-digital-downloads' ) );
 		}
 
@@ -1590,7 +1585,7 @@ class EDD_Discount {
 				if ( edd_doing_ajax() && $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 				}
-			} elseif ( $this->status == 'active' ) {
+			} elseif ( 'active' === $this->status ) {
 				$return = true;
 			} elseif ( edd_doing_ajax() && $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'easy-digital-downloads' ) );
@@ -1620,7 +1615,7 @@ class EDD_Discount {
 		// Start off setting the amount as the base price.
 		$amount = $base_price;
 
-		if ( 'flat' == $this->type ) {
+		if ( 'flat' === $this->amount_type ) {
 			$amount = $base_price - $this->amount;
 
 			if ( $amount < 0 ) {
@@ -1724,7 +1719,10 @@ class EDD_Discount {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->id ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url( add_query_arg( array(
+			'edd-action' => 'edit_discount',
+			'discount'   => $this->id,
+		), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
 	}
 
 	/**
@@ -1735,7 +1733,6 @@ class EDD_Discount {
 	 * @return array       The sanitized data, based off column defaults
 	 */
 	private function sanitize_columns( $data ) {
-
 		$default_values = array();
 
 		foreach ( $data as $key => $type ) {
@@ -1745,45 +1742,45 @@ class EDD_Discount {
 				continue;
 			}
 
-			switch( $type ) {
+			switch ( $type ) {
 
 				case '%s':
-					if ( 'email' == $key ) {
-						$data[$key] = sanitize_email( $data[$key] );
-					} elseif ( 'notes' == $key ) {
-						$data[$key] = strip_tags( $data[$key] );
+					if ( 'email' === $key ) {
+						$data[ $key ] = sanitize_email( $data[ $key ] );
+					} elseif ( 'notes' === $key ) {
+						$data[ $key ] = strip_tags( $data[ $key ] );
 					} else {
-						if ( is_array( $data[$key] ) ) {
-							$data[$key] = json_encode( $data[$key] );
+						if ( is_array( $data[ $key ] ) ) {
+							$data[ $key ] = json_encode( $data[ $key ] );
 						} else {
-							$data[$key] = sanitize_text_field( $data[$key] );
+							$data[ $key ] = sanitize_text_field( $data[ $key ] );
 						}
 					}
 					break;
 
 				case '%d':
-					if ( ! is_numeric( $data[$key] ) || (int) $data[$key] !== absint( $data[$key] ) ) {
-						$data[$key] = $default_values[$key];
+					if ( ! is_numeric( $data[ $key ] ) || absint( $data[ $key ] ) !== (int) $data[ $key ] ) {
+						$data[ $key ] = $default_values[ $key ];
 					} else {
-						$data[$key] = absint( $data[$key] );
+						$data[ $key ] = absint( $data[ $key ] );
 					}
 					break;
 
 				case '%f':
 					// Convert what was given to a float
-					$value = floatval( $data[$key] );
+					$value = floatval( $data[ $key ] );
 
 					if ( ! is_float( $value ) ) {
-						$data[$key] = $default_values[$key];
+						$data[ $key ] = $default_values[ $key ];
 					} else {
-						$data[$key] = $value;
+						$data[ $key ] = $value;
 					}
 					break;
 
 				default:
-					$data[$key] = ! is_array( $data[$key] )
-						? sanitize_text_field( $data[$key] )
-						: maybe_serialize( array_map( 'sanitize_text_field', $data[$key] ) );
+					$data[ $key ] = ! is_array( $data[ $key ] )
+						? sanitize_text_field( $data[ $key ] )
+						: maybe_serialize( array_map( 'sanitize_text_field', $data[ $key ] ) );
 					break;
 			}
 		}
@@ -1801,21 +1798,22 @@ class EDD_Discount {
 	 * @return array The converted arguments.
 	 */
 	public static function convert_legacy_args( $args = array() ) {
+
 		// Loop through arguments provided and adjust old key names for the new schema introduced in 3.0
 		$old = array(
-			'uses'               => 'use_count',
-			'max'                => 'max_uses',
-			'start'              => 'start_date',
-			'expiration'         => 'end_date',
-			'min_price'          => 'min_cart_price',
-			'excluded-products'  => 'excluded_products',
-			'is_not_global'      => 'scope',
-			'is_single_use'      => 'once_per_customer',
+			'uses'              => 'use_count',
+			'max'               => 'max_uses',
+			'start'             => 'start_date',
+			'expiration'        => 'end_date',
+			'min_price'         => 'min_cart_price',
+			'excluded-products' => 'excluded_products',
+			'is_not_global'     => 'scope',
+			'is_single_use'     => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
 			if ( isset( $args[ $old_key ] ) ) {
-				if ( $old_key == 'is_not_global' ) {
+				if ( 'is_not_global' === $old_key ) {
 					$args[ $new_key ] = $args[ $old_key ] ? 'not_global' : 'global';
 				} else {
 					$args[ $new_key ] = $args[ $old_key ];

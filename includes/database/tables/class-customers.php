@@ -37,7 +37,18 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201806070001;
+
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201806070001' => 201806070001
+	);
 
 	/**
 	 * Setup the database schema
@@ -47,13 +58,13 @@ final class Customers extends Base {
 	 * @return void
 	 */
 	protected function set_schema() {
-		$this->schema = "id bigint(20) NOT NULL AUTO_INCREMENT,
-			user_id bigint(20) NOT NULL,
-			email varchar(100) NOT NULL,
+		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) unsigned NOT NULL default '0',
+			email varchar(100) NOT NULL default '',
 			name mediumtext NOT NULL,
 			status varchar(20) NOT NULL default '',
-			purchase_value mediumtext NOT NULL,
-			purchase_count bigint(20) NOT NULL,
+			purchase_value decimal(18,9) NOT NULL default '0',
+			purchase_count bigint(20) unsigned NOT NULL default '0',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			PRIMARY KEY (id),
@@ -64,45 +75,52 @@ final class Customers extends Base {
 	}
 
 	/**
-	 * Maybe upgrade the database table. Handles creation & schema changes.
+	 * Override the Base class `maybe_upgrade()` routine to do a very unique and
+	 * special check against the old option.
 	 *
-	 * Hooked to the "admin_init" action.
+	 * Maybe upgrades the database table from 2.x to 3.x standards. This method
+	 * should be kept up-to-date with schema changes in `set_schema()` above.
+	 *
+	 * - Hooked to the "admin_init" action.
+	 * - Calls the parent class `maybe_upgrade()` method
 	 *
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		global $wpdb;
+		if ( false !== get_option( $this->prefix . 'edd_customers_version', false ) ) {
+			delete_option( $this->prefix . 'edd_customers_version' );
 
-		$option = get_option( $wpdb->prefix . 'edd_customers_version', false );
-
-		if ( false !== $option ) {
-
-			// In 3.0 we use new options to store the database version.
-			delete_option( $wpdb->prefix . 'edd_customers_version' );
-
-			$query = "
+			$this->get_db()->query( "
 				ALTER TABLE {$this->table_name} MODIFY `email` VARCHAR(100) NOT NULL default '';
 				ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
+				ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
 				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
 				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
 				ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default '',
 				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00';
-			";
-
-			$this->get_db()->query( $query );
+			" );
 		}
 
 		parent::maybe_upgrade();
 	}
 
 	/**
-	 * Handle schema changes
+	 * Upgrade to version 201806070001
+	 * - Change purchase_value from mediumtext to decimal(18,9)
 	 *
-	 * @access protected
 	 * @since 3.0
+	 *
+	 * @return boolean
 	 */
-	protected function upgrade() {
+	protected function __201806070001() {
 
+		// Alter the database
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
+		" );
+
+		// Return success/fail
+		return $this->is_success( $result );
 	}
 }
 endif;

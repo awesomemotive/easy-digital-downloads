@@ -8,7 +8,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Taxes
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.3
  */
@@ -212,19 +212,13 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	$tax = 0;
 
 	if ( ! empty( $year ) ) {
-		$payments = get_posts( array(
-			'post_type'      => 'edd_payment',
-			'post_status'    => array( 'publish', 'revoked' ),
-			'posts_per_page' => -1,
-			'year'           => $year,
-			'fields'         => 'ids'
-		) );
+		$year = absint( $year );
 
-		if ( count( $payments ) > 0 ) {
-			$payment_ids = implode( ',', $payments );
-			$sql         = "SELECT SUM( meta_value ) FROM {$wpdb->postmeta} WHERE meta_key = '_edd_payment_tax' AND post_id IN( {$payment_ids} )";
-			$tax         = $wpdb->get_var( $sql );
-		}
+		$tax = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(tax) FROM {$wpdb->edd_orders} WHERE status IN('publish', 'revoked') AND YEAR(date_created) = %d", $year ) );
+	}
+
+	if ( ! $tax || is_null( $tax ) ) {
+		$tax = 0.00;
 	}
 
 	// Filter & return
