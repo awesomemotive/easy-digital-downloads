@@ -6,7 +6,7 @@ global $edd_receipt_args;
 $order = edd_get_order( $edd_receipt_args['id'] );
 
 // Display a notice if the order was not found in the database.
-if( ! $order ) : ?>
+if ( ! $order ) : ?>
 
 	<div class="edd_errors edd-alert edd-alert-error">
 		<?php esc_html_e( 'The specified receipt ID appears to be invalid', 'easy-digital-downloads' ); ?>
@@ -28,8 +28,8 @@ $status    = edd_get_payment_status( $payment, true );
 
 		<?php if ( filter_var( $edd_receipt_args['payment_id'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 		<tr>
-			<th><strong><?php esc_html_e( 'Payment', 'easy-digital-downloads' ); ?>:</strong></th>
-			<th><?php echo edd_get_payment_number( $payment->ID ); ?></th>
+			<th><strong><?php esc_html_x( 'Order', 'heading', 'easy-digital-downloads' ); ?>:</strong></th>
+			<th><?php echo esc_html( $order->get_number() ); ?></th>
 		</tr>
 		<?php endif; ?>
 	</thead>
