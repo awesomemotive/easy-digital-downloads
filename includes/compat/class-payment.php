@@ -35,7 +35,7 @@ class Payment extends Base {
 	protected $component = 'payment';
 
 	/**
-	 * Backwards compatibility hooks for customers.
+	 * Backwards compatibility hooks for payments.
 	 *
 	 * @since 3.0
 	 * @access protected
