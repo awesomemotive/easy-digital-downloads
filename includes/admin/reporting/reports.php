@@ -187,27 +187,27 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'earnings', array(
-			'label'     => __( 'Earnings', 'easy-digital-downloads' ),
+		$reports->add_report( 'overview', array(
+			'label'     => __( 'Overview', 'easy-digital-downloads' ),
 			'priority'  => 5,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
 			),
 		) );
 
-		$reports->add_report( 'categories', array(
-			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
+		$reports->add_report( 'products', array(
+			'label'     => __( 'Products', 'easy-digital-downloads' ),
 			'priority'  => 10,
 			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
+				'tiles' => array( 'test_tile', 'another_test_tile' )
 			),
 		) );
 
-		$reports->add_report( 'downloads', array(
-			'label'     => edd_get_label_plural(),
+		$reports->add_report( 'refunds', array(
+			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
 			'priority'  => 15,
 			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
+				'tiles' => array( 'test_tile', 'another_test_tile' )
 			),
 		) );
 
@@ -222,6 +222,38 @@ function edd_register_core_reports( $reports ) {
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
 			'priority'  => 25,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'file_downloads', array(
+			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
+			'priority'  => 30,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'discounts', array(
+			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
+			'priority'  => 35,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'customers', array(
+			'label'     => __( 'Customers', 'easy-digital-downloads' ),
+			'priority'  => 40,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'categories', array(
+			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
+			'priority'  => 45,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
