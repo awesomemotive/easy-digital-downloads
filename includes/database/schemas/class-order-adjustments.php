@@ -99,6 +99,7 @@ class Order_Adjustments extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true,
 			'sortable'   => true
 		),

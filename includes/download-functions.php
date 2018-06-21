@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Retrieve a download by a given field
@@ -856,6 +856,36 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
 function edd_get_file_download_limit( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->get_file_download_limit();
+}
+
+/**
+ * Gets the file refund window for a particular download
+ *
+ * This window refers to the maximum number of days it can be refunded after
+ * it has been purchased.
+ *
+ * @since 3.0
+ * @param int $download_id Download ID
+ * @return int $limit File download limit
+ */
+function edd_get_file_refund_window( $download_id = 0 ) {
+	$download = new EDD_Download( $download_id );
+	return $download->get_refund_window();
+}
+
+/**
+ * Gets the file refund window for a particular download
+ *
+ * This window refers to the maximum number of days it can be refunded after
+ * it has been purchased.
+ *
+ * @since 3.0
+ * @param int $download_id Download ID
+ * @return int $limit File download limit
+ */
+function edd_get_file_refundability( $download_id = 0 ) {
+	$download = new EDD_Download( $download_id );
+	return $download->get_refundability();
 }
 
 /**

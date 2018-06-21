@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Notes
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
@@ -69,20 +69,20 @@ function edd_update_note( $note_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $note_id Note ID.
- * @return object
+ * @return EDD\Notes\Note
  */
 function edd_get_note( $note_id = 0 ) {
 	return edd_get_note_by( 'id', $note_id );
 }
 
 /**
- * Get a note by a specific field's value.
+ * Get a note by a specific field value.
  *
  * @since 3.0
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
- * @return object
+ * @return EDD\Notes\Note
  */
 function edd_get_note_by( $field = '', $value = '' ) {
 	$notes = new EDD\Database\Queries\Note();

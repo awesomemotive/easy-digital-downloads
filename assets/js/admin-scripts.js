@@ -539,7 +539,7 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on('click', '.edd-delete-note', function(e) {
 				e.preventDefault();
 
-				var edd_notes      = $('.edd-notes'),
+				var edd_notes      = $('.edd-note'),
 					edd_no_notes   = $('.edd-no-notes'),
 					edd_note_nonce = $('#edd_note_nonce');
 
@@ -718,6 +718,11 @@ jQuery(document).ready(function ($) {
 		},
 
 		add_download : function() {
+
+			$('#edd-purchased-files').on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+				e.preventDefault();
+				$( '#edd-purchased-files' ).children( '.edd-add-download-to-purchase' ).slideToggle();
+			} );
 
 			// Add a New Download from the Add Downloads to Purchase Box
 			$('.edd-edit-purchase-element').on('click', '#edd-order-add-download', function(e) {
@@ -968,11 +973,9 @@ jQuery(document).ready(function ($) {
 		},
 
 		type_select : function() {
-
-			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
-				var val = $( this ).val();
+			$('#edd-amount-type').change(function() {
 				$('.edd-amount-description').hide();
-				$('.edd-amount-description.' + val + '-discount').show();
+				$('.edd-amount-description.' + $( this ).val()).show();
 			});
 		},
 
@@ -1210,6 +1213,15 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Update tax rate state field based on selected rate country
+			$( document.body ).on('click', '.edd-tax-whole-country input', function() {
+				var states = $( this ).parent().parent().children( '.edd-select' ),
+					text   = $( this ).parent().parent().children( 'input[type="text"]' );
+
+				states.attr( 'disabled', this.checked );
+				text.attr( 'disabled', this.checked );
+			} );
+
+			// Update tax rate state field based on selected rate country
 			$( document.body ).on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var select = $( this ),
 					data  = {
@@ -1223,8 +1235,8 @@ jQuery(document).ready(function ($) {
 						var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
 						select.parent().next().find('select').replaceWith( text_field );
 					} else {
-						select.parent().next().find('input,select').show();
-						select.parent().next().find('input,select').replaceWith( response );
+						select.parent().next().find('input[type="text"],select').show();
+						select.parent().next().find('input[type="text"],select').replaceWith( response );
 					}
 				});
 
@@ -1322,8 +1334,22 @@ jQuery(document).ready(function ($) {
 
 	EDD_Settings.init();
 
-	$('.download_page_edd-payment-history .row-actions .delete a, a.edd-delete-payment').on('click', function() {
+	$('.download_page_edd-payment-history table.orders .row-actions .delete a, a.edd-delete-payment').on('click', function() {
 		if ( confirm( edd_vars.delete_payment ) ) {
+			return true;
+		}
+		return false;
+	});
+
+	$('.download_page_edd-payment-history table.orderitems .row-actions .delete a').on('click', function() {
+		if ( confirm( edd_vars.delete_order_item ) ) {
+			return true;
+		}
+		return false;
+	});
+
+	$('.download_page_edd-payment-history table.orderadjustments .row-actions .delete a').on('click', function() {
+		if ( confirm( edd_vars.delete_order_adjustment ) ) {
 			return true;
 		}
 		return false;

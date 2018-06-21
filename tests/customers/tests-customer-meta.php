@@ -32,7 +32,7 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD_DB_Note_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Notes::add_meta()
 	 * @covers Note::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_return_false() {

@@ -180,6 +180,7 @@ final class Easy_Digital_Downloads {
 
 			// Register backwards compatibility hooks
 			new EDD\Compat\Customer();
+			new EDD\Compat\Payment();
 		}
 
 		return self::$instance;
@@ -258,7 +259,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.0-alpha-3' );
+			define( 'EDD_VERSION', '3.0.0-beta-1.0007' );
 		}
 
 		// Plugin Root File.
@@ -336,8 +337,8 @@ final class Easy_Digital_Downloads {
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-column.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-customers.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs-api-requests.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs-file-downloads.php';
@@ -348,8 +349,8 @@ final class Easy_Digital_Downloads {
 
 		// Database Objects
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-customer.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-log-api-request.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-log-file-download.php';
@@ -360,8 +361,8 @@ final class Easy_Digital_Downloads {
 
 		// Database Tables
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customers.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-requests.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-downloads.php';
@@ -371,7 +372,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-discount-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-note-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-meta.php';
@@ -379,8 +380,8 @@ final class Easy_Digital_Downloads {
 
 		// Database Table Query Interfaces
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log-api-request.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log-file-download.php';
@@ -435,6 +436,8 @@ final class Easy_Digital_Downloads {
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-payment.php';
 
 		// Original Classes
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
@@ -509,6 +512,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/class-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/meta.php';
 
@@ -557,6 +561,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/refund-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';

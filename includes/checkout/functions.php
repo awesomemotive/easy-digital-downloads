@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Checkout
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -107,7 +107,6 @@ function edd_send_to_success_page( $query_string = null ) {
 	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
 
 	edd_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
-	edd_die();
 }
 
 /**
@@ -172,7 +171,6 @@ function edd_send_back_to_checkout( $args = array() ) {
 	}
 
 	edd_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
-	edd_die();
 }
 
 /**
@@ -252,7 +250,12 @@ function edd_field_is_required( $field = '' ) {
  * @return      array
  */
 function edd_get_banned_emails() {
-	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
+	$banned = edd_get_option( 'banned_emails', array() );
+	$emails = ! is_array( $banned )
+		? explode( "\n", $banned )
+		: $banned;
+
+	$emails = array_map( 'trim', $emails );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
 }

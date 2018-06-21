@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Actions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Processes all EDD actions sent via POST and GET by looking for the 'edd-action'
@@ -82,7 +82,7 @@ add_action( 'admin_notices', 'edd_taxonomies_tabs', 10, 1 );
  *
  * @since 3.0
  */
-function edd_remove_taxonomy_submenus() {
+function edd_admin_adjust_submenus() {
 
 	// Get taxonomies
 	$taxonomies = get_object_taxonomies( 'download' );
@@ -96,11 +96,14 @@ function edd_remove_taxonomy_submenus() {
 	foreach ( $taxonomies as $taxonomy ) {
 		remove_submenu_page( 'edit.php?post_type=download', 'edit-tags.php?taxonomy=' . $taxonomy . '&amp;post_type=download' );
 	}
+
+	// Remove the "Add New" link for downloads
+	remove_submenu_page( 'edit.php?post_type=download', 'post-new.php?post_type=download' );
 }
-add_action( 'admin_menu', 'edd_remove_taxonomy_submenus', 999 );
+add_action( 'admin_menu', 'edd_admin_adjust_submenus', 999 );
 
 /**
- * This tells WordPress to highlight the Downloads > All Downloads submenu,
+ * This tells WordPress to highlight the Downloads > Downloads submenu,
  * regardless of which actual Downloads Taxonomy screen we are on.
  *
  * The conditional prevents the override when the user is viewing settings or
@@ -131,6 +134,35 @@ function edd_taxonomies_modify_menu_highlight() {
 	$submenu_file = 'edit.php?post_type=download';
 }
 add_filter( 'admin_head', 'edd_taxonomies_modify_menu_highlight', 9999 );
+
+/**
+ * This tells WordPress to highlight the Downloads > Downloads submenu when
+ * adding a new product.
+ *
+ * @since 3.0.0
+ *
+ * @global string $submenu_file
+ */
+function edd_add_new_modify_menu_highlight() {
+	global $submenu_file, $pagenow;
+
+	// Bail if not viewing the right page or post type
+	if ( empty( $_GET['post_type'] ) || ( 'post-new.php' !== $pagenow ) ) {
+		return;
+	}
+
+	// Get post_type
+	$post_type = sanitize_key( $_GET['post_type'] );
+
+	// Bail if current post type is not download
+	if ( 'download' !== $post_type ) {
+		return;
+	}
+
+	// Force the submenu file
+	$submenu_file = 'edit.php?post_type=download';
+}
+add_filter( 'admin_head', 'edd_add_new_modify_menu_highlight', 9999 );
 
 /**
  * Displays the product tabs for 'Products' and 'Apps and Integrations'

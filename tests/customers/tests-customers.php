@@ -346,7 +346,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_get_users_purchased_products_should_return_1() {
-		$this->assertCount( 2, edd_get_users_purchased_products( self::$user ) );
+		$this->assertCount( 2, (array) edd_get_users_purchased_products( self::$user ) );
 	}
 
 	public function test_get_purchase_stats_by_user_should_return_true() {

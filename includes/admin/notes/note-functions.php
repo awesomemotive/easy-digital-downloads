@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
@@ -74,7 +74,7 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	}
 
 	// User
-	$user_id = $note->get_user_id();
+	$user_id = $note->user_id;
 	$author  = ! empty( $user_id )
 		? get_userdata( $user_id )->display_name
 		: edd_get_bot_name();
@@ -82,18 +82,18 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_note',
-		'note_id'    => $note->get_id()
-	) ), 'edd_delete_note_' . $note->get_id() );
+		'note_id'    => $note->id
+	) ), 'edd_delete_note_' . $note->id );
 
 	// Start a buffer
 	ob_start(); ?>
 
-	<div class="edd-note" id="edd-note-<?php echo esc_attr( $note->get_id() ); ?>">
+	<div class="edd-note" id="edd-note-<?php echo esc_attr( $note->id ); ?>">
 		<div>
 			<strong class="edd-note-author"><?php echo esc_html( $author ); ?></strong>
-			<time datetime="<?php echo esc_attr( $note->get_date_created() ); ?>"><?php echo edd_date_i18n( $note->get_date_created(), 'datetime' ); ?></time>
-			<p><?php echo make_clickable( $note->get_content() ); ?></p>
-			<a href="<?php echo esc_url( $delete_note_url ); ?>#edd-notes" class="edd-delete-note" data-note-id="<?php echo esc_attr( $note->get_id() ); ?>" data-object-id="<?php echo esc_attr( $note->get_object_id() ); ?>" data-object-type="<?php echo esc_attr( $note->get_object_type() ); ?>">
+			<time datetime="<?php echo esc_attr( $note->date_created ); ?>"><?php echo edd_date_i18n( $note->date_created, 'datetime' ); ?></time>
+			<p><?php echo make_clickable( $note->content ); ?></p>
+			<a href="<?php echo esc_url( $delete_note_url ); ?>#edd-notes" class="edd-delete-note" data-note-id="<?php echo esc_attr( $note->id ); ?>" data-object-id="<?php echo esc_attr( $note->object_id ); ?>" data-object-type="<?php echo esc_attr( $note->object_type ); ?>">
 				<?php _e( 'Delete', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>

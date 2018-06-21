@@ -10,8 +10,6 @@
  */
 namespace EDD\Orders;
 
-use EDD\Base_Object;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -19,8 +17,29 @@ defined( 'ABSPATH' ) || exit;
  * Order Class.
  *
  * @since 3.0
+ *
+ * @property int $id
+ * @property int $parent
+ * @property string $order_number
+ * @property string $status
+ * @property string $date_created
+ * @property string $date_completed
+ * @property int $user_id
+ * @property int $customer_id
+ * @property string $email
+ * @property string $ip
+ * @property string $gateway
+ * @property string $mode
+ * @property string $currency
+ * @property string $payment_key
+ * @property float $subtotal
+ * @property float $tax
+ * @property float $discount
+ * @property float $total
+ * @property Order_Item[] $items
+ * @property Order_Adjustment[] $adjustments
  */
-class Order extends Base_Object {
+class Order extends \EDD\Database\Objects\Order {
 
 	/**
 	 * Order ID.
@@ -44,7 +63,7 @@ class Order extends Base_Object {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $number;
+	protected $order_number;
 
 	/**
 	 * Order status.
@@ -154,7 +173,7 @@ class Order extends Base_Object {
 	 * Order discount.
 	 *
 	 * @since 3.0
-	 * @var   array
+	 * @var   float
 	 */
 	protected $discount;
 
@@ -191,221 +210,37 @@ class Order extends Base_Object {
 	 * @param mixed $object Object to populate members for.
 	 */
 	public function __construct( $object = null ) {
-		if ( $object ) {
-			foreach ( get_object_vars( $object ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
-		}
+		parent::__construct( $object );
 
 		$this->items = edd_get_order_items( array(
-			'order_id' => $this->get_id(),
-			'orderby'  => 'cart_index',
-			'order'    => 'ASC'
+			'order_id'      => $this->id,
+			'orderby'       => 'cart_index',
+			'order'         => 'ASC',
+			'no_found_rows' => true,
 		) );
 
 		$this->adjustments = edd_get_order_adjustments( array(
-			'object_id'   => $this->get_id(),
-			'object_type' => 'order',
+			'object_id'     => $this->id,
+			'object_type'   => 'order',
+			'no_found_rows' => true,
+			'order'         => 'ASC',
 		) );
-	}
-
-	/**
-	 * Retrieve order ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Order ID.
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Retrieve parent order ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Parent order ID.
-	 */
-	public function get_parent() {
-		return $this->parent;
 	}
 
 	/**
 	 * Retrieve order number.
+	 *
+	 * An order number is only retrieved if sequential order numbers are enabled,
+	 * otherwise the order ID is returned.
 	 *
 	 * @since 3.0
 	 *
 	 * @return string
 	 */
 	public function get_number() {
-		// An order number is only retrieved if sequential order numbers are enabled, otherwise the order ID is returned.
-		return edd_get_option( 'enable_sequential' ) ? $this->number : $this->id;
-	}
-
-	/**
-	 * Retrieve order status.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Order status.
-	 */
-	public function get_status() {
-		return $this->status;
-	}
-
-	/**
-	 * Retrieve the date the order was created.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Date order was created.
-	 */
-	public function get_date_created() {
-		return $this->date_created;
-	}
-
-	/**
-	 * Retrieve the date the order was completed.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Date order was completed.
-	 */
-	public function get_date_completed() {
-		return $this->date_completed;
-	}
-
-	/**
-	 * Retrieve user ID associated with order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int User ID.
-	 */
-	public function get_user_id() {
-		return $this->user_id;
-	}
-
-	/**
-	 * Retrieve customer ID associated with order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int Customer ID.
-	 */
-	public function get_customer_id() {
-		return $this->customer_id;
-	}
-
-	/**
-	 * Retrieve email address associated with order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Email address.
-	 */
-	public function get_email() {
-		return $this->email;
-	}
-
-	/**
-	 * Retrieve IP address used to complete the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string IP address.
-	 */
-	public function get_ip() {
-		return $this->ip;
-	}
-
-	/**
-	 * Retrieve the payment gateway used to complete the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Payment gateway.
-	 */
-	public function get_gateway() {
-		return $this->gateway;
-	}
-
-	/**
-	 * Retrieve the mode (i.e. test or live) that the order was placed in.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Order mode.
-	 */
-	public function get_mode() {
-		return $this->mode;
-	}
-
-	/**
-	 * Retrieve the currency that was used for the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Order currency.
-	 */
-	public function get_currency() {
-		return $this->currency;
-	}
-
-	/**
-	 * Retrieve payment key.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Payment key.
-	 */
-	public function get_payment_key() {
-		return $this->payment_key;
-	}
-
-	/**
-	 * Retrieve order subtotal.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Subtotal.
-	 */
-	public function get_subtotal() {
-		return $this->subtotal;
-	}
-
-	/**
-	 * Retrieve tax applied to the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Tax.
-	 */
-	public function get_tax() {
-		return $this->tax;
-	}
-
-	/**
-	 * Retrieve the discounted amount that was applied to the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array Order discount.
-	 */
-	public function get_discount() {
-		return $this->discount;
-	}
-
-	/**
-	 * Retrieve order total.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Order total.
-	 */
-	public function get_total() {
-		return $this->total;
+		return $this->order_number && edd_get_option( 'enable_sequential' )
+			? $this->order_number
+			: $this->id;
 	}
 
 	/**
@@ -413,7 +248,7 @@ class Order extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order items.
+	 * @return Order_Item[] Order items.
 	 */
 	public function get_items() {
 		return $this->items;
@@ -435,19 +270,19 @@ class Order extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order discounts.
+	 * @return Order_Adjustment[] Order discounts.
 	 */
 	public function get_discounts() {
-		if ( empty( $this->adjustments ) ) {
-			return array();
-		}
-
 		$discounts = array();
+
+		if ( empty( $this->adjustments ) ) {
+			return $discounts;
+		}
 
 		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
-			if ( 'discount' === $adjustment->get_type() ) {
+			if ( 'discount' === $adjustment->type ) {
 				$discounts[] = $adjustment;
 			}
 		}
@@ -456,34 +291,68 @@ class Order extends Base_Object {
 	}
 
 	/**
+	 * Retrieve the tax rates applied to the order.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Order tax rates.
+	 */
+	public function get_taxes() {
+		$taxes = array();
+
+		if ( empty( $this->adjustments ) ) {
+			return $taxes;
+		}
+
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'tax_rate' === $adjustment->type ) {
+				$taxes[] = $adjustment;
+			}
+		}
+
+		return $taxes;
+	}
+
+	/**
 	 * Retrieve the fees applied to the order. This retrieves the fees applied to the entire order and to individual items.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array Order fees.
+	 * @return Order_Adjustment[] Order fees.
 	 */
 	public function get_fees() {
-		if ( empty( $this->adjustments ) ) {
-			return array();
-		}
 
+		// Default values
 		$fees = array();
 
+		// Bail if no adjustments
+		if ( empty( $this->adjustments ) ) {
+			return $fees;
+		}
+
 		// Fetch the fees that applied to the entire order.
-		foreach ( $this->get_adjustments() as $adjustment ) {
+		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
-			if ( 'fee' === $adjustment->get_type() ) {
-				$fees[] = $adjustment;
+			if ( 'fee' === $adjustment->type ) {
+				$fee_id = edd_get_order_adjustment_meta( $adjustment->id, 'fee_id', true );
+
+				$fees[ $fee_id ] = $adjustment;
 			}
 		}
 
 		// Fetch the fees that applied to specific items in the order.
-		foreach ( $this->get_items() as $item ) {
+		foreach ( $this->items as $item ) {
 			/** @var Order_Item $item */
 
 			foreach ( $item->get_fees() as $fee ) {
-				$fees[] = $fee;
+				/** @var Order_Adjustment $fee */
+
+				$fee_id = edd_get_order_adjustment_meta( $fee->id, 'fee_id', true );
+
+				$fees[ $fee_id ] = $fee;
 			}
 		}
 
@@ -513,20 +382,13 @@ class Order extends Base_Object {
 		// Default rate
 		$rate = 0;
 
-		// Query for rates
-		$rates = edd_get_order_adjustments( array(
-			'object_id'     => $this->id,
-			'object_type'   => 'order',
-			'type_id'       => 0,
-			'type'          => 'tax',
-			'number'        => 1,
-			'no_found_rows' => true
-		) );
+		// Get rates from adjustments
+		$rates = $this->get_taxes();
 
-		// Get rate amount
+		// Get a single rate amount
 		if ( ! empty( $rates ) ) {
 			$rate = reset( $rates );
-			$rate = $rate->get_amount();
+			$rate = $rate->amount;
 		}
 
 		return $rate;
@@ -551,20 +413,19 @@ class Order extends Base_Object {
 	 * @return string Customer address.
 	 */
 	public function get_customer_address() {
-		$user_info = edd_get_order_meta( $this->id, 'user_info', true );
+		$user_info = $this->get_user_info();
+		$address   = ! empty( $user_info['address'] )
+			? (array) $user_info['address']
+			: array();
 
-		$address  = ! empty( $user_info['address'] ) ? $user_info['address'] : array();
-
-		$defaults = array(
+		return wp_parse_args( $address, array(
 			'line1'   => '',
 			'line2'   => '',
 			'city'    => '',
 			'country' => '',
 			'state'   => '',
-			'zip'     => '',
-		);
-
-		return wp_parse_args( $address, $defaults );
+			'zip'     => ''
+		) );
 	}
 
 	/**
@@ -586,12 +447,21 @@ class Order extends Base_Object {
 	 * @return array Notes associated with this order.
 	 */
 	public function get_notes() {
-		$notes = edd_get_notes( array(
-			'object_id'   => $this->get_id(),
+		return edd_get_notes( array(
+			'object_id'   => $this->id,
 			'object_type' => 'order',
 			'order'       => 'ASC',
 		) );
+	}
 
-		return $notes;
+	/**
+	 * Check if an order is complete.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if the order is complete, false otherwise.
+	 */
+	public function is_complete() {
+		return ( 'publish' === $this->status );
 	}
 }

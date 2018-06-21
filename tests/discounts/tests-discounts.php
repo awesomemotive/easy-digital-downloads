@@ -261,7 +261,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 */
 	public function test_get_discount_type_of_flat_discount() {
 		$d = new \EDD_Discount( self::$flatdiscount_id );
-		$this->assertEquals( 'flat', $d->get_type() );
+		$this->assertEquals( 'flat', $d->type );
 	}
 
 	/**
@@ -282,28 +282,28 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_product_reqs()
 	 */
 	public function test_get_discount_product_requirements_by_method() {
-		$this->assertSame( array(), self::$discount->product_reqs );
+		$this->assertSame( array(), self::$discount->get_product_reqs() );
 	}
 
 	/**
 	 * @covers ::get_product_reqs()
 	 */
 	public function test_get_discount_product_requirements_by_property() {
-		$this->assertSame( array(), self::$discount->get_product_reqs() );
+		$this->assertSame( array(), self::$discount->product_reqs );
 	}
 
 	/**
 	 * @covers ::get_excluded_products()
 	 */
 	public function test_get_discount_excluded_products_by_method() {
-		$this->assertSame( array(), self::$discount->excluded_products );
+		$this->assertSame( array(), self::$discount->get_excluded_products() );
 	}
 
 	/**
 	 * @covers ::get_excluded_products()
 	 */
 	public function test_get_discount_excluded_products_by_property() {
-		$this->assertSame( array(), self::$discount->get_excluded_products() );
+		$this->assertSame( array(), self::$discount->excluded_products );
 	}
 
 	/**
@@ -348,7 +348,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 */
 	public function test_discount_update_type() {
 		$args = array(
-			'type' => 'flat',
+			'type'   => 'flat',
 			'amount' => 50,
 		);
 
@@ -859,12 +859,16 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_get_discount()
 	 */
 	public function test_deletion_of_discount() {
-		$this->markTestSkipped( 'Broken test' );
-
 		edd_delete_discount( self::$discount_id );
+
+		wp_cache_flush();
+
 		$this->assertFalse( edd_get_discount( self::$discount_id ) );
 
 		edd_delete_discount( self::$negativediscount_id );
+
+		wp_cache_flush();
+
 		$this->assertFalse( edd_get_discount( self::$negativediscount_id ) );
 	}
 

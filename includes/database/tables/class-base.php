@@ -69,6 +69,11 @@ abstract class Base extends \EDD\Database\Base {
 	protected $db_version = 0;
 
 	/**
+	 * @var string Table prefix
+	 */
+	protected $prefix = '';
+
+	/**
 	 * @var string Table name
 	 */
 	protected $table_name = '';
@@ -82,6 +87,16 @@ abstract class Base extends \EDD\Database\Base {
 	 * @var string Database character-set & collation for table
 	 */
 	protected $charset_collation = '';
+
+	/**
+	 * @var string The last error, if any.
+	 */
+	protected $last_error = '';
+
+	/**
+	 * @var array Key => value array of versions => methods
+	 */
+	protected $upgrades = array();
 
 	/** Methods ***************************************************************/
 
@@ -127,13 +142,6 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	protected abstract function set_schema();
 
-	/**
-	 * Upgrade this database table
-	 *
-	 * @since 3.0
-	 */
-	protected abstract function upgrade();
-
 	/** Public ****************************************************************/
 
 	/**
@@ -166,10 +174,10 @@ abstract class Base extends \EDD\Database\Base {
 	public function maybe_upgrade() {
 
 		// Is an upgrade needed?
-		$needs_upgrade = version_compare( (int) $this->db_version, (int) $this->version, '>=' );
+		$is_current = version_compare( $this->db_version, $this->version, '>=' );
 
-		// Bail if no upgrade needed
-		if ( true === $needs_upgrade ) {
+		// Bail if database table is current
+		if ( true === $is_current ) {
 			return;
 		}
 
@@ -178,14 +186,18 @@ abstract class Base extends \EDD\Database\Base {
 			return;
 		}
 
-		// Create or upgrade?
-		$this->exists()
-			? $this->upgrade()
-			: $this->create();
-
-		// Only set database version if table exists
+		// Upgrade
 		if ( $this->exists() ) {
-			$this->set_db_version();
+			$this->upgrade();
+
+		// Create
+		} else {
+			$created = $this->create();
+
+			// Set the DB version if create was successful
+			if ( true === $created ) {
+				$this->set_db_version();
+			}
 		}
 	}
 
@@ -197,13 +209,13 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return bool
 	 */
 	public function exists() {
-		$query       = "SHOW TABLES LIKE %s";
-		$like        = $this->get_db()->esc_like( $this->table_name );
-		$prepared    = $this->get_db()->prepare( $query, $like );
-		$table_exist = $this->get_db()->get_var( $prepared );
+		$query    = "SHOW TABLES LIKE %s";
+		$like     = $this->get_db()->esc_like( $this->table_name );
+		$prepared = $this->get_db()->prepare( $query, $like );
+		$result   = $this->get_db()->get_var( $prepared );
 
 		// Does the table exist?
-		return ! empty( $table_exist );
+		return $this->is_success( $result );
 	}
 
 	/**
@@ -214,26 +226,11 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return bool
 	 */
 	public function create() {
-		$query   = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
-		$created = $this->get_db()->query( $query );
+		$query  = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
+		$result = $this->get_db()->query( $query );
 
 		// Was the table created?
-		return ! empty( $created );
-	}
-
-	/**
-	 * Truncate the database table
-	 *
-	 * @since 3.0
-	 *
-	 * @return mixed
-	 */
-	public function truncate() {
-		$query     = "TRUNCATE TABLE {$this->table_name}";
-		$truncated = $this->get_db()->query( $query );
-
-		// Query success/fail
-		return $truncated;
+		return $this->is_success( $result );
 	}
 
 	/**
@@ -244,11 +241,26 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return mixed
 	 */
 	public function drop() {
-		$query   = "DROP TABLE {$this->table_name}";
-		$dropped = $this->get_db()->query( $query );
+		$query  = "DROP TABLE {$this->table_name}";
+		$result = $this->get_db()->query( $query );
 
 		// Query success/fail
-		return $dropped;
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Truncate the database table
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed
+	 */
+	public function truncate() {
+		$query  = "TRUNCATE TABLE {$this->table_name}";
+		$result = $this->get_db()->query( $query );
+
+		// Query success/fail
+		return $this->is_success( $result );
 	}
 
 	/**
@@ -264,6 +276,83 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Query success/fail
 		return $deleted;
+	}
+
+	/**
+	 * Upgrade this database table
+	 *
+	 * @since 3.0
+	 *
+	 * return boolean
+	 */
+	public function upgrade() {
+		$result = false;
+
+		// Bail if no upgrades
+		if ( empty( $this->upgrades ) ) {
+			return true;
+		}
+
+		// Try to do all known upgrades
+		foreach ( $this->upgrades as $version => $method ) {
+			$result = $this->upgrade_to( $version, $method );
+
+			// Bail if an error occurs, to avoid skipping ahead
+			if ( ! $this->is_success( $result ) ) {
+				return false;
+			}
+		}
+
+		// Success/fail
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to a specific database version
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $version
+	 * @param string $method
+	 * @return boolean
+	 */
+	public function upgrade_to( $version = '', $method = '' ) {
+
+		// Set the db_version property
+		$this->get_db_version();
+
+		// Bail if no upgrade is needed
+		if ( version_compare( $this->db_version, $version, '>=' ) ) {
+			return false;
+		}
+
+		// Allow self-named upgrade methods
+		if ( empty( $method ) ) {
+			$method = $version;
+		}
+
+		// Is the method callable?
+		$callable = $this->get_callable( $method );
+
+		// Bail if no callable upgrade method was found
+		if ( empty( $callable ) ) {
+			return false;
+		}
+
+		// Do the upgrade
+		$result  = call_user_func( $callable );
+		$success = $this->is_success( $result );
+
+		// Bail if upgrade failed
+		if ( true !== $success ) {
+			return false;
+		}
+
+		// Set the database version to this successful version
+		$this->set_db_version( $version );
+
+		// Return success
+		return true;
 	}
 
 	/**
@@ -292,6 +381,34 @@ abstract class Base extends \EDD\Database\Base {
 		return isset( $GLOBALS['wpdb'] )
 			? $GLOBALS['wpdb']
 			: new stdClass();
+	}
+
+	/**
+	 * Check if the query failed
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed $result
+	 * @return boolean
+	 */
+	protected function is_success( $result = false ) {
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			$retval = false;
+
+		// Bail if an error occurred
+		} elseif ( is_wp_error( $result ) ) {
+			$this->last_error = $result;
+			$retval           = false;
+
+		// No errors
+		} else {
+			$retval = true;
+		}
+
+		// Return the result
+		return (bool) $retval;
 	}
 
 	/** Private ***************************************************************/
@@ -334,14 +451,14 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Global
 		if ( $this->is_global() ) {
-			$prefix                             = $this->get_db()->get_blog_prefix( 0 );
-			$this->get_db()->{$this->name}      = "{$prefix}{$this->name}";
+			$this->prefix                       = $this->get_db()->get_blog_prefix( 0 );
+			$this->get_db()->{$this->name}      = "{$this->prefix}{$this->name}";
 			$this->get_db()->ms_global_tables[] = $this->name;
 
-			// Site
+		// Site
 		} else {
-			$prefix                        = $this->get_db()->get_blog_prefix( null );
-			$this->get_db()->{$this->name} = "{$prefix}{$this->name}";
+			$this->prefix                  = $this->get_db()->get_blog_prefix( null );
+			$this->get_db()->{$this->name} = "{$this->prefix}{$this->name}";
 			$this->get_db()->tables[]      = $this->name;
 		}
 
@@ -364,15 +481,19 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_db_version() {
+	private function set_db_version( $version = '' ) {
 
 		// Set the class version
-		$this->db_version = $this->version;
+		if ( empty( $version ) ) {
+			$version = $this->version;
+		} else {
+			$this->db_version = $version;
+		}
 
 		// Update the DB version
 		$this->is_global()
-			? update_network_option( get_main_network_id(), $this->db_version_key, $this->version )
-			:         update_option(                        $this->db_version_key, $this->version );
+			? update_network_option( get_main_network_id(), $this->db_version_key, $version )
+			:         update_option(                        $this->db_version_key, $version );
 	}
 
 	/**
@@ -406,7 +527,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * This is primarily used to skip 'admin_init' and force-install tables.
 	 *
-	 * @since 1.4.0
+	 * @since 3.0
 	 *
 	 * @return bool
 	 */
@@ -434,6 +555,37 @@ abstract class Base extends \EDD\Database\Base {
 	}
 
 	/**
+	 * Try to get a callable upgrade method, with some magic to avoid needing to
+	 * do this dance repeatedly inside subclasses.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $method
+	 * @return boolean
+	 */
+	private function get_callable( $method = '' ) {
+		$callable = $method;
+
+		// Look for global function
+		if ( ! is_callable( $callable ) ) {
+			$callable = array( $this, $method );
+
+			// Look for local clas method
+			if ( ! is_callable( $callable ) ) {
+				$callable = array( $this, "__{$method}" );
+
+				// Look for method prefixed with "__"
+				if ( ! is_callable( $callable ) ) {
+					$callable = false;
+				}
+			}
+		}
+
+		// Return callable, if any
+		return $callable;
+	}
+
+	/**
 	 * Sanitize a table name string
 	 *
 	 * Applies the following formatting to a string:
@@ -451,8 +603,11 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	private function sanitize_table_name( $name = '' ) {
 
+		// Trim spaces off the ends
+		$unspace = trim( $name );
+
 		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $name );
+		$accents = remove_accents( $unspace );
 
 		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
 		$lower   = sanitize_key( $accents );

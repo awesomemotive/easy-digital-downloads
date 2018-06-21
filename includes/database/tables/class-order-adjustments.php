@@ -60,16 +60,5 @@ final class Order_Adjustments extends Base {
 		KEY object_id_type (object_id,object_type(20)),
 		KEY date_created (date_created)";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -103,7 +103,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	public function get_columns() {
 		return array(
 			'ID'         => __( 'Log ID',        'easy-digital-downloads' ),
-			'payment_id' => __( 'Payment ID',    'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number',  'easy-digital-downloads' ),
 			'error'      => __( 'Error',         'easy-digital-downloads' ),
 			'message'    => __( 'Error Message', 'easy-digital-downloads' ),
 			'gateway'    => __( 'Gateway',       'easy-digital-downloads' ),
@@ -130,11 +130,11 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 				/** @var $log EDD\Logs\Log */
 
 				$logs_data[] = array(
-					'ID'         => $log->get_id(),
-					'payment_id' => $log->get_object_id(),
+					'ID'         => $log->id,
+					'payment_id' => $log->object_id,
 					'error'      => 'error',
-					'gateway'    => edd_get_payment_gateway( $log->get_object_id() ),
-					'date'       => $log->get_date_created(),
+					'gateway'    => edd_get_payment_gateway( $log->object_id ),
+					'date'       => $log->date_created,
 				);
 			}
 		}

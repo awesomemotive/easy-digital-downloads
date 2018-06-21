@@ -4,7 +4,7 @@ namespace EDD\Discounts;
 /**
  * Test for the discount meta table.
  *
- * @covers EDD_DB_Discount_Meta
+ * @covers \EDD\Database\Queries\Adjustment
  * @group edd_discounts_db
  * @group database
  * @group edd_discounts
@@ -41,7 +41,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::add_meta()
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_be_null() {
@@ -49,7 +49,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::add_meta()
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_empty_value_should_be_empty() {
@@ -57,7 +57,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::add_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::add_meta()
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_key_value_should_not_be_empty() {
@@ -65,7 +65,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::update_meta()
 	 * @covers EDD_Discount::update_meta()
 	 */
 	public function test_update_metadata_with_empty_key_value_should_be_empty() {
@@ -73,7 +73,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::update_meta()
 	 * @covers EDD_Discount::update_meta()
 	 */
 	public function test_update_metadata_with_empty_value_should_not_be_empty() {
@@ -81,7 +81,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::update_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::update_meta()
 	 * @covers EDD_Discount::update_meta()
 	 */
 	public function test_update_metadata_with_key_value_should_not_be_empty() {
@@ -89,7 +89,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::get_meta()
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_with_no_args_should_return_array() {
@@ -97,7 +97,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::get_meta()
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_with_invalid_key_should_be_empty() {
@@ -105,7 +105,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::get_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::get_meta()
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_after_update_should_return_that_value() {
@@ -114,7 +114,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::delete_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::delete_meta()
 	 * @covers EDD_Discount::delete_meta()
 	 */
 	public function test_delete_metadata_with_valid_key_should_return_true() {
@@ -123,7 +123,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers EDD_DB_Discount_Meta::delete_meta()
+	 * @covers \EDD\Database\Queries\Adjustment::delete_meta()
 	 * @covers EDD_Discount::delete_meta()
 	 */
 	public function test_delete_metadata_with_invalid_key_should_return_false() {

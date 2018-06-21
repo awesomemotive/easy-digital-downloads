@@ -50,7 +50,7 @@ final class Logs_File_Downloads extends Base {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 		download_id bigint(20) unsigned NOT NULL default '0',
 		file_id bigint(20) unsigned NOT NULL default '0',
-		payment_id bigint(20) unsigned NOT NULL default '0',
+		order_id bigint(20) unsigned NOT NULL default '0',
 		price_id bigint(20) unsigned NOT NULL default '0',
 		user_id bigint(20) unsigned NOT NULL default '0',
 		ip varchar(60) NOT NULL default '',
@@ -61,17 +61,6 @@ final class Logs_File_Downloads extends Base {
 		KEY user_id (user_id),
 		KEY download_id (download_id),
 		KEY date_created (date_created)";
-	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
 	}
 }
 endif;

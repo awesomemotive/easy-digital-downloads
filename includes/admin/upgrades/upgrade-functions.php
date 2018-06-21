@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
@@ -218,12 +218,12 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="notice notice-warning">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating discount</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads finished migrating <strong>discounts</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
-				__( '<strong>Removing legacy data:</strong><br />All discounts records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
-				'<br /><br />' .
-				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				__( 'All discounts were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
+				'<br />' .
+				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_discounts' ) ),
@@ -247,9 +247,9 @@ function edd_show_upgrade_notices() {
 					'</p>' .
 					'<p style="display: none;">' .
 					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all logs records and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_logs</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
@@ -263,12 +263,12 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="notice notice-warning">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating log</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads finished migrating <strong>logs</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
-				__( '<strong>Removing legacy data:</strong><br />All logs records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
-				'<br /><br />' .
-				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				__( 'All logs were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
+				'<br />' .
+				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_logs' ) ),
@@ -291,9 +291,9 @@ function edd_show_upgrade_notices() {
 					'</p>' .
 					'<p style="display: none;">' .
 					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all notes and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
+					'<br />' .
 					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_notes</code>', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
@@ -307,12 +307,12 @@ function edd_show_upgrade_notices() {
 			printf(
 				'<div class="notice notice-warning">' .
 				'<p>' .
-				__( 'Easy Digital Downloads has <strong>finished migrating note</strong> records, next step is to <a href="%1$s">remove the legacy data</a>. <a href="#" onClick="%2%s">Learn more about this process</a>.', 'easy-digital-downloads' ) .
+				__( 'Easy Digital Downloads finished migrating <strong>notes</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'<p style="display: none;">' .
-				__( '<strong>Removing legacy data:</strong><br />All note records have been migrated to their own custom table. Now all old data needs to be removed.', 'easy-digital-downloads' ) .
-				'<br /><br />' .
-				__( '<strong>If you have not already, back up your database</strong> as this upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+				__( 'All notes were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
+				'<br />' .
+				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
 				'</p>' .
 				'</div>',
 				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_notes' ) ),
@@ -666,26 +666,25 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		}
 	}
 
-	$payments = new EDD_Payments_Query( array(
+	$orders = edd_get_orders( array(
 		'number' => 100,
-		'page'   => $step,
-		'status' => 'any',
-		'order'  => 'ASC'
+		'offset' => $step == 1 ? 0 : ( $step - 1 ) * 100,
+		'order'  => 'asc',
 	) );
-	$payments = $payments->get_payments();
 
-	if ( $payments ) {
-
+	if ( $orders ) {
 		$prefix  = edd_get_option( 'sequential_prefix' );
 		$postfix = edd_get_option( 'sequential_postfix' );
 		$number  = ! empty( $_GET['custom'] ) ? absint( $_GET['custom'] ) : intval( edd_get_option( 'sequential_start', 1 ) );
 
-		foreach ( $payments as $payment ) {
+		foreach ( $orders as $order ) {
 
 			// Re-add the prefix and postfix
 			$payment_number = $prefix . $number . $postfix;
 
-			edd_update_payment_meta( $payment->ID, '_edd_payment_number', $payment_number );
+			edd_update_order( $order->id, array(
+				'order_number' => $payment_number
+            ) );
 
 			// Increment the payment number
 			$number++;
@@ -1436,7 +1435,7 @@ function edd_notes_migration() {
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(comment_ID) as total_notes FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
+		$total     = $results->total_notes;
 		edd_debug_log( $total . ' to migrate' );
 	}
 
@@ -1477,12 +1476,11 @@ function edd_notes_migration() {
 			);
 
 			$id = edd_add_note( $note_data );
-			$note = new EDD\Notes\Note( $id );
 
 			$meta = get_comment_meta( $old_note->comment_ID );
 			if ( ! empty( $meta ) ) {
 				foreach ( $meta as $key => $value ) {
-					$note->add_meta( $key, $value );
+					edd_add_note_meta( $id, $key, $value );
 				}
 			}
 
@@ -1598,7 +1596,7 @@ function edd_logs_migration() {
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
+		$total     = $results->total_logs;
 		edd_debug_log( $total . ' to migrate' );
 	}
 
@@ -1620,75 +1618,81 @@ function edd_logs_migration() {
 
 	if ( ! empty( $logs ) ) {
 		foreach ( $logs as $old_log ) {
-			if ( 'file_download' === $old_log->slug ) {
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
+            $new_log_id = 0;
 
-				$post_meta = array();
+            if ( 'file_download' === $old_log->slug ) {
+                $meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
 
-				foreach ( $meta as $meta_item ) {
-					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-				}
+                $post_meta = array();
 
-				$log_data = array(
-					'download_id'  => $old_log->post_parent,
-					'file_id'      => $post_meta['_edd_log_file_id'],
-					'payment_id'   => $post_meta['_edd_log_payment_id'],
-					'price_id'     => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-					'user_id'      => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-					'ip'           => $post_meta['_edd_log_ip'],
-					'date_created' => $old_log->post_date,
-				);
+                foreach ( $meta as $meta_item ) {
+                    $post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+                }
 
-				$new_log_id = edd_add_file_download_log( $log_data );
-			} else if ( 'api_request' === $old_log->slug ) {
-				$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
+                $log_data = array(
+                    'download_id'   => $old_log->post_parent,
+                    'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
+                    'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
+                    'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+                    'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+                    'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
+                    'date_created'  => $old_log->post_date_gmt,
+                    'date_modified' => $old_log->post_modified_gmt,
+                );
 
-				$post_meta = array();
+                $new_log_id = edd_add_file_download_log( $log_data );
+            } elseif ( 'api_request' === $old_log->slug ) {
+                $meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
 
-				foreach ( $meta as $meta_item ) {
-					$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-				}
+                $post_meta = array();
 
-				$log_data = array(
-					'ip'           => $post_meta['_edd_log_request_ip'],
-					'user_id'      => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-					'api_key'      => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-					'token'        => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
-					'version'      => $post_meta['_edd_log_version'],
-					'time'         => $post_meta['_edd_log_time'],
-					'request'      => $old_log->post_excerpt,
-					'error'        => $old_log->post_content,
-					'date_created' => $old_log->post_date,
-				);
+                foreach ( $meta as $meta_item ) {
+                    $post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+                }
 
-				$new_log_id = edd_add_api_request_log( $log_data );
-			} else {
-				$post = new WP_Post( $old_log->ID );
+                $log_data = array(
+                    'ip'            => isset( $post_meta['_edd_log_request_ip'] ) ? $post_meta['_edd_log_request_ip'] : '',
+                    'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
+                    'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
+                    'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+                    'version'       => isset( $post_meta['_edd_log_version'] ) ? $post_meta['_edd_log_version'] : '',
+                    'time'          => isset( $post_meta['_edd_log_time'] ) ? $post_meta['_edd_log_time'] : '',
+                    'request'       => $old_log->post_excerpt,
+                    'error'         => $old_log->post_content,
+                    'date_created'  => $old_log->post_date_gmt,
+                    'date_modified' => $old_log->post_modified_gmt,
+                );
 
-				$log_data = array(
-					'object_id'   => $post->post_parent,
-					'object_type' => 'download',
-					'type'        => $old_log->slug,
-					'title'       => $old_log->post_title,
-					'message'     => $old_log->post_content
-				);
+                $new_log_id = edd_add_api_request_log( $log_data );
+            } else {
+                $post = get_post( $old_log->ID );
 
-				$meta            = get_post_custom( $old_log->ID );
-				$meta_to_migrate = array();
+                $log_data = array(
+                    'object_id'     => $post->post_parent,
+                    'object_type'   => 'download',
+                    'type'          => $old_log->slug,
+                    'title'         => $old_log->post_title,
+                    'message'       => $old_log->post_content,
+                    'date_created'  => $old_log->post_date_gmt,
+                    'date_modified' => $old_log->post_modified_gmt,
+                );
 
-				foreach ( $meta as $key => $value ) {
-					$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-				}
+                $meta            = get_post_custom( $old_log->ID );
+                $meta_to_migrate = array();
 
-				$new_log_id = edd_add_log( $log_data );
-				$new_log = new EDD\Logs\Log( $new_log_id );
+                foreach ( $meta as $key => $value ) {
+                    $meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+                }
 
-				if ( ! empty( $meta_to_migrate ) ) {
-					foreach ( $meta_to_migrate as $key => $value ) {
-						$new_log->add_meta( $key, $value );
-					}
-				}
-			}
+                $new_log_id = edd_add_log( $log_data );
+                $new_log    = new EDD\Logs\Log( $new_log_id );
+
+                if ( ! empty( $meta_to_migrate ) ) {
+                    foreach ( $meta_to_migrate as $key => $value ) {
+                        $new_log->add_meta( $key, $value );
+                    }
+                }
+            }
 
 			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $new_log_id );
 		}
@@ -1743,7 +1747,7 @@ function edd_remove_legacy_logs() {
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
+		$total     = $results->total_logs;
 		edd_debug_log( $total . ' to remove' );
 	}
 

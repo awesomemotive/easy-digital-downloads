@@ -81,14 +81,14 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 			/** @var EDD\Logs\Api_Request_Log $log */
 
 			$data[] = array(
-				'ID'      => $log->get_id(),
-				'request' => $log->get_request(),
-				'ip'      => $log->get_ip(),
-				'user'    => $log->get_user_id(),
-				'key'     => $log->get_api_key(),
-				'version' => $log->get_version(),
-				'speed'   => $log->get_time(),
-				'date'    => $log->get_date_created()
+				'ID'      => $log->id,
+				'request' => $log->request,
+				'ip'      => $log->ip,
+				'user'    => $log->user_id,
+				'key'     => $log->api_key,
+				'version' => $log->version,
+				'speed'   => $log->time,
+				'date'    => $log->date_created
 			);
 		}
 

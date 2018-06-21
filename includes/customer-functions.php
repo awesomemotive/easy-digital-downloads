@@ -7,13 +7,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Add a customer to the database
@@ -72,21 +72,22 @@ function edd_update_customer( $customer_id = 0, $data = array() ) {
  *
  * @since 3.0
  * @param int $customer_id Customer ID.
- * @param array $data
  *
- * @return int
+ * @return EDD_Customer
  */
 function edd_get_customer( $customer_id = 0 ) {
 	return edd_get_customer_by( 'id', $customer_id );
 }
 
 /**
- * Get a customer item by a specific field's value.
+ * Get a customer item by a specific field value.
  *
  * @since 3.0
- * @param array $args
  *
- * @return object
+ * @param string $field
+ * @param string $value
+ *
+ * @return EDD_Customer
  */
 function edd_get_customer_by( $field = '', $value = '' ) {
 
@@ -95,6 +96,25 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 
 	// Get an item
 	return $customers->get_item_by( $field, $value );
+}
+
+/**
+ * Get a field from a customer object.
+ *
+ * @since 3.0
+ *
+ * @param int    $customer_id
+ * @param string $field
+ *
+ * @return mixed Null if customer does not exist. Value of Customer if exists
+ */
+function edd_get_customer_field( $customer_id = 0, $field = '' ) {
+	$customer = edd_get_customer( $customer_id );
+
+	// Check that field exists
+	return isset( $customer->{$field} )
+		? $customer->{$field}
+		: null;
 }
 
 /**
@@ -139,6 +159,47 @@ function edd_count_customers( $args = array() ) {
 
 	// Return count(s)
 	return absint( $customers->found_items );
+}
+
+/**
+ * Query for and return array of customer counts, keyed by status
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_customer_counts() {
+
+	// Default statuses
+	$defaults = array(
+		'active'  => 0,
+		'pending' => 0,
+		'total'   => 0
+	);
+
+	// Query for count
+	$counts = new EDD\Database\Queries\Customer( array(
+		'count'   => true,
+		'groupby' => 'status'
+	) );
+
+	// Default array
+	$r = array();
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts->items ) ) {
+
+		// Loop through statuses
+		foreach ( $counts->items as $status ) {
+			$r[ $status['status'] ] = absint( $status['count'] );
+		}
+
+		// Total
+		$r['total'] = array_sum( $r );
+	}
+
+	// Return counts
+	return array_merge( $defaults, $r );
 }
 
 /**

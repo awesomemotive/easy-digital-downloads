@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Logs
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
@@ -19,6 +19,16 @@ defined( 'ABSPATH' ) || exit;
  * EDD_File_Download_Log Class.
  *
  * @since 3.0
+ *
+ * @property int $id
+ * @property int $download_id
+ * @property int $file_id
+ * @property int $order_id
+ * @property int $price_id
+ * @property string $ip
+ * @property string $user_agent
+ * @property string $date_created
+ * @property string $date_modified
  */
 class File_Download_Log extends Base_Object {
 
@@ -50,13 +60,13 @@ class File_Download_Log extends Base_Object {
 	protected $file_id;
 
 	/**
-	 * Payment ID.
+	 * Order ID.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $payment_id;
+	protected $order_id;
 
 	/**
 	 * Price ID.
@@ -104,101 +114,11 @@ class File_Download_Log extends Base_Object {
 	protected $date_created;
 
 	/**
-	 * Retrieve file download log ID.
+	 * Date modified.
 	 *
-	 * @since 3.0
-	 *
-	 * @return int
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
 	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Retrieve download ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_download_id() {
-		return $this->download_id;
-	}
-
-	/**
-	 * Retrieve file ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_file_id() {
-		return $this->file_id;
-	}
-
-	/**
-	 * Retrieve payment ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_payment_id() {
-		return $this->payment_id;
-	}
-
-	/**
-	 * Retrieve price ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_price_id() {
-		return $this->price_id;
-	}
-
-	/**
-	 * Retrieve user ID of the user who downloaded the file.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_user_id() {
-		return $this->user_id;
-	}
-
-	/**
-	 * Retrieve the IP address of the client used to download file.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_ip() {
-		return $this->ip;
-	}
-
-	/**
-	 * Retrieve the user agent of the client used to download file.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_user_agent() {
-		return $this->user_agent;
-	}
-
-	/**
-	 * Retrieve the date the file was downloaded.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_date_created() {
-		return $this->date_created;
-	}
+	protected $date_modified;
 }

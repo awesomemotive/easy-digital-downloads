@@ -104,7 +104,7 @@ class Order_Items extends Base {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => '',
+			'default'    => 'inherit',
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -123,7 +123,8 @@ class Order_Items extends Base {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// subtotal
@@ -131,7 +132,8 @@ class Order_Items extends Base {
 			'name'       => 'subtotal',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// discount
@@ -139,7 +141,8 @@ class Order_Items extends Base {
 			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// tax
@@ -147,7 +150,8 @@ class Order_Items extends Base {
 			'name'       => 'tax',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -155,7 +159,8 @@ class Order_Items extends Base {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// date_created

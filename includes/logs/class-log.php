@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Logs
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
@@ -19,6 +19,15 @@ defined( 'ABSPATH' ) || exit;
  * Log Class.
  *
  * @since 3.0
+ *
+ * @property int $id
+ * @property int $object_id
+ * @property string $object_type
+ * @property string $type
+ * @property string $title
+ * @property string $content
+ * @property string $date_created
+ * @property string $date_modified
  */
 class Log extends Base_Object {
 
@@ -93,146 +102,4 @@ class Log extends Base_Object {
 	 * @var    string
 	 */
 	protected $date_modified;
-
-	/**
-	 * Retrieve ID of the log.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Retrieve object ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @return int
-	 */
-	public function get_object_id() {
-		return $this->object_id;
-	}
-
-	/**
-	 * Retrieve object type.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_object_type() {
-		return $this->object_type;
-	}
-
-	/**
-	 * Retrieve the type of log.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_type() {
-		return $this->type;
-	}
-
-	/**
-	 * Retrieve the title of the log.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_title() {
-		return $this->title;
-	}
-
-	/**
-	 * Retrieve the content of the log.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_content() {
-		return $this->content;
-	}
-
-	/**
-	 * Retrieve the date the log was created.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_date_created() {
-		return $this->date_created;
-	}
-
-	/**
-	 * Retrieve the date the log was last modified.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_date_modified() {
-		return $this->date_modified;
-	}
-
-	/**
-	 * Retrieve log meta field for a log.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $meta_key The meta key to retrieve.
-	 * @param bool   $single   Whether to return a single value.
-	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
-	 */
-	public function get_meta( $meta_key = '', $single = true ) {
-		return edd_get_log_meta( $this->id, $meta_key, $single );
-	}
-
-	/**
-	 * Add meta data field to a log.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $meta_key   Metadata name.
-	 * @param mixed  $meta_value Metadata value.
-	 * @param bool   $unique     Optional, default is false. Whether the same key should not be added.
-	 * @return bool True on success, false otherwise.
-	 */
-	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
-		return edd_add_log_meta( $this->id, $meta_key, $meta_value, $unique );
-	}
-
-	/**
-	 * Update discount meta field based on log ID.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $meta_key   Metadata key.
-	 * @param mixed  $meta_value Metadata value.
-	 * @param mixed  $prev_value Optional. Previous value to check before removing.
-	 * @return bool True on success, false otherwise.
-	 */
-	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
-		return edd_update_log_meta( $this->id, $meta_key, $meta_value, $prev_value );
-	}
-
-	/**
-	 * Remove metadata matching criteria from a log.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $meta_key   Metadata key.
-	 * @param mixed  $meta_value Optional. Metadata value.
-	 * @return bool True on success, false otherwise.
-	 */
-	public function delete_meta( $meta_key = '', $meta_value = '' ) {
-		return edd_delete_log_meta( $this->id, $meta_key, $meta_value );
-	}
 }

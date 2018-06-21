@@ -1,18 +1,9 @@
 <?php
 
 /**
- * @group edd_payments
+ * @group edd_privacy
  */
 class Tests_Privacy extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
-
 	public function test_string_mask_0_char() {
 		$this->assertSame( '', edd_mask_string( '' ) );
 	}

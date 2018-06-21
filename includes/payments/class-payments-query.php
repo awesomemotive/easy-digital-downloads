@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -49,24 +49,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	public $payments = array();
 
 	/**
-	 * Holds a boolean to determine if there is an existing $wp_query global.
-	 *
-	 * @var bool
-	 * @access private
-	 * @since 2.8
-	 */
-	private $existing_query;
-
-	/**
-	 * If an existing global $post item exists before we start our query, maintain it for later 'reset'.
-	 *
-	 * @var WP_Post|null
-	 * @access private
-	 * @since 2.8
-	 */
-	private $existing_post;
-
-	/**
 	 * Default query arguments.
 	 *
 	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
@@ -105,8 +87,6 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
 		$this->args = $this->initial_args = wp_parse_args( $args, $defaults );
-
-		$this->init();
 	}
 
 	/**
@@ -115,10 +95,11 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 */
 	public function __set( $query_var, $value ) {
-		if ( in_array( $query_var, array( 'meta_query', 'tax_query' ) ) )
+		if ( in_array( $query_var, array( 'meta_query', 'tax_query' ), true ) ) {
 			$this->args[ $query_var ][] = $value;
-		else
+		} else {
 			$this->args[ $query_var ] = $value;
+		}
 	}
 
 	/**
@@ -128,17 +109,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function __unset( $query_var ) {
 		unset( $this->args[ $query_var ] );
-	}
-
-	/**
-	 * Nothing here at the moment.
-	 *
-	 * @since 1.8
-	 */
-	public function init() {
-		// Before we start setting up queries, let's store any existing queries that might be in globals.
-		$this->existing_query = isset( $GLOBALS['wp_query'] ) && isset( $GLOBALS['wp_query']->post );
-		$this->existing_post  = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
 	}
 
 	/**
@@ -173,33 +143,43 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		do_action( 'edd_pre_get_payments', $this );
 
+		$should_output_wp_post_objects = false;
+		$should_output_order_objects = false;
+
+		if ( 'posts' === $this->args['output'] ) {
+			$should_output_wp_post_objects = true;
+		} elseif ( 'orders' === $this->args['output'] ) {
+			$should_output_order_objects = true;
+		}
+
 		$this->remap_args();
 
 		$orders = edd_get_orders( $this->args );
 
-		$custom_output = array(
-			'payments',
-			'edd_payments',
-		);
+		if ( $should_output_order_objects ) {
+			return $orders;
+		}
 
-		if ( ! in_array( $this->args['output'], $custom_output ) ) {
-			// We need to return WP_Post objects here for backwards compatibility...
+		if ( $should_output_wp_post_objects ) {
+			// TODO: We need to return WP_Post objects here for backwards compatibility...
+		}
+
+		if ( $should_output_order_objects ) {
+			return $orders;
 		}
 
 		foreach ( $orders as $order ) {
 			/** @var $order EDD\Orders\Order */
 
-			$payment = edd_get_payment( $order->get_id() );
+			$payment = edd_get_payment( $order->id );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
 				// Backwards compatibility, needs to set `payment_number` attribute
 				$payment->payment_number = $payment->number;
 			}
 
-			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->get_id(), $this );
+			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->id, $this );
 		}
-
-		add_action( 'edd_post_get_payments', array( $this, 'date_filter_post' ) );
 
 		do_action( 'edd_post_get_payments', $this );
 
@@ -217,33 +197,15 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		$this->setup_dates( $this->args['start_date'], $this->args['end_date'] );
-
-		add_filter( 'posts_where', array( $this, 'payments_where' ) );
-	}
-
-	/**
-	 * If querying a specific date, remove filters after the query has been run
-	 * to avoid affecting future queries.
-	 *
-	 * @since 1.8
-	 * @return void
-	 */
-	public function date_filter_post() {
-		if ( ! ( $this->args['start_date'] || $this->args['end_date'] ) ) {
-			return;
-		}
-
-		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 	}
 
 	/**
 	 * Post Status
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function status() {
-		if ( ! isset ( $this->args['status'] ) ) {
+		if ( ! isset( $this->args['status'] ) ) {
 			return;
 		}
 
@@ -255,10 +217,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Current Page
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function page() {
-		if ( ! isset ( $this->args['page'] ) ) {
+		if ( ! isset( $this->args['page'] ) ) {
 			return;
 		}
 
@@ -270,14 +231,13 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Posts Per Page
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function per_page() {
-		if ( ! isset( $this->args['number'] ) ){
+		if ( ! isset( $this->args['number'] ) ) {
 			return;
 		}
 
-		if ( $this->args['number'] == -1 ) {
+		if ( - 1 === $this->args['number'] ) {
 			$this->__set( 'nopaging', true );
 		} else {
 			$this->__set( 'posts_per_page', $this->args['number'] );
@@ -290,10 +250,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Current Month
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function month() {
-		if ( ! isset ( $this->args['month'] ) ) {
+		if ( ! isset( $this->args['month'] ) ) {
 			return;
 		}
 
@@ -305,17 +264,16 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Order by
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function orderby() {
 		switch ( $this->args['orderby'] ) {
-			case 'amount' :
+			case 'amount':
 				$this->__set( 'orderby', 'meta_value_num' );
 				$this->__set( 'meta_key', '_edd_payment_total' );
-			break;
-			default :
+				break;
+			default:
 				$this->__set( 'orderby', $this->args['orderby'] );
-			break;
+				break;
 		}
 	}
 
@@ -323,7 +281,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Specific User
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function user() {
 		if ( is_null( $this->args['user'] ) ) {
@@ -338,15 +295,14 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$this->__set( 'meta_query', array(
 			'key'   => $user_key,
-			'value' => $this->args['user']
+			'value' => $this->args['user'],
 		) );
 	}
 
 	/**
 	 * Specific customer id
 	 *
-	 * @since   2.6
-	 * @return  void
+	 * @since 2.6
 	 */
 	public function customer() {
 		if ( is_null( $this->args['customer'] ) || ! is_numeric( $this->args['customer'] ) ) {
@@ -362,8 +318,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Specific gateway
 	 *
-	 * @since   2.8
-	 * @return  void
+	 * @since 2.8
 	 */
 	public function gateway() {
 		if ( is_null( $this->args['gateway'] ) ) {
@@ -372,15 +327,14 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$this->__set( 'meta_query', array(
 			'key'   => '_edd_payment_gateway',
-			'value' => $this->args['gateway']
+			'value' => $this->args['gateway'],
 		) );
 	}
 
 	/**
 	 * Specific payments
 	 *
-	 * @since   2.8.7
-	 * @return  void
+	 * @since 2.8.7
 	 */
 	public function post__in() {
 		if ( is_null( $this->args['post__in'] ) ) {
@@ -394,17 +348,15 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * Search
 	 *
 	 * @since 1.8
-	 * @return void
 	 */
 	public function search() {
-
-		if( ! isset( $this->args['s'] ) ) {
+		if ( ! isset( $this->args['s'] ) ) {
 			return;
 		}
 
 		$search = trim( $this->args['s'] );
 
-		if( empty( $search ) ) {
+		if ( empty( $search ) ) {
 			return;
 		}
 
@@ -412,122 +364,69 @@ class EDD_Payments_Query extends EDD_Stats {
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
 		if ( ! empty( $this->args['search_in_notes'] ) ) {
-
 			$notes = edd_get_payment_notes( 0, $search );
 
-			if( ! empty( $notes ) ) {
+			if ( ! empty( $notes ) ) {
+				$payment_ids = wp_list_pluck( (array) $notes, 'object_id' );
 
-				$payment_ids = wp_list_pluck( (array) $notes, 'comment_post_ID' );
-
+				// Set post__in for backwards compatibility purposes.
 				$this->__set( 'post__in', $payment_ids );
 			}
 
 			$this->__unset( 's' );
+		} elseif ( $is_email || 32 === strlen( $search ) ) {
+			$key = $is_email
+				? 'email'
+				: 'payment_key';
 
-		} elseif ( $is_email || strlen( $search ) == 32 ) {
+			if ( 'email' === $key ) {
+				$this->__set( 'user', $search );
+			} else {
+				$this->__set( 'payment_key', $search );
+			}
 
-			$key = $is_email ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
-			$search_meta = array(
-				'key'     => $key,
-				'value'   => $search,
-				'compare' => 'LIKE'
-			);
-
-			$this->__set( 'meta_query', $search_meta );
 			$this->__unset( 's' );
-
 		} elseif ( $is_user ) {
-
-			$search_meta = array(
-				'key'   => '_edd_payment_user_id',
-				'value' => trim( str_replace( 'user:', '', strtolower( $search ) ) )
-			);
-
-			$this->__set( 'meta_query', $search_meta );
-
-			if( edd_get_option( 'enable_sequential' ) ) {
-
-				$search_meta = array(
-					'key'     => '_edd_payment_number',
-					'value'   => $search,
-					'compare' => 'LIKE'
-				);
-
-				$this->__set( 'meta_query', $search_meta );
-
-				$this->args['meta_query']['relation'] = 'OR';
-
-			}
+			$this->__set( 'user', trim( str_replace( 'user:', '', strtolower( $search ) ) ) );
 
 			$this->__unset( 's' );
-
-		} elseif (
-			edd_get_option( 'enable_sequential' ) &&
-			(
-				false !== strpos( $search, edd_get_option( 'sequential_prefix' ) ) ||
-				false !== strpos( $search, edd_get_option( 'sequential_postfix' ) )
-			)
-		) {
-
-			$search_meta = array(
-				'key'     => '_edd_payment_number',
-				'value'   => $search,
-				'compare' => 'LIKE'
-			);
-
-			$this->__set( 'meta_query', $search_meta );
+		} elseif ( edd_get_option( 'enable_sequential' ) && ( false !== strpos( $search, edd_get_option( 'sequential_prefix' ) ) || false !== strpos( $search, edd_get_option( 'sequential_postfix' ) ) ) ) {
+			$this->__set( 'order_number', $search );
 			$this->__unset( 's' );
-
 		} elseif ( is_numeric( $search ) ) {
-
-			$post = get_post( $search );
-
-			if( is_object( $post ) && $post->post_type == 'edd_payment' ) {
-
-				$arr   = array();
-				$arr[] = $search;
-				$this->__set( 'post__in', $arr );
-				$this->__unset( 's' );
-			}
+			$this->__set( 'post__in', array( $search ) );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
-
-				$search_meta = array(
-					'key'     => '_edd_payment_number',
-					'value'   => $search,
-					'compare' => 'LIKE'
-				);
-
-				$this->__set( 'meta_query', $search_meta );
-				$this->__unset( 's' );
-
+				$this->__set( 'order_number', $search );
 			}
 
-		} elseif ( '#' == substr( $search, 0, 1 ) ) {
-
+			$this->__unset( 's' );
+		} elseif ( '#' === substr( $search, 0, 1 ) ) {
 			$search = str_replace( '#:', '', $search );
 			$search = str_replace( '#', '', $search );
-			$this->__set( 'download', $search );
-			$this->__unset( 's' );
 
+			$ids = edd_get_order_items( array(
+				'fields'     => 'order_id',
+				'product_id' => $search,
+			) );
+
+			$this->__set( 'post__in', array_values( $ids ) );
+
+			$this->__unset( 's' );
 		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
-
 			$search = trim( str_replace( 'discount:', '', $search ) );
-			$search = 'discount.*' . $search;
 
-			$search_meta = array(
-				'key'     => '_edd_payment_meta',
-				'value'   => $search,
-				'compare' => 'REGEXP',
-			);
+			$ids = edd_get_order_adjustments( array(
+				'fields'      => 'object_id',
+				'type'        => 'discount',
+				'description' => $search,
+			) );
 
-			$this->__set( 'meta_query', $search_meta );
+			$this->__set( 'post__in', array_values( $ids ) );
 			$this->__unset( 's' );
-
 		} else {
 			$this->__set( 's', $search );
 		}
-
 	}
 
 	/**
@@ -536,14 +435,15 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 */
 	public function mode() {
-		if ( empty( $this->args['mode'] ) || $this->args['mode'] == 'all' ) {
+		if ( empty( $this->args['mode'] ) || 'all' === $this->args['mode'] ) {
 			$this->__unset( 'mode' );
+
 			return;
 		}
 
 		$this->__set( 'meta_query', array(
 			'key'   => '_edd_payment_mode',
-			'value' => $this->args['mode']
+			'value' => $this->args['mode'],
 		) );
 	}
 
@@ -574,21 +474,21 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( is_array( $this->args['download'] ) ) {
 			$orders = edd_get_order_items( array(
-				'product_id__in' => (array) $this->args['download']
+				'product_id__in' => (array) $this->args['download'],
 			) );
 
 			foreach ( $orders as $order ) {
 				/** @var $order EDD\Orders\Order */
-				$order_ids[] = $order->get_id();
+				$order_ids[] = $order->id;
 			}
 		} else {
 			$orders = edd_get_order_items( array(
-				'product_id' => $this->args['download']
+				'product_id' => $this->args['download'],
 			) );
 
 			foreach ( $orders as $order ) {
 				/** @var $order EDD\Orders\Order */
-				$order_ids[] = $order->get_id();
+				$order_ids[] = $order->id;
 			}
 		}
 
@@ -601,13 +501,13 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * As of EDD 3.0, we have introduced new query classes and custom tables so we need to remap the arguments so we can
 	 * pass them to the new query classes.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access private
 	 */
 	private function remap_args() {
 		$arguments = array();
 
-		if ( isset( $this->args['start_date'] ) ) {
+		if ( $this->args['start_date'] ) {
 			$arguments['date_created_query']['after'] = array(
 				'year'  => date( 'Y', $this->start_date ),
 				'month' => date( 'm', $this->start_date ),
@@ -617,7 +517,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['date_created_query']['inclusive'] = true;
 		}
 
-		if ( isset( $this->args['end_date'] ) ) {
+		if ( $this->args['end_date'] ) {
 			$arguments['date_created_query']['before'] = array(
 				'year'  => date( 'Y', $this->end_date ),
 				'month' => date( 'm', $this->end_date ),
@@ -627,7 +527,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['date_created_query']['inclusive'] = true;
 		}
 
-		$arguments['number'] = $this->args['posts_per_page'];
+		$arguments['number'] = isset( $this->args['posts_per_page'] )
+			? $this->args['posts_per_page']
+			: 20;
 
 		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
 			unset( $arguments['number'] );
@@ -675,8 +577,8 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( ! is_null( $this->args['user'] ) ) {
 			$argument_key = is_numeric( $this->args['user'] )
-							? 'user_id'
-							: 'email';
+				? 'user_id'
+				: 'email';
 
 			$arguments[ $argument_key ] = $this->args['user'];
 		}
@@ -702,7 +604,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( isset( $this->args['paged'] ) && isset( $this->args['number'] ) ) {
-			$arguments['offset'] = ($this->args['paged'] * $this->args['number']) - $this->args['number'];
+			$arguments['offset'] = ( $this->args['paged'] * $this->args['number'] ) - $this->args['number'];
 		}
+
+		$this->args = $arguments;
 	}
 }

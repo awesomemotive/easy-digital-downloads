@@ -67,16 +67,5 @@ final class Order_Items extends Base {
 			KEY order_product_price_id (order_id,product_id,price_id),
 			KEY type_status (type(20),status(20))";
 	}
-
-	/**
-	 * Handle schema changes
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @return void
-	 */
-	protected function upgrade() {
-
-	}
 }
 endif;

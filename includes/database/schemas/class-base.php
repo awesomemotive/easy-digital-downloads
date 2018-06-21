@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 class Base extends \EDD\Database\Base {
 
 	/**
-	 * Array of database column objects to turn into EDD_DB_Column
+	 * Array of database column objects to turn into \EDD\Database\Column
 	 *
 	 * @since 3.0
 	 * @access public

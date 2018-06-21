@@ -45,10 +45,10 @@ class Customer extends Base {
 			case 'add':
 			case 'insert':
 				return edd_add_customer( $arguments[0] );
-				break;
+
 			case 'update':
 				return edd_update_customer( $arguments[0], $arguments[1] );
-				break;
+
 			case 'delete':
 				if ( ! is_bool( $arguments[0] ) ) {
 					return false;
@@ -60,18 +60,19 @@ class Customer extends Base {
 				break;
 			case 'exists':
 				return (bool) edd_get_customer_by( 'email', $arguments[0] );
-				break;
+
 			case 'get_customer_by':
 				return edd_get_customer_by( $arguments[0], $arguments[1] );
-				break;
+
 			case 'get_customers':
 				return edd_get_customers( $arguments[0] );
-				break;
+
 			case 'count':
-				return edd_get_customer_count();
+				return edd_count_customers( $arguments[0] );
+
 			case 'get_column':
 				return edd_get_customer_by( $arguments[0], $arguments[1] );
-				break;
+
 			case 'attach_payment':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
@@ -81,7 +82,7 @@ class Customer extends Base {
 				}
 
 				return $customer->attach_payment( $arguments[1], false );
-				break;
+
 			case 'remove_payment':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
@@ -91,7 +92,7 @@ class Customer extends Base {
 				}
 
 				return $customer->remove_payment( $arguments[1], false );
-				break;
+
 			case 'increment_stats':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
@@ -103,8 +104,10 @@ class Customer extends Base {
 				$increased_count = $customer->increase_purchase_count();
 				$increased_value = $customer->increase_value( $arguments[1] );
 
-				return ( $increased_count && $increased_value ) ? true : false;
-				break;
+				return ( $increased_count && $increased_value )
+					? true
+					: false;
+
 			case 'decrement_stats':
 				/** @var $customer \EDD_Customer */
 				$customer = edd_get_customer( $arguments[0] );
@@ -116,8 +119,9 @@ class Customer extends Base {
 				$decreased_count = $customer->decrease_purchase_count();
 				$decreased_value = $customer->decrease_value( $arguments[1] );
 
-				return ( $decreased_count && $decreased_value ) ? true : false;
-				break;
+				return ( $decreased_count && $decreased_value )
+					? true
+					: false;
 		}
 	}
 

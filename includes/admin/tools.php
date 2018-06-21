@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Tools
- * @copyright   Copyright (c) 2018, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -123,8 +123,6 @@ function edd_tools_banned_emails_display() {
 	do_action( 'edd_tools_banned_emails_after' );
 	do_action( 'edd_tools_after' );
 }
-
-add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
 /**
  * Display the recount stats.

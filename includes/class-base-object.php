@@ -30,10 +30,16 @@ abstract class Base_Object {
 	 * @param mixed $object Object to populate members for.
 	 */
 	public function __construct( $object = null ) {
-		if ( $object ) {
-			foreach ( get_object_vars( $object ) as $key => $value ) {
-				$this->{$key} = $value;
-			}
+		if ( empty( $object ) ) {
+			return;
+		}
+
+		if ( ! is_object( $object ) ) {
+			$object = (object) $object;
+		}
+
+		foreach ( get_object_vars( $object ) as $key => $value ) {
+			$this->{$key} = $value;
 		}
 	}
 
@@ -46,5 +52,36 @@ abstract class Base_Object {
 	 */
 	public function to_array() {
 		return get_object_vars( $this );
+	}
+
+	/**
+	 * Magic __get method to dispatch a call to retrieve a protected property.
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed $key The field you are trying to get
+	 *
+	 * @return mixed Either the method or property that best matches the key
+	 */
+	public function __get( $key = '' ) {
+		$retval = null;
+		$key    = sanitize_key( $key );
+
+		// Never allow for uppercase ID fields in our own
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
+
+		// Try the method first
+		if ( method_exists( $this, "get_{$key}" ) ) {
+			$retval = call_user_func( array( $this, "get_{$key}" ) );
+
+		// Try the property last
+		} elseif ( property_exists( $this, $key ) ) {
+			$retval = $this->{$key};
+		}
+
+		// Return whatever was gettable
+		return $retval;
 	}
 }

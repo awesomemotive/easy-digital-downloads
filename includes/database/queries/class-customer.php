@@ -117,22 +117,22 @@ class Customer extends Base {
 	 *     @type decimal      $purchase_value       An 18,9 numeric value. Default empty.
 	 *     @type int          $purchase_count       A numeric value. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
-	 *     @type array        $date_created_query   Date query clauses to limit discounts by. See WP_Date_Query.
+	 *     @type array        $date_created_query   Date query clauses to limit customers by. See WP_Date_Query.
 	 *                                              Default null.
 	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
 	 *     @type bool         $count                Whether to return a customer count (true) or array of customer objects.
 	 *                                              Default false.
-	 *     @type string       $fields               Site fields to return. Accepts 'ids' (returns an array of customer IDs)
+	 *     @type string       $fields               Item fields to return. Accepts any column known names
 	 *                                              or empty (returns an array of complete customer objects). Default empty.
-	 *     @type int          $number               Limit number of customers to retrieve. Default null (no limit).
+	 *     @type int          $number               Limit number of customers to retrieve. Default 100.
 	 *     @type int          $offset               Number of customers to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
 	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
-	 *     @type string       $order                How to customer retrieved customers. Accepts 'ASC', 'DESC'. Default 'DESC'.
+	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching customers for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found customers. Default false.
 	 * }
