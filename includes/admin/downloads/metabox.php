@@ -552,8 +552,8 @@ function edd_render_products_field( $post_id ) {
 	$variable_pricing = $download->has_variable_prices();
 	$variable_display = $variable_pricing ? '' : 'display:none;';
 	$variable_class   = $variable_pricing ? ' has-variable-pricing' : '';
-	$prices           = $download->get_prices();
-?>
+	$prices           = $download->get_prices(); ?>
+
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
@@ -906,7 +906,7 @@ function edd_render_refund_row( $post_id ) {
 	$edd_refund_window = edd_get_file_refund_window( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Refundability:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Refundability', 'easy-digital-downloads' ); ?></strong></p>
 		<p><?php echo EDD()->html->select( array(
 			'name'     => '_edd_refundability',
 			'options'  => $types,
@@ -922,7 +922,7 @@ function edd_render_refund_row( $post_id ) {
 		</p>
 	</div>
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Refund Window:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Refund Window', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
 			<label>
 				<input class="small-text" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
@@ -930,7 +930,7 @@ function edd_render_refund_row( $post_id ) {
 			</label>
 		</p>
 		<p>
-			<?php _e( 'Empty for global. 0 for unlimited', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Empty for global. <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ); ?>"></span>
 		</p>
 	</div>
@@ -957,12 +957,12 @@ function edd_render_download_limit_row( $post_id ) {
 	$display = 'bundle' == edd_get_download_type( $post_id ) ? ' style="display: none;"' : '';
 ?>
 	<div class="edd-product-settings-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>
-		<p><strong><?php _e( 'File Download Limit:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></strong></p>
 		<label>
 			<input class="small-text" name="_edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		</label>
 		<p>
-			<?php _e( 'Empty for global. 0 for unlimited', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Empty for global. <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
 		</p>
 	</div>
@@ -994,6 +994,8 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
  * @return void
  */
 function edd_render_down_tax_options( $post_id = 0 ) {
+
+	// Bail if current user cannot manage, or taxes are disabled
 	if ( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() ) {
 		return;
 	}
@@ -1001,14 +1003,15 @@ function edd_render_down_tax_options( $post_id = 0 ) {
 	$exclusive = edd_download_is_tax_exclusive( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Ignore Tax:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Taxability', 'easy-digital-downloads' ); ?></strong></p>
 		<label>
 			<?php echo EDD()->html->checkbox( array(
 				'name'    => '_edd_download_tax_exclusive',
 				'current' => $exclusive
 			) ); ?>
-			<?php _e( 'Mark this product as exclusive of tax', 'easy-digital-downloads' ); ?>
+			<?php _e( 'This product is non-taxable', 'easy-digital-downloads' ); ?>
 		</label>
+		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Taxability</strong>: Because you have taxes enabled, all products are taxable by default. Check this box to mark this product as non-taxable.', 'easy-digital-downloads' ); ?>"></span>
 	</div>
 
 <?php
@@ -1032,7 +1035,7 @@ function edd_render_download_quantity_option( $post_id = 0 ) {
 	$disabled = edd_download_quantities_disabled( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Item Quantities:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Item Quantities', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
 			<label>
 				<?php echo EDD()->html->checkbox( array(
@@ -1066,11 +1069,11 @@ function edd_render_meta_box_shortcode() {
 	$style         = edd_get_option( 'button_style', 'button' );
 	$color         = edd_get_option( 'checkout_color', 'blue' );
 	$color         = ( $color == 'inherit' ) ? '' : $color;
-	$shortcode     = '[purchase_link id="' . absint( get_the_ID() ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
-?>
+	$shortcode     = '[purchase_link id="' . absint( get_the_ID() ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]'; ?>
+
 	<div class="edd-product-options-wrapper">
 		<p>
-			<strong><?php _e( 'Purchase Shortcode:', 'easy-digital-downloads' ); ?></strong>
+			<strong><?php _e( 'Purchase Shortcode', 'easy-digital-downloads' ); ?></strong>
 		</p>
 		<p>
 			<input type="text" id="edd-purchase-shortcode" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
@@ -1093,10 +1096,10 @@ function edd_render_accounting_options( $post_id ) {
 		return;
 	}
 
-	$edd_sku = get_post_meta( $post_id, 'edd_sku', true );
-?>
+	$edd_sku = get_post_meta( $post_id, 'edd_sku', true ); ?>
+
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Accounting Options:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Accounting Options', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
 			<label>
 				<?php echo EDD()->html->text( array(
@@ -1126,7 +1129,7 @@ function edd_render_disable_button( $post_id ) {
 	$behavior         = get_post_meta( $post_id, '_edd_button_behavior',    true ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Button Options:', 'easy-digital-downloads' ); ?></strong></p>
+		<p><strong><?php _e( 'Button Options', 'easy-digital-downloads' ); ?></strong></p>
 		<p>
 			<label>
 				<?php echo EDD()->html->checkbox( array(
