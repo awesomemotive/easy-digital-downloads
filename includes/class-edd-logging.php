@@ -50,16 +50,6 @@ class EDD_Logging {
 	 */
 	public function __construct() {
 		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 0 );
-
-		// Backwards compatibility for API request logs
-		add_filter( 'get_post_metadata',    array( $this, '_api_request_log_get_meta_backcompat'    ), 99, 4 );
-		add_filter( 'update_post_metadata', array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata',    array( $this, '_api_request_log_update_meta_backcompat' ), 99, 5 );
-
-		// Backwards compatibility for file download logs
-		add_filter( 'get_post_metadata',    array( $this, '_file_download_log_get_meta_backcompat'    ), 99, 4 );
-		add_filter( 'update_post_metadata', array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
-		add_filter( 'add_post_metadata',    array( $this, '_file_download_log_update_meta_backcompat' ), 99, 5 );
 	}
 
 	/**
@@ -228,7 +218,7 @@ class EDD_Logging {
 				'ip'      => $log_meta['request_ip'],
 				'time'    => $log_meta['time'],
 			);
-		} else if ( 'file_download' === $args['log_type'] ) {
+		} elseif ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
 			if ( ! class_exists( 'Browser' ) ) {
@@ -246,7 +236,7 @@ class EDD_Logging {
 				'price_id'    => $log_meta['price_id'],
 				'user_id'     => $log_meta['user_id'],
 				'ip'          => $log_meta['ip'],
-				'user_agent'  => $user_agent
+				'user_agent'  => $user_agent,
 			);
 		}
 
@@ -298,7 +288,7 @@ class EDD_Logging {
 		}
 
 		// Bail if the log ID is still empty.
-		if ( empty ( $log_id ) ) {
+		if ( empty( $log_id ) ) {
 			return false;
 		}
 
@@ -309,7 +299,7 @@ class EDD_Logging {
 			$data['type'] = $args['log_type'];
 		}
 
-		$data = array (
+		$data = array(
 			'object_id'   => $args['object_id'],
 			'object_type' => $args['object_type'],
 			'title'       => $args['title'],
@@ -335,7 +325,7 @@ class EDD_Logging {
 					unset( $log_meta[ $old_key ] );
 				}
 			}
-		} else if ( 'file_download' === $data['type'] ) {
+		} elseif ( 'file_download' === $data['type'] ) {
 			$legacy = array(
 				'file_id'    => 'file_id',
 				'payment_id' => 'payment_id',
@@ -361,7 +351,7 @@ class EDD_Logging {
 
 		// Bail if not callable
 		if ( ! is_callable( $update_method ) ) {
-			return;
+			return false;
 		}
 
 		call_user_func( $update_method, $data );
@@ -460,7 +450,7 @@ class EDD_Logging {
 	 * @param string $type       Log type (default: null).
 	 * @param array  $meta_query Log meta query (default: null).
 	 */
-	public function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
+	public function delete_logs( $object_id = 0, $type = null, $meta_query = null ) {
 		$r = array(
 			'object_id' => $object_id,
 		);
@@ -513,7 +503,7 @@ class EDD_Logging {
 
 		if ( 'api_request' === $type ) {
 			$retval = 'api_request_logs';
-		} else if ( 'file_download' === $type ) {
+		} elseif ( 'file_download' === $type ) {
 			$retval = 'file_download_logs';
 		}
 
@@ -538,7 +528,7 @@ class EDD_Logging {
 			'post_parent'    => 0,
 			'posts_per_page' => 20,
 			'paged'          => get_query_var( 'paged' ),
-			'orderby'        => 'id'
+			'orderby'        => 'id',
 		) );
 
 		// Back-compat for ID ordering
@@ -621,7 +611,6 @@ class EDD_Logging {
 			}
 
 			$file = @file_get_contents( $this->file );
-
 		} else {
 			@file_put_contents( $this->file, '' );
 			@chmod( $this->file, 0664 );
@@ -686,355 +675,6 @@ class EDD_Logging {
 	 */
 	public function get_log_file_path() {
 		return $this->file;
-	}
-
-	/**
-	 * Backwards compatibility filters for get_post_meta() calls on API request logs.
-	 *
-	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
-	 *
-	 * @since 3.0
-	 *
-	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
-	 * @param  int    $object_id The object ID post meta was requested for.
-	 * @param  string $meta_key  The meta key requested.
-	 * @param  bool   $single    If the person wants the single value or an array of the value.
-	 * @return mixed  The meta value to return.
-	 */
-	public function _api_request_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
-		global $wpdb;
-
-		$meta_keys = apply_filters( 'edd_post_meta_api_request_log_backwards_compat_keys', array(
-			'_edd_log_request_ip',
-			'_edd_log_user',
-			'_edd_log_key',
-			'_edd_log_token',
-			'_edd_log_time',
-			'_edd_log_version',
-		) );
-
-		if ( ! in_array( $meta_key, $meta_keys ) ) {
-			return $value;
-		}
-
-		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
-		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
-
-		$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
-
-		if ( ! $api_request_log || ! $api_request_log->id > 0 ) {
-			// We didn't find a API request log record with this ID... so let's check and see if it was a migrated one
-			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
-
-			if ( ! empty( $object_id ) ) {
-				$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
-			} else {
-				return $value;
-			}
-		}
-
-		switch ( $meta_key ) {
-			case '_edd_log_request_ip':
-			case '_edd_log_user':
-			case '_edd_log_key':
-			case '_edd_log_token':
-			case '_edd_log_time':
-			case '_edd_log_version':
-				$key   = str_replace( '_edd_log_', '', $meta_key );
-
-				if ( 'request_ip' === $key ) {
-					$key = 'ip';
-				}
-
-				if ( 'key' === $key ) {
-					$key = 'api_key';
-				}
-
-				if ( 'user' === $key ) {
-					$key = 'user_id';
-				}
-
-				$value = $api_request_log->$key;
-
-				if ( $show_notice ) {
-					// Throw deprecated notice if WP_DEBUG is defined and on
-					trigger_error( __( 'The EDD API request log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\API_Request_Log object to get the relevant data, instead.', 'easy-digital-downloads' ) );
-					$backtrace = debug_backtrace();
-					trigger_error( print_r( $backtrace, 1 ) );
-				}
-				break;
-
-			default:
-				/*
-				 * Developers can hook in here with add_filter( 'edd_get_post_meta_api_request_log_backwards_compat-meta_key... in order to
-				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD\Logs\API_Request_Log::get_meta
-				 */
-				$value = apply_filters( 'edd_get_post_meta_api_request_log_backwards_compat-' . $meta_key, $value, $object_id );
-				break;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Listen for calls to update_post_meta for API request logs and see if we need to filter them.
-	 *
-	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
-	 *
-	 * @since 3.0
-	 *
-	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with the
-	 *                           postmeta table.
-	 * @param int    $object_id  The object ID post meta was requested for.
-	 * @param string $meta_key   The meta key requested.
-	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
-	 * @param mixed  $prev_value The previous value of the meta.
-	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
-	 */
-	public function _api_request_log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		global $wpdb;
-
-		$meta_keys = apply_filters( 'edd_post_meta_api_request_log_backwards_compat_keys', array(
-			'_edd_log_request_ip',
-			'_edd_log_user',
-			'_edd_log_key',
-			'_edd_log_token',
-			'_edd_log_time',
-			'_edd_log_version',
-		) );
-
-		if ( ! in_array( $meta_key, $meta_keys ) ) {
-			return $check;
-		}
-
-		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
-		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
-
-		$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
-
-		if ( ! $api_request_log || ! $api_request_log->id > 0 ) {
-			// We didn't find an API request log record with this ID... so let's check and see if it was a migrated one
-			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
-
-			if ( ! empty( $object_id ) ) {
-				$api_request_log = new EDD\Logs\Api_Request_Log( $object_id );
-			} else {
-				return $check;
-			}
-		}
-
-		switch ( $meta_key ) {
-			case '_edd_log_request_ip':
-			case '_edd_log_user':
-			case '_edd_log_key':
-			case '_edd_log_token':
-			case '_edd_log_time':
-			case '_edd_log_version':
-				$key   = str_replace( '_edd_log_', '', $meta_key );
-
-				if ( 'request_ip' === $key ) {
-					$key = 'ip';
-				}
-
-				if ( 'key' === $key ) {
-					$key = 'api_key';
-				}
-
-				if ( 'user' === $key ) {
-					$key = 'user_id';
-				}
-
-				$api_request_log->{$key} = $meta_value;
-
-				$api_request_log->update( array(
-					$key => $meta_value,
-				) );
-
-				// Since the old API request logs data was simply stored in a single post meta entry, just don't let it be added.
-				if ( $show_notice ) {
-					// Throw deprecated notice if WP_DEBUG is defined and on
-					trigger_error( __( 'API request log data is no longer stored in post meta. Please use the new custom database tables to insert a API request log record.', 'easy-digital-downloads' ) );
-					$backtrace = debug_backtrace();
-					trigger_error( print_r( $backtrace, 1 ) );
-				}
-				break;
-
-			default:
-				/*
-				 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
-				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
-				 */
-				$check = apply_filters( 'edd_update_post_meta_api_request_log_backwards_compat-' . $meta_key, $check, $object_id, $meta_value, $prev_value );
-				break;
-		}
-
-		return $check;
-	}
-
-	/**
-	 * Backwards compatibility filters for get_post_meta() calls on file download logs.
-	 *
-	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
-	 *
-	 * @since 3.0
-	 *
-	 * @param  mixed  $value     The value get_post_meta would return if we don't filter.
-	 * @param  int    $object_id The object ID post meta was requested for.
-	 * @param  string $meta_key  The meta key requested.
-	 * @param  bool   $single    If the person wants the single value or an array of the value.
-	 * @return mixed The meta value to return.
-	 */
-	public function _file_download_log_get_meta_backcompat( $value, $object_id, $meta_key, $single ) {
-		global $wpdb;
-
-		$meta_keys = apply_filters( 'edd_post_meta_log_backwards_compat_keys', array(
-			'_edd_log_user_info',
-			'_edd_log_user_id',
-			'_edd_log_file_id',
-			'_edd_key_ip',
-			'_edd_log_payment_id',
-			'_edd_log_price_id',
-		) );
-
-		if ( ! in_array( $meta_key, $meta_keys ) ) {
-			return $value;
-		}
-
-		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
-		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
-
-		$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
-
-		if ( ! $file_download_log || ! $file_download_log->id > 0 ) {
-			// We didn't find a API request log record with this ID... so let's check and see if it was a migrated one
-			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
-
-			if ( ! empty( $object_id ) ) {
-				$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
-			} else {
-				return $value;
-			}
-		}
-
-		switch ( $meta_key ) {
-			case '_edd_log_user_id':
-			case '_edd_log_file_id':
-			case '_edd_key_ip':
-			case '_edd_log_payment_id':
-			case '_edd_log_price_id':
-				$key = str_replace( '_edd_log_', '', $meta_key );
-
-				$value = $file_download_log->$key;
-
-				if ( $show_notice ) {
-					// Throw deprecated notice if WP_DEBUG is defined and on
-					trigger_error( __( 'The EDD file download log postmeta is <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use the EDD\Logs\File_Download_Log object to get the relevant data, instead.', 'easy-digital-downloads' ) );
-					$backtrace = debug_backtrace();
-					trigger_error( print_r( $backtrace, 1 ) );
-				}
-				break;
-			case '_edd_log_user_info':
-				$user = get_userdata( $file_download_log->user_id );
-
-				$value = array(
-					'id'    => $user->ID,
-					'email' => $user->user_email,
-					'name'  => $user->display_name,
-				);
-
-				break;
-			default:
-				/*
-				 * Developers can hook in here with add_filter( 'edd_get_post_meta_file_download_log_backwards_compat-meta_key... in order to
-				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD\Logs\File_Download_Log::get_meta
-				 */
-				$value = apply_filters( 'edd_get_post_meta_file_download_log_backwards_compat-' . $meta_key, $value, $object_id );
-				break;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Listen for calls to update_post_meta for file download logs and see if we need to filter them.
-	 *
-	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
-	 *
-	 * @since 3.0
-	 *
-	 * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with
-	 *                           the postmeta table.
-	 * @param int    $object_id  The object ID post meta was requested for.
-	 * @param string $meta_key   The meta key requested.
-	 * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
-	 * @param mixed  $prev_value The previous value of the meta
-	 *
-	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta
-	 */
-	public function _file_download_log_update_meta_backcompat( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		global $wpdb;
-
-		$meta_keys = apply_filters( 'edd_post_meta_log_backwards_compat_keys', array(
-			'_edd_log_user_info',
-			'_edd_log_user_id',
-			'_edd_log_file_id',
-			'_edd_key_ip',
-			'_edd_log_payment_id',
-			'_edd_log_price_id',
-		) );
-
-		if ( ! in_array( $meta_key, $meta_keys ) ) {
-			return $check;
-		}
-
-		$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
-		$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
-
-		$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
-
-		if ( ! $file_download_log || ! $file_download_log->id > 0 ) {
-			// We didn't find an API request log record with this ID... so let's check and see if it was a migrated one
-			$object_id = $wpdb->get_var( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_edd_log_migrated_id'" );
-
-			if ( ! empty( $object_id ) ) {
-				$file_download_log = new EDD\Logs\File_Download_Log( $object_id );
-			} else {
-				return $check;
-			}
-		}
-
-		switch ( $meta_key ) {
-			case '_edd_log_user_id':
-			case '_edd_log_file_id':
-			case '_edd_key_ip':
-			case '_edd_log_payment_id':
-			case '_edd_log_price_id':
-				$key = str_replace( '_edd_log_', '', $meta_key );
-
-				$file_download_log->{$key} = $meta_value;
-
-				$file_download_log->update( array( $key => $meta_value, ) );
-
-				// Since the old API request logs data was simply stored in a single post meta entry, just don't let it be added.
-				if ( $show_notice ) {
-					// Throw deprecated notice if WP_DEBUG is defined and on
-					trigger_error( __( 'File download log data is no longer stored in post meta. Please use the new custom database tables to insert a API request log record.', 'easy-digital-downloads' ) );
-					$backtrace = debug_backtrace();
-					trigger_error( print_r( $backtrace, 1 ) );
-				}
-				break;
-			case '_edd_log_user_info':
-				break;
-			default:
-				/*
-				 * Developers can hook in here with add_filter( 'edd_get_post_meta_discount_backwards_compat-meta_key... in order to
-				 * Filter their own meta values for backwards compatibility calls to get_post_meta instead of EDD_Discount::get_meta
-				 */
-				$check = apply_filters( 'edd_update_post_meta_file_download_log_backwards_compat-' . $meta_key, $check, $object_id, $meta_value, $prev_value );
-				break;
-		}
-
-		return $check;
 	}
 }
 
