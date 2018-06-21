@@ -4,6 +4,63 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Display customer sections
+ *
+ * Contains backwards compat code to shim tabs & views to EDD_Sections()
+ *
+ * @since 3.0
+ *
+ * @param object $customer
+ */
+function edd_customers_sections( $customer ) {
+
+	// Instantiate the Sections class and sections array
+	$sections   = new EDD_Sections();
+	$c_sections = array();
+
+	// Setup sections variables
+	$sections->item            = $customer;
+	$sections->use_js          = true;
+	$sections->current_section = ! empty( $_GET['view'] )
+		? sanitize_key( $_GET['view'] )
+		: 'overview';
+	$sections->base_url = add_query_arg( array(
+		'post_type' => 'download',
+		'page'      => 'edd-customers',
+		'id'        => $customer->id
+	), admin_url( 'edit.php' ) );
+
+	// Get all registered tabs & views
+	$tabs  = edd_customer_tabs();
+	$views = edd_customer_views();
+
+	// Loop through tabs & setup sections
+	if ( ! empty( $tabs ) ) {
+		foreach ( $tabs as $id => $tab ) {
+
+			// Bail if no view
+			if ( ! isset( $views[ $id ] ) ) {
+				continue;
+			}
+
+			// Add to sections array
+			$c_sections[] = array(
+				'id'       => $id,
+				'label'    => $tab['title'],
+				'icon'     => str_replace( 'dashicons-', '', $tab['dashicon'] ),
+				'callback' => $views[ $id ]
+			);
+		}
+	}
+
+	// Set the customer sections
+	$sections->set_sections( $c_sections );
+
+	// Display the sections
+	$sections->display();
+}
+
+/**
  * Customers Page
  *
  * Renders the customers page contents.
@@ -13,7 +70,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_customers_page() {
 	$default_views  = edd_customer_views();
-	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'customers';
+	$requested_view = isset( $_GET['view'] )
+		? sanitize_key( $_GET['view'] )
+		: 'customers';
 
 	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[ $requested_view ] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
@@ -109,9 +168,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 	if ( empty( $customer->id ) ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'easy-digital-downloads' ) );
 		$render = false;
-	}
-
-	$customer_tabs = edd_customer_tabs(); ?>
+	} ?>
 
     <div class='wrap'>
         <h2>
@@ -120,58 +177,15 @@ function edd_render_customer_view( $view, $callbacks ) {
         </h2>
 
 		<?php if ( edd_get_errors() ) :?>
-            <div class="error settings-error">
-				<?php edd_print_errors(); ?>
-            </div>
-		<?php endif; ?>
 
-		<?php if ( $customer && $render ) : ?>
+            <div class="error settings-error"><?php edd_print_errors(); ?></div>
+
+		<?php endif;
+
+		if ( $customer && $render ) : ?>
 
             <div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
-                <div id="edd-item-tab-wrapper" class="customer-tab-wrapper">
-                    <ul id="edd-item-tab-wrapper-list" class="customer-tab-wrapper-list">
-						<?php foreach ( $customer_tabs as $key => $tab ) : ?>
-							<?php $active = $key === $view ? true : false; ?>
-							<?php $class  = $active ? 'active' : 'inactive'; ?>
-
-                            <li class="<?php echo sanitize_html_class( $class ); ?>">
-
-								<?php
-
-								// prevent double "Customer" output from extensions
-								$tab['title'] = preg_replace( "(^Customer )","", $tab['title'] );
-
-								// edd item tab full title
-								$tab_title = sprintf( _x( 'Customer %s', 'Customer Details page tab title', 'easy-digital-downloads' ), esc_attr( $tab[ 'title' ] ) );
-
-								// aria-label output
-								$aria_label = ' aria-label="' . $tab_title . '"';
-								?>
-
-								<?php if ( ! $active ) : ?>
-
-                                <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=' . $key . '&id=' . $customer->id ) ); ?>"<?php echo $aria_label; ?>>
-
-									<?php endif; ?>
-
-                                    <span class="edd-item-tab-label-wrap"<?php echo $active ? $aria_label : ''; ?>>
-										<span class="dashicons <?php echo sanitize_html_class( $tab['dashicon'] ); ?>" aria-hidden="true"></span>
-										<span class="edd-item-tab-label"><?php echo esc_attr( $tab['title'] ); ?></span>
-									</span>
-
-									<?php if ( ! $active ) : ?>
-                                </a>
-							<?php endif; ?>
-
-                            </li>
-
-						<?php endforeach; ?>
-                    </ul>
-                </div>
-
-                <div id="edd-item-card-wrapper" class="edd-customer-card-wrapper">
-					<?php call_user_func( $callbacks[ $view ], $customer ); ?>
-                </div>
+				<?php edd_customers_sections( $customer ); ?>
             </div>
 
 		<?php endif; ?>

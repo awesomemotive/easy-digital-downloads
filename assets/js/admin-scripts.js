@@ -50,6 +50,47 @@ jQuery(document).ready(function ($) {
 		$( this ).children('li').children('input').attr( 'placeholder', placeholder );
 	});
 
+	// Hides the section content.
+	$( '.edd-vertical-sections.use-js .section-content' ).hide();
+
+	// Shows the first section's content.
+	$( '.edd-vertical-sections.use-js .section-content:first-child' ).show();
+
+	// Makes the 'aria-selected' attribute true for the first section nav item.
+	$( '.edd-vertical-sections.use-js .section-nav :first-child' ).attr( 'aria-selected', 'true' );
+
+	// Copies the current section item title to the box header.
+	$( '.which-section' ).text( $( '.section-nav :first-child a' ).text() );
+
+	// When a section nav item is clicked.
+	$( '.edd-vertical-sections.use-js .section-nav li a' ).on( 'click',
+		function( j ) {
+
+			// Prevent the default browser action when a link is clicked.
+			j.preventDefault();
+
+			// Get the `href` attribute of the item.
+			var them  = $( this ),
+				href  = them.attr( 'href' ),
+				rents = them.parents( '.edd-vertical-sections' );
+
+			// Hide all section content.
+			rents.find( '.section-content' ).hide();
+
+			// Find the section content that matches the section nav item and show it.
+			rents.find( href ).show();
+
+			// Set the `aria-selected` attribute to false for all section nav items.
+			rents.find( '.section-title' ).attr( 'aria-selected', 'false' );
+
+			// Set the `aria-selected` attribute to true for this section nav item.
+			them.parent().attr( 'aria-selected', 'true' );
+
+			// Copy the current section item title to the box header.
+			$( '.which-section' ).text( them.text() );
+		}
+	); // click()
+
 	/**
 	 * Download Configuration Metabox
 	 */
@@ -1907,8 +1948,8 @@ jQuery(document).ready(function ($) {
 	var EDD_Customer = {
 
 		vars: {
-			customer_card_wrap_editable:  $( '.edd-customer-card-wrapper .editable' ),
-			customer_card_wrap_edit_item: $( '.edd-customer-card-wrapper .edit-item' ),
+			customer_card_wrap_editable:  $( '#edit-customer-info .editable' ),
+			customer_card_wrap_edit_item: $( '#edit-customer-info .edit-item' ),
 			user_id: $('input[name="customerinfo[user_id]"]'),
 			state_input: $(':input[name="customerinfo[state]"]')
 		},
