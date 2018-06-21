@@ -3,10 +3,10 @@
  * This template is used to display the purchase summary with [edd_receipt]
  */
 global $edd_receipt_args;
+$order = edd_get_order( $edd_receipt_args['id'] );
 
-$payment   = get_post( $edd_receipt_args['id'] );
-
-if( empty( $payment ) ) : ?>
+// Display a notice if the order was not found in the database.
+if( ! $order ) : ?>
 
 	<div class="edd_errors edd-alert edd-alert-error">
 		<?php _e( 'The specified receipt ID appears to be invalid', 'easy-digital-downloads' ); ?>
