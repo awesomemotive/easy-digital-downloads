@@ -1011,7 +1011,7 @@ function edd_render_down_tax_options( $post_id = 0 ) {
 			) ); ?>
 			<?php _e( 'This product is non-taxable', 'easy-digital-downloads' ); ?>
 		</label>
-		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Taxability</strong>: Because you have taxes enabled, all products are taxable by default. Check this box to mark this product as non-taxable.', 'easy-digital-downloads' ); ?>"></span>
+		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Taxability</strong>: When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable.', 'easy-digital-downloads' ); ?>"></span>
 	</div>
 
 <?php
