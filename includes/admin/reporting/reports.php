@@ -280,7 +280,7 @@ function edd_register_customer_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'lifetime_value_of_customer',
-					'customer_value',
+					'average_customer_value',
 					'average_number_of_orders_per_customer',
 					'customer_average_age',
 					'most_valuable_customer',
@@ -311,13 +311,13 @@ function edd_register_customer_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'customer_value', array(
-			'label' => __( 'Customer Value', 'easy-digital-downloads' ),
+		$reports->register_endpoint( 'average_customer_value', array(
+			'label' => __( 'Average Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return apply_filters( 'edd_reports_customers_customer_value', $stats->get_customer_lifetime_value( array(
+						return apply_filters( 'edd_reports_customers_average_customer_value', $stats->get_customer_lifetime_value( array(
 							'function' => 'AVG',
 							'range'    => $filter['range'],
 							'output'   => 'formatted',
