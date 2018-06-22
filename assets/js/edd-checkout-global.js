@@ -365,6 +365,8 @@ function recalculate_taxes(state) {
 		billing_country: billing_country
 	};
 
+	jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');
+
 	var current_ajax_count = ++ajax_tax_count;
 	jQuery.ajax({
 		type: "POST",
@@ -386,6 +388,7 @@ function recalculate_taxes(state) {
 				tax_data.response = tax_response;
 				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
 			}
+			jQuery('.edd-recalculate-taxes-loading').remove();
 		}
 	}).fail(function (data) {
 		if ( window.console && window.console.log ) {
