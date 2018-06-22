@@ -390,7 +390,11 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () {
-
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_overview_average_order_value', $stats->get_order_earnings( array(
+							'function' => 'AVG',
+							'output'   => 'formatted',
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
