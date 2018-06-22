@@ -32,15 +32,6 @@ class Stats {
 	protected $query_vars = array();
 
 	/**
-	 * Date ranges.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $date_ranges = array();
-
-	/**
 	 * Query var originals. These hold query vars passed to the constructor.
 	 *
 	 * @since 3.0
@@ -48,6 +39,15 @@ class Stats {
 	 * @var array
 	 */
 	protected $query_var_originals = array();
+
+	/**
+	 * Date ranges.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $date_ranges = array();
 
 	/**
 	 * Constructor.
@@ -84,6 +84,8 @@ class Stats {
 		// Maybe parse query.
 		if ( ! empty( $query ) ) {
 			$this->parse_query( $query );
+
+			$this->query_var_originals = $this->query_vars;
 
 		// Set defaults.
 		} else {
