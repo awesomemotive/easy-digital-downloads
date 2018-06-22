@@ -155,10 +155,12 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
+		$total = $this->maybe_format( $total );
+
 		// Reset query vars.
 		$this->post_query();
 
-		return $this->maybe_format( $total );
+		return $total;
 	}
 
 	/**
@@ -431,10 +433,12 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
+		$total = $this->maybe_format( $total );
+
 		// Reset query vars.
 		$this->post_query();
 
-		return $this->maybe_format( $total );
+		return $total;
 	}
 
 	/**
@@ -685,10 +689,12 @@ class Stats {
 			? 0.00
 			: floatval( $result );
 
+		$total = $this->maybe_format( $total );
+
 		// Reset query vars.
 		$this->post_query();
 
-		return $this->maybe_format( $total );
+		return $total;
 	}
 
 	/**
@@ -738,10 +744,12 @@ class Stats {
 			? 0.00
 			: floatval( $result );
 
+		$total = $this->maybe_format( $total );
+
 		// Reset query vars.
 		$this->post_query();
 
-		return $this->maybe_format( $total );
+		return $total;
 	}
 
 	/**
@@ -1097,10 +1105,12 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
+		$total = $this->maybe_format( $total );
+
 		// Reset query vars.
 		$this->post_query();
 
-		return $this->maybe_format( $total );
+		return $total;
 	}
 
 	/**
@@ -1270,10 +1280,12 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
+		$total = $this->maybe_format( $total );
+
 		// Reset query vars.
 		$this->post_query();
 
-		return $this->maybe_format( $total );
+		return $total;
 	}
 
 	/**
