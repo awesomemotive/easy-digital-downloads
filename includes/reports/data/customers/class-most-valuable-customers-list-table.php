@@ -37,22 +37,22 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	public function reports_data() {
 		$data = array();
 
-		$filter  = Reports\get_filter_value( 'dates' );
+		$filter = Reports\get_filter_value( 'dates' );
 
 		$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
 		$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
 
 		$args = array(
-			'order'   => 'DESC',
-			'orderby' => 'total',
-			'fields'  => 'customer_id',
+			'order'      => 'DESC',
+			'orderby'    => 'total',
+			'fields'     => 'customer_id',
 			'date_query' => array(
 				array(
 					'after'     => $start_date,
 					'before'    => $end_date,
 					'inclusive' => true,
-				)
-			)
+				),
+			),
 		);
 
 		$customer_ids = array_unique( edd_get_orders( $args ) );
