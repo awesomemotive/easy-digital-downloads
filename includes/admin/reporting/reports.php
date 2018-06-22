@@ -158,7 +158,6 @@ function edd_reports_page() {
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
 function edd_register_core_reports( $reports ) {
-
 	try {
 
 		// Endpoint whitelisted for display testing purposes pre-implementation.
@@ -184,14 +183,6 @@ function edd_register_core_reports( $reports ) {
 						'context' => 'tertiary',
 					),
 				),
-			),
-		) );
-
-		$reports->add_report( 'overview', array(
-			'label'     => __( 'Overview', 'easy-digital-downloads' ),
-			'priority'  => 5,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile', 'another_test_tile' )
 			),
 		) );
 
@@ -250,14 +241,200 @@ function edd_register_core_reports( $reports ) {
 				'tiles' => array( 'test_tile' )
 			),
 		) );
-
 	} catch ( \EDD_Exception $exception ) {
-
 		edd_debug_log_exception( $exception );
-
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_core_reports' );
+
+/**
+ * Register overview report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_overview_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$reports->add_report( 'overview', array(
+			'label'     => __( 'Overview', 'easy-digital-downloads' ),
+			'priority'  => 5,
+			'endpoints' => array(
+				'tiles' => array(
+					'overview_today_data',
+					'overview_all_time_data',
+					'overview_sales',
+					'overview_earnings',
+					'overview_refunds',
+					'overview_average_customer_revenue',
+					'overview_average_order_value',
+					'overview_new_customers',
+					'overview_file_downloads',
+					'overview_taxes',
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_today_data', array(
+			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => __( 'Today', 'easy-digital-downloads' ),
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_all_time_data', array(
+			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_earnings', array(
+			'label' => __( 'Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_sales', array(
+			'label' => __( 'Sales', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_refunds', array(
+			'label' => __( 'Refunds', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_average_customer_revenue', array(
+			'label' => __( 'Average Revenue per Customer', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_average_order_value', array(
+			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_new_customers', array(
+			'label' => __( 'New Customers', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_file_downloads', array(
+			'label' => __( 'File Downloads', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_taxes', array(
+			'label' => __( 'Taxes', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_overview_report' );
 
 /**
  * Register customer report and endpoints.
