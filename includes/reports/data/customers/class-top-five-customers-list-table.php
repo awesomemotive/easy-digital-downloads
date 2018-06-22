@@ -65,6 +65,17 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	}
 
 	/**
+	 * Return empty array to disable sorting.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	public function get_sortable_columns() {
+		return array();
+	}
+
+	/**
 	 * Return empty array to remove bulk actions.
 	 *
 	 * @since 3.0
