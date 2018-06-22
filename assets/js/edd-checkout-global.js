@@ -355,7 +355,7 @@ function recalculate_taxes(state) {
 		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
 	};
 
-	jQuery('#edd_purchase_submit').after('<span class="edd-loading-ajax edd-loading"></span>');
+	jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-loading"></span>');
 
 	var current_ajax_count = ++ajax_tax_count;
 	jQuery.ajax({
