@@ -206,6 +206,7 @@ class Orders extends Base {
 			'length'     => '18,9',
 			'default'    => '0',
 			'searchable' => true,
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		)
 	);
