@@ -147,7 +147,7 @@ class Stats {
 
 		$sql = "SELECT {$function}
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -207,7 +207,7 @@ class Stats {
 
 		$sql = "SELECT {$function}
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -360,9 +360,9 @@ class Stats {
 				CROSS JOIN (
 					SELECT COUNT(id) AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$this->query_vars['status_sql']} {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -792,9 +792,9 @@ class Stats {
 				CROSS JOIN (
 					SELECT COUNT(id) AS discounted_orders
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 AND discount > 0 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$this->query_vars['status_sql']} AND discount > 0 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_row( $sql );
 
@@ -894,7 +894,7 @@ class Stats {
 
 		$sql = "SELECT gateway, {$function} AS count
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY gateway";
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1097,7 +1097,7 @@ class Stats {
 
 		$sql = "SELECT {$function}
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -1270,7 +1270,7 @@ class Stats {
 				FROM (
 					SELECT SUM(total) AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
 				  	GROUP BY customer_id
 				) o";
 
@@ -1352,11 +1352,11 @@ class Stats {
 						SELECT COUNT(DISTINCT customer_id) AS total_customers
 						FROM wp_edd_orders
 					) o
-					WHERE 1=1 {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function}
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_var( $sql );
@@ -1466,7 +1466,7 @@ class Stats {
 
 		$sql = "SELECT customer_id, SUM(total) AS total
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY customer_id
 				ORDER BY total DESC
 				LIMIT {$number}";
@@ -1506,6 +1506,8 @@ class Stats {
 			'start'             => '',
 			'end'               => '',
 			'range'             => '',
+			'status'            => array( 'publish', 'revoked' ),
+			'status_sql'        => '',
 			'where_sql'         => '',
 			'date_query_sql'    => '',
 			'date_query_column' => '',
@@ -1579,6 +1581,15 @@ class Stats {
 			}
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;
+		}
+
+		// Generate status SQL if statuses have been set.
+		if ( ! empty( $this->query_vars['status'] ) ) {
+			$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
+
+			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
+
+			$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND status IN ({$placeholders})", $this->query_vars['status'] );
 		}
 	}
 
