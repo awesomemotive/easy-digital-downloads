@@ -1293,8 +1293,6 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_order_count()
-	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
 	 *     Default empty.
@@ -1319,6 +1317,22 @@ class Stats {
 	 * @return int Number of orders made by a customer.
 	 */
 	public function get_customer_order_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: 'COUNT(id)';
+
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
 			: '';
@@ -1333,8 +1347,30 @@ class Stats {
 
 		$query['where_sql'] = "{$user} {$customer} {$email}";
 
-		// Dispatch to \EDD\Orders\Stats::get_order_count().
-		return $this->get_order_count( $query );
+		if ( 'AVG' === $function ) {
+			$sql = "SELECT COUNT(id) / total_customers AS average
+					FROM wp_edd_orders
+					CROSS JOIN (
+						SELECT COUNT(DISTINCT customer_id) AS total_customers
+						FROM wp_edd_orders
+					) o
+					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function}
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$total = null === $result
+			? 0
+			: absint( $result );
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $total;
 	}
 
 	/**
