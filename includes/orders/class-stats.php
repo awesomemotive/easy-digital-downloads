@@ -216,15 +216,38 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT (IFNULL(COUNT(id), 0) - relative)/relative * 100 AS calculation
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL(COUNT(id), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function}
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		}
 
 		$result = $this->get_db()->get_var( $sql );
 
 		$total = null === $result
 			? 0
 			: absint( $result );
+
+		if ( true === $this->query_vars['relative'] ) {
+			if ( 0 === $total ) {
+				$total = __( 'No Change', 'easy-digital-downloads' );
+			} else {
+				$total = is_numeric( $total ) && $total > 0
+					? '▲ ' .  $total . '%'
+					: '▼ ' . $total . '%';
+			}
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -1527,10 +1550,12 @@ class Stats {
 			'function'          => 'SUM',
 			'output'            => 'raw',
 			'relative'          => false,
+			'relative_start'    => '',
+			'relative_end'      => '',
 		);
 
 		if ( empty( $this->query_vars ) ) {
-			$this->query_vars = wp_parse_args( $query, $query_var_defaults );
+			$this->query_vars_defaults = $this->query_vars = wp_parse_args( $query, $query_var_defaults );
 		} else {
 			$this->query_vars = wp_parse_args( $query, $this->query_vars );
 		}
@@ -1539,6 +1564,12 @@ class Stats {
 		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
+		}
+
+		// Use Carbon to set up start and end date based on range passed.
+		if ( true === $this->query_vars['relative'] && ! empty( $this->query_vars['range'] ) && isset( $this->relative_date_ranges[ $this->query_vars['range'] ] ) ) {
+			$this->query_vars['relative_start'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
+			$this->query_vars['relative_end']   = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 		}
 
 		// Correctly format functions and column names.
@@ -1663,6 +1694,42 @@ class Stats {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Generate date query SQL for relative time periods.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 *
+	 * @return string Date query SQL.
+	 */
+	private function generate_relative_date_query_sql() {
+
+		// Bail if relative calculation not requested.
+		if ( false === $this->query_vars['relative'] ) {
+			return '';
+		}
+
+		// Generate date query SQL if dates have been set.
+		if ( ! empty( $this->query_vars['relative_start'] ) || ! empty( $this->query_vars['relative_end'] ) ) {
+			$date_query_sql = "AND {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
+
+			if ( ! empty( $this->query_vars['relative_start'] ) ) {
+				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['relative_start'] );
+			}
+
+			// Join dates with `AND` if start and end date set.
+			if ( ! empty( $this->query_vars['relative_start'] ) && ! empty( $this->query_vars['relative_end'] ) ) {
+				$date_query_sql .= ' AND ';
+			}
+
+			if ( ! empty( $this->query_vars['relative_end'] ) ) {
+				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $this->query_vars['relative_end'] );
+			}
+
+			return $date_query_sql;
+		}
 	}
 
 	/** Private Getters *******************************************************/
