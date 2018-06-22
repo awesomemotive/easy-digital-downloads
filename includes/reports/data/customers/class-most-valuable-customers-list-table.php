@@ -35,40 +35,36 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	 * @return array $data Customers.
 	 */
 	public function reports_data() {
+		global $wpdb;
+
 		$data = array();
 
 		$filter = Reports\get_filter_value( 'dates' );
 
-		$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
-		$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+		$start_date = sanitize_text_field( date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) ) );
+		$end_date   = sanitize_text_field( date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) ) );
 
-		$args = array(
-			'order'      => 'DESC',
-			'orderby'    => 'total',
-			'fields'     => 'customer_id',
-			'date_query' => array(
-				array(
-					'after'     => $start_date,
-					'before'    => $end_date,
-					'inclusive' => true,
-				),
-			),
-		);
+		$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM(total) AS total_spent
+				FROM {$wpdb->edd_orders}
+				WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s
+				GROUP BY customer_id";
 
-		$customer_ids = array_unique( edd_get_orders( $args ) );
+		$results = $wpdb->get_results( $wpdb->prepare( $sql, sanitize_text_field( 'publish' ), sanitize_text_field( 'revoked' ), $start_date, $end_date ) );
 
-		foreach ( $customer_ids as $customer_id ) {
-			$customer = edd_get_customer( $customer_id );
+		foreach ( $results as $result ) {
+			$customer = edd_get_customer( (int) $result->customer_id );
 
-			$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
+			$user_id = ! empty( $customer->user_id )
+				? intval( $customer->user_id )
+				: 0;
 
 			$data[] = array(
 				'id'           => $customer->id,
 				'user_id'      => $user_id,
 				'name'         => $customer->name,
 				'email'        => $customer->email,
-				'order_count'  => $customer->purchase_count,
-				'spent'        => $customer->purchase_value,
+				'order_count'  => absint( $result->order_count ),
+				'spent'        => $result->total_spent,
 				'date_created' => $customer->date_created,
 			);
 		}
