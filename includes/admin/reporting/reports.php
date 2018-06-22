@@ -306,7 +306,11 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () {
+						$stats = new EDD\Orders\Stats( array(
+							'output' => 'formatted',
+						) );
 
+						return $stats->get_order_count() . '/' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
