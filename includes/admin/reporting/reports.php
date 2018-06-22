@@ -301,10 +301,11 @@ function edd_register_customer_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () {
-						global $wpdb;
-						$average_value = $wpdb->get_var( "SELECT AVG(purchase_value) AS average FROM {$wpdb->edd_customers}" );
-
-						return edd_currency_filter( edd_format_amount( $average_value ) );
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_customer_lifetime_value( array(
+							'function' => 'AVG',
+							'output'   => 'formatted',
+						) );
 					},
 				),
 			),
@@ -316,7 +317,7 @@ function edd_register_customer_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return $stats->get_order_earnings( array(
+						return $stats->get_customer_lifetime_value( array(
 							'function' => 'AVG',
 							'range'    => $filter['range'],
 							'output'   => 'formatted',
@@ -335,10 +336,10 @@ function edd_register_customer_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () {
-						global $wpdb;
-						$average_value = $wpdb->get_var( "SELECT AVG(purchase_count) AS average FROM {$wpdb->edd_customers}" );
-
-						return (int) $average_value;
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_customer_order_count( array(
+							'function' => 'AVG',
+						) );
 					},
 					'display_args'  => array(
 						'context' => 'tertiary',
