@@ -266,7 +266,7 @@ function edd_register_overview_report( $reports ) {
 			'label'     => __( 'Overview', 'easy-digital-downloads' ),
 			'priority'  => 5,
 			'endpoints' => array(
-				'tiles' => array(
+				'tiles'  => array(
 					'overview_time_period_data',
 					'overview_all_time_data',
 					'overview_sales',
@@ -277,6 +277,10 @@ function edd_register_overview_report( $reports ) {
 					'overview_new_customers',
 					'overview_file_downloads',
 					'overview_taxes',
+				),
+				'charts' => array(
+					'overview_sales_chart',
+					'overview_earnings_chart',
 				),
 			),
 		) );
@@ -456,6 +460,98 @@ function edd_register_overview_report( $reports ) {
 					'display_args'  => array(
 						'context'          => 'primary',
 						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_sales_chart', array(
+			'label' => __( 'Sales', 'easy-digital-downloads' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function () use ( $filter ) {
+						global $wpdb;
+
+						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
+						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, COUNT(id) AS total
+					         FROM {$wpdb->edd_orders} edd_o
+					         WHERE ( ( date_created >= %s
+                             AND date_created <= %s ) ) 
+                             GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
+                             ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
+						$start_date, $end_date ) );
+
+						$sales = array();
+
+						$i = 0;
+						foreach ( $results as $result ) {
+							$sales[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
+							$sales[ $i ][] = $result->total;
+
+							$i ++;
+						}
+
+						return array( 'sales' => $sales );
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'sales' => array(
+								'label'           => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_earnings_chart', array(
+			'label' => __( 'Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function () use ( $filter ) {
+						global $wpdb;
+
+						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
+						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, SUM(total) AS total
+					         FROM {$wpdb->edd_orders} edd_o
+					         WHERE ( ( date_created >= %s
+                             AND date_created <= %s ) ) 
+                             GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
+                             ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
+						$start_date, $end_date ) );
+
+						$earnings = array();
+
+						$i = 0;
+						foreach ( $results as $result ) {
+							$earnings[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
+							$earnings[ $i ][] = $result->total;
+
+							$i ++;
+						}
+
+						return array( 'earnings' => $earnings );
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'earnings' => array(
+								'label'           => __( 'Earnings', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
 					),
 				),
 			),
