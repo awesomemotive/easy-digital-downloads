@@ -317,11 +317,11 @@ function edd_register_customer_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return $stats->get_customer_lifetime_value( array(
+						return apply_filters( 'edd_reports_customers_customer_value', $stats->get_customer_lifetime_value( array(
 							'function' => 'AVG',
 							'range'    => $filter['range'],
 							'output'   => 'formatted',
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -337,9 +337,9 @@ function edd_register_customer_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () {
 						$stats = new EDD\Orders\Stats();
-						return $stats->get_customer_order_count( array(
+						return apply_filters( 'edd_reports_customers_average_order_count', $stats->get_customer_order_count( array(
 							'function' => 'AVG',
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context' => 'tertiary',
@@ -356,7 +356,7 @@ function edd_register_customer_report( $reports ) {
 						global $wpdb;
 						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
 
-						return $average_value . ' ' . __( 'days', 'easy-digital-downloads' );
+						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
 					},
 					'display_args'  => array(
 						'context' => 'primary',
