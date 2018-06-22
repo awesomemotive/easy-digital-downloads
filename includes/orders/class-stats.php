@@ -1342,10 +1342,8 @@ class Stats {
 			: '';
 
 		$email = isset( $this->query_vars['email'] )
-			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
+			? $this->get_db()->prepare( 'AND email = %s', sanitize_email( $this->query_vars['email'] ) )
 			: '';
-
-		$query['where_sql'] = "{$user} {$customer} {$email}";
 
 		if ( 'AVG' === $function ) {
 			$sql = "SELECT COUNT(id) / total_customers AS average
@@ -1354,11 +1352,11 @@ class Stats {
 						SELECT COUNT(DISTINCT customer_id) AS total_customers
 						FROM wp_edd_orders
 					) o
-					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function}
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_var( $sql );
