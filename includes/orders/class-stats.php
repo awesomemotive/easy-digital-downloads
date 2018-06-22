@@ -156,9 +156,22 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT (IFNULL(SUM(total), 0) - relative)/relative * 100 AS calculation
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL(SUM(total), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function}
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -166,7 +179,17 @@ class Stats {
 			? 0.00
 			: (float) $result;
 
-		$total = $this->maybe_format( $total );
+		if ( true === $this->query_vars['relative'] ) {
+			if ( 0 === $total ) {
+				$total = __( 'No Change', 'easy-digital-downloads' );
+			} else {
+				$total = is_numeric( $total ) && $total > 0
+					? '▲ ' . absint( $total ) . '%'
+					: '▼ ' . absint( $total ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -244,7 +267,7 @@ class Stats {
 				$total = __( 'No Change', 'easy-digital-downloads' );
 			} else {
 				$total = is_numeric( $total ) && $total > 0
-					? '▲ ' .  $total . '%'
+					? '▲ ' . $total . '%'
 					: '▼ ' . $total . '%';
 			}
 		}
