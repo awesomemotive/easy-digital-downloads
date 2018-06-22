@@ -317,8 +317,9 @@ function edd_register_customer_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
 						return $stats->get_order_earnings( array(
-							'range'  => $filter['range'],
-							'output' => 'formatted',
+							'function' => 'AVG',
+							'range'    => $filter['range'],
+							'output'   => 'formatted',
 						) );
 					},
 					'display_args'  => array(
