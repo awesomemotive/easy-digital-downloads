@@ -267,7 +267,7 @@ function edd_register_overview_report( $reports ) {
 			'priority'  => 5,
 			'endpoints' => array(
 				'tiles' => array(
-					'overview_today_data',
+					'overview_time_period_data',
 					'overview_all_time_data',
 					'overview_sales',
 					'overview_earnings',
@@ -281,13 +281,13 @@ function edd_register_overview_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'overview_today_data', array(
+		$reports->register_endpoint( 'overview_time_period_data', array(
 			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats( array(
-							'range'  => 'today',
+							'range'  => $filter['range'],
 							'output' => 'formatted',
 						) );
 
@@ -295,7 +295,7 @@ function edd_register_overview_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
-						'comparison_label' => __( 'Today', 'easy-digital-downloads' ),
+						'comparison_label' => $label,
 					),
 				),
 			),
