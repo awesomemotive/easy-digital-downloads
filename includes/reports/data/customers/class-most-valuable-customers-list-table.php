@@ -75,4 +75,37 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 
 		return $data;
 	}
+
+	/**
+	 * Return empty array to remove bulk actions.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
+		return array();
+	}
+
+	/**
+	 * Hide pagination.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $which
+	 */
+	protected function pagination( $which ) {
+
+	}
+
+	/**
+	 * Hide table navigation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+
+	}
 }
