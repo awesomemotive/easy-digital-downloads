@@ -46,7 +46,9 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		foreach ( $customers as $customer ) {
 			/** @var \EDD_Customer $customer */
 
-			$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
+			$user_id = ! empty( $customer->user_id )
+				? intval( $customer->user_id )
+				: 0;
 
 			$data[] = array(
 				'id'            => $customer->id,
@@ -60,5 +62,38 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Return empty array to remove bulk actions.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
+		return array();
+	}
+
+	/**
+	 * Hide pagination.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $which
+	 */
+	protected function pagination( $which ) {
+
+	}
+
+	/**
+	 * Hide table navigation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+
 	}
 }
