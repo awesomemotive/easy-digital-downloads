@@ -63,13 +63,13 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 			$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
 
 			$data[] = array(
-				'id'            => $customer->id,
-				'user_id'       => $user_id,
-				'name'          => $customer->name,
-				'email'         => $customer->email,
-				'num_purchases' => $customer->purchase_count,
-				'amount_spent'  => $customer->purchase_value,
-				'date_created'  => $customer->date_created,
+				'id'           => $customer->id,
+				'user_id'      => $user_id,
+				'name'         => $customer->name,
+				'email'        => $customer->email,
+				'order_count'  => $customer->purchase_count,
+				'spent'        => $customer->purchase_value,
+				'date_created' => $customer->date_created,
 			);
 		}
 
