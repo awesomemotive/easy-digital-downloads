@@ -339,8 +339,12 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Sales', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_overview_average_customer_revenue', $stats->get_order_count( array(
+							'range'    => $filter['range'],
+							'relative' => true,
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
