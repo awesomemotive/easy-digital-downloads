@@ -243,14 +243,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'customers', array(
-			'label'     => __( 'Customers', 'easy-digital-downloads' ),
-			'priority'  => 40,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'categories', array(
 			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
 			'priority'  => 45,
@@ -266,6 +258,187 @@ function edd_register_core_reports( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_core_reports' );
+
+/**
+ * Register customer report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_customer_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$reports->add_report( 'customers', array(
+			'label'     => __( 'Customers', 'easy-digital-downloads' ),
+			'priority'  => 40,
+			'endpoints' => array(
+				'tiles'  => array(
+					'lifetime_value_of_customer',
+					'average_customer_value',
+					'average_number_of_orders_per_customer',
+					'customer_average_age',
+					'most_valuable_customer',
+				),
+				'tables' => array(
+					'top_five_customers',
+					'most_valuable_customers',
+				),
+				'charts' => array(
+					'new_customers',
+				),
+			),
+			'filters'   => array( 'dates' ),
+		) );
+
+		$reports->register_endpoint( 'lifetime_value_of_customer', array(
+			'label' => __( 'Average Lifetime Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_customer_lifetime_value( array(
+							'function' => 'AVG',
+							'output'   => 'formatted',
+						) );
+					},
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_customer_value', array(
+			'label' => __( 'Average Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_customers_average_customer_value', $stats->get_customer_lifetime_value( array(
+							'function' => 'AVG',
+							'range'    => $filter['range'],
+							'output'   => 'formatted',
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_number_of_orders_per_customer', array(
+			'label' => __( 'Average Number of Orders', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_customers_average_order_count', $stats->get_customer_order_count( array(
+							'function' => 'AVG',
+						) ) );
+					},
+					'display_args'  => array(
+						'context' => 'tertiary',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'customer_average_age', array(
+			'label' => __( 'Average Age', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+						global $wpdb;
+						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
+
+						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
+					},
+					'display_args'  => array(
+						'context' => 'primary',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'top_five_customers', array(
+			'label' => __( 'Top Five Customers of All Time', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Customers\\Top_Five_Customers_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-top-five-customers-list-table.php',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'most_valuable_customers', array(
+			'label' => __( 'Most Valuable Customers of ', 'easy-digital-downloads' ) . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Customers\\Most_Valuable_Customers_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-most-valuable-customers-list-table.php',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'new_customers', array(
+			'label' => __( 'New Customers', 'easy-digital-downloads' ),
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function () use ( $filter ) {
+						global $wpdb;
+
+						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
+						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, COUNT(edd_c.id) AS new_customers
+					         FROM {$wpdb->edd_customers} edd_c
+					         WHERE ( ( date_created >= %s
+                             AND date_created <= %s ) ) 
+                             GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
+                             ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
+						$start_date, $end_date ) );
+
+						$new_customers = array();
+
+						$i = 0;
+						foreach ( $results as $result ) {
+							$new_customers[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
+							$new_customers[ $i ][] = $result->new_customers;
+
+							$i++;
+						}
+
+						return array( 'customers' => $new_customers );
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'customers' => array(
+								'label'           => __( 'New Customers', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_customer_report' );
 
 /**
  * Renders the Reports Downloads Table
