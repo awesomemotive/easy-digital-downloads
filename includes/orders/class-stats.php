@@ -1526,6 +1526,7 @@ class Stats {
 			'table'             => '',
 			'function'          => 'SUM',
 			'output'            => 'raw',
+			'relative'          => false,
 		);
 
 		if ( empty( $this->query_vars ) ) {
