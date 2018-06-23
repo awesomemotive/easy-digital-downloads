@@ -230,6 +230,33 @@ function edd_customers_view( $customer = '' ) {
 		$privacy_timestamp = array_pop( $privacy_timestamps );
 	}
 
+	$user_id = ( $customer->user_id > 0 )
+		? absint( $customer->user_id )
+		: '';
+
+	$data_atts = array(
+		'key'     => 'user_login',
+		'exclude' => $user_id
+	);
+
+	$user_args  = array(
+		'name'  => 'customerinfo[user_login]',
+		'class' => 'edd-user-dropdown',
+		'data'  => $data_atts
+	);
+
+	// Maybe get user data
+	if ( ! empty( $user_id ) ) {
+		$userdata = get_userdata( $user_id );
+
+		if ( ! empty( $userdata->user_login ) ) {
+			$user_login         = $userdata->user_login;
+			$user_args['value'] = $user_login;
+		} else {
+			$user_login = false;
+		}
+	}
+
 	do_action( 'edd_customer_card_top', $customer ); ?>
 
     <div class="info-wrapper customer-section">
@@ -259,9 +286,9 @@ function edd_customers_view( $customer = '' ) {
                 </div>
 
                 <div class="customer-address-wrapper right">
-					<?php if ( ! empty( $customer->user_id ) ) :
+					<?php if ( ! empty( $user_id ) ) :
 
-						$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
+						$address = get_user_meta( $user_id, '_edd_user_address', true );
 						$address = wp_parse_args( $address, array(
 							'line1'   => '',
 							'line2'   => '',
@@ -351,32 +378,16 @@ function edd_customers_view( $customer = '' ) {
 	                    ?>
 					</span>
                     <span class="customer-user-id info-item edit-item">
-						<?php
-
-						$user_id    = $customer->user_id > 0 ? $customer->user_id : '';
-						$data_atts  = array( 'key' => 'user_login', 'exclude' => $user_id );
-						$user_args  = array(
-							'name'  => 'customerinfo[user_login]',
-							'class' => 'edd-user-dropdown',
-							'data'  => $data_atts,
-						);
-
-						// Maybe get user data
-						if ( ! empty( $user_id ) ) {
-							$userdata = get_userdata( $user_id );
-
-							if ( ! empty( $userdata ) ) {
-								$user_args['value'] = $userdata->user_login;
-							}
-						}
-
-						echo EDD()->html->ajax_user_search( $user_args ); ?>
-                        <input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $customer->user_id ); ?>" />
+						<?php echo EDD()->html->ajax_user_search( $user_args ); ?>
+                        <input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $user_id ); ?>" />
 					</span>
                     <span class="customer-user-id info-item editable">
-						<?php if ( intval( $customer->user_id ) > 0 && ! empty( $userdata ) ) : ?>
+						<?php if ( ! empty( $user_id ) ) : ?>
                             <span data-key="user_id">
-								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $customer->user_id ); ?>"><?php echo esc_html( $userdata->user_login ); ?></a>
+								<?php if ( empty( $user_login ) ) :
+									printf( __( 'User %s missing', 'easy-digital-downloads' ), '<code>' . $user_id . '</code>');
+								endif; ?>
+								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $user_id ); ?>"><?php echo esc_html( $user_login ); ?></a>
 							</span>
 						<?php else : ?>
                             <span data-key="user_id">
@@ -384,7 +395,7 @@ function edd_customers_view( $customer = '' ) {
 							</span>
 						<?php endif; ?>
 
-						<?php if ( current_user_can( $customer_edit_role ) && intval( $customer->user_id ) > 0 ) : ?>
+						<?php if ( current_user_can( $customer_edit_role ) && intval( $user_id ) > 0 ) : ?>
                             <span class="disconnect-user">
 								<a id="disconnect-customer" href="#disconnect" class="dashicons dashicons-editor-unlink"></a>
 							</span>
@@ -688,7 +699,7 @@ function edd_customers_delete_view( $customer ) {
 
             <h3><?php _e( 'Delete', 'easy-digital-downloads' ); ?></h3>
 
-            <div class="customer-info delete-customer">
+            <div class="delete-customer">
 				<span class="delete-customer-options">
 					<p>
 						<?php echo EDD()->html->checkbox( array( 'name' => 'edd-customer-delete-confirm' ) ); ?>
@@ -707,8 +718,8 @@ function edd_customers_delete_view( $customer ) {
 					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
 					<?php wp_nonce_field( 'delete-customer', '_wpnonce', false, true ); ?>
                     <input type="hidden" name="edd_action" value="delete-customer" />
-					<input type="submit" disabled="disabled" id="edd-delete-customer" class="button-primary" value="<?php _e( 'Delete Customer', 'easy-digital-downloads' ); ?>" />
 					<a id="edd-delete-customer-cancel" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>" class="delete"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+					<input type="submit" disabled="disabled" id="edd-delete-customer" class="button-primary" value="<?php _e( 'Delete Customer', 'easy-digital-downloads' ); ?>" />
 				</span>
             </div>
         </form>
@@ -737,7 +748,7 @@ function edd_customer_tools_view( $customer ) {
 
         <h3><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h3>
 
-        <div class="edd-item-info customer-info">
+        <div class="edd-item-info">
             <h4><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></h4>
             <p class="edd-item-description"><?php _e( 'Use this tool to recalculate the purchase count and total value of the customer.', 'easy-digital-downloads' ); ?></p>
             <form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">

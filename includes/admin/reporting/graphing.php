@@ -264,7 +264,9 @@ function edd_reports_graph() {
 
 						$month_keys = array_keys( $months );
 
-						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+						$consolidated_date = $month === end( $month_keys )
+							? cal_days_in_month( CAL_GREGORIAN, $month, $year )
+							: 1;
 
 						$earnings        = array_sum( $days );
 						$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
@@ -273,7 +275,9 @@ function edd_reports_graph() {
 				} else {
 					foreach ( $months as $month => $count ) {
 						$month_keys = array_keys( $months );
-						$consolidated_date = $month === end( $month_keys ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : 1;
+						$consolidated_date = $month === end( $month_keys )
+							? cal_days_in_month( CAL_GREGORIAN, $month, $year )
+							: 1;
 
 						$date = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
 						$earnings_data[] = array( $date, $count );
@@ -293,12 +297,14 @@ function edd_reports_graph() {
 
 	$data = array(
 		__( 'Earnings', 'easy-digital-downloads' ) => $earnings_data,
-		__( 'Sales', 'easy-digital-downloads' )    => $sales_data
+		__( 'Sales',    'easy-digital-downloads' ) => $sales_data
 	);
 
 	// start our own output buffer
 	ob_start();
+
 	do_action( 'edd_reports_graph_before' ); ?>
+
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder" style="padding-top: 0;">
 			<div class="postbox">
@@ -357,13 +363,11 @@ function edd_reports_graph() {
 			</div>
 		</div>
 	</div>
+
 	<?php do_action( 'edd_reports_graph_after' );
 
-	// get output buffer contents and end our own buffer
-	$output = ob_get_contents();
-	ob_end_clean();
-
-	echo $output;
+	// Output the buffer
+	echo ob_get_clean();
 }
 
 /**
@@ -653,8 +657,8 @@ function edd_reports_graph_controls() {
 
 				<select class="edd-graphs-date-options" name="range">
 				<?php foreach ( $date_options as $key => $option ) : ?>
-						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
-					<?php endforeach; ?>
+					<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
+				<?php endforeach; ?>
 				</select>
 
 				<div class="edd-date-range-options">
