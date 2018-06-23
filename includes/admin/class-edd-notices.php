@@ -584,8 +584,7 @@ class EDD_Notices {
 				case 'primary-email-updated' :
 					$this->add_notice( array(
 						'id'      => 'eddedd-customer-primary-email-updated',
-						'message' => __( 'Primary email updated for customer', 'easy-digital-downloads'),
-						'class'   => 'error'
+						'message' => __( 'Primary email updated for customer', 'easy-digital-downloads')
 					) );
 					break;
 				case 'primary-email-failed' :
