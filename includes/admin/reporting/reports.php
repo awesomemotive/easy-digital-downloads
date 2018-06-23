@@ -59,7 +59,14 @@ function edd_reports_sections() {
 	$sections->display();
 }
 
-function edd_output_report_callback( $report_id ) {
+/**
+ * Output a report via a callback
+ *
+ * @since 3.0
+ *
+ * @param string $report_id
+ */
+function edd_output_report_callback( $report_id = '' ) {
 	$report = EDD\Reports\get_report( $report_id );
 
 	/**
@@ -73,11 +80,11 @@ function edd_output_report_callback( $report_id ) {
 	 */
 	do_action( 'edd_reports_page_top', $report );
 
-	if ( ! is_wp_error( $report ) ) :
+	if ( ! is_wp_error( $report ) ) {
 		$report->display();
-	else :
+	} else {
 		Reports\default_display_report( $report );
-	endif;
+	}
 
 	/**
 	 * Fires at the bottom of the content area of a Reports tab.
@@ -113,6 +120,7 @@ function edd_reports_page() {
 			<?php edd_reports_sections(); ?>
 		</div>
 	</div><!-- .wrap -->
+
 	<?php
 }
 
@@ -200,11 +208,8 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-
 	} catch ( \EDD_Exception $exception ) {
-
 		edd_debug_log_exception( $exception );
-
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_core_reports' );
@@ -219,18 +224,25 @@ add_action( 'edd_reports_init', 'edd_register_core_reports' );
  */
 function edd_reports_downloads_table() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	if( isset( $_GET['download-id'] ) )
+	if ( isset( $_GET['download-id'] ) ) {
 		return;
+	}
 
-	include( dirname( __FILE__ ) . '/class-download-reports-table.php' );
+	include dirname( __FILE__ ) . '/class-download-reports-table.php'; ?>
 
-	$downloads_table = new EDD_Download_Reports_Table();
-	$downloads_table->prepare_items();
-	$downloads_table->display();
+	<div class="inside">
+		<?php
+		$downloads_table = new EDD_Download_Reports_Table();
+		$downloads_table->prepare_items();
+		$downloads_table->display();
+		?>
+	</div>
+
+	<?php
 }
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
@@ -242,12 +254,13 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
  */
 function edd_reports_download_details() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	if( ! isset( $_GET['download-id'] ) )
+	if ( ! isset( $_GET['download-id'] ) ) {
 		return;
+	}
 
 	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
 }
@@ -264,15 +277,21 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
  */
 function edd_reports_gateways_table() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	include( dirname( __FILE__ ) . '/class-gateways-reports-table.php' );
+	include dirname( __FILE__ ) . '/class-gateways-reports-table.php'; ?>
 
-	$downloads_table = new EDD_Gateway_Reports_Table();
-	$downloads_table->prepare_items();
-	$downloads_table->display();
+	<div class="inside">
+		<?php
+		$downloads_table = new EDD_Gateway_Reports_Table();
+		$downloads_table->prepare_items();
+		$downloads_table->display();
+		?>
+	</div>
+
+	<?php
 }
 add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
 
@@ -285,14 +304,16 @@ add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
  */
 function edd_reports_earnings() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
-	}
-	?>
+	} ?>
+
 	<div class="tablenav top">
 		<div class="alignleft actions"><?php edd_report_views(); ?></div>
 	</div>
+
 	<?php
+
 	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
@@ -303,45 +324,44 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
  * @since  2.4
  */
 function edd_reports_categories() {
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
-	}
+	} ?>
 
-	include( dirname( __FILE__ ) . '/class-categories-reports-table.php' );
-	?>
-			<div class="inside">
-				<?php
+	<div class="inside">
+		<?php
 
-				$categories_table = new EDD_Categories_Reports_Table();
-				$categories_table->prepare_items();
-				$categories_table->display();
-				?>
+		include dirname( __FILE__ ) . '/class-categories-reports-table.php';
+		$categories_table = new EDD_Categories_Reports_Table();
+		$categories_table->prepare_items();
+		$categories_table->display();
 
-				<?php echo $categories_table->load_scripts(); ?>
+		echo $categories_table->load_scripts(); ?>
 
-				<div class="edd-mix-totals">
-					<div class="edd-mix-chart">
-						<strong><?php _e( 'Category Sales Mix: ', 'easy-digital-downloads' ); ?></strong>
-						<?php $categories_table->output_sales_graph(); ?>
-					</div>
-					<div class="edd-mix-chart">
-						<strong><?php _e( 'Category Earnings Mix: ', 'easy-digital-downloads' ); ?></strong>
-						<?php $categories_table->output_earnings_graph(); ?>
-					</div>
-				</div>
-
-				<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
-
-				<p class="edd-graph-notes">
-					<span>
-						<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
-					</span>
-					<span>
-						<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
-					</span>
-				</p>
-
+		<div class="edd-mix-totals">
+			<div class="edd-mix-chart">
+				<strong><?php _e( 'Category Sales Mix: ', 'easy-digital-downloads' ); ?></strong>
+				<?php $categories_table->output_sales_graph(); ?>
 			</div>
+			<div class="edd-mix-chart">
+				<strong><?php _e( 'Category Earnings Mix: ', 'easy-digital-downloads' ); ?></strong>
+				<?php $categories_table->output_earnings_graph(); ?>
+			</div>
+		</div>
+
+		<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
+
+		<p class="edd-graph-notes">
+			<span>
+				<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
+			</span>
+			<span>
+				<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
+			</span>
+		</p>
+	</div>
+
 	<?php
 }
 add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
@@ -354,12 +374,14 @@ add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
  */
 function edd_reports_taxes() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
-	?>
+	$year = isset( $_GET['year'] )
+		? absint( $_GET['year'] )
+		: date( 'Y' ); ?>
+
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php _e('Tax Report','easy-digital-downloads' ); ?></span></h3>
@@ -380,6 +402,7 @@ function edd_reports_taxes() {
 			</div><!-- .inside -->
 		</div><!-- .postbox -->
 	</div><!-- .metabox-holder -->
+
 	<?php
 }
 add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
@@ -392,10 +415,10 @@ add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
  */
 function edd_reports_tab_export() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
-	}
-	?>
+	} ?>
+
 	<div id="edd-dashboard-widgets-wrap">
 		<div class="metabox-holder">
 			<div id="post-body">
@@ -522,7 +545,6 @@ function edd_reports_tab_export() {
 									<span class="spinner"></span>
 								</span>
 							</form>
-
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
@@ -566,7 +588,7 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 		$days_in_month    = cal_days_in_month( CAL_GREGORIAN, $current_month, $current_year );
 
 		$estimated['earnings'] = ( $to_date_earnings / $current_day ) * $days_in_month;
-		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
+		$estimated['sales']    = ( $to_date_sales    / $current_day ) * $days_in_month;
 
 		// Cache for one day
 		set_transient( 'edd_estimated_monthly_stats' . $include_taxes, $estimated, 86400 );
@@ -581,7 +603,7 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
  * @since 3.0
  */
 function edd_add_screen_options_nonces() {
-	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce' , false );
-	wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce' , false );
+	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+	wp_nonce_field( 'meta-box-order',  'meta-box-order-nonce', false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );

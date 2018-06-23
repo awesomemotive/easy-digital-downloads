@@ -1443,6 +1443,11 @@ td.edd_order_price {
 .admin-color-sunrise .edd-import-export-form .edd-progress div {
 	background: #dd823b;
 }
+#edd-graphs-filter {
+	display: block;
+	padding: 10px;
+	border: 1px solid #eee;
+}
 #edd-graphs-filter label {
 	vertical-align: inherit;
 }
@@ -1494,6 +1499,10 @@ td.edd_order_price {
 	display: inline-block;
 	vertical-align: top;
 	width: 80%;
+}
+
+#edd-reports-tiles-wrap .metabox-holder {
+	padding: 0;
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets {
@@ -2139,9 +2148,10 @@ only screen and ( min-resolution: 1.5dppx ) {
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
 	display: inline-block;
-	margin-left: -1px;
-	min-height: 200px;
 	z-index: 2;
+}
+.edd-sections-wrap .section-wrap > div {
+	min-height: 500px;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
@@ -2289,6 +2299,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	color: #888;
 	margin-top: -2px;
 }
+
 #edd-item-tables-wrapper table {
 	width: 100%;
 }
@@ -2365,9 +2376,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 .note-content-wrap {
 	padding-top: 7px;
 }
-.delete-customer {
-	text-align: center;
-}
 .edd-sections-wrap .section-wrap .notice-container {
 	padding-left: 20px;
 	padding-right: 20px;
@@ -2425,9 +2433,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	}
 }
 @media screen and ( max-width: 656px ) {
-	.edd-sections-wrap .section-wrap .customer-info {
-		min-height: 220px;
-	}
 	.edd-item-info.customer-info {
 		position: relative;
 	}
@@ -2626,6 +2631,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	border-right: 1px solid #e5e5e5;
 	box-sizing: border-box;
 	min-height: 142px;
+	max-width: 200px;
 }
 
 .edd-vertical-sections .section-nav li {
@@ -2704,6 +2710,12 @@ only screen and ( min-resolution: 1.5dppx ) {
 	float: left;
 	width: 80%;
 	margin-left: -1px;
+}
+
+@media only screen and ( min-width: 1200px ) {
+	.edd-vertical-sections .section-wrap {
+		width: calc( 100% - 200px );
+	}
 }
 
 @media only screen and ( max-width: 782px ) {

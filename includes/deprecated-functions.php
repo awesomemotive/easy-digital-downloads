@@ -77,8 +77,9 @@ function edd_get_downloads_of_purchase( $payment_id, $payment_meta = null ) {
 
 	$downloads = maybe_unserialize( $payment_meta['downloads'] );
 
-	if ( $downloads )
+	if ( $downloads ) {
 		return $downloads;
+	}
 
 	return false;
 }
@@ -178,8 +179,9 @@ function edd_show_has_purchased_item_message() {
 
 	global $user_ID, $post;
 
-	if( !isset( $post->ID ) )
+	if ( !isset( $post->ID ) ) {
 		return;
+	}
 
 	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
 		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'easy-digital-downloads' ) . '</p>';
@@ -234,7 +236,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 			$amount = edd_get_discounted_amount( $posted_discount, $amount );
 		}
 
-		if( ! empty( $discounts ) ) {
+		if ( ! empty( $discounts ) ) {
 			// Apply the discounted amount from discounts already applied
 			$amount -= edd_get_cart_discounted_amount();
 		}
@@ -245,8 +247,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		$amount += $tax;
 	}
 
-	if( $amount < 0 )
+	if ( $amount < 0 ) {
 		$amount = 0.00;
+	}
 
 	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
 }
@@ -372,7 +375,7 @@ function edd_get_email_body_footer() {
  * @param array $payment_data An array of meta information for the payment
  * @return string $email Formatted email with the template applied
  */
-function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
+function edd_apply_email_template( $body, $payment_id, $payment_data = array() ) {
 	global $edd_options;
 
 	$backtrace = debug_backtrace();
@@ -383,10 +386,12 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
 
 	if ( $template_name == 'none' ) {
-		if ( is_admin() )
+		if ( is_admin() ) {
 			$body = edd_email_preview_template_tags( $body );
+		}
 
-		return $body; // Return the plain email with no template
+		// Return the plain email with no template
+		return $body;
 	}
 
 	ob_start();
@@ -395,8 +400,9 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 
 	$template = ob_get_clean();
 
-	if ( is_admin() )
+	if ( is_admin() ) {
 		$body = edd_email_preview_template_tags( $body );
+	}
 
 	$body = apply_filters( 'edd_purchase_receipt_' . $template_name, $body );
 
@@ -468,8 +474,9 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 			if ( ! empty( $cart_details ) ) {
 				foreach ( $cart_details as $cart_key => $cart_item ) {
 
-					if ( $cart_item['id'] != $download_id )
+					if ( $cart_item['id'] != $download_id ) {
 						continue;
+					}
 
 					$price_options 	= isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
 					$price_id 		= isset( $price_options['price_id'] ) ? $price_options['price_id'] : false;
@@ -477,13 +484,15 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					$file_condition = edd_get_file_price_condition( $cart_item['id'], $file_key );
 
 					// Check to see if the file download limit has been reached
-					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
+					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) ) {
 						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+					}
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
-						if ( $file_condition == $price_options['price_id'] )
+						if ( $file_condition == $price_options['price_id'] ) {
 							return $payment->ID;
+						}
 					}
 
 					// Make sure the link hasn't expired
@@ -497,9 +506,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
 				}
-
 			}
-
 		}
 
 	} else {
@@ -570,8 +577,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
-		'update_post_term_cache' => false,
 		'include_taxes'  => $include_taxes,
+		'update_post_term_cache' => false,
 	);
 
 	if ( ! empty( $day ) ) {
@@ -651,14 +658,17 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		);
 	}
 
-	if ( ! empty( $month_num ) )
+	if ( ! empty( $month_num ) ) {
 		$args['monthnum'] = $month_num;
+	}
 
-	if ( ! empty( $day ) )
+	if ( ! empty( $day ) ) {
 		$args['day'] = $day;
+	}
 
-	if ( ! empty( $hour ) )
+	if ( ! empty( $hour ) ) {
 		$args['hour'] = $hour;
+	}
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
@@ -758,8 +768,6 @@ function edd_microdata_wrapper_open( $query ) {
 
 	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
 
-	global $post;
-
 	static $microdata_open = NULL;
 
 	if ( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $query ) ) {
@@ -819,7 +827,7 @@ function edd_microdata_description( $content ) {
 
 	static $microdata_description = NULL;
 
-	if( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
+	if ( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
 		return $content;
 	}
 
@@ -903,15 +911,16 @@ function edd_reports_tab_reports() {
 
 	_edd_deprecated_function( __FUNCTION__, '3.0' );
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		wp_die( __( 'You do not have permission to access this report', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$current_view = 'earnings';
 	$views        = edd_reports_default_views();
 
-	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) )
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) ) {
 		$current_view = $_GET['view'];
+	}
 
 	/**
 	 * Legacy: fired inside the old global 'Reports' tab.
