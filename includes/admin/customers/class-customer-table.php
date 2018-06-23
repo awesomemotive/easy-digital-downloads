@@ -139,6 +139,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = $item['id'];
 				break;
 
+			case 'email' :
+				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
+				break;
+
 			case 'order_count' :
 				$url = add_query_arg( array(
 					'post_type' => 'download',
@@ -162,9 +166,19 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					: null;
 				break;
 		}
+
+		// Filter & return
 		return apply_filters( 'edd_customers_column_' . $column_name, $value, $item['id'] );
 	}
 
+	/**
+	 * Return the contents of the "Name" column
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return string
+	 */
 	public function column_name( $item ) {
 		$state    = '';
 		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
@@ -360,8 +374,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * Build all the reports data
 	 *
 	 * @since 1.5
-	  * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
+	 *
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
@@ -381,11 +394,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'status'  => $status
 		);
 
-		if( is_email( $search ) ) {
+		if ( is_email( $search ) ) {
 			$args['email'] = $search;
-		} elseif( is_numeric( $search ) ) {
+		} elseif ( is_numeric( $search ) ) {
 			$args['id']    = $search;
-		} elseif( strpos( $search, 'user:' ) !== false ) {
+		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
 		} else {
 			$args['name']  = $search;
@@ -395,7 +408,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$customers  = edd_get_customers( $args );
 
 		if ( $customers ) {
-
 			foreach ( $customers as $customer ) {
 				$data[] = array(
 					'id'            => $customer->id,
