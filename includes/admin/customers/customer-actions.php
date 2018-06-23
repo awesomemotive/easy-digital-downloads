@@ -191,7 +191,7 @@ function edd_add_customer_email( $args = array() ) {
 		$output['success'] = false;
 
 		if ( empty( $args['email'] ) ) {
-			$output['message'] = __( 'Email address is required.', 'easy-digital-downloads' );
+			$output['message'] = __( 'Email address is missing.', 'easy-digital-downloads' );
 		} else if ( empty( $args['customer_id'] ) ) {
 			$output['message'] = __( 'Customer ID is required.', 'easy-digital-downloads' );
 		} else {
