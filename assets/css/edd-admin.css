@@ -2274,6 +2274,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 #edd-item-stats-wrapper {
 	margin: 0 auto;
 	min-height: 30px;
+	text-align: center;
 }
 #edd-item-stats-wrapper li {
 	font-size: 14px;
