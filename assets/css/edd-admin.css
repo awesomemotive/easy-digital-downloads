@@ -2637,13 +2637,12 @@ only screen and ( min-resolution: 1.5dppx ) {
 	position: relative;
 	margin: 0;
 	padding: 0;
-	line-height: 20px;
 }
 
 .edd-vertical-sections .section-nav li a {
 	display: block;
 	margin: 0;
-	padding: 10px;
+	padding: 9px;
 	line-height: 20px !important;
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
@@ -2662,6 +2661,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 .edd-vertical-sections .section-nav li a .dashicons {
 	line-height: 20px;
 	margin-right: 3px;
+	color: #888;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] a {
@@ -2673,18 +2673,25 @@ only screen and ( min-resolution: 1.5dppx ) {
 	margin-right: -1px;
 }
 
+.edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {
+	color: #555;
+}
+
 @media only screen and ( max-width: 782px ) {
 
 	.edd-vertical-sections .section-nav {
 		width: 48px;
 	}
 
+	.edd-vertical-sections .section-nav li a {
+		text-align: center;
+	}
 	.edd-vertical-sections .section-nav li a .dashicons {
 		width: 24px;
 		height: 24px;
 		font-size: 24px;
 		line-height: 24px;
-		margin: 0 0 0 1px;
+		margin: 0;
 	}
 
 	.section-nav li .dashicons::before {
