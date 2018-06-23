@@ -636,13 +636,25 @@ function edd_reports_graph_controls() {
 
 	$dates = edd_get_report_dates();
 	$view  = edd_get_reporting_view();
-	$taxes = ! empty( $_GET['exclude_taxes'] ) ? false : true;
+	$taxes = ! empty( $_GET['exclude_taxes'] )
+		? false
+		: true;
+	$range = isset( $dates['range'] )
+		? sanitize_key( $dates['range'] )
+		: get_dates_filter_range();
+	$class = ( $range === 'other' )
+		? ''
+		: ' screen-reader-text';
 
-	if( empty( $dates['day_end'] ) ) {
+	$dates_values = \EDD\Reports\get_filter_value( 'dates' );
+
+	$from = empty( $dates_values['from'] ) ? '' : $dates_values['from'];
+	$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
+
+	if ( empty( $dates['day_end'] ) ) {
 		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
-	}
+	} ?>
 
-	?>
 	<form id="edd-graphs-filter" method="get">
 		<div class="tablenav top">
 			<div class="alignleft actions">
@@ -661,15 +673,9 @@ function edd_reports_graph_controls() {
 				<?php endforeach; ?>
 				</select>
 
-				<div class="edd-date-range-options">
+				<div class="edd-date-range-options <?php echo esc_attr( $class ); ?>">
 					<fieldset>
 						<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
-						<?php
-						$dates_values = \EDD\Reports\get_filter_value( 'dates' );
-
-						$from = empty( $dates_values['from'] ) ? '' : $dates_values['from'];
-						$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
-						?>
 						<span class="edd-search-date">
 							<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
 							<?php echo EDD()->html->date_field( array(

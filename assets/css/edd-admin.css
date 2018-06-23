@@ -1445,8 +1445,6 @@ td.edd_order_price {
 }
 #edd-graphs-filter {
 	display: block;
-	padding: 10px;
-	border: 1px solid #eee;
 }
 #edd-graphs-filter label {
 	vertical-align: inherit;
