@@ -162,30 +162,12 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'downloads', array(
-			'label'     => edd_get_label_plural(),
-			'priority'  => 10,
-			'icon'      => 'download',
-			'endpoints' => array(
-				'tiles' => array( 'test_tile', 'another_test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
 			'icon'      => 'image-rotate',
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
-			),
-		) );
-
-		$reports->add_report( 'file_downloads', array(
-			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
-			'icon'      => 'download',
-			'priority'  => 30,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
 			),
 		) );
 
@@ -599,6 +581,55 @@ function edd_register_overview_report( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_overview_report' );
+
+/**
+ * Register downloads report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_downloads_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+			: false;
+
+		$download_label = '';
+
+		if ( $download_data ) {
+			$download = edd_get_download( $download_data['download_id'] );
+
+			if ( $download_data['price_id'] ) {
+				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+			} else {
+				$download_label = esc_html( ' (' . $download->post_title . ')' );
+			}
+		}
+
+		$reports->add_report( 'downloads', array(
+			'label'     => edd_get_label_plural(),
+			'priority'  => 10,
+			'icon'      => 'download',
+			'endpoints' => array(
+				'tiles' => array( )
+			),
+		) );
+
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+
+}
+add_action( 'edd_reports_init', 'edd_register_downloads_report' );
 
 /**
  * Register payment gateways report and endpoints.
