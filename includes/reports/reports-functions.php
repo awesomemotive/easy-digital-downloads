@@ -393,6 +393,10 @@ function get_filters() {
 			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter',
 		),
+		'gateways' => array(
+			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter',
+		),
 	);
 }
 
@@ -1066,6 +1070,37 @@ function display_taxes_filter( $report ) {
 		<input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes" />
 		<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
 	</div>
+	<?php
+}
+
+/**
+ * Handles display of the 'Gateways' filter for reports.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ * @return void
+ */
+function display_gateways_filter( $report ) {
+	$gateway = get_filter_value( 'gateways' );
+
+	$gateways = array();
+
+	foreach ( edd_get_payment_gateways() as $id => $data ) {
+		$gateways[ $id ] = esc_html( $data['admin_label'] );
+	}
+	?>
+    <div class="edd-graph-filter-options graph-option-section">
+		<?php
+		echo EDD()->html->select( array(
+			'name'             => 'gateways',
+			'options'          => $gateways,
+			'chosen'           => true,
+			'selected'         => empty( $gateway ) ? 0 : $gateway,
+			'show_option_none' => false,
+		) );
+		?>
+    </div>
 	<?php
 }
 

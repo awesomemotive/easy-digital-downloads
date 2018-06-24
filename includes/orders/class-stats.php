@@ -102,6 +102,8 @@ class Stats {
 				'start'             => '',
 				'end'               => '',
 				'range'             => '',
+				'status'            => array( 'publish', 'revoked' ),
+				'status_sql'        => '',
 				'where_sql'         => '',
 				'date_query_sql'    => '',
 				'date_query_column' => '',
@@ -109,6 +111,10 @@ class Stats {
 				'table'             => '',
 				'function'          => 'SUM',
 				'output'            => 'raw',
+				'relative'          => false,
+				'relative_start'    => '',
+				'relative_end'      => '',
+				'grouped'           => false,
 			);
 		}
 	}
@@ -933,7 +939,7 @@ class Stats {
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return array List of objects containing data pertinent to the query parameters passed.
+	 * @return mixed array|int|float Either a list of payment gateways and counts or just a single value.
 	 */
 	private function get_gateway_data( $query = array() ) {
 
@@ -966,11 +972,11 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
 
-		$gateway = isset( $this->query_vars['gateway'] )
+		$gateway = ! empty( $this->query_vars['gateway'] )
 			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
 			: '';
 
-		$sql = "SELECT gateway, {$function} AS count
+		$sql = "SELECT gateway, {$function} AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY gateway";
@@ -980,36 +986,53 @@ class Stats {
 		// Ensure count values are always valid integers if counting sales.
 		if ( 'COUNT' === $this->query_vars['function'] ) {
 			array_walk( $result, function ( &$value ) {
-				$value->count = absint( $value->count );
+				$value->total = absint( $value->total );
+			} );
+		} elseif ( 'SUM' === $this->query_vars['function'] || 'AVG' === $this->query_vars['function'] ) {
+			array_walk( $result, function ( &$value ) {
+				$value->total = floatval( $value->total );
 			} );
 		}
 
-		$results = array();
+		if ( empty( $gateway ) && true === $this->query_vars['grouped'] ) {
+			$results = array();
 
-		// Merge defaults with values returned from the database.
-		foreach ( $defaults as $key => $value ) {
+			// Merge defaults with values returned from the database.
+			foreach ( $defaults as $key => $value ) {
 
-			// Filter based on gateway.
-			$filter = wp_filter_object_list( $result, array( 'gateway' => $value->gateway ) );
+				// Filter based on gateway.
+				$filter = wp_filter_object_list( $result, array( 'gateway' => $value->gateway ) );
 
-			$filter = ! empty( $filter )
-				? array_values( $filter )
-				: array();
+				$filter = ! empty( $filter )
+					? array_values( $filter )
+					: array();
 
-			if ( ! empty( $filter ) ) {
-				$results[] = $filter[0];
-			} else {
-				$results[] = $defaults[ $key ];
+				if ( ! empty( $filter ) ) {
+					$results[] = $filter[0];
+				} else {
+					$results[] = $defaults[ $key ];
+				}
 			}
+		} elseif ( false === $this->query_vars['grouped'] ) {
+			$total = 0;
+
+			array_walk( $result, function( $value ) use ( &$total ) {
+				$total += $value->total;
+			} );
+
+			$results = 'COUNT' === $this->query_vars['function']
+				? absint( $total )
+				: $this->maybe_format( $total );
 		}
 
-		if ( ! empty( $gateway ) ) {
+		if ( ! empty( $gateway ) && true === $this->query_vars['grouped'] ) {
 
 			// Filter based on gateway if passed.
 			$filter = wp_filter_object_list( $result, array( 'gateway' => $this->query_vars['gateway'] ) );
 
-			// Return number of sales for gateway passed.
-			return absint( $filter[0]->count );
+			$results = 'COUNT' === $this->query_vars['function']
+				? absint( $filter[0]->count )
+				: $this->maybe_format( $filter[0]->count );
 		}
 
 		// Reset query vars.
@@ -1052,17 +1075,23 @@ class Stats {
 	public function get_gateway_earnings( $query = array() ) {
 
 		// Summation is required as we are returning earnings.
-		$query['function'] = 'SUM';
+		$query['function'] = isset( $query['function'] )
+			? $query['function']
+			: 'SUM';
 
 		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
 		$result = $this->get_gateway_data( $query );
 
 		// Rename object var.
-		array_walk( $result, function( &$value ) {
-			$value->earnings = $value->count;
-			$value->earnings = $this->maybe_format( $value->earnings );
-			unset( $value->count );
-		} );
+		if ( is_array( $result ) ) {
+			array_walk( $result, function ( &$value ) {
+				$value->earnings = $value->total;
+				$value->earnings = $this->maybe_format( $value->earnings );
+				unset( $value->total );
+			} );
+		} else {
+			$result = $this->maybe_format( $result );
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -1842,6 +1871,7 @@ class Stats {
 			'relative'          => false,
 			'relative_start'    => '',
 			'relative_end'      => '',
+			'grouped'           => false,
 		);
 
 		if ( empty( $this->query_vars ) ) {
