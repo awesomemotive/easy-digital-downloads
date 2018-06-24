@@ -159,10 +159,10 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL(SUM(total), 0) AS total, IFNULL(relative, 0) AS relative
+			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
 					FROM {$this->query_vars['table']}
 					CROSS JOIN (
-						SELECT IFNULL(SUM(total), 0) AS relative
+						SELECT IFNULL({$function}, 0) AS relative
 						FROM {$this->query_vars['table']}
 						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
