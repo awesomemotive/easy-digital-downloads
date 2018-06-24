@@ -886,7 +886,7 @@ function edd_register_file_downloads_report( $reports ) {
 					'average_file_downloads_per_order',
 				),
 			),
-			'filters'   => array( 'products' )
+			'filters'   => array( 'products' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_file_downloads', array(
@@ -894,7 +894,10 @@ function edd_register_file_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+                        $stats = new EDD\Orders\Stats();
+						return $stats->get_file_download_count( array(
+							'range' => $filter['range'],
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
