@@ -630,6 +630,7 @@ function edd_register_downloads_report( $reports ) {
 					'download_earnings_by_variations',
 				),
 				'tables' => array(
+					'top_selling_downloads',
 					'earnings_by_taxonomy',
 				),
 			),
@@ -720,6 +721,30 @@ function edd_register_downloads_report( $reports ) {
             ) );
         }
 
+		$reports->register_endpoint( 'earnings_by_taxonomy', array(
+			'label' => __( 'Earnings by Taxonomy', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-earnings-by-taxonomy-list-table.php',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'top_selling_downloads', array(
+			'label' => sprintf( __( 'Top Selling %s', 'easy-digital-downloads' ), edd_get_label_plural() ) . ' &mdash; ' . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Top_Selling_Downloads_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-top-selling-downloads-list-table.php',
+					),
+				),
+			),
+		) );
+
         if ( $download_data && $download->has_variable_prices() ) {
 	        $prices = $download->get_prices();
 
@@ -809,18 +834,6 @@ function edd_register_downloads_report( $reports ) {
 		        )
 	        ) );
         }
-
-		$reports->register_endpoint( 'earnings_by_taxonomy', array(
-			'label' => __( 'Earnings by Taxonomy', 'easy-digital-downloads' ),
-			'views' => array(
-				'table' => array(
-					'display_args' => array(
-						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
-						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-earnings-by-taxonomy-list-table.php',
-					),
-				),
-			),
-		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
