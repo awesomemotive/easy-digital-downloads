@@ -916,7 +916,7 @@ function edd_register_file_downloads_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
-						'comparison_label' => $label . $download_label,
+						'comparison_label' => $label,
 					),
 				),
 			),
@@ -935,7 +935,7 @@ function edd_register_file_downloads_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
-						'comparison_label' => $label . $download_label,
+						'comparison_label' => $label,
 					),
 				),
 			),
@@ -950,7 +950,7 @@ function edd_register_file_downloads_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
-						'comparison_label' => $label . $download_label,
+						'comparison_label' => $label,
 					),
 				),
 			),
