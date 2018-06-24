@@ -927,7 +927,11 @@ function edd_register_file_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+                        $stats = new EDD\Orders\Stats();
+                        $d = $stats->get_most_downloaded_products();
+                        if ( $d ) {
+                            return esc_html( $d[0]->object->post_title );
+                        }
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',

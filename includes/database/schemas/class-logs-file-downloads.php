@@ -40,9 +40,9 @@ class Logs_File_Downloads extends Base {
 			'sortable'   => true
 		),
 
-		// download_id
+		// product_id
 		array(
-			'name'       => 'download_id',
+			'name'       => 'product_id',
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
