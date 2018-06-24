@@ -75,7 +75,7 @@ class Adjustments extends Base {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => '',
+			'default'    => 'draft',
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true

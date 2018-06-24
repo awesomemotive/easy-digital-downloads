@@ -521,9 +521,11 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 #edd_product_settings .inside strong {
 	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	background-color: #f9f9f9;
 	display: block;
 	margin: 0 -12px 0;
-	padding: 10px 12px 0;
+	padding: 8px 12px;
 }
 
 #edd_product_settings .inside div:first-child strong {
@@ -1372,7 +1374,7 @@ td.edd_order_price {
 }
 .edd-graphs-date-options,
 .edd-date-range-options {
-	float: left;
+	display: inline-block;
 }
 .edd-date-range-options span {
 	float: left;
@@ -1380,6 +1382,16 @@ td.edd_order_price {
 	height: 24px;
 	margin-right: 6px;
 }
+.edd-report-wrap {
+	padding: 20px;
+	clear: both;
+}
+
+.edd-report-wrap h3 {
+	clear: both;
+	margin: 0 0 20px;
+}
+
 .edd-import-export-form {
 	position: relative;
 }
@@ -1435,8 +1447,8 @@ td.edd_order_price {
 	vertical-align: inherit;
 }
 #edd-graphs-filter .graph-option-section {
-	float: left;
-	line-height: 2.5em;
+	display: inline-block;
+	line-height: 2em;
 	padding-right: 5px;
 }
 .edd-mix-totals {
@@ -1517,8 +1529,11 @@ td.edd_order_price {
 	min-height: 0;
 }
 
+#edd-reports-tiles-wrap .postbox {
+	min-width: 0;
+}
 #edd-reports-tiles-wrap h2.hndle {
-	margin-left: 25px;
+	padding-left: 25px;
 	text-align: center;
 	font-weight: normal;
 	color: #999;
@@ -1534,7 +1549,7 @@ td.edd_order_price {
 
 #edd-reports-tiles-wrap .inside .tile-value {
 	color: #21759b;
-	font-size: 3em;
+	font-size: 2em;
 	line-height: 1;
 }
 
@@ -2105,9 +2120,14 @@ only screen and ( min-resolution: 1.5dppx ) {
 	border: 1px solid #e5e5e5;
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-	max-width: 830px;
+	/* max-width: 830px; */
 	position: relative;
+	margin-top: 15px;
 }
+#edd-item-wrapper.full-width {
+	max-width: 100%;
+}
+
 #edd-item-wrapper:after {
 	content: "";
 	display: block;
@@ -2116,99 +2136,38 @@ only screen and ( min-resolution: 1.5dppx ) {
 	font-size: 0;
 	height: 0;
 }
-#edd-item-tab-wrapper {
-	float:left;
-	width: 18%;
-	z-index: 3;
-	position: relative;
-}
-#edd-item-tab-wrapper-list {
-	background: #fff;
-	margin: 0;
-}
-#edd-item-tab-wrapper-list li {
-	display: block;
-	background-color: #eaeaea;
-	color: #444;
-	font-size: 12px;
-	border-bottom: 1px solid #e5e5e5;
-	border-right: 1px solid #e5e5e5;
-	margin-bottom: 0;
-	-webkit-hyphens: auto;
-	-moz-hyphens: auto;
-	-ms-hyphens: auto;
-	hyphens: auto;
-	word-wrap: break-word;
-}
-#edd-item-tab-wrapper-list li a {
-	display: block;
-	padding: 8px 10px 8px 6px;
-}
-#edd-item-tab-wrapper-list li.active {
-	display: block;
+.edd-sections-wrap .section-wrap {
 	background-color: #fff;
-	padding: 8px 10px 8px 6px;
-	border-right-color: #fff;
-}
-#edd-item-tab-wrapper-list .inactive a,
-#edd-item-tab-wrapper-list .inactive a:visited {
-	background-color: #f5f5f5;
-	color: #444;
-	text-decoration: none;
-}
-#edd-item-tab-wrapper-list .inactive a:hover {
-	background-color: #fff;
-}
-#edd-item-tab-wrapper-list .dashicons {
-	color: #444;
-	font-size: 16px;
-	min-width: 24px;
-	height: auto;
-}
-#edd-item-card-wrapper .left {
-	float: left;
-}
-#edd-item-card-wrapper .right {
-	float: right;
-}
-#edd-item-card-wrapper {
-	background-color: #fff;
-	border: 1px solid #e5e5e5;
 	display: inline-block;
 	margin-left: -1px;
 	min-height: 200px;
-	width: 700px;
 	z-index: 2;
 }
-.edd-item-has-tabs #edd-item-card-wrapper {
-	border-width: 0 0 0 1px;
-	width: 82%;
-}
-#edd-item-card-wrapper .customer-section {
+.edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
 }
-#edd-item-card-wrapper .customer-section table {
+.edd-sections-wrap .section-wrap .customer-section table {
 	margin-bottom: 20px;
 }
-#edd-item-card-wrapper > div {
-	padding: 0px 20px;
+.edd-sections-wrap .section-wrap .section-content {
+	border-left: 1px solid #e5e5e5;
 }
-#edd-item-card-wrapper > div:first-child {
+.edd-sections-wrap .section-wrap .section-content > div {
+	padding: 0px 20px 5px;
+}
+.edd-sections-wrap .section-wrap .section-content > div:first-child {
 	padding: 20px;
 }
-#edd-item-card-wrapper > div:last-child {
-	border: none;
-	padding-bottom: 20px;
-}
-#edd-item-card-wrapper .avatar-wrap {
+.edd-sections-wrap .section-wrap .avatar-wrap {
+	float: left;
 	padding-right: 20px;
 	text-align: center;
 }
-#edd-item-card-wrapper img.avatar {
+.edd-sections-wrap .section-wrap img.avatar {
 	border-radius: 22%;
 	margin-bottom: 10px;
 }
-#edd-item-card-wrapper .customer-id {
+.edd-sections-wrap .section-wrap .customer-id {
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -2222,8 +2181,9 @@ only screen and ( min-resolution: 1.5dppx ) {
 	font-size: 18px;
 	font-weight: 600;
 }
-#edit-customer-info input,
-#edit-customer-info select {
+.edd-item-info.customer-info input[type="text"],
+.edd-item-info.customer-info input[type="password"],
+.edd-item-info.customer-info select {
 	width: 200px;
 	box-shadow: none;
 	transition: none;
@@ -2232,23 +2192,27 @@ only screen and ( min-resolution: 1.5dppx ) {
 	font-size: 13px;
 	padding: 2px 4px;
 }
-#edd-item-card-wrapper .customer-main-wrapper input[name="customerinfo[name]"] {
+.edd-sections-wrap .section-wrap .customer-main-wrapper {
+	float: left;
+}
+.edd-sections-wrap .section-wrap .customer-main-wrapper input[name="customerinfo[name]"] {
 	font-size: 24px;
 }
-
-#edd-item-card-wrapper .customer-address-wrapper {
-	margin-right: 30px;
+.edd-sections-wrap .section-wrap .customer-address-wrapper {
+	float: right;
+	margin-top: -3px;
+	margin-right: 50px;
 	width: 202px;
 }
-#edd-item-card-wrapper .customer-info {
+.edd-sections-wrap .section-wrap .customer-info {
 	margin-bottom: 10px;
 	min-height: 185px;
 }
-#edd-item-card-wrapper .info-wrapper {
+.edd-sections-wrap .section-wrap .info-wrapper {
 	min-height: 125px;
 	overflow: visible;
 }
-#edd-item-card-wrapper a.delete {
+.edd-sections-wrap .section-wrap a.delete {
 	color: #ff0000;
 	margin-right: 5px;
 	text-decoration: none;
@@ -2279,21 +2243,32 @@ only screen and ( min-resolution: 1.5dppx ) {
 #customer-edit-actions .cancel {
 	padding: 5px;
 }
-#edd-item-card-wrapper .row-title {
+.edd-sections-wrap .section-wrap .row-title {
 	width: 30%;
 }
-#edd-item-card-wrapper .editable {
+.edd-sections-wrap .section-wrap .editable {
 	display: block;
 	padding: 3px;
 }
-#edd-item-card-wrapper .edit-item {
+.edd-sections-wrap .section-wrap div.edit-item {
+	margin-left: -4px;
+	margin-top: -20px;
+}
+
+.edd-sections-wrap .section-wrap span.edit-item {
 	display: none;
 }
-#edd-item-card-wrapper .edd_user_search_results {
+.edd-sections-wrap .section-wrap .edit-item input {
+	font-size: 13px;
+}
+.edd-sections-wrap .section-wrap .customer-name.edit-item input {
+	margin-top: -5px;
+}
+.edd-sections-wrap .section-wrap .edd_user_search_results {
 	left: -2px;
 	top: 18px;
 }
-#edd-item-card-wrapper .edd_user_search_results ul {
+.edd-sections-wrap .section-wrap .edd_user_search_results ul {
 	width: 198px;
 }
 #edd-item-stats-wrapper {
@@ -2354,11 +2329,19 @@ only screen and ( min-resolution: 1.5dppx ) {
 	padding-bottom: 20px;
 	border-bottom: 1px solid #e5e5e5;
 }
+.edd-item-header-small span {
+	font-weight: 600;
+	line-height: 15px;
+	font-size: 15px;
+	display: inline-block;
+	margin-bottom: 10px;
+}
 .edd-item-header-small span,
 .edd-item-header-small img {
-	font-weight: 600;
-	line-height: 30px;
 	vertical-align: middle;
+}
+.edd-item-header-small img.avatar {
+	margin-right: 5px;
 }
 .customer-note-input {
 	margin-bottom: 5px;
@@ -2378,13 +2361,13 @@ only screen and ( min-resolution: 1.5dppx ) {
 .delete-customer {
 	text-align: center;
 }
-#edd-item-card-wrapper .notice-container {
+.edd-sections-wrap .section-wrap .notice-container {
 	padding-left: 20px;
 	padding-right: 20px;
 	margin-left: -20px;
 	margin-right: -20px;
 }
-#edd-item-card-wrapper .add-customer-email-wrapper > #add-customer-email {
+.edd-sections-wrap .section-wrap .add-customer-email-wrapper > #add-customer-email {
 	vertical-align: middle;
 }
 
@@ -2392,7 +2375,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	.customer-info .customer-name {
 		font-size: 16px;
 	}
-	#edd-item-card-wrapper .widefat td, .widefat th {
+	.edd-sections-wrap .section-wrap .widefat td, .widefat th {
 		padding: 4px 6px;
 		max-width: 100px!important;
 		display: table-cell;
@@ -2400,7 +2383,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 }
 @media screen and ( max-width: 781px ) {
 	#edd-item-tab-wrapper,
-	#edd-item-card-wrapper {
+	.edd-sections-wrap .section-wrap {
 		margin: 0;
 		width: 100%;
 	}
@@ -2425,28 +2408,27 @@ only screen and ( min-resolution: 1.5dppx ) {
 	#edd-item-tab-wrapper-list .dashicons {
 		font-size: 18px;
 	}
-	.edd-item-has-tabs  #edd-item-card-wrapper {
+	.edd-item-has-tabs  .edd-sections-wrap .section-wrap {
 		border-top: 1px solid #e5e5e5;
 		border-left: 0;
 		margin-top: -1px;
-		width: 100%;
 	}
 }
 @media screen and ( max-width: 656px ) {
-	#edd-item-card-wrapper .customer-info {
+	.edd-sections-wrap .section-wrap .customer-info {
 		min-height: 220px;
 	}
 	.edd-item-info.customer-info {
 		position: relative;
 	}
-	#edd-item-card-wrapper .customer-address-wrapper {
+	.edd-sections-wrap .section-wrap .customer-address-wrapper {
 		float: none;
 		position: absolute;
 		top: 84px;
 		left: 165px;
 		max-width: 200px;
 	}
-	#edd-item-card-wrapper .customer-main-wrapper {
+	.edd-sections-wrap .section-wrap .customer-main-wrapper {
 		float: none;
 		position: absolute;
 		left: 165px;
@@ -2454,21 +2436,21 @@ only screen and ( min-resolution: 1.5dppx ) {
 	.customer-info .customer-name {
 		font-size: 16px;
 	}
-	#edd-item-card-wrapper #edd-item-stats-wrapper {
+	.edd-sections-wrap .section-wrap #edd-item-stats-wrapper {
 		padding-left: 0;
 		padding-right: 0;
 	}
-	#edd-item-card-wrapper .customer-section {
+	.edd-sections-wrap .section-wrap .customer-section {
 		margin-bottom: 0;
 	}
-	#edd-item-card-wrapper .widefat td,
-	#edd-item-card-wrapper .widefat th {
+	.edd-sections-wrap .section-wrap .widefat td,
+	.edd-sections-wrap .section-wrap .widefat th {
 		padding: 4px 6px;
 		max-width: 100px!important;
 		display: table-cell;
 		overflow: hidden;
 	}
-	#edd-item-card-wrapper .customer-id {
+	.edd-sections-wrap .section-wrap .customer-id {
 		display: none;
 	}
 }
@@ -2605,4 +2587,120 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 #edd-debug-log .edd-inline-button {
 	margin-left: 5px;
+}
+
+/* Tools Styles
+-------------------------------------------------------------- */
+
+.edd-vertical-sections {
+	overflow: visible;
+	background: #fcfcfc;
+	background: linear-gradient( 90deg, #fcfcfc 0%, #fcfcfc 20%, #fff 20%, #fff 100% );
+}
+
+@media only screen and ( max-width: 782px ) {
+	.edd-vertical-sections {
+		background: linear-gradient( 90deg, #fcfcfc 0%, #fcfcfc 48px, #fff 48px, #fff 100% );
+	}
+}
+
+.edd-vertical-sections .section-nav {
+	position: relative;
+	float: left;
+	list-style: none;
+	width: 20%;
+	line-height: 1em;
+	margin: 0 0 -1px 0;
+	padding: 0;
+	background-color: #fcfcfc;
+	border-right: 1px solid #e5e5e5;
+	box-sizing: border-box;
+	min-height: 142px;
+}
+
+.edd-vertical-sections .section-nav li {
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	line-height: 20px;
+}
+
+.edd-vertical-sections .section-nav li a {
+	display: block;
+	margin: 0;
+	padding: 10px;
+	line-height: 20px !important;
+	text-decoration: none;
+	border-bottom: 1px solid #e5e5e5;
+	box-shadow: none;
+}
+
+.edd-vertical-sections .section-nav li a .dashicons,
+.edd-vertical-sections .section-nav li a span {
+	display: inline-block;
+}
+
+.edd-vertical-sections .section-nav li a span {
+	max-width: 75%;
+}
+
+.edd-vertical-sections .section-nav li a .dashicons {
+	line-height: 20px;
+	margin-right: 3px;
+}
+
+.edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	position: relative;
+	font-weight: bold;
+	color: #555;
+	background-color: #fff;
+	border-right: none;
+	margin-right: -1px;
+}
+
+@media only screen and ( max-width: 782px ) {
+
+	.edd-vertical-sections .section-nav {
+		width: 48px;
+	}
+
+	.edd-vertical-sections .section-nav li a .dashicons {
+		width: 24px;
+		height: 24px;
+		font-size: 24px;
+		line-height: 24px;
+	}
+
+	.section-nav li .dashicons::before {
+		width: 24px;
+		height: 24px;
+	}
+
+	.section-nav li .label {
+		overflow: hidden;
+		position: absolute;
+		top: -1000em;
+		left: -1000em;
+		width: 1px;
+		height: 1px;
+	}
+}
+
+/* Content wrapper */
+
+.edd-vertical-sections .section-wrap {
+	float: left;
+	width: 80%;
+	margin-left: -1px;
+}
+
+@media only screen and ( max-width: 782px ) {
+	.edd-vertical-sections .section-wrap {
+		width: calc( 100% - 48px );
+	}
+}
+
+.section-content {
+	border-left: 1px solid #e5e5e5;
 }

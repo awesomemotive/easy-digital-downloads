@@ -300,5 +300,5 @@ function edd_cart_needs_tax_address_fields() {
 function edd_download_is_tax_exclusive( $download_id = 0 ) {
 	$ret = (bool) get_post_meta( $download_id, '_edd_download_tax_exclusive', true );
 
-	return apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
+	return (Bool) apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
 }

@@ -915,25 +915,25 @@ function default_display_tile( $report, $tile ) {
 function default_display_tiles_group( $report ) {
 	if ( $report->has_endpoints( 'tiles' ) ) : ?>
 
-		<div id="edd-reports-tiles-wrap">
-			<h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
+        <div id="edd-reports-tiles-wrap">
+            <h3><?php _e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
 
-			<div id="dashboard-widgets" class="metabox-holder">
+            <div id="dashboard-widgets" class="metabox-holder">
 
-				<div class="postbox-container">
+                <div class="postbox-container">
 					<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
-				</div>
+                </div>
 
-				<div class="postbox-container">
+                <div class="postbox-container">
 					<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
-				</div>
+                </div>
 
-				<div class="postbox-container">
+                <div class="postbox-container">
 					<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
-				</div>
+                </div>
 
-			</div>
-		</div>
+            </div>
+        </div>
 	<?php endif; // Has endpoints.
 }
 
@@ -949,17 +949,17 @@ function default_display_tables_group( $report ) {
 	if ( $report->has_endpoints( 'tables' ) ) :
 		$tables = $report->get_endpoints( 'tables' );
 		?>
-		<div id="edd-reports-tables-wrap">
+        <div id="edd-reports-tables-wrap">
 
 			<?php foreach ( $tables as $endpoint_id => $table ) : ?>
-				<div class="edd-reports-table">
-					<h3><?php echo esc_html( $table->get_label() ); ?></h3>
+                <div class="edd-reports-table">
+                    <h3><?php echo esc_html( $table->get_label() ); ?></h3>
 
 					<?php $table->display(); ?>
-				</div>
+                </div>
 			<?php endforeach; ?>
 
-		</div>
+        </div>
 	<?php endif; // Has endpoints.
 }
 
@@ -975,16 +975,16 @@ function default_display_charts_group( $report ) {
 
 		$charts = $report->get_endpoints( 'charts' );
 		?>
-		<div id="edd-reports-charts-wrap">
+        <div id="edd-reports-charts-wrap">
 			<?php foreach ( $charts as $endpoint_id => $chart ) : ?>
-				<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>">
-					<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
+                <div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>">
+                    <h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
 					<?php $chart->display(); ?>
-				</div>
+                </div>
 			<?php endforeach; ?>
-		</div>
-		<?php
+        </div>
+	<?php
 	endif;
 }
 
@@ -1002,16 +1002,16 @@ function display_dates_filter( $report ) {
 	$range   = isset( $dates['range'] ) ? $dates['range'] : get_dates_filter_range();
 	$class   = $range === 'other' ? '' : ' screen-reader-text';
 	?>
-	<select class="edd-graphs-date-options" name="range">
+    <select class="edd-graphs-date-options" name="range">
 		<?php foreach ( $options as $key => $label ) : ?>
-			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $range ); ?>><?php echo esc_html( $label ); ?></option>
+            <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $range ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
-	</select>
+    </select>
 
-	<div class="edd-date-range-options<?php echo esc_attr( $class ); ?>">
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
-			<span class="edd-search-date">
+    <div class="edd-date-range-options<?php echo esc_attr( $class ); ?>">
+        <fieldset>
+            <legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
+            <span class="edd-search-date">
 				<?php
 				// From.
 				echo EDD()->html->date_field( array(
@@ -1032,8 +1032,8 @@ function display_dates_filter( $report ) {
 				) );
 				?>
 			</span>
-		</fieldset>
-	</div>
+        </fieldset>
+    </div>
 	<?php
 }
 
@@ -1048,14 +1048,14 @@ function display_dates_filter( $report ) {
 function display_products_filter( $report ) {
 	$products = get_filter_value( 'products' );
 	?>
-	<div class="edd-graph-filter-options graph-option-section">
+    <div class="edd-graph-filter-options graph-option-section">
 		<?php
 		echo EDD()->html->product_dropdown( array(
 			'chosen'   => true,
 			'selected' => empty( $products ) ? 0 : $products,
 		) );
 		?>
-	</div>
+    </div>
 	<?php
 }
 
@@ -1070,10 +1070,10 @@ function display_products_filter( $report ) {
 function display_taxes_filter( $report ) {
 	$taxes = get_filter_value( 'taxes' );
 	?>
-	<div class="edd-graph-filter-options graph-option-section">
-		<input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes" />
-		<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
-	</div>
+    <div class="edd-graph-filter-options graph-option-section">
+        <input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes" />
+        <label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
+    </div>
 	<?php
 }
 
@@ -1159,10 +1159,10 @@ function display_filters( $report ) {
 	), 'edit.php' ) );
 
 	if ( ! empty( $filters ) ) : ?>
-		<div id="edd-reports-filters-wrap">
-			<h3><?php _e( 'Filters', 'easy-digital-downloads' ); ?></h3>
+        <div id="edd-reports-filters-wrap">
+            <h3><?php _e( 'Filters', 'easy-digital-downloads' ); ?></h3>
 
-			<form id="edd-graphs-filter" method="get">
+            <form id="edd-graphs-filter" method="get">
 				<?php foreach ( $filters as $filter ) : ?>
 					<?php
 					if ( ! empty( $manifest[ $filter ]['display_callback'] ) ) :
@@ -1175,15 +1175,15 @@ function display_filters( $report ) {
 					?>
 				<?php endforeach; ?>
 
-				<div class="edd-graph-filter-submit graph-option-section">
-					<input type="hidden" name="edd_action" value="filter_reports" />
-					<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $action ); ?>">
-					<input type="hidden" name="report_id" value="<?php echo esc_attr( $report->get_id() ); ?>">
-					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
-				</div>
+                <div class="edd-graph-filter-submit graph-option-section">
+                    <input type="hidden" name="edd_action" value="filter_reports" />
+                    <input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $action ); ?>">
+                    <input type="hidden" name="report_id" value="<?php echo esc_attr( $report->get_id() ); ?>">
+                    <input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+                </div>
 
-			</form>
-		</div>
+            </form>
+        </div>
 	<?php endif;
 }
 
