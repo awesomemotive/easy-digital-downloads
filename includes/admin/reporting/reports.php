@@ -180,15 +180,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'taxes', array(
-			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
-			'priority'  => 25,
-			'icon'      => 'editor-paste-text',
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'file_downloads', array(
 			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'icon'      => 'download',
@@ -783,6 +774,41 @@ add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
  */
 function edd_register_taxes_report( $reports ) {
 
+    try {
+
+	    // Variables to hold date filter values.
+	    $options = Reports\get_dates_filter_options();
+	    $filter  = Reports\get_filter_value( 'dates' );
+	    $label   = $options[ $filter['range'] ];
+
+	    $reports->add_report( 'taxes', array(
+		    'label'     => __( 'Taxes', 'easy-digital-downloads' ),
+		    'priority'  => 25,
+		    'icon'      => 'editor-paste-text',
+		    'endpoints' => array(
+			    'tiles' => array(
+				    'total_tax_collected',
+			    ),
+		    ),
+	    ) );
+
+	    $reports->register_endpoint( 'total_tax_collected', array(
+		    'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
+		    'views' => array(
+			    'tile' => array(
+				    'data_callback' => function () use ( $filter ) {
+					    
+				    },
+				    'display_args'  => array(
+					    'context'          => 'primary',
+					    'comparison_label' => $label,
+				    ),
+			    ),
+		    ),
+	    ) );
+    } catch ( \EDD_Exception $exception ) {
+	    edd_debug_log_exception( $exception );
+    }
 }
 add_action( 'edd_reports_init', 'edd_register_taxes_report' );
 
