@@ -660,7 +660,7 @@ function edd_register_payment_methods_report( $reports ) {
 			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
 			'priority'  => 20,
 			'endpoints' => array(
-				'tiles' => array(
+				'tiles'  => array(
 					'sales_per_gateway',
 					'earnings_per_gateway',
 					'refunds_per_gateway',
@@ -684,10 +684,10 @@ function edd_register_payment_methods_report( $reports ) {
 
 						$stats = new EDD\Orders\Stats();
 
-						return $stats->get_gateway_sales( array(
+						return apply_filters( 'edd_reports_gateways_sales', $stats->get_gateway_sales( array(
 							'range'   => $filter['range'],
 							'gateway' => $gateway,
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -708,11 +708,11 @@ function edd_register_payment_methods_report( $reports ) {
 
 						$stats = new EDD\Orders\Stats();
 
-						return $stats->get_gateway_earnings( array(
+						return apply_filters( 'edd_reports_gateways_earnings', $stats->get_gateway_earnings( array(
 							'range'   => $filter['range'],
 							'gateway' => $gateway,
 							'output'  => 'formatted',
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -733,12 +733,12 @@ function edd_register_payment_methods_report( $reports ) {
 
 						$stats = new EDD\Orders\Stats();
 
-						return $stats->get_gateway_earnings( array(
+						return apply_filters( 'edd_reports_gateways_refunds', $stats->get_gateway_earnings( array(
 							'range'   => $filter['range'],
 							'gateway' => $gateway,
 							'output'  => 'formatted',
 							'status'  => array( 'refunded' ),
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
@@ -760,18 +760,18 @@ function edd_register_payment_methods_report( $reports ) {
 						$stats = new EDD\Orders\Stats();
 
 						if ( empty( $gateway ) ) {
-							return $stats->get_order_earnings( array(
+							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_order_earnings( array(
 								'range'    => $filter['range'],
 								'function' => 'AVG',
 								'output'   => 'formatted',
-							) );
+							) ) );
 						} else {
-							return $stats->get_gateway_earnings( array(
+							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_gateway_earnings( array(
 								'range'    => $filter['range'],
 								'gateway'  => $gateway,
 								'function' => 'AVG',
 								'output'   => 'formatted',
-							) );
+							) ) );
 						}
 					},
 					'display_args'  => array(
