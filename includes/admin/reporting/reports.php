@@ -648,7 +648,13 @@ function edd_register_payment_methods_report( $reports ) {
 		// Variables to hold date filter values.
 		$options = Reports\get_dates_filter_options();
 		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+		$gateway = Reports\get_filter_value( 'gateways' );
+
+		$gateway = ! empty( $gateway ) && 'all' !== $gateway
+			? ' (' . esc_html( edd_get_gateway_admin_label( $gateway ) ) . ')'
+			: '';
+
+		$label = $options[ $filter['range'] ] . $gateway;
 
 		$reports->add_report( 'gateways', array(
 			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
