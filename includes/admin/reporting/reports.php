@@ -900,8 +900,8 @@ function edd_register_discounts_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return apply_filters( 'edd_reports_discounts_average_discount_amount', $stats->get_most_popular_discount( array(
-							'range'  => $filter['range'],
+						return apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discount( array(
+							'range' => $filter['range'],
 						) ) );
 					},
 					'display_args'  => array(
