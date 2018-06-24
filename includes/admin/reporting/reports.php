@@ -827,6 +827,7 @@ function edd_register_discounts_report( $reports ) {
 					'customer_savings',
 					'average_discount_amount',
 					'most_popular_discount',
+                    'discount_usage_count',
 				),
 			),
 			'filters'   => array( 'discounts' ),
@@ -926,6 +927,27 @@ function edd_register_discounts_report( $reports ) {
 				),
 			),
 		) );
+
+		if ( $d ) {
+			$reports->register_endpoint( 'discount_usage_count', array(
+				'label' => __( 'Discount Usage Count', 'easy-digital-downloads' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function () use ( $filter, $d ) {
+							$stats = new EDD\Orders\Stats();
+							return apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_discount_usage_count( array(
+								'range'         => $filter['range'],
+								'discount_code' => $d->code,
+							) ) );
+						},
+						'display_args'  => array(
+							'context'          => 'tertiary',
+							'comparison_label' => $label . $discount_label,
+						),
+					),
+				),
+			) );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
