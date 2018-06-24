@@ -442,8 +442,12 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'File Downloads', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_overview_new_customers', $stats->get_file_download_count( array(
+							'range'    => $filter['range'],
+							'relative' => true,
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
