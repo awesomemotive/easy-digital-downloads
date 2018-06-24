@@ -77,9 +77,9 @@ class Logs_File_Downloads extends Base {
 			'default'    => '0'
 		),
 
-		// user_id
+		// customer_id
 		array(
-			'name'       => 'user_id',
+			'name'       => 'customer_id',
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,

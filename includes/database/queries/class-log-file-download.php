@@ -117,9 +117,9 @@ class Log_File_Download extends Base {
 	 *     @type string       $price_id             A price ID to only return those users. Default empty.
 	 *     @type array        $price_id__in         Array of price IDs to include. Default empty.
 	 *     @type array        $price_id__not_in     Array of price IDs to exclude. Default empty.
-	 *     @type string       $user_id              A user ID to only return those users. Default empty.
-	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
-	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
+	 *     @type string       $customer_id          A customer ID to only return those users. Default empty.
+	 *     @type array        $customer_id__in      Array of customer IDs to include. Default empty.
+	 *     @type array        $customer_id__not_in  Array of customer IDs to exclude. Default empty.
 	 *     @type string       $email                An email to only return that type. Default empty.
 	 *     @type array        $email__in            Array of emails to include. Default empty.
 	 *     @type array        $email__not_in        Array of emails to exclude. Default empty.
