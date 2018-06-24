@@ -620,15 +620,18 @@ function edd_register_downloads_report( $reports ) {
 			'priority'  => 10,
 			'icon'      => 'download',
 			'endpoints' => array(
-				'tiles' => array(
+				'tiles'  => array(
 					'most_valuable_download',
 					'average_download_earnings',
 					'download_sales_earnings',
-                ),
-                'charts' => array(
-	                'download_sales_by_variations',
-	                'download_earnings_by_variations',
-                )
+				),
+				'charts' => array(
+					'download_sales_by_variations',
+					'download_earnings_by_variations',
+				),
+				'tables' => array(
+					'earnings_by_taxonomy',
+				),
 			),
             'filters'   => array( 'products' )
 		) );
@@ -806,6 +809,18 @@ function edd_register_downloads_report( $reports ) {
 		        )
 	        ) );
         }
+
+		$reports->register_endpoint( 'earnings_by_taxonomy', array(
+			'label' => __( 'Earnings by Taxonomy', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-earnings-by-taxonomy-list-table.php',
+					),
+				),
+			),
+		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
