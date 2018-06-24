@@ -1044,8 +1044,10 @@ function display_products_filter( $report ) {
 	<div class="edd-graph-filter-options graph-option-section">
 		<?php
 		echo EDD()->html->product_dropdown( array(
-			'chosen'   => true,
-			'selected' => empty( $products ) ? 0 : $products,
+			'chosen'          => true,
+			'variations'      => true,
+			'show_option_all' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+			'selected'        => empty( $products ) ? 0 : $products,
 		) );
 		?>
 	</div>
