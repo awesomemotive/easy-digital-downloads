@@ -826,6 +826,10 @@ function edd_register_discounts_report( $reports ) {
 					'data_callback' => function () {
 
 					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
 				),
 			),
 		) );
@@ -837,6 +841,10 @@ function edd_register_discounts_report( $reports ) {
 					'data_callback' => function () {
 
 					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
 				),
 			),
 		) );
@@ -848,6 +856,10 @@ function edd_register_discounts_report( $reports ) {
 					'data_callback' => function () {
 
 					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
 				),
 			),
 		) );
@@ -859,6 +871,10 @@ function edd_register_discounts_report( $reports ) {
 					'data_callback' => function () {
 
 					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
 				),
 			),
 		) );
