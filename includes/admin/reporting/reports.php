@@ -202,14 +202,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'gateways', array(
-			'label'     => __( 'Payment Methods', 'easy-digital-downloads' ),
-			'priority'  => 20,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
 			'priority'  => 25,
@@ -644,6 +636,170 @@ function edd_register_overview_report( $reports ) {
 add_action( 'edd_reports_init', 'edd_register_overview_report' );
 
 /**
+ * Register payment methods report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_payment_methods_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$gateway = Reports\get_filter_value( 'gateways' );
+
+		$gateway = ! empty( $gateway ) && 'all' !== $gateway
+			? ' (' . esc_html( edd_get_gateway_admin_label( $gateway ) ) . ')'
+			: '';
+
+		$label = $options[ $filter['range'] ] . $gateway;
+
+		$reports->add_report( 'gateways', array(
+			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
+			'priority'  => 20,
+			'endpoints' => array(
+				'tiles'  => array(
+					'sales_per_gateway',
+					'earnings_per_gateway',
+					'refunds_per_gateway',
+					'average_value_per_gateway',
+				),
+				'tables' => array(
+					'gateway_stats',
+				),
+			),
+			'filters'   => array( 'gateways' ),
+		) );
+
+		$reports->register_endpoint( 'sales_per_gateway', array(
+			'label' => __( 'Sales', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
+
+						$stats = new EDD\Orders\Stats();
+
+						return apply_filters( 'edd_reports_gateways_sales', $stats->get_gateway_sales( array(
+							'range'   => $filter['range'],
+							'gateway' => $gateway,
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'earnings_per_gateway', array(
+			'label' => __( 'Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
+
+						$stats = new EDD\Orders\Stats();
+
+						return apply_filters( 'edd_reports_gateways_earnings', $stats->get_gateway_earnings( array(
+							'range'   => $filter['range'],
+							'gateway' => $gateway,
+							'output'  => 'formatted',
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'refunds_per_gateway', array(
+			'label' => __( 'Refunds', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
+
+						$stats = new EDD\Orders\Stats();
+
+						return apply_filters( 'edd_reports_gateways_refunds', $stats->get_gateway_earnings( array(
+							'range'   => $filter['range'],
+							'gateway' => $gateway,
+							'output'  => 'formatted',
+							'status'  => array( 'refunded' ),
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_value_per_gateway', array(
+			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
+
+						$stats = new EDD\Orders\Stats();
+
+						if ( empty( $gateway ) ) {
+							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_order_earnings( array(
+								'range'    => $filter['range'],
+								'function' => 'AVG',
+								'output'   => 'formatted',
+							) ) );
+						} else {
+							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_gateway_earnings( array(
+								'range'    => $filter['range'],
+								'gateway'  => $gateway,
+								'function' => 'AVG',
+								'output'   => 'formatted',
+							) ) );
+						}
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'gateway_stats', array(
+			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Payment_Gateways\\Gateway_Stats',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/payment-gateways/class-gateway-stats-list-table.php',
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_payment_methods_report' );
+
+/**
  * Register customer report and endpoints.
  *
  * @since 3.0
@@ -873,6 +1029,7 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
  * Renders the Gateways Table
  *
  * @since 1.3
+ * @deprecated
  * @uses EDD_Gateway_Reports_Table::prepare_items()
  * @uses EDD_Gateway_Reports_Table::display()
  * @return void
@@ -889,8 +1046,6 @@ function edd_reports_gateways_table() {
 	$downloads_table->prepare_items();
 	$downloads_table->display();
 }
-add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
-
 
 /**
  * Renders the Reports Earnings Graphs
