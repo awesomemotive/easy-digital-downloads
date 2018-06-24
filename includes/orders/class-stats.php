@@ -1266,7 +1266,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = 'oi.tax';
+		$this->query_vars['column']            = 'tax';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
@@ -1305,6 +1305,10 @@ class Stats {
 			$this->query_vars['table'] = 'o';
 			$this->pre_query( $query );
 			$this->query_vars['table'] = $table;
+
+			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+				? $this->query_vars['function'] . "oi.({$this->query_vars['column']})"
+				: "SUM(oi.{$this->query_vars['column']})";
 
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']} o
