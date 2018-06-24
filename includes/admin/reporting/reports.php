@@ -218,14 +218,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'discounts', array(
-			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
-			'priority'  => 35,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'categories', array(
 			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
 			'priority'  => 45,
@@ -636,13 +628,13 @@ function edd_register_overview_report( $reports ) {
 add_action( 'edd_reports_init', 'edd_register_overview_report' );
 
 /**
- * Register payment methods report and endpoints.
+ * Register payment gateways report and endpoints.
  *
  * @since 3.0
  *
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
-function edd_register_payment_methods_report( $reports ) {
+function edd_register_payment_gateways_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
@@ -797,7 +789,191 @@ function edd_register_payment_methods_report( $reports ) {
 		edd_debug_log_exception( $exception );
 	}
 }
-add_action( 'edd_reports_init', 'edd_register_payment_methods_report' );
+add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
+
+/**
+ * Register discounts report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_discounts_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$discount = Reports\get_filter_value( 'discounts' );
+		$discount = ! empty( $discount ) && 'all' !== $discount
+			? $discount
+			: 0;
+
+		$d = edd_get_discount( $discount );
+
+		$discount_label = false !== $d
+			? esc_html( ' (' . $d->name . ')' )
+			: '';
+
+		$reports->add_report( 'discounts', array(
+			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
+			'priority'  => 35,
+			'endpoints' => array(
+				'tiles'  => array(
+					'number_of_discounts_used',
+					'ratio_of_discounted_orders',
+					'customer_savings',
+					'average_discount_amount',
+					'most_popular_discount',
+					'discount_usage_count',
+				),
+				'tables' => array(
+					'top_five_discounts',
+				),
+			),
+			'filters'   => array( 'discounts' ),
+		) );
+
+		$reports->register_endpoint( 'number_of_discounts_used', array(
+			'label' => __( 'Number of Discounts Used', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_discounts_number_of_discounts_used', $stats->get_discount_usage_count( array(
+							'range' => $filter['range'],
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'ratio_of_discounted_orders', array(
+			'label' => __( 'Ratio of Discounted/Non-Discounted Orders', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_discounts_ratio_of_discounted_orders', $stats->get_ratio_of_discounted_orders( array(
+							'range' => $filter['range'],
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'customer_savings', array(
+			'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter, $d ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_discounts_customer_savings', $stats->get_discount_savings( array(
+							'range'         => $filter['range'],
+							'output'        => 'formatted',
+							'discount_code' => isset( $d->code )
+								? $d->code
+								: '',
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label . $discount_label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_discount_amount', array(
+			'label' => __( 'Average Discount Amount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_discounts_average_discount_amount', $stats->get_average_discount_amount( array(
+							'range'  => $filter['range'],
+							'output' => 'formatted',
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'most_popular_discount', array(
+			'label' => __( 'Most Popular Discount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+
+						$r = apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discounts( array(
+							'range' => $filter['range'],
+						) ) );
+
+						if ( ! empty( $r ) ) {
+							$r = $r[0];
+							return apply_filters( 'edd_reports_discounts_most_popular_discount', esc_html( $r->code . ' (' . $r->count . ')' ) );
+						}
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		if ( $d ) {
+			$reports->register_endpoint( 'discount_usage_count', array(
+				'label' => __( 'Discount Usage Count', 'easy-digital-downloads' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function () use ( $filter, $d ) {
+							$stats = new EDD\Orders\Stats();
+							return apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_discount_usage_count( array(
+								'range'         => $filter['range'],
+								'discount_code' => $d->code,
+							) ) );
+						},
+						'display_args'  => array(
+							'context'          => 'tertiary',
+							'comparison_label' => $label . $discount_label,
+						),
+					),
+				),
+			) );
+		}
+
+		$reports->register_endpoint( 'top_five_discounts', array(
+			'label' => __( 'Top Five Discounts', 'easy-digital-downloads' ) . ' – ' . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Discounts\\Top_Five_Discounts_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/discounts/class-top-five-discounts-list-table.php',
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_discounts_report' );
 
 /**
  * Register customer report and endpoints.
