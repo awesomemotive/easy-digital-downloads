@@ -798,7 +798,11 @@ function edd_register_taxes_report( $reports ) {
 		    'views' => array(
 			    'tile' => array(
 				    'data_callback' => function () use ( $filter ) {
-
+					    $stats = new EDD\Orders\Stats();
+					    return $stats->get_tax( array(
+						    'output' => 'formatted',
+						    'range'  => $filter['range'],
+					    ) );
 				    },
 				    'display_args'  => array(
 					    'context'          => 'primary',
