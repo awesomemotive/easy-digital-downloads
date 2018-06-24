@@ -135,12 +135,48 @@ function edd_reports_page() {
  */
 function edd_register_core_reports( $reports ) {
 	try {
+
+		// Endpoint whitelisted for display testing purposes pre-implementation.
+		$reports->register_endpoint( 'test_tile', array(
+			'label' => 'Test Tile',
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function() {
+						return 'Some Tile Data';
+					}
+				)
+			)
+		) );
+
+		$reports->register_endpoint( 'another_test_tile', array(
+			'label'   => 'Another Test Tile',
+			'views'   => array(
+				'tile' => array(
+					'data_callback' => function() {
+						return 'Some Tile Data';
+					},
+					'display_args' => array(
+						'context' => 'tertiary',
+					),
+				),
+			),
+		) );
+
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
 			'icon'      => 'image-rotate',
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
+			),
+		) );
+
+		$reports->add_report( 'categories', array(
+			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
+			'icon'      => 'category',
+			'priority'  => 45,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
 			),
 		) );
 	} catch ( \EDD_Exception $exception ) {
