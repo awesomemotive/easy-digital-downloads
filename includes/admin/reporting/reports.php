@@ -773,48 +773,56 @@ add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
 function edd_register_taxes_report( $reports ) {
+	try {
 
-    try {
+		// Variables to hold date filter values.
+		$options  = Reports\get_dates_filter_options();
+		$filter   = Reports\get_filter_value( 'dates' );
+		$download = Reports\get_filter_value( 'products' );
+		$label    = $options[ $filter['range'] ];
 
-	    // Variables to hold date filter values.
-	    $options = Reports\get_dates_filter_options();
-	    $filter  = Reports\get_filter_value( 'dates' );
-	    $label   = $options[ $filter['range'] ];
+		$reports->add_report( 'taxes', array(
+			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
+			'priority'  => 25,
+			'icon'      => 'editor-paste-text',
+			'endpoints' => array(
+				'tiles' => array(
+					'total_tax_collected',
+				),
+			),
+			'filters'   => array( 'products' ),
+		) );
 
-	    $reports->add_report( 'taxes', array(
-		    'label'     => __( 'Taxes', 'easy-digital-downloads' ),
-		    'priority'  => 25,
-		    'icon'      => 'editor-paste-text',
-		    'endpoints' => array(
-			    'tiles' => array(
-				    'total_tax_collected',
-			    ),
-		    ),
-		    'filters'   => array( 'products' ),
-	    ) );
+		$reports->register_endpoint( 'total_tax_collected', array(
+			'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter, $download ) {
+						$download = 'all' !== Reports\get_filter_value( 'products' )
+							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+							: '';
 
-	    $reports->register_endpoint( 'total_tax_collected', array(
-		    'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
-		    'views' => array(
-			    'tile' => array(
-				    'data_callback' => function () use ( $filter ) {
-					    $stats = new EDD\Orders\Stats();
-					    return $stats->get_tax( array(
-						    'output' => 'formatted',
-						    'range'  => $filter['range'],
-					    ) );
-				    },
-				    'display_args'  => array(
-					    'context'          => 'primary',
-					    'comparison_label' => $label,
-				    ),
-			    ),
-		    ),
-	    ) );
-    } catch ( \EDD_Exception $exception ) {
-	    edd_debug_log_exception( $exception );
-    }
+						$stats = new EDD\Orders\Stats();
+
+						return $stats->get_tax( array(
+							'output'      => 'formatted',
+							'range'       => $filter['range'],
+							'download_id' => $download['download_id'],
+							'price_id'    => (string) $download['price_id'],
+						) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
 }
+
 add_action( 'edd_reports_init', 'edd_register_taxes_report' );
 
 /**
