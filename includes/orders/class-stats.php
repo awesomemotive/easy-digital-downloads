@@ -1704,6 +1704,100 @@ class Stats {
 		return $result;
 	}
 
+	/** File Downloads *******************************************************/
+
+	/**
+	 * Calculate the number of file downloads.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return int Number of file downloads.
+	 */
+	public function get_file_download_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_logs_file_downloads;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: 'COUNT(id)';
+
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL({$function}, 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
+			? 0
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( 0 === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . $total
+					: '▼ ' . $total;
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $total;
+	}
+
 	/** Private Methods ******************************************************/
 
 	/**
