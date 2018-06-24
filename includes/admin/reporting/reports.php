@@ -824,10 +824,10 @@ function edd_register_discounts_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-					    $stats = new EDD\Orders\Stats();
-						return $stats->get_discount_usage_count( array(
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_discounts_number_of_discounts_used', $stats->get_discount_usage_count( array(
 							'range' => $filter['range'],
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -843,9 +843,9 @@ function edd_register_discounts_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return $stats->get_ratio_of_discounted_orders( array(
+						return apply_filters( 'edd_reports_discounts_ratio_of_discounted_orders', $stats->get_ratio_of_discounted_orders( array(
 							'range' => $filter['range'],
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -861,10 +861,10 @@ function edd_register_discounts_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return $stats->get_discount_savings( array(
+						return apply_filters( 'edd_reports_discounts_customer_savings', $stats->get_discount_savings( array(
 							'range'  => $filter['range'],
 							'output' => 'formatted',
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
@@ -880,10 +880,10 @@ function edd_register_discounts_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return $stats->get_average_discount_amount( array(
+						return apply_filters( 'edd_reports_discounts_average_discount_amount', $stats->get_average_discount_amount( array(
 							'range'  => $filter['range'],
 							'output' => 'formatted',
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
