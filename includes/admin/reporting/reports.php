@@ -723,8 +723,19 @@ function edd_register_payment_methods_report( $reports ) {
 			'label' => __( 'Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
 
+						$stats = new EDD\Orders\Stats();
+
+						return $stats->get_gateway_earnings( array(
+							'range'   => $filter['range'],
+							'gateway' => $gateway,
+							'output'  => 'formatted',
+							'status'  => array( 'refunded' ),
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
@@ -738,8 +749,27 @@ function edd_register_payment_methods_report( $reports ) {
 			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
 
+						$stats = new EDD\Orders\Stats();
+
+						if ( empty( $gateway ) ) {
+							return $stats->get_order_earnings( array(
+								'range'    => $filter['range'],
+								'function' => 'AVG',
+								'output'   => 'formatted',
+							) );
+						} else {
+							return $stats->get_gateway_earnings( array(
+								'range'    => $filter['range'],
+								'gateway'  => $gateway,
+								'function' => 'AVG',
+								'output'   => 'formatted',
+							) );
+						}
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
