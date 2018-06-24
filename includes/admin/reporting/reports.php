@@ -837,8 +837,17 @@ function edd_register_downloads_report( $reports ) {
         }
 
         if ( $download_data ) {
+
+            $download_label = $download->post_title;
+
+            if ( ! empty( $download_data['price_id'] ) ) {
+	            $prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+	            $download_label .= ': ' . $prices[0]['name'];
+            }
+
 	        $reports->register_endpoint( 'download_sales_earnings_chart', array(
-		        'label' => __( 'Sales and Earnings for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ),
+		        'label' => __( 'Sales and Earnings for ', 'easy-digital-downloads' ) . esc_html( $download_label ),
 		        'views' => array(
 			        'chart' => array(
 				        'data_callback' => function () use ( $filter, $download_data ) {
@@ -864,10 +873,14 @@ function edd_register_downloads_report( $reports ) {
 					        $start = $dates['start']->format( 'Y-m-d' );
 					        $end   = $dates['end']->format( 'Y-m-d' );
 
+					        $price_id = ! empty( $download_data['price_id'] )
+						        ? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
+						        : '';
+
 					        $results = $wpdb->get_results( $wpdb->prepare(
 						        "SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
                                  FROM {$wpdb->edd_order_items} edd_oi
-                                 WHERE product_id = %d AND date_created >= %s AND date_created <= %s 
+                                 WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s 
                                  GROUP BY {$sql_clauses['groupby']}
                                  ORDER BY {$sql_clauses['orderby']} ASC",
 						    $download_data['download_id'], $start, $end ) );
