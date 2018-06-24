@@ -1306,7 +1306,7 @@ class Stats {
 			$this->query_vars['table'] = $table;
 
 			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-				? $this->query_vars['function'] . "oi.({$this->query_vars['column']})"
+				? $this->query_vars['function'] . "(oi.{$this->query_vars['column']})"
 				: "SUM(oi.{$this->query_vars['column']})";
 
 			$sql = "SELECT {$function} AS total
