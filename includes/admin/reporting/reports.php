@@ -625,6 +625,9 @@ function edd_register_downloads_report( $reports ) {
 					'average_download_earnings',
 					'download_sales_earnings',
                 ),
+                'charts' => array(
+	                'download_variations_chart',
+                )
 			),
             'filters'   => array( 'products' )
 		) );
@@ -708,6 +711,53 @@ function edd_register_downloads_report( $reports ) {
 				    ),
 			    ),
             ) );
+        }
+
+        if ( $download_data && $download->has_variable_prices() ) {
+	        $prices = $download->get_prices();
+
+	        $reports->register_endpoint( 'download_variations_chart', array(
+		        'label' => __( 'Earnings by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
+		        'views' => array(
+			        'chart' => array(
+				        'data_callback' => function() use ( $filter, $download_data, $prices ) {
+					        $stats = new EDD\Orders\Stats();
+					        $d = $stats->get_order_item_earnings( array(
+						        'product_id' => absint( $download_data['download_id'] ),
+						        'range'      => $filter['range'],
+						        'grouped'    => true,
+					        ) );
+
+					        foreach ( $d as $data ) {
+						        $prices[ $data->price_id ]['total'] = floatval( $data->total );
+					        }
+
+					        $totals = array_values( wp_list_pluck( $prices, 'total' ) );
+
+					        return array(
+						        'earnings' => $totals,
+					        );
+				        },
+				        'type' => 'pie',
+				        'options' => array(
+					        'cutoutPercentage' => 50,
+					        'datasets'         => array(
+						        'earnings' => array(
+							        'label'           => __( 'Earnings' ),
+							        'backgroundColor' => array(
+								        'rgb(133,175,91)',
+								        'rgb(9,149,199)',
+								        'rgb(8,189,231)',
+								        'rgb(137,163,87)',
+								        'rgb(27,98,122)',
+							        ),
+						        ),
+					        ),
+					        'labels' => array_values( wp_list_pluck( $prices, 'name' ) ),
+				        ),
+			        ),
+		        )
+	        ) );
         }
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
