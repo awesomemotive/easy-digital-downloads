@@ -397,6 +397,10 @@ function get_filters() {
 			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter',
 		),
+		'discounts' => array(
+			'label'            => __( 'Discounts', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter',
+		),
 	);
 }
 
@@ -1070,6 +1074,39 @@ function display_taxes_filter( $report ) {
 		<input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes" />
 		<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
 	</div>
+	<?php
+}
+
+/**
+ * Handles display of the 'Discounts' filter for reports.
+ *
+ * @since 3.0
+ *
+ * @param Data\Report $report Report object.
+ * @return void
+ */
+function display_discounts_filter( $report ) {
+	$discount = get_filter_value( 'discounts' );
+
+	$d = edd_get_discounts( array(
+		'fields' => array( 'code', 'name' ),
+	) );
+
+	$discounts = array();
+
+	foreach ( $d as $discount_data ) {
+		$discounts[ $discount_data->code ] = esc_html( $discount_data->name );
+	}
+	?>
+    <div class="edd-graph-filter-options graph-option-section">
+		<?php
+		echo EDD()->html->discount_dropdown( array(
+			'name'     => 'discounts',
+			'chosen'   => true,
+			'selected' => empty( $discount ) ? 0 : $discount,
+		) );
+		?>
+    </div>
 	<?php
 }
 

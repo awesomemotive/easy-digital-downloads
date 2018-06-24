@@ -806,6 +806,8 @@ function edd_register_discounts_report( $reports ) {
 		$filter  = Reports\get_filter_value( 'dates' );
 		$label   = $options[ $filter['range'] ];
 
+		$discount = Reports\get_filter_value( 'discounts' );
+
 		$reports->add_report( 'discounts', array(
 			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
 			'priority'  => 35,
@@ -815,9 +817,10 @@ function edd_register_discounts_report( $reports ) {
 					'ratio_of_discounted_orders',
 					'customer_savings',
 					'average_discount_amount',
-                    'most_popular_discount'
+					'most_popular_discount',
 				),
 			),
+			'filters'   => array( 'discounts' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_discounts_used', array(
