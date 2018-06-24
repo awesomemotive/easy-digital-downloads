@@ -472,8 +472,8 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
-						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+						$dates      = Reports\get_dates_filter( 'objects' );
+						$day_by_day = Reports\get_dates_filter_day_by_day();
 
 						$sql_clauses = array(
 							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
@@ -481,24 +481,53 @@ function edd_register_overview_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
+						if ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+							);
+						}
+
+						$start = $dates['start']->format( 'Y-m-d' );
+						$end   = $dates['end']->format( 'Y-m-d' );
+
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_orders} edd_o
-					         WHERE ( ( date_created >= %s
-                             AND date_created <= %s ) ) 
+					         WHERE date_created >= %s AND date_created <= %s 
                              GROUP BY {$sql_clauses['groupby']}
                              ORDER BY {$sql_clauses['orderby']} ASC",
-						$start_date, $end_date ) );
+							$start, $end ) );
 
 						$sales = array();
 
-						$i = 0;
-						foreach ( $results as $result ) {
-							$sales[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
-							$sales[ $i ][] = $result->total;
+						while ( strtotime( $start ) <= strtotime( $end ) ) {
+							$day = ( true === $day_by_day )
+								? $dates['start']->day
+								: 1;
 
-							$i ++;
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+							$sales[ $timestamp ][] = $timestamp;
+							$sales[ $timestamp ][] = 0;
+
+							$start = ( true === $day_by_day )
+								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
 						}
+
+						foreach ( $results as $result ) {
+							$day = ( true === $day_by_day )
+								? $result->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+							$sales[ $timestamp ][1] = $result->total;
+						}
+
+						$sales = array_values( $sales );
 
 						return array( 'sales' => $sales );
 					},
