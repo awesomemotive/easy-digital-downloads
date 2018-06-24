@@ -1015,10 +1015,11 @@ function edd_register_file_downloads_report( $reports ) {
 						$start = $dates['start']->format( 'Y-m-d' );
 						$end   = $dates['end']->format( 'Y-m-d' );
 
+						$product_id = '';
+						$price_id   = '';
+
 						if ( is_array( $download_data ) ) {
-							$product_id = ! empty( $download_data['download_id'] )
-								? $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) )
-								: '';
+							$product_id = $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) );
 
 							$price_id = ! empty( $download_data['price_id'] )
 								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
