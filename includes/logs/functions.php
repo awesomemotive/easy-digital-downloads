@@ -149,9 +149,9 @@ function edd_count_logs( $args = array() ) {
  */
 function edd_add_file_download_log( $data = array() ) {
 
-	// A download ID and an order ID must be supplied for every log that is
+	// A product ID and an order ID must be supplied for every log that is
 	// inserted into the database.
-	if ( empty( $data['download_id'] ) || empty( $data['order_id'] ) ) {
+	if ( empty( $data['product_id'] ) || empty( $data['order_id'] ) ) {
 		return false;
 	}
 
