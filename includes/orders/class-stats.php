@@ -748,7 +748,7 @@ class Stats {
 	 *
 	 * @return string Most popular discount with usage count.
 	 */
-	public function get_most_popular_discount( $query = array() ) {
+	public function get_most_popular_discounts( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
@@ -758,28 +758,31 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
+		// By default, the most valuable discount is returned.
+		$number = isset( $this->query_vars['number'] )
+			? absint( $this->query_vars['number'] )
+			: 1;
+
 		$discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
-		$sql = "SELECT description, COUNT({$this->query_vars['column']}) AS count
+		$sql = "SELECT description AS code, COUNT({$this->query_vars['column']}) AS count
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$discount} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY description
 				ORDER BY {$this->query_vars['date_query_column']} DESC
-				LIMIT 1";
+				LIMIT {$number}";
 
-		$result = $this->get_db()->get_row( $sql );
+		$result = $this->get_db()->get_results( $sql );
 
-		$count = null === $result->count
-			? 0
-			: absint( $result->count );
+		array_walk( $result, function ( &$value ) {
 
-		$result = null === $result->description
-			? 0
-			: esc_html( $result->description );
+			// Add instance of EDD_Discount to resultant object.
+			$value->object = edd_get_discount_by_code( $value->code );
 
-		$result .= ! empty( $count )
-			? ' (' . $count . ')'
-			: '';
+			// Format resultant object.
+			$value->discount_id = absint( $value->object->id );
+			$value->count       = absint( $value->count );
+		} );
 
 		// Reset query vars.
 		$this->post_query();
