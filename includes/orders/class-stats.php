@@ -159,7 +159,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL(SUM(total), 0) AS total, relative
+			$sql = "SELECT IFNULL(SUM(total), 0) AS total, IFNULL(relative, 0) AS relative
 					FROM {$this->query_vars['table']}
 					CROSS JOIN (
 						SELECT IFNULL(SUM(total), 0) AS relative
@@ -183,7 +183,9 @@ class Stats {
 			$total    = floatval( $result->total );
 			$relative = floatval( $result->relative );
 
-			if ( floatval( 0 ) === $relative ) {
+			if ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
 					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
 					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
@@ -249,7 +251,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, relative
+			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, IFNULL(relative, 0) AS relative
 					FROM {$this->query_vars['table']}
 					CROSS JOIN (
 						SELECT IFNULL(COUNT(id), 0) AS relative
@@ -263,8 +265,6 @@ class Stats {
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
-		var_dump( $sql );
-
 		$result = $this->get_db()->get_row( $sql );
 
 		$total = null === $result
@@ -275,7 +275,9 @@ class Stats {
 			$total    = absint( $result->total );
 			$relative = absint( $result->relative );
 
-			if ( 0 === $relative ) {
+			if ( 0 === $total && 0 === $relative ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( 0 === $relative ) {
 				$total = 0 < $total
 					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
 					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
