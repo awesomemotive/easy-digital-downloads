@@ -68,7 +68,7 @@ function edd_reports_sections() {
  */
 function edd_output_report_callback( $report_id = '' ) {
 	$report = EDD\Reports\get_report( $report_id );
-
+	
 	/**
 	 * Fires at the top of the content area of a Reports tab.
 	 *

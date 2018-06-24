@@ -212,12 +212,14 @@ function get_tabs() {
  * @return string The active report tab, or the first tab if the 'tab' var is not defined.
  */
 function get_active_tab() {
-
 	$tabs = get_tabs();
 
 	// If not set, default the active tab to the first one.
-	return isset( $_REQUEST['tab'] ) ? sanitize_key( $_REQUEST['tab'] ) : key( $tabs );
+	return isset( $_REQUEST['view'] )
+		? sanitize_key( $_REQUEST['view'] )
+		: key( $tabs );
 }
+
 
 //
 // Endpoints.
