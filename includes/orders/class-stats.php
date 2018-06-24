@@ -115,6 +115,8 @@ class Stats {
 				'relative_start'    => '',
 				'relative_end'      => '',
 				'grouped'           => false,
+				'product_id'        => '',
+				'price_id'          => '',
 			);
 		}
 	}
@@ -499,15 +501,15 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = isset( $this->query_vars['function'] )
+		$function = ! empty( $this->query_vars['function'] )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
 
-		$product_id = isset( $this->query_vars['product_id'] )
+		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = isset( $this->query_vars['price_id'] )
+		$price_id = ! empty( $this->query_vars['price_id'] )
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
@@ -588,21 +590,21 @@ class Stats {
 		// Only `COUNT` and `AVG` are accepted by this method.
 		$accepted_functions = array( 'COUNT', 'AVG' );
 
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
 
-		$product_id = isset( $this->query_vars['product_id'] )
+		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = isset( $this->query_vars['price_id'] )
+		$price_id = ! empty( $this->query_vars['price_id'] )
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
 		// Calculating an average requires a subquery.
 		if ( 'AVG' === $this->query_vars['function'] ) {
-			$sql = "SELECT AVG(id)
+			$sql = "SELECT AVG(id) AS total
 					FROM (
 						SELECT COUNT(id) AS id
 						FROM {$this->query_vars['table']}
@@ -616,7 +618,7 @@ class Stats {
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
-			$sql = "SELECT {$function}
+			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
@@ -2159,6 +2161,8 @@ class Stats {
 			'relative_start'    => '',
 			'relative_end'      => '',
 			'grouped'           => false,
+			'product_id'        => '',
+			'price_id'          => '',
 		);
 
 		if ( empty( $this->query_vars ) ) {
