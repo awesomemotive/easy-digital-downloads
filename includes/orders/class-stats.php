@@ -487,7 +487,7 @@ class Stats {
 	 *     @type string $output     The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return float|int Formatted order item earnings.
+	 * @return array|float|int Formatted order item earnings.
 	 */
 	public function get_order_item_earnings( $query = array() ) {
 
@@ -507,22 +507,45 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$product_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		$price_id = isset( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
 
-		$result = $this->get_db()->get_var( $sql );
+		if ( true === $this->query_vars['grouped'] ) {
+			$sql = "SELECT product_id, price_id, {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					GROUP BY product_id, price_id
+					ORDER BY total DESC";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		}
 
-		$total = null === $result
-			? 0.00
-			: (float) $result;
+		$result = $this->get_db()->get_results( $sql );
 
-		$total = $this->maybe_format( $total );
+		if ( true === $this->query_vars['grouped'] ) {
+			array_walk( $result, function ( &$value ) {
+
+				// Format resultant object.
+				$value->product_id = absint( $value->product_id );
+				$value->price_id   = absint( $value->price_id );
+				$value->total      = $this->maybe_format( $value->total );
+
+				// Add instance of EDD_Download to resultant object.
+				$value->object = edd_get_download( $value->product_id );
+			} );
+		} else {
+			$result = null === $result[0]->total
+				? 0.00
+				: $this->maybe_format( floatval( $result[0]->total ) );
+		}
 
 		// Reset query vars.
 		$this->post_query();
 
-		return $total;
+		return $result;
 	}
 
 	/**
