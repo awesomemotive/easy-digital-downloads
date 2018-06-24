@@ -623,6 +623,7 @@ function edd_register_downloads_report( $reports ) {
 				'tiles' => array(
 					'most_valuable_download',
 					'average_download_earnings',
+					'download_sales_earnings',
                 ),
 			),
             'filters'   => array( 'products' )
@@ -679,6 +680,35 @@ function edd_register_downloads_report( $reports ) {
 				),
 			),
 		) );
+
+		if ( ! empty( $download_label ) ) {
+		    $reports->register_endpoint( 'download_sales_earnings', array(
+			    'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
+			    'views' => array(
+				    'tile' => array(
+					    'data_callback' => function () use ( $filter, $download_data ) {
+						    $stats = new EDD\Orders\Stats();
+						    $earnings = $stats->get_order_item_earnings( array(
+							    'product_id' => absint( $download_data['download_id'] ),
+							    'range'      => $filter['range'],
+							    'output'     => 'formatted',
+						    ) );
+
+						    $sales = $stats->get_order_item_count( array(
+							    'product_id' => absint( $download_data['download_id'] ),
+							    'range'      => $filter['range'],
+						    ) );
+
+						    return apply_filters( 'edd_reports_downloads_sales_earnings', esc_html( $sales . ' / ' . $earnings ) );
+					    },
+					    'display_args'  => array(
+						    'context'          => 'tertiary',
+						    'comparison_label' => $label . $download_label,
+					    ),
+				    ),
+			    ),
+            ) );
+        }
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
