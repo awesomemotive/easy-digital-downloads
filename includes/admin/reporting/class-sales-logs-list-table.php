@@ -190,7 +190,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
-	 * @global object $edd_logs EDD Logs Object
+	 * @global object $log_query EDD Logs Object
 	 * @return array $logs_data Array of all the Log entries
 	 */
 	public function get_logs( $log_query = array() ) {

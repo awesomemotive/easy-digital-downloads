@@ -1,6 +1,12 @@
 /* global edd_vars, ajaxurl, wpAjax, postboxes, pagenow */
 jQuery(document).ready(function ($) {
 
+	// Variables for setting up the typing timer
+	// Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+	var userInteractionInterval = 342,
+		typingTimerElements     = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
+		typingTimer;
+
 	// Cancel user-search.blur when picking a user
 	var edd_user_search_mouse_down = false;
 	$('.edd_user_search_results').mousedown(function() {
@@ -566,7 +572,7 @@ jQuery(document).ready(function ($) {
 
                     setTimeout( function() {
                         edd_note.css('border-color', border_color );
-                    }, 500 );
+                    }, userInteractionInterval );
                 }
             });
 		},
@@ -1439,12 +1445,6 @@ jQuery(document).ready(function ($) {
 		$.post( ajaxurl, data );
 	});
 
-	// Variables for setting up the typing timer
-	// Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
-	var doneTypingInterval  = 342,
-		typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
-		typingTimer;
-
 	// Replace options with search results
 	$( document.body ).on( 'keyup', typingTimerElements, function(e) {
 		var	element     = $( this ),
@@ -1544,7 +1544,7 @@ jQuery(document).ready(function ($) {
 			}).done(function (response) {
 				container.children( '.spinner' ).remove();
 			});
-		}, doneTypingInterval );
+		}, userInteractionInterval );
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
@@ -1973,38 +1973,35 @@ jQuery(document).ready(function ($) {
 		add_email: function() {
 			$( document.body ).on( 'click', '#add-customer-email', function(e) {
 				e.preventDefault();
-				var button  = $( this );
-				var wrapper = button.parent();
+				var button  = $( this ),
+					wrapper = button.parent().parent().parent().parent(),
+					customer_id = wrapper.find('input[name="customer-id"]').val(),
+					email       = wrapper.find('input[name="additional-email"]').val(),
+					primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked'),
+					nonce       = wrapper.find('input[name="add_email_nonce"]').val(),
+					postData = {
+						edd_action:  'customer-add-email',
+						customer_id: customer_id,
+						email:       email,
+						primary:     primary,
+						_wpnonce:    nonce
+					};
 
 				wrapper.parent().find('.notice-container').remove();
 				wrapper.find('.spinner').css('visibility', 'visible');
 				button.attr('disabled', true);
 
-				var customer_id = wrapper.find('input[name="customer-id"]').val();
-				var email       = wrapper.find('input[name="additional-email"]').val();
-				var primary     = wrapper.find('input[name="make-additional-primary"]').is(':checked');
-				var nonce       = wrapper.find('input[name="add_email_nonce"]').val();
-
-				var postData = {
-					edd_action:  'customer-add-email',
-					customer_id: customer_id,
-					email:       email,
-					primary:     primary,
-					_wpnonce:    nonce
-				};
-
 				$.post(ajaxurl, postData, function( response ) {
-
-					if ( true === response.success ) {
-						window.location.href=response.redirect;
-					} else {
-						button.attr('disabled', false);
-						wrapper.after('<div class="notice-container"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
-						wrapper.find('.spinner').css('visibility', 'hidden');
-					}
-
+					setTimeout( function() {
+						if ( true === response.success ) {
+							window.location.href=response.redirect;
+						} else {
+							button.attr('disabled', false);
+							wrapper.before('<div class="notice-container"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>');
+							wrapper.find('.spinner').css('visibility', 'hidden');
+						}
+					}, userInteractionInterval );
 				}, 'json');
-
 			});
 		},
 		user_search: function() {
