@@ -666,6 +666,9 @@ function edd_register_payment_methods_report( $reports ) {
 					'refunds_per_gateway',
 					'average_value_per_gateway',
 				),
+				'tables' => array(
+					'gateway_stats',
+				),
 			),
 			'filters'   => array( 'gateways' ),
 		) );
@@ -774,6 +777,18 @@ function edd_register_payment_methods_report( $reports ) {
 					'display_args'  => array(
 						'context'          => 'primary',
 						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'gateway_stats', array(
+			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Payment_Gateways\\Gateway_Stats',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/payment-gateways/class-gateway-stats-list-table.php',
 					),
 				),
 			),
@@ -1014,6 +1029,7 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
  * Renders the Gateways Table
  *
  * @since 1.3
+ * @deprecated
  * @uses EDD_Gateway_Reports_Table::prepare_items()
  * @uses EDD_Gateway_Reports_Table::display()
  * @return void
@@ -1030,8 +1046,6 @@ function edd_reports_gateways_table() {
 	$downloads_table->prepare_items();
 	$downloads_table->display();
 }
-add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
-
 
 /**
  * Renders the Reports Earnings Graphs
