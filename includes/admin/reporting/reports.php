@@ -475,13 +475,19 @@ function edd_register_overview_report( $reports ) {
 						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
 						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
 
+						$sql_clauses = array(
+							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
+							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+						);
+
 						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, COUNT(id) AS total
+							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_orders} edd_o
 					         WHERE ( ( date_created >= %s
                              AND date_created <= %s ) ) 
-                             GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
-                             ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
+                             GROUP BY {$sql_clauses['groupby']}
+                             ORDER BY {$sql_clauses['orderby']} ASC",
 						$start_date, $end_date ) );
 
 						$sales = array();
@@ -521,31 +527,54 @@ function edd_register_overview_report( $reports ) {
 						$dates      = Reports\get_dates_filter( 'objects' );
 						$day_by_day = Reports\get_dates_filter_day_by_day();
 
+						$sql_clauses = array(
+							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
+							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+						);
+
+						if ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+							);
+						}
+
 						$start = $dates['start']->format( 'Y-m-d' );
 						$end   = $dates['end']->format( 'Y-m-d' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, SUM(total) AS total
+							"SELECT SUM(total) AS total, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_orders} edd_o
-					         WHERE ( ( date_created >= %s
-                             AND date_created <= %s ) ) 
-                             GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
-                             ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
+					         WHERE date_created >= %s AND date_created <= %s 
+                             GROUP BY {$sql_clauses['groupby']}
+                             ORDER BY {$sql_clauses['orderby']} ASC",
 						$start, $end ) );
 
 						$earnings = array();
 
 						while ( strtotime( $start ) <= strtotime( $end ) ) {
-							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, 0, 0, 0 )->timestamp;
+							$day = ( true === $day_by_day )
+								? $dates['start']->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
 
 							$earnings[ $timestamp ][] = $timestamp;
 							$earnings[ $timestamp ][] = 0;
 
-							$start = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
+							$start = ( true === $day_by_day )
+								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
 						}
 
 						foreach ( $results as $result ) {
-							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
+							$day = ( true === $day_by_day )
+								? $result->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
 
 							$earnings[ $timestamp ][1] = $result->total;
 						}
