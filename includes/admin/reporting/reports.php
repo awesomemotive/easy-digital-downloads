@@ -879,11 +879,14 @@ function edd_register_file_downloads_report( $reports ) {
 			'icon'      => 'download',
 			'priority'  => 30,
 			'endpoints' => array(
-				'tiles' => array(
+				'tiles'  => array(
 					'number_of_file_downloads',
 					'average_file_downloads_per_customer',
 					'most_downloaded_product',
 					'average_file_downloads_per_order',
+				),
+				'charts' => array(
+					'file_downloads_chart',
 				),
 			),
 			'filters'   => array( 'products' ),
@@ -965,6 +968,97 @@ function edd_register_file_downloads_report( $reports ) {
 					'display_args'  => array(
 						'context'          => 'primary',
 						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'file_downloads_chart', array(
+			'label' => __( 'Number of File Downloads', 'easy-digital-downloads' ) . $download_label,
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function () use ( $filter, $download_data ) {
+						global $wpdb;
+
+						$dates      = Reports\get_dates_filter( 'objects' );
+						$day_by_day = Reports\get_dates_filter_day_by_day();
+
+						$sql_clauses = array(
+							'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month, DAY(edd_lfd.date_created) AS day',
+							'groupby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created), DAY(edd_lfd.date_created)',
+							'orderby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created), DAY(edd_lfd.date_created)',
+						);
+
+						if ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month',
+								'groupby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created)',
+								'orderby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created)',
+							);
+						}
+
+						$start = $dates['start']->format( 'Y-m-d' );
+						$end   = $dates['end']->format( 'Y-m-d' );
+
+						if ( is_array( $download_data ) ) {
+							$product_id = ! empty( $download_data['download_id'] )
+								? $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) )
+								: '';
+
+							$price_id = ! empty( $download_data['price_id'] )
+								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
+								: '';
+                        }
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
+					         FROM {$wpdb->edd_logs_file_downloads} edd_lfd
+					         WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id} 
+                             GROUP BY {$sql_clauses['groupby']}
+                             ORDER BY {$sql_clauses['orderby']} ASC",
+							$start, $end ) );
+
+						$file_downloads = array();
+
+						while ( strtotime( $start ) <= strtotime( $end ) ) {
+							$day = ( true === $day_by_day )
+								? $dates['start']->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+							$file_downloads[ $timestamp ][] = $timestamp;
+							$file_downloads[ $timestamp ][] = 0;
+
+							$start = ( true === $day_by_day )
+								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+						}
+
+						foreach ( $results as $result ) {
+							$day = ( true === $day_by_day )
+								? $result->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+							$file_downloads[ $timestamp ][1] = $result->total;
+						}
+
+						$file_downloads = array_values( $file_downloads );
+
+						return array( 'file_downloads' => $file_downloads );
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'file_downloads' => array(
+								'label'           => __( 'File Downloads', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
 					),
 				),
 			),
