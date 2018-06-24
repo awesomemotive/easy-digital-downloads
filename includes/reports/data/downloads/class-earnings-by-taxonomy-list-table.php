@@ -33,10 +33,9 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	public function taxonomy_data() {
 		global $wpdb;
 
-		$date         = EDD()->utils->date( 'now' );
-		$date_filters = Reports\get_dates_filter_options();
-		$filter       = Reports\get_filter_value( 'dates' );
-		$date_range   = Reports\parse_dates_for_range( $date, $filter['range'] );
+		$date       = EDD()->utils->date( 'now' );
+		$filter     = Reports\get_filter_value( 'dates' );
+		$date_range = Reports\parse_dates_for_range( $date, $filter['range'] );
 
 		// Generate date query SQL if dates have been set.
 		$date_query_sql = '';
@@ -55,10 +54,6 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $date_range['end'] );
 			}
 		}
-
-		$stats = new Orders\Stats( array(
-			'range' => $filter['range'],
-		) );
 
 		$taxonomies = get_object_taxonomies( 'download', 'names' );
 		$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
@@ -84,9 +79,10 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 		}
 
 		$data = array();
+		$parent_ids = array();
 
 		foreach ( $taxonomies as $k => $t ) {
-			$c = new \stdClass();
+			$c       = new \stdClass();
 			$c->id   = $k;
 			$c->name = $taxonomies[ $k ]['name'];
 
@@ -109,12 +105,30 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 
 			$c->sales    = $sales;
 			$c->earnings = $earnings;
-			$c->parent   = $t['parent'];
+			$c->parent   = 0 === $t['parent']
+				? null
+				: $t['parent'];
 
 			$data[] = $c;
 		}
 
-		return $data;
+		$sorted_data = array();
+
+		foreach ( $data as $d ) {
+
+			// Get parent level elements
+			if ( null === $d->parent ) {
+				$sorted_data[] = $d;
+
+				$objects = array_values( wp_filter_object_list( $data, array( 'parent' => $d->id ) ) );
+
+				foreach ( $objects as $o ) {
+					$sorted_data[] = $o;
+				}
+			}
+		}
+
+		return $sorted_data;
 	}
 
 	/**
@@ -126,12 +140,50 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'taxonomy'       => __( 'Taxonomy', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
-			'total_earnings' => __( 'Total Earnings', 'easy-digital-downloads' ),
-			'avg_sales'      => __( 'Monthly Sales Average', 'easy-digital-downloads' ),
-			'avg_earnings'   => __( 'Monthly Earnings Average', 'easy-digital-downloads' ),
+			'name'         => __( 'Taxonomy', 'easy-digital-downloads' ),
+			'sales'        => __( 'Total Sales', 'easy-digital-downloads' ),
+			'earnings'     => __( 'Total Earnings', 'easy-digital-downloads' ),
+			'avg_sales'    => __( 'Monthly Sales Average', 'easy-digital-downloads' ),
+			'avg_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' ),
 		);
+	}
+
+	/**
+	 * Render the Name Column.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \stdClass $taxonomy Taxonomy object.
+	 * @return string Data shown in the Name column.
+	 */
+	public function column_name( $taxonomy ) {
+		return 0 < $taxonomy->parent
+			? '&#8212; ' . $taxonomy->name
+			: $taxonomy->name;
+	}
+
+	/**
+	 * Render the Sales Column.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \stdClass $taxonomy Taxonomy object.
+	 * @return string Data shown in the Sales column.
+	 */
+	public function column_sales( $taxonomy ) {
+		return $taxonomy->sales;
+	}
+
+	/**
+	 * Render the Earnings Column.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \stdClass $taxonomy Taxonomy object.
+	 * @return string Data shown in the Earnings column.
+	 */
+	public function column_earnings( $taxonomy ) {
+		return edd_currency_filter( edd_format_amount( $taxonomy->earnings ) );
 	}
 
 	/**
