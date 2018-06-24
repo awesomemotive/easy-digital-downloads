@@ -654,7 +654,72 @@ function edd_register_payment_methods_report( $reports ) {
 			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
 			'priority'  => 20,
 			'endpoints' => array(
-				'tiles' => array( 'test_tile' ),
+				'tiles' => array(
+					'sales_per_gateway',
+					'earnings_per_gateway',
+					'refunds_per_gateway',
+					'average_value_per_gateway',
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'sales_per_gateway', array(
+			'label' => __( 'Sales', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'earnings_per_gateway', array(
+			'label' => __( 'Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'refunds_per_gateway', array(
+			'label' => __( 'Refunds', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_value_per_gateway', array(
+			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
 			),
 		) );
 	} catch ( \EDD_Exception $exception ) {
