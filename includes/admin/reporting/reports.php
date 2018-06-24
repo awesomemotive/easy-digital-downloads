@@ -926,7 +926,7 @@ function edd_register_discounts_report( $reports ) {
 
 						if ( ! empty( $r ) ) {
 							$r = $r[0];
-							return esc_html( $r->code . ' (' . $r->count . ')' );
+							return apply_filters( 'edd_reports_discounts_most_popular_discount', esc_html( $r->code . ' (' . $r->count . ')' ) );
 						}
 					},
 					'display_args'  => array(
