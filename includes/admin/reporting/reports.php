@@ -810,7 +810,56 @@ function edd_register_discounts_report( $reports ) {
 			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
 			'priority'  => 35,
 			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
+				'tiles' => array(
+					'number_of_discounts_used',
+					'ratio_of_discounted_orders',
+					'customer_savings',
+					'average_discount_amount',
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'number_of_discounts_used', array(
+			'label' => __( 'Number of Discounts Used', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'ratio_of_discounted_orders', array(
+			'label' => __( 'Ratio of Discounted/Non-Discounted Orders', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'customer_savings', array(
+			'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_discount_amount', array(
+			'label' => __( 'Average Discount Amount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () {
+
+					},
+				),
 			),
 		) );
 	} catch ( \EDD_Exception $exception ) {
