@@ -782,16 +782,20 @@ function edd_register_taxes_report( $reports ) {
 
 		$download_data = 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
-			: '';
+			: false;
 
-		$download = edd_get_download( $download_data['download_id'] );
+		$download_label = '';
 
-		if ( ! empty( $download_data['price_id'] ) ) {
-			$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );;
+		if ( $download_data ) {
+			$download = edd_get_download( $download_data['download_id'] );
 
-			$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-		} else {
-			$download_label = esc_html( ' (' . $download->post_title . ')' );
+			if ( $download_data['price_id'] ) {
+				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+			} else {
+				$download_label = esc_html( ' (' . $download->post_title . ')' );
+			}
 		}
 
 		$reports->add_report( 'taxes', array(
@@ -813,7 +817,7 @@ function edd_register_taxes_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						$download = 'all' !== Reports\get_filter_value( 'products' )
 							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
-							: '';
+							: array( 'download_id' => '', 'price_id' => '' );
 
 						$stats = new EDD\Orders\Stats();
 
