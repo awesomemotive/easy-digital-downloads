@@ -988,7 +988,7 @@ class Stats {
 			array_walk( $result, function ( &$value ) {
 				$value->total = absint( $value->total );
 			} );
-		} elseif ( 'SUM' === $this->query_vars['function'] ) {
+		} elseif ( 'SUM' === $this->query_vars['function'] || 'AVG' === $this->query_vars['function'] ) {
 			array_walk( $result, function ( &$value ) {
 				$value->total = floatval( $value->total );
 			} );
@@ -1075,7 +1075,9 @@ class Stats {
 	public function get_gateway_earnings( $query = array() ) {
 
 		// Summation is required as we are returning earnings.
-		$query['function'] = 'SUM';
+		$query['function'] = isset( $query['function'] )
+			? $query['function']
+			: 'SUM';
 
 		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
 		$result = $this->get_gateway_data( $query );
