@@ -1460,8 +1460,6 @@ class Stats {
 						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-
-			var_dump( $sql );
 		} else {
 			$sql = "SELECT {$function}
 					FROM (
