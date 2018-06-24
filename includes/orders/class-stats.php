@@ -134,7 +134,7 @@ class Stats {
 	 *     @type string $end       End day and time (based on the end of the given day).
 	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
 	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Default `SUM`.
+	 *     @type string $function  SQL function. Accepts `SUM` and `AVG`. Default `SUM`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
@@ -152,7 +152,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = isset( $this->query_vars['function'] )
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'SUM', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
 
