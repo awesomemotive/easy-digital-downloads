@@ -815,6 +815,7 @@ function edd_register_discounts_report( $reports ) {
 					'ratio_of_discounted_orders',
 					'customer_savings',
 					'average_discount_amount',
+                    'most_popular_discount'
 				),
 			),
 		) );
@@ -887,6 +888,24 @@ function edd_register_discounts_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'most_popular_discount', array(
+			'label' => __( 'Most Popular Discount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_discounts_average_discount_amount', $stats->get_most_popular_discount( array(
+							'range'  => $filter['range'],
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
