@@ -228,7 +228,7 @@ class EDD_Logging {
 				'ip'      => $log_meta['request_ip'],
 				'time'    => $log_meta['time'],
 			);
-		} else if ( 'file_download' === $args['log_type'] ) {
+		} elseif ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
 			if ( ! class_exists( 'Browser' ) ) {
@@ -242,11 +242,11 @@ class EDD_Logging {
 			$data = array(
 				'download_id' => $args['post_parent'],
 				'file_id'     => $log_meta['file_id'],
-				'payment_id'  => $log_meta['payment_id'],
+				'order_id'    => $log_meta['order_id'],
 				'price_id'    => $log_meta['price_id'],
 				'user_id'     => $log_meta['user_id'],
 				'ip'          => $log_meta['ip'],
-				'user_agent'  => $user_agent
+				'user_agent'  => $user_agent,
 			);
 		}
 
