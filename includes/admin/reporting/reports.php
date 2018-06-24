@@ -823,8 +823,11 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Number of Discounts Used', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+					    $stats = new EDD\Orders\Stats();
+						return $stats->get_discount_usage_count( array(
+							'range' => $filter['range'],
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -838,8 +841,11 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Ratio of Discounted/Non-Discounted Orders', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_ratio_of_discounted_orders( array(
+							'range' => $filter['range'],
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -853,8 +859,12 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_discount_savings( array(
+							'range'  => $filter['range'],
+							'output' => 'formatted',
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
@@ -868,8 +878,12 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Average Discount Amount', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_average_discount_amount( array(
+							'range'  => $filter['range'],
+							'output' => 'formatted',
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
