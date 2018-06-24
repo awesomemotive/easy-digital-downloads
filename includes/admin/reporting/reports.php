@@ -1364,6 +1364,8 @@ add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
  * Renders the Tax Reports
  *
  * @since 1.3.3
+ * @deprecated
+ *
  * @return void
  */
 function edd_reports_taxes() {
@@ -1399,7 +1401,6 @@ function edd_reports_taxes() {
 
 	<?php
 }
-add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 
 /**
  * Renders the 'Export' tab on the Reports Page
