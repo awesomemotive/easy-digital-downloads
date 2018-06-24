@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @property int $id
- * @property int $download_id
+ * @property int $product_id
  * @property int $file_id
  * @property int $order_id
  * @property int $price_id
@@ -42,13 +42,13 @@ class File_Download_Log extends Base_Object {
 	protected $id;
 
 	/**
-	 * Download ID.
+	 * Product ID.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $download_id;
+	protected $product_id;
 
 	/**
 	 * File ID.

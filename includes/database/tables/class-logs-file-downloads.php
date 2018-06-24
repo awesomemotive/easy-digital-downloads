@@ -48,7 +48,7 @@ final class Logs_File_Downloads extends Base {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
-		download_id bigint(20) unsigned NOT NULL default '0',
+		product_id bigint(20) unsigned NOT NULL default '0',
 		file_id bigint(20) unsigned NOT NULL default '0',
 		order_id bigint(20) unsigned NOT NULL default '0',
 		price_id bigint(20) unsigned NOT NULL default '0',
@@ -59,7 +59,7 @@ final class Logs_File_Downloads extends Base {
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
 		KEY user_id (user_id),
-		KEY download_id (download_id),
+		KEY product_id (product_id),
 		KEY date_created (date_created)";
 	}
 }

@@ -105,9 +105,9 @@ class Log_File_Download extends Base {
 	 *     @type int          $id                   An log ID to only return that order. Default empty.
 	 *     @type array        $id__in               Array of log IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of log IDs to exclude. Default empty.
-	 *     @type string       $download_id          A download ID to only return those users. Default empty.
-	 *     @type array        $download_id__in      Array of download IDs to include. Default empty.
-	 *     @type array        $download_id__not_in  Array of download IDs to exclude. Default empty.
+	 *     @type string       $product_id           A product ID to only return those users. Default empty.
+	 *     @type array        $product_id__in       Array of product IDs to include. Default empty.
+	 *     @type array        $product_id__not_in   Array of product IDs to exclude. Default empty.
 	 *     @type string       $file_id              A file ID to only return those users. Default empty.
 	 *     @type array        $file_id__in          Array of file IDs to include. Default empty.
 	 *     @type array        $file_id__not_in      Array of file IDs to exclude. Default empty.
