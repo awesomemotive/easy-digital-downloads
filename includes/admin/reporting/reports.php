@@ -636,13 +636,13 @@ function edd_register_overview_report( $reports ) {
 add_action( 'edd_reports_init', 'edd_register_overview_report' );
 
 /**
- * Register payment methods report and endpoints.
+ * Register payment gateways report and endpoints.
  *
  * @since 3.0
  *
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
-function edd_register_payment_methods_report( $reports ) {
+function edd_register_payment_gateways_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
@@ -797,7 +797,7 @@ function edd_register_payment_methods_report( $reports ) {
 		edd_debug_log_exception( $exception );
 	}
 }
-add_action( 'edd_reports_init', 'edd_register_payment_methods_report' );
+add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
 
 /**
  * Register customer report and endpoints.
