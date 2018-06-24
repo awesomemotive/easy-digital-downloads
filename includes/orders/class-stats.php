@@ -2015,6 +2015,69 @@ class Stats {
 		return $result;
 	}
 
+	/**
+	 * Calculate average number of file downloads.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return int Average file downloads.
+	 */
+	public function get_average_file_download_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_logs_file_downloads;
+		$this->query_vars['column']            = 'customer_id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$product_id = ! empty( $this->query_vars['download_id'] )
+			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
+			: '';
+
+		$price_id = ! empty( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+
+		$sql = "SELECT AVG(total) AS total
+				FROM (
+					SELECT {$this->query_vars['column']}, COUNT(id) AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					GROUP BY {$this->query_vars['column']}
+				) o";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$result = null === $result
+			? 0
+			: absint( $result );
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $result;
+	}
+
 	/** Private Methods ******************************************************/
 
 	/**

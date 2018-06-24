@@ -881,8 +881,8 @@ function edd_register_file_downloads_report( $reports ) {
 			'endpoints' => array(
 				'tiles' => array(
 					'number_of_file_downloads',
-					'average_downloads_per_customer',
-					'most_downloaded_products',
+					'average_file_downloads_per_customer',
+					'most_downloaded_product',
 					'average_file_downloads_per_order',
 				),
 			),
@@ -898,12 +898,12 @@ function edd_register_file_downloads_report( $reports ) {
 							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 							: array( 'download_id' => '', 'price_id' => '' );
 
-                        $stats = new EDD\Orders\Stats();
-						return $stats->get_file_download_count( array(
-							'range' => $filter['range'],
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_file_downloads_number_of_file_downloads', $stats->get_file_download_count( array(
+							'range'       => $filter['range'],
 							'download_id' => $download['download_id'],
 							'price_id'    => (string) $download['price_id'],
-						) );
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -913,12 +913,16 @@ function edd_register_file_downloads_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'average_downloads_per_customer', array(
-			'label' => __( 'Average Downloads per Customer', 'easy-digital-downloads' ),
+		$reports->register_endpoint( 'average_file_downloads_per_customer', array(
+			'label' => __( 'Average File Downloads per Customer', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_file_downloads_average_per_customer', $stats->get_average_file_download_count( array(
+							'range'  => $filter['range'],
+							'column' => 'customer_id',
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -928,16 +932,16 @@ function edd_register_file_downloads_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'most_downloaded_products', array(
+		$reports->register_endpoint( 'most_downloaded_product', array(
 			'label' => __( 'Most Downloaded Product', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-                        $stats = new EDD\Orders\Stats();
-                        $d = $stats->get_most_downloaded_products();
-                        if ( $d ) {
-                            return esc_html( $d[0]->object->post_title );
-                        }
+						$stats = new EDD\Orders\Stats();
+						$d = $stats->get_most_downloaded_products();
+						if ( $d ) {
+							return apply_filters( 'edd_reports_file_downloads_most_downloaded_product', esc_html( $d[0]->object->post_title ) );
+						}
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
@@ -952,7 +956,11 @@ function edd_register_file_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+                        $stats = new EDD\Orders\Stats();
+                        return apply_filters( 'edd_reports_file_downloads_average_per_order', $stats->get_average_file_download_count( array(
+	                        'range'  => $filter['range'],
+	                        'column' => 'order_id',
+                        ) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
