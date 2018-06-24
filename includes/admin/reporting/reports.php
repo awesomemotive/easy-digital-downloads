@@ -894,9 +894,15 @@ function edd_register_file_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
+						$download = 'all' !== Reports\get_filter_value( 'products' )
+							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+							: array( 'download_id' => '', 'price_id' => '' );
+
                         $stats = new EDD\Orders\Stats();
 						return $stats->get_file_download_count( array(
 							'range' => $filter['range'],
+							'download_id' => $download['download_id'],
+							'price_id'    => (string) $download['price_id'],
 						) );
 					},
 					'display_args'  => array(
