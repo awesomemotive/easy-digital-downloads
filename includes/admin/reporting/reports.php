@@ -15,6 +15,90 @@ use EDD\Reports;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Contains backwards compat code to shim tabs & views to EDD_Sections()
+ *
+ * @since 3.0
+ */
+function edd_reports_sections() {
+
+	// Instantiate the Sections class and sections array
+	$sections   = new EDD_Sections();
+	$c_sections = array();
+
+	// Setup sections variables
+	$sections->use_js          = false;
+	$sections->current_section = Reports\get_active_tab();
+	$sections->item            = null;
+	$sections->base_url = add_query_arg( array(
+		'post_type'        => 'download',
+		'page'             => 'edd-reports',
+		'settings-updated' => false
+	), admin_url( 'edit.php' ) );
+
+	// Get all registered tabs & views
+	$tabs = Reports\get_tabs();
+
+	// Loop through tabs & setup sections
+	if ( ! empty( $tabs ) ) {
+		foreach ( $tabs as $id => $tab ) {
+
+			// Add to sections array
+			$c_sections[] = array(
+				'id'       => $id,
+				'label'    => $tab['label'],
+				'icon'     => $tab['icon'],
+				'callback' => array( 'edd_output_report_callback', array( $id ) )
+			);
+		}
+	}
+
+	// Set the customer sections
+	$sections->set_sections( $c_sections );
+
+	// Display the sections
+	$sections->display();
+}
+
+/**
+ * Output a report via a callback
+ *
+ * @since 3.0
+ *
+ * @param string $report_id
+ */
+function edd_output_report_callback( $report_id = '' ) {
+	$report = EDD\Reports\get_report( $report_id );
+
+	/**
+	 * Fires at the top of the content area of a Reports tab.
+	 *
+	 * @since 1.0
+	 * @since 3.0 Added the `$report` parameter.
+	 *
+	 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+	 *                                                   or WP_Error if invalid.
+	 */
+	do_action( 'edd_reports_page_top', $report );
+
+	if ( ! is_wp_error( $report ) ) {
+		$report->display();
+	} else {
+		Reports\default_display_report( $report );
+	}
+
+	/**
+	 * Fires at the bottom of the content area of a Reports tab.
+	 *
+	 * @since 1.0
+	 * @since 3.0 Added the `$report` parameter.
+	 *
+	 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+	 *                                                   or WP_Error if invalid.
+	 */
+	do_action( 'edd_reports_page_bottom', $report );
+}
+
+/**
  * Reports Page
  *
  * Renders the reports page contents.
@@ -23,128 +107,20 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function edd_reports_page() {
-	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 
 	wp_enqueue_script( 'postbox' );
 
 	// Start the Reports API.
-	new Reports\Init();
+	new Reports\Init(); ?>
 
-	$active_tab = Reports\get_active_tab();
-	?>
-    <style>
-        /* Vertical tabs style overrides for Reports only */
-        #edd-item-wrapper {
-            max-width: 100%;
-        }
-        #edd-item-tab-wrapper {
-            width: 15%;
-        }
-        .edd-item-has-tabs #edd-item-card-wrapper {
-            width: 85%;
-        }
-        #edd-item-card-wrapper h2 {
-            font-size: 1.5em;
-            text-align: center;
-        }
-        #edd-item-card-wrapper h3 {
-            margin-bottom: 6px;
-        }
-        #edd-item-card-wrapper > div {
-            margin-bottom: 10px;
-            min-height: 50px;
-            clear: both;
-        }
-    </style>
     <div class="wrap">
         <h1><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h1>
 
-        <div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
-            <div id="edd-item-tab-wrapper" class="report-tab-wrapper">
-                <ul id="edd-item-tab-wrapper-list" class="report-tab-wrapper-list">
-					<?php
-					$tabs = Reports\get_tabs();
-
-					if ( current_user_can( 'export_shop_reports' ) ) :
-						$tabs['export'] = __( 'Export', 'easy-digital-downloads' );
-					endif;
-
-					foreach ( $tabs as $slug => $label ) :
-						$active = $slug === $active_tab ? true : false;
-						$class  = $active ? 'active' : 'inactive';
-						?>
-
-                        <li class="<?php echo sanitize_html_class( $class ); ?>">
-
-							<?php
-							$link = add_query_arg( array(
-								'tab'              => $slug,
-								'settings-updated' => false ),
-								$current_page );
-							?>
-
-							<?php if ( ! $active ) : ?>
-                            <a href="<?php echo esc_url( $link ); ?>">
-								<?php endif; ?>
-
-                                <span class="edd-item-tab-label-wrap">
-									<span class="edd-item-tab-label"><?php echo esc_attr( $label ); ?></span>
-								</span>
-
-								<?php if ( ! $active ) : ?>
-                            </a>
-						<?php endif; ?>
-                        </li>
-
-					<?php endforeach; ?>
-                </ul>
-            </div>
-
-            <div id="edd-item-card-wrapper" class="edd-report-card-wrapper" style="float: left">
-				<?php
-				$report = Reports\get_report( $active_tab );
-				$label  = is_wp_error( $report ) ? $tabs[ $active_tab ] : $report->get_label();
-				?>
-
-                <div id="edd-reports-card-header">
-                    <h2><?php echo esc_html( $label ); ?></h2>
-                </div>
-
-				<?php
-				do_action( 'edd_reports_tabs' );
-
-				/**
-				 * Fires at the top of the content area of a Reports tab.
-				 *
-				 * @since 1.0
-				 * @since 3.0 Added the `$report` parameter.
-				 *
-				 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
-				 *                                                   or WP_Error if invalid.
-				 */
-				do_action( 'edd_reports_page_top', $report );
-
-				if ( ! is_wp_error( $report ) ) :
-					$report->display();
-				else :
-					Reports\default_display_report( $report );
-				endif;
-
-				/**
-				 * Fires at the bottom of the content area of a Reports tab.
-				 *
-				 * @since 1.0
-				 * @since 3.0 Added the `$report` parameter.
-				 *
-				 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
-				 *                                                   or WP_Error if invalid.
-				 */
-				do_action( 'edd_reports_page_bottom', $report );
-				?>
-            </div>
+        <div id="edd-item-wrapper" class="full-width edd-clearfix">
+			<?php edd_reports_sections(); ?>
         </div>
-
     </div><!-- .wrap -->
+
 	<?php
 }
 
@@ -189,6 +165,7 @@ function edd_register_core_reports( $reports ) {
 		$reports->add_report( 'products', array(
 			'label'     => __( 'Products', 'easy-digital-downloads' ),
 			'priority'  => 10,
+			'icon'      => 'download',
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
 			),
@@ -205,6 +182,7 @@ function edd_register_core_reports( $reports ) {
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
 			'priority'  => 25,
+			'icon'      => 'editor-paste-text',
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
 			),
@@ -650,6 +628,7 @@ function edd_register_payment_gateways_report( $reports ) {
 
 		$reports->add_report( 'gateways', array(
 			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
+			'icon'      => 'image-filter',
 			'priority'  => 20,
 			'endpoints' => array(
 				'tiles'  => array(
@@ -1166,18 +1145,25 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
  */
 function edd_reports_downloads_table() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	if( isset( $_GET['download-id'] ) )
+	if ( isset( $_GET['download-id'] ) ) {
 		return;
+	}
 
-	include( dirname( __FILE__ ) . '/class-download-reports-table.php' );
+	include dirname( __FILE__ ) . '/class-download-reports-table.php'; ?>
 
-	$downloads_table = new EDD_Download_Reports_Table();
-	$downloads_table->prepare_items();
-	$downloads_table->display();
+	<div class="inside">
+		<?php
+		$downloads_table = new EDD_Download_Reports_Table();
+		$downloads_table->prepare_items();
+		$downloads_table->display();
+		?>
+	</div>
+
+	<?php
 }
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
@@ -1189,12 +1175,13 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
  */
 function edd_reports_download_details() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	if( ! isset( $_GET['download-id'] ) )
+	if ( ! isset( $_GET['download-id'] ) ) {
 		return;
+	}
 
 	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
 }
@@ -1212,15 +1199,21 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
  */
 function edd_reports_gateways_table() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	include( dirname( __FILE__ ) . '/class-gateways-reports-table.php' );
+	include dirname( __FILE__ ) . '/class-gateways-reports-table.php'; ?>
 
-	$downloads_table = new EDD_Gateway_Reports_Table();
-	$downloads_table->prepare_items();
-	$downloads_table->display();
+	<div class="inside">
+		<?php
+		$downloads_table = new EDD_Gateway_Reports_Table();
+		$downloads_table->prepare_items();
+		$downloads_table->display();
+		?>
+	</div>
+
+	<?php
 }
 
 /**
@@ -1231,14 +1224,16 @@ function edd_reports_gateways_table() {
  */
 function edd_reports_earnings() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
-	}
-	?>
+	} ?>
+
     <div class="tablenav top">
         <div class="alignleft actions"><?php edd_report_views(); ?></div>
     </div>
+
 	<?php
+
 	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
@@ -1249,21 +1244,20 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
  * @since  2.4
  */
 function edd_reports_categories() {
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
 
-	include( dirname( __FILE__ ) . '/class-categories-reports-table.php' );
-	?>
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	} ?>
+
     <div class="inside">
 		<?php
 
+		include dirname( __FILE__ ) . '/class-categories-reports-table.php';
 		$categories_table = new EDD_Categories_Reports_Table();
 		$categories_table->prepare_items();
 		$categories_table->display();
-		?>
 
-		<?php echo $categories_table->load_scripts(); ?>
+		echo $categories_table->load_scripts(); ?>
 
         <div class="edd-mix-totals">
             <div class="edd-mix-chart">
@@ -1279,15 +1273,15 @@ function edd_reports_categories() {
 		<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
 
         <p class="edd-graph-notes">
-					<span>
-						<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
-					</span>
+			<span>
+				<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
+			</span>
             <span>
-						<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
-					</span>
+				<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
+			</span>
         </p>
-
     </div>
+
 	<?php
 }
 add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
@@ -1300,12 +1294,14 @@ add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
  */
 function edd_reports_taxes() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 
-	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
-	?>
+	$year = isset( $_GET['year'] )
+		? absint( $_GET['year'] )
+		: date( 'Y' ); ?>
+
     <div class="metabox-holder" style="padding-top: 0;">
         <div class="postbox">
             <h3><span><?php _e('Tax Report','easy-digital-downloads' ); ?></span></h3>
@@ -1326,6 +1322,7 @@ function edd_reports_taxes() {
             </div><!-- .inside -->
         </div><!-- .postbox -->
     </div><!-- .metabox-holder -->
+
 	<?php
 }
 add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
@@ -1338,10 +1335,10 @@ add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
  */
 function edd_reports_tab_export() {
 
-	if( ! current_user_can( 'view_shop_reports' ) ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
-	}
-	?>
+	} ?>
+
     <div id="edd-dashboard-widgets-wrap">
         <div class="metabox-holder">
             <div id="post-body">
@@ -1468,7 +1465,6 @@ function edd_reports_tab_export() {
 									<span class="spinner"></span>
 								</span>
                             </form>
-
                         </div><!-- .inside -->
                     </div><!-- .postbox -->
 
@@ -1512,7 +1508,7 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 		$days_in_month    = cal_days_in_month( CAL_GREGORIAN, $current_month, $current_year );
 
 		$estimated['earnings'] = ( $to_date_earnings / $current_day ) * $days_in_month;
-		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
+		$estimated['sales']    = ( $to_date_sales    / $current_day ) * $days_in_month;
 
 		// Cache for one day
 		set_transient( 'edd_estimated_monthly_stats' . $include_taxes, $estimated, 86400 );
@@ -1527,7 +1523,7 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
  * @since 3.0
  */
 function edd_add_screen_options_nonces() {
-	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce' , false );
-	wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce' , false );
+	wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+	wp_nonce_field( 'meta-box-order',  'meta-box-order-nonce', false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
