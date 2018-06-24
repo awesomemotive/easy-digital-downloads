@@ -35,22 +35,24 @@ class Payment extends Base {
 	protected $component = 'payment';
 
 	/**
-	 * Backwards compatibility hooks for customers.
+	 * Backwards compatibility hooks for payments.
 	 *
 	 * @since 3.0
 	 * @access protected
 	 */
 	protected function hooks() {
 
-		/* Actions ***********************************************************/
+		/* Actions ************************************************************/
+
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 99, 1 );
 
-		/* Filters ***********************************************************/
-		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
-		add_filter( 'query', array( $this, 'get_post' ), 10, 1 );
-		add_filter( 'get_post_metadata', array( $this, 'get_post_metadata' ), 99, 4 );
+		/* Filters ************************************************************/
+
+		add_filter( 'query',                array( $this, 'wp_count_posts'       ), 10, 1 );
+		add_filter( 'query',                array( $this, 'get_post'             ), 10, 1 );
+		add_filter( 'get_post_metadata',    array( $this, 'get_post_metadata'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
-		add_filter( 'add_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
+		add_filter( 'add_post_metadata',    array( $this, 'update_post_metadata' ), 99, 5 );
 	}
 
 	/**

@@ -579,22 +579,41 @@ class EDD_Discount extends Adjustment {
 	/**
 	 * Retrieves the status label of the discount.
 	 *
+	 * This method exists as a helper, until legitimate Status classes can be
+	 * registered that will contain an array of status-specific labels.
+	 *
 	 * @since 2.9
 	 *
 	 * @return string Status label for the current discount.
 	 */
 	public function get_status_label() {
+
+		// Default label
+		$label = ucwords( $this->status );
+
+		// Specific labels
 		switch ( $this->status ) {
+			case '':
+				$label = __( 'None',     'easy-digital-downloads' );
+				break;
+			case 'draft':
+				$label = __( 'Draft',    'easy-digital-downloads' );
+				break;
 			case 'expired':
-				$label = __( 'Expired', 'easy-digital-downloads' );
+				$label = __( 'Expired',  'easy-digital-downloads' );
 				break;
 			case 'inactive':
 				$label = __( 'Inactive', 'easy-digital-downloads' );
 				break;
 			case 'active':
-			default:
-				$label = __( 'Active', 'easy-digital-downloads' );
+				$label = __( 'Active',   'easy-digital-downloads' );
 				break;
+			case 'inherit':
+				if ( ! empty( $this->parent ) ) {
+					$parent = new EDD_Discount( $this->parent );
+					$label  = $parent->get_status_label();
+					break;
+				}
 		}
 
 		/**

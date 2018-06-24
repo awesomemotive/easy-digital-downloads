@@ -535,7 +535,7 @@ function edd_purchase_form_validate_new_user() {
 	// Start an empty array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1,
+		'user_id' => 0,
 		// Get first name
 		'user_first' => isset( $_POST["edd_first"] ) ? sanitize_text_field( $_POST["edd_first"] ) : '',
 		// Get last name
@@ -636,7 +636,7 @@ function edd_purchase_form_validate_user_login() {
 	// Start an array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => 0
 	);
 
 	// Username

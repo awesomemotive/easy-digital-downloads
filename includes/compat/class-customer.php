@@ -132,7 +132,7 @@ class Customer extends Base {
 	 * @access protected
 	 */
 	protected function hooks() {
-		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
+		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10 );
 	}
 
 	/**
@@ -140,36 +140,50 @@ class Customer extends Base {
 	 *
 	 * @since 2.4.0
 	 *
-	 * @param int   $user_id       User ID.
-	 * @param array $old_user_data Old user data.
+	 * @param int   $user_id User ID.
+	 *
 	 * @return bool False if customer does not exist for given user ID.
 	 */
-	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
-		$customer = edd_get_customer_by( 'user_id', $user_id );
+	public function update_customer_email_on_user_update( $user_id = 0 ) {
 
-		if ( ! $customer ) {
+		// Bail if no customer
+		$customer = edd_get_customer_by( 'user_id', $user_id );
+		if ( empty( $customer ) ) {
 			return false;
 		}
 
+		// Bail if no user
 		$user = get_userdata( $user_id );
-
-		if ( ! empty( $user ) && $user->user_email !== $customer->email ) {
-			if ( ! edd_get_customer_by( 'email', $user->user_email ) ) {
-				$success = edd_update_customer( $customer->id, array(
-					'email' => $user->user_email
-				) );
-
-				if ( $success ) {
-					$payments_array = explode( ',', $customer->payment_ids );
-					if ( ! empty( $payments_array ) ) {
-						foreach ( $payments_array as $payment_id ) {
-							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
-						}
-					}
-
-					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
-				}
-			}
+		if ( empty( $user ) || ( $user->user_email === $customer->email ) ) {
+			return;
 		}
+
+		// Bail if customer already has this email address
+		if ( edd_get_customer_by( 'email', $user->user_email ) ) {
+			return;
+		}
+
+		// Try to update the customer
+		$success = edd_update_customer( $customer->id, array(
+			'email' => $user->user_email
+		) );
+
+		// Bail on failure
+		if ( empty( $success ) ) {
+			return;
+		}
+
+		// Bail if no payment IDs to update
+		$payments_array = explode( ',', $customer->payment_ids );
+		if ( empty( $payments_array ) ) {
+			return;
+		}
+
+		// Loop through and update payment meta
+		foreach ( $payments_array as $payment_id ) {
+			edd_update_payment_meta( $payment_id, 'email', $user->user_email );
+		}
+
+		do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
 	}
 }
