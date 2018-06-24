@@ -286,7 +286,7 @@ function edd_register_overview_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'overview_time_period_data', array(
-			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
+			'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
@@ -295,7 +295,7 @@ function edd_register_overview_report( $reports ) {
 							'output' => 'formatted',
 						) );
 
-						return $stats->get_order_count() . '/' . $stats->get_order_earnings();
+						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -306,7 +306,7 @@ function edd_register_overview_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'overview_all_time_data', array(
-			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
+			'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () {
@@ -314,7 +314,7 @@ function edd_register_overview_report( $reports ) {
 							'output' => 'formatted',
 						) );
 
-						return $stats->get_order_count() . '/' . $stats->get_order_earnings();
+						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -518,8 +518,11 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
-						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+						$dates      = Reports\get_dates_filter( 'objects' );
+						$day_by_day = Reports\get_dates_filter_day_by_day();
+
+						$start = $dates['start']->format( 'Y-m-d' );
+						$end   = $dates['end']->format( 'Y-m-d' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, SUM(total) AS total
@@ -528,17 +531,26 @@ function edd_register_overview_report( $reports ) {
                              AND date_created <= %s ) ) 
                              GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
                              ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
-						$start_date, $end_date ) );
+						$start, $end ) );
 
 						$earnings = array();
 
-						$i = 0;
-						foreach ( $results as $result ) {
-							$earnings[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
-							$earnings[ $i ][] = $result->total;
+						while ( strtotime( $start ) <= strtotime( $end ) ) {
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, 0, 0, 0 )->timestamp;
 
-							$i ++;
+							$earnings[ $timestamp ][] = $timestamp;
+							$earnings[ $timestamp ][] = 0;
+
+							$start = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
 						}
+
+						foreach ( $results as $result ) {
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
+
+							$earnings[ $timestamp ][1] = $result->total;
+						}
+
+						$earnings = array_values( $earnings );
 
 						return array( 'earnings' => $earnings );
 					},
