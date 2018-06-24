@@ -109,6 +109,17 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 				? null
 				: $t['parent'];
 
+			$average_sales = 0;
+			$average_earnings = 0.00;
+
+			foreach ( $taxonomies[ $k ]['object_ids'] as $download ) {
+				$average_sales += edd_get_average_monthly_download_sales( $download );
+				$average_earnings += edd_get_average_monthly_download_earnings( $download );
+			}
+
+			$c->average_sales    = $average_sales;
+			$c->average_earnings = $average_earnings;
+
 			$data[] = $c;
 		}
 
@@ -140,11 +151,11 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'         => __( 'Taxonomy', 'easy-digital-downloads' ),
-			'sales'        => __( 'Total Sales', 'easy-digital-downloads' ),
-			'earnings'     => __( 'Total Earnings', 'easy-digital-downloads' ),
-			'avg_sales'    => __( 'Monthly Sales Average', 'easy-digital-downloads' ),
-			'avg_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' ),
+			'name'             => __( 'Taxonomy', 'easy-digital-downloads' ),
+			'sales'            => __( 'Total Sales', 'easy-digital-downloads' ),
+			'earnings'         => __( 'Total Earnings', 'easy-digital-downloads' ),
+			'average_sales'    => __( 'Monthly Sales Average', 'easy-digital-downloads' ),
+			'average_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -184,6 +195,30 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	 */
 	public function column_earnings( $taxonomy ) {
 		return edd_currency_filter( edd_format_amount( $taxonomy->earnings ) );
+	}
+
+	/**
+	 * Render the Average Sales Column.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \stdClass $taxonomy Taxonomy object.
+	 * @return string Data shown in the Average Sales column.
+	 */
+	public function column_average_sales( $taxonomy ) {
+		return $taxonomy->average_sales;
+	}
+
+	/**
+	 * Render the Average Earnings Column.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \stdClass $taxonomy Taxonomy object.
+	 * @return string Data shown in the Average Earnings column.
+	 */
+	public function column_average_earnings( $taxonomy ) {
+		return edd_currency_filter( edd_format_amount( $taxonomy->average_earnings ) );
 	}
 
 	/**
