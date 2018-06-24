@@ -661,6 +661,7 @@ function edd_register_payment_methods_report( $reports ) {
 					'average_value_per_gateway',
 				),
 			),
+			'filters'   => array( 'gateways' ),
 		) );
 
 		$reports->register_endpoint( 'sales_per_gateway', array(
