@@ -1891,6 +1891,14 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
 
+		$product_id = ! empty( $this->query_vars['download_id'] )
+			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
+			: '';
+
+		$price_id = ! empty( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
@@ -1905,7 +1913,7 @@ class Stats {
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -1985,6 +1993,7 @@ class Stats {
 		$sql = "SELECT product_id, COUNT(id) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				GROUP BY product_id
 				ORDER BY total DESC
 				LIMIT {$number}";
 
