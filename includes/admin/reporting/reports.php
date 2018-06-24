@@ -665,7 +665,12 @@ function edd_register_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_order_item_earnings( array(
+							'function' => 'AVG',
+							'range'    => $filter['range'],
+							'output'   => 'formatted',
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
