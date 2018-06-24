@@ -839,8 +839,250 @@ function edd_register_taxes_report( $reports ) {
 		edd_debug_log_exception( $exception );
 	}
 }
-
 add_action( 'edd_reports_init', 'edd_register_taxes_report' );
+
+/**
+ * Register file downloads report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_file_downloads_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+			: false;
+
+		$download_label = '';
+
+		if ( $download_data ) {
+			$download = edd_get_download( $download_data['download_id'] );
+
+			if ( $download_data['price_id'] ) {
+				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+			} else {
+				$download_label = esc_html( ' (' . $download->post_title . ')' );
+			}
+		}
+
+		$reports->add_report( 'file_downloads', array(
+			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
+			'icon'      => 'download',
+			'priority'  => 30,
+			'endpoints' => array(
+				'tiles'  => array(
+					'number_of_file_downloads',
+					'average_file_downloads_per_customer',
+					'most_downloaded_product',
+					'average_file_downloads_per_order',
+				),
+				'tables' => array(
+					'top_five_most_downloaded_products',
+				),
+				'charts' => array(
+					'file_downloads_chart',
+				),
+			),
+			'filters'   => array( 'products' ),
+		) );
+
+		$reports->register_endpoint( 'number_of_file_downloads', array(
+			'label' => __( 'Number of File Downloads', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$download = 'all' !== Reports\get_filter_value( 'products' )
+							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+							: array( 'download_id' => '', 'price_id' => '' );
+
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_file_downloads_number_of_file_downloads', $stats->get_file_download_count( array(
+							'range'       => $filter['range'],
+							'download_id' => $download['download_id'],
+							'price_id'    => (string) $download['price_id'],
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label . $download_label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_file_downloads_per_customer', array(
+			'label' => __( 'Average File Downloads per Customer', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_file_downloads_average_per_customer', $stats->get_average_file_download_count( array(
+							'range'  => $filter['range'],
+							'column' => 'customer_id',
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'most_downloaded_product', array(
+			'label' => __( 'Most Downloaded Product', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						$d = $stats->get_most_downloaded_products();
+						if ( $d ) {
+							return apply_filters( 'edd_reports_file_downloads_most_downloaded_product', esc_html( $d[0]->object->post_title ) );
+						}
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_file_downloads_per_order', array(
+			'label' => __( 'Average File Downloads per Order', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+                        $stats = new EDD\Orders\Stats();
+                        return apply_filters( 'edd_reports_file_downloads_average_per_order', $stats->get_average_file_download_count( array(
+	                        'range'  => $filter['range'],
+	                        'column' => 'order_id',
+                        ) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'top_five_most_downloaded_products', array(
+			'label' => __( 'Top Five Most Downloaded Products', 'easy-digital-downloads' ) . ' – ' . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\File_Downloads\\Top_Five_Most_Downloaded_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'file_downloads_chart', array(
+			'label' => __( 'Number of File Downloads', 'easy-digital-downloads' ) . $download_label,
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function () use ( $filter, $download_data ) {
+						global $wpdb;
+
+						$dates      = Reports\get_dates_filter( 'objects' );
+						$day_by_day = Reports\get_dates_filter_day_by_day();
+
+						$sql_clauses = array(
+							'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month, DAY(edd_lfd.date_created) AS day',
+							'groupby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created), DAY(edd_lfd.date_created)',
+							'orderby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created), DAY(edd_lfd.date_created)',
+						);
+
+						if ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month',
+								'groupby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created)',
+								'orderby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created)',
+							);
+						}
+
+						$start = $dates['start']->format( 'Y-m-d' );
+						$end   = $dates['end']->format( 'Y-m-d' );
+
+						if ( is_array( $download_data ) ) {
+							$product_id = ! empty( $download_data['download_id'] )
+								? $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) )
+								: '';
+
+							$price_id = ! empty( $download_data['price_id'] )
+								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
+								: '';
+                        }
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
+					         FROM {$wpdb->edd_logs_file_downloads} edd_lfd
+					         WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id} 
+                             GROUP BY {$sql_clauses['groupby']}
+                             ORDER BY {$sql_clauses['orderby']} ASC",
+							$start, $end ) );
+
+						$file_downloads = array();
+
+						while ( strtotime( $start ) <= strtotime( $end ) ) {
+							$day = ( true === $day_by_day )
+								? $dates['start']->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+							$file_downloads[ $timestamp ][] = $timestamp;
+							$file_downloads[ $timestamp ][] = 0;
+
+							$start = ( true === $day_by_day )
+								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+						}
+
+						foreach ( $results as $result ) {
+							$day = ( true === $day_by_day )
+								? $result->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+							$file_downloads[ $timestamp ][1] = $result->total;
+						}
+
+						$file_downloads = array_values( $file_downloads );
+
+						return array( 'file_downloads' => $file_downloads );
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'file_downloads' => array(
+								'label'           => __( 'File Downloads', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_file_downloads_report' );
 
 /**
  * Register discounts report and endpoints.

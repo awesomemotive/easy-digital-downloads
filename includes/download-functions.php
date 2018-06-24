@@ -657,7 +657,6 @@ function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip
 
 	$log_meta = array(
 		'customer_id' => $order->customer_id,
-		'user_id'     => $order->user_id,
 		'file_id'     => (int) $file_id,
 		'ip'          => $ip,
 		'order_id'    => $order_id,

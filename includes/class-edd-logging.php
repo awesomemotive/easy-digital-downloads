@@ -230,11 +230,11 @@ class EDD_Logging {
 			$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 
 			$data = array(
-				'download_id' => $args['post_parent'],
+				'product_id'  => $args['post_parent'],
 				'file_id'     => $log_meta['file_id'],
 				'order_id'    => $log_meta['order_id'],
 				'price_id'    => $log_meta['price_id'],
-				'user_id'     => $log_meta['user_id'],
+				'customer_id' => $log_meta['customer_id'],
 				'ip'          => $log_meta['ip'],
 				'user_agent'  => $user_agent,
 			);
