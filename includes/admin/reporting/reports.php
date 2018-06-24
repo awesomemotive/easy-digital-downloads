@@ -776,10 +776,23 @@ function edd_register_taxes_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options  = Reports\get_dates_filter_options();
-		$filter   = Reports\get_filter_value( 'dates' );
-		$download = Reports\get_filter_value( 'products' );
-		$label    = $options[ $filter['range'] ];
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+			: '';
+
+		$download = edd_get_download( $download_data['download_id'] );
+
+		if ( ! empty( $download_data['price_id'] ) ) {
+			$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );;
+
+			$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+		} else {
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
+		}
 
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
@@ -797,7 +810,7 @@ function edd_register_taxes_report( $reports ) {
 			'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter, $download ) {
+					'data_callback' => function () use ( $filter ) {
 						$download = 'all' !== Reports\get_filter_value( 'products' )
 							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 							: '';
@@ -813,7 +826,7 @@ function edd_register_taxes_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
-						'comparison_label' => $label,
+						'comparison_label' => $label . $download_label,
 					),
 				),
 			),
