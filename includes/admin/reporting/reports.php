@@ -698,8 +698,18 @@ function edd_register_payment_methods_report( $reports ) {
 			'label' => __( 'Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $filter ) {
+						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
+							? Reports\get_filter_value( 'gateways' )
+							: '';
 
+						$stats = new EDD\Orders\Stats();
+
+						return $stats->get_gateway_earnings( array(
+							'range'   => $filter['range'],
+							'gateway' => $gateway,
+							'output'  => 'formatted',
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',

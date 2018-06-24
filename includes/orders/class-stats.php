@@ -939,7 +939,7 @@ class Stats {
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return array List of objects containing data pertinent to the query parameters passed.
+	 * @return mixed array|int|float Either a list of payment gateways and counts or just a single value.
 	 */
 	private function get_gateway_data( $query = array() ) {
 
@@ -988,6 +988,10 @@ class Stats {
 			array_walk( $result, function ( &$value ) {
 				$value->total = absint( $value->total );
 			} );
+		} elseif ( 'SUM' === $this->query_vars['function'] ) {
+			array_walk( $result, function ( &$value ) {
+				$value->total = floatval( $value->total );
+			} );
 		}
 
 		if ( empty( $gateway ) && true === $this->query_vars['grouped'] ) {
@@ -1016,7 +1020,9 @@ class Stats {
 				$total += $value->total;
 			} );
 
-			$results = absint( $total );
+			$results = 'COUNT' === $this->query_vars['function']
+				? absint( $total )
+				: $this->maybe_format( $total );
 		}
 
 		if ( ! empty( $gateway ) && true === $this->query_vars['grouped'] ) {
@@ -1024,7 +1030,9 @@ class Stats {
 			// Filter based on gateway if passed.
 			$filter = wp_filter_object_list( $result, array( 'gateway' => $this->query_vars['gateway'] ) );
 
-			$results = absint( $filter[0]->count );
+			$results = 'COUNT' === $this->query_vars['function']
+				? absint( $filter[0]->count )
+				: $this->maybe_format( $filter[0]->count );
 		}
 
 		// Reset query vars.
@@ -1073,11 +1081,15 @@ class Stats {
 		$result = $this->get_gateway_data( $query );
 
 		// Rename object var.
-		array_walk( $result, function( &$value ) {
-			$value->earnings = $value->count;
-			$value->earnings = $this->maybe_format( $value->earnings );
-			unset( $value->count );
-		} );
+		if ( is_array( $result ) ) {
+			array_walk( $result, function ( &$value ) {
+				$value->earnings = $value->total;
+				$value->earnings = $this->maybe_format( $value->earnings );
+				unset( $value->total );
+			} );
+		} else {
+			$result = $this->maybe_format( $result );
+		}
 
 		// Reset query vars.
 		$this->post_query();
