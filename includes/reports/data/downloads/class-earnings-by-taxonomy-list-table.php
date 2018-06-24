@@ -31,9 +31,90 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	 * @return array Taxonomies.
 	 */
 	public function taxonomy_data() {
-		$filter = Reports\get_filter_value( 'dates' );
+		global $wpdb;
 
-		return array();
+		$date         = EDD()->utils->date( 'now' );
+		$date_filters = Reports\get_dates_filter_options();
+		$filter       = Reports\get_filter_value( 'dates' );
+		$date_range   = Reports\parse_dates_for_range( $date, $filter['range'] );
+
+		// Generate date query SQL if dates have been set.
+		$date_query_sql = '';
+
+		if ( ! empty( $date_range['start'] ) || ! empty( $date_range['end'] ) ) {
+			if ( ! empty( $date_range['start'] ) ) {
+				$date_query_sql .= $wpdb->prepare( 'AND date_created >= %s', $date_range['start'] );
+			}
+
+			// Join dates with `AND` if start and end date set.
+			if ( ! empty( $date_range['start'] ) && ! empty( $date_range['end'] ) ) {
+				$date_query_sql .= ' AND ';
+			}
+
+			if ( ! empty( $date_range['end'] ) ) {
+				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $date_range['end'] );
+			}
+		}
+
+		$stats = new Orders\Stats( array(
+			'range' => $filter['range'],
+		) );
+
+		$taxonomies = get_object_taxonomies( 'download', 'names' );
+		$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
+
+		$placeholders = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
+
+		$taxonomy__in = $wpdb->prepare( "tt.taxonomy IN ({$placeholders})", $taxonomies );
+
+		$sql = "SELECT t.*, tt.*, tr.object_id
+				FROM {$wpdb->terms} AS t
+				INNER JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id
+				INNER JOIN {$wpdb->term_relationships} AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				WHERE {$taxonomy__in}";
+
+		$results = $wpdb->get_results( $sql );
+
+		// Build intermediate array to allow for better data processing.
+		$taxonomies = array();
+		foreach ( $results as $r ) {
+			$taxonomies[ absint( $r->term_id ) ]['name']         = esc_html( $r->name );
+			$taxonomies[ absint( $r->term_id ) ]['object_ids'][] = absint( $r->object_id );
+			$taxonomies[ absint( $r->term_id ) ]['parent']       = absint( $r->parent );
+		}
+
+		$data = array();
+
+		foreach ( $taxonomies as $k => $t ) {
+			$c = new \stdClass();
+			$c->id   = $k;
+			$c->name = $taxonomies[ $k ]['name'];
+
+			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
+			$product_id__in = $wpdb->prepare( "product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
+
+			$sql = "SELECT total, COUNT(id) AS sales
+					FROM {$wpdb->edd_order_items}
+					WHERE {$product_id__in} {$date_query_sql}";
+
+			$result = $wpdb->get_row( $sql );
+
+			$earnings = null === $result->total
+				? 0.00
+				: floatval( $result->total );
+
+			$sales = null === $result->sales
+				? 0
+				: absint( $result->sales );
+
+			$c->sales    = $sales;
+			$c->earnings = $earnings;
+			$c->parent   = $t['parent'];
+
+			$data[] = $c;
+		}
+
+		return $data;
 	}
 
 	/**
