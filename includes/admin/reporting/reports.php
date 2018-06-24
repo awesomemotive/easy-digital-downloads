@@ -790,6 +790,7 @@ function edd_register_taxes_report( $reports ) {
 				    'total_tax_collected',
 			    ),
 		    ),
+		    'filters'   => array( 'products' ),
 	    ) );
 
 	    $reports->register_endpoint( 'total_tax_collected', array(
@@ -797,7 +798,7 @@ function edd_register_taxes_report( $reports ) {
 		    'views' => array(
 			    'tile' => array(
 				    'data_callback' => function () use ( $filter ) {
-					    
+
 				    },
 				    'display_args'  => array(
 					    'context'          => 'primary',
