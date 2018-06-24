@@ -821,13 +821,16 @@ function edd_register_discounts_report( $reports ) {
 			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
 			'priority'  => 35,
 			'endpoints' => array(
-				'tiles' => array(
+				'tiles'  => array(
 					'number_of_discounts_used',
 					'ratio_of_discounted_orders',
 					'customer_savings',
 					'average_discount_amount',
 					'most_popular_discount',
-                    'discount_usage_count',
+					'discount_usage_count',
+				),
+				'tables' => array(
+					'top_five_discounts',
 				),
 			),
 			'filters'   => array( 'discounts' ),
@@ -916,9 +919,15 @@ function edd_register_discounts_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Orders\Stats();
-						return apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discount( array(
+
+						$r = apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discounts( array(
 							'range' => $filter['range'],
 						) ) );
+
+						if ( ! empty( $r ) ) {
+							$r = $r[0];
+							return esc_html( $r->code . ' (' . $r->count . ')' );
+						}
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -948,6 +957,18 @@ function edd_register_discounts_report( $reports ) {
 				),
 			) );
 		}
+
+		$reports->register_endpoint( 'top_five_discounts', array(
+			'label' => __( 'Top Five Discounts', 'easy-digital-downloads' ) . ' – ' . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Discounts\\Top_Five_Discounts_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/discounts/class-top-five-discounts-list-table.php',
+					),
+				),
+			),
+		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
