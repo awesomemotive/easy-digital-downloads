@@ -807,6 +807,15 @@ function edd_register_discounts_report( $reports ) {
 		$label   = $options[ $filter['range'] ];
 
 		$discount = Reports\get_filter_value( 'discounts' );
+		$discount = ! empty( $discount ) && 'all' !== $discount
+			? $discount
+			: 0;
+
+		$d = edd_get_discount( $discount );
+
+		$discount_label = false !== $d
+			? esc_html( ' (' . $d->name . ')' )
+			: '';
 
 		$reports->add_report( 'discounts', array(
 			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
@@ -863,16 +872,19 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $filter, $d ) {
 						$stats = new EDD\Orders\Stats();
 						return apply_filters( 'edd_reports_discounts_customer_savings', $stats->get_discount_savings( array(
-							'range'  => $filter['range'],
-							'output' => 'formatted',
+							'range'         => $filter['range'],
+							'output'        => 'formatted',
+							'discount_code' => isset( $d->code )
+								? $d->code
+								: '',
 						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
-						'comparison_label' => $label,
+						'comparison_label' => $label . $discount_label,
 					),
 				),
 			),
