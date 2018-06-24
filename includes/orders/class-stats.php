@@ -1279,6 +1279,14 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
 
+		$product_id = ! empty( $this->query_vars['download_id'] )
+			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
+			: '';
+
+		$price_id = ! empty( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
@@ -1290,6 +1298,24 @@ class Stats {
 						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} elseif ( ! empty( $product_id ) || ! empty( $price_id ) ) {
+
+			// Regenerate SQL clauses due to alias.
+			$table = $this->query_vars['table'];
+			$this->query_vars['table'] = 'o';
+			$this->pre_query( $query );
+			$this->query_vars['table'] = $table;
+
+			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+				? $this->query_vars['function'] . "oi.({$this->query_vars['column']})"
+				: "SUM(oi.{$this->query_vars['column']})";
+
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']} o
+					INNER JOIN {$this->get_db()->edd_order_items} oi ON o.id = oi.order_id 
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+
+			$this->pre_query( $query );
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
@@ -2026,7 +2052,7 @@ class Stats {
 
 			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
 
-			$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND status IN ({$placeholders})", $this->query_vars['status'] );
+			$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
 		}
 	}
 

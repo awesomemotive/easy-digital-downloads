@@ -213,7 +213,7 @@ class EDD_HTML_Elements {
 			'chosen'           => $args['chosen'],
 			'multiple'         => $args['multiple'],
 			'placeholder'      => $args['placeholder'],
-			'show_option_all'  => false,
+			'show_option_all'  => $args['show_option_all'],
 			'show_option_none' => false,
 			'data'             => $args['data'],
 		) );

@@ -68,7 +68,7 @@ function edd_reports_sections() {
  */
 function edd_output_report_callback( $report_id = '' ) {
 	$report = EDD\Reports\get_report( $report_id );
-
+	
 	/**
 	 * Fires at the top of the content area of a Reports tab.
 	 *
@@ -177,15 +177,6 @@ function edd_register_core_reports( $reports ) {
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
-			),
-		) );
-
-		$reports->add_report( 'taxes', array(
-			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
-			'priority'  => 25,
-			'icon'      => 'editor-paste-text',
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
 			),
 		) );
 
@@ -775,6 +766,83 @@ function edd_register_payment_gateways_report( $reports ) {
 add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
 
 /**
+ * Register taxes report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_taxes_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+			: false;
+
+		$download_label = '';
+
+		if ( $download_data ) {
+			$download = edd_get_download( $download_data['download_id'] );
+
+			if ( $download_data['price_id'] ) {
+				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+			} else {
+				$download_label = esc_html( ' (' . $download->post_title . ')' );
+			}
+		}
+
+		$reports->add_report( 'taxes', array(
+			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
+			'priority'  => 25,
+			'icon'      => 'editor-paste-text',
+			'endpoints' => array(
+				'tiles' => array(
+					'total_tax_collected',
+				),
+			),
+			'filters'   => array( 'products' ),
+		) );
+
+		$reports->register_endpoint( 'total_tax_collected', array(
+			'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$download = 'all' !== Reports\get_filter_value( 'products' )
+							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+							: array( 'download_id' => '', 'price_id' => '' );
+
+						$stats = new EDD\Orders\Stats();
+
+						return $stats->get_tax( array(
+							'output'      => 'formatted',
+							'range'       => $filter['range'],
+							'download_id' => $download['download_id'],
+							'price_id'    => (string) $download['price_id'],
+						) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label . $download_label,
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+
+add_action( 'edd_reports_init', 'edd_register_taxes_report' );
+
+/**
  * Register discounts report and endpoints.
  *
  * @since 3.0
@@ -1296,6 +1364,8 @@ add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
  * Renders the Tax Reports
  *
  * @since 1.3.3
+ * @deprecated
+ *
  * @return void
  */
 function edd_reports_taxes() {
@@ -1331,7 +1401,6 @@ function edd_reports_taxes() {
 
 	<?php
 }
-add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 
 /**
  * Renders the 'Export' tab on the Reports Page
