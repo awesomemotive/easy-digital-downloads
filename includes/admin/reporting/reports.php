@@ -1729,6 +1729,7 @@ function edd_reports_downloads_table() {
  * Renders the detailed report for a specific product
  *
  * @since 1.9
+ * @deprecated
  * @return void
  */
 function edd_reports_download_details() {
@@ -1743,7 +1744,6 @@ function edd_reports_download_details() {
 
 	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
 }
-add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
 
 
 /**
