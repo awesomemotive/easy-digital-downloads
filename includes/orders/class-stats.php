@@ -32,6 +32,15 @@ class Stats {
 	protected $query_vars = array();
 
 	/**
+	 * Query var originals. These hold query vars passed to the constructor.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $query_var_originals = array();
+
+	/**
 	 * Date ranges.
 	 *
 	 * @since 3.0
@@ -41,13 +50,13 @@ class Stats {
 	protected $date_ranges = array();
 
 	/**
-	 * Query var originals. These hold query vars passed to the constructor.
+	 * Date ranges used when calculating percentage difference.
 	 *
 	 * @since 3.0
 	 * @access protected
 	 * @var array
 	 */
-	protected $query_var_originals = array();
+	protected $relative_date_ranges = array();
 
 	/**
 	 * Constructor.
@@ -84,6 +93,8 @@ class Stats {
 		// Maybe parse query.
 		if ( ! empty( $query ) ) {
 			$this->parse_query( $query );
+
+			$this->query_var_originals = $this->query_vars;
 
 		// Set defaults.
 		} else {
@@ -123,7 +134,7 @@ class Stats {
 	 *     @type string $end       End day and time (based on the end of the given day).
 	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
 	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Default `SUM`.
+	 *     @type string $function  SQL function. Accepts `SUM` and `AVG`. Default `SUM`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
@@ -141,21 +152,56 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = isset( $this->query_vars['function'] )
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'SUM', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-		$result = $this->get_db()->get_var( $sql );
+			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL({$function}, 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
 
-		$total = null === $result
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
 			? 0.00
-			: (float) $result;
+			: (float) $result->total;
 
-		$total = $this->maybe_format( $total );
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = floatval( $result->total );
+			$relative = floatval( $result->relative );
+
+			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -205,15 +251,47 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-		$result = $this->get_db()->get_var( $sql );
+			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL(COUNT(id), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_row( $sql );
 
 		$total = null === $result
 			? 0
-			: absint( $result );
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( 0 === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -1073,7 +1151,7 @@ class Stats {
 	 *     @type string $end       End day and time (based on the end of the given day).
 	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
 	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Default `COUNT`.
+	 *     @type string $function  SQL function. Accepts `SUM` and `AVG`. Default `SUM`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                             to the query.
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
@@ -1091,21 +1169,56 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = isset( $this->query_vars['function'] )
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'SUM', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: "SUM({$this->query_vars['column']})";
 
-		$sql = "SELECT {$function}
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-		$result = $this->get_db()->get_var( $sql );
+			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL({$function}, 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
 
-		$total = null === $result
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
 			? 0.00
-			: (float) $result;
+			: (float) $result->total;
 
-		$total = $this->maybe_format( $total );
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = floatval( $result->total );
+			$relative = floatval( $result->relative );
+
+			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -1210,6 +1323,91 @@ class Stats {
 	/** Customers ************************************************************/
 
 	/**
+	 * Calculate the number of customers.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return int Number of customers.
+	 */
+	public function get_customer_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_customers;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL(COUNT(id), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT COUNT(id) AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
+			? 0
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( 0 === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . $total
+					: '▼ ' . $total;
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $total;
+	}
+
+	/**
 	 * Calculate the lifetime value of a customer.
 	 *
 	 * @since 3.0
@@ -1266,21 +1464,53 @@ class Stats {
 			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
 			: '';
 
-		$sql = "SELECT {$function}
-				FROM (
-					SELECT SUM(total) AS total
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS total, IFNULL(relative, 0) AS relative
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
-				  	GROUP BY customer_id
-				) o";
+					CROSS JOIN (
+						SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function}
+					FROM (
+						SELECT SUM(total) AS total
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+					    GROUP BY customer_id
+					) o";
+		}
 
-		$result = $this->get_db()->get_var( $sql );
+		$result = $this->get_db()->get_row( $sql );
 
-		$total = null === $result
+		$total = null === $result->total
 			? 0.00
-			: (float) $result;
+			: (float) $result->total;
 
-		$total = $this->maybe_format( $total );
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = floatval( $result->total );
+			$relative = floatval( $result->relative );
+
+			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
@@ -1489,6 +1719,100 @@ class Stats {
 		return $result;
 	}
 
+	/** File Downloads *******************************************************/
+
+	/**
+	 * Calculate the number of file downloads.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return int Number of file downloads.
+	 */
+	public function get_file_download_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_logs_file_downloads;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['column']})"
+			: 'COUNT(id)';
+
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL({$function}, 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
+			? 0
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( 0 === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . $total
+					: '▼ ' . $total;
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $total;
+	}
+
 	/** Private Methods ******************************************************/
 
 	/**
@@ -1515,10 +1839,13 @@ class Stats {
 			'table'             => '',
 			'function'          => 'SUM',
 			'output'            => 'raw',
+			'relative'          => false,
+			'relative_start'    => '',
+			'relative_end'      => '',
 		);
 
 		if ( empty( $this->query_vars ) ) {
-			$this->query_vars = wp_parse_args( $query, $query_var_defaults );
+			$this->query_vars_defaults = $this->query_vars = wp_parse_args( $query, $query_var_defaults );
 		} else {
 			$this->query_vars = wp_parse_args( $query, $this->query_vars );
 		}
@@ -1527,6 +1854,12 @@ class Stats {
 		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			$this->query_vars['end']   = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
+		}
+
+		// Use Carbon to set up start and end date based on range passed.
+		if ( true === $this->query_vars['relative'] && ! empty( $this->query_vars['range'] ) && isset( $this->relative_date_ranges[ $this->query_vars['range'] ] ) ) {
+			$this->query_vars['relative_start'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
+			$this->query_vars['relative_end']   = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 		}
 
 		// Correctly format functions and column names.
@@ -1653,6 +1986,42 @@ class Stats {
 		return $data;
 	}
 
+	/**
+	 * Generate date query SQL for relative time periods.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 *
+	 * @return string Date query SQL.
+	 */
+	private function generate_relative_date_query_sql() {
+
+		// Bail if relative calculation not requested.
+		if ( false === $this->query_vars['relative'] ) {
+			return '';
+		}
+
+		// Generate date query SQL if dates have been set.
+		if ( ! empty( $this->query_vars['relative_start'] ) || ! empty( $this->query_vars['relative_end'] ) ) {
+			$date_query_sql = "AND {$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
+
+			if ( ! empty( $this->query_vars['relative_start'] ) ) {
+				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['relative_start'] );
+			}
+
+			// Join dates with `AND` if start and end date set.
+			if ( ! empty( $this->query_vars['relative_start'] ) && ! empty( $this->query_vars['relative_end'] ) ) {
+				$date_query_sql .= ' AND ';
+			}
+
+			if ( ! empty( $this->query_vars['relative_end'] ) ) {
+				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $this->query_vars['relative_end'] );
+			}
+
+			return $date_query_sql;
+		}
+	}
+
 	/** Private Getters *******************************************************/
 
 	/**
@@ -1685,6 +2054,79 @@ class Stats {
 
 		foreach ( $date_filters as $range => $label ) {
 			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $date, $range );
+
+			switch ( $range ) {
+				case 'this_month':
+					$dates = array(
+						'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
+						'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
+					);
+					break;
+				case 'last_month':
+					$dates = array(
+						'start' => $date->copy()->subMonth( 2 )->startOfMonth(),
+						'end'   => $date->copy()->subMonth( 2 )->endOfMonth(),
+					);
+					break;
+				case 'today':
+					$dates = array(
+						'start' => $date->copy()->subDay( 1 )->startOfDay(),
+						'end'   => $date->copy()->subDay( 1 )->endOfDay(),
+					);
+					break;
+				case 'yesterday':
+					$dates = array(
+						'start' => $date->copy()->subDay( 2 )->startOfDay(),
+						'end'   => $date->copy()->subDay( 2 )->endOfDay(),
+					);
+					break;
+				case 'this_week':
+					$dates = array(
+						'start' => $date->copy()->subWeek( 1 )->startOfWeek(),
+						'end'   => $date->copy()->subWeek( 1 )->endOfWeek(),
+					);
+					break;
+				case 'last_week':
+					$dates = array(
+						'start' => $date->copy()->subWeek( 2 )->startOfWeek(),
+						'end'   => $date->copy()->subWeek( 2 )->endOfWeek(),
+					);
+					break;
+				case 'last_30_days':
+					$dates = array(
+						'start' => $date->copy()->subDay( 60 )->startOfDay(),
+						'end'   => $date->copy()->subDay( 30 )->endOfDay(),
+					);
+					break;
+				case 'this_quarter':
+					$dates = array(
+						'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+						'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
+					);
+					break;
+				case 'last_quarter':
+					$dates = array(
+						'start' => $date->copy()->subQuarter( 2 )->startOfQuarter(),
+						'end'   => $date->copy()->subQuarter( 2 )->endOfQuarter(),
+					);
+					break;
+				case 'this_year':
+					$dates = array(
+						'start' => $date->copy()->subYear( 1 )->startOfYear(),
+						'end'   => $date->copy()->subYear( 1 )->endOfYear(),
+					);
+					break;
+				case 'last_year':
+					$dates = array(
+						'start' => $date->copy()->subYear( 2 )->startOfYear(),
+						'end'   => $date->copy()->subYear( 2 )->endOfYear(),
+					);
+					break;
+			}
+
+			$dates['range'] = $range;
+
+			$this->relative_date_ranges[ $range ] = $dates;
 		}
 	}
 }
