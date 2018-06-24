@@ -839,8 +839,120 @@ function edd_register_taxes_report( $reports ) {
 		edd_debug_log_exception( $exception );
 	}
 }
-
 add_action( 'edd_reports_init', 'edd_register_taxes_report' );
+
+/**
+ * Register file downloads report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_file_downloads_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+			: false;
+
+		$download_label = '';
+
+		if ( $download_data ) {
+			$download = edd_get_download( $download_data['download_id'] );
+
+			if ( $download_data['price_id'] ) {
+				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+			} else {
+				$download_label = esc_html( ' (' . $download->post_title . ')' );
+			}
+		}
+
+		$reports->add_report( 'file_downloads', array(
+			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
+			'icon'      => 'download',
+			'priority'  => 30,
+			'endpoints' => array(
+				'tiles' => array(
+					'number_of_file_downloads',
+					'average_downloads_per_customer',
+					'most_downloaded_products',
+					'average_file_downloads_per_order',
+				),
+			),
+			'filters'   => array( 'products' )
+		) );
+
+		$reports->register_endpoint( 'number_of_file_downloads', array(
+			'label' => __( 'Number of File Downloads', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label . $download_label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_downloads_per_customer', array(
+			'label' => __( 'Average Downloads per Customer', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label . $download_label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'most_downloaded_products', array(
+			'label' => __( 'Most Downloaded Product', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label . $download_label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_file_downloads_per_order', array(
+			'label' => __( 'Average File Downloads per Order', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label . $download_label,
+					),
+				),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_file_downloads_report' );
 
 /**
  * Register discounts report and endpoints.
