@@ -625,6 +625,7 @@ function edd_register_downloads_report( $reports ) {
 					'average_download_earnings',
                 ),
 			),
+            'filters'   => array( 'products' )
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
