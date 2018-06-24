@@ -376,19 +376,52 @@ class EDD_HTML_Elements {
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
 	 * @since 1.5.2
-	 * @param string $name Name attribute of the dropdown
-	 * @param int    $selected Discount to select automatically
-	 * @param string $status Discount post_status to retrieve
+	 * @since 3.0 Allow $args to be passed.
+	 *
+	 * @param string $name Name attribute of the dropdown.
+	 * @param int    $selected Discount to select automatically.
+	 * @param string $status Discount post_status to retrieve.
+	 *
 	 * @return string $output Discount dropdown
 	 */
 	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
-		$args = array( 'nopaging' => true );
 
-		if ( ! empty( $status ) ) {
-			$args['post_status'] = $status;
+		$defaults = array(
+			'name'        => 'discounts',
+			'id'          => 'discounts',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'placeholder' => __( 'Choose a Discount', 'easy-digital-downloads' ),
+			'number'      => 30,
+			'data'        => array(
+				'search-type'        => 'discount',
+				'search-placeholder' => __( 'Search Discounts', 'easy-digital-downloads' ),
+			),
+		);
+
+		$args = func_get_args();
+
+		if ( 1 === func_num_args() && is_array( $args[0] ) ) {
+			$args = wp_parse_args( $args[0], $defaults );
+		} else {
+			$args = wp_parse_args( array(
+				'name'     => $name,
+				'selected' => $selected,
+				'nopaging' => true,
+			), $defaults );
 		}
 
-		$discounts = edd_get_discounts( $args );
+		$discount_args = array(
+			'number' => $args['number'],
+		);
+
+		if ( ! empty( $status ) ) {
+			$discount_args['status'] = $status;
+		}
+
+		$discounts = edd_get_discounts( $discount_args );
 		$options   = array();
 
 		if ( $discounts ) {
@@ -400,11 +433,16 @@ class EDD_HTML_Elements {
 		}
 
 		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-user-select',
 			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => __( 'Select a discount', 'easy-digital-downloads' ),
+			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => __( 'All Discounts', 'easy-digital-downloads' ),
+			'show_option_none' => false,
 		) );
 
 		return $output;
