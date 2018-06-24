@@ -1630,14 +1630,14 @@ function edd_logs_migration() {
                 }
 
                 $log_data = array(
-                    'download_id'   => $old_log->post_parent,
-                    'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
-                    'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
-                    'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-                    'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-                    'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
-                    'date_created'  => $old_log->post_date_gmt,
-                    'date_modified' => $old_log->post_modified_gmt,
+	                'download_id'   => $old_log->post_parent,
+	                'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
+	                'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
+	                'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+	                'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
+	                'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
+	                'date_created'  => $old_log->post_date_gmt,
+	                'date_modified' => $old_log->post_modified_gmt,
                 );
 
                 $new_log_id = edd_add_file_download_log( $log_data );
