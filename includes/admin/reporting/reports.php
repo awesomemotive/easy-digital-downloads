@@ -692,6 +692,7 @@ function edd_register_downloads_report( $reports ) {
 				    'tile' => array(
 					    'data_callback' => function () use ( $filter, $download_data ) {
 						    $stats = new EDD\Orders\Stats();
+
 						    $earnings = $stats->get_order_item_earnings( array(
 							    'product_id' => absint( $download_data['download_id'] ),
 							    'price_id'   => absint( $download_data['price_id'] ),
