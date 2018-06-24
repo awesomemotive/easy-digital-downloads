@@ -775,6 +775,18 @@ function edd_register_payment_gateways_report( $reports ) {
 add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
 
 /**
+ * Register taxes report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_taxes_report( $reports ) {
+
+}
+add_action( 'edd_reports_init', 'edd_register_taxes_report' );
+
+/**
  * Register discounts report and endpoints.
  *
  * @since 3.0
