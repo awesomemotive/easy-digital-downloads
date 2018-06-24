@@ -1449,21 +1449,55 @@ class Stats {
 			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
 			: '';
 
-		$sql = "SELECT {$function}
-				FROM (
-					SELECT SUM(total) AS total
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS total, IFNULL(relative, 0) AS relative
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
-				  	GROUP BY customer_id
-				) o";
+					CROSS JOIN (
+						SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
-		$result = $this->get_db()->get_var( $sql );
+			var_dump( $sql );
+		} else {
+			$sql = "SELECT {$function}
+					FROM (
+						SELECT SUM(total) AS total
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+					    GROUP BY customer_id
+					) o";
+		}
 
-		$total = null === $result
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
 			? 0.00
-			: (float) $result;
+			: (float) $result->total;
 
-		$total = $this->maybe_format( $total );
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = floatval( $result->total );
+			$relative = floatval( $result->relative );
+
+			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();

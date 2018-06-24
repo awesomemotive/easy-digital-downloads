@@ -387,11 +387,12 @@ function edd_register_overview_report( $reports ) {
 							'function' => 'AVG',
 							'range'    => $filter['range'],
 							'output'   => 'formatted',
+							'relative' => true,
 						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
-						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
+						'comparison_label' => $label,
 					),
 				),
 			),
