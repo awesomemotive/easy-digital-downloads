@@ -824,7 +824,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$discount_code = isset( $this->query_vars['discount_code'] )
+		$discount_code = ! empty( $this->query_vars['discount_code'] )
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
