@@ -202,14 +202,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'gateways', array(
-			'label'     => __( 'Payment Methods', 'easy-digital-downloads' ),
-			'priority'  => 20,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
 			'priority'  => 25,
@@ -642,6 +634,34 @@ function edd_register_overview_report( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_overview_report' );
+
+/**
+ * Register payment methods report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_payment_methods_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$reports->add_report( 'gateways', array(
+			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
+			'priority'  => 20,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' ),
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_payment_methods_report' );
 
 /**
  * Register customer report and endpoints.
