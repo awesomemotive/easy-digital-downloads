@@ -530,7 +530,8 @@ function edd_register_downloads_report( $reports ) {
 		$filter  = Reports\get_filter_value( 'dates' );
 		$label   = $options[ $filter['range'] ];
 
-		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+		$download_data = Reports\get_filter_value( 'products' );
+		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
@@ -1066,7 +1067,8 @@ function edd_register_taxes_report( $reports ) {
 		$filter  = Reports\get_filter_value( 'dates' );
 		$label   = $options[ $filter['range'] ];
 
-		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+		$download_data = Reports\get_filter_value( 'products' );
+		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
@@ -1142,7 +1144,8 @@ function edd_register_file_downloads_report( $reports ) {
 		$filter  = Reports\get_filter_value( 'dates' );
 		$label   = $options[ $filter['range'] ];
 
-		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+		$download_data = Reports\get_filter_value( 'products' );
+		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
