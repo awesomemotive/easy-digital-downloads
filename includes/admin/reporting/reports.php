@@ -218,14 +218,6 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'discounts', array(
-			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
-			'priority'  => 35,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'categories', array(
 			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
 			'priority'  => 45,
@@ -798,6 +790,34 @@ function edd_register_payment_gateways_report( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
+
+/**
+ * Register discounts report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_discounts_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$reports->add_report( 'discounts', array(
+			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
+			'priority'  => 35,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile' )
+			),
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_discounts_report' );
 
 /**
  * Register customer report and endpoints.
