@@ -162,8 +162,8 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'products', array(
-			'label'     => __( 'Products', 'easy-digital-downloads' ),
+		$reports->add_report( 'downloads', array(
+			'label'     => edd_get_label_plural(),
 			'priority'  => 10,
 			'icon'      => 'download',
 			'endpoints' => array(
@@ -173,6 +173,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
+			'icon'      => 'image-rotate',
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
@@ -190,6 +191,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'file_downloads', array(
 			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
+			'icon'      => 'download',
 			'priority'  => 30,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
@@ -198,6 +200,7 @@ function edd_register_core_reports( $reports ) {
 
 		$reports->add_report( 'categories', array(
 			'label'     => __( 'Earnings by Category', 'easy-digital-downloads' ),
+			'icon'      => 'category',
 			'priority'  => 45,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile' )
@@ -226,6 +229,7 @@ function edd_register_overview_report( $reports ) {
 
 		$reports->add_report( 'overview', array(
 			'label'     => __( 'Overview', 'easy-digital-downloads' ),
+			'icon'      => 'dashboard',
 			'priority'  => 5,
 			'endpoints' => array(
 				'tiles'  => array(
@@ -798,6 +802,7 @@ function edd_register_discounts_report( $reports ) {
 
 		$reports->add_report( 'discounts', array(
 			'label'     => __( 'Discounts', 'easy-digital-downloads' ),
+			'icon'      => 'tickets-alt',
 			'priority'  => 35,
 			'endpoints' => array(
 				'tiles'  => array(
@@ -971,6 +976,7 @@ function edd_register_customer_report( $reports ) {
 
 		$reports->add_report( 'customers', array(
 			'label'     => __( 'Customers', 'easy-digital-downloads' ),
+			'icon'      => 'groups',
 			'priority'  => 40,
 			'endpoints' => array(
 				'tiles'  => array(
