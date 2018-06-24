@@ -183,7 +183,7 @@ class Stats {
 			$total    = floatval( $result->total );
 			$relative = floatval( $result->relative );
 
-			if ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) {
+			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
@@ -275,7 +275,7 @@ class Stats {
 			$total    = absint( $result->total );
 			$relative = absint( $result->relative );
 
-			if ( 0 === $total && 0 === $relative ) {
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( 0 === $relative ) {
 				$total = 0 < $total
@@ -1306,6 +1306,91 @@ class Stats {
 	}
 
 	/** Customers ************************************************************/
+
+	/**
+	 * Calculate the number of customers.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                             to the query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return int Number of customers.
+	 */
+	public function get_customer_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_customers;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, IFNULL(relative, 0) AS relative
+					FROM {$this->query_vars['table']}
+					CROSS JOIN (
+						SELECT IFNULL(COUNT(id), 0) AS relative
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+					) o
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		} else {
+			$sql = "SELECT COUNT(id) AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
+			? 0
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( 0 === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . $total
+					: '▼ ' . $total;
+			} else {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $total;
+	}
 
 	/**
 	 * Calculate the lifetime value of a customer.
