@@ -52,13 +52,13 @@ final class Logs_File_Downloads extends Base {
 		file_id bigint(20) unsigned NOT NULL default '0',
 		order_id bigint(20) unsigned NOT NULL default '0',
 		price_id bigint(20) unsigned NOT NULL default '0',
-		user_id bigint(20) unsigned NOT NULL default '0',
+		customer_id bigint(20) unsigned NOT NULL default '0',
 		ip varchar(60) NOT NULL default '',
 		user_agent varchar(200) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
-		KEY user_id (user_id),
+		KEY customer_id (customer_id),
 		KEY product_id (product_id),
 		KEY date_created (date_created)";
 	}
