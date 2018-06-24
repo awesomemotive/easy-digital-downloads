@@ -626,7 +626,8 @@ function edd_register_downloads_report( $reports ) {
 					'download_sales_earnings',
                 ),
                 'charts' => array(
-	                'download_variations_chart',
+	                'download_sales_by_variations',
+	                'download_earnings_by_variations',
                 )
 			),
             'filters'   => array( 'products' )
@@ -693,12 +694,14 @@ function edd_register_downloads_report( $reports ) {
 						    $stats = new EDD\Orders\Stats();
 						    $earnings = $stats->get_order_item_earnings( array(
 							    'product_id' => absint( $download_data['download_id'] ),
+							    'price_id'   => absint( $download_data['price_id'] ),
 							    'range'      => $filter['range'],
 							    'output'     => 'formatted',
 						    ) );
 
 						    $sales = $stats->get_order_item_count( array(
 							    'product_id' => absint( $download_data['download_id'] ),
+							    'price_id'   => absint( $download_data['price_id'] ),
 							    'range'      => $filter['range'],
 						    ) );
 
@@ -716,31 +719,74 @@ function edd_register_downloads_report( $reports ) {
         if ( $download_data && $download->has_variable_prices() ) {
 	        $prices = $download->get_prices();
 
-	        $reports->register_endpoint( 'download_variations_chart', array(
-		        'label' => __( 'Earnings by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
+	        $reports->register_endpoint( 'download_sales_by_variations', array(
+		        'label' => __( 'Sales by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
 		        'views' => array(
 			        'chart' => array(
 				        'data_callback' => function() use ( $filter, $download_data, $prices ) {
 					        $stats = new EDD\Orders\Stats();
-					        $d = $stats->get_order_item_earnings( array(
+					        $sales = $stats->get_order_item_count( array(
 						        'product_id' => absint( $download_data['download_id'] ),
 						        'range'      => $filter['range'],
 						        'grouped'    => true,
 					        ) );
 
-					        foreach ( $d as $data ) {
-						        $prices[ $data->price_id ]['total'] = floatval( $data->total );
+					        foreach ( $sales as $data ) {
+						        $prices[ $data->price_id ]['sales'] = absint( $data->total );
 					        }
 
-					        $totals = array_values( wp_list_pluck( $prices, 'total' ) );
+					        $sales = array_values( wp_list_pluck( $prices, 'sales' ) );
 
 					        return array(
-						        'earnings' => $totals,
+						        'sales' => $sales,
 					        );
 				        },
 				        'type' => 'pie',
 				        'options' => array(
-					        'cutoutPercentage' => 50,
+					        'cutoutPercentage' => 0,
+					        'datasets'         => array(
+						        'sales' => array(
+							        'label'           => __( 'Sales' ),
+							        'backgroundColor' => array(
+								        'rgb(133,175,91)',
+								        'rgb(9,149,199)',
+								        'rgb(8,189,231)',
+								        'rgb(137,163,87)',
+								        'rgb(27,98,122)',
+							        ),
+						        ),
+					        ),
+					        'labels' => array_values( wp_list_pluck( $prices, 'name' ) )
+				        ),
+			        ),
+		        )
+	        ) );
+
+	        $reports->register_endpoint( 'download_earnings_by_variations', array(
+		        'label' => __( 'Earnings by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
+		        'views' => array(
+			        'chart' => array(
+				        'data_callback' => function() use ( $filter, $download_data, $prices ) {
+					        $stats = new EDD\Orders\Stats();
+					        $earnings = $stats->get_order_item_earnings( array(
+						        'product_id' => absint( $download_data['download_id'] ),
+						        'range'      => $filter['range'],
+						        'grouped'    => true,
+					        ) );
+
+					        foreach ( $earnings as $data ) {
+						        $prices[ $data->price_id ]['earnings'] = floatval( $data->total );
+					        }
+
+					        $earnings = array_values( wp_list_pluck( $prices, 'earnings' ) );
+
+					        return array(
+						        'earnings' => $earnings,
+					        );
+				        },
+				        'type' => 'pie',
+				        'options' => array(
+					        'cutoutPercentage' => 0,
 					        'datasets'         => array(
 						        'earnings' => array(
 							        'label'           => __( 'Earnings' ),
@@ -753,7 +799,7 @@ function edd_register_downloads_report( $reports ) {
 							        ),
 						        ),
 					        ),
-					        'labels' => array_values( wp_list_pluck( $prices, 'name' ) ),
+					        'labels' => array_values( wp_list_pluck( $prices, 'name' ) )
 				        ),
 			        ),
 		        )
