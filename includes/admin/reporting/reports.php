@@ -885,6 +885,9 @@ function edd_register_file_downloads_report( $reports ) {
 					'most_downloaded_product',
 					'average_file_downloads_per_order',
 				),
+				'tables' => array(
+					'top_five_most_downloaded_products',
+				),
 				'charts' => array(
 					'file_downloads_chart',
 				),
@@ -968,6 +971,18 @@ function edd_register_file_downloads_report( $reports ) {
 					'display_args'  => array(
 						'context'          => 'primary',
 						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'top_five_most_downloaded_products', array(
+			'label' => __( 'Top Five Most Downloaded Products', 'easy-digital-downloads' ) . ' – ' . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\File_Downloads\\Top_Five_Most_Downloaded_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php',
 					),
 				),
 			),
