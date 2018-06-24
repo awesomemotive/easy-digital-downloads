@@ -1149,7 +1149,7 @@ function display_filters( $report ) {
 	$action = admin_url( add_query_arg( array(
 		'post_type' => 'download',
 		'page'      => 'edd-reports',
-		'tab'       => get_active_tab(),
+		'view'      => get_active_tab(),
 	), 'edit.php' ) );
 
 	if ( empty( $filters ) ) {
