@@ -178,7 +178,7 @@ class Stats {
 
 		$result = $this->get_db()->get_row( $sql );
 
-		$total = null === $result
+		$total = null === $result->total
 			? 0.00
 			: (float) $result->total;
 
@@ -1179,7 +1179,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT (IFNULL({$function}, 0) - relative)/relative * 100 AS calculation
+			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
 					FROM {$this->query_vars['table']}
 					CROSS JOIN (
 						SELECT IFNULL({$function}, 0) AS relative
@@ -1188,24 +1188,33 @@ class Stats {
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
-			$sql = "SELECT {$function}
+			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
-		$result = $this->get_db()->get_var( $sql );
+		$result = $this->get_db()->get_row( $sql );
 
-		$total = null === $result
+		$total = null === $result->total
 			? 0.00
-			: (float) $result;
+			: (float) $result->total;
 
 		if ( true === $this->query_vars['relative'] ) {
-			if ( 0 === $total ) {
-				$total = __( 'No Change', 'easy-digital-downloads' );
+			$total    = floatval( $result->total );
+			$relative = floatval( $result->relative );
+
+			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
+				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) === $relative ) {
+				$total = 0 < $total
+					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
 			} else {
-				$total = is_numeric( $total ) && $total > 0
-					? '▲ ' . absint( $total ) . '%'
-					: '▼ ' . absint( $total ) . '%';
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$total = 0 < $percentage_change
+					? '▲ ' . absint( $percentage_change ) . '%'
+					: '▼ ' . absint( $percentage_change ) . '%';
 			}
 		} else {
 			$total = $this->maybe_format( $total );
