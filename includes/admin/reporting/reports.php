@@ -1684,6 +1684,7 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
  * Renders the Reports Downloads Table
  *
  * @since 1.3
+ * @deprecated
  * @uses EDD_Download_Reports_Table::prepare_items()
  * @uses EDD_Download_Reports_Table::display()
  * @return void
@@ -1710,7 +1711,6 @@ function edd_reports_downloads_table() {
 
 	<?php
 }
-add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
 /**
  * Renders the detailed report for a specific product
