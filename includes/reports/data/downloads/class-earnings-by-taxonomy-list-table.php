@@ -42,7 +42,7 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 
 		if ( ! empty( $date_range['start'] ) || ! empty( $date_range['end'] ) ) {
 			if ( ! empty( $date_range['start'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'AND date_created >= %s', $date_range['start'] );
+				$date_query_sql .= $wpdb->prepare( 'AND date_created >= %s', $date_range['start']->format( 'mysql' ) );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -51,7 +51,7 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 			}
 
 			if ( ! empty( $date_range['end'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $date_range['end'] );
+				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $date_range['end']->format( 'mysql' ) );
 			}
 		}
 
