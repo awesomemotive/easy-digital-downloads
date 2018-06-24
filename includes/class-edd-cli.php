@@ -1003,7 +1003,7 @@ class EDD_CLI extends WP_CLI_Command {
 						'file_id'       => $post_meta['_edd_log_file_id'],
 						'order_id'      => $post_meta['_edd_log_payment_id'],
 						'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-						'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+						'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
 						'ip'            => $post_meta['_edd_log_ip'],
 						'date_created'  => $old_log->post_date_gmt,
 						'date_modified' => $old_log->post_modified_gmt,
