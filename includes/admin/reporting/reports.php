@@ -620,10 +620,59 @@ function edd_register_downloads_report( $reports ) {
 			'priority'  => 10,
 			'icon'      => 'download',
 			'endpoints' => array(
-				'tiles' => array( )
+				'tiles' => array(
+					'most_valuable_download',
+					'average_download_earnings',
+                ),
 			),
 		) );
 
+		$reports->register_endpoint( 'most_valuable_download', array(
+			'label' => sprintf( __( 'Most Valuable %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						$d = $stats->get_most_valuable_order_items( array(
+							'range' => $filter['range'],
+						) );
+
+						$d = $d[0];
+
+						$title = $d->object->post_title;
+
+						if ( $d->object->has_variable_prices() ) {
+							$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
+
+							$title .= is_array( $prices )
+                                ? ': ' . $prices[0]['name']
+                                : '';
+                        }
+
+                        return esc_html( $title );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_download_earnings', array(
+			'label' => sprintf( __( 'Average %s Earnings', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}

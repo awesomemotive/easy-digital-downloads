@@ -642,21 +642,25 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT product_id, SUM(total) AS total
+		$sql = "SELECT product_id, price_id, SUM(total) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY product_id
+				GROUP BY product_id, price_id
 				ORDER BY total DESC
 				LIMIT {$number}";
 
-		$result = $this->get_db()->get_row( $sql );
+		$result = $this->get_db()->get_results( $sql );
 
-		// Format resultant object.
-		$result->product_id = absint( $result->product_id );
-		$result->total      = $this->maybe_format( $result->total );
+		array_walk( $result, function ( &$value ) {
 
-		// Add instance of EDD_Download to resultant object.
-		$result->object = edd_get_download( $result->product_id );
+			// Format resultant object.
+			$value->product_id = absint( $value->product_id );
+			$value->price_id   = absint( $value->price_id );
+			$value->total      = $this->maybe_format( $value->total );
+
+			// Add instance of EDD_Download to resultant object.
+			$value->object = edd_get_download( $value->product_id );
+		} );
 
 		// Reset query vars.
 		$this->post_query();
