@@ -102,6 +102,8 @@ class Stats {
 				'start'             => '',
 				'end'               => '',
 				'range'             => '',
+				'status'            => array( 'publish', 'revoked' ),
+				'status_sql'        => '',
 				'where_sql'         => '',
 				'date_query_sql'    => '',
 				'date_query_column' => '',
@@ -109,6 +111,10 @@ class Stats {
 				'table'             => '',
 				'function'          => 'SUM',
 				'output'            => 'raw',
+				'relative'          => false,
+				'relative_start'    => '',
+				'relative_end'      => '',
+				'grouped'           => false,
 			);
 		}
 	}
@@ -966,11 +972,11 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
 			: 'COUNT(id)';
 
-		$gateway = isset( $this->query_vars['gateway'] )
+		$gateway = ! empty( $this->query_vars['gateway'] )
 			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
 			: '';
 
-		$sql = "SELECT gateway, {$function} AS count
+		$sql = "SELECT gateway, {$function} AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY gateway";
@@ -980,36 +986,45 @@ class Stats {
 		// Ensure count values are always valid integers if counting sales.
 		if ( 'COUNT' === $this->query_vars['function'] ) {
 			array_walk( $result, function ( &$value ) {
-				$value->count = absint( $value->count );
+				$value->total = absint( $value->total );
 			} );
 		}
 
-		$results = array();
+		if ( empty( $gateway ) && true === $this->query_vars['grouped'] ) {
+			$results = array();
 
-		// Merge defaults with values returned from the database.
-		foreach ( $defaults as $key => $value ) {
+			// Merge defaults with values returned from the database.
+			foreach ( $defaults as $key => $value ) {
 
-			// Filter based on gateway.
-			$filter = wp_filter_object_list( $result, array( 'gateway' => $value->gateway ) );
+				// Filter based on gateway.
+				$filter = wp_filter_object_list( $result, array( 'gateway' => $value->gateway ) );
 
-			$filter = ! empty( $filter )
-				? array_values( $filter )
-				: array();
+				$filter = ! empty( $filter )
+					? array_values( $filter )
+					: array();
 
-			if ( ! empty( $filter ) ) {
-				$results[] = $filter[0];
-			} else {
-				$results[] = $defaults[ $key ];
+				if ( ! empty( $filter ) ) {
+					$results[] = $filter[0];
+				} else {
+					$results[] = $defaults[ $key ];
+				}
 			}
+		} elseif ( false === $this->query_vars['grouped'] ) {
+			$total = 0;
+
+			array_walk( $result, function( $value ) use ( &$total ) {
+				$total += $value->total;
+			} );
+
+			$results = absint( $total );
 		}
 
-		if ( ! empty( $gateway ) ) {
+		if ( ! empty( $gateway ) && true === $this->query_vars['grouped'] ) {
 
 			// Filter based on gateway if passed.
 			$filter = wp_filter_object_list( $result, array( 'gateway' => $this->query_vars['gateway'] ) );
 
-			// Return number of sales for gateway passed.
-			return absint( $filter[0]->count );
+			$results = absint( $filter[0]->count );
 		}
 
 		// Reset query vars.
@@ -1842,6 +1857,7 @@ class Stats {
 			'relative'          => false,
 			'relative_start'    => '',
 			'relative_end'      => '',
+			'grouped'           => false,
 		);
 
 		if ( empty( $this->query_vars ) ) {
