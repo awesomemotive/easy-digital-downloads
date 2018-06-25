@@ -1054,9 +1054,9 @@ jQuery(document).ready(function ($) {
 		date_options : function() {
 
 			// Show hide extended date options
-			$( '.edd-graphs-date-options' ).on( 'change', function( event ) {
+			$( 'select.edd-graphs-date-options' ).on( 'change', function( event ) {
 				var	select             = $( this ),
-					date_range_options = select.siblings( '.edd-date-range-options' );
+					date_range_options = select.parent().siblings( '.edd-date-range-options' );
 
 				if ( 'other' === select.val() ) {
 					date_range_options.removeClass( 'screen-reader-text' );

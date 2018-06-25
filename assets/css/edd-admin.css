@@ -1372,15 +1372,30 @@ td.edd_order_price {
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-.edd-graphs-date-options,
+.edd-date-range-picker,
 .edd-date-range-options {
-	display: inline-block;
+	float: left;
+	margin-right: 6px;
+}
+.edd-graphs-date-options {
+	max-width: 130px !important; /* Chosen Override */
+}
+.edd-date-range-options {
+	margin-top: -1px;
+}
+.edd-date-range-options .edd_datepicker {
+	width: 100px;
+	height: 29px;
+}
+
+.edd-date-range-options label,
+.edd-date-range-options span:not(:last-of-type) input {
+	margin-right: 5px;
 }
 .edd-date-range-options span {
 	float: left;
-	line-height: 24px;
-	height: 24px;
-	margin-right: 6px;
+	line-height: 29px;
+	height: 29px;
 }
 .edd-report-wrap {
 	padding: 20px;
@@ -1390,6 +1405,11 @@ td.edd_order_price {
 .edd-report-wrap h3 {
 	clear: both;
 	margin: 0 0 20px;
+}
+
+.edd-reports-chart,
+.edd-reports-table {
+	margin-bottom: 20px;
 }
 
 .edd-import-export-form {
@@ -1445,6 +1465,9 @@ td.edd_order_price {
 }
 #edd-graphs-filter {
 	display: block;
+	padding: 0 20px 20px;
+	margin: 0 -20px;
+	border-bottom: 1px solid #eee;
 }
 #edd-graphs-filter label {
 	vertical-align: inherit;
@@ -1452,7 +1475,8 @@ td.edd_order_price {
 #edd-graphs-filter .graph-option-section {
 	display: inline-block;
 	line-height: 2em;
-	padding-right: 5px;
+	margin: 0 5px 0 0;
+	padding: 0;
 }
 .edd-mix-totals {
 	background-color: #fff;
@@ -1543,11 +1567,13 @@ td.edd_order_price {
 	padding-left: 25px;
 	text-align: center;
 	font-weight: normal;
-	color: #999;
+	color: #555;
 }
 
 #edd-reports-tiles-wrap .postbox .inside {
 	text-align: center;
+	vertical-align: middle;
+	position: relative;
 }
 
 #edd-reports-tiles-wrap .inside span {
@@ -1555,15 +1581,33 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap .inside .tile-value {
-	color: #21759b;
+	border-radius: 10px;
+	border: 1px solid transparent;
+	padding: 10px;
+	color: #111;
 	font-size: 2em;
 	line-height: 1;
+	display: inline-block;
+}
+
+#edd-reports-tiles-wrap .inside .tile-default {
+	background: #fafafa;
+	color: #666;
+	border-color: #eee;
+}
+#edd-reports-tiles-wrap .inside .tile-amount {
+	background: rgb(39,148,218);
+}
+#edd-reports-tiles-wrap .inside .tile-number {
+	background: rgb(153,102,255);
+}
+#edd-reports-tiles-wrap .inside .tile-amount,
+#edd-reports-tiles-wrap .inside .tile-number {
+	color: #fff;
 }
 
 #edd-reports-tiles-wrap .inside .tile-value.tile-no-data {
-	color: #888;
-	font-size: 1.5em;
-	line-height: 1;
+	color: #ddd;
 }
 
 #edd-reports-tiles-wrap .inside .tile-value.tile-url {
