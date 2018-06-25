@@ -760,13 +760,13 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$date  = EDD()->utils->date( 'now' );
 		$dates = parse_dates_for_range( $date, 'last_30_days' );
 
-		$eexpected = array(
+		$expected = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
 			'to'    => $dates['end']->format( 'Y-m-d' ),
 			'range' => 'last_30_days',
 		);
 
-		$this->assertEqualSetsWithIndex( $eexpected, get_filter_value( 'dates' ) );
+		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
 
 	/**
