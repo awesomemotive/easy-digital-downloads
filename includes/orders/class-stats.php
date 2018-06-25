@@ -1657,7 +1657,7 @@ class Stats {
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
-			$sql = "SELECT {$function}
+			$sql = "SELECT {$function} AS total
 					FROM (
 						SELECT SUM(total) AS total
 						FROM {$this->query_vars['table']}
