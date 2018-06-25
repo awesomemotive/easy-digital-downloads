@@ -75,7 +75,7 @@ final class Logs_File_Downloads extends Base {
 	}
 
 	/**
-	 * Upgrade to version 201806250001
+	 * Upgrade to version 201806250003
 	 * - Rename  `download_id` column to `product_id`
 	 *
 	 * (Might not work all as one query. Let's see?)
