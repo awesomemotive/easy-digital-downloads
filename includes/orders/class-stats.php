@@ -198,14 +198,14 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$total = 0 < $percentage_change
-					? '▲ ' . absint( $percentage_change ) . '%'
-					: '▼ ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
 			}
 		} else {
 			$total = $this->maybe_format( $total );
@@ -290,14 +290,14 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( 0 === $relative ) {
 				$total = 0 < $total
-					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$total = 0 < $percentage_change
-					? '▲ ' . absint( $percentage_change ) . '%'
-					: '▼ ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
 			}
 		}
 
@@ -1459,14 +1459,14 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$total = 0 < $percentage_change
-					? '▲ ' . absint( $percentage_change ) . '%'
-					: '▼ ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
 			}
 		} else {
 			$total = $this->maybe_format( $total );
@@ -1640,14 +1640,14 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( 0 === $relative ) {
 				$total = 0 < $total
-					? '▲ ' . $total
-					: '▼ ' . $total;
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . $total
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . $total;
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$total = 0 < $percentage_change
-					? '▲ ' . absint( $percentage_change ) . '%'
-					: '▼ ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
 			}
 		} else {
 			$total = $this->maybe_format( $total );
@@ -1751,14 +1751,14 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '▲ ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '▼ ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$total = 0 < $percentage_change
-					? '▲ ' . absint( $percentage_change ) . '%'
-					: '▼ ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
 			}
 		} else {
 			$total = $this->maybe_format( $total );
@@ -2054,14 +2054,14 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( 0 === $relative ) {
 				$total = 0 < $total
-					? '▲ ' . $total
-					: '▼ ' . $total;
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . $total
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . $total;
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$total = 0 < $percentage_change
-					? '▲ ' . absint( $percentage_change ) . '%'
-					: '▼ ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
 			}
 		} else {
 			$total = $this->maybe_format( $total );

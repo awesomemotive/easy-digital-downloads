@@ -1580,6 +1580,14 @@ td.edd_order_price {
 	display: block;
 }
 
+#edd-reports-tiles-wrap .inside span.dashicons {
+	display: inline-block;
+	font-size: 40px;
+	position: relative;
+	top: -5px;
+	left: -10px;
+}
+
 #edd-reports-tiles-wrap .inside .tile-value {
 	border-radius: 10px;
 	border: 1px solid transparent;

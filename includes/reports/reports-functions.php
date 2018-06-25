@@ -872,7 +872,7 @@ function default_display_tile( $report, $tile ) {
 	if ( empty( $tile['args']['data'] ) ) {
 		echo '<span class="tile-no-data tile-value">&mdash;</span>';
 	} else {
-		switch( $tile['args']['display_args']['type'] ) {
+		switch ( $tile['args']['display_args']['type'] ) {
 			case 'number':
 				echo '<span class="tile-number tile-value">' . edd_format_amount( $tile['args']['data'] ) . '</span><br>';
 				break;
@@ -900,7 +900,8 @@ function default_display_tile( $report, $tile ) {
 				break;
 
 			default:
-				echo '<span class="tile-value tile-default">' . esc_html( $tile['args']['data'] ) . '</span>';
+				$tags = wp_kses_allowed_html( 'post' );
+				echo '<span class="tile-value tile-default">' . wp_kses( $tile['args']['data'], $tags ) . '</span>';
 				break;
 		}
 	}
