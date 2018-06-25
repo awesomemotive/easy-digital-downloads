@@ -1094,6 +1094,9 @@ function edd_register_payment_gateways_report( $reports ) {
 				'tables' => array(
 					'gateway_stats',
 				),
+				'charts' => array(
+					'gateway_breakdown',
+				),
 			),
 			'filters'   => array( 'gateways' ),
 		) );
@@ -1217,6 +1220,34 @@ function edd_register_payment_gateways_report( $reports ) {
 					),
 				),
 			),
+		) );
+
+		$reports->register_endpoint( 'gateway_breakdown', array(
+			'label' => __( 'Payment Gateway Usage', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() use ( $filter ) {
+
+					},
+					'type' => 'pie',
+					'options' => array(
+						'cutoutPercentage' => 0,
+						'datasets'         => array(
+							'sales' => array(
+								'label'           => __( 'Sales' ),
+								'backgroundColor' => array(
+									'rgb(133,175,91)',
+									'rgb(9,149,199)',
+									'rgb(8,189,231)',
+									'rgb(137,163,87)',
+									'rgb(27,98,122)',
+								),
+							),
+						),
+						'labels' => array(  )
+					),
+				),
+			)
 		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
