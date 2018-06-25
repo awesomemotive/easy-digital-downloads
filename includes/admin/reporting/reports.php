@@ -216,6 +216,7 @@ function edd_register_overview_report( $reports ) {
 					'overview_new_customers',
 					'overview_file_downloads',
 					'overview_taxes',
+					'overview_busiest_day',
 				),
 				'charts' => array(
 					'overview_sales_earnings_chart',
@@ -408,6 +409,24 @@ function edd_register_overview_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_busiest_day', array(
+			'label' => __( 'Busiest Day', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_overview_busiest_day', $stats->get_busiest_day( array(
+							'range' => $filter['range'],
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
