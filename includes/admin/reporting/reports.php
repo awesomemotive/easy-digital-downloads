@@ -125,32 +125,6 @@ function edd_reports_page() {
 }
 
 /**
- * Placeholder code to re-register former reports views as report tabs.
- *
- * This code will be replaced before release with individual tab registration logic.
- *
- * @since 3.0
- *
- * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
- */
-function edd_register_core_reports( $reports ) {
-	try {
-
-		$reports->add_report( 'refunds', array(
-			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
-			'icon'      => 'image-rotate',
-			'priority'  => 15,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile', 'another_test_tile' )
-			),
-		) );
-	} catch ( \EDD_Exception $exception ) {
-		edd_debug_log_exception( $exception );
-	}
-}
-add_action( 'edd_reports_init', 'edd_register_core_reports' );
-
-/**
  * Register overview report and endpoints.
  *
  * @since 3.0
@@ -870,6 +844,36 @@ function edd_register_downloads_report( $reports ) {
 
 }
 add_action( 'edd_reports_init', 'edd_register_downloads_report' );
+
+
+/**
+ * Register refunds report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_refunds_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+
+		$reports->add_report( 'refunds', array(
+			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
+			'icon'      => 'image-rotate',
+			'priority'  => 15,
+			'endpoints' => array(
+				'tiles' => array( 'test_tile', 'another_test_tile' )
+			),
+            'filters'   => array( 'products' )
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_refunds_report' );
 
 /**
  * Register payment gateways report and endpoints.
