@@ -428,6 +428,17 @@ function get_filter_value( $filter ) {
 
 		if ( false !== $filter_value ) {
 			$value = $filter_value;
+		} elseif ( false === $filter_value && 'dates' === $filter ) {
+
+			// Default to last 30 days for filter value.
+			$date  = EDD()->utils->date( 'now' );
+			$dates = parse_dates_for_range( $date, 'last_30_days' );
+
+			$value = array(
+				'from'  => $dates['start']->format( 'Y-m-d' ),
+				'to'    => $dates['end']->format( 'Y-m-d' ),
+				'range' => 'last_30_days',
+			);
 		}
 	}
 
