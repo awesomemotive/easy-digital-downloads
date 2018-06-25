@@ -1185,36 +1185,85 @@ function display_gateways_filter( $report ) {
  * @param Data\Report $report Report object.
  */
 function display_filters( $report ) {
-	$filters  = $report->get_filters();
-	$manifest = get_filters();
 
+	// Get the report ID
+	$report_id = $report->get_id();
+
+	// Bail if no report
+	if ( empty( $report_id ) ) {
+		return;
+	}
+
+	// Get form actions
 	$action = admin_url( add_query_arg( array(
 		'post_type' => 'download',
 		'page'      => 'edd-reports',
 		'view'      => get_active_tab(),
 	), 'edit.php' ) );
 
+	// Bail if no filters
+	$filters  = $report->get_filters();
 	if ( empty( $filters ) ) {
 		return;
-	} ?>
+	}
+
+	// Bail if no manifest
+	$manifest = get_filters();
+	if ( empty( $manifest ) ) {
+		return;
+	}
+
+	// Setup callables
+	$callables = array();
+
+	// Loop through filters and find the callables
+	foreach ( $filters as $filter ) {
+
+		// Skip if empty
+		if ( empty( $manifest[ $filter ]['display_callback'] ) ) {
+			continue;
+		}
+
+		// Skip if not callable
+		$callback = $manifest[ $filter ]['display_callback'];
+		if ( ! is_callable( $callback ) ) {
+			continue;
+		}
+
+		// Add callable to callables
+		$callables[] = $callback;
+	}
+
+	// Bail if no callables
+	if ( empty( $callables ) ) {
+		return;
+	}
+
+	// Start an output buffer
+	ob_start();
+
+	// Call the callables in the buffer
+	foreach ( $callables as $to_call ) {
+		call_user_func( $to_call, $report );
+	}
+
+	// Get the current buffer
+	$filters = ob_get_clean(); ?>
 
 	<div id="edd-reports-filters-wrap" class="edd-report-wrap">
+		<div class="edd-report-filters-spacer"></div>
 		<form id="edd-graphs-filter" method="get">
 			<?php
-			foreach ( $filters as $filter ) {
-				if ( ! empty( $manifest[ $filter ]['display_callback'] ) ) {
-					$callback = $manifest[ $filter ]['display_callback'];
 
-					if ( is_callable( $callback ) ) {
-						call_user_func( $callback, $report );
-					}
-				}
-			}
+			// Contains HTML (do not escape)
+			echo $filters;
+
+			// Always output the submit button
 			?><div class="edd-graph-filter-submit graph-option-section">
 				<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 				<input type="hidden" name="edd_action" value="filter_reports" />
-				<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $action ); ?>">
-				<input type="hidden" name="report_id" value="<?php echo esc_attr( $report->get_id() ); ?>">
+				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
+				<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">
 			</div>
 		</form>
 	</div>
