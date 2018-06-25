@@ -1055,10 +1055,10 @@ jQuery(document).ready(function ($) {
 
 			// Show hide extended date options
 			$( '.edd-graphs-date-options' ).on( 'change', function( event ) {
-				var	$this = $( this ),
-					date_range_options = $this.next( '.edd-date-range-options');
+				var	select             = $( this ),
+					date_range_options = select.siblings( '.edd-date-range-options' );
 
-				if ( 'other' === $this.val() ) {
+				if ( 'other' === select.val() ) {
 					date_range_options.removeClass( 'screen-reader-text' );
 				} else {
 					date_range_options.addClass( 'screen-reader-text' );
