@@ -2189,11 +2189,10 @@ function display_export_report() {
         <div class="metabox-holder">
             <div id="post-body">
                 <div id="post-body-content">
-
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
                     <div class="postbox edd-export-earnings-report">
-                        <h3><span><?php esc_html_e( 'Export Earnings Report', 'easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e( 'Export Earnings Report', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
@@ -2209,11 +2208,11 @@ function display_export_report() {
 									<span class="spinner"></span>
 								</span>
                             </form>
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
                     <div class="postbox edd-export-order-history">
-                        <h3><span><?php esc_html_e('Export Order History','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e('Export Order History','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of all orders recorded.', 'easy-digital-downloads' ); ?></p>
 
@@ -2237,11 +2236,11 @@ function display_export_report() {
 								</span>
                             </form>
 
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
                     <div class="postbox edd-export-customers">
-                        <h3><span><?php esc_html_e('Export Customers in CSV','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e('Export Customers in CSV','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of customers.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
@@ -2250,11 +2249,11 @@ function display_export_report() {
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
                                 <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
                             </form>
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
                     <div class="postbox edd-export-downloads">
-                        <h3><span><?php esc_html_e('Export Download Products in CSV','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e('Export Download Products in CSV','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of download products. To download a CSV for all download products, leave "Choose a Download" as it is.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
@@ -2263,11 +2262,11 @@ function display_export_report() {
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
                                 <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
                             </form>
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
                     <div class="postbox edd-export-download-history">
-                        <h3><span><?php esc_html_e('Export Download History in CSV','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e('Export Download History in CSV','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of file downloads. To download a CSV for all file downloads, leave "Choose a Download" as it is.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
@@ -2278,11 +2277,11 @@ function display_export_report() {
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
                                 <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
                             </form>
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
                     <div class="postbox edd-export-api-requests">
-                        <h3><span><?php esc_html_e('Export API Requests in CSV','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e('Export API Requests in CSV','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of API request logs.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-api-requests" class="edd-export-form edd-import-export-form" method="post">
@@ -2292,11 +2291,11 @@ function display_export_report() {
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
                                 <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
                             </form>
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
                     <div class="postbox edd-export-payment-history">
-                        <h3><span><?php esc_html_e('Export Sales', 'easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e('Export Sales', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of all sales.', 'easy-digital-downloads' ); ?></p>
 
@@ -2311,15 +2310,14 @@ function display_export_report() {
 									<span class="spinner"></span>
 								</span>
                             </form>
-                        </div><!-- .inside -->
-                    </div><!-- .postbox -->
+                        </div>
+                    </div>
 
 					<?php do_action( 'edd_reports_tab_export_content_bottom' ); ?>
-
-                </div><!-- .post-body-content -->
-            </div><!-- .post-body -->
-        </div><!-- .metabox-holder -->
-    </div><!-- #edd-dashboard-widgets-wrap -->
+                </div>
+            </div>
+        </div>
+    </div>
 	<?php
 }
 
