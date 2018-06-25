@@ -505,14 +505,16 @@ class Stats {
 
 		$status_sql = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
 
+		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
+
 		$sql = "SELECT COUNT(id) / o.total * 100 AS `refund_rate`
 				FROM {$this->query_vars['table']}
 				CROSS JOIN (
 					SELECT COUNT(id) AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$status_sql} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
