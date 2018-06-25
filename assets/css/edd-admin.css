@@ -1797,6 +1797,11 @@ td.edd_order_price {
 /* Chosen styles
 -------------------------------------------------------------- */
 
+body.js select.edd-select-chosen {
+	height: 27px;
+	opacity: 0.2;
+}
+
 .chosen-container.chosen-container-multi {
 	width: 100% !important;
 }
