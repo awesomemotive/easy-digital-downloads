@@ -27,7 +27,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @var string
 	 * @since 2.4
 	 */
-	public $export_type = 'payments';
+	public $export_type = 'orders';
 
 	/**
 	 * Set the CSV columns
@@ -101,8 +101,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = array(
 				array(
-					'after'     => date( 'Y-n-d 00:00:00', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d 23:59:59', strtotime( $this->end ) ),
+					'after'     => date( 'Y-m-d 00:00:00', strtotime( $this->start ) ),
+					'before'    => date( 'Y-m-d 23:59:59', strtotime( $this->end ) ),
 					'inclusive' => true
 				)
 			);
@@ -216,7 +216,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
 				'currency'     => $order->currency,
 				'ip'           => $order->ip,
-				'mode'         => $order->mode(),
+				'mode'         => $order->mode,
 				'status'       => ( 'publish' === $order->status ) ? 'complete' : $order->status,
 				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
 			);
