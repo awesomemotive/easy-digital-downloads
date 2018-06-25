@@ -9,6 +9,8 @@
  * @since       3.0
  */
 
+namespace EDD\Admin;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class EDD_Sections {
+class Sections {
 
 	/**
 	 * Section ID
@@ -35,7 +37,7 @@ class EDD_Sections {
 	 *
 	 * @var array
 	 */
-	private $sections = array();
+	protected $sections = array();
 
 	/**
 	 * ID of the currently selected section
@@ -190,7 +192,7 @@ class EDD_Sections {
 	 *
 	 * @since 3.0
 	 */
-	private function nonce_field() {
+	protected function nonce_field() {
 		wp_nonce_field(
 			'edd_' . $this->id . '_sections_nonce',
 			'edd_' . $this->id . 'nonce_sections',
@@ -205,7 +207,7 @@ class EDD_Sections {
 	 *
 	 * @return string
 	 */
-	private function get_all_section_links() {
+	protected function get_all_section_links() {
 		ob_start();
 
 		// Loop through sections
@@ -240,7 +242,7 @@ class EDD_Sections {
 	 *
 	 * @return string
 	 */
-	private function get_all_section_contents() {
+	protected function get_all_section_contents() {
 		ob_start();
 
 		// Maybe reduce sections down to single
