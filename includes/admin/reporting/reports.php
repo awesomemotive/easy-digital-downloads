@@ -1840,7 +1840,7 @@ function edd_register_customer_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'top_five_customers', array(
-			'label' => __( 'Top Five Customers of All Time', 'easy-digital-downloads' ),
+			'label' => __( 'Top Five Customers &mdash; All Time', 'easy-digital-downloads' ),
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
@@ -1852,7 +1852,7 @@ function edd_register_customer_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'most_valuable_customers', array(
-			'label' => __( 'Most Valuable Customers of ', 'easy-digital-downloads' ) . $label,
+			'label' => __( 'Most Valuable Customers', 'easy-digital-downloads' ) . ' &mdash; '. $label,
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
@@ -1864,7 +1864,7 @@ function edd_register_customer_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'new_customers', array(
-			'label' => __( 'New Customers', 'easy-digital-downloads' ),
+			'label' => __( 'New Customers', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function () use ( $filter ) {
