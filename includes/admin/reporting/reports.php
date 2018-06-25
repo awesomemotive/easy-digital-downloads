@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 function edd_reports_sections() {
 
 	// Instantiate the Sections class and sections array
-	$sections   = new EDD_Sections();
+	$sections   = new EDD\Admin\Reports_Sections();
 	$c_sections = array();
 
 	// Setup sections variables

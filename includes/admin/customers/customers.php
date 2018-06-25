@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 function edd_customers_sections( $customer ) {
 
 	// Instantiate the Sections class and sections array
-	$sections   = new EDD_Sections();
+	$sections   = new EDD\Admin\Sections();
 	$c_sections = array();
 
 	// Setup sections variables
