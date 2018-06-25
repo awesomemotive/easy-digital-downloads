@@ -1095,7 +1095,8 @@ function edd_register_payment_gateways_report( $reports ) {
 					'gateway_stats',
 				),
 				'charts' => array(
-					'gateway_breakdown',
+					'gateway_sales_breakdown',
+					'gateway_earnings_breakdown',
 				),
 			),
 			'filters'   => array( 'gateways' ),
@@ -1222,19 +1223,41 @@ function edd_register_payment_gateways_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'gateway_breakdown', array(
-			'label' => __( 'Payment Gateway Usage', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+		$gateway_list = array_map( 'edd_get_gateway_admin_label', array_keys( edd_get_payment_gateways() ) );
+
+		$reports->register_endpoint( 'gateway_sales_breakdown', array(
+			'label' => __( 'Gateway Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function() use ( $filter ) {
+                        $stats = new EDD\Orders\Stats();
+						$g = $stats->get_gateway_sales( array(
+							'grouped' => true,
+							'range'   => $filter['range'],
+						) );
 
+						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
+
+                        foreach ( $g as $data ) {
+                            $gateways[ $data->gateway ] = $data->total;
+                        }
+
+                        $gateways = array_map( function( $v ) {
+                            return null === $v
+                                ? 0
+                                : $v;
+                        }, $gateways );
+
+						return array(
+							'sales' => array_values( $gateways ),
+						);
 					},
 					'type' => 'pie',
 					'options' => array(
 						'cutoutPercentage' => 0,
 						'datasets'         => array(
 							'sales' => array(
-								'label'           => __( 'Sales' ),
+								'label'           => __( 'Sales', 'easy-digital-downloads' ),
 								'backgroundColor' => array(
 									'rgb(133,175,91)',
 									'rgb(9,149,199)',
@@ -1244,7 +1267,55 @@ function edd_register_payment_gateways_report( $reports ) {
 								),
 							),
 						),
-						'labels' => array(  )
+						'labels' => $gateway_list,
+					),
+				),
+			)
+		) );
+
+		$reports->register_endpoint( 'gateway_earnings_breakdown', array(
+			'label' => __( 'Gateway Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function() use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						$g = $stats->get_gateway_earnings( array(
+							'grouped' => true,
+							'range'   => $filter['range'],
+						) );
+
+						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
+
+						foreach ( $g as $data ) {
+							$gateways[ $data->gateway ] = $data->earnings;
+						}
+
+						$gateways = array_map( function( $v ) {
+							return null === $v
+								? 0.00
+								: $v;
+						}, $gateways );
+
+						return array(
+							'earnings' => array_values( $gateways ),
+						);
+					},
+					'type' => 'pie',
+					'options' => array(
+						'cutoutPercentage' => 0,
+						'datasets'         => array(
+							'earnings' => array(
+								'label'           => __( 'Earnings', 'easy-digital-downloads' ),
+								'backgroundColor' => array(
+									'rgb(133,175,91)',
+									'rgb(9,149,199)',
+									'rgb(8,189,231)',
+									'rgb(137,163,87)',
+									'rgb(27,98,122)',
+								),
+							),
+						),
+						'labels' => $gateway_list,
 					),
 				),
 			)
