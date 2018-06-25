@@ -52,6 +52,16 @@ function edd_reports_sections() {
 		}
 	}
 
+	// Export tab needs to be added separately.
+	if ( current_user_can( 'export_shop_reports' ) ) {
+		$c_sections[] = array(
+			'id'       => 'export',
+			'label'    => __( 'Export', 'easy-digital-downloads' ),
+			'icon'     => 'migrate',
+			'callback' => array( 'edd_output_report_callback', array( 'export' ) ),
+		);
+    }
+
 	// Set the customer sections
 	$sections->set_sections( $c_sections );
 
