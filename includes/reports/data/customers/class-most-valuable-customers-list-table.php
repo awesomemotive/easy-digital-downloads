@@ -74,6 +74,24 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	}
 
 	/**
+	 * Retrieve the table columns.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array $columns Array of all the list table columns.
+	 */
+	public function get_columns() {
+		$columns = parent::get_columns();
+
+		// Remove the checkbox if it exists.
+		if ( isset( $columns['cb'] ) ) {
+			unset( $columns['cb'] );
+		}
+
+		return $columns;
+	}
+
+	/**
 	 * Return empty array to disable sorting.
 	 *
 	 * @since 3.0
