@@ -52,16 +52,6 @@ function edd_reports_sections() {
 		}
 	}
 
-	// Export tab needs to be added separately.
-	if ( current_user_can( 'export_shop_reports' ) ) {
-		$c_sections[] = array(
-			'id'       => 'export',
-			'label'    => __( 'Export', 'easy-digital-downloads' ),
-			'icon'     => 'migrate',
-			'callback' => array( 'edd_output_report_callback', array( 'export' ) ),
-		);
-    }
-
 	// Set the customer sections
 	$sections->set_sections( $c_sections );
 
@@ -78,7 +68,7 @@ function edd_reports_sections() {
  */
 function edd_output_report_callback( $report_id = '' ) {
 	$report = EDD\Reports\get_report( $report_id );
-	
+
 	/**
 	 * Fires at the top of the content area of a Reports tab.
 	 *
@@ -2162,6 +2152,32 @@ function edd_register_customer_report( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_customer_report' );
+
+/**
+ * Register export report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_export_report( $reports ) {
+    try {
+	    $reports->add_report( 'export', array(
+		    'label'      => __( 'Export', 'easy-digital-downloads' ),
+		    'icon'       => 'migrate',
+		    'priority'   => 40,
+		    'endpoints'  => array(
+			    'tiles' => array(
+				    
+			    ),
+		    ),
+		    'capability' => 'export_shop_reports',
+	    ) );
+    } catch ( \EDD_Exception $exception ) {
+	    edd_debug_log_exception( $exception );
+    }
+}
+add_action( 'edd_reports_init', 'edd_register_export_report' );
 
 /**
  * Renders the Reports Downloads Table
