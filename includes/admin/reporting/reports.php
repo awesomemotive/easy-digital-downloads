@@ -859,15 +859,81 @@ function edd_register_refunds_report( $reports ) {
 		// Variables to hold date filter values.
 		$options = Reports\get_dates_filter_options();
 		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
 
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
 			'icon'      => 'image-rotate',
 			'priority'  => 15,
 			'endpoints' => array(
-				'tiles' => array( 'test_tile', 'another_test_tile' )
+				'tiles' => array(
+					'refund_count_and_amount',
+					'average_refund_amount',
+					'average_time_to_refund',
+					'refund_rate',
+				),
 			),
-            'filters'   => array( 'products' )
+			'filters'   => array( 'products' ),
+		) );
+
+		$reports->register_endpoint( 'refund_count_and_amount', array(
+			'label' => __( 'Number / Amount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_refund_amount', array(
+			'label' => __( 'Average Refund Amount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_time_to_refund', array(
+			'label' => __( 'Average Time to Refund', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'refund_rate', array(
+			'label' => __( 'Refund Rate', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
 		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
