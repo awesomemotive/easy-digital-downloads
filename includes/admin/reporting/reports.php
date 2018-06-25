@@ -162,30 +162,12 @@ function edd_register_core_reports( $reports ) {
 			),
 		) );
 
-		$reports->add_report( 'downloads', array(
-			'label'     => edd_get_label_plural(),
-			'priority'  => 10,
-			'icon'      => 'download',
-			'endpoints' => array(
-				'tiles' => array( 'test_tile', 'another_test_tile' )
-			),
-		) );
-
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
 			'icon'      => 'image-rotate',
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles' => array( 'test_tile', 'another_test_tile' )
-			),
-		) );
-
-		$reports->add_report( 'file_downloads', array(
-			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
-			'icon'      => 'download',
-			'priority'  => 30,
-			'endpoints' => array(
-				'tiles' => array( 'test_tile' )
 			),
 		) );
 
@@ -236,8 +218,7 @@ function edd_register_overview_report( $reports ) {
 					'overview_taxes',
 				),
 				'charts' => array(
-					'overview_sales_chart',
-					'overview_earnings_chart',
+					'overview_sales_earnings_chart',
 				),
 			),
 		) );
@@ -433,8 +414,8 @@ function edd_register_overview_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'overview_sales_chart', array(
-			'label' => __( 'Sales', 'easy-digital-downloads' ),
+		$reports->register_endpoint( 'overview_sales_earnings_chart', array(
+			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function () use ( $filter ) {
@@ -461,14 +442,15 @@ function edd_register_overview_report( $reports ) {
 						$end   = $dates['end']->format( 'Y-m-d' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
+							"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_orders} edd_o
 					         WHERE date_created >= %s AND date_created <= %s 
                              GROUP BY {$sql_clauses['groupby']}
                              ORDER BY {$sql_clauses['orderby']} ASC",
 							$start, $end ) );
 
-						$sales = array();
+						$sales    = array();
+						$earnings = array();
 
 						while ( strtotime( $start ) <= strtotime( $end ) ) {
 							$day = ( true === $day_by_day )
@@ -480,6 +462,9 @@ function edd_register_overview_report( $reports ) {
 							$sales[ $timestamp ][] = $timestamp;
 							$sales[ $timestamp ][] = 0;
 
+							$earnings[ $timestamp ][] = $timestamp;
+							$earnings[ $timestamp ][] = 0.00;
+
 							$start = ( true === $day_by_day )
 								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
 								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
@@ -492,97 +477,27 @@ function edd_register_overview_report( $reports ) {
 
 							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
 
-							$sales[ $timestamp ][1] = $result->total;
+							$sales[ $timestamp ][1]    = $result->sales;
+							$earnings[ $timestamp ][1] = floatval( $result->earnings );
 						}
 
-						$sales = array_values( $sales );
+						$sales    = array_values( $sales );
+						$earnings = array_values( $earnings );
 
-						return array( 'sales' => $sales );
+						return array(
+							'sales'    => $sales,
+							'earnings' => $earnings,
+						);
 					},
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
 							'sales' => array(
 								'label'           => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'     => 'rgb(39,148,218)',
-								'backgroundColor' => 'rgb(39,148,218)',
+								'borderColor'     => 'rgb(153,102,255)',
+								'backgroundColor' => 'rgb(153,102,255)',
 								'fill'            => false,
 							),
-						),
-					),
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'overview_earnings_chart', array(
-			'label' => __( 'Earnings', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function () use ( $filter ) {
-						global $wpdb;
-
-						$dates      = Reports\get_dates_filter( 'objects' );
-						$day_by_day = Reports\get_dates_filter_day_by_day();
-
-						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-						);
-
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						}
-
-						$start = $dates['start']->format( 'Y-m-d' );
-						$end   = $dates['end']->format( 'Y-m-d' );
-
-						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT SUM(total) AS total, {$sql_clauses['select']}
-					         FROM {$wpdb->edd_orders} edd_o
-					         WHERE date_created >= %s AND date_created <= %s 
-                             GROUP BY {$sql_clauses['groupby']}
-                             ORDER BY {$sql_clauses['orderby']} ASC",
-							$start, $end ) );
-
-						$earnings = array();
-
-						while ( strtotime( $start ) <= strtotime( $end ) ) {
-							$day = ( true === $day_by_day )
-								? $dates['start']->day
-								: 1;
-
-							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
-
-							$earnings[ $timestamp ][] = $timestamp;
-							$earnings[ $timestamp ][] = 0;
-
-							$start = ( true === $day_by_day )
-								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
-								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
-						}
-
-						foreach ( $results as $result ) {
-							$day = ( true === $day_by_day )
-								? $result->day
-								: 1;
-
-							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
-
-							$earnings[ $timestamp ][1] = $result->total;
-						}
-
-						$earnings = array_values( $earnings );
-
-						return array( 'earnings' => $earnings );
-					},
-					'type'          => 'line',
-					'options'       => array(
-						'datasets' => array(
 							'earnings' => array(
 								'label'           => __( 'Earnings', 'easy-digital-downloads' ),
 								'borderColor'     => 'rgb(39,148,218)',
@@ -599,6 +514,378 @@ function edd_register_overview_report( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_overview_report' );
+
+/**
+ * Register downloads report and endpoints.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_downloads_report( $reports ) {
+	try {
+
+		// Variables to hold date filter values.
+		$options = Reports\get_dates_filter_options();
+		$filter  = Reports\get_filter_value( 'dates' );
+		$label   = $options[ $filter['range'] ];
+
+		$download_data = Reports\get_filter_value( 'products' );
+		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
+			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+			: false;
+
+		$download_label = '';
+
+		if ( $download_data ) {
+			$download = edd_get_download( $download_data['download_id'] );
+
+			if ( $download_data['price_id'] ) {
+				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
+			} else {
+				$download_label = esc_html( ' (' . $download->post_title . ')' );
+			}
+		}
+
+		$reports->add_report( 'downloads', array(
+			'label'     => edd_get_label_plural(),
+			'priority'  => 10,
+			'icon'      => 'download',
+			'endpoints' => array(
+				'tiles'  => array(
+					'most_valuable_download',
+					'average_download_earnings',
+					'download_sales_earnings',
+				),
+				'charts' => array(
+					'download_sales_by_variations',
+					'download_earnings_by_variations',
+                    'download_sales_earnings_chart'
+				),
+				'tables' => array(
+					'top_selling_downloads',
+					'earnings_by_taxonomy',
+				),
+			),
+            'filters'   => array( 'products' )
+		) );
+
+		$reports->register_endpoint( 'most_valuable_download', array(
+			'label' => sprintf( __( 'Most Valuable %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						$d = $stats->get_most_valuable_order_items( array(
+							'range' => $filter['range'],
+						) );
+
+						$d = $d[0];
+
+						$title = $d->object->post_title;
+
+						if ( $d->object->has_variable_prices() ) {
+							$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
+
+							$title .= is_array( $prices )
+                                ? ': ' . $prices[0]['name']
+                                : '';
+                        }
+
+                        return esc_html( $title );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_download_earnings', array(
+			'label' => sprintf( __( 'Average %s Earnings', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_order_item_earnings( array(
+							'function' => 'AVG',
+							'range'    => $filter['range'],
+							'output'   => 'formatted',
+						) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		if ( ! empty( $download_label ) ) {
+		    $reports->register_endpoint( 'download_sales_earnings', array(
+			    'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
+			    'views' => array(
+				    'tile' => array(
+					    'data_callback' => function () use ( $filter, $download_data ) {
+						    $stats = new EDD\Orders\Stats();
+
+						    $earnings = $stats->get_order_item_earnings( array(
+							    'product_id' => absint( $download_data['download_id'] ),
+							    'price_id'   => absint( $download_data['price_id'] ),
+							    'range'      => $filter['range'],
+							    'output'     => 'formatted',
+						    ) );
+
+						    $sales = $stats->get_order_item_count( array(
+							    'product_id' => absint( $download_data['download_id'] ),
+							    'price_id'   => absint( $download_data['price_id'] ),
+							    'range'      => $filter['range'],
+						    ) );
+
+						    return apply_filters( 'edd_reports_downloads_sales_earnings', esc_html( $sales . ' / ' . $earnings ) );
+					    },
+					    'display_args'  => array(
+						    'context'          => 'tertiary',
+						    'comparison_label' => $label . $download_label,
+					    ),
+				    ),
+			    ),
+            ) );
+        }
+
+		$reports->register_endpoint( 'earnings_by_taxonomy', array(
+			'label' => __( 'Earnings by Taxonomy', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-earnings-by-taxonomy-list-table.php',
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'top_selling_downloads', array(
+			'label' => sprintf( __( 'Top Selling %s', 'easy-digital-downloads' ), edd_get_label_plural() ) . ' &mdash; ' . $label,
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Top_Selling_Downloads_List_Table',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-top-selling-downloads-list-table.php',
+					),
+				),
+			),
+		) );
+
+        if ( $download_data && $download->has_variable_prices() ) {
+	        $prices = $download->get_prices();
+
+	        $reports->register_endpoint( 'download_sales_by_variations', array(
+		        'label' => __( 'Sales by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
+		        'views' => array(
+			        'chart' => array(
+				        'data_callback' => function() use ( $filter, $download_data, $prices ) {
+					        $stats = new EDD\Orders\Stats();
+					        $sales = $stats->get_order_item_count( array(
+						        'product_id' => absint( $download_data['download_id'] ),
+						        'range'      => $filter['range'],
+						        'grouped'    => true,
+					        ) );
+
+					        foreach ( $sales as $data ) {
+						        $prices[ $data->price_id ]['sales'] = absint( $data->total );
+					        }
+
+					        $sales = array_values( wp_list_pluck( $prices, 'sales' ) );
+
+					        return array(
+						        'sales' => $sales,
+					        );
+				        },
+				        'type' => 'pie',
+				        'options' => array(
+					        'cutoutPercentage' => 0,
+					        'datasets'         => array(
+						        'sales' => array(
+							        'label'           => __( 'Sales' ),
+							        'backgroundColor' => array(
+								        'rgb(133,175,91)',
+								        'rgb(9,149,199)',
+								        'rgb(8,189,231)',
+								        'rgb(137,163,87)',
+								        'rgb(27,98,122)',
+							        ),
+						        ),
+					        ),
+					        'labels' => array_values( wp_list_pluck( $prices, 'name' ) )
+				        ),
+			        ),
+		        )
+	        ) );
+
+	        $reports->register_endpoint( 'download_earnings_by_variations', array(
+		        'label' => __( 'Earnings by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
+		        'views' => array(
+			        'chart' => array(
+				        'data_callback' => function() use ( $filter, $download_data, $prices ) {
+					        $stats = new EDD\Orders\Stats();
+					        $earnings = $stats->get_order_item_earnings( array(
+						        'product_id' => absint( $download_data['download_id'] ),
+						        'range'      => $filter['range'],
+						        'grouped'    => true,
+					        ) );
+
+					        foreach ( $earnings as $data ) {
+						        $prices[ $data->price_id ]['earnings'] = floatval( $data->total );
+					        }
+
+					        $earnings = array_values( wp_list_pluck( $prices, 'earnings' ) );
+
+					        return array(
+						        'earnings' => $earnings,
+					        );
+				        },
+				        'type' => 'pie',
+				        'options' => array(
+					        'cutoutPercentage' => 0,
+					        'datasets'         => array(
+						        'earnings' => array(
+							        'label'           => __( 'Earnings' ),
+							        'backgroundColor' => array(
+								        'rgb(133,175,91)',
+								        'rgb(9,149,199)',
+								        'rgb(8,189,231)',
+								        'rgb(137,163,87)',
+								        'rgb(27,98,122)',
+							        ),
+						        ),
+					        ),
+					        'labels' => array_values( wp_list_pluck( $prices, 'name' ) )
+				        ),
+			        ),
+		        )
+	        ) );
+        }
+
+        if ( $download_data ) {
+
+            $download_label = $download->post_title;
+
+            if ( ! empty( $download_data['price_id'] ) ) {
+	            $prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
+
+	            $download_label .= ': ' . $prices[0]['name'];
+            }
+
+	        $reports->register_endpoint( 'download_sales_earnings_chart', array(
+		        'label' => __( 'Sales and Earnings for ', 'easy-digital-downloads' ) . esc_html( $download_label ),
+		        'views' => array(
+			        'chart' => array(
+				        'data_callback' => function () use ( $filter, $download_data ) {
+					        global $wpdb;
+
+					        $dates      = Reports\get_dates_filter( 'objects' );
+					        $day_by_day = Reports\get_dates_filter_day_by_day();
+
+					        $sql_clauses = array(
+						        'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
+						        'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+						        'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+					        );
+
+					        if ( ! $day_by_day ) {
+						        $sql_clauses = array(
+							        'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+							        'groupby' => 'YEAR(date_created), MONTH(date_created)',
+							        'orderby' => 'YEAR(date_created), MONTH(date_created)',
+						        );
+					        }
+
+					        $start = $dates['start']->format( 'Y-m-d' );
+					        $end   = $dates['end']->format( 'Y-m-d' );
+
+					        $price_id = ! empty( $download_data['price_id'] )
+						        ? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
+						        : '';
+
+					        $results = $wpdb->get_results( $wpdb->prepare(
+						        "SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
+                                 FROM {$wpdb->edd_order_items} edd_oi
+                                 WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s 
+                                 GROUP BY {$sql_clauses['groupby']}
+                                 ORDER BY {$sql_clauses['orderby']} ASC",
+						    $download_data['download_id'], $start, $end ) );
+
+					        $sales    = array();
+					        $earnings = array();
+
+					        while ( strtotime( $start ) <= strtotime( $end ) ) {
+						        $day = ( true === $day_by_day )
+							        ? $dates['start']->day
+							        : 1;
+
+						        $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+						        $sales[ $timestamp ][] = $timestamp;
+						        $sales[ $timestamp ][] = 0;
+
+						        $earnings[ $timestamp ][] = $timestamp;
+						        $earnings[ $timestamp ][] = 0;
+
+						        $start = ( true === $day_by_day )
+							        ? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+							        : $dates['start']->addMonth( 1 )->format( 'Y-m' );
+					        }
+
+					        foreach ( $results as $result ) {
+						        $day = ( true === $day_by_day )
+							        ? $result->day
+							        : 1;
+
+						        $timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+						        $sales[ $timestamp ][1] = $result->sales;
+						        $earnings[ $timestamp ][1] = $result->earnings;
+					        }
+
+					        $sales    = array_values( $sales );
+					        $earnings = array_values( $earnings );
+
+					        return array(
+						        'sales'    => $sales,
+						        'earnings' => $earnings,
+					        );
+				        },
+				        'type'          => 'line',
+				        'options'       => array(
+					        'datasets' => array(
+						        'sales' => array(
+							        'label'           => __( 'Sales', 'easy-digital-downloads' ),
+							        'borderColor'     => 'rgb(153,102,255)',
+							        'backgroundColor' => 'rgb(153,102,255)',
+							        'fill'            => false,
+						        ),
+						        'earnings' => array(
+							        'label'           => __( 'Earnings', 'easy-digital-downloads' ),
+							        'borderColor'     => 'rgb(39,148,218)',
+							        'backgroundColor' => 'rgb(39,148,218)',
+							        'fill'            => false,
+						        ),
+					        ),
+				        ),
+			        ),
+		        ),
+	        ) );
+        }
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+
+}
+add_action( 'edd_reports_init', 'edd_register_downloads_report' );
 
 /**
  * Register payment gateways report and endpoints.
@@ -780,7 +1067,8 @@ function edd_register_taxes_report( $reports ) {
 		$filter  = Reports\get_filter_value( 'dates' );
 		$label   = $options[ $filter['range'] ];
 
-		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+		$download_data = Reports\get_filter_value( 'products' );
+		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
@@ -856,7 +1144,8 @@ function edd_register_file_downloads_report( $reports ) {
 		$filter  = Reports\get_filter_value( 'dates' );
 		$label   = $options[ $filter['range'] ];
 
-		$download_data = 'all' !== Reports\get_filter_value( 'products' )
+		$download_data = Reports\get_filter_value( 'products' );
+		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
@@ -900,7 +1189,8 @@ function edd_register_file_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-						$download = 'all' !== Reports\get_filter_value( 'products' )
+						$download = Reports\get_filter_value( 'products' );
+						$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
 							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 							: array( 'download_id' => '', 'price_id' => '' );
 
@@ -1408,29 +1698,64 @@ function edd_register_customer_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$start_date = date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) );
-						$end_date   = date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) );
+						$dates      = Reports\get_dates_filter( 'objects' );
+						$day_by_day = Reports\get_dates_filter_day_by_day();
 
-						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, COUNT(edd_c.id) AS new_customers
-					         FROM {$wpdb->edd_customers} edd_c
-					         WHERE ( ( date_created >= %s
-                             AND date_created <= %s ) ) 
-                             GROUP BY YEAR(date_created), MONTH(date_created), DAY(date_created)
-                             ORDER BY YEAR(date_created), MONTH(date_created), DAY(date_created) ASC",
-							$start_date, $end_date ) );
+						$sql_clauses = array(
+							'select'  => 'YEAR(c.date_created) AS year, MONTH(c.date_created) AS month, DAY(c.date_created) AS day',
+							'groupby' => 'YEAR(c.date_created), MONTH(c.date_created), DAY(c.date_created)',
+							'orderby' => 'YEAR(c.date_created), MONTH(c.date_created), DAY(c.date_created)',
+						);
 
-						$new_customers = array();
-
-						$i = 0;
-						foreach ( $results as $result ) {
-							$new_customers[ $i ][] = \Carbon\Carbon::create( $result->year, $result->month, $result->day, 0, 0, 0 )->timestamp;
-							$new_customers[ $i ][] = $result->new_customers;
-
-							$i++;
+						if ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(c.date_created) AS year, MONTH(c.date_created) AS month',
+								'groupby' => 'YEAR(c.date_created), MONTH(c.date_created)',
+								'orderby' => 'YEAR(c.date_created), MONTH(c.date_created)',
+							);
 						}
 
-						return array( 'customers' => $new_customers );
+						$start = $dates['start']->format( 'Y-m-d' );
+						$end   = $dates['end']->format( 'Y-m-d' );
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
+					         FROM {$wpdb->edd_customers} c
+					         WHERE c.date_created >= %s AND c.date_created <= %s 
+					         GROUP BY {$sql_clauses['groupby']}
+					         ORDER BY {$sql_clauses['orderby']} ASC",
+							$start, $end ) );
+
+						$customers = array();
+
+						while ( strtotime( $start ) <= strtotime( $end ) ) {
+							$day = ( true === $day_by_day )
+								? $dates['start']->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+							$customers[ $timestamp ][] = $timestamp;
+							$customers[ $timestamp ][] = 0;
+
+							$start = ( true === $day_by_day )
+								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+						}
+
+						foreach ( $results as $result ) {
+							$day = ( true === $day_by_day )
+								? $result->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+							$customers[ $timestamp ][1] = $result->total;
+						}
+
+						$customers = array_values( $customers );
+
+						return array( 'customers' => $customers );
 					},
 					'type'          => 'line',
 					'options'       => array(
@@ -1456,6 +1781,7 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
  * Renders the Reports Downloads Table
  *
  * @since 1.3
+ * @deprecated
  * @uses EDD_Download_Reports_Table::prepare_items()
  * @uses EDD_Download_Reports_Table::display()
  * @return void
@@ -1482,12 +1808,12 @@ function edd_reports_downloads_table() {
 
 	<?php
 }
-add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
 /**
  * Renders the detailed report for a specific product
  *
  * @since 1.9
+ * @deprecated
  * @return void
  */
 function edd_reports_download_details() {
@@ -1502,7 +1828,6 @@ function edd_reports_download_details() {
 
 	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
 }
-add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
 
 
 /**
