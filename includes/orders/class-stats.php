@@ -399,7 +399,7 @@ class Stats {
 	 * @return int Number of refunded orders.
 	 */
 	public function get_order_refund_count( $query = array() ) {
-		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
+		$query['status'] = array( 'refunded' );
 
 		return $this->get_order_count( $query );
 	}
@@ -432,7 +432,7 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
+		$query['status'] = array( 'refunded' );
 
 		return $this->get_order_earnings( $query );
 	}
