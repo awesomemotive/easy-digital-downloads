@@ -2238,17 +2238,23 @@ function display_export_report() {
                         </div>
                     </div>
 
-                    <div class="postbox edd-export-taxed-orders">
+                    <div class="postbox edd-export-earnings-report">
                         <h3 class="hndle"><span><?php esc_html_e( 'Export Taxed Orders', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of all orders taxed.', 'easy-digital-downloads' ); ?></p>
-                            <form id="edd-export-taxed-orders" class="edd-export-form edd-import-export-form" method="post">
-				                <?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
-				                <?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
-				                <?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?>
-				                <?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
-				                <?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
-				                <?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+                            <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
+		                        <?php echo EDD()->html->date_field( array( 'id' => 'edd-taxed-orders-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
+		                        <?php echo EDD()->html->date_field( array( 'id' => 'edd-taxed-orders-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
+                                <select name="status">
+                                    <option value="any"><?php esc_html_e( 'All Statuses', 'easy-digital-downloads' ); ?></option>
+			                        <?php
+			                        $statuses = edd_get_payment_statuses();
+			                        foreach( $statuses as $status => $label ) {
+				                        echo '<option value="' . $status . '">' . $label . '</option>';
+			                        }
+			                        ?>
+                                </select>
+		                        <?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Orders_Export"/>
                                 <span>
 									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
