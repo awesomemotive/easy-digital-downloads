@@ -239,9 +239,9 @@ function edd_include_api_requests_batch_processor( $class ) {
 }
 
 /**
- * Register the earnings report batch exporter
+ * Register the taxed orders report batch exporter.
  *
- * @since  2.7
+ * @since 3.0
  */
 function edd_register_taxed_orders_batch_export() {
 	add_action( 'edd_batch_export_class_include', 'edd_include_taxed_orders_batch_processor', 10, 1 );
@@ -249,14 +249,37 @@ function edd_register_taxed_orders_batch_export() {
 add_action( 'edd_register_batch_exporter', 'edd_register_taxed_orders_batch_export', 10 );
 
 /**
- * Loads the earnings report batch process if needed
+ * Loads the taxed orders report batch process if needed.
  *
- * @since  2.7
- * @param  string $class The class being requested to run for the batch export
- * @return void
+ * @since 3.0
+ *
+ * @param string $class The class being requested to run for the batch export
  */
 function edd_include_taxed_orders_batch_processor( $class ) {
 	if ( 'EDD_Batch_Taxed_Orders_Export' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-taxed-orders.php';
+	}
+}
+
+/**
+ * Register the taxed orders report batch exporter.
+ *
+ * @since 3.0
+ */
+function edd_register_taxed_customers_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_taxed_customers_batch_processor', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_taxed_customers_batch_export', 10 );
+
+/**
+ * Loads the taxed customers report batch process if needed.
+ *
+ * @since 3.0
+ *
+ * @param string $class The class being requested to run for the batch export
+ */
+function edd_include_taxed_customers_batch_processor( $class ) {
+	if ( 'EDD_Batch_Taxed_Customers_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-taxed-customers.php';
 	}
 }
