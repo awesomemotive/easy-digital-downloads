@@ -1797,6 +1797,11 @@ td.edd_order_price {
 /* Chosen styles
 -------------------------------------------------------------- */
 
+body.js select.edd-select-chosen {
+	height: 27px;
+	opacity: 0.2;
+}
+
 .chosen-container.chosen-container-multi {
 	width: 100% !important;
 }
@@ -2652,13 +2657,13 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 .edd-vertical-sections {
 	overflow: visible;
-	background: #fcfcfc;
-	background: linear-gradient( 90deg, #fcfcfc 0%, #fcfcfc 20%, #fff 20%, #fff 100% );
+	background: #f5f5f5;
+	background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 20%, #fff 20%, #fff 100% );
 }
 
 @media only screen and ( max-width: 782px ) {
 	.edd-vertical-sections {
-		background: linear-gradient( 90deg, #fcfcfc 0%, #fcfcfc 48px, #fff 48px, #fff 100% );
+		background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 48px, #fff 48px, #fff 100% );
 	}
 }
 
