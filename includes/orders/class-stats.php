@@ -493,7 +493,7 @@ class Stats {
 	 *
 	 * @return float|int Rate of refunded orders.
 	 */
-	public function get_refund_rate( $query ) {
+	public function get_refund_rate( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
@@ -512,13 +512,18 @@ class Stats {
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$this->query_vars['status_sql']} {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
 		$total = null === $result
 			? 0
 			: round( $result, 2 );
+
+		if ( 'formatted' === $this->query_vars['output'] ) {
+			$total .= '%';
+			$total = esc_html( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
