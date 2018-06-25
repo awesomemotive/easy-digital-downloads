@@ -591,7 +591,7 @@ class Base extends \EDD\Database\Base {
 			 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
 			 * @param object $item_query        The object instance.
 			 */
-			$found_items_query = (string) apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
+			$found_items_query = (string) apply_filters_ref_array( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), array( 'SELECT FOUND_ROWS()', &$this ) );
 
 			// Maybe query for found items
 			if ( ! empty( $found_items_query ) ) {
@@ -933,7 +933,7 @@ class Base extends \EDD\Database\Base {
 		 * @param array  $pieces A compacted array of item query clauses.
 		 * @param object &$this  Current instance passed by reference.
 		 */
-		$clauses = apply_filters_ref_array( $this->apply_prefix( 'item_clauses' ), array( $query, &$this ) );
+		$clauses = (array) apply_filters_ref_array( $this->apply_prefix( "{$this->item_name_plural}_query_clauses" ), array( $query, &$this ) );
 
 		// Setup request
 		$this->set_request_clauses( $clauses );
@@ -1232,11 +1232,11 @@ class Base extends \EDD\Database\Base {
 			 *
 			 * @since 3.0
 			 *
-			 * @param array        $search_columns Array of column names to be searched.
-			 * @param string       $search         Text being searched.
-			 * @param \EDD\Database\Queries\Base $this           The current \EDD\Database\Queries\Base instance.
+			 * @param array  $search_columns Array of column names to be searched.
+			 * @param string $search         Text being searched.
+			 * @param object $this           The current \EDD\Database\Queries\Base instance.
 			 */
-			$search_columns = (array) apply_filters( $this->apply_prefix( 'item_search_columns' ), $search_columns, $this->query_vars['search'], $this );
+			$search_columns = (array) apply_filters( $this->apply_prefix( "{$this->item_name_plural}_search_columns" ), $search_columns, $this->query_vars['search'], $this );
 
 			// Add search query clause
 			$where['search'] = $this->get_search_sql( $this->query_vars['search'], $search_columns );
@@ -1466,10 +1466,10 @@ class Base extends \EDD\Database\Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param array        $retval An array of items.
-		 * @param \EDD\Database\Queries\Base &$this  Current instance of \EDD\Database\Queries\Base, passed by reference.
+		 * @param array  $retval An array of items.
+		 * @param object &$this  Current instance of \EDD\Database\Queries\Base, passed by reference.
 		 */
-		$retval = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
+		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
 		// Return filtered results
 		return ! empty( $this->query_vars['fields'] )
@@ -1832,7 +1832,7 @@ class Base extends \EDD\Database\Base {
 	 * @return array
 	 */
 	public function filter_item( $item = array() ) {
-		return (array) apply_filters( $this->apply_prefix( "filter_{$this->item_name}_item" ), $item );
+		return (array) apply_filters_ref_array( $this->apply_prefix( "filter_{$this->item_name}_item" ), array( $item, &$this ) );
 	}
 
 	/**
