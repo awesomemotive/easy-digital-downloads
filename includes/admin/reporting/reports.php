@@ -2235,7 +2235,26 @@ function display_export_report() {
 									<span class="spinner"></span>
 								</span>
                             </form>
+                        </div>
+                    </div>
 
+                    <div class="postbox edd-export-taxed-orders">
+                        <h3 class="hndle"><span><?php esc_html_e( 'Export Taxed Orders', 'easy-digital-downloads' ); ?></span></h3>
+                        <div class="inside">
+                            <p><?php esc_html_e( 'Download a CSV of all orders taxed.', 'easy-digital-downloads' ); ?></p>
+                            <form id="edd-export-taxed-orders" class="edd-export-form edd-import-export-form" method="post">
+				                <?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
+				                <?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
+				                <?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?>
+				                <?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+				                <?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
+				                <?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Orders_Export"/>
+                                <span>
+									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+									<span class="spinner"></span>
+								</span>
+                            </form>
                         </div>
                     </div>
 
