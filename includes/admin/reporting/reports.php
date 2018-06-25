@@ -2212,14 +2212,14 @@ function display_export_report() {
                         </div><!-- .inside -->
                     </div><!-- .postbox -->
 
-                    <div class="postbox edd-export-payment-history">
-                        <h3><span><?php esc_html_e('Export Payment History','easy-digital-downloads' ); ?></span></h3>
+                    <div class="postbox edd-export-order-history">
+                        <h3><span><?php esc_html_e('Export Order History','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of all payments recorded.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of all orders recorded.', 'easy-digital-downloads' ); ?></p>
 
-                            <form id="edd-export-payments" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->date_field( array( 'id' => 'edd-payment-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
-								<?php echo EDD()->html->date_field( array( 'id' => 'edd-payment-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
+                            <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
+								<?php echo EDD()->html->date_field( array( 'id' => 'edd-order-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
+								<?php echo EDD()->html->date_field( array( 'id' => 'edd-order-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
                                 <select name="status">
                                     <option value="any"><?php esc_html_e( 'All Statuses', 'easy-digital-downloads' ); ?></option>
 									<?php
