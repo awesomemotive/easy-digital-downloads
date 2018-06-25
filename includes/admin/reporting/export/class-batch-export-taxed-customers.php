@@ -56,21 +56,58 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
-		$customers = edd_get_customers( array(
-			'number' => 30,
-			'offset' => 30 * ( $this->step - 1 ),
-		) );
+		$data = array();
 
-		$i = 0;
+		$args = array(
+			'number'     => 30,
+			'offset'     => ( $this->step * 30 ) - 30,
+			'status__in' => array( 'publish', 'revoked' ),
+			'order'      => 'ASC',
+			'orderby'    => 'date',
+			'fields'     => 'customer_id',
+		);
 
-		foreach ( $customers as $customer ) {
-			$data[ $i ]['id']        = $customer->id;
-			$data[ $i ]['name']      = $customer->name;
-			$data[ $i ]['email']     = $customer->email;
-			$data[ $i ]['purchases'] = $customer->purchase_count;
-			$data[ $i ]['amount']    = edd_format_amount( $customer->purchase_value );
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = array(
+				array(
+					'after'     => date( 'Y-m-d 00:00:00', strtotime( $this->start ) ),
+					'before'    => date( 'Y-m-d 23:59:59', strtotime( $this->end ) ),
+					'inclusive' => true,
+				),
+			);
+		}
 
-			$i++;
+		add_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10, 2 );
+
+		$customer_ids = edd_get_orders( $args );
+
+		remove_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10 );
+
+		$customer_ids = array_unique( $customer_ids );
+
+		asort( $customer_ids );
+
+		foreach ( $customer_ids as $customer_id ) {
+
+			// Bail if a customer ID was not set.
+			if ( 0 === $customer_id ) {
+				continue;
+			}
+
+			$customer = edd_get_customer( $customer_id );
+
+			// Bail if a customer record does not exist.
+			if ( ! $customer ) {
+				continue;
+			}
+
+			$data[] = array(
+				'id'        => $customer->id,
+				'name'      => $customer->name,
+				'email'     => $customer->email,
+				'purchases' => $customer->purchase_count,
+				'amount'    => edd_format_amount( $customer->purchase_value ),
+			);
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
@@ -88,24 +125,26 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 		$args = array(
-			'fields' => 'ids',
+			'fields'     => 'ids',
+			'status__in' => array( 'publish', 'revoked' ),
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = array(
 				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
+					'after'     => date( 'Y-m-d H:i:s', strtotime( $this->start ) ),
+					'before'    => date( 'Y-m-d H:i:s', strtotime( $this->end ) ),
 					'inclusive' => true,
 				),
 			);
 		}
 
-		if ( 'any' !== $this->status ) {
-			$args['status'] = $this->status;
-		}
+		add_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10, 2 );
 
-		$total      = edd_count_orders( $args );
+		$total = edd_count_orders( $args );
+
+		remove_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10 );
+
 		$percentage = 100;
 
 		if ( $total > 0 ) {
