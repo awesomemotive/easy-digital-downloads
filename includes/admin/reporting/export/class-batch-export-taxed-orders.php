@@ -112,11 +112,11 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 			unset( $args['status'] );
 		}
 
-		add_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10, 2 );
+		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
 
 		$orders = edd_get_orders( $args );
 
-		remove_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10 );
+		remove_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10 );
 
 		foreach ( $orders as $order ) {
 			/** @var EDD\Orders\Order $order */
@@ -296,7 +296,7 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	 *
 	 * @return array
 	 */
-	public function item_clauses( $clauses, $base ) {
+	public function query_clauses( $clauses, $base ) {
 		$clauses['where'] = ! empty( $clauses['where'] )
 			? $clauses['where'] .= ' AND tax > 0'
 			: 'tax > 0';

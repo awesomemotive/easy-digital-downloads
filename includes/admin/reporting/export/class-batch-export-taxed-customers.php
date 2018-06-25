@@ -77,11 +77,11 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 			);
 		}
 
-		add_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10, 2 );
+		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
 
 		$customer_ids = edd_get_orders( $args );
 
-		remove_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10 );
+		remove_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10 );
 
 		$customer_ids = array_unique( $customer_ids );
 
@@ -139,11 +139,11 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 			);
 		}
 
-		add_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10, 2 );
+		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
 
 		$total = edd_count_orders( $args );
 
-		remove_filter( 'edd_item_clauses', array( $this, 'item_clauses' ), 10 );
+		remove_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10 );
 
 		$percentage = 100;
 
@@ -180,7 +180,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	 *
 	 * @return array
 	 */
-	public function item_clauses( $clauses, $base ) {
+	public function query_clauses( $clauses, $base ) {
 		$clauses['where'] = ! empty( $clauses['where'] )
 			? $clauses['where'] .= ' AND tax > 0'
 			: 'tax > 0';
