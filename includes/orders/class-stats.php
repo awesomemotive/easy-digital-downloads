@@ -308,6 +308,70 @@ class Stats {
 	}
 
 	/**
+	 * Calculate the busiest day of the week for stores.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return string Busiest day of the week.
+	 */
+	public function get_busiest_day( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT DAYOFWEEK(date_created) AS day, COUNT({$this->query_vars['column']}) as total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				GROUP BY day
+				ORDER BY day DESC
+				LIMIT 1";
+
+		$result = $this->get_db()->get_row( $sql );
+
+		$days = array(
+			__( 'Sunday', 'easy-digital-downloads' ),
+			__( 'Monday', 'easy-digital-downloads' ),
+			__( 'Tuesday', 'easy-digital-downloads' ),
+			__( 'Wednesday', 'easy-digital-downloads' ),
+			__( 'Thursday', 'easy-digital-downloads' ),
+			__( 'Friday', 'easy-digital-downloads' ),
+			__( 'Saturday', 'easy-digital-downloads' ),
+		);
+
+		$day = null === $result
+			? ''
+			: $days[ $result->day - 1 ];
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $day;
+	}
+
+	/**
 	 * Calculate number of refunded orders.
 	 *
 	 * @since 3.0
