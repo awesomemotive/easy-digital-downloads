@@ -1097,6 +1097,7 @@ function edd_register_payment_gateways_report( $reports ) {
 				'charts' => array(
 					'gateway_sales_breakdown',
 					'gateway_earnings_breakdown',
+					'gateway_sales_earnings_chart',
 				),
 			),
 			'filters'   => array( 'gateways' ),
@@ -1226,7 +1227,7 @@ function edd_register_payment_gateways_report( $reports ) {
 		$gateway_list = array_map( 'edd_get_gateway_admin_label', array_keys( edd_get_payment_gateways() ) );
 
 		$reports->register_endpoint( 'gateway_sales_breakdown', array(
-			'label' => __( 'Gateway Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'label' => __( 'Gateway Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function() use ( $filter ) {
@@ -1274,7 +1275,7 @@ function edd_register_payment_gateways_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'gateway_earnings_breakdown', array(
-			'label' => __( 'Gateway Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'label' => __( 'Gateway Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function() use ( $filter ) {
@@ -1320,6 +1321,106 @@ function edd_register_payment_gateways_report( $reports ) {
 				),
 			)
 		) );
+
+		if ( ! empty( $gateway ) ) {
+			$reports->register_endpoint( 'gateway_sales_earnings_chart', array(
+				'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function () use ( $filter ) {
+							global $wpdb;
+
+							$dates      = Reports\get_dates_filter( 'objects' );
+							$day_by_day = Reports\get_dates_filter_day_by_day();
+
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
+								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							);
+
+							if ( ! $day_by_day ) {
+								$sql_clauses = array(
+									'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+									'groupby' => 'YEAR(date_created), MONTH(date_created)',
+									'orderby' => 'YEAR(date_created), MONTH(date_created)',
+								);
+							}
+
+							$start = $dates['start']->format( 'Y-m-d' );
+							$end   = $dates['end']->format( 'Y-m-d' );
+
+							$gateway = Reports\get_filter_value( 'gateways' );
+
+							$results = $wpdb->get_results( $wpdb->prepare(
+								"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
+								 FROM {$wpdb->edd_orders} o
+								 WHERE gateway = %s AND status IN ('publish', 'revoked') AND date_created >= %s AND date_created <= %s 
+								 GROUP BY {$sql_clauses['groupby']}
+								 ORDER BY {$sql_clauses['orderby']} ASC",
+								esc_sql( $gateway ), $start, $end ) );
+
+							$sales = array();
+							$earnings = array();
+
+							while ( strtotime( $start ) <= strtotime( $end ) ) {
+								$day = ( true === $day_by_day )
+									? $dates['start']->day
+									: 1;
+
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+								$sales[ $timestamp ][] = $timestamp;
+								$sales[ $timestamp ][] = 0;
+
+								$earnings[ $timestamp ][] = $timestamp;
+								$earnings[ $timestamp ][] = 0;
+
+								$start = ( true === $day_by_day )
+									? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+									: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+							}
+
+							foreach ( $results as $result ) {
+								$day = ( true === $day_by_day )
+									? $result->day
+									: 1;
+
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+								$sales[ $timestamp ][1] = $result->sales;
+								$earnings[ $timestamp ][1] = $result->earnings;
+							}
+
+							$sales = array_values( $sales );
+							$earnings = array_values( $earnings );
+
+							return array(
+								'sales'    => $sales,
+								'earnings' => $earnings,
+							);
+						},
+						'type'          => 'line',
+						'options'       => array(
+							'datasets' => array(
+								'sales' => array(
+									'label'           => __( 'Sales', 'easy-digital-downloads' ),
+									'borderColor'     => 'rgb(153,102,255)',
+									'backgroundColor' => 'rgb(153,102,255)',
+									'fill'            => false,
+								),
+								'earnings' => array(
+									'label'           => __( 'Earnings', 'easy-digital-downloads' ),
+									'borderColor'     => 'rgb(39,148,218)',
+									'backgroundColor' => 'rgb(39,148,218)',
+									'fill'            => false,
+								),
+							),
+						),
+					),
+				),
+			) );
+        }
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
