@@ -881,7 +881,17 @@ function edd_register_refunds_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						$amount = $stats->get_order_refund_amount( array(
+							'range'  => $filter['range'],
+							'output' => 'formatted',
+						) );
 
+						$number = $stats->get_order_refund_count( array(
+							'range' => $filter['range'],
+						) );
+
+						return apply_filters( 'edd_reports_refunds_refund_count_and_amount', esc_html( $number . ' / ' . $amount ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -896,7 +906,12 @@ function edd_register_refunds_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_refunds_average_refund_amount', $stats->get_order_refund_amount( array(
+							'function' => 'AVG',
+							'range'    => $filter['range'],
+							'output'   => 'formatted',
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
