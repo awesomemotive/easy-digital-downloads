@@ -540,19 +540,23 @@ function edd_register_downloads_report( $reports ) {
 							'range' => $filter['range'],
 						) );
 
-						$d = $d[0];
+						if ( ! empty( $d ) && isset( $d[0] ) ) {
+							$d = $d[0];
 
-						$title = $d->object->post_title;
+							if ( $d->object instanceof EDD_Download ) {
+								$title = $d->object->post_title;
 
-						if ( $d->object->has_variable_prices() ) {
-							$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
+								if ( $d->object->has_variable_prices() ) {
+									$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
 
-							$title .= is_array( $prices )
-                                ? ': ' . $prices[0]['name']
-                                : '';
+									$title .= is_array( $prices )
+										? ': ' . $prices[0]['name']
+										: '';
+								}
+
+								return esc_html( $title );
+							}
                         }
-
-                        return esc_html( $title );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
