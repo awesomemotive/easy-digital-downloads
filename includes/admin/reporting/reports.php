@@ -926,7 +926,11 @@ function edd_register_refunds_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_refunds_refund_rate', $stats->get_refund_rate( array(
+							'range'  => $filter['range'],
+							'output' => 'formatted',
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
