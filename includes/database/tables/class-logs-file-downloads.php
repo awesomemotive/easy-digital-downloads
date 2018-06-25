@@ -37,7 +37,18 @@ final class Logs_File_Downloads extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201806250003;
+
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201806250003' => 201806250003
+	);
 
 	/**
 	 * Setup the database schema
@@ -61,6 +72,31 @@ final class Logs_File_Downloads extends Base {
 		KEY customer_id (customer_id),
 		KEY product_id (product_id),
 		KEY date_created (date_created)";
+	}
+
+	/**
+	 * Upgrade to version 201806250001
+	 * - Rename  `download_id` column to `product_id`
+	 *
+	 * (Might not work all as one query. Let's see?)
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201806250003() {
+
+		// Alter the database
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} CHANGE COLUMN download_id product_id bigint(20) unsigned NOT NULL default 0;
+			ALTER TABLE {$this->table_name} CHANGE COLUMN user_id customer_id bigint(20) unsigned NOT NULL default 0;
+			ALTER TABLE {$this->table_name} CHANGE COLUMN payment_id order_id bigint(20) unsigned NOT NULL default 0;
+			ALTER TABLE {$this->table_name} DROP INDEX download_id;
+			ALTER TABLE {$this->table_name} ADD INDEX product_id (product_id);
+		" );
+
+		// Return success/fail
+		return $this->is_success( $result );
 	}
 }
 endif;
