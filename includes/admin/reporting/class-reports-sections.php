@@ -17,7 +17,7 @@ use EDD\Reports as Reports;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main class for creating a vertically tabbed UI
+ * Class for creating a vertically tabbed UI for reports.
  *
  * @since 3.0
  */
@@ -35,11 +35,13 @@ class Reports_Sections extends Sections {
 
 		$report = Reports\get_report( $this->current_section );
 
+		ob_start(); ?>
+
+		<?php
 		if ( ! is_wp_error( $report ) ) {
 			Reports\display_filters( $report );
 		}
-
-		ob_start(); ?>
+		?>
 
 		<div class="edd-sections-wrap">
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
