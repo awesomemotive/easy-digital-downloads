@@ -27,7 +27,7 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	 * @var string
 	 * @since 3.0
 	 */
-	public $export_type = 'orders';
+	public $export_type = 'taxed_orders';
 
 	/**
 	 * Set the CSV columns
