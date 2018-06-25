@@ -866,11 +866,14 @@ function edd_register_refunds_report( $reports ) {
 			'icon'      => 'image-rotate',
 			'priority'  => 15,
 			'endpoints' => array(
-				'tiles' => array(
+				'tiles'  => array(
 					'refund_count_and_amount',
 					'average_refund_amount',
 					'average_time_to_refund',
 					'refund_rate',
+				),
+				'charts' => array(
+					'refunds_chart',
 				),
 			),
 			'filters'   => array( 'products' ),
@@ -950,6 +953,102 @@ function edd_register_refunds_report( $reports ) {
 					'display_args'  => array(
 						'context'          => 'primary',
 						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'refunds_chart', array(
+			'label' => __( 'Refunds', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'views' => array(
+				'chart' => array(
+					'data_callback' => function () use ( $filter ) {
+						global $wpdb;
+
+						$dates      = Reports\get_dates_filter( 'objects' );
+						$day_by_day = Reports\get_dates_filter_day_by_day();
+
+						$sql_clauses = array(
+							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
+							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+						);
+
+						if ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+							);
+						}
+
+						$start = $dates['start']->format( 'Y-m-d' );
+						$end   = $dates['end']->format( 'Y-m-d' );
+
+						$results = $wpdb->get_results( $wpdb->prepare(
+							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
+							 FROM {$wpdb->edd_orders} o
+							 WHERE status = %s AND date_created >= %s AND date_created <= %s 
+							 GROUP BY {$sql_clauses['groupby']}
+							 ORDER BY {$sql_clauses['orderby']} ASC",
+							esc_sql( 'refunded' ), $start, $end ) );
+
+						$number = array();
+						$amount = array();
+
+						while ( strtotime( $start ) <= strtotime( $end ) ) {
+							$day = ( true === $day_by_day )
+								? $dates['start']->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+							$number[ $timestamp ][] = $timestamp;
+							$number[ $timestamp ][] = 0;
+
+							$amount[ $timestamp ][] = $timestamp;
+							$amount[ $timestamp ][] = 0;
+
+							$start = ( true === $day_by_day )
+								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
+								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+						}
+
+						foreach ( $results as $result ) {
+							$day = ( true === $day_by_day )
+								? $result->day
+								: 1;
+
+							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+
+							$number[ $timestamp ][1] = $result->number;
+							$amount[ $timestamp ][1] = $result->amount;
+						}
+
+						$number = array_values( $number );
+						$amount = array_values( $amount );
+
+						return array(
+							'number' => $number,
+							'amount' => $amount,
+						);
+					},
+					'type'          => 'line',
+					'options'       => array(
+						'datasets' => array(
+							'number' => array(
+								'label'           => __( 'Number', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(153,102,255)',
+								'backgroundColor' => 'rgb(153,102,255)',
+								'fill'            => false,
+							),
+							'amount' => array(
+								'label'           => __( 'Amount', 'easy-digital-downloads' ),
+								'borderColor'     => 'rgb(39,148,218)',
+								'backgroundColor' => 'rgb(39,148,218)',
+								'fill'            => false,
+							),
+						),
 					),
 				),
 			),
