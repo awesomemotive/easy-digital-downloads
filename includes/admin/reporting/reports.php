@@ -2163,21 +2163,27 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
 function edd_register_export_report( $reports ) {
     try {
 	    $reports->add_report( 'export', array(
-		    'label'      => __( 'Export', 'easy-digital-downloads' ),
-		    'icon'       => 'migrate',
-		    'priority'   => 40,
-		    'endpoints'  => array(
-			    'tiles' => array(
-				    
-			    ),
+		    'label'            => __( 'Export', 'easy-digital-downloads' ),
+		    'icon'             => 'migrate',
+		    'priority'         => 40,
+		    'endpoints'        => array(
+			    'tiles' => array(),
 		    ),
-		    'capability' => 'export_shop_reports',
+		    'capability'       => 'export_shop_reports',
+		    'display_callback' => 'display_export_report',
 	    ) );
     } catch ( \EDD_Exception $exception ) {
 	    edd_debug_log_exception( $exception );
     }
 }
 add_action( 'edd_reports_init', 'edd_register_export_report' );
+
+/**
+ * Render the `Export` report.
+ */
+function display_export_report() {
+
+}
 
 /**
  * Renders the Reports Downloads Table
