@@ -1148,7 +1148,7 @@ class Stats {
 		foreach ( $gateways as $id => $data ) {
 			$object          = new \stdClass();
 			$object->gateway = $id;
-			$object->count   = 0;
+			$object->total   = 0;
 
 			$defaults[] = $object;
 		}
@@ -1228,8 +1228,8 @@ class Stats {
 			$filter = wp_filter_object_list( $result, array( 'gateway' => $this->query_vars['gateway'] ) );
 
 			$results = 'COUNT' === $this->query_vars['function']
-				? absint( $filter[0]->count )
-				: $this->maybe_format( $filter[0]->count );
+				? absint( $filter[0]->total )
+				: $this->maybe_format( $filter[0]->total );
 		}
 
 		// Reset query vars.
