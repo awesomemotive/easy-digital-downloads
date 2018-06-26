@@ -465,10 +465,14 @@ textarea[name="edd-note"] {
 /* Filter Bar Styles
 -------------------------------------------------------------- */
 
-#edd-filters .filter-items {
-	padding: 10px;
+#edd-filters {
+	padding: 0 20px;
 }
-#edd-filters p {
+#edd-filters .filter-items > span {
+	display: inline-block;
+	margin: 10px 6px 10px 0;
+}
+#edd-filters > p {
 	color: #777;
 }
 .edd-old-log-filters {
@@ -482,7 +486,7 @@ textarea[name="edd-note"] {
 	padding: 5px;
 }
 #edd-after-core-filters .button-secondary {
-	margin: 2px 0 0 0;
+	margin: -3px 0 0 0;
 }
 
 /* Nav Tab Styles
@@ -1369,19 +1373,24 @@ td.edd_order_price {
 /* Reports Styles
 -------------------------------------------------------------- */
 
+.download_page_edd-reports #edd-filters .filter-items {
+	width: 100%;
+}
+
+.download_page_edd-reports #edd-filters {
+	margin-bottom: -5px;
+}
+.download_page_edd-reports #edd-item-wrapper {
+	margin: 0;
+}
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
-}
-.edd-date-range-picker,
-.edd-date-range-options {
-	float: left;
-	margin-right: 6px;
 }
 .edd-graphs-date-options {
 	max-width: 130px !important; /* Chosen Override */
 }
-.edd-date-range-options {
-	margin-top: -1px;
+#edd-filters .filter-items .edd-date-range-options {
+	margin-top: 9px;
 }
 .edd-date-range-options .edd_datepicker {
 	width: 100px;
@@ -1398,7 +1407,6 @@ td.edd_order_price {
 	height: 29px;
 }
 .edd-report-wrap {
-	padding: 20px;
 	clear: both;
 }
 
@@ -1463,11 +1471,20 @@ td.edd_order_price {
 .admin-color-sunrise .edd-import-export-form .edd-progress div {
 	background: #dd823b;
 }
-#edd-graphs-filter {
+
+.graph-option-section {
+	float: left;
+}
+.edd-report-filters-title span {
 	display: block;
-	padding: 0 20px 20px;
-	margin: 0 -20px;
-	border-bottom: 1px solid #eee;
+	padding: 20px;
+}
+#edd-graphs-filter {
+	float: left;
+	width: 80%;
+}
+#edd-graphs-filter form {
+	padding: 20px;
 }
 #edd-graphs-filter label {
 	vertical-align: inherit;
@@ -2200,6 +2217,9 @@ only screen and ( min-resolution: 1.5dppx ) {
 	font-size: 0;
 	height: 0;
 }
+.edd-sections-wrap {
+	clear: both;
+}
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
 	display: inline-block;
@@ -2775,12 +2795,14 @@ only screen and ( min-resolution: 1.5dppx ) {
 }
 
 @media only screen and ( min-width: 1200px ) {
+	#edd-graphs-filter,
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 200px );
 	}
 }
 
 @media only screen and ( max-width: 782px ) {
+	#edd-graphs-filter,
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 48px );
 	}

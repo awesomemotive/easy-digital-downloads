@@ -111,10 +111,22 @@ function edd_reports_page() {
 	wp_enqueue_script( 'postbox' );
 
 	// Start the Reports API.
-	new Reports\Init(); ?>
+	new Reports\Init();
+
+	// Get the section/report
+	$section = ! empty( $_GET['view'] )
+		? sanitize_key( $_GET['view'] )
+		: '';
+
+	// Get the report
+	$report = Reports\get_report( $section ); ?>
 
     <div class="wrap">
         <h1><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h1>
+
+		<?php if ( ! is_wp_error( $report ) ) {
+			Reports\display_filters( $report );
+		} ?>
 
         <div id="edd-item-wrapper" class="full-width edd-clearfix">
 			<?php edd_reports_sections(); ?>
