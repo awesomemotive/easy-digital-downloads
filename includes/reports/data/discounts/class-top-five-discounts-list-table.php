@@ -43,6 +43,10 @@ class Top_Five_Discounts_List_Table extends \WP_List_Table {
 		$data = array();
 
 		foreach ( $d as $result ) {
+			if ( empty( $result->object ) ) {
+				continue;
+			}
+
 			$c            = new \stdClass();
 			$c->id        = $result->object->id;
 			$c->name      = $result->object->name;
@@ -67,10 +71,10 @@ class Top_Five_Discounts_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'      => __( 'Name', 'easy-digital-downloads' ),
-			'code'      => __( 'Code', 'easy-digital-downloads' ),
-			'use_count' => __( 'Uses', 'easy-digital-downloads' ),
-			'amount'    => __( 'Amount', 'easy-digital-downloads' ),
+			'name'      => __( 'Name',   'easy-digital-downloads' ),
+			'code'      => __( 'Code',   'easy-digital-downloads' ),
+			'use_count' => __( 'Uses',   'easy-digital-downloads' ),
+			'amount'    => __( 'Amount', 'easy-digital-downloads' )
 		);
 	}
 
