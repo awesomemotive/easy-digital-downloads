@@ -138,7 +138,7 @@ function add_report( $report_id, $attributes ) {
  *                                Default true.
  * @return Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
-function get_report( $report_id, $build_endpoints = true ) {
+function get_report( $report_id = false, $build_endpoints = true ) {
 	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
@@ -1023,7 +1023,7 @@ function display_dates_filter( $report ) {
 		? ' screen-reader-text'
 		: ''; ?>
 
-	<div class="edd-date-range-picker"><?php
+	<span class="edd-date-range-picker graph-option-section"><?php
 
 		echo EDD()->html->select( array(
 			'name'             => 'range',
@@ -1036,9 +1036,9 @@ function display_dates_filter( $report ) {
 			'selected'         => $range
 		) );
 
-	?></div>
+	?></span>
 
-	<div class="edd-date-range-options<?php echo esc_attr( $class ); ?>">
+	<span class="edd-date-range-options graph-option-section<?php echo esc_attr( $class ); ?>">
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
 
@@ -1063,7 +1063,7 @@ function display_dates_filter( $report ) {
 			) );
 			?>
 		</fieldset>
-	</div>
+	</span>
 	<?php
 }
 
@@ -1078,7 +1078,7 @@ function display_dates_filter( $report ) {
 function display_products_filter( $report ) {
 	$products = get_filter_value( 'products' ); ?>
 
-	<div class="edd-graph-filter-options graph-option-section">
+	<span class="edd-graph-filter-options graph-option-section">
 		<?php
 		echo EDD()->html->product_dropdown( array(
 			'chosen'          => true,
@@ -1087,7 +1087,7 @@ function display_products_filter( $report ) {
 			'selected'        => empty( $products ) ? 0 : $products,
 		) );
 		?>
-	</div>
+	</span>
 
 	<?php
 }
@@ -1103,10 +1103,10 @@ function display_products_filter( $report ) {
 function display_taxes_filter( $report ) {
 	$taxes = get_filter_value( 'taxes' ); ?>
 
-    <div class="edd-graph-filter-options graph-option-section">
+    <span class="edd-graph-filter-options graph-option-section">
         <input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes"/>
         <label for="exclude_taxes"><?php esc_html_e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
-    </div>
+    </span>
 
 	<?php
 }
@@ -1132,7 +1132,7 @@ function display_discounts_filter( $report ) {
 		$discounts[ $discount_data->code ] = esc_html( $discount_data->name );
 	} ?>
 
-    <div class="edd-graph-filter-options graph-option-section">
+    <span class="edd-graph-filter-options graph-option-section">
 		<?php
 		echo EDD()->html->discount_dropdown( array(
 			'name'     => 'discounts',
@@ -1140,7 +1140,7 @@ function display_discounts_filter( $report ) {
 			'selected' => empty( $discount ) ? 0 : $discount,
 		) );
 		?>
-    </div>
+    </span>
 
 	<?php
 }
@@ -1156,23 +1156,26 @@ function display_discounts_filter( $report ) {
 function display_gateways_filter( $report ) {
 	$gateway = get_filter_value( 'gateways' );
 
+	$known_gateways = edd_get_payment_gateways();
+
 	$gateways = array();
 
-	foreach ( edd_get_payment_gateways() as $id => $data ) {
+	foreach ( $known_gateways as $id => $data ) {
 		$gateways[ $id ] = esc_html( $data['admin_label'] );
-	} ?>
+	}
 
-    <div class="edd-graph-filter-options graph-option-section">
-	    <?php
-	    echo EDD()->html->select( array(
-		    'name'             => 'gateways',
-		    'options'          => $gateways,
-		    'chosen'           => true,
-		    'selected'         => empty( $gateway ) ? 0 : $gateway,
-		    'show_option_none' => false,
-	    ) );
-	    ?>
-    </div>
+	// Get the select
+	$select = EDD()->html->select( array(
+		'name'             => 'gateways',
+		'options'          => $gateways,
+		'chosen'           => true,
+		'selected'         => empty( $gateway ) ? 0 : $gateway,
+		'show_option_none' => false,
+	) ); ?>
+
+    <span class="edd-graph-filter-options graph-option-section">
+	    <?php echo $select; ?>
+    </span>
 
 	<?php
 }
@@ -1250,21 +1253,15 @@ function display_filters( $report ) {
 	// Get the current buffer
 	$filters = ob_get_clean(); ?>
 
-	<div id="edd-reports-filters-wrap" class="edd-report-wrap">
-		<div class="edd-report-filters-spacer"></div>
-		<form id="edd-graphs-filter" method="get">
-			<?php
-
-			// Contains HTML (do not escape)
-			echo $filters;
-
-			// Always output the submit button
-			?><div class="edd-graph-filter-submit graph-option-section">
+	<div class="wp-filter" id="edd-filters">
+		<form class="filter-items" method="get">
+			<?php echo $filters; ?>
+			<span class="edd-graph-filter-submit graph-option-section">
 				<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 				<input type="hidden" name="edd_action" value="filter_reports" />
 				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
 				<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">
-			</div>
+			</span>
 		</form>
 	</div>
 

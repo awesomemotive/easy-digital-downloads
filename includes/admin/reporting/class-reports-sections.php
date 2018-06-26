@@ -11,8 +11,6 @@
 
 namespace EDD\Admin;
 
-use EDD\Reports as Reports;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -31,17 +29,7 @@ class Reports_Sections extends Sections {
 	public function display() {
 		$use_js = ! empty( $this->use_js )
 			? ' use-js'
-			: '';
-
-		$report = Reports\get_report( $this->current_section );
-
-		ob_start(); ?>
-
-		<?php
-		if ( ! is_wp_error( $report ) ) {
-			Reports\display_filters( $report );
-		}
-		?>
+			: ''; ?>
 
 		<div class="edd-sections-wrap">
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
@@ -64,8 +52,5 @@ class Reports_Sections extends Sections {
 		</div>
 
 		<?php
-
-		// Output current buffer
-		echo ob_get_clean();
 	}
 }
