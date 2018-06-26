@@ -297,7 +297,7 @@ class Sections {
 	 * @param object $item
 	*/
 	protected function section_general() {
-		ob_start(); ?>
+		?>
 
 		<table class="form-table rowfat">
 			<tbody>
@@ -314,8 +314,5 @@ class Sections {
 		</table>
 
 		<?php
-
-		// Output current buffer
-		echo ob_get_clean();
 	}
 }
