@@ -157,7 +157,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'date_created' :
-				$value = edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' );
+				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
 				break;
 
 			default:
@@ -278,11 +278,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
 			'cb'            => '<input type="checkbox" />',
-			'name'          => __( 'Name',          'easy-digital-downloads' ),
-			'email'         => __( 'Email',         'easy-digital-downloads' ),
-			'order_count'   => __( 'Orders',        'easy-digital-downloads' ),
-			'spent'         => __( 'Spent',         'easy-digital-downloads' ),
-			'date_created'  => __( 'Date Created',  'easy-digital-downloads' )
+			'name'          => __( 'Name',        'easy-digital-downloads' ),
+			'email'         => __( 'Email',       'easy-digital-downloads' ),
+			'order_count'   => __( 'Orders',      'easy-digital-downloads' ),
+			'spent'         => __( 'Spent',       'easy-digital-downloads' ),
+			'date_created'  => __( 'Established', 'easy-digital-downloads' )
 		) );
 	}
 
@@ -296,6 +296,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		return array(
 			'date_created'  => array( 'date_created',   true  ),
 			'name'          => array( 'name',           true  ),
+			'email'         => array( 'email',          true  ),
 			'order_count'   => array( 'purchase_count', false ),
 			'spent'         => array( 'purchase_value', false )
 		);
