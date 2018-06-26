@@ -616,6 +616,10 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['groupby'] = $this->args['groupby'];
 		}
 
+		if ( isset( $this->args['order'] ) ) {
+			$arguments['order'] = $this->args['order'];
+		}
+
 		$this->args = $arguments;
 	}
 }
