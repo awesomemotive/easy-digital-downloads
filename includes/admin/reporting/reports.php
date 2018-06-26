@@ -310,7 +310,7 @@ function edd_register_overview_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'overview_new_customers', array(
-			'label' => __( 'New Customers', 'easy-digital-downloads' ),
+			'label' => __( 'Customer Growth', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
