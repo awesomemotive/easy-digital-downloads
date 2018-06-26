@@ -40,15 +40,7 @@ class Reports_Sections extends Sections {
 				<div class="section-wrap">
 					<?php echo $this->get_all_section_contents(); ?>
 				</div>
-				<br class="clear" />
 			</div>
-			<?php $this->nonce_field();
-
-			if ( ! empty( $this->item ) ) : ?>
-
-				<input type="hidden" name="edd-item-id" value="<?php echo esc_attr( $this->item->id ); ?>" />
-
-			<?php endif; ?>
 		</div>
 
 		<?php
