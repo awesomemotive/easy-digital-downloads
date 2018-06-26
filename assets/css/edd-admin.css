@@ -1606,18 +1606,23 @@ td.edd_order_price {
 
 #edd-reports-tiles-wrap .inside span.dashicons {
 	display: inline-block;
-	font-size: 40px;
+	font-size: 30px;
+	line-height: 20px;
+	height: 20px;
+	width: 20px;
 	position: relative;
-	top: -5px;
-	left: -10px;
+	top: 2px;
+	left: -5px;
+	margin-left: -5px;
+	color: #999;
 }
 
 #edd-reports-tiles-wrap .inside .tile-value {
-	border-radius: 10px;
-	border: 1px solid transparent;
-	padding: 10px;
-	color: #111;
-	font-size: 2em;
+	border-radius: 15px;
+	border: 2px solid transparent;
+	padding: 13px;
+	color: #333;
+	font-size: 1.6em;
 	line-height: 1;
 	display: inline-block;
 }
