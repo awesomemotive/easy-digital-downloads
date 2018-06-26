@@ -1832,7 +1832,7 @@ function edd_register_discounts_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'ratio_of_discounted_orders', array(
-			'label' => __( 'Ratio of Discounted/Non-Discounted Orders', 'easy-digital-downloads' ),
+			'label' => __( 'Discount Ratio', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
