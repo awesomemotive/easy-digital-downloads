@@ -904,8 +904,13 @@ class Stats {
 			$value->object = edd_get_discount_by_code( $value->code );
 
 			// Format resultant object.
-			$value->discount_id = absint( $value->object->id );
-			$value->count       = absint( $value->count );
+			if ( ! empty( $value->object ) ) {
+				$value->discount_id = absint( $value->object->id );
+				$value->count       = absint( $value->count );
+			} else {
+				$value->discount_id = 0;
+				$value->count       = '&mdash;';
+			}
 		} );
 
 		// Reset query vars.
