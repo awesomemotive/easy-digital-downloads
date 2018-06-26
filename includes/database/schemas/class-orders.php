@@ -116,7 +116,8 @@ class Orders extends Base {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// customer_id
@@ -134,21 +135,24 @@ class Orders extends Base {
 			'name'       => 'email',
 			'type'       => 'varchar',
 			'length'     => '100',
-			'searchable' => true
+			'searchable' => true,
+			'sortable'   => true
 		),
 
 		// ip
 		array(
 			'name'       => 'ip',
 			'type'       => 'varchar',
-			'length'     => '60'
+			'length'     => '60',
+			'sortable'   => true
 		),
 
 		// gateway
 		array(
 			'name'       => 'gateway',
 			'type'       => 'varchar',
-			'length'     => '20'
+			'length'     => '20',
+			'sortable'   => true,
 		),
 
 		// mode
@@ -178,6 +182,7 @@ class Orders extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 
@@ -187,6 +192,7 @@ class Orders extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 
@@ -196,6 +202,7 @@ class Orders extends Base {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 

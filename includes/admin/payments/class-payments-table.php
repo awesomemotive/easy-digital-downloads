@@ -291,11 +291,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_payments_table_columns', array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
-			'number'   => __( 'Number',   'easy-digital-downloads' ),
-			'customer' => __( 'Customer', 'easy-digital-downloads' ),
-			'gateway'  => __( 'Gateway',  'easy-digital-downloads' ),
-			'amount'   => __( 'Amount',   'easy-digital-downloads' ),
-			'date'     => __( 'Date',     'easy-digital-downloads' )
+			'number'   => __( 'Number',    'easy-digital-downloads' ),
+			'customer' => __( 'Customer',  'easy-digital-downloads' ),
+			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
+			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
+			'date'     => __( 'Completed', 'easy-digital-downloads' )
 		) );
 	}
 
@@ -308,11 +308,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
-			'number'   => array( 'number',   true  ),
-			'customer' => array( 'customer', false ),
-			'gateway'  => array( 'gateway',  false ),
-			'amount'   => array( 'amount',   false ),
-			'date'     => array( 'date',     false )
+			'number'   => array( 'id',           true  ),
+			'customer' => array( 'customer_id',  false ),
+			'gateway'  => array( 'gateway',      false ),
+			'amount'   => array( 'total',        false ),
+			'date'     => array( 'date_created', false )
 		) );
 	}
 
@@ -345,7 +345,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
 				break;
 			case 'date':
-				$value = edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( $order->date_created, 'H:i' );
+				$value = '<time datetime="' . esc_attr( $order->date_created ) . '">' . edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( $order->date_created, 'H:i' ) . '</time>';
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
@@ -770,7 +770,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Force EDD\Orders\Order objects to be returned
 		$r['output'] = 'orders';
-		
 		$p = new EDD_Payments_Query( $r );
 
 		return $p->get_payments();
