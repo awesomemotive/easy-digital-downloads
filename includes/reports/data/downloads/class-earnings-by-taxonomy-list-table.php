@@ -206,7 +206,7 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	 * @return string Data shown in the Average Sales column.
 	 */
 	public function column_average_sales( $taxonomy ) {
-		return $taxonomy->average_sales;
+		return edd_format_amount( $taxonomy->average_sales );
 	}
 
 	/**
