@@ -358,7 +358,6 @@ function edd_reports_graph() {
 							<em><sup>&dagger;</sup> <?php _e( 'Excludes sales tax.', 'easy-digital-downloads' ); ?></em>
 						<?php endif; ?>
 					</p>
-
 				</div>
 			</div>
 		</div>
