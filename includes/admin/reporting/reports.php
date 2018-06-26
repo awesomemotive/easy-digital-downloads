@@ -116,7 +116,7 @@ function edd_reports_page() {
 	// Get the section/report
 	$section = ! empty( $_GET['view'] )
 		? sanitize_key( $_GET['view'] )
-		: '';
+		: 'overview'; // Hardcoded default
 
 	// Get the report
 	$report = Reports\get_report( $section ); ?>
@@ -414,7 +414,7 @@ function edd_register_overview_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_orders} edd_o
-					         WHERE date_created >= %s AND date_created <= %s 
+					         WHERE date_created >= %s AND date_created <= %s
                              GROUP BY {$sql_clauses['groupby']}
                              ORDER BY {$sql_clauses['orderby']} ASC",
 							$start, $end ) );
@@ -788,7 +788,7 @@ function edd_register_downloads_report( $reports ) {
 					        $results = $wpdb->get_results( $wpdb->prepare(
 						        "SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
                                  FROM {$wpdb->edd_order_items} edd_oi
-                                 WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s 
+                                 WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s
                                  GROUP BY {$sql_clauses['groupby']}
                                  ORDER BY {$sql_clauses['orderby']} ASC",
 						    $download_data['download_id'], $start, $end ) );
@@ -1004,7 +1004,7 @@ function edd_register_refunds_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
 							 FROM {$wpdb->edd_orders} o
-							 WHERE status = %s AND date_created >= %s AND date_created <= %s 
+							 WHERE status = %s AND date_created >= %s AND date_created <= %s
 							 GROUP BY {$sql_clauses['groupby']}
 							 ORDER BY {$sql_clauses['orderby']} ASC",
 							esc_sql( 'refunded' ), $start, $end ) );
@@ -1371,7 +1371,7 @@ function edd_register_payment_gateways_report( $reports ) {
 							$results = $wpdb->get_results( $wpdb->prepare(
 								"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 								 FROM {$wpdb->edd_orders} o
-								 WHERE gateway = %s AND status IN ('publish', 'revoked') AND date_created >= %s AND date_created <= %s 
+								 WHERE gateway = %s AND status IN ('publish', 'revoked') AND date_created >= %s AND date_created <= %s
 								 GROUP BY {$sql_clauses['groupby']}
 								 ORDER BY {$sql_clauses['orderby']} ASC",
 								esc_sql( $gateway ), $start, $end ) );
@@ -1602,7 +1602,7 @@ function edd_register_file_downloads_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'average_file_downloads_per_customer', array(
-			'label' => __( 'Average File Downloads per Customer', 'easy-digital-downloads' ),
+			'label' => __( 'Average per Customer', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
@@ -1614,6 +1614,25 @@ function edd_register_file_downloads_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'average_file_downloads_per_order', array(
+			'label' => __( 'Average per Order', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+                        $stats = new EDD\Orders\Stats();
+                        return apply_filters( 'edd_reports_file_downloads_average_per_order', $stats->get_average_file_download_count( array(
+	                        'range'  => $filter['range'],
+	                        'column' => 'order_id',
+                        ) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1633,25 +1652,6 @@ function edd_register_file_downloads_report( $reports ) {
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
-						'comparison_label' => $label,
-					),
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'average_file_downloads_per_order', array(
-			'label' => __( 'Average File Downloads per Order', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
-                        $stats = new EDD\Orders\Stats();
-                        return apply_filters( 'edd_reports_file_downloads_average_per_order', $stats->get_average_file_download_count( array(
-	                        'range'  => $filter['range'],
-	                        'column' => 'order_id',
-                        ) ) );
-					},
-					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1711,7 +1711,7 @@ function edd_register_file_downloads_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_logs_file_downloads} edd_lfd
-					         WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id} 
+					         WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id}
                              GROUP BY {$sql_clauses['groupby']}
                              ORDER BY {$sql_clauses['orderby']} ASC",
 							$start, $end ) );
@@ -2113,7 +2113,7 @@ function edd_register_customer_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
 					         FROM {$wpdb->edd_customers} c
-					         WHERE c.date_created >= %s AND c.date_created <= %s 
+					         WHERE c.date_created >= %s AND c.date_created <= %s
 					         GROUP BY {$sql_clauses['groupby']}
 					         ORDER BY {$sql_clauses['orderby']} ASC",
 							$start, $end ) );
