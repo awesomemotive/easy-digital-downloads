@@ -1570,7 +1570,7 @@ td.edd_order_price {
 
 #edd-reports-tiles-wrap #dashboard-widgets .postbox,
 #edd-reports-tiles-wrap #dashboard-widgets .meta-box-sortables {
-	min-height: 127px;
+	min-height: 135px;
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
@@ -1580,10 +1580,17 @@ td.edd_order_price {
 #edd-reports-tiles-wrap .postbox {
 	min-width: 0;
 }
+
+#edd-reports-tiles-wrap .postbox button {
+	height: 32px;
+	width: 32px;
+}
+
 #edd-reports-tiles-wrap h2.hndle {
 	padding-left: 25px;
 	text-align: center;
 	font-weight: normal;
+	font-size: 12px;
 	color: #555;
 }
 
