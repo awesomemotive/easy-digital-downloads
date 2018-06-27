@@ -37,7 +37,7 @@ class Top_Five_Most_Downloaded_List_Table extends \WP_List_Table {
 
 		return $stats->get_most_downloaded_products( array(
 			'number' => 5,
-			'range'  => $filter['range'],
+			'range'  => $filter['range']
 		) );
 	}
 
@@ -50,11 +50,11 @@ class Top_Five_Most_Downloaded_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'           => __( 'Name', 'easy-digital-downloads' ),
+			'name'           => __( 'Name',           'easy-digital-downloads' ),
 			'download_count' => __( 'File Downloads', 'easy-digital-downloads' ),
-			'price'          => __( 'Price', 'easy-digital-downloads' ),
-			'sales'          => __( 'Sales', 'easy-digital-downloads' ),
-			'earnings'       => __( 'Earnings', 'easy-digital-downloads' ),
+			'price'          => __( 'Price',          'easy-digital-downloads' ),
+			'sales'          => __( 'Sales',          'easy-digital-downloads' ),
+			'earnings'       => __( 'Earnings',       'easy-digital-downloads' )
 		);
 	}
 
@@ -71,13 +71,26 @@ class Top_Five_Most_Downloaded_List_Table extends \WP_List_Table {
 			return '&mdash;';
 		}
 
+		// Download title
 		$title = $download->object->post_title;
 
-		$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
+		// Look for variable pricing
+		$prices = $download->object->get_prices();
+		if ( ! empty( $prices ) ) {
 
-		if ( is_array( $prices ) ) {
-			$prices = $prices[0];
-			$title .= ' &mdash; ' . $prices['name'];
+			// Get prices with matching index
+			$prices = wp_filter_object_list( $prices, array(
+				'index' => absint( $download->price_id )
+			) );
+
+			// Only want values
+			$values = array_values( $values );
+
+			// Maybe append the value
+			if ( ! empty( $prices ) ) {
+				$prices = $prices[0];
+				$title .= ' &mdash; ' . $prices['name'];
+			}
 		}
 
 		return $title;
