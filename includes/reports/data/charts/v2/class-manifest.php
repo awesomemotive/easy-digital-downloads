@@ -329,7 +329,7 @@ class Manifest implements Error_Logger {
 			<?php echo esc_js( $target_el ); ?> = <?php echo $config; ?>;
 
 			<?php if ( ! $this->is_pie_manifest() ) : ?>
-				// Convert dataset x-axis values to moment() objects.
+                // Convert dataset x-axis values to moment() objects.
 				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
 
 					dataset.data.forEach( function( pair, index ) {
@@ -429,12 +429,12 @@ class Manifest implements Error_Logger {
 
 		} else {
 
-			$defaults = array(
+		    $defaults = array(
 				'responsive' => true,
 				'hoverMode'  => 'index',
 				'stacked'    => false,
 				'title'      => array(
-					'display' => true,
+					'display' => ! empty( $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ) ),
 					'text'    => $this->get_endpoint()->get_label(),
 				),
 				'scales'     => array(
@@ -462,7 +462,7 @@ class Manifest implements Error_Logger {
 							'position' => 'left',
 						),
 					),
-				)
+				),
 			);
 
 		}
