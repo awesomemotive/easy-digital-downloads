@@ -505,6 +505,7 @@ function edd_register_overview_report( $reports ) {
 								'borderColor'     => 'rgb(39,148,218)',
 								'backgroundColor' => 'rgb(39,148,218)',
 								'fill'            => false,
+								'type'            => 'currency',
 							),
 						),
 					),
