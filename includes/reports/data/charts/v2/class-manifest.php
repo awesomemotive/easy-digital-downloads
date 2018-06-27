@@ -349,6 +349,40 @@ class Manifest implements Error_Logger {
 					xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
 				} );
 
+				// Dynamically display currency.
+				<?php echo esc_js( $target_el ); ?>.options.tooltips = {
+					callbacks: {
+						label: function (t, d) {
+							<?php
+							$options = $this->get_endpoint()->get_options();
+
+							$callback_conditional = '';
+
+							if ( is_array( $options ) && isset( $options['datasets'] ) ) {
+								$i = 0;
+								foreach ( $options['datasets'] as $dataset ) {
+									if ( isset( $dataset['type'] ) && 'currency' === $dataset['type'] ) {
+										$callback_conditional .= 't.datasetIndex === ' . $i . ' || ';
+									}
+									$i ++;
+								}
+							}
+
+							$callback_conditional = substr( $callback_conditional, 0, - 4 );
+							?>
+							var yLabel = t.yLabel;
+
+							<?php if ( ! empty( $callback_conditional ) ) : ?>
+							if ( <?php echo esc_js( $callback_conditional ); ?> ) {
+								yLabel = '<?php echo esc_js( html_entity_decode( edd_currency_symbol( edd_get_currency() ) ) ); ?>' + t.yLabel.toFixed(2);
+							}
+							<?php endif; ?>
+
+							return d.datasets[t.datasetIndex].label + ': ' + yLabel;
+						}
+					}
+				};
+
 			<?php endif; // Line and bar charts ?>
 
 			// Instantiate the chart.
@@ -429,7 +463,7 @@ class Manifest implements Error_Logger {
 
 		} else {
 
-		    $defaults = array(
+			$defaults = array(
 				'responsive' => true,
 				'hoverMode'  => 'index',
 				'stacked'    => false,
@@ -440,18 +474,15 @@ class Manifest implements Error_Logger {
 				'scales'     => array(
 					'xAxes' => array(
 						array(
-							'type'     => "time",
+							'type'     => 'time',
 							'display'  => true,
 							'ticks'    => array(
 								'source' => 'auto',
 							),
 							'position' => 'bottom',
 							'time'     => array(
-								'unit' => 'day',
-								'displayFormats' => array(
-									'day'   => 'MMM D',
-									'month' => 'MMM',
-								),
+								'unit'          => 'day',
+								'tooltipFormat' => 'LL',
 							),
 						),
 					),
@@ -462,7 +493,7 @@ class Manifest implements Error_Logger {
 							'position' => 'left',
 						),
 					),
-				),
+				)
 			);
 
 		}
