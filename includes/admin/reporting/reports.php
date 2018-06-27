@@ -880,6 +880,7 @@ function edd_register_downloads_report( $reports ) {
 							        'borderColor'     => 'rgb(39,148,218)',
 							        'backgroundColor' => 'rgb(39,148,218)',
 							        'fill'            => false,
+							        'type'            => 'currency',
 						        ),
 					        ),
 				        ),
@@ -1071,7 +1072,7 @@ function edd_register_refunds_report( $reports ) {
 							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
 
 							$number[ $timestamp ][1] = $result->number;
-							$amount[ $timestamp ][1] = $result->amount;
+							$amount[ $timestamp ][1] = floatval( $result->amount );
 						}
 
 						$number = array_values( $number );
@@ -1096,6 +1097,7 @@ function edd_register_refunds_report( $reports ) {
 								'borderColor'     => 'rgb(39,148,218)',
 								'backgroundColor' => 'rgb(39,148,218)',
 								'fill'            => false,
+								'type'            => 'currency',
 							),
 						),
 					),
@@ -1438,7 +1440,7 @@ function edd_register_payment_gateways_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
 
 								$sales[ $timestamp ][1] = $result->sales;
-								$earnings[ $timestamp ][1] = $result->earnings;
+								$earnings[ $timestamp ][1] = floatval( $result->earnings );
 							}
 
 							$sales = array_values( $sales );
@@ -1463,6 +1465,7 @@ function edd_register_payment_gateways_report( $reports ) {
 									'borderColor'     => 'rgb(39,148,218)',
 									'backgroundColor' => 'rgb(39,148,218)',
 									'fill'            => false,
+									'type'            => 'currency',
 								),
 							),
 						),
