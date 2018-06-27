@@ -2208,16 +2208,62 @@ function display_export_report() {
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
                     <div class="postbox edd-export-sales">
-                        <h3 class="hndle"><span><?php esc_html_e('Export Sales', 'easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e( 'Export Sales and Earnings', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of all sales.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of all sales or earnings.', 'easy-digital-downloads' ); ?></p>
 
                             <form id="edd-export-sales" class="edd-export-form edd-import-export-form" method="post">
-				                <?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_sales_export_download', 'chosen' => true ) ); ?>
-				                <?php echo EDD()->html->date_field( array( 'id' => 'edd-sales-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
-				                <?php echo EDD()->html->date_field( array( 'id' => 'edd-sales-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
-				                <?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Sales_Export"/>
+				                <?php
+								echo EDD()->html->date_field( array(
+									'id'          => 'edd-order-export-start',
+									'name'        => 'start',
+									'placeholder' => __( 'From', 'easy-digital-downloads' ),
+								) );
+
+								echo EDD()->html->date_field( array(
+									'id'          => 'edd-order-export-end',
+									'name'        => 'end',
+									'placeholder' => __( 'To', 'easy-digital-downloads' ),
+								) );
+
+								echo EDD()->html->product_dropdown( array(
+									'name'   => 'download_id',
+									'id'     => 'edd_orders_export_download',
+									'chosen' => true,
+								) );
+
+								echo EDD()->html->customer_dropdown( array(
+									'name'          => 'customer_id',
+									'id'            => 'edd_order_export_customer',
+									'chosen'        => true,
+									'none_selected' => '',
+								) );
+
+				                $statuses = edd_get_payment_statuses();
+
+				                $options = array();
+
+				                foreach ( $statuses as $id => $data ) {
+					                $options[ $id ] = esc_html( $data );
+				                }
+
+				                echo EDD()->html->select( array(
+					                'name'             => 'status',
+					                'id'               => 'edd_orders_export_status',
+					                'options'          => $options,
+					                'chosen'           => true,
+					                'show_option_none' => false,
+					                'selected'         => false,
+				                ) );
+
+				                echo EDD()->html->checkbox( array(
+					                'name'  => 'day_by_day',
+					                'id'    => 'edd_orders_export_day_by_day',
+					                'label' => __( 'Day by day', 'easy-digital-downloads' ),
+				                ) );
+
+				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Orders_Export"/>
                                 <span>
 									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 									<span class="spinner"></span>
@@ -2238,33 +2284,6 @@ function display_export_report() {
 								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="postbox edd-export-order-history">
-                        <h3 class="hndle"><span><?php esc_html_e('Export Order History','easy-digital-downloads' ); ?></span></h3>
-                        <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of all orders recorded.', 'easy-digital-downloads' ); ?></p>
-
-                            <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->date_field( array( 'id' => 'edd-order-export-start', 'name' => 'start', 'placeholder' => __( 'Choose start date', 'easy-digital-downloads' ) )); ?>
-								<?php echo EDD()->html->date_field( array( 'id' => 'edd-order-export-end','name' => 'end', 'placeholder' => __( 'Choose end date', 'easy-digital-downloads' ) )); ?>
-                                <select name="status">
-                                    <option value="any"><?php esc_html_e( 'All Statuses', 'easy-digital-downloads' ); ?></option>
-									<?php
-									$statuses = edd_get_payment_statuses();
-									foreach( $statuses as $status => $label ) {
-										echo '<option value="' . $status . '">' . $label . '</option>';
-									}
-									?>
-                                </select>
-								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
                                 <span>
 									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 									<span class="spinner"></span>

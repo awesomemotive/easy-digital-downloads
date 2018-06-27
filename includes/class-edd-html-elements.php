@@ -213,18 +213,19 @@ class EDD_HTML_Elements {
 	 */
 	public function customer_dropdown( $args = array() ) {
 		$defaults = array(
-			'name'        => 'customers',
-			'id'          => 'customers',
-			'class'       => '',
-			'multiple'    => false,
-			'selected'    => 0,
-			'chosen'      => true,
-			'placeholder' => __( 'Select a Customer', 'easy-digital-downloads' ),
-			'number'      => 30,
-			'data'        => array(
+			'name'          => 'customers',
+			'id'            => 'customers',
+			'class'         => '',
+			'multiple'      => false,
+			'selected'      => 0,
+			'chosen'        => true,
+			'placeholder'   => __( 'Choose a Customer', 'easy-digital-downloads' ),
+			'number'        => 30,
+			'data'          => array(
 				'search-type'        => 'customer',
 				'search-placeholder' => __( 'Search Customers', 'easy-digital-downloads' ),
 			),
+			'none_selected' => __( 'No customer attached', 'easy-digital-downloads' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -236,7 +237,7 @@ class EDD_HTML_Elements {
 		$options = array();
 
 		if ( $customers ) {
-			$options[0] = __( 'No customer attached', 'easy-digital-downloads' );
+			$options[0] = $args['none_selected'];
 			foreach ( $customers as $customer ) {
 				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
 			}
@@ -529,7 +530,7 @@ class EDD_HTML_Elements {
 			'name'             => null,
 			'class'            => '',
 			'id'               => '',
-			'selected'         => array(),
+			'selected'         => 0,
 			'chosen'           => false,
 			'placeholder'      => null,
 			'multiple'         => false,
@@ -622,6 +623,7 @@ class EDD_HTML_Elements {
 	 * Renders an HTML Checkbox
 	 *
 	 * @since 1.9
+	 * @since 3.0 Added `label` argument.
 	 *
 	 * @param array $args
 	 *
@@ -636,6 +638,7 @@ class EDD_HTML_Elements {
 				'disabled' => false,
 				'readonly' => false,
 			),
+			'label'   => '',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -649,6 +652,10 @@ class EDD_HTML_Elements {
 		}
 
 		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . checked( 1, $args['current'], false ) . ' />';
+
+		if ( ! empty( $args['label'] ) ) {
+			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+		}
 
 		return $output;
 	}
