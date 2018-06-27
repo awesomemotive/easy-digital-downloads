@@ -466,7 +466,7 @@ textarea[name="edd-note"] {
 -------------------------------------------------------------- */
 
 #edd-filters {
-	padding: 0 20px;
+	padding: 0 10px;
 }
 #edd-filters .filter-items > span {
 	display: inline-block;
