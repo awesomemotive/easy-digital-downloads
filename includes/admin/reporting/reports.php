@@ -15,6 +15,52 @@ use EDD\Reports;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Load a report in the admin-area.
+ *
+ * This action-function loads the Report early, so that a redirect can occur in
+ * the event that the report is not valid, registered, or the user cannot view
+ * it.
+ *
+ * @since 3.0
+ */
+function edd_admin_load_report() {
+
+	// Redirect URL (on error)
+	$redirect_url =  add_query_arg( array(
+		'post_type' => 'download',
+		'page'      => 'edd-reports'
+	), admin_url( 'edit.php' ) );
+
+	// Redirect if user cannot view reports
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		edd_redirect( $redirect_url );
+	}
+
+	// Enqueue the postbox JS
+	wp_enqueue_script( 'postbox' );
+
+	// Start the Reports API.
+	new Reports\Init();
+
+	// Get the section/report
+	$section = ! empty( $_GET['view'] )
+		? sanitize_key( $_GET['view'] )
+		: 'overview'; // Hardcoded default
+
+	// Get the report
+	$report = Reports\get_report( $section );
+
+	// Redirect if report is invalid
+	if ( empty( $report ) || is_wp_error( $report ) ) {
+		edd_redirect( $redirect_url );
+	}
+
+	// Stash the report in the EDD global for future reference
+	EDD()->report = $report;
+}
+add_action( 'load-download_page_edd-reports', 'edd_admin_load_report' );
+
+/**
  * Contains backwards compat code to shim tabs & views to EDD_Sections()
  *
  * @since 3.0
@@ -107,26 +153,12 @@ function edd_output_report_callback( $report_id = '' ) {
  * @return void
  */
 function edd_reports_page() {
-
-	wp_enqueue_script( 'postbox' );
-
-	// Start the Reports API.
-	new Reports\Init();
-
-	// Get the section/report
-	$section = ! empty( $_GET['view'] )
-		? sanitize_key( $_GET['view'] )
-		: 'overview'; // Hardcoded default
-
-	// Get the report
-	$report = Reports\get_report( $section ); ?>
+	?>
 
     <div class="wrap">
         <h1><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h1>
 
-		<?php if ( ! is_wp_error( $report ) ) {
-			Reports\display_filters( $report );
-		} ?>
+		<?php Reports\display_filters( EDD()->report ); ?>
 
         <div id="edd-item-wrapper" class="full-width edd-clearfix">
 			<?php edd_reports_sections(); ?>
