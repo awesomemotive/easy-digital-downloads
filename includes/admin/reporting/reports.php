@@ -1,12 +1,13 @@
 <?php
 /**
- * Admin Reports Page
+ * Reports functions.
  *
  * @package     EDD
  * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
+ * @since       3.0 Full refactor of Reports.
  */
 
 use EDD\Reports;
