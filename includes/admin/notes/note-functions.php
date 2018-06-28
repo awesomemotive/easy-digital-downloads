@@ -30,7 +30,7 @@ function edd_admin_get_notes_html( $notes = array() ) {
 	// Start a buffer
 	ob_start(); ?>
 
-	<div class="edd-notes" id="edd-notes">
+	<div id="edd-notes" class="edd-notes">
 		<?php
 
 		// Output notes
