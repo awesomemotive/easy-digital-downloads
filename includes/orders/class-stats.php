@@ -2458,8 +2458,8 @@ class Stats {
 	 */
 	private function set_date_ranges() {
 
-		// Do not apply an offset as we're passing in current server time.
-		$date = EDD()->utils->date( 'now' );
+		// Retrieve the UTC time
+		$date = EDD()->utils->date();
 
 		$date_filters = Reports\get_dates_filter_options();
 
