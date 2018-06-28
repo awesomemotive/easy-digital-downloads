@@ -456,8 +456,8 @@ function edd_register_overview_report( $reports ) {
 							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 						$end = 0 < $offset
-							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+							? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
@@ -879,8 +879,8 @@ function edd_register_downloads_report( $reports ) {
 						        : $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 					        $end = 0 < $offset
-						        ? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-						        : $dates['end']->addSeconds( $offset )->format( 'mysql' );
+						        ? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+						        : $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 					        $price_id = ! empty( $download_data['price_id'] )
 						        ? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
@@ -1141,8 +1141,8 @@ function edd_register_refunds_report( $reports ) {
 							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 						$end = 0 < $offset
-							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+							? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
@@ -1548,8 +1548,8 @@ function edd_register_payment_gateways_report( $reports ) {
 								: $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 							$end = 0 < $offset
-								? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-								: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+								? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+								: $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 							$gateway = Reports\get_filter_value( 'gateways' );
 
@@ -1921,8 +1921,8 @@ function edd_register_file_downloads_report( $reports ) {
 							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 						$end = 0 < $offset
-							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+							? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 						$product_id = '';
 						$price_id   = '';
@@ -2237,8 +2237,8 @@ function edd_register_discounts_report( $reports ) {
 								: $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 							$end = 0 < $offset
-								? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-								: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+								? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+								: $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 							$discount_code = ! empty( $d->code )
 								? $wpdb->prepare( 'AND type = %s AND description = %s', 'discount', esc_sql( $d->code ) )
@@ -2491,8 +2491,8 @@ function edd_register_customer_report( $reports ) {
 							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
 
 						$end = 0 < $offset
-							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
-							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+							? $dates['end']->addSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->subSeconds( $offset )->format( 'mysql' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
