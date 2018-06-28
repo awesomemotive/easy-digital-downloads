@@ -1374,17 +1374,18 @@ jQuery(document).ready(function ($) {
 
 			// Hide Symlink option if Download Method is set to Direct
 			if ( downloadMethod.val() === 'direct' ) {
-				symlink.hide();
-				symlink.find('input').prop('checked', false);
+				symlink.css( 'opacity', '0.4' );
+				symlink.find('input').prop('checked', false).prop('disabled', true);
 			}
 
 			// Toggle download method option
 			downloadMethod.on('change', function() {
 				if ( $( this ).val() === 'direct' ) {
-					symlink.hide();
-					symlink.find('input').prop('checked', false);
+					symlink.css( 'opacity', '0.4' );
+					symlink.find('input').prop('checked', false).prop('disabled', true);
 				} else {
-					symlink.show();
+					symlink.find('input').prop('disabled', false);
+					symlink.css( 'opacity', '1' );
 				}
 			});
 		}

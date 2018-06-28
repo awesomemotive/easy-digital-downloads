@@ -876,7 +876,7 @@ function edd_get_registered_settings() {
 					),
 					'uninstall_on_delete' => array(
 						'id'   => 'uninstall_on_delete',
-						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
+						'name' => __( 'Remove Data on Uninstall', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
@@ -899,7 +899,7 @@ function edd_get_registered_settings() {
 					),
 					'show_register_form' => array(
 						'id'      => 'show_register_form',
-						'name'    => __( 'Show Register / Login Form?', 'easy-digital-downloads' ),
+						'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
 						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'chosen'  => true,
@@ -979,7 +979,7 @@ function edd_get_registered_settings() {
 					),
 					'symlink_file_downloads' => array(
 						'id'   => 'symlink_file_downloads',
-						'name' => __( 'Symlink File Downloads?', 'easy-digital-downloads' ),
+						'name' => __( 'Symbolically Link Files', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
@@ -1005,7 +1005,7 @@ function edd_get_registered_settings() {
 					),
 					'disable_redownload' => array(
 						'id'   => 'disable_redownload',
-						'name' => __( 'Disable Redownload?', 'easy-digital-downloads' ),
+						'name' => __( 'Disable Redownload', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
