@@ -2056,6 +2056,9 @@ function edd_register_discounts_report( $reports ) {
 				'tables' => array(
 					'top_five_discounts',
 				),
+				'charts' => array(
+					'discount_usage_chart',
+				),
 			),
 			'filters'   => array( 'discounts' ),
 		) );
@@ -2193,6 +2196,125 @@ function edd_register_discounts_report( $reports ) {
 				),
 			),
 		) );
+
+		if ( $d ) {
+			$reports->register_endpoint( 'discount_usage_chart', array(
+				'label' => __( 'Discount Usage', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function () use ( $filter, $d ) {
+							global $wpdb;
+
+							$dates        = Reports\get_dates_filter( 'objects' );
+							$day_by_day   = Reports\get_dates_filter_day_by_day();
+							$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+
+							$sql_clauses = array(
+								'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month, DAY(edd_oa.date_created) AS day',
+								'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created)',
+								'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created)',
+							);
+
+							if ( ! $day_by_day ) {
+								$sql_clauses = array(
+									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month',
+									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
+									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
+								);
+							} elseif ( $hour_by_hour ) {
+								$sql_clauses = array(
+									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month, DAY(edd_oa.date_created) AS day, HOUR(edd_oa.date_created) AS hour',
+									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created), HOUR(edd_oa.date_created)',
+									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created), HOUR(edd_oa.date_created)',
+								);
+							}
+
+							// Fetch GMT offset.
+							$offset = EDD()->utils->get_gmt_offset();
+
+							$start = 0 < $offset
+								? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+								: $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+							$end = 0 < $offset
+								? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+								: $dates['end']->addSeconds( $offset )->format( 'mysql' );
+
+							$discount_code = ! empty( $d->code )
+								? $wpdb->prepare( 'AND type = %s AND description = %s', 'discount', esc_sql( $d->code ) )
+								: $wpdb->prepare( 'AND type = %s', 'discount' );
+
+							$results = $wpdb->get_results( $wpdb->prepare(
+								"SELECT COUNT(id) AS total, {$sql_clauses['select']}
+								 FROM {$wpdb->edd_order_adjustments} edd_oa
+								 WHERE 1=1 {$discount_code} AND edd_oa.date_created >= %s AND edd_oa.date_created <= %s
+								 GROUP BY {$sql_clauses['groupby']}
+								 ORDER BY {$sql_clauses['orderby']} ASC",
+								$start, $end ) );
+
+							$discount_usage = array();
+
+							while ( strtotime( $start ) <= strtotime( $end ) ) {
+								if ( $hour_by_hour ) {
+									$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
+
+									$discount_usage[ $timestamp ][] = $timestamp;
+									$discount_usage[ $timestamp ][] = 0;
+
+									$start = $dates['start']->addHour( 1 )->format( 'mysql' );
+								} else {
+									$day = ( true === $day_by_day )
+										? $dates['start']->day
+										: 1;
+
+									$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+									$discount_usage[ $timestamp ][] = $timestamp;
+									$discount_usage[ $timestamp ][] = 0;
+
+									$start = ( true === $day_by_day )
+										? $dates['start']->addDays( 1 )->format( 'mysql' )
+										: $dates['start']->addMonth( 1 )->format( 'mysql' );
+								}
+							}
+
+							foreach ( $results as $result ) {
+								if ( $hour_by_hour ) {
+									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+								} else {
+									$day = ( true === $day_by_day )
+										? $result->day
+										: 1;
+
+									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+								}
+
+								$discount_usage[ $timestamp ][1] = $result->total;
+							}
+
+							$discount_usage = array_values( $discount_usage );
+
+							return array( 'discount_usage' => $discount_usage );
+						},
+						'type'          => 'line',
+						'options'       => array(
+							'datasets' => array(
+								'discount_usage' => array(
+									'label'                => __( 'Discount Usage', 'easy-digital-downloads' ),
+									'borderColor'          => 'rgb(24,126,244)',
+									'backgroundColor'      => 'rgba(24,126,244,0.05)',
+									'fill'                 => true,
+									'borderWidth'          => 2,
+									'pointRadius'          => 4,
+									'pointHoverRadius'     => 6,
+									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+							),
+						),
+					),
+				),
+			) );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
