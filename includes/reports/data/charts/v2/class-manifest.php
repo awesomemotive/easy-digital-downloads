@@ -451,18 +451,14 @@ class Manifest implements Error_Logger {
 	 * @return array Parsed chart options.
 	 */
 	public function get_chart_options() {
-
 		if ( $this->is_pie_manifest() ) {
-
 			$defaults = array(
 				'responsive' => true,
 				'legend'     => array(
 					'position' => 'left',
 				),
 			);
-
 		} else {
-
 			$defaults = array(
 				'responsive' => true,
 				'hoverMode'  => 'index',
@@ -482,7 +478,7 @@ class Manifest implements Error_Logger {
 							'position' => 'bottom',
 							'time'     => array(
 								'unit'          => 'day',
-								'tooltipFormat' => 'LL',
+								'tooltipFormat' => Reports\get_dates_filter_hour_by_hour() ? 'LLL' : 'LL',
 							),
 						),
 					),
@@ -493,9 +489,8 @@ class Manifest implements Error_Logger {
 							'position' => 'left',
 						),
 					),
-				)
+				),
 			);
-
 		}
 
 		return array_merge( $defaults, $this->get_options() );
