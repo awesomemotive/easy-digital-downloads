@@ -523,20 +523,30 @@ function edd_register_overview_report( $reports ) {
 						);
 					},
 					'type'          => 'line',
-					'options'       => array(
+					'options' => array(
 						'datasets' => array(
-							'sales' => array(
-								'label'           => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'     => 'rgb(153,102,255)',
-								'backgroundColor' => 'rgb(153,102,255)',
-								'fill'            => false,
+							'sales'    => array(
+								'label'                => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgb(252,108,18)',
+								'backgroundColor'      => 'rgba(252,108,18,0.2)',
+								'fill'                 => true,
+								'borderDash'           => array( 2, 6 ),
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
 							),
 							'earnings' => array(
-								'label'           => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'     => 'rgb(39,148,218)',
-								'backgroundColor' => 'rgb(39,148,218)',
-								'fill'            => false,
-								'type'            => 'currency',
+								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgb(24,126,244)',
+								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'type'                 => 'currency',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
 							),
 						),
 					),
