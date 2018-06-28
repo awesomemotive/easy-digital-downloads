@@ -2636,7 +2636,7 @@ function display_export_report() {
                     <div class="postbox edd-export-sales-earnings">
                         <h3 class="hndle"><span><?php esc_html_e( 'Export Sales and Earnings', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of all sales or earnings on a day-by-day basis..', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of all sales or earnings on a day-by-day basis.', 'easy-digital-downloads' ); ?></p>
 
                             <form id="edd-export-sales-earnings" class="edd-export-form edd-import-export-form" method="post">
 				                <?php
