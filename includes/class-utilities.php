@@ -201,22 +201,23 @@ class Utilities {
 	/**
 	 * Retrieves a date instance for the WP timezone (and offset) based on the given date string.
 	 *
-	 * Incoming time is expected to be UTC.
-	 *
 	 * @since 3.0
 	 *
 	 * @param string $date_string  Optional. Date string. Default 'now'.
 	 * @param string $timezone     Optional. Timezone to generate the Carbon instance for.
 	 *                             Default is the timezone set in WordPress settings.
-	 * @param bool   $apply_offset Optional. Whether to apply the offset in seconds to the generated
-	 *                             date. Default true.
-	 * @return \EDD\Utils\Date Date instance.
+	 * @param bool   $localize     Optional. Whether to apply the offset in seconds to the generated
+	 *                             date. Default false.
+	 *
+	 * @return \EDD\Utils\Date Date instance. Time is returned as UTC.
 	 */
-	public function date( $date_string = 'now', $timezone = null, $apply_offset = true ) {
+	public function date( $date_string = 'now', $timezone = null, $localize = false ) {
 
 		// Fallback to this time zone
-		if ( null === $timezone ) {
+		if ( null === $timezone && true === $localize ) {
 			$timezone = $this->get_time_zone();
+		} elseif ( null === $timezone && false === $localize ) {
+			$timezone = 'UTC';
 		}
 
 		/*
@@ -227,7 +228,7 @@ class Utilities {
 		 */
 		$date = new Utils\Date( $date_string, new \DateTimezone( $timezone ) );
 
-		if ( false === $apply_offset ) {
+		if ( false === $localize ) {
 			/*
 			 * The offset is automatically applied when the Date object is instantiated.
 			 *
@@ -317,19 +318,6 @@ class Utilities {
 	 * @since 3.0
 	 */
 	private function set_gmt_offset() {
-
-		// We need to calculate the GMT offset and these are a few ways this can be done.
-
-		// First, try and fetch a value from wp_options.
-		$offset = get_option( 'gmt_offset' );
-
-		// Get the timezone if gmt_offset does not exist in wp_options.
-		if ( empty( $offset ) ) {
-			$timezone = $this->get_time_zone( true );
-
-
-		}
-
 		$this->gmt_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
 	}
 
