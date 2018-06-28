@@ -1552,8 +1552,8 @@ td.edd_order_price {
 	width: 33.3%;
 }
 
-#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container {
-	margin-top: 1px;
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container .sortable-placeholder {
+	border-color: transparent;
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
@@ -1565,12 +1565,12 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap .metabox-holder .empty-container {
-	height: 127px;
+	height: 110px;
 }
 
-#edd-reports-tiles-wrap #dashboard-widgets .postbox,
-#edd-reports-tiles-wrap #dashboard-widgets .meta-box-sortables {
-	min-height: 135px;
+#edd-reports-tiles-wrap #dashboard-widgets .postbox .inside {
+	min-height: 60px;
+	margin-top: 5px;
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
@@ -1582,22 +1582,21 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap .postbox button {
-	height: 32px;
-	width: 32px;
+	display: none;
 }
 
 #edd-reports-tiles-wrap h2.hndle {
-	padding-left: 25px;
 	text-align: center;
-	font-weight: normal;
 	font-size: 12px;
-	color: #555;
+	color: #777;
+	border-bottom: none;
 }
 
 #edd-reports-tiles-wrap .postbox .inside {
 	text-align: center;
 	vertical-align: middle;
 	position: relative;
+	overflow: hidden;
 }
 
 #edd-reports-tiles-wrap .inside span {
@@ -1611,32 +1610,25 @@ td.edd_order_price {
 	height: 20px;
 	width: 20px;
 	position: relative;
-	top: 2px;
+	top: 4px;
 	left: -5px;
 	margin-left: -5px;
 	color: #999;
 }
 
 #edd-reports-tiles-wrap .inside .tile-value {
-	border-radius: 15px;
-	border: 2px solid transparent;
-	padding: 13px;
+	padding: 5px;
 	color: #333;
-	font-size: 1.6em;
+	font-size: 2em;
 	line-height: 1;
 	display: inline-block;
 }
 
-#edd-reports-tiles-wrap .inside .tile-default {
-	background: #fafafa;
-	color: #666;
-	border-color: #eee;
-}
 #edd-reports-tiles-wrap .inside .tile-amount {
-	background: rgb(39,148,218);
+	color: rgb(39,148,218);
 }
 #edd-reports-tiles-wrap .inside .tile-number {
-	background: rgb(153,102,255);
+	color: rgb(153,102,255);
 }
 #edd-reports-tiles-wrap .inside .tile-amount,
 #edd-reports-tiles-wrap .inside .tile-number {
@@ -1652,9 +1644,17 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap .inside .tile-compare {
-	color: #333;
-	padding-top: 10px;
-	font-size: 1.1em;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	color: #888;
+	background-color: #fff;
+	border-left: 1px solid #eee;
+	border-top: 1px solid #eee;
+	border-top-left-radius: 8px;
+	padding: 4px 8px 4px 9px;
+	font-size: 12px;
+	box-shadow: 0px 0px 100px 5px #eee;
 }
 
 .edd-reports-chart-pie,
