@@ -870,8 +870,16 @@ function edd_register_downloads_report( $reports ) {
 						        );
 					        }
 
-					        $start = $dates['start']->format( 'mysql' );
-					        $end   = $dates['end']->format( 'mysql' );
+					        // Fetch GMT offset.
+					        $offset = EDD()->utils->get_gmt_offset();
+
+					        $start = 0 < $offset
+						        ? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+						        : $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+					        $end = 0 < $offset
+						        ? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+						        : $dates['end']->addSeconds( $offset )->format( 'mysql' );
 
 					        $price_id = ! empty( $download_data['price_id'] )
 						        ? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
@@ -920,13 +928,13 @@ function edd_register_downloads_report( $reports ) {
 
 					        foreach ( $results as $result ) {
 						        if ( $hour_by_hour ) {
-							        $timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->timestamp;
+							        $timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
 						        } else {
 							        $day = ( true === $day_by_day )
 								        ? $result->day
 								        : 1;
 
-							        $timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+							        $timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
 						        }
 
 						        $sales[ $timestamp ][1]    = $result->sales;
@@ -1124,8 +1132,16 @@ function edd_register_refunds_report( $reports ) {
 							);
 						}
 
-						$start = $dates['start']->format( 'mysql' );
-						$end   = $dates['end']->format( 'mysql' );
+						// Fetch GMT offset.
+						$offset = EDD()->utils->get_gmt_offset();
+
+						$start = 0 < $offset
+							? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+						$end = 0 < $offset
+							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
@@ -1170,13 +1186,13 @@ function edd_register_refunds_report( $reports ) {
 
 						foreach ( $results as $result ) {
 							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
 							} else {
 								$day = ( true === $day_by_day )
 									? $result->day
 									: 1;
 
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
 							}
 
 							$number[ $timestamp ][1] = $result->number;
@@ -1499,8 +1515,9 @@ function edd_register_payment_gateways_report( $reports ) {
 						'data_callback' => function () use ( $filter ) {
 							global $wpdb;
 
-							$dates      = Reports\get_dates_filter( 'objects' );
-							$day_by_day = Reports\get_dates_filter_day_by_day();
+							$dates        = Reports\get_dates_filter( 'objects' );
+							$day_by_day   = Reports\get_dates_filter_day_by_day();
+							$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
@@ -1514,10 +1531,24 @@ function edd_register_payment_gateways_report( $reports ) {
 									'groupby' => 'YEAR(date_created), MONTH(date_created)',
 									'orderby' => 'YEAR(date_created), MONTH(date_created)',
 								);
+							} elseif ( $hour_by_hour ) {
+								$sql_clauses = array(
+									'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
+									'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+									'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+								);
 							}
 
-							$start = $dates['start']->format( 'Y-m-d' );
-							$end   = $dates['end']->format( 'Y-m-d' );
+							// Fetch GMT offset.
+							$offset = EDD()->utils->get_gmt_offset();
+
+							$start = 0 < $offset
+								? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+								: $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+							$end = 0 < $offset
+								? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+								: $dates['end']->addSeconds( $offset )->format( 'mysql' );
 
 							$gateway = Reports\get_filter_value( 'gateways' );
 
@@ -1533,35 +1564,51 @@ function edd_register_payment_gateways_report( $reports ) {
 							$earnings = array();
 
 							while ( strtotime( $start ) <= strtotime( $end ) ) {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
+								if ( $hour_by_hour ) {
+									$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
 
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+									$sales[ $timestamp ][] = $timestamp;
+									$sales[ $timestamp ][] = 0;
 
-								$sales[ $timestamp ][] = $timestamp;
-								$sales[ $timestamp ][] = 0;
+									$earnings[ $timestamp ][] = $timestamp;
+									$earnings[ $timestamp ][] = 0.00;
 
-								$earnings[ $timestamp ][] = $timestamp;
-								$earnings[ $timestamp ][] = 0;
+									$start = $dates['start']->addHour( 1 )->format( 'mysql' );
+								} else {
+									$day = ( true === $day_by_day )
+										? $dates['start']->day
+										: 1;
 
-								$start = ( true === $day_by_day )
-									? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
-									: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+									$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+									$sales[ $timestamp ][] = $timestamp;
+									$sales[ $timestamp ][] = 0;
+
+									$earnings[ $timestamp ][] = $timestamp;
+									$earnings[ $timestamp ][] = 0.00;
+
+									$start = ( true === $day_by_day )
+										? $dates['start']->addDays( 1 )->format( 'mysql' )
+										: $dates['start']->addMonth( 1 )->format( 'mysql' );
+								}
 							}
 
 							foreach ( $results as $result ) {
-								$day = ( true === $day_by_day )
-									? $result->day
-									: 1;
+								if ( $hour_by_hour ) {
+									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+								} else {
+									$day = ( true === $day_by_day )
+										? $result->day
+										: 1;
 
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+								}
 
 								$sales[ $timestamp ][1] = $result->sales;
 								$earnings[ $timestamp ][1] = floatval( $result->earnings );
 							}
 
-							$sales = array_values( $sales );
+							$sales    = array_values( $sales );
 							$earnings = array_values( $earnings );
 
 							return array(
@@ -1841,8 +1888,9 @@ function edd_register_file_downloads_report( $reports ) {
 					'data_callback' => function () use ( $filter, $download_data ) {
 						global $wpdb;
 
-						$dates      = Reports\get_dates_filter( 'objects' );
-						$day_by_day = Reports\get_dates_filter_day_by_day();
+						$dates        = Reports\get_dates_filter( 'objects' );
+						$day_by_day   = Reports\get_dates_filter_day_by_day();
+						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 						$sql_clauses = array(
 							'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month, DAY(edd_lfd.date_created) AS day',
@@ -1852,14 +1900,28 @@ function edd_register_file_downloads_report( $reports ) {
 
 						if ( ! $day_by_day ) {
 							$sql_clauses = array(
-								'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month',
-								'groupby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created)',
-								'orderby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created)',
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+							);
+						} elseif ( $hour_by_hour ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
+								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 							);
 						}
 
-						$start = $dates['start']->format( 'Y-m-d' );
-						$end   = $dates['end']->format( 'Y-m-d' );
+						// Fetch GMT offset.
+						$offset = EDD()->utils->get_gmt_offset();
+
+						$start = 0 < $offset
+							? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+						$end = 0 < $offset
+							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
 
 						$product_id = '';
 						$price_id   = '';
@@ -1883,26 +1945,42 @@ function edd_register_file_downloads_report( $reports ) {
 						$file_downloads = array();
 
 						while ( strtotime( $start ) <= strtotime( $end ) ) {
-							$day = ( true === $day_by_day )
-								? $dates['start']->day
-								: 1;
+							if ( $hour_by_hour ) {
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
 
-							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+								$file_downloads[ $timestamp ][] = $timestamp;
+								$file_downloads[ $timestamp ][] = 0;
 
-							$file_downloads[ $timestamp ][] = $timestamp;
-							$file_downloads[ $timestamp ][] = 0;
+								$earnings[ $timestamp ][] = $timestamp;
+								$earnings[ $timestamp ][] = 0.00;
 
-							$start = ( true === $day_by_day )
-								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
-								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+								$start = $dates['start']->addHour( 1 )->format( 'mysql' );
+							} else {
+								$day = ( true === $day_by_day )
+									? $dates['start']->day
+									: 1;
+
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+								$file_downloads[ $timestamp ][] = $timestamp;
+								$file_downloads[ $timestamp ][] = 0;
+
+								$start = ( true === $day_by_day )
+									? $dates['start']->addDays( 1 )->format( 'mysql' )
+									: $dates['start']->addMonth( 1 )->format( 'mysql' );
+							}
 						}
 
 						foreach ( $results as $result ) {
-							$day = ( true === $day_by_day )
-								? $result->day
-								: 1;
+							if ( $hour_by_hour ) {
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+							} else {
+								$day = ( true === $day_by_day )
+									? $result->day
+									: 1;
 
-							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+							}
 
 							$file_downloads[ $timestamp ][1] = $result->total;
 						}
@@ -2258,25 +2336,40 @@ function edd_register_customer_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$dates      = Reports\get_dates_filter( 'objects' );
-						$day_by_day = Reports\get_dates_filter_day_by_day();
+						$dates        = Reports\get_dates_filter( 'objects' );
+						$day_by_day   = Reports\get_dates_filter_day_by_day();
+						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(c.date_created) AS year, MONTH(c.date_created) AS month, DAY(c.date_created) AS day',
-							'groupby' => 'YEAR(c.date_created), MONTH(c.date_created), DAY(c.date_created)',
-							'orderby' => 'YEAR(c.date_created), MONTH(c.date_created), DAY(c.date_created)',
+							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
+							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
 						if ( ! $day_by_day ) {
 							$sql_clauses = array(
-								'select'  => 'YEAR(c.date_created) AS year, MONTH(c.date_created) AS month',
-								'groupby' => 'YEAR(c.date_created), MONTH(c.date_created)',
-								'orderby' => 'YEAR(c.date_created), MONTH(c.date_created)',
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+							);
+						} elseif ( $hour_by_hour ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
+								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 							);
 						}
 
-						$start = $dates['start']->format( 'Y-m-d' );
-						$end   = $dates['end']->format( 'Y-m-d' );
+						// Fetch GMT offset.
+						$offset = EDD()->utils->get_gmt_offset();
+
+						$start = 0 < $offset
+							? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+						$end = 0 < $offset
+							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
@@ -2289,33 +2382,51 @@ function edd_register_customer_report( $reports ) {
 						$customers = array();
 
 						while ( strtotime( $start ) <= strtotime( $end ) ) {
-							$day = ( true === $day_by_day )
-								? $dates['start']->day
-								: 1;
+							if ( $hour_by_hour ) {
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
 
-							$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+								$customers[ $timestamp ][] = $timestamp;
+								$customers[ $timestamp ][] = 0;
 
-							$customers[ $timestamp ][] = $timestamp;
-							$customers[ $timestamp ][] = 0;
+								$earnings[ $timestamp ][] = $timestamp;
+								$earnings[ $timestamp ][] = 0.00;
 
-							$start = ( true === $day_by_day )
-								? $dates['start']->addDays( 1 )->format( 'Y-m-d' )
-								: $dates['start']->addMonth( 1 )->format( 'Y-m' );
+								$start = $dates['start']->addHour( 1 )->format( 'mysql' );
+							} else {
+								$day = ( true === $day_by_day )
+									? $dates['start']->day
+									: 1;
+
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0 )->timestamp;
+
+								$customers[ $timestamp ][] = $timestamp;
+								$customers[ $timestamp ][] = 0;
+
+								$start = ( true === $day_by_day )
+									? $dates['start']->addDays( 1 )->format( 'mysql' )
+									: $dates['start']->addMonth( 1 )->format( 'mysql' );
+							}
 						}
 
 						foreach ( $results as $result ) {
-							$day = ( true === $day_by_day )
-								? $result->day
-								: 1;
+							if ( $hour_by_hour ) {
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+							} else {
+								$day = ( true === $day_by_day )
+									? $result->day
+									: 1;
 
-							$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
+							}
 
 							$customers[ $timestamp ][1] = $result->total;
 						}
 
 						$customers = array_values( $customers );
 
-						return array( 'customers' => $customers );
+						return array(
+							'customers' => $customers,
+						);
 					},
 					'type'          => 'line',
 					'options'       => array(
