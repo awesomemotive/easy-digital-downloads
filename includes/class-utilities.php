@@ -10,6 +10,8 @@
  */
 namespace EDD;
 
+use EDD\Utils as Utils;
+
 /**
  * Class that bootstraps various utilities leveraged in EDD core.
  *
@@ -233,7 +235,7 @@ class Utilities {
 		 * Note that supplying the timezone during DateTime instantiation doesn't actually
 		 * convert the UNIX timestamp, it just lays the groundwork for deriving the offset.
 		 */
-		$date = new EDD\Utils\Date( $date_string, new DateTimezone( $timezone ) );
+		$date = new Utils\Date( $date_string, new \DateTimezone( $timezone ) );
 
 		if ( false === $apply_offset ) {
 			/*
