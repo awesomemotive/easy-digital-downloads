@@ -568,8 +568,10 @@ if ( ! empty( $transaction_id ) ) {
                                 <h3 class="hndle"><span><?php _e( 'Order Notes', 'easy-digital-downloads' ); ?></span>
                                 </h3>
                                 <div class="inside">
-									<?php echo edd_admin_get_notes_html( $notes ); ?>
-									<?php echo edd_admin_get_new_note_form( $order->id, 'order' ); ?>
+									<div class="edd-notes-wrapper">
+										<?php echo edd_admin_get_notes_html( $notes ); ?>
+										<?php echo edd_admin_get_new_note_form( $order->id, 'order' ); ?>
+									</div>
                                 </div><!-- /.inside -->
                             </div><!-- /#edd-notes -->
 
