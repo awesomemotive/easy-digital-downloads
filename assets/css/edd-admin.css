@@ -2676,7 +2676,53 @@ only screen and ( min-resolution: 1.5dppx ) {
 	background-color: #fff;
 	border-right: none;
 	margin-right: -1px;
-	border-left: 5px solid #00a0d2;
+}
+
+/* Blue */
+.admin-color-blue .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #096484;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #26292c;
+}
+
+/* Ocean */
+.admin-color-ocean .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #be3631;
+}
+
+/* Light */
+.admin-color-light .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #36533f;
+}
+
+/* Mint */
+.admin-color-mint .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #4f6d59;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {
