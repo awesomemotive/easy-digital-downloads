@@ -717,7 +717,7 @@ function edd_register_downloads_report( $reports ) {
 					        'cutoutPercentage' => 0,
 					        'datasets'         => array(
 						        'sales' => array(
-							        'label'           => __( 'Sales' ),
+							        'label'           => __( 'Sales', 'easy-digital-downloads' ),
 							        'backgroundColor' => array(
 								        'rgb(133,175,91)',
 								        'rgb(9,149,199)',
@@ -760,7 +760,7 @@ function edd_register_downloads_report( $reports ) {
 					        'cutoutPercentage' => 0,
 					        'datasets'         => array(
 						        'earnings' => array(
-							        'label'           => __( 'Earnings' ),
+							        'label'           => __( 'Earnings', 'easy-digital-downloads' ),
 							        'backgroundColor' => array(
 								        'rgb(133,175,91)',
 								        'rgb(9,149,199)',
@@ -2326,7 +2326,7 @@ function display_export_report() {
 								echo EDD()->html->select( array(
 									'id'              => 'edd-orders-export-status',
 									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses' ),
+									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
 									'selected'        => false,
 									'chosen'          => true,
 									'options'         => edd_get_payment_statuses(),
