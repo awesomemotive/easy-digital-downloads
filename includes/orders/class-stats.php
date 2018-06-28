@@ -2266,7 +2266,7 @@ class Stats {
 			}
 
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
-				$this->query_vars['relative_end']   = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
+				$this->query_vars['relative_end'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 			}
 		}
 
@@ -2457,6 +2457,8 @@ class Stats {
 	 * @access private
 	 */
 	private function set_date_ranges() {
+
+		// Do not apply an offset as we're passing in current server time.
 		$date = EDD()->utils->date( 'now' );
 
 		$date_filters = Reports\get_dates_filter_options();
