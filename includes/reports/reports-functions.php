@@ -929,8 +929,6 @@ function default_display_tiles_group( $report ) {
 	} ?>
 
 	<div id="edd-reports-tiles-wrap" class="edd-report-wrap">
-		<h3><?php esc_html_e( 'Quick Stats', 'easy-digital-downloads' ); ?></h3>
-
 		<div id="dashboard-widgets" class="metabox-holder">
 			<div class="postbox-container">
 				<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
