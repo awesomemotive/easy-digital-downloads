@@ -1047,8 +1047,19 @@ jQuery(document).ready(function ($) {
 	var EDD_Reports = {
 
 		init : function() {
+			this.meta_boxes();
 			this.date_options();
 			this.customers_export();
+		},
+
+		meta_boxes : function() {
+			$( '#edd-reports-tiles-wrap .postbox .handlediv' ).remove();
+			$( '#edd-reports-tiles-wrap .postbox' ).removeClass( 'closed' );
+
+			// Use a timeout to ensure this happens after core binding
+			setTimeout( function() {
+				$( '#edd-reports-tiles-wrap .postbox h2.hndle' ).unbind( 'click.postboxes' );
+			}, 1 );
 		},
 
 		date_options : function() {
