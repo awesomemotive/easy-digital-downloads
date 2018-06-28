@@ -1552,6 +1552,14 @@ td.edd_order_price {
 	width: 33.3%;
 }
 
+#edd-reports-tiles-wrap #dashboard-widgets .sortable-placeholder {
+	padding: 0;
+	margin: 0 0 20px 0;
+	line-height: 0;
+	box-sizing: border-box;
+	height: 110px;
+}
+
 #edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container .sortable-placeholder {
 	border-color: transparent;
 }
@@ -1564,20 +1572,14 @@ td.edd_order_price {
 	margin-right: 0;
 }
 
+#edd-reports-tiles-wrap .postbox {
+	border: none;
+	box-shadow: none;
+	overflow: hidden;
+}
+#edd-reports-tiles-wrap .postbox,
 #edd-reports-tiles-wrap .metabox-holder .empty-container {
 	height: 110px;
-}
-
-#edd-reports-tiles-wrap #dashboard-widgets .postbox .inside {
-	min-height: 60px;
-	margin-top: 5px;
-}
-
-#edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
-	min-height: 0;
-}
-
-#edd-reports-tiles-wrap .postbox {
 	min-width: 0;
 }
 
@@ -1588,15 +1590,31 @@ td.edd_order_price {
 #edd-reports-tiles-wrap h2.hndle {
 	text-align: center;
 	font-size: 12px;
-	color: #777;
+	font-weight: normal;
+	color: #555;
 	border-bottom: none;
+	padding: 0;
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
+#edd-reports-tiles-wrap h2.hndle span {
+	position: relative;
+	top: 65px;
+}
 #edd-reports-tiles-wrap .postbox .inside {
 	text-align: center;
 	vertical-align: middle;
 	position: relative;
-	overflow: hidden;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	border: 1px solid #e5e5e5;
 }
 
 #edd-reports-tiles-wrap .inside span {
@@ -1617,6 +1635,7 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap .inside .tile-value {
+	margin-top: 27px;
 	padding: 5px;
 	color: #333;
 	font-size: 2em;
@@ -1647,14 +1666,17 @@ td.edd_order_price {
 	position: absolute;
 	right: 0;
 	bottom: 0;
-	color: #888;
+	color: #aaa;
 	background-color: #fff;
-	border-left: 1px solid #eee;
-	border-top: 1px solid #eee;
+	border-left: 1px solid #e5e5e5;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
 	border-top-left-radius: 8px;
-	padding: 4px 8px 4px 9px;
+	padding: 4px 0 0 9px;
+	margin: 0 -1px -1px 0;
 	font-size: 12px;
-	box-shadow: 0px 0px 100px 5px #eee;
+	box-shadow: 0px 0px 150px 0px #bbb;
 }
 
 .edd-reports-chart-pie,
