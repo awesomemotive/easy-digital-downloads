@@ -217,7 +217,7 @@ function edd_display_product_tabs() {
 	ob_start() ?>
 
 	<div class="clear"></div>
-	<h2 class="nav-tab-wrapper edd-tab-clear">
+	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-tab-clear">
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab ) {
