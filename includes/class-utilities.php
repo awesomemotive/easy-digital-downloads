@@ -8,13 +8,14 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD;
 
 /**
  * Class that bootstraps various utilities leveraged in EDD core.
  *
  * @since 3.0
  */
-class EDD_Utilities {
+class Utilities {
 
 	/**
 	 * Represents the WordPress GMT offset in seconds.
