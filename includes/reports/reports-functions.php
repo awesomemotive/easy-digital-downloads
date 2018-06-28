@@ -742,6 +742,31 @@ function get_dates_filter_range() {
 }
 
 /**
+ * Determines whether results should be displayed hour by hour, or not.
+ *
+ * @since 3.0
+ *
+ * @return bool True if results should use hour by hour, otherwise false.
+ */
+function get_dates_filter_hour_by_hour() {
+	// Retrieve the queried dates
+	$dates = get_dates_filter( 'objects' );
+
+	// Determine graph options
+	switch ( $dates['range'] ) {
+		case 'today':
+		case 'yesterday':
+			$hour_by_hour = true;
+			break;
+		default:
+			$hour_by_hour = false;
+			break;
+	}
+
+	return $hour_by_hour;
+}
+
+/**
  * Determines whether results should be displayed day by day or not.
  *
  * @since 3.0
