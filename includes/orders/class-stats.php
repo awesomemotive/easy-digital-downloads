@@ -2255,8 +2255,8 @@ class Stats {
 		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
 				$this->query_vars['start'] = 0 < $offset
-					? $this->date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' )
-					: $this->date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' );
+					? $this->date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' )
+					: $this->date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' );
 			}
 
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['end'] ) ) {

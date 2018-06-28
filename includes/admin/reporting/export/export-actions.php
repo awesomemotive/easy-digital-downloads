@@ -283,3 +283,26 @@ function edd_include_taxed_customers_batch_processor( $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-taxed-customers.php';
 	}
 }
+
+/**
+ * Register the sales and earnings report batch exporter.
+ *
+ * @since 3.0
+ */
+function edd_register_sales_and_earnings_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_sales_and_earnings_batch_processor', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_sales_and_earnings_batch_export', 10 );
+
+/**
+ * Loads the sales and earnings batch process if needed.
+ *
+ * @since 3.0
+ *
+ * @param string $class The class being requested to run for the batch export
+ */
+function edd_include_sales_and_earnings_batch_processor( $class ) {
+	if ( 'EDD_Batch_Sales_And_Earnings_Export' === $class ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-sales-and-earnings.php';
+	}
+}
