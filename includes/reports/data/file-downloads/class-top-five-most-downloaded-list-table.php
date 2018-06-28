@@ -80,11 +80,11 @@ class Top_Five_Most_Downloaded_List_Table extends \WP_List_Table {
 
 			// Get prices with matching index
 			$prices = wp_filter_object_list( $prices, array(
-				'index' => absint( $download->price_id )
+				'index' => absint( $download->price_id ),
 			) );
 
 			// Only want values
-			$values = array_values( $values );
+			$prices = array_values( $prices );
 
 			// Maybe append the value
 			if ( ! empty( $prices ) ) {
