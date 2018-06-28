@@ -269,9 +269,10 @@ a.edd-delete:hover {
 	background-color: #ffffee;
 	border-left: 5px solid #cccc00;
 	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-	width: 80%;
+	width: 100%;
 	position: relative;
 	margin-bottom: 10px;
+	box-sizing: border-box;
 	overflow: hidden;
 }
 
@@ -300,6 +301,10 @@ a.edd-delete:hover {
 	margin: 0;
 }
 
+.edd-notes .edd-note p a {
+	color: #000;
+}
+
 .edd-notes .edd-note .edd-note-author {
 	margin-right: 5px;
 }
@@ -325,8 +330,12 @@ a.edd-delete:hover {
 }
 
 textarea[name="edd-note"] {
-	width: 80%;
+	width: 100%;
 	min-height: 70px;
+}
+
+.edd-notes-wrapper {
+	width: 80%;
 }
 
 #edd-customer-notes {
@@ -353,7 +362,6 @@ textarea[name="edd-note"] {
 }
 
 #edd-edit-discount textarea {
-	width: 80%;
 	height: 100px;
 }
 
@@ -1590,9 +1598,10 @@ td.edd_order_price {
 
 #edd-reports-tiles-wrap h2.hndle {
 	text-align: center;
-	font-size: 12px;
+	text-transform: uppercase;
+	font-size: 11px;
 	font-weight: normal;
-	color: #555;
+	color: #888;
 	border-bottom: none;
 	padding: 0;
 	position: absolute;
@@ -1616,7 +1625,7 @@ td.edd_order_price {
 	margin: 0;
 	height: 100%;
 	border: 1px solid #e5e5e5;
-	background: #fcfcfc;
+	background: #fafafa;
 }
 
 #edd-reports-tiles-wrap .inside span {
@@ -1669,6 +1678,8 @@ td.edd_order_price {
 	right: 0;
 	bottom: 0;
 	color: #aaa;
+	font-size: 11px;
+	line-height: 1em;
 	background-color: #fff;
 	border-left: 1px solid #e5e5e5;
 	border-top: 1px solid #e5e5e5;
@@ -1677,8 +1688,6 @@ td.edd_order_price {
 	border-top-left-radius: 8px;
 	padding: 4px 0 0 9px;
 	margin: 0 -1px -1px 0;
-	font-size: 12px;
-	box-shadow: 0px 0px 150px 0px #bbb;
 }
 
 #edd-reports-tiles-wrap .postbox:hover .inside {
@@ -1688,6 +1697,7 @@ td.edd_order_price {
 #edd-reports-tiles-wrap .postbox:hover .tile-compare {
 	border-left: 1px solid #bbb;
 	border-top: 1px solid #bbb;
+	color: #777;
 }
 
 .edd-reports-chart-pie,
@@ -2815,6 +2825,53 @@ only screen and ( min-resolution: 1.5dppx ) {
 	background-color: #fff;
 	border-right: none;
 	margin-right: -1px;
+}
+
+/* Blue */
+.admin-color-blue .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #096484;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #26292c;
+}
+
+/* Ocean */
+.admin-color-ocean .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #be3631;
+}
+
+/* Light */
+.admin-color-light .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #36533f;
+}
+
+/* Mint */
+.admin-color-mint .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #4f6d59;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {

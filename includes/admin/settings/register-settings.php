@@ -828,7 +828,7 @@ function edd_get_registered_settings() {
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+						'desc' => __( 'Add tax rates for specific regions. Enter <code>6.5</code> for 6.5%.', 'easy-digital-downloads' ),
 						'type' => 'tax_rates',
 					),
 					'tax_rate' => array(
