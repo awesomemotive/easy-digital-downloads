@@ -508,7 +508,7 @@ function edd_register_overview_report( $reports ) {
 									? $result->day
 									: 1;
 
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0 )->setTimezone( 'UTC' )->timestamp;
 							}
 
 							$sales[ $timestamp ][1]    = $result->sales;
