@@ -183,7 +183,7 @@ class Stats {
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 		}
-
+		
 		$result = $this->get_db()->get_row( $sql );
 
 		$total = null === $result->total
@@ -2255,14 +2255,14 @@ class Stats {
 		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
 				$this->query_vars['start'] = 0 < $offset
-					? $this->date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' )
-					: $this->date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' );
+					? $this->date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' )
+					: $this->date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' );
 			}
 
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
 				$this->query_vars['end'] = 0 < $offset
-					? $this->date_ranges[ $this->query_vars['range'] ]['end']->subSeconds( $offset )->format( 'mysql' )
-					: $this->date_ranges[ $this->query_vars['range'] ]['end']->addSeconds( $offset )->format( 'mysql' );
+					? $this->date_ranges[ $this->query_vars['range'] ]['end']->addSeconds( $offset )->format( 'mysql' )
+					: $this->date_ranges[ $this->query_vars['range'] ]['end']->subSeconds( $offset )->format( 'mysql' );
 			}
 		}
 
@@ -2270,14 +2270,14 @@ class Stats {
 		if ( true === $this->query_vars['relative'] && ! empty( $this->query_vars['range'] ) && isset( $this->relative_date_ranges[ $this->query_vars['range'] ] ) ) {
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
 				$this->query_vars['relative_start'] = 0 < $offset
-					? $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' )
-					: $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' );
+					? $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' )
+					: $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' );
 			}
 
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
 				$this->query_vars['relative_end'] = 0 < $offset
-					? $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->subSeconds( $offset )->format( 'mysql' )
-					: $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->addSeconds( $offset )->format( 'mysql' );
+					? $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->addSeconds( $offset )->format( 'mysql' )
+					: $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->subSeconds( $offset )->format( 'mysql' );
 			}
 		}
 
