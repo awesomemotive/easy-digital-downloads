@@ -183,7 +183,7 @@ class Stats {
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 		}
-		
+
 		$result = $this->get_db()->get_row( $sql );
 
 		$total = null === $result->total

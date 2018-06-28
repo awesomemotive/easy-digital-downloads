@@ -447,8 +447,16 @@ function edd_register_overview_report( $reports ) {
 							);
 						}
 
-						$start = $dates['start']->format( 'mysql' );
-						$end   = $dates['end']->format( 'mysql' );
+						// Fetch GMT offset.
+						$offset = EDD()->utils->get_gmt_offset();
+
+						$start = 0 < $offset
+							? $dates['start']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['start']->addSeconds( $offset )->format( 'mysql' );
+
+						$end = 0 < $offset
+							? $dates['end']->subSeconds( $offset )->format( 'mysql' )
+							: $dates['end']->addSeconds( $offset )->format( 'mysql' );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
@@ -463,7 +471,7 @@ function edd_register_overview_report( $reports ) {
 
 						while ( strtotime( $start ) <= strtotime( $end ) ) {
 							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
+							    $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
 
 								$sales[ $timestamp ][] = $timestamp;
 								$sales[ $timestamp ][] = 0;
@@ -493,7 +501,7 @@ function edd_register_overview_report( $reports ) {
 
 						foreach ( $results as $result ) {
 							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->setTimezone( 'UTC' )->timestamp;
 							} else {
 								$day = ( true === $day_by_day )
 									? $result->day
