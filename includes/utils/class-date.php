@@ -35,11 +35,6 @@ final class Date extends \Carbon\Carbon {
 		}
 
 		parent::__construct( $time, $timezone );
-
-		// Apply the WP offset based on the WP timezone that was set.
-		$offset   = $this->getOffset();
-		$interval = \DateInterval::createFromDateString( "{$offset} seconds" );
-		$this->add( $interval );
 	}
 
 	/**
