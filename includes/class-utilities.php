@@ -317,6 +317,19 @@ class Utilities {
 	 * @since 3.0
 	 */
 	private function set_gmt_offset() {
+
+		// We need to calculate the GMT offset and these are a few ways this can be done.
+
+		// First, try and fetch a value from wp_options.
+		$offset = get_option( 'gmt_offset' );
+
+		// Get the timezone if gmt_offset does not exist in wp_options.
+		if ( empty( $offset ) ) {
+			$timezone = $this->get_time_zone( true );
+
+
+		}
+
 		$this->gmt_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
 	}
 
