@@ -457,7 +457,28 @@ class Manifest implements Error_Logger {
 					}
 				};
 
-			<?php endif; // Line and bar charts ?>
+			<?php else : // Pie charts ?>
+
+			// Display percentage amounts with label.
+			<?php echo esc_js( $target_el ); ?>.options.tooltips = {
+				callbacks: {
+					label: function( t, d ) {
+						var dataset = d.datasets[ t.datasetIndex ];
+
+						var total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
+							return previousValue + currentValue;
+						} );
+
+						var currentValue = dataset.data[ t.index ];
+
+						var precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
+
+						return d.labels[ t.datasetIndex ] + ': ' + currentValue + ' (' + precentage + '%)';
+					}
+				}
+			};
+
+			<?php endif; ?>
 
 			// Instantiate the chart.
 			<?php echo esc_js( $target_el ); ?>_chart = new Chart(
