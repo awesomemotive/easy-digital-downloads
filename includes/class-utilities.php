@@ -11,6 +11,7 @@
 namespace EDD;
 
 use EDD\Utils as Utils;
+use EDD\Reports as Reports;
 
 /**
  * Class that bootstraps various utilities leveraged in EDD core.
@@ -98,31 +99,20 @@ class Utilities {
 	 * @return \EDD\Utils\Registry|\WP_Error The registry instance if it exists, otherwise a WP_Error..
 	 */
 	public function get_registry( $name ) {
-
-		switch( $name ) {
+		switch ( $name ) {
 			case 'reports':
-
 				if ( ! did_action( 'edd_reports_init' ) ) {
-
 					_doing_it_wrong( __FUNCTION__, 'The Report registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
-
 				} elseif ( class_exists( '\EDD\Reports\Data\Report_Registry' ) ) {
-
-					$registry = \EDD\Reports\Data\Report_Registry::instance();
-
+					$registry = Reports\Data\Report_Registry::instance();
 				}
 				break;
 
 			case 'reports:endpoints':
-
 				if ( ! did_action( 'edd_reports_init' ) ) {
-
 					_doing_it_wrong( __FUNCTION__, 'The Endpoints registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
-
 				} elseif ( class_exists( '\EDD\Reports\Data\Endpoint_Registry' ) ) {
-
-					$registry = \EDD\Reports\Data\Endpoint_Registry::instance();
-
+					$registry = Reports\Data\Endpoint_Registry::instance();
 				}
 				break;
 
@@ -156,7 +146,7 @@ class Utilities {
 		}
 
 		// Bail if format is not known
-		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'date-attribute', 'date-js', 'date-mysql', 'time-mysql' ) ) ) {
+		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'date-attribute', 'date-js', 'date-mysql', 'time-mysql' ), true ) ) {
 			return $format;
 		}
 
@@ -164,22 +154,22 @@ class Utilities {
 		switch ( $format ) {
 
 			// jQuery UI Datepicker fields, placeholders, etc...
-			case 'date-attribute' :
+			case 'date-attribute':
 				$retval = 'yyyy-mm-dd';
 				break;
 
 			// jQuery UI Datepicker JS variable
-			case 'date-js' :
+			case 'date-js':
 				$retval = 'yy-mm-dd';
 				break;
 
 			// Date in MySQL format
-			case 'date-mysql' :
+			case 'date-mysql':
 				$retval = 'Y-m-d';
 				break;
 
 			// Time in MySQL format
-			case 'time-mysql' :
+			case 'time-mysql':
 				$retval = 'H:i:s';
 				break;
 
@@ -198,7 +188,7 @@ class Utilities {
 				$retval = $this->get_time_format();
 				break;
 
-			// WordPress date_fromat only
+			// WordPress date_format only
 			case 'date':
 			default:
 				$retval = $this->get_date_format();
@@ -345,7 +335,7 @@ class Utilities {
 	 * @since 3.0
 	 */
 	private function set_time_format() {
-		$this->time_format = get_option( 'time_format', 'g:i a'  );
+		$this->time_format = get_option( 'time_format', 'g:i a' );
 	}
 
 	/**
