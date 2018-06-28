@@ -2676,6 +2676,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	background-color: #fff;
 	border-right: none;
 	margin-right: -1px;
+	border-left: 5px solid #00a0d2;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {
