@@ -478,7 +478,7 @@ function edd_register_overview_report( $reports ) {
 
 						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
 							if ( $hour_by_hour ) {
-							    $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
+							    $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
 
 								$sales[ $timestamp ][] = $timestamp;
 								$sales[ $timestamp ][] = 0;
@@ -508,7 +508,7 @@ function edd_register_overview_report( $reports ) {
 
 						foreach ( $results as $result ) {
 							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							} else {
 								$day = ( true === $day_by_day )
 									? $result->day
@@ -905,7 +905,7 @@ function edd_register_downloads_report( $reports ) {
 
 					        while ( strtotime( $start ) <= strtotime( $end ) ) {
 						        if ( $hour_by_hour ) {
-							        $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
+						            $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
 
 							        $sales[ $timestamp ][] = $timestamp;
 							        $sales[ $timestamp ][] = 0;
