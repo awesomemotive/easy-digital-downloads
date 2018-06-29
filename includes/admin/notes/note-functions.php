@@ -127,6 +127,7 @@ function edd_admin_get_new_note_form( $object_id = 0, $object_type = '' ) {
 			<button type="button" id="edd-add-note" class="edd-note-submit button button-secondary left" data-object-id="<?php echo esc_attr( $object_id ); ?>" data-object-type="<?php echo esc_attr( $object_type ); ?>">
 				<?php _e( 'Add Note', 'easy-digital-downloads' ); ?>
 			</button>
+			<span class="spinner"></span>
 		</p>
 		<?php wp_nonce_field( 'edd_note', 'edd_note_nonce' ); ?>
 	</div>
