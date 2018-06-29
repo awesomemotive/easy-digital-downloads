@@ -2888,13 +2888,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	color: #555;
 }
 
-.edd-vertical-sections .spinner {
-	visibility: visible;
-	position: absolute;
-	left: calc( 60% );
-	top: 50%;
-}
-
 @media only screen and ( max-width: 782px ) {
 
 	.edd-vertical-sections .section-nav {
