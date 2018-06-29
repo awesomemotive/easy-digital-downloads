@@ -555,7 +555,7 @@ function get_dates_filter_options() {
  * }
  */
 function get_dates_filter( $values = 'strings', $timezone = null ) {
-	$date  = EDD()->utils->date( 'now', $timezone );
+	$date  = EDD()->utils->date( 'now', $timezone, false );
 	$dates = parse_dates_for_range( $date );
 
 	if ( 'strings' === $values ) {
@@ -619,15 +619,15 @@ function parse_dates_for_range( $date, $range = null ) {
 
 		case 'today':
 			$dates = array(
-				'start' => $date->copy()->startOfDay(),
-				'end'   => $date->copy()->endOfDay(),
+				'start' => $date->copy()->setTimezone( edd_get_timezone_id() )->startOfDay()->setTimezone( 'UTC' ),
+				'end'   => $date->copy()->setTimezone( edd_get_timezone_id() )->endOfDay()->setTimezone( 'UTC' ),
 			);
 			break;
 
 		case 'yesterday':
 			$dates = array(
-				'start' => $date->copy()->subDay( 1 )->startOfDay(),
-				'end'   => $date->copy()->subDay( 1 )->endOfDay(),
+				'start' => $date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->startOfDay()->setTimezone( 'UTC' ),
+				'end'   => $date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->endOfDay()->setTimezone( 'UTC' ),
 			);
 			break;
 

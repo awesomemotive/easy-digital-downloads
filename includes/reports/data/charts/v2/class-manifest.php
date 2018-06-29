@@ -318,6 +318,10 @@ class Manifest implements Error_Logger {
 		$default   = "edd_reports_graph_{$endpoint->get_id()}";
 		$target_el = $endpoint->get_display_arg( 'target', $default );
 
+		// Apply UTC offset.
+		$dates['start']->setTimezone( edd_get_timezone_id() );
+		$dates['end']->setTimezone( edd_get_timezone_id() );
+
 		// The target ID has to be JS compatible, so no dashes.
 		$target_el = str_replace( '-', '_', $target_el );
 		?>
@@ -343,7 +347,6 @@ class Manifest implements Error_Logger {
 				<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
 					<?php if ( false === $day_by_day ) : ?>
 						xaxis.time.unit = 'month';
-						console.log( xaxis.time );
 					<?php endif; ?>
 
 					xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );

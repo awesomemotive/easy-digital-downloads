@@ -2248,36 +2248,25 @@ class Stats {
 			$this->query_vars = wp_parse_args( $query, $this->query_vars );
 		}
 
-		// Fetch GMT offset.
-		$offset = EDD()->utils->get_gmt_offset();
-
 		// Use Carbon to set up start and end date based on range passed.
 		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
-				$this->query_vars['start'] = 0 < $offset
-					? $this->date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' )
-					: $this->date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' );
+				$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			}
 
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
-				$this->query_vars['end'] = 0 < $offset
-					? $this->date_ranges[ $this->query_vars['range'] ]['end']->addSeconds( $offset )->format( 'mysql' )
-					: $this->date_ranges[ $this->query_vars['range'] ]['end']->subSeconds( $offset )->format( 'mysql' );
+				$this->query_vars['end'] = $this->date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 			}
 		}
 
 		// Use Carbon to set up start and end date based on range passed.
 		if ( true === $this->query_vars['relative'] && ! empty( $this->query_vars['range'] ) && isset( $this->relative_date_ranges[ $this->query_vars['range'] ] ) ) {
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
-				$this->query_vars['relative_start'] = 0 < $offset
-					? $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->addSeconds( $offset )->format( 'mysql' )
-					: $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->subSeconds( $offset )->format( 'mysql' );
+				$this->query_vars['relative_start'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			}
 
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
-				$this->query_vars['relative_end'] = 0 < $offset
-					? $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->addSeconds( $offset )->format( 'mysql' )
-					: $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->subSeconds( $offset )->format( 'mysql' );
+				$this->query_vars['relative_end'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 			}
 		}
 
