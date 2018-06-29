@@ -62,15 +62,11 @@ final class Init {
 	 * @since 3.0
 	 */
 	public function __construct() {
-		static $done = false;
-
-		// Bail if already done
-		if ( true === $done ) {
-			return;
-		}
 
 		// Avoid multiple initializations
-		$done = true;
+		if ( did_action( 'edd_reports_init' ) ) {
+			return;
+		}
 
 		self::bootstrap();
 
