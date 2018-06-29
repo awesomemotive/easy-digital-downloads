@@ -62,6 +62,16 @@ final class Init {
 	 * @since 3.0
 	 */
 	public function __construct() {
+		static $done = false;
+
+		// Bail if already done
+		if ( true === $done ) {
+			return;
+		}
+
+		// Avoid multiple initializations
+		$done = true;
+
 		self::bootstrap();
 
 		$reports = Data\Report_Registry::instance();
