@@ -536,6 +536,7 @@ jQuery(document).ready(function ($) {
 				var edd_note       = $('#edd-note'),
 					edd_notes      = $('.edd-notes'),
 					edd_no_notes   = $('.edd-no-notes'),
+					edd_spinner    = $('.edd-add-note .spinner'),
 					edd_note_nonce = $('#edd_note_nonce');
 
                 var postData = {
@@ -547,6 +548,8 @@ jQuery(document).ready(function ($) {
                 };
 
                 if ( postData.note ) {
+					edd_spinner.css('visibility', 'visible');
+
                     $.ajax({
                         type: 'POST',
                         data: postData,
@@ -557,12 +560,14 @@ jQuery(document).ready(function ($) {
 
                             edd_notes.append( res.data );
                             edd_no_notes.hide();
+							edd_spinner.css('visibility', 'hidden');
                             edd_note.val('');
                         }
                     }).fail(function (data) {
                         if ( window.console && window.console.log ) {
                             console.log( data );
                         }
+						edd_spinner.css('visibility', 'hidden');
                     });
 
                 } else {
