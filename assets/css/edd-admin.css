@@ -276,6 +276,16 @@ a.edd-delete:hover {
 	overflow: hidden;
 }
 
+.edd-notes .edd-note.deleting {
+	opacity: 0.5;
+}
+
+.edd-add-note .spinner {
+	float: none;
+	display: inline-block;
+	margin: 0;
+}
+
 .edd-notes .edd-note div {
 	padding: 5px 10px;
 	margin: 0;

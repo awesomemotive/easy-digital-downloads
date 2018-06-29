@@ -533,7 +533,8 @@ jQuery(document).ready(function ($) {
             $('#edd-add-note').on('click', function(e) {
                 e.preventDefault();
 
-				var edd_note       = $('#edd-note'),
+				var edd_button     = $( this ),
+					edd_note       = $('#edd-note'),
 					edd_notes      = $('.edd-notes'),
 					edd_no_notes   = $('.edd-no-notes'),
 					edd_spinner    = $('.edd-add-note .spinner'),
@@ -542,12 +543,13 @@ jQuery(document).ready(function ($) {
                 var postData = {
                     action:      'edd_add_note',
 					nonce:       edd_note_nonce.val(),
-                    object_id:   $( this ).data('object-id'),
-                    object_type: $( this ).data('object-type'),
+                    object_id:   edd_button.data('object-id'),
+                    object_type: edd_button.data('object-type'),
                     note:        edd_note.val()
                 };
 
                 if ( postData.note ) {
+					edd_button.prop('disabled', true);
 					edd_spinner.css('visibility', 'visible');
 
                     $.ajax({
@@ -560,6 +562,7 @@ jQuery(document).ready(function ($) {
 
                             edd_notes.append( res.data );
                             edd_no_notes.hide();
+							edd_button.prop('disabled', false);
 							edd_spinner.css('visibility', 'hidden');
                             edd_note.val('');
                         }
@@ -567,6 +570,7 @@ jQuery(document).ready(function ($) {
                         if ( window.console && window.console.log ) {
                             console.log( data );
                         }
+						edd_button.prop('disabled', false);
 						edd_spinner.css('visibility', 'hidden');
                     });
 
@@ -591,7 +595,9 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on('click', '.edd-delete-note', function(e) {
 				e.preventDefault();
 
-				var edd_notes      = $('.edd-note'),
+				var edd_link       = $( this ),
+					edd_notes      = $('.edd-note'),
+					edd_note       = edd_link.parents( '.edd-note' ),
 					edd_no_notes   = $('.edd-no-notes'),
 					edd_note_nonce = $('#edd_note_nonce');
 
@@ -599,25 +605,31 @@ jQuery(document).ready(function ($) {
 					var postData = {
 						action:  'edd_delete_note',
 						nonce:   edd_note_nonce.val(),
-						note_id: $( this ).data('note-id')
+						note_id: edd_link.data('note-id')
 					};
+
+					edd_note.addClass('deleting');
 
 					$.ajax({
 						type: "POST",
 						data: postData,
 						url:  ajaxurl,
 						success: function (response) {
-							$('#edd-note-' + postData.note_id ).remove();
+							if ( '1' === response ) {
+								edd_note.remove();
+							}
 
 							if ( edd_notes.length === 1 ) {
 								edd_no_notes.show();
 							}
+
 							return false;
 						}
 					}).fail(function (data) {
 						if ( window.console && window.console.log ) {
 							console.log( data );
 						}
+						edd_note.removeClass('deleting');
 					});
 					return true;
 				}
