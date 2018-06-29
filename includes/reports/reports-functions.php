@@ -430,24 +430,31 @@ function validate_filter( $filter ) {
 function get_filter_value( $filter ) {
 	$value = '';
 
-	if ( validate_filter( $filter ) ) {
-		$filter_key   = get_filter_key( $filter );
-		$filter_value = get_transient( $filter_key );
+	// Bail if filter does not validate
+	if ( ! validate_filter( $filter ) ) {
+		return $value;
+	}
 
-		if ( false !== $filter_value ) {
-			$value = $filter_value;
-		} elseif ( false === $filter_value && 'dates' === $filter ) {
+	// Look for filter in transients
+	$filter_key   = get_filter_key( $filter );
+	$filter_value = get_transient( $filter_key );
 
-			// Default to last 30 days for filter value.
-			$date  = EDD()->utils->date( 'now' );
-			$dates = parse_dates_for_range( $date, 'last_30_days' );
+	// Maybe use transient value
+	if ( false !== $filter_value ) {
+		$value = $filter_value;
 
-			$value = array(
-				'from'  => $dates['start']->format( 'Y-m-d' ),
-				'to'    => $dates['end']->format( 'Y-m-d' ),
-				'range' => 'last_30_days',
-			);
-		}
+	// Maybe use dates defaults
+	} elseif ( 'dates' === $filter ) {
+
+		// Default to last 30 days for filter value.
+		$default = 'last_30_days';
+		$date    = EDD()->utils->date( 'now' );
+		$dates   = parse_dates_for_range( $date, $default );
+		$value   = array(
+			'from'  => $dates['start']->format( 'Y-m-d' ),
+			'to'    => $dates['end']->format( 'Y-m-d' ),
+			'range' => $default
+		);
 	}
 
 	return $value;
