@@ -336,11 +336,9 @@ class Manifest implements Error_Logger {
 			<?php if ( ! $this->is_pie_manifest() ) : ?>
 				// Convert dataset x-axis values to moment() objects.
 				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
-
 					dataset.data.forEach( function( pair, index ) {
-						pair.x = moment( pair.x );
+						pair.x = moment( pair.x ).utcOffset( <?php echo esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ); ?> ).format( 'LLL' );
 					} );
-
 				} );
 
 				// Set min and max moment() values for the x-axis.
