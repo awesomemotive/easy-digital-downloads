@@ -290,6 +290,7 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Bail if no upgrades
 		if ( empty( $this->upgrades ) ) {
+			$this->set_db_version();
 			return true;
 		}
 
