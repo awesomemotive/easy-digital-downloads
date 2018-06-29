@@ -308,8 +308,9 @@ class Manifest implements Error_Logger {
 		$config = $this->build_config();
 
 		// Dates.
-		$dates      = Reports\get_dates_filter( 'objects' );
-		$day_by_day = Reports\get_dates_filter_day_by_day();
+		$dates        = Reports\get_dates_filter( 'objects' );
+		$day_by_day   = Reports\get_dates_filter_day_by_day();
+		$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 		// Adjust end date forward by 1 second to push into the next day (for ChartJS display purposes).
 		$dates['end']->addSeconds( 1 );
@@ -337,7 +338,11 @@ class Manifest implements Error_Logger {
 				// Convert dataset x-axis values to moment() objects.
 				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
 					dataset.data.forEach( function( pair, index ) {
-						pair.x = moment( pair.x ).utcOffset( <?php echo esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ); ?> ).format( 'LLL' );
+						<?php if ( false === $hour_by_hour ) : ?>
+                        pair.x = moment( pair.x ).utcOffset( 0 ).format( 'LLL' );
+						<?php else : ?>
+                        pair.x = moment( pair.x ).utcOffset( <?php echo esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ); ?> ).format( 'LLL' );
+						<?php endif; ?>
 					} );
 				} );
 
