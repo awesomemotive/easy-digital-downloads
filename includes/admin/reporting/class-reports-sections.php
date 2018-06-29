@@ -33,8 +33,6 @@ class Reports_Sections extends Sections {
 
 		<div class="edd-sections-wrap">
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
-				<span class="spinner"></span>
-
 				<ul class="section-nav">
 					<?php echo $this->get_all_section_links(); ?>
 				</ul>
@@ -45,11 +43,6 @@ class Reports_Sections extends Sections {
 				<br class="clear">
 			</div>
 		</div>
-		<style>
-			.edd-vertical-sections .spinner {
-				visibility: hidden;
-			}
-		</style>
 
 		<?php
 	}
