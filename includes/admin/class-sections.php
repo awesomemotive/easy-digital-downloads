@@ -274,10 +274,12 @@ class Sections {
 						isset( $section->callback[1] )
 							? call_user_func_array( $section->callback[0], $section->callback[1] )
 							: call_user_func_array( $section->callback[0], array() );
+
 					} else {
-						var_dump( $section->callback );
+						_e( 'Invalid section', 'easy-digital-downloads' );
 					}
 				} else {
+					die;
 					do_action( 'edd_' . $section->id . 'section_contents', $this );
 				}
 
