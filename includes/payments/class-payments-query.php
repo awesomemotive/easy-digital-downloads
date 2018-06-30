@@ -83,6 +83,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null,
 			'gateway'         => null,
 			'post__in'        => null,
+			'advanced_query'  => null,
 		);
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
@@ -618,6 +619,10 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['order'] ) ) {
 			$arguments['order'] = $this->args['order'];
+		}
+
+		if ( isset( $this->args['advanced_query'] ) && is_array( $this->args['advanced_query'] ) ) {
+			$arguments['advanced_query'] = $this->args['advanced_query'];
 		}
 
 		$this->args = $arguments;
