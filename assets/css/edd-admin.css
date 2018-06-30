@@ -503,6 +503,11 @@ textarea[name="edd-note"] {
 	margin: 2px 0 0 0;
 }
 
+.edd-advanced-filters-items {
+	clear: both;
+	display: block;
+}
+
 /* Nav Tab Styles
 -------------------------------------------------------------- */
 

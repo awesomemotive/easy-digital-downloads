@@ -186,6 +186,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<span id="edd-after-core-filters">
 					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
+                    <input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'Advanced Filters', 'easy-digital-downloads' ); ?>"/>
+
 					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ( 'all' !== $gateway ) ) : ?>
@@ -204,6 +206,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
 
 			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
+
+            <div class="edd-advanced-filters-items filter-items">
+                <div class="edd-advanced-filter-row">
+                    
+                </div>
+            </div>
 		</div>
 
 		<?php
