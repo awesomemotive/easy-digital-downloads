@@ -209,7 +209,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			<div id="edd-advanced-filters" class="filter-items">
 				<div class="edd-advanced-filter-row">
-					<span class="edd-advanced-filter-name"><label for="order-total-filter-type"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?></label></span>
+					<span class="edd-advanced-filter-name"><label for="order-amount-filter-type"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label></span>
 					<?php
 					$options = array(
 						'equal'   => __( 'is equal to', 'easy-digital-downloads' ),
@@ -218,8 +218,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					);
 
 					echo EDD()->html->select( array(
-						'id'               => 'order-total-filter-type',
-						'name'             => 'order-total-filter-type',
+						'id'               => 'order-amount-filter-type',
+						'name'             => 'order-amount-filter-type',
 						'options'          => $options,
 						'selected'         => false,
 						'show_option_all'  => false,
@@ -228,7 +228,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					?>
 
 					<span>
-						<input type="text" name="order-total" />
+						<input type="number" name="order-amount-filter-value" />
 					</span>
 				</div>
 			</div>
