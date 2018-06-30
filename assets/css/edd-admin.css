@@ -494,7 +494,8 @@ textarea[name="edd-note"] {
 	margin-left: 2px;
 }
 
-#edd-filters input[type=text] {
+#edd-filters input[type=text],
+#edd-filters input[type=number] {
 	vertical-align: middle;
 	max-width: 100px;
 	padding: 5px;
@@ -505,6 +506,9 @@ textarea[name="edd-note"] {
 
 #edd-advanced-filters {
 	clear: both;
+}
+
+#edd-advanced-filters.hide {
 	display: none;
 }
 
