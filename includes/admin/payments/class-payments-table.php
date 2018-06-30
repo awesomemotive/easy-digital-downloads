@@ -212,9 +212,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					<span class="edd-advanced-filter-name"><label for="order-amount-filter-type"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label></span>
 					<?php
 					$options = array(
-						'equal'   => __( 'is equal to', 'easy-digital-downloads' ),
-						'greater' => __( 'is greater than', 'easy-digital-downloads' ),
-						'less'    => __( 'is less than', 'easy-digital-downloads' ),
+						'=' => __( 'is equal to', 'easy-digital-downloads' ),
+						'>' => __( 'is greater than', 'easy-digital-downloads' ),
+						'<' => __( 'is less than', 'easy-digital-downloads' ),
 					);
 
 					echo EDD()->html->select( array(
@@ -814,6 +814,20 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					'before'  => date( 'Y-m-d 23:59:59', strtotime( $end_date ) )
 				);
 			}
+		}
+
+		// Maybe filter by order amount.
+		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
+			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+
+			$args['advanced_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
 		}
 
 		// No empties
