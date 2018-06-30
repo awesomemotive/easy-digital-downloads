@@ -702,6 +702,20 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['mode'] = sanitize_key( $_GET['mode'] );
 		}
 
+		// Maybe filter by order amount.
+		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
+			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+
+			$args['advanced_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
+		}
+
 		// No empties
 		$r = wp_parse_args( array_filter( $args ) );
 
