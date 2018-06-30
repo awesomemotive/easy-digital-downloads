@@ -114,7 +114,11 @@ function edd_reports_sections() {
  * @param string $report_id
  */
 function edd_output_report_callback( $report_id = '' ) {
-	$report = EDD\Reports\get_report( $report_id );
+
+	// Maybe use the already loaded report
+	$report = EDD()->report
+		? EDD()->report
+		: EDD\Reports\get_report( $report_id );
 
 	/**
 	 * Fires at the top of the content area of a Reports tab.
