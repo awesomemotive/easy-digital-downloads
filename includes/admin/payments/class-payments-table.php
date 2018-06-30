@@ -207,11 +207,31 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
 
-            <div id="edd-advanced-filters" class="filter-items">
-                <div class="edd-advanced-filter-row">
-                    
-                </div>
-            </div>
+			<div id="edd-advanced-filters" class="filter-items">
+				<div class="edd-advanced-filter-row">
+					<span class="edd-advanced-filter-name"><label for="order-total-filter-type"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?></label></span>
+					<?php
+					$options = array(
+						'equal'   => __( 'is equal to', 'easy-digital-downloads' ),
+						'greater' => __( 'is greater than', 'easy-digital-downloads' ),
+						'less'    => __( 'is less than', 'easy-digital-downloads' ),
+					);
+
+					echo EDD()->html->select( array(
+						'id'               => 'order-total-filter-type',
+						'name'             => 'order-total-filter-type',
+						'options'          => $options,
+						'selected'         => false,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+					) );
+					?>
+
+					<span>
+						<input type="text" name="order-total" />
+					</span>
+				</div>
+			</div>
 		</div>
 
 		<?php
