@@ -422,6 +422,7 @@ class Base extends \EDD\Database\Base {
 			'count'             => false,
 			'meta_query'        => null, // See WP_Meta_Query
 			'date_query'        => null, // See WP_Date_Query
+			'advanced_query'    => null, // See WP_Meta_Query
 			'no_found_rows'     => true,
 
 			// Caching
@@ -1257,6 +1258,20 @@ class Base extends \EDD\Database\Base {
 
 				// Remove " AND " from meta_query query where clause
 				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+			}
+		}
+
+		// Maybe perform an advanced query
+		$advanced_query = $this->query_vars['advanced_query'];
+		if ( ! empty( $advanced_query ) && is_array( $advanced_query ) ) {
+			$meta_query = new Advanced_Query( $advanced_query );
+			$table      = $this->apply_prefix( $this->item_name );
+			$clauses    = $meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
+
+			if ( false !== $clauses ) {
+
+				// Remove " AND " from query where clause.
+				$where['advanced_query'] = preg_replace( $and, '', $clauses['where'] );
 			}
 		}
 
