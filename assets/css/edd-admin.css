@@ -494,7 +494,7 @@ textarea[name="edd-note"] {
 	margin-left: 2px;
 }
 
-#edd-date-filters input {
+#edd-filters input[type=text] {
 	vertical-align: middle;
 	max-width: 100px;
 	padding: 5px;
