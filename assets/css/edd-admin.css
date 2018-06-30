@@ -239,17 +239,17 @@ a.edd-delete:hover {
 #edd-add-ons .edd-extension .third-party {
 	display: none;
 }
-#edd-add-ons .edd-starter-package {
+#edd-add-ons .edd-add-ons-container .edd-extension:first-child {
 	background-color: #85c0e5;
 	border-color: #62a9d7;
 	color: #fff;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
-#edd-add-ons .edd-starter-package h3 {
+#edd-add-ons .edd-add-ons-container .edd-extension:first-child h3 {
 	color: #fff;
 }
 /* Mock blue "Primary" styling on Starter Package */
-#edd-add-ons .edd-starter-package .button-secondary {
+#edd-add-ons .edd-add-ons-container .edd-extension:first-child .button-secondary {
 	background: #0085ba;
 	border-color: #0073aa #006799 #006799;
 	box-shadow: 0 1px 0 #006799;
