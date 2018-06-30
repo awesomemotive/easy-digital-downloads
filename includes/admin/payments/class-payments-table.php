@@ -1,6 +1,6 @@
 <?php
 /**
- * Payment History Table Class
+ * Order History Table.
  *
  * @package     EDD
  * @subpackage  Admin/Payments
@@ -20,23 +20,24 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * EDD_Payment_History_Table Class
  *
- * Renders the Payment History table on the Payment History page
+ * Displays a list of orders on the 'Orders' page.
  *
  * @since 1.4
  * @since 3.0 Updated to use new query methods.
+ *            Updated to use new nomenclature.
  */
 class EDD_Payment_History_Table extends WP_List_Table {
 
 	/**
-	 * Number of results to show per page
+	 * Number of orders to show per page.
 	 *
-	 * @var string
+	 * @var int
 	 * @since 1.4
 	 */
 	public $per_page = 30;
 
 	/**
-	 * URL of this page
+	 * URL of this page.
 	 *
 	 * @var string
 	 * @since 1.4.1
@@ -44,7 +45,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public $base_url;
 
 	/**
-	 * Total number of payments, grouped by status
+	 * Total number of orders, grouped by status.
 	 *
 	 * @var array
 	 * @since 3.0
@@ -52,11 +53,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public $counts = array();
 
 	/**
-	 * Get things started
+	 * Constructor.
+     *
+     * @see \WP_List_Table::__construct()
 	 *
 	 * @since 1.4
-	 * @uses EDD_Payment_History_Table::get_payment_counts()
-	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
 
@@ -76,6 +77,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->get_payment_counts();
 	}
 
+	/**
+     * Retrieve the status.
+     *
+     * @since 3.0
+     *
+	 * @return string Status, if selected.
+	 */
 	public function get_status() {
 		return isset( $_GET['status'] )
 			? sanitize_key( $_GET['status'] )
@@ -83,23 +91,36 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Output advanced filters for payments
+	 * Display advanced filters.
 	 *
 	 * @since 1.4
+	 * @since 3.0 Add a filter for modes.
+	 *            Display 'Advanced Filters'
 	 */
 	public function advanced_filters() {
 
 		// Get values
-		$start_date = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date   = isset( $_GET['end-date']   ) ? sanitize_text_field( $_GET['end-date']   ) : null;
-		$gateway    = isset( $_GET['gateway']    ) ? sanitize_key( $_GET['gateway']           ) : 'all';
-		$mode       = isset( $_GET['mode']       ) ? sanitize_key( $_GET['mode']              ) : 'all';
+		$start_date                = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date                  = isset( $_GET['end-date'] ) ? sanitize_text_field( $_GET['end-date'] ) : null;
+		$gateway                   = isset( $_GET['gateway'] ) ? sanitize_key( $_GET['gateway'] ) : 'all';
+		$mode                      = isset( $_GET['mode'] ) ? sanitize_key( $_GET['mode'] ) : 'all';
+		$order_total_filter_type   = isset( $_GET['order-amount-filter-type'] ) ? sanitize_text_field( $_GET['order-amount-filter-type'] ) : false;
+		$order_total_filter_amount = isset( $_GET['order-amount-filter-value'] ) ? sanitize_text_field( $_GET['order-amount-filter-value'] ) : '';
+
 		$status     = $this->get_status();
 		$clear_url  = $this->base_url;
 
 		// Filters
 		$all_modes    = edd_get_payment_modes();
 		$all_gateways = edd_get_payment_gateways();
+
+		// Advanced filters
+		$advanced_filters_applied = (bool) ! empty( $order_total_filter_type ) && ! empty( $order_total_filter_amount );
+		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
+
+		$maybe_show_filters = ( true === $advanced_filters_applied )
+			? 'show'
+			: 'hide';
 
 		// No modes
 		if ( empty( $all_modes ) ) {
@@ -149,11 +170,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				<span id="edd-date-filters">
 					<span>
-						<label for="start-date"><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
+						<label for="start-date"><?php echo esc_html_x( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
 						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 					</span>
 					<span>
-						<label for="end-date"><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
+						<label for="end-date"><?php echo esc_html_x( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
 						<input type="text" id="end-date" name="end-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 					</span>
 				</span>
@@ -176,11 +197,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<span id="edd-after-core-filters">
 					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
-					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+                    <input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'Advanced Filters', 'easy-digital-downloads' ); ?>"/>
+
+					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ( 'all' !== $gateway ) ) : ?>
 						<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-							<?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?>
+							<?php esc_html_e( 'Clear Filter', 'easy-digital-downloads' ); ?>
 						</a>
 					<?php endif; ?>
 				</span>
@@ -190,26 +213,52 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<?php endif; ?>
 
 			</div>
+
 			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
-			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
+
+			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
+
+			<div id="edd-advanced-filters" class="filter-items <?php echo esc_attr( $maybe_show_filters ); ?>">
+				<div class="edd-advanced-filter-row">
+					<span class="edd-advanced-filter-name"><label for="order-amount-filter-type"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label></span>
+					<?php
+					$options = array(
+						'=' => __( 'is equal to', 'easy-digital-downloads' ),
+						'>' => __( 'is greater than', 'easy-digital-downloads' ),
+						'<' => __( 'is less than', 'easy-digital-downloads' ),
+					);
+
+					echo EDD()->html->select( array(
+						'id'               => 'order-amount-filter-type',
+						'name'             => 'order-amount-filter-type',
+						'options'          => $options,
+						'selected'         => $order_total_filter_type,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+					) );
+					?>
+
+					<span>
+						<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
+					</span>
+				</div>
+			</div>
 		</div>
 
 		<?php
 	}
 
 	/**
-	 * Show the search field
+	 * Show the search field.
 	 *
 	 * @since 1.4
 	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
+	 * @param string $text     Label for the search box.
+	 * @param string $input_id ID of the search box.
 	 */
 	public function search_box( $text, $input_id ) {
 
-		// Bail if no customers and no search
+		// Bail if no customers and no search.
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 			return;
 		}
@@ -236,20 +285,19 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Message to be displayed when there are no items
+	 * Message to be displayed when there are no items.
 	 *
 	 * @since 3.0
-	 * @access public
 	 */
 	public function no_items() {
-		_e( 'No orders found.', 'easy-digital-downloads' );
+		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
 	}
 
 	/**
 	 * Retrieve the view types.
 	 *
 	 * @since 1.4
-     *
+	 *
 	 * @return array $views All the views available.
 	 */
 	public function get_views() {
@@ -257,22 +305,35 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			? sanitize_key( $_GET['status'] )
 			: '';
 
-		$url   = remove_query_arg( array( 'status', 'paged' ) );
-		$class = in_array( $current, array( '', 'all' ) ) ? ' class="current"' : '';
+		$url = remove_query_arg( array( 'status', 'paged' ) );
+
+		$class = in_array( $current, array( '', 'all' ), true )
+			? ' class="current"'
+			: '';
+
 		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
-		$label = __( 'All',  'easy-digital-downloads' ) . $count;
+
+		$label = __( 'All', 'easy-digital-downloads' ) . $count;
 		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label )
+			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
 		);
 
 		$counts = $this->counts;
 		unset( $counts['total'] );
 
-		// Loop through known statuses
+		// Loop through known statuses.
 		foreach ( $counts as $status => $count ) {
-			$url              = add_query_arg( array( 'status' => $status, 'paged' => false ) );
-			$class            = ( $current === $status ) ? ' class="current"' : '';
-			$count            = '&nbsp;<span class="count">(' . $this->counts[ $status ] . ')</span>';
+			$url = add_query_arg( array(
+				'status' => $status,
+				'paged'  => false,
+			) );
+
+			$class = ( $current === $status )
+				? ' class="current"'
+				: '';
+
+			$count = '&nbsp;<span class="count">(' . $this->counts[ $status ] . ')</span>';
+
 			$label            = edd_get_payment_status_label( $status ) . $count;
 			$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label );
 		}
@@ -286,7 +347,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 *
 	 * @since 1.4
 	 *
-     * @return array $columns Array of all the list table columns.
+	 * @return array $columns Array of all the list table columns.
 	 */
 	public function get_columns() {
 		return apply_filters( 'edd_payments_table_columns', array(
@@ -304,7 +365,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 *
 	 * @since 1.4
 	 *
-     * @return array Array of all the sortable columns.
+	 * @return array Array of all the sortable columns.
 	 */
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
@@ -332,7 +393,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @since 1.4
-     * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
 	 * @param EDD\Orders\Order $order       Order object.
 	 * @param string           $column_name The name of the column.
@@ -364,8 +425,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the Email column.
 	 *
 	 * @since 1.4
-     * @since 3.0 Updated to use the new EDD\Orders\Order class.
-     *
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 *
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Data shown in the Email column
 	 */
@@ -412,7 +473,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the checkbox column.
 	 *
 	 * @since 1.4
-     * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
@@ -439,7 +500,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$status = $this->get_status();
 
 		// State
-		if ( ( ! empty( $status ) && ( $status !== $order->status ) ) || ( empty( $status ) && ( $order->status !== 'publish' ) ) ) {
+		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'publish' !== $order->status ) ) ) {
 			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
 		}
 
@@ -448,7 +509,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'post_type' => 'download',
 			'page'      => 'edd-payment-history',
 			'view'      => 'view-order-details',
-			'id'        => $order->id
+			'id'        => $order->id,
 		), admin_url( 'edit.php' ) );
 
 		// Default row actions
@@ -458,14 +519,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Refund
 		if ( 'publish' === $order->status ) {
-			$refund_url = add_query_arg( array(), admin_url( 'edit.php' ) );
+			$refund_url            = add_query_arg( array(), admin_url( 'edit.php' ) );
 			$row_actions['refund'] = '<a href="' . esc_url( $refund_url ) . '">' . esc_html__( 'Refund', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Keep Delete at the end
 		$delete_url = wp_nonce_url( add_query_arg( array(
 			'edd-action'  => 'delete_payment',
-			'purchase_id' => $order->id
+			'purchase_id' => $order->id,
 		), $this->base_url ), 'edd_payment_nonce' );
 		$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
@@ -483,9 +544,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the Customer column.
 	 *
 	 * @since 2.4.3
-     * @since 3.0 Updated to use the new EDD\Orders\Order class.
-     *
-     * @param EDD\Orders\Order $order Order object.
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 *
+	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Data shown in the Customer column.
 	 */
 	public function column_customer( $order ) {
@@ -505,7 +566,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				'post_type' => 'download',
 				'page'      => 'edd-customers',
 				'view'      => 'overview',
-				'id'        => $customer_id
+				'id'        => $customer_id,
 			), admin_url( 'edit.php' ) );
 
 			$name = '<a href="' . esc_url( $url ) . '">' . $name . '</a>';
@@ -517,11 +578,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the bulk actions
+	 * Retrieve the bulk actions.
 	 *
 	 * @since 1.4
 	 *
-     * @return array $actions Bulk actions.
+	 * @return array $actions Bulk actions.
 	 */
 	public function get_bulk_actions() {
 		return apply_filters( 'edd_payments_table_bulk_actions', array(
@@ -561,7 +622,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$ids = wp_parse_id_list( $ids );
 
 		foreach ( $ids as $id ) {
-		    // Detect when a bulk action is being triggered...
+
+			// Detect when a bulk action is being triggered...
 			switch ( $this->current_action() ) {
 				case 'delete':
 					edd_delete_purchase( $id );
@@ -606,7 +668,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				case 'resend-receipt':
 					edd_email_purchase_receipt( $id, false );
 					break;
-            }
+			}
 
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
 		}
@@ -651,6 +713,20 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['mode'] = sanitize_key( $_GET['mode'] );
 		}
 
+		// Maybe filter by order amount.
+		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
+			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+
+			$args['advanced_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
+		}
+
 		// No empties
 		$r = wp_parse_args( array_filter( $args ) );
 
@@ -660,13 +736,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$r['count']   = true;
 		$r['groupby'] = 'status';
 
-		$p = new EDD_Payments_Query( $r );
+		$p      = new EDD_Payments_Query( $r );
 		$counts = $p->get_payments();
 
 		$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
 
 		$o = array(
-			'total' => 0
+			'total' => 0,
 		);
 
 		if ( ! empty( $counts ) ) {
@@ -681,14 +757,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve all the data for all the payments.
+	 * Retrieve all the data for all the orders.
 	 *
 	 * @since 1.4
 	 *
-     * @return array $payment_data Array of all the data for the payments.
+	 * @return array $payment_data Array of all the data for the orders.
 	 */
 	public function payments_data() {
-	    $args = array();
+		$args = array();
 
 		$per_page   = $this->per_page;
 		$paged      = isset( $_GET['paged'] )      ? absint( $_GET['paged'] )                   : null;
@@ -763,6 +839,20 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					'before'  => date( 'Y-m-d 23:59:59', strtotime( $end_date ) )
 				);
 			}
+		}
+
+		// Maybe filter by order amount.
+		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
+			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+
+			$args['advanced_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
 		}
 
 		// No empties
