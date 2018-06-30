@@ -83,9 +83,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Output advanced filters for payments
+	 * Display advanced filters.
 	 *
 	 * @since 1.4
+	 * @since 3.0 Add a filter for modes.
+	 *            Display 'Advanced Filters'
 	 */
 	public function advanced_filters() {
 
@@ -149,11 +151,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				<span id="edd-date-filters">
 					<span>
-						<label for="start-date"><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
+						<label for="start-date"><?php echo esc_html_x( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
 						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 					</span>
 					<span>
-						<label for="end-date"><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
+						<label for="end-date"><?php echo esc_html_x( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
 						<input type="text" id="end-date" name="end-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 					</span>
 				</span>
@@ -176,11 +178,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<span id="edd-after-core-filters">
 					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
-					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ( 'all' !== $gateway ) ) : ?>
 						<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-							<?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?>
+							<?php esc_html_e( 'Clear Filter', 'easy-digital-downloads' ); ?>
 						</a>
 					<?php endif; ?>
 				</span>
@@ -190,8 +192,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<?php endif; ?>
 
 			</div>
+
 			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
-			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
+
+			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
 		</div>
 
 		<?php
