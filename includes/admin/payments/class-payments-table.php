@@ -228,7 +228,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					?>
 
 					<span>
-						<input type="number" name="order-amount-filter-value" />
+						<input type="number" name="order-amount-filter-value" min="0" />
 					</span>
 				</div>
 			</div>
