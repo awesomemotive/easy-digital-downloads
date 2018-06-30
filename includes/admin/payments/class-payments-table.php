@@ -207,7 +207,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
 
-            <div class="edd-advanced-filters-items filter-items">
+            <div id="edd-advanced-filters" class="filter-items">
                 <div class="edd-advanced-filter-row">
                     
                 </div>
