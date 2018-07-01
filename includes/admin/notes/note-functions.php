@@ -82,19 +82,23 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_note',
-		'note_id'    => $note->id
+		'note_id'    => $note->id,
 	) ), 'edd_delete_note_' . $note->id );
 
 	// Start a buffer
-	ob_start(); ?>
+	ob_start();
+
+	// Apply offset so date and time is displayed correctly.
+	$date = EDD()->utils->date( $note->date_created )->toDateTimeString();
+	?>
 
 	<div class="edd-note" id="edd-note-<?php echo esc_attr( $note->id ); ?>">
 		<div>
 			<strong class="edd-note-author"><?php echo esc_html( $author ); ?></strong>
-			<time datetime="<?php echo esc_attr( $note->date_created ); ?>"><?php echo edd_date_i18n( $note->date_created, 'datetime' ); ?></time>
+			<time datetime="<?php echo esc_attr( $date ); ?>"><?php echo edd_date_i18n( $date, 'datetime' ); ?></time>
 			<p><?php echo make_clickable( $note->content ); ?></p>
 			<a href="<?php echo esc_url( $delete_note_url ); ?>#edd-notes" class="edd-delete-note" data-note-id="<?php echo esc_attr( $note->id ); ?>" data-object-id="<?php echo esc_attr( $note->object_id ); ?>" data-object-type="<?php echo esc_attr( $note->object_type ); ?>">
-				<?php _e( 'Delete', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
 	</div>
