@@ -373,6 +373,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-column.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-customer-addresses.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs-api-requests.php';
@@ -386,6 +387,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-customer-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-log-api-request.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-log-file-download.php';
@@ -397,6 +399,7 @@ final class Easy_Digital_Downloads {
 		// Database Tables
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustments.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-addresses.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-requests.php';
@@ -418,6 +421,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-advanced-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log-api-request.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log-file-download.php';
@@ -519,6 +523,9 @@ final class Easy_Digital_Downloads {
 		// Checkout
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
+
+		// Customers
+		require_once EDD_PLUGIN_DIR . 'includes/customers/class-address.php';
 
 		// Cart
 		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';

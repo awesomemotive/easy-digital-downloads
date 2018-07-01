@@ -123,6 +123,14 @@ function edd_setup_components() {
 		'object' => 'EDD_Customer'
 	) );
 
+	// Register Customer Addresses
+	edd_register_component( 'customer_addresses', array(
+		'schema' => '\\EDD\\Database\\Schema\\Customer_Addresses',
+		'table'  => '\\EDD\\Database\\Tables\\Customer_Addresses',
+		'query'  => '\\EDD\\Database\\Queries\\Customer_Address',
+		'object' => '\\EDD\\Customers\\Address'
+	) );
+
 	// Register Adjustment
 	edd_register_component( 'adjustment', array(
 		'schema' => '\\EDD\\Database\\Schema\\Adjustments',
