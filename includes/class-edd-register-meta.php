@@ -65,8 +65,11 @@ class EDD_Register_Meta {
 	 * @return void
 	 */
 	public function register_download_meta() {
-		register_meta(
-			'post',
+
+		$post_types = edd_get_download_meta_post_types();
+
+		$this->register_post_meta(
+			$post_types,
 			'_edd_download_earnings',
 			array(
 				'sanitize_callback' => 'edd_sanitize_amount',
@@ -75,13 +78,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		// Pre-WordPress 4.6 compatibility
-		if ( ! has_filter( 'sanitize_post_meta__edd_download_earnings' ) ) {
-			add_filter( 'sanitize_post_meta__edd_download_earnings', 'edd_sanitize_amount', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_download_sales',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
@@ -90,12 +88,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_download_sales' ) ) {
-			add_filter( 'sanitize_post_meta__edd_download_sales', array( $this, 'intval_wrapper' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'edd_price',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_price' ),
@@ -105,12 +99,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta_edd_price' ) ) {
-			add_filter( 'sanitize_post_meta_edd_price', array( $this, 'sanitize_price' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'edd_variable_prices',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_variable_prices'),
@@ -120,12 +110,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta_edd_variable_prices' ) ) {
-			add_filter( 'sanitize_post_meta_edd_variable_prices', array( $this, 'sanitize_variable_prices'), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'edd_download_files',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_files' ),
@@ -134,12 +120,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta_edd_download_files' ) ) {
-			add_filter( 'sanitize_post_meta_edd_download_files', array( $this, 'sanitize_files' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_bundled_products',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_array' ),
@@ -149,12 +131,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_bundled_products' ) ) {
-			add_filter( 'sanitize_post_meta__edd_bundled_products', array( $this, 'sanitize_array' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_button_behavior',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -164,12 +142,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_button_behavior' ) ) {
-			add_filter( 'sanitize_post_meta__edd_button_behavior', 'sanitize_text_field', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_default_price_id',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
@@ -178,10 +152,6 @@ class EDD_Register_Meta {
 				'show_in_rest'      => true,
 			)
 		);
-
-		if ( ! has_filter( 'sanitize_post_meta__edd_default_price_id' ) ) {
-			add_filter( 'sanitize_post_meta__edd_default_price_id', array( $this, 'intval_wrapper' ), 10, 4 );
-		}
 
 	}
 
@@ -193,8 +163,10 @@ class EDD_Register_Meta {
 	 */
 	public function register_payment_meta() {
 
-		register_meta(
-			'post',
+		$post_types = array( 'edd_payment' );
+
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_user_email',
 			array(
 				'sanitize_callback' => 'sanitize_email',
@@ -203,13 +175,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		// Pre-WordPress 4.6 compatibility
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_user_email' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_user_email', 'sanitize_email', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_customer_id',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
@@ -218,12 +185,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_customer_id' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_customer_id', array( $this, 'intval_wrapper' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_user_id',
 			array(
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
@@ -232,12 +195,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_user_id' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_user_id', array( $this, 'intval_wrapper' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_user_ip',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -246,12 +205,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_user_ip' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_user_ip', 'sanitize_text_field', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_purchase_key',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -260,12 +215,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_purchase_key' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_purchase_key', 'sanitize_text_field', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_total',
 			array(
 				'sanitize_callback' => 'edd_sanitize_amount',
@@ -274,12 +225,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_total' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_total', 'edd_sanitize_amount', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_mode',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -288,12 +235,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_mode' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_mode', 'sanitize_text_field', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_gateway',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -302,12 +245,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_gateway' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_gateway', 'sanitize_text_field', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_meta',
 			array(
 				'sanitize_callback' => array( $this, 'sanitize_array' ),
@@ -316,12 +255,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_meta' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_meta', array( $this, 'sanitize_array' ), 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_payment_tax',
 			array(
 				'sanitize_callback' => 'edd_sanitize_amount',
@@ -330,12 +265,8 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_payment_tax' ) ) {
-			add_filter( 'sanitize_post_meta__edd_payment_tax', 'edd_sanitize_amount', 10, 4 );
-		}
-
-		register_meta(
-			'post',
+		$this->register_post_meta(
+			$post_types,
 			'_edd_completed_date',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -344,11 +275,46 @@ class EDD_Register_Meta {
 			)
 		);
 
-		if ( ! has_filter( 'sanitize_post_meta__edd_completed_date' ) ) {
-			add_filter( 'sanitize_post_meta__edd_completed_date', 'sanitize_text_field', 10, 4 );
+	}
+
+	/**
+	 * Registers metadata for a post.
+	 *
+	 * Due to the changes to the `register_meta()` function in WordPress, this method provides
+	 * a convenient wrapper which accounts for those changes and ensures that the function is
+	 * always called correctly.
+	 *
+	 * @since 3.1
+	 * @param string|array $post_types One or more post types to register the metadata for.
+	 * @param string       $meta_key   Meta key to register.
+	 * @param array        $args       Data used to describe the meta key when registered.
+	 */
+	public function register_post_meta( $post_types, $meta_key, $args ) {
+		global $wp_version;
+
+		if ( version_compare( $wp_version, '4.6', '<' ) ) {
+			$sanitize_callback = ! empty( $args['sanitize_callback'] ) ? $args['sanitize_callback'] : null;
+			$auth_callback     = ! empty( $args['auth_callback'] ) ? $args['auth_callback'] : null;
+
+			// If none of this is given, no point in registering meta.
+			if ( ! $sanitize_callback && ! $auth_callback ) {
+				return;
+			}
+
+			register_meta( 'post', $meta_key, $sanitize_callback, $auth_callback );
+			return;
 		}
 
+		if ( version_compare( $wp_version, '5.0', '<' ) ) {
+			register_meta( 'post', $meta_key, $args );
+			return;
+		}
 
+		$post_types = (array) $post_types;
+
+		foreach ( $post_types as $post_type ) {
+			register_post_meta( $post_type, $meta_key, $args );
+		}
 	}
 
 	/**

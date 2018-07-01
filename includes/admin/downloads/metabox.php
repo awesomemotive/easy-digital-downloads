@@ -15,6 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /** All Downloads *****************************************************************/
 
 /**
+ * Gets the list of post types that should use download metadata.
+ *
+ * @since 3.1
+ * @return array List of post types.
+ */
+function edd_get_download_meta_post_types() {
+
+	return apply_filters( 'edd_download_metabox_post_types' , array( 'download' ) );
+}
+
+/**
  * Register all the meta boxes for the Download custom post type
  *
  * @since 1.0
@@ -22,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_add_download_meta_box() {
 
-	$post_types = apply_filters( 'edd_download_metabox_post_types' , array( 'download' ) );
+	$post_types = edd_get_download_meta_post_types();
 
 	foreach ( $post_types as $post_type ) {
 
