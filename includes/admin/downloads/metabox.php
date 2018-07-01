@@ -995,8 +995,8 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
  */
 function edd_render_down_tax_options( $post_id = 0 ) {
 
-	// Bail if current user cannot manage, or taxes are disabled
-	if ( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() ) {
+	// Bail if current user cannot view shop reports, or taxes are disabled,
+	if ( ! current_user_can( 'view_shop_reports' ) || ! edd_use_taxes() ) {
 		return;
 	}
 
