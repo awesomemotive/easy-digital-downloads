@@ -368,7 +368,7 @@ class Utilities {
 			if ( false !== $timezone ) {
 				$retval = $timezone;
 
-			// Last try, guess timezone string manually
+				// Last try, guess timezone string manually
 			} else {
 				$list = timezone_abbreviations_list();
 

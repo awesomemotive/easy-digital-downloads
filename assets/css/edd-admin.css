@@ -498,13 +498,22 @@ textarea[name="edd-note"] {
 	margin-left: 2px;
 }
 
-#edd-date-filters input {
+#edd-filters input[type=text],
+#edd-filters input[type=number] {
 	vertical-align: middle;
 	max-width: 100px;
 	padding: 5px;
 }
 #edd-after-core-filters .button-secondary {
 	margin: -3px 0 0 0;
+}
+
+#edd-advanced-filters {
+	clear: both;
+}
+
+#edd-advanced-filters.hide {
+	display: none;
 }
 
 /* Nav Tab Styles

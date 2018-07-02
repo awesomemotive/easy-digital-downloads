@@ -97,6 +97,15 @@ jQuery(document).ready(function ($) {
 		}
 	); // click()
 
+	// Toggle advanced filters on Orders page.
+	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
+
+		// Prevnt submit action
+		e.preventDefault();
+
+		$( '#edd-advanced-filters' ).slideToggle();
+	} );
+
 	/**
 	 * Download Configuration Metabox
 	 */
