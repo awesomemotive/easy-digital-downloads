@@ -98,7 +98,7 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 *     @type string $label     Report label.
 	 *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
 	 *     @type array  $filters   Filters available to the report.
-	 *     @type array  $endpoints Endpoints to associate with the report.
+	 *     @type array  $endpoints Optional. Endpoints to associate with the report.
 	 * }
 	 * @return bool True if the report was successfully registered, otherwise false.
 	 */
@@ -110,8 +110,7 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			'priority'   => 10,
 			'group'      => 'core',
 			'capability' => 'view_shop_reports',
-			'filters'    => array( 'dates' ),
-			'endpoints'  => array(),
+			'filters'    => array( 'dates' )
 		);
 
 		$attributes['id'] = $report_id;

@@ -1518,6 +1518,9 @@ td.edd_order_price {
 	margin: 0 5px 0 0;
 	padding: 0;
 }
+.download_page_edd-reports .section-content #post-body-content {
+	float: none;
+}
 .download_page_edd-reports .section-content select[name="range"] {
 	display: none;
 }
