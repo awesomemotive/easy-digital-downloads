@@ -1506,10 +1506,6 @@ td.edd_order_price {
 	display: block;
 	padding: 20px;
 }
-#edd-graphs-filter {
-	float: left;
-	width: 80%;
-}
 #edd-graphs-filter form {
 	padding: 20px;
 }
@@ -1521,6 +1517,9 @@ td.edd_order_price {
 	line-height: 2em;
 	margin: 0 5px 0 0;
 	padding: 0;
+}
+.download_page_edd-reports .section-content select[name="range"] {
+	display: none;
 }
 .edd-mix-totals {
 	background-color: #fff;
