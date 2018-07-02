@@ -31,7 +31,7 @@ class Reports_Sections extends Sections {
 			? ' use-js'
 			: ''; ?>
 
-		<div class="edd-sections-wrap">
+		<div class="edd-sections-wrap edd-reports-wrapper">
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
 				<ul class="section-nav">
 					<?php echo $this->get_all_section_links(); ?>
