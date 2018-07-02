@@ -17,8 +17,6 @@ namespace EDD\Reports;
  */
 final class Init {
 
-	private $legacy_callbacks = array();
-
 	/**
 	 * Handles including or requiring files central to the reports API.
 	 *
