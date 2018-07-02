@@ -98,7 +98,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	 * @covers ::customer_dropdown
 	 */
 	public function test_customer_dropdown() {
-		$expected = '<select name="customers" id="customers" class="edd-select  edd-customer-select edd-select-chosen" data-placeholder="Select a Customer" data-search-type="customer" data-search-placeholder="Search Customers">';
+		$expected = '<select name="customers" id="customers" class="edd-select  edd-customer-select edd-select-chosen" data-placeholder="Choose a Customer" data-search-type="customer" data-search-placeholder="Search Customers"><option value="0" selected=\'selected\'>No customers found</option></select>';
 
 		$this->assertContains( $expected, EDD()->html->customer_dropdown() );
 	}
