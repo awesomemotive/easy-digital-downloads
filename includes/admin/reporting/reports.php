@@ -16,11 +16,13 @@ use EDD\Reports;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Load a report in the admin-area.
+ * Load a report early in the admin-area.
  *
  * This action-function loads the Report early, so that a redirect can occur in
  * the event that the report is not valid, registered, or the user cannot view
  * it.
+ *
+ * Note that pre-3.0 reports are shimmed via EDD\Reports::legacy_reports()
  *
  * @since 3.0
  */
@@ -37,24 +39,20 @@ function edd_admin_load_report() {
 		edd_redirect( $redirect_url );
 	}
 
-	// Enqueue the postbox JS
-	wp_enqueue_script( 'postbox' );
-
 	// Start the Reports API.
 	new Reports\Init();
 
-	// Get the section/report
-	$section = ! empty( $_GET['view'] )
-		? sanitize_key( $_GET['view'] )
-		: 'overview'; // Hardcoded default
-
-	// Get the report
-	$report = Reports\get_report( $section );
+	// Get the section and report
+	$section = Reports\get_current_report();
+	$report  = Reports\get_report( $section );
 
 	// Redirect if report is invalid
 	if ( empty( $report ) || is_wp_error( $report ) ) {
 		edd_redirect( $redirect_url );
 	}
+
+	// Enqueue the postbox JS
+	wp_enqueue_script( 'postbox' );
 
 	// Stash the report in the EDD global for future reference
 	EDD()->report = $report;
@@ -74,7 +72,7 @@ function edd_reports_sections() {
 
 	// Setup sections variables
 	$sections->use_js          = false;
-	$sections->current_section = Reports\get_active_tab();
+	$sections->current_section = Reports\get_current_report();
 	$sections->item            = null;
 	$sections->base_url = add_query_arg( array(
 		'post_type'        => 'download',
@@ -83,7 +81,7 @@ function edd_reports_sections() {
 	), admin_url( 'edit.php' ) );
 
 	// Get all registered tabs & views
-	$tabs = Reports\get_tabs();
+	$tabs = Reports\get_reports();
 
 	// Loop through tabs & setup sections
 	if ( ! empty( $tabs ) ) {
@@ -462,7 +460,7 @@ function edd_register_overview_report( $reports ) {
 
 						$sales    = array();
 						$earnings = array();
-						
+
 						// Initialise all arrays with timestamps and set values to 0.
 						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
 							if ( $hour_by_hour ) {

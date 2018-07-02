@@ -54,21 +54,21 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\get_active_tab()
+	 * @covers \EDD\Reports\get_current_report()
 	 */
-	public function test_get_active_tab_should_use_the_value_of_the_tab_var_when_set() {
+	public function test_get_current_report_should_use_the_value_of_the_tab_var_when_set() {
 		$_REQUEST['view'] = 'overview';
 
-		$this->assertSame( 'overview', get_active_tab() );
+		$this->assertSame( 'overview', get_current_report() );
 	}
 
 	/**
-	 * @covers \EDD\Reports\get_active_tab()
+	 * @covers \EDD\Reports\get_current_report()
 	 */
-	public function test_get_active_tab_should_use_the_sanitized_value_of_the_tab_var_when_set() {
+	public function test_get_current_report_should_use_the_sanitized_value_of_the_tab_var_when_set() {
 		$_REQUEST['view'] = 'sales/figures';
 
-		$this->assertSame( 'salesfigures', get_active_tab() );
+		$this->assertSame( 'salesfigures', get_current_report() );
 	}
 
 	/**
