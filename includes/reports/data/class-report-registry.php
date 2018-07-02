@@ -70,7 +70,9 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 */
 	public function __call( $name, $arguments ) {
 
-		$report_id_or_sort = isset( $arguments[0] ) ? $arguments[0] : '';
+		$report_id_or_sort = isset( $arguments[0] )
+			? $arguments[0]
+			: '';
 
 		switch( $name ) {
 			case 'get_report':
@@ -116,20 +118,16 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 		$attributes = array_merge( $defaults, $attributes );
 
 		try {
-
 			$this->validate_attributes( $attributes, $report_id );
 
 		} catch( \EDD_Exception $exception ) {
-
 			$error = true;
 
 			throw $exception;
 		}
 
 		foreach ( $attributes['endpoints'] as $view_group => $endpoints ) {
-
 			foreach ( $endpoints as $index => $endpoint ) {
-
 				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Reports\Data\Endpoint ) ) {					
 					unset( $attributes['endpoints'][ $view_group ][ $index ] );
 
@@ -235,13 +233,13 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 * @return Report|\WP_Error Report object on success, otherwise a WP_Error object.
 	 */
 	public function build_report( $report, $build_endpoints = true ) {
+
 		// If a report object was passed, just return it.
 		if ( $report instanceof Report ) {
 			return $report;
 		}
 
 		try {
-
 			$_report = $this->get_report( $report );
 
 		} catch( \EDD_Exception $exception ) {
@@ -249,7 +247,6 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			edd_debug_log_exception( $exception );
 
 			return new \WP_Error( 'invalid_report', $exception->getMessage(), $report );
-
 		}
 
 		if ( ! empty( $_report ) ) {
