@@ -204,9 +204,12 @@ final class Init {
 				edd_do_action_deprecated( $hook, array(), '3.0', '\EDD\Reports\add_report' );
 			};
 
+			// Legacy label
+			$legacy_label = $label . '<span class="edd-legacy-label">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
+
 			// Add report
 			$reports->add_report( $report_id, array(
-				'label'            => $label,
+				'label'            => $legacy_label,
 				'group'            => 'core',
 				'icon'             => 'info',
 				'priority'         => $priority,

@@ -1400,6 +1400,21 @@ td.edd_order_price {
 /* Reports Styles
 -------------------------------------------------------------- */
 
+.edd-vertical-sections .edd-legacy-label {
+	font-size: 8px;
+	font-weight: bold;
+	line-height: 8px;
+	padding: 3px 4px 4px;
+	border-radius: 4px;
+	color: #fff;
+	background-color: #aaa;
+	opacity: 0.5;
+	display: inline-block;
+	position: absolute;
+	top: 13px;
+	right: 10px;
+}
+
 .download_page_edd-reports #edd-filters .filter-items {
 	width: 100%;
 }
@@ -2824,13 +2839,13 @@ only screen and ( min-resolution: 1.5dppx ) {
 	box-shadow: none;
 }
 
-.edd-vertical-sections .section-nav li a .dashicons,
-.edd-vertical-sections .section-nav li a span {
+.edd-vertical-sections .section-nav li a > .dashicons,
+.edd-vertical-sections .section-nav li a > span {
 	display: inline-block;
 }
 
-.edd-vertical-sections .section-nav li a span {
-	max-width: 75%;
+.edd-vertical-sections .section-nav li a > span {
+	max-width: 76%;
 }
 
 .edd-vertical-sections .section-nav li a .dashicons {
