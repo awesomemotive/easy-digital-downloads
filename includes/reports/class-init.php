@@ -168,6 +168,8 @@ final class Init {
 			return $reports;
 		}
 
+		$priority = 800;
+
 		// Loop through views and try to convert them
 		foreach ( $legacy_views as $report_id => $label ) {
 
@@ -207,9 +209,12 @@ final class Init {
 				'label'            => $label,
 				'group'            => 'core',
 				'icon'             => 'info',
-				'priority'         => 10,
+				'priority'         => $priority,
 				'display_callback' => $callback
 			) );
+
+			// Bump the priority
+			++$priority;
 		}
 
 		// Return reports array
