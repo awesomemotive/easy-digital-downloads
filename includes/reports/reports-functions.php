@@ -43,10 +43,11 @@ namespace EDD\Reports;
  * @return bool True if the endpoint was successfully registered, otherwise false.
  */
 function register_endpoint( $endpoint_id, $attributes ) {
+
 	/** @var Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
-	if ( is_wp_error( $registry ) ) {
+	if ( empty( $registry ) || is_wp_error( $registry ) ) {
 		return false;
 	}
 
@@ -74,10 +75,11 @@ function register_endpoint( $endpoint_id, $attributes ) {
  * @return Data\Endpoint|\WP_Error Endpoint object on success, otherwise a WP_Error object.
  */
 function get_endpoint( $endpoint_id, $view_type ) {
+
 	/** @var Data\Endpoint_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
-	if ( is_wp_error( $registry ) ) {
+	if ( empty( $registry ) || is_wp_error( $registry ) ) {
 		return $registry;
 	}
 
@@ -103,23 +105,21 @@ function get_endpoint( $endpoint_id, $view_type ) {
  * @return bool True if the report was successfully registered, otherwise false.
  */
 function add_report( $report_id, $attributes ) {
+
 	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
-	if ( is_wp_error( $registry ) ) {
+	if ( empty( $registry ) || is_wp_error( $registry ) ) {
 		return false;
 	}
 
 	try {
-
 		$added = $registry->add_report( $report_id, $attributes );
 
 	} catch ( \EDD_Exception $exception ) {
-
 		edd_debug_log_exception( $exception );
 
 		$added = false;
-
 	}
 
 	return $added;
@@ -139,32 +139,32 @@ function add_report( $report_id, $attributes ) {
  * @return Data\Report|\WP_Error Report object on success, otherwise a WP_Error object.
  */
 function get_report( $report_id = false, $build_endpoints = true ) {
+
 	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
-	if ( is_wp_error( $registry ) ) {
+	if ( empty( $registry ) || is_wp_error( $registry ) ) {
 		return $registry;
 	}
 
 	return $registry->build_report( $report_id, $build_endpoints );
 }
 
-//
-// Tabs.
-//
+/** Sections ******************************************************************/
 
 /**
- * Retrieves the list of slug/label report tab pairs.
+ * Retrieves the list of slug/label report pairs.
  *
  * @since 3.0
  *
- * @return array List of report tabs, otherwise an empty array.
+ * @return array List of reports, otherwise an empty array.
  */
-function get_tabs() {
+function get_reports() {
+
 	/** @var Data\Report_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports' );
 
-	if ( is_wp_error( $registry ) ) {
+	if ( empty( $registry ) || is_wp_error( $registry ) ) {
 		return array();
 	} else {
 		$reports = $registry->get_reports( 'priority', 'core' );
@@ -174,35 +174,29 @@ function get_tabs() {
 	uasort( $reports, array( $registry, 'priority_sort' ) );
 
 	/**
-	 * Filters the list of report tab slug/label pairs.
+	 * Filters the list of report slug/label pairs.
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $reports List of slug/label pairs as representative of report tabs.
+	 * @param array $reports List of slug/label pairs as representative of reports.
 	 */
-	return apply_filters( 'edd_reports_get_tabs', $reports );
+	return apply_filters( 'edd_get_reports', $reports );
 }
 
 /**
- * Retrieves the slug for the active report tab.
+ * Retrieves the slug for the active report.
  *
  * @since 3.0
  *
- * @return string The active report tab, or the first tab if the 'tab' var is not defined.
+ * @return string The active report, or the 'overview' report if no view defined
  */
-function get_active_tab() {
-	$tabs = get_tabs();
-
-	// If not set, default the active tab to the first one.
+function get_current_report() {
 	return isset( $_REQUEST['view'] )
 		? sanitize_key( $_REQUEST['view'] )
-		: key( $tabs );
+		: 'overview'; // Hardcoded default
 }
 
-
-//
-// Endpoints.
-//
+/** Endpoints *****************************************************************/
 
 /**
  * Retrieves the list of supported endpoint view types and their attributes.
@@ -268,13 +262,9 @@ function get_endpoint_views() {
 function get_endpoint_handler( $view ) {
 	$views = get_endpoint_views();
 
-	if ( isset( $views[ $view ]['handler'] ) ) {
-		$handler = $views[ $view ]['handler'];
-	} else {
-		$handler = '';
-	}
-
-	return $handler;
+	return isset( $views[ $view ]['handler'] )
+		? $views[ $view ]['handler']
+		: '';
 }
 
 /**
@@ -288,13 +278,9 @@ function get_endpoint_handler( $view ) {
 function get_endpoint_group_callback( $view ) {
 	$views = get_endpoint_views();
 
-	if ( isset( $views[ $view ]['group_callback'] ) ) {
-		$callback = $views[ $view ]['group_callback'];
-	} else {
-		$callback = '';
-	}
-
-	return $callback;
+	return isset( $views[ $view ]['group_callback'] )
+		? $views[ $view ]['group_callback']
+		: '';
 }
 
 /**
@@ -342,9 +328,7 @@ function parse_endpoint_views( $views ) {
 	return $views;
 }
 
-//
-// Filters.
-//
+/** Filters *******************************************************************/
 
 /**
  * Retrieves the list of registered reports filters and their attributes.
@@ -399,7 +383,7 @@ function validate_filter( $filter ) {
 }
 
 /**
- * Retrieves the value of an endpoint filter for the current session and tab.
+ * Retrieves the value of an endpoint filter for the current session and report.
  *
  * @since 3.0
  *
@@ -796,9 +780,7 @@ function get_dates_filter_day_by_day() {
 	return $day_by_day;
 }
 
-//
-// Display callbacks.
-//
+/** Display *******************************************************************/
 
 /**
  * Handles display of a report.
@@ -837,8 +819,9 @@ function default_display_report( $report ) {
  * }
  * @return void Meta box display callbacks only echo output.
  */
-function default_display_tile( $report, $tile ) {
+function default_display_tile( $report = null, $tile = array() ) {
 
+	// Bail if tile has no args
 	if ( ! isset( $tile['args'] ) ) {
 		return;
 	}
@@ -888,7 +871,7 @@ function default_display_tile( $report, $tile ) {
 	}
 
 	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . $tile['args']['display_args']['comparison_label'] . '</span>';
+		echo '<span class="tile-compare">' . esc_attr( $tile['args']['display_args']['comparison_label'] ) . '</span>';
 	}
 }
 
@@ -972,7 +955,7 @@ function default_display_charts_group( $report ) {
 
 		foreach ( $charts as $endpoint_id => $chart ) :
 
-			?><div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>">
+			?><div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
 				<h3><?php echo esc_html( $chart->get_label() ); ?></h3><?php
 
 				$chart->display();
@@ -988,11 +971,8 @@ function default_display_charts_group( $report ) {
  * Handles display of the 'Date' filter for reports.
  *
  * @since 3.0
- *
- * @param Data\Report $report Report object.
- * @return void
  */
-function display_dates_filter( $report ) {
+function display_dates_filter() {
 	$options = get_dates_filter_options();
 	$dates   = get_filter_value( 'dates' );
 	$range   = isset( $dates['range'] )
@@ -1051,11 +1031,8 @@ function display_dates_filter( $report ) {
  * Handles display of the 'Products' filter for reports.
  *
  * @since 3.0
- *
- * @param Data\Report $report Report object.
- * @return void
  */
-function display_products_filter( $report ) {
+function display_products_filter() {
 	$products = get_filter_value( 'products' );
 	$select   = EDD()->html->product_dropdown( array(
 		'chosen'          => true,
@@ -1073,11 +1050,8 @@ function display_products_filter( $report ) {
  * Handles display of the 'Exclude Taxes' filter for reports.
  *
  * @since 3.0
- *
- * @param Data\Report $report Report object.
- * @return void
  */
-function display_taxes_filter( $report ) {
+function display_taxes_filter() {
 	$taxes = get_filter_value( 'taxes' ); ?>
 
     <span class="edd-graph-filter-options graph-option-section">
@@ -1090,11 +1064,8 @@ function display_taxes_filter( $report ) {
  * Handles display of the 'Discounts' filter for reports.
  *
  * @since 3.0
- *
- * @param Data\Report $report Report object.
- * @return void
  */
-function display_discounts_filter( $report ) {
+function display_discounts_filter() {
 	$discount = get_filter_value( 'discounts' );
 
 	$d = edd_get_discounts( array(
@@ -1123,11 +1094,8 @@ function display_discounts_filter( $report ) {
  * Handles display of the 'Gateways' filter for reports.
  *
  * @since 3.0
- *
- * @param Data\Report $report Report object.
- * @return void
  */
-function display_gateways_filter( $report ) {
+function display_gateways_filter() {
 	$gateway = get_filter_value( 'gateways' );
 
 	$known_gateways = edd_get_payment_gateways();
@@ -1173,7 +1141,7 @@ function display_filters( $report ) {
 	$action = admin_url( add_query_arg( array(
 		'post_type' => 'download',
 		'page'      => 'edd-reports',
-		'view'      => get_active_tab(),
+		'view'      => get_current_report(),
 	), 'edit.php' ) );
 
 	// Bail if no filters
@@ -1238,9 +1206,7 @@ function display_filters( $report ) {
 	</div><?php
 }
 
-//
-// Compat.
-//
+/** Compat ********************************************************************/
 
 /**
  * Private: Injects the value of $_REQUEST['range'] into the Reports\get_dates_filter_range() if set.

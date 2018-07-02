@@ -156,12 +156,12 @@ final class Init {
 		 * Filters legacy 'Reports' tab views.
 		 *
 		 * @since 1.4
-		 * @deprecated 3.0 Use {@see 'edd_reports_get_tabs'}
-		 * @see 'edd_reports_get_tabs'
+		 * @deprecated 3.0 Use {@see 'edd_reports_get_reports'}
+		 * @see 'edd_reports_get_reports'
 		 *
 		 * @param array $views 'Reports' tab views.
 		 */
-		$legacy_views = edd_apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_reports_get_tabs' );
+		$legacy_views = edd_apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_reports_get_reports' );
 
 		// Bail if no legacy views
 		if ( empty( $legacy_views ) ) {
