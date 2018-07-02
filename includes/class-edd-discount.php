@@ -219,18 +219,17 @@ class EDD_Discount extends Adjustment {
 		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
 
-			// Code
+		// Code
 		} elseif ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
 
-			// Name
+		// Name
 		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
-			// Default to ID
+		// Default to ID
 		} else {
-			$_id_or_code_or_name = intval( $_id_or_code_or_name );
-			$discount = edd_get_discount( $_id_or_code_or_name );
+			$discount = edd_get_discount( absint( $_id_or_code_or_name ) );
 		}
 
 		// Setup or bail
@@ -610,7 +609,7 @@ class EDD_Discount extends Adjustment {
 				break;
 			case 'inherit':
 				if ( ! empty( $this->parent ) ) {
-					$parent = new EDD_Discount( $this->parent );
+					$parent = edd_get_discount( $this->parent );
 					$label  = $parent->get_status_label();
 					break;
 				}
