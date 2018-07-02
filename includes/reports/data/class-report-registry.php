@@ -75,12 +75,9 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 		switch( $name ) {
 			case 'get_report':
 				return parent::get_item( $report_id_or_sort );
-				break;
 
 			case 'remove_report':
-				parent::remove_item( $report_id_or_sort );
-				break;
-
+				return parent::remove_item( $report_id_or_sort );
 		}
 	}
 
@@ -124,22 +121,20 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 
 		} catch( \EDD_Exception $exception ) {
 
-			throw $exception;
-
 			$error = true;
 
+			throw $exception;
 		}
 
 		foreach ( $attributes['endpoints'] as $view_group => $endpoints ) {
 
 			foreach ( $endpoints as $index => $endpoint ) {
 
-				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Reports\Data\Endpoint ) ) {
+				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Reports\Data\Endpoint ) ) {					
+					unset( $attributes['endpoints'][ $view_group ][ $index ] );
+
 					throw new Utils\Exception( sprintf( 'The \'%1$s\' report contains one or more invalidly defined endpoints.', $report_id ) );
-
-					unset( $attributes['endpoints'][ $view_group][ $index ] );
 				}
-
 			}
 		}
 
@@ -147,20 +142,17 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			if ( ! Reports\validate_filter( $filter ) ) {
 				$message = sprintf( 'The \'%1$s\' report contains one or more invalid filters.', $report_id );
 
-				throw new Utils\Exception( $message );
-
 				unset( $attributes['filters'][ $index ] );
+
+				throw new Utils\Exception( $message );
 			}
 		}
 
 		if ( true === $error ) {
-
 			return false;
 
 		} else {
-
 			return parent::add_item( $report_id, $attributes );
-
 		}
 	}
 
