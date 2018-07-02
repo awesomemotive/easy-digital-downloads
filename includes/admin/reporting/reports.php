@@ -2587,9 +2587,6 @@ function edd_register_export_report( $reports ) {
 		    'label'            => __( 'Export', 'easy-digital-downloads' ),
 		    'icon'             => 'migrate',
 		    'priority'         => 40,
-		    'endpoints'        => array(
-			    'tiles' => array(),
-		    ),
 		    'capability'       => 'export_shop_reports',
 		    'display_callback' => 'display_export_report',
 	    ) );

@@ -170,27 +170,6 @@ function get_tabs() {
 		$reports = $registry->get_reports( 'priority', 'core' );
 	}
 
-	if ( has_filter( 'edd_report_views' ) ) {
-		/**
-		 * Filters legacy 'Reports' tab views.
-		 *
-		 * @since 1.4
-		 * @deprecated 3.0 Use {@see 'edd_reports_get_tabs'}
-		 * @see 'edd_reports_get_tabs'
-		 *
-		 * @param array $views 'Reports' tab views.
-		 */
-		$legacy_views = edd_apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_reports_get_tabs' );
-
-		foreach ( $legacy_views as $report_id => $label ) {
-			$reports[ $report_id ] = array(
-				'label'    => $label,
-				'icon'     => 'info',
-				'priority' => 10,
-			);
-		}
-	}
-
 	// Re-sort by priority.
 	uasort( $reports, array( $registry, 'priority_sort' ) );
 
@@ -384,24 +363,24 @@ function get_filters() {
 	$filters = array(
 		'dates'     => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_dates_filter',
+			'display_callback' => __NAMESPACE__ . '\\display_dates_filter'
 		),
 		'products'  => array(
 			'label'            => __( 'Products', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_products_filter',
+			'display_callback' => __NAMESPACE__ . '\\display_products_filter'
 		),
 		'taxes'     => array(
 			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter',
+			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter'
 		),
 		'gateways'  => array(
 			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter',
+			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter'
 		),
 		'discounts' => array(
 			'label'            => __( 'Discounts', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter',
-		),
+			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter'
+		)
 	);
 
 	return $filters;
@@ -830,50 +809,15 @@ function get_dates_filter_day_by_day() {
  */
 function default_display_report( $report ) {
 
-	if ( ! is_wp_error( $report ) ) :
-		$report->display_endpoint_group( 'tiles'  );
-		$report->display_endpoint_group( 'tables' );
-		$report->display_endpoint_group( 'charts' );
-	endif; // WP_Error.
-
-	// Back-compat.
-	$active_tab = get_active_tab();
-
-	if ( has_action( "edd_reports_tab_{$active_tab}" ) ) {
-
-		/**
-		 * Legacy: Fires inside the content area of the currently active Reports tab.
-		 *
-		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
-		 * the current reports tab.
-		 *
-		 * @since 1.0
-		 * @deprecated 3.0 Use the new Reports API to register new tabs.
-		 * @see \EDD\Reports\add_report()
-		 *
-		 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
-		 *                                                   or WP_Error if invalid.
-		 */
-		edd_do_action_deprecated( "edd_reports_tab_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
-
-	} elseif ( has_action( "edd_reports_view_{$active_tab}" ) ) {
-
-		/**
-		 * Legacy: Fires inside the content area of the currently active Reports tab
-		 * (formerly reviewed to as a 'view' inside the global 'Reports' tab).
-		 *
-		 * The dynamic portion of the hook name, `$active_tab` refers to the slug of
-		 * the current reports tab.
-		 *
-		 * @since 1.0
-		 * @deprecated 3.0 Use the new Reports API to register new tabs.
-		 * @see \EDD\Reports\add_report()
-		 *
-		 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
-		 *                                                   or WP_Error if invalid.
-		 */
-		edd_do_action_deprecated( "edd_reports_view_{$active_tab}", array( $report ), '3.0', '\EDD\Reports\add_report' );
+	// Bail if erroneous report
+	if ( empty( $report ) || is_wp_error( $report ) ) {
+		return;
 	}
+
+	// Try to output: tiles, tables, and charts
+	$report->display_endpoint_group( 'tiles'  );
+	$report->display_endpoint_group( 'tables' );
+	$report->display_endpoint_group( 'charts' );
 }
 
 /**
