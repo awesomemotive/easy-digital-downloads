@@ -1685,11 +1685,10 @@ function edd_logs_migration() {
                 }
 
                 $new_log_id = edd_add_log( $log_data );
-                $new_log    = new EDD\Logs\Log( $new_log_id );
 
                 if ( ! empty( $meta_to_migrate ) ) {
                     foreach ( $meta_to_migrate as $key => $value ) {
-                        $new_log->add_meta( $key, $value );
+                        edd_add_log_meta( $new_log_id, $key, $value );
                     }
                 }
             }
