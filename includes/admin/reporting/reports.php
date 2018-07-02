@@ -2584,7 +2584,7 @@ function edd_register_export_report( $reports ) {
 	    $reports->add_report( 'export', array(
 		    'label'            => __( 'Export', 'easy-digital-downloads' ),
 		    'icon'             => 'migrate',
-		    'priority'         => 40,
+		    'priority'         => 1000,
 		    'capability'       => 'export_shop_reports',
 		    'display_callback' => 'display_export_report',
 	    ) );
