@@ -1274,21 +1274,21 @@ function edd_discounts_migration() {
 
 	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 	if ( empty( $total ) || $total <= 1 ) {
-		$total_sql = "SELECT COUNT(ID) as total_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount'";
+		$total_sql = "SELECT COUNT(ID) as total_discounts FROM {$wpdb->posts} WHERE post_type = 'edd_discount'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
 		$total     = $results->total_discounts;
 		edd_debug_log( $total . ' to migrate' );
 	}
 
 	if ( 1 === $step ) {
-		$discounts = edd_get_component_interface( 'discount', 'table' );
-		if ( ! $discounts->exists() ) {
+		$discounts = edd_get_component_interface( 'adjustment', 'table' );
+		if ( ! empty( $discounts ) && ! $discounts->exists() ) {
 			$discounts->create();
 			edd_debug_log( $discounts->table_name . ' created successfully' );
 		}
 
-		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
-		if ( ! $discount_meta->exists() ) {
+		$discount_meta = edd_get_component_interface( 'adjustment', 'meta' );
+		if ( ! empty( $discount_meta ) && ! $discount_meta->exists() ) {
 			$discount_meta->create();
 			edd_debug_log( $discount_meta->table_name . ' created successfully' );
 		}
@@ -1296,7 +1296,7 @@ function edd_discounts_migration() {
 
 	$discounts = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
+			"SELECT * FROM {$wpdb->posts} WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
 			$offset,
 			$number
 		)
