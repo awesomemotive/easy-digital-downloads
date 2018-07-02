@@ -80,40 +80,27 @@ final class Report extends Base_Object {
 		parent::__construct( $args );
 
 		if ( ! empty( $args['endpoints'] ) ) {
-
 			$this->raw_endpoints = $args['endpoints'];
-
-		} else{
-
+		} else {
 			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.', $args );
 		}
 
 		if ( ! empty( $args['capability'] ) ) {
-
 			$this->set_capability( $args['capability'] );
-
 		} else {
-
 			$this->errors->add( 'missing_capability', 'No capability is defined for the report.', $args );
-
 		}
 
 		if ( ! empty( $args['display_callback'] ) ) {
-
 			$this->set_display_callback( $args['display_callback'] );
-
 		}
 
 		if ( ! empty( $args['filters'] ) ) {
-
 			$this->set_filters( $args['filters'] );
-
 		}
 
 		if ( ! empty( $args['group'] ) ) {
-
 			$this->set_group( $args['group'] );
-
 		}
 	}
 
@@ -129,19 +116,14 @@ final class Report extends Base_Object {
 	public function build_endpoints() {
 		if ( ! empty( $this->raw_endpoints ) && current_user_can( $this->get_capability() ) ) {
 			try {
-
 				$this->parse_endpoints( $this->raw_endpoints );
 
 			} catch ( \EDD_Exception $exception ) {
-
 				edd_debug_log_exception( $exception );
-
 			}
 
 		} else {
-
 			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.' );
-
 		}
 	}
 
@@ -159,10 +141,7 @@ final class Report extends Base_Object {
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
 		if ( is_wp_error( $registry ) ) {
-
 			throw new Utils\Exception( $registry->get_error_message() );
-
-			return;
 		}
 
 		$view_groups = $this->parse_view_groups();
@@ -176,8 +155,6 @@ final class Report extends Base_Object {
 					'The \'%1$s\' view group does not correspond to a known endpoint view type.',
 					$group
 				) );
-
-				continue;
 			}
 
 			// Loop through all endpoints for each view group and build endpoint objects.
@@ -186,10 +163,8 @@ final class Report extends Base_Object {
 				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ], $this->get_id() );
 
 				$this->validate_endpoint( $group, $endpoint );
-
 			}
 		}
-
 	}
 
 	/**
@@ -205,13 +180,11 @@ final class Report extends Base_Object {
 		$view_groups = array();
 
 		foreach ( $views as $view_type => $atts ) {
-
 			if ( ! empty( $atts['group'] ) ) {
 				$view_group = $atts['group'];
 
 				$view_groups[ $view_group ] = $view_type;
 			}
-
 		}
 
 		return $view_groups;
@@ -229,7 +202,6 @@ final class Report extends Base_Object {
 	 */
 	public function validate_endpoint( $view_group, $endpoint ) {
 		if ( is_wp_error( $endpoint ) ) {
-
 			$this->errors->add(
 				$endpoint->get_error_code(),
 				$endpoint->get_error_message(),
@@ -237,16 +209,13 @@ final class Report extends Base_Object {
 			);
 
 		} elseif ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) {
-
 			$message = sprintf( 'The \'%1$s\' endpoint is invalid.', $endpoint->get_id() );
 
 			$this->errors->add( 'invalid_endpoint', $message, $endpoint->get_errors() );
 
+		// Valid.
 		} else {
-
-			// Valid.
 			$this->endpoints[ $view_group ][ $endpoint->get_id() ] = $endpoint;
-
 		}
 	}
 
@@ -261,13 +230,9 @@ final class Report extends Base_Object {
 	 */
 	public function get_endpoints( $view_group = '' ) {
 		if ( ! empty( $view_group ) && ! empty( $this->endpoints[ $view_group ] ) ) {
-
 			return $this->endpoints[ $view_group ];
-
 		} else {
-
 			return $this->endpoints;
-
 		}
 	}
 
@@ -303,11 +268,9 @@ final class Report extends Base_Object {
 		$endpoints = $this->get_endpoints( $view_group );
 
 		if ( isset( $endpoints[ $endpoint_id ] ) ) {
-
 			$endpoint = $endpoints[ $endpoint_id ];
 
 		} else {
-
 			$message = sprintf( 'The \'%1$s\' endpoint does not exist for the \'%2$s\' view group in the \'%3$s\' report.',
 				$endpoint_id,
 				$view_group,
@@ -315,7 +278,6 @@ final class Report extends Base_Object {
 			);
 
 			$endpoint = new \WP_Error( 'invalid_report_endpoint', $message );
-
 		}
 
 		return $endpoint;
@@ -377,15 +339,11 @@ final class Report extends Base_Object {
 	 * @param callable $callback Display callback.
 	 */
 	private function set_display_callback( $callback ) {
-
 		if ( is_callable( $callback ) ) {
-
 			$this->display_callback = $callback;
 
 		} else {
-
 			$this->flag_invalid_report_arg_type( 'display_callback', 'callable' );
-
 		}
 	}
 
@@ -408,22 +366,18 @@ final class Report extends Base_Object {
 	 * @param array $filters Filters to set for this report.
 	 */
 	private function set_filters( $filters ) {
-		$valid_filters = Reports\get_filters();
 
 		foreach ( $filters as $filter ) {
 			if ( Reports\validate_filter( $filter ) ) {
-
 				$this->filters[] = $filter;
 
 			} else {
-
 				$message = sprintf( 'The \'%1$s\' filter for the \'%2$s\' report is invalid.',
 					$filter,
 					$this->get_id()
 				);
 
 				$this->errors->add( 'invalid_report_filter', $message, $this );
-
 			}
 		}
 
@@ -490,6 +444,4 @@ final class Report extends Base_Object {
 			'report_id' => $this->get_id(),
 		) );
 	}
-
-
 }
