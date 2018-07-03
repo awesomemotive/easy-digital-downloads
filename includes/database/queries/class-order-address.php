@@ -108,12 +108,6 @@ class Order_Address extends Base {
 	 *     @type int          $order_id             A order ID to only return that object. Default empty.
 	 *     @type array        $order_id__in         Array of order IDs to include. Default empty.
 	 *     @type array        $order_id__not_in     Array of order IDs to exclude. Default empty.
-	 *     @type string       $type                 Limit results to those affiliated with a given type. Default empty.
-	 *     @type array        $type__in             Array of types to include affiliated order addresses for. Default empty.
-	 *     @type array        $type__not_in         Array of types to exclude affiliated order addresses for. Default empty.
-	 *     @type string       $status               An address statuses to only return that address. Default empty.
-	 *     @type array        $status__in           Array of address statuses to include. Default empty.
-	 *     @type array        $status__not_in       Array of address statuses to exclude. Default empty.
 	 *     @type string       $first_name           A first name to only return that address. Default empty.
 	 *     @type array        $first_name__in       Array of first names to include. Default empty.
 	 *     @type array        $first_name__not_in   Array of first names to exclude. Default empty.

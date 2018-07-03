@@ -49,8 +49,6 @@ final class Order_Addresses extends Base {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 		order_id bigint(20) unsigned NOT NULL default '0',
-		type varchar(20) NOT NULL default '',
-		status varchar(20) NOT NULL default '',
 		first_name mediumtext NOT NULL,
 		last_name mediumtext NOT NULL,
 		address mediumtext NOT NULL,
