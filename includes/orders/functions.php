@@ -386,18 +386,38 @@ function edd_build_order( $order_data = array() ) {
 	$total_fees     = 0.00;
 	$order_total    = 0.00;
 
-	/** Insert order meta *****************************************************/
+	/** Insert order address *************************************************/
 
 	$order_data['user_info']['address'] = isset( $order_data['user_info']['address'] )
 		? $order_data['user_info']['address']
 		: array();
 
-	// Add user info to order meta.
-	edd_add_order_meta( $order_id, 'user_info', array(
-		'first_name' => $order_data['user_info']['first_name'],
-		'last_name'  => $order_data['user_info']['last_name'],
-		'address'    => $order_data['user_info']['address']
+	$order_data['user_info']['address'] = wp_parse_args( $order_data['user_info']['address'], array(
+		'line1'   => '',
+		'line2'   => '',
+		'city'    => '',
+		'zip'     => '',
+		'country' => '',
+		'state'   => '',
 	) );
+
+	$order_address_data = array(
+		'order_id'    => $order_id,
+		'first_name'  => $order_data['user_info']['first_name'],
+		'last_name'   => $order_data['user_info']['last_name'],
+		'address'     => $order_data['user_info']['address']['line1'],
+		'address2'    => $order_data['user_info']['address']['line2'],
+		'city'        => $order_data['user_info']['address']['city'],
+		'region'      => $order_data['user_info']['address']['state'],
+		'country'     => $order_data['user_info']['address']['country'],
+		'postal_code' => $order_data['user_info']['address']['zip'],
+	);
+
+	// Remove empty data.
+	$order_address_data = array_filter( $order_address_data );
+
+	// Add to edd_order_addresses table.
+	edd_add_order_address( $order_address_data );
 
 	/** Insert order items ****************************************************/
 
