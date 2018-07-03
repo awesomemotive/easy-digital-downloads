@@ -19,12 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
-	global $is_checkout;
-
-	if ( ! is_null( $is_checkout ) ) {
-		return $is_checkout;
-	}
-
 	global $wp_query;
 
 	$is_object_set    = isset( $wp_query->queried_object );
@@ -46,9 +40,7 @@ function edd_is_checkout() {
 		$is_checkout = true;
 	}
 
-	$is_checkout = apply_filters( 'edd_is_checkout', $is_checkout );
-
-	return $is_checkout;
+	return apply_filters( 'edd_is_checkout', $is_checkout );
 }
 
 /**
@@ -124,10 +116,15 @@ function edd_send_to_success_page( $query_string = null ) {
  * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
  */
 function edd_get_checkout_uri( $args = array() ) {
+	$uri = false;
+
 	if ( edd_is_checkout() ) {
 		global $post;
-		$uri = get_permalink( $post->ID );
-	} else {
+		$uri = $post instanceof WP_Post ? get_permalink( $post->ID ) : NULL;
+	}
+
+	// If we are not on a checkout page, determine the URI from the default.
+	if ( empty( $uri ) ) {
 		$uri = edd_get_option( 'purchase_page', false );
 		$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
 	}
