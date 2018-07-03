@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer Addresses Schema Class.
+ * Customer Email Addresses Schema Class.
  *
  * @package     EDD
  * @subpackage  Database\Schemas
@@ -15,18 +15,18 @@ namespace EDD\Database\Schemas;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Customer Addresses Schema Class.
+ * Customer Email Addresses Schema Class.
  *
  * @since 3.0
  */
-class Customer_Addresses extends Base {
+class Customer_Email_Addresses extends Base {
 
 	/**
 	 * Array of database column objects
 	 *
 	 * @since  3.0
 	 * @access public
-	 * @var array
+	 * @var    array
 	 */
 	public $columns = array(
 
@@ -72,36 +72,10 @@ class Customer_Addresses extends Base {
 			'transition' => true
 		),
 
-		// address
+		// email
 		array(
-			'name'       => 'address',
+			'name'       => 'email',
 			'type'       => 'mediumtext',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// country
-		array(
-			'name'       => 'country',
-			'type'       => 'mediumtext',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// region
-		array(
-			'name'       => 'region',
-			'type'       => 'mediumtext',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// postal_code
-		array(
-			'name'       => 'postal_code',
-			'type'       => 'varchar',
-			'length'     => '32',
-			'default'    => '',
 			'searchable' => true,
 			'sortable'   => true
 		),
