@@ -22,6 +22,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int $id
  * @property int $order_id
+ * @property string $first_name
+ * @property string $last_name
  * @property string $address
  * @property string $address2
  * @property string $city
