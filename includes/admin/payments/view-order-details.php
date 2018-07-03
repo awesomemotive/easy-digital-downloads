@@ -17,7 +17,7 @@ if ( ! class_exists( 'EDD_Order_Item_Table' ) ) {
 	require_once 'class-order-items-table.php';
 }
 
-if ( ! class_exists( 'EDD_Order_Adjustemnt_Table' ) ) {
+if ( ! class_exists( 'EDD_Order_Adjustment_Table' ) ) {
 	require_once 'class-order-adjustments-table.php';
 }
 
