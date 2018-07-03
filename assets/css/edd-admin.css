@@ -1418,9 +1418,24 @@ td.edd_order_price {
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
+#edd-dashboard-widgets-wrap .metabox-holder {
+	padding-top: 0;
+}
 .edd-reports-wrapper .postbox {
 	border: none;
 	box-shadow: none;
+}
+
+.edd-reports-wrapper .postbox .chosen-container {
+	max-width: 200px;
+	vertical-align: inherit;
+	margin-right: 4px;
+}
+.edd-reports-wrapper .postbox #edd-start-wrap input.edd_datepicker,
+.edd-reports-wrapper .postbox #edd-end-wrap input.edd_datepicker {
+	width: 120px;
+	height: 29px;
+	margin-right: 4px;
 }
 
 .download_page_edd-reports #edd-filters .filter-items {
