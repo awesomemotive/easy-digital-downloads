@@ -97,9 +97,16 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 				$file_id     = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
 				$file_name   = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
+				if ( ! empty( $customer ) ) {
+					$user = ! empty( $customer->name ) ? $customer->name : $customer->email;
+				} else {
+					$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+					$user       = edd_get_payment_user_email( $payment_id );
+				}
+
 				$data[]    = array(
 					'date'     => $log->post_date,
-					'user'     => ! empty( $customer ) && ! empty( $customer->name ) ? $customer->name : edd_get_payment_user_email( $log->post_parent ),
+					'user'     => $user,
 					'ip'       => get_post_meta( $log->ID, '_edd_log_ip', true ),
 					'download' => get_the_title( $log->post_parent ),
 					'file'     => $file_name
