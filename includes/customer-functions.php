@@ -445,10 +445,42 @@ function edd_count_customer_addresses( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$customer_addresses = new EDD\Database\Queries\Order_Address( $r );
+	$customer_addresses = new EDD\Database\Queries\Customer_Address( $r );
 
 	// Return count(s)
 	return absint( $customer_addresses->found_items );
+}
+
+/**
+ * Maybe add a customer address. Used by `edd_build_order()` to maybe add
+ * order addresses to the customer addresses table.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_id Customer ID.
+ * @param array $args        Customer address to check.
+ *
+ * @return mixed False if address exists. Otherwise ID of newly added EDD\Customers\Customer_Address object.
+ */
+function edd_maybe_add_customer_address( $customer_id = 0, $args = array() ) {
+
+	// Bail if nothing passed.
+	if ( empty( $customer_id ) || empty( $args ) ) {
+		return false;
+	}
+
+	$args['customer_id'] = $customer_id;
+
+	$c = edd_count_customer_addresses( $args );
+
+	// Add to the table if an address does not exist.
+	if ( 0 === $c ) {
+		$args['type'] = 'billing';
+
+		return edd_add_customer_address( $args );
+	}
+
+	return false;
 }
 
 /** Back Compat ***************************************************************/

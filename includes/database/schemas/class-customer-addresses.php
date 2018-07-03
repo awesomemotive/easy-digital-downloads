@@ -55,7 +55,7 @@ class Customer_Addresses extends Base {
 			'name'       => 'type',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'active',
+			'default'    => 'billing',
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true

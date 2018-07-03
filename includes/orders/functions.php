@@ -419,6 +419,16 @@ function edd_build_order( $order_data = array() ) {
 	// Add to edd_order_addresses table.
 	edd_add_order_address( $order_address_data );
 
+	// Maybe add the address to the edd_customer_addresses.
+	$customer_address_data = $order_address_data;
+
+	// We don't need to pass this data to edd_maybe_add_customer_address().
+	unset( $customer_address_data['order_id'] );
+	unset( $customer_address_data['first_name'] );
+	unset( $customer_address_data['last_name'] );
+
+	edd_maybe_add_customer_address( $customer->id, $customer_address_data );
+
 	/** Insert order items ****************************************************/
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
