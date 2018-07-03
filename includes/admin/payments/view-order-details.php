@@ -58,8 +58,6 @@ $order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $order->customer_id );
 $notes          = edd_get_payment_notes( $order->id );
 
-var_dump( $user_info );
-
 $default_address = array(
 	'id'          => 0,
 	'order_id'    => 0,
