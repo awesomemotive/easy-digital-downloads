@@ -534,7 +534,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->number ) . '</a>' . esc_html( $state ) . '</strong>';
+		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Concatenate & return the results
 		return $link . $actions;
