@@ -97,20 +97,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 }
 
 /**
- * Get Users Purchased Products
+ * Retrieve products purchased by a specific user.
  *
- * Returns a list of unique products purchased by a specific user
+ * @since 2.0
+ * @since 3.0 Refactored to use new query methods and to be more efficient.
  *
- * @since  2.0
+ * @param int|string $user   User ID or email address.
+ * @param string     $status Order status.
  *
- * @param int    $user User ID or email address
- * @param string $status
- *
- * @return WP_Post[]|false List of unique products purchased by user
+ * @return WP_Post[]|false Array of products, false otherwise.
  */
 function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
 
-    // Fall back to user ID
+	// Fall back to user ID
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
@@ -124,7 +123,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
 	if ( is_numeric( $user ) ) {
 		$customer = edd_get_customer_by( 'user_id', $user );
 	} elseif ( is_email( $user ) ) {
-		$customer = edd_get_customer_by( 'email',   $user );
+		$customer = edd_get_customer_by( 'email', $user );
 	} else {
 		return false;
 	}
@@ -133,66 +132,26 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
 		return false;
 	}
 
-	$payment_ids = $customer->get_payment_ids();
+	// Fetch the order IDs
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999 );
 
-	if ( empty( $payment_ids ) ) {
-		return false;
-	}
+	$order_ids = edd_get_orders( array(
+		'customer_id' => $customer->id,
+		'fields'      => 'ids',
+		'status'      => $status,
+		'number'      => $number,
+	) );
 
-	// Get all the items purchased
-	$limit_payments = apply_filters( 'edd_users_purchased_products_payments', 9999 );
-	$payment_args   = array(
-		'output'   => 'payments',
-		'post__in' => $payment_ids,
-		'status'   => $status,
-		'number'   => $limit_payments,
-	);
-	$payments_query = new EDD_Payments_Query( $payment_args );
-	$payments       = $payments_query->get_payments();
+	$product_ids = edd_get_order_items( array(
+		'order_id__in' => $order_ids,
+		'number'       => $number,
+		'fields'       => 'product_id',
+	) );
 
-	$purchase_data  = array();
+	$product_ids = array_unique( $product_ids );
 
-	foreach ( $payments as $payment ) {
-		$purchase_data[] = $payment->downloads;
-	}
-
-	if ( empty( $purchase_data ) ) {
-		return false;
-	}
-
-	// Grab only the post ids of the products purchased on this order
-	$purchase_product_ids = array();
-	foreach ( $purchase_data as $purchase_meta ) {
-
-		$purchase_ids = @wp_list_pluck( $purchase_meta, 'id' );
-
-		if ( ! is_array( $purchase_ids ) || empty( $purchase_ids ) ) {
-			continue;
-		}
-
-		$purchase_ids           = array_values( $purchase_ids );
-		$purchase_product_ids[] = $purchase_ids;
-
-	}
-
-	// Ensure that grabbed products actually HAVE downloads
-	$purchase_product_ids = array_filter( $purchase_product_ids );
-
-	if ( empty( $purchase_product_ids ) ) {
-		return false;
-	}
-
-	// Merge all orders into a single array of all items purchased
-	$purchased_products = array();
-	foreach ( $purchase_product_ids as $product ) {
-		$purchased_products = array_merge( $product, $purchased_products );
-	}
-
-	// Only include each product purchased once
-	$product_ids = array_unique( $purchased_products );
-
-	// Make sure we still have some products and a first item
-	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) ) {
+	// Bail if no product IDs found.
+	if ( empty( $product_ids ) ) {
 		return false;
 	}
 
