@@ -54,21 +54,21 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Reports\get_active_tab()
+	 * @covers \EDD\Reports\get_current_report()
 	 */
-	public function test_get_active_tab_should_use_the_value_of_the_tab_var_when_set() {
-		$_REQUEST['tab'] = 'sales';
+	public function test_get_current_report_should_use_the_value_of_the_tab_var_when_set() {
+		$_REQUEST['view'] = 'overview';
 
-		$this->assertSame( 'sales', get_active_tab() );
+		$this->assertSame( 'overview', get_current_report() );
 	}
 
 	/**
-	 * @covers \EDD\Reports\get_active_tab()
+	 * @covers \EDD\Reports\get_current_report()
 	 */
-	public function test_get_active_tab_should_use_the_sanitized_value_of_the_tab_var_when_set() {
-		$_REQUEST['tab'] = 'sales/figures';
-		
-		$this->assertSame( 'salesfigures', get_active_tab() );
+	public function test_get_current_report_should_use_the_sanitized_value_of_the_tab_var_when_set() {
+		$_REQUEST['view'] = 'sales/figures';
+
+		$this->assertSame( 'salesfigures', get_current_report() );
 	}
 
 	/**
@@ -280,7 +280,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\get_filters()
 	 */
 	public function test_get_filters_should_return_records_for_all_official_filters() {
-		$expected = array( 'dates', 'products', 'taxes' );
+		$expected = array( 'dates', 'discounts', 'gateways', 'products', 'taxes' );
 
 		$this->assertEqualSets( $expected, array_keys( get_filters() ) );
 	}
@@ -742,7 +742,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers \EDD\Reports\clear_filter
 	 */
-	public function test_clear_filter_should_clear_it() {
+	public function test_clear_filter_should_default_to_last_30_days() {
 		$dates = array(
 			'from' => date( 'Y-m-d H:i:s' ),
 			'to'   => date( 'Y-m-d H:i:s' ),
@@ -756,7 +756,17 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		// Clear it.
 		clear_filter( 'dates' );
 
-		$this->assertSame( '', get_filter_value( 'dates' ) );
+		// Default to last 30 days for filter value.
+		$date  = EDD()->utils->date( 'now' );
+		$dates = parse_dates_for_range( $date, 'last_30_days' );
+
+		$expected = array(
+			'from'  => $dates['start']->format( 'Y-m-d' ),
+			'to'    => $dates['end']->format( 'Y-m-d' ),
+			'range' => 'last_30_days',
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
 
 	/**

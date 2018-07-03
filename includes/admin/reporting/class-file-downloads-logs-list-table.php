@@ -169,7 +169,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
 						'ID'         => $log->id,
-						'download'   => $log->download_id,
+						'download'   => $log->product_id,
 						'customer'   => new EDD_Customer( $customer_id ),
 						'payment_id' => $log->order_id,
 						'price_id'   => $log->price_id,

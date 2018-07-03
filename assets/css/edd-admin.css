@@ -239,17 +239,17 @@ a.edd-delete:hover {
 #edd-add-ons .edd-extension .third-party {
 	display: none;
 }
-#edd-add-ons .edd-starter-package {
+#edd-add-ons .edd-add-ons-container .edd-extension:first-child {
 	background-color: #85c0e5;
 	border-color: #62a9d7;
 	color: #fff;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
-#edd-add-ons .edd-starter-package h3 {
+#edd-add-ons .edd-add-ons-container .edd-extension:first-child h3 {
 	color: #fff;
 }
 /* Mock blue "Primary" styling on Starter Package */
-#edd-add-ons .edd-starter-package .button-secondary {
+#edd-add-ons .edd-add-ons-container .edd-extension:first-child .button-secondary {
 	background: #0085ba;
 	border-color: #0073aa #006799 #006799;
 	box-shadow: 0 1px 0 #006799;
@@ -483,10 +483,14 @@ textarea[name="edd-note"] {
 /* Filter Bar Styles
 -------------------------------------------------------------- */
 
-#edd-filters .filter-items {
-	padding: 10px;
+#edd-filters {
+	padding: 0 10px;
 }
-#edd-filters p {
+#edd-filters .filter-items > span {
+	display: inline-block;
+	margin: 10px 6px 10px 0;
+}
+#edd-filters > p {
 	color: #777;
 }
 .edd-old-log-filters {
@@ -501,7 +505,7 @@ textarea[name="edd-note"] {
 	padding: 5px;
 }
 #edd-after-core-filters .button-secondary {
-	margin: 2px 0 0 0;
+	margin: -3px 0 0 0;
 }
 
 #edd-advanced-filters {
@@ -1396,27 +1400,66 @@ td.edd_order_price {
 /* Reports Styles
 -------------------------------------------------------------- */
 
+.edd-vertical-sections .edd-legacy-label {
+	font-size: 8px;
+	font-weight: bold;
+	line-height: 8px;
+	padding: 3px 4px 4px;
+	border-radius: 4px;
+	color: #fff;
+	background-color: #aaa;
+	opacity: 0.5;
+	display: inline-block;
+	position: absolute;
+	top: 13px;
+	right: 10px;
+}
+
+.download_page_edd-reports #edd-filters .filter-items {
+	width: 100%;
+}
+
+.download_page_edd-reports #edd-filters {
+	margin-bottom: -5px;
+}
+.download_page_edd-reports #edd-item-wrapper {
+	margin: 0;
+}
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-.edd-graphs-date-options,
-.edd-date-range-options {
-	display: inline-block;
+.edd-graphs-date-options {
+	max-width: 130px !important; /* Chosen Override */
+}
+#edd-filters .filter-items .edd-date-range-options {
+	margin-top: 9px;
+}
+.edd-date-range-options .edd_datepicker {
+	width: 100px;
+	height: 29px;
+}
+
+.edd-date-range-options label,
+.edd-date-range-options span:not(:last-of-type) input {
+	margin-right: 5px;
 }
 .edd-date-range-options span {
 	float: left;
-	line-height: 24px;
-	height: 24px;
-	margin-right: 6px;
+	line-height: 29px;
+	height: 29px;
 }
 .edd-report-wrap {
-	padding: 20px;
 	clear: both;
 }
 
 .edd-report-wrap h3 {
 	clear: both;
 	margin: 0 0 20px;
+}
+
+.edd-reports-chart,
+.edd-reports-table {
+	margin-bottom: 20px;
 }
 
 .edd-import-export-form {
@@ -1470,8 +1513,16 @@ td.edd_order_price {
 .admin-color-sunrise .edd-import-export-form .edd-progress div {
 	background: #dd823b;
 }
-#edd-graphs-filter {
+
+.graph-option-section {
+	float: left;
+}
+.edd-report-filters-title span {
 	display: block;
+	padding: 20px;
+}
+#edd-graphs-filter form {
+	padding: 20px;
 }
 #edd-graphs-filter label {
 	vertical-align: inherit;
@@ -1479,7 +1530,14 @@ td.edd_order_price {
 #edd-graphs-filter .graph-option-section {
 	display: inline-block;
 	line-height: 2em;
-	padding-right: 5px;
+	margin: 0 5px 0 0;
+	padding: 0;
+}
+.download_page_edd-reports .section-content #post-body-content {
+	float: none;
+}
+.download_page_edd-reports .section-content select[name="range"] {
+	display: none;
 }
 .edd-mix-totals {
 	background-color: #fff;
@@ -1538,8 +1596,16 @@ td.edd_order_price {
 	width: 33.3%;
 }
 
-#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container {
-	margin-top: 1px;
+#edd-reports-tiles-wrap #dashboard-widgets .sortable-placeholder {
+	padding: 0;
+	margin: 0 0 20px 0;
+	line-height: 0;
+	box-sizing: border-box;
+	height: 110px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container .sortable-placeholder {
+	border-color: transparent;
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
@@ -1550,47 +1616,93 @@ td.edd_order_price {
 	margin-right: 0;
 }
 
-#edd-reports-tiles-wrap .metabox-holder .empty-container {
-	height: 127px;
-}
-
-#edd-reports-tiles-wrap #dashboard-widgets .postbox,
-#edd-reports-tiles-wrap #dashboard-widgets .meta-box-sortables {
-	min-height: 127px;
-}
-
-#edd-reports-tiles-wrap #dashboard-widgets .postbox.closed {
-	min-height: 0;
-}
-
 #edd-reports-tiles-wrap .postbox {
+	border: none;
+	box-shadow: none;
+	overflow: hidden;
+	background: transparent;
+}
+#edd-reports-tiles-wrap .postbox,
+#edd-reports-tiles-wrap .metabox-holder .empty-container {
+	height: 110px;
 	min-width: 0;
 }
-#edd-reports-tiles-wrap h2.hndle {
-	padding-left: 25px;
-	text-align: center;
-	font-weight: normal;
-	color: #999;
+
+#edd-reports-tiles-wrap .postbox button {
+	display: none;
 }
 
+#edd-reports-tiles-wrap h2.hndle {
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 11px;
+	font-weight: normal;
+	color: #888;
+	border-bottom: none;
+	padding: 0;
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#edd-reports-tiles-wrap h2.hndle span {
+	position: relative;
+	top: 65px;
+}
 #edd-reports-tiles-wrap .postbox .inside {
 	text-align: center;
+	vertical-align: middle;
+	position: relative;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	border: 1px solid #e5e5e5;
+	background: #fafafa;
 }
 
 #edd-reports-tiles-wrap .inside span {
 	display: block;
 }
 
+#edd-reports-tiles-wrap .inside span.dashicons {
+	display: inline-block;
+	font-size: 30px;
+	line-height: 20px;
+	height: 20px;
+	width: 20px;
+	position: relative;
+	top: 4px;
+	left: -5px;
+	margin-left: -5px;
+	color: #999;
+}
+
 #edd-reports-tiles-wrap .inside .tile-value {
-	color: #21759b;
+	margin-top: 27px;
+	padding: 5px;
+	color: #333;
 	font-size: 2em;
 	line-height: 1;
+	display: inline-block;
+}
+
+#edd-reports-tiles-wrap .inside .tile-amount {
+	color: rgb(39,148,218);
+}
+#edd-reports-tiles-wrap .inside .tile-number {
+	color: rgb(153,102,255);
+}
+#edd-reports-tiles-wrap .inside .tile-amount,
+#edd-reports-tiles-wrap .inside .tile-number {
+	color: #fff;
 }
 
 #edd-reports-tiles-wrap .inside .tile-value.tile-no-data {
-	color: #888;
-	font-size: 1.5em;
-	line-height: 1;
+	color: #ddd;
 }
 
 #edd-reports-tiles-wrap .inside .tile-value.tile-url {
@@ -1598,9 +1710,30 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap .inside .tile-compare {
-	color: #333;
-	padding-top: 10px;
-	font-size: 1.1em;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	color: #aaa;
+	font-size: 11px;
+	line-height: 1em;
+	background-color: #fff;
+	border-left: 1px solid #e5e5e5;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
+	border-top-left-radius: 8px;
+	padding: 4px 0 0 9px;
+	margin: 0 -1px -1px 0;
+}
+
+#edd-reports-tiles-wrap .postbox:hover .inside {
+	border: 1px solid #aaa;
+}
+
+#edd-reports-tiles-wrap .postbox:hover .tile-compare {
+	border-left: 1px solid #bbb;
+	border-top: 1px solid #bbb;
+	color: #777;
 }
 
 .edd-reports-chart-pie,
@@ -1610,6 +1743,30 @@ td.edd_order_price {
 	-webkit-box-sizing: border-box;
 	float: left;
 	width: 50%;
+}
+
+#edd-chartjs-tooltip {
+	position: absolute;
+	background-color: #fff;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	-webkit-transition: all .1s ease;
+	transition: all .1s ease;
+	pointer-events: none;
+	-webkit-transform: translate(-50%, 0);
+	transform: translate(-50%, 0);
+	font-size: 12px;
+	box-shadow: 0 0 0 1px rgba(89,94,100,.1), 0 15px 35px 0 rgba(89,94,100,.1), 0 5px 15px 0 rgba(0,0,0,.12);
+	min-width: 120px;
+	opacity: 0;
+}
+
+.edd-chartjs-tooltip-key {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-right: 5px;
 }
 
 /* Upgrades page styles
@@ -2155,11 +2312,10 @@ only screen and ( min-resolution: 1.5dppx ) {
 -------------------------------------------------------------- */
 
 #edd-item-wrapper {
-	background: #f5f5f5;
+	background: #fff;
 	border: 1px solid #e5e5e5;
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-	/* max-width: 830px; */
 	position: relative;
 	margin-top: 15px;
 }
@@ -2174,6 +2330,9 @@ only screen and ( min-resolution: 1.5dppx ) {
 	visibility: hidden;
 	font-size: 0;
 	height: 0;
+}
+.edd-sections-wrap {
+	clear: both;
 }
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
@@ -2640,7 +2799,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 .edd-vertical-sections {
 	overflow: visible;
-	background: #f5f5f5;
 	background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 20%, #fff 20%, #fff 100% );
 }
 
@@ -2655,7 +2813,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	float: left;
 	width: 20%;
 	line-height: 1em;
-	margin: 0 0 -1px 0;
+	margin: 0 -1px -1px 0;
 	padding: 0;
 	background-color: #fcfcfc;
 	border-right: 1px solid #e5e5e5;
@@ -2681,13 +2839,13 @@ only screen and ( min-resolution: 1.5dppx ) {
 	box-shadow: none;
 }
 
-.edd-vertical-sections .section-nav li a .dashicons,
-.edd-vertical-sections .section-nav li a span {
+.edd-vertical-sections .section-nav li a > .dashicons,
+.edd-vertical-sections .section-nav li a > span {
 	display: inline-block;
 }
 
-.edd-vertical-sections .section-nav li a span {
-	max-width: 75%;
+.edd-vertical-sections .section-nav li a > span {
+	max-width: 76%;
 }
 
 .edd-vertical-sections .section-nav li a .dashicons {
@@ -2793,16 +2951,17 @@ only screen and ( min-resolution: 1.5dppx ) {
 .edd-vertical-sections .section-wrap {
 	float: left;
 	width: 80%;
-	margin-left: -1px;
 }
 
 @media only screen and ( min-width: 1200px ) {
+	#edd-graphs-filter,
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 200px );
 	}
 }
 
 @media only screen and ( max-width: 782px ) {
+	#edd-graphs-filter,
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 48px );
 	}

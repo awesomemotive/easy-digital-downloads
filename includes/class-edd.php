@@ -52,7 +52,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Utilities Object.
 	 *
-	 * @var object|EDD_Utilities
+	 * @var object|EDD\Utilities
 	 * @since 3.0
 	 */
 	public $utils;
@@ -168,7 +168,7 @@ final class Easy_Digital_Downloads {
 		self::$instance->roles           = new EDD_Roles();
 		self::$instance->fees            = new EDD_Fees();
 		self::$instance->api             = new EDD_API();
-		self::$instance->utils           = new EDD_Utilities();
+		self::$instance->utils           = new EDD\Utilities();
 		self::$instance->session         = new EDD_Session();
 		self::$instance->html            = new EDD_HTML_Elements();
 		self::$instance->emails          = new EDD_Emails();
@@ -278,7 +278,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.0-beta-1.0010' );
+			define( 'EDD_VERSION', '3.0.0-beta-1.0011' );
 		}
 
 		// Plugin Root File.
@@ -450,7 +450,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function setup_utilities() {
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-utilities.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
 	}
 
@@ -556,6 +556,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/class-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/meta.php';
 
@@ -625,7 +626,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-sections.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
@@ -647,6 +648,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-reports-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';

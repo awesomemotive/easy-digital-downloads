@@ -1274,21 +1274,21 @@ function edd_discounts_migration() {
 
 	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 	if ( empty( $total ) || $total <= 1 ) {
-		$total_sql = "SELECT COUNT(ID) as total_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount'";
+		$total_sql = "SELECT COUNT(ID) as total_discounts FROM {$wpdb->posts} WHERE post_type = 'edd_discount'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
 		$total     = $results->total_discounts;
 		edd_debug_log( $total . ' to migrate' );
 	}
 
 	if ( 1 === $step ) {
-		$discounts = edd_get_component_interface( 'discount', 'table' );
-		if ( ! $discounts->exists() ) {
+		$discounts = edd_get_component_interface( 'adjustment', 'table' );
+		if ( ! empty( $discounts ) && ! $discounts->exists() ) {
 			$discounts->create();
 			edd_debug_log( $discounts->table_name . ' created successfully' );
 		}
 
-		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
-		if ( ! $discount_meta->exists() ) {
+		$discount_meta = edd_get_component_interface( 'adjustment', 'meta' );
+		if ( ! empty( $discount_meta ) && ! $discount_meta->exists() ) {
 			$discount_meta->create();
 			edd_debug_log( $discount_meta->table_name . ' created successfully' );
 		}
@@ -1296,7 +1296,7 @@ function edd_discounts_migration() {
 
 	$discounts = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
+			"SELECT * FROM {$wpdb->posts} WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
 			$offset,
 			$number
 		)
@@ -1630,14 +1630,14 @@ function edd_logs_migration() {
                 }
 
                 $log_data = array(
-                    'download_id'   => $old_log->post_parent,
-                    'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
-                    'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
-                    'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-                    'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-                    'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
-                    'date_created'  => $old_log->post_date_gmt,
-                    'date_modified' => $old_log->post_modified_gmt,
+	                'download_id'   => $old_log->post_parent,
+	                'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
+	                'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
+	                'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+	                'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
+	                'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
+	                'date_created'  => $old_log->post_date_gmt,
+	                'date_modified' => $old_log->post_modified_gmt,
                 );
 
                 $new_log_id = edd_add_file_download_log( $log_data );
@@ -1685,11 +1685,10 @@ function edd_logs_migration() {
                 }
 
                 $new_log_id = edd_add_log( $log_data );
-                $new_log    = new EDD\Logs\Log( $new_log_id );
 
                 if ( ! empty( $meta_to_migrate ) ) {
                     foreach ( $meta_to_migrate as $key => $value ) {
-                        $new_log->add_meta( $key, $value );
+                        edd_add_log_meta( $new_log_id, $key, $value );
                     }
                 }
             }

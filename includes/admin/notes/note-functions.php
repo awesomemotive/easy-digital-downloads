@@ -89,7 +89,7 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	ob_start();
 
 	// Apply offset so date and time is displayed correctly.
-	$date = EDD()->utils->date( $note->date_created )->toDateTimeString();
+	$date = EDD()->utils->date( $note->date_created, null, true )->toDateTimeString();
 	?>
 
 	<div class="edd-note" id="edd-note-<?php echo esc_attr( $note->id ); ?>">

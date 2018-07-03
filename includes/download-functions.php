@@ -641,11 +641,11 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
  * @param int $file_id ID of the file downloaded
  * @param array $user_info User information (Deprecated)
  * @param string $ip IP Address
- * @param int $payment_id Payment ID
+ * @param int $order_id Payment ID
  * @param int $price_id Price ID, if any
  * @return void
  */
-function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
+function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $order_id, $price_id = false ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -653,14 +653,13 @@ function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip
 		'log_type'    => 'file_download',
 	);
 
-	$payment = new EDD_Payment( $payment_id );
+	$order = edd_get_order( $order_id );
 
 	$log_meta = array(
-		'customer_id' => $payment->customer_id,
-		'user_id'     => $payment->user_id,
+		'customer_id' => $order->customer_id,
 		'file_id'     => (int) $file_id,
 		'ip'          => $ip,
-		'payment_id'  => $payment_id,
+		'order_id'    => $order_id,
 		'price_id'    => (int) $price_id,
 	);
 
