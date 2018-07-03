@@ -49,8 +49,8 @@ final class Customer_Addresses extends Base {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 		customer_id bigint(20) unsigned NOT NULL default '0',
-		type varchar(20) NOT NULL default '',
-		status varchar(20) NOT NULL default '',
+		type varchar(20) NOT NULL default 'billing',
+		status varchar(20) NOT NULL default 'active',
 		address mediumtext NOT NULL,
 		address2 mediumtext NOT NULL,
 		city mediumtext NOT NULL,
