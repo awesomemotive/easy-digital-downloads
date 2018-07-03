@@ -2164,7 +2164,35 @@ class EDD_Payment {
 						}
 					}
 
+					$order_address = $this->order->get_address();
+
 					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array( 'id', 'email', 'discount' ) ) );
+
+					$defaults = array(
+						'first_name' => '',
+						'last_name' => '',
+						'address' => array(
+							'line1'   => '',
+							'line2'   => '',
+							'city'    => '',
+							'state'   => '',
+							'country' => '',
+							'zip'     => '',
+						),
+					);
+
+					$user_info = wp_parse_args( $user_info, $defaults );
+
+					edd_update_order_address( $order_address->id, array(
+						'first_name'  => $user_info['first_name'],
+						'last_name'   => $user_info['last_name'],
+						'address'     => $user_info['address']['line1'],
+						'address2'    => $user_info['address']['line2'],
+						'city'        => $user_info['address']['city'],
+						'region'      => $user_info['address']['state'],
+						'postal_code' => $user_info['address']['zip'],
+						'country'     => $user_info['address']['country'],
+					) );
 
 					edd_update_order_meta( $this->ID, 'user_info', $user_info );
 				}
