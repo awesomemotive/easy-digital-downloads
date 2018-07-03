@@ -2193,8 +2193,6 @@ class EDD_Payment {
 						'postal_code' => $user_info['address']['zip'],
 						'country'     => $user_info['address']['country'],
 					) );
-
-					edd_update_order_meta( $this->ID, 'user_info', $user_info );
 				}
 
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
