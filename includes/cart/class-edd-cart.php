@@ -198,7 +198,7 @@ class EDD_Cart {
 
 		do_action( 'edd_cart_contents_loaded' );
 
-		return $this->contents;
+		return (array) $this->contents;
 	}
 
 	/**
@@ -358,7 +358,7 @@ class EDD_Cart {
 	 * @return boolean
 	 */
 	public function is_empty() {
-		return 0 === sizeof( $this->contents );
+		return 0 === count( (array) $this->get_contents() );
 	}
 
 	/**
