@@ -624,7 +624,6 @@ function edd_customers_view( $customer = null ) {
 			<thead>
 			<tr>
 				<th class="column-primary"><?php echo edd_get_label_singular(); ?></th>
-				<th class="column-actions"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -633,12 +632,7 @@ function edd_customers_view( $customer = null ) {
 				<?php foreach ( $downloads as $download ) : ?>
 
 					<tr>
-						<td class="column-primary"><?php echo esc_html( $download->post_title ); ?></td>
-						<td class="column-actions">
-							<a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>">
-								<?php printf( __( 'View %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
-							</a>
-						</td>
+						<td class="column-primary"><strong><a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>"><?php echo esc_html( $download->post_title ); ?></a></strong></td>
 					</tr>
 
 				<?php endforeach; ?>
