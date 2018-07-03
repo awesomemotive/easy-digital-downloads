@@ -55,7 +55,7 @@ class Customer_Email_Addresses extends Base {
 			'name'       => 'type',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'active',
+			'default'    => 'secondary',
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true

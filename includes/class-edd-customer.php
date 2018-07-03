@@ -363,7 +363,10 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
 
 		// Update is used to ensure duplicate emails are not added.
-		$ret = (bool) edd_add_customer_meta( $this->id, 'additional_email', $email );
+		$ret = (bool) edd_add_customer_email_address( array(
+			'customer_id' => $this->id,
+			'email'       => $email
+		) );
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
@@ -406,7 +409,6 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @return boolean True if assigned to existing customer, false otherwise.
 	 */
 	public function email_exists( $email = '' ) {
-		global $wpdb;
 
 		// Bail if not an email address
 		if ( ! is_email( $email ) ) {
@@ -418,17 +420,19 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			return true;
 		}
 
-		// Return true if found in customers table
+		// Return true if found in customers table.
 		if ( edd_get_customer_by( 'email', $email ) ) {
 			return true;
 		}
 
-		// Query all customer meta values
-		$query      = "SELECT meta_value FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1";
-		$additional = $wpdb->get_var( $wpdb->prepare( $query, $email ) );
+		// Query all customer email addresses.
+		$count = edd_count_customer_email_addresses( array(
+			'customer_id' => $this->id,
+			'email'       => $email,
+		) );
 
 		// Return true if found in additional email addresses
-		if ( ! empty( $additional ) && ! is_wp_error( $additional ) ) {
+		if ( 0 < $count ) {
 			return true;
 		}
 
