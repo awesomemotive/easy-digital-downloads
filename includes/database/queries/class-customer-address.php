@@ -117,15 +117,21 @@ class Customer_Address extends Base {
 	 *     @type string       $address              An address to only return that address. Default empty.
 	 *     @type array        $address__in          Array of addresses to include. Default empty.
 	 *     @type array        $address__not_in      Array of addresses to exclude. Default empty.
-	 *     @type string       $country              A country to only return that address. Default empty.
-	 *     @type array        $country__in          Array of countries to include. Default empty.
-	 *     @type array        $country__not_in      Array of countries to exclude. Default empty.
+	 *     @type string       $address2             An address to only return that address. Default empty.
+	 *     @type array        $address2__in         Array of addresses to include. Default empty.
+	 *     @type array        $address2__not_in     Array of addresses to exclude. Default empty.
+	 *     @type string       $city                 A city to only return that address. Default empty.
+	 *     @type array        $city__in             Array of cities to include. Default empty.
+	 *     @type array        $city__not_in         Array of cities to exclude. Default empty.
 	 *     @type string       $region               A region to only return that address. Default empty.
 	 *     @type array        $region__in           Array of regions to include. Default empty.
 	 *     @type array        $region__not_in       Array of regions to exclude. Default empty.
 	 *     @type string       $postal_code          A postal code to only return that address. Default empty.
 	 *     @type array        $postal_code__in      Array of postal codes to include. Default empty.
 	 *     @type array        $postal_code__not_in  Array of postal codes to exclude. Default empty.
+	 *     @type string       $country              A country to only return that address. Default empty.
+	 *     @type array        $country__in          Array of countries to include. Default empty.
+	 *     @type array        $country__not_in      Array of countries to exclude. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit customers by. See WP_Date_Query.
 	 *                                              Default null.
