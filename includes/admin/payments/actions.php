@@ -70,24 +70,21 @@ function edd_update_payment_details( $data = array() ) {
 
 	// Bail if an empty array is passed.
 	if ( empty( $data ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( esc_html__( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	// Bail if the user does not have the correct permissions.
 	if ( ! current_user_can( 'edit_shop_payments', $data['edd_payment_id'] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( esc_html__( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
 
 	// Retrieve the order ID and set up the order.
 	$order_id = absint( $data['edd_payment_id'] );
-	$order = edd_get_order( $order_id );
+	$order    = edd_get_order( $order_id );
 
 	$order_update_args = array();
-
-	// Retrieve existing payment meta
-	$user_info = $order->get_user_info();
 
 	$status    = $data['edd-payment-status'];
 	$unlimited = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
@@ -110,15 +107,15 @@ function edd_update_payment_details( $data = array() ) {
 		$minute = 00;
 	}
 
-	$address     = array_map( 'trim', $data['edd-payment-address'][0] );
+	$address = array_map( 'trim', $data['edd-payment-address'][0] );
 
-	$curr_total  = edd_sanitize_amount( $order->total );
-	$new_total   = edd_sanitize_amount( $_POST['edd-payment-total'] );
-	$tax         = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
-	$date        = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
+	$curr_total = edd_sanitize_amount( $order->total );
+	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
+	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
+	$date       = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
 
-	$curr_customer_id  = sanitize_text_field( $data['edd-current-customer'] );
-	$new_customer_id   = sanitize_text_field( $data['customer-id'] );
+	$curr_customer_id = sanitize_text_field( $data['edd-current-customer'] );
+	$new_customer_id  = sanitize_text_field( $data['customer-id'] );
 
 	$new_subtotal = 0.00;
 	$new_tax      = 0.00;
@@ -136,7 +133,7 @@ function edd_update_payment_details( $data = array() ) {
 				/** @var EDD\Orders\Order_Item $order_item */
 				$order_item = edd_get_order_item( absint( $download['order_item_id'] ) );
 
-				$quantity   = isset( $download['quantity'] ) ? absint( $download['quantity']) : 1;
+				$quantity   = isset( $download['quantity'] ) ? absint( $download['quantity'] ) : 1;
 				$item_price = isset( $download['item_price'] ) ? $download['item_price'] : 0;
 				$item_tax   = isset( $download['item_tax'] ) ? $download['item_tax'] : 0;
 
@@ -146,7 +143,7 @@ function edd_update_payment_details( $data = array() ) {
 
 				// Increase running totals.
 				$new_subtotal += ( floatval( $item_price ) * $quantity ) - $order_item->discount;
-				$new_tax += $item_tax;
+				$new_tax      += $item_tax;
 
 				$args = array(
 					'cart_index' => $cart_index,
@@ -156,7 +153,7 @@ function edd_update_payment_details( $data = array() ) {
 					'tax'        => $item_tax
 				);
 
-				edd_update_order_item( absint( $download['order_item_id']), $args );
+				edd_update_order_item( absint( $download['order_item_id'] ), $args );
 			} else {
 				if ( empty( $download['item_price'] ) ) {
 					$download['item_price'] = 0.00;
@@ -192,7 +189,7 @@ function edd_update_payment_details( $data = array() ) {
 
 				// Increase running totals.
 				$new_subtotal += floatval( $item_price ) * $quantity;
-				$new_tax += $tax;
+				$new_tax      += $tax;
 
 				edd_add_order_item( $args );
 			}
@@ -203,7 +200,7 @@ function edd_update_payment_details( $data = array() ) {
 		foreach ( $deleted_downloads as $deleted_download ) {
 			$deleted_download = $deleted_download[0];
 
-			if ( empty ( $deleted_download['id'] ) ) {
+			if ( empty( $deleted_download['id'] ) ) {
 				continue;
 			}
 
@@ -211,7 +208,7 @@ function edd_update_payment_details( $data = array() ) {
 			$order_item = edd_get_order_item( absint( $deleted_download['order_item_id'] ) );
 
 			$new_subtotal -= (float) $deleted_download['amount'] * $deleted_download['quantity'];
-			$new_tax -= (float) $order_item->tax;
+			$new_tax      -= (float) $order_item->tax;
 
 			edd_delete_order_item( absint( $deleted_download['order_item_id'] ) );
 
@@ -226,18 +223,28 @@ function edd_update_payment_details( $data = array() ) {
 	$customer_changed = false;
 
 	// Create a new customer.
-	if ( isset( $data['edd-new-customer'] ) && $data['edd-new-customer'] == '1' ) {
-		$email      = isset( $data['edd-new-customer-email'] ) ? sanitize_text_field( $data['edd-new-customer-email'] ) : '';
-		$names      = isset( $data['edd-new-customer-name'] ) ? sanitize_text_field( $data['edd-new-customer-name'] ) : '';
+	if ( isset( $data['edd-new-customer'] ) && 1 === (int) $data['edd-new-customer'] ) {
+		$email = isset( $data['edd-new-customer-email'] )
+			? sanitize_text_field( $data['edd-new-customer-email'] )
+			: '';
+
+		$names = isset( $data['edd-new-customer-name'] )
+			? sanitize_text_field( $data['edd-new-customer-name'] )
+			: '';
 
 		if ( empty( $email ) || empty( $names ) ) {
-			wp_die( __( 'New Customers require a name and email address', 'easy-digital-downloads' ) );
+			wp_die( esc_html__( 'New Customers require a name and email address', 'easy-digital-downloads' ) );
 		}
 
 		$customer = new EDD_Customer( $email );
 		if ( empty( $customer->id ) ) {
-			$customer_data = array( 'name' => $names, 'email' => $email );
-			$user_id       = email_exists( $email );
+			$customer_data = array(
+				'name'  => $names,
+				'email' => $email,
+			);
+
+			$user_id = email_exists( $email );
+
 			if ( false !== $user_id ) {
 				$customer_data['user_id'] = $user_id;
 			}
@@ -284,7 +291,7 @@ function edd_update_payment_details( $data = array() ) {
 		$customer->attach_payment( $order_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
-		if ( 'revoked' == $status || 'publish' == $status ) {
+		if ( 'revoked' === $status || 'publish' === $status ) {
 			$previous_customer->decrease_purchase_count();
 			$previous_customer->decrease_value( $new_total );
 
@@ -301,22 +308,25 @@ function edd_update_payment_details( $data = array() ) {
 	$order_update_args['tax']     = $new_tax;
 	$order_update_args['total']   = $new_total;
 
-	$user_info = array(
-		'first_name' => $first_name,
-		'last_name'  => $last_name,
-		'address'    => $address,
-	);
+	edd_update_order_address( absint( $address['address_id'] ), array(
+		'first_name'  => $first_name,
+		'last_name'   => $last_name,
+		'address'     => $address['address'],
+		'address2'    => $address['address2'],
+		'city'        => $address['city'],
+		'region'      => $address['region'],
+		'postal_code' => $address['postal_code'],
+		'country'     => $address['country'],
+	) );
 
-	edd_update_order_meta( $order_id, 'user_info', $user_info );
-
-	if ( '1' === $unlimited ) {
+	if ( 1 === (int) $unlimited ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', $unlimited );
 	} else {
 		edd_delete_order_meta( $order_id, 'unlimited_downloads' );
 	}
 
 	// Adjust total store earnings if the payment total has been changed
-	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
+	if ( $new_total !== $curr_total && ( 'publish' === $status || 'revoked' === $status ) ) {
 		if ( $new_total > $curr_total ) {
 
 			// Increase if our new total is higher
