@@ -2927,12 +2927,12 @@ class EDD_Payment {
 	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
-		$address = $this->order->get_address();
+		$order_address = $this->order->get_address();
 
 		$user_info = array(
 			'id'         => $this->user_id,
-			'first_name' => $address->first_name,
-			'last_name'  => $address->last_name,
+			'first_name' => $order_address->first_name,
+			'last_name'  => $order_address->last_name,
 			'discount'   => $this->discounts,
 		);
 
@@ -2986,9 +2986,18 @@ class EDD_Payment {
 			}
 		}
 
+		$city = $order_address->city;
+
 		// Add address to array if one exists.
-		if ( ! empty( $address->address ) ) {
-			
+		if ( ! empty( $city ) ) {
+			$user_info['address'] = array(
+				'line1'   => $order_address->address,
+				'line2'   => $order_address->address2,
+				'city'    => $city,
+				'state'   => $order_address->region,
+				'country' => $order_address->country,
+				'zip'     => $order_address->postal_code,
+			);
 		}
 
 		return $user_info;
