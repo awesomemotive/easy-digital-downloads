@@ -25,9 +25,11 @@ defined( 'ABSPATH' ) || exit;
  * @property string $type
  * @property string $status
  * @property string $address
- * @property string $country
+ * @property string $address2
+ * @property string $city
  * @property string $region
  * @property string $postal_code
+ * @property string $country
  * @property string $date_created
  * @property string $date_modified
  */
@@ -79,16 +81,25 @@ class Customer_Address extends Base_Object {
 	protected $address;
 
 	/**
-	 * Country.
+	 * Address line 2.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
-	protected $country;
+	protected $address2;
 
 	/**
-	 * Region
+	 * City.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $city;
+
+	/**
+	 * Region.
 	 *
 	 * @since  3.0
 	 * @access protected
@@ -104,6 +115,15 @@ class Customer_Address extends Base_Object {
 	 * @var    string
 	 */
 	protected $postal_code;
+
+	/**
+	 * Country.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $country;
 
 	/**
 	 * Date created.
