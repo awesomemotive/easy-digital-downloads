@@ -322,17 +322,17 @@ function edd_customers_view( $customer = null ) {
 						<legend class="screen-reader-text"><?php esc_html_e( 'Customer Address', 'easy-digital-downloads' ); ?></legend>
 
 						<span class="customer-address info-item editable">
-							<span class="info-item" data-key="line1"><?php echo esc_html( $address['address'] ); ?></span>
-							<span class="info-item" data-key="line2"><?php echo esc_html( $address['address2'] ); ?></span>
+							<span class="info-item" data-key="address"><?php echo esc_html( $address['address'] ); ?></span>
+							<span class="info-item" data-key="address2"><?php echo esc_html( $address['address2'] ); ?></span>
 							<span class="info-item" data-key="city"><?php echo esc_html( $address['city'] ); ?></span>
-							<span class="info-item" data-key="state"><?php echo edd_get_state_name( $address['country'], $address['region'] ); ?></span>
+							<span class="info-item" data-key="region"><?php echo edd_get_state_name( $address['country'], $address['region'] ); ?></span>
 							<span class="info-item" data-key="country"><?php echo esc_html( $address['country'] ); ?></span>
-							<span class="info-item" data-key="zip"><?php echo esc_html( $address['postal_code'] ); ?></span>
+							<span class="info-item" data-key="postal_code"><?php echo esc_html( $address['postal_code'] ); ?></span>
 						</span>
 
 						<span class="customer-address info-item edit-item">
-							<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line1'] ); ?>" />
-							<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['line2'] ); ?>" />
+							<input class="info-item" type="text" data-key="address" name="customerinfo[address]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['address'] ); ?>" />
+							<input class="info-item" type="text" data-key="address2" name="customerinfo[address2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['address2'] ); ?>" />
 							<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
 							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
 								<?php
@@ -347,14 +347,15 @@ function edd_customers_view( $customer = null ) {
 							</select>
 
 							<?php
-
 							$selected_state = edd_get_shop_state();
 							$states         = edd_get_shop_states( $selected_country );
 
-							$selected_state = isset( $address['state'] ) ? $address['state'] : $selected_state;
+							$selected_state = isset( $address['region'] )
+								? $address['region']
+								: $selected_state;
 
-							if( ! empty( $states ) ) : ?>
-								<select data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-select info-item">
+							if ( ! empty( $states ) ) : ?>
+								<select data-key="state" name="customerinfo[region]" id="card_state" class="card_state edd-select info-item">
 								<?php
 								foreach( $states as $state_code => $state ) {
 									echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . esc_html( $state ) . '</option>';
@@ -362,9 +363,9 @@ function edd_customers_view( $customer = null ) {
 								?>
 							</select>
 							<?php else : ?>
-								<input type="text" size="6" data-key="state" name="customerinfo[state]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+								<input type="text" size="6" data-key="region" name="customerinfo[region]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
 							<?php endif; ?>
-							<input class="info-item" type="text" data-key="zip" name="customerinfo[zip]" placeholder="<?php _e( 'Postal', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['zip'] ); ?>" />
+							<input class="info-item" type="text" data-key="postal_code" name="customerinfo[postal_code]" placeholder="<?php _e( 'Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['postal_code'] ); ?>" />
 						</span>
 					</fieldset>
 				</div>
