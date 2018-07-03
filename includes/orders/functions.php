@@ -43,7 +43,7 @@ function edd_delete_order( $order_id = 0 ) {
 /**
  * Destroy an order.
  *
- * Completely deletes an order, and the items and adjustments withi it.
+ * Completely deletes an order, and the items and adjustments with it.
  *
  * @todo switch to _destroy_ for items & adjustments
  *
