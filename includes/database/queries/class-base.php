@@ -22,6 +22,8 @@ if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
  * @since 3.0
  *
  * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
+ *
+ * @property int $found_items
  */
 class Base extends \EDD\Database\Base {
 
