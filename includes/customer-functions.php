@@ -326,6 +326,131 @@ function edd_delete_customer_meta_by_key( $meta_key ) {
 	return delete_metadata( 'edd_customer', null, $meta_key, '', true );
 }
 
+/** Customer Addresses **********************************************************/
+
+/**
+ * Add a customer address.
+ *
+ * @since 3.0
+ *
+ * @param array $data
+ * @return int|false ID of newly created customer address, false on error.
+ */
+function edd_add_customer_address( $data ) {
+
+	// An customer ID must be supplied for every address inserted.
+	if ( empty( $data['customer_id'] ) ) {
+		return false;
+	}
+
+	// Instantiate a query object
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	return $customer_addresses->add_item( $data );
+}
+
+/**
+ * Delete a customer address.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_address_id Order address ID.
+ * @return int
+ */
+function edd_delete_customer_address( $customer_address_id = 0 ) {
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	return $customer_addresses->delete_item( $customer_address_id );
+}
+
+/**
+ * Update a customer address.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_address_id Customer address ID.
+ * @param array $data                Updated customer address data.
+ * @return bool Whether or not the customer address was updated.
+ */
+function edd_update_customer_address( $customer_address_id = 0, $data = array() ) {
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	return $customer_addresses->update_item( $customer_address_id, $data );
+}
+
+///**
+// * Get a customer address by ID.
+// *
+// * @since 3.0
+// *
+// * @param int $customer_address_id Order adjustment ID.
+// * @return object
+// */
+//function edd_get_customer_address( $customer_address_id = 0 ) {
+//	return edd_get_customer_address_by( 'id', $customer_address_id );
+//}
+
+/**
+ * Get a customer address by a specific field value.
+ *
+ * @since 3.0
+ *
+ * @param string $field Database table field.
+ * @param string $value Value of the row.
+ *
+ * @return \EDD\Customers\Customer_Address|false Object if successful, false otherwise.
+ */
+function edd_get_customer_address_by( $field = '', $value = '' ) {
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Return order address
+	return $customer_addresses->get_item_by( $field, $value );
+}
+
+/**
+ * Query for customer addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return \EDD\Customers\Customer_Address[]
+ */
+function edd_get_customer_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Return orders
+	return $customer_addresses->query( $r );
+}
+
+/**
+ * Count customer addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_customer_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$customer_addresses = new EDD\Database\Queries\Order_Address( $r );
+
+	// Return count(s)
+	return absint( $customer_addresses->found_items );
+}
+
 /** Back Compat ***************************************************************/
 
 /**

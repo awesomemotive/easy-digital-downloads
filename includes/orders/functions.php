@@ -1252,4 +1252,3 @@ function edd_count_order_addresses( $args = array() ) {
 	// Return count(s)
 	return absint( $order_addresses->found_items );
 }
-

@@ -80,9 +80,17 @@ class Customer_Addresses extends Base {
 			'sortable'   => true
 		),
 
-		// country
+		// address2
 		array(
-			'name'       => 'country',
+			'name'       => 'address2',
+			'type'       => 'mediumtext',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// city
+		array(
+			'name'       => 'city',
 			'type'       => 'mediumtext',
 			'searchable' => true,
 			'sortable'   => true
@@ -102,6 +110,14 @@ class Customer_Addresses extends Base {
 			'type'       => 'varchar',
 			'length'     => '32',
 			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// country
+		array(
+			'name'       => 'country',
+			'type'       => 'mediumtext',
 			'searchable' => true,
 			'sortable'   => true
 		),
