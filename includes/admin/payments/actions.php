@@ -191,6 +191,8 @@ function edd_update_payment_details( $data ) {
 				$customer = new EDD_Customer( $curr_customer_id );
 				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
+		} else {
+			wp_die( sprintf( __( 'A customer with the email address %s already exists. Please go back and use the "Assign to another customer" link to assign this payment to them.', 'easy-digital-downloads' ), $email ) );
 		}
 
 		$new_customer_id = $customer->id;
