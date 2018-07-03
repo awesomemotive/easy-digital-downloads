@@ -525,7 +525,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
 
 		// Customers
-		require_once EDD_PLUGIN_DIR . 'includes/customers/class-address.php';
+		require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-address.php';
+		require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-email-address.php';
 
 		// Cart
 		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
@@ -554,6 +555,7 @@ final class Easy_Digital_Downloads {
 
 		// Orders
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-stats.php';
