@@ -78,7 +78,7 @@ class Customer_Address extends Base {
 	 * @access public
 	 * @var mixed
 	 */
-	protected $item_shape = '\\EDD\\Customers\\Address';
+	protected $item_shape = '\\EDD\\Customers\\Customer_Address';
 
 	/** Cache *****************************************************************/
 
