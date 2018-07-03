@@ -168,6 +168,7 @@ final class Init {
 			return $reports;
 		}
 
+		// Default legacy report priority to position them towards the bottom
 		$priority = 800;
 
 		// Loop through views and try to convert them

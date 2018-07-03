@@ -1415,6 +1415,14 @@ td.edd_order_price {
 	right: 10px;
 }
 
+.edd-reports-wrapper .postbox h3 {
+	font-size: 1.3em
+}
+.edd-reports-wrapper .postbox {
+	border: none;
+	box-shadow: none;
+}
+
 .download_page_edd-reports #edd-filters .filter-items {
 	width: 100%;
 }
@@ -2354,7 +2362,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 .edd-sections-wrap .section-wrap .section-content > div {
 	padding: 0px 20px 5px;
 }
-.edd-sections-wrap .section-wrap .section-content > div:first-child {
+.edd-sections-wrap .section-wrap .section-content > div:not(.tablenav):first-child {
 	padding: 20px;
 }
 .edd-sections-wrap .section-wrap .avatar-wrap {
