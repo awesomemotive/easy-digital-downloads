@@ -163,7 +163,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 	}
 
 	$customer_id = absint( $_GET['id'] );
-	$customer    = new EDD_Customer( $customer_id );
+	$customer    = edd_get_customer( $customer_id );
 
 	if ( empty( $customer->id ) ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'easy-digital-downloads' ) );
@@ -198,11 +198,12 @@ function edd_render_customer_view( $view, $callbacks ) {
 /**
  * View a customer profile
  *
- * @since  2.3
- * @param  $customer The Customer object being displayed
- * @return void
+ * @since 2.3
+ * @since 3.0 Updated to use new query methods.
+ *
+ * @param \EDD_Customer $customer Customer object.
  */
-function edd_customers_view( $customer = '' ) {
+function edd_customers_view( $customer = null ) {
 	$customer_edit_role = edd_get_edit_customers_role();
 
 	$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time',   false );
@@ -563,36 +564,50 @@ function edd_customers_view( $customer = '' ) {
 			</tbody>
 		</table>
 
-		<h3><?php _e( 'Recent Payments', 'easy-digital-downloads' ); ?></h3>
+		<h3><?php _e( 'Recent Orders', 'easy-digital-downloads' ); ?></h3>
 		<?php
-		$payment_ids = explode( ',', $customer->payment_ids );
-		$payments    = edd_get_payments( array( 'post__in' => $payment_ids ) );
-		$payments    = array_slice( $payments, 0, 10 );
+		$orders = edd_get_orders( array(
+			'customer_id' => $customer->id,
+			'number'      => 10,
+		) );
 		?>
 		<table class="wp-list-table widefat striped customer-payments">
 			<thead>
 			<tr>
-				<th class="column-primary"><?php _e( 'ID',      'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Amount',  'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Date',    'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Status',  'easy-digital-downloads' ); ?></th>
-				<th class="column-actions"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
+				<th class="column-primary"><?php _e( 'Number', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Gateway', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Amount', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Completed', 'easy-digital-downloads' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
-			<?php if ( ! empty( $payments ) ) : ?>
-				<?php foreach ( $payments as $payment ) : ?>
+			<?php if ( ! empty( $orders ) ) : ?>
+				<?php foreach ( $orders as $order ) : ?>
+					<?php
+					$payment = edd_get_payment( $order->id );
+
+					$state  = '';
+
+					// State
+					if ( 'publish' !== $order->status ) {
+						$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
+					}
+
+					// View URL
+					$view_url = add_query_arg( array(
+						'post_type' => 'download',
+						'page'      => 'edd-payment-history',
+						'view'      => 'view-order-details',
+						'id'        => $order->id,
+					), admin_url( 'edit.php' ) );
+
+					$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>';
+					?>
 					<tr>
-						<td class="column-primary"><?php echo esc_html( $payment->ID ); ?></td>
-						<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-						<td><?php echo edd_date_i18n( $payment->post_date ); ?></td>
-						<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
-						<td class="column-actions">
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
-								<?php _e( 'View Details', 'easy-digital-downloads' ); ?>
-							</a>
-							<?php do_action( 'edd_customer_recent_purchases_actions', $customer, $payment ); ?>
-						</td>
+						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
+						<td><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></td>
+						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else: ?>
