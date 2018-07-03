@@ -355,6 +355,8 @@ function recalculate_taxes(state) {
 		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
 	};
 
+	jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');
+
 	var current_ajax_count = ++ajax_tax_count;
 	jQuery.ajax({
 		type: "POST",
@@ -376,6 +378,7 @@ function recalculate_taxes(state) {
 				tax_data.response = tax_response;
 				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
 			}
+			jQuery('.edd-recalculate-taxes-loading').remove();
 		}
 	}).fail(function (data) {
 		if ( window.console && window.console.log ) {
