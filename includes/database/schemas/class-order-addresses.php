@@ -72,6 +72,22 @@ class Order_Addresses extends Base {
 			'transition' => true
 		),
 
+		// first_name
+		array(
+			'name'       => 'first_name',
+			'type'       => 'mediumtext',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// last_name
+		array(
+			'name'       => 'last_name',
+			'type'       => 'mediumtext',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// address
 		array(
 			'name'       => 'address',
