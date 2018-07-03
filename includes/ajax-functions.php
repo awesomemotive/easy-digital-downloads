@@ -155,6 +155,8 @@ function edd_ajax_remove_from_cart() {
 			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
 		}
 
+		$return = apply_filters( 'edd_ajax_remove_from_cart_response', $return );
+
 		echo json_encode( $return );
 
 	}
@@ -222,6 +224,8 @@ function edd_ajax_add_to_cart() {
 			$cart_tax = (float) edd_get_cart_tax();
 			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
 		}
+
+		$return = apply_filters( 'edd_ajax_add_to_cart_response', $return );
 
 		echo json_encode( $return );
 	}
