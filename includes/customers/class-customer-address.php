@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created
  * @property string $date_modified
  */
-class Address extends Base_Object {
+class Customer_Address extends Base_Object {
 
 	/**
 	 * Customer address ID.
