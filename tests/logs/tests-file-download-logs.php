@@ -8,7 +8,7 @@ namespace EDD\Logs;
  * @group database
  * @group edd_logs
  *
- * @coversDefaultClass \EDD\Database\Queries\Logs_File_Downloads
+ * @coversDefaultClass \EDD\Logs\File_Download_Log
  */
 class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 
@@ -106,25 +106,25 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_orderby_download_id_and_order_asc_should_return_true() {
+	public function test_get_logs_with_orderby_product_id_and_order_asc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'orderby' => 'download_id',
-			'order'   => 'asc'
+			'orderby' => 'product_id',
+			'order'   => 'asc',
 		) );
 
-		$this->assertTrue( $logs[0]->download_id < $logs[1]->download_id );
+		$this->assertTrue( $logs[0]->product_id < $logs[1]->product_id );
 	}
 
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_with_orderby_download_id_and_order_desc_should_return_true() {
+	public function test_get_logs_with_orderby_product_id_and_order_desc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'orderby' => 'download_id',
-			'order'   => 'desc'
+			'orderby' => 'product_id',
+			'order'   => 'desc',
 		) );
 
-		$this->assertTrue( $logs[0]->download_id > $logs[1]->download_id );
+		$this->assertTrue( $logs[0]->product_id > $logs[1]->product_id );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	public function test_get_logs_with_orderby_file_id_and_order_asc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
 			'orderby' => 'file_id',
-			'order'   => 'asc'
+			'order'   => 'asc',
 		) );
 
 		$this->assertTrue( $logs[0]->file_id < $logs[1]->file_id );
@@ -145,7 +145,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	public function test_get_logs_with_orderby_file_id_and_order_desc_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
 			'orderby' => 'file_id',
-			'order'   => 'desc'
+			'order'   => 'desc',
 		) );
 
 		$this->assertTrue( $logs[0]->file_id > $logs[1]->file_id );
@@ -176,9 +176,9 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_logs()
 	 */
-	public function test_get_logs_by_download_id_should_return_true() {
+	public function test_get_logs_by_product_id_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'download_id' => \WP_UnitTest_Generator_Sequence::$incr
+			'product_id' => \WP_UnitTest_Generator_Sequence::$incr,
 		) );
 
 		$this->assertCount( 1, $logs );
@@ -189,7 +189,7 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_logs_by_invalid_object_id_should_return_true() {
 		$logs = edd_get_file_download_logs( array(
-			'download_id' => 99999,
+			'product_id' => 99999,
 		) );
 
 		$this->assertCount( 0, $logs );
@@ -234,5 +234,4 @@ class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
 	public function test_count() {
 		$this->assertEquals( 5, edd_count_file_download_logs() );
 	}
-
 }

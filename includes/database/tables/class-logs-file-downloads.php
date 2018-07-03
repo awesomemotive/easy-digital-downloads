@@ -37,7 +37,18 @@ final class Logs_File_Downloads extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201806280001;
+
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201806280001' => 201806280001
+	);
 
 	/**
 	 * Setup the database schema
@@ -48,19 +59,40 @@ final class Logs_File_Downloads extends Base {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
-		download_id bigint(20) unsigned NOT NULL default '0',
+		product_id bigint(20) unsigned NOT NULL default '0',
 		file_id bigint(20) unsigned NOT NULL default '0',
 		order_id bigint(20) unsigned NOT NULL default '0',
 		price_id bigint(20) unsigned NOT NULL default '0',
-		user_id bigint(20) unsigned NOT NULL default '0',
+		customer_id bigint(20) unsigned NOT NULL default '0',
 		ip varchar(60) NOT NULL default '',
 		user_agent varchar(200) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
-		KEY user_id (user_id),
-		KEY download_id (download_id),
+		KEY customer_id (customer_id),
+		KEY product_id (product_id),
 		KEY date_created (date_created)";
+	}
+
+	/**
+	 * Upgrade to version 201806280001
+	 * - Rename  `download_id` column to `product_id`
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201806280001() {
+
+		// Alter the database with separate queries so indexes succeed
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN download_id product_id bigint(20) unsigned NOT NULL default 0" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN user_id customer_id bigint(20) unsigned NOT NULL default 0" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN payment_id order_id bigint(20) unsigned NOT NULL default 0" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX download_id" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX product_id (product_id)" );
+
+		// Return success/fail
+		return $this->is_success( true );
 	}
 }
 endif;

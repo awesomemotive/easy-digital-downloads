@@ -69,18 +69,16 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 * @return mixed Results of the method call (if any).
 	 */
 	public function __call( $name, $arguments ) {
+		$report_id_or_sort = isset( $arguments[0] )
+			? $arguments[0]
+			: '';
 
-		$report_id_or_sort = isset( $arguments[0] ) ? $arguments[0] : '';
-
-		switch( $name ) {
+		switch ( $name ) {
 			case 'get_report':
 				return parent::get_item( $report_id_or_sort );
-				break;
 
 			case 'remove_report':
-				parent::remove_item( $report_id_or_sort );
-				break;
-
+				return parent::remove_item( $report_id_or_sort );
 		}
 	}
 
@@ -99,7 +97,7 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 *     @type string $label     Report label.
 	 *     @type int    $priority  Optional. Priority by which to register the report. Default 10.
 	 *     @type array  $filters   Filters available to the report.
-	 *     @type array  $endpoints Endpoints to associate with the report.
+	 *     @type array  $endpoints Optional. Endpoints to associate with the report.
 	 * }
 	 * @return bool True if the report was successfully registered, otherwise false.
 	 */
@@ -111,56 +109,49 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			'priority'   => 10,
 			'group'      => 'core',
 			'capability' => 'view_shop_reports',
-			'filters'    => array( 'dates' ),
-			'endpoints'  => array(),
+			'filters'    => array( 'dates' )
 		);
 
 		$attributes['id'] = $report_id;
 		$attributes = array_merge( $defaults, $attributes );
 
 		try {
-
 			$this->validate_attributes( $attributes, $report_id );
-
-		} catch( \EDD_Exception $exception ) {
-
-			throw $exception;
-
+		} catch ( \EDD_Exception $exception ) {
 			$error = true;
 
+			throw $exception;
 		}
 
-		foreach ( $attributes['endpoints'] as $view_group => $endpoints ) {
+		if ( isset( $attributes['endpoints'] ) && is_array( $attributes['endpoints'] ) ) {
+			foreach ( $attributes['endpoints'] as $view_group => $endpoints ) {
+				foreach ( $endpoints as $index => $endpoint ) {
+					if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Reports\Data\Endpoint ) ) {
+						unset( $attributes['endpoints'][ $view_group ][ $index ] );
 
-			foreach ( $endpoints as $index => $endpoint ) {
-
-				if ( ! is_string( $endpoint ) && ! ( $endpoint instanceof \EDD\Reports\Data\Endpoint ) ) {
-					throw new Utils\Exception( sprintf( 'The \'%1$s\' report contains one or more invalidly defined endpoints.', $report_id ) );
-
-					unset( $attributes['endpoints'][ $view_group][ $index ] );
+						throw new Utils\Exception( sprintf( 'The \'%1$s\' report contains one or more invalidly defined endpoints.', $report_id ) );
+					}
 				}
-
 			}
 		}
 
-		foreach ( $attributes['filters'] as $index => $filter ) {
-			if ( ! Reports\validate_filter( $filter ) ) {
-				$message = sprintf( 'The \'%1$s\' report contains one or more invalid filters.', $report_id );
+		if ( isset( $attributes['filters'] ) && is_array( $attributes['filters'] ) ) {
+			foreach ( $attributes['filters'] as $index => $filter ) {
+				if ( ! Reports\validate_filter( $filter ) ) {
+					$message = sprintf( 'The \'%1$s\' report contains one or more invalid filters.', $report_id );
 
-				throw new Utils\Exception( $message );
+					unset( $attributes['filters'][ $index ] );
 
-				unset( $attributes['filters'][ $index ] );
+					throw new Utils\Exception( $message );
+				}
 			}
 		}
 
 		if ( true === $error ) {
-
 			return false;
 
 		} else {
-
 			return parent::add_item( $report_id, $attributes );
-
 		}
 	}
 
@@ -243,13 +234,13 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 * @return Report|\WP_Error Report object on success, otherwise a WP_Error object.
 	 */
 	public function build_report( $report, $build_endpoints = true ) {
+
 		// If a report object was passed, just return it.
 		if ( $report instanceof Report ) {
 			return $report;
 		}
 
 		try {
-
 			$_report = $this->get_report( $report );
 
 		} catch( \EDD_Exception $exception ) {
@@ -257,7 +248,6 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			edd_debug_log_exception( $exception );
 
 			return new \WP_Error( 'invalid_report', $exception->getMessage(), $report );
-
 		}
 
 		if ( ! empty( $_report ) ) {

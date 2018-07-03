@@ -1,45 +1,45 @@
 <?php
 /**
- * Payments Export Class
+ * Taxed Orders Export Class.
  *
- * This class handles payment export in batches
+ * This class handles the taxed orders export in batches.
  *
  * @package     EDD
  * @subpackage  Admin/Reporting/Export
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.4
+ * @since       3.0
  */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
- * EDD_Batch_Payments_Export Class
+ * EDD_Batch_Taxed_Orders_Export Class
  *
- * @since 2.4
+ * @since 3.0
  */
-class EDD_Batch_Payments_Export extends EDD_Batch_Export {
+class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @var string
-	 * @since 2.4
+	 * @since 3.0
 	 */
-	public $export_type = 'orders';
+	public $export_type = 'taxed_orders';
 
 	/**
 	 * Set the CSV columns
 	 *
-	 * @since 2.4
+	 * @since 3.0
 	 *
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'           => __( 'Payment ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'id'           => __( 'Order ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'       => __( 'Order Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
 			'first'        => __( 'First Name', 'easy-digital-downloads' ),
@@ -56,7 +56,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'amount'       => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'tax'          => __( 'Tax', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'discount'     => __( 'Discount Code', 'easy-digital-downloads' ),
-			'gateway'      => __( 'Payment Method', 'easy-digital-downloads' ),
+			'gateway'      => __( 'Gateway', 'easy-digital-downloads' ),
 			'trans_id'     => __( 'Transaction ID', 'easy-digital-downloads' ),
 			'key'          => __( 'Purchase Key', 'easy-digital-downloads' ),
 			'date'         => __( 'Date', 'easy-digital-downloads' ),
@@ -68,7 +68,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'country_name' => __( 'Country Name', 'easy-digital-downloads' ),
 		);
 
-		if ( ! edd_use_skus() ){
+		if ( ! edd_use_skus() ) {
 			unset( $cols['skus'] );
 		}
 
@@ -82,8 +82,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	/**
 	 * Get the export data.
 	 *
-	 * @since 2.4
-	 * @since 3.0 Updated to use new query methods.
+	 * @since 3.0
 	 *
 	 * @return array $data The data for the CSV file.
 	 */
@@ -103,8 +102,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-m-d 00:00:00', strtotime( $this->start ) ),
 					'before'    => date( 'Y-m-d 23:59:59', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
@@ -113,7 +112,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			unset( $args['status'] );
 		}
 
+		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
+
 		$orders = edd_get_orders( $args );
+
+		remove_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10 );
 
 		foreach ( $orders as $order ) {
 			/** @var EDD\Orders\Order $order */
@@ -122,7 +125,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$user_info    = $order->get_user_info();
 			$address      = $order->get_customer_address();
 			$total        = $order->total;
-			$user_id      = $order->id && $order->id != - 1 ? $order->id : $user_info['email'];
+			$user_id      = $order->user_id;
 			$products     = '';
 			$products_raw = '';
 			$skus         = '';
@@ -165,7 +168,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
 
-				if ( $key != ( count( $items ) -1 ) ) {
+				if ( ( count( $items ) - 1 ) !== $key ) {
 					$products .= ' / ';
 
 					if ( edd_use_skus() ) {
@@ -181,7 +184,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					$products_raw .= '{' . $price_id . '}';
 				}
 
-				if ( $key != ( count( $items ) -1 ) ) {
+				if ( ( count( $items ) - 1 ) !== $key ) {
 					$products_raw .= ' / ';
 				}
 			}
@@ -231,10 +234,9 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Return the calculated completion percentage
+	 * Return the calculated completion percentage.
 	 *
-	 * @since 2.4
-	 * @since 3.0 Updated to use new query methods.
+	 * @since 3.0
 	 *
 	 * @return int
 	 */
@@ -248,8 +250,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
@@ -257,7 +259,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$args['status'] = $this->status;
 		}
 
-		$total = edd_count_orders( $args );
+		$total      = edd_count_orders( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
@@ -272,15 +274,33 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Set the properties specific to the payments export
+	 * Set the properties specific to the taxed orders export.
 	 *
-	 * @since 2.4.2
+	 * @since 3.0
 	 *
-	 * @param array $request The Form Data passed into the batch processing
+	 * @param array $request The form data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
-		$this->start  = isset( $request['start'] )  ? sanitize_text_field( $request['start'] )  : '';
-		$this->end    = isset( $request['end']  )   ? sanitize_text_field( $request['end']  )   : '';
+		$this->start  = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
+		$this->end    = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
 		$this->status = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
+	}
+
+	/**
+	 * Filter the database query to only return orders which have tax applied to them.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array                      $clauses A compacted array of item query clauses.
+	 * @param \EDD\Database\Queries\Base $base    Instance passed by reference.
+	 *
+	 * @return array
+	 */
+	public function query_clauses( $clauses, $base ) {
+		$clauses['where'] = ! empty( $clauses['where'] )
+			? $clauses['where'] .= ' AND tax > 0'
+			: 'tax > 0';
+
+		return $clauses;
 	}
 }
