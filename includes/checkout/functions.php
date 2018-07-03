@@ -19,6 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
+	global $is_checkout;
+
+	if ( ! is_null( $is_checkout ) ) {
+		return $is_checkout;
+	}
 
 	global $wp_query;
 
@@ -41,7 +46,9 @@ function edd_is_checkout() {
 		$is_checkout = true;
 	}
 
-	return apply_filters( 'edd_is_checkout', $is_checkout );
+	$is_checkout = apply_filters( 'edd_is_checkout', $is_checkout );
+
+	return $is_checkout;
 }
 
 /**
@@ -117,8 +124,13 @@ function edd_send_to_success_page( $query_string = null ) {
  * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
  */
 function edd_get_checkout_uri( $args = array() ) {
-	$uri = edd_get_option( 'purchase_page', false );
-	$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
+	if ( edd_is_checkout() ) {
+		global $post;
+		$uri = get_permalink( $post->ID );
+	} else {
+		$uri = edd_get_option( 'purchase_page', false );
+		$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
+	}
 
 	if ( ! empty( $args ) ) {
 		// Check for backward compatibility
