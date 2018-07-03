@@ -49,7 +49,7 @@ class Order_Address extends Base {
 	 * @access public
 	 * @var string
 	 */
-	protected $table_schema = '\\EDD\\Database\\Schemas\\Customer_Addresses';
+	protected $table_schema = '\\EDD\\Database\\Schemas\\Order_Addresses';
 
 	/** Item ******************************************************************/
 
