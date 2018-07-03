@@ -1003,7 +1003,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			'groupby'     => 'ip',
 		) );
 	}
-	
+
 	/**
 	 * Retrieve all the email addresses associated with this customer.
 	 *
@@ -1032,5 +1032,32 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 		}
 
 		return $emails;
+	}
+
+	/**
+	 * Retrieve an address.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type Address type. Default primary.
+	 *
+	 * @return array|\EDD\Customers\Customer_Address Object if primary address request, array otherwise.
+	 */
+	public function get_address( $type = 'primary' ) {
+		if ( 'primary' === $type ) {
+			$address = edd_get_customer_addresses( array(
+				'number'      => 1,
+				'type'        => 'primary',
+				'customer_id' => $this->id,
+			) );
+
+			if ( is_array( $address ) && ! empty( $address ) ) {
+				return $address[0];
+			}
+		} else {
+			return edd_get_customer_addresses( array(
+				'customer_id' => $this->id,
+			) );
+		}
 	}
 }
