@@ -50,28 +50,6 @@ class Order_Addresses extends Base {
 			'default'  => '0'
 		),
 
-		// type
-		array(
-			'name'       => 'type',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => 'active',
-			'searchable' => true,
-			'sortable'   => true,
-			'transition' => true
-		),
-
-		// status
-		array(
-			'name'       => 'status',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => 'active',
-			'searchable' => true,
-			'sortable'   => true,
-			'transition' => true
-		),
-
 		// first_name
 		array(
 			'name'       => 'first_name',
