@@ -1085,12 +1085,12 @@ jQuery(document).ready(function ($) {
 		},
 
 		meta_boxes : function() {
-			$( '#edd-reports-tiles-wrap .postbox .handlediv' ).remove();
-			$( '#edd-reports-tiles-wrap .postbox' ).removeClass( 'closed' );
+			$( '.edd-reports-wrapper .postbox .handlediv' ).remove();
+			$( '.edd-reports-wrapper .postbox' ).removeClass( 'closed' );
 
 			// Use a timeout to ensure this happens after core binding
 			setTimeout( function() {
-				$( '#edd-reports-tiles-wrap .postbox h2.hndle' ).unbind( 'click.postboxes' );
+				$( '.edd-reports-wrapper .postbox .hndle' ).unbind( 'click.postboxes' );
 			}, 1 );
 		},
 
