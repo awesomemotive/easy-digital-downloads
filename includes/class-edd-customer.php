@@ -200,9 +200,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	public function __get( $key = '' ) {
 		switch ( $key ) {
 			case 'emails':
-				$emails   = (array) edd_get_customer_meta( $this->id, 'additional_email', false );
-				$emails[] = $this->email;
-				return $emails;
+				return $this->get_emails();
 			case 'payment_ids':
 				$payment_ids = $this->get_payment_ids();
 				$payment_ids = implode( ',', $payment_ids );
@@ -1004,5 +1002,35 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			'fields'      => 'ip',
 			'groupby'     => 'ip',
 		) );
+	}
+	
+	/**
+	 * Retrieve all the email addresses associated with this customer.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	public function get_emails() {
+		$emails = array();
+
+		// Add primary email.
+		$emails[] = $this->email;
+
+		// Fetch email addresses from the database.
+		$secondary_emails = edd_get_customer_email_addresses( array(
+			'customer_id' => $this->id,
+		) );
+
+		if ( ! empty( $secondary_emails ) ) {
+
+			// We only want the email addresses
+			$secondary_emails = wp_list_pluck( $secondary_emails, 'email' );
+
+			// Merge with primary email
+			$emails = array_merge( $emails, $secondary_emails );
+		}
+
+		return $emails;
 	}
 }
