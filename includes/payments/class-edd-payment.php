@@ -2927,26 +2927,14 @@ class EDD_Payment {
 	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
-		$user_info = edd_get_order_meta( $this->ID, 'user_info', true );
+		$address = $this->order->get_address();
 
-		$user_info = $user_info
-			? $user_info
-			: array();
-
-		if ( is_serialized( $user_info ) ) {
-			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
-			if ( ! empty( $matches ) ) {
-				$user_info = array();
-			}
-		}
-
-		// As per Github issue #4248, we need to run maybe_unserialize here still.
-		$user_info = wp_parse_args( maybe_unserialize( $user_info ), array(
+		$user_info = array(
 			'id'         => $this->user_id,
-			'first_name' => $this->first_name,
-			'last_name'  => $this->last_name,
+			'first_name' => $address->first_name,
+			'last_name'  => $address->last_name,
 			'discount'   => $this->discounts,
-		) );
+		);
 
 		// Ensure email index is in the old user info array
 		if ( empty( $user_info['email'] ) ) {
@@ -2996,6 +2984,11 @@ class EDD_Payment {
 				}
 
 			}
+		}
+
+		// Add address to array if one exists.
+		if ( ! empty( $address->address ) ) {
+			
 		}
 
 		return $user_info;

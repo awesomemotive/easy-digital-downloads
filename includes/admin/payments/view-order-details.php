@@ -53,10 +53,12 @@ $order_adjustments->prepare_items();
 // Order
 $unlimited      = $order->has_unlimited_downloads();
 $transaction_id = $order->get_transaction_id();
-$user_info      = array();
+$user_info      = $payment->user_info;
 $order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $order->customer_id );
 $notes          = edd_get_payment_notes( $order->id );
+
+var_dump( $user_info );
 
 $default_address = array(
 	'id'          => 0,
