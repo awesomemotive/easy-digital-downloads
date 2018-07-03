@@ -51,6 +51,8 @@ final class Order_Addresses extends Base {
 		order_id bigint(20) unsigned NOT NULL default '0',
 		type varchar(20) NOT NULL default '',
 		status varchar(20) NOT NULL default '',
+		first_name mediumtext NOT NULL,
+		last_name mediumtext NOT NULL,
 		address mediumtext NOT NULL,
 		country mediumtext NOT NULL,
 		region mediumtext NOT NULL,

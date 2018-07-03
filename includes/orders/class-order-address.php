@@ -70,6 +70,24 @@ class Order_Address extends Base_Object {
 	protected $status;
 
 	/**
+	 * First name.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $first_name;
+
+	/**
+	 * Last name.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $last_name;
+
+	/**
 	 * Address.
 	 *
 	 * @since  3.0
