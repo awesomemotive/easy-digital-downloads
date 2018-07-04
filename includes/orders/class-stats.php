@@ -1486,8 +1486,6 @@ class Stats {
 	/**
 	 * Calculate total tax collected for country and state passed.
 	 *
-	 * TODO: Finish implementation.
-	 *
 	 * @since 3.0
 	 *
 	 * @param array $query {
@@ -1545,6 +1543,10 @@ class Stats {
 			return 0.00;
 		}
 
+		// Convert back to country code for SQL query.
+		$country_list = array_flip( $country_list );
+		$country      = $country_list[ $country ];
+
 		/** Parse state ******************************************************/
 
 		$state = isset( $this->query_vars['state'] )
@@ -1553,28 +1555,30 @@ class Stats {
 
 		// Only parse state if one was passed.
 		if ( $state ) {
-			$country_codes = array_flip( $country_list );
-
-			$state_list = array_filter( edd_get_shop_states( $country_codes[ $country ] ) );
+			$state_list = array_filter( edd_get_shop_states( $country ) );
 
 			// Maybe convert state code to state name.
 			$state = in_array( $state, array_flip( $state_list ), true )
 				? $state_list[ $state ]
 				: $state;
 
-			// Ensure a valid county has been passed.
+			// Ensure a valid state has been passed.
 			$state = in_array( $state, $state_list, true )
 				? $state
 				: null;
+
+			// Bail if state does not exist.
+			if ( null === $state ) {
+				return 0.00;
+			}
+
+			// Convert back to state code for SQL query.
+			$state_codes = array_flip( $state_list );
+			$state = $state_codes[ $state ];
 		}
 
 		// Reset query vars.
 		$this->post_query();
-
-		// Bail early if state does not exist.
-		if ( null === $state ) {
-			return 0.00;
-		}
 	}
 
 	/** Customers ************************************************************/
