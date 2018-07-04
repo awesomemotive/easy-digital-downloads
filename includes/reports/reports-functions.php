@@ -1134,7 +1134,7 @@ function display_gateways_filter() {
  * @since 3.0
  */
 function display_region_filter() {
-	$country = get_filter_value( 'regions' );
+	$region = get_filter_value( 'regions' );
 
 	$regions = edd_get_states_list();
 
@@ -1146,7 +1146,7 @@ function display_region_filter() {
 		'name'             => 'regions',
 		'options'          => $regions,
 		'chosen'           => true,
-		'selected'         => empty( $country ) ? 0 : $country,
+		'selected'         => empty( $region ) ? 0 : $region,
 		'show_option_none' => false,
 		'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
 	) ); ?>
