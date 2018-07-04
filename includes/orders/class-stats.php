@@ -1574,11 +1574,41 @@ class Stats {
 
 			// Convert back to state code for SQL query.
 			$state_codes = array_flip( $state_list );
-			$state = $state_codes[ $state ];
+			$state       = $state_codes[ $state ];
 		}
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'SUM', 'AVG' );
+
+		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "(o.{$this->query_vars['column']})"
+			: "SUM(o.{$this->query_vars['column']})";
+
+		$region = ! empty( $state )
+			? $this->get_db()->prepare( 'AND oa.region = %s', esc_sql( $state ) )
+			: '';
+
+		$country = ! empty( $country )
+			? $this->get_db()->prepare( 'AND oa.country = %s', esc_sql( $country ) )
+			: '';
+
+		$sql = "SELECT {$function} AS total
+				FROM {$this->query_vars['table']} o
+				INNER JOIN {$this->get_db()->edd_order_addresses} oa ON o.id = oa.order_id
+				WHERE 1=1 {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_row( $sql );
+
+		$total = null === $result->total
+			? 0.00
+			: (float) $result->total;
+
+		$total = $this->maybe_format( $total );
 
 		// Reset query vars.
 		$this->post_query();
+
+		return $total;
 	}
 
 	/** Customers ************************************************************/
