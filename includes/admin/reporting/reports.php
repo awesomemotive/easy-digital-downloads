@@ -1695,7 +1695,7 @@ function edd_register_taxes_report( $reports ) {
 					'total_tax_collected',
 				),
 			),
-			'filters'   => array( 'products' ),
+			'filters'   => array( 'products', 'regions', 'countries' ),
 		) );
 
 		$reports->register_endpoint( 'total_tax_collected', array(
