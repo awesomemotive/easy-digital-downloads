@@ -493,21 +493,37 @@ function edd_count_total_customers( $args = array() ) {
 /**
  * Returns the saved address for a customer
  *
- * @since 		1.8
- * @return 		array - The customer's address, if any
+ * @since 1.8
+ * @since 3.0 Update to use new query methods.
+
+ * @param int $user_id User ID.
+ * @return array Customer address.
  */
 function edd_get_customer_address( $user_id = 0 ) {
-	if( empty( $user_id ) ) {
+
+	// Maybe fall back to logged in user ID.
+	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
-	$address = get_user_meta( $user_id, '_edd_user_address', true );
+	$customer = edd_get_customer_by( 'user_id', $user_id );
 
-	if ( ! $address || ! is_array( $address ) || empty( $address ) ) {
-		$address = array();
+	$address = $customer->get_address();
+
+	$parsed_address = array();
+
+	if ( $address instanceof EDD\Customers\Customer_Address ) {
+		$parsed_address = array(
+			'line1'   => $address->address,
+			'line2'   => $address->address2,
+			'city'    => $address->city,
+			'zip'     => $address->postal_code,
+			'country' => $address->country,
+			'state'   => $address->region,
+		);
 	}
 
-	$address = wp_parse_args( $address, array(
+	$address = wp_parse_args( $parsed_address, array(
 		'line1'   => '',
 		'line2'   => '',
 		'city'    => '',
