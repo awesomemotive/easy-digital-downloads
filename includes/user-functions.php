@@ -168,7 +168,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
  * Checks to see if a user has purchased a product.
  *
  * @since 1.0
- * @since 3.0 Refactored to use new query methods.
+ * @since 3.0 Refactored to be more efficient.
  *
  * @param int   $user_id   User ID.
  * @param array $downloads Download IDs to check against.
@@ -177,6 +177,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
  * @return bool True if purchased, false otherwise.
  */
 function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_price_id = null ) {
+	global $wpdb;
 
 	// Bail if no user ID passed.
 	if ( empty( $user_id ) ) {
@@ -190,8 +191,6 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 	 */
 	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
 
-	$users_purchases = edd_get_users_purchases( $user_id );
-
 	$return = false;
 
 	if ( ! is_array( $downloads ) ) {
@@ -203,31 +202,29 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		return false;
 	}
 
-	if ( $users_purchases ) {
-		foreach ( $users_purchases as $purchase ) {
-			$payment         = new EDD_Payment( $purchase->ID );
-			$purchased_files = $payment->cart_details;
+	$number = $wpdb->prepare( '%d', apply_filters( 'edd_users_purchased_products_payments', 9999 ) );
 
-			if ( is_array( $purchased_files ) ) {
-				foreach ( $purchased_files as $download ) {
-					if ( in_array( $download['id'], $downloads ) ) {
-						$variable_prices = edd_has_variable_prices( $download['id'] );
-						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
-							if ( isset( $download['item_number']['options']['price_id'] ) && $variable_price_id == $download['item_number']['options']['price_id'] ) {
-								$return = true;
-								break 2; // Get out to prevent this value being overwritten if the customer has purchased item twice
-							} else {
-								$return = false;
-							}
-						} else {
-							$return = true;
-							break 2;  // Get out to prevent this value being overwritten if the customer has purchased item twice
-						}
-					}
-				}
-			}
-		}
-	}
+	$where_id   = "'" . implode( "', '", $wpdb->_escape( $downloads ) ) . "'";
+	$product_id = "oi.product_id IN ({$where_id})";
+
+	$price_id = isset( $variable_price_id )
+		? $wpdb->prepare( 'AND oi.price_id = %d', absint( $variable_price_id ) )
+		: '';
+
+	// Perform a direct database query as it is more efficient.
+	$sql = "
+		SELECT COUNT(o.id) AS count
+		FROM {$wpdb->edd_orders} o
+		INNER JOIN {$wpdb->edd_order_items} oi ON o.id = oi.order_id
+		WHERE {$product_id} {$price_id}
+		LIMIT {$number}
+	";
+
+	$result = (int) $wpdb->get_var( $sql );
+
+	$return = 0 === $result
+		? false
+		: true;
 
 	/**
 	 * @since 2.7.7
