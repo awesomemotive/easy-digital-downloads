@@ -1060,4 +1060,25 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			) );
 		}
 	}
+
+	/**
+	 * Retrieve all addresses.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type Address type. Default empty.
+	 *
+	 * @return \EDD\Customers\Customer_Address[] Array of addresses.
+	 */
+	public function get_addresses( $type = '' ) {
+		$addresses = edd_get_customer_addresses( array(
+			'customer_id' => $this->id,
+		) );
+
+		if ( ! empty( $type ) ) {
+			$addresses = wp_filter_object_list( $addresses, array( 'type' => $type ) );
+		}
+
+		return $addresses;
+	}
 }

@@ -504,6 +504,98 @@ function edd_customers_view( $customer = null ) {
 
 		<?php do_action( 'edd_customer_before_tables', $customer ); ?>
 
+		<h3><?php esc_html_e( 'Customer Addresses', 'easy-digital-downloads' ); ?></h3>
+
+		<div class="notice-wrap"></div>
+
+		<table class="wp-list-table widefat striped addresses">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Address', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'City', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Region', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Postal Code', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'First Used', 'easy-digital-downloads' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+				$addresses = $customer->get_addresses();
+
+				if ( ! empty( $addresses ) ) : ?>
+
+				<?php foreach ( $addresses as $address ) : ?>
+
+					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
+						<td class="column-primary">
+							<?php
+							$address1 = esc_attr( $address->address );
+
+							if ( ! empty( $address1 ) ) {
+								echo $address1;
+							} else {
+								echo '&mdash;';
+							}
+
+							$address2 = esc_attr( $address->address2 );
+
+							if ( ! empty( $address2 ) ) {
+								echo '<br>' . $address2;
+							}
+							?>
+						</td>
+						<td>
+							<?php
+							$city = esc_attr( $address->city );
+
+							echo ! empty( $city )
+								? $city
+								: '&mdash';
+							?>
+						</td>
+						<td>
+							<?php
+							$region = esc_attr( $address->region );
+
+							echo ! empty( $region )
+								? edd_get_state_name( esc_attr( $address->country ), $region )
+								: '&mdash';
+							?>
+						</td>
+						<td>
+							<?php
+							$postal_code = esc_attr( $address->postal_code );
+
+							echo ! empty( $postal_code )
+								? $postal_code
+								: '&mdash';
+							?>
+						</td>
+						<td>
+							<?php
+							$country = esc_attr( $address->country );
+
+							echo ! empty( $country )
+								? edd_get_country_name( $country )
+								: '&mdash';
+							?>
+						</td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
+					</tr>
+
+				<?php endforeach; ?>
+
+			<?php else : ?>
+
+				<tr>
+					<td colspan="6"><?php esc_html_e( 'No addresses found.', 'easy-digital-downloads' ); ?></td>
+				</tr>
+
+			<?php endif; ?>
+			</tbody>
+		</table>
+
 		<h3>
 			<?php esc_html_e( 'Customer Emails', 'easy-digital-downloads' ); ?>
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ); ?>"></span>
@@ -525,10 +617,10 @@ function edd_customers_view( $customer = null ) {
 
 		<table class="wp-list-table widefat striped emails">
 			<thead>
-				<tr>
-					<th class="column-primary"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?></th>
-					<th><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
-				</tr>
+			<tr>
+				<th class="column-primary"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?></th>
+				<th><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
+			</tr>
 			</thead>
 			<tbody>
 			<?php if ( ! empty( $all_emails ) ) : ?>
@@ -549,7 +641,7 @@ function edd_customers_view( $customer = null ) {
 								$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-primary-email' ), $base_url ), 'edd-set-customer-primary-email' );
 								$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-remove-email'  ), $base_url ), 'edd-remove-customer-email'      );
 								?>
-								<a href="<?php echo esc_url( $promote_url ); ?>"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></a>&nbsp;|&nbsp;<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+								<a href="<?php echo esc_url( $promote_url ); ?>"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></a>&nbsp;|&nbsp;<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></a>
 							<?php else : ?>
 								&mdash;
 							<?php endif; ?>
@@ -563,19 +655,19 @@ function edd_customers_view( $customer = null ) {
 						<div class="add-customer-email-wrapper">
 							<input type="hidden" name="customer-id" value="<?php echo esc_attr( $customer->id ); ?>" />
 							<?php wp_nonce_field( 'edd-add-customer-email', 'add_email_nonce', false, true ); ?>
-							<input type="email" name="additional-email" value="" placeholder="<?php _e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
-							<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />&nbsp;<label for="make-additional-primary"><?php _e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
+							<input type="email" name="additional-email" value="" placeholder="<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
+							<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />&nbsp;<label for="make-additional-primary"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
 						</div>
 					</td>
 					<td>
-						<button class="button-secondary edd-add-customer-email" id="add-customer-email" style="margin: 6px 0;"><?php _e( 'Add Email', 'easy-digital-downloads' ); ?></button>
+						<button class="button-secondary edd-add-customer-email" id="add-customer-email" style="margin: 6px 0;"><?php esc_html_e( 'Add Email', 'easy-digital-downloads' ); ?></button>
 						<span class="spinner"></span>
 					</td>
 				</tr>
 
-			<?php else: ?>
+			<?php else : ?>
 
-				<tr><td colspan="2"><?php _e( 'No Emails Found', 'easy-digital-downloads' ); ?></td></tr>
+				<tr><td colspan="2"><?php esc_html_e( 'No emails found.', 'easy-digital-downloads' ); ?></td></tr>
 
 			<?php endif; ?>
 			</tbody>
