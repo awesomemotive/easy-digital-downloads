@@ -165,26 +165,28 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
 }
 
 /**
- * Has User Purchased
+ * Checks to see if a user has purchased a product.
  *
- * Checks to see if a user has purchased a download.
+ * @since 1.0
+ * @since 3.0 Refactored to use new query methods.
  *
- * @since       1.0
- * @param       int $user_id - the ID of the user to check
- * @param       array $downloads - Array of IDs to check if purchased. If an int is passed, it will be converted to an array
- * @param       int $variable_price_id - the variable price ID to check for
- * @return      boolean - true if has purchased, false otherwise
+ * @param int   $user_id   User ID.
+ * @param array $downloads Download IDs to check against.
+ * @param int $variable_price_id - the variable price ID to check for
+ *
+ * @return bool True if purchased, false otherwise.
  */
-function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
+function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_price_id = null ) {
 
-	if( empty( $user_id ) ) {
+	// Bail if no user ID passed.
+	if ( empty( $user_id ) ) {
 		return false;
 	}
 
 	/**
-	 * @since 2.7.7
+	 * Fires before the queries execute.
 	 *
-	 * Allow 3rd parties to take actions before the history is queried.
+	 * @since 2.7.7
 	 */
 	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
 
@@ -194,6 +196,11 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 
 	if ( ! is_array( $downloads ) ) {
 		$downloads = array( $downloads );
+	}
+
+	// Bail if no downloads passed.
+	if ( empty( $downloads ) ) {
+		return false;
 	}
 
 	if ( $users_purchases ) {
