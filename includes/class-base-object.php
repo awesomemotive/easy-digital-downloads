@@ -24,20 +24,23 @@ abstract class Base_Object {
 	/**
 	 * Object constructor.
 	 *
-	 * @access public
-	 * @since  3.0
+	 * @since 3.0
 	 *
 	 * @param mixed $object Object to populate members for.
 	 */
 	public function __construct( $object = null ) {
+
+		// Bail if nothing was passed.
 		if ( empty( $object ) ) {
 			return;
 		}
 
+		// Maybe cast to object.
 		if ( ! is_object( $object ) ) {
 			$object = (object) $object;
 		}
 
+		// Set class vars.
 		foreach ( get_object_vars( $object ) as $key => $value ) {
 			$this->{$key} = $value;
 		}
@@ -72,16 +75,16 @@ abstract class Base_Object {
 			$key = 'id';
 		}
 
-		// Try the method first
+		// Try the method first.
 		if ( method_exists( $this, "get_{$key}" ) ) {
 			$retval = call_user_func( array( $this, "get_{$key}" ) );
 
-		// Try the property last
+		// Try the property last.
 		} elseif ( property_exists( $this, $key ) ) {
 			$retval = $this->{$key};
 		}
 
-		// Return whatever was gettable
+		// Return whatever was gettable.
 		return $retval;
 	}
 }

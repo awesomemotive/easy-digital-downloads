@@ -395,37 +395,14 @@ class Order extends \EDD\Database\Objects\Order {
 	}
 
 	/**
-	 * Retrieve the customer information associated with the order.
+	 * Retrieve the address associated with the order.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array User information.
+	 * @return \EDD\Orders\Order_Address|false Object if successful, false otherwise.
 	 */
-	public function get_user_info() {
-		return edd_get_order_meta( $this->id, 'user_info', true );
-	}
-
-	/**
-	 * Retrieve the customer address associated with the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Customer address.
-	 */
-	public function get_customer_address() {
-		$user_info = $this->get_user_info();
-		$address   = ! empty( $user_info['address'] )
-			? (array) $user_info['address']
-			: array();
-
-		return wp_parse_args( $address, array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'country' => '',
-			'state'   => '',
-			'zip'     => ''
-		) );
+	public function get_address() {
+		return edd_get_order_address_by( 'order_id', $this->id );
 	}
 
 	/**

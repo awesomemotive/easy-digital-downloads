@@ -364,6 +364,14 @@ function get_filters() {
 		'discounts' => array(
 			'label'            => __( 'Discounts', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter'
+		),
+		'regions'   => array(
+			'label'            => __( 'Regions', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_region_filter'
+		),
+		'countries' => array(
+			'label'            => __( 'Countries', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_country_filter'
 		)
 	);
 
@@ -1117,6 +1125,62 @@ function display_gateways_filter() {
 
     <span class="edd-graph-filter-options graph-option-section"><?php
 		echo $select;
+	?></span><?php
+}
+
+/**
+ * Handles display of the 'Country' filter for reports.
+ *
+ * @since 3.0
+ */
+function display_region_filter() {
+	$region = get_filter_value( 'regions' );
+
+	$regions = edd_get_states_list();
+
+	// Remove empty values.
+	$regions = array_filter( $regions );
+
+	// Get the select
+	$select = EDD()->html->select( array(
+		'name'             => 'regions',
+		'options'          => $regions,
+		'chosen'           => true,
+		'selected'         => empty( $region ) ? 0 : $region,
+		'show_option_none' => false,
+		'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+	) ); ?>
+
+	<span class="edd-graph-filter-options graph-option-section"><?php
+	echo $select;
+	?></span><?php
+}
+
+/**
+ * Handles display of the 'Country' filter for reports.
+ *
+ * @since 3.0
+ */
+function display_country_filter() {
+	$country = get_filter_value( 'countries' );
+
+	$countries = edd_get_country_list();
+
+	// Remove empty values.
+	$countries = array_filter( $countries );
+
+	// Get the select
+	$select = EDD()->html->select( array(
+		'name'             => 'countries',
+		'options'          => $countries,
+		'chosen'           => true,
+		'selected'         => empty( $country ) ? 0 : $country,
+		'show_option_none' => false,
+		'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+	) ); ?>
+
+	<span class="edd-graph-filter-options graph-option-section"><?php
+	echo $select;
 	?></span><?php
 }
 
