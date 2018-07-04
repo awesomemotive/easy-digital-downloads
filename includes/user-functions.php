@@ -19,20 +19,22 @@ defined( 'ABSPATH' ) || exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @since  1.0
+ * @since 1.0
  *
- * @param int $user User ID or email address
- * @param int $number Number of purchases to retrieve
- * @param bool $pagination Page number to retrieve
- * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
+ * @param int|string   $user       User ID or email address.
+ * @param int          $number     Number of purchases to retrieve
+ * @param bool         $pagination Page number to retrieve
+ * @param string|array $status     Either an array of statuses, a single status as a string literal or a comma
+ *                                 separated list of statues. Default 'complete'.
  *
- * @return WP_Post[]|false List of all user purchases
+ * @return WP_Post[]|false List of all user purchases.
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
+	// Bail if no user found.
 	if ( 0 === $user ) {
 		return false;
 	}
@@ -41,10 +43,12 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		if ( strpos( $status, ',' ) ) {
 			$status = explode( ',', $status );
 		} else {
-			$status = $status === 'complete' ? 'publish' : $status;
+			$status = 'complete' === $status
+				? 'publish'
+				: $status;
+
 			$status = array( $status );
 		}
-
 	}
 
 	if ( is_array( $status ) ) {
@@ -52,12 +56,13 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	if ( $pagination ) {
-		if ( get_query_var( 'paged' ) )
-			$paged = get_query_var('paged');
-		else if ( get_query_var( 'page' ) )
+		if ( get_query_var( 'paged' ) ) {
+			$paged = get_query_var( 'paged' );
+		} elseif ( get_query_var( 'page' ) ) {
 			$paged = get_query_var( 'page' );
-		else
+		} else {
 			$paged = 1;
+		}
 	}
 
 	$args = array(
@@ -68,17 +73,15 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	);
 
 	if ( $pagination ) {
-
 		$args['page'] = $paged;
-
 	} else {
-
 		$args['nopaging'] = true;
-
 	}
 
 	$by_user_id = is_numeric( $user ) ? true : false;
-	$customer   = new EDD_Customer( $user, $by_user_id );
+	$customer   = $by_user_id
+		? edd_get_customer_by( 'user_id', $user )
+		: edd_get_customer_by( 'email', $user );
 
 	$payment_ids = $customer->payment_ids;
 
@@ -89,11 +92,9 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
 
-	// No purchases
-	if ( ! $purchases )
-		return false;
-
-	return $purchases;
+	return $purchases
+		? $purchases
+		: false;
 }
 
 /**
