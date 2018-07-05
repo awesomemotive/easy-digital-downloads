@@ -1433,16 +1433,13 @@ jQuery(document).ready(function ($) {
                     };
 
                 $.post(ajaxurl, data, function (response) {
-                	console.log(response);
+                    $( '#edd_reports_filter_regions' ).find( 'option:gt(0)' ).remove();
 
-                    if ( 'nostates' === response ) {
-                        $('#edd_reports_filter_regions').find( 'option:gt(0)' ).remove();
-                        $('#edd_reports_filter_regions').trigger('chosen:updated');
-                    } else {
-                    	var regions = $(response).find('option:gt(0)');
-                        $('#edd_reports_filter_regions').find( 'option:gt(0)' ).remove().append( regions );
-                        $('#edd_reports_filter_regions').trigger('chosen:updated');
+                    if ( 'nostates' !== response ) {
+                        $( response ).find( 'option:gt(0)' ).appendTo( '#edd_reports_filter_regions' );
                     }
+
+                    $( '#edd_reports_filter_regions' ).trigger( 'chosen:updated' );
                 });
 
                 return false;
