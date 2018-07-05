@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /** Sections ******************************************************************/
 
 /**
- * Contains backwards compat code to shim tabs & views to EDD_Sections()
+ * Contains code to setup tabs & views using EDD_Sections()
  *
  * @since 3.0
  */
@@ -180,7 +180,7 @@ function edd_order_details_email( $order ) {
 			echo 'edd-select-receipt-email';
 		} else {
 			echo 'edd-resend-receipt';
-		} ?>" class="button-secondary"><?php _e( 'Resend Receipt', 'easy-digita-downloads' ); ?></a>
+		} ?>" class="button-secondary"><?php _e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
 
 		<p class="description"><?php _e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
@@ -204,7 +204,7 @@ function edd_order_details_addresses( $order ) {
 		<?php do_action( 'edd_view_order_details_billing_before', $order->id ); ?>
 
 		<div class="order-data-address">
-			<div class="column">
+			<div>
 				<p>
 					<strong class="order-data-address-line"><?php _e( 'Billing Address Line 1:', 'easy-digital-downloads' ); ?></strong><br/>
 					<input type="text" name="edd-payment-address[0][address]" value="<?php echo esc_attr( $address->address ); ?>" class="large-text" />
@@ -215,7 +215,7 @@ function edd_order_details_addresses( $order ) {
 				</p>
 			</div>
 
-			<div class="column">
+			<div>
 				<p>
 					<strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></strong><br/>
 					<input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address->city ); ?>" class="large-text" />
@@ -227,7 +227,7 @@ function edd_order_details_addresses( $order ) {
 				</p>
 			</div>
 
-			<div class="column">
+			<div>
 				<p id="edd-order-address-country-wrap">
 					<strong class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></strong><br/>
 					<?php
@@ -238,6 +238,7 @@ function edd_order_details_addresses( $order ) {
 						'selected'         => $address->country,
 						'show_option_all'  => false,
 						'show_option_none' => false,
+						'chosen'           => true,
 						'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
 						'data'             => array(
 							'search-type'        => 'no_ajax',
@@ -259,7 +260,7 @@ function edd_order_details_addresses( $order ) {
 							'selected'         => $address->region,
 							'show_option_all'  => false,
 							'show_option_none' => false,
-							'chosen'           => false,
+							'chosen'           => true,
 							'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
 							'data'             => array(
 								'search-type'        => 'no_ajax',
@@ -414,7 +415,7 @@ function edd_order_details_items( $order ) {
  *
  * @param object $order
  */
-function edd_order_details_adjustments( $order ) {
+function edd_order_details_adjustments() {
 
 	// Load list table if not already loaded
 	if ( ! class_exists( 'EDD_Order_Adjustment_Table' ) ) {
