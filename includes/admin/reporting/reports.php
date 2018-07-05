@@ -1686,6 +1686,9 @@ function edd_register_taxes_report( $reports ) {
 			}
 		}
 
+		$country = Reports\get_filter_value( 'countries' );
+		$region  = Reports\get_filter_value( 'regions' );
+
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
 			'priority'  => 25,
@@ -1693,9 +1696,10 @@ function edd_register_taxes_report( $reports ) {
 			'endpoints' => array(
 				'tiles' => array(
 					'total_tax_collected',
+					'total_tax_collected_for_location',
 				),
 			),
-			'filters'   => array( 'products', 'regions', 'countries' ),
+			'filters'   => array( 'products', 'countries', 'regions' ),
 		) );
 
 		$reports->register_endpoint( 'total_tax_collected', array(
@@ -1724,6 +1728,45 @@ function edd_register_taxes_report( $reports ) {
 				),
 			),
 		) );
+
+		if ( ! empty( $country ) ) {
+			$location = '';
+
+			if ( ! empty( $region ) ) {
+				$location = edd_get_state_name( $country, $region ) . ', ';
+			}
+
+			$location .= edd_get_country_name( $country );
+
+			$reports->register_endpoint( 'total_tax_collected_for_location', array(
+				'label' => __( 'Total Tax Collected for ', 'easy-digital-downloads' ) . $location,
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function () use ( $filter, $country, $region ) {
+							$download = Reports\get_filter_value( 'products' );
+							$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
+								? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+								: array( 'download_id' => '', 'price_id' => '' );
+
+							$stats = new EDD\Orders\Stats();
+
+							return $stats->get_tax_by_location( array(
+								'output'      => 'formatted',
+								'range'       => $filter['range'],
+								'download_id' => $download['download_id'],
+								'price_id'    => (string) $download['price_id'],
+								'country'     => $country,
+								'region'      => $region
+							) );
+						},
+						'display_args'  => array(
+							'context'          => 'secondary',
+							'comparison_label' => $label . $download_label,
+						),
+					),
+				),
+			) );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -2678,13 +2721,13 @@ function display_export_report() {
                             <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
 								<?php
 								echo EDD()->html->date_field( array(
-									'id'          => 'edd-taxed-orders-export-start',
+									'id'          => 'edd-orders-export-start',
 									'name'        => 'start',
 									'placeholder' => __( 'From', 'easy-digital-downloads' ),
 								) );
 
 								echo EDD()->html->date_field( array(
-									'id'          => 'edd-taxed-orders-export-end',
+									'id'          => 'edd-orders-export-end',
 									'name'        => 'end',
 									'placeholder' => __( 'To', 'easy-digital-downloads' ),
 								) );
@@ -2720,13 +2763,35 @@ function display_export_report() {
 		                        echo EDD()->html->date_field( array( 'id' => 'edd-taxed-orders-export-end','name' => 'end', 'placeholder' => __( 'To', 'easy-digital-downloads' ) ));
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-orders-export-status',
+									'id'              => 'edd-taxed-orders-export-status',
 									'name'            => 'status',
 									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
 									'selected'        => false,
 									'chosen'          => true,
 									'options'         => edd_get_payment_statuses(),
 								) );
+
+		                        echo EDD()->html->select( array(
+			                        'name'             => 'country',
+			                        'id'               => 'edd_reports_filter_countries',
+			                        'options'          => edd_get_country_list(),
+			                        'chosen'           => true,
+			                        'selected'         => false,
+			                        'show_option_none' => false,
+			                        'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+			                        'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+		                        ) );
+
+		                        echo EDD()->html->select( array(
+			                        'name'             => 'region',
+			                        'id'               => 'edd_reports_filter_regions',
+			                        'options'          => edd_get_shop_states(),
+			                        'chosen'           => true,
+			                        'selected'         => false,
+			                        'show_option_none' => false,
+			                        'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+			                        'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+		                        ) );
 
 		                        wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>

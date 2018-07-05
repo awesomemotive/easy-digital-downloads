@@ -1504,7 +1504,7 @@ class Stats {
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                             to the query.
 	 *     @type string $country   Country name. Defaults to store's base country.
-	 *     @type string $state     State name. Defaults to store's base state.
+	 *     @type string $region    Region name. Defaults to store's base state.
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
@@ -1549,8 +1549,8 @@ class Stats {
 
 		/** Parse state ******************************************************/
 
-		$state = isset( $this->query_vars['state'] )
-			? sanitize_text_field( $this->query_vars['state'] )
+		$state = isset( $this->query_vars['region'] )
+			? sanitize_text_field( $this->query_vars['region'] )
 			: edd_get_shop_state();
 
 		// Only parse state if one was passed.
@@ -1581,8 +1581,8 @@ class Stats {
 		$accepted_functions = array( 'SUM', 'AVG' );
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "(o.{$this->query_vars['column']})"
-			: "SUM(o.{$this->query_vars['column']})";
+			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
+			: "SUM({$this->query_vars['table']}.{$this->query_vars['column']})";
 
 		$region = ! empty( $state )
 			? $this->get_db()->prepare( 'AND oa.region = %s', esc_sql( $state ) )
@@ -1592,10 +1592,30 @@ class Stats {
 			? $this->get_db()->prepare( 'AND oa.country = %s', esc_sql( $country ) )
 			: '';
 
+		$product_id = ! empty( $this->query_vars['download_id'] )
+			? $this->get_db()->prepare( 'AND oi.product_id = %d', absint( $this->query_vars['download_id'] ) )
+			: '';
+
+		$price_id = ! empty( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND oi.price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+
+		$join = ! empty( $product_id )
+			? "INNER JOIN {$this->get_db()->edd_order_items} oi ON {$this->query_vars['table']}.id = oi.order_id"
+			: '';
+
+		// Re-parse function to fetch tax from the order items table.
+		if ( ! empty( $product_id ) && 'tax' === $this->query_vars['column'] ) {
+			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+				? $this->query_vars['function'] . "(oi.{$this->query_vars['column']})"
+				: "SUM(oi.{$this->query_vars['column']})";
+		}
+
 		$sql = "SELECT {$function} AS total
-				FROM {$this->query_vars['table']} o
-				INNER JOIN {$this->get_db()->edd_order_addresses} oa ON o.id = oa.order_id
-				WHERE 1=1 {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+				FROM {$this->query_vars['table']}
+				INNER JOIN {$this->get_db()->edd_order_addresses} oa ON {$this->query_vars['table']}.id = oa.order_id
+				{$join}
+				WHERE 1=1 {$region} {$country} {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_row( $sql );
 
