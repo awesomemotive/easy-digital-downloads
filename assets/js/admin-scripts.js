@@ -701,8 +701,8 @@ jQuery(document).ready(function ($) {
 		remove_download : function() {
 
 			// Remove a download from a purchase
-			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
-				var count = $( document.body ).find( '#edd-purchased-files > .row:not(.header)' ).length;
+			$('#edd-order-items').on('click', '.edd-order-remove-download', function() {
+				var count = $( document.body ).find( '#edd-order-items > .row:not(.header)' ).length;
 
 				if ( count === 1 ) {
 					alert( edd_vars.one_download_min );
@@ -760,11 +760,13 @@ jQuery(document).ready(function ($) {
 					cancel          = $( this ).hasClass('edd-payment-change-customer-cancel');
 
 				if ( change_customer ) {
-					$('.customer-info').hide();
+					$('.order-customer-info').hide();
 					$('.change-customer').show();
-					$('.edd-payment-change-customer-input').css('width', 'auto');
+					setTimeout( function() {
+						$('.edd-payment-change-customer-input').css('width', '300');
+					}, 1 );
 				} else if ( cancel) {
-					$('.customer-info').show();
+					$('.order-customer-info').show();
 					$('.change-customer').hide();
 				}
 			});
@@ -779,10 +781,10 @@ jQuery(document).ready(function ($) {
 					cancel       = $( this ).hasClass('edd-payment-new-customer-cancel');
 
 				if ( new_customer ) {
-					$('.customer-info').hide();
+					$('.order-customer-info').hide();
 					$('.new-customer').show();
 				} else if ( cancel ) {
-					$('.customer-info').show();
+					$('.order-customer-info').show();
 					$('.new-customer').hide();
 				}
 
@@ -798,9 +800,9 @@ jQuery(document).ready(function ($) {
 
 		add_download : function() {
 
-			$('#edd-purchased-files').on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+			$('#edd-order-items').on( 'click', 'h3 .edd-metabox-title-action', function(e) {
 				e.preventDefault();
-				$( '#edd-purchased-files' ).children( '.edd-add-download-to-purchase' ).slideToggle();
+				$( '#edd-order-items' ).children( '.edd-add-download-to-purchase' ).slideToggle();
 			} );
 
 			// Add a New Download from the Add Downloads to Purchase Box
@@ -850,8 +852,8 @@ jQuery(document).ready(function ($) {
 					download_title = download_title + ' - ' + price_name;
 				}
 
-				var count = $('#edd-purchased-files div.row').length,
-					clone = $('#edd-purchased-files div.row:last').clone();
+				var count = $('#edd-order-items div.row').length,
+					clone = $('#edd-order-items div.row:last').clone();
 
 				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
 				clone.find( '.download span a' ).text( download_title );
@@ -884,7 +886,7 @@ jQuery(document).ready(function ($) {
 				// Flag the Downloads section as changed
 				$('#edd-payment-downloads-changed').val(1);
 
-				$(clone).insertAfter( '#edd-purchased-files div.row:last' );
+				$(clone).insertAfter( '#edd-order-items div.row:last' );
 				$( '.edd-order-payment-recalc-totals' ).show();
 				$( '.edd-add-download-field' ).val('');
 			});
@@ -930,8 +932,8 @@ jQuery(document).ready(function ($) {
 
 				var total  = 0,
 					tax    = 0,
-					totals = $('#edd-purchased-files .row input.edd-payment-details-download-amount'),
-					taxes  = $('#edd-purchased-files .row input.edd-payment-details-download-item-tax');
+					totals = $('#edd-order-items .row input.edd-payment-details-download-amount'),
+					taxes  = $('#edd-order-items .row input.edd-payment-details-download-item-tax');
 
 				if ( totals.length ) {
 					totals.each(function() {

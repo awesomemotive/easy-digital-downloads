@@ -30,6 +30,10 @@ a.edd-delete:hover {
 /* General Settings Styles
 -------------------------------------------------------------- */
 
+.edd_datepicker {
+	height: 29px;
+}
+
 .edd-settings-sub-nav {
 	margin: 0 0px 10px 0;
 	width: 100%;
@@ -366,7 +370,6 @@ textarea[name="edd-note"] {
 
 #edd-add-discount input[type="text"].edd_datepicker,
 #edd-edit-discount input[type="text"].edd_datepicker {
-	height: 29px;
 	width: 183px;
 	vertical-align: middle;
 }
@@ -864,10 +867,10 @@ textarea#edd-payment-note {
 	height: 4em;
 	margin: 0;
 }
-#edd-purchased-files .row .edd-purchased-files-list-wrapper .download {
+#edd-order-items .row .edd-purchased-files-list-wrapper .download {
 	line-height: 1.4;
 }
-#edd-purchased-files .edd-purchased-files-list-wrapper .edd-purchased-option {
+#edd-order-items .edd-purchased-files-list-wrapper .edd-purchased-option {
 	color: #666;
 }
 input[class*="edd-price-field"] {
@@ -921,9 +924,6 @@ input[class*="edd-price-field"] {
 /* Payment Details
 -------------------------------------------------------------- */
 
-#edd-edit-order-form .column {
-	width: 32%;
-}
 #poststuff .edd-metabox-title-action {
 	margin: 0;
 	float: right;
@@ -1021,25 +1021,24 @@ input[class*="edd-price-field"] {
 	float: left;
 	margin-left: 10px;
 }
-#edd-order-logs .inside,
-#edd-order-update .inside,
-#edd-order-details .inside {
+#poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
 }
-#edd-order-update .edd-select-chosen {
+.edd-order-data .edd-select-chosen {
 	width: 130px !important;
 }
-#edd-order-update input.edd_datepicker {
+.edd-order-data input.edd_datepicker {
 	width: 180px;
 }
-#edd-order-update input[type="number"].edd-payment-time-hour,
-#edd-order-update input[type="number"].edd-payment-time-min {
+.edd-order-data input[type="number"].edd-payment-time-hour,
+.edd-order-data input[type="number"].edd-payment-time-min {
 	width: 50px;
 }
-#edd-order-update .edd-tax-rate {
+.edd-order-data .edd-tax-rate {
 	color: #9c9c9c;
 	font-style: italic;
+	padding: 5px;
 }
 #edd-order-logs ul {
 	margin: 0;
@@ -1081,13 +1080,9 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element ul,
 #edd-order-address-country-wrap select,
 #edd-customer-details .order-data-address input,
-#edd-edit-order-form .column input,
 #edd-customer-details .order-data-column p.data input {
 	clear: both;
 	display: block;
-}
-#edd-customer-details .customer-info .column {
-	width: 49%;
 }
 #edd-customer-details .actions {
 	float: right;
@@ -1099,10 +1094,6 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	width: 100px;
 }
-#edd-edit-order-form .column .description {
-	padding-right: 10px;
-}
-#edd-edit-order-form .column,
 .edd-edit-purchase-element ul li {
 	display: inline-block;
 	line-height: 1.4;
@@ -1238,9 +1229,6 @@ input[class*="edd-price-field"] {
 
 @media screen and ( max-width: 782px ) {
 
-	#edd-edit-order-form .column {
-		width: 49%;
-	}
 	.edd-edit-purchase-element ul li.item_price,
 	.edd-edit-purchase-element ul li.item_price.item_quantity {
 		padding-bottom: 10px;
@@ -1281,9 +1269,6 @@ input[class*="edd-price-field"] {
 	}
 	.edd-edit-purchase-element .edd-add-download-to-purchase-actions {
 		padding-top: 15px;
-	}
-	#edd-edit-order-form .column {
-		width: 100%;
 	}
 }
 
@@ -1434,7 +1419,6 @@ td.edd_order_price {
 .edd-reports-wrapper .postbox #edd-start-wrap input.edd_datepicker,
 .edd-reports-wrapper .postbox #edd-end-wrap input.edd_datepicker {
 	width: 120px;
-	height: 29px;
 	margin-right: 4px;
 }
 
@@ -1459,7 +1443,6 @@ td.edd_order_price {
 }
 .edd-date-range-options .edd_datepicker {
 	width: 100px;
-	height: 29px;
 }
 
 .edd-date-range-options label,
@@ -2362,7 +2345,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	display: inline-block;
 	z-index: 2;
 }
-.edd-sections-wrap .section-wrap > div {
+.edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
@@ -2841,7 +2824,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	background-color: #fcfcfc;
 	border-right: 1px solid #e5e5e5;
 	box-sizing: border-box;
-	min-height: 142px;
 	max-width: 200px;
 }
 
@@ -2978,7 +2960,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 @media only screen and ( min-width: 1200px ) {
 	#edd-graphs-filter,
-	.edd-vertical-sections .section-wrap {
+	.edd-vertical-sections:not(.meta-box) .section-wrap {
 		width: calc( 100% - 200px );
 	}
 }
