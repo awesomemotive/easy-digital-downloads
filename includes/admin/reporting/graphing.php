@@ -358,7 +358,6 @@ function edd_reports_graph() {
 							<em><sup>&dagger;</sup> <?php _e( 'Excludes sales tax.', 'easy-digital-downloads' ); ?></em>
 						<?php endif; ?>
 					</p>
-
 				</div>
 			</div>
 		</div>
@@ -676,21 +675,19 @@ function edd_reports_graph_controls() {
 				<div class="edd-date-range-options <?php echo esc_attr( $class ); ?>">
 					<fieldset>
 						<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
-						<span class="edd-search-date">
-							<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
-							<?php echo EDD()->html->date_field( array(
-								'name'        => 'filter_from',
-								'placeholder' => edd_get_date_picker_format(),
-								'value'       => $from
-							) ); ?>
+						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
+						<?php echo EDD()->html->date_field( array(
+							'name'        => 'filter_from',
+							'placeholder' => edd_get_date_picker_format(),
+							'value'       => $from
+						) ); ?>
 
-							<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
-							<?php echo EDD()->html->date_field( array(
-								'name'        => 'filter_to',
-								'placeholder' => edd_get_date_picker_format(),
-								'value'       => $to
-							) ); ?>
-						</span>
+						<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
+						<?php echo EDD()->html->date_field( array(
+							'name'        => 'filter_to',
+							'placeholder' => edd_get_date_picker_format(),
+							'value'       => $to
+						) ); ?>
 					</fieldset>
 				</div>
 
@@ -789,8 +786,7 @@ function edd_reports_refresh_button() {
 		'edd-message' => 'refreshed-reports'
 	) ), 'edd-refresh-reports' );
 
-	echo '<a href="' . $url . '" title="' . __( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
-
+	echo '<a href="' . esc_url( $url ) . '" title="' . __( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
 }
 
 add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );

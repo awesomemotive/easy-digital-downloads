@@ -200,9 +200,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	public function __get( $key = '' ) {
 		switch ( $key ) {
 			case 'emails':
-				$emails   = (array) edd_get_customer_meta( $this->id, 'additional_email', false );
-				$emails[] = $this->email;
-				return $emails;
+				return $this->get_emails();
 			case 'payment_ids':
 				$payment_ids = $this->get_payment_ids();
 				$payment_ids = implode( ',', $payment_ids );
@@ -363,7 +361,10 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 		do_action( 'edd_customer_pre_add_email', $email, $this->id, $this );
 
 		// Update is used to ensure duplicate emails are not added.
-		$ret = (bool) edd_add_customer_meta( $this->id, 'additional_email', $email );
+		$ret = (bool) edd_add_customer_email_address( array(
+			'customer_id' => $this->id,
+			'email'       => $email
+		) );
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
@@ -406,7 +407,6 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * @return boolean True if assigned to existing customer, false otherwise.
 	 */
 	public function email_exists( $email = '' ) {
-		global $wpdb;
 
 		// Bail if not an email address
 		if ( ! is_email( $email ) ) {
@@ -418,17 +418,19 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			return true;
 		}
 
-		// Return true if found in customers table
+		// Return true if found in customers table.
 		if ( edd_get_customer_by( 'email', $email ) ) {
 			return true;
 		}
 
-		// Query all customer meta values
-		$query      = "SELECT meta_value FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' AND meta_value = %s LIMIT 1";
-		$additional = $wpdb->get_var( $wpdb->prepare( $query, $email ) );
+		// Query all customer email addresses.
+		$count = edd_count_customer_email_addresses( array(
+			'customer_id' => $this->id,
+			'email'       => $email,
+		) );
 
 		// Return true if found in additional email addresses
-		if ( ! empty( $additional ) && ! is_wp_error( $additional ) ) {
+		if ( 0 < $count ) {
 			return true;
 		}
 
@@ -1000,5 +1002,83 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			'fields'      => 'ip',
 			'groupby'     => 'ip',
 		) );
+	}
+
+	/**
+	 * Retrieve all the email addresses associated with this customer.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	public function get_emails() {
+		$emails = array();
+
+		// Add primary email.
+		$emails[] = $this->email;
+
+		// Fetch email addresses from the database.
+		$secondary_emails = edd_get_customer_email_addresses( array(
+			'customer_id' => $this->id,
+		) );
+
+		if ( ! empty( $secondary_emails ) ) {
+
+			// We only want the email addresses
+			$secondary_emails = wp_list_pluck( $secondary_emails, 'email' );
+
+			// Merge with primary email
+			$emails = array_merge( $emails, $secondary_emails );
+		}
+
+		return $emails;
+	}
+
+	/**
+	 * Retrieve an address.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type Address type. Default primary.
+	 *
+	 * @return array|\EDD\Customers\Customer_Address Object if primary address request, array otherwise.
+	 */
+	public function get_address( $type = 'primary' ) {
+		if ( 'primary' === $type ) {
+			$address = edd_get_customer_addresses( array(
+				'number'      => 1,
+				'type'        => 'primary',
+				'customer_id' => $this->id,
+			) );
+
+			if ( is_array( $address ) && ! empty( $address ) ) {
+				return $address[0];
+			}
+		} else {
+			return edd_get_customer_addresses( array(
+				'customer_id' => $this->id,
+			) );
+		}
+	}
+
+	/**
+	 * Retrieve all addresses.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $type Address type. Default empty.
+	 *
+	 * @return \EDD\Customers\Customer_Address[] Array of addresses.
+	 */
+	public function get_addresses( $type = '' ) {
+		$addresses = edd_get_customer_addresses( array(
+			'customer_id' => $this->id,
+		) );
+
+		if ( ! empty( $type ) ) {
+			$addresses = wp_filter_object_list( $addresses, array( 'type' => $type ) );
+		}
+
+		return $addresses;
 	}
 }

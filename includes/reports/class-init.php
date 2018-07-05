@@ -62,9 +62,17 @@ final class Init {
 	 * @since 3.0
 	 */
 	public function __construct() {
+
+		// Avoid multiple initializations
+		if ( did_action( 'edd_reports_init' ) ) {
+			return;
+		}
+
 		self::bootstrap();
 
 		$reports = Data\Report_Registry::instance();
+
+		$reports = $this->legacy_reports( $reports );
 
 		/**
 		 * Fires when the Reports API is initialized.
@@ -128,4 +136,92 @@ final class Init {
 		do_action_ref_array( 'edd_reports_init', array( &$reports ) );
 	}
 
+	/**
+	 * Maybe add legacy reports if any exist
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $reports
+	 *
+	 * @return array
+	 */
+	private function legacy_reports( $reports = array() ) {
+
+		// Bail if no legacy reports
+		if ( ! has_filter( 'edd_report_views' ) ) {
+			return $reports;
+		}
+
+		/**
+		 * Filters legacy 'Reports' tab views.
+		 *
+		 * @since 1.4
+		 * @deprecated 3.0 Use {@see 'edd_reports_get_reports'}
+		 * @see 'edd_reports_get_reports'
+		 *
+		 * @param array $views 'Reports' tab views.
+		 */
+		$legacy_views = edd_apply_filters_deprecated( 'edd_report_views', array( array() ), '3.0', 'edd_reports_get_reports' );
+
+		// Bail if no legacy views
+		if ( empty( $legacy_views ) ) {
+			return $reports;
+		}
+
+		// Default legacy report priority to position them towards the bottom
+		$priority = 800;
+
+		// Loop through views and try to convert them
+		foreach ( $legacy_views as $report_id => $label ) {
+
+			// Legacy "_tab_" action
+			if ( has_action( "edd_reports_tab_{$report_id}" ) ) {
+				$hook = "edd_reports_tab_{$report_id}";
+
+			// Legacy "_view_" action
+			} elseif ( has_action( "edd_reports_view_{$report_id}" ) ) {
+				$hook = "edd_reports_view_{$report_id}";
+
+			// Skip
+			} else {
+				continue;
+			}
+
+			// Create a callback function
+			$callback = function() use ( $hook ) {
+				/**
+				 * Legacy: Fires inside the content area of the currently active Reports tab.
+				 *
+				 * The dynamic portion of the hook name, `$report_id` refers to the slug of
+				 * the current reports tab.
+				 *
+				 * @since 1.0
+				 * @deprecated 3.0 Use the new Reports API to register new tabs.
+				 * @see \EDD\Reports\add_report()
+				 *
+				 * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object,
+				 *                                                   or WP_Error if invalid.
+				 */
+				edd_do_action_deprecated( $hook, array(), '3.0', '\EDD\Reports\add_report' );
+			};
+
+			// Legacy label
+			$legacy_label = $label . '<span class="edd-legacy-label">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
+
+			// Add report
+			$reports->add_report( $report_id, array(
+				'label'            => $legacy_label,
+				'group'            => 'core',
+				'icon'             => 'info',
+				'priority'         => $priority,
+				'display_callback' => $callback
+			) );
+
+			// Bump the priority
+			++$priority;
+		}
+
+		// Return reports array
+		return $reports;
+	}
 }

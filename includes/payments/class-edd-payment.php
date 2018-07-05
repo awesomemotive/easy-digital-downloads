@@ -2164,9 +2164,35 @@ class EDD_Payment {
 						}
 					}
 
+					$order_address = $this->order->get_address();
+
 					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array( 'id', 'email', 'discount' ) ) );
 
-					edd_update_order_meta( $this->ID, 'user_info', $user_info );
+					$defaults = array(
+						'first_name' => '',
+						'last_name' => '',
+						'address' => array(
+							'line1'   => '',
+							'line2'   => '',
+							'city'    => '',
+							'state'   => '',
+							'country' => '',
+							'zip'     => '',
+						),
+					);
+
+					$user_info = wp_parse_args( $user_info, $defaults );
+
+					edd_update_order_address( $order_address->id, array(
+						'first_name'  => $user_info['first_name'],
+						'last_name'   => $user_info['last_name'],
+						'address'     => $user_info['address']['line1'],
+						'address2'    => $user_info['address']['line2'],
+						'city'        => $user_info['address']['city'],
+						'region'      => $user_info['address']['state'],
+						'postal_code' => $user_info['address']['zip'],
+						'country'     => $user_info['address']['country'],
+					) );
 				}
 
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
@@ -2927,26 +2953,14 @@ class EDD_Payment {
 	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
-		$user_info = edd_get_order_meta( $this->ID, 'user_info', true );
+		$order_address = $this->order->get_address();
 
-		$user_info = $user_info
-			? $user_info
-			: array();
-
-		if ( is_serialized( $user_info ) ) {
-			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
-			if ( ! empty( $matches ) ) {
-				$user_info = array();
-			}
-		}
-
-		// As per Github issue #4248, we need to run maybe_unserialize here still.
-		$user_info = wp_parse_args( maybe_unserialize( $user_info ), array(
+		$user_info = array(
 			'id'         => $this->user_id,
-			'first_name' => $this->first_name,
-			'last_name'  => $this->last_name,
+			'first_name' => $order_address->first_name,
+			'last_name'  => $order_address->last_name,
 			'discount'   => $this->discounts,
-		) );
+		);
 
 		// Ensure email index is in the old user info array
 		if ( empty( $user_info['email'] ) ) {
@@ -2996,6 +3010,20 @@ class EDD_Payment {
 				}
 
 			}
+		}
+
+		$city = $order_address->city;
+
+		// Add address to array if one exists.
+		if ( ! empty( $city ) ) {
+			$user_info['address'] = array(
+				'line1'   => $order_address->address,
+				'line2'   => $order_address->address2,
+				'city'    => $city,
+				'state'   => $order_address->region,
+				'country' => $order_address->country,
+				'zip'     => $order_address->postal_code,
+			);
 		}
 
 		return $user_info;

@@ -21,10 +21,11 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @property int $id
- * @property int $download_id
+ * @property int $product_id
  * @property int $file_id
  * @property int $order_id
  * @property int $price_id
+ * @property int $customer_id
  * @property string $ip
  * @property string $user_agent
  * @property string $date_created
@@ -42,13 +43,13 @@ class File_Download_Log extends Base_Object {
 	protected $id;
 
 	/**
-	 * Download ID.
+	 * Product ID.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $download_id;
+	protected $product_id;
 
 	/**
 	 * File ID.
@@ -78,13 +79,13 @@ class File_Download_Log extends Base_Object {
 	protected $price_id;
 
 	/**
-	 * User ID.
+	 * Customer ID.
 	 *
 	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $user_id;
+	protected $customer_id;
 
 	/**
 	 * IP.
