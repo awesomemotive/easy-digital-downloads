@@ -655,6 +655,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/orders.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
