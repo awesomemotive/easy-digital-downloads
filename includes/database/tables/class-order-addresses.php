@@ -47,23 +47,26 @@ final class Order_Addresses extends Base {
 	 * @return void
 	 */
 	protected function set_schema() {
-		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-		order_id bigint(20) unsigned NOT NULL default '0',
-		first_name mediumtext NOT NULL,
-		last_name mediumtext NOT NULL,
-		address mediumtext NOT NULL,
-		address2 mediumtext NOT NULL,
-		city mediumtext NOT NULL,
-		region mediumtext NOT NULL,
-		postal_code varchar(32) NOT NULL default '',
-		country mediumtext NOT NULL,
-		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
-		PRIMARY KEY (id),
-		KEY order_id (order_id),
-		KEY type (type(20)),
-		KEY status (status(20)),
-		KEY date_created (date_created)";
+		$max_index_length = 191;
+		$this->schema     = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			order_id bigint(20) unsigned NOT NULL default '0',
+			first_name mediumtext NOT NULL,
+			last_name mediumtext NOT NULL,
+			address mediumtext NOT NULL,
+			address2 mediumtext NOT NULL,
+			city mediumtext NOT NULL,
+			region mediumtext NOT NULL,
+			postal_code varchar(32) NOT NULL default '',
+			country mediumtext NOT NULL,
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			PRIMARY KEY (id),
+			KEY order_id (order_id),
+			KEY city (city({$max_index_length})),
+			KEY region (region({$max_index_length})),
+			KEY postal_code (postal_code(32)),
+			KEY country (country({$max_index_length})),
+			KEY date_created (date_created)";
 	}
 }
 endif;
