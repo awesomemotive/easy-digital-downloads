@@ -1144,6 +1144,7 @@ function display_region_filter() {
 	// Get the select
 	$select = EDD()->html->select( array(
 		'name'             => 'regions',
+		'id'               => 'edd_reports_filter_regions',
 		'options'          => $regions,
 		'chosen'           => true,
 		'selected'         => empty( $region ) ? 0 : $region,
@@ -1172,6 +1173,7 @@ function display_country_filter() {
 	// Get the select
 	$select = EDD()->html->select( array(
 		'name'             => 'countries',
+		'id'               => 'edd_reports_filter_countries',
 		'options'          => $countries,
 		'chosen'           => true,
 		'selected'         => empty( $country ) ? 0 : $country,
