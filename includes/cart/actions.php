@@ -84,8 +84,8 @@ function edd_process_add_to_cart( $data ) {
 		$query_part 	= strpos( $query_args, "?" );
 		$url_parameters = '';
 
-		if ( false !== $query_part ) { 
-			$url_parameters = substr( $query_args, $query_part ); 
+		if ( false !== $query_part ) {
+			$url_parameters = substr( $query_args, $query_part );
 		}
 
 		wp_redirect( edd_get_checkout_uri() . $url_parameters, 303 );
