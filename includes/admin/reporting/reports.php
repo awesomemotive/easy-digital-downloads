@@ -2771,6 +2771,28 @@ function display_export_report() {
 									'options'         => edd_get_payment_statuses(),
 								) );
 
+		                        echo EDD()->html->select( array(
+			                        'name'             => 'country',
+			                        'id'               => 'edd_reports_filter_countries',
+			                        'options'          => edd_get_country_list(),
+			                        'chosen'           => true,
+			                        'selected'         => false,
+			                        'show_option_none' => false,
+			                        'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+			                        'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+		                        ) );
+
+		                        echo EDD()->html->select( array(
+			                        'name'             => 'region',
+			                        'id'               => 'edd_reports_filter_regions',
+			                        'options'          => edd_get_shop_states(),
+			                        'chosen'           => true,
+			                        'selected'         => false,
+			                        'show_option_none' => false,
+			                        'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+			                        'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+		                        ) );
+
 		                        wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Orders_Export"/>
