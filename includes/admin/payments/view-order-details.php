@@ -57,21 +57,7 @@ $user_info      = $payment->user_info;
 $order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $order->customer_id );
 $notes          = edd_get_payment_notes( $order->id );
-
-$default_address = array(
-	'id'          => 0,
-	'order_id'    => 0,
-	'first_name'  => '',
-	'last_name'   => '',
-	'address'     => '',
-	'address2'    => '',
-	'city'        => '',
-	'region'      => '',
-	'postal_code' => '',
-	'country'     => '',
-);
-
-$address = (object) wp_parse_args( $order->get_address()->to_array(), $default_address );
+$address        = $order->get_address();
 
 // Filter the transaction ID (back-compat)
 if ( ! empty( $transaction_id ) ) {

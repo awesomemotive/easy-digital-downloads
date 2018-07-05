@@ -402,7 +402,28 @@ class Order extends \EDD\Database\Objects\Order {
 	 * @return \EDD\Orders\Order_Address|false Object if successful, false otherwise.
 	 */
 	public function get_address() {
-		return edd_get_order_address_by( 'order_id', $this->id );
+
+		// Attempt to get the order address
+		$address = edd_get_order_address_by( 'order_id', $this->id );
+
+		// Fallback object if not found
+		if ( empty( $address ) ) {
+			$address = (object) array(
+				'id'          => 0,
+				'order_id'    => 0,
+				'first_name'  => '',
+				'last_name'   => '',
+				'address'     => '',
+				'address2'    => '',
+				'city'        => '',
+				'region'      => '',
+				'postal_code' => '',
+				'country'     => '',
+			);
+		}
+
+		// Return address (from DB or fallback)
+		return $address;
 	}
 
 	/**
