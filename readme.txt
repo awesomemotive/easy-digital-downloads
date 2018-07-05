@@ -191,7 +191,18 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 == Changelog ==
 
 = 2.9.4, June 6, 2018 =
-* Fix: Added nonce checks to multiple AJAX calls.
+* Fix: Added nonce checks to multiple AJAX calls. If you have customized any of the following beyond CSS, please review this blog post:
+* https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4
+* templates/widget-cart-item.php
+* templates/shortcode-profile-editor.php
+* templates/checkout_cart.php
+* The following functions includes/checkout/template.php:
+* edd_default_cc_address_fields()
+* edd_get_register_fields()
+* edd_get_login_fields()
+* edd_payment_mode_select()
+* edd_checkout_hidden_fields()
+
 * Fix: Unexpected behavior in 'redirect to checkout' when multiple checkout pages were used.
 * Fix: Saving an order in the admin when prices were inclusive of tax could cause incorrect item price amounts to be saved.
 * Fix: PHP 7.2 Compatibility - Some PHP notices were being thrown while activating Easy Digital Downloads.

@@ -105,6 +105,15 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
  */
 function edd_process_remove_from_cart( $data ) {
 	$cart_key = absint( $_GET['cart_item'] );
+
+	if ( ! isset( $_GET['edd_remove_from_cart_nonce'] ) ) {
+		add_filter( 'edd_is_debug_mode', '__return_true' );
+
+		edd_debug_log( __( 'Missing nonce when removing an item from the cart. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+		remove_filter( 'edd_is_debug_mode', '__return_true' );
+	}
+
 	$nonce    = ! empty( $_GET['edd_remove_from_cart_nonce'] ) ? sanitize_text_field( $_GET['edd_remove_from_cart_nonce'] ) : '';
 
 	$nonce_verified = wp_verify_nonce( $nonce, 'edd-remove-from-cart-' . $cart_key );

@@ -139,6 +139,14 @@ function edd_get_ajax_url() {
  * @return void
  */
 function edd_ajax_remove_from_cart() {
+	if ( ! isset( $_POST['nonce'] ) ) {
+		add_filter( 'edd_is_debug_mode', '__return_true' );
+
+		edd_debug_log( __( 'Missing nonce when removing an item from the cart. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+		remove_filter( 'edd_is_debug_mode', '__return_true' );
+	}
+
 	if ( isset( $_POST['cart_item'] ) && isset( $_POST['nonce'] ) ) {
 
 
@@ -182,6 +190,14 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  * @return void
  */
 function edd_ajax_add_to_cart() {
+	if ( ! isset( $_POST['nonce'] ) ) {
+		add_filter( 'edd_is_debug_mode', '__return_true' );
+
+		edd_debug_log( __( 'Missing nonce when adding an item to the cart. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+		remove_filter( 'edd_is_debug_mode', '__return_true' );
+	}
+
 	if ( isset( $_POST['download_id'] ) && isset( $_POST['nonce'] ) ) {
 		$download_id = absint( $_POST['download_id'] );
 		$nonce       = sanitize_text_field( $_POST['nonce'] );
@@ -459,6 +475,14 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return void
  */
 function edd_ajax_recalculate_taxes() {
+	if ( ! isset( $_POST['nonce'] ) ) {
+		add_filter( 'edd_is_debug_mode', '__return_true' );
+
+		edd_debug_log( __( 'Missing nonce when recalculating taxes. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+		remove_filter( 'edd_is_debug_mode', '__return_true' );
+	}
+
 	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : '';
 	$nonce_verified = wp_verify_nonce( $nonce, 'edd-checkout-address-fields' );
 
@@ -503,6 +527,14 @@ add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes'
 function edd_ajax_get_states_field() {
 	if( empty( $_POST['country'] ) ) {
 		$_POST['country'] = edd_get_shop_country();
+	}
+
+	if ( ! isset( $_POST['nonce'] ) ) {
+		add_filter( 'edd_is_debug_mode', '__return_true' );
+
+		edd_debug_log( __( 'Missing nonce when retrieving state list. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+		remove_filter( 'edd_is_debug_mode', '__return_true' );
 	}
 
 	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : '';

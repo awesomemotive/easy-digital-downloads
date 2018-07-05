@@ -40,7 +40,15 @@ function edd_process_purchase_form() {
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
 	if ( $is_ajax ) {
-		$nonce = sanitize_text_field( $_POST['edd-process-checkout-nonce'] );
+		if ( ! isset( $_POST['edd-process-checkout-nonce'] ) ) {
+			add_filter( 'edd_is_debug_mode', '__return_true' );
+
+			edd_debug_log( __( 'Missing nonce when processing checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+			remove_filter( 'edd_is_debug_mode', '__return_true' );
+		}
+
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] ) ? sanitize_text_field( $_POST['edd-process-checkout-nonce'] ) : '';
 		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
 
 		if ( false === $nonce_verified ) {
@@ -224,6 +232,14 @@ add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10
 function edd_process_purchase_login() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
+
+	if ( ! isset( $_POST['edd_login_nonce'] ) ) {
+		add_filter( 'edd_is_debug_mode', '__return_true' );
+
+		edd_debug_log( __( 'Missing nonce when processing login during checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
+
+		remove_filter( 'edd_is_debug_mode', '__return_true' );
+	}
 
 	$nonce = isset( $_POST['edd_login_nonce'] ) ? sanitize_text_field( $_POST['edd_login_nonce'] ) : '';
 	$nonce_verified = wp_verify_nonce( $nonce, 'edd-login-form' );
