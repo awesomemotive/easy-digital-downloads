@@ -139,20 +139,30 @@ function edd_get_ajax_url() {
  * @return void
  */
 function edd_ajax_remove_from_cart() {
-	if ( isset( $_POST['cart_item'] ) ) {
+	if ( isset( $_POST['cart_item'] ) && isset( $_POST['nonce'] ) ) {
 
-		edd_remove_from_cart( $_POST['cart_item'] );
 
-		$return = array(
-			'removed'       => 1,
-			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
-			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
-		);
+		$cart_item = absint( $_POST['cart_item'] );
+		$nonce     = sanitize_text_field( $_POST['nonce'] );
 
-		if ( edd_use_taxes() ) {
-			$cart_tax = (float) edd_get_cart_tax();
-			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-remove-cart-widget-item' );
+
+		if ( false === $nonce_verified ) {
+			$return = array( 'removed' => 0 );
+		} else {
+			edd_remove_from_cart( $cart_item );
+
+			$return = array(
+				'removed'       => 1,
+				'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+				'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+				'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
+			);
+
+			if ( edd_use_taxes() ) {
+				$cart_tax = (float) edd_get_cart_tax();
+				$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+			}
 		}
 
 		$return = apply_filters( 'edd_ajax_remove_from_cart_response', $return );
@@ -172,7 +182,16 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  * @return void
  */
 function edd_ajax_add_to_cart() {
-	if ( isset( $_POST['download_id'] ) ) {
+	if ( isset( $_POST['download_id'] ) && isset( $_POST['nonce'] ) ) {
+		$download_id = absint( $_POST['download_id'] );
+		$nonce       = sanitize_text_field( $_POST['nonce'] );
+
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-add-to-cart-' . $download_id );
+
+		if ( false === $nonce_verified ) {
+			edd_die( '', '', 403 );
+		}
+
 		$to_add = array();
 
 		if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
@@ -374,7 +393,15 @@ add_action( 'wp_ajax_nopriv_edd_remove_discount', 'edd_ajax_remove_discount' );
  * @return void
  */
 function edd_load_checkout_login_fields() {
-	do_action( 'edd_purchase_form_login_fields' );
+	$action = sanitize_text_field( $_POST['action'] );
+	$nonce  = sanitize_text_field( $_POST['nonce'] );
+
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd_' . $action );
+
+	if ( $nonce_verified ) {
+		do_action( 'edd_purchase_form_login_fields' );
+	}
+
 	edd_die();
 }
 add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
@@ -386,7 +413,15 @@ add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
  * @return void
 */
 function edd_load_checkout_register_fields() {
-	do_action( 'edd_purchase_form_register_fields' );
+	$action = sanitize_text_field( $_POST['action'] );
+	$nonce  = sanitize_text_field( $_POST['nonce'] );
+
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd_' . $action );
+
+	if ( $nonce_verified ) {
+		do_action( 'edd_purchase_form_register_fields' );
+	}
+
 	edd_die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
@@ -424,6 +459,13 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return void
  */
 function edd_ajax_recalculate_taxes() {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : '';
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd-checkout-address-fields' );
+
+	if ( false === $nonce_verified ) {
+		return false;
+	}
+
 	if ( ! edd_get_cart_contents() ) {
 		return false;
 	}
@@ -462,27 +504,33 @@ function edd_ajax_get_states_field() {
 	if( empty( $_POST['country'] ) ) {
 		$_POST['country'] = edd_get_shop_country();
 	}
-	$states = edd_get_shop_states( $_POST['country'] );
 
-	if( ! empty( $states ) ) {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : '';
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd-country-field-nonce' );
 
-		$args = array(
-			'name'    => $_POST['field_name'],
-			'id'      => $_POST['field_name'],
-			'class'   => $_POST['field_name'] . '  edd-select',
-			'options' => $states,
-			'show_option_all'  => false,
-			'show_option_none' => false
-		);
+	if ( false !== $nonce_verified ) {
+		$states = edd_get_shop_states( $_POST['country'] );
 
-		$response = EDD()->html->select( $args );
+		if( ! empty( $states ) ) {
 
-	} else {
+			$args = array(
+				'name'    => $_POST['field_name'],
+				'id'      => $_POST['field_name'],
+				'class'   => $_POST['field_name'] . '  edd-select',
+				'options' => $states,
+				'show_option_all'  => false,
+				'show_option_none' => false
+			);
 
-		$response = 'nostates';
+			$response = EDD()->html->select( $args );
+
+		} else {
+
+			$response = 'nostates';
+		}
+
+		echo $response;
 	}
-
-	echo $response;
 
 	edd_die();
 }

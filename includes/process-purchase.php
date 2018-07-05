@@ -39,6 +39,15 @@ function edd_process_purchase_form() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
+	if ( $is_ajax ) {
+		$nonce = sanitize_text_field( $_POST['edd-process-checkout-nonce'] );
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			edd_set_error( 'checkout-nonce-error', __( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
+		}
+	}
+
 	// Process the login form
 	if ( isset( $_POST['edd_login_submit'] ) ) {
 		edd_process_purchase_login();
@@ -215,6 +224,19 @@ add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10
 function edd_process_purchase_login() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
+
+	$nonce = isset( $_POST['edd_login_nonce'] ) ? sanitize_text_field( $_POST['edd_login_nonce'] ) : '';
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd-login-form' );
+	if ( false === $nonce_verified ) {
+		edd_set_error( 'edd-login-nonce-failed', __( 'Error processing login. Nonce failed.', 'easy-digital-downloads' ) );
+
+		if ( $is_ajax ) {
+			do_action( 'edd_ajax_checkout_errors' );
+			edd_die();
+		} else {
+			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+		}
+	}
 
 	$user_data = edd_purchase_form_validate_user_login();
 
