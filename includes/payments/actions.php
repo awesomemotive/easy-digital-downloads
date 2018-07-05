@@ -152,7 +152,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 		// Save the completed date
 		edd_update_order( $order_id, array(
-			'date_completed' => current_time( 'mysql' ),
+			'date_completed' => EDD()->utils->date()->format( 'mysql' ),
 		) );
 
 		// Required for backwards compatibility.

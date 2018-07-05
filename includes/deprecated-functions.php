@@ -890,15 +890,15 @@ function edd_reports_tab_logs() {
  * Defines views for the legacy 'Reports' tab.
  *
  * @since 1.4
- * @deprecated 3.0 Use \EDD\Reports\get_tabs()
- * @see \EDD\Reports\get_tabs()
+ * @deprecated 3.0 Use \EDD\Reports\get_reports()
+ * @see \EDD\Reports\get_reports()
  *
  * @return array $views Report Views
  */
 function edd_reports_default_views() {
-	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_tabs' );
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_reports' );
 
-	return Reports\get_tabs();
+	return Reports\get_reports();
 }
 
 /**

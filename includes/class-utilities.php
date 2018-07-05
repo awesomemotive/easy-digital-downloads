@@ -8,13 +8,17 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD;
+
+use EDD\Utils as Utils;
+use EDD\Reports as Reports;
 
 /**
  * Class that bootstraps various utilities leveraged in EDD core.
  *
  * @since 3.0
  */
-class EDD_Utilities {
+class Utilities {
 
 	/**
 	 * Represents the WordPress GMT offset in seconds.
@@ -100,7 +104,7 @@ class EDD_Utilities {
 				if ( ! did_action( 'edd_reports_init' ) ) {
 					_doing_it_wrong( __FUNCTION__, 'The Report registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
 				} elseif ( class_exists( '\EDD\Reports\Data\Report_Registry' ) ) {
-					$registry = \EDD\Reports\Data\Report_Registry::instance();
+					$registry = Reports\Data\Report_Registry::instance();
 				}
 				break;
 
@@ -108,7 +112,7 @@ class EDD_Utilities {
 				if ( ! did_action( 'edd_reports_init' ) ) {
 					_doing_it_wrong( __FUNCTION__, 'The Endpoints registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
 				} elseif ( class_exists( '\EDD\Reports\Data\Endpoint_Registry' ) ) {
-					$registry = \EDD\Reports\Data\Endpoint_Registry::instance();
+					$registry = Reports\Data\Endpoint_Registry::instance();
 				}
 				break;
 
@@ -123,8 +127,8 @@ class EDD_Utilities {
 	/**
 	 * Retrieves a date format string based on a given short-hand format.
 	 *
-	 * @see   edd_get_date_format()
-	 * @see   edd_get_date_picker_format()
+	 * @see edd_get_date_format()
+	 * @see edd_get_date_picker_format()
 	 *
 	 * @since 3.0
 	 *
@@ -142,16 +146,7 @@ class EDD_Utilities {
 		}
 
 		// Bail if format is not known
-		if ( ! in_array( $format, array(
-			'date',
-			'time',
-			'datetime',
-			'mysql',
-			'date-attribute',
-			'date-js',
-			'date-mysql',
-			'time-mysql',
-		), true ) ) {
+		if ( ! in_array( $format, array( 'date', 'time', 'datetime', 'mysql', 'date-attribute', 'date-js', 'date-mysql', 'time-mysql' ), true ) ) {
 			return $format;
 		}
 
@@ -206,23 +201,23 @@ class EDD_Utilities {
 	/**
 	 * Retrieves a date instance for the WP timezone (and offset) based on the given date string.
 	 *
-	 * Incoming time is expected to be UTC.
-	 *
 	 * @since 3.0
 	 *
 	 * @param string $date_string  Optional. Date string. Default 'now'.
 	 * @param string $timezone     Optional. Timezone to generate the Carbon instance for.
 	 *                             Default is the timezone set in WordPress settings.
-	 * @param bool   $apply_offset Optional. Whether to apply the offset in seconds to the generated
-	 *                             date. Default true.
+	 * @param bool   $localize     Optional. Whether to apply the offset in seconds to the generated
+	 *                             date. Default false.
 	 *
-	 * @return \EDD\Utils\Date Date instance.
+	 * @return \EDD\Utils\Date Date instance. Time is returned as UTC.
 	 */
-	public function date( $date_string = 'now', $timezone = null, $apply_offset = true ) {
+	public function date( $date_string = 'now', $timezone = null, $localize = false ) {
 
 		// Fallback to this time zone
-		if ( null === $timezone ) {
+		if ( null === $timezone && true === $localize ) {
 			$timezone = $this->get_time_zone();
+		} elseif ( null === $timezone && false === $localize ) {
+			$timezone = 'UTC';
 		}
 
 		/*
@@ -231,9 +226,9 @@ class EDD_Utilities {
 		 * Note that supplying the timezone during DateTime instantiation doesn't actually
 		 * convert the UNIX timestamp, it just lays the groundwork for deriving the offset.
 		 */
-		$date = new EDD\Utils\Date( $date_string, new DateTimezone( $timezone ) );
+		$date = new Utils\Date( $date_string, new \DateTimezone( $timezone ) );
 
-		if ( false === $apply_offset ) {
+		if ( false === $localize ) {
 			/*
 			 * The offset is automatically applied when the Date object is instantiated.
 			 *
@@ -271,7 +266,6 @@ class EDD_Utilities {
 	 *
 	 * @param bool $refresh Optional. Whether to refresh the `$gmt_offset` value before retrieval.
 	 *                      Default false.
-	 *
 	 * @return string Value of the `$date_format` property.
 	 */
 	public function get_date_format( $refresh = false ) {

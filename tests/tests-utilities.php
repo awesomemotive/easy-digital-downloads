@@ -1,17 +1,21 @@
 <?php
+namespace EDD;
+
+use EDD\Reports as Reports;
+
 /**
  * Tests for EDD_Utilities.
  *
  * @group edd_utils
  *
- * @coversDefaultClass \EDD_Utilities
+ * @coversDefaultClass \EDD\Utilities
  */
-class EDD_Utilities_Tests extends \EDD_UnitTestCase {
+class Utilities_Tests extends \EDD_UnitTestCase {
 
 	/**
-	 * EDD_Utilities fixture.
+	 * \EDD\Utilities fixture.
 	 *
-	 * @var \EDD_Utilities
+	 * @var \EDD\Utilities
 	 */
 	protected static $utils;
 
@@ -23,7 +27,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
 		EDD()->utils->get_gmt_offset( true );
 
-		self::$utils = new \EDD_Utilities;
+		self::$utils = new Utilities();
 	}
 
 	/**
@@ -89,7 +93,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	 * @group edd_registry
 	 */
 	public function test_get_registry_with_reports_should_retrieve_reports_registry_instance() {
-		new \EDD\Reports\Init();
+		new Reports\Init();
 
 		$result = self::$utils->get_registry( 'reports' );
 
@@ -101,7 +105,7 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 	 * @group edd_registry
 	 */
 	public function test_get_registry_with_reports_endpoints_should_retrieve_endpoints_registry_instance() {
-		new \EDD\Reports\Init();
+		new Reports\Init();
 
 		$result = self::$utils->get_registry( 'reports:endpoints' );
 
@@ -162,5 +166,4 @@ class EDD_Utilities_Tests extends \EDD_UnitTestCase {
 
 		$this->assertSame( $expected, self::$utils->get_time_format() );
 	}
-
 }

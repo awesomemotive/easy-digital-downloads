@@ -43,7 +43,7 @@ function edd_delete_order( $order_id = 0 ) {
 /**
  * Destroy an order.
  *
- * Completely deletes an order, and the items and adjustments withi it.
+ * Completely deletes an order, and the items and adjustments with it.
  *
  * @todo switch to _destroy_ for items & adjustments
  *
@@ -386,18 +386,48 @@ function edd_build_order( $order_data = array() ) {
 	$total_fees     = 0.00;
 	$order_total    = 0.00;
 
-	/** Insert order meta *****************************************************/
+	/** Insert order address *************************************************/
 
 	$order_data['user_info']['address'] = isset( $order_data['user_info']['address'] )
 		? $order_data['user_info']['address']
 		: array();
 
-	// Add user info to order meta.
-	edd_add_order_meta( $order_id, 'user_info', array(
-		'first_name' => $order_data['user_info']['first_name'],
-		'last_name'  => $order_data['user_info']['last_name'],
-		'address'    => $order_data['user_info']['address']
+	$order_data['user_info']['address'] = wp_parse_args( $order_data['user_info']['address'], array(
+		'line1'   => '',
+		'line2'   => '',
+		'city'    => '',
+		'zip'     => '',
+		'country' => '',
+		'state'   => '',
 	) );
+
+	$order_address_data = array(
+		'order_id'    => $order_id,
+		'first_name'  => $order_data['user_info']['first_name'],
+		'last_name'   => $order_data['user_info']['last_name'],
+		'address'     => $order_data['user_info']['address']['line1'],
+		'address2'    => $order_data['user_info']['address']['line2'],
+		'city'        => $order_data['user_info']['address']['city'],
+		'region'      => $order_data['user_info']['address']['state'],
+		'country'     => $order_data['user_info']['address']['country'],
+		'postal_code' => $order_data['user_info']['address']['zip'],
+	);
+
+	// Remove empty data.
+	$order_address_data = array_filter( $order_address_data );
+
+	// Add to edd_order_addresses table.
+	edd_add_order_address( $order_address_data );
+
+	// Maybe add the address to the edd_customer_addresses.
+	$customer_address_data = $order_address_data;
+
+	// We don't need to pass this data to edd_maybe_add_customer_address().
+	unset( $customer_address_data['order_id'] );
+	unset( $customer_address_data['first_name'] );
+	unset( $customer_address_data['last_name'] );
+
+	edd_maybe_add_customer_address( $customer->id, $customer_address_data );
 
 	/** Insert order items ****************************************************/
 
@@ -1126,4 +1156,129 @@ function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order'
 
 	// Return counts
 	return array_merge( $defaults, $o );
+}
+
+/** Order Addresses **********************************************************/
+
+/**
+ * Add an order address.
+ *
+ * @since 3.0
+ *
+ * @param array $data
+ * @return int|false ID of newly created order address, false on error.
+ */
+function edd_add_order_address( $data ) {
+
+	// An order ID must be supplied for every address inserted.
+	if ( empty( $data['order_id'] ) ) {
+		return false;
+	}
+
+	// Instantiate a query object
+	$order_addresses = new EDD\Database\Queries\Order_Address();
+
+	return $order_addresses->add_item( $data );
+}
+
+/**
+ * Delete an order address.
+ *
+ * @since 3.0
+ *
+ * @param int $order_address_id Order address ID.
+ * @return int
+ */
+function edd_delete_order_address( $order_address_id = 0 ) {
+	$order_addresses = new EDD\Database\Queries\Order_Address();
+
+	return $order_addresses->delete_item( $order_address_id );
+}
+
+/**
+ * Update an order address.
+ *
+ * @since 3.0
+ *
+ * @param int   $order_address_id Order address ID.
+ * @param array $data             Updated order address data.
+ * @return bool Whether or not the API request order was updated.
+ */
+function edd_update_order_address( $order_address_id = 0, $data = array() ) {
+	$order_addresses = new EDD\Database\Queries\Order_Address();
+
+	return $order_addresses->update_item( $order_address_id, $data );
+}
+
+/**
+ * Get an order address by ID.
+ *
+ * @since 3.0
+ *
+ * @param int $order_address_id Order adjustment ID.
+ * @return object
+ */
+function edd_get_order_address( $order_address_id = 0 ) {
+	return edd_get_order_address_by( 'id', $order_address_id );
+}
+
+/**
+ * Get an order address by a specific field value.
+ *
+ * @since 3.0
+ *
+ * @param string $field Database table field.
+ * @param string $value Value of the row.
+ *
+ * @return \EDD\Orders\Order_Address|false Object if successful, false otherwise.
+ */
+function edd_get_order_address_by( $field = '', $value = '' ) {
+	$order_addresses = new EDD\Database\Queries\Order_Address();
+
+	// Return order address
+	return $order_addresses->get_item_by( $field, $value );
+}
+
+/**
+ * Query for order addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return \EDD\Orders\Order_Address[]
+ */
+function edd_get_order_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$order_addresses = new EDD\Database\Queries\Order_Address();
+
+	// Return orders
+	return $order_addresses->query( $r );
+}
+
+/**
+ * Count order addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_order_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$order_addresses = new EDD\Database\Queries\Order_Address( $r );
+
+	// Return count(s)
+	return absint( $order_addresses->found_items );
 }

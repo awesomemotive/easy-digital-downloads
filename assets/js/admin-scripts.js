@@ -472,14 +472,20 @@ jQuery(document).ready(function ($) {
 	 */
 	var edd_datepicker = $( 'input.edd_datepicker' );
 	if ( edd_datepicker.length > 0 ) {
-		edd_datepicker.datepicker( {
-			dateFormat: edd_vars.date_picker_format,
-			beforeShow: function() {
-				$( '#ui-datepicker-div' )
-					.removeClass( 'ui-datepicker' )
-					.addClass( 'edd-datepicker' );
-			}
-		});
+		edd_datepicker
+
+			// Disable autocomplete to avoid it covering the calendar
+			.attr( 'autocomplete', 'off' )
+
+			// Invoke the datepickers
+			.datepicker( {
+				dateFormat: edd_vars.date_picker_format,
+				beforeShow: function() {
+					$( '#ui-datepicker-div' )
+						.removeClass( 'ui-datepicker' )
+						.addClass( 'edd-datepicker' );
+				}
+			});
 	}
 
 	/**
@@ -1073,18 +1079,29 @@ jQuery(document).ready(function ($) {
 	var EDD_Reports = {
 
 		init : function() {
+			this.meta_boxes();
 			this.date_options();
 			this.customers_export();
+		},
+
+		meta_boxes : function() {
+			$( '.edd-reports-wrapper .postbox .handlediv' ).remove();
+			$( '.edd-reports-wrapper .postbox' ).removeClass( 'closed' );
+
+			// Use a timeout to ensure this happens after core binding
+			setTimeout( function() {
+				$( '.edd-reports-wrapper .postbox .hndle' ).unbind( 'click.postboxes' );
+			}, 1 );
 		},
 
 		date_options : function() {
 
 			// Show hide extended date options
-			$( '.edd-graphs-date-options' ).on( 'change', function( event ) {
-				var	$this = $( this ),
-					date_range_options = $this.next( '.edd-date-range-options');
+			$( 'select.edd-graphs-date-options' ).on( 'change', function( event ) {
+				var	select             = $( this ),
+					date_range_options = select.parent().siblings( '.edd-date-range-options' );
 
-				if ( 'other' === $this.val() ) {
+				if ( 'other' === select.val() ) {
 					date_range_options.removeClass( 'screen-reader-text' );
 				} else {
 					date_range_options.addClass( 'screen-reader-text' );
@@ -1141,6 +1158,7 @@ jQuery(document).ready(function ($) {
 			this.taxes();
 			this.emails();
 			this.misc();
+			this.reports();
 		},
 
 		general : function() {
@@ -1403,6 +1421,29 @@ jQuery(document).ready(function ($) {
 					symlink.css( 'opacity', '1' );
 				}
 			});
+		},
+
+		reports : function() {
+			$('#edd_reports_filter_countries').on( 'change', function() {
+                var select = $( this ),
+                    data  = {
+                        action: 'edd_get_shop_states',
+                        country: select.val(),
+                        field_name: 'edd_reports_filter_countries',
+                    };
+
+                $.post(ajaxurl, data, function (response) {
+                    $( '#edd_reports_filter_regions' ).find( 'option:gt(0)' ).remove();
+
+                    if ( 'nostates' !== response ) {
+                        $( response ).find( 'option:gt(0)' ).appendTo( '#edd_reports_filter_regions' );
+                    }
+
+                    $( '#edd_reports_filter_regions' ).trigger( 'chosen:updated' );
+                });
+
+                return false;
+			} );
 		}
 	};
 

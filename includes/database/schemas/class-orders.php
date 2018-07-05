@@ -214,7 +214,7 @@ class Orders extends Base {
 			'default'    => '0',
 			'searchable' => true,
 			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount',
+			'validate'   => 'edd_sanitize_amount'
 		)
 	);
 }

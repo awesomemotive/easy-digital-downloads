@@ -22,6 +22,30 @@ if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
  * @since 3.0
  *
  * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
+ *
+ * @property string $prefix
+ * @property string $table_name
+ * @property string $table_alias
+ * @property string $table_schema
+ * @property string $item_name
+ * @property string $item_name_plural
+ * @property string $item_shape
+ * @property string $cache_group
+ * @property string $columns
+ * @property string $query_clauses
+ * @property string $request_clauses
+ * @property \WP_Meta_Query $meta_query
+ * @property \WP_Date_Query $date_query
+ * @property array $query_vars
+ * @property array $query_var_originals
+ * @property array $query_var_defaults
+ * @property array $items
+ * @property int $found_items
+ * @property int $max_num_pages
+ * @property string $request
+ * @property int $last_changed
+ * @property mixed $last_error
+ * @property string $date_query_sql
  */
 class Base extends \EDD\Database\Base {
 
