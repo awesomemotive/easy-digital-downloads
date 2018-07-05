@@ -1686,6 +1686,9 @@ function edd_register_taxes_report( $reports ) {
 			}
 		}
 
+		$country = Reports\get_filter_value( 'countries' );
+		$region  = Reports\get_filter_value( 'regions' );
+
 		$reports->add_report( 'taxes', array(
 			'label'     => __( 'Taxes', 'easy-digital-downloads' ),
 			'priority'  => 25,
@@ -1693,6 +1696,7 @@ function edd_register_taxes_report( $reports ) {
 			'endpoints' => array(
 				'tiles' => array(
 					'total_tax_collected',
+					'total_tax_collected_for_location',
 				),
 			),
 			'filters'   => array( 'products', 'countries', 'regions' ),
@@ -1724,6 +1728,45 @@ function edd_register_taxes_report( $reports ) {
 				),
 			),
 		) );
+
+		if ( ! empty( $country ) ) {
+			$location = '';
+
+			if ( ! empty( $region ) ) {
+				$location = edd_get_state_name( $country, $region ) . ', ';
+			}
+
+			$location .= edd_get_country_name( $country );
+
+			$reports->register_endpoint( 'total_tax_collected_for_location', array(
+				'label' => __( 'Total Tax Collected for ', 'easy-digital-downloads' ) . $location,
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function () use ( $filter, $country, $region ) {
+							$download = Reports\get_filter_value( 'products' );
+							$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
+								? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
+								: array( 'download_id' => '', 'price_id' => '' );
+
+							$stats = new EDD\Orders\Stats();
+
+							return $stats->get_tax_by_location( array(
+								'output'      => 'formatted',
+								'range'       => $filter['range'],
+								'download_id' => $download['download_id'],
+								'price_id'    => (string) $download['price_id'],
+								'country'     => $country,
+								'region'      => $region
+							) );
+						},
+						'display_args'  => array(
+							'context'          => 'secondary',
+							'comparison_label' => $label . $download_label,
+						),
+					),
+				),
+			) );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
