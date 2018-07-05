@@ -53,11 +53,11 @@ $order_adjustments->prepare_items();
 // Order
 $unlimited      = $order->has_unlimited_downloads();
 $transaction_id = $order->get_transaction_id();
+$address        = $order->get_address();
 $user_info      = $payment->user_info;
 $order_date     = strtotime( $order->date_created );
 $customer       = edd_get_customer( $order->customer_id );
 $notes          = edd_get_payment_notes( $order->id );
-$address        = $order->get_address();
 
 // Filter the transaction ID (back-compat)
 if ( ! empty( $transaction_id ) ) {
