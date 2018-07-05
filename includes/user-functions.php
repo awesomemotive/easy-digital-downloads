@@ -19,20 +19,22 @@ defined( 'ABSPATH' ) || exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @since  1.0
+ * @since 1.0
  *
- * @param int $user User ID or email address
- * @param int $number Number of purchases to retrieve
- * @param bool $pagination Page number to retrieve
- * @param string|array $status Either an array of statuses, a single status as a string literal or a comma separated list of statues
+ * @param int|string   $user       User ID or email address.
+ * @param int          $number     Number of purchases to retrieve
+ * @param bool         $pagination Page number to retrieve
+ * @param string|array $status     Either an array of statuses, a single status as a string literal or a comma
+ *                                 separated list of statues. Default 'complete'.
  *
- * @return WP_Post[]|false List of all user purchases
+ * @return WP_Post[]|false List of all user purchases.
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
+	// Bail if no user found.
 	if ( 0 === $user ) {
 		return false;
 	}
@@ -41,10 +43,12 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		if ( strpos( $status, ',' ) ) {
 			$status = explode( ',', $status );
 		} else {
-			$status = $status === 'complete' ? 'publish' : $status;
+			$status = 'complete' === $status
+				? 'publish'
+				: $status;
+
 			$status = array( $status );
 		}
-
 	}
 
 	if ( is_array( $status ) ) {
@@ -52,12 +56,13 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	if ( $pagination ) {
-		if ( get_query_var( 'paged' ) )
-			$paged = get_query_var('paged');
-		else if ( get_query_var( 'page' ) )
+		if ( get_query_var( 'paged' ) ) {
+			$paged = get_query_var( 'paged' );
+		} elseif ( get_query_var( 'page' ) ) {
 			$paged = get_query_var( 'page' );
-		else
+		} else {
 			$paged = 1;
+		}
 	}
 
 	$args = array(
@@ -67,28 +72,27 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	);
 
 	if ( $pagination ) {
-
 		$args['page'] = $paged;
-
 	} else {
-
 		$args['nopaging'] = true;
-
 	}
 
 	$by_user_id = is_numeric( $user ) ? true : false;
-	$customer   = edd_get_customer( $user, $by_user_id );
+	$customer   = $by_user_id
+		? edd_get_customer_by( 'user_id', $user )
+		: edd_get_customer_by( 'email', $user );
 
-	$args['customer'] = $customer->id;
-
-	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
-
-	// No purchases.
-	if ( ! $purchases ) {
+	if ( $customer ) {
+		$args['customer'] = $customer->id;
+	} else {
 		return false;
 	}
 
-	return $purchases;
+	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
+
+	return $purchases
+		? $purchases
+		: false;
 }
 
 /**
@@ -290,30 +294,29 @@ function edd_has_purchases( $user_id = null ) {
 
 
 /**
- * Get Purchase Status for User
+ * Get purchase statistics for user.
  *
- * Retrieves the purchase count and the total amount spent for a specific user
+ * @since 1.6
+ * @since 3.0 Updated to use new query method.
  *
- * @since       1.6
- * @param       int|string $user - the ID or email of the customer to retrieve stats for
- * @param       string $mode - "test" or "live"
- * @return      array
+ * @param int|string $user User ID or email address.
+ *
+ * @return array|false $stats Number of purchases and total amount spent by customer. False otherwise.
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
-
 	if ( is_email( $user ) ) {
 		$field = 'email';
 	} elseif ( is_numeric( $user ) ) {
 		$field = 'user_id';
 	} else {
-		return;
+		return false;
 	}
 
 	$stats    = array();
 	$customer = edd_get_customer_by( $field, $user );
 
 	if ( ! empty( $customer ) ) {
-		$stats['purchases']   = absint( $customer->purchase_count );
+		$stats['purchases']   = edd_count_orders( array( 'customer_id' => $customer->id ) );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 	}
 
@@ -322,22 +325,25 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 
 /**
- * Count number of purchases of a customer
+ * Count number of purchases of a customer.
  *
- * Returns total number of purchases a customer has made
+ * @since 1.3
  *
- * @since       1.3
- * @param       mixed $user - ID or email
- * @return      int - the total number of purchases
+ * @param string|int $user User ID or email.
+ * @return int Number of purchases.
  */
 function edd_count_purchases_of_customer( $user = null ) {
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
-	$stats = ! empty( $user ) ? edd_get_purchase_stats_by_user( $user ) : false;
+	$stats = ! empty( $user )
+		? edd_get_purchase_stats_by_user( $user )
+		: false;
 
-	return isset( $stats['purchases'] ) ? $stats['purchases'] : 0;
+	return isset( $stats['purchases'] )
+		? $stats['purchases']
+		: 0;
 }
 
 /**
