@@ -1134,9 +1134,10 @@ function display_gateways_filter() {
  * @since 3.0
  */
 function display_region_filter() {
-	$region = get_filter_value( 'regions' );
+	$region  = get_filter_value( 'regions' );
+	$country = get_filter_value( 'countries' );
 
-	$regions = edd_get_states_list();
+	$regions = edd_get_shop_states( $country );
 
 	// Remove empty values.
 	$regions = array_filter( $regions );
