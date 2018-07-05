@@ -92,6 +92,9 @@ jQuery(document).ready(function ($) {
 			// Set the `aria-selected` attribute to true for this section nav item.
 			them.parent().attr( 'aria-selected', 'true' );
 
+			// Maybe re-Chosen
+			rents.find( 'div.chosen-container' ).css( 'width', '100%' );
+
 			// Copy the current section item title to the box header.
 			$( '.which-section' ).text( them.text() );
 		}
@@ -685,12 +688,15 @@ jQuery(document).ready(function ($) {
 
 				$.post(ajaxurl, data, function (response) {
 					var state_wrapper = $( '#edd-order-address-state-wrap select, #edd-order-address-state-wrap input' );
+
 					// Remove any chosen containers here too
 					$( '#edd-order-address-state-wrap .chosen-container' ).remove();
+
 					if ( 'nostates' === response ) {
 						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][state]" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
 						state_wrapper.replaceWith( response );
+						$( '#edd-order-address-state-wrap select' ).chosen( chosen_vars );
 					}
 				});
 
