@@ -202,7 +202,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Tax rate 'Apply to whole country' label could not be clicked when no tax rates have ever existed.
 * Fix: The Shop Accountant role was not able to manage the tax exclusion at a product level.
 * Fix: In some cases, PayPal IPN and PDT would cause double payment processing.
-* Tweak: Easy Digital Download sessions can now be started when in the wp-admin path.
+* Tweak: Easy Digital Downloads sessions can now be started when in the wp-admin path.
 * New: When taxes are being recalculated at checkout, an AJAX indicator is now shown below the purchase button.
 * Dev: Filters were added to the AJAX responses for adding and removing items from the cart.
 
