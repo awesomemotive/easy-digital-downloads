@@ -1442,8 +1442,6 @@ jQuery(document).ready(function ($) {
                     	var regions = $(response).find('option:gt(0)');
                         $('#edd_reports_filter_regions').find( 'option:gt(0)' ).remove().append( regions );
                         $('#edd_reports_filter_regions').trigger('chosen:updated');
-                    //     select.parent().next().find('input[type="text"],select').show();
-                    //     select.parent().next().find('input[type="text"],select').replaceWith( response );
                     }
                 });
 
