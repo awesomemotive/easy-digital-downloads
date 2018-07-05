@@ -625,6 +625,34 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['advanced_query'] = $this->args['advanced_query'];
 		}
 
+		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
+			if ( isset( $arguments['status'][0] ) && 'any' === $arguments['status'][0] ) {
+				unset( $arguments['status'] );
+			}
+		}
+
+		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
+			foreach ( $this->args['meta_query'] as $meta_key => $meta_value ) {
+				switch ( $meta_key ) {
+					case '_edd_payment_customer_id':
+						$arguments['customer_id'] = absint( $meta_value );
+						break;
+
+					case '_edd_payment_user_id':
+						$arguments['user_id'] = absint( $meta_value );
+						break;
+
+					case '_edd_payment_user_email':
+						$arguments['email'] = sanitize_email( $meta_value );
+						break;
+
+					case '_edd_payment_gateway':
+						$arguments['gateway'] = sanitize_text_field( $meta_value );
+						break;
+				}
+			}
+		}
+
 		$this->args = $arguments;
 	}
 }

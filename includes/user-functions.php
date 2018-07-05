@@ -66,7 +66,6 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	$args = array(
-		'user'    => $user,
 		'number'  => $number,
 		'status'  => $status,
 		'orderby' => 'date'
@@ -83,11 +82,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		? edd_get_customer_by( 'user_id', $user )
 		: edd_get_customer_by( 'email', $user );
 
-	$payment_ids = $customer->payment_ids;
-
-	if ( ! empty( $payment_ids ) ) {
-		unset( $args['user'] );
-		$args['post__in'] = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+	if ( $customer ) {
+		$args['customer'] = $customer->id;
+	} else {
+		return false;
 	}
 
 	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
@@ -259,30 +257,29 @@ function edd_has_purchases( $user_id = null ) {
 
 
 /**
- * Get Purchase Status for User
+ * Get purchase statistics for user.
  *
- * Retrieves the purchase count and the total amount spent for a specific user
+ * @since 1.6
+ * @since 3.0 Updated to use new query method.
  *
- * @since       1.6
- * @param       int|string $user - the ID or email of the customer to retrieve stats for
- * @param       string $mode - "test" or "live"
- * @return      array
+ * @param int|string $user User ID or email address.
+ *
+ * @return array|false $stats Number of purchases and total amount spent by customer. False otherwise.
  */
 function edd_get_purchase_stats_by_user( $user = '' ) {
-
 	if ( is_email( $user ) ) {
 		$field = 'email';
 	} elseif ( is_numeric( $user ) ) {
 		$field = 'user_id';
 	} else {
-		return;
+		return false;
 	}
 
 	$stats    = array();
 	$customer = edd_get_customer_by( $field, $user );
 
 	if ( ! empty( $customer ) ) {
-		$stats['purchases']   = absint( $customer->purchase_count );
+		$stats['purchases']   = edd_count_orders( array( 'customer_id' => $customer->id ) );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 	}
 
@@ -291,22 +288,25 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 
 
 /**
- * Count number of purchases of a customer
+ * Count number of purchases of a customer.
  *
- * Returns total number of purchases a customer has made
+ * @since 1.3
  *
- * @since       1.3
- * @param       mixed $user - ID or email
- * @return      int - the total number of purchases
+ * @param string|int $user User ID or email.
+ * @return int Number of purchases.
  */
 function edd_count_purchases_of_customer( $user = null ) {
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
 
-	$stats = ! empty( $user ) ? edd_get_purchase_stats_by_user( $user ) : false;
+	$stats = ! empty( $user )
+		? edd_get_purchase_stats_by_user( $user )
+		: false;
 
-	return isset( $stats['purchases'] ) ? $stats['purchases'] : 0;
+	return isset( $stats['purchases'] )
+		? $stats['purchases']
+		: 0;
 }
 
 /**
