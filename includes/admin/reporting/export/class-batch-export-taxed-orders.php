@@ -108,7 +108,7 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 		}
 
 
-		if ( 'any' === $args['status'] ) {
+		if ( 'any' === $args['status'] || 'all' === $args['status'] ) {
 			unset( $args['status'] );
 		}
 
@@ -122,8 +122,7 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 			/** @var EDD\Orders\Order $order */
 
 			$items        = $order->get_items();
-			$user_info    = $order->get_user_info();
-			$address      = $order->get_customer_address();
+			$address      = $order->get_address();
 			$total        = $order->total;
 			$user_id      = $order->user_id;
 			$products     = '';
@@ -198,14 +197,14 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 				'seq_id'       => $order->get_number(),
 				'email'        => $order->email,
 				'customer_id'  => $order->customer_id,
-				'first'        => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
-				'last'         => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
-				'address1'     => isset( $address['line1'] ) ? $address['line1'] : '',
-				'address2'     => isset( $address['line2'] ) ? $address['line2'] : '',
-				'city'         => isset( $address['city'] ) ? $address['city'] : '',
-				'state'        => isset( $address['state'] ) ? $address['state'] : '',
-				'country'      => isset( $address['country'] ) ? $address['country'] : '',
-				'zip'          => isset( $address['zip'] ) ? $address['zip'] : '',
+				'first'        => $address->first_name,
+				'last'         => $address->last_name,
+				'address1'     => $address->address,
+				'address2'     => $address->address2,
+				'city'         => $address->city,
+				'state'        => $address->region,
+				'country'      => $address->country,
+				'zip'          => $address->postal_code,
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
@@ -281,9 +280,11 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	 * @param array $request The form data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
-		$this->start  = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end    = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
-		$this->status = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
+		$this->start   = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
+		$this->end     = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
+		$this->status  = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
+		$this->country = isset( $request['country'] ) ? sanitize_text_field( $request['country'] ) : '';
+		$this->region  = isset( $request['region'] ) ? sanitize_text_field( $request['region'] ) : '';
 	}
 
 	/**
@@ -297,9 +298,20 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	 * @return array
 	 */
 	public function query_clauses( $clauses, $base ) {
+		global $wpdb;
+
 		$clauses['where'] = ! empty( $clauses['where'] )
-			? $clauses['where'] .= ' AND tax > 0'
-			: 'tax > 0';
+			? $clauses['where'] .= ' AND edd_o.tax > 0'
+			: 'edd_o.tax > 0';
+
+		if ( ! empty( $this->country ) ) {
+			$clauses['join'] = " INNER JOIN {$wpdb->edd_order_addresses} edd_oa ON edd_o.id = edd_oa.order_id";
+			$clauses['where'] .= $wpdb->prepare( ' AND edd_oa.country = %s', $this->country );
+		}
+
+		if ( ! empty( $this->region ) ) {
+			$clauses['where'] .= $wpdb->prepare( ' AND edd_oa.region = %s', $this->region );
+		}
 
 		return $clauses;
 	}

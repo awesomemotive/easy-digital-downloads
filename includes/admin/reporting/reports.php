@@ -2721,13 +2721,13 @@ function display_export_report() {
                             <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
 								<?php
 								echo EDD()->html->date_field( array(
-									'id'          => 'edd-taxed-orders-export-start',
+									'id'          => 'edd-orders-export-start',
 									'name'        => 'start',
 									'placeholder' => __( 'From', 'easy-digital-downloads' ),
 								) );
 
 								echo EDD()->html->date_field( array(
-									'id'          => 'edd-taxed-orders-export-end',
+									'id'          => 'edd-orders-export-end',
 									'name'        => 'end',
 									'placeholder' => __( 'To', 'easy-digital-downloads' ),
 								) );
@@ -2763,7 +2763,7 @@ function display_export_report() {
 		                        echo EDD()->html->date_field( array( 'id' => 'edd-taxed-orders-export-end','name' => 'end', 'placeholder' => __( 'To', 'easy-digital-downloads' ) ));
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-orders-export-status',
+									'id'              => 'edd-taxed-orders-export-status',
 									'name'            => 'status',
 									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
 									'selected'        => false,
