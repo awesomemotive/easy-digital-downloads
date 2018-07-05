@@ -68,7 +68,7 @@ class Customer extends Base {
 				return edd_get_customers( $arguments[0] );
 
 			case 'count':
-				return edd_count_customers( $arguments[0] );
+				return edd_count_customers();
 
 			case 'get_column':
 				return edd_get_customer_by( $arguments[0], $arguments[1] );

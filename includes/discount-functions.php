@@ -632,11 +632,11 @@ function edd_get_discount_product_condition( $discount_id = 0 ) {
  *
  * @since 2.9
  *
- * @param int $code_id Discount ID.
+ * @param int $discount_id Discount ID.
  * @return string Product condition.
  */
-function edd_get_discount_status_label( $code_id = null ) {
-	$discount = new EDD_Discount( $code_id );
+function edd_get_discount_status_label( $discount_id = null ) {
+	$discount = edd_get_discount( $discount_id );
 
 	return $discount->get_status_label();
 }
@@ -1354,7 +1354,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 
 	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
 	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
-	$discount        = new EDD_Discount( $object_id );
+	$discount        = edd_get_discount( $object_id );
 
 	if ( empty( $discount->id ) ) {
 
@@ -1363,7 +1363,7 @@ function _edd_discount_post_meta_bc_filter( $value, $object_id, $meta_key, $sing
 		$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_adjustmentmeta WHERE meta_key = 'legacy_id' AND meta_value = $object_id" );
 
 		if ( ! empty( $object_id ) ) {
-			$discount = new EDD_Discount( $object_id );
+			$discount = edd_get_discount( $object_id );
 		} else {
 			return $value;
 		}
@@ -1445,7 +1445,7 @@ add_filter( 'get_post_metadata', '_edd_discount_post_meta_bc_filter', 99, 4 );
  *
  * @since 3.0
  *
- * @param mixed   $check     Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table
+ * @param mixed  $check      Comes in 'null' but if returned not null, WordPress Core will not interact with the postmeta table
  * @param int    $object_id  The object ID post meta was requested for.
  * @param string $meta_key   The meta key requested.
  * @param mixed  $meta_value The value get_post_meta would return if we don't filter.
@@ -1478,23 +1478,24 @@ function _edd_discount_update_meta_backcompat( $check, $object_id, $meta_key, $m
 	$edd_is_checkout = function_exists( 'edd_is_checkout' ) ? edd_is_checkout() : false;
 	$show_notice     = apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! $edd_is_checkout ) && ! defined( 'EDD_DOING_TESTS' ) );
 
-	$discount = new EDD_Discount( $object_id );
+	$discount = edd_get_discount( $object_id );
 
 	if ( empty( $discount->id ) ) {
 
 		// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
-		$table_name = edd_get_component_interface( 'discount', 'meta' )->table_name;
+		$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
 
-		$object_id = $wpdb->get_var( $wpdb->prepare(
-			"
-				SELECT edd_discount_id
-				FROM $table_name
-				WHERE meta_key = %s AND meta_value = %d
-			", 'legacy_id', $object_id
+		$object_id = $wpdb->get_var( $wpdb->prepare( "
+			SELECT edd_adjustment_id
+				FROM {$table_name}
+				WHERE meta_key = %s
+					AND meta_value = %d",
+			'legacy_id',
+			$object_id
 		) );
 
 		if ( ! empty( $object_id ) ) {
-			$discount = new EDD_Discount( $object_id );
+			$discount = edd_get_discount( $object_id );
 		} else {
 			return $check;
 		}
@@ -1593,7 +1594,7 @@ function _edd_discount_get_post_doing_it_wrong( $query ) {
 	$message = sprintf(
 		__( 'As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information.', 'easy-digital-downloads' ),
 		'<code>' . $wpdb->posts . '</code>',
-		'<code>' . edd_get_component_interface( 'discount', 'table' )->table_name . '</code>',
+		'<code>' . edd_get_component_interface( 'adjustment', 'table' )->table_name . '</code>',
 		'<code>edd_get_discounts()</code>',
 		'<code>edd_get_discount()</code>',
 		'<code>EDD_Discount</code>',
@@ -1701,7 +1702,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 			$args['number'] = absint( $args['number'] );
 		}
 
-		$table_name = edd_get_component_interface( 'discount', 'table' )->table_name;
+		$table_name = edd_get_component_interface( 'adjustment', 'table' )->table_name;
 
 		$meta_query = $query->get( 'meta_query' );
 
@@ -1710,6 +1711,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 
 		$meta_key   = $query->get( 'meta_key',   false );
 		$meta_value = $query->get( 'meta_value', false );
+		$columns    = wp_list_pluck( edd_get_component_interface( 'adjustment', 'schema' )->columns, 'name' );
 
 		// 'meta_key' and 'meta_value' passed as arguments
 		if ( $meta_key && $meta_value ) {
@@ -1718,7 +1720,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 			 * Note: there is no backwards compatibility support for product requirements and excluded
 			 * products as these would be serialized under the old schema.
 			 */
-			if ( in_array( $meta_key, array_keys( EDD()->discounts->get_columns() ) ) ) {
+			if ( in_array( $meta_key, $columns, true ) ) {
 				$sql_where .= ' ' . $wpdb->prepare( $meta_key . ' = %s', $meta_value );
 			}
 		}
@@ -1740,7 +1742,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 						 * Note: there is no backwards compatibility support for product requirements and excluded
 						 * products as these would be serialized under the old schema.
 						 */
-				 		if ( in_array( $query['key'], array_keys( EDD()->discounts->get_columns() ) ) && array_key_exists( 'value', $query ) ) {
+				 		if ( in_array( $query['key'], $columns, true ) && array_key_exists( 'value', $query ) ) {
 							$meta_compare = $query['compare'];
 							$meta_compare = strtoupper( $meta_compare );
 
@@ -1795,7 +1797,7 @@ function _edd_discounts_bc_posts_request( $request, $query ) {
 			}
 		}
 
-		$request = "SELECT id FROM {$table_name} $sql_where ORDER BY {$args['orderby']} {$args['order']} LIMIT {$args['offset']}, {$args['number']};";
+		$request = "SELECT id FROM {$table_name} {$sql_where} ORDER BY {$args['orderby']} {$args['order']} LIMIT {$args['offset']}, {$args['number']};";
 	}
 
 	return $request;
