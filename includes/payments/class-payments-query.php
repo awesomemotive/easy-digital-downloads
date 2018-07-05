@@ -625,6 +625,12 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['advanced_query'] = $this->args['advanced_query'];
 		}
 
+		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
+			if ( isset( $arguments['status'][0] ) && 'any' === $arguments['status'][0] ) {
+				unset( $arguments['status'] );
+			}
+		}
+
 		$this->args = $arguments;
 	}
 }
