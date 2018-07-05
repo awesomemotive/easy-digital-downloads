@@ -1158,6 +1158,7 @@ jQuery(document).ready(function ($) {
 			this.taxes();
 			this.emails();
 			this.misc();
+			this.reports();
 		},
 
 		general : function() {
@@ -1420,6 +1421,34 @@ jQuery(document).ready(function ($) {
 					symlink.css( 'opacity', '1' );
 				}
 			});
+		},
+
+		reports : function() {
+			$('#edd_reports_filter_countries').on( 'change', function() {
+                var select = $( this ),
+                    data  = {
+                        action: 'edd_get_shop_states',
+                        country: select.val(),
+                        field_name: 'edd_reports_filter_countries',
+                    };
+
+                $.post(ajaxurl, data, function (response) {
+                	console.log(response);
+
+                    if ( 'nostates' === response ) {
+                        $('#edd_reports_filter_regions').find( 'option:gt(0)' ).remove();
+                        $('#edd_reports_filter_regions').trigger('chosen:updated');
+                    } else {
+                    	var regions = $(response).find('option:gt(0)');
+                        $('#edd_reports_filter_regions').find( 'option:gt(0)' ).remove().append( regions );
+                        $('#edd_reports_filter_regions').trigger('chosen:updated');
+                    //     select.parent().next().find('input[type="text"],select').show();
+                    //     select.parent().next().find('input[type="text"],select').replaceWith( response );
+                    }
+                });
+
+                return false;
+			} );
 		}
 	};
 
