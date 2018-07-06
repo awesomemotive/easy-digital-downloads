@@ -512,19 +512,21 @@ function edd_get_customer_address( $user_id = 0 ) {
 
 	$customer = edd_get_customer_by( 'user_id', $user_id );
 
-	$address = $customer->get_address();
-
 	$parsed_address = array();
 
-	if ( $address instanceof EDD\Customers\Customer_Address ) {
-		$parsed_address = array(
-			'line1'   => $address->address,
-			'line2'   => $address->address2,
-			'city'    => $address->city,
-			'zip'     => $address->postal_code,
-			'country' => $address->country,
-			'state'   => $address->region,
-		);
+	if ( $customer ) {
+		$address = $customer->get_address();
+
+		if ( $address instanceof EDD\Customers\Customer_Address ) {
+			$parsed_address = array(
+				'line1'   => $address->address,
+				'line2'   => $address->address2,
+				'city'    => $address->city,
+				'zip'     => $address->postal_code,
+				'country' => $address->country,
+				'state'   => $address->region,
+			);
+		}
 	}
 
 	$address = wp_parse_args( $parsed_address, array(
