@@ -1077,16 +1077,46 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element .edd-select-chosen {
 	width: 196px;
 }
-.edd-edit-purchase-element ul,
-#edd-order-address-country-wrap select,
-#edd-customer-details .order-data-address input,
-#edd-customer-details .order-data-column p.data input {
+.edd-edit-purchase-element ul {
 	clear: both;
 	display: block;
 }
 #edd-customer-details .actions {
 	float: right;
 }
+
+.order-data-address h3 {
+	margin: 0 0 10px 0;
+}
+
+.order-data-address .input-wrap {
+	display: block;
+	clear: both;
+	padding: 3px 0;
+}
+.order-data-address .input-wrap label {
+	width: 150px;
+	text-align: right;
+	margin-right: 5px;
+}
+.order-data-address .input-wrap label,
+.order-data-address .input-wrap > input {
+	display: inline-block;
+}
+
+.order-data-address .input-wrap input {
+	width: 50%;
+	height: 29px;
+	max-width: 300px;
+}
+
+.order-data-address #edd-order-address-state-wrap,
+.order-data-address #edd-order-address-country-wrap {
+	display: inline-block;
+	width: 50%;
+	max-width: 300px;
+}
+
 .edd-order-data input.small-text {
 	margin: 0;
 }
@@ -2974,4 +3004,5 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 .section-content {
 	border-left: 1px solid #e5e5e5;
+	min-height: 155px;
 }
