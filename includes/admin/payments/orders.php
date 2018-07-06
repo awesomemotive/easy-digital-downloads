@@ -204,32 +204,31 @@ function edd_order_details_addresses( $order ) {
 		<?php do_action( 'edd_view_order_details_billing_before', $order->id ); ?>
 
 		<div class="order-data-address">
-			<div>
-				<p>
-					<strong class="order-data-address-line"><?php _e( 'Billing Address Line 1:', 'easy-digital-downloads' ); ?></strong><br/>
-					<input type="text" name="edd-payment-address[0][address]" value="<?php echo esc_attr( $address->address ); ?>" class="large-text" />
-				</p>
-				<p>
-					<strong class="order-data-address-line"><?php _e( 'Billing Address Line 2:', 'easy-digital-downloads' ); ?></strong><br/>
-					<input type="text" name="edd-payment-address[0][address2]" value="<?php echo esc_attr( $address->address2 ); ?>" class="large-text" />
-				</p>
+			<h3><?php _e( 'Billing Address', 'easy-digital-downloads' ); ?></h3>
+
+			<div class="input-wrap">
+				<label><?php _e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd-payment-address[0][address]" value="<?php echo esc_attr( $address->address ); ?>" />
 			</div>
 
-			<div>
-				<p>
-					<strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></strong><br/>
-					<input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address->city ); ?>" class="large-text" />
-				</p>
-
-				<p>
-					<strong class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></strong><br/>
-					<input type="text" name="edd-payment-address[0][postal_code]" value="<?php echo esc_attr( $address->postal_code ); ?>" class="large-text" />
-				</p>
+			<div class="input-wrap">
+				<label><?php _e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd-payment-address[0][address2]" value="<?php echo esc_attr( $address->address2 ); ?>" />
 			</div>
 
-			<div>
-				<p id="edd-order-address-country-wrap">
-					<strong class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></strong><br/>
+			<div class="input-wrap">
+				<label><?php echo _x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd-payment-address[0][city]" value="<?php echo esc_attr( $address->city ); ?>" />
+			</div>
+
+			<div class="input-wrap">
+				<label><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd-payment-address[0][postal_code]" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
+			</div>
+
+			<div class="input-wrap">
+				<label><?php echo _x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
+				<div id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select( array(
 						'options'          => edd_get_country_list(),
@@ -246,10 +245,12 @@ function edd_order_details_addresses( $order ) {
 						),
 					) );
 					?>
-				</p>
+				</div>
+			</div>
 
-				<p id="edd-order-address-state-wrap">
-					<strong class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'easy-digital-downloads' ); ?></strong><br/>
+			<div class="input-wrap">
+				<label><?php echo _x( 'State / Province:', 'State / province of address', 'easy-digital-downloads' ); ?></label>
+				<div id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
 					if ( ! empty( $states ) ) {
@@ -268,13 +269,13 @@ function edd_order_details_addresses( $order ) {
 							),
 						) );
 					} else { ?>
-						<input type="text" name="edd-payment-address[0][region]" value="<?php echo esc_attr( $address->region ); ?>" class="large-text" />
+						<input type="text" name="edd-payment-address[0][region]" value="<?php echo esc_attr( $address->region ); ?>" />
 						<?php
 					} ?>
-				</p>
-
-				<input type="hidden" name="edd-payment-address[0][address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
+				</div>
 			</div>
+
+			<input type="hidden" name="edd-payment-address[0][address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
 		</div>
 
 		<?php do_action( 'edd_view_order_details_billing_after', $order->id ); ?>
