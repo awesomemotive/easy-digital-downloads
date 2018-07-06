@@ -88,6 +88,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 	}
 
+	if ( 'any' === $status ) {
+		unset( $args['status'] );
+	}
+
 	$purchases = edd_get_payments( apply_filters( 'edd_get_users_purchases_args', $args ) );
 
 	return $purchases

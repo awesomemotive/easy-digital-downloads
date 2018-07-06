@@ -555,10 +555,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			unset( $arguments['number'] );
 		}
 
-		if ( isset( $this->args['post_status'] ) ) {
-			$arguments['status'] = $this->args['post_status'];
-		}
-
 		switch ( $this->args['orderby'] ) {
 			case 'amount':
 				$arguments['orderby'] = 'total';
@@ -643,10 +639,20 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['advanced_query'] = $this->args['advanced_query'];
 		}
 
+		// Re-map post_status to status.
+		if ( isset( $this->args['post_status'] ) ) {
+			$arguments['status'] = $this->args['post_status'];
+		}
+
+		// If the status includes `any`, we don't need to pass anything to the query class.
 		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
 			if ( isset( $arguments['status'][0] ) && 'any' === $arguments['status'][0] ) {
 				unset( $arguments['status'] );
 			}
+		}
+
+		if ( isset( $arguments['status'] ) && ! is_array( $arguments['status'] ) && 'any' === $arguments['status'] ) {
+			unset( $arguments['status'] );
 		}
 
 		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
