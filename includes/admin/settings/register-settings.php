@@ -2545,7 +2545,6 @@ function edd_tax_rates_callback( $args ) {
 						} else {
 							echo EDD()->html->text( array(
 								'name'  => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								$rate['state'],
 								'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
 							) );
 						}
