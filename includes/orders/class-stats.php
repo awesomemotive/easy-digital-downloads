@@ -584,16 +584,30 @@ class Stats {
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
+		$region = ! empty( $this->query_vars['region'] )
+			? $this->get_db()->prepare( 'AND edd_oa.region = %s', esc_sql( $this->query_vars['region'] ) )
+			: '';
+
+		$country = ! empty( $this->query_vars['country'] )
+			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
+			: '';
+
+		$join = ! empty( $country ) || ! empty( $region )
+			? "INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id"
+			: '';
+
 		if ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					{$join}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					{$join}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -662,8 +676,8 @@ class Stats {
 		$accepted_functions = array( 'COUNT', 'AVG' );
 
 		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
+			: "COUNT({$this->query_vars['table']}.id)";
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -673,25 +687,40 @@ class Stats {
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
+		$region = ! empty( $this->query_vars['region'] )
+			? $this->get_db()->prepare( 'AND edd_oa.region = %s', esc_sql( $this->query_vars['region'] ) )
+			: '';
+
+		$country = ! empty( $this->query_vars['country'] )
+			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
+			: '';
+
+		$join = ! empty( $country ) || ! empty( $region )
+			? "INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id"
+			: '';
+
 		// Calculating an average requires a subquery.
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
 					FROM (
 						SELECT COUNT(id) AS id
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						{$join}
+						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					{$join}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					{$join}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1515,63 +1544,6 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		/** Parse country ****************************************************/
-
-		$country_list = array_filter( edd_get_country_list() );
-
-		$country = isset( $this->query_vars['country'] )
-			? sanitize_text_field( $this->query_vars['country'] )
-			: edd_get_shop_country();
-
-		// Maybe convert country code to country name.
-		$country = in_array( $country, array_flip( $country_list ), true )
-			? $country_list[ $country ]
-			: $country;
-
-		// Ensure a valid county has been passed.
-		$country = in_array( $country, $country_list, true )
-			? $country
-			: null;
-
-		// Bail early if country does not exist.
-		if ( is_null( $country ) ) {
-			return 0.00;
-		}
-
-		// Convert back to country code for SQL query.
-		$country_list = array_flip( $country_list );
-		$country      = $country_list[ $country ];
-
-		/** Parse state ******************************************************/
-
-		$state = isset( $this->query_vars['region'] )
-			? sanitize_text_field( $this->query_vars['region'] )
-			: edd_get_shop_state();
-
-		// Only parse state if one was passed.
-		if ( $state ) {
-			$state_list = array_filter( edd_get_shop_states( $country ) );
-
-			// Maybe convert state code to state name.
-			$state = in_array( $state, array_flip( $state_list ), true )
-				? $state_list[ $state ]
-				: $state;
-
-			// Ensure a valid state has been passed.
-			$state = in_array( $state, $state_list, true )
-				? $state
-				: null;
-
-			// Bail if state does not exist.
-			if ( null === $state ) {
-				return 0.00;
-			}
-
-			// Convert back to state code for SQL query.
-			$state_codes = array_flip( $state_list );
-			$state       = $state_codes[ $state ];
-		}
-
 		// Only `COUNT` and `AVG` are accepted by this method.
 		$accepted_functions = array( 'SUM', 'AVG' );
 
@@ -1579,12 +1551,12 @@ class Stats {
 			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
 			: "SUM({$this->query_vars['table']}.{$this->query_vars['column']})";
 
-		$region = ! empty( $state )
-			? $this->get_db()->prepare( 'AND oa.region = %s', esc_sql( $state ) )
+		$region = ! empty( $this->query_vars['region'] )
+			? $this->get_db()->prepare( 'AND oa.region = %s', esc_sql( $this->query_vars['region'] ) )
 			: '';
 
-		$country = ! empty( $country )
-			? $this->get_db()->prepare( 'AND oa.country = %s', esc_sql( $country ) )
+		$country = ! empty( $this->query_vars['country'] )
+			? $this->get_db()->prepare( 'AND oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
 		$product_id = ! empty( $this->query_vars['download_id'] )
@@ -2289,6 +2261,8 @@ class Stats {
 			'grouped'           => false,
 			'product_id'        => '',
 			'price_id'          => '',
+			'country'           => '',
+			'region'            => '',
 		);
 
 		if ( empty( $this->query_vars ) ) {
@@ -2326,6 +2300,57 @@ class Stats {
 
 		if ( ! empty( $this->query_vars['column'] ) ) {
 			$this->query_vars['column'] = strtolower( $this->query_vars['column'] );
+		}
+
+		/** Parse country ****************************************************/
+
+		$country_list = array_filter( edd_get_country_list() );
+
+		$country = isset( $this->query_vars['country'] )
+			? sanitize_text_field( $this->query_vars['country'] )
+			: edd_get_shop_country();
+
+		// Maybe convert country code to country name.
+		$country = in_array( $country, array_flip( $country_list ), true )
+			? $country_list[ $country ]
+			: $country;
+
+		// Ensure a valid county has been passed.
+		$country = in_array( $country, $country_list, true )
+			? $country
+			: null;
+
+		// Convert back to country code for SQL query.
+		$country_list                = array_flip( $country_list );
+		$this->query_vars['country'] = is_null( $country )
+			? ''
+			: $country_list[ $country ];
+
+		/** Parse state ******************************************************/
+
+		$state = isset( $this->query_vars['region'] )
+			? sanitize_text_field( $this->query_vars['region'] )
+			: edd_get_shop_state();
+
+		// Only parse state if one was passed.
+		if ( $state ) {
+			$state_list = array_filter( edd_get_shop_states( $this->query_vars['country'] ) );
+
+			// Maybe convert state code to state name.
+			$state = in_array( $state, array_flip( $state_list ), true )
+				? $state_list[ $state ]
+				: $state;
+
+			// Ensure a valid state has been passed.
+			$state = in_array( $state, $state_list, true )
+				? $state
+				: null;
+
+			// Convert back to state code for SQL query.
+			$state_codes                = array_flip( $state_list );
+			$this->query_vars['region'] = is_null( $state )
+				? ''
+				: $state_codes[ $state ];
 		}
 
 		/**
