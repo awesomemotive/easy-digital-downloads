@@ -1974,13 +1974,14 @@ function edd_register_file_downloads_report( $reports ) {
 					         WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id}
                              GROUP BY {$sql_clauses['groupby']}
                              ORDER BY {$sql_clauses['orderby']} ASC",
-							$start, $end ) );
+							$dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
 
 						$file_downloads = array();
 
-						while ( strtotime( $start ) <= strtotime( $end ) ) {
+						// Initialise all arrays with timestamps and set values to 0.
+						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
 							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0 )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 
 								$file_downloads[ $timestamp ][] = $timestamp;
 								$file_downloads[ $timestamp ][] = 0;
