@@ -579,6 +579,9 @@ function edd_register_downloads_report( $reports ) {
 
 		$download_label = '';
 
+		$country = Reports\get_filter_value( 'countries' );
+		$region  = Reports\get_filter_value( 'regions' );
+
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
 
@@ -611,7 +614,7 @@ function edd_register_downloads_report( $reports ) {
 					'earnings_by_taxonomy',
 				),
 			),
-            'filters'   => array( 'products' )
+            'filters'   => array( 'products', 'countries', 'regions' )
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -672,25 +675,40 @@ function edd_register_downloads_report( $reports ) {
 		) );
 
 		if ( ! empty( $download_label ) ) {
+			$endpoint_label = __( 'Sales / Earnings', 'easy-digital-downloads' );
+
+			$location = '';
+
+			if ( ! empty( $region ) || ! empty( $country ) ) {
+				$location .= ' ' . __( 'for', 'easy-digital-downloads' ) . ' ';
+			}
+
+			if ( ! empty( $region ) ) {
+				$location .= edd_get_state_name( $country, $region ) . ', ';
+			}
+
+			if ( ! empty( $country ) ) {
+				$location .= edd_get_country_name( $country );
+			}
+
+			$endpoint_label .= $location;
+
 		    $reports->register_endpoint( 'download_sales_earnings', array(
-			    'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
+			    'label' => $endpoint_label,
 			    'views' => array(
 				    'tile' => array(
-					    'data_callback' => function () use ( $filter, $download_data ) {
-						    $stats = new EDD\Orders\Stats();
-
-						    $earnings = $stats->get_order_item_earnings( array(
+					    'data_callback' => function () use ( $filter, $download_data, $country, $region ) {
+						    $stats = new EDD\Orders\Stats( array(
 							    'product_id' => absint( $download_data['download_id'] ),
 							    'price_id'   => absint( $download_data['price_id'] ),
 							    'range'      => $filter['range'],
 							    'output'     => 'formatted',
+							    'country'    => $country,
+							    'region'     => $region
 						    ) );
 
-						    $sales = $stats->get_order_item_count( array(
-							    'product_id' => absint( $download_data['download_id'] ),
-							    'price_id'   => absint( $download_data['price_id'] ),
-							    'range'      => $filter['range'],
-						    ) );
+						    $earnings = $stats->get_order_item_earnings();
+						    $sales    = $stats->get_order_item_count();
 
 						    return apply_filters( 'edd_reports_downloads_sales_earnings', esc_html( $sales . ' / ' . $earnings ) );
 					    },
