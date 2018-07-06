@@ -463,7 +463,7 @@ function edd_ajax_get_states_field() {
 			'class'   => $_POST['field_name'] . '  edd-select',
 			'options' => $states,
 			'chosen'           => true,
-			'placeholder'      => __( 'Select a country', 'easy-digital-downloads' ),
+			'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
