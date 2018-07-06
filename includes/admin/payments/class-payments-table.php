@@ -194,10 +194,36 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				<?php endif; ?>
 
+				<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
+					<span>
+						<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
+						<?php
+						$options = array(
+							'=' => __( 'equal to',     'easy-digital-downloads' ),
+							'>' => __( 'greater than', 'easy-digital-downloads' ),
+							'<' => __( 'less than',    'easy-digital-downloads' ),
+						);
+
+						echo EDD()->html->select( array(
+							'id'               => 'order-amount-filter-type',
+							'name'             => 'order-amount-filter-type',
+							'options'          => $options,
+							'selected'         => $order_total_filter_type,
+							'show_option_all'  => false,
+							'show_option_none' => false,
+						) );
+						?>
+					</span>
+
+					<span>
+						<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
+					</span>
+				</span>
+
 				<span id="edd-after-core-filters">
 					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
-                    <input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'Advanced Filters', 'easy-digital-downloads' ); ?>"/>
+                    <input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'Advanced', 'easy-digital-downloads' ); ?>"/>
 
 					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
@@ -218,31 +244,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
 
-			<div id="edd-advanced-filters" class="filter-items <?php echo esc_attr( $maybe_show_filters ); ?>">
-				<div class="edd-advanced-filter-row">
-					<span class="edd-advanced-filter-name"><label for="order-amount-filter-type"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label></span>
-					<?php
-					$options = array(
-						'=' => __( 'is equal to', 'easy-digital-downloads' ),
-						'>' => __( 'is greater than', 'easy-digital-downloads' ),
-						'<' => __( 'is less than', 'easy-digital-downloads' ),
-					);
-
-					echo EDD()->html->select( array(
-						'id'               => 'order-amount-filter-type',
-						'name'             => 'order-amount-filter-type',
-						'options'          => $options,
-						'selected'         => $order_total_filter_type,
-						'show_option_all'  => false,
-						'show_option_none' => false,
-					) );
-					?>
-
-					<span>
-						<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
-					</span>
-				</div>
-			</div>
 		</div>
 
 		<?php
