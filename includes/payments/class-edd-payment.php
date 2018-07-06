@@ -1062,7 +1062,7 @@ class EDD_Payment {
 							'order_id'     => $this->ID,
 							'product_id'   => $item['id'],
 							'product_name' => $item['name'],
-							'price_id'     => $item['item_number']['options']['price_id'],
+							'price_id'     => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
 							'cart_index'   => $key,
 							'quantity'     => $item['quantity'],
 							'amount'       => $item['item_price'],
