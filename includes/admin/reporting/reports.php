@@ -598,7 +598,7 @@ function edd_register_downloads_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'most_valuable_download',
-					'average_download_earnings',
+					'average_download_sales_earnings',
 					'download_sales_earnings',
 				),
 				'charts' => array(
@@ -650,17 +650,18 @@ function edd_register_downloads_report( $reports ) {
 			),
 		) );
 
-		$reports->register_endpoint( 'average_download_earnings', array(
-			'label' => sprintf( __( 'Average %s Earnings', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		$reports->register_endpoint( 'average_download_sales_earnings', array(
+			'label' => __( 'Average Sales / Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-						$stats = new EDD\Orders\Stats();
-						return $stats->get_order_item_earnings( array(
+						$stats = new EDD\Orders\Stats( array(
 							'function' => 'AVG',
 							'range'    => $filter['range'],
 							'output'   => 'formatted',
 						) );
+
+						return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
