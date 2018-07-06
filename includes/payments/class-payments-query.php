@@ -63,6 +63,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		$defaults = array(
 			'output'          => 'payments', // Use 'posts' to get standard post objects
 			'post_type'       => array( 'edd_payment' ),
+			'post_parent'     => null,
 			'start_date'      => false,
 			'end_date'        => false,
 			'number'          => 20,
@@ -86,8 +87,10 @@ class EDD_Payments_Query extends EDD_Stats {
 			'advanced_query'  => null,
 		);
 
+		$this->initial_args = $args;
+
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
-		$this->args = $this->initial_args = wp_parse_args( $args, $defaults );
+		$this->args = wp_parse_args( $args, $defaults );
 	}
 
 	/**
@@ -508,6 +511,21 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	private function remap_args() {
 		$arguments = array();
+
+		// Check for post_parent
+		if ( isset( $this->initial_args['post_parent'] ) ) {
+			$arguments['parent'] = absint( $this->initial_args['post_parent'] );
+		}
+
+		// Meta key and value
+		if ( isset( $this->initial_args['meta_key'] ) && isset( $this->initial_args['meta_value'] ) ) {
+			$arguments['meta_query'] = array(
+				array(
+					'key'   => $this->initial_args['meta_key'],
+					'value' => $this->initial_args['meta_value'],
+				),
+			);
+		}
 
 		if ( $this->args['start_date'] ) {
 			$arguments['date_created_query']['after'] = array(
