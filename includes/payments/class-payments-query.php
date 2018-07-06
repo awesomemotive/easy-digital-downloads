@@ -483,8 +483,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			) );
 
 			foreach ( $orders as $order ) {
-				/** @var $order EDD\Orders\Order */
-				$order_ids[] = $order->id;
+				/** @var $order EDD\Orders\Order_Item */
+				$order_ids[] = $order->order_id;
 			}
 		} else {
 			$orders = edd_get_order_items( array(
@@ -492,7 +492,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			) );
 
 			foreach ( $orders as $order ) {
-				/** @var $order EDD\Orders\Order */
+				/** @var $order EDD\Orders\Order_Item */
 				$order_ids[] = $order->id;
 			}
 		}
@@ -669,6 +669,10 @@ class EDD_Payments_Query extends EDD_Stats {
 						break;
 				}
 			}
+		}
+
+		if ( isset( $this->args['id__in'] ) ) {
+			$arguments['id__in'] = $this->args['id__in'];
 		}
 
 		$this->args = $arguments;
