@@ -686,6 +686,9 @@ class EDD_Payment {
 			$this->ID = $this->_ID;
 		}
 
+		// If the order is null, it means a new order is being added
+		$this->order = edd_get_order( $this->ID );
+
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id !== $customer->id ) {
 			$this->customer_id            = $customer->id;
@@ -1071,13 +1074,13 @@ class EDD_Payment {
 					}
 				}
 
-				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
-
 				/**
 				 * Re-fetch the order with the new items from the database as it is used for the synchronization
 				 * between cart_details and the database.
 				 */
 				$this->order = edd_get_order( $this->ID );
+
+				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
 				if ( false !== $updated ) {
 					$saved = true;
@@ -2164,35 +2167,42 @@ class EDD_Payment {
 						}
 					}
 
-					$order_address = $this->order->get_address();
+					// Check an order is attached to this payment before proceeding
+					if ( null !== $this->order ) {
+						$order_address = $this->order->get_address();
 
-					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array( 'id', 'email', 'discount' ) ) );
+						$user_info = array_diff_key( $meta_value['user_info'], array_flip( array(
+							'id',
+							'email',
+							'discount'
+						) ) );
 
-					$defaults = array(
-						'first_name' => '',
-						'last_name' => '',
-						'address' => array(
-							'line1'   => '',
-							'line2'   => '',
-							'city'    => '',
-							'state'   => '',
-							'country' => '',
-							'zip'     => '',
-						),
-					);
+						$defaults = array(
+							'first_name' => '',
+							'last_name'  => '',
+							'address'    => array(
+								'line1'   => '',
+								'line2'   => '',
+								'city'    => '',
+								'state'   => '',
+								'country' => '',
+								'zip'     => '',
+							),
+						);
 
-					$user_info = wp_parse_args( $user_info, $defaults );
+						$user_info = wp_parse_args( $user_info, $defaults );
 
-					edd_update_order_address( $order_address->id, array(
-						'first_name'  => $user_info['first_name'],
-						'last_name'   => $user_info['last_name'],
-						'address'     => $user_info['address']['line1'],
-						'address2'    => $user_info['address']['line2'],
-						'city'        => $user_info['address']['city'],
-						'region'      => $user_info['address']['state'],
-						'postal_code' => $user_info['address']['zip'],
-						'country'     => $user_info['address']['country'],
-					) );
+						edd_update_order_address( $order_address->id, array(
+							'first_name'  => $user_info['first_name'],
+							'last_name'   => $user_info['last_name'],
+							'address'     => $user_info['address']['line1'],
+							'address2'    => $user_info['address']['line2'],
+							'city'        => $user_info['address']['city'],
+							'region'      => $user_info['address']['state'],
+							'postal_code' => $user_info['address']['zip'],
+							'country'     => $user_info['address']['country'],
+						) );
+					}
 				}
 
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
