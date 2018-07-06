@@ -628,7 +628,7 @@ function edd_is_payment_complete( $order_id = 0 ) {
 	$ret = false;
 
 	if ( $order ) {
-		if ( (int) $order_id === $order->id && $order->is_complete() ) {
+		if ( (int) $order_id === (int) $order->id && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
