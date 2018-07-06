@@ -1080,13 +1080,8 @@ class Stats {
 		$result = $this->get_db()->get_row( $sql );
 
 		// No need to calculate the ratio if there are no orders.
-		if ( 0 === (int) $result->discounted_orders && 0 === (int) $result->total ) {
+		if ( 0 === (int) $result->discounted_orders || 0 === (int) $result->total ) {
 			return 0;
-		}
-
-		// No need to calculate the ratio if there are no discounted orders.
-		if ( 0 === (int) $result->discounted_orders ) {
-			return $result->discounted_orders . ':' . $result->total;
 		}
 
 		// Calculate GCD.
