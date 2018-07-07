@@ -1315,6 +1315,85 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Migrate tax rates.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_tax_rates
+	 * wp edd migrate_tax_rates --force
+	 */
+	public function migrate_tax_rates( $args, $assoc_args ) {
+		global $wpdb;
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_tax_rates' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		// Create the tables if they do not exist.
+		$components = array(
+			array( 'adjustment', 'table' ),
+			array( 'adjustment', 'meta' ),
+		);
+
+		foreach ( $components as $component ) {
+			/** @var EDD\Database\Tables\Base $table */
+			$table = edd_get_component_interface( $component[0], $component[1] );
+
+			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+				@$table->create();
+			}
+		}
+
+		// Migrate user addresses first.
+		$tax_rates = get_option( 'edd_tax_rates', array() );
+
+		if ( ! empty( $tax_rates ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Tax Rates', count( $tax_rates ) );
+
+			var_dump(  $tax_rates );
+
+			foreach ( $tax_rates as $tax_rate ) {
+				$scope = isset( $tax_rate['global'] )
+					? 'country'
+					: 'region';
+
+				$region = isset( $tax_rate['state'] )
+					? sanitize_text_field( $tax_rate['state'] )
+					: '';
+
+				$adjustment_data = array(
+					'name'        => $tax_rate['country'],
+					'status'      => 'active',
+					'type'        => 'tax_rate',
+					'scope'       => $scope,
+					'amount_type' => 'percent',
+					'amount'      => floatval( $tax_rate['rate'] ),
+					'description' => $region,
+				);
+
+				edd_add_adjustment( $adjustment_data );
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+		}
+
+		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'migrate_tax_rates' );
+	}
+
+	/**
 	 * Migrate payments to the custom tables.
 	 *
 	 * ## OPTIONS
