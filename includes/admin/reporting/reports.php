@@ -1733,7 +1733,7 @@ function edd_register_taxes_report( $reports ) {
 			),
 		) );
 
-		if ( ! empty( $country ) ) {
+		if ( ! empty( $country ) && 'all' !== $country ) {
 			$location = '';
 
 			if ( ! empty( $region ) ) {
