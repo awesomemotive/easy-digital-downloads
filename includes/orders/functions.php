@@ -596,7 +596,7 @@ function edd_build_order( $order_data = array() ) {
 					'object_type' => 'order_item',
 					'type_id'     => 0,
 					'type'        => 'tax_rate',
-					'amount'      => $tax_rate,
+					'total'       => $tax_rate,
 				) );
 			}
 
@@ -622,7 +622,7 @@ function edd_build_order( $order_data = array() ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
-			$tax = ! empty( $fee['no_tax'] ) || $fee['amount'] < 0
+			$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
 				? floatval( edd_calculate_tax( $fee['amount'] ) )
 				: 0.00;
 
