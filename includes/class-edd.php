@@ -525,6 +525,11 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
 		}
 
+		// Adjustments
+		require_once EDD_PLUGIN_DIR . 'includes/adjustments/class-adjustment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/adjustments/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/adjustments/meta.php';
+
 		// API
 		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
 

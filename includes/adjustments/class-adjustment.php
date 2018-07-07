@@ -1,6 +1,6 @@
 <?php
 /**
- * Adjustment Object
+ * Adjustment Object.
  *
  * @package     EDD
  * @subpackage  Adjustments
