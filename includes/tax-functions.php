@@ -50,7 +50,7 @@ function edd_get_tax_rates() {
 		foreach ( $tax_rates as $tax_rate ) {
 			$rate = array(
 				'country' => esc_attr( $tax_rate->name ),
-				'rate'    => number_format( floatval( $tax_rate->amount ), 4 ),
+				'rate'    => floatval( $tax_rate->amount ),
 			);
 
 			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
