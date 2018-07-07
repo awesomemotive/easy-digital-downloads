@@ -31,6 +31,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float $amount
  * @property string $description
  * @property int $max_uses
+ * @property int $use_count
  * @property int $once_per_customer
  * @property float $min_charge_amount
  * @property string $product_condition
@@ -124,6 +125,15 @@ class Adjustment extends Base_Object {
 	 * @var    int
 	 */
 	protected $max_uses = null;
+
+	/**
+	 * Use Count.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    int
+	 */
+	protected $use_count = null;
 
 	/**
 	 * Minimum Amount.

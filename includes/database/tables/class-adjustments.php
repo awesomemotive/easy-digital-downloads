@@ -69,6 +69,7 @@ final class Adjustments extends Base {
             amount decimal(18,9) NOT NULL default '0',
             description longtext NOT NULL default '',
             max_uses bigint(20) unsigned NOT NULL default '0',
+            use_count bigint(20) unsigned NOT NULL default '0',
             once_per_customer int(1) NOT NULL default '0',
             min_charge_amount decimal(18,9) NOT NULL default '0',
             product_condition varchar(20) NOT NULL DEFAULT 'all',
