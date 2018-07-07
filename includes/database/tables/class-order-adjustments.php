@@ -37,7 +37,18 @@ final class Order_Adjustments extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201807070001;
+
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201807070001' => 201807070001
+	);
 
 	/**
 	 * Setup the database schema
@@ -53,12 +64,36 @@ final class Order_Adjustments extends Base {
 		type_id bigint(20) unsigned NOT NULL default '0',
 		type varchar(20) DEFAULT NULL,
 		description varchar(100) DEFAULT NULL,
-		amount decimal(18,9) NOT NULL default '0',
+		subtotal decimal(18,9) NOT NULL default '0',
+		tax decimal(18,9) NOT NULL default '0',
+		total decimal(18,9) NOT NULL default '0',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
 		KEY date_created (date_created)";
+	}
+
+	/**
+	 * Upgrade to version 201807070001
+	 * - Add subtotal and tax columns.
+	 * - Rename amount column to total.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807070001() {
+
+		// Alter the database.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} CHANGE `amount` `total` decimal(18,9) NOT NULL default '0';
+			ALTER TABLE {$this->table_name} ADD COLUMN `subtotal` decimal(18,9) NOT NULL default '0';
+			ALTER TABLE {$this->table_name} ADD COLUMN `tax` decimal(18,9) NOT NULL default '0'
+		" );
+
+		// Return success/fail.
+		return $this->is_success( $result );
 	}
 }
 endif;
