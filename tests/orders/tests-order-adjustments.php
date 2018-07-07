@@ -385,6 +385,128 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_adjustments
 	 */
+	public function test_get_order_adjustments_with_orderby_subtotal_and_order_asc_should_return_true() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'orderby' => 'subtotal',
+			'order'   => 'asc',
+		) );
+
+		$this->assertTrue( $order_adjustments[0]->subtotal < $order_adjustments[1]->subtotal );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_orderby_subtotal_and_order_desc_should_return_true() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'orderby' => 'subtotal',
+			'order'   => 'desc',
+		) );
+
+		$this->assertTrue( $order_adjustments[0]->subtotal > $order_adjustments[1]->subtotal );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_subtotal_should_return_1() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'subtotal' => \WP_UnitTest_Generator_Sequence::$incr,
+		) );
+
+		$this->assertCount( 1, $order_adjustments );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_subtotal__in_should_return_1() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'subtotal__in' => array(
+				\WP_UnitTest_Generator_Sequence::$incr,
+			),
+		) );
+
+		$this->assertCount( 1, $order_adjustments );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_subtotal__not_in_should_return_5() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'subtotal__not_in' => array(
+				-999,
+			),
+		) );
+
+		$this->assertCount( 5, $order_adjustments );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_orderby_tax_and_order_asc_should_return_true() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'orderby' => 'tax',
+			'order'   => 'asc',
+		) );
+
+		$this->assertTrue( $order_adjustments[0]->tax < $order_adjustments[1]->tax );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_orderby_tax_and_order_desc_should_return_true() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'orderby' => 'tax',
+			'order'   => 'desc',
+		) );
+
+		$this->assertTrue( $order_adjustments[0]->tax > $order_adjustments[1]->tax );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_tax_should_return_1() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'tax' => \WP_UnitTest_Generator_Sequence::$incr,
+		) );
+
+		$this->assertCount( 1, $order_adjustments );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_tax__in_should_return_1() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'tax__in' => array(
+				\WP_UnitTest_Generator_Sequence::$incr,
+			),
+		) );
+
+		$this->assertCount( 1, $order_adjustments );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
+	public function test_get_order_adjustments_with_tax__not_in_should_return_5() {
+		$order_adjustments = edd_get_order_adjustments( array(
+			'tax__not_in' => array(
+				-999,
+			),
+		) );
+
+		$this->assertCount( 5, $order_adjustments );
+	}
+
+	/**
+	 * @covers ::edd_get_order_adjustments
+	 */
 	public function test_get_order_adjustments_with_orderby_total_and_order_asc_should_return_true() {
 		$order_adjustments = edd_get_order_adjustments( array(
 			'orderby' => 'total',
