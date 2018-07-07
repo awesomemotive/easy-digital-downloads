@@ -5,6 +5,7 @@ namespace EDD\Orders;
  * Order Adjustment Tests.
  *
  * @group edd_orders
+ * @group edd_order_adjustments
  * @group database
  *
  * @coversDefaultClass \EDD\Orders\Order_Item
@@ -384,33 +385,33 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_adjustments
 	 */
-	public function test_get_order_adjustments_with_orderby_amount_and_order_asc_should_return_true() {
+	public function test_get_order_adjustments_with_orderby_total_and_order_asc_should_return_true() {
 		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'amount',
+			'orderby' => 'total',
 			'order'   => 'asc',
 		) );
 
-		$this->assertTrue( $order_adjustments[0]->amount < $order_adjustments[1]->amount );
+		$this->assertTrue( $order_adjustments[0]->total < $order_adjustments[1]->total );
 	}
 
 	/**
 	 * @covers ::edd_get_order_adjustments
 	 */
-	public function test_get_order_adjustments_with_orderby_amount_and_order_desc_should_return_true() {
+	public function test_get_order_adjustments_with_orderby_total_and_order_desc_should_return_true() {
 		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'amount',
+			'orderby' => 'total',
 			'order'   => 'desc',
 		) );
 
-		$this->assertTrue( $order_adjustments[0]->amount > $order_adjustments[1]->amount );
+		$this->assertTrue( $order_adjustments[0]->total > $order_adjustments[1]->total );
 	}
 
 	/**
 	 * @covers ::edd_get_order_adjustments
 	 */
-	public function test_get_order_adjustments_with_amount_should_return_1() {
+	public function test_get_order_adjustments_with_total_should_return_1() {
 		$order_adjustments = edd_get_order_adjustments( array(
-			'amount' => \WP_UnitTest_Generator_Sequence::$incr,
+			'total' => \WP_UnitTest_Generator_Sequence::$incr,
 		) );
 
 		$this->assertCount( 1, $order_adjustments );
@@ -419,9 +420,9 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_adjustments
 	 */
-	public function test_get_order_adjustments_with_amount__in_should_return_1() {
+	public function test_get_order_adjustments_with_total__in_should_return_1() {
 		$order_adjustments = edd_get_order_adjustments( array(
-			'amount__in' => array(
+			'total__in' => array(
 				\WP_UnitTest_Generator_Sequence::$incr,
 			),
 		) );
@@ -432,9 +433,9 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_adjustments
 	 */
-	public function test_get_order_adjustments_with_amount__not_in_should_return_5() {
+	public function test_get_order_adjustments_with_total__not_in_should_return_5() {
 		$order_adjustments = edd_get_order_adjustments( array(
-			'amount__not_in' => array(
+			'total__not_in' => array(
 				-999,
 			),
 		) );
