@@ -620,13 +620,23 @@ function edd_build_order( $order_data = array() ) {
 				continue;
 			}
 
+			add_filter( 'edd_prices_include_tax', '__return_false' );
+
+			$tax = ! empty( $fee['no_tax'] ) || $fee['amount'] < 0
+				? floatval( edd_calculate_tax( $fee['amount'] ) )
+				: 0.00;
+
+			remove_filter( 'edd_prices_include_tax', '__return_false' );
+
 			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type_id'     => '',
 				'type'        => 'fee',
 				'description' => $fee['label'],
-				'amount'      => $fee['amount']
+				'subtotal'    => floatval( $fee['amount'] ),
+				'tax'         => $tax,
+				'total'       => floatval( $fee['amount'] ) + $tax,
 			);
 
 			// Add the adjustment.
@@ -634,15 +644,12 @@ function edd_build_order( $order_data = array() ) {
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
 
-			if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-			}
-
 			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 			}
 
 			$total_fees += (float) $fee['amount'];
+			$total_tax  += $tax;
 		}
 	}
 
