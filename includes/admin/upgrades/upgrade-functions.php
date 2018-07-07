@@ -1338,7 +1338,7 @@ function edd_discounts_migration() {
 
 			if ( ! empty( $meta_to_migrate ) ) {
 				foreach ( $meta_to_migrate as $key => $value ) {
-					edd_add_discount_meta( $discount_id, $key, $value );
+					edd_add_adjustment_meta( $discount_id, $key, $value );
 				}
 			}
 
