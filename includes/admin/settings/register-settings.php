@@ -2547,20 +2547,17 @@ function edd_tax_rates_callback( $args ) {
 						}
 						?>
 						<span class="edd-tax-whole-country">
-							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
-								   id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
-								   value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
 							<label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 						</span>
                     </td>
                     <td class="edd_tax_rate">
-						<input type="number" class="small-text" step="0.0001" min="0.0" max="99"
-                               name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]"
-                               value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off" />
+						<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off" />
 					</td>
                     <td class="edd_tax_remove">
                         <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
                     </td>
+	                <input type="hidden" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate['id'] ); ?>" />
                 </tr>
 			<?php endforeach; ?>
 		<?php else : ?>
