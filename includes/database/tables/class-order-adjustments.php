@@ -86,14 +86,12 @@ final class Order_Adjustments extends Base {
 	protected function __201807070001() {
 
 		// Alter the database.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} CHANGE `amount` `total` decimal(18,9) NOT NULL default '0';
-			ALTER TABLE {$this->table_name} ADD COLUMN `subtotal` decimal(18,9) NOT NULL default '0';
-			ALTER TABLE {$this->table_name} ADD COLUMN `tax` decimal(18,9) NOT NULL default '0'
-		" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `amount` `total` decimal(18,9) NOT NULL default '0'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `subtotal` decimal(18,9) NOT NULL default '0';" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `tax` decimal(18,9) NOT NULL default '0'" );
 
 		// Return success/fail.
-		return $this->is_success( $result );
+		return $this->is_success( true );
 	}
 }
 endif;
