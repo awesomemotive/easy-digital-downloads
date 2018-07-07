@@ -12,7 +12,9 @@ class Order_Adjustment extends \WP_UnitTest_Factory_For_Thing {
 			'type_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'type'        => new \WP_UnitTest_Generator_Sequence( 'Adjustment Type %d' ),
 			'description' => new \WP_UnitTest_Generator_Sequence( 'Adjustment Description %d' ),
-			'amount'      => new \WP_UnitTest_Generator_Sequence( '%f' ),
+			'subtotal'    => new \WP_UnitTest_Generator_Sequence( '%f' ),
+			'tax'         => 5,
+			'total'       => ( new \WP_UnitTest_Generator_Sequence( '%f' ) ) + 5,
 		);
 	}
 
