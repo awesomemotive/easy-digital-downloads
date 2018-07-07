@@ -155,9 +155,9 @@ class Adjustments extends Base {
 			'default'    => '0'
 		),
 
-		// min_cart_price
+		// min_charge_price
 		array(
-			'name'       => 'min_cart_price',
+			'name'       => 'min_charge_price',
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
