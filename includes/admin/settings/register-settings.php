@@ -2503,11 +2503,8 @@ function edd_tax_rates_callback( $args ) {
         <thead>
         <tr>
             <th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
-            <th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
-            <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223"
-                                                                                                       class="edd-help-tip dashicons dashicons-editor-help"
-                                                                                                       title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span>
-            </th>
+            <th scope="col" class="edd_tax_state"><?php _e( 'Region', 'easy-digital-downloads' ); ?></th>
+            <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span></th>
             <th scope="col"  class="edd_tax_actions"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
         </tr>
         </thead>

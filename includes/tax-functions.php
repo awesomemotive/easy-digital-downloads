@@ -49,6 +49,7 @@ function edd_get_tax_rates() {
 	if ( $tax_rates ) {
 		foreach ( $tax_rates as $tax_rate ) {
 			$rate = array(
+				'id'      => absint( $tax_rate->id ),
 				'country' => esc_attr( $tax_rate->name ),
 				'rate'    => floatval( $tax_rate->amount ),
 			);
