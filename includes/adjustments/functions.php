@@ -89,7 +89,7 @@ function edd_get_adjustment_by( $field = '', $value = '' ) {
  * @since 3.0
  *
  * @param array $args
- * @return array
+ * @return \EDD\Adjustments\Adjustment[]
  */
 function edd_get_adjustments( $args = array() ) {
 

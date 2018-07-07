@@ -33,10 +33,37 @@ function edd_use_taxes() {
  * Retrieve tax rates
  *
  * @since 1.6
+ * @since 3.0 Updated to use new query class.
+ *
  * @return array Defined tax rates
  */
 function edd_get_tax_rates() {
-	$rates = get_option( 'edd_tax_rates', array() );
+
+	// Fetch from adjustments table.
+	$tax_rates = edd_get_adjustments( array(
+		'type' => 'tax_rate',
+	) );
+
+	$rates = array();
+
+	if ( $tax_rates ) {
+		foreach ( $tax_rates as $tax_rate ) {
+			$rate = array(
+				'country' => esc_attr( $tax_rate->name ),
+				'rate'    => edd_format_amount( esc_attr( $tax_rate->amount ) ),
+			);
+
+			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
+				$rate['state'] = esc_attr( $tax_rate->description );
+			}
+
+			if ( 'country' === $tax_rate->scope ) {
+				$rate['global'] = '1';
+			}
+
+			$rates[] = $rate;
+		}
+	}
 
 	return (array) apply_filters( 'edd_get_tax_rates', $rates );
 }
