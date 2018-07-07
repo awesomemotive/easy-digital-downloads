@@ -138,6 +138,15 @@ class Adjustments extends Base {
 			'default'    => '0'
 		),
 
+		// use_count
+		array(
+			'name'       => 'use_count',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0'
+		),
+
 		// once_per_customer
 		array(
 			'name'       => 'once_per_customer',

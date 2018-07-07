@@ -500,6 +500,9 @@ class EDD_Discount extends Adjustment {
 				case 'id':
 					$this->{$key} = (int) $value;
 					break;
+				case 'min_charge_amount':
+					$this->min_cart_price = $value;
+					break;
 				default:
 					if ( is_string( $value ) ) {
 						@json_decode( $value );
