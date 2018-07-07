@@ -24,7 +24,9 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $type_id
  * @property string $type
  * @property string $description
- * @property float  $amount
+ * @property float  $subtotal
+ * @property float  $tax
+ * @property float  $total
  * @property string $date_completed
  * @property string $date_modified
  */
@@ -79,12 +81,28 @@ class Order_Adjustment extends \EDD\Database\Objects\Order_Adjustment {
 	protected $description;
 
 	/**
-	 * Amount.
+	 * Subtotal.
 	 *
 	 * @since 3.0
 	 * @var   float
 	 */
-	protected $amount;
+	protected $subtotal;
+
+	/**
+	 * Tax.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $tax;
+
+	/**
+	 * Total.
+	 *
+	 * @since 3.0
+	 * @var   float
+	 */
+	protected $total;
 
 	/**
 	 * Date created.
