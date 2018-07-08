@@ -248,11 +248,6 @@ class Customer extends Base {
 	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid usermeta.
 	 */
 	public function update_user_meta( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		if ( 'update_user_metadata' !== current_filter() ) {
-			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
-			_doing_it_wrong( __FUNCTION__, esc_html( $message ), 'EDD 3.0' );
-		}
-
 		if ( '_edd_user_address' !== $meta_key ) {
 			return $check;
 		}
