@@ -345,6 +345,7 @@ final class Easy_Digital_Downloads {
 		new EDD\Compat\Customer();
 		new EDD\Compat\Log();
 		new EDD\Compat\Payment();
+		new EDD\Compat\Tax();
 	}
 
 	/**
@@ -487,6 +488,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-payment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-tax.php';
 
 		// Original Classes
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';

@@ -1358,8 +1358,6 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! empty( $tax_rates ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Tax Rates', count( $tax_rates ) );
 
-			var_dump(  $tax_rates );
-
 			foreach ( $tax_rates as $tax_rate ) {
 				$scope = isset( $tax_rate['global'] )
 					? 'country'

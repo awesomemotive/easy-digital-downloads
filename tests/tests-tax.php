@@ -113,12 +113,15 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rate_user_address() {
+		$this->setExpectedIncorrectUsage( 'add_user_meta()/update_user_meta()' );
+		$this->setExpectedIncorrectUsage( 'get_user_meta()' );
+		$this->setExpectedIncorrectUsage( 'update_user_meta' );
+
 		global $current_user;
 
 		$current_user = new WP_User( 1 );
 		$user_id      = get_current_user_id();
 
-		$existing_addresss = get_user_meta( $user_id, '_edd_user_address', true );
 		update_user_meta( $user_id, '_edd_user_address', array(
 			'line1'   => 'First address',
 			'line2'   => 'Line two',
@@ -128,11 +131,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 			'state'   => 'AL',
 		) );
 
-		// Assert
 		$this->assertEquals( '0.15', edd_get_tax_rate() );
-
-		// Reset to origin
-		update_post_meta( $user_id, '_edd_user_address', $existing_addresss );
 	}
 
 	public function test_get_tax_rate_global() {

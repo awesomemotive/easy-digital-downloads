@@ -280,7 +280,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\get_filters()
 	 */
 	public function test_get_filters_should_return_records_for_all_official_filters() {
-		$expected = array( 'dates', 'discounts', 'gateways', 'products', 'taxes' );
+		$expected = array( 'dates', 'products', 'taxes', 'gateways', 'discounts', 'regions', 'countries' );
 
 		$this->assertEqualSets( $expected, array_keys( get_filters() ) );
 	}

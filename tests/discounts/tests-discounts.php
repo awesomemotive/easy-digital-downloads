@@ -594,7 +594,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	/**
 	 * @covers \edd_get_discount_min_price()
 	 */
-	public function testDiscountMinPrice() {
+	public function test_discount_min_price() {
 		$this->assertSame( '128.00', edd_get_discount_min_price( self::$discount_id ) );
 	}
 

@@ -379,6 +379,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 * Remove an email address from the customer.
 	 *
 	 * @since 2.6
+	 * @since 3.0 Updated to use custom table.
 	 *
 	 * @param string $email The email address to remove from the customer.
 	 * @return bool True if the email was removed successfully, false otherwise.
@@ -390,7 +391,11 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 
 		do_action( 'edd_customer_pre_remove_email', $email, $this->id, $this );
 
-		$ret = (bool) edd_delete_customer_meta( $this->id, 'additional_email', $email );
+		$email_address = edd_get_customer_email_address_by( 'email', $email );
+
+		$ret = $email_address
+			? (bool) edd_delete_customer_email_address( $email_address->id )
+			: false;
 
 		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
 
