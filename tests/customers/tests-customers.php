@@ -17,12 +17,12 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	protected static $customers;
 
 	/**
-	 * Payment fixture.
+	 * Order fixture.
 	 *
 	 * @access protected
 	 * @var int
- 	 */
-	protected static $payment;
+	 */
+	protected static $order;
 
 	/**
 	 * User fixture.
@@ -42,19 +42,19 @@ class Tests_Customers extends \EDD_UnitTestCase {
 			self::$customers[] = edd_get_customer( $customer );
 		}
 
-		self::$user = 1;
-		self::$payment = \EDD_Helper_Payment::create_simple_payment();
+		self::$user  = 1;
+		self::$order = \EDD_Helper_Payment::create_simple_payment();
 
 		edd_update_customer( self::$customers[0], array(
-			'user_id' => self::$user
+			'user_id' => self::$user,
 		) );
 
 		self::$customers[0]->add_email( 'admin@example.org', true );
-		self::$customers[0]->attach_payment( self::$payment );
+		self::$customers[0]->attach_payment( self::$order );
 
 		self::$customers[0] = edd_get_customer( $customers[0] );
 
-		edd_update_payment_status( self::$payment, 'complete' );
+		edd_update_payment_status( self::$order, 'complete' );
 	}
 
 	public function test_create_customer_from_EDD_Customer_should_be_greater_than_0() {
@@ -87,9 +87,9 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_attach_payment_to_customer_should_return_true() {
-		$payment_ids = array_map( 'absint', explode( ',', self::$customers[0]->payment_ids ) );
+		$order_ids = array_map( 'absint', explode( ',', self::$customers[0]->payment_ids ) );
 
-		$this->assertTrue( in_array( self::$payment, $payment_ids ) );
+		$this->assertTrue( in_array( self::$order, $order_ids ) );
 	}
 
 	public function test_attach_payment_with_invalid_data_should_return_false() {
@@ -97,24 +97,24 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_attach_payment_twice_should_return_true() {
-		self::$customers[2]->attach_payment( self::$payment );
+		self::$customers[2]->attach_payment( self::$order );
 
 		$expected_purchase_count = self::$customers[2]->purchase_count;
 		$expected_purchase_value = self::$customers[2]->purchase_value;
 
-		self::$customers[2]->attach_payment( self::$payment );
+		self::$customers[2]->attach_payment( self::$order );
 
 		$this->assertSame( $expected_purchase_count, self::$customers[2]->purchase_count );
 		$this->assertSame( $expected_purchase_value, self::$customers[2]->purchase_value );
 	}
 
 	public function test_remove_payment_should_return_true() {
-		self::$customers[2]->attach_payment( self::$payment );
-		self::$customers[2]->remove_payment( self::$payment );
+		self::$customers[2]->attach_payment( self::$order );
+		self::$customers[2]->remove_payment( self::$order );
 
-		$payment_ids = array_map( 'absint', explode( ',', self::$customers[2]->payment_ids ) );
+		$order_ids = array_map( 'absint', explode( ',', self::$customers[2]->payment_ids ) );
 
-		$this->assertFalse( in_array( self::$payment, $payment_ids ) );
+		$this->assertFalse( in_array( self::$order, $order_ids ) );
 	}
 
 	public function test_increase_value_should_return_10() {
@@ -156,7 +156,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 	
 	public function test_get_payment_ids_of_customer_should_return_1() {
-		self::$customers[0]->attach_payment( self::$payment );
+		self::$customers[0]->attach_payment( self::$order );
 
 		$this->assertCount( 1, self::$customers[0]->get_payment_ids() );
 	}
@@ -183,7 +183,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		self::$customers[1]->add_email( 'added-email@edd.test' );
 
 		$this->assertTrue( self::$customers[1]->remove_email( 'added-email@edd.test' ) );
-		$this->assertFalse( in_array( 'added-email@edd.test', self::$customers[1]->emails ) );
+		$this->assertFalse( in_array( 'added-email@edd.test', self::$customers[1]->emails, true ) );
 	}
 
 	public function test_validate_username_should_return_true() {
@@ -193,7 +193,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	public function test_validate_username_with_invalid_characters_should_return_false() {
 		$this->assertFalse( edd_validate_username( 'edd12345$%&+-!@£%^&()(*&^%$£@!' ) );
 	}
-	
+
 	public function test_get_users_purchases_should_return_1() {
 		$this->assertCount( 1, edd_get_users_purchases( self::$user ) );
 	}
@@ -203,7 +203,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_user_has_purchases_should_return_true() {
-		self::$customers[0]->attach_payment( self::$payment );
+		self::$customers[0]->attach_payment( self::$order );
 
 		$this->assertTrue( edd_has_purchases( self::$user ) );
 	}
@@ -225,7 +225,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_user_has_purchased_with_valid_user_and_download_id_should_return_true() {
-		$this->assertTrue( edd_has_user_purchased( self::$user, edd_get_payment( self::$payment )->downloads[0]['id'] ) );
+		$this->assertTrue( edd_has_user_purchased( self::$user, edd_get_payment( self::$order )->downloads[0]['id'] ) );
 	}
 
 	public function test_user_has_purchased_with_valid_user_and_invalid_download_id_should_return_false() {
@@ -233,7 +233,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_add_past_purchases_to_new_user() {
-		$payment_id = \EDD_Helper_Payment::create_simple_guest_payment();
+		$order_id = \EDD_Helper_Payment::create_simple_guest_payment();
 
 		$userdata = array(
 			'user_login' => 'guest',
@@ -242,10 +242,10 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		);
 		$user_id = wp_insert_user( $userdata );
 
-		$payments = edd_get_payments( array( 's' => $userdata['user_email'], 'output' => 'payments' ) );
-		$payment = $payments[0];
+		$orders = edd_get_payments( array( 's' => $userdata['user_email'], 'output' => 'payments' ) );
+		$order = $orders[0];
 
-		$this->assertSame( $payment->ID, $payment_id );
+		$this->assertSame( $order->ID, $order_id );
 	}
 
 	public function test_user_verification_base_url() {
@@ -323,7 +323,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_get_purchase_total_of_user_should_return_120() {
-		self::$customers[0]->attach_payment( self::$payment );
+		self::$customers[0]->attach_payment( self::$order );
 
 		$purchase_total = edd_purchase_total_of_user( self::$user );
 

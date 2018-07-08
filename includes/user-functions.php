@@ -240,15 +240,16 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 }
 
 /**
- * Has Purchases
+ * Check if a user has made any purchases.
  *
- * Checks to see if a user has purchased at least one item.
+ * @since 1.0
  *
- * @since       1.0
- * @param       int $user_id - the ID of the user to check
- * @return      bool - true if has purchased, false other wise.
+ * @param int $user_id User ID.
+ * @return bool True if user has purchased, false otherwise.
  */
 function edd_has_purchases( $user_id = null ) {
+
+	// Maybe fallback to logged in user.
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
@@ -256,6 +257,7 @@ function edd_has_purchases( $user_id = null ) {
 	if ( edd_get_users_purchases( $user_id, 1 ) ) {
 		return true; // User has at least one purchase
 	}
+
 	return false; // User has never purchased anything
 }
 
@@ -282,7 +284,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	$stats    = array();
 	$customer = edd_get_customer_by( $field, $user );
 
-	if ( ! empty( $customer ) ) {
+	if ( $customer ) {
 		$stats['purchases']   = edd_count_orders( array( 'customer_id' => $customer->id ) );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 	}
@@ -321,7 +323,6 @@ function edd_count_purchases_of_customer( $user = null ) {
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
-
 	$stats = edd_get_purchase_stats_by_user( $user );
 
 	return $stats['total_spent'];
