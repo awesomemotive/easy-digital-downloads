@@ -2197,6 +2197,10 @@ class EDD_Payment {
 						),
 					);
 
+					if ( isset( $user_info['address'] ) ) {
+						$user_info['address'] = wp_parse_args( $user_info['address'], $defaults['address'] );
+					}
+
 					$user_info = wp_parse_args( $user_info, $defaults );
 
 					if ( null !== $this->order ) {
@@ -3071,16 +3075,16 @@ class EDD_Payment {
 			}
 		}
 
-		$city = $order_address->city;
+		$country = $order_address->country;
 
 		// Add address to array if one exists.
-		if ( ! empty( $city ) ) {
+		if ( ! empty( $country ) ) {
 			$user_info['address'] = array(
 				'line1'   => $order_address->address,
 				'line2'   => $order_address->address2,
-				'city'    => $city,
+				'city'    => $order_address->address,
 				'state'   => $order_address->region,
-				'country' => $order_address->country,
+				'country' => $country,
 				'zip'     => $order_address->postal_code,
 			);
 		}
