@@ -989,7 +989,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
-		$sql = "SELECT SUM({$this->query_vars['column']})
+		$sql = "SELECT SUM('{$this->query_vars['column']}')
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$discount_code} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
@@ -1044,7 +1044,7 @@ class Stats {
 
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
-		$sql = "SELECT AVG({$this->query_vars['column']})
+		$sql = "SELECT AVG('{$this->query_vars['column']}')
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$type_discount} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
