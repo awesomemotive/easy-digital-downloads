@@ -561,6 +561,7 @@ textarea[name="edd-note"] {
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 	min-width: 285px;
 	opacity: 0;
+	visibility: hidden;
 }
 
 #edd-filters #edd-advanced-filters.open .edd-advanced-filters-button {
@@ -572,6 +573,7 @@ textarea[name="edd-note"] {
 }
 
 #edd-filters #edd-advanced-filters.open .inside {
+	visibility: visible;
 	opacity: 1;
     -webkit-transition: opacity 0.2s ease-in;
        -moz-transition: opacity 0.2s ease-in;
