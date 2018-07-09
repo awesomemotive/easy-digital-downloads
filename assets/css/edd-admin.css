@@ -52,11 +52,13 @@ a.edd-delete:hover {
 	box-shadow: none;
 }
 
-.edd-from-to-wrapper input[name="start"] {
+.edd-from-to-wrapper input[name="start"],
+.edd-from-to-wrapper input[name="start-date"] {
 	border-right-color: #eee;
 }
 
-.edd-from-to-wrapper input[name="end"] {
+.edd-from-to-wrapper input[name="end"],
+.edd-from-to-wrapper input[name="end-date"] {
 	border-left-color: #eee;
 	margin-left: -1px;
 }
@@ -512,7 +514,7 @@ textarea[name="edd-note"] {
 	padding: 0 10px;
 }
 
-#edd-filters .filter-items > span {
+#edd-filters .filter-items > span:not(#edd-date-filters) {
 	display: inline-block;
 	margin: 10px 4px 10px 0;
 	max-width: 200px;
@@ -535,7 +537,7 @@ textarea[name="edd-note"] {
 }
 
 #edd-filters .button-secondary {
-	vertical-align: baseline;
+	vertical-align: middle;
 }
 
 #edd-filters #edd-advanced-filters {
@@ -549,7 +551,7 @@ textarea[name="edd-note"] {
 #edd-filters #edd-advanced-filters .inside {
 	z-index: 99;
 	position: absolute;
-	top: 26px;
+	top: 29px;
 	right: 0;
 	border: 1px solid #e5e5e5;
 	padding: 10px;

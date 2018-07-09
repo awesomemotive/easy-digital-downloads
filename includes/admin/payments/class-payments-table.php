@@ -168,18 +168,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				<?php endif; ?>
 
-				<span id="edd-date-filters">
-					<span>
-						<label for="start-date"><?php echo esc_html_x( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-					<span>
-						<label for="end-date"><?php echo esc_html_x( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="end-date" name="end-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-				</span>
+				<span id="edd-date-filters" class="edd-from-to-wrapper">
+					<?php
 
-				<?php if ( ! empty( $gateways ) ) : ?>
+					echo EDD()->html->date_field( array(
+						'id'          => 'start-date',
+						'name'        => 'start-date',
+						'placeholder' => __( 'From', 'easy-digital-downloads' ),
+					) );
+
+					echo EDD()->html->date_field( array(
+						'id'          => 'end-date',
+						'name'        => 'end-date',
+						'placeholder' => __( 'To', 'easy-digital-downloads' ),
+					) );
+
+				?></span><?php
+
+				if ( ! empty( $gateways ) ) : ?>
 
 					<span id="edd-gateway-filter">
 						<?php echo EDD()->html->select( array(
