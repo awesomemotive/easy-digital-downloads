@@ -198,25 +198,58 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					<input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 					<span class="inside">
-						<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
-						<?php
-						$options = array(
-							'=' => __( 'equal to',     'easy-digital-downloads' ),
-							'>' => __( 'greater than', 'easy-digital-downloads' ),
-							'<' => __( 'less than',    'easy-digital-downloads' ),
-						);
+						<p>
+							<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
+							<?php
+							$options = array(
+								'=' => __( 'equal to',     'easy-digital-downloads' ),
+								'>' => __( 'greater than', 'easy-digital-downloads' ),
+								'<' => __( 'less than',    'easy-digital-downloads' ),
+							);
 
-						echo EDD()->html->select( array(
-							'id'               => 'order-amount-filter-type',
-							'name'             => 'order-amount-filter-type',
-							'options'          => $options,
-							'selected'         => $order_total_filter_type,
-							'show_option_all'  => false,
-							'show_option_none' => false,
-						) );
-						?>
+							echo EDD()->html->select( array(
+								'id'               => 'order-amount-filter-type',
+								'name'             => 'order-amount-filter-type',
+								'options'          => $options,
+								'selected'         => $order_total_filter_type,
+								'show_option_all'  => false,
+								'show_option_none' => false,
+							) );
+							?>
 
-						<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
+							<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
+						</p>
+
+						<p>
+							<label><?php esc_html_e( 'Country/Region', 'easy-digital-downloads' ); ?></label>
+							<?php
+							echo EDD()->html->select( array(
+								'name'             => 'order-country-filter-value',
+								'class'            => 'edd_countries_filter',
+								'options'          => edd_get_country_list(),
+								'chosen'           => true,
+								'selected'         => false,
+								'show_option_none' => false,
+								'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+								'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+							) );
+							?>
+						</p>
+
+						<p>
+							<?php
+							echo EDD()->html->select( array(
+								'name'             => 'order-region-filter-value',
+								'class'            => 'edd_regions_filter',
+								'options'          => edd_get_shop_states(),
+								'chosen'           => true,
+								'selected'         => false,
+								'show_option_none' => false,
+								'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+								'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+							) );
+							?>
+						</p>
 					</span>
 				</span>
 
