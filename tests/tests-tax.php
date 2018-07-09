@@ -115,7 +115,6 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	public function test_get_tax_rate_user_address() {
 		$this->setExpectedIncorrectUsage( 'add_user_meta()/update_user_meta()' );
 		$this->setExpectedIncorrectUsage( 'get_user_meta()' );
-		$this->setExpectedIncorrectUsage( 'update_user_meta' );
 
 		global $current_user;
 
