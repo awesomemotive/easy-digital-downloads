@@ -656,22 +656,22 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
-			foreach ( $this->args['meta_query'] as $meta_key => $meta_value ) {
-				switch ( $meta_key ) {
+			foreach ( $this->args['meta_query'] as $meta ) {
+				switch ( $meta['key'] ) {
 					case '_edd_payment_customer_id':
-						$arguments['customer_id'] = absint( $meta_value );
+						$arguments['customer_id'] = absint( $meta['value'] );
 						break;
 
 					case '_edd_payment_user_id':
-						$arguments['user_id'] = absint( $meta_value );
+						$arguments['user_id'] = absint( $meta['value'] );
 						break;
 
 					case '_edd_payment_user_email':
-						$arguments['email'] = sanitize_email( $meta_value );
+						$arguments['email'] = sanitize_email( $meta['value'] );
 						break;
 
 					case '_edd_payment_gateway':
-						$arguments['gateway'] = sanitize_text_field( $meta_value );
+						$arguments['gateway'] = sanitize_text_field( $meta['value'] );
 						break;
 				}
 			}
@@ -679,6 +679,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['id__in'] ) ) {
 			$arguments['id__in'] = $this->args['id__in'];
+		}
+
+		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
+			$arguments['status__in'] = $arguments['status'];
+			unset( $arguments['status'] );
 		}
 
 		$this->args = $arguments;

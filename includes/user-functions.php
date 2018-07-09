@@ -66,26 +66,16 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	$args = array(
+		'user'    => $user,
 		'number'  => $number,
 		'status'  => $status,
-		'orderby' => 'date'
+		'orderby' => 'date',
 	);
 
 	if ( $pagination ) {
 		$args['page'] = $paged;
 	} else {
 		$args['nopaging'] = true;
-	}
-
-	$by_user_id = is_numeric( $user ) ? true : false;
-	$customer   = $by_user_id
-		? edd_get_customer_by( 'user_id', $user )
-		: edd_get_customer_by( 'email', $user );
-
-	if ( $customer ) {
-		$args['customer'] = $customer->id;
-	} else {
-		return false;
 	}
 
 	if ( 'any' === $status ) {
@@ -254,11 +244,9 @@ function edd_has_purchases( $user_id = null ) {
 		$user_id = get_current_user_id();
 	}
 
-	if ( edd_get_users_purchases( $user_id, 1 ) ) {
-		return true; // User has at least one purchase
-	}
+	$count = edd_count_orders( array( 'user_id' => $user_id ) );
 
-	return false; // User has never purchased anything
+	return (bool) $count;
 }
 
 
@@ -285,7 +273,7 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	$customer = edd_get_customer_by( $field, $user );
 
 	if ( $customer ) {
-		$stats['purchases']   = edd_count_orders( array( 'customer_id' => $customer->id ) );
+		$stats['purchases']   = edd_count_orders( array( $field => $user ) );
 		$stats['total_spent'] = edd_sanitize_amount( $customer->purchase_value );
 	}
 
