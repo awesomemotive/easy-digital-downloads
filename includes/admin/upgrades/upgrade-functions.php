@@ -202,7 +202,32 @@ function edd_show_upgrade_notices() {
 
 		// Check if we need to do any upgrades.
 		if ( count( $upgrades ) !== count( array_filter( $upgrades ) ) ) {
-			
+
+			// Check if any payments exist.
+			$results    = $wpdb->get_row( "SELECT count(ID) as has_orders FROM $wpdb->posts WHERE post_type = 'edd_payment' LIMIT 0, 1" );
+			$has_orders = ! empty( $results->has_orders )
+				? true
+				: false;
+
+			if ( $has_orders ) {
+				printf(
+					'<div class="updated">' .
+					'<p>' .
+					__( 'Easy Digital Downloads needs to upgrade the database, click <a href="%s">here</a> to start the upgrade. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
+					'</p>' .
+					'<p style="display: none;">' .
+					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Please back up your database before starting this upgrade.</strong> This upgrade routine will make irreversible changes to the database.', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WP-CLI with the following command:<br /><code>wp edd migrate_orders</code>', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( 'For large sites, this is the recommended method of upgrading.', 'easy-digital-downloads' ) .
+					'</p>' .
+					'</div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=v30_upgrade' ) )
+				);
+			}
 		}
 
 		/*
@@ -1135,6 +1160,8 @@ function edd_remove_refunded_sale_logs() {
 	}
 }
 add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );
+
+/** 2.9.2 Upgrades ***********************************************************/
 
 /**
  * Output the results of the file-download log data update

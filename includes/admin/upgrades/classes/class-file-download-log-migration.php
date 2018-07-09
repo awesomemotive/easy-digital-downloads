@@ -261,3 +261,6 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
 }
+
+/** 3.0 Upgrades *************************************************************/
+
