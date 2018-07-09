@@ -263,6 +263,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		} else {
 			$args['name']  = $search;
 		}
+		
+		$args = apply_filters( 'edd_report_customer_args', $args );
 
 		$this->args = $args;
 		$customers  = EDD()->customers->get_customers( $args );
