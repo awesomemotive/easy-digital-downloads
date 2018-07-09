@@ -34,11 +34,7 @@ add_action( 'edd_gateway_select', 'edd_process_gateway_select' );
  */
 function edd_load_ajax_gateway() {
 	if ( ! isset( $_POST['nonce'] ) ) {
-		add_filter( 'edd_is_debug_mode', '__return_true' );
-
-		edd_debug_log( __( 'Missing nonce when loading the gateway fields. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ) );
-
-		remove_filter( 'edd_is_debug_mode', '__return_true' );
+		edd_debug_log( __( 'Missing nonce when loading the gateway fields. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
 	}
 
 	if ( isset( $_POST['edd_payment_mode'] ) && isset( $_POST['nonce'] ) ) {

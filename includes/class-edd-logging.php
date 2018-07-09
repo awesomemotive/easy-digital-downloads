@@ -514,15 +514,16 @@ function edd_record_log( $title = '', $message = '', $parent = 0, $type = null )
  * Logs a message to the debug log file
  *
  * @since 2.8.7
+ * @since 2.9.4 Added the 'force' option.
  *
  * @param string $message
  * @global $edd_logs EDD Logs Object
  * @return void
  */
-function edd_debug_log( $message = '' ) {
+function edd_debug_log( $message = '', $force = false ) {
 	global $edd_logs;
 
-	if( edd_is_debug_mode() ) {
+	if ( edd_is_debug_mode() || $force ) {
 
 		$edd_logs->log_to_file( $message );
 
