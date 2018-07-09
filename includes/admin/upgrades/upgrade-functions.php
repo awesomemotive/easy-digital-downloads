@@ -1313,6 +1313,8 @@ function edd_upgrade_render_v30_migration() {
 		$orders_complete = true;
 	}
 
+	$order_removal_complete = edd_has_upgrade_completed( 'remove_legacy_orders' );
+
 	/** Customer Data Migration **********************************************/
 	$addresses = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
 	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
@@ -1423,6 +1425,247 @@ function edd_upgrade_render_v30_migration() {
             });
         });
 	</script>
+
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php printf( esc_html__( 'Step %d: Upgrade Orders', 'easy-digital-downloads' ), $step ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside migrate-order-control">
+				<p>
+					<?php _e( 'This will migrate all orders from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+				</p>
+				<form method="post" id="edd-migrate-orders-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $order_removal_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Orders" />
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+
+	<?php
+	// Increment step
+	$step++;
+	?>
+
+	<?php if ( ! empty( $addresses ) ) : ?>
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php printf( esc_html__( 'Step %d: Upgrade Customer Addresses', 'easy-digital-downloads' ), $step ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside migrate-order-control">
+				<p>
+					<?php _e( 'This will migrate all customer address from user meta to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+				</p>
+				<form method="post" id="edd-migrate-customer-addresses-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $customer_addresses_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Customer_Addresses" />
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+	<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $email_addresses ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Customer Email Addresses', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-customer-email-addresses-control">
+					<p>
+						<?php _e( 'This will migrate all customer email address from customer meta to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-customer-email-addresses-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $customer_email_addresses_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Customer_Email_Addresses" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $logs ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Logs', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-logs-control">
+					<p>
+						<?php _e( 'This will migrate all logs from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-logs-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $logs_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Logs" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $tax_rates ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Tax Rates', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-order-control">
+					<p>
+						<?php _e( 'This will migrate all tax rates from the WordPress options table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-tax-rates-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $tax_rates_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Tax_Rates" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $discounts ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Discounts', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-order-control">
+					<p>
+						<?php _e( 'This will migrate all discounts from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-discounts-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $discounts_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Discounts" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
 
 	<?php
 }
