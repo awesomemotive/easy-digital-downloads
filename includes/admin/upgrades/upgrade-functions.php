@@ -220,12 +220,12 @@ function edd_show_upgrade_notices() {
 					'<br /><br />' .
 					__( '<strong>Please back up your database before starting this upgrade.</strong> This upgrade routine will make irreversible changes to the database.', 'easy-digital-downloads' ) .
 					'<br /><br />' .
-					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WP-CLI with the following command:<br /><code>wp edd migrate_orders</code>', 'easy-digital-downloads' ) .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WP-CLI with the following command:<br /><code>wp edd v30_migration</code>', 'easy-digital-downloads' ) .
 					'<br /><br />' .
 					__( 'For large sites, this is the recommended method of upgrading.', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=v30_upgrade' ) )
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=v30_migration' ) )
 				);
 			}
 		}
@@ -1290,4 +1290,36 @@ function edd_include_file_download_log_migration_batch_processor( $class = '' ) 
 	if ( 'EDD_File_Download_Log_Migration' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/classes/class-file-download-log-migration.php';
 	}
+}
+
+/** 3.0 Upgrades *************************************************************/
+
+/**
+ * Render 3.0 upgrade page.
+ *
+ * @since 3.0
+ */
+function edd_upgrade_render_v30_migration() {
+	global $wpdb;
+
+	$migration_complete = edd_has_upgrade_completed( 'v30_migration' );
+
+	/** Orders Migration *****************************************************/
+	$have_orders     = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' LIMIT 1" );
+	$orders_complete = edd_has_upgrade_completed( 'migrate_orders' );
+
+	if ( empty( $have_orders ) ) {
+		edd_set_upgrade_complete( 'migrate_orders' );
+		$orders_complete = true;
+	}
+
+	/** Customer Data Migration **********************************************/
+
+	/** Logs Migration *******************************************************/
+
+	/** Tax Rates Migration **************************************************/
+
+	/** Discounts Migration **************************************************/
+
+	/** Order Notes Migration ************************************************/
 }
