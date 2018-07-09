@@ -1667,5 +1667,45 @@ function edd_upgrade_render_v30_migration() {
 	endif;
 	?>
 
+	<?php if ( ! empty( $notes ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Order Notes', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-order-control">
+					<p>
+						<?php _e( 'This will migrate all order notes from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-order-notes-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $notes_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="\\EDD\\Admin\\Upgrades\\v3\\Order_Notes" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
 	<?php
 }
