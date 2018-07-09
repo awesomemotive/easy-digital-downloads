@@ -130,11 +130,6 @@ a.edd-delete:hover {
 	position: relative;
 	height: 28px;
 	cursor: move;
-	opacity: 0.8;
-}
-
-.edd-sortable-list li:hover {
-	opacity: 1;
 }
 
 .edd-sortable-list li label * {
@@ -491,7 +486,7 @@ textarea[name="edd-note"] {
 }
 #edd-filters .filter-items > span {
 	display: inline-block;
-	margin: 10px 6px 10px 0;
+	margin: 10px 0 10px 0;
 }
 #edd-filters > p {
 	color: #777;
@@ -507,12 +502,46 @@ textarea[name="edd-note"] {
 	max-width: 100px;
 	padding: 5px;
 }
-#edd-after-core-filters .button-secondary {
+
+#edd-filters .button-secondary {
 	margin: -3px 0 0 0;
 }
 
-#edd-advanced-filters.hide {
-	display: none;
+#edd-filters #edd-advanced-filters {
+	position: relative;
+}
+
+#edd-filters #edd-advanced-filters .inside * {
+	display: inline;
+}
+
+#edd-filters #edd-advanced-filters .inside {
+	z-index: 99;
+	position: absolute;
+	top: 26px;
+	right: 0;
+	border: 1px solid #e5e5e5;
+	padding: 10px;
+	background: #fafafa;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+	min-width: 285px;
+	opacity: 0;
+}
+
+#edd-filters #edd-advanced-filters.open .edd-advanced-filters-button {
+	background: #eee;
+	border-color: #999;
+	box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
+	-webkit-transform: translateY(1px);
+	transform: translateY(1px);
+}
+
+#edd-filters #edd-advanced-filters.open .inside {
+	opacity: 1;
+    -webkit-transition: opacity 0.2s ease-in;
+       -moz-transition: opacity 0.2s ease-in;
+         -o-transition: opacity 0.2s ease-in;
+		    transition: opacity 0.2s ease-in;
 }
 
 /* Nav Tab Styles

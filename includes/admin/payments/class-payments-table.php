@@ -101,10 +101,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Get values
 		$start_date                = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date                  = isset( $_GET['end-date'] ) ? sanitize_text_field( $_GET['end-date'] ) : null;
-		$gateway                   = isset( $_GET['gateway'] ) ? sanitize_key( $_GET['gateway'] ) : 'all';
-		$mode                      = isset( $_GET['mode'] ) ? sanitize_key( $_GET['mode'] ) : 'all';
-		$order_total_filter_type   = isset( $_GET['order-amount-filter-type'] ) ? sanitize_text_field( $_GET['order-amount-filter-type'] ) : false;
+		$end_date                  = isset( $_GET['end-date']   ) ? sanitize_text_field( $_GET['end-date']   ) : null;
+		$gateway                   = isset( $_GET['gateway']    ) ? sanitize_key( $_GET['gateway']           ) : 'all';
+		$mode                      = isset( $_GET['mode']       ) ? sanitize_key( $_GET['mode']              ) : 'all';
+		$order_total_filter_type   = isset( $_GET['order-amount-filter-type']  ) ? sanitize_text_field( $_GET['order-amount-filter-type']  ) : false;
 		$order_total_filter_amount = isset( $_GET['order-amount-filter-value'] ) ? sanitize_text_field( $_GET['order-amount-filter-value'] ) : '';
 
 		$status     = $this->get_status();
@@ -115,12 +115,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$all_gateways = edd_get_payment_gateways();
 
 		// Advanced filters
-		$advanced_filters_applied = (bool) ! empty( $order_total_filter_type ) && ! empty( $order_total_filter_amount );
+		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount );
 		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
 
 		$maybe_show_filters = ( true === $advanced_filters_applied )
-			? 'show'
-			: 'hide';
+			? 'open'
+			: '';
 
 		// No modes
 		if ( empty( $all_modes ) ) {
@@ -195,7 +195,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<?php endif; ?>
 
 				<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
-					<span>
+					<input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+
+					<span class="inside">
 						<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
 						<?php
 						$options = array(
@@ -213,9 +215,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 							'show_option_none' => false,
 						) );
 						?>
-					</span>
 
-					<span>
 						<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
 					</span>
 				</span>
@@ -223,13 +223,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<span id="edd-after-core-filters">
 					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
-                    <input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'Advanced', 'easy-digital-downloads' ); ?>"/>
-
 					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
-					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ( 'all' !== $gateway ) ) : ?>
+					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
 						<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-							<?php esc_html_e( 'Clear Filter', 'easy-digital-downloads' ); ?>
+							<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
 						</a>
 					<?php endif; ?>
 				</span>
