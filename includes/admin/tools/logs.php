@@ -223,7 +223,7 @@ function edd_log_views() {
 		<div class="wp-filter" id="edd-filters">
 			<div class="filter-items">
 				<span id="edd-type-filter">
-					<select id="edd-logs-view" name="view">
+					<select id="edd-logs-view" name="view" class="edd-select-chosen">
 						<?php foreach ( $views as $view_id => $label ) : ?>
 							<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>

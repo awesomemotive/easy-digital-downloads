@@ -1023,13 +1023,8 @@ function display_dates_filter() {
 		echo $range;
 	?></span>
 
-	<span class="edd-date-range-options graph-option-section<?php echo esc_attr( $class ); ?>">
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend><?php
-
-			echo $from . $to;
-
-		?></fieldset>
+	<span class="edd-date-range-options graph-option-section edd-from-to-wrapper<?php echo esc_attr( $class ); ?>">
+		<?php echo $from . $to; ?>
 	</span><?php
 }
 
