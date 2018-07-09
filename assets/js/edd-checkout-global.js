@@ -352,7 +352,8 @@ function recalculate_taxes(state) {
 		action: 'edd_recalculate_taxes',
 		billing_country: $edd_cc_address.find('#billing_country').val(),
 		state: state,
-		card_zip: $edd_cc_address.find('input[name=card_zip]').val()
+		card_zip: $edd_cc_address.find('input[name=card_zip]').val(),
+		nonce: jQuery('#edd-checkout-address-fields-nonce').val(),
 	};
 
 	jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');
