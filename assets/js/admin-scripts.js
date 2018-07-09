@@ -106,7 +106,7 @@ jQuery(document).ready(function ($) {
 		// Prevnt submit action
 		e.preventDefault();
 
-		$( '#edd-advanced-filters' ).fadeToggle();
+		$( '#edd-advanced-filters' ).toggleClass( 'open' );
 	} );
 
 	/**
