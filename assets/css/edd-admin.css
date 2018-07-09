@@ -511,10 +511,6 @@ textarea[name="edd-note"] {
 	position: relative;
 }
 
-#edd-filters #edd-advanced-filters .inside * {
-	display: inline;
-}
-
 #edd-filters #edd-advanced-filters .inside {
 	z-index: 99;
 	position: absolute;
