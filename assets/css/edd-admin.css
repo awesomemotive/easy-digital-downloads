@@ -35,6 +35,7 @@ a.edd-delete:hover {
 }
 
 .edd-from-to-wrapper {
+	vertical-align: middle;
 	margin-right: 4px;
 }
 
@@ -53,12 +54,14 @@ a.edd-delete:hover {
 }
 
 .edd-from-to-wrapper input[name="start"],
-.edd-from-to-wrapper input[name="start-date"] {
+.edd-from-to-wrapper input[name="start-date"],
+.edd-from-to-wrapper input[name="filter_from"] {
 	border-right-color: #eee;
 }
 
 .edd-from-to-wrapper input[name="end"],
-.edd-from-to-wrapper input[name="end-date"] {
+.edd-from-to-wrapper input[name="end-date"],
+.edd-from-to-wrapper input[name="filter_to"] {
 	border-left-color: #eee;
 	margin-left: -1px;
 }
@@ -514,7 +517,7 @@ textarea[name="edd-note"] {
 	padding: 0 10px;
 }
 
-#edd-filters .filter-items > span:not(#edd-date-filters) {
+#edd-filters .filter-items > span:not(#edd-date-filters):not(.edd-date-range-options) {
 	display: inline-block;
 	margin: 10px 4px 10px 0;
 	max-width: 200px;
@@ -529,9 +532,8 @@ textarea[name="edd-note"] {
 	margin-left: 2px;
 }
 
-#edd-filters input[type=text],
+#edd-filters input[type=text].edd_datepicker,
 #edd-filters input[type=number] {
-	vertical-align: middle;
 	max-width: 100px;
 	padding: 5px;
 }
@@ -1522,17 +1524,15 @@ td.edd_order_price {
 	max-width: 130px !important; /* Chosen Override */
 }
 #edd-filters .filter-items .edd-date-range-options {
-	margin-top: 9px;
+	margin: 10px 4px 10px 0;
+	max-width: 205px;
 }
+
 .edd-date-range-options .edd_datepicker {
 	width: 100px;
 }
 
-.edd-date-range-options label,
-.edd-date-range-options span:not(:last-of-type) input {
-	margin-right: 5px;
-}
-.edd-date-range-options span {
+.edd-date-range-options span span {
 	float: left;
 	line-height: 29px;
 	height: 29px;
