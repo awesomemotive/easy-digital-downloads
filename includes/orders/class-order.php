@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $order_number
  * @property string $status
  * @property string $date_created
+ * @property string $date_modified
  * @property string $date_completed
  * @property int $user_id
  * @property int $customer_id
@@ -80,6 +81,14 @@ class Order extends \EDD\Database\Objects\Order {
 	 * @var   string
 	 */
 	protected $date_created;
+
+	/**
+	 * Date modified.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_modified;
 
 	/**
 	 * Date completed.

@@ -165,7 +165,22 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $should_output_wp_post_objects ) {
-			// TODO: We need to return WP_Post objects here for backwards compatibility...
+			$posts = array();
+
+			foreach ( $orders as $order ) {
+				$p = new WP_Post( new stdClass() );
+
+				$p->ID                = $order->id;
+				$p->post_date         = EDD()->utils->date( $order->date_created, null, true )->toDateTimeString();
+				$p->post_date_gmt     = $order->date_created;
+				$p->post_status       = $order->status;
+				$p->post_modified     = EDD()->utils->date( $order->date_modified, null, true )->toDateTimeString();
+				$p->post_modified_gmt = $order->date_modified;
+
+				$posts[] = $p;
+			}
+
+			return $posts;
 		}
 
 		if ( $should_output_order_objects ) {
@@ -173,8 +188,6 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		foreach ( $orders as $order ) {
-			/** @var $order EDD\Orders\Order */
-
 			$payment = edd_get_payment( $order->id );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
