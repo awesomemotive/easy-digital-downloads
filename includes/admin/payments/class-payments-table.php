@@ -225,7 +225,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
-					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ( 'all' !== $gateway ) ) : ?>
+					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
 						<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
 							<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
 						</a>
