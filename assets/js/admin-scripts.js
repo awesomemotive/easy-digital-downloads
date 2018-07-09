@@ -506,7 +506,7 @@ jQuery(document).ready(function ($) {
 			tolerance:   'pointer',
 			containment: 'parent',
 			distance:    2,
-			opacity:     0.9,
+			opacity:     0.7,
 			scroll:      true,
 
 			/**
