@@ -434,16 +434,22 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 					<?php $this->log_views(); ?>
 				</span>
 
-				<span id="edd-date-filters">
-					<span>
-						<label for="start-date"><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-					<span>
-						<label for="end-date"><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="end-date" name="end-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-				</span>
+				<span id="edd-date-filters" class="edd-from-to-wrapper">
+					<?php
+
+					echo EDD()->html->date_field( array(
+						'id'          => 'start-date',
+						'name'        => 'start-date',
+						'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
+					) );
+
+					echo EDD()->html->date_field( array(
+						'id'          => 'end-date',
+						'name'        => 'end-date',
+						'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
+					) );
+
+				?></span>
 
 				<span id="edd-download-filter">
 					<?php $this->downloads_filter(); ?>

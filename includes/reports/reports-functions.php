@@ -1007,8 +1007,7 @@ function display_dates_filter() {
 		'id'          => 'filter_from',
 		'name'        => 'filter_from',
 		'value'       => ( empty( $dates['from'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['from'],
-		'label'       => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-		'placeholder' => edd_get_date_picker_format(),
+		'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 	) );
 
 	// To.
@@ -1016,8 +1015,7 @@ function display_dates_filter() {
 		'id'          => 'filter_to',
 		'name'        => 'filter_to',
 		'value'       => ( empty( $dates['to'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['to'],
-		'label'       => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-		'placeholder' => edd_get_date_picker_format(),
+		'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 	) );
 
 	// Output fields
