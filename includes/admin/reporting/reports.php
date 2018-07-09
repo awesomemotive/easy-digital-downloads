@@ -722,7 +722,7 @@ function edd_register_downloads_report( $reports ) {
         }
 
         $reports->register_endpoint( 'earnings_by_taxonomy', array(
-			'label' => __( 'Earnings by Taxonomy', 'easy-digital-downloads' ),
+			'label' => __( 'Earnings in Categories & Tags', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
