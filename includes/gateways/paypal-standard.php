@@ -55,7 +55,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 		),
 		'paypal_image_url' => array(
 			'id'   => 'paypal_image_url',
-			'name' => __( 'PayPal Image URL', 'easy-digital-downloads' ),
+			'name' => __( 'PayPal Image', 'easy-digital-downloads' ),
 			'desc' => __( 'Upload an image to display on the PayPal checkout page.', 'easy-digital-downloads' ),
 			'type' => 'upload',
 			'size' => 'regular',

@@ -106,7 +106,7 @@ jQuery(document).ready(function ($) {
 		// Prevnt submit action
 		e.preventDefault();
 
-		$( '#edd-advanced-filters' ).fadeToggle();
+		$( '#edd-advanced-filters' ).toggleClass( 'open' );
 	} );
 
 	/**
@@ -506,7 +506,7 @@ jQuery(document).ready(function ($) {
 			tolerance:   'pointer',
 			containment: 'parent',
 			distance:    2,
-			opacity:     0.9,
+			opacity:     0.7,
 			scroll:      true,
 
 			/**
