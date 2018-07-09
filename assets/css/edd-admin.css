@@ -34,6 +34,33 @@ a.edd-delete:hover {
 	height: 29px;
 }
 
+.edd-from-to-wrapper {
+	margin-right: 4px;
+}
+
+.edd-from-to-wrapper input {
+	width: 120px;
+	margin: 0;
+	position: relative;
+	z-index: 1;
+}
+
+.edd-from-to-wrapper input:focus {
+	z-index: 2;
+	outline: auto 5px -webkit-focus-ring-color;
+	border-color: #eee;
+	box-shadow: none;
+}
+
+.edd-from-to-wrapper input[name="start"] {
+	border-right-color: #eee;
+}
+
+.edd-from-to-wrapper input[name="end"] {
+	border-left-color: #eee;
+	margin-left: -1px;
+}
+
 .edd-settings-sub-nav {
 	margin: 0 0px 10px 0;
 	width: 100%;
@@ -1466,14 +1493,9 @@ td.edd_order_price {
 	box-shadow: none;
 }
 
-.edd-reports-wrapper .postbox .chosen-container {
+.edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
-	vertical-align: inherit;
-	margin-right: 4px;
-}
-.edd-reports-wrapper .postbox #edd-start-wrap input.edd_datepicker,
-.edd-reports-wrapper .postbox #edd-end-wrap input.edd_datepicker {
-	width: 120px;
+	vertical-align: baseline;
 	margin-right: 4px;
 }
 
@@ -2001,6 +2023,7 @@ td.edd_order_price {
 body.js select.edd-select-chosen {
 	height: 27px;
 	opacity: 0.2;
+	max-width: 300px;
 }
 
 .chosen-container.chosen-container-multi {
