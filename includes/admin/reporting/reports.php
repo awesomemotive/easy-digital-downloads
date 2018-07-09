@@ -2671,13 +2671,13 @@ function display_export_report() {
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-order-export-start',
 										'name'        => 'start',
-										'placeholder' => __( 'From', 'easy-digital-downloads' ),
+										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-order-export-end',
 										'name'        => 'end',
-										'placeholder' => __( 'To', 'easy-digital-downloads' ),
+										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 								?></span><?php
@@ -2718,13 +2718,13 @@ function display_export_report() {
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-orders-export-start',
 										'name'        => 'start',
-										'placeholder' => __( 'From', 'easy-digital-downloads' ),
+										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-orders-export-end',
 										'name'        => 'end',
-										'placeholder' => __( 'To', 'easy-digital-downloads' ),
+										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 								?></span><?php
@@ -2760,13 +2760,13 @@ function display_export_report() {
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-start',
 										'name'        => 'start',
-										'placeholder' => __( 'From', 'easy-digital-downloads' )
+										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-end',
 										'name'        => 'end',
-										'placeholder' => __( 'To', 'easy-digital-downloads' )
+										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
 								?></span><?php
@@ -2837,13 +2837,13 @@ function display_export_report() {
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-start',
 										'name'        => 'start',
-										'placeholder' => __( 'From', 'easy-digital-downloads' )
+										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-end',
 										'name'        => 'end',
-										'placeholder' => __( 'To', 'easy-digital-downloads' )
+										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
 								?></span><?php
@@ -2884,13 +2884,13 @@ function display_export_report() {
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-api-requests-export-start',
 										'name'        => 'start',
-										'placeholder' => __( 'From', 'easy-digital-downloads' )
+										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-api-requests-export-end',
 										'name'        => 'end',
-										'placeholder' => __( 'To', 'easy-digital-downloads' )
+										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
 								?></span><?php
@@ -2916,13 +2916,13 @@ function display_export_report() {
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-file-download-export-start',
 										'name'        => 'start',
-										'placeholder' => __( 'From', 'easy-digital-downloads' )
+										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-file-download-export-end',
 										'name'        => 'end',
-										'placeholder' => __( 'To', 'easy-digital-downloads' )
+										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
 								?></span><?php
