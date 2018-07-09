@@ -1036,7 +1036,7 @@ function edd_render_meta_box_shortcode() {
 ?>
 	<p>
 		<strong><?php _e( 'Purchase Shortcode:', 'easy-digital-downloads' ); ?></strong>
-		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchse Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
+		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
 	</p>
 	<input type="text" id="edd-purchase-shortcode" class="widefat" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
 <?php
