@@ -599,7 +599,7 @@ function edd_get_registered_settings() {
 						'id'    => 'test_mode',
 						'name'  => __( 'Test Mode', 'easy-digital-downloads' ),
 						'check' => __( 'Enabled',   'easy-digital-downloads' ),
-						'desc'  => __( 'While test mode is enabled, no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'easy-digital-downloads' ),
+						'desc'  => __( 'While test mode is enabled, no live transactions are processed.<br>Use test mode in conjunction with the sandbox/test account for the payment gateways to test.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description'
 					),
 					'gateways' => array(
@@ -612,7 +612,7 @@ function edd_get_registered_settings() {
 					'default_gateway' => array(
 						'id'      => 'default_gateway',
 						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
-						'desc'    => __( 'Select this gateway automatically on the checkout page. (If not set, the first active gateway is used.)', 'easy-digital-downloads' ),
+						'desc'    => __( 'Automatically select this gateway on checkout pages.<br>If empty, the first active gateway is selected instead.', 'easy-digital-downloads' ),
 						'type'    => 'gateway_select',
 						'chosen'  => true,
 						'options' => $gateways,
@@ -1986,7 +1986,7 @@ function edd_gateways_callback( $args ) {
 		);
 
 		$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
-		$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+		$html .= '<p class="description">' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );

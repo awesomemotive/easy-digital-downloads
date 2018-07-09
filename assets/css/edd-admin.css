@@ -130,11 +130,6 @@ a.edd-delete:hover {
 	position: relative;
 	height: 28px;
 	cursor: move;
-	opacity: 0.8;
-}
-
-.edd-sortable-list li:hover {
-	opacity: 1;
 }
 
 .edd-sortable-list li label * {
