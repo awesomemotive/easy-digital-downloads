@@ -607,6 +607,15 @@ function edd_purchase_form_validate_new_user() {
 	} else {
 		if ( edd_no_guest_checkout() ) {
 			edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
+		} else {
+			// If the entered email is attached to a user account, they must log in. Otherwise you can add purchases/CC to an account you do not own.
+			$user = get_user_by( 'email', $user_email );
+
+			if ( $user ) {
+				edd_set_error( 'login_required', __( 'You must login to complete your purchase', 'easy-digital-downloads' ) );
+			} else {
+				edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
+			}
 		}
 	}
 
@@ -758,6 +767,14 @@ function edd_purchase_form_validate_guest_user() {
 		} else {
 			// All is good to go
 			$valid_user_data['user_email'] = $guest_email;
+
+			// We have a valid email, but if that email is attached to a user account, they must log in. Otherwise you can add purchases/CC to an account you do not own.
+			$user = get_user_by( 'email', $guest_email );
+
+			if ( $user ) {
+				edd_set_error( 'login_required', __( 'You must login to complete your purchase', 'easy-digital-downloads' ) );
+			}
+
 		}
 	} else {
 		// No email
