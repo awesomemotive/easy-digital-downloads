@@ -33,8 +33,20 @@ add_action( 'edd_gateway_select', 'edd_process_gateway_select' );
  * @return void
  */
 function edd_load_ajax_gateway() {
-	if ( isset( $_POST['edd_payment_mode'] ) ) {
-		do_action( 'edd_purchase_form' );
+	if ( ! isset( $_POST['nonce'] ) ) {
+		edd_debug_log( __( 'Missing nonce when loading the gateway fields. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+	}
+
+	if ( isset( $_POST['edd_payment_mode'] ) && isset( $_POST['nonce'] ) ) {
+		$payment_mode = sanitize_text_field( $_POST['edd_payment_mode'] );
+		$nonce        = sanitize_text_field( $_POST['nonce'] );
+
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-gateway-selected-' . $payment_mode );
+
+		if ( false !== $nonce_verified ) {
+			do_action( 'edd_purchase_form' );
+		}
+
 		exit();
 	}
 }
