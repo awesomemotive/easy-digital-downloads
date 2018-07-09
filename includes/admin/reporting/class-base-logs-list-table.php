@@ -440,13 +440,15 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 					echo EDD()->html->date_field( array(
 						'id'          => 'start-date',
 						'name'        => 'start-date',
-						'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
+						'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+						'value'       => $start_date
 					) );
 
 					echo EDD()->html->date_field( array(
 						'id'          => 'end-date',
 						'name'        => 'end-date',
-						'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
+						'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+						'value'       => $end_date
 					) );
 
 				?></span>

@@ -175,12 +175,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 						'id'          => 'start-date',
 						'name'        => 'start-date',
 						'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+						'value'       => $start_date
 					) );
 
 					echo EDD()->html->date_field( array(
 						'id'          => 'end-date',
 						'name'        => 'end-date',
 						'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+						'value'       => $end_date
 					) );
 
 				?></span><?php
