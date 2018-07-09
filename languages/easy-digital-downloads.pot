@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-07-05 22:26:17+00:00\n"
+"POT-Creation-Date: 2018-07-09 19:18:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5061,7 +5061,7 @@ msgstr ""
 msgid "Step %d of approximately %d running"
 msgstr ""
 
-#: includes/ajax-functions.php:145 includes/cart/actions.php:112
+#: includes/ajax-functions.php:143 includes/cart/actions.php:110
 msgid ""
 "Missing nonce when removing an item from the cart. Please read the "
 "following for more information: "
@@ -5069,7 +5069,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:196
+#: includes/ajax-functions.php:190
 msgid ""
 "Missing nonce when adding an item to the cart. Please read the following "
 "for more information: "
@@ -5077,7 +5077,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:481
+#: includes/ajax-functions.php:471
 msgid ""
 "Missing nonce when recalculating taxes. Please read the following for more "
 "information: "
@@ -5085,7 +5085,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:535
+#: includes/ajax-functions.php:521
 msgid ""
 "Missing nonce when retrieving state list. Please read the following for "
 "more information: "
@@ -5093,16 +5093,16 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:667 includes/ajax-functions.php:719
+#: includes/ajax-functions.php:651 includes/ajax-functions.php:703
 msgid "No results found"
 msgstr ""
 
-#: includes/ajax-functions.php:768 includes/ajax-functions.php:860
+#: includes/ajax-functions.php:752 includes/ajax-functions.php:844
 #: includes/class-edd-html-elements.php:339
 msgid "No users found"
 msgstr ""
 
-#: includes/ajax-functions.php:810
+#: includes/ajax-functions.php:794
 msgid "All Prices"
 msgstr ""
 
@@ -5463,7 +5463,7 @@ msgstr ""
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:754 includes/process-purchase.php:394
+#: includes/checkout/template.php:754 includes/process-purchase.php:386
 #: includes/scripts.php:67
 msgid "Enter discount"
 msgstr ""
@@ -6448,7 +6448,7 @@ msgstr ""
 msgid "Receipt"
 msgstr ""
 
-#: includes/gateways/actions.php:39
+#: includes/gateways/actions.php:37
 msgid ""
 "Missing nonce when loading the gateway fields. Please read the following "
 "for more information: "
@@ -6456,7 +6456,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/gateways/actions.php:72
+#: includes/gateways/actions.php:68
 msgid "You must enable a payment gateway to use Easy Digital Downloads"
 msgstr ""
 
@@ -6870,16 +6870,16 @@ msgstr ""
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:93 includes/process-purchase.php:732
+#: includes/login-register.php:93 includes/process-purchase.php:733
 msgid "The username you entered does not exist"
 msgstr ""
 
 #: includes/login-register.php:147 includes/login-register.php:155
-#: includes/process-purchase.php:610
+#: includes/process-purchase.php:602
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:151 includes/process-purchase.php:603
+#: includes/login-register.php:151 includes/process-purchase.php:595
 msgid "Username already taken"
 msgstr ""
 
@@ -6887,8 +6887,8 @@ msgstr ""
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:163 includes/process-purchase.php:550
-#: includes/process-purchase.php:625 includes/process-purchase.php:765
+#: includes/login-register.php:163 includes/process-purchase.php:542
+#: includes/process-purchase.php:626 includes/process-purchase.php:766
 msgid "Invalid email"
 msgstr ""
 
@@ -7611,7 +7611,7 @@ msgstr ""
 msgid "Your cart is empty"
 msgstr ""
 
-#: includes/process-purchase.php:46
+#: includes/process-purchase.php:44
 msgid ""
 "Missing nonce when processing checkout. Please read the following for more "
 "information: "
@@ -7619,15 +7619,15 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/process-purchase.php:55
+#: includes/process-purchase.php:51
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
 
-#: includes/process-purchase.php:215
+#: includes/process-purchase.php:211
 msgid "The email address %s is already in use."
 msgstr ""
 
-#: includes/process-purchase.php:239
+#: includes/process-purchase.php:233
 msgid ""
 "Missing nonce when processing login during checkout. Please read the "
 "following for more information: "
@@ -7635,105 +7635,109 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/process-purchase.php:247
+#: includes/process-purchase.php:239
 msgid "Error processing login. Nonce failed."
 msgstr ""
 
-#: includes/process-purchase.php:361
+#: includes/process-purchase.php:353
 msgid "The selected payment gateway is not enabled"
 msgstr ""
 
-#: includes/process-purchase.php:421
+#: includes/process-purchase.php:413
 msgid "One or more of the discounts you entered is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:438
+#: includes/process-purchase.php:430
 msgid "You must agree to the terms of use"
 msgstr ""
 
-#: includes/process-purchase.php:452
+#: includes/process-purchase.php:444
 msgid "You must agree to the privacy policy"
 msgstr ""
 
-#: includes/process-purchase.php:467
+#: includes/process-purchase.php:459
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: includes/process-purchase.php:471
+#: includes/process-purchase.php:463
 msgid "Please enter your first name"
 msgstr ""
 
-#: includes/process-purchase.php:481
+#: includes/process-purchase.php:473
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/process-purchase.php:485
+#: includes/process-purchase.php:477
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:489
+#: includes/process-purchase.php:481
 msgid "Please select your billing country"
 msgstr ""
 
-#: includes/process-purchase.php:493
+#: includes/process-purchase.php:485
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:555 includes/process-purchase.php:876
+#: includes/process-purchase.php:547 includes/process-purchase.php:885
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:608
+#: includes/process-purchase.php:600
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:617
+#: includes/process-purchase.php:609 includes/process-purchase.php:617
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:630
+#: includes/process-purchase.php:615 includes/process-purchase.php:775
+msgid "You must login to complete your purchase"
+msgstr ""
+
+#: includes/process-purchase.php:631
 msgid ""
 "Email already used. Login or use a different email to complete your "
 "purchase."
 msgstr ""
 
-#: includes/process-purchase.php:638 includes/process-purchase.php:772
+#: includes/process-purchase.php:639 includes/process-purchase.php:781
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:646
+#: includes/process-purchase.php:647
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:655 includes/process-purchase.php:728
+#: includes/process-purchase.php:656 includes/process-purchase.php:729
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:658
+#: includes/process-purchase.php:659
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:682
+#: includes/process-purchase.php:683
 msgid "You must log in or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:709
+#: includes/process-purchase.php:710
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:754
+#: includes/process-purchase.php:755
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:940
+#: includes/process-purchase.php:949
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1189
+#: includes/process-purchase.php:1198
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1225
+#: includes/process-purchase.php:1234
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 

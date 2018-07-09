@@ -202,7 +202,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * edd_get_login_fields()
 * edd_payment_mode_select()
 * edd_checkout_hidden_fields()
-
+* Fix: Important - Don't allow guest purchases for an email address that has an existing user.
 * Fix: Unexpected behavior in 'redirect to checkout' when multiple checkout pages were used.
 * Fix: Saving an order in the admin when prices were inclusive of tax could cause incorrect item price amounts to be saved.
 * Fix: PHP 7.2 Compatibility - Some PHP notices were being thrown while activating Easy Digital Downloads.
