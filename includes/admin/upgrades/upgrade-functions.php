@@ -1305,21 +1305,124 @@ function edd_upgrade_render_v30_migration() {
 	$migration_complete = edd_has_upgrade_completed( 'v30_migration' );
 
 	/** Orders Migration *****************************************************/
-	$have_orders     = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' LIMIT 1" );
+	$orders          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
 	$orders_complete = edd_has_upgrade_completed( 'migrate_orders' );
 
-	if ( empty( $have_orders ) ) {
+	if ( empty( $orders ) ) {
 		edd_set_upgrade_complete( 'migrate_orders' );
 		$orders_complete = true;
 	}
 
 	/** Customer Data Migration **********************************************/
+	$addresses = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
+	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
+
+	if ( empty( $addresses ) ) {
+		edd_set_upgrade_complete( 'migrate_customer_addresses' );
+		$customer_addresses_complete = true;
+	}
+
+	$email_addresses = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
+	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
+
+	if ( empty( $email_addresses ) ) {
+		edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
+		$customer_email_addresses_complete = true;
+	}
 
 	/** Logs Migration *******************************************************/
+	$logs = $wpdb->get_results( "SELECT t.slug
+								 FROM {$wpdb->posts} AS p
+								 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+								 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+								 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+								 WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+								 GROUP BY p.ID
+								 LIMIT 1" );
+	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
+	
+	if ( empty( $logs ) ) {
+		edd_set_upgrade_complete( 'migrate_logs' );
+		$logs_complete = true;
+	}
 
 	/** Tax Rates Migration **************************************************/
+	$tax_rates = get_option( 'edd_tax_rates', array() );
+	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
+
+	if ( empty( $tax_rates ) ) {
+		edd_set_upgrade_complete( 'migrate_tax_rates' );
+		$tax_rates_complete = true;
+	}
 
 	/** Discounts Migration **************************************************/
+	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discounts' LIMIT 1" );
+	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
+
+	if ( empty( $discounts ) ) {
+		edd_set_upgrade_complete( 'migrate_discounts' );
+		$discounts_complete = true;
+	}
 
 	/** Order Notes Migration ************************************************/
+	$notes          = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
+	$notes_complete = edd_has_upgrade_completed( 'migrate_order_notes' );
+
+	if ( empty( $notes ) ) {
+		edd_set_upgrade_complete( 'migrate_order_notes' );
+		$notes_complete = true;
+	}
+
+	// Initialise to first step.
+	$step = 1; ?>
+
+	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
+		<p>
+			<?php _e( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'easy-digital-downloads' ); ?>
+			<br /><br />
+			<?php _e( 'You may now leave this page.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+
+	<div id="edd-migration-nav-warn" class="notice notice-info">
+		<p><?php _e( '<strong>Important:</strong> Please leave this screen open and do not navigate away until the process completes.', 'easy-digital-downloads' ); ?></p>
+	</div>
+
+	<style>
+		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
+	</style>
+	<script>
+        jQuery( function($) {
+            $(document).ready(function () {
+                $(document).on("DOMNodeInserted", function (e) {
+                    var element = e.target;
+
+                    if (element.id === 'edd-batch-success') {
+                        element = $(element);
+
+                        element.parent().prev().find('.edd-migration.allowed').hide();
+                        element.parent().prev().find('.edd-migration.unavailable').show();
+                        var element_wrapper = element.parents().eq(4);
+                        element_wrapper.find('.dashicons.dashicons-yes').show();
+
+                        var next_step_wrapper = element_wrapper.next();
+                        if (next_step_wrapper.find('.postbox').length) {
+                            next_step_wrapper.find('.edd-migration.allowed').show();
+                            next_step_wrapper.find('.edd-migration.unavailable').hide();
+
+                            if (auto_start_next_step) {
+                                next_step_wrapper.find('.edd-export-form').submit();
+                            }
+                        } else {
+                            $('#edd-migration-nav-warn').hide();
+                            $('#edd-migration-ready').slideDown();
+                        }
+
+                    }
+                });
+            });
+        });
+	</script>
+
+	<?php
 }
