@@ -167,7 +167,7 @@ class Base extends \EDD_Batch_Export {
 		switch ( $type ) {
 			case 'orders':
 				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_payment_id' AND meta_value = %d",
+					"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
 					$legacy_id
 				) );
 				break;
