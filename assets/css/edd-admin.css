@@ -250,6 +250,7 @@ a.edd-delete:hover {
 	height: 315px;
 	opacity: 0.9;
 	transition: all .2s ease-in-out;
+	cursor: default;
 }
 #edd-add-ons .edd-extension:hover {
 	border: 1px solid #bbb;
