@@ -67,14 +67,14 @@ function edd_payment_history_page() {
 */
 function edd_payment_history_mobile_link() {
 	?>
-	<div class="edd-mobile-link">
+	<span class="edd-mobile-link">
 		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
 			<?php _e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
 		</a>
-	</div>
+	</span>
 	<?php
 }
-add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
+add_action( 'edd_after_admin_filter_bar_reports', 'edd_payment_history_mobile_link' );
 
 /**
  * Payment History admin titles
