@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_customermeta" database table
  *
@@ -80,4 +79,3 @@ final class Customer_Meta extends Base {
 		parent::maybe_upgrade();
 	}
 }
-endif;

@@ -10,12 +10,9 @@
  */
 namespace EDD\Database\Queries;
 
-use EDD\Database\Schemas\Column;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
 /**
  * Base class used for querying custom database tables.
  *
@@ -394,25 +391,12 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Invoke a new table schema class
-		$schema  = new $this->table_schema;
-		$columns = ! empty( $schema->columns )
-			? $schema->columns
-			: $this->columns;
+		$schema = new $this->table_schema;
 
-		// Default array
-		$new_columns = array();
-
-		// Loop through columns array
-		foreach ( $columns as $column ) {
-			if ( is_array( $column ) ) {
-				$new_columns[] = new Column( $column );
-			} elseif ( $column instanceof Column ) {
-				$new_columns[] = $column;
-			}
+		// Maybe get the column objects
+		if ( ! empty( $schema->columns ) ) {
+			$this->columns = $schema->columns;
 		}
-
-		// Set columns
-		$this->columns = $new_columns;
 	}
 
 	/**
@@ -2713,4 +2697,3 @@ class Base extends \EDD\Database\Base {
 		wp_cache_delete( $key, $group );
 	}
 }
-endif;

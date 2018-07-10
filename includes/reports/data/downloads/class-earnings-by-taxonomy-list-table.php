@@ -139,6 +139,11 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 			}
 		}
 
+		// Sort by total earnings
+		usort( $sorted_data, function( $a, $b ) {
+			return $a->earnings < $b->earnings;
+		} );
+
 		return $sorted_data;
 	}
 
@@ -151,11 +156,11 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'             => __( 'Taxonomy', 'easy-digital-downloads' ),
-			'sales'            => __( 'Total Sales', 'easy-digital-downloads' ),
-			'earnings'         => __( 'Total Earnings', 'easy-digital-downloads' ),
-			'average_sales'    => __( 'Monthly Sales Average', 'easy-digital-downloads' ),
-			'average_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' ),
+			'name'             => __( 'Name',                     'easy-digital-downloads' ),
+			'sales'            => __( 'Total Sales',              'easy-digital-downloads' ),
+			'earnings'         => __( 'Total Earnings',           'easy-digital-downloads' ),
+			'average_sales'    => __( 'Monthly Sales Average',    'easy-digital-downloads' ),
+			'average_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' )
 		);
 	}
 
