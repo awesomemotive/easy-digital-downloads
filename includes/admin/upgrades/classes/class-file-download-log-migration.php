@@ -65,7 +65,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 			foreach ( $step_items as $log_id ) {
 
-				$log_id           = (int) $log_id['object_id'];
+				$log_id           = (int) $log_id->object_id;
 				$sanitized_log_id = absint( $log_id );
 
 				if ( $sanitized_log_id !== $log_id ) {
@@ -110,8 +110,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$items = $this->get_stored_data( 'edd_file_download_log_ids', false );
-		$total = count( $items );
+		$total = get_option( 'edd_fdlm_total_logs' );
 
 		$percentage = 100;
 
@@ -156,6 +155,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 			return true;
 		} else {
 			$this->done    = true;
+			delete_option( 'edd_fdlm_total_logs' );
 			$this->message = __( 'File download logs updated successfully.', 'easy-digital-downloads' );
 			edd_set_upgrade_complete( 'update_file_download_log_data' );
 			return false;
@@ -187,7 +187,17 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 	public function pre_fetch() {
 
-		$log_ids = $this->get_log_ids_for_current_step();
+		global $wpdb;
+
+		$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download'" );
+		$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type'" );
+		$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id}" );
+
+		// Count the number of rows
+		$rowcount = count( $log_ids );
+
+		// Temporarily save the number of rows
+		update_option( 'edd_fdlm_total_logs', $rowcount );
 
 	}
 
