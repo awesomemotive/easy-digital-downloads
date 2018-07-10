@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_customers" database table
  *
@@ -123,4 +122,3 @@ final class Customers extends Base {
 		return $this->is_success( $result );
 	}
 }
-endif;
