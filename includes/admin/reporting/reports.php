@@ -276,7 +276,6 @@ function edd_register_overview_report( $reports ) {
 						$stats = new EDD\Orders\Stats();
 						return apply_filters( 'edd_reports_overview_sales', $stats->get_order_count( array(
 							'range'    => $filter['range'],
-							'relative' => true,
 						) ) );
 					},
 					'display_args'  => array(
