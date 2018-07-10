@@ -55,14 +55,11 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 		global $wpdb;
 
-		$items = $this->get_stored_data( 'edd_file_download_log_ids' );
+		$step_items = $this->get_log_ids_for_current_step();
 
-		if ( ! is_array( $items ) ) {
+		if ( ! is_array( $step_items ) ) {
 			return false;
 		}
-
-		$offset     = ( $this->step - 1 ) * $this->per_step;
-		$step_items = array_slice( $items, $offset, $this->per_step, true );
 
 		if ( $step_items ) {
 
@@ -193,18 +190,24 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	public function pre_fetch() {
 		global $wpdb;
 
-		// Get all the file download logs
-		if ( $this->step == 1 ) {
-			$this->delete_data( 'edd_file_download_log_ids' );
+		// Get the file download logs for step 1.
+		$this->delete_data( 'edd_file_download_log_ids' );
 
-			$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download'" );
-			$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type'" );
-			$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id}" );
+		$log_ids = $this->get_log_ids_for_current_step();
 
-			$this->store_data( 'edd_file_download_log_ids', $log_ids );
+		$this->store_data( 'edd_file_download_log_ids', $log_ids );
 
-		}
+	}
 
+	private function get_log_ids_for_current_step() {
+
+		$offset = ( $this->step * $this->per_step ) - $this->per_step;
+
+		$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download'" );
+		$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type'" );
+		$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id} LIMIT {$offset}, {$this->per_step}" );
+
+		return $log_ids;
 	}
 
 	/**
