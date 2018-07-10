@@ -418,6 +418,7 @@ class Orders extends Base {
 					'_edd_payment_tax_rate',
 					'_edd_completed_date',
 					'_edd_payment_unlimited_downloads',
+					'_edd_payment_number',
 				);
 
 				$remaining_meta = array_diff_key( $meta, array_flip( $core_meta_keys ) );
