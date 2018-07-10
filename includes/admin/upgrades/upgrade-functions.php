@@ -1302,7 +1302,7 @@ function edd_include_file_download_log_migration_batch_processor( $class = '' ) 
 function edd_upgrade_render_v30_migration() {
 	global $wpdb;
 
-	$migration_complete = edd_has_upgrade_completed( 'v30_remove_legacy_data' );
+	$migration_complete = edd_has_upgrade_completed( 'v30_data_migration' );
 
 	/** Orders Migration *****************************************************/
 	$orders          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
