@@ -49,7 +49,7 @@ class Base extends \EDD_Batch_Export {
 	 * @since 3.0
 	 * @var   bool
 	 */
-	protected $done;
+	public $done;
 
 	/**
 	 * Message.
@@ -57,7 +57,7 @@ class Base extends \EDD_Batch_Export {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $message;
+	public $message;
 
 	/**
 	 * Completed message.
@@ -65,7 +65,7 @@ class Base extends \EDD_Batch_Export {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $completed_message;
+	public $completed_message;
 
 	/**
 	 * Upgrade routine.
@@ -73,7 +73,7 @@ class Base extends \EDD_Batch_Export {
 	 * @since 3.0
 	 * @var   string
 	 */
-	protected $upgrade;
+	public $upgrade;
 
 	/**
 	 * Retrieve the data pertaining to the current step and migrate as necessary.
