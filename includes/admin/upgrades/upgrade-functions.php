@@ -1434,15 +1434,22 @@ function edd_upgrade_render_v30_migration() {
 							next_step_wrapper.find('.edd-migration.unavailable').hide();
 
 							if (auto_start_next_step) {
-								next_step_wrapper.find('.edd-export-form').submit();
+								next_step_wrapper.find('.edd-export-form:not(#edd-remove-legacy-data-form)').submit();
 							}
 						} else {
 							$('#edd-migration-nav-warn').hide();
 							$('#edd-migration-ready').slideDown();
 						}
-
 					}
 				});
+
+				$('#remove-legacy-data-confirm').on( 'change', function() {
+				    if ( this.checked == true ) {
+					    $('#remove-legacy-data-submit').removeClass('button-secondary').addClass('button-primary').prop( 'disabled', false );
+				    } else {
+                        $('#remove-legacy-data-submit').addClass('button-secondary').removeClass('button-primary').prop( 'disabled', 'disabled' );
+				    }
+				} );
 			});
 		});
 	</script>
@@ -1769,6 +1776,47 @@ function edd_upgrade_render_v30_migration() {
 	endif;
 	?>
 
+	<?php if ( ! $migration_complete ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Remove Legacy Data', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-customer-notes-control">
+					<p><strong><?php _e( 'Important:', 'easy-digital-downloads' ); ?></strong> <?php _e( 'This remove all legacy data. This action is not reversible. Please backup your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ); ?></p>
+					<form method="post" id="edd-remove-legacy-data-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $migration_complete ) : ?>
+							<p>
+								<input id="remove-legacy-data-confirm" name="remove-legacy-data-confirm" type="checkbox" value="1" />
+								<label for="remove-legacy-data-confirm">Confirm removal of legacy data.</label>
+							</p>
+
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Remove_Legacy_Data" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+	<?php endif; ?>
+
 	<?php
 }
 
@@ -1819,7 +1867,11 @@ function edd_load_batch_processors_for_v30_upgrade( $class ) {
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Notes':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Remove_Legacy_Data':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
 			break;
 	}
 }
