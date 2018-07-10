@@ -282,6 +282,7 @@ class Column {
 	 *     @type boolean  $primary     Is this the primary column?
 	 *     @type boolean  $created     Is this the column used as a created date?
 	 *     @type boolean  $modified    Is this the column used as a modified date?
+	 *     @type boolean  $guid        Is this the column used as a globally unique identifier?
 	 *     @type boolean  $searchable  Is this column searchable?
 	 *     @type boolean  $sortable    Is this column used in orderby?
 	 *     @type boolean  $date_query  Is this column a datetime?
@@ -357,6 +358,7 @@ class Column {
 			'primary'    => false,
 			'created'    => false,
 			'modified'   => false,
+			'guid'       => false,
 
 			// Cache
 			'cache_key'  => false,
@@ -407,10 +409,12 @@ class Column {
 			'encoding'   => 'wp_kses_data',
 			'collation'  => 'wp_kses_data',
 			'comment'    => 'wp_kses_data',
-			'pattern'    => array( $this, 'sanitize_pattern' ),
+
 			'primary'    => 'wp_validate_boolean',
 			'created'    => 'wp_validate_boolean',
 			'modified'   => 'wp_validate_boolean',
+			'guid'       => 'wp_validate_boolean',
+
 			'searchable' => 'wp_validate_boolean',
 			'sortable'   => 'wp_validate_boolean',
 			'date_query' => 'wp_validate_boolean',
@@ -418,6 +422,8 @@ class Column {
 			'in'         => 'wp_validate_boolean',
 			'not_in'     => 'wp_validate_boolean',
 			'cache_key'  => 'wp_validate_boolean',
+
+			'pattern'    => array( $this, 'sanitize_pattern'      ),
 			'validate'   => array( $this, 'sanitize_validation'   ),
 			'caps'       => array( $this, 'sanitize_capabilities' ),
 			'aliases'    => array( $this, 'sanitize_aliases'      )

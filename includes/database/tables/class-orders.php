@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_orders" database table
  *
@@ -108,4 +107,3 @@ final class Orders extends Base {
 		return $this->is_success( $result );
 	}
 }
-endif;

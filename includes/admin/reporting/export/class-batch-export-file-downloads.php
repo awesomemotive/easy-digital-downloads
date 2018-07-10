@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Batch_File_Downloads_Export Class
  *
  * @since 2.4
+ * @since 3.0 Refactored to use new query methods.
  */
 class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 
@@ -54,7 +55,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	 * Get the export data.
 	 *
 	 * @since 2.4
-	 * @since 3.0 Updated to use new query methods.
+	 * @since 3.0 Refactored to use new query methods.
 	 *
 	 * @return array $data The data for the CSV file.
 	 */
@@ -63,7 +64,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 
 		$args = array(
 			'number' => 30,
-			'offset' => ( $this->step * 30 ) - 30
+			'offset' => ( $this->step * 30 ) - 30,
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -71,13 +72,13 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
 		if ( 0 !== $this->download_id ) {
-			$args['download_id'] = $this->download_id;
+			$args['product_id'] = $this->download_id;
 		}
 
 		$logs = edd_get_file_download_logs( $args );
@@ -85,18 +86,29 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		foreach ( $logs as $log ) {
 			/** @var EDD\Logs\File_Download_Log $log */
 
-			$files     = edd_get_download_files( $log->download_id );
+			$files     = edd_get_download_files( $log->product_id );
 			$file_id   = $log->file_id;
 			$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-			$user      = get_userdata( $log->user_id );
-			$user      = $user ? $user->user_login : $user->user_email;
+			$customer  = edd_get_customer( $log->customer_id );
 
-			$data[]    = array(
+			if ( $customer ) {
+				$customer = ! empty( $customer->name )
+					? $customer->name
+					: $customer->email;
+			} else {
+				$order = edd_get_order( $log->order_id );
+
+				if ( $order ) {
+					$customer = $order->email;
+				}
+			}
+
+			$data[] = array(
 				'date'       => $log->date_created,
-				'user'       => $user,
+				'user'       => $customer,
 				'ip'         => $log->ip,
 				'user_agent' => $log->user_agent,
-				'download'   => get_the_title( $log->download_id ),
+				'download'   => get_the_title( $log->product_id ),
 				'file'       => $file_name,
 			);
 		}
@@ -127,7 +139,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
+					'inclusive' => true,
 				)
 			);
 		}
@@ -136,7 +148,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 			$args['download_id'] = $this->download_id;
 		}
 
-		$total = edd_count_file_download_logs( $args );
+		$total      = edd_count_file_download_logs( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
