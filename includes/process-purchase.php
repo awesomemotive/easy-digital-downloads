@@ -39,6 +39,19 @@ function edd_process_purchase_form() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
+	if ( $is_ajax ) {
+		if ( ! isset( $_POST['edd-process-checkout-nonce'] ) ) {
+			edd_debug_log( __( 'Missing nonce when processing checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+		}
+
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] ) ? sanitize_text_field( $_POST['edd-process-checkout-nonce'] ) : '';
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			edd_set_error( 'checkout-nonce-error', __( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
+		}
+	}
+
 	// Process the login form
 	if ( isset( $_POST['edd_login_submit'] ) ) {
 		edd_process_purchase_login();
@@ -215,6 +228,23 @@ add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10
 function edd_process_purchase_login() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
+
+	if ( ! isset( $_POST['edd_login_nonce'] ) ) {
+		edd_debug_log( __( 'Missing nonce when processing login during checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+	}
+
+	$nonce = isset( $_POST['edd_login_nonce'] ) ? sanitize_text_field( $_POST['edd_login_nonce'] ) : '';
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd-login-form' );
+	if ( false === $nonce_verified ) {
+		edd_set_error( 'edd-login-nonce-failed', __( 'Error processing login. Nonce failed.', 'easy-digital-downloads' ) );
+
+		if ( $is_ajax ) {
+			do_action( 'edd_ajax_checkout_errors' );
+			edd_die();
+		} else {
+			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+		}
+	}
 
 	$user_data = edd_purchase_form_validate_user_login();
 
@@ -577,6 +607,15 @@ function edd_purchase_form_validate_new_user() {
 	} else {
 		if ( edd_no_guest_checkout() ) {
 			edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
+		} else {
+			// If the entered email is attached to a user account, they must log in. Otherwise you can add purchases/CC to an account you do not own.
+			$user = get_user_by( 'email', $user_email );
+
+			if ( $user ) {
+				edd_set_error( 'login_required', __( 'You must login to complete your purchase', 'easy-digital-downloads' ) );
+			} else {
+				edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
+			}
 		}
 	}
 
@@ -728,6 +767,14 @@ function edd_purchase_form_validate_guest_user() {
 		} else {
 			// All is good to go
 			$valid_user_data['user_email'] = $guest_email;
+
+			// We have a valid email, but if that email is attached to a user account, they must log in. Otherwise you can add purchases/CC to an account you do not own.
+			$user = get_user_by( 'email', $guest_email );
+
+			if ( $user ) {
+				edd_set_error( 'login_required', __( 'You must login to complete your purchase', 'easy-digital-downloads' ) );
+			}
+
 		}
 	} else {
 		// No email

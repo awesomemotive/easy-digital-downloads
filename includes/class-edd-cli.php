@@ -631,7 +631,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'price'       => edd_sanitize_amount( $item_price ),
 					'quantity'    => 1,
 					'discount'    => 0,
-					'tax'         => $tax,
+					'tax'         => edd_calculate_tax( $item_price ),
 				);
 
 				$final_downloads[ $key ] = $item_number;
@@ -675,15 +675,15 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 
 			$purchase_data = array(
-				'price'        => edd_sanitize_amount( $total ),
-				'tax'          => 0,
-				'purchase_key' => strtolower( md5( uniqid() ) ),
-				'user_email'   => $email,
-				'user_info'    => $user_info,
-				'currency'     => edd_get_currency(),
-				'downloads'    => $final_downloads,
-				'cart_details' => $cart_details,
-				'status'       => 'pending',
+				'price'	        => edd_sanitize_amount( $total ),
+				'tax'           => edd_calculate_tax( $total ),
+				'purchase_key'  => strtolower( md5( uniqid() ) ),
+				'user_email'    => $email,
+				'user_info'     => $user_info,
+				'currency'      => edd_get_currency(),
+				'downloads'     => $final_downloads,
+				'cart_details'  => $cart_details,
+				'status'        => 'pending',
 			);
 
 			if ( ! empty( $timestring ) ) {

@@ -383,7 +383,7 @@ function edd_default_cc_address_fields() {
 				<?php endif; ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<select name="billing_country" id="billing_country" class="billing_country edd-select<?php if ( edd_field_is_required( 'billing_country' ) ) { echo ' required'; } ?>"<?php if ( edd_field_is_required( 'billing_country' ) ) {  echo ' required '; } ?>>
+			<select name="billing_country" id="billing_country" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>" class="billing_country edd-select<?php if ( edd_field_is_required( 'billing_country' ) ) { echo ' required'; } ?>"<?php if ( edd_field_is_required( 'billing_country' ) ) {  echo ' required '; } ?>>
 				<?php
 				$selected_country = edd_get_shop_country();
 
@@ -429,6 +429,7 @@ function edd_default_cc_address_fields() {
 			<?php endif; ?>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>
+		<?php wp_nonce_field( 'edd-checkout-address-fields', 'edd-checkout-address-fields-nonce', false, true ); ?>
 	</fieldset>
 	<?php
 	echo ob_get_clean();
@@ -465,7 +466,7 @@ function edd_get_register_fields() {
 	<fieldset id="edd_register_fields">
 
 		<?php if ( 'both' === $show_register_form ) { ?>
-			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'easy-digital-downloads' ); ?></a></p>
+			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login" data-nonce="<?php echo wp_create_nonce( 'edd_checkout_login' ); ?>"><?php _e( 'Login', 'easy-digital-downloads' ); ?></a></p>
 		<?php } ?>
 
 		<?php do_action( 'edd_register_fields_before' ); ?>
@@ -543,7 +544,7 @@ function edd_get_login_fields() {
 			<?php if ( 'both' === $show_register_form ) : ?>
 				<p id="edd-new-account-wrap">
 					<?php _e( 'Need to create an account?', 'easy-digital-downloads' ); ?>
-					<a href="<?php echo esc_url( remove_query_arg( 'login' ) ); ?>" class="edd_checkout_register_login" data-action="checkout_register">
+					<a href="<?php echo esc_url( remove_query_arg( 'login' ) ); ?>" class="edd_checkout_register_login" data-action="checkout_register"  data-nonce="<?php echo wp_create_nonce( 'edd_checkout_register' ); ?>">
 						<?php _e( 'Register', 'easy-digital-downloads' ); if ( ! edd_no_guest_checkout() ) { echo esc_html( ' ' . __( 'or checkout as a guest.', 'easy-digital-downloads' ) ); } ?>
 					</a>
 				</p>
@@ -574,6 +575,7 @@ function edd_get_login_fields() {
 			</p>
 			<p id="edd-user-login-submit">
 				<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" name="edd_login_submit" value="<?php _e( 'Login', 'easy-digital-downloads' ); ?>"/>
+				<?php wp_nonce_field( 'edd-login-form', 'edd_login_nonce', false, true ); ?>
 			</p>
 
 			<?php do_action( 'edd_checkout_login_fields_after' ); ?>
@@ -599,9 +601,11 @@ function edd_payment_mode_select() {
 	?>
 	<div id="edd_payment_mode_select_wrap">
 		<?php do_action('edd_payment_mode_top'); ?>
+
 		<?php if( edd_is_ajax_disabled() ) { ?>
 		<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 		<?php } ?>
+
 			<fieldset id="edd_payment_mode_select">
 				<legend><?php _e( 'Select Payment Method', 'easy-digital-downloads' ); ?></legend>
 				<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
@@ -613,14 +617,14 @@ function edd_payment_mode_select() {
 						$label         = apply_filters( 'edd_gateway_checkout_label_' . $gateway_id, $gateway['checkout_label'] );
 						$checked       = checked( $gateway_id, $chosen_gateway, false );
 						$checked_class = $checked ? ' edd-gateway-option-selected' : '';
+						$nonce         = ' data-' . esc_attr( $gateway_id ) . '-nonce="' . wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) ) .'"';
 
 						echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
-						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $label );
+							echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . $nonce . '>' . esc_html( $label );
 						echo '</label>';
 					}
 
 					do_action( 'edd_payment_mode_after_gateways' );
-
 					?>
 				</div>
 
@@ -632,9 +636,11 @@ function edd_payment_mode_select() {
 					<?php echo edd_checkout_button_next(); ?>
 				</p>
 			</fieldset>
+
 		<?php if ( edd_is_ajax_disabled() ) : ?>
 		</form>
 		<?php endif; ?>
+
 	</div>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 
@@ -998,7 +1004,8 @@ function edd_checkout_hidden_fields() {
 	<input type="hidden" name="edd-user-id" value="<?php echo get_current_user_id(); ?>"/>
 	<?php endif; ?>
 	<input type="hidden" name="edd_action" value="purchase"/>
-	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" /><?php
+	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" />
+	<?php wp_nonce_field( 'edd-process-checkout', 'edd-process-checkout-nonce', false, true );
 }
 
 /**
