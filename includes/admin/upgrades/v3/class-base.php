@@ -192,4 +192,20 @@ class Base extends \EDD_Batch_Export {
 			? $GLOBALS['wpdb']
 			: new \stdClass();
 	}
+
+	/**
+	 * Set properties specific to the export.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $request Form data passed into the batch processor.
+	 */
+	public function set_properties( $request ) {}
+
+	/**
+	 * Allow for pre-fetching of data for the remainder of the batch processor.
+	 *
+	 * @since 3.0
+	 */
+	public function pre_fetch() {}
 }
