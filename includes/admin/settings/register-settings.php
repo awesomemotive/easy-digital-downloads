@@ -584,7 +584,7 @@ function edd_get_registered_settings() {
 						'desc'  => sprintf(
 							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%s">our newsletter</a>, we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/tracking/',
-							'https://easydigitaldownloads.com/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking#footer-newsletter',
+							'https://easydigitaldownloads.com/subscribe/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking',
 							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox_description',
