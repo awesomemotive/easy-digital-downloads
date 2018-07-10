@@ -17,31 +17,19 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Order_Notes extends \EDD_Batch_Export {
+class Order_Notes extends Base {
 
 	/**
-	 * Our export type. Used for export-type specific filters/actions.
+	 * Constructor.
 	 *
-	 * @since 3.0
-	 * @var   string
+	 * @param int $step Step.
 	 */
-	public $export_type = '';
+	public function __construct( $step = 1 ) {
+		parent::__construct( $step );
 
-	/**
-	 * Allows for a non-download batch processing to be run.
-	 *
-	 * @since 3.0
-	 * @var   bool
-	 */
-	public $is_void = true;
-
-	/**
-	 * Sets the number of items to pull on each step.
-	 *
-	 * @since 3.0
-	 * @var   int
-	 */
-	public $per_step = 50;
+		$this->completed_message = __( 'Order notes migration completed successfully.', 'easy-digital-downloads' );
+		$this->upgrade           = 'migrate_order_notes';
+	}
 
 	/**
 	 * Retrieve the data pertaining to the current step and migrate as necessary.
@@ -53,8 +41,68 @@ class Order_Notes extends \EDD_Batch_Export {
 	public function get_data() {
 		global $wpdb;
 
+		$offset = ( $this->step - 1 ) * $this->per_step;
 
+		$results = $this->get_db()->get_results( $this->get_db()->prepare(
+			"SELECT *
+			 FROM {$wpdb->comments}
+			 WHERE comment_type = %s
+			 ORDER BY comment_id ASC
+			 LIMIT %d, %d",
+			esc_sql( 'edd_payment_note' ), $offset, $this->per_step
+		) );
+
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $old_note ) {
+				$note_data = array(
+					'object_id'     => $this->remap_id( $old_note->comment_post_ID, 'orders' ),
+					'object_type'   => 'order',
+					'date_created'  => $old_note->comment_date_gmt,
+					'date_modified' => $old_note->comment_date_gmt,
+					'content'       => $old_note->comment_content,
+					'user_id'       => $old_note->user_id,
+				);
+
+				$id = edd_add_note( $note_data );
+
+				$meta = get_comment_meta( $old_note->comment_ID );
+				if ( ! empty( $meta ) ) {
+					foreach ( $meta as $key => $value ) {
+						edd_add_note_meta( $id, $key, $value );
+					}
+				}
+			}
+
+			return true;
+		}
 
 		return false;
+	}
+
+	/**
+	 * Calculate the percentage completed.
+	 *
+	 * @since 3.0
+	 *
+	 * @return float Percentage.
+	 */
+	public function get_percentage_complete() {
+		$total = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT COUNT(id) AS count FROM {$this->get_db()->comments} WHERE comment_type = %s", esc_sql( 'edd_payment_note' ) ) );
+
+		if ( empty( $total ) ) {
+			$total = 0;
+		}
+
+		$percentage = 100;
+
+		if ( $total > 0 ) {
+			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
+		}
+
+		if ( $percentage > 100 ) {
+			$percentage = 100;
+		}
+
+		return $percentage;
 	}
 }
