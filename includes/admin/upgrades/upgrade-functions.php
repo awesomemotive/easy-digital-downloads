@@ -1367,13 +1367,23 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	/** Order Notes Migration ************************************************/
-	$notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
-	$notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
-	$notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
+	$order_notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
+	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
+	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
 
 	if ( empty( $notes ) ) {
 		edd_set_upgrade_complete( 'migrate_order_notes' );
-		$notes_complete = true;
+		$order_notes_complete = true;
+	}
+
+	/** Customer Notes Migration *********************************************/
+	$order_notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
+	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
+	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
+
+	if ( empty( $notes ) ) {
+		edd_set_upgrade_complete( 'migrate_order_notes' );
+		$order_notes_complete = true;
 	}
 
 	// Initialise to first step.
@@ -1677,7 +1687,7 @@ function edd_upgrade_render_v30_migration() {
 	endif;
 	?>
 
-	<?php if ( ! empty( $notes ) ) : ?>
+	<?php if ( ! empty( $order_notes ) ) : ?>
 		<div class="metabox-holder">
 			<div class="postbox">
 				<h2 class="hndle">
@@ -1692,7 +1702,7 @@ function edd_upgrade_render_v30_migration() {
 					<span class="step-instructions-wrapper">
 						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
-						<?php if ( ! $notes_removal_complete ) : ?>
+						<?php if ( ! $order_notes_removal_complete ) : ?>
 							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 							</span>
