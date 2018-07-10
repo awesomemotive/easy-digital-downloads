@@ -9,6 +9,8 @@
  */
 namespace EDD\Admin\Upgrades\v3;
 
+use Carbon\Carbon;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -34,9 +36,6 @@ class Customer_Notes extends Base {
 	/**
 	 * Retrieve the data pertaining to the current step and migrate as necessary.
 	 *
-	 * @internal This batch processor migrates all the data in one step as the customer notes were previously stored as one
-	 *           large block of text making it impossible to split the data with the query.
-	 *
 	 * @since 3.0
 	 *
 	 * @return bool True if data was migrated, false otherwise.
@@ -46,20 +45,43 @@ class Customer_Notes extends Base {
 
 		$results = $this->get_db()->get_results( $this->get_db()->prepare(
 			"SELECT *
-			 FROM {$this->get_db()->edd_customermeta}
-			 WHERE meta_key = %s
+			 FROM {$this->get_db()->edd_customers}
 			 LIMIT %d, %d",
-			esc_sql( 'additional_email' ), $offset, $this->per_step
+			$offset, $this->per_step
 		) );
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
-				$customer_id = absint( $result->edd_customer_id );
+				$customer_id = absint( $result->id );
 
-				edd_add_customer_email_address( array(
-					'customer_id' => $customer_id,
-					'email'       => $result->meta_value,
-				) );
+				if ( property_exists( $result, 'notes' ) && ! empty( $result->notes ) ) {
+					$notes = array_reverse( array_filter( explode( "\n\n", $result->notes ) ) );
+
+					$notes = array_map( function( $val ) {
+						return explode( ' - ', $val );
+					}, $notes );
+
+					if ( ! empty( $notes ) ) {
+						foreach ( $notes as $note ) {
+							$date = isset( $note[0] )
+								? Carbon::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
+								: '';
+
+							$note_content = isset( $note[1] )
+								? $note[1]
+								: '';
+
+							edd_add_note( array(
+								'user_id'       => 0,
+								'object_id'     => $customer_id,
+								'object_type'   => 'customer',
+								'content'       => $note_content,
+								'date_created'  => $date,
+								'date_modified' => $date,
+							) );
+						}
+					}
+				}
 			}
 
 			return true;
@@ -76,8 +98,22 @@ class Customer_Notes extends Base {
 	 * @return float Percentage.
 	 */
 	public function get_percentage_complete() {
+		$total = $this->get_db()->get_var( "SELECT COUNT(id) AS count FROM {$this->get_db()->edd_customers}" );
 
-		// Return 100 as this migration is done in one step.
-		return 100;
+		if ( empty( $total ) ) {
+			$total = 0;
+		}
+
+		$percentage = 100;
+
+		if ( $total > 0 ) {
+			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
+		}
+
+		if ( $percentage > 100 ) {
+			$percentage = 100;
+		}
+
+		return $percentage;
 	}
 }
