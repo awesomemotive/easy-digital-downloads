@@ -155,8 +155,6 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
-			$this->delete_data( 'edd_file_download_log_ids' );
-
 			$this->done    = true;
 			$this->message = __( 'File download logs updated successfully.', 'easy-digital-downloads' );
 			edd_set_upgrade_complete( 'update_file_download_log_data' );
@@ -188,18 +186,14 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	}
 
 	public function pre_fetch() {
-		global $wpdb;
-
-		// Get the file download logs for step 1.
-		$this->delete_data( 'edd_file_download_log_ids' );
 
 		$log_ids = $this->get_log_ids_for_current_step();
-
-		$this->store_data( 'edd_file_download_log_ids', $log_ids );
 
 	}
 
 	private function get_log_ids_for_current_step() {
+
+		global $wpdb;
 
 		$offset = ( $this->step * $this->per_step ) - $this->per_step;
 
@@ -208,69 +202,6 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 		$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id} LIMIT {$offset}, {$this->per_step}" );
 
 		return $log_ids;
-	}
-
-	/**
-	 * Given a key, get the information from the Database Directly
-	 *
-	 * @since  2.9.2
-	 * @param  string $key The option_name
-	 * @return mixed       Returns the data from the database
-	 */
-	private function get_stored_data( $key ) {
-		global $wpdb;
-		$value = $wpdb->get_var(
-			$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key )
-		);
-
-		if ( empty( $value ) ) {
-			return false;
-		}
-
-		$maybe_json = json_decode( $value );
-		if ( ! is_null( $maybe_json ) ) {
-			$value = json_decode( $value, true );
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Give a key, store the value
-	 *
-	 * @since  2.9.2
-	 * @param  string $key   The option_name
-	 * @param  mixed  $value  The value to store
-	 * @return void
-	 */
-	private function store_data( $key, $value ) {
-		global $wpdb;
-
-		$value = is_array( $value ) ? wp_json_encode( $value ) : esc_attr( $value );
-
-		$data = array(
-			'option_name'  => $key,
-			'option_value' => $value,
-			'autoload'     => 'no',
-		);
-
-		$formats = array(
-			'%s', '%s', '%s',
-		);
-
-		$wpdb->replace( $wpdb->options, $data, $formats );
-	}
-
-	/**
-	 * Delete an option
-	 *
-	 * @since  2.9.2
-	 * @param  string $key The option_name to delete
-	 * @return void
-	 */
-	private function delete_data( $key ) {
-		global $wpdb;
-		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
 
 }
