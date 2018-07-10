@@ -1718,6 +1718,7 @@ function edd_upgrade_render_v30_migration() {
 function edd_register_batch_processors_for_v30_upgrade() {
 	add_action( 'edd_batch_export_class_include', 'edd_load_batch_processors_for_v30_upgrade', 10, 1 );
 }
+add_action( 'edd_register_batch_exporter', 'edd_register_batch_processors_for_v30_upgrade', 10 );
 
 /**
  * Load the batch processor for upgrade routines for EDD 3.0.
