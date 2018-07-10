@@ -249,10 +249,13 @@ a.edd-delete:hover {
 	width: 320px;
 	height: 315px;
 	opacity: 0.9;
+	transition: all .2s ease-in-out;
 }
 #edd-add-ons .edd-extension:hover {
 	border: 1px solid #bbb;
 	opacity: 1;
+	transform: scale(1.05);
+	z-index: 5;
 }
 #edd-add-ons .edd-extension h3 {
 	font-size: 13px;
@@ -1768,6 +1771,7 @@ td.edd_order_price {
 	font-size: 2em;
 	line-height: 1;
 	display: inline-block;
+	transition: all .2s ease-in-out;
 }
 
 #edd-reports-tiles-wrap .inside .tile-amount {
@@ -1808,6 +1812,10 @@ td.edd_order_price {
 
 #edd-reports-tiles-wrap .postbox:hover .inside {
 	border: 1px solid #aaa;
+}
+
+#edd-reports-tiles-wrap .postbox:hover .tile-value:not(.tile-no-data) {
+	transform: scale(1.05);
 }
 
 #edd-reports-tiles-wrap .postbox:hover .tile-compare {
