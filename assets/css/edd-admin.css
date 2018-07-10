@@ -646,17 +646,9 @@ marquee {
 	margin: 0;
 }
 .edd-mobile-link {
+	float: right;
 	line-height: 32px;
-	vertical-align: middle;
-	background: #fff;
-	border-left: 4px solid #fff;
-	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-	margin: 25px 0;
-	padding: 5px 8px;
-	background-image: url('../images/edd-peeking.png');
-	background-repeat: no-repeat;
-	background-position-x: 99%;
-	background-position-y: -90%;
+	padding: 8px 0;
 }
 .edd-mobile-link a {
 	text-decoration: none;
@@ -667,12 +659,13 @@ marquee {
 	-webkit-font-smoothing: antialiased;
 	font: normal 20px/30px "dashicons";
 	vertical-align: top;
-	margin: 0;
+	margin: 1px 0 0 0;
 	padding: 0;
 }
 .edd-mobile-link a:before {
 	content: "\f470";
 	color: #656a6f;
+	margin-right: -3px;
 }
 .edd-mobile-link a:after {
 	content: "\f504";
@@ -1507,10 +1500,6 @@ td.edd_order_price {
 	max-width: 200px;
 	vertical-align: baseline;
 	margin-right: 4px;
-}
-
-.download_page_edd-reports #edd-filters .filter-items {
-	width: 100%;
 }
 
 .download_page_edd-reports #edd-filters {
