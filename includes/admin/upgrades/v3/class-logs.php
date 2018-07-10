@@ -65,7 +65,7 @@ class Logs extends Base {
 					}
 
 					$log_data = array(
-						'download_id'   => $old_log->post_parent,
+						'product_id'    => $old_log->post_parent,
 						'file_id'       => $post_meta['_edd_log_file_id'],
 						'order_id'      => $post_meta['_edd_log_payment_id'],
 						'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
