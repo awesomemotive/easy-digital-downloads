@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_logs_file_downloads" database table
  *
@@ -95,4 +94,3 @@ final class Logs_File_Downloads extends Base {
 		return $this->is_success( true );
 	}
 }
-endif;
