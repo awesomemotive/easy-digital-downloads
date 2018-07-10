@@ -1367,8 +1367,9 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	/** Order Notes Migration ************************************************/
-	$notes          = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
-	$notes_complete = edd_has_upgrade_completed( 'migrate_order_notes' );
+	$notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
+	$notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
+	$notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
 
 	if ( empty( $notes ) ) {
 		edd_set_upgrade_complete( 'migrate_order_notes' );
@@ -1691,7 +1692,7 @@ function edd_upgrade_render_v30_migration() {
 					<span class="step-instructions-wrapper">
 						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
-						<?php if ( ! $notes_complete ) : ?>
+						<?php if ( ! $notes_removal_complete ) : ?>
 							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 							</span>
