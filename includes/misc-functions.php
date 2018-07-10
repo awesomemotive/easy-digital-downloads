@@ -1312,3 +1312,48 @@ function edd_set_time_limit( $ignore_user_abort = true, $time_limit = 21600 ) {
 		@set_time_limit( $time_limit );
 	}
 }
+
+/**
+ * Output the admin area filter bar
+ *
+ * @since 3.0
+ *
+ * @param string $context
+ */
+function edd_admin_filter_bar( $context = '', $item = null ) {
+
+	?><div class="wp-filter" id="edd-filters"><?php
+
+		/**
+		 * Fires before filtered items, usually unused
+		 *
+		 * @since 3.0
+		 *
+		 * @param string $context
+		 */
+		do_action( "edd_before_admin_filter_bar_{$context}", $item );
+
+		?><div class="filter-items"><?php
+
+			/**
+			 * Output filter bar items, used primarily for selects/inputs/buttons
+			 *
+			 * @since 3.0
+			 *
+			 * @param string $context
+			 */
+			do_action( "edd_admin_filter_bar_{$context}", $item );
+
+		?></div><?php
+
+		/**
+		 * Fires after filtered items, usually used by search boxes
+		 *
+		 * @since 3.0
+		 *
+		 * @param string $context
+		 */
+		do_action( "edd_after_admin_filter_bar_{$context}", $item );
+
+	?></div><?php
+}

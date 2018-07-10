@@ -1191,6 +1191,22 @@ function display_country_filter() {
  */
 function display_filters( $report ) {
 
+	// Output the filter bar
+	?><form method="get"><?php
+		edd_admin_filter_bar( 'reports', $report );
+	?></form><?php
+
+}
+
+/**
+ * Output filter items
+ *
+ * @since 3.0
+ *
+ * @param object $report
+ */
+function filter_items( $report = false ) {
+
 	// Get the report ID
 	$report_id = $report->get_id();
 
@@ -1250,23 +1266,21 @@ function display_filters( $report ) {
 	// Call the callables in the buffer
 	foreach ( $callables as $to_call ) {
 		call_user_func( $to_call, $report );
-	}
+	} ?>
 
-	// Get the current buffer
-	$filters = ob_get_clean(); ?>
+	<span class="edd-graph-filter-submit graph-option-section">
+		<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+		<input type="hidden" name="edd_action" value="filter_reports" />
+		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
+		<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">
+	</span>
 
-	<div class="wp-filter" id="edd-filters">
-		<form class="filter-items" method="get">
-			<?php echo $filters; ?>
-			<span class="edd-graph-filter-submit graph-option-section">
-				<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
-				<input type="hidden" name="edd_action" value="filter_reports" />
-				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
-				<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">
-			</span>
-		</form>
-	</div><?php
+	<?php
+
+	// Output the current buffer
+	echo ob_get_clean();
 }
+add_action( 'edd_admin_filter_bar_reports', 'EDD\Reports\filter_items' );
 
 /** Compat ********************************************************************/
 
