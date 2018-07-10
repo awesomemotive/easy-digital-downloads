@@ -39,13 +39,11 @@ class Order_Notes extends Base {
 	 * @return bool True if data was migrated, false otherwise.
 	 */
 	public function get_data() {
-		global $wpdb;
-
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
 		$results = $this->get_db()->get_results( $this->get_db()->prepare(
 			"SELECT *
-			 FROM {$wpdb->comments}
+			 FROM {$this->get_db()->comments}
 			 WHERE comment_type = %s
 			 ORDER BY comment_id ASC
 			 LIMIT %d, %d",
