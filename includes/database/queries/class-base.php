@@ -10,12 +10,9 @@
  */
 namespace EDD\Database\Queries;
 
-use EDD\Database\Schemas\Column;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
 /**
  * Base class used for querying custom database tables.
  *
@@ -2700,4 +2697,3 @@ class Base extends \EDD\Database\Base {
 		wp_cache_delete( $key, $group );
 	}
 }
-endif;
