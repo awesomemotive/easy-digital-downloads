@@ -1394,36 +1394,45 @@ function edd_upgrade_render_v30_migration() {
 		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
 	</style>
 	<script>
-        jQuery( function($) {
-            $(document).ready(function () {
-                $(document).on("DOMNodeInserted", function (e) {
-                    var element = e.target;
+		jQuery( function($) {
+			$(document).ready(function () {
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
 
-                    if (element.id === 'edd-batch-success') {
-                        element = $(element);
+					if (element.id === 'edd-batch-success') {
+						element = $(element);
 
-                        element.parent().prev().find('.edd-migration.allowed').hide();
-                        element.parent().prev().find('.edd-migration.unavailable').show();
-                        var element_wrapper = element.parents().eq(4);
-                        element_wrapper.find('.dashicons.dashicons-yes').show();
+						element.parent().prev().find('.edd-migration.allowed').hide();
+						element.parent().prev().find('.edd-migration.unavailable').show();
+						var element_wrapper = element.parents().eq(4);
+						element_wrapper.find('.dashicons.dashicons-yes').show();
 
-                        var next_step_wrapper = element_wrapper.next();
-                        if (next_step_wrapper.find('.postbox').length) {
-                            next_step_wrapper.find('.edd-migration.allowed').show();
-                            next_step_wrapper.find('.edd-migration.unavailable').hide();
+						var auto_start_next_step = true;
 
-                            if (auto_start_next_step) {
-                                next_step_wrapper.find('.edd-export-form').submit();
-                            }
-                        } else {
-                            $('#edd-migration-nav-warn').hide();
-                            $('#edd-migration-ready').slideDown();
-                        }
+						if (element.find('.edd-new-count')) {
+							var new_count = element.find('.edd-new-count').text(),
+								old_count = element.find('.edd-old-count').text();
 
-                    }
-                });
-            });
-        });
+							auto_start_next_step = new_count === old_count;
+						}
+
+						var next_step_wrapper = element_wrapper.next();
+						if (next_step_wrapper.find('.postbox').length) {
+							next_step_wrapper.find('.edd-migration.allowed').show();
+							next_step_wrapper.find('.edd-migration.unavailable').hide();
+
+							if (auto_start_next_step) {
+								next_step_wrapper.find('.edd-export-form').submit();
+							}
+						} else {
+							$('#edd-migration-nav-warn').hide();
+							$('#edd-migration-ready').slideDown();
+						}
+
+					}
+				});
+			});
+		});
 	</script>
 
 	<div class="metabox-holder">
