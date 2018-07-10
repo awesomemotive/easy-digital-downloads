@@ -24,8 +24,6 @@
  *
  * @package EDD
  * @category Core
- * @author Pippin Williamson
- * @version 3.0.0-beta-1
  */
 
 // Exit if accessed directly.
@@ -490,4 +488,4 @@ final class EDD_Requirements_Check {
 }
 
 // Invoke the checker
-new EDD_Requirements_Check;
+new EDD_Requirements_Check();

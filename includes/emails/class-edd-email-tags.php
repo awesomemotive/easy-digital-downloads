@@ -205,7 +205,7 @@ function edd_get_emails_tags_list() {
 	$list = '';
 
 	// Get all tags
-	$email_tags = edd_get_email_tags();
+	$email_tags = (array) edd_get_email_tags();
 
 	// Check
 	if ( count( $email_tags ) > 0 ) {
