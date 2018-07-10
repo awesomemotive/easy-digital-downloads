@@ -1302,7 +1302,7 @@ function edd_include_file_download_log_migration_batch_processor( $class = '' ) 
 function edd_upgrade_render_v30_migration() {
 	global $wpdb;
 
-	$migration_complete = edd_has_upgrade_completed( 'v30_migration' );
+	$migration_complete = edd_has_upgrade_completed( 'v30_remove_legacy_data' );
 
 	/** Orders Migration *****************************************************/
 	$orders          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
@@ -1404,6 +1404,7 @@ function edd_upgrade_render_v30_migration() {
 	<style>
 		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
 	</style>
+	<?php if ( ! $migration_complete ) : ?>
 	<script>
 		jQuery( function($) {
 			$(document).ready(function () {
@@ -1445,6 +1446,7 @@ function edd_upgrade_render_v30_migration() {
 			});
 		});
 	</script>
+	<?php endif; ?>
 
 	<div class="metabox-holder">
 		<div class="postbox">
@@ -1817,7 +1819,7 @@ function edd_load_batch_processors_for_v30_upgrade( $class ) {
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Notes':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
 			break;
 	}
 }
