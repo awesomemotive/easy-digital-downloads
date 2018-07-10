@@ -764,15 +764,17 @@ function edd_customers_view( $customer = null ) {
 }
 
 /**
- * View the notes section of a customer
+ * View the notes section of a customer.
  *
- * @since  2.3
- * @param  $customer The Customer being displayed
- * @return void
+ * @since 2.3
+ *
+ * @param $customer EDD_Customer Customer profile being viewed.
  */
 function edd_customer_notes_view( $customer ) {
+	$paged = ! empty( $_GET['paged'] ) && is_numeric( $_GET['paged'] )
+		? absint( $_GET['paged'] )
+		: 1;
 
-	$paged      = ! empty( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	$per_page   = apply_filters( 'edd_customer_notes_per_page', 20 );
 	$notes      = $customer->get_notes( $per_page, $paged );
 	$note_count = $customer->get_notes_count(); ?>
@@ -781,7 +783,7 @@ function edd_customer_notes_view( $customer ) {
 		<div class="edd-item-header-small">
 			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo esc_html( $customer->name ); ?></span>
 		</div>
-		<h3><?php _e( 'Notes', 'easy-digital-downloads' ); ?></h3>
+		<h3><?php esc_html_e( 'Notes', 'easy-digital-downloads' ); ?></h3>
 
 		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
 
@@ -815,18 +817,18 @@ function edd_customers_delete_view( $customer ) {
 				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
 			</div>
 
-			<h3><?php _e( 'Delete', 'easy-digital-downloads' ); ?></h3>
+			<h3><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></h3>
 
 			<div class="delete-customer">
 				<span class="delete-customer-options">
 					<p>
 						<?php echo EDD()->html->checkbox( array( 'name' => 'edd-customer-delete-confirm' ) ); ?>
-						<label for="edd-customer-delete-confirm"><?php _e( 'Are you sure you want to delete this customer?', 'easy-digital-downloads' ); ?></label>
+						<label for="edd-customer-delete-confirm"><?php esc_html_e( 'Are you sure you want to delete this customer?', 'easy-digital-downloads' ); ?></label>
 					</p>
 
 					<p>
 						<?php echo EDD()->html->checkbox( array( 'name' => 'edd-customer-delete-records', 'options' => array( 'disabled' => true ) ) ); ?>
-						<label for="edd-customer-delete-records"><?php _e( 'Delete all associated payments and records?', 'easy-digital-downloads' ); ?></label>
+						<label for="edd-customer-delete-records"><?php esc_html_e( 'Delete all associated payments and records?', 'easy-digital-downloads' ); ?></label>
 					</p>
 
 					<?php do_action( 'edd_customer_delete_inputs', $customer ); ?>
