@@ -1352,6 +1352,7 @@ jQuery(document).ready(function ($) {
 					data   = {
 						action:     'edd_get_shop_states',
 						country:    $( this ).val(),
+                        nonce:      select.data('nonce'),
 						field_name: select.attr('name').replace('country', 'state'),
 						nonce:      select.data('nonce')
 					};
