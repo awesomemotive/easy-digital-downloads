@@ -1736,7 +1736,7 @@ function edd_register_taxes_report( $reports ) {
 		if ( ! empty( $country ) && 'all' !== $country ) {
 			$location = '';
 
-			if ( ! empty( $region ) ) {
+			if ( ! empty( $region ) && 'all' !== $region ) {
 				$location = edd_get_state_name( $country, $region ) . ', ';
 			}
 
