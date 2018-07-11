@@ -376,7 +376,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return wpdb
+	 * @return \wpdb
 	 */
 	protected static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
