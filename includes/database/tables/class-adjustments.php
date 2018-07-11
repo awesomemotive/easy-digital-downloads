@@ -36,7 +36,7 @@ final class Adjustments extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201806140002;
+	protected $version = 201807110001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -46,7 +46,8 @@ final class Adjustments extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806140002' => 201806140002
+		'201806140002' => 201806140002,
+		'201807110001' => 201807110001
 	);
 
 	/**
@@ -147,5 +148,26 @@ final class Adjustments extends Base {
 
 		// Return success/fail
 		return true;
+	}
+
+	/**
+	 * Upgrade to version 201807110001
+	 * - Rename min_cart_price to min_charge_amount
+	 *
+	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807110001() {
+
+		// Attempt to drop the old table
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} CHANGE `min_cart_price` `min_charge_amount` decimal(18,9) NOT NULL default '0';
+		" );
+
+		// Return success/fail
+		return $this->is_success( true );
 	}
 }
