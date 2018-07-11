@@ -1438,6 +1438,8 @@ function edd_settings_sanitize_taxes( $input ) {
 			'amount_type' => 'percent',
 			'amount'      => floatval( $tax_rate['rate'] ),
 			'description' => $region,
+			'start_date'  => $tax_rate['from'],
+			'end_date'    => $tax_rate['to'],
 		);
 
 		// Update database if adjustment ID was supplied.
@@ -2631,7 +2633,7 @@ function edd_tax_rates_callback( $args ) {
 		                echo EDD()->html->date_field( array(
 			                'id'          => 'tax_rates[' . edd_sanitize_key( $key ) . '][from]',
 			                'name'        => 'tax_rates[' . edd_sanitize_key( $key ) . '][from]',
-			                'value'       => ( '0000-00-00 00:00:00' === $rate->start_date ) ? '' : $rate->start_date,
+			                'value'       => ( '0000-00-00 00:00:00' === $rate->start_date ) ? '' : edd_date_i18n( $rate->start_date, 'Y-m-d' ),
 			                'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 		                ) );
 		                ?>
@@ -2641,7 +2643,7 @@ function edd_tax_rates_callback( $args ) {
 		                echo EDD()->html->date_field( array(
 			                'id'          => 'tax_rates[' . edd_sanitize_key( $key ) . '][to]',
 			                'name'        => 'tax_rates[' . edd_sanitize_key( $key ) . '][to]',
-			                'value'       => ( '0000-00-00 00:00:00' === $rate->end_date ) ? '' : $rate->end_date,
+			                'value'       => ( '0000-00-00 00:00:00' === $rate->end_date ) ? '' : edd_date_i18n( $rate->end_date, 'Y-m-d' ),
 			                'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 		                ) );
 		                ?>
