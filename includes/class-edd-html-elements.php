@@ -654,7 +654,7 @@ class EDD_HTML_Elements {
 		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . checked( 1, $args['current'], false ) . ' />';
 
 		if ( ! empty( $args['label'] ) ) {
-			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . wp_kses_post( $args['label'] ) . '</label>';
 		}
 
 		return $output;
