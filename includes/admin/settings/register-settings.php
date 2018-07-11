@@ -1775,10 +1775,9 @@ function edd_header_callback( $args ) {
  * Renders checkboxes.
  *
  * @since 1.0
+ * @since 3.0 Updated to use `EDD_HTML_Elements`.
  *
- * @param array $args Arguments passed by the setting
- *
- * @return void
+ * @param array $args Arguments passed by the setting.
  */
 function edd_checkbox_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
@@ -1786,16 +1785,21 @@ function edd_checkbox_callback( $args ) {
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
 	} else {
-		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
+		$name = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']';
 	}
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$checked = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
-	$html    = '<input type="hidden"' . $name . ' value="-1" />';
+	$args['name']    = $name;
+	$args['class']   = $class;
+	$args['current'] = ! empty( $edd_option )
+		? $edd_option
+		: '';
+	$args['label']   = wp_kses_post( $args['desc'] );
+
+	$html    = '<input type="hidden" name="' . $name . '" value="-1" />';
 	$html   .= '<div class="edd-check-wrapper">';
-	$html   .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-	$html   .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+	$html   .= EDD()->html->checkbox( $args );
 	$html   .= '</div>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
