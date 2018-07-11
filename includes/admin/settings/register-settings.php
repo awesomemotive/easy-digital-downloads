@@ -2581,7 +2581,7 @@ function edd_tax_rates_callback( $args ) {
                     <td class="edd_tax_remove">
                         <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
                     </td>
-	                <input type="hidden" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate['id'] ); ?>" />
+	                <input type="hidden" data-type="edd-adjustment-id" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate['id'] ); ?>" />
                 </tr>
 			<?php endforeach; ?>
 		<?php else : ?>
