@@ -245,6 +245,15 @@ function edd_customers_view( $customer = null ) {
 		? absint( $customer->user_id )
 		: '';
 
+	$address_args = array(
+		'address'     => '',
+		'address2'    => '',
+		'city'        => '',
+		'region'      => '',
+		'postal_code' => '',
+		'country'     => '',
+	);
+
 	$data_atts = array(
 		'key'     => 'user_login',
 		'exclude' => $user_id
@@ -266,6 +275,17 @@ function edd_customers_view( $customer = null ) {
 		} else {
 			$user_login = false;
 		}
+	}
+
+	// Address
+	$address = $customer->get_address();
+
+	if ( $address ) {
+		$address = $address->to_array();
+		$address = wp_parse_args( $address, $address_args );
+
+	} else {
+		$address = $address_args;
 	}
 
 	do_action( 'edd_customer_card_top', $customer ); ?>
@@ -297,27 +317,6 @@ function edd_customers_view( $customer = null ) {
 				</div>
 
 				<div class="customer-address-wrapper right">
-					<?php
-					$address = $customer->get_address();
-
-					$defaults = array(
-						'address'     => '',
-						'address2'    => '',
-						'city'        => '',
-						'region'      => '',
-						'postal_code' => '',
-						'country'     => '',
-					);
-
-					if ( $address ) {
-						$address = $address->to_array();
-
-						$address = wp_parse_args( $address, $defaults );
-					} else {
-						$address = $defaults;
-					}
-					?>
-
 					<fieldset>
 						<legend class="screen-reader-text"><?php esc_html_e( 'Customer Address', 'easy-digital-downloads' ); ?></legend>
 
@@ -334,7 +333,7 @@ function edd_customers_view( $customer = null ) {
 							<input class="info-item" type="text" data-key="address" name="customerinfo[address]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['address'] ); ?>" />
 							<input class="info-item" type="text" data-key="address2" name="customerinfo[address2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['address2'] ); ?>" />
 							<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
-							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
+							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>">
 								<?php
 
 								$selected_country = $address['country'];
