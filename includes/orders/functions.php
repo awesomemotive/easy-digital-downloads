@@ -918,7 +918,7 @@ function edd_get_order_item_by( $field = '', $value = '' ) {
  * @since 3.0
  *
  * @param array $args
- * @return array
+ * @return \EDD\Orders\Order_Item[]
  */
 function edd_get_order_items( $args = array() ) {
 
