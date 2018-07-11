@@ -161,13 +161,11 @@ final class Adjustments extends Base {
 	 * @return bool
 	 */
 	protected function __201807110001() {
-
-		// Attempt to drop the old table
-		$this->get_db()->query( "
+		$retval = $this->get_db()->query( "
 			ALTER TABLE {$this->table_name} CHANGE `min_cart_price` `min_charge_amount` decimal(18,9) NOT NULL default '0';
 		" );
 
 		// Return success/fail
-		return $this->is_success( true );
+		return $this->is_success( $retval );
 	}
 }
