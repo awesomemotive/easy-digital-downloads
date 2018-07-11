@@ -550,17 +550,13 @@ textarea[name="edd-note"] {
 	position: relative;
 }
 
-#edd-filters #edd-advanced-filters .inside * {
-	display: inline;
-}
-
 #edd-filters #edd-advanced-filters .inside {
 	z-index: 99;
 	position: absolute;
 	top: 29px;
 	right: 0;
 	border: 1px solid #e5e5e5;
-	padding: 10px;
+	padding: 0 1em;
 	background: #fafafa;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 	min-width: 285px;

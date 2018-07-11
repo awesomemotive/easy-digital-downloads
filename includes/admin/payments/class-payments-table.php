@@ -121,11 +121,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Get values
 		$start_date                = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date                  = isset( $_GET['end-date']   ) ? sanitize_text_field( $_GET['end-date']   ) : null;
-		$gateway                   = isset( $_GET['gateway']    ) ? sanitize_key( $_GET['gateway']           ) : 'all';
-		$mode                      = isset( $_GET['mode']       ) ? sanitize_key( $_GET['mode']              ) : 'all';
-		$order_total_filter_type   = isset( $_GET['order-amount-filter-type']  ) ? sanitize_text_field( $_GET['order-amount-filter-type']  ) : false;
+		$end_date                  = isset( $_GET['end-date'] ) ? sanitize_text_field( $_GET['end-date'] ) : null;
+		$gateway                   = isset( $_GET['gateway'] ) ? sanitize_key( $_GET['gateway'] ) : 'all';
+		$mode                      = isset( $_GET['mode'] ) ? sanitize_key( $_GET['mode'] ) : 'all';
+		$order_total_filter_type   = isset( $_GET['order-amount-filter-type'] ) ? sanitize_text_field( $_GET['order-amount-filter-type'] ) : false;
 		$order_total_filter_amount = isset( $_GET['order-amount-filter-value'] ) ? sanitize_text_field( $_GET['order-amount-filter-value'] ) : '';
+		$country                   = isset( $_GET['order-country-filter-value'] ) ? sanitize_text_field( $_GET['order-country-filter-value'] ) : '';
+		$region                    = isset( $_GET['order-region-filter-value'] ) ? sanitize_text_field( $_GET['order-region-filter-value'] ) : '';
 
 		$status     = $this->get_status();
 		$clear_url  = $this->base_url;
@@ -135,7 +137,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$all_gateways = edd_get_payment_gateways();
 
 		// Advanced filters
-		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount );
+		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount ) || ! empty( $country ) || ! empty( $region );
 		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
 
 		$maybe_show_filters = ( true === $advanced_filters_applied )
@@ -225,25 +227,58 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<span class="inside">
-				<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
-				<?php
-				$options = array(
-					'=' => __( 'equal to',     'easy-digital-downloads' ),
-					'>' => __( 'greater than', 'easy-digital-downloads' ),
-					'<' => __( 'less than',    'easy-digital-downloads' ),
-				);
+				<p>
+					<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
+					<?php
+					$options = array(
+						'=' => __( 'equal to', 'easy-digital-downloads' ),
+						'>' => __( 'greater than', 'easy-digital-downloads' ),
+						'<' => __( 'less than', 'easy-digital-downloads' ),
+					);
 
+					echo EDD()->html->select( array(
+						'id'               => 'order-amount-filter-type',
+						'name'             => 'order-amount-filter-type',
+						'options'          => $options,
+						'selected'         => $order_total_filter_type,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+					) );
+					?>
+
+					<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
+				</p>
+
+				<p>
+					<label><?php esc_html_e( 'Country/Region', 'easy-digital-downloads' ); ?></label>
+					<?php
+					echo EDD()->html->select( array(
+						'name'             => 'order-country-filter-value',
+						'class'            => 'edd_countries_filter',
+						'options'          => edd_get_country_list(),
+						'chosen'           => true,
+						'selected'         => $country,
+						'show_option_none' => false,
+						'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+						'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+					) );
+					?>
+				</p>
+
+				<p>
+				<?php
 				echo EDD()->html->select( array(
-					'id'               => 'order-amount-filter-type',
-					'name'             => 'order-amount-filter-type',
-					'options'          => $options,
-					'selected'         => $order_total_filter_type,
-					'show_option_all'  => false,
+					'name'             => 'order-region-filter-value',
+					'class'            => 'edd_regions_filter',
+					'options'          => edd_get_shop_states( $country ),
+					'chosen'           => true,
+					'selected'         => $region,
 					'show_option_none' => false,
+					'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+					'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
 				) );
 				?>
-
-				<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
+				</p>
 			</span>
 		</span>
 
@@ -754,6 +789,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			);
 		}
 
+		// Maybe filter by country.
+		if ( isset( $_GET['order-country-filter-value'] ) ) {
+			$country = ! empty( $_GET['order-country-filter-value'] )
+				? sanitize_text_field( $_GET['order-country-filter-value'] )
+				: '';
+
+			$args['country'] = $country;
+		}
+
+		// Maybe filter by region.
+		if ( isset( $_GET['order-region-filter-value'] ) ) {
+			$region = ! empty( $_GET['order-region-filter-value'] )
+				? sanitize_text_field( $_GET['order-region-filter-value'] )
+				: '';
+
+			$args['region'] = $region;
+		}
+
 		// No empties
 		$r = wp_parse_args( array_filter( $args ) );
 
@@ -870,16 +923,36 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
-			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+			if ( ! empty( $_GET['order-amount-filter-value'] ) || '0' === $_GET['order-amount-filter-value'] ) {
+				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-			$args['advanced_query'] = array(
-				array(
-					'key'     => 'total',
-					'value'   => $filter_amount,
-					'compare' => $filter_type,
-				),
-			);
+				$args['advanced_query'] = array(
+					array(
+						'key'     => 'total',
+						'value'   => $filter_amount,
+						'compare' => $filter_type,
+					),
+				);
+			}
+		}
+
+		// Maybe filter by country.
+		if ( isset( $_GET['order-country-filter-value'] ) ) {
+			$country = ! empty( $_GET['order-country-filter-value'] )
+				? sanitize_text_field( $_GET['order-country-filter-value'] )
+				: '';
+
+			$args['country'] = $country;
+		}
+
+		// Maybe filter by region.
+		if ( isset( $_GET['order-region-filter-value'] ) ) {
+			$region = ! empty( $_GET['order-region-filter-value'] )
+				? sanitize_text_field( $_GET['order-region-filter-value'] )
+				: '';
+
+			$args['region'] = $region;
 		}
 
 		// No empties

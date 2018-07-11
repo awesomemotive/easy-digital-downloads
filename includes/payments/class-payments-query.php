@@ -85,6 +85,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			'gateway'         => null,
 			'post__in'        => null,
 			'advanced_query'  => null,
+			'country'         => null,
+			'region'          => null,
 		);
 
 		$this->initial_args = $args;
@@ -165,7 +167,22 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $should_output_wp_post_objects ) {
-			// TODO: We need to return WP_Post objects here for backwards compatibility...
+			$posts = array();
+
+			foreach ( $orders as $order ) {
+				$p = new WP_Post( new stdClass() );
+
+				$p->ID                = $order->id;
+				$p->post_date         = EDD()->utils->date( $order->date_created, null, true )->toDateTimeString();
+				$p->post_date_gmt     = $order->date_created;
+				$p->post_status       = $order->status;
+				$p->post_modified     = EDD()->utils->date( $order->date_modified, null, true )->toDateTimeString();
+				$p->post_modified_gmt = $order->date_modified;
+
+				$posts[] = $p;
+			}
+
+			return $posts;
 		}
 
 		if ( $should_output_order_objects ) {
@@ -173,8 +190,6 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		foreach ( $orders as $order ) {
-			/** @var $order EDD\Orders\Order */
-
 			$payment = edd_get_payment( $order->id );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
@@ -510,6 +525,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @access private
 	 */
 	private function remap_args() {
+		global $wpdb;
+
 		$arguments = array();
 
 		// Check for post_parent
@@ -528,6 +545,8 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $this->args['start_date'] ) {
+			$this->start_date = \Carbon\Carbon::parse( $this->start_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+
 			$arguments['date_created_query']['after'] = array(
 				'year'  => date( 'Y', $this->start_date ),
 				'month' => date( 'm', $this->start_date ),
@@ -538,6 +557,8 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $this->args['end_date'] ) {
+			$this->end_date = \Carbon\Carbon::parse( $this->start_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+
 			$arguments['date_created_query']['before'] = array(
 				'year'  => date( 'Y', $this->end_date ),
 				'month' => date( 'm', $this->end_date ),
@@ -684,6 +705,64 @@ class EDD_Payments_Query extends EDD_Stats {
 		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
 			$arguments['status__in'] = $arguments['status'];
 			unset( $arguments['status'] );
+		}
+
+		if ( isset( $this->args['country'] ) && ! empty( $this->args['country'] ) ) {
+			$region = ! empty( $this->args['region'] )
+				? $wpdb->prepare( 'AND edd_oa.region = %s', esc_sql( $this->args['region'] ) )
+				: '';
+
+			$country = ! empty( $this->args['country'] )
+				? $wpdb->prepare( 'AND edd_oa.country = %s', esc_sql( $this->args['country'] ) )
+				: '';
+
+			$join = ! empty( $country ) || ! empty( $region )
+				? "INNER JOIN {$wpdb->edd_order_addresses} edd_oa ON edd_o.id = edd_oa.order_id"
+				: '';
+
+			$date_query = '';
+
+			if ( ! empty( $this->start_date ) || ! empty( $this->end_date ) ) {
+				$date_query = ' AND ';
+
+				if ( ! empty( $this->start_date ) ) {
+					$date_query .= 'edd_o.date_created ';
+					$date_query .= $wpdb->prepare( '>= %s', $this->start_date );
+				}
+
+				// Join dates with `AND` if start and end date set.
+				if ( ! empty( $this->start_date ) && ! empty( $this->end_date ) ) {
+					$date_query .= ' AND ';
+				}
+
+				if ( ! empty( $this->end_date ) ) {
+					$date_query .= $wpdb->prepare( 'edd_o.date_created <= %s', $this->end_date );
+				}
+			}
+
+			$gateway = ! empty( $arguments['gateway'] )
+				? $wpdb->prepare( 'AND edd_o.gateway = %s', esc_sql( $arguments['gateway'] ) )
+				: '';
+
+			$mode = ! empty( $arguments['mode'] )
+				? $wpdb->prepare( 'AND edd_o.mode = %s', esc_sql( $arguments['mode'] ) )
+				: '';
+
+			$sql = "
+				SELECT edd_o.id
+				FROM {$wpdb->edd_orders} edd_o
+				{$join}
+				WHERE 1=1 {$country} {$region} {$mode} {$gateway} {$date_query}
+			";
+
+			$ids = $wpdb->get_col( $sql, 0 );
+
+			if ( ! empty( $ids ) ) {
+				$ids = wp_parse_id_list( $ids );
+				$arguments['id__in'] = isset( $arguments['id__in'] )
+					? array_merge( $ids, $arguments['id__in'] )
+					: $ids;
+			}
 		}
 
 		$this->args = $arguments;
