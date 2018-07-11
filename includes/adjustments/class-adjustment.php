@@ -35,6 +35,8 @@ defined( 'ABSPATH' ) || exit;
  * @property int $once_per_customer
  * @property float $min_charge_amount
  * @property string $product_condition
+ * @property string $start_date
+ * @property string $end_date
  * @property string $date_created
  * @property string $date_modified
  */
