@@ -468,7 +468,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
 				break;
 			case 'date':
-				$value = '<time datetime="' . esc_attr( $order->date_created ) . '">' . edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( $order->date_created, 'H:i' ) . '</time>';
+				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ) . '</time>';
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
