@@ -469,7 +469,7 @@ class Manifest implements Error_Logger {
 			<?php echo esc_js( $target_el ); ?>.options.tooltips = {
 				callbacks: {
 					label: function( t, d ) {
-						var dataset = d.datasets[ t.datasetIndex ];
+					    var dataset = d.datasets[ t.datasetIndex ];
 
 						var total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
 							return previousValue + currentValue;
@@ -479,7 +479,7 @@ class Manifest implements Error_Logger {
 
 						var precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
 
-						return d.labels[ t.datasetIndex ] + ': ' + currentValue + ' (' + precentage + '%)';
+						return d.labels[ t.index ] + ': ' + currentValue + ' (' + precentage + '%)';
 					}
 				}
 			};
