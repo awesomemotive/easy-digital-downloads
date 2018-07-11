@@ -101,4 +101,12 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		// Reset the option
 		edd_update_option( 'currency', $initial_currency );
 	}
+
+	public function test_decimal_filter_with_currency_passed_should_return_0() {
+		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'RIAL' ) );
+
+		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'HUF' ) );
+
+		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'JPY' ) );
+	}
 }

@@ -6,81 +6,42 @@
  */
 class Tests_Taxes extends EDD_UnitTestCase {
 
-	protected $_payment_id = null;
+	/**
+	 * Order test fixture.
+	 *
+	 * @var EDD\Orders\Order
+	 */
+	protected static $order;
 
-	protected $_post = null;
+	/**
+	 * Download test fixture.
+	 *
+	 * @var EDD_Download
+	 */
+	protected static $download;
 
-	public function setUp() {
-		parent::setUp();
-
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+	/**
+	 * Set up fixtures once.
+	 */
+	public static function wpSetUpBeforeClass() {
+		$post_id = self::factory()->post->create( array(
+			'post_title'  => 'Test Download',
+			'post_type'   => 'download',
+			'post_status' => 'publish',
+		) );
 
 		$meta = array(
 			'edd_price' => '10.00',
 		);
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
 
-		$this->_post = get_post( $post_id );
+		self::$download = edd_get_download( $post_id );
 
-		/** Generate some sales */
-		$user = get_userdata(1);
+		self::$order = edd_get_order( EDD_Helper_Payment::create_simple_payment_with_tax() );
 
-		$user_info = array(
-			'id' => $user->ID,
-			'email' => $user->user_email,
-			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
-		);
-
-		$download_details = array(
-			array(
-				'id' => $this->_post->ID,
-				'options' => array(
-					'price_id' => 1
-				)
-			)
-		);
-
-		$cart_details = array();
-		$cart_details[] = array(
-			'name' => 'Test Download',
-			'id' => $this->_post->ID,
-			'item_number' => array(
-				'id' => $this->_post->ID,
-				'options' => array(
-					'price_id' => 1
-				)
-			),
-			'subtotal' => '10',
-			'discount' => '0',
-			'tax'      => '0.36',
-			'item_price'=> '10',
-			'price'    => '10.36',
-			'quantity' => 1,
-		);
-
-		$purchase_data = array(
-			'price' => '10.36',
-			'date' => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-			'purchase_key' => strtolower( md5( uniqid() ) ),
-			'user_email' => $user_info['email'],
-			'user_info' => $user_info,
-			'currency' => 'USD',
-			'downloads' => $download_details,
-			'cart_details' => $cart_details,
-			'status' => 'publish'
-		);
-
-		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
-		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
-
-		$payment_id = edd_insert_payment( $purchase_data );
-		edd_update_payment_status( $payment_id, 'publish' );
-
-		$this->_payment_id = $payment_id;
+		edd_update_order_status( self::$order->ID, 'publish' );
 
 		// Setup global tax rate
 
@@ -99,11 +60,6 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		update_option( 'edd_tax_rates', $tax_rates );
 	}
 
-	public function tearDown() {
-		parent::tearDown();
-		EDD_Helper_Payment::delete_payment( $this->_payment_id );
-	}
-
 	public function test_use_taxes() {
 		$this->assertTrue( edd_use_taxes() );
 	}
@@ -114,6 +70,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_get_tax_rate() {
 		$this->assertInternalType( 'float', edd_get_tax_rate( 'US', 'AL' ) );
+
 		// Test the one state that has its own rate
 		$this->assertEquals( '0.15', edd_get_tax_rate( 'US', 'AL' ) );
 
@@ -156,12 +113,14 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rate_user_address() {
+		$this->setExpectedIncorrectUsage( 'add_user_meta()/update_user_meta()' );
+		$this->setExpectedIncorrectUsage( 'get_user_meta()' );
 
-		// Prep test (fake is_user_logged_in())
 		global $current_user;
-		$current_user      = new WP_User(1);
-		$user_id           = get_current_user_id();
-		$existing_addresss = get_user_meta( $user_id, '_edd_user_address', true );
+
+		$current_user = new WP_User( 1 );
+		$user_id      = get_current_user_id();
+
 		update_user_meta( $user_id, '_edd_user_address', array(
 			'line1'   => 'First address',
 			'line2'   => 'Line two',
@@ -171,16 +130,10 @@ class Tests_Taxes extends EDD_UnitTestCase {
 			'state'   => 'AL',
 		) );
 
-		// Assert
 		$this->assertEquals( '0.15', edd_get_tax_rate() );
-
-		// Reset to origin
-		update_post_meta( $user_id, '_edd_user_address', $existing_addresss );
 	}
 
 	public function test_get_tax_rate_global() {
-
-		// Prepare test
 		$existing_tax_rates = get_option( 'edd_tax_rates' );
 		$tax_rates[]        = array( 'country' => 'NL', 'global' => '1', 'rate' => 21 );
 		update_option( 'edd_tax_rates', $tax_rates );
@@ -203,7 +156,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( '9.29916', edd_calculate_tax( 258.31 ) );
 		$this->assertEquals( '37.41552', edd_calculate_tax( 1039.32 ) );
 		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
-		$this->assertEquals( '0', edd_calculate_tax( -1.50 ) );
+		$this->assertEquals( '0', edd_calculate_tax( - 1.50 ) );
 	}
 
 	public function test_calculate_tax_less_than_one() {
@@ -233,7 +186,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_sales_tax_for_year() {
-		$this->assertEquals( '0.36', edd_get_sales_tax_for_year( date( 'Y' ) ) );
+		$this->assertEquals( '11.0', edd_get_sales_tax_for_year( date( 'Y' ) ) );
 		$this->assertEquals( '0', edd_get_sales_tax_for_year( date( 'Y' ) - 1 ) );
 	}
 
@@ -246,7 +199,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		edd_sales_tax_for_year( date( 'Y' ) - 1 );
 		$last_year = ob_get_clean();
 
-		$this->assertEquals( '&#36;0.36', $this_year );
+		$this->assertEquals( '&#36;11.00', $this_year );
 		$this->assertEquals( '&#36;0.00', $last_year );
 	}
 
@@ -285,31 +238,33 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_download_is_exclusive_of_tax() {
-		$this->assertFalse( edd_download_is_tax_exclusive( $this->_post->ID ) );
+		$this->assertFalse( edd_download_is_tax_exclusive( self::$download->ID ) );
 	}
 
 	public function test_get_payment_tax() {
-		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
+		$this->assertEquals( '11.0', edd_get_payment_tax( self::$order->ID ) );
 	}
 
 	public function test_payment_tax_updates() {
 		// Test backwards compat bug in issue/3324
-		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
-		$current_meta = edd_get_payment_meta( $this->_payment_id );
-		edd_update_payment_meta( $this->_payment_id, '_edd_payment_meta', $current_meta );
-		$this->assertEquals( '0.36', edd_get_payment_tax( $this->_payment_id ) );
+		$this->assertEquals( '11.0', self::$order->tax );
+		$current_meta = edd_get_payment_meta( self::$order->id );
+
+		edd_update_payment_meta( self::$order->id, '_edd_payment_meta', $current_meta );
+		$this->assertEquals( '11.0', edd_get_payment_tax( self::$order->id ) );
 
 		// Test that when we update _edd_payment_tax, we update the _edd_payment_meta
-		edd_update_payment_meta( $this->_payment_id, '_edd_payment_tax', 10 );
-		$meta_array = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+		edd_update_payment_meta( self::$order->id, '_edd_payment_tax', 10 );
+
+		$meta_array = edd_get_payment_meta( self::$order->id, '_edd_payment_meta', true );
+
 		$this->assertEquals( 10, $meta_array['tax'] );
-		$this->assertEquals( 10, edd_get_payment_tax( $this->_payment_id ) );
+		$this->assertEquals( 10, edd_get_payment_tax( self::$order->id ) );
 
 		// Test that when we update the _edd_payment_meta, we update the _edd_payment_tax
-		$current_meta = edd_get_payment_meta( $this->_payment_id, '_edd_payment_meta', true );
+		$current_meta        = edd_get_payment_meta( self::$order->id, '_edd_payment_meta', true );
 		$current_meta['tax'] = 20;
-		edd_update_payment_meta( $this->_payment_id, '_edd_payment_meta', $current_meta );
-		$this->assertEquals( 20, edd_get_payment_tax( $this->_payment_id ) );
-
+		edd_update_payment_meta( self::$order->id, '_edd_payment_meta', $current_meta );
+		$this->assertEquals( 20, edd_get_payment_tax( self::$order->id ) );
 	}
 }

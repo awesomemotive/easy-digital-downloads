@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Fees
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Fees Class
@@ -132,7 +132,6 @@ class EDD_Fees {
 	/**
 	 * Remove an Existing Fee
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $id Fee ID
 	 * @uses EDD_Fees::get_fees()
@@ -156,7 +155,6 @@ class EDD_Fees {
 	/**
 	 * Check if any fees are present
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
@@ -178,7 +176,6 @@ class EDD_Fees {
 	/**
 	 * Retrieve all active fees
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @param int $download_id The download ID whose fees to retrieve
@@ -204,10 +201,21 @@ class EDD_Fees {
 
 		if ( ! empty( $fees ) && ! empty( $download_id ) ) {
 			// Remove fees that don't belong to the specified Download
+			$applied_fees = array();
 			foreach ( $fees as $key => $fee ) {
+
 				if ( empty( $fee['download_id'] ) || (int) $download_id !== (int) $fee['download_id'] ) {
 					unset( $fees[ $key ] );
 				}
+
+				$fee_hash   = md5( $fee['amount'] . $fee['label'] . $fee['type'] );
+
+				if ( in_array( $fee_hash, $applied_fees ) ) {
+					unset( $fees[ $key ] );
+				}
+
+				$applied_fees[] = $fee_hash;
+
 			}
 		}
 
@@ -264,7 +272,6 @@ class EDD_Fees {
 	 *
 	 * Can be negative
 	 *
-	 * @access public
 	 * @since 2.0
 	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
@@ -289,7 +296,6 @@ class EDD_Fees {
 	 *
 	 * Can be negative
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
@@ -312,7 +318,6 @@ class EDD_Fees {
 	/**
 	 * Stores the fees in the payment meta
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @uses EDD_Session::set()
 	 * @param array $payment_meta The meta data to store with the payment

@@ -18,14 +18,14 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
  * @author      Barry Kooij
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 class EDD_Email_Template_Tags {
 
@@ -34,7 +34,7 @@ class EDD_Email_Template_Tags {
 	 *
 	 * @since 1.9
 	 */
-	private $tags;
+	private $tags = array();
 
 	/**
 	 * Payment ID
@@ -205,7 +205,7 @@ function edd_get_emails_tags_list() {
 	$list = '';
 
 	// Get all tags
-	$email_tags = edd_get_email_tags();
+	$email_tags = (array) edd_get_email_tags();
 
 	// Check
 	if ( count( $email_tags ) > 0 ) {
@@ -745,7 +745,7 @@ function edd_email_tag_billing_address( $payment_id ) {
  */
 function edd_email_tag_date( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
-	return date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) );
+	return edd_date_i18n( $payment->date );
 }
 
 /**
@@ -833,11 +833,9 @@ function edd_email_tag_payment_method( $payment_id ) {
  * Email template tag: sitename
  * Your site name
  *
- * @param int $payment_id
- *
  * @return string sitename
  */
-function edd_email_tag_sitename( $payment_id ) {
+function edd_email_tag_sitename() {
 	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 }
 
