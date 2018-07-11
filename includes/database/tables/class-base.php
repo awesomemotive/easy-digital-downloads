@@ -571,7 +571,7 @@ abstract class Base extends \EDD\Database\Base {
 		if ( ! is_callable( $callable ) ) {
 			$callable = array( $this, $method );
 
-			// Look for local clas method
+			// Look for local class method
 			if ( ! is_callable( $callable ) ) {
 				$callable = array( $this, "__{$method}" );
 

@@ -1194,6 +1194,11 @@ function edd_multiple_discounts_allowed() {
  */
 function edd_listen_for_cart_discount() {
 
+	// Bail if in admin
+	if ( is_admin() ) {
+		return;
+	}
+
 	// Array stops the bulk delete of discount codes from storing as a preset_discount
 	if ( empty( $_REQUEST['discount'] ) || is_array( $_REQUEST['discount'] ) ) {
 		return;
@@ -1212,6 +1217,11 @@ add_action( 'init', 'edd_listen_for_cart_discount', 0 );
  * @return void
  */
 function edd_apply_preset_discount() {
+
+	// Bail if in admin
+	if ( is_admin() ) {
+		return;
+	}
 
 	$code = sanitize_text_field( EDD()->session->get( 'preset_discount' ) );
 

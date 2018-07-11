@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_adjustments" database table
  *
@@ -150,4 +149,3 @@ final class Adjustments extends Base {
         return true;
     }
 }
-endif;

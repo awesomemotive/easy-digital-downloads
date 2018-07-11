@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_notes" database table
  *
@@ -60,4 +59,3 @@ final class Notes extends Base {
 			KEY date_created (date_created)";
 	}
 }
-endif;

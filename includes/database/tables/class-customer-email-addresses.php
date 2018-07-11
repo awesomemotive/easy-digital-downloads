@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_customer_email_addresses" database table
  *
@@ -61,4 +60,3 @@ final class Customer_Email_Addresses extends Base {
 			KEY date_created (date_created)";
 	}
 }
-endif;
