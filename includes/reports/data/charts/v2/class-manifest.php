@@ -378,7 +378,7 @@ class Manifest implements Error_Logger {
 								}
 							}
 
-							$callback_conditional = substr( $callback_conditional, 0, - 4 );
+							$callback_conditional = substr( $callback_conditional, 0, -4 );
 							?>
 							var yLabel = t.yLabel;
 
@@ -469,7 +469,25 @@ class Manifest implements Error_Logger {
 			<?php echo esc_js( $target_el ); ?>.options.tooltips = {
 				callbacks: {
 					label: function( t, d ) {
-					    var dataset = d.datasets[ t.datasetIndex ];
+						<?php
+						$options = $this->get_endpoint()->get_options();
+
+						$callback_conditional = '';
+
+						if ( is_array( $options ) && isset( $options['datasets'] ) ) {
+							$i = 0;
+							foreach ( $options['datasets'] as $dataset ) {
+								if ( isset( $dataset['type'] ) && 'currency' === $dataset['type'] ) {
+									$callback_conditional .= 't.datasetIndex === ' . $i . ' || ';
+								}
+								$i++;
+							}
+						}
+
+						$callback_conditional = substr( $callback_conditional, 0, -4 );
+						?>
+
+						var dataset = d.datasets[ t.datasetIndex ];
 
 						var total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
 							return previousValue + currentValue;
@@ -478,6 +496,12 @@ class Manifest implements Error_Logger {
 						var currentValue = dataset.data[ t.index ];
 
 						var precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
+
+						<?php if ( ! empty( $callback_conditional ) ) : ?>
+						if ( <?php echo esc_js( $callback_conditional ); ?> ) {
+							currentValue = '<?php echo esc_js( html_entity_decode( edd_currency_symbol( edd_get_currency() ) ) ); ?>' + currentValue.toFixed(2);
+						}
+						<?php endif; ?>
 
 						return d.labels[ t.index ] + ': ' + currentValue + ' (' + precentage + '%)';
 					}

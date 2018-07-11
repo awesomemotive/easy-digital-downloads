@@ -1506,6 +1506,7 @@ function edd_register_payment_gateways_report( $reports ) {
 									'rgb(137,163,87)',
 									'rgb(27,98,122)',
 								),
+								'type'            => 'currency',
 							),
 						),
 						'labels' => $gateway_list,
