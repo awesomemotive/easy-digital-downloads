@@ -1703,6 +1703,9 @@ function edd_register_taxes_report( $reports ) {
 					'total_tax_collected',
 					'total_tax_collected_for_location',
 				),
+				'tables' => array(
+					'tax_collected_by_location',
+				),
 			),
 			'filters'   => array( 'products', 'countries', 'regions' ),
 		) );
@@ -1772,6 +1775,18 @@ function edd_register_taxes_report( $reports ) {
 				),
 			) );
 		}
+
+		$reports->register_endpoint( 'tax_collected_by_location', array(
+			'label' => __( 'Tax Collected by Location', 'easy-digital-downloads' ),
+			'views' => array(
+				'table' => array(
+					'display_args' => array(
+						'class_name' => '\\EDD\\Reports\\Data\\Taxes\\Tax_Collected_By_Location',
+						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/taxes/class-tax-collected-by-location-list-table.php',
+					),
+				),
+			),
+		) );
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
