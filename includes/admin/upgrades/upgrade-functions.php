@@ -1359,7 +1359,7 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	/** Discounts Migration **************************************************/
-	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discounts' LIMIT 1" );
+	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discount' LIMIT 1" );
 	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
 
 	if ( empty( $discounts ) ) {

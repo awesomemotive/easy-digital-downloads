@@ -53,10 +53,6 @@ class Discounts extends Base {
 			foreach ( $results as $old_discount ) {
 				$old_discount = get_post( $old_discount->ID );
 
-				if ( 'edd_discount' !== $old_discount->post_type ) {
-					continue;
-				}
-
 				$args            = array();
 				$meta            = get_post_custom( $old_discount->ID );
 				$meta_to_migrate = array();
@@ -78,7 +74,6 @@ class Discounts extends Base {
 					$args['name'] = $old_discount->post_title;
 				}
 
-				$args['status']        = get_post_status( $old_discount->ID );
 				$args['date_created']  = $old_discount->post_date_gmt;
 				$args['date_modified'] = $old_discount->post_modified_gmt;
 
