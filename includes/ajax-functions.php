@@ -533,13 +533,13 @@ function edd_ajax_get_states_field() {
 	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
 		$field_name = sanitize_text_field( $_POST['field_name'] );
-
-		$response = EDD()->html->select( array(
+		$chosen     = false === strstr( $field_name, 'tax_rate' );
+		$response   = EDD()->html->select( array(
 			'name'             => $field_name,
 			'id'               => $field_name,
 			'class'            => $field_name . '  edd-select',
 			'options'          => $states,
-			'chosen'           => true,
+			'chosen'           => $chosen,
 			'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
 			'show_option_all'  => false,
 			'show_option_none' => false,
