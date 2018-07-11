@@ -497,7 +497,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @since 3.0
 	 */
 	public function filter_bar_searchbox() {
-		do_action( 'edd_payment_advanced_filters_row' );
+		do_action( 'edd_logs_advanced_filters_row' );
 
 		$this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-logs' );
 	}
