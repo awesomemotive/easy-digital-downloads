@@ -350,7 +350,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 *
 	 * @return array
 	 */
-	private function get_query_args() {
+	protected function get_query_args() {
 
 		// Pagination
 		$paged  = $this->get_paged();
@@ -373,15 +373,13 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				$retval['ip'] = $search;
-
 			} elseif ( is_email( $search ) ) {
-				$customer = new EDD_Customer( $search );
+				$customer = edd_get_customer( $search );
 				if ( ! empty( $customer->id ) ) {
 					$retval['customer_id'] = $customer->id;
 				}
-
 			} elseif ( is_numeric( $search ) ) {
-				$customer = new EDD_Customer( $search );
+				$customer = edd_get_customer( $search );
 
 				if ( ! empty( $customer->id ) ) {
 					$retval['customer_id'] = $customer->id;
@@ -405,7 +403,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 			if ( ! empty( $start_date ) ) {
 				$retval['date_created_query'][] = array(
 					'column' => 'date_created',
-					'after'  => date( "Y-m-d H:i:s", strtotime( "{$start_date} midnight" ) )
+					'after'  => \Carbon\Carbon::parse( date( 'Y-m-d H:i:s', strtotime( "{$start_date} midnight" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
 				);
 			}
 
@@ -413,7 +411,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 			if ( ! empty( $end_date ) ) {
 				$retval['date_created_query'][] = array(
 					'column' => 'date_created',
-					'before' => date( "Y-m-d H:i:s", strtotime( "{$end_date} + 1 day" ) )
+					'before' => \Carbon\Carbon::parse( date( 'Y-m-d H:i:s', strtotime( "{$end_date} + 1 day" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
 				);
 			}
 		}
@@ -441,7 +439,6 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		// Get values
 		$start_date = $this->get_filtered_start_date();
 		$end_date   = $this->get_filtered_end_date();
-		//! empty( $_GET['end-date']   ) ? sanitize_text_field( $_GET['end-date']   ) : null;
 		$download   = $this->get_filtered_download();
 		$clear_url  = add_query_arg( array(
 			'post_type' => 'download',
@@ -483,7 +480,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) ) : ?>
 				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-					<?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Clear Filter', 'easy-digital-downloads' ); ?>
 				</a>
 			<?php endif; ?>
 		</span>
@@ -497,7 +494,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @since 3.0
 	 */
 	public function filter_bar_searchbox() {
-		do_action( 'edd_payment_advanced_filters_row' );
+		do_action( 'edd_logs_advanced_filters_row' );
 
 		$this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-logs' );
 	}
