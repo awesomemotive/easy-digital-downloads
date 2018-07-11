@@ -761,6 +761,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			);
 		}
 
+		// Maybe filter by country.
+		if ( isset( $_GET['order-country-filter-value'] ) ) {
+			$country = ! empty( $_GET['order-country-filter-value'] )
+				? sanitize_text_field( $_GET['order-country-filter-value'] )
+				: '';
+
+			$args['country'] = $country;
+		}
+
+		// Maybe filter by region.
+		if ( isset( $_GET['order-region-filter-value'] ) ) {
+			$region = ! empty( $_GET['order-region-filter-value'] )
+				? sanitize_text_field( $_GET['order-region-filter-value'] )
+				: '';
+
+			$args['region'] = $region;
+		}
+
 		// No empties
 		$r = wp_parse_args( array_filter( $args ) );
 
