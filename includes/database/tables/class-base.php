@@ -294,6 +294,11 @@ abstract class Base extends \EDD\Database\Base {
 			return true;
 		}
 
+		// Remove all upgrades that have already been completed
+		$this->upgrades = array_filter( $this->upgrades, function( $value ) {
+			return $value >= (int) $this->version;
+		} );
+
 		// Try to do all known upgrades
 		foreach ( $this->upgrades as $version => $method ) {
 			$result = $this->upgrade_to( $version, $method );
@@ -376,7 +381,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return wpdb
+	 * @return \wpdb
 	 */
 	protected static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
