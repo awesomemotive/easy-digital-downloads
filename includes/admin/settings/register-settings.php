@@ -1394,7 +1394,7 @@ add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc
  *
  * @param array $input The value inputted in the field
  *
- * @return string $input Sanitized value
+ * @return array $input Sanitized value.
  */
 function edd_settings_sanitize_taxes( $input ) {
 
@@ -1421,7 +1421,50 @@ function edd_settings_sanitize_taxes( $input ) {
 		? array_values( $new_rates )
 		: array();
 
-	update_option( 'edd_tax_rates', $new_rates );
+	foreach ( $new_rates as $tax_rate ) {
+		$scope = isset( $tax_rate['global'] )
+			? 'country'
+			: 'region';
+
+		$region = isset( $tax_rate['state'] )
+			? sanitize_text_field( $tax_rate['state'] )
+			: '';
+
+		$adjustment_data = array(
+			'name'        => $tax_rate['country'],
+			'status'      => 'active',
+			'type'        => 'tax_rate',
+			'scope'       => $scope,
+			'amount_type' => 'percent',
+			'amount'      => floatval( $tax_rate['rate'] ),
+			'description' => $region,
+		);
+
+		// Update database if adjustment ID was supplied.
+		if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
+			edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
+
+			// Check if the tax rate exists.
+		} else {
+			$rate = edd_get_adjustments( array(
+				'fields'      => 'ids',
+				'name'        => $tax_rate['country'],
+				'description' => $region,
+				'scope'       => $scope,
+			) );
+
+			// Tax rate exists.
+			if ( 1 === count( $rate ) ) {
+				$adjustment_id = absint( $rate[0] );
+
+				edd_update_adjustment( $adjustment_id, $adjustment_data );
+
+				// Add the tax rate to the database.
+			} else {
+				edd_add_adjustment( $adjustment_data );
+			}
+		}
+	}
 
 	return $input;
 }
