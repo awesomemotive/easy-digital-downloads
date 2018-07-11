@@ -290,8 +290,8 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( 0 === $relative ) {
 				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $total )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $total );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
