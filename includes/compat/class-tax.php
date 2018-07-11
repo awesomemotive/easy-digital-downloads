@@ -89,8 +89,8 @@ class Tax extends Base {
 			);
 
 			// Update database if adjustment ID was supplied.
-			if ( isset( $tax_rate['id'] ) ) {
-				edd_update_adjustment( $tax_rate['id'], $adjustment_data );
+			if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
+				edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
 
 			// Check if the tax rate exists.
 			} else {
