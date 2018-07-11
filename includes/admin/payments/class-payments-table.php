@@ -877,16 +877,36 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
-			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+			if ( ! empty( $_GET['order-amount-filter-value'] ) || '0' === $_GET['order-amount-filter-value'] ) {
+				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-			$args['advanced_query'] = array(
-				array(
-					'key'     => 'total',
-					'value'   => $filter_amount,
-					'compare' => $filter_type,
-				),
-			);
+				$args['advanced_query'] = array(
+					array(
+						'key'     => 'total',
+						'value'   => $filter_amount,
+						'compare' => $filter_type,
+					),
+				);
+			}
+		}
+
+		// Maybe filter by country.
+		if ( isset( $_GET['order-country-filter-value'] ) ) {
+			$country = ! empty( $_GET['order-country-filter-value'] )
+				? sanitize_text_field( $_GET['order-country-filter-value'] )
+				: '';
+
+			$args['country'] = $country;
+		}
+
+		// Maybe filter by region.
+		if ( isset( $_GET['order-region-filter-value'] ) ) {
+			$region = ! empty( $_GET['order-region-filter-value'] )
+				? sanitize_text_field( $_GET['order-region-filter-value'] )
+				: '';
+
+			$args['region'] = $region;
 		}
 
 		// No empties
