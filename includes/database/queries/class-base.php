@@ -1637,6 +1637,9 @@ class Base extends \EDD\Database\Base {
 			$this->update_item_cache( $retval );
 		}
 
+		// Reduce the item
+		$retval = $this->reduce_item( 'select', $retval );
+
 		// Return result
 		return $this->shape_item( $retval );
 	}
@@ -1688,7 +1691,8 @@ class Base extends \EDD\Database\Base {
 
 		// Try to add
 		$table  = $this->get_table_name();
-		$save   = $this->validate_item( $save );
+		$reduce = $this->reduce_item( 'insert', $save );
+		$save   = $this->validate_item( $reduce );
 		$result = ! empty( $save )
 			? $this->get_db()->insert( $table, $save )
 			: false;
@@ -1773,7 +1777,8 @@ class Base extends \EDD\Database\Base {
 		// Try to update
 		$where  = array( $primary => $item_id );
 		$table  = $this->get_table_name();
-		$save   = $this->validate_item( $save );
+		$reduce = $this->reduce_item( 'update', $save );
+		$save   = $this->validate_item( $reduce );
 		$result = ! empty( $save )
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
@@ -1819,6 +1824,7 @@ class Base extends \EDD\Database\Base {
 
 		// Get item (before it's deleted)
 		$item    = $this->get_item_raw( $primary, $item_id );
+		$item    = $this->reduce_item( 'delete', $item );
 
 		// Bail if item does not exist to delete
 		if ( empty( $item ) ) {
@@ -1925,6 +1931,47 @@ class Base extends \EDD\Database\Base {
 
 		// Return the validated item
 		return $this->filter_item( $item );
+	}
+
+	/**
+	 * Reduce an item down to the keys and values the current user has the
+	 * appropriate capabilities to select|insert|update|delete.
+	 *
+	 * Note that internally, this method works with both arrays and objects of
+	 * any type, and also resets the key values. It looks weird, but is
+	 * currently by design to protect the integrity of the return value.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $method select|insert|update|delete
+	 * @param mixed  $item   Object|Array of keys/values to reduce
+	 *
+	 * @return mixed Object|Array without keys the current user does not have caps for
+	 */
+	private function reduce_item( $method = 'update', $item = array() ) {
+		foreach ( $item as $key => $value ) {
+
+			// Get callback for column
+			$caps = $this->get_column_field( array( 'name' => $key ), 'caps' );
+
+			// Unset if not explicitly allowed
+			if ( empty( $caps[ $method ] ) || ! current_user_can( $caps[ $method ] ) ) {
+				if ( is_array( $item ) ) {
+					unset( $item[ $key ] );
+				} elseif ( is_object( $item ) ) {
+					$item->{$key} = null;
+				}
+
+			// Set if explicitly allowed
+			} elseif ( is_array( $item ) ) {
+				$item[ $key ] = $value;
+			} elseif ( is_object( $item ) ) {
+				$item->{$key} = $value;
+			}
+		}
+
+		// Return the reduced item
+		return $item;
 	}
 
 	/**
