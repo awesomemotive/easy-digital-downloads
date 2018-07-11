@@ -13,7 +13,11 @@ msgstr ""
 =======
 "Project-Id-Version: Easy Digital Downloads 2.9.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2018-07-09 21:34:14+00:00\n"
+>>>>>>> master
+=======
+"POT-Creation-Date: 2018-07-11 17:27:02+00:00\n"
 >>>>>>> master
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
