@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_logs_api_requests" database table
  *
@@ -63,4 +62,3 @@ final class Logs_Api_Requests extends Base {
 		KEY date_created (date_created)";
 	}
 }
-endif;

@@ -34,6 +34,38 @@ a.edd-delete:hover {
 	height: 29px;
 }
 
+.edd-from-to-wrapper {
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+.edd-from-to-wrapper input {
+	width: 120px;
+	margin: 0;
+	position: relative;
+	z-index: 1;
+}
+
+.edd-from-to-wrapper input:focus {
+	z-index: 2;
+	outline: auto 5px -webkit-focus-ring-color;
+	border-color: #eee;
+	box-shadow: none;
+}
+
+.edd-from-to-wrapper input[name="start"],
+.edd-from-to-wrapper input[name="start-date"],
+.edd-from-to-wrapper input[name="filter_from"] {
+	border-right-color: #eee;
+}
+
+.edd-from-to-wrapper input[name="end"],
+.edd-from-to-wrapper input[name="end-date"],
+.edd-from-to-wrapper input[name="filter_to"] {
+	border-left-color: #eee;
+	margin-left: -1px;
+}
+
 .edd-settings-sub-nav {
 	margin: 0 0px 10px 0;
 	width: 100%;
@@ -217,10 +249,14 @@ a.edd-delete:hover {
 	width: 320px;
 	height: 315px;
 	opacity: 0.9;
+	transition: all .2s ease-in-out;
+	cursor: default;
 }
 #edd-add-ons .edd-extension:hover {
 	border: 1px solid #bbb;
 	opacity: 1;
+	transform: scale(1.05);
+	z-index: 5;
 }
 #edd-add-ons .edd-extension h3 {
 	font-size: 13px;
@@ -484,27 +520,30 @@ textarea[name="edd-note"] {
 #edd-filters {
 	padding: 0 10px;
 }
-#edd-filters .filter-items > span {
+
+#edd-filters .filter-items > span:not(#edd-date-filters):not(.edd-date-range-options) {
 	display: inline-block;
-	margin: 10px 0 10px 0;
+	margin: 10px 4px 10px 0;
+	max-width: 200px;
 }
+
 #edd-filters > p {
 	color: #777;
 }
+
 .edd-old-log-filters {
 	margin-top: -30px;
 	margin-left: 2px;
 }
 
-#edd-filters input[type=text],
+#edd-filters input[type=text].edd_datepicker,
 #edd-filters input[type=number] {
-	vertical-align: middle;
 	max-width: 100px;
 	padding: 5px;
 }
 
 #edd-filters .button-secondary {
-	margin: -3px 0 0 0;
+	vertical-align: middle;
 }
 
 #edd-filters #edd-advanced-filters {
@@ -514,7 +553,7 @@ textarea[name="edd-note"] {
 #edd-filters #edd-advanced-filters .inside {
 	z-index: 99;
 	position: absolute;
-	top: 26px;
+	top: 29px;
 	right: 0;
 	border: 1px solid #e5e5e5;
 	padding: 0 1em;
@@ -522,6 +561,7 @@ textarea[name="edd-note"] {
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 	min-width: 285px;
 	opacity: 0;
+	visibility: hidden;
 }
 
 #edd-filters #edd-advanced-filters.open .edd-advanced-filters-button {
@@ -533,6 +573,7 @@ textarea[name="edd-note"] {
 }
 
 #edd-filters #edd-advanced-filters.open .inside {
+	visibility: visible;
 	opacity: 1;
     -webkit-transition: opacity 0.2s ease-in;
        -moz-transition: opacity 0.2s ease-in;
@@ -605,17 +646,9 @@ marquee {
 	margin: 0;
 }
 .edd-mobile-link {
+	float: right;
 	line-height: 32px;
-	vertical-align: middle;
-	background: #fff;
-	border-left: 4px solid #fff;
-	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-	margin: 25px 0;
-	padding: 5px 8px;
-	background-image: url('../images/edd-peeking.png');
-	background-repeat: no-repeat;
-	background-position-x: 99%;
-	background-position-y: -90%;
+	padding: 8px 0;
 }
 .edd-mobile-link a {
 	text-decoration: none;
@@ -626,12 +659,13 @@ marquee {
 	-webkit-font-smoothing: antialiased;
 	font: normal 20px/30px "dashicons";
 	vertical-align: top;
-	margin: 0;
+	margin: 1px 0 0 0;
 	padding: 0;
 }
 .edd-mobile-link a:before {
 	content: "\f470";
 	color: #656a6f;
+	margin-right: -3px;
 }
 .edd-mobile-link a:after {
 	content: "\f504";
@@ -1462,19 +1496,10 @@ td.edd_order_price {
 	box-shadow: none;
 }
 
-.edd-reports-wrapper .postbox .chosen-container {
+.edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
-	vertical-align: inherit;
+	vertical-align: baseline;
 	margin-right: 4px;
-}
-.edd-reports-wrapper .postbox #edd-start-wrap input.edd_datepicker,
-.edd-reports-wrapper .postbox #edd-end-wrap input.edd_datepicker {
-	width: 120px;
-	margin-right: 4px;
-}
-
-.download_page_edd-reports #edd-filters .filter-items {
-	width: 100%;
 }
 
 .download_page_edd-reports #edd-filters {
@@ -1490,17 +1515,15 @@ td.edd_order_price {
 	max-width: 130px !important; /* Chosen Override */
 }
 #edd-filters .filter-items .edd-date-range-options {
-	margin-top: 9px;
+	margin: 10px 4px 10px 0;
+	max-width: 205px;
 }
+
 .edd-date-range-options .edd_datepicker {
 	width: 100px;
 }
 
-.edd-date-range-options label,
-.edd-date-range-options span:not(:last-of-type) input {
-	margin-right: 5px;
-}
-.edd-date-range-options span {
+.edd-date-range-options span span {
 	float: left;
 	line-height: 29px;
 	height: 29px;
@@ -1745,6 +1768,7 @@ td.edd_order_price {
 	font-size: 2em;
 	line-height: 1;
 	display: inline-block;
+	transition: all .2s ease-in-out;
 }
 
 #edd-reports-tiles-wrap .inside .tile-amount {
@@ -1785,6 +1809,10 @@ td.edd_order_price {
 
 #edd-reports-tiles-wrap .postbox:hover .inside {
 	border: 1px solid #aaa;
+}
+
+#edd-reports-tiles-wrap .postbox:hover .tile-value:not(.tile-no-data) {
+	transform: scale(1.05);
 }
 
 #edd-reports-tiles-wrap .postbox:hover .tile-compare {
@@ -1997,6 +2025,7 @@ td.edd_order_price {
 body.js select.edd-select-chosen {
 	height: 27px;
 	opacity: 0.2;
+	max-width: 300px;
 }
 
 .chosen-container.chosen-container-multi {

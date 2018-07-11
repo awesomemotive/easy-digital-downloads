@@ -45,6 +45,8 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 			'plural'   => edd_get_label_plural(),
 			'ajax'     => false
 		) );
+
+		$this->filter_bar_hooks();
 	}
 
 	/**
@@ -69,6 +71,16 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 
 			<br class="clear" />
 		</div><?php
+	}
+
+	/**
+	 * Hook in filter bar actions
+	 *
+	 * @since 3.0
+	 */
+	private function filter_bar_hooks() {
+		add_action( 'edd_admin_filter_bar_logs',       array( $this, 'filter_bar_items'     ) );
+		add_action( 'edd_after_admin_filter_bar_logs', array( $this, 'filter_bar_searchbox' ) );
 	}
 
 	/**
@@ -234,7 +246,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		$views        = edd_log_default_views();
 		$current_view = $this->get_filtered_view(); ?>
 
-		<select id="edd-logs-view" name="view">
+		<select id="edd-logs-view" name="view" class="edd-select-chosen">
 			<?php foreach ( $views as $view_id => $label ) : ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
@@ -274,7 +286,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		) );
 
 		if ( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter">';
+			echo '<select name="download" id="edd-log-download-filter" class="edd-select-chosen">';
 				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
@@ -416,6 +428,15 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @since 3.0
 	 */
 	public function advanced_filters() {
+		edd_admin_filter_bar( 'logs' );
+	}
+
+	/**
+	 * Output filter bar items
+	 *
+	 * @since 3.0
+	 */
+	public function filter_bar_items() {
 
 		// Get values
 		$start_date = $this->get_filtered_start_date();
@@ -428,44 +449,57 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 			'tab'       => 'logs'
 		), admin_url( 'edit.php' ) ); ?>
 
-		<div class="wp-filter" id="edd-filters">
-			<div class="filter-items">
-				<span id="edd-type-filter">
-					<?php $this->log_views(); ?>
-				</span>
+		<span id="edd-type-filter">
+			<?php $this->log_views(); ?>
+		</span>
 
-				<span id="edd-date-filters">
-					<span>
-						<label for="start-date"><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-					<span>
-						<label for="end-date"><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="end-date" name="end-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-				</span>
+		<span id="edd-date-filters" class="edd-from-to-wrapper">
+			<?php
 
-				<span id="edd-download-filter">
-					<?php $this->downloads_filter(); ?>
-				</span>
+			echo EDD()->html->date_field( array(
+				'id'          => 'start-date',
+				'name'        => 'start-date',
+				'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+				'value'       => $start_date
+			) );
 
-				<span id="edd-after-core-filters">
-					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
+			echo EDD()->html->date_field( array(
+				'id'          => 'end-date',
+				'name'        => 'end-date',
+				'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+				'value'       => $end_date
+			) );
 
-					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+		?></span>
 
-					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) ) : ?>
-						<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-							<?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?>
-						</a>
-					<?php endif; ?>
-				</span>
-			</div>
-			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
-			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-logs' ); ?>
-		</div>
+		<span id="edd-download-filter">
+			<?php $this->downloads_filter(); ?>
+		</span>
+
+		<span id="edd-after-core-filters">
+			<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
+
+			<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+
+			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) ) : ?>
+				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
+					<?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?>
+				</a>
+			<?php endif; ?>
+		</span>
 
 		<?php
+	}
+
+	/**
+	 * Output the filter bar searchbox
+	 *
+	 * @since 3.0
+	 */
+	public function filter_bar_searchbox() {
+		do_action( 'edd_payment_advanced_filters_row' );
+
+		$this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-logs' );
 	}
 
 	/**

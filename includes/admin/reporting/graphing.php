@@ -675,19 +675,25 @@ function edd_reports_graph_controls() {
 				<div class="edd-date-range-options <?php echo esc_attr( $class ); ?>">
 					<fieldset>
 						<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
-						<span><?php _ex( 'From', 'date filter', 'easy-digital-downloads' ); ?></span>
-						<?php echo EDD()->html->date_field( array(
-							'name'        => 'filter_from',
-							'placeholder' => edd_get_date_picker_format(),
-							'value'       => $from
-						) ); ?>
 
-						<span><?php _ex( 'To', 'date filter', 'easy-digital-downloads' ); ?></span>
-						<?php echo EDD()->html->date_field( array(
-							'name'        => 'filter_to',
-							'placeholder' => edd_get_date_picker_format(),
-							'value'       => $to
-						) ); ?>
+						<span id="edd-date-filters" class="edd-from-to-wrapper">
+							<?php
+
+							echo EDD()->html->date_field( array(
+								'id'          => 'filter_from',
+								'name'        => 'filter_from',
+								'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+								'value'       => $from
+							) );
+
+							echo EDD()->html->date_field( array(
+								'id'          => 'filter_to',
+								'name'        => 'filter_to',
+								'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+								'value'       => $to
+							) );
+
+						?></span>
 					</fieldset>
 				</div>
 

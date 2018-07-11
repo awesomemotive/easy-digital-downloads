@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_adjustmentmeta" database table
  *
@@ -120,4 +119,3 @@ final class Adjustment_Meta extends Base {
         return true;
     }
 }
-endif;

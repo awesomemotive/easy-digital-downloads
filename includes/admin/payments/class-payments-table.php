@@ -73,8 +73,19 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'page'      => 'edd-payment-history'
 		), admin_url( 'edit.php' ) );
 
+		$this->filter_bar_hooks();
 		$this->process_bulk_action();
 		$this->get_payment_counts();
+	}
+
+	/**
+	 * Hook in filter bar actions
+	 *
+	 * @since 3.0
+	 */
+	private function filter_bar_hooks() {
+		add_action( 'edd_admin_filter_bar_orders',       array( $this, 'filter_bar_items'     ) );
+		add_action( 'edd_after_admin_filter_bar_orders', array( $this, 'filter_bar_searchbox' ) );
 	}
 
 	/**
@@ -98,6 +109,15 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 *            Display 'Advanced Filters'
 	 */
 	public function advanced_filters() {
+		edd_admin_filter_bar( 'orders' );
+	}
+
+	/**
+	 * Output filter bar items
+	 *
+	 * @since 3.0
+	 */
+	public function filter_bar_items() {
 
 		// Get values
 		$start_date                = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
@@ -151,135 +171,143 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		 *
 		 * @since 2.8.11
 		 */
-		$gateways = apply_filters( 'edd_payments_table_gateways', $gateways ); ?>
+		$gateways = apply_filters( 'edd_payments_table_gateways', $gateways );
 
-		<div class="wp-filter" id="edd-filters">
-			<div class="filter-items">
-				<?php if ( ! empty( $modes ) ) : ?>
+		// Output the items
+		if ( ! empty( $modes ) ) : ?>
 
-					<span id="edd-mode-filter">
-						<?php echo EDD()->html->select( array(
-							'options'          => $modes,
-							'name'             => 'mode',
-							'id'               => 'mode',
-							'selected'         => $mode,
-							'show_option_all'  => false,
-							'show_option_none' => false
-						) ); ?>
-					</span>
+			<span id="edd-mode-filter">
+				<?php echo EDD()->html->select( array(
+					'options'          => $modes,
+					'name'             => 'mode',
+					'id'               => 'mode',
+					'selected'         => $mode,
+					'show_option_all'  => false,
+					'show_option_none' => false
+				) ); ?>
+			</span>
 
-				<?php endif; ?>
+		<?php endif; ?>
 
-				<span id="edd-date-filters">
-					<span>
-						<label for="start-date"><?php echo esc_html_x( 'From', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="start-date" name="start-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-					<span>
-						<label for="end-date"><?php echo esc_html_x( 'To', 'date filter', 'easy-digital-downloads' ); ?></label>
-						<input type="text" id="end-date" name="end-date" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-					</span>
-				</span>
+		<span id="edd-date-filters" class="edd-from-to-wrapper">
+			<?php
 
-				<?php if ( ! empty( $gateways ) ) : ?>
+			echo EDD()->html->date_field( array(
+				'id'          => 'start-date',
+				'name'        => 'start-date',
+				'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+				'value'       => $start_date
+			) );
 
-					<span id="edd-gateway-filter">
-						<?php echo EDD()->html->select( array(
-							'options'          => $gateways,
-							'name'             => 'gateway',
-							'id'               => 'gateway',
-							'selected'         => $gateway,
-							'show_option_all'  => false,
-							'show_option_none' => false
-						) ); ?>
-					</span>
+			echo EDD()->html->date_field( array(
+				'id'          => 'end-date',
+				'name'        => 'end-date',
+				'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+				'value'       => $end_date
+			) );
 
-				<?php endif; ?>
+		?></span><?php
 
-				<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
-					<input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+		if ( ! empty( $gateways ) ) : ?>
 
-					<span class="inside">
-						<p>
-							<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
-							<?php
-							$options = array(
-								'=' => __( 'equal to',     'easy-digital-downloads' ),
-								'>' => __( 'greater than', 'easy-digital-downloads' ),
-								'<' => __( 'less than',    'easy-digital-downloads' ),
-							);
+			<span id="edd-gateway-filter">
+				<?php echo EDD()->html->select( array(
+					'options'          => $gateways,
+					'name'             => 'gateway',
+					'id'               => 'gateway',
+					'selected'         => $gateway,
+					'show_option_all'  => false,
+					'show_option_none' => false
+				) ); ?>
+			</span>
 
-							echo EDD()->html->select( array(
-								'id'               => 'order-amount-filter-type',
-								'name'             => 'order-amount-filter-type',
-								'options'          => $options,
-								'selected'         => $order_total_filter_type,
-								'show_option_all'  => false,
-								'show_option_none' => false,
-							) );
-							?>
+		<?php endif; ?>
 
-							<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
-						</p>
+		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
+      <input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
-						<p>
-							<label><?php esc_html_e( 'Country/Region', 'easy-digital-downloads' ); ?></label>
-							<?php
-							echo EDD()->html->select( array(
-								'name'             => 'order-country-filter-value',
-								'class'            => 'edd_countries_filter',
-								'options'          => edd_get_country_list(),
-								'chosen'           => true,
-								'selected'         => $country,
-								'show_option_none' => false,
-								'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
-								'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-							) );
-							?>
-						</p>
+      <span class="inside">
+        <p>
+          <label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
+          <?php
+          $options = array(
+            '=' => __( 'equal to',     'easy-digital-downloads' ),
+            '>' => __( 'greater than', 'easy-digital-downloads' ),
+            '<' => __( 'less than',    'easy-digital-downloads' ),
+          );
 
-						<p>
-							<?php
-							echo EDD()->html->select( array(
-								'name'             => 'order-region-filter-value',
-								'class'            => 'edd_regions_filter',
-								'options'          => edd_get_shop_states( $country ),
-								'chosen'           => true,
-								'selected'         => $region,
-								'show_option_none' => false,
-								'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-								'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-							) );
-							?>
-						</p>
-					</span>
-				</span>
+          echo EDD()->html->select( array(
+            'id'               => 'order-amount-filter-type',
+            'name'             => 'order-amount-filter-type',
+            'options'          => $options,
+            'selected'         => $order_total_filter_type,
+            'show_option_all'  => false,
+            'show_option_none' => false,
+          ) );
+          ?>
 
-				<span id="edd-after-core-filters">
-					<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
+          <input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>" />
+        </p>
 
-					<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+        <p>
+          <label><?php esc_html_e( 'Country/Region', 'easy-digital-downloads' ); ?></label>
+          <?php
+          echo EDD()->html->select( array(
+            'name'             => 'order-country-filter-value',
+            'class'            => 'edd_countries_filter',
+            'options'          => edd_get_country_list(),
+            'chosen'           => true,
+            'selected'         => $country,
+            'show_option_none' => false,
+            'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+            'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+          ) );
+          ?>
+        </p>
 
-					<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
-						<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-							<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
-						</a>
-					<?php endif; ?>
-				</span>
+        <p>
+          <?php
+          echo EDD()->html->select( array(
+            'name'             => 'order-region-filter-value',
+            'class'            => 'edd_regions_filter',
+            'options'          => edd_get_shop_states( $country ),
+            'chosen'           => true,
+            'selected'         => $region,
+            'show_option_none' => false,
+            'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+            'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+          ) );
+          ?>
+        </p>
+      </span>
+    </span>
 
-				<?php if ( ! empty( $status ) ) : ?>
-					<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
-				<?php endif; ?>
+		<span id="edd-after-core-filters">
+			<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
-			</div>
+			<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
-			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
+			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
+				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
+					<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
+				</a>
+			<?php endif; ?>
+		</span>
 
-			<?php $this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
+		<?php if ( ! empty( $status ) ) : ?>
+			<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
+		<?php endif;
+	}
 
-		</div>
+	/**
+	 * Output the filter bar searchbox
+	 *
+	 * @since 3.0
+	 */
+	public function filter_bar_searchbox() {
+		do_action( 'edd_payment_advanced_filters_row' );
 
-		<?php
+		$this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' );
 	}
 
 	/**
