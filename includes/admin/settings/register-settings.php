@@ -2561,7 +2561,7 @@ function edd_shop_states_callback( $args ) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates();
+	$rates = edd_get_tax_rates( 'object' );
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
@@ -2572,6 +2572,8 @@ function edd_tax_rates_callback( $args ) {
             <th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
             <th scope="col" class="edd_tax_state"><?php _e( 'Region', 'easy-digital-downloads' ); ?></th>
 	        <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span></th>
+	        <th scope="col" class="edd_tax_from"><?php _e( 'From', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Start date: </strong>The date a tax rate is active from.', 'easy-digital-downloads' ); ?>"></span></th>
+	        <th scope="col" class="edd_tax_to"><?php _e( 'To', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>End date: </strong>The date a tax rate stops applying.', 'easy-digital-downloads' ); ?>"></span></th>
             <th scope="col"  class="edd_tax_actions"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
         </tr>
         </thead>
@@ -2583,7 +2585,7 @@ function edd_tax_rates_callback( $args ) {
 						echo EDD()->html->select( array(
 							'options'          => edd_get_country_list(),
 							'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][country]',
-							'selected'         => $rate['country'],
+							'selected'         => $rate->name,
 							'show_option_all'  => false,
 							'show_option_none' => false,
 							'class'            => 'edd-tax-country',
@@ -2597,13 +2599,13 @@ function edd_tax_rates_callback( $args ) {
                     </td>
                     <td class="edd_tax_state">
 						<?php
-						$states = edd_get_shop_states( $rate['country'] );
+						$states = edd_get_shop_states( $rate->name );
 						if ( ! empty( $states ) ) {
 							echo EDD()->html->select( array(
 								'options'          => $states,
 								'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								'selected'         => ! empty( $rate['state'] ) ? $rate['state'] : '',
-								'disabled'         => ! empty( $rate['global'] ),
+								'selected'         => $rate->description,
+								'disabled'         => (bool) ( 'global' === $rate->scope ),
 								'show_option_all'  => false,
 								'show_option_none' => false,
 								'chosen'           => false,
@@ -2612,22 +2614,42 @@ function edd_tax_rates_callback( $args ) {
 						} else {
 							echo EDD()->html->text( array(
 								'name'  => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
+								'value' => $rate->description,
 							) );
 						}
 						?>
 						<span class="edd-tax-whole-country">
-							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, (bool) 'global' === $rate->scope ); ?>/>
 							<label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 						</span>
                     </td>
                     <td class="edd_tax_rate">
-						<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off" />
+						<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_attr( floatval( $rate->amount ) ); ?>" autocomplete="off" />
 					</td>
+	                <td class="edd_tax_rate_from">
+		                <?php
+		                echo EDD()->html->date_field( array(
+			                'id'          => 'tax_rates[' . edd_sanitize_key( $key ) . '][from]',
+			                'name'        => 'tax_rates[' . edd_sanitize_key( $key ) . '][from]',
+			                'value'       => ( '0000-00-00 00:00:00' === $rate->start_date ) ? '' : $rate->start_date,
+			                'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+		                ) );
+		                ?>
+	                </td>
+	                <td class="edd_tax_rate_to">
+		                <?php
+		                echo EDD()->html->date_field( array(
+			                'id'          => 'tax_rates[' . edd_sanitize_key( $key ) . '][to]',
+			                'name'        => 'tax_rates[' . edd_sanitize_key( $key ) . '][to]',
+			                'value'       => ( '0000-00-00 00:00:00' === $rate->end_date ) ? '' : $rate->end_date,
+			                'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+		                ) );
+		                ?>
+	                </td>
                     <td class="edd_tax_remove">
                         <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
                     </td>
-	                <input type="hidden" data-type="edd-adjustment-id" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate['id'] ); ?>" />
+	                <input type="hidden" data-type="edd-adjustment-id" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate->id ); ?>" />
                 </tr>
 			<?php endforeach; ?>
 		<?php else : ?>

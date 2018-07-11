@@ -34,15 +34,22 @@ function edd_use_taxes() {
  *
  * @since 1.6
  * @since 3.0 Updated to use new query class.
+ *            Added $output parameter to output an array of EDD\Adjustments\Adjustment objects, if set to `object`.
  *
- * @return array Defined tax rates
+ * @param string $output Type of data to output. Default `array`.
+ * @return array|\EDD\Adjustments\Adjustment[] Tax rates.
  */
-function edd_get_tax_rates() {
+function edd_get_tax_rates( $output = 'array' ) {
 
 	// Fetch from adjustments table.
 	$tax_rates = edd_get_adjustments( array(
-		'type' => 'tax_rate',
+		'type'  => 'tax_rate',
+		'order' => 'ASC',
 	) );
+
+	if ( 'object' === $output ) {
+		return $tax_rates;
+	}
 
 	$rates = array();
 
