@@ -22,16 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
-	 * Get things started
-	 *
-	 * @since 1.4
-	 * @see WP_List_Table::__construct()
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * Gets the name of the primary column.
 	 *
 	 * @since 2.5
@@ -57,8 +47,8 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 		$return   = '';
 		$currency = $item['currency'];
 
-		switch ( $column_name ){
-			case 'download' :
+		switch ( $column_name ) {
+			case 'download':
 				$download_id = $item[ $column_name ];
 				$download    = new EDD_Download( $download_id );
 
@@ -73,20 +63,20 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
 				break;
 
-			case 'customer' :
+			case 'customer':
 				$name = ! empty( $item['customer']->name ) ? $item['customer']->name : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
 				$return = '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['customer']->id ) ) . '">#' . $item['customer']->id . ' ' . $name . '</a>';
 				break;
 
-			case 'item_price' :
+			case 'item_price':
 				$return = edd_currency_filter( edd_format_amount( $item['item_price'] ), $currency );
 				break;
 
-			case 'amount' :
+			case 'amount':
 				$return = edd_currency_filter( edd_format_amount( $item['amount'] / $item['quantity'] ), $currency );
 				break;
 
-			case 'payment_id' :
+			case 'payment_id':
 				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>';
 				break;
 
@@ -106,21 +96,22 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
-			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'amount'     => __( 'Item Amount',  'easy-digital-downloads' ),
+			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
 			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
-			'date'       => __( 'Date',         'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
 	/**
-	 * Gets the meta query for the log query
+	 * Gets the meta query for the log query.
 	 *
-	 * This is used to return log entries that match our search query, user query, or download query
+	 * This is used to return log entries that match our search query, user query, or download query.
 	 *
 	 * @since 1.4
+	 *
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
@@ -128,7 +119,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 
 		$meta_query = array();
 
-		if( $user ) {
+		if ( $user ) {
 			// Show only logs from a specific user
 			$meta_query[] = array(
 				'key'   => '_edd_log_user_id',
@@ -179,7 +170,6 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 					'value'   => $search,
 					'compare' => $compare,
 				);
-
 			}
 		}
 
@@ -187,11 +177,12 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	}
 
 	/**
-	 * Gets the log entries for the current view
+	 * Gets the log entries for the current view.
 	 *
 	 * @since 1.4
-	 * @global object $log_query EDD Logs Object
-	 * @return array $logs_data Array of all the Log entries
+	 *
+	 * @param array $log_query Query vars.
+	 * @return array $logs_data Array of all the log entries.
 	 */
 	public function get_logs( $log_query = array() ) {
 		$logs_data = array();
@@ -200,7 +191,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
 				/** @var EDD\Logs\Log $log */
-				$payment_id = $log->get_meta( 'payment_id' );
+				$payment_id = edd_get_log_meta( $log->id, 'payment_id' );
 				$payment    = new EDD_Payment( $payment_id );
 
 				// Make sure this payment hasn't been deleted
@@ -214,7 +205,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 							// If the item has variable pricing, make sure it's the right variation
 							if ( $item['id'] == $log->object_id ) {
 								if ( isset( $item['item_number']['options']['price_id'] ) ) {
-									$log_price_id = $log->get_meta( 'price_id' );
+									$log_price_id = edd_get_log_meta( $log->id, 'price_id' );
 
 									if ( (int) $item['item_number']['options']['price_id'] !== (int) $log_price_id ) {
 										continue;
