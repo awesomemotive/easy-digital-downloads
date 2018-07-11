@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Cart
- * @copyright   Copyright (c) 2016, Sunny Ratilal
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Cart Class
@@ -118,7 +118,6 @@ class EDD_Cart {
 	 * Constructor.
 	 *
 	 * @since 2.7
-	 * @access public
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'setup_cart' ), 1 );
@@ -144,7 +143,6 @@ class EDD_Cart {
 	 * Populate the cart with the data stored in the session
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return void
 	 */
 	public function get_contents_from_session() {
@@ -158,7 +156,6 @@ class EDD_Cart {
 	 * Populate the discounts with the data stored in the session.
 	 *
 	 * @since  2.7
-	 * @access public
 	 * @return void
 	 */
 	public function get_discounts_from_session() {
@@ -172,7 +169,6 @@ class EDD_Cart {
 	 * Get cart contents
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array List of cart contents.
 	 */
 	public function get_contents() {
@@ -202,21 +198,20 @@ class EDD_Cart {
 
 		do_action( 'edd_cart_contents_loaded' );
 
-		return $this->contents;
+		return (array) $this->contents;
 	}
 
 	/**
 	 * Get cart contents details
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array
 	 */
 	public function get_contents_details() {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 		if ( empty( $this->contents ) ) {
-			return false;
+			return array();
 		}
 
 		$details = array();
@@ -228,6 +223,7 @@ class EDD_Cart {
 			}
 
 			$item['quantity'] = edd_item_quantities_enabled() ? absint( $item['quantity'] ) : 1;
+			$item['quantity'] = max( 1, $item['quantity'] ); // Force quantity to 1
 
 			$options = isset( $item['options'] ) ? $item['options'] : array();
 
@@ -244,6 +240,7 @@ class EDD_Cart {
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
+
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 
@@ -294,7 +291,6 @@ class EDD_Cart {
 	 * Get Discounts.
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array $discounts The active discount codes
 	 */
 	public function get_discounts() {
@@ -307,7 +303,6 @@ class EDD_Cart {
 	 * Update Cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return void
 	 */
 	public function update_cart() {
@@ -318,7 +313,6 @@ class EDD_Cart {
 	 * Checks if any discounts have been applied to the cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return bool
 	 */
 	public function has_discounts() {
@@ -342,7 +336,6 @@ class EDD_Cart {
 	 * Get quantity
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return int
 	 */
 	public function get_quantity() {
@@ -362,11 +355,10 @@ class EDD_Cart {
 	 * Checks if the cart is empty
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return boolean
 	 */
 	public function is_empty() {
-		return 0 === sizeof( $this->contents );
+		return 0 === count( (array) $this->get_contents() );
 	}
 
 	/**
@@ -375,7 +367,6 @@ class EDD_Cart {
 	 * As of EDD 2.7, items can only be added to the cart when the object passed extends EDD_Cart_Item
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array $cart Updated cart object
 	 */
 	public function add( $download_id, $options = array() ) {
@@ -490,7 +481,6 @@ class EDD_Cart {
 	 * Remove from cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int $key Cart key to remove. This key is the numerical index of the item contained within the cart array.
  	 * @return array Updated cart contents
@@ -521,21 +511,20 @@ class EDD_Cart {
 	 * Generate the URL to remove an item from the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int $cart_key Cart item key
  	 * @return string $remove_url URL to remove the cart item
 	 */
 	public function remove_item_url( $cart_key ) {
-		global $wp_query;
 
-		if ( defined( 'DOING_AJAX' ) ) {
-			$current_page = edd_get_checkout_uri();
-		} else {
-			$current_page = edd_get_current_page_url();
-		}
+		$current_page = edd_doing_ajax()
+			? edd_get_checkout_uri()
+			: edd_get_current_page_url();
 
-		$remove_url = edd_add_cache_busting( add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page ) );
+		$remove_url = edd_add_cache_busting( add_query_arg( array(
+			'cart_item'  => $cart_key,
+			'edd_action' => 'remove'
+		), $current_page ) );
 
 		return apply_filters( 'edd_remove_item_url', $remove_url );
 	}
@@ -544,21 +533,21 @@ class EDD_Cart {
 	 * Generate the URL to remove a fee from the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int $fee_id Fee ID.
 	 * @return string $remove_url URL to remove the cart item
 	 */
 	public function remove_fee_url( $fee_id = '' ) {
-		global $post;
 
-		if ( defined('DOING_AJAX') ) {
-			$current_page = edd_get_checkout_uri();
-		} else {
-			$current_page = edd_get_current_page_url();
-		}
+		$current_page = edd_doing_ajax()
+			? edd_get_checkout_uri()
+			: edd_get_current_page_url();
 
-		$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee', 'nocache' => 'true' ), $current_page );
+		$remove_url = add_query_arg( array(
+			'fee'        => $fee_id,
+			'edd_action' => 'remove_fee',
+			'nocache'    => 'true'
+		), $current_page );
 
 		return apply_filters( 'edd_remove_fee_url', $remove_url );
 	}
@@ -567,10 +556,10 @@ class EDD_Cart {
 	 * Empty the cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return void
 	 */
 	public function empty_cart() {
+
 		// Remove cart contents.
 		EDD()->session->set( 'edd_cart', NULL );
 
@@ -591,7 +580,6 @@ class EDD_Cart {
 	 * Remove discount from the cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array Discount codes
 	 */
 	public function remove_discount( $code = '' ) {
@@ -622,7 +610,6 @@ class EDD_Cart {
 	 * Remove all discount codes
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return void
 	 */
 	public function remove_all_discounts() {
@@ -634,7 +621,6 @@ class EDD_Cart {
 	 * Get the discounted amount on a price
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array       $item     Cart item.
 	 * @param bool|string $discount False to use the cart discounts or a string to check with a discount code.
@@ -723,7 +709,7 @@ class EDD_Cart {
 				}
 			}
 
-			$amount = ( $price - apply_filters( 'edd_get_cart_item_discounted_amount', $discounted_price, $discounts, $item, $price ) );
+			$amount = round( ( $price - apply_filters( 'edd_get_cart_item_discounted_amount', $discounted_price, $discounts, $item, $price ) ), edd_currency_decimal_filter() );
 
 			if ( 'flat' !== edd_get_discount_type( $code_id ) ) {
 				$amount = $amount * $item['quantity'];
@@ -737,7 +723,6 @@ class EDD_Cart {
 	 * Shows the fully formatted cart discount
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $echo Echo?
 	 * @return string $amount Fully formatted cart discount
@@ -763,7 +748,6 @@ class EDD_Cart {
 	 * Checks to see if an item is in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int   $download_id Download ID of the item to check.
  	 * @param array $options
@@ -797,7 +781,6 @@ class EDD_Cart {
 	 * Get the position of an item in the cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int   $download_id Download ID of the item to check.
  	 * @param array $options
@@ -829,7 +812,6 @@ class EDD_Cart {
 	 * Get the quantity of an item in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int   $download_id Download ID of the item
  	 * @param array $options
@@ -851,7 +833,6 @@ class EDD_Cart {
 	 * Set the quantity of an item in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int   $download_id Download ID of the item
 	 * @param int   $quantity    Updated quantity of the item
@@ -881,7 +862,6 @@ class EDD_Cart {
 	 * Cart Item Price.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int   $item_id Download (cart item) ID number
  	 * @param array $options Optional parameters, used for defining variable prices
@@ -927,7 +907,6 @@ class EDD_Cart {
  	 * Use edd_get_cart_item_final_price()
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param  int        $download_id               Download ID for the cart item
 	 * @param  array      $options                   Optional parameters, used for defining variable prices
@@ -966,7 +945,6 @@ class EDD_Cart {
 	 * Final Price of Item in Cart (incl. discounts and taxes)
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param int $item_key Cart item key
  	 * @return float Final price for the item
@@ -981,7 +959,6 @@ class EDD_Cart {
 	 * Calculate the tax for an item in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $download_id Download ID
 	 * @param array $options     Cart item options
@@ -1007,7 +984,6 @@ class EDD_Cart {
 	 * Get Cart Fees
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array Cart fees
 	 */
 	public function get_fees( $type = 'all', $download_id = 0, $price_id = null ) {
@@ -1018,7 +994,6 @@ class EDD_Cart {
 	 * Get All Cart Fees.
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return array
 	 */
 	public function get_all_fees() {
@@ -1030,7 +1005,6 @@ class EDD_Cart {
 	 * Get Cart Items Subtotal.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $items Cart items array
  	 * @return float items subtotal
@@ -1061,7 +1035,6 @@ class EDD_Cart {
 	 * Get Discountable Subtotal.
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return float Total discountable amount before taxes
 	 */
 	public function get_discountable_subtotal( $code_id ) {
@@ -1087,7 +1060,6 @@ class EDD_Cart {
 	 * Get Discounted Amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $discounts Discount codes
 	 * @return float|mixed|void Total discounted amount
@@ -1114,7 +1086,6 @@ class EDD_Cart {
 	 * Gets the total price amount in the cart before taxes and before any discounts.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @return float Total amount before taxes
 	 */
@@ -1129,7 +1100,6 @@ class EDD_Cart {
 	 * Subtotal (before taxes).
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return float Total amount before taxes fully formatted
 	 */
 	public function subtotal() {
@@ -1140,7 +1110,6 @@ class EDD_Cart {
 	 * Get Total Cart Amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
 	 * @return float Cart amount
@@ -1166,7 +1135,6 @@ class EDD_Cart {
 	 * Fully Formatted Total Cart Amount.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param bool $echo
 	 * @return mixed|string|void
@@ -1185,7 +1153,6 @@ class EDD_Cart {
 	 * Get Cart Fee Total
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return double
 	 */
 	public function get_total_fees() {
@@ -1208,7 +1175,6 @@ class EDD_Cart {
 	 * Get the price ID for an item in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $item Item details
 	 * @return string $price_id Price ID
@@ -1227,7 +1193,6 @@ class EDD_Cart {
 	 * Get the price name for an item in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $item Item details
 	 * @return string $name Price name
@@ -1244,7 +1209,6 @@ class EDD_Cart {
 	 * Get the name of an item in the cart.
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param array $item Item details
 	 * @return string $name Item name
@@ -1267,7 +1231,6 @@ class EDD_Cart {
 	 * Get all applicable tax for the items in the cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return float Total tax amount
 	 */
 	public function get_tax() {
@@ -1298,7 +1261,6 @@ class EDD_Cart {
 	 * Gets the total tax amount for the cart contents in a fully formatted way
 	 *
 	 * @since 2.7
-	 * @access public
 	 *
 	 * @param boolean $echo Decides if the result should be returned or not
 	 * @return string Total tax amount
@@ -1321,7 +1283,6 @@ class EDD_Cart {
 	 * Get tax applicable for fees.
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return float Total taxable amount for fees
 	 */
 	public function get_tax_on_fees() {
@@ -1350,7 +1311,6 @@ class EDD_Cart {
 	 * Is Cart Saving Enabled?
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return bool
 	 */
 	public function is_saving_enabled() {
@@ -1361,7 +1321,6 @@ class EDD_Cart {
 	 * Checks if the cart has been saved
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return bool
 	 */
 	public function is_saved() {
@@ -1398,54 +1357,56 @@ class EDD_Cart {
 	 * Save Cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return bool
 	 */
 	public function save() {
+
+		// Bail if carts cannot be saved
 		if ( ! $this->is_saving_enabled() ) {
 			return false;
 		}
 
-		$user_id  = get_current_user_id();
-		$cart     = EDD()->session->get( 'edd_cart' );
-		$token    = edd_generate_cart_token();
-		$messages = EDD()->session->get( 'edd_cart_messages' );
+		// Get cart & cart token
+		$cart  = EDD()->session->get( 'edd_cart' );
+		$token = edd_generate_cart_token();
 
 		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
 			update_user_meta( $user_id, 'edd_saved_cart', $cart,  false );
 			update_user_meta( $user_id, 'edd_cart_token', $token, false );
 		} else {
-			$cart = json_encode( $cart );
-			setcookie( 'edd_saved_cart', $cart,  time() + 3600 * 24 * 7, COOKIEPATH, COOKIE_DOMAIN );
-			setcookie( 'edd_cart_token', $token, time() + 3600 * 24 * 7, COOKIEPATH, COOKIE_DOMAIN );
+			$cart    = json_encode( $cart );
+			$expires = time() + WEEK_IN_SECONDS;
+			@setcookie( 'edd_saved_cart', $cart,  $expires, COOKIEPATH, COOKIE_DOMAIN );
+			@setcookie( 'edd_cart_token', $token, $expires, COOKIEPATH, COOKIE_DOMAIN );
 		}
 
+		// Get all cart messages
 		$messages = EDD()->session->get( 'edd_cart_messages' );
 
-		if ( ! $messages ) {
+		// Make sure it's an array, if empty
+		if ( empty( $messages ) ) {
 			$messages = array();
 		}
 
+		// Add the success message
 		$messages['edd_cart_save_successful'] = sprintf(
 			'<strong>%1$s</strong>: %2$s',
 			__( 'Success', 'easy-digital-downloads' ),
 			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
 		);
 
+		// Set these messages in the session
 		EDD()->session->set( 'edd_cart_messages', $messages );
 
-		if ( $cart ) {
-			return true;
-		}
-
-		return false;
+		// Return if cart saved
+		return ! empty( $cart );
 	}
 
 	/**
 	 * Restore Cart
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return bool
 	 */
 	public function restore() {
@@ -1505,7 +1466,6 @@ class EDD_Cart {
 	 * Retrieve a saved cart token. Used in validating saved carts
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return int
 	 */
 	public function get_token() {
@@ -1524,7 +1484,6 @@ class EDD_Cart {
 	 * Generate URL token to restore the cart via a URL
 	 *
 	 * @since 2.7
-	 * @access public
 	 * @return int
 	 */
 	public function generate_token() {

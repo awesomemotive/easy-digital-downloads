@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Registers and sets up the Downloads custom post type
@@ -31,7 +31,7 @@ function edd_setup_edd_post_types() {
 		'add_new_item'          => __( 'Add New %1$s', 'easy-digital-downloads' ),
 		'edit_item'             => __( 'Edit %1$s', 'easy-digital-downloads' ),
 		'new_item'              => __( 'New %1$s', 'easy-digital-downloads' ),
-		'all_items'             => __( 'All %2$s', 'easy-digital-downloads' ),
+		'all_items'             => __( '%2$s', 'easy-digital-downloads' ),
 		'view_item'             => __( 'View %1$s', 'easy-digital-downloads' ),
 		'search_items'          => __( 'Search %2$s', 'easy-digital-downloads' ),
 		'not_found'             => __( 'No %2$s found', 'easy-digital-downloads' ),

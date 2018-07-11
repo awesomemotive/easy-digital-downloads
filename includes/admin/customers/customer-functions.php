@@ -1,7 +1,16 @@
 <?php
+/**
+ * Customers - Admin Functions.
+ *
+ * @package     EDD
+ * @subpackage  Admin/Customers
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.3
+ */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Register a view for the single customer view
@@ -11,16 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array        The altered list of views
  */
 function edd_register_default_customer_views( $views ) {
-
-	$default_views = array(
-		'overview'  => 'edd_customers_view',
-		'delete'    => 'edd_customers_delete_view',
-		'notes'     => 'edd_customer_notes_view',
-		'tools'      => 'edd_customer_tools_view',
-	);
-
-	return array_merge( $views, $default_views );
-
+	return array_merge( $views, array(
+		'overview' => 'edd_customers_view',
+		'delete'   => 'edd_customers_delete_view',
+		'notes'    => 'edd_customer_notes_view',
+		'tools'    => 'edd_customer_tools_view'
+	) );
 }
 add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
 
@@ -32,14 +37,11 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
  * @return array       The altered list of tabs
  */
 function edd_register_default_customer_tabs( $tabs ) {
-
-	$default_tabs = array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users', 'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools', 'title' => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ) ),
-	);
-
-	return array_merge( $tabs, $default_tabs );
+	return array_merge( $tabs, array(
+		'overview' => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
+		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
+		'tools'    => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
+	) );
 }
 add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
 
@@ -52,7 +54,10 @@ add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
  */
 function edd_register_delete_customer_tab( $tabs ) {
 
-	$tabs['delete'] = array( 'dashicon' => 'dashicons-trash', 'title' => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ) );
+	$tabs['delete'] = array(
+		'dashicon' => 'dashicons-trash',
+		'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' )
+	);
 
 	return $tabs;
 }
@@ -71,12 +76,9 @@ function edd_maybe_remove_adminbar_profile_link() {
 	}
 
 	if ( edd_user_pending_verification() ) {
-
 		global $wp_admin_bar;
-		$wp_admin_bar->remove_menu('edit-profile', 'user-actions');
-
+		$wp_admin_bar->remove_menu( 'edit-profile', 'user-actions' );
 	}
-
 }
 add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_link' );
 
@@ -88,7 +90,7 @@ add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_lin
  */
 function edd_maybe_remove_menu_profile_links() {
 
-	if( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( edd_doing_ajax() ) {
 		return;
 	}
 
@@ -110,8 +112,49 @@ function edd_maybe_remove_menu_profile_links() {
 
 		remove_menu_page( 'profile.php' );
 		remove_submenu_page( 'users.php', 'profile.php' );
-
 	}
-
 }
 add_action( 'admin_init', 'edd_maybe_remove_menu_profile_links' );
+
+/**
+ * Add Customer column to Users list table.
+ *
+ * @since 3.0
+ *
+ * @param array $columns Existing columns.
+ *
+ * @return array $columns Columns with `Customer` added.
+ */
+function edd_add_customer_column_to_users_table( $columns ) {
+	$columns['edd_customer'] = __( 'Customer', 'easy-digital-downloads' );
+	return $columns;
+}
+add_filter( 'manage_users_columns', 'edd_add_customer_column_to_users_table' );
+
+/**
+ * Display customer details on Users list table.
+ *
+ * @since 3.0
+ *
+ * @param string $value       Existing value of the custom column.
+ * @param string $column_name Column name.
+ * @param int    $user_id     User ID.
+ *
+ * @return string URL to Customer page, existing value otherwise.
+ */
+function edd_render_customer_column( $value, $column_name, $user_id ) {
+	if ( 'edd_customer' === $column_name ) {
+		$customer = new EDD_Customer( $user_id, true );
+
+		if ( $customer->id > 0 ) {
+			$name     = '#' . $customer->id . ' ';
+			$name     .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
+			$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+
+			return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>';
+		}
+	}
+
+	return $value;
+}
+add_action( 'manage_users_custom_column',  'edd_render_customer_column', 10, 3 );

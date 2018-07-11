@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Stats
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Stats Class
@@ -33,7 +33,6 @@ class EDD_Stats {
 	 * Predefined date options are: today, yesterday, this_week, last_week, this_month, last_month
 	 * this_quarter, last_quarter, this_year, last_year
 	 *
-	 * @access public
 	 * @since 1.8
 	 */
 	public $start_date;
@@ -50,7 +49,6 @@ class EDD_Stats {
 	 *
 	 * The end date is optional
 	 *
-	 * @access public
 	 * @since 1.8
 	 */
 	public $end_date;
@@ -58,14 +56,12 @@ class EDD_Stats {
 	/**
 	 * Flag to determine if current query is based on timestamps
 	 *
-	 * @access public
 	 * @since 1.9
 	 */
 	public $timestamp;
 
 	/**
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
@@ -75,12 +71,11 @@ class EDD_Stats {
 	/**
 	 * Get the predefined date periods permitted
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array
 	 */
 	public function get_predefined_dates() {
-		$predefined = array(
+		return apply_filters( 'edd_stats_predefined_dates', array(
 			'today'        => __( 'Today',        'easy-digital-downloads' ),
 			'yesterday'    => __( 'Yesterday',    'easy-digital-downloads' ),
 			'this_week'    => __( 'This Week',    'easy-digital-downloads' ),
@@ -88,11 +83,10 @@ class EDD_Stats {
 			'this_month'   => __( 'This Month',   'easy-digital-downloads' ),
 			'last_month'   => __( 'Last Month',   'easy-digital-downloads' ),
 			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-			'last_quarter' => __( 'Last Quarter',  'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
 			'this_year'    => __( 'This Year',    'easy-digital-downloads' ),
 			'last_year'    => __( 'Last Year',    'easy-digital-downloads' )
-		);
-		return apply_filters( 'edd_stats_predefined_dates', $predefined );
+		) );
 	}
 
 	/**
@@ -100,17 +94,16 @@ class EDD_Stats {
 	 *
 	 * This calls the convert_date() member function to ensure the dates are formatted correctly
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
 	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
 
-		if( empty( $_start_date ) ) {
+		if ( empty( $_start_date ) ) {
 			$_start_date = 'this_month';
 		}
 
-		if( empty( $_end_date ) ) {
+		if ( empty( $_end_date ) ) {
 			$_end_date = $_start_date;
 		}
 
@@ -122,7 +115,6 @@ class EDD_Stats {
 	/**
 	 * Converts a date to a timestamp
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
 	 */
@@ -136,14 +128,14 @@ class EDD_Stats {
 		$month           = date( 'n', current_time( 'timestamp' ) );
 		$year            = date( 'Y', current_time( 'timestamp' ) );
 
-		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
+		if ( ( is_string( $date ) || is_int( $date ) ) && array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
 			// This is a predefined date rate, such as last_week
 			switch( $date ) {
 
 				case 'this_month' :
 
-					if( $end_date ) {
+					if ( $end_date ) {
 
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 						$hour   = 23;
@@ -156,7 +148,7 @@ class EDD_Stats {
 
 				case 'last_month' :
 
-					if( $month == 1 ) {
+					if ( $month == 1 ) {
 
 						$month = 12;
 						$year--;
@@ -167,7 +159,7 @@ class EDD_Stats {
 
 					}
 
-					if( $end_date ) {
+					if ( $end_date ) {
 						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 					}
 
@@ -177,7 +169,7 @@ class EDD_Stats {
 
 					$day = date( 'd', current_time( 'timestamp' ) );
 
-					if( $end_date ) {
+					if ( $end_date ) {
 						$hour   = 23;
 						$minute = 59;
 						$second = 59;
@@ -190,10 +182,10 @@ class EDD_Stats {
 					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
 
 					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
-					if( $day < 1 ) {
+					if ( $day < 1 ) {
 
 						// If current month is 1
-						if( 1 == $month ) {
+						if ( 1 == $month ) {
 
 							$year -= 1; // Today is January 1, so skip back to last day of December
 							$month = 12;
@@ -215,9 +207,9 @@ class EDD_Stats {
 					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
 				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
 
-				 	if( $today < $days_to_week_start ) {
+				 	if ( $today < $days_to_week_start ) {
 
-				 		if( $month > 1 ) {
+				 		if ( $month > 1 ) {
 					 		$month -= 1;
 					 	} else {
 					 		$month = 12;
@@ -225,7 +217,7 @@ class EDD_Stats {
 
 				 	}
 
-					if( ! $end_date ) {
+					if ( ! $end_date ) {
 
 					 	// Getting the start day
 
@@ -248,9 +240,9 @@ class EDD_Stats {
 					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
 				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
 
-				 	if( $today < $days_to_week_start ) {
+				 	if ( $today < $days_to_week_start ) {
 
-				 		if( $month > 1 ) {
+				 		if ( $month > 1 ) {
 					 		$month -= 1;
 					 	} else {
 					 		$month = 12;
@@ -258,7 +250,7 @@ class EDD_Stats {
 
 				 	}
 
-					if( ! $end_date ) {
+					if ( ! $end_date ) {
 
 					 	// Getting the start day
 
@@ -282,7 +274,7 @@ class EDD_Stats {
 
 					if ( $month_now <= 3 ) {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 1;
 						} else {
 							$month = 3;
@@ -294,7 +286,7 @@ class EDD_Stats {
 
 					} else if ( $month_now <= 6 ) {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 4;
 						} else {
 							$month = 6;
@@ -306,7 +298,7 @@ class EDD_Stats {
 
 					} else if ( $month_now <= 9 ) {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 7;
 						} else {
 							$month = 9;
@@ -318,7 +310,7 @@ class EDD_Stats {
 
 					} else {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 10;
 						} else {
 							$month = 12;
@@ -327,7 +319,6 @@ class EDD_Stats {
 							$minute = 59;
 							$second = 59;
 						}
-
 					}
 
 					break;
@@ -338,7 +329,7 @@ class EDD_Stats {
 
 					if ( $month_now <= 3 ) {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 10;
 						} else {
 							$year -= 1;
@@ -351,7 +342,7 @@ class EDD_Stats {
 
 					} else if ( $month_now <= 6 ) {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 1;
 						} else {
 							$month = 3;
@@ -363,7 +354,7 @@ class EDD_Stats {
 
 					} else if ( $month_now <= 9 ) {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 4;
 						} else {
 							$month = 6;
@@ -375,7 +366,7 @@ class EDD_Stats {
 
 					} else {
 
-						if( ! $end_date ) {
+						if ( ! $end_date ) {
 							$month = 7;
 						} else {
 							$month = 9;
@@ -384,14 +375,13 @@ class EDD_Stats {
 							$minute = 59;
 							$second = 59;
 						}
-
 					}
 
 					break;
 
 				case 'this_year' :
 
-					if( ! $end_date ) {
+					if ( ! $end_date ) {
 						$month  = 1;
 					} else {
 						$month  = 12;
@@ -406,7 +396,7 @@ class EDD_Stats {
 				case 'last_year' :
 
 					$year -= 1;
-					if( ! $end_date ) {
+					if ( ! $end_date ) {
 						$month = 1;
 						$day   = 1;
 					} else {
@@ -422,12 +412,12 @@ class EDD_Stats {
 			}
 
 
-		} else if( is_numeric( $date ) ) {
+		} else if ( is_numeric( $date ) ) {
 
 			// return $date unchanged since it is a timestamp
 			$this->timestamp = true;
 
-		} else if( false !== strtotime( $date ) ) {
+		} else if ( false !== strtotime( $date ) ) {
 
 			$date  = strtotime( $date, current_time( 'timestamp' ) );
 			$year  = date( 'Y', $date );
@@ -435,49 +425,44 @@ class EDD_Stats {
 			$day   = date( 'd', $date );
 
 		} else {
-
 			return new WP_Error( 'invalid_date', __( 'Improper date provided.', 'easy-digital-downloads' ) );
-
 		}
 
-		if( false === $this->timestamp ) {
-			// Create an exact timestamp
+		// Create an exact timestamp
+		if ( false === $this->timestamp ) {
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );
-
 		}
 
 		return apply_filters( 'edd_stats_date', $date, $end_date, $this );
-
 	}
 
 	/**
 	 * Modifies the WHERE flag for payment counts
 	 *
-	 * @access public
+	 * Only get payments in our date range
+	 *
 	 * @since 1.8
 	 * @return string
 	 */
 	public function count_where( $where = '' ) {
-		// Only get payments in our date range
 
-		$start_where = '';
-		$end_where   = '';
+		$start_where = $end_where = '';
 
-		if( $this->start_date ) {
+		if ( $this->start_date ) {
 
-			if( $this->timestamp ) {
+			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
 				$format = 'Y-m-d 00:00:00';
 			}
 
 			$start_date  = date( $format, $this->start_date );
-			$start_where = " AND p.post_date >= '{$start_date}'";
+			$start_where = " AND date_created >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if ( $this->end_date ) {
 
-			if( $this->timestamp ) {
+			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
 				$format = 'Y-m-d 23:59:59';
@@ -485,7 +470,7 @@ class EDD_Stats {
 
 			$end_date  = date( $format, $this->end_date );
 
-			$end_where = " AND p.post_date <= '{$end_date}'";
+			$end_where = " AND date_created <= '{$end_date}'";
 		}
 
 		$where .= "{$start_where}{$end_where}";
@@ -496,32 +481,30 @@ class EDD_Stats {
 	/**
 	 * Modifies the WHERE flag for payment queries
 	 *
-	 * @access public
 	 * @since 1.8
 	 * @return string
 	 */
 	public function payments_where( $where = '' ) {
-
 		global $wpdb;
 
 		$start_where = '';
 		$end_where   = '';
 
-		if( ! is_wp_error( $this->start_date ) ) {
+		if ( ! is_wp_error( $this->start_date ) ) {
 
-			if( $this->timestamp ) {
+			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
 				$format = 'Y-m-d 00:00:00';
 			}
 
 			$start_date  = date( $format, $this->start_date );
-			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
+			$start_where = " AND {$wpdb->posts}.post_date >= '{$start_date}'";
 		}
 
-		if( ! is_wp_error( $this->end_date ) ) {
+		if ( ! is_wp_error( $this->end_date ) ) {
 
-			if( $this->timestamp ) {
+			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
 				$format = 'Y-m-d 23:59:59';
@@ -529,12 +512,11 @@ class EDD_Stats {
 
 			$end_date  = date( $format, $this->end_date );
 
-			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
+			$end_where = " AND {$wpdb->posts}.post_date <= '{$end_date}'";
 		}
 
 		$where .= "{$start_where}{$end_where}";
 
 		return $where;
 	}
-
 }

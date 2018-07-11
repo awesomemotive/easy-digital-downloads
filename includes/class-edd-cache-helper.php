@@ -1,14 +1,14 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Cache helper
  *
  * @package     EDD
  * @subpackage  Classes/Cache Helper
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.7
 */
@@ -26,7 +26,6 @@ class EDD_Cache_Helper {
 	/**
 	 * Prevent caching on dynamic pages.
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function init() {
@@ -99,7 +98,6 @@ class EDD_Cache_Helper {
 	/**
 	 * notices function.
 	 *
-	 * @access public
 	 * @return void
 	 */
 	public function notices() {
@@ -125,7 +123,6 @@ class EDD_Cache_Helper {
 	/**
 	 * Prevents W3TC from adding to the cache prior to modifying data
 	 *
-	 * @access public
 	 * @return void
 	 */
 	function w3tc_suspend_cache_addition_pre() {
@@ -135,7 +132,6 @@ class EDD_Cache_Helper {
 	/**
 	 * Prevents W3TC from adding to the cache after modifying data
 	 *
-	 * @access public
 	 * @return void
 	 */
 	function w3tc_suspend_cache_addition_post() {

@@ -123,7 +123,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'FIR3SID3';
+		$transaction_id = 'EDD_ORDER';
 		$payment = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
@@ -229,7 +229,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'GUESTPURCHASE';
+		$transaction_id = 'EDD_GUEST_ORDER';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
@@ -334,7 +334,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'FIR3SID3';
+		$transaction_id = 'EDD_ORDER_TAX';
 		$payment = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
@@ -444,7 +444,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'FIR3SID3';
+		$transaction_id = 'EDD_ORDER_QUANTITY_TAX';
 		$payment = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
@@ -463,6 +463,16 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$edd_options['sequential_prefix'] = 'EDD-';
 
 		$simple_download   = EDD_Helper_Download::create_simple_download();
+
+		add_filter( 'edd_cart_contents', function( $cart ) use ( $simple_download ) {
+			return array( 0 => array(
+				'id' => $simple_download->ID,
+				'options' => array(),
+				'quantity' => 1
+			) );
+		}, 10 );
+
+		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		/** Generate some sales */
 		$user      = get_userdata(1);
@@ -533,12 +543,15 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'FIR3SID3';
+		$transaction_id = 'EDD_ORDER_FEE';
 		$payment = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
+
+		remove_all_filters( 'edd_cart_contents' );
+		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		return $payment_id;
 
@@ -640,7 +653,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'FIR3SID3';
+		$transaction_id = 'EDD_ORDER_DATE';
 		$payment = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->date = $date;

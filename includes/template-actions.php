@@ -16,7 +16,7 @@
  * @since 2.8
  */
 function edd_profile_editor_logged_out() {
-	echo '<p class="edd-logged-out">' . esc_html( 'You need to login to edit your profile.', 'easy-digital-downloads' ) . '</p>';
+	echo '<p class="edd-logged-out">' . esc_html__( 'You need to log in to edit your profile.', 'easy-digital-downloads' ) . '</p>';
 	echo edd_login_form(); // WPCS: XSS ok.
 }
 add_action( 'edd_profile_editor_logged_out', 'edd_profile_editor_logged_out' );
@@ -29,6 +29,6 @@ add_action( 'edd_profile_editor_logged_out', 'edd_profile_editor_logged_out' );
  * @since 2.8
  */
 function edd_login_form_logged_in() {
-	echo '<p class="edd-logged-in">' . esc_html( 'You are already logged in', 'easy-digital-downloads' ) . '</p>';
+	echo '<p class="edd-logged-in">' . esc_html__( 'You are already logged in', 'easy-digital-downloads' ) . '</p>';
 }
 add_action( 'edd_login_form_logged_in', 'edd_login_form_logged_in' );

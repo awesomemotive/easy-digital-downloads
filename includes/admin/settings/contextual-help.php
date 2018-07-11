@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Settings contextual help.
@@ -22,8 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_settings_contextual_help() {
 	$screen = get_current_screen();
 
-	if ( $screen->id != 'download_page_edd-settings' )
+	if ( $screen->id !== 'download_page_edd-settings' ) {
 		return;
+	}
 
 	$screen->set_help_sidebar(
 		'<p><strong>' . sprintf( __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
@@ -80,6 +81,14 @@ function edd_settings_contextual_help() {
 			'<p>' . __( '<strong>Display During Checkout</strong>: This determines whether prices are shown with taxes or without taxes on checkout. If set to Including Tax, a $10 product with a 10% tax will be shown as $11.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Calculate Tax After Discounts</strong>: If enabled, this option will make it so that tax is calculated on the after-discount amount. If a purchase of $20 is made and a 20% discount is applied, tax will be calculated off of $16 instead of $20.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Additional Tax Rates</strong>: This section lets you add tax rates for specific countries and/or states/provinces in those countries.', 'easy-digital-downloads' ) . '</p>'
+	) );
+
+	$screen->add_help_tab( array(
+		'id'		=> 'edd-settings-privacy',
+		'title'		=> __( 'Privacy', 'easy-digital-downloads' ),
+		'content'	=>
+			'<p>' . __( 'This screen provides access to customer privacy policies, terms & agreements, and how to display them on the front of your site.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'You may also override what happens to order records when a customer exercises their right to be forgotten from your site.',        'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(

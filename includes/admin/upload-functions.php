@@ -4,14 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Upload
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Change Downloads Upload Directory
@@ -42,7 +41,7 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
 /**
  * Creates blank index.php and .htaccess files
  *
- * This function runs approximately once per month in order to ensure all folders
+ * This function runs approximately once per day in order to ensure all folders
  * have their necessary protection files
  *
  * @since 1.1.5
@@ -50,14 +49,10 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  * @param bool $force
  * @param bool $method
  */
-
 function edd_create_protection_files( $force = false, $method = false ) {
 	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 
 		$upload_path = edd_get_upload_dir();
-
-		// Make sure the /edd folder is created
-		wp_mkdir_p( $upload_path );
 
 		// Top level .htaccess file
 		$rules = edd_get_htaccess_rules( $method );
@@ -67,7 +62,7 @@ function edd_create_protection_files( $force = false, $method = false ) {
 				// Update the .htaccess rules if they don't match
 				@file_put_contents( $upload_path . '/.htaccess', $rules );
 			}
-		} elseif( wp_is_writable( $upload_path ) ) {
+		} elseif ( wp_is_writable( $upload_path ) ) {
 			// Create the file if it doesn't exist
 			@file_put_contents( $upload_path . '/.htaccess', $rules );
 		}
@@ -85,8 +80,9 @@ function edd_create_protection_files( $force = false, $method = false ) {
 				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 		}
+
 		// Check for the files once per day
-		set_transient( 'edd_check_protection_files', true, 3600 * 24 );
+		set_transient( 'edd_check_protection_files', true, DAY_IN_SECONDS );
 	}
 }
 add_action( 'admin_init', 'edd_create_protection_files' );
@@ -107,21 +103,37 @@ function edd_htaccess_exists() {
  * Scans all folders inside of /uploads/edd
  *
  * @since 1.1.5
+ *
+ * @param string $path   Path to scan
+ * @param array  $return Results of previous recursion
+ *
  * @return array $return List of files inside directory
  */
 function edd_scan_folders( $path = '', $return = array() ) {
-	$path = $path == ''? dirname( __FILE__ ) : $path;
+	$path  = ( $path === '' ) ? dirname( __FILE__ ) : $path;
 	$lists = @scandir( $path );
 
-	if ( ! empty( $lists ) ) {
-		foreach ( $lists as $f ) {
-			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != ".." ) {
-				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) )
-					$return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
+	// Bail early if nothing to scan
+	if ( empty( $lists ) ) {
+		return $return;
+	}
 
-				edd_scan_folders( $path . DIRECTORY_SEPARATOR . $f, $return);
-			}
+	// Loop through directory items
+	foreach ( $lists as $f ) {
+		$dir = $path . DIRECTORY_SEPARATOR . $f;
+
+		// Skip if not a directory
+		if ( ! is_dir( $dir ) || ( $f === "." ) || ( $f === ".." ) ) {
+			continue;
 		}
+
+		// Maybe add directory to return array
+		if ( ! in_array( $dir, $return, true ) ) {
+			$return[] = trailingslashit( $dir );
+		}
+
+		// Recursively scan
+		edd_scan_folders( $dir, $return );
 	}
 
 	return $return;
@@ -137,10 +149,11 @@ function edd_scan_folders( $path = '', $return = array() ) {
  */
 function edd_get_htaccess_rules( $method = false ) {
 
-	if( empty( $method ) )
+	if ( empty( $method ) ) {
 		$method = edd_get_file_download_method();
+	}
 
-	switch( $method ) :
+	switch ( $method ) {
 
 		case 'redirect' :
 			// Prevent directory browsing
@@ -158,33 +171,15 @@ function edd_get_htaccess_rules( $method = false ) {
 			    $rules .= "Allow from all\n";
 			$rules .= "</FilesMatch>\n";
 			break;
-
-	endswitch;
-	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
-	return $rules;
-}
-
-
-// For installs on pre WP 3.6
-if( ! function_exists( 'wp_is_writable' ) ) {
+	}
 
 	/**
-	 * Determine if a directory is writable.
+	 * Filter and return the htaccess rules used to allow or deny access
 	 *
-	 * This function is used to work around certain ACL issues
-	 * in PHP primarily affecting Windows Servers.
+	 * @since 1.6
 	 *
-	 * @see win_is_writable()
-	 *
-	 * @since 3.6.0
-	 *
-	 * @param string $path
-	 * @return bool
+	 * @param string $rules  The contents of .htaccess
+	 * @param string $method The method (either direct|redirect)
 	 */
-	function wp_is_writable( $path ) {
-	        if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) ) )
-	                return win_is_writable( $path );
-	        else
-	                return @is_writable( $path );
-	}
+	return apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
 }

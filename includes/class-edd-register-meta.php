@@ -5,13 +5,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Register Meta
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Register_Meta Class
@@ -459,6 +459,11 @@ class EDD_Register_Meta {
 	 */
 	function sanitize_files( $files = array() ) {
 		$files = $this->remove_blank_rows( $files );
+
+		// Files should always be in array format, even when there are none.
+		if ( ! is_array( $files ) ) {
+			$files = array();
+		}
 
 		// Clean up filenames to ensure whitespaces are stripped
 		foreach( $files as $id => $file ) {

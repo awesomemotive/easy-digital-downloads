@@ -2,7 +2,7 @@
 namespace PayWithAmazon;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /* Class IPN_Handler
  * Takes headers and body of the IPN message as input in the constructor
