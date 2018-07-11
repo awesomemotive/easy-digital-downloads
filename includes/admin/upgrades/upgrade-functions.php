@@ -189,13 +189,14 @@ function edd_show_upgrade_notices() {
 		/** 3.0 Upgrades *****************************************************/
 
 		$upgrades = array(
-			'migrate_orders'        => 'migrate_orders',
-			'migrate_customer_data' => 'migrate_customer_data',
-			'migrate_notes'         => 'migrate_notes',
-			'migrate_logs'          => 'migrate_logs',
-			'migrate_tax_rates'     => 'migrate_tax_rates',
-			'migrate_discounts'     => 'migrate_discounts',
-			'migrate_order_notes'   => 'migrate_order_notes',
+			'migrate_orders'                   => 'migrate_orders',
+			'migrate_customer_addresses'       => 'migrate_customer_addresses',
+			'migrate_customer_email_addresses' => 'migrate_customer_email_addresses',
+			'migrate_customer_notes'           => 'migrate_customer_notes',
+			'migrate_logs'                     => 'migrate_logs',
+			'migrate_tax_rates'                => 'migrate_tax_rates',
+			'migrate_discounts'                => 'migrate_discounts',
+			'migrate_order_notes'              => 'migrate_order_notes',
 		);
 
 		$upgrades = array_map( 'edd_has_upgrade_completed', $upgrades );
