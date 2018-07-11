@@ -445,6 +445,9 @@ function edd_get_registered_settings() {
 						'options'     => edd_get_country_list(),
 						'chosen'      => true,
 						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
+						'data'        => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					),
 					'base_state' => array(
 						'id'          => 'base_state',
@@ -1403,7 +1406,9 @@ function edd_settings_sanitize_taxes( $input ) {
 		return $input;
 	}
 
-	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
+	$new_rates = ! empty( $_POST['tax_rates'] )
+		? array_values( $_POST['tax_rates'] )
+		: array();
 
 	foreach ( $new_rates as $key => $rate ) {
 		$rate = array_filter( $rate );
@@ -1412,7 +1417,9 @@ function edd_settings_sanitize_taxes( $input ) {
 		}
 	}
 
-	$new_rates = ! empty( $new_rates ) ? array_values( $new_rates ) : array();
+	$new_rates = ! empty( $new_rates )
+		? array_values( $new_rates )
+		: array();
 
 	update_option( 'edd_tax_rates', $new_rates );
 
@@ -2288,11 +2295,16 @@ function edd_select_callback( $args ) {
 		$class .= ' edd-select-chosen';
 	}
 
+	// Nonce
+	$nonce = isset( $args['data']['nonce'] )
+		? ' data-nonce="' . sanitize_text_field( $args['data']['nonce'] ) . '"'
+		: '';
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
+	$html = '<select ' . $nonce . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
 
@@ -2531,6 +2543,9 @@ function edd_tax_rates_callback( $args ) {
 							'class'            => 'edd-tax-country',
 							'chosen'           => false,
 							'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+							'data'             => array(
+								'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+							)
 						) );
 						?>
                     </td>
@@ -2582,6 +2597,9 @@ function edd_tax_rates_callback( $args ) {
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
 						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
@@ -2593,8 +2611,9 @@ function edd_tax_rates_callback( $args ) {
 						<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 					</span>
 				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0"
-												name="tax_rates[0][rate]" value=""/></td>
+				<td class="edd_tax_rate">
+					<input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/>
+				</td>
 				<td>
 					<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
 				</td>
@@ -2602,8 +2621,9 @@ function edd_tax_rates_callback( $args ) {
 		<?php endif; ?>
     </table>
     <p>
-        <span class="button-secondary"
-              id="edd_add_tax_rate"><?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?></span>
+        <span class="button-secondary" id="edd_add_tax_rate">
+			<?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?>
+		</span>
     </p>
 	<?php
 	echo ob_get_clean();

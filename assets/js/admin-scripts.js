@@ -683,6 +683,7 @@ jQuery(document).ready(function ($) {
 					data   = {
 						action:     'edd_get_shop_states',
 						country:    select.val(),
+						nonce:      select.data('nonce'),
 						field_name: 'edd-payment-address[0][state]'
 					};
 
@@ -1156,9 +1157,10 @@ jQuery(document).ready(function ($) {
 		filters : function() {
 			$('.edd_countries_filter').on( 'change', function() {
 				var select = $( this ),
-					data  = {
-						action: 'edd_get_shop_states',
-						country: select.val(),
+					data   = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
 						field_name: 'edd_countries_filter'
 					};
 
@@ -1307,8 +1309,9 @@ jQuery(document).ready(function ($) {
 				var select = $( this ),
 					tr     = select.closest('tr'),
 					data   = {
-						action: 'edd_get_shop_states',
-						country: $( this ).val(),
+						action:     'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
 						field_name: 'edd_settings[base_state]'
 					};
 
@@ -1346,18 +1349,23 @@ jQuery(document).ready(function ($) {
 			// Update tax rate state field based on selected rate country
 			$( document.body ).on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var select = $( this ),
-					data  = {
-						action: 'edd_get_shop_states',
-						country: $( this ).val(),
-						field_name: select.attr('name').replace('country', 'state')
+					data   = {
+						action:     'edd_get_shop_states',
+						country:    $( this ).val(),
+						field_name: select.attr('name').replace('country', 'state'),
+						nonce:      select.data('nonce')
 					};
 
 				$.post(ajaxurl, data, function (response) {
+					if ( ! response ) {
+						return;
+					}
+
 					if ( 'nostates' === response ) {
 						var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
 						select.parent().next().find('select').replaceWith( text_field );
 					} else {
-						select.parent().next().find('input[type="text"],select').show();
+						select.parent().next().find('input[type="text"],select').css( 'opacity');
 						select.parent().next().find('input[type="text"],select').replaceWith( response );
 					}
 				});
@@ -2118,12 +2126,14 @@ jQuery(document).ready(function ($) {
 		},
 		change_country: function() {
 			$('select[name="customerinfo[country]"]').change(function() {
-				var select = $( this );
-				var data = {
-					action: 'edd_get_shop_states',
-					country: select.val(),
-					field_name: 'customerinfo[state]'
-				};
+				var select = $( this ),
+					data = {
+						action:     'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
+						field_name: 'customerinfo[state]'
+					};
+
 				$.post(ajaxurl, data, function (response) {
 					if ( 'nostates' === response ) {
 						EDD_Customer.vars.state_input.replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
