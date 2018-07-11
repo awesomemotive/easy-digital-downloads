@@ -1483,14 +1483,14 @@ function edd_register_payment_gateways_report( $reports ) {
 							$gateways[ $data->gateway ] = $data->earnings;
 						}
 
-						$gateways = array_map( function( $v ) {
+						$gateways = array_values( array_map( function( $v ) {
 							return null === $v
 								? 0.00
 								: $v;
-						}, $gateways );
+						}, $gateways ) );
 
 						return array(
-							'earnings' => array_values( $gateways ),
+							'earnings' => $gateways,
 						);
 					},
 					'type' => 'pie',
