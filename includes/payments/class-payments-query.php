@@ -545,7 +545,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $this->args['start_date'] ) {
-			$this->start_date = \Carbon\Carbon::parse( $this->start_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+			$this->start_date = \Carbon\Carbon::parse( $this->args['start_date'], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
 
 			$arguments['date_created_query']['after'] = array(
 				'year'  => date( 'Y', $this->start_date ),
@@ -557,7 +557,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $this->args['end_date'] ) {
-			$this->end_date = \Carbon\Carbon::parse( $this->start_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+			$this->end_date = \Carbon\Carbon::parse( $this->args['end_date'], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
 
 			$arguments['date_created_query']['before'] = array(
 				'year'  => date( 'Y', $this->end_date ),
