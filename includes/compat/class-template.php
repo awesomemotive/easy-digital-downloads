@@ -55,16 +55,23 @@ class Template extends Base {
 	public function update_receipt_template() {
 		$access_type = get_filesystem_method();
 
+		// Retrieve the path to the template being used.
 		$template = edd_locate_template( 'shortcode-receipt.php' );
 
+		// Bail if the template has not been overridden.
 		if ( false === strpos( $template, 'edd_templates' ) ) {
-			return;
+			return false;
 		}
 
 		if ( 'direct' === $access_type ) {
-			$creds = request_filesystem_credentials( admin_url(), '', false, false, array() );
 
-			if ( ! WP_Filesystem( $creds ) ) {
+			// Request credentials from the user, if necessary.
+			$credentials = request_filesystem_credentials( admin_url(), '', false, false, array() );
+
+			// Authenticate & instantiate the WordPress Filesystem classes.
+			if ( ! WP_Filesystem( $credentials ) ) {
+
+				// Request credentials again in case they were wrong the first time.
 				request_filesystem_credentials( admin_url(), '', true, false, array() );
 
 				return false;
