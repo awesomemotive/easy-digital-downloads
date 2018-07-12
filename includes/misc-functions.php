@@ -1311,7 +1311,26 @@ function edd_set_time_limit( $ignore_user_abort = true, $time_limit = 21600 ) {
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit( $time_limit );
 	}
+
+	// Attempt to raise the memory limit. See: edd_set_batch_memory_limit()
+	wp_raise_memory_limit( 'edd_batch' );
 }
+
+/**
+ * Set the memory limit for batch processing to 256M
+ *
+ * @since 3.0
+ *
+ * @param string $memory_limit 128M by default
+ *
+ * @return string 256M
+ */
+function edd_set_batch_memory_limit( $memory_limit = '128M' ) {
+	$memory_limit = '256M';
+
+	return $memory_limit;
+}
+add_filter( 'edd_batch_memory_limit', 'edd_set_batch_memory_limit' );
 
 /**
  * Output the admin area filter bar
