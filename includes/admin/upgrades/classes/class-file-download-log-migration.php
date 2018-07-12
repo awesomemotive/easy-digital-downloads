@@ -47,13 +47,9 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 *
 	 * @access public
 	 * @since 2.9.2
-	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-
-		global $wpdb;
 
 		$step_items = $this->get_log_ids_for_current_step();
 
@@ -61,45 +57,39 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 			return false;
 		}
 
-		if ( $step_items ) {
-
-			foreach ( $step_items as $log_id ) {
-
-				$log_id           = (int) $log_id->object_id;
-				$sanitized_log_id = absint( $log_id );
-
-				if ( $sanitized_log_id !== $log_id ) {
-					edd_debug_log( "Log ID mismatch, skipping log ID {$log_id}" );
-					continue;
-				}
-
-				$has_customer_id = get_post_meta( $log_id, '_edd_log_customer_id', true );
-				if ( ! empty( $has_customer_id ) ) {
-					continue;
-				}
-
-				$payment_id = $wpdb->get_var( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = {$sanitized_log_id} AND meta_key = '_edd_log_payment_id'" );
-				if ( ! empty( $payment_id ) ) {
-					$payment     = edd_get_payment( $payment_id );
-					$customer_id = $payment->customer_id;
-
-					if ( $customer_id < 0 ) {
-						$customer_id = 0;
-					}
-
-					update_post_meta( $log_id, '_edd_log_customer_id', $customer_id );
-					delete_post_meta( $log_id, '_edd_log_user_info' );
-
-				}
-
-			}
-
-			return true;
-
+		if ( empty( $step_items ) ) {
+			return false;
 		}
 
-		return false;
+		foreach ( $step_items as $log_id ) {
 
+			$log_id           = (int) $log_id->object_id;
+			$sanitized_log_id = absint( $log_id );
+
+			if ( $sanitized_log_id !== $log_id ) {
+				edd_debug_log( "Log ID mismatch, skipping log ID {$log_id}" );
+				continue;
+			}
+
+			$has_customer_id = get_post_meta( $log_id, '_edd_log_customer_id', true );
+			if ( ! empty( $has_customer_id ) ) {
+				continue;
+			}
+
+			$payment_id = get_post_meta( $log_id, '_edd_log_payment_id', true );
+			if ( ! empty( $payment_id ) ) {
+				$customer_id = edd_get_payment_customer_id( $payment_id );
+
+				if ( $customer_id < 0 ) {
+					$customer_id = 0;
+				}
+
+				update_post_meta( $log_id, '_edd_log_customer_id', $customer_id );
+				delete_post_meta( $log_id, '_edd_log_user_info' );
+			}
+		}
+
+		return true;
 	}
 
 	/**
