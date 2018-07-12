@@ -1527,32 +1527,34 @@ class EDD_API {
 
 				$c = 0;
 
-				foreach ( $payment->cart_details as $key => $item ) {
+				if ( ! empty( $payment->cart_details ) && is_array( $payment->cart_details ) ) {
+					foreach ( $payment->cart_details as $key => $item ) {
 
-					$item_id  = isset( $item['id'] ) ? $item['id'] : $item;
-					$price    = isset( $item['price'] ) ? $item['price'] : false;
-					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$quantity = isset( $item['quantity'] ) && $item['quantity'] > 0 ? $item['quantity'] : 1;
+						$item_id  = isset( $item['id'] ) ? $item['id'] : $item;
+						$price    = isset( $item['price'] ) ? $item['price'] : false;
+						$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+						$quantity = isset( $item['quantity'] ) && $item['quantity'] > 0 ? $item['quantity'] : 1;
 
-					if ( ! $price ) {
-						// This function is only used on payments with near 1.0 cart data structure
-						$price = edd_get_download_final_price( $item_id, $user_info, null );
-					}
-
-					$price_name = '';
-					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
-						$price_options = $item['item_number']['options'];
-						if ( isset( $price_options['price_id'] ) ) {
-							$price_name = edd_get_price_option_name( $item_id, $price_options['price_id'], $payment->ID );
+						if ( ! $price ) {
+							// This function is only used on payments with near 1.0 cart data structure
+							$price = edd_get_download_final_price( $item_id, $user_info, null );
 						}
-					}
 
-					$sales['sales'][ $i ]['products'][ $c ]['id']         = $item_id;
-					$sales['sales'][ $i ]['products'][ $c ]['quantity']   = $quantity;
-					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item_id );
-					$sales['sales'][ $i ]['products'][ $c ]['price']      = $price;
-					$sales['sales'][ $i ]['products'][ $c ]['price_name'] = $price_name;
-					$c ++;
+						$price_name = '';
+						if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
+							$price_options = $item['item_number']['options'];
+							if ( isset( $price_options['price_id'] ) ) {
+								$price_name = edd_get_price_option_name( $item_id, $price_options['price_id'], $payment->ID );
+							}
+						}
+
+						$sales['sales'][ $i ]['products'][ $c ]['id']         = $item_id;
+						$sales['sales'][ $i ]['products'][ $c ]['quantity']   = $quantity;
+						$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item_id );
+						$sales['sales'][ $i ]['products'][ $c ]['price']      = $price;
+						$sales['sales'][ $i ]['products'][ $c ]['price_name'] = $price_name;
+						$c ++;
+					}
 				}
 
 				$i ++;
