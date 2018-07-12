@@ -589,7 +589,7 @@ class Manifest implements Error_Logger {
 				'hoverMode'  => 'index',
 				'stacked'    => false,
 				'title'      => array(
-					'display' => ! empty( $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ) ),
+					'display' => $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ),
 					'text'    => $this->get_endpoint()->get_label(),
 				),
 				'scales'     => array(
