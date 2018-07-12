@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9.7
-Stable Tag: 2.9.4
+Stable Tag: 2.9.5
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -190,7 +190,11 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 == Changelog ==
 
-= 2.9.4, June 9, 2018 =
+= 2.9.5, July 12, 2018 =
+* Fix: Changing the country field in the admin would not display the State fields.
+* Fix: File Download Log Migration from version 2.9.2 would fail on some sites.
+
+= 2.9.4, July 9, 2018 =
 * Fix: Added nonce checks to multiple AJAX calls. If you have customized any of the following beyond CSS, please review this blog post:
 * https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4
 * templates/widget-cart-item.php
