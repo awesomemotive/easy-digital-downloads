@@ -88,7 +88,7 @@ class Template extends Base {
 						?>
 						<div class="notice notice-error">
 							<p><?php esc_html_e( 'Easy Digital Downloads failed to automatically update your purchase receipt template. This update is necessary for the purchase receipt to display correctly.', 'easy-digital-downloads' ); ?></p>
-							<p><?php esc_html_e( 'This update must be completed manually. Please click here for more information.', 'easy-digital-downloads' ); ?></p>
+							<p><?php printf( __( 'This update must be completed manually. Please click %shere%s for more information.', 'easy-digital-downloads' ), '<a href="https://docs.easydigitaldownloads.com/article/2061-template-update-for-3-0">', '</a>' ); ?></p>
 							<p><?php esc_html_e( 'The file that needs to be updated is located at:', 'easy-digital-downloads' ); ?> <code><?php echo esc_html( $template ); ?></code></p>
 						</div>
 						<?php
