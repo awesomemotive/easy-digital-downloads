@@ -482,6 +482,47 @@ function edd_maybe_add_customer_address( $customer_id = 0, $args = array() ) {
 	return false;
 }
 
+/**
+ * Maybe update the customer's primary address. If the primary address is set,
+ * update it or add a primary address.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_id Customer ID.
+ * @param array $args        Customer address.
+ *
+ * @return mixed False if address exists. Otherwise ID of EDD\Customers\Customer_Address object.
+ */
+function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = array() ) {
+
+	// Bail if nothing passed.
+	if ( empty( $customer_id ) || empty( $args ) ) {
+		return false;
+	}
+
+	$address_ids = edd_get_customer_addresses( array(
+		'fields'      => 'ids',
+		'customer_id' => $customer_id,
+		'type'        => 'primary',
+		'number'      => 1,
+	) );
+
+	// Primary address exists, so update it.
+	if ( ! empty( $address_ids ) ) {
+		$address_id = $address_ids[0];
+
+		edd_update_customer_address( $address_id, $args );
+
+	// Add primary address.
+	} else {
+		$args['type'] = 'primary';
+
+		$address_id = edd_add_customer_address( $args );
+	}
+
+	return $address_id;
+}
+
 /** Customer Email Addresses *************************************************/
 
 /**

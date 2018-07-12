@@ -921,12 +921,8 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 	$user['address']['country'] = ! empty( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
 	$user['address']['zip']     = ! empty( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : '';
 
-	if ( empty( $user['address']['country'] ) )
+	if ( empty( $user['address']['country'] ) ) {
 		$user['address'] = false; // Country will always be set if address fields are present
-
-	if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $user['address'] ) ) {
-		// Store the address in the user's meta so the cart can be pre-populated with it on return purchases
-		update_user_meta( $user['user_id'], '_edd_user_address', $user['address'] );
 	}
 
 	// Return valid user
