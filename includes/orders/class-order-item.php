@@ -163,6 +163,35 @@ class Order_Item extends \EDD\Database\Objects\Order_Item {
 	protected $date_modified;
 
 	/**
+	 * Order adjustments.
+	 *
+	 * @since 3.0
+	 * @var   \EDD\Orders\Order_Adjustment[]
+	 */
+	protected $adjustments = null;
+
+	/**
+	 * Magic getter for immutability.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __get( $key = '' ) {
+		if ( 'adjustments' === $key && null === $this->adjustments ) {
+			$this->adjustments = edd_get_order_adjustments( array(
+				'object_id'     => $this->id,
+				'object_type'   => 'order_item',
+				'no_found_rows' => true,
+				'order'         => 'ASC',
+			) );
+		}
+
+		return parent::__get( $key );
+	}
+
+	/**
 	 * Retrieve fees applied to this order item.
 	 *
 	 * @since 3.0
