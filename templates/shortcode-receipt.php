@@ -19,8 +19,7 @@ endif;
 $meta   = edd_get_payment_meta( $order->id );
 $cart   = edd_get_payment_meta_cart_details( $order->id, true );
 $user   = edd_get_payment_meta_user_info( $order->id );
-$email  = edd_get_payment_user_email( $order->id );
-$status = edd_get_payment_status( $order->id, true );
+$status = edd_get_payment_status( $order, true );
 ?>
 <table id="edd_purchase_receipt" class="edd-table">
 	<thead>
@@ -35,7 +34,6 @@ $status = edd_get_payment_status( $order->id, true );
 	</thead>
 
 	<tbody>
-
 		<tr>
 			<td class="edd_receipt_payment_status"><strong><?php esc_html_e( 'Order Status', 'easy-digital-downloads' ); ?>:</strong></td>
 			<td class="edd_receipt_payment_status <?php echo esc_html( strtolower( $order->status ) ); ?>"><?php echo esc_html( $status ); ?></td>
@@ -57,7 +55,7 @@ $status = edd_get_payment_status( $order->id, true );
 		<?php if ( filter_var( $edd_receipt_args['date'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 		<tr>
 			<td><strong><?php esc_html_e( 'Date', 'easy-digital-downloads' ); ?>:</strong></td>
-			<td><?php echo esc_html( edd_date_i18n( $order->date_created ) ); ?></td>
+			<td><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 
@@ -70,7 +68,7 @@ $status = edd_get_payment_status( $order->id, true );
 					<li>
 						<span class="edd_fee_label"><?php echo esc_html( $fee->description ); ?></span>
 						<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-						<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->amount ) ) ); ?></span>
+						<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->total ) ) ); ?></span>
 					</li>
 				<?php endforeach; ?>
 				</ul>
@@ -166,7 +164,7 @@ $status = edd_get_payment_status( $order->id, true );
 								foreach ( $download_files as $filekey => $file ) :
 									?>
 									<li class="edd_download_file">
-										<a href="<?php echo esc_url( edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+										<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item['id'], $price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 									</li>
 									<?php
 									do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $order->id, $meta );
@@ -188,7 +186,7 @@ $status = edd_get_payment_status( $order->id, true );
 												foreach ( $download_files as $filekey => $file ) :
 													?>
 													<li class="edd_download_file">
-														<a href="<?php echo esc_url( edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item, $price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+														<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 													</li>
 													<?php
 													do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $order->id, $meta );
