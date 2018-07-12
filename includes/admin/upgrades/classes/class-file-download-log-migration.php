@@ -143,8 +143,9 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
-			$this->done    = true;
+			$this->done = true;
 			delete_option( 'edd_fdlm_total_logs' );
+			delete_option( 'edd_fdlm_term_tax_id' );
 			$this->message = __( 'File download logs updated successfully.', 'easy-digital-downloads' );
 			edd_set_upgrade_complete( 'update_file_download_log_data' );
 			return false;
@@ -184,9 +185,28 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	public function pre_fetch() {
 		global $wpdb;
 
-		$term_id      = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download' LIMIT 1" );
-		$term_tax_id  = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type' LIMIT 1" );
-		$log_id_count = $wpdb->get_var( "SELECT COUNT (*) FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id}" );
+		// Default count (assume no entries)
+		$log_id_count = 0;
+
+		// Query for a term ID (make sure log items exist)
+		$term_id = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download' LIMIT 1" );
+
+		// Log items exist...
+		if ( ! empty( $term_id ) ) {
+
+			// Query for possible entries...
+			$term_tax_id  = $wpdb->get_var( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = %d AND taxonomy = 'edd_log_type' LIMIT 1", $term_id ) );
+
+			// Entries exist...
+			if ( ! empty( $term_tax_id ) ) {
+
+				// Cache the term taxonomy ID
+				update_option( 'edd_fdlm_term_tax_id', $term_tax_id );
+
+				// Count the number of entries!
+				$log_id_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT (*) FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_tax_id ) );
+			}
+		}
 
 		// Temporarily save the number of rows
 		update_option( 'edd_fdlm_total_logs', (int) $log_id_count );
@@ -203,12 +223,19 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	private function get_log_ids_for_current_step() {
 		global $wpdb;
 
-		$offset = ( $this->step * $this->per_step ) - $this->per_step;
+		// Default values
+		$log_ids = array();
+		$offset  = ( $this->step * $this->per_step ) - $this->per_step;
 
-		$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download' LIMIT 1" );
-		$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type' LIMIT 1" );
-		$log_ids     = $wpdb->get_col( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id} LIMIT {$offset}, {$this->per_step}" );
+		// Count the number of entries!
+		$term_tax_id = (int) get_option( 'edd_fdlm_term_tax_id', 0 );
 
+		// Only query if term taxonomy ID was prefetched
+		if ( ! empty( $term_tax_id ) ) {
+			$log_ids = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d LIMIT %d, %d", $term_tax_id, $offset, $this->per_step ) );
+		}
+
+		// Always return an array
 		return ! is_wp_error( $log_ids )
 			? (array) $log_ids
 			: array();
