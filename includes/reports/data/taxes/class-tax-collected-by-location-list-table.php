@@ -129,7 +129,7 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 			}
 
 			$results = $wpdb->get_row( $wpdb->prepare( "
-				SELECT subtotal, tax, total, country, region
+				SELECT tax, total, country, region
 				FROM {$wpdb->edd_orders}
 				INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
 				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
@@ -146,7 +146,7 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 				'tax_rate' => floatval( $tax_rate->amount ) . '%',
 				'from'     => $from,
 				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['subtotal'] ) ) ),
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['total'] - $results['tax'] ) ) ),
 				'net'      => edd_currency_filter( edd_format_amount( floatval( $results['total'] ) ) ),
 			);
 		}
