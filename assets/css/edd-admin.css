@@ -1695,7 +1695,7 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container .sortable-placeholder {
-	border-color: transparent;
+	
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
@@ -1716,6 +1716,11 @@ td.edd_order_price {
 #edd-reports-tiles-wrap .metabox-holder .empty-container {
 	height: 110px;
 	min-width: 0;
+	border: none;
+}
+
+#edd-reports-tiles-wrap .metabox-holder .empty-container:after {
+	content: none;
 }
 
 #edd-reports-tiles-wrap .postbox button {
