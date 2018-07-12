@@ -684,7 +684,7 @@ jQuery(document).ready(function ($) {
 						action:     'edd_get_shop_states',
 						country:    select.val(),
 						nonce:      select.data('nonce'),
-						field_name: 'edd-payment-address[0][state]'
+						field_name: 'edd-payment-address[0][region]'
 					};
 
 				$.post(ajaxurl, data, function (response) {
@@ -694,7 +694,7 @@ jQuery(document).ready(function ($) {
 					$( '#edd-order-address-state-wrap .chosen-container' ).remove();
 
 					if ( 'nostates' === response ) {
-						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][state]" value="" class="edd-edit-toggles medium-text"/>' );
+						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
 						state_wrapper.replaceWith( response );
 						$( '#edd-order-address-state-wrap select' ).chosen( chosen_vars );
@@ -1353,8 +1353,7 @@ jQuery(document).ready(function ($) {
 						action:     'edd_get_shop_states',
 						country:    $( this ).val(),
                         nonce:      select.data('nonce'),
-						field_name: select.attr('name').replace('country', 'state'),
-						nonce:      select.data('nonce')
+						field_name: select.attr('name').replace('country', 'state')
 					};
 
 				$.post(ajaxurl, data, function (response) {
@@ -2038,7 +2037,7 @@ jQuery(document).ready(function ($) {
 			customer_card_wrap_editable:  $( '#edit-customer-info .editable' ),
 			customer_card_wrap_edit_item: $( '#edit-customer-info .edit-item' ),
 			user_id: $('input[name="customerinfo[user_id]"]'),
-			state_input: $(':input[name="customerinfo[state]"]')
+			state_input: $(':input[name="customerinfo[region]"]')
 		},
 		init : function() {
 			this.edit_customer();
@@ -2134,10 +2133,11 @@ jQuery(document).ready(function ($) {
 						action:     'edd_get_shop_states',
 						country:    select.val(),
 						nonce:      select.data('nonce'),
-						field_name: 'customerinfo[state]'
+						field_name: 'customerinfo[region]'
 					};
 
 				$.post(ajaxurl, data, function (response) {
+					console.log( response );
 					if ( 'nostates' === response ) {
 						EDD_Customer.vars.state_input.replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
