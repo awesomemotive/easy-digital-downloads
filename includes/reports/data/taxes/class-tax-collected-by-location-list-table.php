@@ -92,6 +92,8 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 	 * @return array $data All the data for the list table.
 	 */
 	public function get_data() {
+		global $wpdb;
+
 		$data = array();
 
 		$tax_rates = edd_get_tax_rates( 'object' );
@@ -111,11 +113,36 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 				? '&mdash;'
 				: edd_date_i18n( EDD()->utils->date( $tax_rate->end_date, null, true )->endOfDay()->timestamp );
 
+			$region = ! empty( $tax_rate->description )
+				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->description ) )
+				: '';
+
+			// Date query.
+			$date_query = '';
+
+			if ( ! empty( $tax_rate->start_date ) && '0000-00-00 00:00:00' !== $tax_rate->start_date ) {
+				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( $tax_rate->start_date ) );
+			}
+
+			if ( ! empty( $tax_rate->end_date ) && '0000-00-00 00:00:00' !== $tax_rate->end_date ) {
+				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( $tax_rate->end_date ) );
+			}
+
+			$results = $wpdb->get_row( $wpdb->prepare( "
+				SELECT subtotal, tax, total, country, region
+				FROM {$wpdb->edd_orders}
+				INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
+				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
+				GROUP BY country, region
+			", esc_sql( $tax_rate->name ) ) );
+
 			$data[] = array(
 				'country'  => $location,
 				'tax_rate' => floatval( $tax_rate->amount ) . '%',
 				'from'     => $from,
 				'to'       => $to,
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results->subtotal ) ) ),
+				'net'      => edd_currency_filter( edd_format_amount( floatval( $results->total ) ) ),
 			);
 		}
 
