@@ -1,9 +1,8 @@
 <?php
 
-/* These tests do not currently run */
-
-
 /**
+ * These tests currently do not run
+ *
  * @group edd_ajax
  */
 class Tests_AJAX extends WP_UnitTestCase {

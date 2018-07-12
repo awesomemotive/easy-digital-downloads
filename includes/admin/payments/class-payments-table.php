@@ -224,7 +224,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		<?php endif; ?>
 
 		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
-			<input type="submit" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<span class="inside">
 				<p>
