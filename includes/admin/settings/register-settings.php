@@ -2607,7 +2607,7 @@ function edd_tax_rates_callback( $args ) {
 								'options'          => $states,
 								'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
 								'selected'         => $rate->description,
-								'disabled'         => (bool) ( 'global' === $rate->scope ),
+								'disabled'         => 'country' === $rate->scope,
 								'show_option_all'  => false,
 								'show_option_none' => false,
 								'chosen'           => false,
@@ -2621,7 +2621,7 @@ function edd_tax_rates_callback( $args ) {
 						}
 						?>
 						<span class="edd-tax-whole-country">
-							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, (bool) 'global' === $rate->scope ); ?>/>
+							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, 'country' === $rate->scope ); ?>/>
 							<label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 						</span>
                     </td>
