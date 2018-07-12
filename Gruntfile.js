@@ -106,7 +106,7 @@ module.exports = function(grunt) {
 					potHeaders: {
 						poedit: true,                 // Includes common Poedit headers.
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
-								},
+					},
 					type: 'wp-plugin',    // Type of project (wp-plugin or wp-theme).
 					updateTimestamp: true,    // Whether the POT-Creation-Date should be updated without other changes.
 					processPot: function( pot, options ) {
@@ -120,15 +120,15 @@ module.exports = function(grunt) {
 								'Plugin URI of the plugin/theme',
 								'Author of the plugin/theme',
 								'Author URI of the plugin/theme'
-								];
-									for ( translation in pot.translations[''] ) {
-										if ( 'undefined' !== typeof pot.translations[''][ translation ].comments.extracted ) {
-											if ( excluded_meta.indexOf( pot.translations[''][ translation ].comments.extracted ) >= 0 ) {
-												console.log( 'Excluded meta: ' + pot.translations[''][ translation ].comments.extracted );
-													delete pot.translations[''][ translation ];
-												}
-											}
-										}
+							];
+							for ( translation in pot.translations[''] ) {
+								if ( 'undefined' !== typeof pot.translations[''][ translation ].comments.extracted ) {
+									if ( excluded_meta.indexOf( pot.translations[''][ translation ].comments.extracted ) >= 0 ) {
+										console.log( 'Excluded meta: ' + pot.translations[''][ translation ].comments.extracted );
+										delete pot.translations[''][ translation ];
+									}
+								}
+							}
 						return pot;
 					}
 				}
