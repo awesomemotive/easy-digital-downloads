@@ -507,8 +507,8 @@ function edd_check_for_existing_payment( $order_id ) {
  * @since 1.0
  * @since 3.0 Updated to use new EDD\Order\Order class.
  *
- * @param WP_Post|EDD_Payment|int $order        Payment post object, EDD_Payment object, or payment/post ID.
- * @param bool                    $return_label Whether to return the payment status or not
+ * @param mixed $order        Payment post object, EDD_Payment object, or payment/post ID.
+ * @param bool  $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
