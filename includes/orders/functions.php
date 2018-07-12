@@ -54,35 +54,43 @@ function edd_delete_order( $order_id = 0 ) {
  */
 function edd_destroy_order( $order_id = 0 ) {
 
-	// Get items
+	// Get items.
 	$items = edd_get_order_items( array(
 		'order_id'      => $order_id,
 		'no_found_rows' => true
 	) );
 
-	// Destroy items (and their adjustments)
+	// Destroy items (and their adjustments).
 	if ( ! empty( $items ) ) {
 		foreach ( $items as $item ) {
 			edd_delete_order_item( $item->id );
 		}
 	}
 
-	// Get adjustments
+	// Get adjustments.
 	$adjustments = edd_get_order_adjustments( array(
 		'object_id'     => $order_id,
 		'object_type'   => 'order',
 		'no_found_rows' => true
 	) );
 
-	// Destroy adjustments
+	// Destroy adjustments.
 	if ( ! empty( $adjustments ) ) {
 		foreach ( $adjustments as $adjustment ) {
 			edd_delete_order_adjustment( $adjustment->id );
 		}
 	}
 
+	// Get address.
+	$address = edd_get_order_address_by( 'order_id', $order_id );
+
+	// Destroy address.
+	if ( $address ) {
+		edd_delete_order_address( $address->id );
+	}
+
 	// Delete the order
-	edd_delete_order( $order_id );
+	return edd_delete_order( $order_id );
 }
 
 /**

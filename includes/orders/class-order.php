@@ -10,6 +10,8 @@
  */
 namespace EDD\Orders;
 
+use EDD\Database\Objects as Objects;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -39,8 +41,9 @@ defined( 'ABSPATH' ) || exit;
  * @property float $total
  * @property Order_Item[] $items
  * @property Order_Adjustment[] $adjustments
+ * @property Order_Address $address
  */
-class Order extends \EDD\Database\Objects\Order {
+class Order extends Objects\Order {
 
 	/**
 	 * Order ID.
@@ -198,42 +201,52 @@ class Order extends \EDD\Database\Objects\Order {
 	 * Order items.
 	 *
 	 * @since 3.0
-	 * @var   array
+	 * @var   \EDD\Orders\Order_Item[]
 	 */
-	protected $items;
+	protected $items = null;
 
 	/**
 	 * Order adjustments.
 	 *
 	 * @since 3.0
-	 * @var   array
+	 * @var   \EDD\Orders\Order_Adjustment[]
 	 */
-	protected $adjustments;
+	protected $adjustments = null;
 
 	/**
-	 * Object constructor.
+	 * Order address.
 	 *
-	 * @access public
-	 * @since  1.9
-	 *
-	 * @param mixed $object Object to populate members for.
+	 * @since 3.0
+	 * @var   \EDD\Orders\Order_Address
 	 */
-	public function __construct( $object = null ) {
-		parent::__construct( $object );
+	protected $address = null;
 
-		$this->items = edd_get_order_items( array(
-			'order_id'      => $this->id,
-			'orderby'       => 'cart_index',
-			'order'         => 'ASC',
-			'no_found_rows' => true,
-		) );
+	/**
+	 * Magic getter for immutability.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __get( $key = '' ) {
+		if ( 'adjustments' === $key && null === $this->adjustments ) {
+			$this->adjustments = edd_get_order_adjustments( array(
+				'object_id'     => $this->id,
+				'object_type'   => 'order',
+				'no_found_rows' => true,
+				'order'         => 'ASC',
+			) );
+		} elseif ( 'items' === $key && null === $this->items ) {
+			$this->items = edd_get_order_items( array(
+				'order_id'      => $this->id,
+				'orderby'       => 'cart_index',
+				'order'         => 'ASC',
+				'no_found_rows' => true,
+			) );
+		}
 
-		$this->adjustments = edd_get_order_adjustments( array(
-			'object_id'     => $this->id,
-			'object_type'   => 'order',
-			'no_found_rows' => true,
-			'order'         => 'ASC',
-		) );
+		return parent::__get( $key );
 	}
 
 	/**
@@ -412,10 +425,10 @@ class Order extends \EDD\Database\Objects\Order {
 	 */
 	public function get_address() {
 
-		// Attempt to get the order address
+		// Attempt to get the order address.
 		$address = edd_get_order_address_by( 'order_id', $this->id );
 
-		// Fallback object if not found
+		// Fallback object if not found.
 		if ( empty( $address ) ) {
 			$address = (object) array(
 				'id'          => 0,
@@ -431,7 +444,7 @@ class Order extends \EDD\Database\Objects\Order {
 			);
 		}
 
-		// Return address (from DB or fallback)
+		// Return address (from DB or fallback).
 		return $address;
 	}
 

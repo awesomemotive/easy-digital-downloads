@@ -36,7 +36,35 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 	}
 
 	public function create_object( $args ) {
-		return edd_add_order( $args );
+		$order_id = edd_add_order( $args );
+
+		$oid = edd_add_order_item( array(
+			'order_id'     => $order_id,
+			'product_id'   => 1,
+			'product_name' => 'Simple Download',
+			'status'       => 'inherit',
+			'amount'       => 100,
+			'subtotal'     => 100,
+			'discount'     => 5,
+			'tax'          => 25,
+			'total'        => 120,
+		) );
+
+		edd_add_order_adjustment( array(
+			'object_type' => 'order',
+			'object_id'   => $order_id,
+			'type'        => 'tax_rate',
+			'total'       => '0.25',
+		) );
+
+		edd_add_order_address( array(
+			'order_id'   => $order_id,
+			'first_name' => 'John',
+			'last_name'  => 'Smith',
+			'country'    => 'US',
+		) );
+
+		return $order_id;
 	}
 
 	public function update_object( $order_id, $fields ) {
@@ -44,7 +72,7 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 	}
 
 	public function delete( $order_id ) {
-		edd_delete_order( $order_id );
+		edd_destroy_order( $order_id );
 	}
 
 	public function delete_many( $orders ) {

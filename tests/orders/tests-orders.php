@@ -509,4 +509,48 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	public function test_order_number_should_be_id_and_return_true() {
 		$this->assertSame( self::$orders[0], (int) edd_get_order( self::$orders[0] )->id );
 	}
+
+	/**
+	 * @covers ::__get
+	 */
+	public function test_order_object_magic_getter_for_address_should_return_true() {
+
+		foreach ( self::$orders as $order ) {
+			$o = edd_get_order( $order );
+
+			$this->assertNotEmpty( $o->address );
+			$this->assertInstanceOf( 'EDD\Orders\Order_Address', $o->address );
+		}
+	}
+
+	/**
+	 * @covers ::__get
+	 */
+	public function test_order_object_magic_getter_for_adjustments_should_return_true() {
+
+		foreach ( self::$orders as $order ) {
+			$o = edd_get_order( $order );
+
+			$this->assertNotEmpty( $o->adjustments );
+
+			foreach ( $o->adjustments as $adjustment ) {
+				$this->assertInstanceOf( 'EDD\Orders\Order_Adjustment', $adjustment );
+			}
+		}
+	}
+
+	/**
+	 * @covers ::__get
+	 */
+	public function test_order_object_magic_getter_for_items_should_return_true() {
+		foreach ( self::$orders as $order ) {
+			$o = edd_get_order( $order );
+
+			$this->assertNotEmpty( $o->items );
+
+			foreach ( $o->items as $item ) {
+				$this->assertInstanceOf( 'EDD\Orders\Order_Item', $item );
+			}
+		}
+	}
 }
