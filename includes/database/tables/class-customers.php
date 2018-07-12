@@ -46,8 +46,7 @@ final class Customers extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806070001' => 201806070001,
-		'201807110001' => 201807110001,
+		'201807110001' => 201807110001
 	);
 
 	/**
@@ -107,25 +106,7 @@ final class Customers extends Base {
 	/**
 	 * Upgrade to version 201806070001
 	 * - Change `purchase_value` from mediumtext to decimal(18,9).
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool
-	 */
-	protected function __201806070001() {
-
-		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
-		" );
-
-		// Return success/fail
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201806070001
-	 * - Add `status` column.
+	 * - Add the `status` column.
 	 *
 	 * @since 3.0
 	 *
@@ -134,11 +115,10 @@ final class Customers extends Base {
 	protected function __201807110001() {
 
 		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active';
-		" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active'" );
 
 		// Return success/fail
-		return $this->is_success( $result );
+		return $this->is_success( true );
 	}
 }
