@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_customermeta" database table
  *
@@ -37,7 +36,18 @@ final class Customer_Meta extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805290002;
+	protected $version = 201807110001;
+
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201807110001' => 201807110001
+	);
 
 	/**
 	 * Setup the database schema
@@ -79,5 +89,24 @@ final class Customer_Meta extends Base {
 
 		parent::maybe_upgrade();
 	}
+
+	/**
+	 * Upgrade to version 201807110001
+	 * - Rename  `customer_id` column to `edd_customer_id`
+	 * - Add `status` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807110001() {
+
+		// Alter the database with separate queries so indexes succeed
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );
+
+		// Return success/fail
+		return $this->is_success( true );
+	}
 }
-endif;

@@ -186,138 +186,49 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
-		if ( ! edd_has_upgrade_completed( 'migrate_discounts' ) ) {
-			// Check to see if we have discounts in the Database
-			$results       = $wpdb->get_row( "SELECT count(ID) as has_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount' LIMIT 0, 1" );
-			$has_discounts = ! empty( $results->has_discounts ) ? true : false;
+		/** 3.0 Upgrades *****************************************************/
 
-			if ( ! $has_discounts ) {
-				edd_set_upgrade_complete( 'migrate_discounts' );
-				edd_set_upgrade_complete( 'remove_legacy_discounts' );
-			} else {
+		$upgrades = array(
+			'migrate_orders'                   => 'migrate_orders',
+			'migrate_customer_addresses'       => 'migrate_customer_addresses',
+			'migrate_customer_email_addresses' => 'migrate_customer_email_addresses',
+			'migrate_customer_notes'           => 'migrate_customer_notes',
+			'migrate_logs'                     => 'migrate_logs',
+			'migrate_tax_rates'                => 'migrate_tax_rates',
+			'migrate_discounts'                => 'migrate_discounts',
+			'migrate_order_notes'              => 'migrate_order_notes',
+		);
+
+		$upgrades = array_map( 'edd_has_upgrade_completed', $upgrades );
+
+		// Check if we need to do any upgrades.
+		if ( count( $upgrades ) !== count( array_filter( $upgrades ) ) ) {
+
+			// Check if any payments exist.
+			$results    = $wpdb->get_row( "SELECT count(ID) as has_orders FROM $wpdb->posts WHERE post_type = 'edd_payment' LIMIT 0, 1" );
+			$has_orders = ! empty( $results->has_orders )
+				? true
+				: false;
+
+			if ( $has_orders ) {
 				printf(
-					'<div class="notice notice-warning">' .
+					'<div class="updated">' .
 					'<p>' .
-					__( 'Easy Digital Downloads needs to upgrade the discounts records database, click <a href="%1$s">here</a> to start the upgrade. <a href="#" onClick="%2$s">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
+					__( 'Easy Digital Downloads needs to upgrade the database, click <a href="%s">here</a> to start the upgrade. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
 					'</p>' .
 					'<p style="display: none;">' .
-					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all discounts records and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
+					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability.', 'easy-digital-downloads' ) .
 					'<br /><br />' .
-					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
+					__( '<strong>Please back up your database before starting this upgrade.</strong> This upgrade routine will make irreversible changes to the database.', 'easy-digital-downloads' ) .
 					'<br /><br />' .
-					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_discounts</code>', 'easy-digital-downloads' ) .
+					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WP-CLI with the following command:<br /><code>wp edd v30_migration</code>', 'easy-digital-downloads' ) .
+					'<br /><br />' .
+					__( 'For large sites, this is the recommended method of upgrading.', 'easy-digital-downloads' ) .
 					'</p>' .
 					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=discounts_migration' ) ),
-					"jQuery(this).parent().next('p').slideToggle()"
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=v30_migration' ) )
 				);
 			}
-		}
-
-		if ( edd_has_upgrade_completed( 'migrate_discounts' ) && ! edd_has_upgrade_completed( 'remove_legacy_discounts' ) ) {
-			printf(
-				'<div class="notice notice-warning">' .
-				'<p>' .
-				__( 'Easy Digital Downloads finished migrating <strong>discounts</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
-				'</p>' .
-				'<p style="display: none;">' .
-				__( 'All discounts were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
-				'<br />' .
-				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
-				'</p>' .
-				'</div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_discounts' ) ),
-				"jQuery(this).parent().next('p').slideToggle()"
-			);
-		}
-
-		if ( ! edd_has_upgrade_completed( 'migrate_logs' ) ) {
-			// Check to see if we have logs in the Database
-			$results  = $wpdb->get_row( "SELECT count(ID) as has_logs FROM $wpdb->posts WHERE post_type = 'edd_log' LIMIT 0, 1" );
-			$has_logs = ! empty( $results->has_logs ) ? true : false;
-
-			if ( ! $has_logs ) {
-				edd_set_upgrade_complete( 'migrate_logs' );
-				edd_set_upgrade_complete( 'remove_legacy_logs' );
-			} else {
-				printf(
-					'<div class="notice notice-warning">' .
-					'<p>' .
-					__( 'Easy Digital Downloads needs to upgrade the logs records database, click <a href="%1$s">here</a> to start the upgrade. <a href="#" onClick="%2$s">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
-					'</p>' .
-					'<p style="display: none;">' .
-					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all logs records and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br />' .
-					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
-					'<br />' .
-					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_logs</code>', 'easy-digital-downloads' ) .
-					'</p>' .
-					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=logs_migration' ) ),
-					"jQuery(this).parent().next('p').slideToggle()"
-				);
-			}
-		}
-
-		if ( edd_has_upgrade_completed( 'migrate_logs' ) && ! edd_has_upgrade_completed( 'remove_legacy_logs' ) ) {
-			printf(
-				'<div class="notice notice-warning">' .
-				'<p>' .
-				__( 'Easy Digital Downloads finished migrating <strong>logs</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
-				'</p>' .
-				'<p style="display: none;">' .
-				__( 'All logs were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
-				'<br />' .
-				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
-				'</p>' .
-				'</div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_logs' ) ),
-				"jQuery(this).parent().next('p').slideToggle()"
-			);
-		}
-
-		if ( ! edd_has_upgrade_completed( 'migrate_notes' ) ) {
-			$results   = $wpdb->get_row( "SELECT count(comment_ID) as has_notes FROM $wpdb->comments WHERE comment_type = 'edd_payment_note' LIMIT 0, 1" );
-			$has_notes = ! empty( $results->has_notes ) ? true : false;
-
-			if ( ! $has_notes ) {
-				edd_set_upgrade_complete( 'migrate_notes' );
-				edd_set_upgrade_complete( 'remove_legacy_notes' );
-			} else {
-				printf(
-					'<div class="notice notice-warning">' .
-					'<p>' .
-					__( 'Easy Digital Downloads needs to upgrade the notes table, click <a href="%1$s">here</a> to start the upgrade. <a href="#" onClick="%2$s">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
-					'</p>' .
-					'<p style="display: none;">' .
-					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all notes and their meta data to a new custom database table. This upgrade should provider better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br />' .
-					__( '<strong>Please backup your database before starting this upgrade.</strong> This upgrade routine will be making changes to the database that are not reversible.', 'easy-digital-downloads' ) .
-					'<br />' .
-					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd migrate_notes</code>', 'easy-digital-downloads' ) .
-					'</p>' .
-					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=notes_migration' ) ),
-					"jQuery(this).parent().next('p').slideToggle()"
-				);
-			}
-		}
-
-		if ( edd_has_upgrade_completed( 'migrate_notes' ) && ! edd_has_upgrade_completed( 'remove_legacy_notes' ) ) {
-			printf(
-				'<div class="notice notice-warning">' .
-				'<p>' .
-				__( 'Easy Digital Downloads finished migrating <strong>notes</strong>. Consider <a href="%1$s">removing the legacy data</a>. <a href="#" onClick="%2$s">Learn more</a>.', 'easy-digital-downloads' ) .
-				'</p>' .
-				'<p style="display: none;">' .
-				__( 'All notes were successfully migrated to their new homes.', 'easy-digital-downloads' ) .
-				'<br />' .
-				__( '<strong>Back up your database</strong> as this step <em>intentionally</em> destroys old copies of these items.', 'easy-digital-downloads' ) .
-				'</p>' .
-				'</div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_legacy_notes' ) ),
-				"jQuery(this).parent().next('p').slideToggle()"
-			);
 		}
 
 		/*
@@ -1251,551 +1162,7 @@ function edd_remove_refunded_sale_logs() {
 }
 add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );
 
-/**
- * Migrates all discounts and their meta to the new custom table
- *
- * @since 3.0
- * @return void
- */
-function edd_discounts_migration() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	edd_set_time_limit();
-
-	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
-	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
-	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
-
-	edd_debug_log( 'Beginning step ' . $step . ' of discounts migration' );
-
-	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
-	if ( empty( $total ) || $total <= 1 ) {
-		$total_sql = "SELECT COUNT(ID) as total_discounts FROM $wpdb->posts WHERE post_type = 'edd_discount'";
-		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_discounts;
-		edd_debug_log( $total . ' to migrate' );
-	}
-
-	if ( 1 === $step ) {
-		$discounts = edd_get_component_interface( 'discount', 'table' );
-		if ( ! $discounts->exists() ) {
-			$discounts->create();
-			edd_debug_log( $discounts->table_name . ' created successfully' );
-		}
-
-		$discount_meta = edd_get_component_interface( 'discount', 'meta' );
-		if ( ! $discount_meta->exists() ) {
-			$discount_meta->create();
-			edd_debug_log( $discount_meta->table_name . ' created successfully' );
-		}
-	}
-
-	$discounts = $wpdb->get_results(
-		$wpdb->prepare(
-			"SELECT * FROM $wpdb->posts WHERE post_type = 'edd_discount' ORDER BY ID ASC LIMIT %d,%d;",
-			$offset,
-			$number
-		)
-	);
-
-	if ( ! empty( $discounts ) ) {
-
-		// Discounts found so migrate them
-		foreach ( $discounts as $old_discount ) {
-			$old_discount = get_post( $old_discount->ID );
-
-			if ( 'edd_discount' !== $old_discount->post_type ) {
-				continue;
-			}
-
-			$args = array();
-			$meta = get_post_custom( $old_discount->ID );
-			$meta_to_migrate = array();
-
-			foreach ( $meta as $key => $value ) {
-				if ( false === strpos( $key, '_edd_discount' ) ) {
-					// This is custom meta from another plugin that needs to be migrated to the new meta table
-					$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-					continue;
-				}
-
-				$value = maybe_unserialize( $value[0] );
-				$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
-			}
-
-			// If the discount name was not stored in post_meta, use value from the WP_Post object
-			if ( ! isset( $args['name'] ) ) {
-				$args['name'] = $old_discount->post_title;
-			}
-
-			$args['status'] = get_post_status( $old_discount->ID );
-
-			$discount_id = edd_store_discount( $args );
-
-			if ( ! empty( $meta_to_migrate ) ) {
-				foreach ( $meta_to_migrate as $key => $value ) {
-					edd_add_discount_meta( $discount_id, $key, $value );
-				}
-			}
-
-			edd_debug_log( $old_discount->ID . ' successfully migrated to ' . $discount_id );
-		}
-
-		edd_debug_log( 'Step ' . $step . ' of discounts migration complete' );
-
-		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'discounts_migration',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
-
-		edd_redirect( $redirect );
-
-	// No more discounts found, finish up
-	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_set_upgrade_complete( 'migrate_discounts' );
-		delete_option( 'edd_doing_upgrade' );
-
-		edd_debug_log( 'All old discounts migrated, upgrade complete.' );
-
-		edd_redirect( admin_url() );
-	}
-}
-add_action( 'edd_discounts_migration', 'edd_discounts_migration' );
-
-/**
- * Removes legacy discount date
- *
- * @since 3.0
- * @return void
- */
-function edd_remove_legacy_discounts() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	edd_set_time_limit();
-
-	$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
-	$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
-	$discount_ids = implode( ', ', $discount_ids );
-
-	edd_debug_log( 'Beginning removal of legacy discounts' );
-
-	if ( ! empty( $discount_ids ) ) {
-		$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
-		$wpdb->query( $delete_posts_query );
-
-		$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
-		$wpdb->query( $delete_postmeta_query );
-	}
-
-	// No more discounts found, finish up.
-	edd_set_upgrade_complete( 'remove_legacy_discounts' );
-
-	delete_option( 'edd_doing_upgrade' );
-
-	edd_debug_log( 'Legacy discounts removed, upgrade complete.' );
-
-	edd_redirect( admin_url() );
-}
-add_action( 'edd_remove_legacy_discounts', 'edd_remove_legacy_discounts' );
-
-/**
- * Migrates all notes and their meta to the new custom table.
- *
- * @since 3.0
- */
-function edd_notes_migration() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	edd_set_time_limit();
-
-	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
-	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
-	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
-
-	edd_debug_log( 'Beginning step ' . $step . ' of notes migration' );
-
-	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
-	if ( empty( $total ) || $total <= 1 ) {
-		$total_sql = "SELECT COUNT(comment_ID) as total_notes FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'";
-		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_notes;
-		edd_debug_log( $total . ' to migrate' );
-	}
-
-	if ( 1 === $step ) {
-		$notes_db = edd_get_component_interface( 'note', 'table' );
-		if ( ! $notes_db->exists() ) {
-			@$notes_db->create();
-		}
-
-		$note_meta_db = edd_get_component_interface( 'note', 'meta' );
-		if ( ! $note_meta_db->exists() ) {
-			@$note_meta_db->create();
-		}
-	}
-
-	$notes = $wpdb->get_results(
-		$wpdb->prepare(
-			"
-			SELECT *
-			FROM {$wpdb->comments}
-			WHERE comment_type = 'edd_payment_note'
-			ORDER BY comment_ID ASC
-			LIMIT %d,%d;
-			",
-			$offset,
-			$number
-		)
-	);
-
-	if ( ! empty( $notes ) ) {
-		foreach ( $notes as $old_note ) {
-			$note_data = array(
-				'object_id'    => $old_note->comment_post_ID,
-				'object_type'  => 'payment',
-				'date_created' => $old_note->comment_date,
-				'content'      => $old_note->comment_content,
-				'user_id'      => $old_note->user_id,
-			);
-
-			$id = edd_add_note( $note_data );
-
-			$meta = get_comment_meta( $old_note->comment_ID );
-			if ( ! empty( $meta ) ) {
-				foreach ( $meta as $key => $value ) {
-					edd_add_note_meta( $id, $key, $value );
-				}
-			}
-
-			edd_debug_log( $old_note->comment_ID . ' successfully migrated to ' . $id );
-		}
-
-		edd_debug_log( 'Step ' . $step . ' of notes migration complete' );
-
-		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'notes_migration',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
-
-		edd_redirect( $redirect );
-
-	// No more notes found, finish up
-	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_set_upgrade_complete( 'migrate_notes' );
-		delete_option( 'edd_doing_upgrade' );
-
-		edd_debug_log( 'All old notes migrated, upgrade complete.' );
-
-		edd_redirect( admin_url() );
-	}
-}
-add_action( 'edd_notes_migration', 'edd_notes_migration' );
-
-/**
- * Removes legacy notes data.
- *
- * @since 3.0
- */
-function edd_remove_legacy_notes() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	edd_set_time_limit();
-
-	$note_ids = $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments WHERE comment_type = 'edd_payment_note'" );
-	$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
-	$note_ids = implode( ', ', $note_ids );
-
-	edd_debug_log( 'Beginning removal of legacy notes' );
-
-	if ( ! empty( $note_ids ) ) {
-		$delete_query = "DELETE FROM $wpdb->comments WHERE comment_ID IN ({$note_ids})";
-		$wpdb->query( $delete_query );
-
-		$delete_postmeta_query = "DELETE FROM $wpdb->commentmeta WHERE comment_id IN ({$note_ids})";
-		$wpdb->query( $delete_postmeta_query );
-	}
-
-	edd_set_upgrade_complete( 'remove_legacy_notes' );
-
-	delete_option( 'edd_doing_upgrade' );
-
-	edd_debug_log( 'Legacy notes removed, upgrade complete.' );
-
-	edd_redirect( admin_url() );
-}
-add_action( 'edd_remove_legacy_notes', 'edd_remove_legacy_notes' );
-
-/**
- * Migrates all logs and log meta to the new custom tables.
- *
- * @since 3.0
- */
-function edd_logs_migration() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	edd_set_time_limit();
-
-	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
-	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
-	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
-
-	$logs_db = edd_get_component_interface( 'log', 'table' );
-	if ( ! $logs_db->exists() ) {
-		@$logs_db->create();
-	}
-
-	$log_meta_db = edd_get_component_interface( 'log', 'meta' );
-	if ( ! $log_meta_db->exists() ) {
-		@$log_meta_db->create();
-	}
-
-	$log_api_request_db = edd_get_component_interface( 'log_api_request', 'table' );
-	if ( ! $log_api_request_db->exists() ) {
-		@$log_api_request_db->create();
-	}
-
-	$log_file_download_db = edd_get_component_interface( 'log_file_download', 'table' );
-	if ( ! $log_file_download_db->exists() ) {
-		@$log_file_download_db->create();
-	}
-
-	edd_debug_log( 'Beginning step ' . $step . ' of logs migration' );
-
-	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
-
-	if ( empty( $total ) || $total <= 1 ) {
-		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
-		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_logs;
-		edd_debug_log( $total . ' to migrate' );
-	}
-
-	$logs = $wpdb->get_results(
-		$wpdb->prepare(
-			"
-			SELECT p.*, t.slug
-			FROM {$wpdb->posts} AS p
-			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
-			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
-			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
-			GROUP BY p.ID
-			LIMIT %d,%d;
-			",
-			$offset, $number
-		)
-	);
-
-	if ( ! empty( $logs ) ) {
-		foreach ( $logs as $old_log ) {
-            $new_log_id = 0;
-
-            if ( 'file_download' === $old_log->slug ) {
-                $meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
-
-                $post_meta = array();
-
-                foreach ( $meta as $meta_item ) {
-                    $post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-                }
-
-                $log_data = array(
-                    'download_id'   => $old_log->post_parent,
-                    'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? $post_meta['_edd_log_file_id'] : 0,
-                    'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
-                    'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-                    'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
-                    'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
-                    'date_created'  => $old_log->post_date_gmt,
-                    'date_modified' => $old_log->post_modified_gmt,
-                );
-
-                $new_log_id = edd_add_file_download_log( $log_data );
-            } elseif ( 'api_request' === $old_log->slug ) {
-                $meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
-
-                $post_meta = array();
-
-                foreach ( $meta as $meta_item ) {
-                    $post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-                }
-
-                $log_data = array(
-                    'ip'            => isset( $post_meta['_edd_log_request_ip'] ) ? $post_meta['_edd_log_request_ip'] : '',
-                    'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-                    'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-                    'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
-                    'version'       => isset( $post_meta['_edd_log_version'] ) ? $post_meta['_edd_log_version'] : '',
-                    'time'          => isset( $post_meta['_edd_log_time'] ) ? $post_meta['_edd_log_time'] : '',
-                    'request'       => $old_log->post_excerpt,
-                    'error'         => $old_log->post_content,
-                    'date_created'  => $old_log->post_date_gmt,
-                    'date_modified' => $old_log->post_modified_gmt,
-                );
-
-                $new_log_id = edd_add_api_request_log( $log_data );
-            } else {
-                $post = get_post( $old_log->ID );
-
-                $log_data = array(
-                    'object_id'     => $post->post_parent,
-                    'object_type'   => 'download',
-                    'type'          => $old_log->slug,
-                    'title'         => $old_log->post_title,
-                    'message'       => $old_log->post_content,
-                    'date_created'  => $old_log->post_date_gmt,
-                    'date_modified' => $old_log->post_modified_gmt,
-                );
-
-                $meta            = get_post_custom( $old_log->ID );
-                $meta_to_migrate = array();
-
-                foreach ( $meta as $key => $value ) {
-                    $meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-                }
-
-                $new_log_id = edd_add_log( $log_data );
-                $new_log    = new EDD\Logs\Log( $new_log_id );
-
-                if ( ! empty( $meta_to_migrate ) ) {
-                    foreach ( $meta_to_migrate as $key => $value ) {
-                        $new_log->add_meta( $key, $value );
-                    }
-                }
-            }
-
-			edd_debug_log( $old_log->ID . ' successfully migrated to ' . $new_log_id );
-		}
-
-		edd_debug_log( 'Step ' . $step . ' of logs migration complete' );
-
-		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'logs_migration',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
-
-		edd_redirect( $redirect );
-
-	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_set_upgrade_complete( 'migrate_logs' );
-		delete_option( 'edd_doing_upgrade' );
-
-		edd_debug_log( 'All old logs migrated, upgrade complete.' );
-
-		edd_redirect( admin_url() );
-	}
-}
-add_action( 'edd_logs_migration', 'edd_logs_migration' );
-
-/**
- * Removes legacy logs data.
- *
- * @since 3.0
- */
-function edd_remove_legacy_logs() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	edd_set_time_limit();
-
-	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] )   : 1;
-	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
-	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
-
-	edd_debug_log( 'Beginning step ' . $step . ' of removal of legacy logs' );
-
-	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
-
-	if ( empty( $total ) || $total <= 1 ) {
-		$total_sql = "SELECT COUNT(ID) as total_logs FROM $wpdb->posts WHERE post_type = 'edd_log'";
-		$results   = $wpdb->get_row( $total_sql, 0 );
-		$total     = $results->total_logs;
-		edd_debug_log( $total . ' to remove' );
-	}
-
-	$log_ids = $wpdb->get_results(
-		$wpdb->prepare(
-			"
-			SELECT ID
-			FROM {$wpdb->posts}
-			WHERE post_type = 'edd_log'
-			LIMIT %d,%d;
-			",
-			$offset, $number
-		)
-	);
-	$log_ids = wp_list_pluck( $log_ids, 'ID' );
-	$log_ids = implode( ', ', $log_ids );
-
-	if ( ! empty( $log_ids ) ) {
-		$delete_posts_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
-		$wpdb->query( $delete_posts_query );
-
-		$delete_postmeta_query = "DELETE FROM {$wpdb->postmeta} WHERE post_id IN ({$log_ids})";
-		$wpdb->query( $delete_postmeta_query );
-
-		edd_debug_log( 'Step ' . $step . ' of removal of legacy logs complete' );
-
-		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'remove_legacy_logs',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
-
-		edd_redirect( $redirect );
-
-	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
-		edd_set_upgrade_complete( 'remove_legacy_logs' );
-		delete_option( 'edd_doing_upgrade' );
-
-		edd_debug_log( 'Legacy logs removed, upgrade complete.' );
-
-		edd_redirect( admin_url() );
-	}
-}
-add_action( 'edd_remove_legacy_logs', 'edd_remove_legacy_logs' );
+/** 2.9.2 Upgrades ***********************************************************/
 
 /**
  * Output the results of the file-download log data update
@@ -1923,5 +1290,589 @@ add_action( 'edd_register_batch_exporter', 'edd_register_batch_file_download_log
 function edd_include_file_download_log_migration_batch_processor( $class = '' ) {
 	if ( 'EDD_File_Download_Log_Migration' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/classes/class-file-download-log-migration.php';
+	}
+}
+
+/** 3.0 Upgrades *************************************************************/
+
+/**
+ * Render 3.0 upgrade page.
+ *
+ * @since 3.0
+ */
+function edd_upgrade_render_v30_migration() {
+	global $wpdb;
+
+	$migration_complete = edd_has_upgrade_completed( 'v30_data_migration' );
+
+	/** Orders Migration *****************************************************/
+	$orders          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+	$orders_complete = edd_has_upgrade_completed( 'migrate_orders' );
+
+	if ( empty( $orders ) ) {
+		edd_set_upgrade_complete( 'migrate_orders' );
+		$orders_complete = true;
+	}
+
+	$order_removal_complete = edd_has_upgrade_completed( 'remove_legacy_orders' );
+
+	/** Customer Data Migration **********************************************/
+	$addresses = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
+	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
+
+	if ( empty( $addresses ) ) {
+		edd_set_upgrade_complete( 'migrate_customer_addresses' );
+		$customer_addresses_complete = true;
+	}
+
+	$email_addresses = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
+	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
+
+	if ( empty( $email_addresses ) ) {
+		edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
+		$customer_email_addresses_complete = true;
+	}
+
+	/** Logs Migration *******************************************************/
+	$logs = $wpdb->get_results( "SELECT t.slug
+								 FROM {$wpdb->posts} AS p
+								 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+								 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+								 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+								 WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+								 GROUP BY p.ID
+								 LIMIT 1" );
+	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
+	
+	if ( empty( $logs ) ) {
+		edd_set_upgrade_complete( 'migrate_logs' );
+		$logs_complete = true;
+	}
+
+	/** Tax Rates Migration **************************************************/
+	$tax_rates = get_option( 'edd_tax_rates', array() );
+	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
+
+	if ( empty( $tax_rates ) ) {
+		edd_set_upgrade_complete( 'migrate_tax_rates' );
+		$tax_rates_complete = true;
+	}
+
+	/** Discounts Migration **************************************************/
+	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discount' LIMIT 1" );
+	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
+
+	if ( empty( $discounts ) ) {
+		edd_set_upgrade_complete( 'migrate_discounts' );
+		$discounts_complete = true;
+	}
+
+	/** Order Notes Migration ************************************************/
+	$order_notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
+	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
+	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
+
+	if ( empty( $notes ) ) {
+		edd_set_upgrade_complete( 'migrate_order_notes' );
+		$order_notes_complete = true;
+	}
+
+	/** Customer Notes Migration *********************************************/
+	$customer_notes                  = $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->edd_customers} LIKE 'notes'" );
+	$customer_notes_complete         = edd_has_upgrade_completed( 'migrate_customer_notes' );
+	$customer_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_customer_notes' );
+
+	if ( empty( $notes ) ) {
+		edd_set_upgrade_complete( 'migrate_customer_notes' );
+		$customer_notes_complete = true;
+	}
+
+	// Initialise to first step.
+	$step = 1; ?>
+
+	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
+		<p>
+			<?php _e( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'easy-digital-downloads' ); ?>
+			<br /><br />
+			<?php _e( 'You may now leave this page.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+
+	<div id="edd-migration-nav-warn" class="notice notice-info">
+		<p><?php _e( '<strong>Important:</strong> Please leave this screen open and do not navigate away until the process completes.', 'easy-digital-downloads' ); ?></p>
+	</div>
+
+	<style>
+		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
+	</style>
+	<?php if ( ! $migration_complete ) : ?>
+	<script>
+		jQuery( function($) {
+			$(document).ready(function () {
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
+
+					if (element.id === 'edd-batch-success') {
+						element = $(element);
+
+						element.parent().prev().find('.edd-migration.allowed').hide();
+						element.parent().prev().find('.edd-migration.unavailable').show();
+						var element_wrapper = element.parents().eq(4);
+						element_wrapper.find('.dashicons.dashicons-yes').show();
+
+						var auto_start_next_step = true;
+
+						if (element.find('.edd-new-count')) {
+							var new_count = element.find('.edd-new-count').text(),
+								old_count = element.find('.edd-old-count').text();
+
+							auto_start_next_step = new_count === old_count;
+						}
+
+						var next_step_wrapper = element_wrapper.next();
+						if (next_step_wrapper.find('.postbox').length) {
+							next_step_wrapper.find('.edd-migration.allowed').show();
+							next_step_wrapper.find('.edd-migration.unavailable').hide();
+
+							if (auto_start_next_step) {
+								next_step_wrapper.find('.edd-export-form:not(#edd-remove-legacy-data-form)').submit();
+							}
+						} else {
+							$('#edd-migration-nav-warn').hide();
+							$('#edd-migration-ready').slideDown();
+						}
+					}
+				});
+
+				$('#remove-legacy-data-confirm').on( 'change', function() {
+				    if ( this.checked == true ) {
+					    $('#remove-legacy-data-submit').removeClass('button-secondary').addClass('button-primary').prop( 'disabled', false );
+				    } else {
+                        $('#remove-legacy-data-submit').addClass('button-secondary').removeClass('button-primary').prop( 'disabled', 'disabled' );
+				    }
+				} );
+			});
+		});
+	</script>
+	<?php endif; ?>
+
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php printf( esc_html__( 'Step %d: Upgrade Orders', 'easy-digital-downloads' ), $step ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside migrate-order-control">
+				<p>
+					<?php _e( 'This will migrate all orders from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+				</p>
+				<form method="post" id="edd-migrate-orders-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $order_removal_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Orders" />
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+
+	<?php
+	// Increment step
+	$step++;
+	?>
+
+	<?php if ( ! empty( $addresses ) ) : ?>
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php printf( esc_html__( 'Step %d: Upgrade Customer Addresses', 'easy-digital-downloads' ), $step ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside migrate-order-control">
+				<p>
+					<?php _e( 'This will migrate all customer address from user meta to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+				</p>
+				<form method="post" id="edd-migrate-customer-addresses-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $customer_addresses_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Customer_Addresses" />
+						<span class="spinner"></span>
+					</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+	<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $email_addresses ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Customer Email Addresses', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-customer-email-addresses-control">
+					<p>
+						<?php _e( 'This will migrate all customer email address from customer meta to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-customer-email-addresses-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $customer_email_addresses_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Customer_Email_Addresses" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $logs ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Logs', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-logs-control">
+					<p>
+						<?php _e( 'This will migrate all logs from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-logs-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $logs_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Logs" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $tax_rates ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Tax Rates', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-tax-rates-control">
+					<p>
+						<?php _e( 'This will migrate all tax rates from the WordPress options table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-tax-rates-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $tax_rates_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Tax_Rates" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $discounts ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Discounts', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-discounts-control">
+					<p>
+						<?php _e( 'This will migrate all discounts from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-discounts-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $discounts_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Discounts" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $order_notes ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Order Notes', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-order-notes-control">
+					<p>
+						<?php _e( 'This will migrate all order notes from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-order-notes-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $order_notes_removal_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Order_Notes" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! empty( $customer_notes ) ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Upgrade Customer Notes', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-customer-notes-control">
+					<p>
+						<?php _e( 'This will migrate all customer notes from the WordPress posts table to custom database tables for improved performance and reliability.', 'easy-digital-downloads' ); ?>
+					</p>
+					<form method="post" id="edd-migrate-customer-notes-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $customer_notes_removal_complete ) : ?>
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-primary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Customer_Notes" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+		<?php $step++;
+	endif;
+	?>
+
+	<?php if ( ! $migration_complete ) : ?>
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle">
+					<span><?php printf( esc_html__( 'Step %d: Remove Legacy Data', 'easy-digital-downloads' ), $step ); ?></span>
+					<span class="dashicons dashicons-yes"></span>
+				</h2>
+				<div class="inside migrate-customer-notes-control">
+					<p><strong><?php _e( 'Important:', 'easy-digital-downloads' ); ?></strong> <?php _e( 'This remove all legacy data. This action is not reversible. Please backup your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ); ?></p>
+					<form method="post" id="edd-remove-legacy-data-form" class="edd-export-form edd-import-export-form">
+					<span class="step-instructions-wrapper">
+						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+						<?php if ( ! $migration_complete ) : ?>
+							<p>
+								<input id="remove-legacy-data-confirm" name="remove-legacy-data-confirm" type="checkbox" value="1" />
+								<label for="remove-legacy-data-confirm">Confirm removal of legacy data.</label>
+							</p>
+
+							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							</span>
+
+							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
+								<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+							</span>
+						<?php else: ?>
+							<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+						<?php endif; ?>
+
+						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Remove_Legacy_Data" />
+						<span class="spinner"></span>
+					</span>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div>
+	<?php endif; ?>
+
+	<?php
+}
+
+/**
+ * Register batch processors for upgrade routines for EDD 3.0.
+ *
+ * @since 3.0
+ */
+function edd_register_batch_processors_for_v30_upgrade() {
+	add_action( 'edd_batch_export_class_include', 'edd_load_batch_processors_for_v30_upgrade', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_register_batch_processors_for_v30_upgrade', 10 );
+
+/**
+ * Load the batch processor for upgrade routines for EDD 3.0.
+ *
+ * @param $class string Class name.
+ */
+function edd_load_batch_processors_for_v30_upgrade( $class ) {
+	switch ( $class ) {
+		case 'EDD\Admin\Upgrades\v3\Orders':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-orders.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Customer_Addresses':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-addresses.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Customer_Email_Addresses':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-email-addresses.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Logs':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-logs.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Tax_Rates':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-tax-rates.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Discounts':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-discounts.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Order_Notes':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Customer_Notes':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
+			break;
+		case 'EDD\Admin\Upgrades\v3\Remove_Legacy_Data':
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
+			break;
 	}
 }

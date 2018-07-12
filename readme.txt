@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.6
-Tested up to: 4.9
-Stable Tag: 3.0.0
+Tested up to: 4.9.7
+Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,33 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.4, June 9, 2018 =
+* Fix: Added nonce checks to multiple AJAX calls. If you have customized any of the following beyond CSS, please review this blog post:
+* https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4
+* templates/widget-cart-item.php
+* templates/shortcode-profile-editor.php
+* templates/checkout_cart.php
+* The following functions includes/checkout/template.php:
+* edd_default_cc_address_fields()
+* edd_get_register_fields()
+* edd_get_login_fields()
+* edd_payment_mode_select()
+* edd_checkout_hidden_fields()
+* Fix: Important - Don't allow guest purchases for an email address that has an existing user.
+* Fix: Unexpected behavior in 'redirect to checkout' when multiple checkout pages were used.
+* Fix: Saving an order in the admin when prices were inclusive of tax could cause incorrect item price amounts to be saved.
+* Fix: PHP 7.2 Compatibility - Some PHP notices were being thrown while activating Easy Digital Downloads.
+* Fix: The EDD_Cart class now forces the cart contents to always be an array.
+* Fix: The process of adding past purchases to a new user now verifies the user has an email address.
+* Fix: The file download log export did not contain the name of the user who downloaded the file.
+* Fix: Attempting to add a new customer to an order gave unexpected results when using the email address of an existing customer.
+* Fix: Tax rate 'Apply to whole country' label could not be clicked when no tax rates have ever existed.
+* Fix: The Shop Accountant role was not able to manage the tax exclusion at a product level.
+* Fix: In some cases, PayPal IPN and PDT would cause double payment processing.
+* Tweak: Easy Digital Downloads sessions can now be started when in the wp-admin path.
+* New: When taxes are being recalculated at checkout, an AJAX indicator is now shown below the purchase button.
+* Dev: Filters were added to the AJAX responses for adding and removing items from the cart.
 
 = 2.9.3, May 25, 2018 =
 * Fix: Corrected multiple inconsistencies in the Privacy Policy Checkbox at checkout.

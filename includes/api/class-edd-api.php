@@ -1504,8 +1504,11 @@ class EDD_API {
 					$payment = new EDD_Payment( $payment );
 				}
 
-				$payment_meta = $payment->get_meta();
-				$user_info    = $payment->user_info;
+				if ( empty( $payment ) ) {
+					continue;
+				}
+
+				$user_info = $payment->user_info;
 
 				$sales['sales'][ $i ]['ID']             = $payment->number;
 				$sales['sales'][ $i ]['transaction_id'] = $payment->transaction_id;

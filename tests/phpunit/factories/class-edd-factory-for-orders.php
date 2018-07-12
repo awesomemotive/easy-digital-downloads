@@ -8,9 +8,6 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 
 		$this->default_generation_definitions = array(
 			'status'          => 'publish',
-			'date_created'    => date( 'Y-m-d h:i:s', mt_rand( 1, time() ) ),
-			'date_completed'  => date( 'Y-m-d h:i:s', mt_rand( 1, time() ) ),
-			'date_refundable' => date( 'Y-m-d h:i:s', mt_rand( 1, time() ) ),
 			'user_id'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'customer_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'email'           => new \WP_UnitTest_Generator_Sequence( 'user%d@edd.test' ),
@@ -35,9 +32,6 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 	 * @return \EDD\Orders\Order|false
 	 */
 	public function create_and_get( $args = array(), $generation_definitions = null ) {
-		$this->default_generation_definitions['date_created']   = date( 'Y-m-d h:i:s', mt_rand( 1, time() ) );
-		$this->default_generation_definitions['date_completed'] = date( 'Y-m-d h:i:s', mt_rand( 1, time() ) );
-
 		return parent::create_and_get( $args, $generation_definitions );
 	}
 

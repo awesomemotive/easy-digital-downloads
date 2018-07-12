@@ -169,7 +169,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
 						'ID'         => $log->id,
-						'download'   => $log->download_id,
+						'download'   => $log->product_id,
 						'customer'   => new EDD_Customer( $customer_id ),
 						'payment_id' => $log->order_id,
 						'price_id'   => $log->price_id,
@@ -192,59 +192,5 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_total( $log_query = array() ) {
 		return edd_count_file_download_logs( $log_query );
-	}
-
-	/**
-	 * Return array of query arguments
-	 *
-	 * @since 3.0
-	 *
-	 * @return array
-	 */
-	private function get_query_args() {
-
-		// Pagination
-		$paged  = $this->get_paged();
-		$offset = ( $paged > 1 )
-			? ( ( $paged - 1 ) * $this->per_page )
-			: 0;
-
-		// Defaults
-		$retval = array(
-			'download_id' => $this->get_filtered_download(),
-			'customer_id' => $this->get_filtered_customer(),
-			'payment_id'  => $this->get_filtered_payment(),
-			'meta_query'  => $this->get_meta_query(),
-			'offset'      => $offset,
-			'number'      => $this->per_page
-		);
-
-		$search = $this->get_search();
-
-		if ( ! empty( $search ) ) {
-			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				$retval['ip'] = $search;
-
-			} elseif ( is_email( $search ) ) {
-				$customer = new EDD_Customer( $search );
-				if ( ! empty( $customer->id ) ) {
-					$retval['customer_id'] = $customer->id;
-				}
-
-			} elseif ( is_numeric( $search ) ) {
-				$customer = new EDD_Customer( $search );
-
-				if ( ! empty( $customer->id ) ) {
-					$retval['customer_id'] = $customer->id;
-				} else {
-					$this->file_search = true;
-				}
-			} else {
-				$retval['file_id'] = $search;
-			}
-		}
-
-		// Return query arguments
-		return $retval;
 	}
 }

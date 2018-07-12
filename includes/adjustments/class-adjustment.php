@@ -1,12 +1,12 @@
 <?php
 /**
- * Adjustment Object
+ * Adjustment Object.
  *
  * @package     EDD
- * @subpackage  Classes/Adjustments
+ * @subpackage  Adjustments
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Adjustments;
 
@@ -21,191 +21,173 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @property int $id
- * @property int $object_id
- * @property string $object_type
- * @property int $user_id
- * @property string $content
- * @property string $date_completed
+ * @property int $parent
+ * @property string $name
+ * @property string $code
+ * @property string $status
+ * @property string $type
+ * @property string $scope
+ * @property string $amount_type
+ * @property float $amount
+ * @property string $description
+ * @property int $max_uses
+ * @property int $use_count
+ * @property int $once_per_customer
+ * @property float $min_charge_amount
+ * @property string $product_condition
+ * @property string $start_date
+ * @property string $end_date
+ * @property string $date_created
  * @property string $date_modified
  */
 class Adjustment extends Base_Object {
 
 	/**
-	 * Adjustment ID.
+	 * ID.
 	 *
 	 * @since 3.0
 	 * @access protected
 	 * @var int
 	 */
-	protected $id = 0;
+	protected $id;
 
 	/**
-	 * Adjustment Name.
+	 * Name.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $name = null;
+	protected $name;
 
 	/**
-	 * Adjustment Code.
+	 * Code.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $code = null;
+	protected $code;
 
 	/**
-	 * Adjustment Status (Active or Inactive).
+	 * Status.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $status = null;
+	protected $status;
 
 	/**
 	 * Adjustment Type (discount, fee, tax, credit).
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $type = null;
+	protected $type;
 
 	/**
-	 * Scope of the discount.
+	 * Scope of the adjustment.
 	 *
 	 * global     - Applies to all products in the cart, save for those explicitly excluded through excluded_products
 	 * not_global - Applies only to the products set in product_reqs
 	 *
 	 * This used to be called "is_not_global" but was changed to "scope" in 3.0.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var bool
+	 * @var    bool
 	 */
-	protected $scope = null;
+	protected $scope;
 
 	/**
 	 * Adjustment Type (Percentage or Flat Amount).
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $amount_type = null;
+	protected $amount_type;
 
 	/**
 	 * Adjustment Amount.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var mixed float|int
+	 * @var    mixed float|int
 	 */
 	protected $amount = null;
 
 	/**
-	 * Uses.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 * @var int
-	 */
-	protected $use_count = null;
-
-	/**
 	 * Maximum Uses.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var int
+	 * @var    int
 	 */
 	protected $max_uses = null;
 
 	/**
+	 * Use Count.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    int
+	 */
+	protected $use_count = null;
+
+	/**
 	 * Minimum Amount.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var mixed int|float
+	 * @var    mixed int|float
 	 */
-	protected $min_cart_price = null;
+	protected $min_charge_amount;
 
 	/**
 	 * Is Single Use per customer?
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var bool
+	 * @var    bool
 	 */
 	protected $once_per_customer = null;
 
 	/**
-	 * Product Condition
+	 * Product Condition.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $product_condition = null;
+	protected $product_condition;
 
 	/**
 	 * Created Date.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $date_created = null;
+	protected $date_created;
 
 	/**
 	 * Start Date.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $start_date = null;
+	protected $start_date;
 
 	/**
 	 * End Date.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
-	 * @var string
+	 * @var    string
 	 */
-	protected $end_date = null;
-
-	/**
-	 * Download Requirements.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $product_reqs = array();
-
-	/**
-	 * Excluded Downloads.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $excluded_products = array();
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 3.0
-	 * @access protected
-	 *
-	 * @param \object $adjustment Adjustment data from the database.
-	 */
-	public function __construct( $adjustment = null ) {
-		parent::__construct( $adjustment );
-	}
+	protected $end_date;
 }

@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $order_number
  * @property string $status
  * @property string $date_created
+ * @property string $date_modified
  * @property string $date_completed
  * @property int $user_id
  * @property int $customer_id
@@ -80,6 +81,14 @@ class Order extends \EDD\Database\Objects\Order {
 	 * @var   string
 	 */
 	protected $date_created;
+
+	/**
+	 * Date modified.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_modified;
 
 	/**
 	 * Date completed.
@@ -395,37 +404,35 @@ class Order extends \EDD\Database\Objects\Order {
 	}
 
 	/**
-	 * Retrieve the customer information associated with the order.
+	 * Retrieve the address associated with the order.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array User information.
+	 * @return \EDD\Orders\Order_Address|false Object if successful, false otherwise.
 	 */
-	public function get_user_info() {
-		return edd_get_order_meta( $this->id, 'user_info', true );
-	}
+	public function get_address() {
 
-	/**
-	 * Retrieve the customer address associated with the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Customer address.
-	 */
-	public function get_customer_address() {
-		$user_info = $this->get_user_info();
-		$address   = ! empty( $user_info['address'] )
-			? (array) $user_info['address']
-			: array();
+		// Attempt to get the order address
+		$address = edd_get_order_address_by( 'order_id', $this->id );
 
-		return wp_parse_args( $address, array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'country' => '',
-			'state'   => '',
-			'zip'     => ''
-		) );
+		// Fallback object if not found
+		if ( empty( $address ) ) {
+			$address = (object) array(
+				'id'          => 0,
+				'order_id'    => 0,
+				'first_name'  => '',
+				'last_name'   => '',
+				'address'     => '',
+				'address2'    => '',
+				'city'        => '',
+				'region'      => '',
+				'postal_code' => '',
+				'country'     => '',
+			);
+		}
+
+		// Return address (from DB or fallback)
+		return $address;
 	}
 
 	/**

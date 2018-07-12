@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_adjustmentmeta" database table
  *
@@ -83,6 +82,17 @@ final class Adjustment_Meta extends Base {
         // Old discounts table
         $table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discountmeta';
 
+		// Does old table exist?
+		$query    = "SHOW TABLES LIKE %s";
+		$like     = $this->get_db()->esc_like( $table_name );
+		$prepared = $this->get_db()->prepare( $query, $like );
+		$result   = $this->get_db()->get_var( $prepared );
+
+		// Bail if no old table
+		if ( empty( $result ) || is_wp_error( $result ) ) {
+			return true;
+		}
+
         // Get the contents
         $discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name}" );
 
@@ -109,4 +119,3 @@ final class Adjustment_Meta extends Base {
         return true;
     }
 }
-endif;

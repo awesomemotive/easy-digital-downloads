@@ -631,7 +631,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'price'       => edd_sanitize_amount( $item_price ),
 					'quantity'    => 1,
 					'discount'    => 0,
-					'tax'         => $tax,
+					'tax'         => edd_calculate_tax( $item_price ),
 				);
 
 				$final_downloads[ $key ] = $item_number;
@@ -675,15 +675,15 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 
 			$purchase_data = array(
-				'price'        => edd_sanitize_amount( $total ),
-				'tax'          => 0,
-				'purchase_key' => strtolower( md5( uniqid() ) ),
-				'user_email'   => $email,
-				'user_info'    => $user_info,
-				'currency'     => edd_get_currency(),
-				'downloads'    => $final_downloads,
-				'cart_details' => $cart_details,
-				'status'       => 'pending',
+				'price'	        => edd_sanitize_amount( $total ),
+				'tax'           => edd_calculate_tax( $total ),
+				'purchase_key'  => strtolower( md5( uniqid() ) ),
+				'user_email'    => $email,
+				'user_info'     => $user_info,
+				'currency'      => edd_get_currency(),
+				'downloads'     => $final_downloads,
+				'cart_details'  => $cart_details,
+				'status'        => 'pending',
 			);
 
 			if ( ! empty( $timestring ) ) {
@@ -890,7 +890,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 				if ( ! empty( $meta_to_migrate ) ) {
 					foreach ( $meta_to_migrate as $key => $value ) {
-						edd_add_discount_meta( $discount_id, $key, $value );
+						edd_add_adjustment_meta( $discount_id, $key, $value );
 					}
 				}
 				$progress->tick();
@@ -1003,7 +1003,7 @@ class EDD_CLI extends WP_CLI_Command {
 						'file_id'       => $post_meta['_edd_log_file_id'],
 						'order_id'      => $post_meta['_edd_log_payment_id'],
 						'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-						'user_id'       => isset( $post_meta['_edd_log_user_id'] ) ? $post_meta['_edd_log_user_id'] : 0,
+						'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
 						'ip'            => $post_meta['_edd_log_ip'],
 						'date_created'  => $old_log->post_date_gmt,
 						'date_modified' => $old_log->post_modified_gmt,
@@ -1194,6 +1194,204 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Migrate customer data to the custom tables.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_customer_data
+	 * wp edd migrate_customer_data --force
+	 */
+	public function migrate_customer_data( $args, $assoc_args ) {
+		global $wpdb;
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_data' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		// Create the tables if they do not exist.
+		$components = array(
+			array( 'order', 'table' ),
+			array( 'order', 'meta' ),
+			array( 'customer', 'table' ),
+			array( 'customer', 'meta' ),
+			array( 'customer_address', 'table' ),
+			array( 'customer_email_address', 'table' ),
+		);
+
+		foreach ( $components as $component ) {
+			/** @var EDD\Database\Tables\Base $table */
+			$table = edd_get_component_interface( $component[0], $component[1] );
+
+			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+				@$table->create();
+			}
+		}
+
+		// Migrate user addresses first.
+		$sql = "
+			SELECT *
+			FROM {$wpdb->usermeta}
+			WHERE meta_key = '_edd_user_address'
+		";
+		$results = $wpdb->get_results( $sql );
+		$total   = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
+
+			foreach ( $results as $result ) {
+				$address = maybe_unserialize( $result->meta_value );
+
+				$user_id = absint( $result->user_id );
+
+				$customer = edd_get_customer_by( 'user_id', $user_id );
+
+				$address = wp_parse_args( $address, array(
+					'line1'   => '',
+					'line2'   => '',
+					'city'    => '',
+					'state'   => '',
+					'zip'     => '',
+					'country' => '',
+				) );
+
+				if ( $customer ) {
+					edd_add_customer_address( array(
+						'customer_id' => $customer->id,
+						'type'        => 'primary',
+						'address'     => $address['line1'],
+						'address2'    => $address['line2'],
+						'city'        => $address['city'],
+						'region'      => $address['state'],
+						'postal_code' => $address['zip'],
+						'country'     => $address['country']
+					) );
+				}
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+		}
+
+		// Migrate email addresses next.
+		$sql = "
+			SELECT *
+			FROM {$wpdb->edd_customermeta}
+			WHERE meta_key = 'additional_email'
+		";
+		$results = $wpdb->get_results( $sql );
+		$total   = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
+
+			foreach ( $results as $result ) {
+				$customer_id = absint( $result->edd_customer_id );
+
+				edd_add_customer_email_address( array(
+					'customer_id' => $customer_id,
+					'email'       => $result->meta_value,
+				) );
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+		}
+
+		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'migrate_customer_data' );
+	}
+
+	/**
+	 * Migrate tax rates.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_tax_rates
+	 * wp edd migrate_tax_rates --force
+	 */
+	public function migrate_tax_rates( $args, $assoc_args ) {
+		global $wpdb;
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_tax_rates' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		// Create the tables if they do not exist.
+		$components = array(
+			array( 'adjustment', 'table' ),
+			array( 'adjustment', 'meta' ),
+		);
+
+		foreach ( $components as $component ) {
+			/** @var EDD\Database\Tables\Base $table */
+			$table = edd_get_component_interface( $component[0], $component[1] );
+
+			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+				@$table->create();
+			}
+		}
+
+		// Migrate user addresses first.
+		$tax_rates = get_option( 'edd_tax_rates', array() );
+
+		if ( ! empty( $tax_rates ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Tax Rates', count( $tax_rates ) );
+
+			foreach ( $tax_rates as $tax_rate ) {
+				$scope = isset( $tax_rate['global'] )
+					? 'country'
+					: 'region';
+
+				$region = isset( $tax_rate['state'] )
+					? sanitize_text_field( $tax_rate['state'] )
+					: '';
+
+				$adjustment_data = array(
+					'name'        => $tax_rate['country'],
+					'status'      => 'active',
+					'type'        => 'tax_rate',
+					'scope'       => $scope,
+					'amount_type' => 'percent',
+					'amount'      => floatval( $tax_rate['rate'] ),
+					'description' => $region,
+				);
+
+				edd_add_adjustment( $adjustment_data );
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+		}
+
+		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_set_upgrade_complete( 'migrate_tax_rates' );
+	}
+
+	/**
 	 * Migrate payments to the custom tables.
 	 *
 	 * ## OPTIONS
@@ -1307,12 +1505,53 @@ class EDD_CLI extends WP_CLI_Command {
 
 				$order_id = edd_add_order( $order_data );
 
-				// Add user info to order meta.
-				edd_add_order_meta( $order_id, 'user_info', array(
-					'first_name' => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
-					'last_name'  => isset( $user_info['last_name']  ) ? $user_info['last_name']  : '',
-					'address'    => isset( $user_info['address']    ) ? $user_info['address']    : ''
+				// Add order address.
+				$user_info['address'] = isset( $user_info['address'] )
+					? $user_info['address']
+					: array();
+
+				$user_info['address'] = wp_parse_args( $user_info['address'], array(
+					'line1'   => '',
+					'line2'   => '',
+					'city'    => '',
+					'zip'     => '',
+					'country' => '',
+					'state'   => '',
 				) );
+
+				$order_address_data = array(
+					'order_id'    => $order_id,
+					'first_name'  => $user_info['first_name'],
+					'last_name'   => $user_info['last_name'],
+					'address'     => $user_info['address']['line1'],
+					'address2'    => $user_info['address']['line2'],
+					'city'        => $user_info['address']['city'],
+					'region'      => $user_info['address']['state'],
+					'country'     => $user_info['address']['country'],
+					'postal_code' => $user_info['address']['zip'],
+				);
+
+				// Remove empty data.
+				$order_address_data = array_filter( $order_address_data );
+
+				// Add to edd_order_addresses table.
+				edd_add_order_address( $order_address_data );
+
+				// Maybe add the address to the edd_customer_addresses.
+				$customer_address_data = $order_address_data;
+
+				// We don't need to pass this data to edd_maybe_add_customer_address().
+				unset( $customer_address_data['order_id'] );
+				unset( $customer_address_data['first_name'] );
+				unset( $customer_address_data['last_name'] );
+
+				edd_maybe_add_customer_address( $customer_id, $customer_address_data );
+
+				// Maybe add email address to customer record
+				$customer = edd_get_customer( $customer_id );
+				if ( $customer ) {
+					$customer->add_email( $payment_meta['email'] );
+				}
 
 				if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
 					edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );

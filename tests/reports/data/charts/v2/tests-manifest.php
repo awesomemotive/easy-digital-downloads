@@ -333,7 +333,7 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 			'hoverMode'  => 'index',
 			'stacked'    => false,
 			'title'      => array(
-				'display' => true,
+				'display' => false,
 				'text'    => 'Foo Dataset'
 			),
 			'scales'     => array(
@@ -347,10 +347,7 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 						'position' => 'bottom',
 						'time'     => array(
 							'unit' => 'day',
-							'displayFormats' => array(
-								'day'   => 'MMM D',
-								'month' => 'MMM',
-							),
+							'tooltipFormat' => 'LL',
 						),
 					),
 				),

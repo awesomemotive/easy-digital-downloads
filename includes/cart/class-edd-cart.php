@@ -198,7 +198,7 @@ class EDD_Cart {
 
 		do_action( 'edd_cart_contents_loaded' );
 
-		return $this->contents;
+		return (array) $this->contents;
 	}
 
 	/**

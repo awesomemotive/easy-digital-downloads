@@ -139,6 +139,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				$value = $item['id'];
 				break;
 
+			case 'email' :
+				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
+				break;
+
 			case 'order_count' :
 				$url = add_query_arg( array(
 					'post_type' => 'download',
@@ -153,7 +157,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			case 'date_created' :
-				$value = edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' );
+				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
 				break;
 
 			default:
@@ -162,9 +166,19 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					: null;
 				break;
 		}
+
+		// Filter & return
 		return apply_filters( 'edd_customers_column_' . $column_name, $value, $item['id'] );
 	}
 
+	/**
+	 * Return the contents of the "Name" column
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return string
+	 */
 	public function column_name( $item ) {
 		$state    = '';
 		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
@@ -264,11 +278,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
 			'cb'            => '<input type="checkbox" />',
-			'name'          => __( 'Name',          'easy-digital-downloads' ),
-			'email'         => __( 'Email',         'easy-digital-downloads' ),
-			'order_count'   => __( 'Orders',        'easy-digital-downloads' ),
-			'spent'         => __( 'Spent',         'easy-digital-downloads' ),
-			'date_created'  => __( 'Date Created',  'easy-digital-downloads' )
+			'name'          => __( 'Name',        'easy-digital-downloads' ),
+			'email'         => __( 'Email',       'easy-digital-downloads' ),
+			'order_count'   => __( 'Orders',      'easy-digital-downloads' ),
+			'spent'         => __( 'Spent',       'easy-digital-downloads' ),
+			'date_created'  => __( 'Established', 'easy-digital-downloads' )
 		) );
 	}
 
@@ -282,6 +296,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		return array(
 			'date_created'  => array( 'date_created',   true  ),
 			'name'          => array( 'name',           true  ),
+			'email'         => array( 'email',          true  ),
 			'order_count'   => array( 'purchase_count', false ),
 			'spent'         => array( 'purchase_value', false )
 		);
@@ -360,8 +375,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * Build all the reports data
 	 *
 	 * @since 1.5
-	  * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
+	 *
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
@@ -381,11 +395,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'status'  => $status
 		);
 
-		if( is_email( $search ) ) {
+		if ( is_email( $search ) ) {
 			$args['email'] = $search;
-		} elseif( is_numeric( $search ) ) {
+		} elseif ( is_numeric( $search ) ) {
 			$args['id']    = $search;
-		} elseif( strpos( $search, 'user:' ) !== false ) {
+		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
 		} else {
 			$args['name']  = $search;
@@ -395,7 +409,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$customers  = edd_get_customers( $args );
 
 		if ( $customers ) {
-
 			foreach ( $customers as $customer ) {
 				$data[] = array(
 					'id'            => $customer->id,

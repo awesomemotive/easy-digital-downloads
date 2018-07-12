@@ -219,18 +219,17 @@ class EDD_Discount extends Adjustment {
 		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
 
-			// Code
+		// Code
 		} elseif ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
 
-			// Name
+		// Name
 		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
-			// Default to ID
+		// Default to ID
 		} else {
-			$_id_or_code_or_name = intval( $_id_or_code_or_name );
-			$discount = edd_get_discount( $_id_or_code_or_name );
+			$discount = edd_get_discount( absint( $_id_or_code_or_name ) );
 		}
 
 		// Setup or bail
@@ -501,6 +500,9 @@ class EDD_Discount extends Adjustment {
 				case 'id':
 					$this->{$key} = (int) $value;
 					break;
+				case 'min_charge_amount':
+					$this->min_cart_price = $value;
+					break;
 				default:
 					if ( is_string( $value ) ) {
 						@json_decode( $value );
@@ -518,8 +520,8 @@ class EDD_Discount extends Adjustment {
 		 * Some object vars need to be setup manually as the values need to be
 		 * pulled in from the `edd_adjustmentmeta` table.
 		 */
-		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
-		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
+		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product',    false );
+		$this->product_reqs      = (array) edd_get_adjustment_meta( $this->id, 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -610,7 +612,7 @@ class EDD_Discount extends Adjustment {
 				break;
 			case 'inherit':
 				if ( ! empty( $this->parent ) ) {
-					$parent = new EDD_Discount( $this->parent );
+					$parent = edd_get_discount( $this->parent );
 					$label  = $parent->get_status_label();
 					break;
 				}
@@ -998,7 +1000,7 @@ class EDD_Discount extends Adjustment {
 				if ( isset( $args['excluded_products'] ) ) {
 					if ( is_array( $args['excluded_products'] ) ) {
 						foreach ( $args['excluded_products'] as $product ) {
-							edd_add_discount_meta( $this->id, 'excluded_product', absint( $product ) );
+							edd_add_adjustment_meta( $this->id, 'excluded_product', absint( $product ) );
 						}
 					}
 				}
@@ -1006,7 +1008,7 @@ class EDD_Discount extends Adjustment {
 				if ( isset( $args['product_reqs'] ) ) {
 					if ( is_array( $args['product_reqs'] ) ) {
 						foreach ( $args['product_reqs'] as $product ) {
-							edd_add_discount_meta( $this->id, 'product_requirement', absint( $product ) );
+							edd_add_adjustment_meta( $this->id, 'product_requirement', absint( $product ) );
 						}
 					}
 				}
@@ -1828,6 +1830,7 @@ class EDD_Discount extends Adjustment {
 			'excluded-products' => 'excluded_products',
 			'is_not_global'     => 'scope',
 			'is_single_use'     => 'once_per_customer',
+			'min_cart_price'    => 'min_charge_amount',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {

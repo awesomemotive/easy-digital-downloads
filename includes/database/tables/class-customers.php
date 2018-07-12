@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_customers" database table
  *
@@ -37,7 +36,7 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201806070001;
+	protected $version = 201807110001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -47,7 +46,7 @@ final class Customers extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806070001' => 201806070001
+		'201807110001' => 201807110001
 	);
 
 	/**
@@ -96,7 +95,7 @@ final class Customers extends Base {
 				ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
 				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
 				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
-				ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default '',
+				ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active',
 				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00';
 			" );
 		}
@@ -106,21 +105,20 @@ final class Customers extends Base {
 
 	/**
 	 * Upgrade to version 201806070001
-	 * - Change purchase_value from mediumtext to decimal(18,9)
+	 * - Change `purchase_value` from mediumtext to decimal(18,9).
+	 * - Add the `status` column.
 	 *
 	 * @since 3.0
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	protected function __201806070001() {
+	protected function __201807110001() {
 
 		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
-		" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active'" );
 
 		// Return success/fail
-		return $this->is_success( $result );
+		return $this->is_success( true );
 	}
 }
-endif;

@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_order_adjustmentmeta" database table
  *
@@ -57,4 +56,3 @@ final class Order_Adjustment_Meta extends Base {
 		KEY meta_key (meta_key({$max_index_length}))";
 	}
 }
-endif;

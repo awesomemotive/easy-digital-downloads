@@ -56,10 +56,16 @@ function edd_render_download_columns( $column_name, $post_id ) {
 
 	switch ( $column_name ) {
 		case 'download_category':
-			echo get_the_term_list( $post_id, 'download_category', '', ', ', '');
+			$terms = get_the_term_list( $post_id, 'download_category', '', ', ', '');
+			echo ! empty( $terms )
+				? $terms
+				: '&mdash;';
 			break;
 		case 'download_tag':
-			echo get_the_term_list( $post_id, 'download_tag', '', ', ', '');
+			$terms = get_the_term_list( $post_id, 'download_tag', '', ', ', '');
+			echo ! empty( $terms )
+				? $terms
+				: '&mdash;';
 			break;
 		case 'price':
 			if ( edd_has_variable_prices( $post_id ) ) {

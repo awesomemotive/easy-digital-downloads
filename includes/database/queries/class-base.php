@@ -10,18 +10,39 @@
  */
 namespace EDD\Database\Queries;
 
-use EDD\Database\Schemas\Column;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'EDD\\Database\\Queries\\Base' ) ) :
 /**
  * Base class used for querying custom database tables.
  *
  * @since 3.0
  *
  * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
+ *
+ * @property string $prefix
+ * @property string $table_name
+ * @property string $table_alias
+ * @property string $table_schema
+ * @property string $item_name
+ * @property string $item_name_plural
+ * @property string $item_shape
+ * @property string $cache_group
+ * @property string $columns
+ * @property string $query_clauses
+ * @property string $request_clauses
+ * @property \WP_Meta_Query $meta_query
+ * @property \WP_Date_Query $date_query
+ * @property array $query_vars
+ * @property array $query_var_originals
+ * @property array $query_var_defaults
+ * @property array $items
+ * @property int $found_items
+ * @property int $max_num_pages
+ * @property string $request
+ * @property int $last_changed
+ * @property mixed $last_error
+ * @property string $date_query_sql
  */
 class Base extends \EDD\Database\Base {
 
@@ -370,25 +391,12 @@ class Base extends \EDD\Database\Base {
 		}
 
 		// Invoke a new table schema class
-		$schema  = new $this->table_schema;
-		$columns = ! empty( $schema->columns )
-			? $schema->columns
-			: $this->columns;
+		$schema = new $this->table_schema;
 
-		// Default array
-		$new_columns = array();
-
-		// Loop through columns array
-		foreach ( $columns as $column ) {
-			if ( is_array( $column ) ) {
-				$new_columns[] = new Column( $column );
-			} elseif ( $column instanceof Column ) {
-				$new_columns[] = $column;
-			}
+		// Maybe get the column objects
+		if ( ! empty( $schema->columns ) ) {
+			$this->columns = $schema->columns;
 		}
-
-		// Set columns
-		$this->columns = $new_columns;
 	}
 
 	/**
@@ -422,6 +430,7 @@ class Base extends \EDD\Database\Base {
 			'count'             => false,
 			'meta_query'        => null, // See WP_Meta_Query
 			'date_query'        => null, // See WP_Date_Query
+			'advanced_query'    => null, // See WP_Meta_Query
 			'no_found_rows'     => true,
 
 			// Caching
@@ -591,7 +600,7 @@ class Base extends \EDD\Database\Base {
 			 * @param string $found_items_query SQL query. Default 'SELECT FOUND_ROWS()'.
 			 * @param object $item_query        The object instance.
 			 */
-			$found_items_query = (string) apply_filters( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), 'SELECT FOUND_ROWS()', $this );
+			$found_items_query = (string) apply_filters_ref_array( $this->apply_prefix( "found_{$this->item_name_plural}_query" ), array( 'SELECT FOUND_ROWS()', &$this ) );
 
 			// Maybe query for found items
 			if ( ! empty( $found_items_query ) ) {
@@ -933,7 +942,7 @@ class Base extends \EDD\Database\Base {
 		 * @param array  $pieces A compacted array of item query clauses.
 		 * @param object &$this  Current instance passed by reference.
 		 */
-		$clauses = apply_filters_ref_array( $this->apply_prefix( 'item_clauses' ), array( $query, &$this ) );
+		$clauses = (array) apply_filters_ref_array( $this->apply_prefix( "{$this->item_name_plural}_query_clauses" ), array( $query, &$this ) );
 
 		// Setup request
 		$this->set_request_clauses( $clauses );
@@ -1232,11 +1241,11 @@ class Base extends \EDD\Database\Base {
 			 *
 			 * @since 3.0
 			 *
-			 * @param array        $search_columns Array of column names to be searched.
-			 * @param string       $search         Text being searched.
-			 * @param \EDD\Database\Queries\Base $this           The current \EDD\Database\Queries\Base instance.
+			 * @param array  $search_columns Array of column names to be searched.
+			 * @param string $search         Text being searched.
+			 * @param object $this           The current \EDD\Database\Queries\Base instance.
 			 */
-			$search_columns = (array) apply_filters( $this->apply_prefix( 'item_search_columns' ), $search_columns, $this->query_vars['search'], $this );
+			$search_columns = (array) apply_filters( $this->apply_prefix( "{$this->item_name_plural}_search_columns" ), $search_columns, $this->query_vars['search'], $this );
 
 			// Add search query clause
 			$where['search'] = $this->get_search_sql( $this->query_vars['search'], $search_columns );
@@ -1257,6 +1266,20 @@ class Base extends \EDD\Database\Base {
 
 				// Remove " AND " from meta_query query where clause
 				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+			}
+		}
+
+		// Maybe perform an advanced query
+		$advanced_query = $this->query_vars['advanced_query'];
+		if ( ! empty( $advanced_query ) && is_array( $advanced_query ) ) {
+			$meta_query = new Advanced_Query( $advanced_query );
+			$table      = $this->apply_prefix( $this->item_name );
+			$clauses    = $meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
+
+			if ( false !== $clauses ) {
+
+				// Remove " AND " from query where clause.
+				$where['advanced_query'] = preg_replace( $and, '', $clauses['where'] );
 			}
 		}
 
@@ -1466,10 +1489,10 @@ class Base extends \EDD\Database\Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param array        $retval An array of items.
-		 * @param \EDD\Database\Queries\Base &$this  Current instance of \EDD\Database\Queries\Base, passed by reference.
+		 * @param array  $retval An array of items.
+		 * @param object &$this  Current instance of \EDD\Database\Queries\Base, passed by reference.
 		 */
-		$retval = apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
+		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
 		// Return filtered results
 		return ! empty( $this->query_vars['fields'] )
@@ -1614,6 +1637,9 @@ class Base extends \EDD\Database\Base {
 			$this->update_item_cache( $retval );
 		}
 
+		// Reduce the item
+		$retval = $this->reduce_item( 'select', $retval );
+
 		// Return result
 		return $this->shape_item( $retval );
 	}
@@ -1665,7 +1691,8 @@ class Base extends \EDD\Database\Base {
 
 		// Try to add
 		$table  = $this->get_table_name();
-		$save   = $this->validate_item( $save );
+		$reduce = $this->reduce_item( 'insert', $save );
+		$save   = $this->validate_item( $reduce );
 		$result = ! empty( $save )
 			? $this->get_db()->insert( $table, $save )
 			: false;
@@ -1750,7 +1777,8 @@ class Base extends \EDD\Database\Base {
 		// Try to update
 		$where  = array( $primary => $item_id );
 		$table  = $this->get_table_name();
-		$save   = $this->validate_item( $save );
+		$reduce = $this->reduce_item( 'update', $save );
+		$save   = $this->validate_item( $reduce );
 		$result = ! empty( $save )
 			? $this->get_db()->update( $table, $save, $where )
 			: false;
@@ -1795,9 +1823,17 @@ class Base extends \EDD\Database\Base {
 		$primary = $this->get_primary_column_name();
 
 		// Get item (before it's deleted)
-		$item    = $this->get_item_raw( $primary, $item_id );
+		$item = $this->get_item_raw( $primary, $item_id );
 
 		// Bail if item does not exist to delete
+		if ( empty( $item ) ) {
+			return false;
+		}
+
+		// Attempt to reduce this item
+		$item = $this->reduce_item( 'delete', $item );
+
+		// Bail if item was reduced to nothing
 		if ( empty( $item ) ) {
 			return false;
 		}
@@ -1832,7 +1868,7 @@ class Base extends \EDD\Database\Base {
 	 * @return array
 	 */
 	public function filter_item( $item = array() ) {
-		return (array) apply_filters( $this->apply_prefix( "filter_{$this->item_name}_item" ), $item );
+		return (array) apply_filters_ref_array( $this->apply_prefix( "filter_{$this->item_name}_item" ), array( $item, &$this ) );
 	}
 
 	/**
@@ -1874,6 +1910,13 @@ class Base extends \EDD\Database\Base {
 	 * @return mixed False on error, Array of validated values on success
 	 */
 	private function validate_item( $item = array() ) {
+
+		// Bail if item is empty
+		if ( empty( $item ) ) {
+			return $item;
+		}
+
+		// Loop through item attributes
 		foreach ( $item as $key => $value ) {
 
 			// Always strip slashes from all values
@@ -1902,6 +1945,54 @@ class Base extends \EDD\Database\Base {
 
 		// Return the validated item
 		return $this->filter_item( $item );
+	}
+
+	/**
+	 * Reduce an item down to the keys and values the current user has the
+	 * appropriate capabilities to select|insert|update|delete.
+	 *
+	 * Note that internally, this method works with both arrays and objects of
+	 * any type, and also resets the key values. It looks weird, but is
+	 * currently by design to protect the integrity of the return value.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $method select|insert|update|delete
+	 * @param mixed  $item   Object|Array of keys/values to reduce
+	 *
+	 * @return mixed Object|Array without keys the current user does not have caps for
+	 */
+	private function reduce_item( $method = 'update', $item = array() ) {
+
+		// Bail if item is empty
+		if ( empty( $item ) ) {
+			return $item;
+		}
+
+		// Loop through item attributes
+		foreach ( $item as $key => $value ) {
+
+			// Get callback for column
+			$caps = $this->get_column_field( array( 'name' => $key ), 'caps' );
+
+			// Unset if not explicitly allowed
+			if ( empty( $caps[ $method ] ) || ! current_user_can( $caps[ $method ] ) ) {
+				if ( is_array( $item ) ) {
+					unset( $item[ $key ] );
+				} elseif ( is_object( $item ) ) {
+					$item->{$key} = null;
+				}
+
+			// Set if explicitly allowed
+			} elseif ( is_array( $item ) ) {
+				$item[ $key ] = $value;
+			} elseif ( is_object( $item ) ) {
+				$item->{$key} = $value;
+			}
+		}
+
+		// Return the reduced item
+		return $item;
 	}
 
 	/**
@@ -2674,4 +2765,3 @@ class Base extends \EDD\Database\Base {
 		wp_cache_delete( $key, $group );
 	}
 }
-endif;

@@ -73,16 +73,16 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 */
 	public function __call( $name, $arguments ) {
 
-		$endpoint_id_or_sort = isset( $arguments[0] ) ? $arguments[0] : '';
+		$endpoint_id_or_sort = isset( $arguments[0] )
+			? $arguments[0]
+			: '';
 
 		switch( $name ) {
 			case 'get_endpoint':
 				return parent::get_item( $endpoint_id_or_sort );
-				break;
 
 			case 'endpoint_exists':
 				return parent::offsetExists( $endpoint_id_or_sort );
-				break;
 
 			case 'unregister_endpoint':
 				parent::remove_item( $endpoint_id_or_sort );
@@ -90,8 +90,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 			case 'get_endpoints':
 				return $this->get_items_sorted( $endpoint_id_or_sort );
-				break;
-
 		}
 	}
 
@@ -124,7 +122,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
 	public function register_endpoint( $endpoint_id, $attributes ) {
-		$error = false;
 
 		$defaults = array(
 			'label'    => '',
@@ -145,29 +142,22 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		try {
-
 			$valid = $this->validate_endpoint( $endpoint_id, $attributes );
 
 		} catch ( \EDD_Exception $exception ) {
-
 			throw $exception;
-
 		}
 
 		if ( false === $valid ) {
-
 			return false;
 
 		} else {
-
 			return parent::add_item( $endpoint_id, $attributes );
-
 		}
 	}
 
 	/**
-	 *
-	 * Validates an endpoint's attributes.
+	 * Validates the endpoint attributes.
 	 *
 	 * @since 3.0
 	 *
@@ -186,26 +176,22 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 			$this->validate_attributes( $attributes, $endpoint_id );
 
 			try {
-
 				$this->validate_views( $attributes['views'], $endpoint_id );
 
 			} catch( \EDD_Exception $exception ) {
-
 				edd_debug_log_exception( $exception );
-
-				throw $exception;
 
 				$is_valid = false;
 
+				throw $exception;
 			}
 
 		} catch( \EDD_Exception $exception ) {
-
 			edd_debug_log_exception( $exception );
 
-			throw $exception;
-
 			$is_valid = false;
+
+			throw $exception;
 		}
 
 		return $is_valid;
@@ -229,15 +215,12 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		}
 
 		try {
-
 			$_endpoint = $this->get_endpoint( $endpoint );
 
 		} catch( \EDD_Exception $exception ) {
-
 			edd_debug_log_exception( $exception );
 
 			return new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint );
-
 		}
 
 		if ( ! empty( $_endpoint ) ) {
@@ -248,18 +231,16 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 				$handler = Reports\get_endpoint_handler( $view_type );
 
 				if ( ! empty( $handler ) && class_exists( $handler ) ) {
-
 					$_endpoint = new $handler( $_endpoint );
 
 				} else {
-
 					$_endpoint = new \WP_Error(
 						'invalid_handler',
 						sprintf( 'The handler for the \'%1$s\' view is invalid.', $view_type ),
 						$handler
 					);
-
 				}
+
 			} else {
 				$_endpoint = new \WP_Error(
 					'invalid_view',
@@ -276,10 +257,10 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 *
 	 * @since 3.0
 	 *
-	 * @throws \EDD_Exception if a view's attributes is empty or it's not a valid view.
+	 * @throws \EDD_Exception if the view attributes is empty or it's not a valid view.
 	 *
-	 * @param array  $attributes List of attributes to check.
-	 * @param string $item_id    Endpoint ID.
+	 * @param array  $views       List of attributes to check.
+	 * @param string $endpoint_id Endpoint ID.
 	 * @return void
 	 */
 	public function validate_views( $views, $endpoint_id ) {
@@ -327,8 +308,4 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 			}
 		}
 	}
-
-
-
 }
-

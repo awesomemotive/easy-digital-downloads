@@ -326,6 +326,347 @@ function edd_delete_customer_meta_by_key( $meta_key ) {
 	return delete_metadata( 'edd_customer', null, $meta_key, '', true );
 }
 
+/** Customer Addresses **********************************************************/
+
+/**
+ * Add a customer address.
+ *
+ * @since 3.0
+ *
+ * @param array $data
+ * @return int|false ID of newly created customer address, false on error.
+ */
+function edd_add_customer_address( $data ) {
+
+	// An customer ID must be supplied for every address inserted.
+	if ( empty( $data['customer_id'] ) ) {
+		return false;
+	}
+
+	// Instantiate a query object
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	return $customer_addresses->add_item( $data );
+}
+
+/**
+ * Delete a customer address.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_address_id Order address ID.
+ * @return int
+ */
+function edd_delete_customer_address( $customer_address_id = 0 ) {
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	return $customer_addresses->delete_item( $customer_address_id );
+}
+
+/**
+ * Update a customer address.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_address_id Customer address ID.
+ * @param array $data                Updated customer address data.
+ * @return bool Whether or not the customer address was updated.
+ */
+function edd_update_customer_address( $customer_address_id = 0, $data = array() ) {
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	return $customer_addresses->update_item( $customer_address_id, $data );
+}
+
+///**
+// * Get a customer address by ID.
+// *
+// * @since 3.0
+// *
+// * @param int $customer_address_id Order adjustment ID.
+// * @return object
+// */
+//function edd_get_customer_address( $customer_address_id = 0 ) {
+//	return edd_get_customer_address_by( 'id', $customer_address_id );
+//}
+
+/**
+ * Get a customer address by a specific field value.
+ *
+ * @since 3.0
+ *
+ * @param string $field Database table field.
+ * @param string $value Value of the row.
+ *
+ * @return \EDD\Customers\Customer_Address|false Object if successful, false otherwise.
+ */
+function edd_get_customer_address_by( $field = '', $value = '' ) {
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Return order address
+	return $customer_addresses->get_item_by( $field, $value );
+}
+
+/**
+ * Query for customer addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return \EDD\Customers\Customer_Address[]
+ */
+function edd_get_customer_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Return orders
+	return $customer_addresses->query( $r );
+}
+
+/**
+ * Count customer addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_customer_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$customer_addresses = new EDD\Database\Queries\Customer_Address( $r );
+
+	// Return count(s)
+	return absint( $customer_addresses->found_items );
+}
+
+/**
+ * Maybe add a customer address. Used by `edd_build_order()` to maybe add
+ * order addresses to the customer addresses table.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_id Customer ID.
+ * @param array $args        Customer address to check.
+ *
+ * @return mixed False if address exists. Otherwise ID of newly added EDD\Customers\Customer_Address object.
+ */
+function edd_maybe_add_customer_address( $customer_id = 0, $args = array() ) {
+
+	// Bail if nothing passed.
+	if ( empty( $customer_id ) || empty( $args ) ) {
+		return false;
+	}
+
+	$args['customer_id'] = $customer_id;
+
+	$c = edd_count_customer_addresses( $args );
+
+	// Add to the table if an address does not exist.
+	if ( 0 === $c ) {
+		$args['type'] = 'billing';
+		return edd_add_customer_address( $args );
+	}
+
+	return false;
+}
+
+/**
+ * Maybe update the customer's primary address. If the primary address is set,
+ * update it or add a primary address.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_id Customer ID.
+ * @param array $args        Customer address.
+ *
+ * @return mixed False if address exists. Otherwise ID of EDD\Customers\Customer_Address object.
+ */
+function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = array() ) {
+
+	// Bail if nothing passed.
+	if ( empty( $customer_id ) || empty( $args ) ) {
+		return false;
+	}
+
+	$address_ids = edd_get_customer_addresses( array(
+		'fields'      => 'ids',
+		'customer_id' => $customer_id,
+		'type'        => 'primary',
+		'number'      => 1,
+	) );
+
+	// Primary address exists, so update it.
+	if ( ! empty( $address_ids ) ) {
+		$address_id = $address_ids[0];
+
+		edd_update_customer_address( $address_id, $args );
+
+	// Add primary address.
+	} else {
+		$args['type'] = 'primary';
+
+		$address_id = edd_add_customer_address( $args );
+	}
+
+	return $address_id;
+}
+
+/** Customer Email Addresses *************************************************/
+
+/**
+ * Add a customer email address.
+ *
+ * @since 3.0
+ *
+ * @param array $data
+ * @return int|false ID of newly created customer email address, false on error.
+ */
+function edd_add_customer_email_address( $data ) {
+
+	// An customer ID must be supplied for every address inserted.
+	if ( empty( $data['customer_id'] ) ) {
+		return false;
+	}
+
+	// Instantiate a query object
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
+
+	return $customer_email_addresses->add_item( $data );
+}
+
+/**
+ * Delete a customer email address.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_email_address_id Customer email address ID.
+ * @return int
+ */
+function edd_delete_customer_email_address( $customer_email_address_id = 0 ) {
+
+	// Bail if a customer address ID is not passed.
+	if ( empty( $customer_email_address_id ) ) {
+		return false;
+	}
+
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
+
+	return $customer_email_addresses->delete_item( $customer_email_address_id );
+}
+
+/**
+ * Update a customer email address.
+ *
+ * @since 3.0
+ *
+ * @param int   $customer_email_address_id Customer email address ID.
+ * @param array $data                      Updated customer email address data.
+ *
+ * @return bool Whether or not the customer email address was updated.
+ */
+function edd_update_customer_email_address( $customer_email_address_id = 0, $data = array() ) {
+
+	// Bail if a customer address ID is not passed.
+	if ( empty( $customer_email_address_id ) ) {
+		return false;
+	}
+
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
+
+	return $customer_email_addresses->update_item( $customer_email_address_id, $data );
+}
+
+/**
+ * Get a customer email address by ID.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_email_address_id Customer email address ID.
+ * @return \EDD\Customers\Customer_Email_Address|false Object if successful, false otherwise.
+ */
+function edd_get_customer_email_address( $customer_email_address_id = 0 ) {
+
+	// Bail if a customer address ID is not passed.
+	if ( empty( $customer_email_address_id ) ) {
+		return false;
+	}
+	
+	return edd_get_customer_email_address_by( 'id', $customer_email_address_id );
+}
+
+/**
+ * Get a customer email address by a specific field value.
+ *
+ * @since 3.0
+ *
+ * @param string $field Database table field.
+ * @param string $value Value of the row.
+ *
+ * @return \EDD\Customers\Customer_Email_Address|false Object if successful, false otherwise.
+ */
+function edd_get_customer_email_address_by( $field = '', $value = '' ) {
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
+
+	// Return customer email address
+	return $customer_email_addresses->get_item_by( $field, $value );
+}
+
+/**
+ * Query for customer email addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return \EDD\Customers\Customer_Email_Address[]
+ */
+function edd_get_customer_email_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number' => 30
+	) );
+
+	// Instantiate a query object
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
+
+	// Return orders
+	return $customer_email_addresses->query( $r );
+}
+
+/**
+ * Count customer addresses.
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return int
+ */
+function edd_count_customer_email_addresses( $args = array() ) {
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'count' => true
+	) );
+
+	// Query for count(s)
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address( $r );
+
+	// Return count(s)
+	return absint( $customer_email_addresses->found_items );
+}
+
 /** Back Compat ***************************************************************/
 
 /**
