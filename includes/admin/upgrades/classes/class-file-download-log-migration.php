@@ -62,8 +62,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 		}
 
 		foreach ( $step_items as $log_id ) {
-
-			$log_id           = (int) $log_id->object_id;
+			$log_id           = (int) $log_id;
 			$sanitized_log_id = absint( $log_id );
 
 			if ( $sanitized_log_id !== $log_id ) {
@@ -71,12 +70,12 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 				continue;
 			}
 
-			$has_customer_id = get_post_meta( $log_id, '_edd_log_customer_id', true );
+			$has_customer_id = (int) get_post_meta( $log_id, '_edd_log_customer_id', true );
 			if ( ! empty( $has_customer_id ) ) {
 				continue;
 			}
 
-			$payment_id = get_post_meta( $log_id, '_edd_log_payment_id', true );
+			$payment_id = (int) get_post_meta( $log_id, '_edd_log_payment_id', true );
 			if ( ! empty( $payment_id ) ) {
 				$customer_id = edd_get_payment_customer_id( $payment_id );
 
@@ -208,7 +207,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 		$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download' LIMIT 1" );
 		$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type' LIMIT 1" );
-		$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id} LIMIT {$offset}, {$this->per_step}" );
+		$log_ids     = $wpdb->get_col( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id} LIMIT {$offset}, {$this->per_step}" );
 
 		return ! is_wp_error( $log_ids )
 			? (array) $log_ids
