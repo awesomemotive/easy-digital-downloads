@@ -35,12 +35,11 @@ a.edd-delete:hover {
 }
 
 .edd-from-to-wrapper {
-	vertical-align: middle;
 	margin-right: 4px;
 }
 
 .edd-from-to-wrapper input {
-	width: 120px;
+	width: 100px;
 	margin: 0;
 	position: relative;
 	z-index: 1;
@@ -1496,6 +1495,13 @@ td.edd_order_price {
 	box-shadow: none;
 }
 
+.edd-reports-wrapper form .edd-from-to-wrapper,
+.edd-reports-wrapper form .edd-select,
+.edd-reports-wrapper form input.button {
+	vertical-align: middle;
+	float: left;
+}
+
 .edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
 	vertical-align: baseline;
@@ -1504,6 +1510,9 @@ td.edd_order_price {
 
 .download_page_edd-reports #edd-filters {
 	margin-bottom: -5px;
+}
+.download_page_edd-reports #edd-filters .filter-items {
+	float: none;
 }
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
@@ -1515,8 +1524,9 @@ td.edd_order_price {
 	max-width: 130px !important; /* Chosen Override */
 }
 #edd-filters .filter-items .edd-date-range-options {
+	display: inline-block;
 	margin: 10px 4px 10px 0;
-	max-width: 205px;
+	width: 200px;
 }
 
 .edd-date-range-options .edd_datepicker {
@@ -2068,10 +2078,11 @@ body.js select.edd-select-chosen {
 	height: 17px;
 	position: absolute;
 	right: 6px;
-	top: 6px;
+	top: 8px;
 	color: #aaa;
 	font-family: dashicons;
 	font-size: 17px;
+	line-height: 17px;
 	content: '\f179';
 }
 
