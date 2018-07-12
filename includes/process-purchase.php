@@ -106,14 +106,24 @@ function edd_process_purchase_form() {
 	}
 
 	// Update the customer's address if different to what's in the database
-	$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
-	if ( ! is_array( $address ) ) {
-		$address = array();
-	}
+	$address = wp_parse_args( $user_info['address'], array(
+		'line1'   => '',
+		'line2'   => '',
+		'country' => '',
+		'state'   => '',
+		'zip'     => '',
+	) );
 
-	if ( 0 == strlen( implode( $address ) ) || count( array_diff( $address, $user_info['address'] ) ) > 0 ) {
-		update_user_meta( $user['user_id'], '_edd_user_address', $user_info['address'] );
-	}
+	$address = array(
+		'address'     => $address['line1'],
+		'address2'    => $address['line2'],
+		'city'        => $address['city'],
+		'region'      => $address['state'],
+		'country'     => $address['country'],
+		'postal_code' => $address['zip'],
+	);
+
+	edd_maybe_update_customer_primary_address( $customer->id, $address );
 
 	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 
@@ -127,7 +137,7 @@ function edd_process_purchase_form() {
 
 	if ( ! empty( $existing_payment ) ) {
 		$payment = new EDD_Payment( $existing_payment );
-		if( $payment->is_recoverable() && ! empty( $payment->key ) ) {
+		if ( $payment->is_recoverable() && ! empty( $payment->key ) ) {
 			$purchase_key = $payment->key;
 		}
 	}
@@ -158,7 +168,7 @@ function edd_process_purchase_form() {
 	do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
 
 	// If the total amount in the cart is 0, send to the manual gateway. This emulates a free download purchase
-	if ( !$purchase_data['price'] ) {
+	if ( ! $purchase_data['price'] ) {
 		// Revert to manual
 		$purchase_data['gateway'] = 'manual';
 		$_POST['edd-gateway'] = 'manual';
