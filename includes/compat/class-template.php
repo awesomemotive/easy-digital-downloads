@@ -44,7 +44,7 @@ class Template extends Base {
 
 		/* Actions ***********************************************************/
 
-		add_action( 'edd_loaded', array( $this, 'update_receipt_template' ) );
+		add_action( 'admin_init', array( $this, 'update_receipt_template' ) );
 	}
 
 	/**
@@ -53,17 +53,48 @@ class Template extends Base {
 	 * @since 3.0
 	 */
 	public function update_receipt_template() {
+		$access_type = get_filesystem_method();
+
 		$template = edd_locate_template( 'shortcode-receipt.php' );
 
-		// Bail if the template being used is in EDD.
 		if ( false === strpos( $template, 'edd_templates' ) ) {
 			return;
 		}
 
-		$contents = file_get_contents( $template );
+		if ( 'direct' === $access_type ) {
+			$creds = request_filesystem_credentials( admin_url(), '', false, false, array() );
 
-		$contents = str_replace( 'get_post( $edd_receipt_args[\'id\'] )', 'edd_get_payment( $edd_receipt_args[\'id\'] )', $contents );
+			if ( ! WP_Filesystem( $creds ) ) {
+				request_filesystem_credentials( admin_url(), '', true, false, array() );
 
-		file_put_contents( $template, $contents );
+				return false;
+			}
+
+			global $wp_filesystem;
+
+			/** @var \WP_Filesystem_Base $wp_filesystem */
+
+			if ( $wp_filesystem->exists( $template ) && $wp_filesystem->is_writable( $template ) ) {
+				$contents = $wp_filesystem->get_contents( $template );
+
+				$get_post_call_exists = strstr( $contents, 'get_post( $edd_receipt_args[\'id\'] )' );
+
+				$contents = str_replace( 'get_post( $edd_receipt_args[\'id\'] )', 'edd_get_payment( $edd_receipt_args[\'id\'] )', $contents );
+				$updated  = $wp_filesystem->put_contents( $template, $contents );
+
+				// Only display a notice if a `get_post()` call exists.
+				if ( ! $updated && $get_post_call_exists ) {
+					add_action( 'admin_notices', function() use ( $template ) {
+						?>
+						<div class="notice notice-error">
+							<p><?php esc_html_e( 'Easy Digital Downloads failed to automatically update your purchase receipt template. This update is necessary for the purchase receipt to display correctly.', 'easy-digital-downloads' ); ?></p>
+							<p><?php esc_html_e( 'This update must be completed manually. Please click here for more information.', 'easy-digital-downloads' ); ?></p>
+							<p><?php esc_html_e( 'The file that needs to be updated is located at:', 'easy-digital-downloads' ); ?> <code><?php echo esc_html( $template ); ?></code></p>
+						</div>
+						<?php
+					} );
+				}
+			}
+		}
 	}
 }
