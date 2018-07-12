@@ -1823,10 +1823,17 @@ class Base extends \EDD\Database\Base {
 		$primary = $this->get_primary_column_name();
 
 		// Get item (before it's deleted)
-		$item    = $this->get_item_raw( $primary, $item_id );
-		$item    = $this->reduce_item( 'delete', $item );
+		$item = $this->get_item_raw( $primary, $item_id );
 
 		// Bail if item does not exist to delete
+		if ( empty( $item ) ) {
+			return false;
+		}
+
+		// Attempt to reduce this item
+		$item = $this->reduce_item( 'delete', $item );
+
+		// Bail if item was reduced to nothing
 		if ( empty( $item ) ) {
 			return false;
 		}
@@ -1903,6 +1910,13 @@ class Base extends \EDD\Database\Base {
 	 * @return mixed False on error, Array of validated values on success
 	 */
 	private function validate_item( $item = array() ) {
+
+		// Bail if item is empty
+		if ( empty( $item ) ) {
+			return $item;
+		}
+
+		// Loop through item attributes
 		foreach ( $item as $key => $value ) {
 
 			// Always strip slashes from all values
@@ -1949,6 +1963,13 @@ class Base extends \EDD\Database\Base {
 	 * @return mixed Object|Array without keys the current user does not have caps for
 	 */
 	private function reduce_item( $method = 'update', $item = array() ) {
+
+		// Bail if item is empty
+		if ( empty( $item ) ) {
+			return $item;
+		}
+
+		// Loop through item attributes
 		foreach ( $item as $key => $value ) {
 
 			// Get callback for column

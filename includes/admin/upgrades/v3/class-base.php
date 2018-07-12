@@ -83,10 +83,6 @@ class Base extends \EDD_Batch_Export {
 	 * @return bool True if data was migrated, false otherwise.
 	 */
 	public function get_data() {
-		global $wpdb;
-
-
-
 		return false;
 	}
 

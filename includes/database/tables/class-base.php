@@ -288,19 +288,19 @@ abstract class Base extends \EDD\Database\Base {
 	public function upgrade() {
 		$result = false;
 
+		// Remove all upgrades that have already been completed
+		$upgrades = array_filter( (array) $this->upgrades, function( $value ) {
+			return version_compare( $value, $this->db_version, '>' );
+		} );
+
 		// Bail if no upgrades
-		if ( empty( $this->upgrades ) ) {
+		if ( empty( $upgrades ) ) {
 			$this->set_db_version();
 			return true;
 		}
 
-		// Remove all upgrades that have already been completed
-		$this->upgrades = array_filter( $this->upgrades, function( $value ) {
-			return $value >= (int) $this->version;
-		} );
-
 		// Try to do all known upgrades
-		foreach ( $this->upgrades as $version => $method ) {
+		foreach ( $upgrades as $version => $method ) {
 			$result = $this->upgrade_to( $version, $method );
 
 			// Bail if an error occurs, to avoid skipping ahead
