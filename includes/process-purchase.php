@@ -841,10 +841,12 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 /**
  * Get Purchase Form User
  *
- * @param array   $valid_data
+ * @since 1.0.8.1
+ * @since 3.0 Remove `update_user_meta()` call to update the user's address
+ *            as it is done later on in the order flow where a customer ID
+ *            is available.
  *
- * @access  private
- * @since  1.0.8.1
+ * @param array $valid_data
  * @return  array
  */
 function edd_get_purchase_form_user( $valid_data = array() ) {
