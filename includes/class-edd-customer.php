@@ -1046,7 +1046,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 	 *
 	 * @param string $type Address type. Default primary.
 	 *
-	 * @return array|\EDD\Customers\Customer_Address Object if primary address request, array otherwise.
+	 * @return array|\EDD\Customers\Customer_Address Object if primary address requested, array otherwise.
 	 */
 	public function get_address( $type = 'primary' ) {
 		if ( 'primary' === $type ) {
@@ -1058,10 +1058,13 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 
 			if ( is_array( $address ) && ! empty( $address ) ) {
 				return $address[0];
+			} else {
+				return null;
 			}
 		} else {
 			return edd_get_customer_addresses( array(
 				'customer_id' => $this->id,
+				'type'        => $type,
 			) );
 		}
 	}
