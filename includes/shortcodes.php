@@ -766,25 +766,16 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 
 /**
- * Profile Editor Shortcode
- *
- * Outputs the EDD Profile Editor to allow users to amend their details from the
- * front-end. This function uses the EDD templating system allowing users to
- * override the default profile editor template. The profile editor template is located
- * under templates/profile-editor.php, however, it can be altered by creating a
- * file called profile-editor.php in the edd_template directory in your active theme's
- * folder. Please visit the EDD Documentation for more information on how the
- * templating system is used.
+ * Render the profile editor shortcode.
  *
  * @since 1.4
  *
- * @author Sunny Ratilal
+ * @param null $atts    Unused parameter.
+ * @param null $content Unused parameter.
  *
- * @param      $atts Shortcode attributes
- * @param null $content
- * @return string Output generated from the profile editor
+ * @return string Shortcode template.
  */
-function edd_profile_editor_shortcode( $atts, $content = null ) {
+function edd_profile_editor_shortcode( $atts = null, $content = null ) {
 	ob_start();
 
 	if ( ! edd_user_pending_verification() ) {
@@ -800,34 +791,36 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
 
 /**
- * Process Profile Updater Form
- *
- * Processes the profile updater form by updating the necessary fields
+ * Process profile updates.
  *
  * @since 1.4
- * @author Sunny Ratilal
- * @param array $data Data sent from the profile editor
- * @return void
+ * @since 3.0 Updated to use new custom tables.
+ *
+ * @param array $data Data sent from the profile editor.
+ * @return bool False on error.
  */
 function edd_process_profile_editor_updates( $data ) {
 
-	// Profile field change request
-	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() ) {
+	// Profile field change request.
+	if ( empty( $_POST['edd_profile_editor_submit'] ) && ! is_user_logged_in() ) {
 		return false;
 	}
 
-	// Pending users can't edit their profile
+	// Pending users can't edit their profile.
 	if ( edd_user_pending_verification() ) {
 		return false;
 	}
 
-	// Nonce security
+	// Verify nonce.
 	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
 		return false;
 	}
 
 	$user_id       = get_current_user_id();
 	$old_user_data = get_userdata( $user_id );
+
+	// Fetch customer record.
+	$customer = edd_get_customer_by( 'user_id', $user_id );
 
 	$display_name = isset( $data['edd_display_name'] )    ? sanitize_text_field( $data['edd_display_name'] )    : $old_user_data->display_name;
 	$first_name   = isset( $data['edd_first_name'] )      ? sanitize_text_field( $data['edd_first_name'] )      : $old_user_data->first_name;
@@ -847,7 +840,6 @@ function edd_process_profile_editor_updates( $data ) {
 		'display_name' => $display_name,
 		'user_email'   => $email
 	);
-
 
 	$address = array(
 		'line1'    => $line1,
@@ -869,41 +861,72 @@ function edd_process_profile_editor_updates( $data ) {
 		}
 	}
 
-	// Make sure the new email doesn't belong to another user
-	if( $email != $old_user_data->user_email ) {
-		// Make sure the new email is valid
-		if( ! is_email( $email ) ) {
+	// Make sure the new email doesn't belong to another user.
+	if ( $email !== $old_user_data->user_email ) {
+
+		// Make sure the new email is valid.
+		if ( ! is_email( $email ) ) {
 			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'easy-digital-downloads' ) );
 		}
 
-		// Make sure the new email doesn't belong to another user
-		if( email_exists( $email ) ) {
+		// Make sure the new email doesn't belong to another user.
+		if ( email_exists( $email ) ) {
 			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'easy-digital-downloads' ) );
 		}
 	}
 
-	// Check for errors
+	// Check for errors.
 	$errors = edd_get_errors();
 
-	// Send back to the profile editor if there are errors
+	// Send back to the profile editor if there are errors.
 	if ( ! empty( $errors ) ) {
 		edd_redirect( $data['edd_redirect'] );
 	}
 
-	// Update the user
-	update_user_meta( $user_id, '_edd_user_address', $address );
-
+	// Update user.
 	$updated = wp_update_user( $userdata );
 
-	// Possibly update the customer
-	$customer    = new EDD_Customer( $user_id, true );
-	if ( $customer->email === $email || ( is_array( $customer->emails ) && in_array( $email, $customer->emails ) ) ) {
-		$customer->set_primary_email( $email );
-	}
+	// Possibly update the customer.
+	if ( $customer ) {
 
-	if ( $customer->id > 0 ) {
+		// Update the primary address.
+		$customer_address_id = edd_get_customer_addresses( array(
+			'customer_id' => $customer->id,
+			'type'        => 'primary',
+			'number'      => 1,
+			'fields'      => 'ids'
+		) );
+
+		// Try updating the address if it exists.
+		if ( ! empty( $customer_address_id ) ) {
+			$customer_address_id = $customer_address_id[0];
+
+			edd_update_customer_address( $customer_address_id, array(
+				'address'     => $address['line1'],
+				'address2'    => $address['line2'],
+				'city'        => $address['city'],
+				'region'      => $address['state'],
+				'postal_code' => $address['zip'],
+			) );
+
+		// Add a customer address.
+		} else {
+			edd_add_customer_address( array(
+				'type'        => 'primary',
+				'address'     => $address['line1'],
+				'address2'    => $address['line2'],
+				'city'        => $address['city'],
+				'region'      => $address['state'],
+				'postal_code' => $address['zip'],
+			) );
+		}
+
+		if ( $customer->email === $email || ( is_array( $customer->emails ) && in_array( $email, $customer->emails ) ) ) {
+			$customer->set_primary_email( $email );
+		}
+
 		$update_args = array(
-			'name'  => $first_name . ' ' . $last_name,
+			'name' => $first_name . ' ' . $last_name,
 		);
 
 		$customer->update( $update_args );

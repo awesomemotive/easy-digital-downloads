@@ -628,7 +628,7 @@ function edd_is_payment_complete( $order_id = 0 ) {
 	$ret = false;
 
 	if ( $order ) {
-		if ( (int) $order_id === $order->id && $order->is_complete() ) {
+		if ( (int) $order_id === (int) $order->id && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
@@ -1570,6 +1570,8 @@ function edd_get_purchase_id_by_transaction_id( $transaction_id ) {
  * @return array|bool $notes Order notes, false otherwise.
  */
 function edd_get_payment_notes( $order_id = 0, $search = '' ) {
+
+	// Bail if nothing passed.
 	if ( empty( $order_id ) && empty( $search ) ) {
 		return false;
 	}
@@ -1580,7 +1582,7 @@ function edd_get_payment_notes( $order_id = 0, $search = '' ) {
 	);
 
 	if ( ! empty( $order_id ) ) {
-		$args['order_id'] = $order_id;
+		$args['object_id'] = $order_id;
 	}
 
 	if ( ! empty( $search ) ) {

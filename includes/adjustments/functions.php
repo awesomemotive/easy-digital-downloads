@@ -1,19 +1,19 @@
 <?php
 /**
- * Adjustment Functions
+ * Adjustment Functions.
  *
  * @package     EDD
  * @subpackage  Adjustments
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Add a adjustment.
+ * Add an adjustment.
  *
  * @since 3.0
  *
@@ -27,7 +27,7 @@ function edd_add_adjustment( $data = array() ) {
 }
 
 /**
- * Delete a adjustment.
+ * Delete an adjustment.
  *
  * @since 3.0
  *
@@ -41,7 +41,7 @@ function edd_delete_adjustment( $adjustment_id = 0 ) {
 }
 
 /**
- * Update a adjustment.
+ * Update an adjustment.
  *
  * @since 3.0
  *
@@ -56,7 +56,7 @@ function edd_update_adjustment( $adjustment_id = 0, $data = array() ) {
 }
 
 /**
- * Get a adjustment by ID.
+ * Get an adjustment by ID.
  *
  * @since 3.0
  *
@@ -68,7 +68,7 @@ function edd_get_adjustment( $adjustment_id = 0 ) {
 }
 
 /**
- * Get a adjustment by a specific field value.
+ * Get an adjustment by a specific field value.
  *
  * @since 3.0
  *
@@ -89,7 +89,7 @@ function edd_get_adjustment_by( $field = '', $value = '' ) {
  * @since 3.0
  *
  * @param array $args
- * @return array
+ * @return \EDD\Adjustments\Adjustment[]
  */
 function edd_get_adjustments( $args = array() ) {
 

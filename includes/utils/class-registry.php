@@ -132,28 +132,20 @@ abstract class Registry extends \ArrayObject {
 	 * @throws \EDD_Exception if the item does not exist.
 	 * @throws \EDD_Exception if the attribute and/or item does not exist.
 	 *
-	 * @param string $key           Key of the attribute to retrieve.
-	 * @param string $collection_id Collection to retrieve the attribute from.
+	 * @param string $key     Key of the attribute to retrieve.
+	 * @param string $item_id Collection to retrieve the attribute from.
 	 * @return mixed|null The attribute value if set, otherwise null.
 	 */
 	public function get_attribute( $key, $item_id ) {
-
-		$attribute = $item = null;
-
-		$item = $this->get_item( $item_id );
+		$attribute = null;
+		$item      = $this->get_item( $item_id );
 
 		if ( ! empty( $item[ $key ] ) ) {
-
 			$attribute = $item[ $key ];
-
 		} else {
-
 			throw Exceptions\Attribute_Not_Found::from_attr( $key, $item_id );
-
 		}
 
 		return $attribute;
-
 	}
-
 }

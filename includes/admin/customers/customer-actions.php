@@ -1,27 +1,38 @@
 <?php
+/**
+ * Customers - Admin Actions.
+ *
+ * @package     EDD
+ * @subpackage  Admin/Customers
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.3
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Processes a custom edit
+ * Update customer.
  *
- * @since  2.3
- * @param  array $args The $_POST array being passed
- * @return array $output Response messages
+ * @since 2.3
+ * @since 3.0 Updated to use new query methods and custom tables.
+ *
+ * @param array $args Form data being passed.
+ * @return false|array $output Response message.
  */
 function edd_edit_customer( $args = array() ) {
 
-	// Bail if nothing new to edit
+	// Bail if nothing new to edit.
 	if ( empty( $args ) || empty( $args['customerinfo'] ) || empty( $args['_wpnonce'] ) ) {
-		return;
+		return false;
 	}
 
 	$customer_edit_role = edd_get_edit_customers_role();
 
-	// Bail if user cannot edit customers
+	// Bail if user cannot edit customers.
 	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
-		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
+		wp_die( esc_html__( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	$customer_info = $args['customerinfo'];
@@ -30,16 +41,16 @@ function edd_edit_customer( $args = array() ) {
 
 	// Bail if nonce check fails
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
+		wp_die( esc_html__( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
 	}
 
-	// Bail if customer does not exist
-	$customer = new EDD_Customer( $customer_id );
-	if ( empty( $customer->id ) ) {
+	// Bail if customer does not exist.
+	$customer = edd_get_customer( $customer_id );
+	if ( ! $customer ) {
 		return false;
 	}
 
-	// Parse customer info with defaults
+	// Parse customer info with defaults.
 	$customer_info = wp_parse_args( $customer_info, array(
 		'name'         => '',
 		'email'        => '',
@@ -66,14 +77,15 @@ function edd_edit_customer( $args = array() ) {
 	}
 
 	// Record this for later
-	$previous_user_id  = $customer->user_id;
+	$previous_user_id = $customer->user_id;
 
-	// Bail if errored
+	// Bail if errors exist.
 	if ( edd_get_errors() ) {
-		return;
+		return false;
 	}
 
-	$user_id = intval( $customer_info['user_id'] );
+	$user_id = absint( $customer_info['user_id'] );
+
 	if ( empty( $user_id ) && ! empty( $customer_info['user_login'] ) ) {
 
 		// See if they gave an email, otherwise we'll assume login
@@ -82,6 +94,7 @@ function edd_edit_customer( $args = array() ) {
 			: 'login';
 
 		$user = get_user_by( $user_by_field, $customer_info['user_login'] );
+
 		if ( $user ) {
 			$user_id = $user->ID;
 		} else {
@@ -89,29 +102,32 @@ function edd_edit_customer( $args = array() ) {
 		}
 	}
 
-	// Setup the customer address, if present
+	// Setup the customer address, if present.
 	$address = array();
-	if ( ! empty( $user_id ) ) {
 
-		$current_address = get_user_meta( $customer_info['user_id'], '_edd_user_address', true );
+	$address['address'] = isset( $customer_info['address'] )
+		? $customer_info['address']
+		: '';
 
-		if ( empty( $current_address ) ) {
-			$address['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : '';
-			$address['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : '';
-			$address['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : '';
-			$address['country'] = isset( $customer_info['country'] ) ? $customer_info['country'] : '';
-			$address['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : '';
-			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : '';
-		} else {
-			$current_address    = wp_parse_args( $current_address, array( 'line1', 'line2', 'city', 'zip', 'state', 'country' ) );
-			$address['line1']   = isset( $customer_info['line1'] )   ? $customer_info['line1']   : $current_address['line1']  ;
-			$address['line2']   = isset( $customer_info['line2'] )   ? $customer_info['line2']   : $current_address['line2']  ;
-			$address['city']    = isset( $customer_info['city'] )    ? $customer_info['city']    : $current_address['city']   ;
-			$address['country'] = isset( $customer_info['country'] ) ? $customer_info['country'] : $current_address['country'];
-			$address['zip']     = isset( $customer_info['zip'] )     ? $customer_info['zip']     : $current_address['zip']    ;
-			$address['state']   = isset( $customer_info['state'] )   ? $customer_info['state']   : $current_address['state']  ;
-		}
-	}
+	$address['address2'] = isset( $customer_info['address2'] )
+		? $customer_info['address2']
+		: '';
+
+	$address['city'] = isset( $customer_info['city'] )
+		? $customer_info['city']
+		: '';
+
+	$address['country'] = isset( $customer_info['country'] )
+		? $customer_info['country']
+		: '';
+
+	$address['postal_code'] = isset( $customer_info['postal_code'] )
+		? $customer_info['postal_code']
+		: '';
+
+	$address['region'] = isset( $customer_info['region'] )
+		? $customer_info['region']
+		: '';
 
 	// Sanitize the inputs
 	$customer_data                 = array();
@@ -132,21 +148,26 @@ function edd_edit_customer( $args = array() ) {
 	$previous_email = $customer->email;
 
 	if ( $customer->update( $customer_data ) ) {
+		$current_address        = $customer->get_address( 'primary' );
+		$address['customer_id'] = $customer->id;
 
-		if ( ! empty( $customer->user_id ) && $customer->user_id > 0 ) {
-			update_user_meta( $customer->user_id, '_edd_user_address', $address );
+		if ( $current_address ) {
+			edd_update_customer_address( $current_address->id, $address );
+		} else {
+			$address['type'] = 'primary';
+			edd_add_customer_address( $address );
 		}
 
 		// Update some payment meta if we need to
 		$payments_array = explode( ',', $customer->payment_ids );
 
-		if ( $customer->email != $previous_email ) {
+		if ( $customer->email !== $previous_email ) {
 			foreach ( $payments_array as $payment_id ) {
 				edd_update_payment_meta( $payment_id, 'email', $customer->email );
 			}
 		}
 
-		if ( $customer->user_id != $previous_user_id ) {
+		if ( (int) $customer->user_id !== (int) $previous_user_id ) {
 			foreach ( $payments_array as $payment_id ) {
 				edd_update_payment_meta( $payment_id, '_edd_payment_user_id', $customer->user_id );
 			}
@@ -155,7 +176,6 @@ function edd_edit_customer( $args = array() ) {
 		$output['success']       = true;
 		$customer_data           = array_merge( $customer_data, $address );
 		$output['customer_info'] = $customer_data;
-
 	} else {
 		$output['success'] = false;
 	}
@@ -191,7 +211,7 @@ function edd_add_customer_email( $args = array() ) {
 		$output['success'] = false;
 
 		if ( empty( $args['email'] ) ) {
-			$output['message'] = __( 'Email address is required.', 'easy-digital-downloads' );
+			$output['message'] = __( 'Email address is missing.', 'easy-digital-downloads' );
 		} else if ( empty( $args['customer_id'] ) ) {
 			$output['message'] = __( 'Customer ID is required.', 'easy-digital-downloads' );
 		} else {

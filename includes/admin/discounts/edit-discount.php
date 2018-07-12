@@ -300,8 +300,10 @@ $minutes              = edd_get_minute_values();
                         <label for="notes"><?php _e( 'Discount Notes', 'easy-digital-downloads' ); ?></label>
                     </th>
                     <td>
-						<?php echo edd_admin_get_notes_html( $notes ); ?>
-						<?php echo edd_admin_get_new_note_form( $discount->id, 'discount' ); ?>
+						<div class="edd-notes-wrapper">
+							<?php echo edd_admin_get_notes_html( $notes ); ?>
+							<?php echo edd_admin_get_new_note_form( $discount->id, 'discount' ); ?>
+						</div>
                     </td>
                 </tr>
 			</tbody>

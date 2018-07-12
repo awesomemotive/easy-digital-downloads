@@ -351,7 +351,7 @@ function recalculate_taxes(state) {
 		card_state = $edd_cc_address.find('#card_state').val(),
 		card_zip = $edd_cc_address.find('#card_zip').val();
 
-	if( ! state ) {
+	if ( ! state ) {
 		state = card_state;
 	}
 
@@ -362,8 +362,11 @@ function recalculate_taxes(state) {
 		card_city: card_city,
 		card_zip: card_zip,
 		state: state,
-		billing_country: billing_country
+		billing_country: billing_country,
+		nonce: jQuery('#edd-checkout-address-fields-nonce').val()
 	};
+
+	jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');
 
 	var current_ajax_count = ++ajax_tax_count;
 	jQuery.ajax({
@@ -386,6 +389,7 @@ function recalculate_taxes(state) {
 				tax_data.response = tax_response;
 				jQuery('body').trigger('edd_taxes_recalculated', [ tax_data ]);
 			}
+			jQuery('.edd-recalculate-taxes-loading').remove();
 		}
 	}).fail(function (data) {
 		if ( window.console && window.console.log ) {

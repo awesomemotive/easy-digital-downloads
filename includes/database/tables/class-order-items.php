@@ -13,7 +13,6 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * Setup the global "edd_order_items" database table
  *
@@ -68,4 +67,3 @@ final class Order_Items extends Base {
 			KEY type_status (type(20),status(20))";
 	}
 }
-endif;

@@ -22,5 +22,32 @@ class Base extends \EDD\Database\Base {
 	 * @access public
 	 * @var array
 	 */
-	public $columns = array();
+	protected $columns = array();
+
+	/**
+	 * Invoke new column objects based on array of column data
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function __construct() {
+
+		// Bail if no columns
+		if ( empty( $this->columns ) || ! is_array( $this->columns ) ) {
+			return;
+		}
+
+		// Juggle original columns array
+		$columns = $this->columns;
+		$this->columns = array();
+
+		// Loop through columns and create objects from them
+		foreach ( $columns as $column ) {
+			if ( is_array( $column ) ) {
+				$this->columns[] = new Column( $column );
+			} elseif ( $column instanceof Column ) {
+				$this->columns[] = $column;
+			}
+		}
+	}
 }

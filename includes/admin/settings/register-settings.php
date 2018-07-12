@@ -445,6 +445,9 @@ function edd_get_registered_settings() {
 						'options'     => edd_get_country_list(),
 						'chosen'      => true,
 						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
+						'data'        => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					),
 					'base_state' => array(
 						'id'          => 'base_state',
@@ -584,7 +587,7 @@ function edd_get_registered_settings() {
 						'desc'  => sprintf(
 							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%s">our newsletter</a>, we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/tracking/',
-							'https://easydigitaldownloads.com/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking#footer-newsletter',
+							'https://easydigitaldownloads.com/subscribe/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking',
 							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox_description',
@@ -599,7 +602,7 @@ function edd_get_registered_settings() {
 						'id'    => 'test_mode',
 						'name'  => __( 'Test Mode', 'easy-digital-downloads' ),
 						'check' => __( 'Enabled',   'easy-digital-downloads' ),
-						'desc'  => __( 'While test mode is enabled, no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'easy-digital-downloads' ),
+						'desc'  => __( 'While test mode is enabled, no live transactions are processed.<br>Use test mode in conjunction with the sandbox/test account for the payment gateways to test.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description'
 					),
 					'gateways' => array(
@@ -612,7 +615,7 @@ function edd_get_registered_settings() {
 					'default_gateway' => array(
 						'id'      => 'default_gateway',
 						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
-						'desc'    => __( 'Select this gateway automatically on the checkout page. (If not set, the first active gateway is used.)', 'easy-digital-downloads' ),
+						'desc'    => __( 'Automatically select this gateway on checkout pages.<br>If empty, the first active gateway is selected instead.', 'easy-digital-downloads' ),
 						'type'    => 'gateway_select',
 						'chosen'  => true,
 						'options' => $gateways,
@@ -828,7 +831,7 @@ function edd_get_registered_settings() {
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+						'desc' => __( 'Add tax rates for specific regions. Enter <code>6.5</code> for 6.5%.', 'easy-digital-downloads' ),
 						'type' => 'tax_rates',
 					),
 					'tax_rate' => array(
@@ -876,7 +879,7 @@ function edd_get_registered_settings() {
 					),
 					'uninstall_on_delete' => array(
 						'id'   => 'uninstall_on_delete',
-						'name' => __( 'Remove Data on Uninstall?', 'easy-digital-downloads' ),
+						'name' => __( 'Remove Data on Uninstall', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
@@ -899,7 +902,7 @@ function edd_get_registered_settings() {
 					),
 					'show_register_form' => array(
 						'id'      => 'show_register_form',
-						'name'    => __( 'Show Register / Login Form?', 'easy-digital-downloads' ),
+						'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
 						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'chosen'  => true,
@@ -979,7 +982,7 @@ function edd_get_registered_settings() {
 					),
 					'symlink_file_downloads' => array(
 						'id'   => 'symlink_file_downloads',
-						'name' => __( 'Symlink File Downloads?', 'easy-digital-downloads' ),
+						'name' => __( 'Symbolically Link Files', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
@@ -1005,7 +1008,7 @@ function edd_get_registered_settings() {
 					),
 					'disable_redownload' => array(
 						'id'   => 'disable_redownload',
-						'name' => __( 'Disable Redownload?', 'easy-digital-downloads' ),
+						'name' => __( 'Disable Redownload', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
@@ -1075,7 +1078,7 @@ function edd_get_registered_settings() {
 						'size'        => 'regular',
 					),
 					'show_privacy_policy_on_checkout' => array(
-						'id'    => 'show_to_privacy_policy_on_checkout',
+						'id'    => 'show_privacy_policy_on_checkout',
 						'name'  => __( 'Privacy Policy on Checkout',                     'easy-digital-downloads' ),
 						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
 						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
@@ -1391,7 +1394,7 @@ add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc
  *
  * @param array $input The value inputted in the field
  *
- * @return string $input Sanitized value
+ * @return array $input Sanitized value.
  */
 function edd_settings_sanitize_taxes( $input ) {
 
@@ -1403,9 +1406,67 @@ function edd_settings_sanitize_taxes( $input ) {
 		return $input;
 	}
 
-	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
+	$new_rates = ! empty( $_POST['tax_rates'] )
+		? array_values( $_POST['tax_rates'] )
+		: array();
 
-	update_option( 'edd_tax_rates', $new_rates );
+	foreach ( $new_rates as $key => $rate ) {
+		$rate = array_filter( $rate );
+		if ( empty( $rate ) ) {
+			unset( $new_rates[ $key ] );
+		}
+	}
+
+	$new_rates = ! empty( $new_rates )
+		? array_values( $new_rates )
+		: array();
+
+	foreach ( $new_rates as $tax_rate ) {
+		$scope = isset( $tax_rate['global'] )
+			? 'country'
+			: 'region';
+
+		$region = isset( $tax_rate['state'] )
+			? sanitize_text_field( $tax_rate['state'] )
+			: '';
+
+		$adjustment_data = array(
+			'name'        => $tax_rate['country'],
+			'status'      => 'active',
+			'type'        => 'tax_rate',
+			'scope'       => $scope,
+			'amount_type' => 'percent',
+			'amount'      => floatval( $tax_rate['rate'] ),
+			'description' => $region,
+			'start_date'  => $tax_rate['from'],
+			'end_date'    => $tax_rate['to'],
+		);
+
+		// Update database if adjustment ID was supplied.
+		if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
+			edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
+
+			// Check if the tax rate exists.
+		} else {
+			$rate = edd_get_adjustments( array(
+				'fields'      => 'ids',
+				'name'        => $tax_rate['country'],
+				'description' => $region,
+				'scope'       => $scope,
+			) );
+
+			// Tax rate exists.
+			if ( 1 === count( $rate ) ) {
+				$adjustment_id = absint( $rate[0] );
+
+				edd_update_adjustment( $adjustment_id, $adjustment_data );
+
+				// Add the tax rate to the database.
+			} else {
+				edd_add_adjustment( $adjustment_data );
+			}
+		}
+	}
 
 	return $input;
 }
@@ -1716,10 +1777,9 @@ function edd_header_callback( $args ) {
  * Renders checkboxes.
  *
  * @since 1.0
+ * @since 3.0 Updated to use `EDD_HTML_Elements`.
  *
- * @param array $args Arguments passed by the setting
- *
- * @return void
+ * @param array $args Arguments passed by the setting.
  */
 function edd_checkbox_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
@@ -1727,16 +1787,21 @@ function edd_checkbox_callback( $args ) {
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
 	} else {
-		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
+		$name = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']';
 	}
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	$checked = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
-	$html    = '<input type="hidden"' . $name . ' value="-1" />';
+	$args['name']    = $name;
+	$args['class']   = $class;
+	$args['current'] = ! empty( $edd_option )
+		? $edd_option
+		: '';
+	$args['label']   = wp_kses_post( $args['desc'] );
+
+	$html    = '<input type="hidden" name="' . $name . '" value="-1" />';
 	$html   .= '<div class="edd-check-wrapper">';
-	$html   .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-	$html   .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+	$html   .= EDD()->html->checkbox( $args );
 	$html   .= '</div>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1986,7 +2051,7 @@ function edd_gateways_callback( $args ) {
 		);
 
 		$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
-		$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+		$html .= '<p class="description">' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2279,11 +2344,16 @@ function edd_select_callback( $args ) {
 		$class .= ' edd-select-chosen';
 	}
 
+	// Nonce
+	$nonce = isset( $args['data']['nonce'] )
+		? ' data-nonce="' . sanitize_text_field( $args['data']['nonce'] ) . '"'
+		: '';
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
+	$html = '<select ' . $nonce . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
 
@@ -2493,21 +2563,19 @@ function edd_shop_states_callback( $args ) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates();
+	$rates = edd_get_tax_rates( 'object' );
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
-
     <p><?php echo $args['desc']; ?></p>
     <table id="edd_tax_rates" class="wp-list-table widefat striped fixed posts <?php echo $class; ?>">
         <thead>
         <tr>
             <th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
-            <th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
-            <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223"
-                                                                                                       class="edd-help-tip dashicons dashicons-editor-help"
-                                                                                                       title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span>
-            </th>
+            <th scope="col" class="edd_tax_state"><?php _e( 'Region', 'easy-digital-downloads' ); ?></th>
+	        <th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically.', 'easy-digital-downloads' ); ?>"></span></th>
+	        <th scope="col" class="edd_tax_from"><?php _e( 'From', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Start date: </strong>The date a tax rate is active from.', 'easy-digital-downloads' ); ?>"></span></th>
+	        <th scope="col" class="edd_tax_to"><?php _e( 'To', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>End date: </strong>The date a tax rate stops applying.', 'easy-digital-downloads' ); ?>"></span></th>
             <th scope="col"  class="edd_tax_actions"><?php _e( 'Actions', 'easy-digital-downloads' ); ?></th>
         </tr>
         </thead>
@@ -2519,24 +2587,27 @@ function edd_tax_rates_callback( $args ) {
 						echo EDD()->html->select( array(
 							'options'          => edd_get_country_list(),
 							'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][country]',
-							'selected'         => $rate['country'],
+							'selected'         => $rate->name,
 							'show_option_all'  => false,
 							'show_option_none' => false,
 							'class'            => 'edd-tax-country',
 							'chosen'           => false,
 							'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+							'data'             => array(
+								'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+							)
 						) );
 						?>
                     </td>
                     <td class="edd_tax_state">
 						<?php
-						$states = edd_get_shop_states( $rate['country'] );
+						$states = edd_get_shop_states( $rate->name );
 						if ( ! empty( $states ) ) {
 							echo EDD()->html->select( array(
 								'options'          => $states,
 								'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								'selected'         => ! empty( $rate['state'] ) ? $rate['state'] : '',
-								'disabled'         => ! empty( $rate['global'] ),
+								'selected'         => $rate->description,
+								'disabled'         => (bool) ( 'global' === $rate->scope ),
 								'show_option_all'  => false,
 								'show_option_none' => false,
 								'chosen'           => false,
@@ -2545,26 +2616,42 @@ function edd_tax_rates_callback( $args ) {
 						} else {
 							echo EDD()->html->text( array(
 								'name'  => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								$rate['state'],
-								'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
+								'value' => $rate->description,
 							) );
 						}
 						?>
 						<span class="edd-tax-whole-country">
-							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
-								   id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"
-								   value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+							<input type="checkbox" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" id="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]" value="1"<?php checked( true, (bool) 'global' === $rate->scope ); ?>/>
 							<label for="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 						</span>
                     </td>
                     <td class="edd_tax_rate">
-						<input type="number" class="small-text" step="0.0001" min="0.0" max="99"
-                               name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]"
-                               value="<?php echo esc_html( $rate['rate'] ); ?>" autocomplete="off" />
+						<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_attr( floatval( $rate->amount ) ); ?>" autocomplete="off" />
 					</td>
+	                <td class="edd_tax_rate_from">
+		                <?php
+		                echo EDD()->html->date_field( array(
+			                'id'          => 'tax_rates[' . edd_sanitize_key( $key ) . '][from]',
+			                'name'        => 'tax_rates[' . edd_sanitize_key( $key ) . '][from]',
+			                'value'       => ( '0000-00-00 00:00:00' === $rate->start_date ) ? '' : edd_date_i18n( $rate->start_date, 'Y-m-d' ),
+			                'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+		                ) );
+		                ?>
+	                </td>
+	                <td class="edd_tax_rate_to">
+		                <?php
+		                echo EDD()->html->date_field( array(
+			                'id'          => 'tax_rates[' . edd_sanitize_key( $key ) . '][to]',
+			                'name'        => 'tax_rates[' . edd_sanitize_key( $key ) . '][to]',
+			                'value'       => ( '0000-00-00 00:00:00' === $rate->end_date ) ? '' : edd_date_i18n( $rate->end_date, 'Y-m-d' ),
+			                'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+		                ) );
+		                ?>
+	                </td>
                     <td class="edd_tax_remove">
                         <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
                     </td>
+	                <input type="hidden" data-type="edd-adjustment-id" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate->id ); ?>" />
                 </tr>
 			<?php endforeach; ?>
 		<?php else : ?>
@@ -2580,6 +2667,9 @@ function edd_tax_rates_callback( $args ) {
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
 						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
@@ -2591,8 +2681,9 @@ function edd_tax_rates_callback( $args ) {
 						<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'easy-digital-downloads' ); ?></label>
 					</span>
 				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0"
-												name="tax_rates[0][rate]" value=""/></td>
+				<td class="edd_tax_rate">
+					<input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/>
+				</td>
 				<td>
 					<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
 				</td>
@@ -2600,8 +2691,9 @@ function edd_tax_rates_callback( $args ) {
 		<?php endif; ?>
     </table>
     <p>
-        <span class="button-secondary"
-              id="edd_add_tax_rate"><?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?></span>
+        <span class="button-secondary" id="edd_add_tax_rate">
+			<?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?>
+		</span>
     </p>
 	<?php
 	echo ob_get_clean();

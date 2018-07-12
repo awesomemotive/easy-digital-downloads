@@ -77,8 +77,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		parent::setUp();
 
 		// Create legacy data records for backwards compatibility
-		edd_add_discount_meta( self::$discount_id,         'legacy_id', self::$discount_id );
-		edd_add_discount_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
+		edd_add_adjustment_meta( self::$discount_id,         'legacy_id', self::$discount_id );
+		edd_add_adjustment_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
 
 		// Update meta via old method. If these work properly, it helps show backwards compatibility is working
 		update_post_meta( self::$negativediscount_id, '_edd_discount_name',   'Double Double' );
@@ -92,8 +92,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @access public
 	 */
 	public function tearDown() {
-		edd_delete_discount_meta( self::$discount_id,         'legacy_id', self::$discount_id );
-		edd_delete_discount_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
+		edd_delete_adjustment_meta( self::$discount_id,         'legacy_id', self::$discount_id );
+		edd_delete_adjustment_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
 
 		edd_empty_cart();
 
@@ -418,25 +418,25 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::update_meta()
 	 */
 	public function test_discount_update_meta() {
-		edd_update_discount_meta( self::$discount->id, 'test_meta_key', 'test_meta_value' );
+		edd_update_adjustment_meta( self::$discount->id, 'test_meta_key', 'test_meta_value' );
 
-		$this->assertEquals( 'test_meta_value', edd_get_discount_meta( self::$discount->id, 'test_meta_key', true ) );
+		$this->assertEquals( 'test_meta_value', edd_get_adjustment_meta( self::$discount->id, 'test_meta_key', true ) );
 	}
 
 	/**
 	 * @covers ::delete_meta()
 	 */
 	public function test_discount_delete_meta_should_return_empty() {
-		edd_delete_discount_meta( self::$discount->id, 'legacy_id' );
+		edd_delete_adjustment_meta( self::$discount->id, 'legacy_id' );
 
-		$this->assertEmpty( edd_get_discount_meta( self::$discount->id, 'legacy_id' ) );
+		$this->assertEmpty( edd_get_adjustment_meta( self::$discount->id, 'legacy_id' ) );
 	}
 
 	/**
 	 * @covers ::delete_meta()
 	 */
 	public function test_discount_delete_meta_with_no_meta_key_should_be_false() {
-		$this->assertFalse( edd_delete_discount_meta( self::$download->ID, '' ) );
+		$this->assertFalse( edd_delete_adjustment_meta( self::$download->ID, '' ) );
 	}
 
 	/*
@@ -594,7 +594,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	/**
 	 * @covers \edd_get_discount_min_price()
 	 */
-	public function testDiscountMinPrice() {
+	public function test_discount_min_price() {
 		$this->assertSame( '128.00', edd_get_discount_min_price( self::$discount_id ) );
 	}
 

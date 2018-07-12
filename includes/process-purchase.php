@@ -39,6 +39,19 @@ function edd_process_purchase_form() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
+	if ( $is_ajax ) {
+		if ( ! isset( $_POST['edd-process-checkout-nonce'] ) ) {
+			edd_debug_log( __( 'Missing nonce when processing checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+		}
+
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] ) ? sanitize_text_field( $_POST['edd-process-checkout-nonce'] ) : '';
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			edd_set_error( 'checkout-nonce-error', __( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
+		}
+	}
+
 	// Process the login form
 	if ( isset( $_POST['edd_login_submit'] ) ) {
 		edd_process_purchase_login();
@@ -93,14 +106,24 @@ function edd_process_purchase_form() {
 	}
 
 	// Update the customer's address if different to what's in the database
-	$address = get_user_meta( $customer->user_id, '_edd_user_address', true );
-	if ( ! is_array( $address ) ) {
-		$address = array();
-	}
+	$address = wp_parse_args( $user_info['address'], array(
+		'line1'   => '',
+		'line2'   => '',
+		'country' => '',
+		'state'   => '',
+		'zip'     => '',
+	) );
 
-	if ( 0 == strlen( implode( $address ) ) || count( array_diff( $address, $user_info['address'] ) ) > 0 ) {
-		update_user_meta( $user['user_id'], '_edd_user_address', $user_info['address'] );
-	}
+	$address = array(
+		'address'     => $address['line1'],
+		'address2'    => $address['line2'],
+		'city'        => $address['city'],
+		'region'      => $address['state'],
+		'country'     => $address['country'],
+		'postal_code' => $address['zip'],
+	);
+
+	edd_maybe_update_customer_primary_address( $customer->id, $address );
 
 	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 
@@ -114,7 +137,7 @@ function edd_process_purchase_form() {
 
 	if ( ! empty( $existing_payment ) ) {
 		$payment = new EDD_Payment( $existing_payment );
-		if( $payment->is_recoverable() && ! empty( $payment->key ) ) {
+		if ( $payment->is_recoverable() && ! empty( $payment->key ) ) {
 			$purchase_key = $payment->key;
 		}
 	}
@@ -145,7 +168,7 @@ function edd_process_purchase_form() {
 	do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
 
 	// If the total amount in the cart is 0, send to the manual gateway. This emulates a free download purchase
-	if ( !$purchase_data['price'] ) {
+	if ( ! $purchase_data['price'] ) {
 		// Revert to manual
 		$purchase_data['gateway'] = 'manual';
 		$_POST['edd-gateway'] = 'manual';
@@ -215,6 +238,23 @@ add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10
 function edd_process_purchase_login() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
+
+	if ( ! isset( $_POST['edd_login_nonce'] ) ) {
+		edd_debug_log( __( 'Missing nonce when processing login during checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+	}
+
+	$nonce = isset( $_POST['edd_login_nonce'] ) ? sanitize_text_field( $_POST['edd_login_nonce'] ) : '';
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd-login-form' );
+	if ( false === $nonce_verified ) {
+		edd_set_error( 'edd-login-nonce-failed', __( 'Error processing login. Nonce failed.', 'easy-digital-downloads' ) );
+
+		if ( $is_ajax ) {
+			do_action( 'edd_ajax_checkout_errors' );
+			edd_die();
+		} else {
+			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+		}
+	}
 
 	$user_data = edd_purchase_form_validate_user_login();
 
@@ -535,7 +575,7 @@ function edd_purchase_form_validate_new_user() {
 	// Start an empty array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1,
+		'user_id' => 0,
 		// Get first name
 		'user_first' => isset( $_POST["edd_first"] ) ? sanitize_text_field( $_POST["edd_first"] ) : '',
 		// Get last name
@@ -577,6 +617,15 @@ function edd_purchase_form_validate_new_user() {
 	} else {
 		if ( edd_no_guest_checkout() ) {
 			edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
+		} else {
+			// If the entered email is attached to a user account, they must log in. Otherwise you can add purchases/CC to an account you do not own.
+			$user = get_user_by( 'email', $user_email );
+
+			if ( $user ) {
+				edd_set_error( 'login_required', __( 'You must login to complete your purchase', 'easy-digital-downloads' ) );
+			} else {
+				edd_set_error( 'registration_required', __( 'You must register or login to complete your purchase', 'easy-digital-downloads' ) );
+			}
 		}
 	}
 
@@ -636,7 +685,7 @@ function edd_purchase_form_validate_user_login() {
 	// Start an array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => 0
 	);
 
 	// Username
@@ -728,6 +777,14 @@ function edd_purchase_form_validate_guest_user() {
 		} else {
 			// All is good to go
 			$valid_user_data['user_email'] = $guest_email;
+
+			// We have a valid email, but if that email is attached to a user account, they must log in. Otherwise you can add purchases/CC to an account you do not own.
+			$user = get_user_by( 'email', $guest_email );
+
+			if ( $user ) {
+				edd_set_error( 'login_required', __( 'You must login to complete your purchase', 'easy-digital-downloads' ) );
+			}
+
 		}
 	} else {
 		// No email
@@ -794,10 +851,12 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 /**
  * Get Purchase Form User
  *
- * @param array   $valid_data
+ * @since 1.0.8.1
+ * @since 3.0 Remove `update_user_meta()` call to update the user's address
+ *            as it is done later on in the order flow where a customer ID
+ *            is available.
  *
- * @access  private
- * @since  1.0.8.1
+ * @param array $valid_data
  * @return  array
  */
 function edd_get_purchase_form_user( $valid_data = array() ) {
@@ -874,12 +933,8 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 	$user['address']['country'] = ! empty( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
 	$user['address']['zip']     = ! empty( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : '';
 
-	if ( empty( $user['address']['country'] ) )
+	if ( empty( $user['address']['country'] ) ) {
 		$user['address'] = false; // Country will always be set if address fields are present
-
-	if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $user['address'] ) ) {
-		// Store the address in the user's meta so the cart can be pre-populated with it on return purchases
-		update_user_meta( $user['user_id'], '_edd_user_address', $user['address'] );
 	}
 
 	// Return valid user

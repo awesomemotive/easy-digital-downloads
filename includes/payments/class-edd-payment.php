@@ -614,17 +614,26 @@ class EDD_Payment {
 			if ( ! empty( $this->payment_meta['fees'] ) ) {
 				$this->fees = array_merge( $this->payment_meta['fees'], $this->fees );
 				foreach ( $this->fees as $key => $fee ) {
+					add_filter( 'edd_prices_include_tax', '__return_false' );
+
+					$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
+						? floatval( edd_calculate_tax( $fee['amount'] ) )
+						: 0.00;
+
+					remove_filter( 'edd_prices_include_tax', '__return_false' );
+
 					$adjustment_id = edd_add_order_adjustment( array(
 						'object_id'   => $this->ID,
 						'object_type' => 'order',
 						'type_id'     => '',
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'amount'      => $fee['amount'],
+						'subtotal'    => floatval( $fee['amount'] ),
+						'tax'         => $tax,
+						'total'       => floatval( $fee['amount'] ) + $tax,
 					) );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-					edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
 					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
 					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 
@@ -685,6 +694,9 @@ class EDD_Payment {
 		if ( $this->ID !== $this->_ID ) {
 			$this->ID = $this->_ID;
 		}
+
+		// If the order is null, it means a new order is being added
+		$this->order = edd_get_order( $this->ID );
 
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id !== $customer->id ) {
@@ -882,7 +894,8 @@ class EDD_Payment {
 								'type_id'     => $discount_obj->id,
 								'type'        => 'discount',
 								'description' => $discount,
-								'amount'      => $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ),
+								'subtotal'    => floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) ),
+								'total'       => floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) ),
 							) );
 						}
 
@@ -1059,7 +1072,7 @@ class EDD_Payment {
 							'order_id'     => $this->ID,
 							'product_id'   => $item['id'],
 							'product_name' => $item['name'],
-							'price_id'     => $item['item_number']['options']['price_id'],
+							'price_id'     => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
 							'cart_index'   => $key,
 							'quantity'     => $item['quantity'],
 							'amount'       => $item['item_price'],
@@ -1071,13 +1084,13 @@ class EDD_Payment {
 					}
 				}
 
-				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
-
 				/**
 				 * Re-fetch the order with the new items from the database as it is used for the synchronization
 				 * between cart_details and the database.
 				 */
 				$this->order = edd_get_order( $this->ID );
+
+				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
 				if ( false !== $updated ) {
 					$saved = true;
@@ -1491,7 +1504,7 @@ class EDD_Payment {
 			: 0.00;
 
 		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
-		$merged_item['price']               = $new_subtotal + $merged_item['tax'] - $discount;
+		$merged_item['price']               = edd_prices_include_tax() ? $new_subtotal - $discount : $new_subtotal + $merged_item['tax'] - $discount;
 		$this->cart_details[ $cart_index ]  = $merged_item;
 		$modified_download                  = $merged_item;
 		$modified_download['action']        = 'modify';
@@ -2150,7 +2163,7 @@ class EDD_Payment {
 									'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
 								) );
 
-								// Add the discount as an adjustment.
+							// Add the discount as an adjustment.
 							} else {
 								edd_add_order_adjustment( array(
 									'object_id'   => $this->ID,
@@ -2158,15 +2171,77 @@ class EDD_Payment {
 									'type_id'     => $discount->id,
 									'type'        => 'discount',
 									'description' => $discount->code,
-									'amount'      => $this->subtotal - $discount->get_discounted_amount( $this->subtotal )
+									'subtotal'    => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+									'total'       => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
 								) );
 							}
 						}
 					}
 
-					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array( 'id', 'email', 'discount' ) ) );
+					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array(
+						'id',
+						'email',
+						'discount'
+					) ) );
 
-					edd_update_order_meta( $this->ID, 'user_info', $user_info );
+					$defaults = array(
+						'first_name' => '',
+						'last_name'  => '',
+						'address'    => array(
+							'line1'   => '',
+							'line2'   => '',
+							'city'    => '',
+							'state'   => '',
+							'country' => '',
+							'zip'     => '',
+						),
+					);
+
+					if ( isset( $user_info['address'] ) ) {
+						$user_info['address'] = wp_parse_args( $user_info['address'], $defaults['address'] );
+					}
+
+					$user_info = wp_parse_args( $user_info, $defaults );
+
+					if ( null !== $this->order ) {
+						$order_address = $this->order->get_address();
+
+						edd_update_order_address( $order_address->id, array(
+							'first_name'  => $user_info['first_name'],
+							'last_name'   => $user_info['last_name'],
+							'address'     => $user_info['address']['line1'],
+							'address2'    => $user_info['address']['line2'],
+							'city'        => $user_info['address']['city'],
+							'region'      => $user_info['address']['state'],
+							'postal_code' => $user_info['address']['zip'],
+							'country'     => $user_info['address']['country'],
+						) );
+					} else {
+						edd_add_order_address( array(
+							'order_id'    => $this->ID,
+							'first_name'  => $user_info['first_name'],
+							'last_name'   => $user_info['last_name'],
+							'address'     => $user_info['address']['line1'],
+							'address2'    => $user_info['address']['line2'],
+							'city'        => $user_info['address']['city'],
+							'region'      => $user_info['address']['state'],
+							'postal_code' => $user_info['address']['zip'],
+							'country'     => $user_info['address']['country'],
+						) );
+					}
+
+					$remaining_user_info = array_diff_key( $meta_value['user_info'], array_flip( array(
+						'id',
+						'first_name',
+						'last_name',
+						'email',
+						'address',
+						'discount'
+					) ) );
+
+					if ( ! empty( $remaining_user_info ) ) {
+						edd_update_order_meta( $this->ID, 'user_info', $remaining_user_info );
+					}
 				}
 
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
@@ -2206,27 +2281,29 @@ class EDD_Payment {
 									'amount'      => (float) $fee['amount'],
 								) );
 
-								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-									edd_update_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-								}
-
 								if ( ! is_null( $fee['price_id'] ) ) {
 									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 								}
 							} else {
+								add_filter( 'edd_prices_include_tax', '__return_false' );
+
+								$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
+									? floatval( edd_calculate_tax( $fee['amount'] ) )
+									: 0.00;
+
+								remove_filter( 'edd_prices_include_tax', '__return_false' );
+
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $order_item_id,
 									'object_type' => 'order_item',
 									'type'        => 'fee',
 									'description' => $fee['label'],
-									'amount'      => (float) $fee['amount'],
+									'subtotal'    => floatval( $fee['amount'] ),
+									'tax'         => $tax,
+									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
-								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-								}
 
 								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
@@ -2264,19 +2341,25 @@ class EDD_Payment {
 									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 								}
 							} else {
+								add_filter( 'edd_prices_include_tax', '__return_false' );
+
+								$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
+									? floatval( edd_calculate_tax( $fee['amount'] ) )
+									: 0.00;
+
+								remove_filter( 'edd_prices_include_tax', '__return_false' );
+
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $this->ID,
 									'object_type' => 'order',
 									'type'        => 'fee',
 									'description' => $fee['label'],
-									'amount'      => (float) $fee['amount'],
+									'subtotal'    => floatval( $fee['amount'] ),
+									'tax'         => $tax,
+									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
-								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-								}
 
 								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
@@ -2350,23 +2433,31 @@ class EDD_Payment {
 
 							if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 								foreach ( $item['fees'] as $fee_id => $fee ) {
+									add_filter( 'edd_prices_include_tax', '__return_false' );
+
+									$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
+										? floatval( edd_calculate_tax( $fee['amount'] ) )
+										: 0.00;
+
+									remove_filter( 'edd_prices_include_tax', '__return_false' );
+
 									$adjustment_id = edd_add_order_adjustment( array(
 										'object_id'   => $order_item_id,
 										'object_type' => 'order_item',
 										'type'        => 'fee',
 										'description' => $fee['label'],
-										'amount'      => (float) $fee['amount'],
+										'subtotal'    => floatval( $fee['amount'] ),
+										'tax'         => $tax,
+										'total'       => floatval( $fee['amount'] ) + $tax,
 									) );
 
 									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-									if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-										edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-									}
-
 									if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 										edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
 									}
+
+									$new_tax += $tax;
 								}
 							}
 						}
@@ -2819,12 +2910,12 @@ class EDD_Payment {
 		foreach ( $this->order->get_fees() as $order_fee ) {
 			$fee_id   = edd_get_order_adjustment_meta( $order_fee->id, 'fee_id', true );
 			$price_id = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
-			$no_tax   = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
+			$no_tax   = (bool) 0.00 === $order_fee->tax;
 
 			$fees[ $fee_id ] = array(
-				'amount'   => $order_fee->amount,
+				'amount'   => $order_fee->subtotal,
 				'label'    => $order_fee->description,
-				'no_tax'   => $no_tax ? $no_tax : false,
+				'no_tax'   => $no_tax,
 				'type'     => 'fee',
 				'price_id' => $price_id ? $price_id : null,
 				'download_id' => 0,
@@ -2840,12 +2931,12 @@ class EDD_Payment {
 				$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
 				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-				$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$no_tax      = (bool) 0.00 === $item_fee->tax;
 
 				$fees[ $fee_id ] = array(
-					'amount'   => $item_fee->amount,
+					'amount'   => $item_fee->subtotal,
 					'label'    => $item_fee->description,
-					'no_tax'   => $no_tax ? $no_tax : false,
+					'no_tax'   => $no_tax,
 					'type'     => 'fee',
 					'price_id' => $price_id ? $price_id : null,
 				);
@@ -2892,12 +2983,10 @@ class EDD_Payment {
 
 		// Make sure it exists, and that it matches that of the associated customer record
 		if ( ! empty( $customer->user_id ) && ( empty( $user_id ) || (int) $user_id !== (int) $customer->user_id ) ) {
-
 			$user_id = $customer->user_id;
 
 			// Backfill the user ID, or reset it to be correct in the event of data corruption
 			$this->update_meta( '_edd_payment_user_id', $user_id );
-
 		}
 
 		return $user_id;
@@ -2927,26 +3016,14 @@ class EDD_Payment {
 	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
-		$user_info = edd_get_order_meta( $this->ID, 'user_info', true );
+		$order_address = $this->order->get_address();
 
-		$user_info = $user_info
-			? $user_info
-			: array();
-
-		if ( is_serialized( $user_info ) ) {
-			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
-			if ( ! empty( $matches ) ) {
-				$user_info = array();
-			}
-		}
-
-		// As per Github issue #4248, we need to run maybe_unserialize here still.
-		$user_info = wp_parse_args( maybe_unserialize( $user_info ), array(
+		$user_info = array(
 			'id'         => $this->user_id,
-			'first_name' => $this->first_name,
-			'last_name'  => $this->last_name,
+			'first_name' => $order_address->first_name,
+			'last_name'  => $order_address->last_name,
 			'discount'   => $this->discounts,
-		) );
+		);
 
 		// Ensure email index is in the old user info array
 		if ( empty( $user_info['email'] ) ) {
@@ -2996,6 +3073,20 @@ class EDD_Payment {
 				}
 
 			}
+		}
+
+		$country = $order_address->country;
+
+		// Add address to array if one exists.
+		if ( ! empty( $country ) ) {
+			$user_info['address'] = array(
+				'line1'   => $order_address->address,
+				'line2'   => $order_address->address2,
+				'city'    => $order_address->address,
+				'state'   => $order_address->region,
+				'country' => $country,
+				'zip'     => $order_address->postal_code,
+			);
 		}
 
 		return $user_info;

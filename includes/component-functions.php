@@ -123,7 +123,25 @@ function edd_setup_components() {
 		'object' => 'EDD_Customer'
 	) );
 
-	// Register Adjustment
+	// Register customer address
+	edd_register_component( 'customer_address', array(
+		'schema' => '\\EDD\\Database\\Schema\\Customer_Addresses',
+		'table'  => '\\EDD\\Database\\Tables\\Customer_Addresses',
+		'query'  => '\\EDD\\Database\\Queries\\Customer_Address',
+		'object' => '\\EDD\\Customers\\Customer_Address',
+		'meta'   => false
+	) );
+
+	// Register customer email address
+	edd_register_component( 'customer_email_address', array(
+		'schema' => '\\EDD\\Database\\Schema\\Customer_Email_Addresses',
+		'table'  => '\\EDD\\Database\\Tables\\Customer_Email_Addresses',
+		'query'  => '\\EDD\\Database\\Queries\\Customer_Email_Address',
+		'object' => '\\EDD\\Customers\\Customer_Email_Address',
+		'meta'   => false
+	) );
+
+	// Register adjustment
 	edd_register_component( 'adjustment', array(
 		'schema' => '\\EDD\\Database\\Schema\\Adjustments',
 		'table'  => '\\EDD\\Database\\Tables\\Adjustments',
@@ -168,6 +186,15 @@ function edd_setup_components() {
 		'object' => '\\EDD\\Orders\\Order_Adjustment',
 	) );
 
+	// Register order address
+	edd_register_component( 'order_address', array(
+		'schema' => '\\EDD\\Database\\Schema\\Order_Addresses',
+		'table'  => '\\EDD\\Database\\Tables\\Order_Addresses',
+		'query'  => '\\EDD\\Database\\Queries\\Order_Address',
+		'object' => '\\EDD\\Orders\\Order_Address',
+		'meta'   => false
+	) );
+
 	// Register log
 	edd_register_component( 'log', array(
 		'schema' => '\\EDD\\Database\\Schema\\Logs',
@@ -177,7 +204,7 @@ function edd_setup_components() {
 		'object' => '\\EDD\\Logs\\Log'
 	) );
 
-	// Register log api request
+	// Register log API request
 	edd_register_component( 'log_api_request', array(
 		'schema' => '\\EDD\\Database\\Schema\\Logs_Api_Requests',
 		'table'  => '\\EDD\\Database\\Tables\\Logs_Api_Requests',
@@ -186,7 +213,7 @@ function edd_setup_components() {
 		'meta'   => false
 	) );
 
-	// Register log api request
+	// Register log file download
 	edd_register_component( 'log_file_download', array(
 		'schema' => '\\EDD\\Database\\Schema\\Logs_File_Downloads',
 		'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',

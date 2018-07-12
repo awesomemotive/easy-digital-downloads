@@ -117,9 +117,15 @@ class Order_Adjustment extends Base {
 	 *     @type string       $type                 A type to only return that type. Default empty.
 	 *     @type array        $type__in             Array of types to include. Default empty.
 	 *     @type array        $type__not_in         Array of types to exclude. Default empty.
-	 *     @type string       $amount               Limit results to those affiliated with a given total. Default empty.
-	 *     @type array        $amount__in           Array of amounts to include. Default empty.
-	 *     @type array        $amount__not_in       Array of amounts to exclude. Default empty.
+	 *     @type string       $tax                  Limit results to those affiliated with a given tax. Default empty.
+	 *     @type array        $tax__in              Array of tax amounts to include. Default empty.
+	 *     @type array        $tax__not_in          Array of tax amounts to exclude. Default empty.
+	 *     @type string       $subtotal             Limit results to those affiliated with a given subtotal. Default empty.
+	 *     @type array        $subtotal__in         Array of subtotal amounts to include. Default empty.
+	 *     @type array        $subtotal__not_in     Array of subtotal amounts to exclude. Default empty.
+	 *     @type string       $total                Limit results to those affiliated with a given total. Default empty.
+	 *     @type array        $total__in            Array of totals to include. Default empty.
+	 *     @type array        $total__not_in        Array of totals to exclude. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.

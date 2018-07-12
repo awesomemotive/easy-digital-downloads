@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $object_type
  * @property int $user_id
  * @property string $content
- * @property string $date_completed
+ * @property string $date_created
  * @property string $date_modified
  */
 class Note extends Base_Object {

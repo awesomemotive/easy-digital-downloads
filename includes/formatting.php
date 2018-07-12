@@ -280,4 +280,3 @@ function edd_number_not_negative( $number = 0 ) {
 	// Filter & return
 	return (int) apply_filters( 'edd_number_not_negative', $not_less_than_zero, $casted_number, $number );
 }
-

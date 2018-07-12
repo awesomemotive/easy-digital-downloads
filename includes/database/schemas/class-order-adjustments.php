@@ -93,9 +93,31 @@ class Order_Adjustments extends Base {
 			'sortable'   => true
 		),
 
-		// amount
+		// subtotal
 		array(
-			'name'       => 'amount',
+			'name'       => 'subtotal',
+			'type'       => 'decimal',
+			'length'     => '18,9',
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// tax
+		array(
+			'name'       => 'tax',
+			'type'       => 'decimal',
+			'length'     => '18,9',
+			'default'    => '0',
+			'validate'   => 'edd_sanitize_amount',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// total
+		array(
+			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',

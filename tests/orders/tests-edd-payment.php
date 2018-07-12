@@ -611,6 +611,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		remove_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
 
 		$payment = edd_get_payment( $payment_id );
+
 		$this->assertEquals( 'PL', $payment->payment_meta['user_info']['address']['country'] );
 	}
 
