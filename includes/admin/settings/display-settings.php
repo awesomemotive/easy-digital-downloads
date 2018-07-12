@@ -209,7 +209,7 @@ function edd_options_page() {
 	ob_start(); ?>
 
 	<div class="wrap <?php echo 'wrap-' . esc_attr( $active_tab ); ?>">
-		<h1><?php _e( 'Easy Digital Downloads Settings', 'easy-digital-downloads' ); ?></h1><?php
+		<h1><?php _e( 'Settings', 'easy-digital-downloads' ); ?></h1><?php
 
 		// Primary nav
 		edd_options_page_primary_nav( $active_tab );
