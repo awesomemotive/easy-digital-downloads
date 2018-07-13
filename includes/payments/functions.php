@@ -69,12 +69,6 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  * @return EDD_Payment[] $payments Payments retrieved from the database.
  */
 function edd_get_payments( $args = array() ) {
-
-	// Fallback to post objects to ensure backwards compatibility.
-	if ( ! isset( $args['output'] ) ) {
-		$args['output'] = 'posts';
-	}
-
 	$args     = apply_filters( 'edd_get_payments_args', $args );
 	$payments = new EDD_Payments_Query( $args );
 	return $payments->get_payments();
