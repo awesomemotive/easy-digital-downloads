@@ -602,7 +602,7 @@ function edd_get_customer_email_address( $customer_email_address_id = 0 ) {
 	if ( empty( $customer_email_address_id ) ) {
 		return false;
 	}
-	
+
 	return edd_get_customer_email_address_by( 'id', $customer_email_address_id );
 }
 
@@ -666,42 +666,3 @@ function edd_count_customer_email_addresses( $args = array() ) {
 	// Return count(s)
 	return absint( $customer_email_addresses->found_items );
 }
-
-/** Back Compat ***************************************************************/
-
-/**
- * Backwards compatibility layer for old `customer_id` column.
- *
- * @since 3.0
- *
- * @param string  $query   SQL query.
- * @return string $request SQL query with column replaced.
- */
-function _edd_filter_customer_meta_id_column( $query = '' ) {
-
-	// Get customer meta
-	$customer_meta = edd_get_component_interface( 'customer', 'meta' );
-
-	// Bail if no customer meta
-	if ( empty( $customer_meta ) ) {
-		return $query;
-	}
-
-	// Bail if not a customer meta query
-	if ( ! strpos( $query, $customer_meta->table_name ) ) {
-		return $query;
-	}
-
-	// Bail if not a customer ID query
-	if ( ! strpos( $query, 'customer_id' ) ) {
-		return $query;
-	}
-
-	// Replace, but also avoid double replacements
-	$replaced = str_replace( 'customer_id',         'edd_customer_id', $query );
-	$replaced = str_replace( 'edd_edd_customer_id', 'edd_customer_id', $query );
-
-	// Return
-	return $replaced;
-}
-add_filter( 'query', '_edd_filter_customer_meta_id_column', 10 );
