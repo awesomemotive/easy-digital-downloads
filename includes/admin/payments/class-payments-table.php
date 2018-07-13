@@ -226,9 +226,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
 			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
-			<span class="inside">
-				<p>
-					<label for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></label>
+			<div class="inside">
+				<fieldset>
+					<legend for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
 						'=' => __( 'equal to', 'easy-digital-downloads' ),
@@ -247,10 +247,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					?>
 
 					<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
-				</p>
+				</fieldset>
 
-				<p>
-					<label><?php esc_html_e( 'Country/Region', 'easy-digital-downloads' ); ?></label>
+				<fieldset>
+					<legend><?php esc_html_e( 'Country & Region', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'order-country-filter-value',
@@ -261,25 +261,23 @@ class EDD_Payment_History_Table extends WP_List_Table {
 						'show_option_none' => false,
 						'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
 						'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) );
-					?>
-				</p>
-
-				<p>
-				<?php
-				echo EDD()->html->select( array(
-					'name'             => 'order-region-filter-value',
-					'class'            => 'edd_regions_filter',
-					'options'          => edd_get_shop_states( $country ),
-					'chosen'           => true,
-					'selected'         => $region,
-					'show_option_none' => false,
-					'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-					'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-				) );
+					echo EDD()->html->select( array(
+						'name'             => 'order-region-filter-value',
+						'class'            => 'edd_regions_filter',
+						'options'          => edd_get_shop_states( $country ),
+						'chosen'           => true,
+						'selected'         => $region,
+						'show_option_none' => false,
+						'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+						'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+					) );
 				?>
-				</p>
-			</span>
+				</fieldset>
+			</div>
 		</span>
 
 		<span id="edd-after-core-filters">

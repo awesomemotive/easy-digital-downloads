@@ -539,12 +539,13 @@ textarea[name="edd-note"] {
 	margin-left: 2px;
 }
 
-#edd-filters input[type=text].edd_datepicker,
-#edd-filters input[type=number] {
+#edd-filters input[type="text"].edd_datepicker,
+#edd-filters input[type="number"] {
 	max-width: 100px;
 	padding: 5px;
 }
 
+#edd-filters input[type="number"],
 #edd-filters .button-secondary {
 	vertical-align: middle;
 }
@@ -559,12 +560,30 @@ textarea[name="edd-note"] {
 	top: 29px;
 	right: 0;
 	border: 1px solid #e5e5e5;
-	padding: 0 1em;
+	padding: 0;
 	background: #fafafa;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 	min-width: 285px;
 	opacity: 0;
 	visibility: hidden;
+}
+
+#edd-filters #edd-advanced-filters fieldset {
+	display: block;
+	padding: 10px 15px 15px;
+	margin: 10px 0;
+}
+
+#edd-filters #edd-advanced-filters fieldset:not(:last-of-type) {
+	border-bottom: 1px solid #e5e5e5;
+}
+
+#edd-filters #edd-advanced-filters fieldset:last-of-type {
+	padding-bottom: 5px;
+}
+
+#edd-filters #edd-advanced-filters div.edd-select-chosen:not(:last-child) {
+	margin-bottom: 10px;
 }
 
 #edd-filters #edd-advanced-filters.open .edd-advanced-filters-button {
