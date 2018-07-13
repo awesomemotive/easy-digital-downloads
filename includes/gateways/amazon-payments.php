@@ -1166,5 +1166,3 @@ final class EDD_Amazon_Payments {
 		return add_query_arg( $query_args, $base_url );
 	}
 }
-
-EDD_Amazon_Payments::getInstance();
