@@ -77,13 +77,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		parent::setUp();
 
 		// Create legacy data records for backwards compatibility
-		edd_add_adjustment_meta( self::$discount_id,         'legacy_id', self::$discount_id );
-		edd_add_adjustment_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
-
-		// Update meta via old method. If these work properly, it helps show backwards compatibility is working
-		update_post_meta( self::$negativediscount_id, '_edd_discount_name',   'Double Double' );
-		update_post_meta( self::$negativediscount_id, '_edd_discount_amount', '-100' );
-		update_post_meta( self::$negativediscount_id, '_edd_discount_code',   'DOUBLE' );
+		edd_add_adjustment_meta( self::$discount_id,         'legacy_discount_id', self::$discount_id );
+		edd_add_adjustment_meta( self::$negativediscount_id, 'legacy_discount_id', self::$negativediscount_id );
 	}
 
 	/**
@@ -509,6 +504,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_store_discount()
 	 */
 	public function test_is_discount_active() {
+		$this->setExpectedIncorrectUsage( 'get_post_meta()' );
+
 		edd_update_discount_status( self::$discount_id, 'active' );
 
 		$this->assertTrue( edd_is_discount_active( self::$discount_id, true  ) );
@@ -752,6 +749,9 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_increase_discount_usage()
 	 */
 	public function test_discount_inactive_at_max() {
+		$this->setExpectedIncorrectUsage( 'get_post_meta()' );
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		update_post_meta( self::$discount_id, '_edd_discount_status', 'active' );
 
 		$code = edd_get_discount_code( self::$discount_id );
@@ -771,6 +771,9 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::decrease_usage()
 	 */
 	public function test_discount_active_after_decreasing_at_max() {
+		$this->setExpectedIncorrectUsage( 'get_post_meta()' );
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		update_post_meta( self::$discount_id, '_edd_discount_max', 10 );
 		update_post_meta( self::$discount_id, '_edd_discount_uses', 10 );
 		update_post_meta( self::$discount_id, '_edd_discount_status', 'inactive' );
@@ -803,6 +806,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_format_discount_rate()
 	 */
 	public function test_formatted_discount_amount() {
+		$this->setExpectedIncorrectUsage( 'get_post_meta()' );
+
 		$rate = get_post_meta( self::$discount_id, '_edd_discount_amount', true );
 		$this->assertSame( '20.00%', edd_format_discount_rate( 'percent', $rate ) );
 	}
@@ -891,6 +896,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_set_cart_discount()
 	 */
 	public function test_set_multiple_discounts() {
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		EDD()->session->set( 'cart_discounts', null );
 
 		edd_update_option( 'allow_multiple_discounts', true );
