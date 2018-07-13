@@ -325,6 +325,16 @@ function edd_build_order( $order_data = array() ) {
 		? sanitize_key( $_POST['edd-gateway'] )
 		: $gateway;
 
+	if ( ! $resume_order ) {
+
+		// Account for post_date
+		if ( isset( $order_data['post_date'] ) ) {
+			$order_data['date_created'] = $order_data['post_date'];
+			unset( $order_data['post_date'] );
+		}
+
+	}
+
 	// Build order information based on data passed from the gateway.
 	$order_args = array(
 		'parent'       => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
@@ -336,7 +346,8 @@ function edd_build_order( $order_data = array() ) {
 		'gateway'      => $gateway,
 		'mode'         => edd_is_test_mode() ? 'test' : 'live',
 		'currency'     => ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency(),
-		'payment_key'  => $order_data['purchase_key']
+		'payment_key'  => $order_data['purchase_key'],
+		'date_created' => ! empty( $order_data['date_created'] ) ? $order_data['date_created'] : '',
 	);
 
 	/** Setup customer ********************************************************/
