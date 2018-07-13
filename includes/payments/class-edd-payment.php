@@ -1884,7 +1884,9 @@ class EDD_Payment {
 			$status = 'publish';
 		}
 
-		$old_status = ! empty( $this->old_status ) ? $this->old_status : false;
+		$old_status = ! empty( $this->old_status )
+			? $this->old_status
+			: false;
 
 		if ( $old_status === $status ) {
 			return false; // Don't permit status changes that aren't changes
