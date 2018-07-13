@@ -344,6 +344,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function setup_compat() {
+		new EDD\Compat\Discount();
 		new EDD\Compat\Customer();
 		new EDD\Compat\Log();
 		new EDD\Compat\Payment();
@@ -488,6 +489,7 @@ final class Easy_Digital_Downloads {
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-payment.php';

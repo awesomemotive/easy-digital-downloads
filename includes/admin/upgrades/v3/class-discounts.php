@@ -86,6 +86,9 @@ class Discounts extends Base {
 						edd_add_adjustment_meta( $discount_id, $key, $value );
 					}
 				}
+
+				// Store legacy discount ID.
+				edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
 			}
 
 			return true;

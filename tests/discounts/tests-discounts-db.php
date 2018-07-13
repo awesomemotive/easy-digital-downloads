@@ -4,12 +4,12 @@ namespace EDD\Discounts;
 /**
  * Discount DB Tests
  *
- * @covers \EDD\Database\Queries\Discounts
+ * @covers \EDD\Compat\Discount_Query
  * @group edd_discounts_db
  * @group database
  * @group edd_discounts
  *
- * @coversDefaultClass \EDD\Database\Queries\Discounts
+ * @coversDefaultClass \EDD\Compat\Discount_Query
  */
 class Tests_Discounts_DB extends \EDD_UnitTestCase {
 

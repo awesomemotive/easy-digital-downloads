@@ -881,18 +881,22 @@ class EDD_CLI extends WP_CLI_Command {
 					$args['name'] = $old_discount->post_title;
 				}
 
-				$args['status']        = get_post_status( $old_discount->ID );
 				$args['date_created']  = $old_discount->post_date_gmt;
 				$args['date_modified'] = $old_discount->post_modified_gmt;
 
 				// Use edd_store_discount() so any legacy data is handled correctly
 				$discount_id = edd_store_discount( $args );
 
+				// Migrate any additional meta.
 				if ( ! empty( $meta_to_migrate ) ) {
 					foreach ( $meta_to_migrate as $key => $value ) {
 						edd_add_adjustment_meta( $discount_id, $key, $value );
 					}
 				}
+
+				// Store legacy discount ID.
+				edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
+
 				$progress->tick();
 			}
 
