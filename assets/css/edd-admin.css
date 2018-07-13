@@ -520,10 +520,14 @@ textarea[name="edd-note"] {
 	padding: 0 10px;
 }
 
-#edd-filters .filter-items > span:not(#edd-date-filters):not(.edd-date-range-options) {
+#edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
 	margin: 10px 4px 10px 0;
 	max-width: 200px;
+}
+
+#edd-filters .filter-items > #edd-date-filters {
+	vertical-align: middle;
 }
 
 #edd-filters > p {
