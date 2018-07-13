@@ -178,6 +178,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$p->post_status       = $order->status;
 				$p->post_modified     = EDD()->utils->date( $order->date_modified, null, true )->toDateTimeString();
 				$p->post_modified_gmt = $order->date_modified;
+				$p->post_type         = 'edd_payment';
 
 				$posts[] = $p;
 			}

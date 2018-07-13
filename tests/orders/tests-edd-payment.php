@@ -253,6 +253,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->payment->save();
 
 		$this->payment = edd_get_payment( $this->payment->ID );
+
 		$this->assertEquals( 5, $this->payment->fees_total );
 		$this->assertEquals( 125, $this->payment->total );
 
