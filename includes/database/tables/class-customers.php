@@ -36,7 +36,7 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807110001;
+	protected $version = 201807130001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -46,7 +46,8 @@ final class Customers extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807110001' => 201807110001
+		'201807110001' => 201807110001,
+		'201807130001' => 201807130001,
 	);
 
 	/**
@@ -120,5 +121,22 @@ final class Customers extends Base {
 
 		// Return success/fail
 		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 201807130001
+	 * - Add `date_modified` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807130001() {
+
+		// Alter the database
+		$retval = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00'" );
+
+		// Return success/fail
+		return $this->is_success( $retval );
 	}
 }
