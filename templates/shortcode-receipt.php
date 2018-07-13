@@ -86,7 +86,7 @@ $status = edd_get_payment_status( $order, true );
 		<?php if ( edd_use_taxes() ) : ?>
 			<tr>
 				<td><strong><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo esc_html( $order->tax ); ?></td>
+				<td><?php echo esc_html( edd_payment_tax( $order->id ) ); ?></td>
 			</tr>
 		<?php endif; ?>
 
