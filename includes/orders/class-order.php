@@ -349,7 +349,27 @@ class Order extends Objects\Order {
 		// Default values
 		$fees = array();
 
-		// Bail if no adjustments
+		// Ensure adjustments exist.
+		if ( null === $this->adjustments ) {
+			$this->adjustments = edd_get_order_adjustments( array(
+				'object_id'     => $this->id,
+				'object_type'   => 'order',
+				'no_found_rows' => true,
+				'order'         => 'ASC',
+			) );
+		}
+
+		// Ensure items exist.
+		if ( null === $this->items ) {
+			$this->items = edd_get_order_items( array(
+				'order_id'      => $this->id,
+				'orderby'       => 'cart_index',
+				'order'         => 'ASC',
+				'no_found_rows' => true,
+			) );
+		}
+
+		// Bail if no adjustments.
 		if ( empty( $this->adjustments ) ) {
 			return $fees;
 		}

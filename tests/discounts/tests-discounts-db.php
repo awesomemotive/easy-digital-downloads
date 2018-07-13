@@ -30,7 +30,7 @@ class Tests_Discounts_DB extends \EDD_UnitTestCase {
 				'amount'            => '10',
 				'max_uses'          => 10,
 				'use_count'         => 54,
-				'min_cart_price'    => 128,
+				'min_charge_amount' => 128,
 				'product_condition' => 'all',
 				'start_date'        => '2010-12-12 00:00:00',
 				'end_date'          => '2050-12-31 23:59:59'
@@ -43,7 +43,7 @@ class Tests_Discounts_DB extends \EDD_UnitTestCase {
 				'amount'            => '20',
 				'max_uses'          => 10,
 				'use_count'         => 54,
-				'min_cart_price'    => 128,
+				'min_charge_amount' => 128,
 				'product_condition' => 'all',
 				'start_date'        => '2010-12-12 00:00:00',
 				'end_date'          => '2050-12-31 23:59:59'
@@ -93,7 +93,20 @@ class Tests_Discounts_DB extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::delete()
 	 */
-	public function test_delete_should_return_true() {
+	public function test_delete_should_return_false_because_use_count_greater_than_1() {
+		$retval = (bool) edd_delete_discount( self::$discounts[0]->id );
+
+		$this->assertFalse( $retval );
+	}
+
+	/**
+	 * @covers ::delete()
+	 */
+	public function test_delete_should_return_false_because_use_count_is_0() {
+		edd_update_discount( self::$discounts[0]->id, array(
+			'use_count' => 0,
+		) );
+
 		$success = (bool) edd_delete_discount( self::$discounts[0]->id );
 
 		$this->assertTrue( $success );

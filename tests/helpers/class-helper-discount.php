@@ -132,13 +132,15 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'is_single_use'     => true
 		);
 
-		remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
+		remove_filter( 'add_post_metadata', array( 'EDD\Compat\Discount', 'update_post_metadata' ), 99 );
 
 		foreach( $meta as $key => $value ) {
 			add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
-		add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
+		$compat = new EDD\Compat\Discount();
+
+		add_filter( 'add_post_metadata', array( $compat, 'update_post_metadata' ), 99, 5 );
 
 		return $discount_id;
 	}
