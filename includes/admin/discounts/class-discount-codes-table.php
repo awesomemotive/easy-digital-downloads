@@ -317,10 +317,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		}
 
 		// Delete
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action' => 'delete_discount',
-			'discount'   => $discount->id,
-		), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		if ( 0 === (int) $discount->use_count ) {
+			$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+				'edd-action' => 'delete_discount',
+				'discount'   => $discount->id,
+			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		}
 
 		// Filter all discount row actions
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
