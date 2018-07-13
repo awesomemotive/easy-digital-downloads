@@ -4,9 +4,10 @@
 if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 /**
- * Main Easy_Digital_Downloads Singleton Class.
+ * Easy_Digital_Downloads Class.
  *
  * @since 1.4
+ * @since 3.0 Refactored and restructured to work with EDD_Requirements_Check.
  */
 final class Easy_Digital_Downloads {
 
@@ -322,6 +323,7 @@ final class Easy_Digital_Downloads {
 		$this->setup_backcompat();
 		$this->setup_objects();
 		$this->setup_functions();
+		$this->setup_gateways();
 
 		// Admin
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
@@ -693,14 +695,25 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 	}
+
+	/**
+	 * Setup gateways.
+	 *
+	 * @since 3.0
+	 */
+	private function setup_gateways() {
+
+		// Load Amazon Payments.
+		PayWithAmazon\EDD_Amazon_Payments::getInstance();
+	}
 }
 endif; // End if class_exists check.
 
 /**
- * The main function for that returns Easy_Digital_Downloads
+ * Returns the instance of Easy_Digital_Downloads.
  *
  * The main function responsible for returning the one true Easy_Digital_Downloads
- * Instance to functions everywhere.
+ * instance to functions everywhere.
  *
  * Use this function like you would a global variable, except without needing
  * to declare the global.
@@ -708,7 +721,7 @@ endif; // End if class_exists check.
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
- * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
+ * @return Easy_Digital_Downloads The one true Easy_Digital_Downloads instance.
  */
 function EDD() {
 	return Easy_Digital_Downloads::instance();

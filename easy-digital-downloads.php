@@ -123,9 +123,18 @@ final class EDD_Requirements_Check {
 	private function load() {
 		require_once dirname( $this->file ) . '/includes/class-edd.php';
 		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
-			Easy_Digital_Downloads::instance( $this->file );
+			add_action( 'plugins_loaded', array( $this, 'bootstrap' ) );
 		}
 		do_action( 'edd_loaded' );
+	}
+
+	/**
+	 * Bootstrap everything.
+	 *
+	 * @since 3.0
+	 */
+	public function bootstrap() {
+		Easy_Digital_Downloads::instance( $this->file );
 	}
 
 	/**
