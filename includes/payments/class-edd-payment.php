@@ -1486,10 +1486,6 @@ class EDD_Payment {
 
 		$merged_item = array_merge( $current_args, $args );
 
-		// Sort the current and new args, and checksum them. If no changes. No need to fire a modification.
-		ksort( $current_args );
-		ksort( $merged_item );
-
 		if ( md5( json_encode( $current_args ) ) === md5( json_encode( $merged_item ) ) ) {
 			return false;
 		}
@@ -1504,6 +1500,11 @@ class EDD_Payment {
 		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
 		$merged_item['price']               = edd_prices_include_tax() ? $new_subtotal - $discount : $new_subtotal + $merged_item['tax'] - $discount;
 		$this->cart_details[ $cart_index ]  = $merged_item;
+
+		// Sort the current and new args, and checksum them. If no changes. No need to fire a modification.
+		ksort( $current_args );
+		ksort( $merged_item );
+
 		$modified_download                  = $merged_item;
 		$modified_download['action']        = 'modify';
 		$modified_download['previous_data'] = $current_args;
