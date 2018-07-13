@@ -863,18 +863,14 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_delete_discount()
 	 * @covers \edd_get_discount()
 	 */
-	public function test_deletion_of_discount() {
+	public function test_deletion_of_discount_should_be_false_because_use_count_greater_than_1() {
 		edd_delete_discount( self::$discount_id );
 
-		wp_cache_flush();
-
-		$this->assertFalse( edd_get_discount( self::$discount_id ) );
+		$this->assertInstanceOf( 'EDD_Discount', edd_get_discount( self::$discount_id ) );
 
 		edd_delete_discount( self::$negativediscount_id );
 
-		wp_cache_flush();
-
-		$this->assertFalse( edd_get_discount( self::$negativediscount_id ) );
+		$this->assertInstanceOf( 'EDD_Discount', edd_get_discount( self::$negativediscount_id ) );
 	}
 
 	/**
