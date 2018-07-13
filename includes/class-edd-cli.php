@@ -687,10 +687,10 @@ class EDD_CLI extends WP_CLI_Command {
 			);
 
 			if ( ! empty( $timestring ) ) {
-				$purchase_data['post_date'] = $timestring;
+				$purchase_data['date_created'] = $timestring;
 			}
 
-			$payment_id = edd_insert_payment( $purchase_data );
+			$payment_id = edd_build_order( $purchase_data );
 
 			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 
@@ -1799,7 +1799,7 @@ class EDD_CLI extends WP_CLI_Command {
 				// Migrate additional payment meta.
 				foreach ( $remaining_meta as $meta_key => $meta_value ) {
 					$meta_value = $meta_value[0];
-					
+
 					edd_add_order_meta( $order_id, $meta_key, $meta_value );
 				}
 
