@@ -1,6 +1,6 @@
 <?php
 /**
- * Adjustment Query Class.
+ * Discount Query Class.
  *
  * @package     EDD
  * @subpackage  Database\Queries
@@ -8,7 +8,9 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0.0
  */
-namespace EDD\Database\Queries;
+namespace EDD\Compat;
+
+use EDD\Database\Queries as Queries;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -20,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see \EDD\Database\Queries\Adjustment::__construct() for accepted arguments.
  */
-class Discount extends Adjustment {
+class Discount_Query extends Queries\Adjustment {
 
 	/**
 	 * Callback function for turning IDs into objects

@@ -31,6 +31,7 @@ defined( 'ABSPATH' ) || exit;
  * @property array $excluded_products
  * @property string $product_condition
  * @property string $date_created
+ * @property string $date_modified
  * @property string $start_date
  * @property string $end_date
  * @property int $use_count
@@ -143,6 +144,15 @@ class EDD_Discount extends Adjustment {
 	 * @var string
 	 */
 	protected $date_created = null;
+
+	/**
+	 * Modified Date.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $date_modified = null;
 
 	/**
 	 * Start Date.
@@ -274,6 +284,10 @@ class EDD_Discount extends Adjustment {
 				case 'post_date':
 				case 'post_date_gmt':
 					return $this->date_created;
+
+				case 'post_modified':
+				case 'post_modified_gmt':
+					return $this->date_modified;
 
 				case 'post_content':
 				case 'post_title':

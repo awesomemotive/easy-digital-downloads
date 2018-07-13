@@ -177,7 +177,7 @@ class Payment extends Base {
 
 		if ( 'get_post_metadata' !== current_filter() ) {
 			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
-			_doing_it_wrong( __FUNCTION__, $message, 'EDD 3.0' );
+			_doing_it_wrong( __FUNCTION__, esc_html( $message ), 'EDD 3.0' );
 		}
 
 		$meta_keys = array(
