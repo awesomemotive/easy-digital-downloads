@@ -327,12 +327,11 @@ function edd_build_order( $order_data = array() ) {
 
 	if ( ! $resume_order ) {
 
-		// Account for post_date
+		// Allow for post_date to be passed in.
 		if ( isset( $order_data['post_date'] ) ) {
 			$order_data['date_created'] = $order_data['post_date'];
 			unset( $order_data['post_date'] );
 		}
-
 	}
 
 	// Build order information based on data passed from the gateway.

@@ -283,6 +283,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 	public function test_get_product_stats() {
 		$out = self::$api_output;
+
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
