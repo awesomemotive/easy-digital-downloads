@@ -36,7 +36,7 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807130001;
+	protected $version = 201807130002;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,6 +48,7 @@ final class Customers extends Base {
 	protected $upgrades = array(
 		'201807110001' => 201807110001,
 		'201807130001' => 201807130001,
+		'201807130002' => 201807130002,
 	);
 
 	/**
@@ -96,8 +97,9 @@ final class Customers extends Base {
 				ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
 				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
 				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
-				ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active',
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00';
+				ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active' AFTER 'name';
+				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER 'date_created';
+					 UPDATE {$this->table_name} SET 'date_modified' = 'date_created';
 			" );
 		}
 
@@ -117,7 +119,7 @@ final class Customers extends Base {
 
 		// Alter the database
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active' AFTER 'name'" );
 
 		// Return success/fail
 		return $this->is_success( true );
@@ -134,7 +136,24 @@ final class Customers extends Base {
 	protected function __201807130001() {
 
 		// Alter the database
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER 'date_created'" );
+
+		// Return success/fail
+		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 201807130002
+	 * - Set values of `date_modified` to `date_created` (no empties)
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807130002() {
+
+		// Update modified row values
+		$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
 
 		// Return success/fail
 		return $this->is_success( true );
