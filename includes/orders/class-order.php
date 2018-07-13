@@ -273,6 +273,15 @@ class Order extends Objects\Order {
 	 * @return Order_Item[] Order items.
 	 */
 	public function get_items() {
+		if ( null === $this->items ) {
+			$this->items = edd_get_order_items( array(
+				'order_id'      => $this->id,
+				'orderby'       => 'cart_index',
+				'order'         => 'ASC',
+				'no_found_rows' => true,
+			) );
+		}
+
 		return $this->items;
 	}
 
@@ -284,6 +293,15 @@ class Order extends Objects\Order {
 	 * @return array Order adjustments.
 	 */
 	public function get_adjustments() {
+		if ( null === $this->adjustments ) {
+			$this->adjustments = edd_get_order_adjustments( array(
+				'object_id'     => $this->id,
+				'object_type'   => 'order',
+				'no_found_rows' => true,
+				'order'         => 'ASC',
+			) );
+		}
+
 		return $this->adjustments;
 	}
 

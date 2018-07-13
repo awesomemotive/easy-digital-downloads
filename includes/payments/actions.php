@@ -42,7 +42,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 	$completed_date = '0000-00-00 00:00:00' === $order->date_completed ? '' : $order->date_completed;
 	$customer_id    = $order->customer_id;
 	$amount         = $order->total;
-	$order_items    = $order->get_items();
+	$order_items    = $order->items;
 
 	do_action( 'edd_pre_complete_purchase', $order_id );
 
