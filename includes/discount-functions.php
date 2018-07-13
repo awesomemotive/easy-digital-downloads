@@ -76,6 +76,13 @@ function edd_add_discount( $data = array() ) {
  * @return int
  */
 function edd_delete_discount( $discount_id = 0 ) {
+	$discount = edd_get_discount( $discount_id );
+
+	// Do not allow for a discount to be deleted if it has been used.
+	if ( $discount && 0 < $discount->use_count ) {
+		return false;
+	}
+
 	$discounts = new EDD\Database\Queries\Discount();
 
 	// Pre-3.0 pre action.
@@ -97,7 +104,7 @@ function edd_delete_discount( $discount_id = 0 ) {
  * @since 3.0 Updated to call use new query class.
  *
  * @param int $discount_id Discount ID.
- * @return mixed object|bool EDD_Discount object or false if not found.
+ * @return \EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount( $discount_id = 0 ) {
 	return edd_get_discount_by( 'id', $discount_id );
