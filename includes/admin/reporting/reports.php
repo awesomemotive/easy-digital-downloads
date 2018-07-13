@@ -679,17 +679,23 @@ function edd_register_downloads_report( $reports ) {
 
 			$location = '';
 
-			if ( ! empty( $region ) || ! empty( $country ) ) {
-				$location .= ' ' . __( 'for', 'easy-digital-downloads' ) . ' ';
-			}
+			if ( ! empty( $country ) && 'all' !== $country ) {
+				$location = ' ' . __( 'for', 'easy-digital-downloads' ) . ' ';
 
-			if ( ! empty( $region ) ) {
-				$location .= edd_get_state_name( $country, $region ) . ', ';
-			}
+				if ( ! empty( $region ) && 'all' !== $region ) {
+					$location .= edd_get_state_name( $country, $region ) . ', ';
+				}
 
-			if ( ! empty( $country ) ) {
 				$location .= edd_get_country_name( $country );
 			}
+
+			$country = 'all' !== $country
+				? $country
+				: '';
+
+			$region = 'all' !== $region
+				? $region
+				: '';
 
 			$endpoint_label .= $location;
 
