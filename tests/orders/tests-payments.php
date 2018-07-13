@@ -386,6 +386,11 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_recovering_payment_guest_to_guest() {
+		/**
+		 * @internal This call is necessary as we need to flush the meta cache.
+		 */
+		wp_cache_flush();
+
 		$initial_purchase_data = array(
 			'price'        => 299.0,
 			'date'         => date( 'Y-m-d H:i:s' ),
