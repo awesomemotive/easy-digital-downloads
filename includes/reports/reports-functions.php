@@ -1035,11 +1035,13 @@ function display_dates_filter() {
  */
 function display_products_filter() {
 	$products = get_filter_value( 'products' );
+
 	$select   = EDD()->html->product_dropdown( array(
-		'chosen'          => true,
-		'variations'      => true,
-		'show_option_all' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'selected'        => empty( $products ) ? 0 : $products,
+		'chosen'           => true,
+		'variations'       => true,
+		'selected'         => empty( $products ) ? 0 : $products,
+		'show_option_none' => false,
+		'show_option_all'  => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 	) ); ?>
 
 	<span class="edd-graph-filter-options graph-option-section"><?php

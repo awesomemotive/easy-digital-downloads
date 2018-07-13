@@ -185,6 +185,11 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' variations';
 		}
 
+		// 'all' gets created as an option if passed via the `selected` argument.
+		if ( isset( $options['all'] ) ) {
+			unset( $options['all'] );
+		}
+
 		$output = $this->select( array(
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],
