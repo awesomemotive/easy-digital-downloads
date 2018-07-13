@@ -103,7 +103,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_log_user_in() {
 		wp_logout();
-		edd_log_user_in( 1, 'admin', 'pass' );
+		edd_log_user_in( 1, 'admin', 'password' );
 		$this->assertTrue( is_user_logged_in() );
 	}
 
