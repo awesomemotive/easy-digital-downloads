@@ -134,9 +134,9 @@ final class Customers extends Base {
 	protected function __201807130001() {
 
 		// Alter the database
-		$retval = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00'" );
 
 		// Return success/fail
-		return $this->is_success( $retval );
+		return $this->is_success( true );
 	}
 }
