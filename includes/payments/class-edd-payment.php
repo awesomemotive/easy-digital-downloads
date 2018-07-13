@@ -677,8 +677,6 @@ class EDD_Payment {
 	 * @return bool True of the save occurred, false if it failed or wasn't needed.
 	 */
 	public function save() {
-		global $edd_logs;
-
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
@@ -2278,7 +2276,7 @@ class EDD_Payment {
 
 								edd_update_order_adjustment( $adjustment_id, array(
 									'description' => $fee['label'],
-									'amount'      => (float) $fee['amount'],
+									'subtotal'    => (float) $fee['amount'],
 								) );
 
 								if ( ! is_null( $fee['price_id'] ) ) {
@@ -2330,12 +2328,8 @@ class EDD_Payment {
 
 								edd_update_order_adjustment( $adjustment_id, array(
 									'description' => $fee['label'],
-									'amount'      => (float) $fee['amount'],
+									'subtotal'    => (float) $fee['amount'],
 								) );
-
-								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-									edd_update_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-								}
 
 								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
