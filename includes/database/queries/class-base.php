@@ -649,7 +649,7 @@ class Base extends \EDD\Database\Base {
 	private function get_date_query( $args = array(), $column = 'date_created' ) {
 
 		// Filter valid date columns for these columns
-		add_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns'), 2 );
+		add_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
 		$date_query = new \WP_Date_Query( $args, $column );
 		$table      = $this->get_table_name();
@@ -659,7 +659,7 @@ class Base extends \EDD\Database\Base {
 		$this->date_query_sql = $date_query->get_sql();
 
 		// Remove all valid columns filters
-		remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns'), 2 );
+		remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
 		// Return the date
 		return $date_query;
