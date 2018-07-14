@@ -20,11 +20,11 @@ class Order_Transaction extends \WP_UnitTest_Factory_For_Thing {
 
 		$this->default_generation_definitions = array(
 			'object_id'      => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'object_type'    => 'order',
-			'transaction_id' => md5( time() ),
-			'gateway'        => 'phpunit',
-			'status'         => 'complete',
-			'total'          => 20,
+			'object_type'    => new \WP_UnitTest_Generator_Sequence( 'order%d' ),
+			'transaction_id' => new \WP_UnitTest_Generator_Sequence( 'transaction%d' ),
+			'gateway'        => new \WP_UnitTest_Generator_Sequence( 'gateway%d' ),
+			'status'         => new \WP_UnitTest_Generator_Sequence( 'status%d' ),
+			'total'          => new \WP_UnitTest_Generator_Sequence( '%f' ),
 		);
 	}
 
