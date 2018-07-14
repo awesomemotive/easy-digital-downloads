@@ -7,7 +7,7 @@ namespace EDD\Orders;
  * @group edd_orders
  * @group database
  *
- * @coversDefaultClass \EDD\Orders\Order_Item
+ * @coversDefaultClass \EDD\Orders\Order_Transaction
  */
 class Order_Transaction_Tests extends \EDD_UnitTestCase {
 

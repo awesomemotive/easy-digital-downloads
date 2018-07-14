@@ -127,7 +127,8 @@ function edd_get_order( $order_id = 0 ) {
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
- * @return object
+ *
+ * @return \EDD\Orders\Order Order object.
  */
 function edd_get_order_by( $field = '', $value = '' ) {
 

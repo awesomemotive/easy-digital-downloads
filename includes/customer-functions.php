@@ -329,6 +329,22 @@ function edd_delete_customer_meta_by_key( $meta_key ) {
 /** Customer Addresses **********************************************************/
 
 /**
+ * Get a customer address by ID.
+ *
+ * @internal This method is named edd_fetch_customer_address as edd_get_customer_address
+ *           exists for backwards compatibility purposes and returns an array instead of
+ *           an object.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_address_id Customer address ID.
+ * @return EDD\Customers\Customer_Address Customer address object.
+ */
+function edd_fetch_customer_address( $customer_address_id = 0 ) {
+	return edd_get_customer_address_by( 'id', $customer_address_id );
+}
+
+/**
  * Add a customer address.
  *
  * @since 3.0
@@ -540,7 +556,7 @@ function edd_add_customer_email_address( $data ) {
 		return false;
 	}
 
-	// Instantiate a query object
+	// Instantiate a query object.
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
 	return $customer_email_addresses->add_item( $data );
