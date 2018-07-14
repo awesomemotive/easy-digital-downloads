@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * @property int $id
  * @property int $object_id
  * @property string $object_type
- * @property string $gateway
  * @property string $transaction_id
+ * @property string $gateway
  * @property string $status
  * @property float $total
  * @property string $date_created
@@ -57,20 +57,20 @@ class Order_Transaction extends Objects\Order_Transaction {
 	protected $object_type;
 
 	/**
-	 * Gateway.
-	 *
-	 * @since 3.0
-	 * @var   string
-	 */
-	protected $gateway;
-
-	/**
 	 * Transaction ID.
 	 *
 	 * @since 3.0
 	 * @var   string
 	 */
 	protected $transaction_id;
+
+	/**
+	 * Gateway.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $gateway;
 
 	/**
 	 * Status.
