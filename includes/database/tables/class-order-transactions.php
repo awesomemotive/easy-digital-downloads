@@ -59,6 +59,6 @@ final class Order_Transactions extends Base {
 			KEY transaction_id (transaction_id(64)),
 			KEY gateway (gateway(20)),
 			KEY status (status(20)),
-			KEY date_created_completed (date_created,date_completed)";
+			KEY date_created (date_created)";
 	}
 }

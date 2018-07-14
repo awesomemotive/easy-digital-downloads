@@ -389,6 +389,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-addresses.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-transactions.php';
 
 		// Database Objects
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-base.php';
@@ -404,6 +405,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/objects/class-order-transaction.php';
 
 		// Database Tables
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-base.php';
@@ -420,6 +422,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-transactions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-meta.php';
@@ -442,6 +445,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-transaction.php';
 
 		// Call the component setup function
 		edd_setup_components();
@@ -579,6 +583,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-transaction.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/meta.php';
