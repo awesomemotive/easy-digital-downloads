@@ -1235,17 +1235,22 @@ function edd_get_bot_name() {
  */
 function edd_redirect( $location = '', $status = 302 ) {
 
-	// Prevent errors from empty $location
+	// Prevent redirects in unit tests.
+	if ( (bool) ( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR ) || function_exists( '_manually_load_plugin' ) ) {
+		return;
+	}
+
+	// Prevent errors from empty $location.
 	if ( empty( $location ) ) {
 		$location = is_admin()
 			? admin_url()
 			: home_url();
 	}
 
-	// Setup the safe redirect
+	// Setup the safe redirect.
 	wp_safe_redirect( $location, $status );
 
-	// Exit so the redirect takes place immediately
+	// Exit so the redirect takes place immediately.
 	edd_die();
 }
 

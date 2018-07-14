@@ -16,10 +16,11 @@ if ( ! $order ) : ?>
 return;
 endif;
 
-$meta   = edd_get_payment_meta( $order->id );
-$cart   = edd_get_payment_meta_cart_details( $order->id, true );
-$user   = edd_get_payment_meta_user_info( $order->id );
-$status = edd_get_payment_status( $order, true );
+$payment = edd_get_payment( $order->id );
+$meta    = edd_get_payment_meta( $order->id );
+$cart    = edd_get_payment_meta_cart_details( $order->id, true );
+$user    = edd_get_payment_meta_user_info( $order->id );
+$status  = edd_get_payment_status( $order, true );
 ?>
 <table id="edd_purchase_receipt" class="edd-table">
 	<thead>
