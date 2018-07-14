@@ -9,4 +9,5 @@ require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-notes.php'
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-orders.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-items.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-adjustments.php' );
+require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-transactions.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory.php' );
