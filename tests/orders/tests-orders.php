@@ -514,7 +514,6 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::__get
 	 */
 	public function test_order_object_magic_getter_for_address_should_return_true() {
-
 		foreach ( self::$orders as $order ) {
 			$o = edd_get_order( $order );
 
@@ -527,7 +526,6 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::__get
 	 */
 	public function test_order_object_magic_getter_for_adjustments_should_return_true() {
-
 		foreach ( self::$orders as $order ) {
 			$o = edd_get_order( $order );
 
