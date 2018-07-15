@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $customer_id
  * @property string $type
  * @property string $status
- * @property string $email_address
+ * @property string $email
  * @property string $date_created
  * @property string $date_modified
  */

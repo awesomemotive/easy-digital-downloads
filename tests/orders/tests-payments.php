@@ -26,7 +26,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 
 		edd_destroy_order( self::$payment->ID );
 
-		$component = edd_get_component_interface( 'order', 'meta' );
+		$component = edd_get_component_interface( 'order_transaction', 'table' );
 
 		if ( $component instanceof \EDD\Database\Tables\Base ) {
 			$component->delete_all();
