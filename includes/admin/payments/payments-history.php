@@ -99,7 +99,10 @@ function edd_view_order_details_title( $admin_title, $title ) {
 	switch ( $action ) {
 		case 'view-order-details':
 		case 'edit-payment':
-			$title = __( 'Edit Order', 'easy-digital-downloads' ) . ' - ' . $admin_title;
+			$title = __( 'Edit Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
+			break;
+		case 'add-order':
+			$title = __( 'Add Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
 			break;
 		default:
 			$title = $admin_title;
