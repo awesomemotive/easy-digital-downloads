@@ -1049,6 +1049,33 @@ jQuery(document).ready(function ($) {
 
 	EDD_Edit_Payment.init();
 
+    /**
+	 * Add order
+     */
+
+    var EDD_Add_Order = {
+    	init : function() {
+			this.add_order_item();
+		},
+
+        add_order_item : function () {
+        	$( '.edd-add-order-item' ).on( 'click', function( e ) {
+        		e.preventDefault();
+
+                var row = $('#edd-order-items .edd_repeatable_row:last-child'),
+                    clone = EDD_Download_Configuration.clone_repeatable(row);
+
+                clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
+
+                // Setup chosen fields again if they exist
+                clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
+                clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
+                clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
+			});
+        }
+	};
+
+    EDD_Add_Order.init();
 
 	/**
 	 * Discount add / edit screen JS
