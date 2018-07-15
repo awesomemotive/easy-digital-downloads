@@ -832,7 +832,6 @@ function edd_check_for_download_price_variations() {
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
 
-
 /**
  * Searches for users via ajax and returns a list of results
  *
@@ -895,3 +894,65 @@ function edd_ajax_search_users() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
+
+/**
+ * Search for download variations via AJAX and return a list of results.
+ *
+ * @since 3.0
+ */
+function edd_ajax_download_variations() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+	
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$download_id = isset( $_POST['download_id'] )
+		? absint( $_POST['download_id'] )
+		: 0;
+
+	$key = isset( $_POST['key'] )
+		? absint( $_POST['key'] )
+		: 0;
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $download_id ) || empty( $key ) ) {
+		edd_die( '-1' );
+	}
+
+	// Bail if nonce fails.
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+		edd_die( '-1' );
+	}
+
+	$response = array();
+
+	$download = edd_get_download( $download_id );
+
+	$prices = $download->get_prices();
+
+	if ( ! empty( $prices ) ) {
+		$html = '<select name="downloads[' . $key . '][price_id]">';
+		foreach ( $prices as $key => $price ) {
+			$html .= '<option value="' . esc_attr( $key ) . '">' . $price['name']  . '</option>';
+
+			if ( ! isset( $response['amount'] ) ) {
+				$response['amount'] = $price['amount'];
+			}
+		}
+		$html .= '</select>';
+		$response['html'] = $html;
+	} else {
+		$response['amount'] = $download->get_price();
+	}
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_download_variations', 'edd_ajax_download_variations' );

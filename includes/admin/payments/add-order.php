@@ -63,7 +63,7 @@ if ( empty( $decimals ) ) {
 									</tr>
 								</thead>
 								<tbody>
-									<tr class="edd_repeatable_row" data-key="0">
+									<tr class="edd_repeatable_row" data-key="1">
 										<td>
 											<?php
 											echo EDD()->html->product_dropdown( array(
@@ -75,7 +75,7 @@ if ( empty( $decimals ) ) {
 											) );
 											?>
 										</td>
-										<td class="download-price-option-wrap"><?php esc_html_e( 'N/A', 'easy-digital-downloads' ); ?></td>
+										<td class="download-price-option-wrap"><?php esc_html_e( '&mdash;', 'easy-digital-downloads' ); ?> <span class="spinner"></span></td>
 										<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-amount" name="downloads[1][amount]" value="" min="0" placeholder="<?php esc_attr_e( 'Amount', 'easy-digital-downloads' ); ?>"/></td>
 										<?php if ( edd_item_quantities_enabled() ) : ?>
 											<td>&nbsp;&times;&nbsp; <input type="number" step="1" class="edd-quantity" name="downloads[1][quantity]" value="1" min="1" placeholder="<?php esc_attr_e( 'Quantity', 'easy-digital-downloads' ); ?>"/></td>
