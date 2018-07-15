@@ -23,6 +23,8 @@ function edd_payment_history_page() {
 
 	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
 		$payments_table = new EDD_Payment_History_Table();
@@ -34,7 +36,7 @@ function edd_payment_history_page() {
 		), admin_url( 'edit.php' ) ); ?>
 
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'view' => 'add_order' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
+			<h1><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'view' => 'add-order' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
 			<hr class="wp-header-end">
 
 			<?php do_action( 'edd_payments_page_top' ); ?>
