@@ -1507,7 +1507,37 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
 	 */
 	$transaction_id = apply_filters( 'edd_set_payment_transaction_id', $transaction_id, $order_id );
 
-	return edd_update_order_meta( $order_id, 'transaction_id', $transaction_id );
+	$order = edd_get_order( $order_id );
+
+	if ( $order ) {
+		$transaction_ids = array_values( edd_get_order_transactions( array(
+			'fields'      => 'ids',
+			'number'      => 1,
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+			'orderby'     => 'date_created',
+			'order'       => 'ASC',
+		) ) );
+
+		if ( $transaction_ids ) {
+			$transaction_id = $transaction_ids[0];
+
+			return edd_update_order_transaction( $transaction_id, array(
+				'transaction_id' => $transaction_id,
+				'gateway'        => $order->gateway,
+			) );
+		} else {
+			return edd_add_order_transaction( array(
+				'object_id'      => $order_id,
+				'object_type'    => 'order',
+				'transaction_id' => $transaction_id,
+				'gateway'        => $order->gateway,
+				'status'         => 'complete',
+			) );
+		}
+	}
+
+	return false;
 }
 
 /**

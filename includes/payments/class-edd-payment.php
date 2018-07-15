@@ -1975,7 +1975,22 @@ class EDD_Payment {
 				break;
 
 			case '_edd_payment_transaction_id':
-				$meta = edd_get_order_meta( $this->ID, 'transaction_id', true );
+				$transactions = array_values( edd_get_order_transactions( array(
+					'number'      => 1,
+					'object_id'   => $this->ID,
+					'object_type' => 'order',
+					'orderby'     => 'date_created',
+					'order'       => 'ASC',
+					'fields'      => 'transaction_id',
+				) ) );
+
+				$transaction_id = '';
+
+				if ( $transactions ) {
+					$transaction_id = esc_attr( $transactions[0] );
+				}
+
+				$meta = $transaction_id;
 				break;
 
 			case '_edd_payment_user_email':
@@ -2533,7 +2548,32 @@ class EDD_Payment {
 				) );
 				return true;
 			case '_edd_payment_transaction_id':
-				return edd_update_order_meta( $this->ID, 'transaction_id', $meta_value );
+			case 'transaction_id':
+				$transaction_ids = array_values( edd_get_order_transactions( array(
+					'fields'      => 'ids',
+					'number'      => 1,
+					'object_id'   => $this->ID,
+					'object_type' => 'order',
+					'orderby'     => 'date_created',
+					'order'       => 'ASC',
+				) ) );
+
+				if ( $transaction_ids ) {
+					$transaction_id = $transaction_ids[0];
+
+					return edd_update_order_transaction( $transaction_id, array(
+						'transaction_id' => $meta_value,
+						'gateway'        => $this->gateway,
+					) );
+				} else {
+					return edd_add_order_transaction( array(
+						'object_id'      => $this->ID,
+						'object_type'    => 'order',
+						'transaction_id' => $meta_value,
+						'gateway'        => $this->gateway,
+						'status'         => 'complete',
+					) );
+				}
 		}
 
 		$meta_key = str_replace( '_edd_payment_', '', $meta_key );
