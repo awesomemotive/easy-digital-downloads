@@ -87,6 +87,7 @@ if ( empty( $decimals ) ) {
 								</tbody>
 							</table>
 							<p><a href="#" class="button button-secondary edd-add-order-item"><?php esc_html_e( 'Add Item', 'easy-digital-downloads' ); ?></a> </p>
+							<p><strong><?php esc_html_e( 'Total:', 'easy-digital-downloads' ); ?></strong> <?php echo esc_html( edd_currency_symbol() ); ?><span id="edd-total">0.00</span></p>
 						</div>
 					</td>
 				</tr>
