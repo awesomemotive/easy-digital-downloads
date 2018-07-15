@@ -13,27 +13,24 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Renders the Discount Pages Admin Page
+ * Renders the Discounts admin page.
  *
  * @since 1.4
- * @author Sunny Ratilal
- * @return void
+ * @since 3.0 Nomenclature updated for consistency.
 */
 function edd_discounts_page() {
-
 	if ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] === 'edit_discount' ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php';
-
 	} elseif ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] === 'add_discount' ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php';
-
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php';
 		$discount_codes_table = new EDD_Discount_Codes_Table();
-		$discount_codes_table->prepare_items(); ?>
+		$discount_codes_table->prepare_items();
+	?>
 
 	<div class="wrap">
-		<h1><?php _e( 'Discount Codes', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'edd-action' => 'add_discount' ) ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
+		<h1><?php esc_html_e( 'Discounts', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'edd-action' => 'add_discount' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
 
 		<hr class="wp-header-end">
 
@@ -46,17 +43,14 @@ function edd_discounts_page() {
 			<input type="hidden" name="page" value="edd-discounts" />
 
 			<?php
-			
 			$discount_codes_table->views();
-
 			$discount_codes_table->display();
-
 			?>
 		</form>
 
 		<?php do_action( 'edd_discounts_page_bottom' ); ?>
-
 	</div>
-<?php
+
+	<?php
 	}
 }
