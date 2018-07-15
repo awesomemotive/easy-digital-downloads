@@ -63,11 +63,11 @@ if ( empty( $decimals ) ) {
 									</tr>
 								</thead>
 								<tbody>
-									<tr class="edd-repeatable-row" data-key="0">
+									<tr class="edd_repeatable_row" data-key="0">
 										<td>
 											<?php
 											echo EDD()->html->product_dropdown( array(
-												'name'     => 'downloads[0][id]',
+												'name'     => 'downloads[1][id]',
 												'id'       => 'downloads',
 												'class'    => 'add-order-download',
 												'multiple' => false,
@@ -76,12 +76,12 @@ if ( empty( $decimals ) ) {
 											?>
 										</td>
 										<td class="download-price-option-wrap"><?php esc_html_e( 'N/A', 'easy-digital-downloads' ); ?></td>
-										<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-amount" name="downloads[0][amount]" value="" min="0" placeholder="<?php esc_attr_e( 'Amount', 'easy-digital-downloads' ); ?>"/></td>
+										<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-amount" name="downloads[1][amount]" value="" min="0" placeholder="<?php esc_attr_e( 'Amount', 'easy-digital-downloads' ); ?>"/></td>
 										<?php if ( edd_item_quantities_enabled() ) : ?>
-											<td>&nbsp;&times;&nbsp; <input type="number" step="1" class="edd-quantity" name="downloads[0][quantity]" value="1" min="1" placeholder="<?php esc_attr_e( 'Quantity', 'easy-digital-downloads' ); ?>"/></td>
+											<td>&nbsp;&times;&nbsp; <input type="number" step="1" class="edd-quantity" name="downloads[1][quantity]" value="1" min="1" placeholder="<?php esc_attr_e( 'Quantity', 'easy-digital-downloads' ); ?>"/></td>
 										<?php endif; ?>
 										<?php if ( edd_use_taxes() ) : ?>
-											<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-tax" name="downloads[0][tax]" value="" min="0" placeholder="<?php esc_attr_e( 'Tax', 'easy-digital-downloads' ); ?>"/></td>
+											<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-tax" name="downloads[1][tax]" value="" min="0" placeholder="<?php esc_attr_e( 'Tax', 'easy-digital-downloads' ); ?>"/></td>
 										<?php endif; ?>
 									</tr>
 								</tbody>
@@ -242,6 +242,5 @@ if ( empty( $decimals ) ) {
 		<?php do_action( 'edd_add_order_form_bottom' ); ?>
 
 		<?php submit_button( __( 'Add Order', 'easy-digital-downloads' ) ); ?>
-
 	</form>
 </div>
