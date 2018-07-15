@@ -88,16 +88,14 @@ function edd_view_order_details_title( $admin_title, $title ) {
 		return $admin_title;
 	}
 
-	if ( ! isset( $_GET['edd-action'] ) ) {
+	if ( ! isset( $_GET['view'] ) ) {
 		return $admin_title;
 	}
 
-	$action = sanitize_text_field( $_GET['edd-action'] );
+	$action = sanitize_text_field( $_GET['view'] );
 
 	switch ( $action ) {
 		case 'view-order-details':
-			$title = __( 'View Order Details', 'easy-digital-downloads' ) . ' - ' . $admin_title;
-			break;
 		case 'edit-payment':
 			$title = __( 'Edit Order', 'easy-digital-downloads' ) . ' - ' . $admin_title;
 			break;
