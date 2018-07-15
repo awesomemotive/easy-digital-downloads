@@ -386,7 +386,7 @@ textarea[name="edd-note"] {
 	margin-bottom: 50px;
 }
 
-/* Discount Code Styles
+/* Discount Code/Add Order Styles
 -------------------------------------------------------------- */
 
 #edd-products {
@@ -394,12 +394,14 @@ textarea[name="edd-note"] {
 	min-width: 200px;
 }
 #edd-add-discount input[type="text"],
-#edd-edit-discount input[type="text"] {
+#edd-edit-discount input[type="text"],
+#edd-add-order input[type="text"] {
 	width: 300px;
 }
 
 #edd-add-discount input[type="text"].edd_datepicker,
-#edd-edit-discount input[type="text"].edd_datepicker {
+#edd-edit-discount input[type="text"].edd_datepicker,
+#edd-add-order input[type="text"].edd_datepicker {
 	width: 183px;
 	vertical-align: middle;
 }
@@ -409,10 +411,20 @@ textarea[name="edd-note"] {
 }
 
 #edd-add-discount input.edd-price-field,
-#edd-edit-discount input.edd-price-field {
+#edd-edit-discount input.edd-price-field,
+#edd-add-order input.edd-price-field{
 	padding: 3px 5px;
 	width: 80%;
 	max-width: 125px;
+}
+
+#edd-add-order .orderitems {
+	max-width: 850px;
+}
+
+#edd-add-order .orderitems th {
+	padding: 8px 10px;
+	font-weight: normal;
 }
 
 /* List Tables
