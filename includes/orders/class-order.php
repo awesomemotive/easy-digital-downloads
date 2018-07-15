@@ -424,10 +424,39 @@ class Order extends Objects\Order {
 	 *
 	 * @since 3.0
 	 *
-	 * @return string Transaction ID.
+	 * @param string $type Transaction type. Default `primary`.
+	 * @return string|array $retval Transaction ID(s).
 	 */
-	public function get_transaction_id() {
-		return edd_get_order_meta( $this->id, 'transaction_id', true );
+	public function get_transaction_id( $type = 'primary' ) {
+		$retval = '';
+
+		// Retrieve first transaction ID only.
+		if ( 'primary' === $type ) {
+			$transactions = array_values( edd_get_order_transactions( array(
+				'object_id'   => $this->id,
+				'object_type' => 'order',
+				'orderby'     => 'date_created',
+				'order'       => 'ASC',
+				'fields'      => 'transaction_id',
+				'number'      => 1,
+			) ) );
+
+			if ( $transactions ) {
+				$retval = esc_attr( $transactions[0] );
+			}
+
+		// Retrieve all transaction IDs.
+		} else {
+			$retval = edd_get_order_transactions( array(
+				'object_id'   => $this->id,
+				'object_type' => 'order',
+				'orderby'     => 'date_created',
+				'order'       => 'ASC',
+				'fields'      => 'transaction_id',
+			) );
+		}
+
+		return $retval;
 	}
 
 	/**
