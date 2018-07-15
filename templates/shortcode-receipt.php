@@ -193,7 +193,7 @@ $status  = edd_get_payment_status( $order, true );
 													do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $order->id, $meta );
 												endforeach;
 											else :
-												echo esc_html( '<li>' . __( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>' );
+												echo '<li>' . __( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
 											endif;
 											?>
 										</ul>
@@ -202,7 +202,7 @@ $status  = edd_get_payment_status( $order, true );
 								endforeach;
 
 							else :
-								echo esc_html( '<li>' . apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item['id'] ) . '</li>' );
+								echo '<li>' . apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item['id'] ) . '</li>';
 							endif;
 							?>
 						</ul>
