@@ -1046,3 +1046,36 @@ function edd_get_report_dates( $timezone = null ) {
 	 */
 	return edd_apply_filters_deprecated( 'edd_report_dates', array( $dates ), '3.0' );
 }
+
+/**
+ * Intercept default Edit post links for EDD orders and rewrite them to the View Order Details screen.
+ *
+ * @since 1.8.3
+ * @deprecated 3.0 No alternative present as get_post() does not work with orders.
+ *
+ * @param $url
+ * @param $post_id
+ * @param $context
+ *
+ * @return string
+ */
+function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $context = '') {
+	_edd_deprecated_function( __FUNCTION__, '3.0', '' );
+
+	$post = get_post( $post_id );
+
+	if ( empty( $post ) ) {
+		return $url;
+	}
+
+	if ( 'edd_payment' !== $post->post_type ) {
+		return $url;
+	}
+
+	return add_query_arg( array(
+		'post_type' => 'download',
+		'page'      => 'edd-payment-history',
+		'view'      => 'view-order-details',
+		'id'        => $post_id
+	), admin_url( 'edit.php' ) );
+}
