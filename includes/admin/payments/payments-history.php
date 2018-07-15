@@ -34,7 +34,7 @@ function edd_payment_history_page() {
 		), admin_url( 'edit.php' ) ); ?>
 
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
+			<h1><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'view' => 'add_order' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
 			<hr class="wp-header-end">
 
 			<?php do_action( 'edd_payments_page_top' ); ?>
