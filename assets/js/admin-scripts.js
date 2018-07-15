@@ -1056,23 +1056,50 @@ jQuery(document).ready(function ($) {
     var EDD_Add_Order = {
     	init : function() {
 			this.add_order_item();
+			this.select_order_item();
+			this.recalculate_total();
 		},
 
         add_order_item : function () {
-        	$( '.edd-add-order-item' ).on( 'click', function( e ) {
+        	$( '#edd-add-order .edd-add-order-item' ).on( 'click', function( e ) {
         		e.preventDefault();
 
-                var row = $('#edd-order-items .edd_repeatable_row:last-child'),
-                    clone = EDD_Download_Configuration.clone_repeatable(row);
+                var row = $( '#edd-order-items .edd_repeatable_row:last-child' ),
+                    clone = EDD_Download_Configuration.clone_repeatable( row );
 
-                clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
+                clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
                 // Setup chosen fields again if they exist
                 clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
                 clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
                 clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 			});
-        }
+        },
+
+        select_order_item : function() {
+            $('#edd-add-order .add-order-download').on( 'change', function() {
+                var $this = $( this ),
+					data = {
+                    action: 'edd_download_variations',
+                    nonce: $( '#edd_add_order_nonce' ).val(),
+					download_id: $this.val(),
+					key: $this.parent().parent().data('key')
+                };
+
+                $this.parent().parent().find('.download-price-option-wrap .spinner').css("visibility", "visible");
+
+                $.post( ajaxurl, data, function ( response ) {
+                    $this.parent().parent().find('.download-price-option-wrap').html( response.html );
+                    $this.parent().parent().find('.download-price-option-wrap select').chosen( chosen_vars );
+                }, 'json' );
+
+                return false;
+            } );
+		},
+
+		recalculate_total : function() {
+
+		}
 	};
 
     EDD_Add_Order.init();

@@ -427,6 +427,11 @@ textarea[name="edd-note"] {
 	font-weight: normal;
 }
 
+#edd-add-order .orderitems .spinner {
+	float: none;
+	margin: 0;
+}
+
 /* List Tables
 -------------------------------------------------------------- */
 
