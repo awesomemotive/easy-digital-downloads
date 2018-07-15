@@ -277,7 +277,7 @@ function edd_build_order( $order_data = array() ) {
 			$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
 
 			$transaction_id = $order->get_transaction_id();
-
+			
 			if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $transaction_id ) ) {
 				$payment      = edd_get_payment( $existing_order );
 				$resume_order = true;
@@ -839,7 +839,7 @@ function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
 	}
 
 	$order_id = $wpdb->get_var( $wpdb->prepare(
-		"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'transaction_id' AND meta_value = %s",
+		"SELECT object_id FROM {$wpdb->edd_order_transactions} WHERE transaction_id = %s",
 		$transaction_id
 	) );
 

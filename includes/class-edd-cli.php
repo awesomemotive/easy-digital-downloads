@@ -1464,6 +1464,11 @@ class EDD_CLI extends WP_CLI_Command {
 				$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 				$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
 
+				// Maybe convert the date completed to UTC.
+				if ( '0000-00-00 00:00:00' !== $date_completed ) {
+					$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+				}
+
 				// Do not use -1 as the user ID.
 				$user_id = ( -1 === $user_id )
 					? 0
@@ -1562,7 +1567,16 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 
 				if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
-					edd_add_order_meta( $order_id, 'transaction_id', $meta['_edd_payment_transaction_id'][0] );
+					edd_add_order_transaction( array(
+						'object_id'      => $order_id,
+						'object_type'    => 'order',
+						'transaction_id' => $meta['_edd_payment_transaction_id'][0],
+						'gateway'        => $gateway,
+						'status'         => 'complete',
+						'total'          => $total,
+						'date_created'   => $date_completed,
+						'date_modified'  => $date_completed,
+					) );
 				}
 
 				/** Migrate edd_payment_meta *********************************/

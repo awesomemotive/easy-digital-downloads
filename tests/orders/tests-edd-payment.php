@@ -5,6 +5,7 @@ namespace EDD\Orders;
  * EDD_Payment Tests.
  *
  * @group edd_orders
+ * @group edd_payment
  *
  * @coversDefaultClass \EDD_Payment
  */
