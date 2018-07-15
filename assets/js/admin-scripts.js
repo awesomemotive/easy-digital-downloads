@@ -548,8 +548,8 @@ jQuery(document).ready(function ($) {
 		 * @since 3.0
 		 */
 		add_note : function() {
-            $('#edd-add-note').on('click', function(e) {
-                e.preventDefault();
+			$('#edd-add-note').on('click', function(e) {
+				e.preventDefault();
 
 				var edd_button     = $( this ),
 					edd_note       = $('#edd-note'),
@@ -558,50 +558,50 @@ jQuery(document).ready(function ($) {
 					edd_spinner    = $('.edd-add-note .spinner'),
 					edd_note_nonce = $('#edd_note_nonce');
 
-                var postData = {
-                    action:      'edd_add_note',
+				var postData = {
+					action:      'edd_add_note',
 					nonce:       edd_note_nonce.val(),
-                    object_id:   edd_button.data('object-id'),
-                    object_type: edd_button.data('object-type'),
-                    note:        edd_note.val()
-                };
+					object_id:   edd_button.data('object-id'),
+					object_type: edd_button.data('object-type'),
+					note:        edd_note.val()
+				};
 
-                if ( postData.note ) {
+				if ( postData.note ) {
 					edd_button.prop('disabled', true);
 					edd_spinner.css('visibility', 'visible');
 
-                    $.ajax({
-                        type: 'POST',
-                        data: postData,
-                        url:  ajaxurl,
-                        success: function (response) {
-                            var res = wpAjax.parseAjaxResponse( response );
-                            res = res.responses[0];
+					$.ajax({
+						type: 'POST',
+						data: postData,
+						url:  ajaxurl,
+						success: function (response) {
+							var res = wpAjax.parseAjaxResponse( response );
+							res = res.responses[0];
 
-                            edd_notes.append( res.data );
-                            edd_no_notes.hide();
+							edd_notes.append( res.data );
+							edd_no_notes.hide();
 							edd_button.prop('disabled', false);
 							edd_spinner.css('visibility', 'hidden');
-                            edd_note.val('');
-                        }
-                    }).fail(function (data) {
-                        if ( window.console && window.console.log ) {
-                            console.log( data );
-                        }
+							edd_note.val('');
+						}
+					}).fail(function (data) {
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 						edd_button.prop('disabled', false);
 						edd_spinner.css('visibility', 'hidden');
-                    });
+					});
 
-                } else {
-                    var border_color = edd_note.css('border-color');
+				} else {
+					var border_color = edd_note.css('border-color');
 
-                    edd_note.css('border-color', 'red');
+					edd_note.css('border-color', 'red');
 
-                    setTimeout( function() {
-                        edd_note.css('border-color', border_color );
-                    }, userInteractionInterval );
-                }
-            });
+					setTimeout( function() {
+						edd_note.css('border-color', border_color );
+					}, userInteractionInterval );
+				}
+			});
 		},
 
 		/**
@@ -1049,60 +1049,102 @@ jQuery(document).ready(function ($) {
 
 	EDD_Edit_Payment.init();
 
-    /**
+	/**
 	 * Add order
-     */
+	 */
 
-    var EDD_Add_Order = {
-    	init : function() {
+	var EDD_Add_Order = {
+		init : function() {
 			this.add_order_item();
 			this.select_order_item();
 			this.recalculate_total();
 		},
 
-        add_order_item : function () {
-        	$( '#edd-add-order .edd-add-order-item' ).on( 'click', function( e ) {
-        		e.preventDefault();
+		add_order_item : function () {
+			$( '#edd-add-order .edd-add-order-item' ).on( 'click', function( e ) {
+				e.preventDefault();
 
-                var row = $( '#edd-order-items .edd_repeatable_row:last-child' ),
-                    clone = EDD_Download_Configuration.clone_repeatable( row );
+				var row = $( '#edd-order-items .edd_repeatable_row:last-child' ),
+					clone = EDD_Download_Configuration.clone_repeatable( row );
 
-                clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
+				clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
-                // Setup chosen fields again if they exist
-                clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
-                clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
-                clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
+				// Setup chosen fields again if they exist
+				clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
+				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
+				clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 			});
-        },
+		},
 
-        select_order_item : function() {
-            $('#edd-add-order .add-order-download').on( 'change', function() {
-                var $this = $( this ),
+		select_order_item : function() {
+			$('#edd-add-order .add-order-download').on( 'change', function() {
+				var $this = $( this ),
 					data = {
-                    action: 'edd_download_variations',
-                    nonce: $( '#edd_add_order_nonce' ).val(),
+					action: 'edd_download_variations',
+					nonce: $( '#edd_add_order_nonce' ).val(),
 					download_id: $this.val(),
 					key: $this.parent().parent().data('key')
-                };
+				};
 
-                $this.parent().parent().find('.download-price-option-wrap .spinner').css("visibility", "visible");
+				$this.parent().parent().find('.download-price-option-wrap .spinner').css('visibility', 'visible');
 
-                $.post( ajaxurl, data, function ( response ) {
-                    $this.parent().parent().find('.download-price-option-wrap').html( response.html );
-                    $this.parent().parent().find('.download-price-option-wrap select').chosen( chosen_vars );
-                }, 'json' );
+				$.post( ajaxurl, data, function ( response ) {
+					$this.parent().parent().find( '.edd-amount' ).val( response.amount );
 
-                return false;
-            } );
+					if ( response.html ) {
+						$this.parent().parent().find( '.download-price-option-wrap' ).html( response.html );
+						$this.parent().parent().find( '.download-price-option-wrap select' ).chosen( chosen_vars );
+					}
+
+					EDD_Add_Order.update_total();
+				}, 'json' );
+
+				return false;
+			} );
 		},
 
 		recalculate_total : function() {
 
+		},
+
+		update_total : function() {
+			var item_amount   = 0,
+				item_tax      = 0,
+				item_quantity = 1,
+				item_total    = 0,
+				total         = 0;
+
+			$( '#edd-add-order .edd_repeatable_row' ).each( function() {
+				var row = $( this );
+
+				item_amount = parseFloat( row.find('input.edd-amount').val() );
+
+				if ( row.find( 'input.edd-tax' ).length ) {
+					item_tax = parseFloat( row.find('input.edd-tax').val() );
+
+					if ( ! isNaN( item_tax ) && ! edd_vars.taxes_included ) {
+						item_amount = item_amount + item_tax;
+					}
+				}
+
+				if ( row.find( 'input.edd-quantity' ).length ) {
+					item_quantity = parseFloat( row.find( 'input.edd-quantity' ).val() );
+				}
+
+				item_total = item_amount * item_quantity;
+
+				total += item_total;
+			} );
+
+			if ( isNaN( total ) ) {
+				total = 0;
+			}
+
+			$('#edd-total').html( total.toFixed( edd_vars.currency_decimals ) );
 		}
 	};
 
-    EDD_Add_Order.init();
+	EDD_Add_Order.init();
 
 	/**
 	 * Discount add / edit screen JS
@@ -1406,7 +1448,7 @@ jQuery(document).ready(function ($) {
 					data   = {
 						action:     'edd_get_shop_states',
 						country:    $( this ).val(),
-                        nonce:      select.data('nonce'),
+						nonce:      select.data('nonce'),
 						field_name: select.attr('name').replace('country', 'state')
 					};
 
