@@ -595,12 +595,13 @@ function edd_purchase_form_validate_new_user() {
 			edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
 			// Check if it's valid
 		} else if ( ! edd_validate_username( $user_login ) ) {
-				// Invalid username
-				if ( is_multisite() )
-					edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'easy-digital-downloads' ) );
-				else
-					edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
+			// Invalid username
+			if ( is_multisite() ) {
+				edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'easy-digital-downloads' ) );
 			} else {
+				edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
+			}
+		} else {
 			// All the checks have run and it's good to go
 			$valid_user_data['user_login'] = $user_login;
 		}
