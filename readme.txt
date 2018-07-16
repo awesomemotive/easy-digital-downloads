@@ -190,6 +190,10 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 
 == Changelog ==
 
+= 2.9.6, July 16, 2018 =
+* Fix: "Error: You must login to complete your purchase" shown incorrectly on checkout.
+* Fix: WordPress database error in File Download Log updater.
+
 = 2.9.5, July 12, 2018 =
 * Fix: Changing the country field in the admin would not display the State fields.
 * Fix: File Download Log Migration from version 2.9.2 would fail on some sites.
