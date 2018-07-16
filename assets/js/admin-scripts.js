@@ -1106,7 +1106,9 @@ jQuery(document).ready(function ($) {
 		},
 
 		recalculate_total : function() {
-
+			$( document.body ).on( '#edd-add-order input', '.edd-amount, .edd-tax, .edd-quantity', function() {
+				EDD_Add_Order.update_total();
+            });
 		},
 
 		update_total : function() {
