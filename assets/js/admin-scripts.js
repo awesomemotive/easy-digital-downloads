@@ -1086,14 +1086,16 @@ jQuery(document).ready(function ($) {
 					key: $this.parent().parent().data('key')
 				};
 
-				$this.parent().parent().find('.download-price-option-wrap .spinner').css('visibility', 'visible');
+				$this.parent().parent().find('.download-price-option-wrap .spinner').css( 'visibility', 'visible' );
 
 				$.post( ajaxurl, data, function ( response ) {
 					$this.parent().parent().find( '.edd-amount' ).val( response.amount );
 
 					if ( response.html ) {
-						$this.parent().parent().find( '.download-price-option-wrap' ).html( response.html );
+						$this.parent().parent().find( '.download-price-option-wrap' ).html( response.html + '<span class="spinner"></span>' );
 						$this.parent().parent().find( '.download-price-option-wrap select' ).chosen( chosen_vars );
+					} else {
+						$this.parent().parent().find( '.download-price-option-wrap' ).html( '&mdash; <span class="spinner"></span>' );
 					}
 
 					EDD_Add_Order.update_total();
