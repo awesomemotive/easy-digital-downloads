@@ -1057,6 +1057,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.add_order_item();
 			this.select_order_item();
+			this.select_price_variation();
 			this.recalculate_total();
 		},
 
@@ -1105,10 +1106,35 @@ jQuery(document).ready(function ($) {
 			} );
 		},
 
+		select_price_variation : function() {
+			$( document.body ).on( 'change', '#edd-add-order .add-order-price-variation-select', function() {
+				var $this = $( this ),
+					spinner = $this.parent().parent().find('.download-price-option-wrap .spinner'),
+					key = $this.parent().parent().data( 'key' ),
+					data = {
+						action: 'edd_download_variation_amount',
+						nonce: $( '#edd_add_order_nonce' ).val(),
+						price_id: $this.val(),
+						key: key,
+						download_id: $( 'select[name="downloads[' + key + '][id]"] option:selected' ).val()
+					};
+
+				spinner.css( 'visibility', 'visible' );
+
+				$.post( ajaxurl, data, function ( response ) {
+					$this.parent().parent().find( '.edd-amount' ).val( response.amount );
+					EDD_Add_Order.update_total();
+					spinner.css( 'visibility', 'hidden' );
+				}, 'json' );
+
+				return false;
+			} );
+		},
+
 		recalculate_total : function() {
 			$( document.body ).on( '#edd-add-order input', '.edd-amount, .edd-tax, .edd-quantity', function() {
 				EDD_Add_Order.update_total();
-            });
+			});
 		},
 
 		update_total : function() {

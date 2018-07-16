@@ -937,7 +937,7 @@ function edd_ajax_download_variations() {
 	$prices = $download->get_prices();
 
 	if ( ! empty( $prices ) ) {
-		$html = '<select name="downloads[' . $key . '][price_id]">';
+		$html = '<select class="add-order-price-variation-select" name="downloads[' . $key . '][price_id]">';
 		foreach ( $prices as $key => $price ) {
 			$html .= '<option value="' . esc_attr( $key ) . '">' . $price['name']  . '</option>';
 
@@ -956,3 +956,61 @@ function edd_ajax_download_variations() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_download_variations', 'edd_ajax_download_variations' );
+
+/**
+ * Search for the download variation amount and return the amount.
+ *
+ * @since 3.0
+ */
+function edd_ajax_download_variation_amount() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$download_id = isset( $_POST['download_id'] )
+		? absint( $_POST['download_id'] )
+		: 0;
+
+	// Price ID could be 0 so we revert to false instead of 0.
+	$price_id = isset( $_POST['price_id'] )
+		? absint( $_POST['price_id'] )
+		: false;
+
+	$key = isset( $_POST['key'] )
+		? absint( $_POST['key'] )
+		: 0;
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $download_id ) || empty( $key ) || false === $price_id ) {
+		edd_die( '-1' );
+	}
+
+	// Bail if nonce fails.
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+		edd_die( '-1' );
+	}
+
+	$response = array();
+
+	$download = edd_get_download( $download_id );
+
+	$prices = $download->get_prices();
+
+	$amount = isset( $prices[ $price_id ] )
+		? floatval( $prices[ $price_id ]['amount'] )
+		: false;
+
+	$response['amount'] = $amount;
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_download_variation_amount', 'edd_ajax_download_variation_amount' );
