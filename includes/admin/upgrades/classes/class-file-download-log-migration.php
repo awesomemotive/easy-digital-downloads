@@ -198,7 +198,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 				update_option( 'edd_fdlm_term_tax_id', $term_tax_id );
 
 				// Count the number of entries!
-				$log_id_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT (*) FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_tax_id ) );
+				$log_id_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_tax_id ) );
 			}
 		}
 
