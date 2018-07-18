@@ -85,7 +85,7 @@ class Order_Notes extends Base {
 	 * @return float Percentage.
 	 */
 	public function get_percentage_complete() {
-		$total = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT COUNT(id) AS count FROM {$this->get_db()->comments} WHERE comment_type = %s", esc_sql( 'edd_payment_note' ) ) );
+		$total = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT COUNT(comment_ID) AS count FROM {$this->get_db()->comments} WHERE comment_type = %s", esc_sql( 'edd_payment_note' ) ) );
 
 		if ( empty( $total ) ) {
 			$total = 0;
