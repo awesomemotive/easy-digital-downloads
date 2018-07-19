@@ -28,6 +28,9 @@ jQuery(document).ready(function ($) {
 		no_results_text:           edd_vars.no_results_text
 	};
 
+	// Create "global" to store intermediate data.
+	var edd_admin_globals = {};
+
 	// Setup Chosen menus
 	$('.edd-select-chosen').chosen( chosen_vars );
 
@@ -1146,7 +1149,7 @@ jQuery(document).ready(function ($) {
 				spinner.css( 'visibility', 'visible' );
 
 				$.post( ajaxurl, data, function( response ) {
-					console.log( response );
+					edd_admin_globals.customer_address_ajax_result = response;
 
 					if ( response.html ) {
 						$( '.customer-address-select-wrap' ).html( response.html ).show();
@@ -1165,9 +1168,33 @@ jQuery(document).ready(function ($) {
 		select_address : function() {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
-					val   = $this.val();
+					val   = $this.val(),
+					select = $( '#edd-add-order select#edd_country' );
 
-				console.log( val );
+				var address = edd_admin_globals.customer_address_ajax_result['addresses'][ val ];
+
+				$( '#edd-add-order #edd-address' ).val( address.address );
+				$( '#edd-add-order #edd-address2' ).val( address.address2 );
+				$( '#edd-add-order #edd-city' ).val( address.city );
+				select.val( address.country ).trigger( 'chosen:updated' );
+
+				var data = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data( 'nonce' ),
+						field_name: 'edd_countries_filter'
+					};
+
+				$.post( ajaxurl, data, function ( response ) {
+					$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+
+					if ( 'nostates' !== response ) {
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+					}
+
+					$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
+					$( '#edd-add-order select.edd_regions_filter' ).val( address.region ).trigger( 'chosen:updated' );
+				});
 
 				return false;
 			} );
