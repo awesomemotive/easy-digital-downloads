@@ -32,6 +32,21 @@ if ( empty( $decimals ) ) {
 	$step = (float) $step;
 }
 
+$hours   = edd_get_hour_values();
+$minutes = edd_get_minute_values();
+
+$countries = array_filter( edd_get_country_list() );
+$regions   = array_filter( edd_get_shop_states( edd_get_shop_country() ) );
+
+// Setup gateway list.
+$known_gateways = edd_get_payment_gateways();
+
+$gateways = array();
+
+foreach ( $known_gateways as $id => $data ) {
+	$gateways[ $id ] = esc_html( $data['admin_label'] );
+}
+
 // Output
 ?><div class="wrap">
 	<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
@@ -123,22 +138,17 @@ if ( empty( $decimals ) ) {
 
 						<p>
 							<label for="edd-city"><?php esc_html_e( 'City' ); ?></label>
-							<input type="text" id="edd-city" name="city" />
+							<input type="text" id="edd-city" name="city" required="required" />
 						</p>
 
 						<p>
 							<label for="edd-postal-code"><?php esc_html_e( 'Zip / Postal Code' ); ?></label>
-							<input type="text" id="edd-postal-code" name="postal_code" />
+							<input type="text" id="edd-postal-code" name="postal_code" required="required" />
 						</p>
 
 						<p>
 							<label for="edd-country"><?php esc_html_e( 'Country' ); ?></label>
 							<?php
-							$countries = edd_get_country_list();
-
-							// Remove empty values.
-							$countries = array_filter( $countries );
-
 							echo EDD()->html->select( array(
 								'name'             => 'country',
 								'id'               => 'edd-country',
@@ -155,11 +165,6 @@ if ( empty( $decimals ) ) {
 						<p>
 							<label for="edd-region"><?php esc_html_e( 'Region' ); ?></label>
 							<?php
-							$regions = edd_get_shop_states( edd_get_shop_country() );
-
-							// Remove empty values.
-							$regions = array_filter( $regions );
-
 							echo EDD()->html->select( array(
 								'name'             => 'region',
 								'id'               => 'edd-region',
@@ -241,14 +246,6 @@ if ( empty( $decimals ) ) {
 					</th>
 					<td class="edd-gateway">
 						<?php
-						$known_gateways = edd_get_payment_gateways();
-
-						$gateways = array();
-
-						foreach ( $known_gateways as $id => $data ) {
-							$gateways[ $id ] = esc_html( $data['admin_label'] );
-						}
-
 						echo EDD()->html->select( array(
 							'name'             => 'gateway',
 							'id'               => 'edd-gateway',
@@ -284,6 +281,30 @@ if ( empty( $decimals ) ) {
 							'name'        => 'date',
 							'value'       => '',
 							'placeholder' => esc_html_x( 'Date Created', 'date filter', 'easy-digital-downloads' ),
+						) );
+						?>
+
+						<?php
+						echo EDD()->html->select( array(
+							'name'             => 'hour',
+							'options'          => $hours,
+							'selected'         => false,
+							'chosen'           => true,
+							'class'            => 'edd-time',
+							'show_option_none' => false,
+							'show_option_all'  => false
+						) );
+						?>
+						:
+						<?php
+						echo EDD()->html->select( array(
+							'name'             => 'minute',
+							'options'          => $minutes,
+							'selected'         => false,
+							'chosen'           => true,
+							'class'            => 'edd-time',
+							'show_option_none' => false,
+							'show_option_all'  => false
 						) );
 						?>
 						<p class="description"><?php esc_html_e( 'Enter the purchase date, or leave blank for the current date.', 'easy-digital-downloads' ); ?></p>

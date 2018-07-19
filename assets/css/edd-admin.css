@@ -432,6 +432,14 @@ textarea[name="edd-note"] {
 	margin: 0;
 }
 
+#edd-add-order .customer-address label {
+	display: block;
+}
+
+#edd-add-order .customer-address p {
+	margin-bottom: 1em;
+}
+
 /* List Tables
 -------------------------------------------------------------- */
 
