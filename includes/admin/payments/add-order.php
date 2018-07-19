@@ -107,6 +107,75 @@ if ( empty( $decimals ) ) {
 					</td>
 				</tr>
 
+				<?php if ( edd_use_taxes() ) : ?>
+				<tr class="form-field">
+					<th scope="row" valign="top"><?php esc_html_e( 'Customer Address', 'easy-digital-downloads' ); ?></th>
+					<td class="customer-address">
+						<p>
+							<label for="edd-address"><?php esc_html_e( 'Address Line 1' ); ?></label>
+							<input type="text" id="edd-address" name="address" />
+						</p>
+
+						<p>
+							<label for="edd-address2"><?php esc_html_e( 'Address Line 2' ); ?></label>
+							<input type="text" id="edd-address2" name="address2" />
+						</p>
+
+						<p>
+							<label for="edd-city"><?php esc_html_e( 'City' ); ?></label>
+							<input type="text" id="edd-city" name="city" />
+						</p>
+
+						<p>
+							<label for="edd-postal-code"><?php esc_html_e( 'Zip / Postal Code' ); ?></label>
+							<input type="text" id="edd-postal-code" name="postal_code" />
+						</p>
+
+						<p>
+							<label for="edd-country"><?php esc_html_e( 'Country' ); ?></label>
+							<?php
+							$countries = edd_get_country_list();
+
+							// Remove empty values.
+							$countries = array_filter( $countries );
+
+							echo EDD()->html->select( array(
+								'name'             => 'country',
+								'id'               => 'edd-country',
+								'class'            => 'edd-country',
+								'options'          => $countries,
+								'chosen'           => true,
+								'selected'         => false,
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							) );
+							?>
+						</p>
+
+						<p>
+							<label for="edd-region"><?php esc_html_e( 'Region' ); ?></label>
+							<?php
+							$regions = edd_get_shop_states( edd_get_shop_country() );
+
+							// Remove empty values.
+							$regions = array_filter( $regions );
+
+							echo EDD()->html->select( array(
+								'name'             => 'region',
+								'id'               => 'edd-region',
+								'class'            => 'edd-region',
+								'options'          => $regions,
+								'chosen'           => true,
+								'selected'         => false,
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							) );
+							?>
+						</p>
+					</td>
+				</tr>
+				<?php endif; ?>
+
 				<tr class="form-field new-customer" style="display: none">
 					<th scope="row" valign="top"><label for="edd-customer-email"><?php esc_html_e( 'Customer Email', 'easy-digital-downloads' ); ?></label></th>
 					<td class="customer-email">
