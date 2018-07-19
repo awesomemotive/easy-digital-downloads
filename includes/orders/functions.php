@@ -910,7 +910,7 @@ function edd_add_manual_order( $data ) {
 	// Create the customer if the record doesn't exist.
 	if ( ! $customer->id > 0 ) {
 		$customer->create( array(
-			'email'      => $data['email'],
+			'email'      => sanitize_email( $data['email'] ),
 			'first_name' => sanitize_text_field( $data['first'] ),
 			'last_name'  => sanitize_text_field( $data['last'] ),
 		) );
