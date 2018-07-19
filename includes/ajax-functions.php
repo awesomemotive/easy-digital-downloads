@@ -1083,18 +1083,6 @@ function edd_ajax_customer_addresses() {
 
 			// Fetch the select
 			if ( ! empty( $options ) ) {
-				$select = EDD()->html->select( array(
-					'name'             => '',
-					'id'               => 'add-order-customer-address-select',
-					'class'            => 'add-order-customer-address-select',
-					'options'          => $options,
-					'chosen'           => true,
-					'selected'         => false,
-					'placeholder'      => __( 'Select a previously used address', 'easy-digital-downloads' ),
-					'show_option_all'  => false,
-					'show_option_none' => __( 'New address' ),
-				) );
-
 				$html  = '<select data-placeholder="Select a previously used address" class="edd-select-chosen add-order-customer-address-select">';
 				$html .= '<option></option>';
 				foreach ( $options as $key => $value ) {
