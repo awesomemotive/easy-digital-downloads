@@ -427,6 +427,11 @@ textarea[name="edd-note"] {
 	font-weight: normal;
 }
 
+#edd-add-order .delete-column {
+	padding: 0;
+	vertical-align: middle;
+}
+
 #edd-add-order .orderitems .spinner,
 #edd-add-order .customer .spinner {
 	float: none;

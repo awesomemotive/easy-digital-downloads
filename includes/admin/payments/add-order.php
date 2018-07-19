@@ -75,6 +75,7 @@ foreach ( $known_gateways as $id => $data ) {
 										<?php if ( edd_use_taxes() ) : ?>
 										<th scope="col"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></th>
 										<?php endif; ?>
+										<td class="column-cb check-column"></td>
 									</tr>
 								</thead>
 								<tbody>
@@ -98,6 +99,7 @@ foreach ( $known_gateways as $id => $data ) {
 										<?php if ( edd_use_taxes() ) : ?>
 											<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-tax" name="downloads[1][tax]" value="" min="0" placeholder="<?php esc_attr_e( 'Tax', 'easy-digital-downloads' ); ?>"/></td>
 										<?php endif; ?>
+										<td class="check-column delete-column"><a href="#" class="edd-remove-row"><span class="dashicons dashicons-no"></span></a></td>
 									</tr>
 								</tbody>
 							</table>
