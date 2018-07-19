@@ -1133,7 +1133,24 @@ jQuery(document).ready(function ($) {
 		},
 
         fetch_addresses : function() {
+			$( '#edd-add-order .edd-customer-select' ).on( 'change', function() {
+				var $this = $( this ),
+					spinner = $( '.edd-customer-address-spinner' ),
+					data = {
+					action: 'edd_customer_addresses',
+					customer_id: $this.val(),
+					nonce: $( '#edd_add_order_nonce' ).val()
+				};
 
+                spinner.css( 'visibility', 'visible' );
+
+				$.post( ajaxurl, data, function( response ) {
+					console.log( response );
+                    spinner.css( 'visibility', 'hidden' );
+				}, 'json' );
+
+				return false;
+			} );
 		},
 
 		recalculate_total : function() {

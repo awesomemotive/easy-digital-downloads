@@ -111,7 +111,7 @@ foreach ( $known_gateways as $id => $data ) {
 					<th scope="row" valign="top"><label><?php esc_html_e( 'Customer', 'easy-digital-downloads' ); ?></label></th>
 					<td class="customer">
 						<div class="customer-info">
-							<?php echo EDD()->html->customer_dropdown( array( 'name' => 'customer' ) ); ?>
+							<?php echo EDD()->html->customer_dropdown( array( 'name' => 'customer' ) ); ?> <span class="spinner edd-customer-address-spinner"></span>
 						</div>
 						<p class="customer-info">
 							<a href="#new" class="button button-secondary edd-payment-new-customer order-customer-info" title="<?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?>"><?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?></a>

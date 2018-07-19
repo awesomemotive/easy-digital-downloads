@@ -1048,7 +1048,13 @@ function edd_ajax_customer_addresses() {
 	if ( $customer ) {
 		$addresses = $customer->get_addresses();
 
-		$response['address'] = $addresses;
+		if ( $addresses ) {
+			$response['addresses'] = array();
+
+			foreach ( $addresses as $key => $address ) {
+				$response['addresses'][ $key ] = $address->to_array();
+			}
+		}
 	}
 
 	echo wp_json_encode( $response );
