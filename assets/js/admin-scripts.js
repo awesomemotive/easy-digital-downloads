@@ -1132,7 +1132,7 @@ jQuery(document).ready(function ($) {
 			} );
 		},
 
-        fetch_addresses : function() {
+		fetch_addresses : function() {
 			$( '#edd-add-order .edd-customer-select' ).on( 'change', function() {
 				var $this = $( this ),
 					spinner = $( '.edd-customer-address-spinner' ),
@@ -1142,11 +1142,11 @@ jQuery(document).ready(function ($) {
 					nonce: $( '#edd_add_order_nonce' ).val()
 				};
 
-                spinner.css( 'visibility', 'visible' );
+				spinner.css( 'visibility', 'visible' );
 
 				$.post( ajaxurl, data, function( response ) {
 					console.log( response );
-                    spinner.css( 'visibility', 'hidden' );
+					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
 
 				return false;
