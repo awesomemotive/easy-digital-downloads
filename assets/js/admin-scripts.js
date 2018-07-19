@@ -1064,6 +1064,7 @@ jQuery(document).ready(function ($) {
 			this.fetch_addresses();
 			this.select_address();
 			this.recalculate_total();
+			this.delete_row();
 		},
 
 		add_order_item : function () {
