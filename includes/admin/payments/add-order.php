@@ -42,7 +42,7 @@ if ( empty( $decimals ) ) {
 
 		<?php do_action( 'edd_add_order_form_top' ); ?>
 
-		<table class="form-table">
+		<table class="form-table" id="edd-customer-details">
 			<tbody>
 				<tr class="form-field edd-add-order-download-wrap">
 					<th scope="row" valign="top"><label><?php echo esc_html_e( 'Order Items', 'easy-digital-downloads' ); ?></label></th>
@@ -99,10 +99,10 @@ if ( empty( $decimals ) ) {
 							<?php echo EDD()->html->customer_dropdown( array( 'name' => 'customer' ) ); ?>
 						</div>
 						<p class="customer-info">
-							<a href="#new" class="button button-secondary edd-order-new-customer" title="<?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?>"><?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?></a>
+							<a href="#new" class="button button-secondary edd-payment-new-customer order-customer-info" title="<?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?>"><?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?></a>
 						</p>
 						<p class="description new-customer" style="display: none">
-							<a href="#cancel" class="button button-secondary edd-order-new-customer-cancel" title="<?php esc_html_e( 'Select Existing Customer', 'easy-digital-downloads' ); ?>"><?php esc_html_e( 'Select Existing Customer', 'easy-digital-downloads' ); ?></a>
+							<a href="#cancel" class="button button-secondary edd-payment-new-customer-cancel" title="<?php esc_html_e( 'Select Existing Customer', 'easy-digital-downloads' ); ?>"><?php esc_html_e( 'Select Existing Customer', 'easy-digital-downloads' ); ?></a>
 						</p>
 					</td>
 				</tr>
@@ -238,7 +238,7 @@ if ( empty( $decimals ) ) {
 
 		<?php wp_nonce_field( 'edd_add_order_nonce', 'edd_add_order_nonce' ); ?>
 
-		<input type="hidden" name="edd-action" value="manually_add_order" />
+		<input type="hidden" name="edd-action" value="add_manual_order" />
 
 		<?php do_action( 'edd_add_order_form_bottom' ); ?>
 
