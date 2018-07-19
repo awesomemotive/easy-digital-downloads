@@ -918,6 +918,8 @@ function edd_add_manual_order( $data ) {
 		$email = $customer->email;
 	}
 
+	/** Insert order *********************************************************/
+
 	// Parse order status.
 	$status = sanitize_text_field( $data['status'] );
 
@@ -933,6 +935,36 @@ function edd_add_manual_order( $data ) {
 	);
 
 	$order_id = edd_add_order( $order_data );
+
+	/** Insert order data ****************************************************/
+
+	$order_total = 0.00;
+
+	// Insert order items.
+	if ( $data['downloads'] ) {
+
+		// Re-index downloads.
+		$data['downloads'] = array_values( $data['downloads'] );
+
+		foreach ( $data['downloads'] as $cart_key => $download ) {
+			edd_add_order_item( array(
+				'order_id'   => $order_id,
+				'product_id' => absint( $download['id'] ),
+			) );
+		}
+	}
+
+	// Insert transaction ID.
+	if ( ! empty( $data['transaction_id'] ) ) {
+		edd_add_order_transaction( array(
+			'object_id'      => $order_id,
+			'object_type'    => 'order',
+			'transaction_id' => sanitize_text_field( $data['transaction_id'] ),
+			'gateway'        => sanitize_text_field( $data['gateway'] ),
+			'status'         => 'complete',
+			'total'          => $order_total,
+		) );
+	}
 }
 add_action( 'edd_add_manual_order', 'edd_add_manual_order' );
 
