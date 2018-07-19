@@ -446,6 +446,28 @@ textarea[name="edd-note"] {
 	margin-bottom: 1em;
 }
 
+#edd-add-order .edd-order-totals-box {
+	width: 255px;
+	margin-top: 1em;
+}
+
+#edd-add-order .edd-order-totals-box h3 {
+	font-size: 14px;
+	padding: 8px 12px;
+	margin: 0;
+	line-height: 1.4;
+	border-bottom: 1px solid #eee;
+}
+
+#edd-add-order .edd-order-totals-box .inside {
+	margin: 0;
+	padding: 0;
+}
+
+#edd-add-order .edd-admin-box-inside span.label {
+	width: 90px;
+}
+
 /* List Tables
 -------------------------------------------------------------- */
 
@@ -1032,7 +1054,7 @@ input[class*="edd-price-field"] {
 /* Payment Details
 -------------------------------------------------------------- */
 
-#poststuff .edd-metabox-title-action {
+.edd-metabox-title-action {
 	margin: 0;
 	float: right;
 	padding: 4px 8px;
@@ -1051,7 +1073,7 @@ input[class*="edd-price-field"] {
 	cursor: pointer;
 	outline: 0;
 }
-#poststuff .edd-metabox-title-action:hover {
+.edd-metabox-title-action:hover {
 	border-color: #008EC2;
 	background: #00a0d2;
 	color: #fff;
