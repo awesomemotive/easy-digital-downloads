@@ -122,6 +122,32 @@ foreach ( $known_gateways as $id => $data ) {
 					</td>
 				</tr>
 
+				<tr class="form-field new-customer" style="display: none">
+					<th scope="row" valign="top"><label for="edd-customer-email"><?php esc_html_e( 'Customer Email', 'easy-digital-downloads' ); ?></label></th>
+					<td class="customer-email">
+						<input type="text" id="edd-customer-email" name="email" />
+						<p class="description"><?php esc_html_e( 'Enter the email address of the customer.', 'easy-digital-downloads' ); ?></p>
+					</td>
+				</tr>
+
+				<tr class="form-field new-customer" style="display: none">
+					<th scope="row" valign="top"><label for="edd-customer-first-name"><?php esc_html_e( 'Customer First Name', 'easy-digital-downloads' ); ?></label></th>
+					<td class="customer-first-name">
+						<input type="text" id="edd-customer-first-name" name="first" />
+						<p class="description"><?php esc_html_e( 'Enter the first name of the customer (optional).', 'easy-digital-downloads' ); ?></p>
+					</td>
+				</tr>
+
+				<tr class="form-field new-customer" style="display: none">
+					<th scope="row" valign="top">
+						<label for="edd-customer-last-name"><?php esc_html_e( 'Customer Last Name', 'easy-digital-downloads' ); ?></label>
+					</th>
+					<td class="customer-last-name">
+						<input type="text" id="edd-customer-last-name" name="last" />
+						<p class="description"><?php esc_html_e( 'Enter the last name of the customer (optional).', 'easy-digital-downloads' ); ?></p>
+					</td>
+				</tr>
+
 				<?php if ( edd_use_taxes() ) : ?>
 				<tr class="form-field">
 					<th scope="row" valign="top"><?php esc_html_e( 'Customer Address', 'easy-digital-downloads' ); ?></th>
@@ -181,38 +207,12 @@ foreach ( $known_gateways as $id => $data ) {
 				</tr>
 				<?php endif; ?>
 
-				<tr class="form-field new-customer" style="display: none">
-					<th scope="row" valign="top"><label for="edd-customer-email"><?php esc_html_e( 'Customer Email', 'easy-digital-downloads' ); ?></label></th>
-					<td class="customer-email">
-						<input type="text" id="edd-customer-email" name="email" />
-						<p class="description"><?php esc_html_e( 'Enter the email address of the customer.', 'easy-digital-downloads' ); ?></p>
-					</td>
-				</tr>
-
-				<tr class="form-field new-customer" style="display: none">
-					<th scope="row" valign="top"><label for="edd-customer-first-name"><?php esc_html_e( 'Customer First Name', 'easy-digital-downloads' ); ?></label></th>
-					<td class="customer-first-name">
-						<input type="text" id="edd-customer-first-name" name="first" />
-						<p class="description"><?php esc_html_e( 'Enter the first name of the customer (optional).', 'easy-digital-downloads' ); ?></p>
-					</td>
-				</tr>
-
-				<tr class="form-field new-customer" style="display: none">
-					<th scope="row" valign="top">
-						<label for="edd-customer-last-name"><?php esc_html_e( 'Customer Last Name', 'easy-digital-downloads' ); ?></label>
-					</th>
-					<td class="customer-last-name">
-						<input type="text" id="edd-customer-last-name" name="last" />
-						<p class="description"><?php esc_html_e( 'Enter the last name of the customer (optional).', 'easy-digital-downloads' ); ?></p>
-					</td>
-				</tr>
-
 				<tr class="form-field amount">
 					<th scope="row" valign="top">
-						<label for="edd-amount"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
+						<label for="edd-total"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?></label>
 					</th>
-					<td class="amount">
-						<input type="text" class="edd-price-field" id="edd-amount" name="amount" />
+					<td class="total">
+						<input type="text" class="edd-price-field" id="edd-total" name="total" />
 						<?php if ( edd_item_quantities_enabled() ) : ?>
 							<p class="description"><?php esc_html_e( 'Enter the total purchase amount, or leave blank to auto calculate price based on the selected items and quantities above. Use 0.00 for 0.', 'easy-digital-downloads' ); ?></p>
 						<?php else : ?>
