@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Bail if incorrect view.
-if ( ! isset( $_GET['view'] ) || 'add-order' !== $_GET['view'] ) {
+if ( ! isset( $_GET['view'] ) || 'add-order' !== $_GET['view'] ) { // WPCS: input var ok, CSRF ok.
 	wp_die( esc_html__( 'Something went wrong.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 }
 
@@ -29,7 +29,7 @@ if ( empty( $decimals ) ) {
 		$i++;
 	}
 	$step .= '1';
-	$step = (float) $step;
+	$step  = (float) $step;
 }
 
 $hours   = edd_get_hour_values();
@@ -66,7 +66,7 @@ foreach ( $known_gateways as $id => $data ) {
 							<table class="wp-list-table widefat fixed striped orderitems">
 								<thead>
 									<tr>
-										<th scope="col" class="column-primary"><?php echo esc_html_e( 'Product', 'easy-digital-downloads' ); ?></th>
+										<th scope="col" class="column-primary"><?php esc_html_e( 'Product', 'easy-digital-downloads' ); ?></th>
 										<th scope="col"><?php esc_html_e( 'Price Option', 'easy-digital-downloads' ); ?></th>
 										<th scope="col"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 										<?php if ( edd_item_quantities_enabled() ) : ?>
@@ -323,6 +323,15 @@ foreach ( $known_gateways as $id => $data ) {
 					</td>
 				</tr>
 
+				<?php
+				/**
+				 * Fires at the bottom of the table to allow developers to add fields.
+				 *
+				 * @since 3.0
+				 */
+				do_action( 'edd_add_order_form_bottom' );
+				?>
+
 			</tbody>
 		</table>
 
@@ -330,7 +339,14 @@ foreach ( $known_gateways as $id => $data ) {
 
 		<input type="hidden" name="edd-action" value="add_manual_order" />
 
-		<?php do_action( 'edd_add_order_form_bottom' ); ?>
+		<?php
+		/**
+		 * Fires just before the `Add Order` button to allow developers to add hidden inputs.
+		 *
+		 * @since 3.0
+		 */
+		do_action( 'edd_add_order_form_after' );
+		?>
 
 		<?php submit_button( __( 'Add Order', 'easy-digital-downloads' ) ); ?>
 	</form>
