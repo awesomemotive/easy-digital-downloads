@@ -152,6 +152,10 @@ foreach ( $known_gateways as $id => $data ) {
 				<tr class="form-field">
 					<th scope="row" valign="top"><?php esc_html_e( 'Customer Address', 'easy-digital-downloads' ); ?></th>
 					<td class="customer-address">
+						<p class="customer-address-select-wrap" style="display: none;">
+							
+						</p>
+						
 						<p>
 							<label for="edd-address"><?php esc_html_e( 'Address Line 1' ); ?></label>
 							<input type="text" id="edd-address" name="address" />
