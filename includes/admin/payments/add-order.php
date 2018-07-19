@@ -182,12 +182,15 @@ foreach ( $known_gateways as $id => $data ) {
 							echo EDD()->html->select( array(
 								'name'             => 'country',
 								'id'               => 'edd-country',
-								'class'            => 'edd-country',
+								'class'            => 'edd_countries_filter',
 								'options'          => $countries,
 								'chosen'           => true,
 								'selected'         => false,
 								'show_option_none' => false,
 								'show_option_all'  => false,
+								'data'             => array(
+									'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+								),
 							) );
 							?>
 						</p>
@@ -198,7 +201,7 @@ foreach ( $known_gateways as $id => $data ) {
 							echo EDD()->html->select( array(
 								'name'             => 'region',
 								'id'               => 'edd-region',
-								'class'            => 'edd-region',
+								'class'            => 'edd_regions_filter',
 								'options'          => $regions,
 								'chosen'           => true,
 								'selected'         => false,
