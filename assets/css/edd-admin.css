@@ -427,7 +427,8 @@ textarea[name="edd-note"] {
 	font-weight: normal;
 }
 
-#edd-add-order .orderitems .spinner {
+#edd-add-order .orderitems .spinner,
+#edd-add-order .customer .spinner {
 	float: none;
 	margin: 0;
 }
