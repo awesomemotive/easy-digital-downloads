@@ -1043,16 +1043,58 @@ function edd_ajax_customer_addresses() {
 
 	$response = array();
 
+	// Fetch customer.
 	$customer = edd_get_customer( $customer_id );
 
 	if ( $customer ) {
+
+		// Fetch customer addresses.
 		$addresses = $customer->get_addresses();
 
 		if ( $addresses ) {
 			$response['addresses'] = array();
+			$options               = array();
 
 			foreach ( $addresses as $key => $address ) {
-				$response['addresses'][ $key ] = $address->to_array();
+
+				// Convert EDD\Customer\Customer_Address object to array.
+				$a = $address->to_array();
+
+				// Pass array back as response.
+				$response['addresses'][ $key ] = $a;
+
+				$address_keys = array_flip( array( 'address', 'address2', 'city', 'region', 'country', 'postal_code' ) );
+
+				$a = array_filter( array_intersect_key( $a, $address_keys ) );
+
+				if ( isset( $a['region'] ) && isset( $a['country'] ) ) {
+					$a['region'] = edd_get_state_name( $a['country'], $a['region'] );
+				}
+
+				if ( isset( $a['country'] ) ) {
+					$a['country'] = edd_get_country_name( $a['country'] );
+				}
+
+				$a = implode( ', ', $a );
+
+				$response['formatted'][ $key ] = $a;
+				$options[ $key ] = $a;
+			}
+
+			// Fetch the select
+			if ( ! empty( $options ) ) {
+				$select = EDD()->html->select( array(
+					'name'             => '',
+					'id'               => 'edd-customer-addresses-select',
+					'options'          => $options,
+					'chosen'           => true,
+					'selected'         => false,
+					'placeholder'      => __( 'Select a previously used address', 'easy-digital-downloads' ),
+					'show_option_all'  => false,
+					'show_option_none' => false,
+				) );
+				
+				$response['html'] = $select;
 			}
 		}
 	}
