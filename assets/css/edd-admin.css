@@ -5,7 +5,7 @@
  * @subpackage  Admin CSS
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
-*/
+ */
 
 .edd-hidden {
 	display: none;
@@ -2509,6 +2509,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 .edd-item-info.customer-info input[type="password"],
 .edd-item-info.customer-info select {
 	width: 200px;
+	height: auto;
 	box-shadow: none;
 	transition: none;
 	border: 1px solid #ddd;
