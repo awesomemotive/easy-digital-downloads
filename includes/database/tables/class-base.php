@@ -44,9 +44,9 @@ abstract class Base extends \EDD\Database\Base {
 	protected $description = '';
 
 	/**
-	 * @var int Database version
+	 * @var mixed Database version
 	 */
-	protected $version = 0;
+	protected $version = '';
 
 	/**
 	 * @var boolean Is this table for a site, or global
@@ -64,7 +64,7 @@ abstract class Base extends \EDD\Database\Base {
 	protected $db_version_key = '';
 
 	/**
-	 * @var string Current database version
+	 * @var mixed Current database version
 	 */
 	protected $db_version = 0;
 
@@ -107,7 +107,7 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	public function __construct() {
 
-		// Setup the database
+		// Setup the database table
 		$this->setup();
 
 		// Bail if setup failed
@@ -115,13 +115,10 @@ abstract class Base extends \EDD\Database\Base {
 			return;
 		}
 
-		// Get the version of he table currently in the database
-		$this->get_db_version();
+		// Add the table to the database interface
+		$this->set_db_interface();
 
-		// Add the table to the object
-		$this->set_wpdb_tables();
-
-		// Setup the database schema
+		// Set the database schema
 		$this->set_schema();
 
 		// Add hooks to WordPress actions
@@ -160,8 +157,8 @@ abstract class Base extends \EDD\Database\Base {
 			$this->db_version = get_blog_option( $site_id, $this->db_version_key, false );
 		}
 
-		// Update table references based on th current site
-		$this->set_wpdb_tables();
+		// Update interface for switched site
+		$this->set_db_interface();
 	}
 
 	/** Public Helpers ********************************************************/
@@ -205,12 +202,22 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
+	 * @param mixed $version Database version to check if upgrade is needed
+	 *
 	 * @return boolean True if table needs upgrading. False if not.
 	 */
-	public function needs_upgrade() {
+	public function needs_upgrade( $version = false ) {
 
-		// Is the table current?
-		$is_current = version_compare( $this->db_version, $this->version, '>=' );
+		// Use the current table version if none was passed
+		if ( empty( $version ) ) {
+			$version = $this->version;
+		}
+
+		// Get the current database version
+		$this->get_db_version();
+
+		// Is the database table up to date?
+		$is_current = version_compare( $this->db_version, $version, '>=' );
 
 		// Return false if current, true if out of date
 		return ( true === $is_current )
@@ -239,6 +246,9 @@ abstract class Base extends \EDD\Database\Base {
 	/**
 	 * Return the current table version from the database.
 	 *
+	 * This is public method for accessing a private variable so that it cannot
+	 * be externally modified.
+	 *
 	 * @since 3.0
 	 *
 	 * @return string
@@ -259,10 +269,20 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return bool
 	 */
 	public function exists() {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
 		$query    = "SHOW TABLES LIKE %s";
-		$like     = $this->get_db()->esc_like( $this->table_name );
-		$prepared = $this->get_db()->prepare( $query, $like );
-		$result   = $this->get_db()->get_var( $prepared );
+		$like     = $db->esc_like( $this->table_name );
+		$prepared = $db->prepare( $query, $like );
+		$result   = $db->get_var( $prepared );
 
 		// Does the table exist?
 		return $this->is_success( $result );
@@ -276,8 +296,18 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return bool
 	 */
 	public function create() {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
 		$query  = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
-		$result = $this->get_db()->query( $query );
+		$result = $db->query( $query );
 
 		// Was the table created?
 		return $this->is_success( $result );
@@ -291,8 +321,18 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return mixed
 	 */
 	public function drop() {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
 		$query  = "DROP TABLE {$this->table_name}";
-		$result = $this->get_db()->query( $query );
+		$result = $db->query( $query );
 
 		// Query success/fail
 		return $this->is_success( $result );
@@ -306,8 +346,18 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return mixed
 	 */
 	public function truncate() {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
 		$query  = "TRUNCATE TABLE {$this->table_name}";
-		$result = $this->get_db()->query( $query );
+		$result = $db->query( $query );
 
 		// Query success/fail
 		return $this->is_success( $result );
@@ -321,8 +371,18 @@ abstract class Base extends \EDD\Database\Base {
 	 * @return mixed
 	 */
 	public function delete_all() {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
 		$query   = "DELETE FROM {$this->table_name}";
-		$deleted = $this->get_db()->query( $query );
+		$deleted = $db->query( $query );
 
 		// Query success/fail
 		return $deleted;
@@ -370,17 +430,15 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $version
+	 * @param mixed  $version Database version to check if upgrade is needed
 	 * @param string $method
+	 *
 	 * @return boolean
 	 */
 	public function upgrade_to( $version = '', $method = '' ) {
 
-		// Set the db_version property
-		$this->get_db_version();
-
 		// Bail if no upgrade is needed
-		if ( version_compare( $this->db_version, $version, '>=' ) ) {
+		if ( ! $this->needs_upgrade( $version ) ) {
 			return false;
 		}
 
@@ -420,12 +478,12 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return \wpdb
+	 * @return mixed Database interface or False
 	 */
 	protected static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
 			? $GLOBALS['wpdb']
-			: new stdClass();
+			: false;
 	}
 
 	/**
@@ -465,7 +523,7 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	private function setup() {
 
-		// Bail if no WordPress database interface is available
+		// Bail if no database interface is available
 		if ( ! $this->get_db() ) {
 			return;
 		}
@@ -485,39 +543,47 @@ abstract class Base extends \EDD\Database\Base {
 	}
 
 	/**
-	 * Modify the database object and add the table to it
+	 * Set this table up in the database interface, usually the $wpdb global.
 	 *
 	 * This must be done directly because WordPress does not have a mechanism
 	 * for manipulating them safely
 	 *
 	 * @since 3.0
 	 */
-	private function set_wpdb_tables() {
+	private function set_db_interface() {
+
+		// Get the database once, to avoid duplicate function calls
+		$db = $this->get_db();
+
+		// Bail if no database
+		if ( empty( $db ) ) {
+			return;
+		}
 
 		// Global
 		if ( $this->is_global() ) {
-			$this->prefix                       = $this->get_db()->get_blog_prefix( 0 );
-			$this->get_db()->{$this->name}      = "{$this->prefix}{$this->name}";
-			$this->get_db()->ms_global_tables[] = $this->name;
+			$this->prefix           = $db->get_blog_prefix( 0 );
+			$db->{$this->name}      = "{$this->prefix}{$this->name}";
+			$db->ms_global_tables[] = $this->name;
 
 		// Site
 		} else {
-			$this->prefix                  = $this->get_db()->get_blog_prefix( null );
-			$this->get_db()->{$this->name} = "{$this->prefix}{$this->name}";
-			$this->get_db()->tables[]      = $this->name;
+			$this->prefix      = $db->get_blog_prefix( null );
+			$db->{$this->name} = "{$this->prefix}{$this->name}";
+			$db->tables[]      = $this->name;
 		}
 
 		// Set the table name locally
-		$this->table_name = $this->get_db()->{$this->name};
+		$this->table_name = $db->{$this->name};
 
 		// Charset
-		if ( ! empty( $this->get_db()->charset ) ) {
-			$this->charset_collation = "DEFAULT CHARACTER SET {$this->get_db()->charset}";
+		if ( ! empty( $db->charset ) ) {
+			$this->charset_collation = "DEFAULT CHARACTER SET {$db->charset}";
 		}
 
 		// Collation
-		if ( ! empty( $this->get_db()->collate ) ) {
-			$this->charset_collation .= " COLLATE {$this->get_db()->collate}";
+		if ( ! empty( $db->collate ) ) {
+			$this->charset_collation .= " COLLATE {$db->collate}";
 		}
 	}
 
@@ -525,6 +591,8 @@ abstract class Base extends \EDD\Database\Base {
 	 * Set the database version for the table
 	 *
 	 * @since 3.0
+	 *
+	 * @param mixed $version Database version to set when upgrading/creating
 	 */
 	private function set_db_version( $version = '' ) {
 
