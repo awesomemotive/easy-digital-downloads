@@ -848,6 +848,94 @@ function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
 		: $order_id;
 }
 
+/**
+ * Manually add an order.
+ *
+ * @since 3.0
+ *
+ * @param array $data Order form data.
+ * @return int|bool Order ID if successful, false otherwise.
+ */
+function edd_add_manual_order( $data ) {
+
+	// Bail if user cannot manage shop settings or no data was passed.
+	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $data ) ) {
+		return false;
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	// Bail if nonce fails.
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+		return false;
+	}
+
+	// Set defaults.
+	$defaults = array(
+		'downloads'      => array(),
+		'customer'       => '',
+		'email'          => '',
+		'first'          => '',
+		'last'           => '',
+		'amount'         => '',
+		'status'         => '',
+		'gateway'        => '',
+		'transaction_id' => '',
+		'date'           => '',
+		'receipt'        => '',
+	);
+
+	// Parse args.
+	$data = wp_parse_args( $data, $defaults );
+
+	/** Customer data ********************************************************/
+
+	// Email address passed so new customer needs creating.
+	if ( ! empty( $data['email'] ) ) {
+		$customer = sanitize_email( $data['email'] );
+		$email    = $customer;
+
+	// Existing customer selected.
+	} elseif ( empty( $data['email'] ) && ! empty( $data['customer'] ) ) {
+		$customer = absint( $data['customer'] );
+	} else {
+		wp_die( esc_html__( 'Please select a customer or create a new one.', 'easy-digital-downloads' ) );
+	}
+
+	$customer = new EDD_Customer( $customer );
+
+	// Create the customer if the record doesn't exist.
+	if ( ! $customer->id > 0 ) {
+		$customer->create( array(
+			'email'      => $data['email'],
+			'first_name' => sanitize_text_field( $data['first'] ),
+			'last_name'  => sanitize_text_field( $data['last'] ),
+		) );
+	} else {
+		$email = $customer->email;
+	}
+
+	// Parse order status.
+	$status = sanitize_text_field( $data['status'] );
+
+	if ( empty( $status ) || ! in_array( $status, array_keys( edd_get_payment_statuses() ), true ) ) {
+		$status = 'publish';
+	}
+
+	$order_data = array(
+		'status'      => $status,
+		'customer_id' => $customer->id,
+		'email'       => $email,
+		'gateway'     => sanitize_text_field( $data['gateway'] ),
+	);
+
+	die();
+}
+add_action( 'edd_add_manual_order', 'edd_add_manual_order' );
+
 /** Order Items ***************************************************************/
 
 /**
