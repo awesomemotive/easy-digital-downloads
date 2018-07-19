@@ -1146,6 +1146,10 @@ jQuery(document).ready(function ($) {
 
 				$.post( ajaxurl, data, function( response ) {
 					console.log( response );
+
+					$( '.customer-address-select-wrap' ).html( response.html ).show();
+					$( '.customer-address-select-wrap select' ).chosen( chosen_vars );
+
 					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
 
