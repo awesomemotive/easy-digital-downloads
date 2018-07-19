@@ -142,7 +142,7 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	protected abstract function set_schema();
 
-	/** Public ****************************************************************/
+	/** Multisite *************************************************************/
 
 	/**
 	 * Update table version & references.
@@ -164,25 +164,24 @@ abstract class Base extends \EDD\Database\Base {
 		$this->set_wpdb_tables();
 	}
 
+	/** Public Helpers ********************************************************/
+
 	/**
 	 * Maybe upgrade the database table. Handles creation & schema changes.
 	 *
-	 * Hooked to the "admin_init" action.
+	 * Hooked to the `admin_init` action.
 	 *
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
 
-		// Is an upgrade needed?
-		$is_current = version_compare( $this->db_version, $this->version, '>=' );
-
-		// Bail if database table is current
-		if ( true === $is_current ) {
+		// Bail if not upgradeable
+		if ( ! $this->is_upgradeable() ) {
 			return;
 		}
 
-		// Bail if global and upgrading global tables is not allowed
-		if ( $this->is_global() && ! wp_should_upgrade_global_tables() ) {
+		// Bail if upgrade not needed
+		if ( ! $this->needs_upgrade() ) {
 			return;
 		}
 
@@ -200,6 +199,57 @@ abstract class Base extends \EDD\Database\Base {
 			}
 		}
 	}
+
+	/**
+	 * Return whether this table needs an upgrade.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean True if table needs upgrading. False if not.
+	 */
+	public function needs_upgrade() {
+
+		// Is the table current?
+		$is_current = version_compare( $this->db_version, $this->version, '>=' );
+
+		// Return false if current, true if out of date
+		return ( true === $is_current )
+			? false
+			: true;
+	}
+
+	/**
+	 * Return whether this table can be upgraded.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean True if table can be upgraded. False if not.
+	 */
+	public function is_upgradeable() {
+
+		// Bail if global and upgrading global tables is not allowed
+		if ( $this->is_global() && ! wp_should_upgrade_global_tables() ) {
+			return false;
+		}
+
+		// Kinda weird, but assume it is
+		return true;
+	}
+
+	/**
+	 * Return the current table version from the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		$this->get_db_version();
+
+		return $this->db_version;
+	}
+
+	/** Public Management *****************************************************/
 
 	/**
 	 * Check if table already exists
@@ -277,6 +327,8 @@ abstract class Base extends \EDD\Database\Base {
 		// Query success/fail
 		return $deleted;
 	}
+
+	/** Upgrades **************************************************************/
 
 	/**
 	 * Upgrade this database table
@@ -359,19 +411,6 @@ abstract class Base extends \EDD\Database\Base {
 
 		// Return success
 		return true;
-	}
-
-	/**
-	 * Return the current table version from the database.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string
-	 */
-	public function get_version() {
-		$this->get_db_version();
-
-		return $this->db_version;
 	}
 
 	/** Protected *************************************************************/
@@ -489,17 +528,18 @@ abstract class Base extends \EDD\Database\Base {
 	 */
 	private function set_db_version( $version = '' ) {
 
-		// Set the class version
+		// If no version is passed during an upgrade, use the current version
 		if ( empty( $version ) ) {
 			$version = $this->version;
-		} else {
-			$this->db_version = $version;
 		}
 
 		// Update the DB version
 		$this->is_global()
 			? update_network_option( get_main_network_id(), $this->db_version_key, $version )
 			:         update_option(                        $this->db_version_key, $version );
+
+		// Set the DB version
+		$this->db_version = $version;
 	}
 
 	/**
