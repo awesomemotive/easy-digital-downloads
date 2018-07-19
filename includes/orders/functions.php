@@ -932,7 +932,7 @@ function edd_add_manual_order( $data ) {
 		'gateway'     => sanitize_text_field( $data['gateway'] ),
 	);
 
-	die();
+	$order_id = edd_add_order( $order_data );
 }
 add_action( 'edd_add_manual_order', 'edd_add_manual_order' );
 
