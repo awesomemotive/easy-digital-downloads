@@ -68,10 +68,11 @@ foreach ( $known_gateways as $id => $data ) {
 									<tr>
 										<th scope="col" class="column-primary"><?php esc_html_e( 'Product', 'easy-digital-downloads' ); ?></th>
 										<th scope="col"><?php esc_html_e( 'Price Option', 'easy-digital-downloads' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Item Price', 'easy-digital-downloads' ); ?></th>
 										<?php if ( edd_item_quantities_enabled() ) : ?>
 											<th scope="col"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
 										<?php endif; ?>
+										<th scope="col"><?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?></th>
 										<?php if ( edd_use_taxes() ) : ?>
 										<th scope="col"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></th>
 										<?php endif; ?>
@@ -104,7 +105,26 @@ foreach ( $known_gateways as $id => $data ) {
 								</tbody>
 							</table>
 							<p><a href="#" class="button button-secondary edd-add-order-item"><?php esc_html_e( 'Add Item', 'easy-digital-downloads' ); ?></a> </p>
-							<p><strong><?php esc_html_e( 'Total:', 'easy-digital-downloads' ); ?></strong> <?php echo esc_html( edd_currency_symbol() ); ?><span id="edd-total">0.00</span></p>
+							<div class="postbox edd-order-totals-box">
+								<h3><span><?php esc_html_e( 'Order Amounts', 'easy-digital-downloads' ); ?></span> <a href="" id="edd-order-recalc-total" class="edd-metabox-title-action">Recalculate</a></h3>
+								<div class="inside">
+									<div class="edd-order-subtotal edd-admin-box-inside">
+										<span class="label">Subtotal:</span><?php echo esc_html( edd_currency_symbol() ); ?><span class="value">0.00</span>
+									</div>
+
+									<div class="edd-order-taxes edd-admin-box-inside">
+										<span class="label">Tax:</span><?php echo esc_html( edd_currency_symbol() ); ?><span class="value">0.00</span>
+									</div>
+
+									<div class="edd-order-discounts edd-admin-box-inside">
+										<span class="label">Discount:</span><?php echo esc_html( edd_currency_symbol() ); ?><span class="value">0.00</span>
+									</div>
+
+									<div class="edd-order-total edd-admin-box-inside">
+										<span class="label">Total:</span><?php echo esc_html( edd_currency_symbol() ); ?><span class="value">0.00</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</td>
 				</tr>
