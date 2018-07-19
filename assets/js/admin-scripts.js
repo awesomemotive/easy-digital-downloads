@@ -1058,8 +1058,9 @@ jQuery(document).ready(function ($) {
 			this.add_order_item();
 			this.select_order_item();
 			this.select_price_variation();
-			this.recalculate_total();
 			this.fetch_addresses();
+			this.select_address();
+			this.recalculate_total();
 		},
 
 		add_order_item : function () {
@@ -1156,6 +1157,17 @@ jQuery(document).ready(function ($) {
 
 					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
+
+				return false;
+			} );
+		},
+		
+		select_address : function() {
+			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
+				var $this = $( this ),
+					val   = $this.val();
+
+				console.log( val );
 
 				return false;
 			} );
