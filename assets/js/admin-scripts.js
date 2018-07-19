@@ -1147,8 +1147,12 @@ jQuery(document).ready(function ($) {
 				$.post( ajaxurl, data, function( response ) {
 					console.log( response );
 
-					$( '.customer-address-select-wrap' ).html( response.html ).show();
-					$( '.customer-address-select-wrap select' ).chosen( chosen_vars );
+					if ( response.html ) {
+						$( '.customer-address-select-wrap' ).html( response.html ).show();
+						$( '.customer-address-select-wrap select' ).chosen( chosen_vars );
+					} else {
+						$( '.customer-address-select-wrap' ).html( '' ).hide();
+					}
 
 					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
