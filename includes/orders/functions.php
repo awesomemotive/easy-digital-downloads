@@ -947,10 +947,24 @@ function edd_add_manual_order( $data ) {
 		$data['downloads'] = array_values( $data['downloads'] );
 
 		foreach ( $data['downloads'] as $cart_key => $download ) {
-			edd_add_order_item( array(
-				'order_id'   => $order_id,
-				'product_id' => absint( $download['id'] ),
-			) );
+			$d = edd_get_download( absint( $download['id'] ) );
+
+			if ( $d ) {
+				$quantity = isset( $download['quantity'] )
+					? absint( $download['quantity'] )
+					: 1;
+
+				edd_add_order_item( array(
+					'order_id'     => $order_id,
+					'product_id'   => absint( $download['id'] ),
+					'product_name' => $d->post_title,
+					'price_id'     => 0,
+					'cart_index'   => $cart_key,
+					'type'         => 'download',
+					'status'       => 'inherit',
+					'quantity'     => $quantity,
+				) );
+			}
 		}
 	}
 
