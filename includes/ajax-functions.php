@@ -1014,3 +1014,45 @@ function edd_ajax_download_variation_amount() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_download_variation_amount', 'edd_ajax_download_variation_amount' );
+
+/**
+ * Search for customer addresses and return a list.
+ *
+ * @since 3.0
+ */
+function edd_ajax_customer_addresses() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$customer_id = isset( $_POST['customer_id'] )
+		? absint( $_POST['customer_id'] )
+		: 0;
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $customer_id ) ) {
+		edd_die( '-1' );
+	}
+
+	$response = array();
+
+	$customer = edd_get_customer( $customer_id );
+
+	if ( $customer ) {
+		$addresses = $customer->get_addresses();
+
+		$response['address'] = $addresses;
+	}
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );

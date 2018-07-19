@@ -1059,10 +1059,11 @@ jQuery(document).ready(function ($) {
 			this.select_order_item();
 			this.select_price_variation();
 			this.recalculate_total();
+			this.fetch_addresses();
 		},
 
 		add_order_item : function () {
-			$( '#edd-add-order .edd-add-order-item' ).on( 'click', function( e ) {
+			$( document.body ).on( 'click', '#edd-add-order .edd-add-order-item', function( e ) {
 				e.preventDefault();
 
 				var row = $( '#edd-order-items .edd_repeatable_row:last-child' ),
@@ -1078,7 +1079,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		select_order_item : function() {
-			$('#edd-add-order .add-order-download').on( 'change', function() {
+			$( document.body ).on( 'change', '#edd-add-order .add-order-download', function() {
 				var $this = $( this ),
 					data = {
 					action: 'edd_download_variations',
@@ -1129,6 +1130,10 @@ jQuery(document).ready(function ($) {
 
 				return false;
 			} );
+		},
+
+        fetch_addresses : function() {
+
 		},
 
 		recalculate_total : function() {
