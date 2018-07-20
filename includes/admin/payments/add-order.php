@@ -46,6 +46,56 @@ $gateways = array();
 foreach ( $known_gateways as $id => $data ) {
 	$gateways[ $id ] = esc_html( $data['admin_label'] );
 }
-
-// Output
 ?>
+
+<div class="wrap edd-wrap">
+	<h2><?php esc_html_e( 'Add Order', 'easy-digital-downloads' ); ?></h2>
+
+	<?php do_action( 'edd_add_order_before' ); ?>
+
+	<form id="edd-add-order-form" method="post">
+		<?php do_action( 'edd_add_order_form_top' ); ?>
+
+		<div id="poststuff">
+			<div id="edd-dashboard-widgets-wrap">
+				<div id="post-body" class="metabox-holder columns-2">
+					<div id="postbox-container-1" class="postbox-container">
+						<div id="side-sortables">
+							<?php
+
+							// Before sidebar
+							do_action( 'edd_add_order_sidebar_before' );
+
+							// After sidebar
+							do_action( 'edd_add_order_sidebar_after' );
+
+							?>
+						</div>
+					</div>
+
+					<div id="postbox-container-2" class="postbox-container">
+						<div id="normal-sortables">
+							<?php
+
+							// Before body
+							do_action( 'edd_add_order_main_before' );
+
+							// After body
+							do_action( 'edd_add_order_main_after' );
+
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<?php
+
+		do_action( 'edd_add_order_form_bottom' );
+
+		wp_nonce_field( 'edd_add_order_nonce' );
+		?>
+		<input type="hidden" name="edd_action" value="add_order" />
+	</form>
+</div><!-- /.wrap -->
