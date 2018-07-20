@@ -1775,19 +1775,21 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'submit', '.edd-export-form', function(e) {
 				e.preventDefault();
 
-				var submitButton = $( this ).find( 'input[type="submit"]' );
+				var form         = $( this ),
+					submitButton = form.find( 'input[type="submit"]' ).first();
 
-				if ( ! submitButton.hasClass( 'button-disabled' ) ) {
-
-					var data = $( this ).serialize();
-
-					submitButton.addClass( 'button-disabled' );
-					$( this ).find('.notice-wrap').remove();
-					$( this ).append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
-
-					// start the process
-					self.process_step( 1, data, self );
+				if ( submitButton.hasClass( 'button-disabled' ) || submitButton.is( ':disabled' ) ) {
+					return;
 				}
+
+				var data = form.serialize();
+
+				submitButton.addClass( 'button-disabled' );
+				form.find('.notice-wrap').remove();
+				form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+
+				// start the process
+				self.process_step( 1, data, self );
 			});
 		},
 
