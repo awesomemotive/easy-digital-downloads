@@ -468,6 +468,11 @@ textarea[name="edd-note"] {
 	width: 90px;
 }
 
+#edd-add-order .edd-order-total.invalid {
+	font-weight: bold;
+	color: #dc3232;
+}
+
 /* List Tables
 -------------------------------------------------------------- */
 

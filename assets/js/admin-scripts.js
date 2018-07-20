@@ -1266,6 +1266,14 @@ jQuery(document).ready(function ($) {
 				total_discount = 0;
 			}
 
+			if ( total < 0 ) {
+				$( '#edd-add-order #submit' ).prop( 'disabled', 'disabled' );
+				$( '#edd-add-order .edd-order-total' ).addClass( 'invalid' );
+			} else {
+				$( '#edd-add-order #submit' ).removeAttr( 'disabled' );
+				$( '#edd-add-order .edd-order-total' ).removeClass( 'invalid' );
+			}
+
 			$(' .edd-order-subtotal .value').html( subtotal.toFixed( edd_vars.currency_decimals ) );
 			$(' .edd-order-taxes .value').html( total_tax.toFixed( edd_vars.currency_decimals ) );
 			$(' .edd-order-discounts .value').html( total_discount.toFixed( edd_vars.currency_decimals ) );
