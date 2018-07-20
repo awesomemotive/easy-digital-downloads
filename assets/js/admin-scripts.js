@@ -1064,7 +1064,6 @@ jQuery(document).ready(function ($) {
 			this.fetch_addresses();
 			this.select_address();
 			this.recalculate_total();
-			this.delete_row();
 		},
 
 		add_order_item : function () {
@@ -1202,28 +1201,38 @@ jQuery(document).ready(function ($) {
 		},
 
 		recalculate_total : function() {
-			$( document.body ).on( '#edd-add-order input', '.edd-amount, .edd-tax, .edd-quantity', function() {
+			$( document.body ).on( '#edd-add-order input', '.edd-amount, .edd-discount, .edd-tax, .edd-quantity', function() {
 				EDD_Add_Order.update_total();
 			});
+
+			$( document.body ).on( 'click', '#edd-add-order #edd-order-recalc-total', function() {
+				EDD_Add_Order.update_total();
+			} );
 		},
 
 		update_total : function() {
 			var item_amount   = 0,
 				item_tax      = 0,
 				item_quantity = 1,
+				item_discount = 0,
 				item_total    = 0,
+				subtotal      = 0,
+				total_tax     = 0,
+				total_discount= 0,
 				total         = 0;
 
 			$( '#edd-add-order .edd_repeatable_row' ).each( function() {
 				var row = $( this );
 
-				item_amount = parseFloat( row.find('input.edd-amount').val() );
+				item_amount = parseFloat( row.find( 'input.edd-amount' ).val() );
+				subtotal += item_amount;
 
 				if ( row.find( 'input.edd-tax' ).length ) {
-					item_tax = parseFloat( row.find('input.edd-tax').val() );
+					item_tax = parseFloat( row.find( 'input.edd-tax' ).val() );
 
 					if ( ! isNaN( item_tax ) && ! edd_vars.taxes_included ) {
 						item_amount = item_amount + item_tax;
+						total_tax += item_tax;
 					}
 				}
 
@@ -1233,6 +1242,11 @@ jQuery(document).ready(function ($) {
 
 				item_total = item_amount * item_quantity;
 
+				item_discount = parseFloat( row.find( 'input.edd-discount' ).val() );
+				total_discount += item_discount;
+
+				item_total -= item_discount;
+
 				total += item_total;
 			} );
 
@@ -1240,7 +1254,22 @@ jQuery(document).ready(function ($) {
 				total = 0;
 			}
 
-			$('#edd-total').html( total.toFixed( edd_vars.currency_decimals ) );
+			if ( isNaN( subtotal ) ) {
+				subtotal = 0;
+			}
+
+			if ( isNaN( total_tax ) ) {
+				total_tax = 0;
+			}
+
+			if ( isNaN( total_discount ) ) {
+				total_discount = 0;
+			}
+
+			$(' .edd-order-subtotal .value').html( subtotal.toFixed( edd_vars.currency_decimals ) );
+			$(' .edd-order-taxes .value').html( total_tax.toFixed( edd_vars.currency_decimals ) );
+			$(' .edd-order-discounts .value').html( total_discount.toFixed( edd_vars.currency_decimals ) );
+			$(' .edd-order-total .value ').html( total.toFixed( edd_vars.currency_decimals ) );
 		}
 	};
 
