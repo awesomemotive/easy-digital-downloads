@@ -97,6 +97,7 @@ foreach ( $known_gateways as $id => $data ) {
 										<?php if ( edd_item_quantities_enabled() ) : ?>
 											<td>&nbsp;&times;&nbsp; <input type="number" step="1" class="edd-quantity" name="downloads[1][quantity]" value="1" min="1" placeholder="<?php esc_attr_e( 'Quantity', 'easy-digital-downloads' ); ?>"/></td>
 										<?php endif; ?>
+										<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-discount" name="downloads[1][discount]" value="" min="0" placeholder="<?php esc_attr_e( 'Discount' ); ?>" /></td>
 										<?php if ( edd_use_taxes() ) : ?>
 											<td><input type="number" step="<?php echo esc_attr( $step ); ?>" class="edd-tax" name="downloads[1][tax]" value="" min="0" placeholder="<?php esc_attr_e( 'Tax', 'easy-digital-downloads' ); ?>"/></td>
 										<?php endif; ?>
