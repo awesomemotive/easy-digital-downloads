@@ -1095,13 +1095,16 @@ jQuery(document).ready(function ($) {
 				$this.parent().parent().find('.download-price-option-wrap .spinner').css( 'visibility', 'visible' );
 
 				$.post( ajaxurl, data, function ( response ) {
-					$this.parent().parent().find( '.edd-amount' ).val( response.amount );
+					edd_admin_globals.order_item_ajax_result = response;
+
+					$this.parent().parent().find( '.edd-amount' ).val(migrate-orders-submit response.amount );
 
 					if ( response.html ) {
 						$this.parent().parent().find( '.download-price-option-wrap' ).html( response.html + '<span class="spinner"></span>' );
 						$this.parent().parent().find( '.download-price-option-wrap select' ).chosen( chosen_vars );
 					} else {
 						$this.parent().parent().find( '.download-price-option-wrap' ).html( '&mdash; <span class="spinner"></span>' );
+						$this.parent().parent().find( '.edd-tax' ).val( response.tax );
 					}
 
 					EDD_Add_Order.update_total();

@@ -949,6 +949,7 @@ function edd_ajax_download_variations() {
 		$response['html'] = $html;
 	} else {
 		$response['amount'] = $download->get_price();
+		$response['tax']    = edd_calculate_tax( $response['amount'] );
 	}
 
 	echo wp_json_encode( $response );
