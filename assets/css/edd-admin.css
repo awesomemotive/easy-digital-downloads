@@ -1405,6 +1405,13 @@ input[class*="edd-price-field"] {
 	content: '\f239';
 }
 
+/* Dashboard Page Styles
+-------------------------------------------------------------- */
+
+body.dashboard_page_edd-upgrades.js .postbox .hndle {
+	cursor: default;
+}
+
 /* Dashboard Widget Styles
 -------------------------------------------------------------- */
 
@@ -1718,7 +1725,7 @@ td.edd_order_price {
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container .sortable-placeholder {
-	
+
 }
 
 #edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
