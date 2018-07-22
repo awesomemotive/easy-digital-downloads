@@ -947,7 +947,7 @@ function edd_ajax_add_order_item() {
 
 		$response['name']     = $name;
 		$response['discount'] = 0.00;
-		$response['tax']      = edd_calculate_tax( $amount * $quantity);
+		$response['tax']      = edd_calculate_tax( $amount * $quantity );
 		$response['quantity'] = $quantity;
 		$response['amount']   = $amount;
 		$response['total']    = floatval( ( $amount * $quantity ) + $response['tax'] );
@@ -986,7 +986,11 @@ function edd_ajax_add_order_item() {
 			? array()
 			: $downloads;
 
-		$downloads[] = $download;
+		$downloads[] = array(
+			'download_id' => $download['download_id'],
+			'price_id'    => $download['price_id'],
+			'quantity'    => $quantity,
+		);
 
 		EDD()->session->set( 'add_order_downloads', $downloads );
 

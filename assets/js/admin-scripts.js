@@ -1285,13 +1285,35 @@ jQuery(document).ready(function ($) {
 						break;
 					case 'discount':
 						amount = parseFloat( row.find( 'input.discount-amount', row ).val() );
-						$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-							var value = $( this ).find( '.total .value' ).text(),
-								reduction = value / 100 * amount;
 
-							adjustments += reduction;
-							total -= reduction;
-						} );
+						if ( 'percent' === row.find( 'input.discount-type' ).val() ) {
+							$( '.orderitems tbody tr:not(.no-items)' ).each( function () {
+								var item_amount = $( this ).find( '.amount .value' ).text(),
+									quantity = 1;
+
+								if ( $( this ).find( '.quantity' ).length ) {
+									quantity = parseFloat( $( this ).find( '.quantity' ).text() );
+								}
+
+								item_amount *= quantity;
+
+								var reduction = parseFloat( ( item_amount / 100 ) * amount );
+
+								if ( $( this ).find( '.tax' ).length ) {
+									var item_tax = parseFloat( $( this ).find( '.tax .value' ).text() ),
+										item_tax_reduction = parseFloat( item_tax / 100 * amount );
+
+									tax -= item_tax_reduction;
+									total -= item_tax_reduction;
+								}
+
+								adjustments += reduction;
+								total -= reduction;
+							} );
+						} else {
+							adjustments += amount;
+							total -= amount;
+						}
 
 						break;
 				}

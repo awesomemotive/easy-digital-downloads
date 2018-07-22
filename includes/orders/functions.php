@@ -1056,7 +1056,7 @@ function edd_add_manual_order( $data ) {
 				if ( edd_use_taxes() ) {
 					$tax = edd_prices_include_tax()
 						? 0.00
-						: edd_calculate_tax( $subtotal, $address['country'], $address['region'] );
+						: edd_calculate_tax( $subtotal - $discount, $address['country'], $address['region'] );
 				}
 
 				// Calculate total.
