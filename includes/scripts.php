@@ -264,6 +264,8 @@ function edd_load_admin_scripts( $hook ) {
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
 		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
 		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
+		'taxes_enabled'               => edd_use_taxes(),
+		'taxes_included'              => edd_use_taxes() && edd_prices_include_tax()
 	));
 
 	/*

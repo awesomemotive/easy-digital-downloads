@@ -832,7 +832,6 @@ function edd_check_for_download_price_variations() {
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
 
-
 /**
  * Searches for users via ajax and returns a list of results
  *
@@ -895,3 +894,314 @@ function edd_ajax_search_users() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
+
+/**
+ * Search for download, build, and return HTML.
+ *
+ * @since 3.0
+ */
+function edd_ajax_add_order_item() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+	
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$download = isset( $_POST['download'] )
+		? edd_parse_product_dropdown_value( sanitize_text_field( $_POST['download'] ) )
+		: array();
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $download ) ) {
+		edd_die( '-1' );
+	}
+
+	// Bail if nonce fails.
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+		edd_die( '-1' );
+	}
+
+	$response = array();
+
+	$d = edd_get_download( $download['download_id'] );
+
+	if ( $d ) {
+		$name = $d->get_name();
+
+		if ( false === $download['price_id'] ) {
+			$amount = floatval( $d->get_price() );
+		} else {
+			$prices = wp_filter_object_list( $d->get_prices(), array( 'index' => $download['price_id'] ) );
+			$amount = floatval( implode( wp_list_pluck( $prices, 'amount' ) ) );
+			$name .= ' &mdash; ' . implode( wp_list_pluck( $prices, 'name' ) );
+		}
+
+		$quantity = edd_item_quantities_enabled() && isset( $_POST['quantity'] )
+			? absint( $_POST['quantity'] )
+			: 1;
+
+		$response['name']     = $name;
+		$response['discount'] = 0.00;
+		$response['tax']      = edd_calculate_tax( $amount * $quantity );
+		$response['quantity'] = $quantity;
+		$response['amount']   = $amount;
+		$response['total']    = floatval( ( $amount * $quantity ) + $response['tax'] );
+
+		static $symbol = null;
+
+		if ( null === $symbol ) {
+			$symbol = edd_currency_symbol( edd_get_currency() );
+		}
+		
+		ob_start(); ?>
+
+		<tr data-key="0">
+			<td class="name column-name column-primary"><a class="row-title" href=""><?php echo esc_html( $response['name'] ); ?></a></td>
+			<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['amount'] ) ); ?></span></td>
+			<?php if ( edd_item_quantities_enabled() ) : ?>
+				<td class="quantity column-quantity"><?php echo esc_html( $quantity ); ?></td>
+			<?php endif; ?>
+			<?php if ( edd_use_taxes() ) : ?>
+				<td class="tax column-tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
+			<?php endif; ?>
+			<td class="total column-total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
+			<input type="hidden" class="download-id" name="downloads[0][id]" value="<?php echo esc_attr( $download['download_id'] ); ?>" />
+			<input type="hidden" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" />
+			<input type="hidden" class="download-price-id" name="downloads[0][price_id]" value="<?php echo esc_attr( $download['price_id'] ); // WPCS: XSS ok. ?>" />
+		</tr>
+
+		<?php
+		$html = ob_get_contents();
+
+		ob_end_clean();
+
+		$downloads = EDD()->session->get( 'add_order_downloads' );
+
+		$downloads = false === $downloads
+			? array()
+			: $downloads;
+
+		$downloads[] = array(
+			'download_id' => $download['download_id'],
+			'price_id'    => $download['price_id'],
+			'quantity'    => $quantity,
+		);
+
+		EDD()->session->set( 'add_order_downloads', $downloads );
+
+		$response['html'] = $html;
+	}
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_add_order_item', 'edd_ajax_add_order_item' );
+
+function edd_ajax_add_adjustment_to_order() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$type = isset( $_POST['type'] )
+		? sanitize_text_field( $_POST['type'] )
+		: '';
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $type ) ) {
+		edd_die( '-1' );
+	}
+
+	// Bail if nonce fails.
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+		edd_die( '-1' );
+	}
+	
+	$response = array();
+
+	$valid_types = array( 'fee', 'discount', 'credit' );
+
+	// Bail if an invalid type is passed.
+	if ( ! in_array( $type, $valid_types, true ) ) {
+		edd_die( '-1' );
+	}
+
+	static $symbol = null;
+
+	if ( null === $symbol ) {
+		$symbol = edd_currency_symbol( edd_get_currency() );
+	}
+
+	switch ( $type ) {
+		case 'discount':
+			$discount = isset( $_POST['adjustment_data']['discount'] )
+				? absint( $_POST['adjustment_data']['discount'] )
+				: 0;
+
+			// Bail if no discount ID passed.
+			if ( empty( $discount ) ) {
+				edd_die( '-1' );
+			}
+
+			$discount = edd_get_discount( $discount );
+
+			// Bail if discount not found.
+			if ( ! $discount ) {
+				edd_die( '-1' );
+			}
+
+			ob_start(); ?>
+
+			<tr data-key="0" data-adjustment="discount">
+				<td class="name column-name column-primary"><a class="row-title" href=""><?php echo esc_html( $discount->name ) ?></a></td>
+				<td class="type column-type"><?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?></td>
+				<td class="description column-description"><code><?php echo esc_html( $discount->code ); ?></code></span></td>
+				<td class="amount column-amount"><span class="value"><?php echo edd_format_discount_rate( $discount->type, $discount->amount ); ?></span></td>
+				<input type="hidden" class="discount-id" name="adjustments[discount][0][id]" value="<?php echo $discount->id; // WPCS: XSS ok. ?>" />
+				<input type="hidden" class="discount-amount" name="adjustments[discount][0][amount]" value="<?php echo $discount->amount; // WPCS: XSS ok. ?>" />
+				<input type="hidden" class="discount-type" name="adjustments[discount][0][type]" value="<?php echo $discount->type; // WPCS: XSS ok. ?>" />
+			</tr>
+
+			<?php
+			$html = ob_get_contents();
+			ob_end_clean();
+
+			$response['html'] = $html;
+			$response['amount'] = $discount->amount;
+			$response['type'] = $discount->type;
+
+			break;
+
+		// We just need to generate HTML if credit is being applied.
+		case 'credit':
+			$amount = isset( $_POST['adjustment_data']['credit']['amount'] )
+				? floatval( $_POST['adjustment_data']['credit']['amount'] )
+				: 0.00;
+
+			$description = isset( $_POST['adjustment_data']['credit']['description'] )
+				? esc_html( $_POST['adjustment_data']['credit']['description'] )
+				: '';
+
+			ob_start(); ?>
+
+			<tr data-key="0" data-adjustment="credit">
+				<td class="name column-name column-primary"><a class="row-title" href=""><?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?></a></td>
+				<td class="type column-type"><?php esc_html_e( 'Credit', 'easy-digital-downloads' ); ?></td>
+				<td class="description column-description"><?php echo $description; // WPCS: XSS ok. ?></span></td>
+				<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $amount ) ); ?></span></td>
+				<input type="hidden" class="credit-description" name="adjustments[credit][0][description]" value="<?php echo $description; // WPCS: XSS ok. ?>" />
+				<input type="hidden" class="credit-amount" name="adjustments[credit][0][amount]" value="<?php echo $amount; // WPCS: XSS ok. ?>" />
+			</tr>
+
+			<?php
+			$html = ob_get_contents();
+			ob_end_clean();
+
+			$response['amount'] = $amount;
+			$response['html']   = $html;
+			break;
+	}
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_add_adjustment_to_order', 'edd_ajax_add_adjustment_to_order' );
+
+/**
+ * Search for customer addresses and return a list.
+ *
+ * @since 3.0
+ */
+function edd_ajax_customer_addresses() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$customer_id = isset( $_POST['customer_id'] )
+		? absint( $_POST['customer_id'] )
+		: 0;
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $customer_id ) ) {
+		edd_die( '-1' );
+	}
+
+	$response = array();
+
+	// Fetch customer.
+	$customer = edd_get_customer( $customer_id );
+
+	if ( $customer ) {
+
+		// Fetch customer addresses.
+		$addresses = $customer->get_addresses();
+
+		if ( $addresses ) {
+			$response['addresses'] = array();
+			$options               = array();
+
+			foreach ( $addresses as $address ) {
+
+				// Convert EDD\Customer\Customer_Address object to array.
+				$a = $address->to_array();
+
+				// Pass array back as response.
+				$response['addresses'][ $address->id ] = $a;
+
+				$address_keys = array_flip( array( 'address', 'address2', 'city', 'region', 'country', 'postal_code' ) );
+
+				$a = array_filter( array_intersect_key( $a, $address_keys ) );
+
+				if ( isset( $a['region'] ) && isset( $a['country'] ) ) {
+					$a['region'] = edd_get_state_name( $a['country'], $a['region'] );
+				}
+
+				if ( isset( $a['country'] ) ) {
+					$a['country'] = edd_get_country_name( $a['country'] );
+				}
+
+				$a = implode( ', ', $a );
+
+				$response['formatted'][ $address->id ] = $a;
+				$options[ $address->id ] = $a;
+			}
+
+			// Fetch the select
+			if ( ! empty( $options ) ) {
+				$html  = '<select data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="edd-select-chosen add-order-customer-address-select">';
+				$html .= '<option></option>';
+				foreach ( $options as $key => $value ) {
+					$html .= '<option data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_attr( $value ). '</option>';
+				}
+				$html .= '</select>';
+				
+				$response['html'] = $html;
+			}
+		}
+	}
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );

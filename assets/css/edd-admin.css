@@ -296,6 +296,16 @@ a.edd-delete:hover {
 	height: auto;
 }
 
+/* Add/View Order Styles
+-------------------------------------------------------------- */
+.edd-vertical-sections .new-customer strong {
+	width: 85px;
+	display: inline-block;
+	white-space: nowrap;
+	text-align: right;
+	margin-right: 10px;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
@@ -1001,7 +1011,7 @@ input[class*="edd-price-field"] {
 /* Payment Details
 -------------------------------------------------------------- */
 
-#poststuff .edd-metabox-title-action {
+.edd-metabox-title-action {
 	margin: 0;
 	float: right;
 	padding: 4px 8px;
@@ -1020,7 +1030,7 @@ input[class*="edd-price-field"] {
 	cursor: pointer;
 	outline: 0;
 }
-#poststuff .edd-metabox-title-action:hover {
+.edd-metabox-title-action:hover {
 	border-color: #008EC2;
 	background: #00a0d2;
 	color: #fff;
@@ -1128,7 +1138,7 @@ input[class*="edd-price-field"] {
 }
 .edd-admin-box-inside span.label {
 	display: inline-block;
-	width: 70px;
+	width: 85px;
 	white-space: nowrap;
 	text-align: right;
 	margin-right: 10px;
@@ -1202,11 +1212,12 @@ input[class*="edd-price-field"] {
 	width: 100px;
 }
 .edd-edit-purchase-element ul li {
-	display: inline-block;
+	display: block;
 	line-height: 1.4;
 	position: relative;
 	margin: 0;
 	vertical-align: middle;
+	font-size: 13px;
 }
 .edd-edit-purchase-element .row {
 	padding: 12px;
@@ -1224,9 +1235,7 @@ input[class*="edd-price-field"] {
 }
 .edd-edit-purchase-element ul {
 	font-size: 0;
-}
-.edd-edit-purchase-element ul li {
-	font-size: 13px;
+	margin: 0 0 15px;
 }
 #edd-order-data .data span {
 	color: #666;
@@ -1271,22 +1280,38 @@ input[class*="edd-price-field"] {
 .edd_repeatable_product_wrapper td {
 	overflow: visible;
 }
-.edd-payment-details-label-mobile {
+.edd-order-details-label-mobile {
 	display: none;
 }
 
-.edd-add-download-to-purchase {
-	padding: 15px 15px 20px 15px;
+.edd-add-download-to-purchase,
+.edd-add-adjustment-to-purchase {
+	padding: 15px 15px 0;
 	border-bottom: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
 }
-.edd-add-download-to-purchase .chosen-container {
+.edd-add-download-to-purchase .chosen-container,
+.edd-add-adjustment-to-purchase .chosen-container{
 	width: 90% !important;
 	max-width: 220px !important;
 }
 
-.edd-add-download-to-purchase .edd-add-download-to-purchase-actions {
-	float: right;
+.edd-add-download-to-purchase .spinner,
+.edd-add-adjustment-to-purchase .spinner{
+	margin: 0;
+	float: none;
+}
+
+.edd-add-download-to-purchase .edd-add-order-quantity {
+	width: 40px;
+	height: 29px;
+	vertical-align: middle;
+}
+
+.edd-add-download-to-purchase .edd-add-order-item-button,
+.edd-add-adjustment-to-purchase .edd-add-adjustment-button,
+.edd-add-adjustment-to-purchase input[type="text"] {
+	height: 29px;
 }
 
 @media screen and ( max-width: 1284px ) {
@@ -1309,7 +1334,7 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-payment-details-label-mobile {
+	.edd-order-details-label-mobile {
 		display: block;
 		font-weight: 500;
 		padding-bottom: 6px;
@@ -1348,7 +1373,7 @@ input[class*="edd-price-field"] {
 		width: 20%;
 		padding-bottom: 10px;
 	}
-	.edd-payment-details-label-mobile {
+	.edd-order-details-label-mobile {
 		font-size: 14px;
 		font-weight: 500;
 	}
