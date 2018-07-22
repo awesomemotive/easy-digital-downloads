@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Adjustments Table Class
+ * Order Adjustments Table Class.
  *
  * @package     EDD
  * @subpackage  Admin/OrderAdjustments
@@ -8,54 +8,55 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+namespace EDD\Admin;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
+// Load WP_List_Table if not loaded.
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
- * EDD_Order_Adjustment_Table Class
+ * Order_Adjustments_Table Class.
  *
- * Renders the Order Adjustments table on the Order Adjustments page
+ * Renders the Order Adjustments table on the Order Adjustments page.
  *
  * @since 3.0
  */
-class EDD_Order_Adjustment_Table extends WP_List_Table {
+class Order_Adjustments_Table extends \WP_List_Table {
 
 	/**
-	 * Number of results to show per page
+	 * Number of results to show per page.
 	 *
-	 * @var string
 	 * @since 3.0
+	 * @var   int
 	 */
 	public $per_page = 30;
 
 	/**
-	 * Order Adjustment counts, keyed by status
+	 * Order Adjustment counts, keyed by status.
 	 *
-	 * @var array
 	 * @since 3.0
+	 * @var   array
 	 */
 	public $counts = array(
 		'tax_rate' => 0,
 		'discount' => 0,
 		'fee'      => 0,
-		'total'    => 0
+		'total'    => 0,
 	);
 
 	/**
-	 * Get things started
+	 * Constructor.
 	 *
 	 * @since 3.0
-	 * @see WP_List_Table::__construct()
+	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Order Adjustment',  'easy-digital-downloads' ),
+			'singular' => __( 'Order Adjustment', 'easy-digital-downloads' ),
 			'plural'   => __( 'Order Adjustments', 'easy-digital-downloads' ),
 			'ajax'     => false,
 		) );
@@ -65,13 +66,12 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Show the search field
+	 * Show the search field.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
+	 * @param string $text     Label for the search box.
+	 * @param string $input_id ID of the search box.
 	 */
 	public function search_box( $text, $input_id ) {
 
@@ -92,21 +92,22 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 
 		?>
 
-        <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ) ?>"><?php echo esc_html( $text ); ?>:</label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ) ?>"><?php echo esc_html( $text ); ?>
+				:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-        </p>
+		</p>
 
 		<?php
 	}
 
 	/**
-	 * Get the base URL for the order_adjustment list table
+	 * Get the base URL for the order adjustments list table/.
 	 *
 	 * @since 3.0
 	 *
-	 * @return string
+	 * @return string Base URL.
 	 */
 	public function get_base_url() {
 
@@ -122,14 +123,13 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 			'post_type' => 'download',
 			'page'      => 'edd-payment-history',
 			'view'      => 'view-order-details',
-			'id'        => $id
+			'id'        => $id,
 		), $base );
 	}
 
 	/**
 	 * Retrieve the view types
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @return array $views All the views available
@@ -141,42 +141,49 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		return array(
+		$columns = array(
 			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Name',        'easy-digital-downloads' ),
-			'type'   => __( 'Type',        'easy-digital-downloads' ),
+			'name'   => __( 'Name', 'easy-digital-downloads' ),
+			'type'   => __( 'Type', 'easy-digital-downloads' ),
 			'desc'   => __( 'Description', 'easy-digital-downloads' ),
-			'amount' => __( 'Amount',      'easy-digital-downloads' )
+			'amount' => __( 'Amount', 'easy-digital-downloads' ),
 		);
+
+		// Remove checkbox column if we're adding an order.
+		if ( edd_is_add_order_page() ) {
+			unset( $columns['cb'] );
+		}
+
+		return $columns;
 	}
 
 	/**
 	 * Retrieve the sortable columns
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
-		return array(
-			'name'     => array( 'name',        false ),
-			'type'     => array( 'type',        false ),
-			'desc'     => array( 'descirption', false ),
-			'amount'   => array( 'amount',      false )
-		);
+		return edd_is_add_order_page()
+			? array()
+			: array(
+				'name'   => array( 'name', false ),
+				'type'   => array( 'type', false ),
+				'desc'   => array( 'description', false ),
+				'amount' => array( 'amount', false ),
+			);
 	}
 
 	/**
 	 * Gets the name of the primary column.
 	 *
-	 * @since 2.5
+	 * @since  3.0
 	 * @access protected
 	 *
 	 * @return string Name of the primary column.
@@ -188,11 +195,10 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
-	 * @param string $column_name The name of the column
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Order Adjustment object.
+	 * @param string                       $column_name      The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -205,10 +211,10 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	/**
 	 * This function renders the amount column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD\Orders\Order_Adjustment $order_adjustment Data for the order_adjustment code.
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Data for the order_adjustment code.
+	 *
 	 * @return string Formatted amount.
 	 */
 	public function column_amount( $order_adjustment ) {
@@ -218,29 +224,29 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render the Name Column
+	 * Render the Name Column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
-	 * @return string Data shown in the Name column
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Order Adjustment object.
+	 *
+	 * @return string Data shown in the Name column.
 	 */
 	public function column_name( $order_adjustment ) {
-		$base         = $this->get_base_url();
-		$row_actions  = array();
+		$base        = $this->get_base_url();
+		$row_actions = array();
 
 		// Edit
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-			'edd-action'       => 'edit_order_adjustment',
-			'order_adjustment' => $order_adjustment->id,
-		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+				'edd-action'       => 'edit_order_adjustment',
+				'order_adjustment' => $order_adjustment->id,
+			), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Delete
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action'       => 'delete_order_adjustment',
-			'order_adjustment' => $order_adjustment->id,
-		), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+				'edd-action'       => 'delete_order_adjustment',
+				'order_adjustment' => $order_adjustment->id,
+			), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all order_adjustment row actions
 		$row_actions = apply_filters( 'edd_order_adjustment_row_actions', $row_actions, $order_adjustment );
@@ -261,41 +267,41 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 
 		// Wrap order_adjustment title in strong anchor
 		$order_adjustment_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-			'edd-action'       => 'edit_order_adjustment',
-			'order_adjustment' => $order_adjustment->id,
-		), $base ) . '">' . esc_html( $name ) . '</a></strong>';
+				'edd-action'       => 'edit_order_adjustment',
+				'order_adjustment' => $order_adjustment->id,
+			), $base ) . '">' . esc_html( $name ) . '</a></strong>';
 
 		// Return order_adjustment title & row actions
 		return $order_adjustment_title . $this->row_actions( $row_actions );
 	}
 
 	/**
-	 * Render the checkbox column
+	 * Render the checkbox column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Order Adjustment object.
 	 *
-	 * @return string Displays a checkbox
+	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $order_adjustment ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ 'order_adjustment',
-			/*$2%s*/ $order_adjustment->id
+			/*$1%s*/
+			'order_adjustment',
+			/*$2%s*/
+			$order_adjustment->id
 		);
 	}
 
 	/**
-	 * Render the checkbox column
+	 * Render the Type column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Order Adjustment object.
 	 *
-	 * @return string Displays the order type
+	 * @return string Displays the adjustment type.
 	 */
 	public function column_type( $order_adjustment ) {
 		return ! empty( $order_adjustment->type )
@@ -305,25 +311,22 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 
 
 	/**
-	 * Render the checkbox column
+	 * Render the description column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD\Orders\Order_Adjustment $order_adjustment Order_Adjustment object.
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Order Adjustment object.
 	 *
-	 * @return string Displays the order type
+	 * @return string Displays the description.
 	 */
 	public function column_desc( $order_adjustment ) {
 		$value = $order_adjustment->description;
 
-		// Update desc based on type
+		// Update description based on type.
 		if ( 'discount' === $order_adjustment->type ) {
 			$desc = '<code>' . sanitize_key( $value ) . '</code>';
-
 		} elseif ( 'tax_rate' === $order_adjustment->type ) {
 			$desc = $value;
-
 		} elseif ( 'fee' === $order_adjustment->type ) {
 			$desc = edd_get_order_adjustment_meta( $order_adjustment->id, 'fee_id', true );
 		}
@@ -334,32 +337,32 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Message to be displayed when there are no adjustments
+	 * Message to be displayed when there are no adjustments.
 	 *
 	 * @since 3.0
-	 * @access public
 	 */
 	public function no_items() {
-		_e( 'No order adjustments found.', 'easy-digital-downloads' );
+		edd_is_add_order_page()
+			? esc_html_e( 'Add an order adjustment.', 'easy-digital-downloads' )
+			: esc_html_e( 'No order adjustments found.', 'easy-digital-downloads' );
 	}
 
 	/**
-	 * Retrieve the bulk actions
+	 * Retrieve the bulk actions.
 	 *
-	 * @access public
 	 * @since 3.0
-	 * @return array $actions Array of the bulk actions
+	 *
+	 * @return array $actions Array of the bulk actions.
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete' => __( 'Delete', 'easy-digital-downloads' )
+			'delete' => __( 'Delete', 'easy-digital-downloads' ),
 		);
 	}
 
 	/**
-	 * Process the bulk actions
+	 * Process the bulk actions.
 	 *
-	 * @access public
 	 * @since 3.0
 	 */
 	public function process_bulk_action() {
@@ -381,7 +384,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'delete' :
+				case 'delete':
 					edd_delete_order_adjustment( $id );
 					break;
 			}
@@ -389,31 +392,39 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the order_adjustment code counts
+	 * Retrieve the order adjustment counts.
 	 *
-	 * @access public
 	 * @since 3.0
 	 */
 	public function get_counts() {
-		$this->counts = edd_get_order_adjustment_counts( $_GET['id'] );
+
+		// Maybe retrieve the counts.
+		if ( ! edd_is_add_order_page() ) {
+			$this->counts = edd_get_order_adjustment_counts( $_GET['id'] );
+		}
 	}
 
 	/**
-	 * Retrieve all the data for all the order_adjustment codes
+	 * Retrieve all the data for all the order_adjustment codes.
 	 *
-	 * @access public
 	 * @since 3.0
-	 * @return array $order_adjustments_data Array of all the data for the order_adjustment codes
+	 *
+	 * @return array $order_adjustments_data Array of all the data for the order adjustments.
 	 */
 	public function order_adjustments_data() {
 
+		// Return if we are adding a new order.
+		if ( edd_is_add_order_page() ) {
+			return array();
+		}
+
 		// Query args
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby']  ) : 'id';
-		$order   = isset( $_GET['order']   ) ? sanitize_key( $_GET['order']    ) : 'DESC';
-		$type    = isset( $_GET['type']    ) ? sanitize_key( $_GET['type']     ) : '';
-		$search  = isset( $_GET['s']       ) ? sanitize_text_field( $_GET['s'] ) : null;
-		$paged   = isset( $_GET['paged']   ) ? absint( $_GET['paged']          ) : 1;
-		$id      = isset( $_GET['id']      ) ? absint( $_GET['id']             ) : 0;
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'id';
+		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
+		$type    = isset( $_GET['type'] ) ? sanitize_key( $_GET['type'] ) : '';
+		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
+		$paged   = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
 		// Get order_adjustments
 		return edd_get_order_adjustments( array(
@@ -424,26 +435,20 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 			'orderby'     => $orderby,
 			'order'       => $order,
 			'type'        => $type,
-			'search'      => $search
+			'search'      => $search,
 		) );
 	}
 
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 3.0
-	 * @uses EDD_Order_Adjustment_Table::get_columns()
-	 * @uses EDD_Order_Adjustment_Table::get_sortable_columns()
-	 * @uses EDD_Order_Adjustment_Table::order_adjustments_data()
-	 * @uses WP_List_Table::get_pagenum()
-	 * @uses WP_List_Table::set_pagination_args()
 	 */
 	public function prepare_items() {
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$this->items = $this->order_adjustments_data();
@@ -456,7 +461,7 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 			'total_items' => $this->counts[ $type ],
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page )
+			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page ),
 		) );
 	}
 
@@ -464,19 +469,18 @@ class EDD_Order_Adjustment_Table extends WP_List_Table {
 	 * Generates content for a single row of the table
 	 *
 	 * @since 3.0
-	 * @access public
 	 *
 	 * @param object $item The current item
 	 */
 	public function single_row( $item ) {
 
-		// Status
+		// Status.
 		$classes = array_map( 'sanitize_html_class', array(
-			'order-'. $item->order_id,
-			$item->type
+			'order-' . $item->order_id,
+			$item->type,
 		) );
 
-		// Turn into a string
+		// Turn into a string.
 		$class = implode( ' ', $classes ); ?>
 
 		<tr id="order-item-<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
