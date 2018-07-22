@@ -159,14 +159,25 @@ function edd_order_details_customer( $order ) {
 		</div>
 
 		<div class="column-container new-customer" style="display: none">
-			<strong><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?>:</strong>
-			<input type="text" name="edd-new-customer-name" value="" class="medium-text"/>
+			<p>
+				<strong><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</strong>
+				<input type="text" name="edd-new-customer-first-name" value="" class="medium-text"/>
+			</p>
 
-			<strong><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</strong>
-			<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
+			<p>
+				<strong><?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>:</strong>
+				<input type="text" name="edd-new-customer-last-name" value="" class="medium-text"/>
+			</p>
 
-			<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
-			<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+			<p>
+				<strong><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</strong>
+				<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
+			</p>
+
+			<p>
+				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
+				<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+			</p>
 		</div>
 	</div>
 
@@ -465,7 +476,6 @@ function edd_order_details_adjustments( $order ) {
 							'class'            => 'edd-order-add-adjustment-select',
 							'options'          => array(
 								''         => '', // Empty  option needed to display placeholder.
-								'fee'      => __( 'Fee', 'easy-digital-downloads' ),
 								'discount' => __( 'Discount', 'easy-digital-downloads' ),
 								'credit'   => __( 'Credit', 'easy-digital-downloads' ),
 							),
@@ -474,32 +484,6 @@ function edd_order_details_adjustments( $order ) {
 							'show_option_none' => false,
 							'chosen'           => true,
 						) ); // WPCS: XSS ok. ?>
-					</li>
-				</ul>
-
-				<ul>
-					<li class="fee" style="display: none;">
-						<?php
-						$f = EDD()->session->get( 'edd_cart_fees' );
-
-						$fees = array();
-
-						if ( is_array( $f ) && ! empty( $f ) ) {
-							foreach ( $f as $fee_id => $fee ) {
-								$fees[ $fee_id ] = esc_html( $fee['label'] );
-							}
-						}
-
-						echo EDD()->html->select( array(
-							'name'             => 'edd-order-add-fee-select',
-							'id'               => 'edd-order-add-fee-select',
-							'class'            => 'edd-order-add-fee-select',
-							'options'          => $fees,
-							'show_option_all'  => false,
-							'show_option_none' => false,
-							'chosen'           => true,
-						) ); // WPCS: XSS ok.
-						?>
 					</li>
 				</ul>
 
@@ -678,6 +662,15 @@ function edd_order_details_extras( $order ) {
 					<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
 				</div>
 
+				<?php if ( edd_is_add_order_page() ) : ?>
+					<div class="edd-send-purchase-receipt edd-admin-box-inside">
+						<span class="label"><?php esc_html_e( 'Receipt' ); ?>:</span>
+						<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
+						<label class="description" for="edd-order-send-receipt"><?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?></label>
+						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+					</div>
+				<?php endif; ?>
+
 				<?php do_action( 'edd_view_order_details_payment_meta_after', $order->id ); ?>
 			</div>
 		</div>
@@ -820,7 +813,10 @@ function edd_order_details_attributes( $order ) {
 				</div>
 				<?php endif; ?>
 
-				<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
+				<div id="publishing-action">
+					<span class="spinner"></span>
+					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
+				</div>
 				<div class="clear"></div>
 			</div>
 

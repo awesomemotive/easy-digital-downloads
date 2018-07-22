@@ -296,6 +296,16 @@ a.edd-delete:hover {
 	height: auto;
 }
 
+/* Add/View Order Styles
+-------------------------------------------------------------- */
+.edd-vertical-sections .new-customer strong {
+	width: 85px;
+	display: inline-block;
+	white-space: nowrap;
+	text-align: right;
+	margin-right: 10px;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 

@@ -71,6 +71,14 @@ $order = (object) $order;
 <div class="wrap edd-wrap">
 	<h2><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h2>
 
+	<div class="notice notice-error" id="edd-add-order-customer-error" style="display: none;">
+		<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
+	</div>
+
+	<div class="notice notice-error" id="edd-add-order-no-items-error" style="display: none">
+		<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add an item to this order.', 'easy-digital-downloads' ); ?></p>
+	</div>
+
 	<?php do_action( 'edd_add_order_before' ); ?>
 
 	<form id="edd-add-order-form" method="post">

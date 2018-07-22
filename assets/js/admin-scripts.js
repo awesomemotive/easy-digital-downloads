@@ -1058,6 +1058,7 @@ jQuery(document).ready(function ($) {
 			this.fetch_addresses();
 			this.select_address();
 			this.recalculate_total();
+			this.validate();
 		},
 
 		add_order_item : function () {
@@ -1339,6 +1340,25 @@ jQuery(document).ready(function ($) {
 			$(' .edd-order-taxes .value').html( tax.toFixed( edd_vars.currency_decimals ) );
 			$(' .edd-order-discounts .value').html( adjustments.toFixed( edd_vars.currency_decimals ) );
 			$(' .edd-order-total .value ').html( total.toFixed( edd_vars.currency_decimals ) );
+		},
+
+		validate : function() {
+			$( '#edd-add-order-form' ).on( 'submit', function() {
+				$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
+
+				if ( $( '.orderitems tr.no-items' ).is( ':visible' ) ) {
+					$( '#edd-add-order-no-items-error' ).slideDown();
+				}
+
+				if ( $( '.order-customer-info' ).is( ':visible' ) ) {
+					$( '#edd-add-order-customer-error' ).slideDown();
+				}
+
+				if ( $( '.notice' ).is( ':visible' ) ) {
+					$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
+					return false;
+				}
+			} );
 		}
 	};
 

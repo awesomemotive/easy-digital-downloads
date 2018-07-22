@@ -1045,9 +1045,6 @@ function edd_ajax_add_adjustment_to_order() {
 	}
 
 	switch ( $type ) {
-		case 'fee':
-			break;
-
 		case 'discount':
 			$discount = isset( $_POST['adjustment_data']['discount'] )
 				? absint( $_POST['adjustment_data']['discount'] )
