@@ -875,12 +875,16 @@ function edd_add_manual_order( $data ) {
 
 	// Set defaults.
 	$defaults = array(
-		'downloads'          => array(),
-		'edd-payment-status' => '',
-		'payment_key'        => '',
-		'gateway'            => '',
-		'transaction_id'     => '',
-		'receipt'            => '',
+		'downloads'               => array(),
+		'edd-payment-status'      => 'publish',
+		'payment_key'             => '',
+		'gateway'                 => '',
+		'transaction_id'          => '',
+		'receipt'                 => '',
+		'edd-payment-date'        => date( 'Y-m-d', EDD()->utils->date( 'now' )->timestamp ),
+		'edd-payment-time-hour'   => date( 'G', EDD()->utils->date( 'now' )->timestamp ),
+		'edd-payment-time-min'    => date( 'i', EDD()->utils->date( 'now' )->timestamp ),
+		'edd-unlimited-downloads' => 0,
 	);
 
 	// Parse args.
@@ -920,9 +924,6 @@ function edd_add_manual_order( $data ) {
 			$email   = $customer->email;
 			$user_id = $customer->user_id;
 		}
-	} else {
-		// @todo
-		// Error: Please select customer or create one.
 	}
 
 	/** Insert order *********************************************************/
@@ -934,16 +935,21 @@ function edd_add_manual_order( $data ) {
 		$status = 'publish';
 	}
 
+	// Parse date.
+	$date = $data['edd-payment-date'] . ' ' . $data['edd-payment-time-hour'] . ':' . $data['edd-payment-time-min'];
+
 	$order_data = array(
-		'status'      => $status,
-		'user_id'     => $user_id,
-		'customer_id' => $customer_id,
-		'email'       => $email,
-		'ip'          => sanitize_text_field( $data['ip'] ),
-		'gateway'     => sanitize_text_field( $data['gateway'] ),
-		'mode'        => edd_is_test_mode() ? 'test' : 'live',
-		'currency'    => edd_get_currency(),
-		'payment_key' => sanitize_text_field( $data['payment_key'] ),
+		'status'         => 'pending', // Always insert as pending initially.
+		'user_id'        => $user_id,
+		'customer_id'    => $customer_id,
+		'email'          => $email,
+		'ip'             => sanitize_text_field( $data['ip'] ),
+		'gateway'        => sanitize_text_field( $data['gateway'] ),
+		'mode'           => edd_is_test_mode() ? 'test' : 'live',
+		'currency'       => edd_get_currency(),
+		'payment_key'    => sanitize_text_field( $data['payment_key'] ),
+		'date_created'   => $date,
+		'date_completed' => 'publish' === $data['edd-payment-status'] ? $date : '',
 	);
 
 	$order_id = edd_add_order( $order_data );
@@ -955,7 +961,6 @@ function edd_add_manual_order( $data ) {
 	$order_subtotal = 0.00;
 	$total_tax      = 0.00;
 	$total_discount = 0.00;
-	$total_fees     = 0.00;
 	$order_total    = 0.00;
 
 	/** Insert order address *************************************************/
@@ -987,8 +992,6 @@ function edd_add_manual_order( $data ) {
 		unset( $customer_address_data['order_id'] );
 
 		edd_maybe_add_customer_address( $customer->id, $customer_address_data );
-	} elseif ( edd_use_taxes() && ! isset( $data['edd_order_address'] ) ) {
-		// @TODO: Error... enter address.
 	}
 
 	/** Insert order items ***************************************************/
@@ -1079,6 +1082,10 @@ function edd_add_manual_order( $data ) {
 					'total'        => $total,
 				) );
 
+				// Increase the earnings for this download.
+				edd_increase_earnings( absint( $download['id'] ), $total );
+				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
+
 				// Update running totals.
 				$order_subtotal += $subtotal;
 				$total_tax      += $tax;
@@ -1132,6 +1139,9 @@ function edd_add_manual_order( $data ) {
 					'total'       => $amount,
 				) );
 
+				// Increase discount usage.
+				$discount->increase_usage();
+
 				// Subtract from order total.
 				$order_total -= $amount;
 			}
@@ -1150,13 +1160,33 @@ function edd_add_manual_order( $data ) {
 		) );
 	}
 
+	// Unlimited downloads.
+	if ( isset( $data['edd-unlimited-downloads'] ) && 1 === (int) $data['edd-unlimited-downloads'] ) {
+		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
+	}
+
+	$customer->increase_purchase_count();
+	$customer->increase_value( $order_total );
+	edd_increase_total_earnings( $order_total );
+
 	// Update totals.
 	edd_update_order( $order_id, array(
 		'subtotal' => $order_subtotal,
 		'tax'      => $total_tax,
 		'discount' => $total_discount,
-		'total'    => $order_total
+		'total'    => $order_total,
 	) );
+
+	if ( ! isset( $data['edd_order_send_receipt'] ) ) {
+
+		// Stop purchase receipt from being sent.
+		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
+	}
+
+	// Trigger edd_complete_purchase.
+	if ( 'publish' === $status ) {
+		edd_update_order_status( $order_id, $status );
+	}
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
 
