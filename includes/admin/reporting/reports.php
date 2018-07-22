@@ -1448,7 +1448,7 @@ function edd_register_payment_gateways_report( $reports ) {
                         }, $gateways );
 
 						return array(
-							'sales' => array_values( $gateways ),
+							'sales' => array_filter( array_values( $gateways ) ),
 						);
 					},
 					'type' => 'pie',
@@ -1496,7 +1496,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						}, $gateways ) );
 
 						return array(
-							'earnings' => $gateways,
+							'earnings' => array_filter( $gateways ),
 						);
 					},
 					'type' => 'pie',
