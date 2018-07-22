@@ -484,8 +484,10 @@ function edd_order_details_adjustments( $order ) {
 
 						$fees = array();
 
-						foreach ( $f as $fee_id => $fee ) {
-							$fees[ $fee_id ] = esc_html( $fee['label'] );
+						if ( is_array( $f ) && ! empty( $f ) ) {
+							foreach ( $f as $fee_id => $fee ) {
+								$fees[ $fee_id ] = esc_html( $fee['label'] );
+							}
 						}
 
 						echo EDD()->html->select( array(
@@ -497,7 +499,6 @@ function edd_order_details_adjustments( $order ) {
 							'show_option_none' => false,
 							'chosen'           => true,
 						) ); // WPCS: XSS ok.
-
 						?>
 					</li>
 				</ul>
@@ -857,6 +858,18 @@ function edd_order_details_amounts( $order ) {
 					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->subtotal ) ); ?></span>
 				</div>
 
+				<div class="edd-order-discounts edd-admin-box-inside">
+					<span class="label"><?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>:</span><?php
+					echo esc_html( edd_currency_symbol( $order->currency ) );
+					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
+				</div>
+
+				<div class="edd-order-adjustments edd-admin-box-inside">
+					<span class="label"><?php esc_html_e( 'Adjustments', 'easy-digital-downloads' ); ?>:</span><?php
+					echo esc_html( edd_currency_symbol( $order->currency ) );
+					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
+				</div>
+
 				<?php if ( edd_use_taxes() ) : ?>
 					<div class="edd-order-taxes edd-admin-box-inside">
 						<span class="label"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>:</span><?php
@@ -864,12 +877,6 @@ function edd_order_details_amounts( $order ) {
 						?><span class="value"><?php echo esc_attr( edd_format_amount( $order->tax ) ); ?></span>
 					</div>
 				<?php endif; ?>
-
-				<div class="edd-order-discounts edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Adjustments', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
-				</div>
 
 				<div class="edd-order-total edd-admin-box-inside">
 					<span class="label"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</span><?php
