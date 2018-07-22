@@ -1073,6 +1073,7 @@ function display_discounts_filter() {
 
 	$d = edd_get_discounts( array(
 		'fields' => array( 'code', 'name' ),
+		'number' => 100,
 	) );
 
 	$discounts = array();

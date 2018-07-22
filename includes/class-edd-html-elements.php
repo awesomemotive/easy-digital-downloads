@@ -362,15 +362,16 @@ class EDD_HTML_Elements {
 	 */
 	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
 		$defaults = array(
-			'name'        => 'discounts',
-			'id'          => 'discounts',
-			'class'       => '',
-			'multiple'    => false,
-			'selected'    => 0,
-			'chosen'      => true,
-			'placeholder' => __( 'Choose a Discount', 'easy-digital-downloads' ),
-			'number'      => 30,
-			'data'        => array(
+			'name'            => 'discounts',
+			'id'              => 'discounts',
+			'class'           => '',
+			'multiple'        => false,
+			'selected'        => 0,
+			'chosen'          => true,
+			'placeholder'     => __( 'Choose a Discount', 'easy-digital-downloads' ),
+			'show_option_all' => __( 'All Discounts', 'easy-digital-downloads' ),
+			'number'          => 30,
+			'data'            => array(
 				'search-type'        => 'discount',
 				'search-placeholder' => __( 'Search Discounts', 'easy-digital-downloads' ),
 			),
@@ -416,7 +417,7 @@ class EDD_HTML_Elements {
 			'multiple'         => $args['multiple'],
 			'placeholder'      => $args['placeholder'],
 			'chosen'           => $args['chosen'],
-			'show_option_all'  => __( 'All Discounts', 'easy-digital-downloads' ),
+			'show_option_all'  => $args['show_option_all'],
 			'show_option_none' => false,
 		) );
 
