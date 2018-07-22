@@ -117,7 +117,9 @@ function edd_get_order_details_sections( $order ) {
 function edd_order_details_customer( $order ) {
 	$customer  = edd_get_customer( $order->customer_id );
 	$payment   = edd_get_payment( $order->id );
-	$user_info = $payment->user_info;
+	$user_info = $payment
+		? $payment->user_info
+		: array();
 
 	$change_text = edd_is_add_order_page()
 		? esc_html__( 'Assign', 'easy-digital-downloads' )
@@ -839,10 +841,7 @@ function edd_order_details_amounts( $order ) {
 ?>
 
 	<div id="edd-order-amounts" class="postbox edd-order-data">
-		<h3 class="hndle">
-			<span><?php esc_html_e( 'Order Amounts', 'easy-digital-downloads' ); ?></span>
-			<a href="" id="edd-order-recalc-total" class="edd-metabox-title-action"><?php esc_html_e( 'Recalculate', 'easy-digital-downloads' ); ?></a>
-		</h3>
+		<h3 class="hndle"><span><?php esc_html_e( 'Order Amounts', 'easy-digital-downloads' ); ?></span></h3>
 
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
