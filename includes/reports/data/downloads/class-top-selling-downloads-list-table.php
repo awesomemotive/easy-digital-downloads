@@ -77,7 +77,7 @@ class Top_Selling_Downloads_List_Table extends \WP_List_Table {
 
 			if ( is_array( $prices ) ) {
 				$prices = $prices[0];
-				$title  .= ' &mdash; ' . $prices['name'];
+				$title .= ' &mdash; ' . $prices['name'];
 			}
 		}
 
