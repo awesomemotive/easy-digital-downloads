@@ -810,11 +810,6 @@ jQuery(document).ready(function ($) {
 
 		add_download : function() {
 
-			$('#edd-order-items').on( 'click', 'h3 .edd-metabox-title-action', function(e) {
-				e.preventDefault();
-				$( '#edd-order-items' ).children( '.edd-add-download-to-purchase' ).slideToggle();
-			} );
-
 			// Add a New Download from the Add Downloads to Purchase Box
 			$('.edd-edit-purchase-element').on('click', '#edd-order-add-download', function(e) {
 				e.preventDefault();
@@ -1059,99 +1054,113 @@ jQuery(document).ready(function ($) {
 	var EDD_Add_Order = {
 		init : function() {
 			this.add_order_item();
-			this.select_order_item();
-			this.select_price_variation();
+			this.add_adjustment();
 			this.fetch_addresses();
 			this.select_address();
 			this.recalculate_total();
 		},
 
 		add_order_item : function () {
-			$( document.body ).on( 'click', '#edd-add-order .edd-add-order-item', function( e ) {
+			var button = $( '.edd-add-order-item-button' );
+
+			// Toggle form.
+			$( '#edd-order-items' ).on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+				e.preventDefault();
+				$( '#edd-order-items' ).children( '.edd-add-download-to-purchase' ).slideToggle();
+			} );
+
+			button.prop( 'disabled', 'disabled' );
+
+			$( '.edd-order-add-download-select' ).on( 'change', function() {
+				button.removeAttr( 'disabled' );
+			} );
+
+			// Add item.
+			button.on( 'click', function( e ) {
 				e.preventDefault();
 
-				var row = $( '#edd-order-items .edd_repeatable_row:last-child' ),
-					clone = EDD_Download_Configuration.clone_repeatable( row );
-
-				clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
-
-				// Setup chosen fields again if they exist
-				clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
-				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
-				clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
-			});
-		},
-
-		select_order_item : function() {
-			$( document.body ).on( 'change', '#edd-add-order .add-order-download', function() {
-				var $this = $( this ),
+				var select = $( '.edd-order-add-download-select' ),
+					spinner = $( '.edd-add-download-to-purchase .spinner' ),
 					data = {
-					action: 'edd_download_variations',
-					nonce: $( '#edd_add_order_nonce' ).val(),
-					download_id: $this.val(),
-					key: $this.parent().parent().data('key')
-				};
-
-				$this.parent().parent().find('.download-price-option-wrap .spinner').css( 'visibility', 'visible' );
-
-				$.post( ajaxurl, data, function ( response ) {
-					edd_admin_globals.order_item_ajax_result = response;
-
-					$this.parent().parent().find( '.edd-amount' ).val(migrate-orders-submit response.amount );
-
-					if ( response.html ) {
-						$this.parent().parent().find( '.download-price-option-wrap' ).html( response.html + '<span class="spinner"></span>' );
-						$this.parent().parent().find( '.download-price-option-wrap select' ).chosen( chosen_vars );
-					} else {
-						$this.parent().parent().find( '.download-price-option-wrap' ).html( '&mdash; <span class="spinner"></span>' );
-						$this.parent().parent().find( '.edd-tax' ).val( response.tax );
-					}
-
-					EDD_Add_Order.update_total();
-				}, 'json' );
-
-				return false;
-			} );
-		},
-
-		select_price_variation : function() {
-			$( document.body ).on( 'change', '#edd-add-order .add-order-price-variation-select', function() {
-				var $this = $( this ),
-					spinner = $this.parent().parent().find('.download-price-option-wrap .spinner'),
-					key = $this.parent().parent().data( 'key' ),
-					data = {
-						action: 'edd_download_variation_amount',
+						action: 'edd_add_order_item',
 						nonce: $( '#edd_add_order_nonce' ).val(),
-						price_id: $this.val(),
-						key: key,
-						download_id: $( 'select[name="downloads[' + key + '][id]"] option:selected' ).val()
+						download: select.val(),
+						quantity: $( '.edd-add-order-quantity' ).val()
 					};
 
 				spinner.css( 'visibility', 'visible' );
 
-				$.post( ajaxurl, data, function ( response ) {
-					$this.parent().parent().find( '.edd-amount' ).val( response.amount );
-					EDD_Add_Order.update_total();
+				$.post( ajaxurl, data, function( response ) {
+					$( '.orderitems .no-items' ).hide();
+					$( '.orderitems tbody' ).append( response.html );
+
+					EDD_Add_Order.update_totals();
+					EDD_Add_Order.reindex();
+
 					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
-
-				return false;
 			} );
 		},
+		
+		add_adjustment : function () {
+			// Toggle form.
+			$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+				e.preventDefault();
+				$( '#edd-order-adjustments' ).children( '.edd-add-adjustment-to-purchase' ).slideToggle();
+			} );
 
-		fetch_addresses : function() {
-			$( '#edd-add-order .edd-customer-select' ).on( 'change', function() {
-				var $this = $( this ),
-					spinner = $( '.edd-customer-address-spinner' ),
-					data = {
-					action: 'edd_customer_addresses',
-					customer_id: $this.val(),
-					nonce: $( '#edd_add_order_nonce' ).val()
-				};
+			$( '.edd-order-add-adjustment-select' ).on( 'change', function() {
+				var type = $( this ).val();
+
+				$( '.edd-add-adjustment-to-purchase li.fee, .edd-add-adjustment-to-purchase li.discount, .edd-add-adjustment-to-purchase li.fee, .edd-add-adjustment-to-purchase li.credit' ).hide();
+
+				$( '.' + type, '.edd-add-adjustment-to-purchase' ).show();
+			} );
+
+			$( '.edd-add-order-adjustment-button' ).on( 'click', function( e ) {
+				e.preventDefault();
+
+				var data = {
+						action: 'edd_add_adjustment_to_order',
+						nonce: $( '#edd_add_order_nonce' ).val(),
+						type: $( '.edd-order-add-adjustment-select' ).val(),
+						adjustment_data: {
+							fee: $( '.edd-order-add-fee-select' ).val(),
+							discount: $( '.edd-order-add-discount-select' ).val(),
+							credit: {
+								description: $( '.edd-add-order-credit-description' ).val(),
+								amount: $( '.edd-add-order-credit-amount' ).val()
+							}
+						}
+					},
+					spinner = $( '.edd-add-adjustment-to-purchase .spinner' );
 
 				spinner.css( 'visibility', 'visible' );
 
 				$.post( ajaxurl, data, function( response ) {
+					$( '.orderadjustments .no-items' ).hide();
+					$( '.orderadjustments tbody' ).append( response.html );
+
+					EDD_Add_Order.update_totals();
+					EDD_Add_Order.reindex();
+
+					spinner.css( 'visibility', 'hidden' );
+				}, 'json' );
+			} );
+		},
+
+		fetch_addresses : function() {
+			$( '.edd-payment-change-customer-input' ).on( 'change', function() {
+				var $this = $( this ),
+					data = {
+						action: 'edd_customer_addresses',
+						customer_id: $this.val(),
+						nonce: $( '#edd_add_order_nonce' ).val()
+					};
+
+				$.post( ajaxurl, data, function( response ) {
+
+				    // Store response for later use.
 					edd_admin_globals.customer_address_ajax_result = response;
 
 					if ( response.html ) {
@@ -1160,8 +1169,6 @@ jQuery(document).ready(function ($) {
 					} else {
 						$( '.customer-address-select-wrap' ).html( '' ).hide();
 					}
-
-					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
 
 				return false;
@@ -1172,86 +1179,123 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
 					val   = $this.val(),
-					select = $( '#edd-add-order select#edd_country' );
+					select = $( '#edd-add-order-form select#edd_order_address_country' );
 
 				var address = edd_admin_globals.customer_address_ajax_result['addresses'][ val ];
 
-				$( '#edd-add-order #edd-address' ).val( address.address );
-				$( '#edd-add-order #edd-address2' ).val( address.address2 );
-				$( '#edd-add-order #edd-city' ).val( address.city );
+				$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
+				$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
+				$( '#edd-add-order-form input[name="edd_order_address[city]"]' ).val( address.city );
 				select.val( address.country ).trigger( 'chosen:updated' );
+				$( '#edd-add-order-form input[name="edd_order_address[address_id]"]' ).val( val );
 
 				var data = {
 						action:    'edd_get_shop_states',
 						country:    select.val(),
-						nonce:      select.data( 'nonce' ),
-						field_name: 'edd_countries_filter'
+						nonce:      $( '.add-order-customer-address-select' ).data( 'nonce' ),
+						field_name: 'edd_order_address_region'
 					};
 
 				$.post( ajaxurl, data, function ( response ) {
-					$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+					$( 'select#edd_order_address_region' ).find( 'option:gt(0)' ).remove();
 
 					if ( 'nostates' !== response ) {
-						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select#edd_order_address_region' );
 					}
 
-					$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
-					$( '#edd-add-order select.edd_regions_filter' ).val( address.region ).trigger( 'chosen:updated' );
+					$( 'select#edd_order_address_region' ).trigger( 'chosen:updated' );
+					$( 'select#edd_order_address_region' ).val( address.region ).trigger( 'chosen:updated' );
 				});
 
 				return false;
 			} );
 		},
 
-		recalculate_total : function() {
-			$( document.body ).on( '#edd-add-order input', '.edd-amount, .edd-discount, .edd-tax, .edd-quantity', function() {
-				EDD_Add_Order.update_total();
-			});
+		reindex : function () {
+			var key = 0;
 
-			$( document.body ).on( 'click', '#edd-add-order #edd-order-recalc-total', function() {
-				EDD_Add_Order.update_total();
+			$( '.orderitems tbody tr:not(.no-items), .orderadjustments tbody tr:not(.no-items)' ).each( function() {
+				$( this ).attr( 'data-key', key );
+
+				$( this ).find( 'input' ).each( function() {
+					var name = $( this ).attr( 'name' );
+
+					if ( name ) {
+						name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
+						$( this ).attr( 'name', name );
+					}
+				} );
+
+				key++;
+			});
+		},
+
+		recalculate_total : function() {
+			$( '#edd-add-order' ).on( 'click', '#edd-order-recalc-total', function() {
+				EDD_Add_Order.update_totals();
 			} );
 		},
 
-		update_total : function() {
-			var item_amount   = 0,
-				item_tax      = 0,
-				item_quantity = 1,
-				item_discount = 0,
-				item_total    = 0,
-				subtotal      = 0,
-				total_tax     = 0,
-				total_discount= 0,
-				total         = 0;
+		update_totals : function() {
+			var subtotal = 0,
+				tax = 0,
+				adjustments = 0,
+				total = 0;
 
-			$( '#edd-add-order .edd_repeatable_row' ).each( function() {
-				var row = $( this );
+			$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
+				var row = $( this ),
+					item_amount,
+					item_quantity = 1,
+					item_tax = 0,
+					item_total;
 
-				item_amount = parseFloat( row.find( 'input.edd-amount' ).val() );
+				item_amount = parseFloat( row.find( '.amount .value' ).text() );
 				subtotal += item_amount;
 
-				if ( row.find( 'input.edd-tax' ).length ) {
-					item_tax = parseFloat( row.find( 'input.edd-tax' ).val() );
+				if ( row.find( '.tax' ).length ) {
+					item_tax = parseFloat( row.find( '.tax .value' ).text() );
 
 					if ( ! isNaN( item_tax ) && ! edd_vars.taxes_included ) {
-						item_amount = item_amount + item_tax;
-						total_tax += item_tax;
+						item_amount += item_tax;
+						tax += item_tax;
 					}
 				}
 
-				if ( row.find( 'input.edd-quantity' ).length ) {
-					item_quantity = parseFloat( row.find( 'input.edd-quantity' ).val() );
+				if ( row.find( '.quantity' ).length ) {
+					item_quantity = parseFloat( row.find( '.quantity' ).text() );
 				}
 
 				item_total = item_amount * item_quantity;
 
-				item_discount = parseFloat( row.find( 'input.edd-discount' ).val() );
-				total_discount += item_discount;
-
-				item_total -= item_discount;
-
 				total += item_total;
-			} );
+			});
+
+			$( '.orderadjustments tbody tr:not(.no-items)' ).each( function() {
+				var row = $( this ),
+					type,
+					amount = 0;
+
+				type = row.data( 'adjustment' );
+
+				switch ( type ) {
+					case 'credit':
+						amount = parseFloat( row.find( 'input.credit-amount', row ).val() );
+						adjustments += amount;
+						total -= amount;
+						break;
+					case 'discount':
+						amount = parseFloat( row.find( 'input.discount-amount', row ).val() );
+						$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
+							var value = $( this ).find( '.total .value' ).text(),
+								reduction = value / 100 * amount;
+
+							adjustments += reduction;
+							total -= reduction;
+						} );
+
+						break;
+				}
+			});
 
 			if ( isNaN( total ) ) {
 				total = 0;
@@ -1261,25 +1305,17 @@ jQuery(document).ready(function ($) {
 				subtotal = 0;
 			}
 
-			if ( isNaN( total_tax ) ) {
-				total_tax = 0;
+			if ( isNaN( tax ) ) {
+				tax = 0;
 			}
 
-			if ( isNaN( total_discount ) ) {
-				total_discount = 0;
-			}
-
-			if ( total < 0 ) {
-				$( '#edd-add-order #submit' ).prop( 'disabled', 'disabled' );
-				$( '#edd-add-order .edd-order-total' ).addClass( 'invalid' );
-			} else {
-				$( '#edd-add-order #submit' ).removeAttr( 'disabled' );
-				$( '#edd-add-order .edd-order-total' ).removeClass( 'invalid' );
+			if ( isNaN( adjustments ) ) {
+				adjustments = 0;
 			}
 
 			$(' .edd-order-subtotal .value').html( subtotal.toFixed( edd_vars.currency_decimals ) );
-			$(' .edd-order-taxes .value').html( total_tax.toFixed( edd_vars.currency_decimals ) );
-			$(' .edd-order-discounts .value').html( total_discount.toFixed( edd_vars.currency_decimals ) );
+			$(' .edd-order-taxes .value').html( tax.toFixed( edd_vars.currency_decimals ) );
+			$(' .edd-order-discounts .value').html( adjustments.toFixed( edd_vars.currency_decimals ) );
 			$(' .edd-order-total .value ').html( total.toFixed( edd_vars.currency_decimals ) );
 		}
 	};

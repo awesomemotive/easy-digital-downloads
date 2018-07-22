@@ -17,6 +17,11 @@ if ( ! isset( $_GET['view'] ) || 'add-order' !== $_GET['view'] ) { // WPCS: inpu
 	wp_die( esc_html__( 'Something went wrong.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 }
 
+// Load list table if not already loaded
+if ( ! class_exists( 'EDD_Order_Item_Table' ) ) {
+	require_once 'class-order-items-table.php';
+}
+
 // Determine float accuracy for the steps and rounding.
 $decimals = edd_currency_decimal_filter();
 if ( empty( $decimals ) ) {
@@ -26,7 +31,7 @@ if ( empty( $decimals ) ) {
 	$step = '0.';
 	while ( $i < $decimals ) {
 		$step .= '0';
-		$i++;
+		$i ++;
 	}
 	$step .= '1';
 	$step  = (float) $step;
@@ -38,22 +43,38 @@ $minutes = edd_get_minute_values();
 $countries = array_filter( edd_get_country_list() );
 $regions   = array_filter( edd_get_shop_states( edd_get_shop_country() ) );
 
-// Setup gateway list.
-$known_gateways = edd_get_payment_gateways();
-
-$gateways = array();
-
-foreach ( $known_gateways as $id => $data ) {
-	$gateways[ $id ] = esc_html( $data['admin_label'] );
-}
+// Create empty order object to pass to callback functions.
+$order = array(
+	'id'              => 0,
+	'parent'          => 0,
+	'order_number'    => 0,
+	'status'          => 'publish',
+	'date_created'    => '0000-00-00 00:00:00',
+	'date_modified'   => '0000-00-00 00:00:00',
+	'date_refundable' => '0000-00-00 00:00:00',
+	'user_id'         => 0,
+	'customer_id'     => 0,
+	'email'           => '',
+	'ip'              => edd_get_ip(),
+	'gateway'         => '',
+	'mode'            => '',
+	'currency'        => edd_get_currency(),
+	'payment_key'     => '',
+	'subtotal'        => 0,
+	'discount'        => 0,
+	'tax'             => 0,
+	'total'           => 0,
+);
+$order = (object) $order;
 ?>
 
 <div class="wrap edd-wrap">
-	<h2><?php esc_html_e( 'Add Order', 'easy-digital-downloads' ); ?></h2>
+	<h2><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h2>
 
 	<?php do_action( 'edd_add_order_before' ); ?>
 
 	<form id="edd-add-order-form" method="post">
+
 		<?php do_action( 'edd_add_order_form_top' ); ?>
 
 		<div id="poststuff">
@@ -63,11 +84,20 @@ foreach ( $known_gateways as $id => $data ) {
 						<div id="side-sortables">
 							<?php
 
-							// Before sidebar
-							do_action( 'edd_add_order_sidebar_before' );
+							// Before sidebar.
+							do_action( 'edd_add_order_details_sidebar_before' );
 
-							// After sidebar
-							do_action( 'edd_add_order_sidebar_after' );
+							// Amounts.
+							edd_order_details_amounts( $order );
+
+							// Attributes.
+							edd_order_details_attributes( $order );
+
+							// Extras.
+							edd_order_details_extras( $order );
+
+							// After sidebar.
+							do_action( 'edd_add_order_details_sidebar_after' );
 
 							?>
 						</div>
@@ -77,11 +107,20 @@ foreach ( $known_gateways as $id => $data ) {
 						<div id="normal-sortables">
 							<?php
 
-							// Before body
-							do_action( 'edd_add_order_main_before' );
+							// Before body.
+							do_action( 'edd_add_order_details_main_before' );
 
-							// After body
-							do_action( 'edd_add_order_main_after' );
+							// Items.
+							edd_order_details_items( $order );
+
+							// Adjustments.
+							edd_order_details_adjustments( $order );
+
+							// Details sections.
+							edd_order_details_sections( $order );
+
+							// After body.
+							do_action( 'edd_add_order_details_main_after' );
 
 							?>
 						</div>
@@ -91,11 +130,14 @@ foreach ( $known_gateways as $id => $data ) {
 		</div>
 
 		<?php
-
 		do_action( 'edd_add_order_form_bottom' );
 
-		wp_nonce_field( 'edd_add_order_nonce' );
+		wp_nonce_field( 'edd_add_order_nonce', 'edd_add_order_nonce' );
 		?>
 		<input type="hidden" name="edd_action" value="add_order" />
+
 	</form>
-</div><!-- /.wrap -->
+
+	<?php do_action( 'edd_add_order_after' ); ?>
+
+</div>

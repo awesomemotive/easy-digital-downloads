@@ -386,7 +386,7 @@ textarea[name="edd-note"] {
 	margin-bottom: 50px;
 }
 
-/* Discount Code/Add Order Styles
+/* Discount Code Styles
 -------------------------------------------------------------- */
 
 #edd-products {
@@ -394,14 +394,12 @@ textarea[name="edd-note"] {
 	min-width: 200px;
 }
 #edd-add-discount input[type="text"],
-#edd-edit-discount input[type="text"],
-#edd-add-order input[type="text"] {
+#edd-edit-discount input[type="text"] {
 	width: 300px;
 }
 
 #edd-add-discount input[type="text"].edd_datepicker,
-#edd-edit-discount input[type="text"].edd_datepicker,
-#edd-add-order input[type="text"].edd_datepicker {
+#edd-edit-discount input[type="text"].edd_datepicker {
 	width: 183px;
 	vertical-align: middle;
 }
@@ -411,66 +409,10 @@ textarea[name="edd-note"] {
 }
 
 #edd-add-discount input.edd-price-field,
-#edd-edit-discount input.edd-price-field,
-#edd-add-order input.edd-price-field{
+#edd-edit-discount input.edd-price-field {
 	padding: 3px 5px;
 	width: 80%;
 	max-width: 125px;
-}
-
-#edd-add-order .orderitems {
-	max-width: 850px;
-}
-
-#edd-add-order .orderitems th {
-	padding: 8px 10px;
-	font-weight: normal;
-}
-
-#edd-add-order .delete-column {
-	padding: 0;
-	vertical-align: middle;
-}
-
-#edd-add-order .orderitems .spinner,
-#edd-add-order .customer .spinner {
-	float: none;
-	margin: 0;
-}
-
-#edd-add-order .customer-address label {
-	display: block;
-}
-
-#edd-add-order .customer-address p {
-	margin-bottom: 1em;
-}
-
-#edd-add-order .edd-order-totals-box {
-	width: 255px;
-	margin-top: 1em;
-}
-
-#edd-add-order .edd-order-totals-box h3 {
-	font-size: 14px;
-	padding: 8px 12px;
-	margin: 0;
-	line-height: 1.4;
-	border-bottom: 1px solid #eee;
-}
-
-#edd-add-order .edd-order-totals-box .inside {
-	margin: 0;
-	padding: 0;
-}
-
-#edd-add-order .edd-admin-box-inside span.label {
-	width: 90px;
-}
-
-#edd-add-order .edd-order-total.invalid {
-	font-weight: bold;
-	color: #dc3232;
 }
 
 /* List Tables
@@ -1186,7 +1128,7 @@ input[class*="edd-price-field"] {
 }
 .edd-admin-box-inside span.label {
 	display: inline-block;
-	width: 70px;
+	width: 85px;
 	white-space: nowrap;
 	text-align: right;
 	margin-right: 10px;
@@ -1260,11 +1202,12 @@ input[class*="edd-price-field"] {
 	width: 100px;
 }
 .edd-edit-purchase-element ul li {
-	display: inline-block;
+	display: block;
 	line-height: 1.4;
 	position: relative;
 	margin: 0;
 	vertical-align: middle;
+	font-size: 13px;
 }
 .edd-edit-purchase-element .row {
 	padding: 12px;
@@ -1282,9 +1225,7 @@ input[class*="edd-price-field"] {
 }
 .edd-edit-purchase-element ul {
 	font-size: 0;
-}
-.edd-edit-purchase-element ul li {
-	font-size: 13px;
+	margin: 0 0 15px;
 }
 #edd-order-data .data span {
 	color: #666;
@@ -1329,22 +1270,38 @@ input[class*="edd-price-field"] {
 .edd_repeatable_product_wrapper td {
 	overflow: visible;
 }
-.edd-payment-details-label-mobile {
+.edd-order-details-label-mobile {
 	display: none;
 }
 
-.edd-add-download-to-purchase {
-	padding: 15px 15px 20px 15px;
+.edd-add-download-to-purchase,
+.edd-add-adjustment-to-purchase {
+	padding: 15px 15px 0;
 	border-bottom: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
 }
-.edd-add-download-to-purchase .chosen-container {
+.edd-add-download-to-purchase .chosen-container,
+.edd-add-adjustment-to-purchase .chosen-container{
 	width: 90% !important;
 	max-width: 220px !important;
 }
 
-.edd-add-download-to-purchase .edd-add-download-to-purchase-actions {
-	float: right;
+.edd-add-download-to-purchase .spinner,
+.edd-add-adjustment-to-purchase .spinner{
+	margin: 0;
+	float: none;
+}
+
+.edd-add-download-to-purchase .edd-add-order-quantity {
+	width: 40px;
+	height: 29px;
+	vertical-align: middle;
+}
+
+.edd-add-download-to-purchase .edd-add-order-item-button,
+.edd-add-adjustment-to-purchase .edd-add-adjustment-button,
+.edd-add-adjustment-to-purchase input[type="text"] {
+	height: 29px;
 }
 
 @media screen and ( max-width: 1284px ) {
@@ -1367,7 +1324,7 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-payment-details-label-mobile {
+	.edd-order-details-label-mobile {
 		display: block;
 		font-weight: 500;
 		padding-bottom: 6px;
@@ -1406,7 +1363,7 @@ input[class*="edd-price-field"] {
 		width: 20%;
 		padding-bottom: 10px;
 	}
-	.edd-payment-details-label-mobile {
+	.edd-order-details-label-mobile {
 		font-size: 14px;
 		font-weight: 500;
 	}

@@ -42,11 +42,11 @@ if ( empty( $order ) ) {
     <form id="edd-edit-order-form" method="post">
 		<?php do_action( 'edd_view_order_details_form_top', $order->id ); ?>
 
-        <div id="poststuff">
-            <div id="edd-dashboard-widgets-wrap">
-                <div id="post-body" class="metabox-holder columns-2">
-                    <div id="postbox-container-1" class="postbox-container">
-                        <div id="side-sortables">
+		<div id="poststuff">
+			<div id="edd-dashboard-widgets-wrap">
+				<div id="post-body" class="metabox-holder columns-2">
+					<div id="postbox-container-1" class="postbox-container">
+						<div id="side-sortables">
 							<?php
 
 							// Before sidebar
@@ -65,12 +65,14 @@ if ( empty( $order ) ) {
 							edd_order_details_logs( $order );
 
 							// After sidebar
-							do_action( 'edd_view_order_details_sidebar_after', $order->id ); ?>
-                        </div>
-                    </div>
+							do_action( 'edd_view_order_details_sidebar_after', $order->id );
 
-                    <div id="postbox-container-2" class="postbox-container">
-                        <div id="normal-sortables">
+							?>
+						</div>
+					</div>
+
+					<div id="postbox-container-2" class="postbox-container">
+						<div id="normal-sortables">
 							<?php
 
 							// Before body
@@ -86,21 +88,23 @@ if ( empty( $order ) ) {
 							edd_order_details_sections( $order );
 
 							// After body
-							do_action( 'edd_view_order_details_main_after', $order->id ); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+							do_action( 'edd_view_order_details_main_after', $order->id );
+
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<?php
 
 		do_action( 'edd_view_order_details_form_bottom', $order->id );
 
 		wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
-        <input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $order->id ); ?>"/>
-        <input type="hidden" name="edd_action" value="update_payment_details"/>
-    </form>
+		<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $order->id ); ?>"/>
+		<input type="hidden" name="edd_action" value="update_payment_details"/>
+	</form>
 
 	<?php do_action( 'edd_view_order_details_after', $order->id ); ?>
 
