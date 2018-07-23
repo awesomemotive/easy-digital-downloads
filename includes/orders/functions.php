@@ -1793,6 +1793,50 @@ function edd_refund_order( $order_id = 0 ) {
 	if ( empty( $order_id ) ) {
 		return false;
 	}
+
+	// Fetch order.
+	$order = edd_get_order( $order_id );
+
+	// Bail if order was not found or it has been revoked.
+	if ( ! $order || 'revoked' === $order->status ) {
+		return false;
+	}
+
+	/**
+	 * Allow refunds to be stopped.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $order_id Order ID.
+	 */
+	$should_refund = apply_filters( 'edd_should_process_refund', '__return_true', $order_id );
+
+	// Bail if refund is blocked.
+	if ( ! $should_refund ) {
+		return false;
+	}
+
+	// Credit the order.
+	edd_add_order_adjustment( array(
+		'object_id'   => $order_id,
+		'object_type' => 'order',
+		'type'        => 'credit',
+		'description' => apply_filters( 'edd_refund_description', __( 'Credit for refund', 'easy-digital-downloads' ) ),
+		'subtotal'    => $order->total,
+		'total'       => $order->total,
+	) );
+
+	// Log the refund.
+	edd_add_log( array(
+		'object_id'   => $order_id,
+		'object_type' => 'order',
+		'type'        => 'refund',
+		'title'       => __( 'Refund issued', 'easy-digital-downloads' ),
+		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
+	) );
+
+	// Trigger actions to run.
+	edd_update_order_status( $order_id, 'refunded' );
 }
 
 /**
