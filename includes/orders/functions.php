@@ -1776,3 +1776,37 @@ function edd_count_order_transactions( $args = array() ) {
 	// Return count(s).
 	return absint( $transactions->found_items );
 }
+
+/** Refunds ******************************************************************/
+
+/**
+ * Refund entire order.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return boolean True if refund was successful, false otherwise.
+ */
+function edd_refund_order( $order_id = 0 ) {
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+}
+
+/**
+ * Refund order item (partial refund).
+ *
+ * @since 3.0
+ *
+ * @param int $order_item_id Order Item ID.
+ * @return boolean True if partial refund was successful, false otherwise.
+ */
+function edd_refund_order_item( $order_item_id = 0 ) {
+
+	// Bail if no order item ID was passed.
+	if ( empty( $order_item_id ) ) {
+		return false;
+	}
+}
