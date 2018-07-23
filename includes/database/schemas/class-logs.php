@@ -47,7 +47,8 @@ class Logs extends Base {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'cache_key'  => true,
 		),
 
 		// object_type
@@ -56,7 +57,19 @@ class Logs extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'sortable'   => true
+			'sortable'   => true,
+			'cache_key'  => true,
+		),
+
+		// user_id
+		array(
+			'name'       => 'user_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true,
+			'cache_key'  => true,
 		),
 
 		// type
