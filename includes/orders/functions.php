@@ -1832,12 +1832,14 @@ function edd_refund_order( $order_id = 0 ) {
 		'object_type' => 'order',
 		'user_id'     => get_current_user_id(),
 		'type'        => 'refund',
-		'title'       => __( 'Refund issued', 'easy-digital-downloads' ),
+		'title'       => __( 'Refund Issued', 'easy-digital-downloads' ),
 		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
 	) );
 
 	// Trigger actions to run.
 	edd_update_order_status( $order_id, 'refunded' );
+
+	return true;
 }
 
 /**
@@ -1854,4 +1856,42 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 	if ( empty( $order_item_id ) ) {
 		return false;
 	}
+
+	// Fetch order item.
+	$order_item = edd_get_order_item( $order_item_id );
+
+	// Bail if order item was not found.
+	if ( ! $order_item ) {
+		return false;
+	}
+
+	// Fetch order.
+	$order = edd_get_order( $order_item->order_id );
+
+	// Bail if order has been revoked.
+	if ( 'revoked' === $order_item->status ) {
+		return false;
+	}
+
+	/**
+	 * Allow refunds to be stopped.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $order_item Order item ID.
+	 */
+	$should_refund = apply_filters( 'edd_should_process_partial_refund', '__return_true', $order_item_id );
+
+	// Bail if refund is blocked.
+	if ( ! $should_refund ) {
+		return false;
+	}
+
+	// Update order item status.
+	edd_update_order_item( $order_item_id, array(
+		'status' => 'refunded',
+	) );
+
+	// Trigger actions to run.
+	edd_update_order_status( $order->id, 'partial_refund' );
 }
