@@ -20,7 +20,6 @@ defined( 'ABSPATH' ) || exit;
  * @since 2.9.2
  */
 function edd_register_privacy_policy_template() {
-
 	if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
 		return;
 	}
@@ -58,7 +57,7 @@ Handling this data also allows us to:
 
 add_action( 'admin_init', 'edd_register_privacy_policy_template' );
 
-/** Helper Functions */
+/** Helper Functions *********************************************************/
 
 /**
  * Given a string, mask it with the * character.
@@ -73,13 +72,12 @@ add_action( 'admin_init', 'edd_register_privacy_policy_template' );
  * @return string
  */
 function edd_mask_string( $string = '' ) {
-
 	if ( empty( $string ) ) {
 		return '';
 	}
 
 	$first_char = substr( $string, 0, 1 );
-	$last_char  = substr( $string, - 1, 1 );
+	$last_char  = substr( $string, -1, 1 );
 
 	$masked_string = $string;
 
@@ -123,12 +121,16 @@ function edd_mask_domain( $domain = '' ) {
 		$part_count     = count( $domain_parts );
 		$possible_cctld = strlen( $domain_parts[ $part_count - 2 ] ) <= 3 ? true : false;
 
-		$mask_parts = $possible_cctld ? array_slice( $domain_parts, 0, $part_count - 2 ) : array_slice( $domain_parts, 0, $part_count - 1 );
+		$mask_parts = $possible_cctld
+			? array_slice( $domain_parts, 0, $part_count - 2 )
+			: array_slice( $domain_parts, 0, $part_count - 1 );
+
+		$mask_parts = count( $mask_parts );
 
 		$i = 0;
-		while ( $i < count( $mask_parts ) ) {
+		while ( $i < $mask_parts ) {
 			$domain_parts[ $i ] = edd_mask_string( $domain_parts[ $i ] );
-			$i ++;
+			$i++;
 		}
 	}
 
@@ -239,7 +241,7 @@ function edd_anonymize_email( $email_address ) {
  *
  * Once completed, a note is left stating when the customer was anonymized.
  *
- * @param int $customer_id
+ * @param int $customer_id Customer ID.
  *
  * @return array
  */
@@ -263,10 +265,10 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 * @since 2.9.2
 	 *
 	 * @param array {
-	 *                                Contains data related to if the anonymization should take place
+	 *     Contains data related to if the anonymization should take place
 	 *
-	 * @type bool   $should_anonymize If the customer should be anonymized.
-	 * @type string $message          A message to display if the customer could not be anonymized.
+	 *     @type bool   $should_anonymize If the customer should be anonymized.
+	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
 	 */
 	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array(
@@ -283,7 +285,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
 		'output'   => 'payments',
-		'number'   => - 1,
+		'number'   => -1,
 	) );
 
 	foreach ( $payments as $payment ) {
@@ -979,6 +981,7 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
  * customer is anonymized we can still find them. Then we'll delete it.
  *
  * @param array $erasers
+ * @return array $erasers
  */
 function edd_register_privacy_eraser_customer_id_lookup( $erasers = array() ) {
 	$erasers[] = array(
@@ -1017,6 +1020,7 @@ function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
  * We are now assumed done with our exporters, so we can go ahead and delete the customer ID we found for this eraser.
  *
  * @param array $erasers
+ * @return array $erasers
  */
 function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
 	$erasers[] = array(
@@ -1037,8 +1041,8 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_cus
 /**
  * Delete the customer ID for this email address that was found in edd_privacy_prefetch_customer_id()
  *
- * @param     $email_address
- * @param int $page
+ * @param string $email_address
+ * @param int    $page
  *
  * @return array
  */
@@ -1157,9 +1161,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 	);
 
 	return $erasers;
-
 }
-
 add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 11, 1 );
 
 /**
@@ -1227,6 +1229,7 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$items_removed  = null;
 	$items_retained = null;
 	$messages       = array();
+
 	foreach ( $payments as $payment ) {
 		$result = _edd_anonymize_payment( $payment->ID );
 
@@ -1281,7 +1284,6 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 	$logs = $edd_logs->get_connected_logs( $log_query );
 
 	if ( empty( $logs ) ) {
-
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
