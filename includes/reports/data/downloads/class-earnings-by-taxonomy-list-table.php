@@ -78,7 +78,7 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 			$taxonomies[ absint( $r->term_id ) ]['parent']       = absint( $r->parent );
 		}
 
-		$data = array();
+		$data       = array();
 		$parent_ids = array();
 
 		foreach ( $taxonomies as $k => $t ) {
@@ -93,7 +93,7 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 					FROM {$wpdb->edd_order_items}
 					WHERE {$product_id__in} {$date_query_sql}";
 
-			$result = $wpdb->get_row( $sql );
+			$result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
 
 			$earnings = null === $result->total
 				? 0.00
@@ -109,11 +109,11 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 				? null
 				: $t['parent'];
 
-			$average_sales = 0;
+			$average_sales    = 0;
 			$average_earnings = 0.00;
 
 			foreach ( $taxonomies[ $k ]['object_ids'] as $download ) {
-				$average_sales += edd_get_average_monthly_download_sales( $download );
+				$average_sales    += edd_get_average_monthly_download_sales( $download );
 				$average_earnings += edd_get_average_monthly_download_earnings( $download );
 			}
 
