@@ -1915,6 +1915,11 @@ class EDD_Payment {
 
 			edd_update_order( $this->ID, $update_fields );
 
+			// Update each order item.
+			foreach ( $this->order->items as $item ) {
+				edd_update_order_item( $item->id, $update_fields );
+			}
+
 			$this->status      = $status;
 			$this->post_status = $status;
 
