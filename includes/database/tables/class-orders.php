@@ -6,7 +6,7 @@
  * @subpackage  Database\Tables
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Database\Tables;
 
@@ -21,40 +21,40 @@ defined( 'ABSPATH' ) || exit;
 final class Orders extends Base {
 
 	/**
-	 * Table name
+	 * Table name.
 	 *
 	 * @access protected
-	 * @since 3.0
-	 * @var string
+	 * @since  3.0
+	 * @var    string
 	 */
 	protected $name = 'edd_orders';
 
 	/**
-	 * Database version
+	 * Database version.
 	 *
 	 * @access protected
-	 * @since 3.0
-	 * @var int
+	 * @since  3.0
+	 * @var    int
 	 */
-	protected $version = 201806110001;
+	protected $version = 201807250001;
 
 	/**
-	 * Array of upgrade versions and methods
+	 * Array of upgrade versions and methods.
 	 *
-	 * @since 3.0
-	 *
-	 * @var array
+	 * @access protected
+	 * @since  3.0
+	 * @var    array
 	 */
 	protected $upgrades = array(
-		'201806110001' => 201806110001
+		'201806110001' => 201806110001,
+		'201807250001' => 201807250001
 	);
 
 	/**
-	 * Setup the database schema
+	 * Setup the database schema.
 	 *
 	 * @access protected
-	 * @since 3.0
-	 * @return void
+	 * @since  3.0
 	 */
 	protected function set_schema() {
 		$max_index_length = 191;
@@ -62,6 +62,7 @@ final class Orders extends Base {
 			parent bigint(20) unsigned NOT NULL default '0',
 			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
+			order_type varchar(20) NOT NULL default 'order',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
@@ -90,7 +91,7 @@ final class Orders extends Base {
 
 	/**
 	 * Upgrade to version 201806110001
-	 * - Add the `date_refundable` datetime column
+	 * - Add the `date_refundable` datetime column.
 	 *
 	 * @since 3.0
 	 *
@@ -98,12 +99,31 @@ final class Orders extends Base {
 	 */
 	protected function __201806110001() {
 
-		// Alter the database
+		// Alter the database.
 		$result = $this->get_db()->query( "
 			ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00';
 		" );
 
-		// Return success/fail
+		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201807250001
+	 * - Add the `order_type` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201807250001() {
+
+		// Alter the database.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} ADD COLUMN `order_type` varchar(20) NOT NULL default 'order' AFTER status;
+		" );
+
+		// Return success/fail.
 		return $this->is_success( $result );
 	}
 }
