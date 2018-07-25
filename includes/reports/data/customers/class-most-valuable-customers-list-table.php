@@ -55,6 +55,11 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		foreach ( $results as $result ) {
 			$customer = edd_get_customer( (int) $result->customer_id );
 
+			// Skip if customer record not found.
+			if ( ! $customer ) {
+				continue;
+			}
+
 			$user_id = ! empty( $customer->user_id )
 				? intval( $customer->user_id )
 				: 0;
