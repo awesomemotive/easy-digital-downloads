@@ -108,9 +108,12 @@ class Order extends Base {
 	 *     @type string       $order_number         An order number to only return that order. Default empty.
 	 *     @type array        $order_number__in     Array of order numbers to include. Default empty.
 	 *     @type array        $order_number__not_in Array of order numbers to exclude. Default empty.
-	 *     @type string       $status               An order statuses to only return that order. Default empty.
+	 *     @type string       $status               An order status to only return that order. Default empty.
 	 *     @type array        $status__in           Array of order statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of order statuses to exclude. Default empty.
+	 *     @type string       $order_type           An order type to only return that order. Default empty.
+	 *     @type array        $order_type__in       Array of order types to include. Default empty.
+	 *     @type array        $order_type__not_in   Array of order types to exclude. Default empty.
 	 *     @type int          $user_id              A user ID to only return that object. Default empty.
 	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
 	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
