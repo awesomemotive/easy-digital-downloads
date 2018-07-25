@@ -1192,6 +1192,163 @@ function edd_add_manual_order( $data ) {
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
 
+/**
+ * Clone an existing order.
+ *
+ * @since 3.0
+ *
+ * @param int     $order_id            Order ID.
+ * @param boolean $clone_relationships True to clone order items and adjustments,
+ *                                     false otherwise.
+ * @param array $args                  Arguments that are used in place of cloned
+ *                                     order attributes.
+ *
+ * @return int|boolean New order ID on success, false on failure.
+ */
+function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = array() ) {
+
+	// Bail if no order ID passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	// Fetch the order.
+	$order = edd_get_order( $order_id );
+
+	// Bail if the order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
+	// Parse arguments.
+	$args = wp_parse_args( $args, $order->to_array() );
+
+	// Remove order ID and order number.
+	unset( $args['id'] );
+	unset( $args['order_number'] );
+
+	// Remove dates.
+	unset( $args['date_created'] );
+	unset( $args['date_modified'] );
+	unset( $args['date_completed'] );
+	unset( $args['date_refundable'] );
+
+	// Remove payment key.
+	unset( $args['payment_key'] );
+
+	// Remove object vars.
+	unset( $args['address'] );
+	unset( $args['adjustments'] );
+	unset( $args['items'] );
+
+	$new_order_id = edd_add_order( $args );
+
+	if ( $clone_relationships ) {
+		$items = edd_get_order_items( array(
+			'order_id' => $order_id,
+		) );
+
+		if ( $items ) {
+			foreach ( $items as $item ) {
+				$args = $item->to_array();
+
+				// Remove original item data.
+				unset( $args['id'] );
+				unset( $args['date_created'] );
+				unset( $args['date_modified'] );
+
+				// Point order item to the new order ID.
+				$args['order_id'] = $new_order_id;
+
+				$order_item_id = edd_add_order_item( $args );
+
+				$metadata = edd_get_order_item_meta( $item->id );
+
+				if ( $metadata ) {
+					foreach ( $metadata as $meta_key => $meta_value ) {
+						edd_add_order_item_meta( $order_item_id, $meta_key, $meta_value );
+					}
+				}
+
+				$adjustments = edd_get_order_adjustments( array(
+					'object_id'   => $item->id,
+					'object_type' => 'order_item',
+				) );
+
+				if ( $adjustments ) {
+					foreach ( $adjustments as $adjustment ) {
+						$args = $adjustment->to_array();
+
+						// Remove original adjustment data.
+						unset( $args['id'] );
+						unset( $args['date_created'] );
+						unset( $args['date_modified'] );
+
+						// Point order item to the new order ID.
+						$args['object_id']   = $order_item_id;
+						$args['object_type'] = 'order_item';
+
+						$adjustment_id = edd_add_order_adjustment( $args );
+
+						$metadata = edd_get_order_adjustment_meta( $adjustment->id );
+
+						if ( $metadata ) {
+							foreach ( $metadata as $meta_key => $meta_value ) {
+								edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value );
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+		) );
+
+		if ( $adjustments ) {
+			foreach ( $adjustments as $adjustment ) {
+				$args = $adjustment->to_array();
+
+				// Remove original adjustment data.
+				unset( $args['id'] );
+				unset( $args['date_created'] );
+				unset( $args['date_modified'] );
+
+				// Point order item to the new order ID.
+				$args['object_id']   = $new_order_id;
+				$args['object_type'] = 'order';
+
+				$adjustment_id = edd_add_order_adjustment( $args );
+
+				$metadata = edd_get_order_adjustment_meta( $adjustment->id );
+
+				if ( $metadata ) {
+					foreach ( $metadata as $meta_key => $meta_value ) {
+						edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value );
+					}
+				}
+			}
+		}
+
+		if ( $order->address ) {
+			$args = $order->address->to_array();
+
+			// Remove original address data.
+			unset( $args['order_id'] );
+			unset( $args['date_created'] );
+			unset( $args['date_modified'] );
+
+			$args['order_id'] = $new_order_id;
+
+			edd_add_order_address( $args );
+		}
+	}
+
+	return $new_order_id;
+}
+
 /** Order Items ***************************************************************/
 
 /**
