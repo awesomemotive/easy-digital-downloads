@@ -769,12 +769,10 @@ function get_dates_filter_day_by_day() {
 		case 'last_year':
 			$day_by_day = false;
 			break;
-		case 'other' :
-			$difference = ( $dates['start']->getTimestamp() - $dates['end']->getTimestamp() );
+		case 'other':
+			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
 
-			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
-			     || $difference >= YEAR_IN_SECONDS
-			) {
+			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true ) || $difference >= YEAR_IN_SECONDS ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
