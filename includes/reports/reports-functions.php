@@ -757,12 +757,12 @@ function get_dates_filter_day_by_day() {
 
 	// Determine graph options
 	switch ( $dates['range'] ) {
-		case 'today' :
-		case 'yesterday' :
+		case 'today':
+		case 'yesterday':
 			$day_by_day = true;
 			break;
-		case 'last_quarter' :
-		case 'this_quarter' :
+		case 'last_quarter':
+		case 'this_quarter':
 			$day_by_day = true;
 			break;
 		case 'this_year':
