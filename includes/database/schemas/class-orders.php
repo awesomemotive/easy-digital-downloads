@@ -71,9 +71,9 @@ class Orders extends Base {
 			'transition' => true
 		),
 
-		// order_type
+		// type
 		array(
-			'name'       => 'order_type',
+			'name'       => 'type',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'order',
