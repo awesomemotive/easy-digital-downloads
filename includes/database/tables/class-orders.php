@@ -62,7 +62,7 @@ final class Orders extends Base {
 			parent bigint(20) unsigned NOT NULL default '0',
 			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
-			order_type varchar(20) NOT NULL default 'order',
+			type varchar(20) NOT NULL default 'order',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
@@ -110,7 +110,7 @@ final class Orders extends Base {
 
 	/**
 	 * Upgrade to version 201807250001
-	 * - Add the `order_type` column.
+	 * - Add the `type` column.
 	 *
 	 * @since 3.0
 	 *
@@ -120,7 +120,7 @@ final class Orders extends Base {
 
 		// Alter the database.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `order_type` varchar(20) NOT NULL default 'order' AFTER status;
+			ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'order' AFTER status;
 		" );
 
 		// Return success/fail.
