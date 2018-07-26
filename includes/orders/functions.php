@@ -2064,6 +2064,19 @@ function edd_refund_order( $order_id = 0 ) {
 		) );
 	}
 
+	// Trigger actions to run.
+	edd_update_order_status( $order_id, 'refunded' );
+
+	/**
+	 * Fires when an order has been refunded.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int   $order_id Order ID.
+	 * @param float $total    Refund amount.
+	 */
+	do_action( 'edd_refund_order', $order_id, floatval( $order->total ) );
+
 	return true;
 }
 
