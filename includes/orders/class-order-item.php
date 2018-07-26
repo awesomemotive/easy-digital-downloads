@@ -34,6 +34,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float  $total
  * @property string $date_created
  * @property string $date_modified
+ * @property Order_Adjustment[] $adjustments
  */
 class Order_Item extends \EDD\Database\Objects\Order_Item {
 
@@ -163,7 +164,7 @@ class Order_Item extends \EDD\Database\Objects\Order_Item {
 	protected $date_modified;
 
 	/**
-	 * Order adjustments.
+	 * Order item adjustments.
 	 *
 	 * @since 3.0
 	 * @var   \EDD\Orders\Order_Adjustment[]

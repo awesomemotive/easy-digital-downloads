@@ -104,7 +104,7 @@ class Order extends Objects\Order {
 
 	/**
 	 * Date refundable.
-	 * 
+	 *
 	 * @since 3.0
 	 * @var   string
 	 */
