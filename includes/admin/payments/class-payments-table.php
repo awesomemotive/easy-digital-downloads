@@ -338,7 +338,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		<p class="search-form">
 			<?php do_action( 'edd_payment_history_search' ); ?>
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" placeholder="<?php esc_html_e( 'Search payments...', 'easy-digital-downloads' ); ?>" value="<?php _admin_search_query(); ?>" />
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" placeholder="<?php esc_html_e( 'Search orders...', 'easy-digital-downloads' ); ?>" value="<?php _admin_search_query(); ?>" />
 		</p>
 
 		<?php
