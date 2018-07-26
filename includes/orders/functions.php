@@ -6,7 +6,7 @@
  * @subpackage  Orders
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 
 // Exit if accessed directly
@@ -57,7 +57,7 @@ function edd_destroy_order( $order_id = 0 ) {
 	// Get items.
 	$items = edd_get_order_items( array(
 		'order_id'      => $order_id,
-		'no_found_rows' => true
+		'no_found_rows' => true,
 	) );
 
 	// Destroy items (and their adjustments).
@@ -71,7 +71,7 @@ function edd_destroy_order( $order_id = 0 ) {
 	$adjustments = edd_get_order_adjustments( array(
 		'object_id'     => $order_id,
 		'object_type'   => 'order',
-		'no_found_rows' => true
+		'no_found_rows' => true,
 	) );
 
 	// Destroy adjustments.
@@ -151,7 +151,7 @@ function edd_get_orders( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'number' => 30
+		'number' => 30,
 	) );
 
 	// Instantiate a query object
@@ -173,7 +173,7 @@ function edd_count_orders( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'count' => true
+		'count' => true,
 	) );
 
 	// Query for count(s)
@@ -198,12 +198,12 @@ function edd_get_order_counts() {
 	// Query for count
 	$counts = edd_get_orders( array(
 		'count'   => true,
-		'groupby' => 'status'
+		'groupby' => 'status',
 	) );
 
 	// Default array
 	$o = array(
-		'total' => 0
+		'total' => 0,
 	);
 
 	// Loop through counts and shape return value
@@ -277,7 +277,7 @@ function edd_build_order( $order_data = array() ) {
 			$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
 
 			$transaction_id = $order->get_transaction_id();
-			
+
 			if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $transaction_id ) ) {
 				$payment      = edd_get_payment( $existing_order );
 				$resume_order = true;
@@ -322,7 +322,7 @@ function edd_build_order( $order_data = array() ) {
 	/** Setup order information ***********************************************/
 
 	$gateway = ! empty( $order_data['gateway'] ) ? $order_data['gateway'] : '';
-	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] )
+	$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) // WPCS: CSRF ok.
 		? sanitize_key( $_POST['edd-gateway'] )
 		: $gateway;
 
@@ -375,14 +375,14 @@ function edd_build_order( $order_data = array() ) {
 		$customer->create( array(
 			'name'    => $name,
 			'email'   => $order_args['email'],
-			'user_id' => $order_args['user_id']
+			'user_id' => $order_args['user_id'],
 		) );
 	}
 
 	// If the customer name was initially empty, update the record to store the name used at checkout.
 	if ( empty( $customer->name ) ) {
 		$customer->update( array(
-			'name' => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name']
+			'name' => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'],
 		) );
 	}
 
@@ -489,7 +489,7 @@ function edd_build_order( $order_data = array() ) {
 				'discount'     => $item['discount'],
 				'tax'          => $item['tax'],
 				'total'        => $item['price'],
-				'item_price'   => $item['item_price'] // Added for backwards compatibility
+				'item_price'   => $item['item_price'], // Added for backwards compatibility
 			);
 
 			/**
@@ -577,7 +577,7 @@ function edd_build_order( $order_data = array() ) {
 						'type_id'     => '',
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'amount'      => $fee['amount']
+						'amount'      => $fee['amount'],
 					) );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
@@ -720,7 +720,7 @@ function edd_build_order( $order_data = array() ) {
 		'subtotal'     => $subtotal,
 		'tax'          => $total_tax,
 		'discount'     => $total_discount,
-		'total'        => $order_total
+		'total'        => $order_total,
 	) );
 
 	/**
@@ -807,7 +807,7 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 		 * is changing to something that requires interception by the payment gateway (e.g. refunds).
 		 */
 		$payment->status = $new_status;
-		$updated = $payment->save();
+		$updated         = $payment->save();
 
 		/**
 		 * Action triggered when updating order status.
@@ -1444,7 +1444,7 @@ function edd_get_order_items( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'number' => 30
+		'number' => 30,
 	) );
 
 	// Instantiate a query object
@@ -1466,7 +1466,7 @@ function edd_count_order_items( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'count' => true
+		'count' => true,
 	) );
 
 	// Query for count(s)
@@ -1492,12 +1492,12 @@ function edd_get_order_item_counts( $order_id = 0 ) {
 	$counts = edd_get_order_items( array(
 		'order_id' => $order_id,
 		'count'    => true,
-		'groupby'  => 'status'
+		'groupby'  => 'status',
 	) );
 
 	// Default array
 	$o = array(
-		'total' => 0
+		'total' => 0,
 	);
 
 	// Loop through counts and shape return value
@@ -1609,7 +1609,7 @@ function edd_get_order_adjustments( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'number' => 30
+		'number' => 30,
 	) );
 
 	// Instantiate a query object
@@ -1631,7 +1631,7 @@ function edd_count_order_adjustments( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'count' => true
+		'count' => true,
 	) );
 
 	// Query for count(s)
@@ -1661,12 +1661,12 @@ function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order'
 		'object_id'   => $object_id,
 		'object_type' => $object_type,
 		'count'       => true,
-		'groupby'     => 'type'
+		'groupby'     => 'type',
 	) );
 
 	// Default array
 	$o = array(
-		'total' => 0
+		'total' => 0,
 	);
 
 	// Loop through counts and shape return value
@@ -1778,7 +1778,7 @@ function edd_get_order_addresses( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'number' => 30
+		'number' => 30,
 	) );
 
 	// Instantiate a query object
@@ -1800,7 +1800,7 @@ function edd_count_order_addresses( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'count' => true
+		'count' => true,
 	) );
 
 	// Query for count(s)
@@ -1904,7 +1904,7 @@ function edd_get_order_transactions( $args = array() ) {
 
 	// Parse args.
 	$r = wp_parse_args( $args, array(
-		'number' => 30
+		'number' => 30,
 	) );
 
 	// Instantiate a query object.
@@ -1926,7 +1926,7 @@ function edd_count_order_transactions( $args = array() ) {
 
 	// Parse args.
 	$r = wp_parse_args( $args, array(
-		'count' => true
+		'count' => true,
 	) );
 
 	// Query for count(s).
