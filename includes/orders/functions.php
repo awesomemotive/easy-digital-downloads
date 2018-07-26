@@ -1975,16 +1975,6 @@ function edd_refund_order( $order_id = 0 ) {
 		return false;
 	}
 
-	// Credit the order.
-	edd_add_order_adjustment( array(
-		'object_id'   => $order_id,
-		'object_type' => 'order',
-		'type'        => 'credit',
-		'description' => apply_filters( 'edd_refund_description', __( 'Credit for refund', 'easy-digital-downloads' ) ),
-		'subtotal'    => $order->total,
-		'total'       => $order->total,
-	) );
-
 	// Log the refund.
 	edd_add_log( array(
 		'object_id'   => $order_id,
@@ -1995,8 +1985,84 @@ function edd_refund_order( $order_id = 0 ) {
 		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
 	) );
 
-	// Trigger actions to run.
-	edd_update_order_status( $order_id, 'refunded' );
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-1' );
+
+	/** Insert order *********************************************************/
+
+	$order_data = array(
+		'parent'       => $order_id,
+		'order_number' => $order->get_number() . $refund_suffix,
+		'status'       => 'refunded',
+		'order_type'   => 'refund',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'subtotal'     => $order->subtotal * -1,
+		'discount'     => $order->discount * -1,
+		'total'        => $order->total * -1,
+	);
+
+	$new_order_id = edd_add_order( $order_data );
+
+	/** Insert order items ***************************************************/
+
+	foreach ( $order->items as $item ) {
+		$order_item_id = edd_add_order_item( array(
+			'order_id'     => $new_order_id,
+			'product_id'   => $item->product_id,
+			'product_name' => $item->product_name,
+			'price_id'     => $item->price_id,
+			'cart_index'   => $item->cart_index,
+			'type'         => $item->type,
+			'status'       => 'refunded',
+			'quantity'     => $item->quantity * -1,
+			'amount'       => $item->amount * -1,
+			'subtotal'     => $item->subtotal * -1,
+			'discount'     => $item->discount * -1,
+			'tax'          => $item->tax * -1,
+			'total'        => $item->total * -1,
+		) );
+
+		foreach ( $item->adjustments as $adjustment ) {
+			edd_add_order_adjustment( array(
+				'object_id'   => $order_item_id,
+				'object_type' => 'order_item',
+				'type_id'     => $adjustment->type_id,
+				'type'        => $adjustment->type,
+				'description' => $adjustment->description,
+				'subtotal'    => $adjustment->subtotal * -1,
+				'tax'         => $adjustment->tax * -1,
+				'total'       => $adjustment->total * -1,
+			) );
+		}
+	}
+
+	/** Insert order adjustments *********************************************/
+
+	foreach ( $order->adjustments as $adjustment ) {
+		edd_add_order_adjustment( array(
+			'object_id'   => $new_order_id,
+			'object_type' => 'order',
+			'type_id'     => $adjustment->type_id,
+			'type'        => $adjustment->type,
+			'description' => $adjustment->description,
+			'subtotal'    => $adjustment->subtotal * -1,
+			'tax'         => $adjustment->tax * -1,
+			'total'       => $adjustment->total * -1,
+		) );
+	}
 
 	return true;
 }
