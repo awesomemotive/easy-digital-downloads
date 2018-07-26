@@ -855,21 +855,24 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
  * @return int $order_id Order ID.
  */
 function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
-	global $wpdb;
+
+	// Default return value
+	$retval = 0;
 
 	// Bail if no transaction ID passed.
-	if ( empty( $transaction_id ) ) {
-		return 0;
+	if ( ! empty( $transaction_id ) ) {
+
+		// Look for a transaction by gateway transaction ID
+		$transaction = edd_get_order_transaction_by( 'transaction_id', $transaction_id );
+
+		// Return object ID if found
+		if ( ! empty( $transaction->object_id ) ) {
+			$retval = $transaction->object_id;
+		}
 	}
 
-	$order_id = $wpdb->get_var( $wpdb->prepare(
-		"SELECT object_id FROM {$wpdb->edd_order_transactions} WHERE transaction_id = %s",
-		$transaction_id
-	) );
-
-	return empty( $order_id )
-		? 0
-		: $order_id;
+	// Return
+	return absint( $retval );
 }
 
 /**
