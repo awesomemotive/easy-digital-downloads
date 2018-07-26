@@ -266,33 +266,34 @@ class Column {
 	 * @param string|array $args {
 	 *     Optional. Array or query string of order query parameters. Default empty.
 	 *
-	 *     @type string   $name        Name of database column
-	 *     @type string   $type        Type of database column
-	 *     @type integer  $length      Length of database column
-	 *     @type boolean  $unsigned    Is integer unsigned?
-	 *     @type boolean  $zerofill    Is integer filled with zeroes?
-	 *     @type boolean  $binary      Is data in a binary format?
-	 *     @type boolean  $allow_null  Is null an allowed value?
-	 *     @type mixed    $default     Typically empty/null, or date value
-	 *     @type string   $extra       auto_increment, etc...
-	 *     @type string   $encoding    Typically inherited from wpdb
-	 *     @type string   $collation   Typically inherited from wpdb
-	 *     @type string   $comment     Typically empty
-	 *     @type boolean  $pattern     What is the string-replace pattern?
-	 *     @type boolean  $primary     Is this the primary column?
-	 *     @type boolean  $created     Is this the column used as a created date?
-	 *     @type boolean  $modified    Is this the column used as a modified date?
-	 *     @type boolean  $guid        Is this the column used as a globally unique identifier?
-	 *     @type boolean  $searchable  Is this column searchable?
-	 *     @type boolean  $sortable    Is this column used in orderby?
-	 *     @type boolean  $date_query  Is this column a datetime?
-	 *     @type boolean  $in          Is __in supported?
-	 *     @type boolean  $not_in      Is __not_in supported?
-	 *     @type boolean  $cache_key   Is this column queried independently?
-	 *     @type boolean  $transition  Does this column transition between changes?
-	 *     @type string   $validate    A callback function used to validate on save.
-	 *     @type array    $caps        Array of capabilities to check.
-	 *     @type array    $aliases     Array of possible column name aliases.
+	 *     @type string   $name           Name of database column
+	 *     @type string   $type           Type of database column
+	 *     @type integer  $length         Length of database column
+	 *     @type boolean  $unsigned       Is integer unsigned?
+	 *     @type boolean  $zerofill       Is integer filled with zeroes?
+	 *     @type boolean  $binary         Is data in a binary format?
+	 *     @type boolean  $allow_null     Is null an allowed value?
+	 *     @type mixed    $default        Typically empty/null, or date value
+	 *     @type string   $extra          auto_increment, etc...
+	 *     @type string   $encoding       Typically inherited from wpdb
+	 *     @type string   $collation      Typically inherited from wpdb
+	 *     @type string   $comment        Typically empty
+	 *     @type boolean  $pattern        What is the string-replace pattern?
+	 *     @type boolean  $primary        Is this the primary column?
+	 *     @type boolean  $created        Is this the column used as a created date?
+	 *     @type boolean  $modified       Is this the column used as a modified date?
+	 *     @type boolean  $guid           Is this the column used as a globally unique identifier?
+	 *     @type boolean  $searchable     Is this column searchable?
+	 *     @type boolean  $sortable       Is this column used in orderby?
+	 *     @type boolean  $date_query     Is this column a datetime?
+	 *     @type boolean  $in             Is __in supported?
+	 *     @type boolean  $not_in         Is __not_in supported?
+	 *     @type boolean  $cache_key      Is this column queried independently?
+	 *     @type boolean  $transition     Does this column transition between changes?
+	 *     @type string   $validate       A callback function used to validate on save.
+	 *     @type array    $caps           Array of capabilities to check.
+	 *     @type array    $aliases        Array of possible column name aliases.
+	 *     @type array    $relationships  Array of columns in other tables this column relates to.
 	 * }
 	 */
 	public function __construct( $args = array() ) {
@@ -367,10 +368,13 @@ class Column {
 			'validate'   => '',
 
 			// Capabilities
-			'caps'       => array(),
+			'caps'          => array(),
 
 			// Backwards Compatibility
-			'aliases'    => array()
+			'aliases'       => array(),
+
+			// Column Relationships
+			'relationships' => array()
 		) );
 
 		// Primary key columns are always cached
