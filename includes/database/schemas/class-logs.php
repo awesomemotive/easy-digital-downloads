@@ -108,6 +108,11 @@ class Logs extends Base {
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true
+		),
+
+		// uuid
+		array(
+			'uuid'       => true,
 		)
 	);
 }
