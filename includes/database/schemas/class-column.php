@@ -167,20 +167,7 @@ class Column {
 	 */
 	public $comment = '';
 
-	/** Query Attributes ******************************************************/
-
-	/**
-	 * What is the string-replace pattern?
-	 *
-	 * By default, column patterns will be guessed based on their type. Set this
-	 * manually to `%s|%d|%f` only if you are doing something weird, or are
-	 * explicitly storing numeric values in text-based column types.
-	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
-	 */
-	public $pattern = '';
+	/** Special Attributes ****************************************************/
 
 	/**
 	 * Is this the primary column?
@@ -220,6 +207,34 @@ class Column {
 	 * @var bool
 	 */
 	public $modified = false;
+
+	/**
+	 * Is this the column used as a unique universal identifier?
+	 *
+	 * By default, columns are not UUIDs. This is used by the Query class to
+	 * generate a unique string that can be used to identify a row in a database
+	 * table, typically in such a way that is unrelated to the row data itself.
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @var bool
+	 */
+	public $uuid = false;
+
+	/** Query Attributes ******************************************************/
+
+	/**
+	 * What is the string-replace pattern?
+	 *
+	 * By default, column patterns will be guessed based on their type. Set this
+	 * manually to `%s|%d|%f` only if you are doing something weird, or are
+	 * explicitly storing numeric values in text-based column types.
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @var string
+	 */
+	public $pattern = '';
 
 	/**
 	 * Is this column searchable?
@@ -407,7 +422,7 @@ class Column {
 	 *     @type boolean  $primary        Is this the primary column?
 	 *     @type boolean  $created        Is this the column used as a created date?
 	 *     @type boolean  $modified       Is this the column used as a modified date?
-	 *     @type boolean  $guid           Is this the column used as a globally unique identifier?
+	 *     @type boolean  $uuid           Is this the column used as a universally unique identifier?
 	 *     @type boolean  $searchable     Is this column searchable?
 	 *     @type boolean  $sortable       Is this column used in orderby?
 	 *     @type boolean  $date_query     Is this column a datetime?
@@ -474,7 +489,7 @@ class Column {
 			'primary'    => false,
 			'created'    => false,
 			'modified'   => false,
-			'guid'       => false,
+			'uuid'       => false,
 
 			// Cache
 			'cache_key'  => false,
@@ -532,7 +547,7 @@ class Column {
 			'primary'       => 'wp_validate_boolean',
 			'created'       => 'wp_validate_boolean',
 			'modified'      => 'wp_validate_boolean',
-			'guid'          => 'wp_validate_boolean',
+			'uuid'          => 'wp_validate_boolean',
 
 			'searchable'    => 'wp_validate_boolean',
 			'sortable'      => 'wp_validate_boolean',
@@ -689,8 +704,8 @@ class Column {
 	 * Sanitize the validation callback
 	 *
 	 * @since 3.0
-	 * @param string $callback
-	 * @return string
+	 * @param string $callback A callable PHP function name or method
+	 * @return string The most appropriate callback function for the value
 	 */
 	private function sanitize_validation( $callback = '' ) {
 
@@ -699,8 +714,12 @@ class Column {
 			return $callback;
 		}
 
+		//
+		if ( true === $this->uuid ) {
+			$callback = array( $this, 'generate_uuid ' );
+
 		// Intval fallback
-		if ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
+		} elseif ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
 			$callback = 'intval';
 
 		// Datetime fallback
@@ -718,7 +737,8 @@ class Column {
 	 * Fallback to validate a datetime value if no other is set.
 	 *
 	 * @since 3.0
-	 * @param string $value
+	 * @param string $value A datetime value that needs validating
+	 * @return string A valid datetime value
 	 */
 	public function validate_datetime( $value = '0000-00-00 00:00:00' ) {
 
@@ -739,5 +759,40 @@ class Column {
 
 		// Return the validated value
 		return $value;
+	}
+
+	/**
+	 * Generate a UUID
+	 *
+	 * This uses the v4 algorithm to generate a UUID that is used to uniquely
+	 * and universally identify a given database row without any direct
+	 * connection or correlation to the data in that row.
+	 *
+	 * From http://php.net/manual/en/function.uniqid.php#94959
+	 *
+	 * @since 3.0
+	 * @return string Generated UUID.
+	 */
+	public function generate_uuid( $prefix = 'urn:uuid:' ) {
+		return sprintf( "{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
+
+			// 32 bits for "time_low"
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+
+			// 16 bits for "time_mid"
+			mt_rand( 0, 0xffff ),
+
+			// 16 bits for "time_hi_and_version",
+			// four most significant bits holds version number 4
+			mt_rand( 0, 0x0fff ) | 0x4000,
+
+			// 16 bits, 8 bits for "clk_seq_hi_res",
+			// 8 bits for "clk_seq_low",
+			// two most significant bits holds zero and one for variant DCE1.1
+			mt_rand( 0, 0x3fff ) | 0x8000,
+
+			// 48 bits for "node"
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		);
 	}
 }
