@@ -507,10 +507,8 @@ class Column {
 			'relationships' => array()
 		) );
 
-		// Primary key columns are always cached
-		if ( true === $r['primary'] ) {
-			$r['cache_key'] = true;
-		}
+		// Force some arguments for special column types
+		$r = $this->special_args( $r );
 
 		// Set the args before they are sanitized
 		$this->set_args( $r );
@@ -582,6 +580,35 @@ class Column {
 
 		// Return sanitized arguments
 		return $r;
+	}
+
+	/**
+	 * Force column arguments for special column types
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	private function special_args( $args = array() ) {
+
+		// Primary key columns are always used as cache keys
+		if ( ! empty( $args['primary'] ) ) {
+			$args['cache_key'] = true;
+
+		// All UUID columns need to follow a very specific pattern
+		} elseif ( ! empty( $args['uuid'] ) ) {
+			$args['name']       = 'uuid';
+			$args['type']       = 'varchar';
+			$args['length']     = '100';
+			$args['in']         = false;
+			$args['not_in']     = false;
+			$args['searchable'] = false;
+			$args['sortable']   = false;
+		}
+
+		// Return args
+		return (array) $args;
 	}
 
 	/**
