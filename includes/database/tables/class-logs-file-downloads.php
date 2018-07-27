@@ -46,7 +46,8 @@ final class Logs_File_Downloads extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806280001' => 201806280001
+		'201806280001' => 201806280001,
+		'201807270003' => 201807270003
 	);
 
 	/**
@@ -67,6 +68,7 @@ final class Logs_File_Downloads extends Base {
 		user_agent varchar(200) NOT NULL default '',
 		date_created datetime NOT NULL default '0000-00-00 00:00:00',
 		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+		uuid varchar(100) NOT NULL default '',
 		PRIMARY KEY (id),
 		KEY customer_id (customer_id),
 		KEY product_id (product_id),
@@ -92,5 +94,24 @@ final class Logs_File_Downloads extends Base {
 
 		// Return success/fail
 		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 201807270003
+	 * - Add the `uuid` varchar column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201807270003() {
+
+		// Alter the database
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
+		" );
+
+		// Return success/fail
+		return $this->is_success( $result );
 	}
 }

@@ -741,9 +741,9 @@ class Column {
 			return $callback;
 		}
 
-		//
+		// UUID special column
 		if ( true === $this->uuid ) {
-			$callback = array( $this, 'generate_uuid ' );
+			$callback = array( $this, 'validate_uuid' );
 
 		// Intval fallback
 		} elseif ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
@@ -789,7 +789,7 @@ class Column {
 	}
 
 	/**
-	 * Generate a UUID
+	 * Validate a UUID
 	 *
 	 * This uses the v4 algorithm to generate a UUID that is used to uniquely
 	 * and universally identify a given database row without any direct
@@ -798,10 +798,21 @@ class Column {
 	 * From http://php.net/manual/en/function.uniqid.php#94959
 	 *
 	 * @since 3.0
+	 * @param string $uuid The UUID value (empty on insert, string on update)
 	 * @return string Generated UUID.
 	 */
-	public function generate_uuid( $prefix = 'urn:uuid:' ) {
-		return sprintf( "{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
+	public function validate_uuid( $uuid = '' ) {
+
+		// Bail if not empty (UUIDs should never change once they are set)
+		if ( ! empty( $uuid ) ) {
+			return $uuid;
+		}
+
+		// Default URN UUID prefix
+		$prefix = 'urn:uuid:';
+
+		// Put the pieces together
+		$uuid = sprintf( "{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
 
 			// 32 bits for "time_low"
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
@@ -821,5 +832,8 @@ class Column {
 			// 48 bits for "node"
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
 		);
+
+		// Return the new UUID
+		return $uuid;
 	}
 }
