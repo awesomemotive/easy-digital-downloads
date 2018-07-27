@@ -960,7 +960,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$r['output'] = 'orders';
 		$p = new EDD_Payments_Query( $r );
 
-		return $p->get_payments();
+		// Setup items
+		$items = $p->get_payments();
+
+		// Get customer IDs and count from payments
+		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
+		$cust_count   = count( $customer_ids );
+
+		// Maybe prime customer objects (if more than number of queries)
+		if ( $cust_count > 1 ) {
+			edd_get_customers( array(
+				'id__in'        => $customer_ids,
+				'no_found_rows' => true,
+				'number'        => $cust_count
+			) );
+		}
+
+		// Return items
+		return $items;
 	}
 
 	/**
