@@ -1139,3 +1139,47 @@ function edd_download_shortcode_item( $atts, $i ) {
 	edd_get_template_part( 'shortcode', 'download' );
 }
 add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
+
+/**
+ * Load the pagination for the [downloads] shortcode.
+ *
+ * @since 2.9.7
+ *
+ * @param array  $atts The [downloads] shortcode attributes.
+ * @param object $downloads The WP_Query.
+ * @param array  $query EDD's array of attributes used to construct the main WP_Query.
+ */
+function edd_downloads_pagination( $atts, $downloads, $query ) {
+
+	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) :
+
+		$pagination = false;
+
+		if ( is_single() ) {
+			$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
+				'base'    => get_permalink() . '%#%',
+				'format'  => '?paged=%#%',
+				'current' => max( 1, $query['paged'] ),
+				'total'   => $downloads->max_num_pages
+			), $atts, $downloads, $query ) );
+		} else {
+			$big = 999999;
+			$search_for   = array( $big, '#038;' );
+			$replace_with = array( '%#%', '&' );
+			$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
+				'base'    => str_replace( $search_for, $replace_with, get_pagenum_link( $big ) ),
+				'format'  => '?paged=%#%',
+				'current' => max( 1, $query['paged'] ),
+				'total'   => $downloads->max_num_pages
+			), $atts, $downloads, $query ) );
+		}
+
+		if ( ! empty( $pagination ) ) : ?>
+		<div id="edd_download_pagination" class="navigation">
+			<?php echo $pagination; ?>
+		</div>
+		<?php endif; ?>
+
+	<?php endif;
+}
+add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
