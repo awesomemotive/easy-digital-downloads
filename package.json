@@ -11,6 +11,7 @@
     "grunt-contrib-cssmin": "^2.2.1",
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-force-task": "^2.0.0",
+    "grunt-rtlcss": "~2.0.1",
     "grunt-wp-i18n": "^1.0.2",
     "load-grunt-tasks": "^3.5.2",
     "makepot": "^0.3.0"
