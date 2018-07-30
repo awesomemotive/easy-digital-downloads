@@ -8,6 +8,49 @@ module.exports = function(grunt) {
 
 		pkg: grunt.file.readJSON('package.json'),
 
+		rtlcss: {
+			options: {
+				opts: {
+					processUrls: false,
+					autoRename: false,
+					clean: true
+				},
+				saveUnmodified: false
+			},
+			target: {
+				files: [
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-menu.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-datepicker.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'templates',
+						src: ['edd.css'],
+						dest: 'templates',
+						ext: '-rtl.css'
+					}
+				]
+			}
+		},
+
 		cssmin: {
 			options: {
 				mergeIntoShorthands: false
@@ -73,49 +116,6 @@ module.exports = function(grunt) {
 						src: ['edd-rtl.css'],
 						dest: 'templates',
 						ext: '.min.css'
-					}
-				]
-			}
-		},
-
-		rtlcss: {
-			options: {
-				opts: {
-					processUrls: false,
-					autoRename: false,
-					clean: true
-				},
-				saveUnmodified: false
-			},
-			target: {
-				files: [
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-menu.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-datepicker.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'templates',
-						src: ['edd.css'],
-						dest: 'templates',
-						ext: '-rtl.css'
 					}
 				]
 			}

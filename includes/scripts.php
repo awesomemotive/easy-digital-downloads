@@ -195,8 +195,8 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 	}
 
-	// These have to be global
-	wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $css_suffix . '.css', array(), $version );
+	// These have to be global (use the JS prefix)
+	wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $js_suffix . '.css', array(), $version );
 	wp_enqueue_style( 'jquery-chosen' );
 
 	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $js_suffix . '.js', array( 'jquery' ), $version );
