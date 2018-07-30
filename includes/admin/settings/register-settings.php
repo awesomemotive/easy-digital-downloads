@@ -2074,6 +2074,9 @@ function edd_gateway_select_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	$html     = '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '">';
@@ -2342,6 +2345,9 @@ function edd_select_callback( $args ) {
 
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	// Nonce
@@ -2396,6 +2402,9 @@ function edd_color_select_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 	if ( $args['chosen'] ) {
 		$class .= 'edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
@@ -2532,6 +2541,9 @@ function edd_shop_states_callback( $args ) {
 
 	if ( $args['chosen'] ) {
 		$class .= 'edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	if ( empty( $states ) ) {

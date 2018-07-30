@@ -8,11 +8,54 @@ module.exports = function(grunt) {
 
 		pkg: grunt.file.readJSON('package.json'),
 
+		rtlcss: {
+			options: {
+				opts: {
+					processUrls: false,
+					autoRename: false,
+					clean: true
+				},
+				saveUnmodified: false
+			},
+			target: {
+				files: [
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-menu.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-datepicker.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'templates',
+						src: ['edd.css'],
+						dest: 'templates',
+						ext: '-rtl.css'
+					}
+				]
+			}
+		},
+
 		cssmin: {
 			options: {
 				mergeIntoShorthands: false
 			},
-			target: {
+			ltr: {
 				files: [
 					{
 						expand: true,
@@ -39,6 +82,38 @@ module.exports = function(grunt) {
 						expand: true,
 						cwd: 'templates',
 						src: ['edd.css'],
+						dest: 'templates',
+						ext: '.min.css'
+					}
+				]
+			},
+			rtl: {
+				files: [
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-menu-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-datepicker-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'templates',
+						src: ['edd-rtl.css'],
 						dest: 'templates',
 						ext: '.min.css'
 					}
@@ -171,6 +246,6 @@ module.exports = function(grunt) {
 	});
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'cssmin', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'build', [ 'cssmin:ltr', 'rtlcss', 'cssmin:rtl', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
 
 };

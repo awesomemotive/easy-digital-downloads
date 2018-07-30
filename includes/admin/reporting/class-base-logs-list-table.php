@@ -243,10 +243,14 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function log_views() {
+		$rtl_class = is_rtl()
+			? ' chosen-rtl'
+			: '';
+
 		$views        = edd_log_default_views();
 		$current_view = $this->get_filtered_view(); ?>
 
-		<select id="edd-logs-view" name="view" class="edd-select-chosen">
+		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
 			<?php foreach ( $views as $view_id => $label ) : ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
@@ -274,6 +278,10 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function downloads_filter() {
+		$rtl_class = is_rtl()
+			? ' chosen-rtl'
+			: '';
+
 		$downloads = get_posts( array(
 			'post_type'              => 'download',
 			'post_status'            => 'any',
@@ -286,7 +294,7 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		) );
 
 		if ( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter" class="edd-select-chosen">';
+			echo '<select name="download" id="edd-log-download-filter" class="edd-select-chosen ' . esc_attr( $rtl_class ) . '">';
 				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
