@@ -246,6 +246,6 @@ module.exports = function(grunt) {
 	});
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'rtlcss', 'cssmin:ltr', 'cssmin:rtl', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'build', [ 'cssmin:ltr', 'rtlcss', 'cssmin:rtl', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
 
 };
