@@ -165,7 +165,7 @@ function edd_add_new_modify_menu_highlight() {
 add_filter( 'admin_head', 'edd_add_new_modify_menu_highlight', 9999 );
 
 /**
- * Displays the product tabs for 'Products' and 'Apps and Integrations'
+ * Displays the product tabs for Products, Categories, and Tags
  *
  * @since 2.8.9
  */
@@ -191,21 +191,11 @@ function edd_display_product_tabs() {
 		);
 	}
 
-	// Integrations is last
-	$tabs['integrations'] = array(
-		'name' => __( 'Apps and Integrations', 'easy-digital-downloads' ),
-		'url'  => admin_url( 'edit.php?post_type=download&page=edd-addons&view=integrations' ),
-	);
-
 	// Filter the tabs
 	$tabs = apply_filters( 'edd_add_ons_tabs', $tabs );
 
-	// Add-ons
-	if ( isset( $_GET['page'] ) && ( $_GET['page'] === 'edd-addons' ) ) {
-		$active_tab = 'integrations';
-
 	// Taxonomies
-	} elseif ( isset( $_GET['taxonomy'] ) && in_array( $_GET['taxonomy'], array_keys( $taxonomies ), true ) ) {
+	if ( isset( $_GET['taxonomy'] ) && in_array( $_GET['taxonomy'], array_keys( $taxonomies ), true ) ) {
 		$active_tab = $_GET['taxonomy'];
 
 	// Default to Products
