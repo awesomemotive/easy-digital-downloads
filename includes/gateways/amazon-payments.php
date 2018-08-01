@@ -892,7 +892,7 @@ final class EDD_Amazon_Payments {
 			edd_update_payment_meta( $payment_id, '_edd_amazon_authorization_id', $authorization_id );
 			edd_update_payment_meta( $payment_id, '_edd_amazon_capture_id', $capture_id );
 
-			edd_set_payment_transaction_id( $payment_id, $reference_id );
+			edd_set_payment_transaction_id( $payment_id, $reference_id, $purchase_data['price'] );
 
 			edd_update_payment_status( $payment_id, 'publish' );
 
