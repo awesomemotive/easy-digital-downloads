@@ -651,6 +651,10 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['type'] = $this->args['type'];
 		}
 
+		if ( ! empty( $this->args['s'] ) ) {
+			$arguments['search'] = $this->args['s'];
+		}
+
 		if ( ! empty( $this->args['post_parent'] ) ) {
 			$this->args['parent'] = $this->args['post_parent'];
 		}
