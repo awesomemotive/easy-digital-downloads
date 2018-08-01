@@ -597,6 +597,14 @@ textarea[name="edd-note"] {
 	padding-bottom: 5px;
 }
 
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters label,
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters span,
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters p,
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters div {
+	display: block;
+	margin-bottom: 2px;
+}
+
 #edd-filters #edd-advanced-filters div.edd-select-chosen:not(:last-child) {
 	margin-bottom: 10px;
 }
