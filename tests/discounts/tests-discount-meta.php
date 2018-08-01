@@ -45,7 +45,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_be_null() {
-		$this->assertFalse( edd_add_adjustment_meta( self::$discount_id, '', '' ) );
+		$this->assertFalse( edd_add_discount_meta( self::$discount_id, '', '' ) );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_empty_value_should_be_empty() {
-		$this->assertNotEmpty( edd_add_adjustment_meta( self::$discount_id, 'test_key', '' ) );
+		$this->assertNotEmpty( edd_add_discount_meta( self::$discount_id, 'test_key', '' ) );
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::add_meta()
 	 */
 	public function test_add_metadata_with_key_value_should_not_be_empty() {
-		$this->assertNotEmpty( edd_add_adjustment_meta( self::$discount_id, 'test_key', '1' ) );
+		$this->assertNotEmpty( edd_add_discount_meta( self::$discount_id, 'test_key', '1' ) );
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::update_meta()
 	 */
 	public function test_update_metadata_with_empty_key_value_should_be_empty() {
-		$this->assertEmpty( edd_update_adjustment_meta( self::$discount_id, '', '' ) );
+		$this->assertEmpty( edd_update_discount_meta( self::$discount_id, '', '' ) );
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::update_meta()
 	 */
 	public function test_update_metadata_with_empty_value_should_not_be_empty() {
-		$this->assertNotEmpty( edd_update_adjustment_meta( self::$discount_id, 'test_key_2', '' ) );
+		$this->assertNotEmpty( edd_update_discount_meta( self::$discount_id, 'test_key_2', '' ) );
 	}
 
 	/**
@@ -85,7 +85,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::update_meta()
 	 */
 	public function test_update_metadata_with_key_value_should_not_be_empty() {
-		$this->assertNotEmpty( edd_update_adjustment_meta( self::$discount_id, 'test_key_2', '1' ) );
+		$this->assertNotEmpty( edd_update_discount_meta( self::$discount_id, 'test_key_2', '1' ) );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_with_no_args_should_return_array() {
-		$this->assertEmpty( edd_get_adjustment_meta( self::$discount_id ) );
+		$this->assertEmpty( edd_get_discount_meta( self::$discount_id ) );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_with_invalid_key_should_be_empty() {
-		$this->assertEmpty( edd_get_adjustment_meta( self::$discount_id, 'key_that_does_not_exist', true ) );
+		$this->assertEmpty( edd_get_discount_meta( self::$discount_id, 'key_that_does_not_exist', true ) );
 	}
 
 	/**
@@ -109,8 +109,8 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_after_update_should_return_that_value() {
-		edd_update_adjustment_meta( self::$discount_id, 'test_key_2', '1' );
-		$this->assertEquals( '1', edd_get_adjustment_meta( self::$discount_id, 'test_key_2', true ) );
+		edd_update_discount_meta( self::$discount_id, 'test_key_2', '1' );
+		$this->assertEquals( '1', edd_get_discount_meta( self::$discount_id, 'test_key_2', true ) );
 	}
 
 	/**
@@ -118,8 +118,8 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::delete_meta()
 	 */
 	public function test_delete_metadata_with_valid_key_should_return_true() {
-		edd_update_adjustment_meta( self::$discount_id, 'test_key', '1' );
-		$this->assertTrue( edd_delete_adjustment_meta( self::$discount_id, 'test_key' ) );
+		edd_update_discount_meta( self::$discount_id, 'test_key', '1' );
+		$this->assertTrue( edd_delete_discount_meta( self::$discount_id, 'test_key' ) );
 	}
 
 	/**
@@ -127,6 +127,6 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::delete_meta()
 	 */
 	public function test_delete_metadata_with_invalid_key_should_return_false() {
-		$this->assertFalse( edd_delete_adjustment_meta( self::$discount_id,  'key_that_does_not_exist' ) );
+		$this->assertFalse( edd_delete_discount_meta( self::$discount_id,  'key_that_does_not_exist' ) );
 	}
 }

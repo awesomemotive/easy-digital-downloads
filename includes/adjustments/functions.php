@@ -27,20 +27,6 @@ function edd_add_adjustment( $data = array() ) {
 }
 
 /**
- * Delete an adjustment.
- *
- * @since 3.0
- *
- * @param int $adjustment_id Adjustment ID.
- * @return int
- */
-function edd_delete_adjustment( $adjustment_id = 0 ) {
-	$adjustments = new EDD\Database\Queries\Adjustment();
-
-	return $adjustments->delete_item( $adjustment_id );
-}
-
-/**
  * Update an adjustment.
  *
  * @since 3.0
@@ -105,24 +91,4 @@ function edd_get_adjustments( $args = array() ) {
 	return $adjustments->query( $r );
 }
 
-/**
- * Count adjustments.
- *
- * @since 3.0
- *
- * @param array $args Arguments.
- * @return int
- */
-function edd_count_adjustments( $args = array() ) {
-
-	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
-
-	// Query for count(s)
-	$adjustments = new EDD\Database\Queries\Adjustment( $r );
-
-	// Return count(s)
-	return absint( $adjustments->found_items );
-}
+/** Meta **************************************************/

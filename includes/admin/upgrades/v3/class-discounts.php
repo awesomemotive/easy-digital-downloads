@@ -83,12 +83,12 @@ class Discounts extends Base {
 				// Migrate any additional meta.
 				if ( ! empty( $meta_to_migrate ) ) {
 					foreach ( $meta_to_migrate as $key => $value ) {
-						edd_add_adjustment_meta( $discount_id, $key, $value );
+						edd_add_discount_meta( $discount_id, $key, $value );
 					}
 				}
 
 				// Store legacy discount ID.
-				edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
+				edd_add_discount_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
 			}
 
 			return true;

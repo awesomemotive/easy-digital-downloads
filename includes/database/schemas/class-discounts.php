@@ -1,6 +1,6 @@
 <?php
 /**
- * Adjustments Schema Class.
+ * Discounts Schema Class.
  *
  * @package     EDD
  * @subpackage  Database\Schemas
@@ -14,11 +14,11 @@ namespace EDD\Database\Schemas;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Adjustments Schema Class.
+ * Discounts Schema Class.
  *
  * @since 3.0
  */
-class Adjustments extends Base {
+class Discounts extends Base {
 
 	/**
 	 * Array of database column objects
@@ -94,16 +94,6 @@ class Adjustments extends Base {
 		// scope
 		array(
 			'name'       => 'scope',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
-			'sortable'   => true,
-			'transition' => true
-		),
-
-		// amount_type
-		array(
-			'name'       => 'amount_type',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',

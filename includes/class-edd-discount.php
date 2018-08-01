@@ -9,7 +9,7 @@
  * @since       2.7
  */
 
-use EDD\Database\Objects\Adjustment;
+use EDD\Database\Objects\Discount;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float $min_cart_price
  * @property bool $once_per_customer
  */
-class EDD_Discount extends Adjustment {
+class EDD_Discount extends Discount {
 
 	/**
 	 * Discount ID.
@@ -534,8 +534,8 @@ class EDD_Discount extends Adjustment {
 		 * Some object vars need to be setup manually as the values need to be
 		 * pulled in from the `edd_adjustmentmeta` table.
 		 */
-		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product',    false );
-		$this->product_reqs      = (array) edd_get_adjustment_meta( $this->id, 'product_requirement', false );
+		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
+		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -1014,7 +1014,7 @@ class EDD_Discount extends Adjustment {
 				if ( isset( $args['excluded_products'] ) ) {
 					if ( is_array( $args['excluded_products'] ) ) {
 						foreach ( $args['excluded_products'] as $product ) {
-							edd_add_adjustment_meta( $this->id, 'excluded_product', absint( $product ) );
+							edd_add_discount_meta( $this->id, 'excluded_product', absint( $product ) );
 						}
 					}
 				}
@@ -1022,7 +1022,7 @@ class EDD_Discount extends Adjustment {
 				if ( isset( $args['product_reqs'] ) ) {
 					if ( is_array( $args['product_reqs'] ) ) {
 						foreach ( $args['product_reqs'] as $product ) {
-							edd_add_adjustment_meta( $this->id, 'product_requirement', absint( $product ) );
+							edd_add_discount_meta( $this->id, 'product_requirement', absint( $product ) );
 						}
 					}
 				}
