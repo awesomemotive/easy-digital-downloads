@@ -528,6 +528,11 @@ textarea[name="edd-note"] {
 
 #edd-filters {
 	padding: 0 10px;
+	margin: 0;
+}
+
+.download_page_edd-reports #edd-filters {
+	margin-top: 8px;
 }
 
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
@@ -617,7 +622,7 @@ textarea[name="edd-note"] {
 -------------------------------------------------------------- */
 
 #edd-add-ons {
-	margin: 29px 20px -9px 2px;
+	margin: 9px 20px -9px 2px;
 }
 
 .edd-tab-wrap {
@@ -625,16 +630,14 @@ textarea[name="edd-note"] {
 }
 
 h2.nav-tab-wrapper.edd-tab-clear {
-	margin: -20px 0 0 0;
+	margin: -19px 0 0 0;
 }
 
 .edit-tags-php.post-type-download .wrap > .wp-heading-inline,
 .edit-php.post-type-download .wrap .wp-heading-inline,
 .download_page_edd-payment-history .wrap .wp-heading-inline,
-.download_page_edd-addons .wrap .wp-heading-inline,
 .edit-tags-php.post-type-download .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .subtitle,
-.download_page_edd-addons .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .page-title-action,
 .download_page_edd-addons .wrap > .page-title-action {
 	display: none;
@@ -642,8 +645,7 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
-.download_page_edd-payment-history .wrap .nav-tab-wrapper .page-title-action,
-.download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
+.download_page_edd-payment-history .wrap .nav-tab-wrapper .page-title-action {
 	top: 3px;
 	margin-left: 10px;
 	line-height: 24px;
