@@ -276,12 +276,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					) );
 				?>
 				</fieldset>
+
+				<?php
+
+				// Third party plugin support
+				if ( has_action( 'edd_payment_advanced_filters_after_fields' ) ) : ?>
+
+					<fieldset>
+						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?>
+
+						<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
+
+					</fieldset>
+
+				<?php endif; ?>
 			</div>
 		</span>
 
 		<span id="edd-after-core-filters">
-			<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
-
 			<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
