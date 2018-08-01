@@ -29,10 +29,9 @@ defined( 'ABSPATH' ) || exit;
 function edd_admin_load_report() {
 
 	// Redirect URL (on error)
-	$redirect_url =  add_query_arg( array(
-		'post_type' => 'download',
-		'page'      => 'edd-reports'
-	), admin_url( 'edit.php' ) );
+	$redirect_url = edd_get_admin_url( array(
+		'page' => 'edd-reports'
+	) );
 
 	// Redirect if user cannot view reports
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
@@ -74,11 +73,10 @@ function edd_reports_sections() {
 	$sections->use_js          = false;
 	$sections->current_section = Reports\get_current_report();
 	$sections->item            = null;
-	$sections->base_url = add_query_arg( array(
-		'post_type'        => 'download',
+	$sections->base_url = edd_get_admin_url( array(
 		'page'             => 'edd-reports',
 		'settings-updated' => false
-	), admin_url( 'edit.php' ) );
+	) );
 
 	// Get all registered tabs & views
 	$tabs = Reports\get_reports();

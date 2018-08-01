@@ -464,13 +464,12 @@ function edd_delete_discount_note( $data ) {
 	edd_delete_note( $data['note_id'] );
 
 	// Redirect on delete
-	edd_redirect( add_query_arg( array(
-		'post_type'   => 'download',
+	edd_redirect( edd_get_admin_url( array(
 		'page'        => 'edd-discounts',
 		'edd-action'  => 'edit_discount',
 		'edd-message' => 'discount-note-deleted',
 		'discount'    => absint( $data['discount_id'] )
-	), admin_url( 'edit.php' ) ) );
+	) ) );
 }
 add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
 

@@ -31,11 +31,10 @@ function edd_tools_page() {
 
 			foreach ( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
-				$tab_url = add_query_arg( array(
-					'post_type' => 'download',
-					'page'      => 'edd-tools',
-					'tab'       => $tab_id
-				), admin_url( 'edit.php' ) );
+				$tab_url = edd_get_admin_url( array(
+					'page' => 'edd-tools',
+					'tab'  => $tab_id
+				) );
 
 				$tab_url = remove_query_arg( array(
 					'edd-message',
@@ -1102,11 +1101,10 @@ function edd_tools_import_export_process_import() {
 
 	}
 
-	edd_redirect( add_query_arg( array(
-		'post_type'   => 'download',
+	edd_redirect( edd_get_admin_url( array(
 		'page'        => 'edd-tools',
 		'edd-message' => 'settings-imported'
-	), admin_url( 'edit.php' ) ) );
+	) ) );
 }
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
 
@@ -1176,11 +1174,10 @@ function edd_handle_submit_debug_log() {
 		// Clear the debug log.
 		$edd_logs->clear_log_file();
 
-		edd_redirect( add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-tools',
-			'tab'       => 'debug_log'
-		), admin_url( 'edit.php' ) ) );
+		edd_redirect( edd_get_admin_url( array(
+			'page' => 'edd-tools',
+			'tab'  => 'debug_log'
+		) ) );
 	}
 }
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );
