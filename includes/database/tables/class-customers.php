@@ -138,7 +138,7 @@ final class Customers extends Base {
 	protected function __201807130001() {
 
 		// Alter the database
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER 'date_created'" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
 
 		// Return success/fail
 		return $this->is_success( true );
