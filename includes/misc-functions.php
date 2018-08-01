@@ -13,6 +13,32 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Return the base admin-area URL.
+ *
+ * Use this to avoid typing all of it out a million times.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_admin_base_url() {
+
+	// Default args
+	$args = array(
+		'post_type' => 'download'
+	);
+
+	// Default URL
+	$admin_url = admin_url( 'edit.php' );
+
+	// Get the base admin URL
+	$url = add_query_arg( $args, $admin_url );
+
+	// Filter & return
+	return apply_filters( 'edd_get_admin_base_url', $url, $args, $admin_url );
+}
+
+/**
  * Is Test Mode
  *
  * @since 1.0
