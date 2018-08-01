@@ -105,7 +105,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
 function edd_add_extentions_link() {
 	global $edd_add_ons_page;
 
-	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
+	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
 }
 add_action( 'admin_menu', 'edd_add_extentions_link', 99999 );
 
