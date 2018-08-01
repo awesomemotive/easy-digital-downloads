@@ -62,8 +62,8 @@ function edd_payments_contextual_help() {
 		'title'	    => __( '&mdash; Refunds', 'easy-digital-downloads' ),
 		'content'	=>
 			'<p>' . __( 'Refunds are created when a customer would like money back from a completed order.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'Every refund refers back to the original order, and contains only the items and adjustments for what is being refunded.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'Refunds might be entire orders or single products in an order with many others.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'Every refund refers back to the original order, and only contains the items and adjustments that were refunded.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'Refunds could be entire orders, or single products.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'Once an item is refunded, it cannot be undone; it can only be repurchased.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
@@ -71,7 +71,7 @@ function edd_payments_contextual_help() {
 		'id'	    => 'edd-invoice',
 		'title'	    => __( '&mdash; Invoices', 'easy-digital-downloads' ),
 		'content'	=>
-			'<p>' . __( 'Invoices are created by stop admins as a way to request that a customer pay you for something.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'Invoices are created by store admins as a way to request that a customer pay you for something.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'Every invoice contains a snapshot of your store at the time the order was placed, and is made up of many different pieces of information.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'Things like products, discounts, taxes, fees, and customer email address, are all examples of information that is saved with each invoice.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'Invoices can be refunded entirely, or individual items can be refunded by editing an existing invoice.', 'easy-digital-downloads' ) . '</p>'
@@ -81,15 +81,16 @@ function edd_payments_contextual_help() {
 		'id'	    => 'edd-payments-search',
 		'title'	    => __( 'Search', 'easy-digital-downloads' ),
 		'content'	=>
-			'<p>' . __( 'The order history can be searched in several different ways:', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'The order history can be searched in several different ways.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'You can enter:', 'easy-digital-downloads' ) . '</p>' .
 			'<ul>
-				<li>' . __( 'You can enter the customer\'s email address', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'You can enter the customer\'s name or ID prefixed by \'user:\'', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'You can enter the 32-character purchase key', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'You can enter the purchase ID', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'You can enter a transaction ID prefixed by \'txn:\'', 'easy-digital-downloads' ) . '</li>
-				<li>' . sprintf( __( 'You can enter the %s ID prefixed by \'#\'', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</li>
-				<li>' . __( 'You can enter the Discount Code prefixed by \'discount:\'', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The purchase ID', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The 32-character purchase key', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The customer\'s email address', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The customer\'s name or ID prefixed by <code>user:</code>', 'easy-digital-downloads' ) . '</li>
+				<li>' . sprintf( __( 'The %s ID prefixed by <code>#</code>', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</li>
+				<li>' . __( 'The Discount Code prefixed by <code>discount:</code>', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'A transaction ID prefixed by <code>txn:</code>', 'easy-digital-downloads' ) . '</li>
 			</ul>'
 	) );
 
