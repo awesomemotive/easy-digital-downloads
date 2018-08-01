@@ -893,7 +893,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		// Search
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
 			$args['search_in_notes'] = true;
-			$args['search']          = trim( str_replace( 'txn:', '', $args['search'] ) );
+			$args['search']          = trim( str_replace( 'txn:', '', $args['s'] ) );
 		}
 
 		// Date query
