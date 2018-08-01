@@ -12,6 +12,77 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** Navigation ****************************************************************/
+
+/**
+ * Output the primary orders page navigation
+ *
+ * @since 3.0
+ * @param string $active_tab
+ */
+function edd_orders_page_primary_nav( $active_tab = '' ) {
+
+	$add_new_url = add_query_arg( array( 'view' => 'add-order' ) );
+
+	ob_start();?>
+
+	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<?php
+
+		// Get the order pages
+		$tabs = edd_get_order_pages();
+
+		// Loop through order pages and create tabs
+		foreach ( $tabs as $tab_id => $tab_name ) {
+			
+			// Remove 
+			$tab_url = add_query_arg( array(
+				'settings-updated' => false,
+				'type'             => $tab_id,
+			) );
+
+			// Remove the section from the tabs so we always end up at the main section
+			$tab_url = remove_query_arg( 'section', $tab_url );
+			$active  = $active_tab == $tab_id
+				? ' nav-tab-active'
+				: '';
+
+			// Link
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">';
+				echo esc_html( $tab_name );
+			echo '</a>';
+		}
+		?>
+		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
+	</h2>
+
+	<?php
+
+	echo ob_get_clean();
+}
+
+/**
+ * Retrieve the order pages.
+ *
+ * Used only by the primary tab navigation for orders currently.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_order_pages() {
+
+	// Default tabs
+	$tabs = array(
+		'order'   => __( 'Orders',   'easy-digital-downloads' ),
+		'refund'  => __( 'Refunds',  'easy-digital-downloads' ),
+		'invoice' => __( 'Invoices', 'easy-digital-downloads' )
+	);
+
+	// Filter & return
+	return (array) apply_filters( 'edd_get_order_pages', $tabs );
+}
+
 /**
  * Render Orders page.
  *
@@ -30,20 +101,27 @@ function edd_payment_history_page() {
 		$payments_table = new EDD_Payment_History_Table();
 		$payments_table->prepare_items();
 
+		$active_tab = ! empty( $_GET['type'] )
+			? sanitize_key( $_GET['type'] )
+			: 'order';
+
 		$admin_url = add_query_arg( array(
 			'post_type' => 'download',
 			'page'      => 'edd-payment-history'
 		), admin_url( 'edit.php' ) ); ?>
 
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'view' => 'add-order' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
 			<hr class="wp-header-end">
+
+			<?php edd_orders_page_primary_nav( $active_tab ); ?>
 
 			<?php do_action( 'edd_payments_page_top' ); ?>
 
 			<form id="edd-payments-filter" method="get" action="<?php echo esc_url( $admin_url ); ?>">
 				<input type="hidden" name="post_type" value="download" />
 				<input type="hidden" name="page" value="edd-payment-history" />
+				<input type="hidden" name="type" value="<?php echo esc_attr( $active_tab ); ?>" />
 				<?php
 				$payments_table->views();
 				$payments_table->advanced_filters();
