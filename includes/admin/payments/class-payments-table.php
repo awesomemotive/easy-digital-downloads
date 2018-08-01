@@ -282,8 +282,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				// Third party plugin support
 				if ( has_action( 'edd_payment_advanced_filters_after_fields' ) ) : ?>
 
-					<fieldset>
-						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?>
+					<fieldset class="edd-add-on-filters">
+						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?></legend>
 
 						<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
