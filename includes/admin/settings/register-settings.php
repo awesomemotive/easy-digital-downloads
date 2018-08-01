@@ -2696,6 +2696,26 @@ function edd_tax_rates_callback( $args ) {
 				<td class="edd_tax_rate">
 					<input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/>
 				</td>
+				<td class="edd_tax_rate_from">
+					<?php
+					echo EDD()->html->date_field( array(
+						'id'          => 'tax_rates[0][from]',
+						'name'        => 'tax_rates[0][from]',
+						'value'       => '',
+						'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+					) );
+					?>
+				</td>
+				<td class="edd_tax_rate_to">
+					<?php
+					echo EDD()->html->date_field( array(
+						'id'          => 'tax_rates[0][to]',
+						'name'        => 'tax_rates[0][to]',
+						'value'       => '',
+						'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+					) );
+					?>
+				</td>
 				<td>
 					<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
 				</td>
