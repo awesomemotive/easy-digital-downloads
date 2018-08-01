@@ -1701,7 +1701,7 @@ jQuery(document).ready(function ($) {
 					$( this ).attr( 'name', name ).attr( 'id', name );
 				});
 
-				clone.find( 'input[data-type="edd-adjustment-id"]' ).remove();
+				clone.find( 'input[data-type="edd-tax-rate-id"]' ).remove();
 
 				clone.find( 'label' ).each(function() {
 					var name = $( this ).attr( 'for' );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Adjustments Table.
+ * Discounts Table.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -14,11 +14,11 @@ namespace EDD\Database\Tables;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup the global "edd_adjustments" database table
+ * Setup the global "edd_discounts" database table
  *
  * @since 3.0
  */
-final class Adjustments extends Base {
+final class Discounts extends Base {
 
 	/**
 	 * Table name
@@ -27,7 +27,7 @@ final class Adjustments extends Base {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_adjustments';
+	protected $name = 'edd_discounts';
 
 	/**
 	 * Database version
@@ -36,7 +36,7 @@ final class Adjustments extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 20180801002;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -46,8 +46,7 @@ final class Adjustments extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806140002' => 201806140002,
-		'201807270003' => 201807270003
+		'20180801002' => 20180801002,
 	);
 
 	/**
@@ -65,7 +64,6 @@ final class Adjustments extends Base {
 			status varchar(20) NOT NULL default '',
 			type varchar(20) NOT NULL default '',
 			scope varchar(20) NOT NULL default 'all',
-			amount_type varchar(20) NOT NULL default '',
 			amount decimal(18,9) NOT NULL default '0',
 			description longtext NOT NULL default '',
 			max_uses bigint(20) unsigned NOT NULL default '0',
@@ -79,14 +77,14 @@ final class Adjustments extends Base {
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
-			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20),amount_type(20)),
+			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20)),
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
 	}
 
 	/**
-	 * Upgrade to version 201806140002
-	 * - Migrate data from edd_discounts to edd_adjustments
+	 * Upgrade to version 20180801002
+	 * - Migrate data from edd_adjustments to edd_discounts
 	 *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
 	 *
@@ -94,10 +92,10 @@ final class Adjustments extends Base {
 	 *
 	 * @return boolean
 	 */
-	protected function __201806140002() {
+	protected function __20180801002() {
 
-		// Old discounts table
-		$table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discounts';
+		// Old adjustments table
+		$table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_adjustments';
 
 		// Does old table exist?
 		$query    = "SHOW TABLES LIKE %s";
@@ -111,9 +109,9 @@ final class Adjustments extends Base {
 		}
 
 		// Get the contents
-		$discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name}" );
+		$discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name} WHERE type = 'discount'" );
 
-		// Migrate discounts to adjustments
+		// Migrate adjustments to discounts
 		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
 				$this->get_db()->insert( $this->table_name, array(
@@ -121,71 +119,25 @@ final class Adjustments extends Base {
 					'name'              => $discount->name,
 					'code'              => $discount->code,
 					'status'            => $discount->status,
-					'type'              => 'discount',
+					'type'              => $discount->amount_type,
 					'scope'             => $discount->scope,
-					'amount_type'       => $discount->type,
 					'amount'            => $discount->amount,
 					'description'       => $discount->description,
 					'max_uses'          => $discount->max_uses,
 					'use_count'         => $discount->use_count,
 					'once_per_customer' => $discount->once_per_customer,
-					'min_cart_price'    => $discount->min_cart_price,
+					'min_charge_amount' => $discount->min_charge_amount,
 					'product_condition' => $discount->product_condition,
 					'date_created'      => $discount->date_created,
 					'date_modified'     => $discount->date_modified,
 					'start_date'        => $discount->start_date,
-					'end_date'          => $discount->end_date
+					'end_date'          => $discount->end_date,
+					'uuid'              => $discount->uuid,
 				) );
 			}
 		}
 
-		// Delete the old option
-		delete_option( 'wpdb_edd_discounts_version' );
-
-		// Attempt to drop the old table
-		$this->get_db()->query( "
-			DROP TABLE {$table_name};
-		" );
-
-		// Return success/fail
+		// Return success
 		return true;
-	}
-
-	/**
-	 * Upgrade to version 201807110001
-	 * - Rename min_cart_price to min_charge_amount
-	 *
-	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool
-	 */
-	protected function __201807110001() {
-		$retval = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} CHANGE `min_cart_price` `min_charge_amount` decimal(18,9) NOT NULL default '0';
-		" );
-
-		// Return success/fail
-		return $this->is_success( $retval );
-	}
-
-	/**
-	 * Upgrade to version 201807270003
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807270003() {
-
-		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-		" );
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 }

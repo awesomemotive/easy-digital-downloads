@@ -1429,40 +1429,43 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
-		$adjustment_data = array(
-			'name'        => $tax_rate['country'],
-			'status'      => 'active',
-			'type'        => 'tax_rate',
-			'scope'       => $scope,
-			'amount_type' => 'percent',
-			'amount'      => floatval( $tax_rate['rate'] ),
-			'description' => $region,
-			'start_date'  => $tax_rate['from'],
-			'end_date'    => $tax_rate['to'],
+		// Ensure the end date is 23:59:59.
+		$tax_rate['to'] = ! empty( $tax_rate['to'] )
+			? \Carbon\Carbon::parse( $tax_rate['to'], edd_get_timezone_id() )->endOfDay()->toDateTimeString()
+			: '';
+
+		$tax_rate_data = array(
+			'status'     => 'active',
+			'country'    => $tax_rate['country'],
+			'region'     => $region,
+			'scope'      => $scope,
+			'rate'       => floatval( $tax_rate['rate'] ),
+			'start_date' => $tax_rate['from'],
+			'end_date'   => $tax_rate['to'],
 		);
 
 		// Update database if adjustment ID was supplied.
-		if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
-			edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
+		if ( isset( $tax_rate['edd_tax_rate_id'] ) ) {
+			edd_update_tax_rate( $tax_rate['edd_tax_rate_id'], $tax_rate_data );
 
 			// Check if the tax rate exists.
 		} else {
-			$rate = edd_get_adjustments( array(
-				'fields'      => 'ids',
-				'name'        => $tax_rate['country'],
-				'description' => $region,
-				'scope'       => $scope,
+			$rate = edd_get_tax_rates( array(
+				'fields'  => 'ids',
+				'country' => $tax_rate['country'],
+				'region'  => $region,
+				'scope'   => $scope,
 			) );
 
 			// Tax rate exists.
 			if ( 1 === count( $rate ) ) {
-				$adjustment_id = absint( $rate[0] );
+				$tax_rate_id = absint( $rate[0] );
 
-				edd_update_adjustment( $adjustment_id, $adjustment_data );
+				edd_update_tax_rate( $tax_rate_id, $tax_rate_data );
 
 				// Add the tax rate to the database.
 			} else {
-				edd_add_adjustment( $adjustment_data );
+				edd_add_tax_rate( $tax_rate_data );
 			}
 		}
 	}
@@ -2574,7 +2577,7 @@ function edd_shop_states_callback( $args ) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( 'object', 'all' );
+	$rates = edd_get_tax_rates( array(), 'object' );
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
@@ -2598,7 +2601,7 @@ function edd_tax_rates_callback( $args ) {
 						echo EDD()->html->select( array(
 							'options'          => edd_get_country_list(),
 							'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][country]',
-							'selected'         => $rate->name,
+							'selected'         => $rate->country,
 							'show_option_all'  => false,
 							'show_option_none' => false,
 							'class'            => 'edd-tax-country',
@@ -2612,12 +2615,12 @@ function edd_tax_rates_callback( $args ) {
                     </td>
                     <td class="edd_tax_state">
 						<?php
-						$states = edd_get_shop_states( $rate->name );
+						$states = edd_get_shop_states( $rate->country );
 						if ( ! empty( $states ) ) {
 							echo EDD()->html->select( array(
 								'options'          => $states,
 								'name'             => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								'selected'         => $rate->description,
+								'selected'         => $rate->region,
 								'disabled'         => 'country' === $rate->scope,
 								'show_option_all'  => false,
 								'show_option_none' => false,
@@ -2627,7 +2630,7 @@ function edd_tax_rates_callback( $args ) {
 						} else {
 							echo EDD()->html->text( array(
 								'name'  => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
-								'value' => $rate->description,
+								'value' => $rate->region,
 							) );
 						}
 						?>
@@ -2637,7 +2640,7 @@ function edd_tax_rates_callback( $args ) {
 						</span>
                     </td>
                     <td class="edd_tax_rate">
-						<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_attr( floatval( $rate->amount ) ); ?>" autocomplete="off" />
+						<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][rate]" value="<?php echo esc_attr( floatval( $rate->rate ) ); ?>" autocomplete="off" />
 					</td>
 	                <td class="edd_tax_rate_from">
 		                <?php
@@ -2662,7 +2665,7 @@ function edd_tax_rates_callback( $args ) {
                     <td class="edd_tax_remove">
                         <span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>
                     </td>
-	                <input type="hidden" data-type="edd-adjustment-id" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_adjustment_id]" value="<?php echo esc_html( $rate->id ); ?>" />
+	                <input type="hidden" data-type="edd-tax-rate-id" name="tax_rates[<?php echo edd_sanitize_key( $key ); ?>][edd_tax_rate_id]" value="<?php echo esc_html( $rate->id ); ?>" />
                 </tr>
 			<?php endforeach; ?>
 		<?php else : ?>
