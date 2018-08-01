@@ -449,7 +449,7 @@ function edd_build_order( $order_data = array() ) {
 	edd_maybe_add_customer_address( $customer->id, $customer_address_data );
 
 	/** Insert order items ****************************************************/
-	
+
 	$decimal_filter = edd_currency_decimal_filter();
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
@@ -572,22 +572,24 @@ function edd_build_order( $order_data = array() ) {
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
 
-					// Add the adjustment.
-					$adjustment_id = edd_add_order_adjustment( array(
+					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
-						'type_id'     => '',
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'amount'      => $fee['amount'],
-					) );
+						'subtotal'    => $fee['amount'],
+						'total'       => $fee['amount'],
+					);
+
+					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+						$adjustment_data['tax'] = 0.00;
+					}
+
+					// Add the adjustment.
+					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-						edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-					}
 
 					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
@@ -617,7 +619,6 @@ function edd_build_order( $order_data = array() ) {
 				edd_add_order_adjustment( array(
 					'object_id'   => $order_item_id,
 					'object_type' => 'order_item',
-					'type_id'     => 0,
 					'type'        => 'tax_rate',
 					'total'       => $tax_rate,
 				) );
@@ -654,7 +655,6 @@ function edd_build_order( $order_data = array() ) {
 			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
-				'type_id'     => '',
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'subtotal'    => floatval( $fee['amount'] ),
@@ -692,13 +692,16 @@ function edd_build_order( $order_data = array() ) {
 			$discount = edd_get_discount_by( 'code', $discount );
 
 			if ( $discount ) {
+				$discounted_amount = $subtotal - $discount->get_discounted_amount( $subtotal );
+
 				edd_add_order_adjustment( array(
 					'object_id'   => $order_id,
 					'object_type' => 'order',
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount,
-					'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
+					'subtotal'    => $discounted_amount,
+					'total'       => $discounted_amount,
 				) );
 			}
 		}
