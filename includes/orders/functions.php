@@ -1943,15 +1943,33 @@ function edd_count_order_transactions( $args = array() ) {
  *
  * @since 3.0
  *
- * @param int $order_id Order ID.
+ * @param int   $order_id Order ID.
+ * @param array $data {
+ *     Refund data. Optional.
+ *
+ *     @type float $amount      Refund amount. Leave empty for full refund.
+ *                              If an amount is supplied and this does not match
+ *                              the order total then a credit adjustment for the
+ *                              difference is automatically applied to the refunded
+ *                              order.
+ *     @type array $adjustments Adjustments to add to the refunded order (e.g. credit, discount).
+ *                              See `edd_add_order_adjustment()` for accepted arguments.
+ *                              If adjustments are applied but an amount is not
+ *                              passed then the amount is automatically calculated.
+ * }
+ *
  * @return boolean True if refund was successful, false otherwise.
  */
-function edd_refund_order( $order_id = 0 ) {
+function edd_refund_order( $order_id = 0, $data = array() ) {
+	global $wpdb;
 
 	// Bail if no order ID was passed.
 	if ( empty( $order_id ) ) {
 		return false;
 	}
+
+	// Ensure the order ID is an integer.
+	$order_id = absint( $order_id );
 
 	// Fetch order.
 	$order = edd_get_order( $order_id );
@@ -1970,20 +1988,21 @@ function edd_refund_order( $order_id = 0 ) {
 	 */
 	$should_refund = apply_filters( 'edd_should_process_refund', '__return_true', $order_id );
 
+	// Set to false if an overridden amount is supplied.
+	$clone_relationships = true;
+
 	// Bail if refund is blocked.
 	if ( ! $should_refund ) {
 		return false;
 	}
 
-	// Log the refund.
-	edd_add_log( array(
-		'object_id'   => $order_id,
-		'object_type' => 'order',
-		'user_id'     => get_current_user_id(),
-		'type'        => 'refund',
-		'title'       => __( 'Refund Issued', 'easy-digital-downloads' ),
-		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
-	) );
+	/** Generate new order number ********************************************/
+
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", 0 ) );
 
 	/**
 	 * Filter the suffix applied to order numbers for refunds.
@@ -1992,13 +2011,36 @@ function edd_refund_order( $order_id = 0 ) {
 	 *
 	 * @param string Suffix.
 	 */
-	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-1' );
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+			// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+		// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $last_order->id . $refund_suffix . '1';
+	}
 
 	/** Insert order *********************************************************/
 
 	$order_data = array(
 		'parent'       => $order_id,
-		'order_number' => $order->get_number() . $refund_suffix,
+		'order_number' => $number,
 		'status'       => 'refunded',
 		'type'         => 'refund',
 		'user_id'      => $order->user_id,
@@ -2009,86 +2051,213 @@ function edd_refund_order( $order_id = 0 ) {
 		'mode'         => $order->mode,
 		'currency'     => $order->currency,
 		'payment_key'  => strtolower( md5( uniqid() ) ),
-		'subtotal'     => $order->subtotal * -1,
-		'discount'     => $order->discount * -1,
-		'total'        => $order->total * -1,
+		'subtotal'     => edd_negate_amount( $order->subtotal ),
+		'discount'     => edd_negate_amount( $order->discount ),
+		'total'        => edd_negate_amount( $order->total ),
 	);
 
+	// Full refund is inserted first to allow for conditional checks to run later
+	// and update the order, but we need an INSERT to be executed to generate a
+	// new order ID.
 	$new_order_id = edd_add_order( $order_data );
 
-	/** Insert order items ***************************************************/
+	// Check if any overrides were supplied.
+	if ( ! empty( $data ) ) {
+		if ( isset( $data['amount'] ) && ! empty( $data['amount'] ) ) {
 
-	foreach ( $order->items as $item ) {
-		$order_item_id = edd_add_order_item( array(
-			'order_id'     => $new_order_id,
-			'product_id'   => $item->product_id,
-			'product_name' => $item->product_name,
-			'price_id'     => $item->price_id,
-			'cart_index'   => $item->cart_index,
-			'type'         => $item->type,
-			'status'       => 'refunded',
-			'quantity'     => $item->quantity * -1,
-			'amount'       => $item->amount * -1,
-			'subtotal'     => $item->subtotal * -1,
-			'discount'     => $item->discount * -1,
-			'tax'          => $item->tax * -1,
-			'total'        => $item->total * -1,
-		) );
+			// Ensure relationships (items) are not cloned because an overridden
+			// amount we don't know how to retroactively apply this to items.
+			$clone_relationships = false;
 
-		foreach ( $item->adjustments as $adjustment ) {
-			edd_add_order_adjustment( array(
-				'object_id'   => $order_item_id,
-				'object_type' => 'order_item',
-				'type_id'     => $adjustment->type_id,
-				'type'        => $adjustment->type,
-				'description' => $adjustment->description,
-				'subtotal'    => $adjustment->subtotal * -1,
-				'tax'         => $adjustment->tax * -1,
-				'total'       => $adjustment->total * -1,
-			) );
+			$amount = floatval( $data['amount'] );
+
+			// Block attempts to refund more than the order total.
+			if ( $amount > $order->total ) {
+				return false;
+			}
+
+			// Add a credit adjustment if the amount is a fixed amount.
+			if ( $amount !== $order->total ) {
+				$difference = absint( $order->total - $amount );
+
+				$order_data['total'] = edd_negate_amount( $amount );
+
+				// Store the difference as an adjustment.
+				edd_add_order_adjustment( array(
+					'object_type' => 'order',
+					'object_id'   => $new_order_id,
+					'type'        => 'credit',
+					'description' => __( 'Credit for refund', 'easy-digital-downloads' ),
+					'subtotal'    => $difference,
+					'total'       => $difference,
+				) );
+			}
+		}
+
+		// Apply any adjustments.
+		if ( isset( $data['adjustments'] ) && is_array( $data['adjustments'] ) ) {
+			foreach ( $data['adjustments'] as $adjustment ) {
+				$defaults = array(
+					'type_id'     => 0,
+					'type'        => '',
+					'description' => '',
+					'subtotal'    => 0,
+					'tax'         => 0,
+					'total'       => 0,
+				);
+
+				$adjustment = wp_parse_args( $adjustment, $defaults );
+
+				switch ( $adjustment['type'] ) {
+					case 'discount':
+						$discount = edd_get_discount( absint( $adjustment['type_id'] ) );
+
+						// Skip if discount cannot be retrieved.
+						if ( ! $discount ) {
+							continue;
+						}
+						break;
+					case 'credit':
+						edd_add_order_adjustment( array(
+							'object_type' => 'order',
+							'object_id'   => $new_order_id,
+							'type_id'     => absint( $adjustment['type_id'] ),
+							'type'        => 'credit',
+							'description' => sanitize_text_field( $adjustment['description'] ),
+							'subtotal'    => sanitize_text_field( $adjustment['subtotal'] ),
+							'tax'         => sanitize_text_field( $adjustment['tax'] ),
+							'total'       => sanitize_text_field( $adjustment['total'] ),
+						) );
+						break;
+				}
+			}
 		}
 	}
 
-	/** Insert order adjustments *********************************************/
+	// Copy order items across as we are dealing with a full refund.
+	if ( $clone_relationships ) {
 
-	foreach ( $order->adjustments as $adjustment ) {
-		edd_add_order_adjustment( array(
-			'object_id'   => $new_order_id,
+		/** Insert order items ***********************************************/
+
+		foreach ( $order->items as $item ) {
+			$order_item_id = edd_add_order_item( array(
+				'order_id'     => $new_order_id,
+				'product_id'   => $item->product_id,
+				'product_name' => $item->product_name,
+				'price_id'     => $item->price_id,
+				'cart_index'   => $item->cart_index,
+				'type'         => $item->type,
+				'status'       => 'refunded',
+				'quantity'     => edd_negate_amount( $item->quantity ),
+				'amount'       => edd_negate_amount( $item->amount ),
+				'subtotal'     => edd_negate_amount( $item->subtotal ),
+				'discount'     => edd_negate_amount( $item->discount ),
+				'tax'          => edd_negate_amount( $item->tax ),
+				'total'        => edd_negate_amount( $item->total ),
+			) );
+
+			foreach ( $item->adjustments as $adjustment ) {
+				edd_add_order_adjustment( array(
+					'object_id'   => $order_item_id,
+					'object_type' => 'order_item',
+					'type_id'     => $adjustment->type_id,
+					'type'        => $adjustment->type,
+					'description' => $adjustment->description,
+					'subtotal'    => edd_negate_amount( $adjustment->subtotal ),
+					'tax'         => edd_negate_amount( $adjustment->tax ),
+					'total'       => edd_negate_amount( $adjustment->total ),
+				) );
+			}
+		}
+
+		/** Insert order adjustments *****************************************/
+
+		foreach ( $order->adjustments as $adjustment ) {
+			edd_add_order_adjustment( array(
+				'object_id'   => $new_order_id,
+				'object_type' => 'order',
+				'type_id'     => $adjustment->type_id,
+				'type'        => $adjustment->type,
+				'description' => $adjustment->description,
+				'subtotal'    => edd_negate_amount( $adjustment->subtotal ),
+				'tax'         => edd_negate_amount( $adjustment->tax ),
+				'total'       => edd_negate_amount( $adjustment->total ),
+			) );
+		}
+
+		// Log the refund.
+		edd_add_log( array(
+			'object_id'   => $order_id,
 			'object_type' => 'order',
-			'type_id'     => $adjustment->type_id,
-			'type'        => $adjustment->type,
-			'description' => $adjustment->description,
-			'subtotal'    => $adjustment->subtotal * -1,
-			'tax'         => $adjustment->tax * -1,
-			'total'       => $adjustment->total * -1,
+			'user_id'     => get_current_user_id(),
+			'type'        => 'refund',
+			'title'       => __( 'Refund Issued', 'easy-digital-downloads' ),
+			'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
 		) );
-	}
 
-	// Trigger actions to run.
-	edd_update_order_status( $order_id, 'refunded' );
+		// Trigger actions to run.
+		edd_update_order_status( $new_order_id, 'refunded' );
+
+	// Partial refund.
+	} else {
+
+		// Log the partial refund.
+		edd_add_log( array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+			'user_id'     => get_current_user_id(),
+			'type'        => 'partial_refund',
+			'title'       => __( 'Partial Refund Issued', 'easy-digital-downloads' ),
+			'content'     => __( 'A partial refund for the entire order was issued.', 'easy-digital-downloads' ),
+		) );
+
+		// Trigger actions to run.
+		edd_update_order_status( $new_order_id, 'partially_refunded' );
+	}
 
 	/**
 	 * Fires when an order has been refunded.
 	 *
 	 * @since 3.0
 	 *
-	 * @param int   $order_id Order ID.
-	 * @param float $total    Refund amount.
+	 * @param int   $order_id     Order ID of the original order.
+	 * @param int   $new_order_id Order ID of the refunded order.
+	 * @param float $total        Amount refunded.
 	 */
-	do_action( 'edd_refund_order', $order_id, floatval( $order->total ) );
+	do_action( 'edd_refund_order', $order_id, $new_order_id, floatval( $order->total ) );
 
 	return true;
 }
 
 /**
- * Refund order item (partial refund).
+ * Refund an order item. An order item can be fully or partially refunded. By
+ * default, it assumes the entire value of the order item is being refunded
+ * unless an amount or adjustment is passed.
  *
  * @since 3.0
  *
  * @param int $order_item_id Order Item ID.
+ * @param array $data {
+ *     Refund data. Optional.
+ *
+ *     @type float $amount      Refund amount. Leave empty for full refund.
+ *                              If an amount is supplied and this does not match
+ *                              the order item total then a credit adjustment for the
+ *                              difference is automatically applied to the refunded
+ *                              order item.
+ *     @type array $adjustments Adjustments to add to the refunded order (e.g. credit).
+ *                              See `edd_add_order_adjustment()` for accepted
+ *                              arguments. If adjustments are applied but an
+ *                              amount is not passed then the amount is
+ *                              automatically calculated. Any discounts that
+ *                              are passed will be ignored as discounts cannot
+ *                              be retroactively applied to order items; only
+ *                              to orders.
+ * }
+ *
  * @return boolean True if partial refund was successful, false otherwise.
  */
-function edd_refund_order_item( $order_item_id = 0 ) {
+function edd_refund_order_item( $order_item_id = 0, $data = array() ) {
 
 	// Bail if no order item ID was passed.
 	if ( empty( $order_item_id ) ) {
