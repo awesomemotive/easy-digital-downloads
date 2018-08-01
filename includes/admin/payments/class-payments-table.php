@@ -68,10 +68,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'ajax'     => false
 		) );
 
-		$this->base_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history'
-		), admin_url( 'edit.php' ) );
+		$this->base_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history'
+		) );
 
 		$this->filter_bar_hooks();
 		$this->process_bulk_action();
@@ -565,12 +564,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		}
 
 		// View URL
-		$view_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
-			'id'        => $order->id,
-		), admin_url( 'edit.php' ) );
+		$view_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
+			'id'   => $order->id,
+		) );
 
 		// Default row actions
 		$row_actions = array(
@@ -622,12 +620,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				: __( 'No Name', 'easy-digital-downloads' );
 
 			// Link to View Customer
-			$url = add_query_arg( array(
-				'post_type' => 'download',
-				'page'      => 'edd-customers',
-				'view'      => 'overview',
-				'id'        => $customer_id,
-			), admin_url( 'edit.php' ) );
+			$url = edd_get_admin_url( array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => $customer_id,
+			) );
 
 			$name = '<a href="' . esc_url( $url ) . '">' . $name . '</a>';
 		} else {

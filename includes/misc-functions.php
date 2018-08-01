@@ -39,6 +39,18 @@ function edd_get_admin_base_url() {
 }
 
 /**
+ * Get the admin URL, maybe with arguments added
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return string
+ */
+function edd_get_admin_url( $args = array() ) {
+	return add_query_arg( $args, edd_get_admin_base_url() );
+}
+
+/**
  * Is Test Mode
  *
  * @since 1.0

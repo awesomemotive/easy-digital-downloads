@@ -44,11 +44,10 @@ function edd_maybe_add_test_mode_admin_bar_link( $wp_admin_bar ) {
         'id'     => 'edd-store-menu',
         'title'  => sprintf( __( 'Store Status: %s', 'easy-digital-downloads' ), '<span class="edd-mode edd-mode-' . esc_attr( $mode ) . '">' . $text . '</span>' ),
         'parent' => false,
-        'href'   => add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-settings',
-			'tab'       => 'gateways'
-		), admin_url( 'edit.php' ) )
+        'href'   => edd_get_admin_url( array(
+			'page' => 'edd-settings',
+			'tab'  => 'gateways'
+		) )
 	) );
 }
 add_action( 'admin_bar_menu', 'edd_maybe_add_test_mode_admin_bar_link', 9999 );

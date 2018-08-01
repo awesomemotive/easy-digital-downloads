@@ -448,11 +448,10 @@ class EDD_Base_Log_List_Table extends WP_List_Table {
 		$start_date = $this->get_filtered_start_date();
 		$end_date   = $this->get_filtered_end_date();
 		$download   = $this->get_filtered_download();
-		$clear_url  = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-tools',
-			'tab'       => 'logs'
-		), admin_url( 'edit.php' ) ); ?>
+		$clear_url  = edd_get_admin_url( array(
+			'page' => 'edd-tools',
+			'tab'  => 'logs'
+		) ); ?>
 
 		<span id="edd-type-filter">
 			<?php $this->log_views(); ?>

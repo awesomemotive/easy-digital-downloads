@@ -1072,10 +1072,9 @@ function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $cont
 		return $url;
 	}
 
-	return add_query_arg( array(
-		'post_type' => 'download',
-		'page'      => 'edd-payment-history',
-		'view'      => 'view-order-details',
-		'id'        => $post_id
-	), admin_url( 'edit.php' ) );
+	return edd_get_admin_url( array(
+		'page' => 'edd-payment-history',
+		'view' => 'view-order-details',
+		'id'   => $post_id
+	) );
 }

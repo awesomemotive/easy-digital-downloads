@@ -48,12 +48,11 @@ function edd_handle_order_item_change( $request = array() ) {
 	// Update order item
 	if ( ! empty( $data ) ) {
 		edd_update_order_item( $request['order_item'], $data );
-		edd_redirect( add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
-			'id'        => absint( $request['id'] )
-		), admin_url( 'edit.php' ) ) );
+		edd_redirect( edd_get_admin_url( array(
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
+			'id'   => absint( $request['id'] )
+		) ) );
 	}
 }
 add_action( 'edd_handle_order_item_change', 'edd_handle_order_item_change' );
@@ -355,13 +354,12 @@ function edd_update_payment_details( $data = array() ) {
 
 	do_action( 'edd_updated_edited_purchase', $order_id );
 
-	edd_redirect( add_query_arg( array(
-		'post_type'   => 'download',
+	edd_redirect( edd_get_admin_url( array(
 		'page'        => 'edd-payment-history',
 		'view'        => 'view-order-details',
 		'edd-message' => 'payment-updated',
 		'id'          => $order_id
-	), admin_url( 'edit.php' ) ) );
+	) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 

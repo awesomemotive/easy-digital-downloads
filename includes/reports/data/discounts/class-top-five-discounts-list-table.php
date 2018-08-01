@@ -161,12 +161,11 @@ class Top_Five_Discounts_List_Table extends \WP_List_Table {
 	public function get_base_url() {
 
 		// Remove some query arguments
-		$base = remove_query_arg( edd_admin_removable_query_args(), admin_url( 'edit.php' ) );
+		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
 		// Add base query args
 		return add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-discounts',
+			'page' => 'edd-discounts',
 		), $base );
 	}
 

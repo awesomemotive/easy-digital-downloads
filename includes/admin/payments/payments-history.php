@@ -105,10 +105,9 @@ function edd_payment_history_page() {
 			? sanitize_key( $_GET['type'] )
 			: 'order';
 
-		$admin_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history'
-		), admin_url( 'edit.php' ) ); ?>
+		$admin_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history'
+		) ); ?>
 
 		<div class="wrap">
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
