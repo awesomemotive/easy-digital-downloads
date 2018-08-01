@@ -220,7 +220,7 @@ class Order_Adjustments_Table extends \WP_List_Table {
 	public function column_amount( $order_adjustment ) {
 		$currency = edd_get_order( $order_adjustment->object_id )->currency;
 
-		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->amount );
+		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->total );
 	}
 
 	/**
