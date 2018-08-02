@@ -2064,21 +2064,23 @@ function edd_refund_order( $order_id = 0, $data = array() ) {
 	// Check if any overrides were supplied.
 	if ( ! empty( $data ) ) {
 		if ( isset( $data['amount'] ) && ! empty( $data['amount'] ) ) {
-
-			// Ensure relationships (items) are not cloned because an overridden
-			// amount we don't know how to retroactively apply this to items.
-			$clone_relationships = false;
-
 			$amount = floatval( $data['amount'] );
+
+			// Ensure relationships (items) are not cloned because we don't know
+			// how to retroactively apply an arbitrary amount to items.
+			$clone_relationships = false;
 
 			// Block attempts to refund more than the order total.
 			if ( $amount > $order->total ) {
 				return false;
 			}
 
+			if ( $amount === $order->total ) {
+				$clone_relationships = true;
+
 			// Add a credit adjustment if the amount is a fixed amount.
-			if ( $amount !== $order->total ) {
-				$difference = absint( $order->total - $amount );
+			} else {
+				$difference = floatval( $order->total - $amount );
 
 				$order_data['total'] = edd_negate_amount( $amount );
 
@@ -2096,6 +2098,8 @@ function edd_refund_order( $order_id = 0, $data = array() ) {
 
 		// Apply any adjustments.
 		if ( isset( $data['adjustments'] ) && is_array( $data['adjustments'] ) ) {
+			$total_discounted = 0.00;
+
 			foreach ( $data['adjustments'] as $adjustment ) {
 				$defaults = array(
 					'type_id'     => 0,
@@ -2116,6 +2120,26 @@ function edd_refund_order( $order_id = 0, $data = array() ) {
 						if ( ! $discount ) {
 							continue;
 						}
+
+						// Flat discount.
+						if ( EDD_Discount::FLAT === $discount->get_type() ) {
+							$amount = floatval( $discount->amount );
+
+							edd_add_order_adjustment( array(
+								'object_type' => 'order',
+								'object_id'   => $new_order_id,
+								'type_id'     => $discount->id,
+								'type'        => 'discount',
+								'description' => sanitize_text_field( $discount->code ),
+								'subtotal'    => $amount,
+								'total'       => $amount,
+							) );
+
+						// Percent discount.
+						} elseif ( EDD_Discount::PERCENT === $discount->get_type() ) {
+
+						}
+
 						break;
 					case 'credit':
 						edd_add_order_adjustment( array(
@@ -2128,6 +2152,9 @@ function edd_refund_order( $order_id = 0, $data = array() ) {
 							'tax'         => floatval( $adjustment['tax'] ),
 							'total'       => floatval( $adjustment['total'] ),
 						) );
+
+						$order_data['total'] -= floatval( $adjustment['total'] );
+
 						break;
 				}
 			}
@@ -2214,6 +2241,9 @@ function edd_refund_order( $order_id = 0, $data = array() ) {
 		// Trigger actions to run.
 		edd_update_order_status( $new_order_id, 'partially_refunded' );
 	}
+
+	// Update the order if any data has changed.
+	edd_update_order( $new_order_id, $order_data );
 
 	/**
 	 * Fires when an order has been refunded.
