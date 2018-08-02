@@ -81,7 +81,7 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 			'to'       => __( 'To', 'easy-digital-downloads' ),
 			'gross'    => __( 'Gross', 'easy-digital-downloads' ),
 			'net'      => __( 'Net', 'easy-digital-downloads' ),
- 		);
+		);
 	}
 
 	/**
@@ -96,13 +96,13 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 
 		$data = array();
 
-		$tax_rates = edd_get_tax_rates( 'object' );
+		$tax_rates = edd_get_tax_rates( array(), OBJECT );
 
 		foreach ( $tax_rates as $tax_rate ) {
-			$location = edd_get_country_name( $tax_rate->name );
+			$location = edd_get_country_name( $tax_rate->country );
 
-			if ( ! empty( $tax_rate->description ) ) {
-				$location .= ' &mdash; ' . edd_get_state_name( $tax_rate->name, $tax_rate->description );
+			if ( ! empty( $tax_rate->region ) ) {
+				$location .= ' &mdash; ' . edd_get_state_name( $tax_rate->country, $tax_rate->region );
 			}
 
 			$from = empty( $tax_rate->start_date ) || '0000-00-00 00:00:00' === $tax_rate->start_date
@@ -113,8 +113,8 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 				? '&mdash;'
 				: edd_date_i18n( EDD()->utils->date( $tax_rate->end_date, null, true )->endOfDay()->timestamp );
 
-			$region = ! empty( $tax_rate->description )
-				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->description ) )
+			$region = ! empty( $tax_rate->region )
+				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->region ) )
 				: '';
 
 			// Date query.

@@ -99,16 +99,17 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 
 		// Fetch all the tax rates from the database.
 		// The region is not passed in deliberately in order to check for country-wide tax rates.
-		$tax_rates = edd_get_tax_rates( 'object', 'active', array(
-			'name' => $country,
-		) );
+		$tax_rates = edd_get_tax_rates( array(
+			'country' => $country,
+			'status'  => 'active',
+		), OBJECT );
 
 		// Save processing if only one tax rate is returned.
 		if ( 1 === count( $tax_rates ) ) {
 			$tax_rate = $tax_rates[0];
 
-			if ( $tax_rate->name === $country && $tax_rate->description === $region ) {
-				$rate = number_format( $tax_rate->amount, 4 );
+			if ( $tax_rate->country === $country && $tax_rate->region === $region ) {
+				$rate = number_format( $tax_rate->rate, 4 );
 			}
 		}
 
@@ -117,15 +118,15 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 
 				// Countrywide tax rate.
 				if ( 'country' === $tax_rate->scope ) {
-					$rate = number_format( $tax_rate->amount, 4 );
+					$rate = number_format( $tax_rate->rate, 4 );
 
 				// Regional tax rate.
 				} else {
-					if ( empty( $tax_rate->description ) || strtolower( $region ) !== strtolower( $tax_rate->description ) ) {
+					if ( empty( $tax_rate->region ) || strtolower( $region ) !== strtolower( $tax_rate->region ) ) {
 						continue;
 					}
 
-					$regional_rate = $tax_rate->amount;
+					$regional_rate = $tax_rate->rate;
 
 					if ( ( 0 !== $regional_rate || ! empty( $regional_rate ) ) && '' !== $regional_rate ) {
 						$rate = number_format( $regional_rate, 4 );

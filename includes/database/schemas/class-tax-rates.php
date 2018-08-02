@@ -45,7 +45,7 @@ class Tax_Rates extends Base {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'draft',
+			'default'    => 'active',
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true

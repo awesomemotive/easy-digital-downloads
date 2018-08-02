@@ -111,11 +111,11 @@ function edd_count_tax_rates( $args = array() ) {
  *            Added $args parameter.
  *
  * @param array  $args   Query arguments.
- * @param string $output Type of data to output. Default `array`.
+ * @param string $output Optional. Type of data to output. Any of ARRAY_N | OBJECT.
  *
  * @return array|\EDD\Tax_Rates\Tax_Rate[] Tax rates.
  */
-function edd_get_tax_rates( $args = array(), $output = 'array' ) {
+function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 
 	if ( isset( $args['type'] ) && 'active' === $args['type'] ) {
 		add_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
@@ -135,7 +135,7 @@ function edd_get_tax_rates( $args = array(), $output = 'array' ) {
 
 	$tax_rates->query( $r );
 
-	if ( 'object' === $output ) {
+	if ( OBJECT === $output ) {
 		return $tax_rates->items;
 	}
 

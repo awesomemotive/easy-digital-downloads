@@ -101,7 +101,7 @@ class Discount extends Base {
 		$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
 
 		if ( $expected === $query ) {
-			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_discounts} WHERE type = 'discount' GROUP BY post_status";
+			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_discounts} GROUP BY post_status";
 		}
 
 		return $query;

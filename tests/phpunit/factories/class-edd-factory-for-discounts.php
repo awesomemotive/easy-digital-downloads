@@ -3,10 +3,6 @@ namespace EDD\Tests\Factory;
 
 class Discount extends \WP_UnitTest_Factory_For_Thing {
 
-	function __construct( $factory = null ) {
-		parent::__construct( $factory );
-	}
-
 	/**
 	 * Stub out copy of parent method for IDE type hinting purposes.
 	 *
