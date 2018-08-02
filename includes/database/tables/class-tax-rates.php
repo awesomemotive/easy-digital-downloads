@@ -58,7 +58,7 @@ final class Tax_Rates extends Base {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
-			status varchar(20) NOT NULL default '',
+			status varchar(20) NOT NULL default 'active',
 			country varchar(200) NOT NULL default '',
 			region varchar(200) NOT NULL default '',
 			scope varchar(20) NOT NULL default 'region',

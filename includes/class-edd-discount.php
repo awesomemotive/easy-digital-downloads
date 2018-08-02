@@ -18,13 +18,13 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Objects\Discount instead of EDD_DB_Discount
  *
  * @property int $id
  * @property string $name
  * @property string $code
  * @property string $status
- * @property string $amount_type
+ * @property string $type
  * @property float $amount
  * @property array $product_reqs
  * @property string $scope
@@ -80,11 +80,11 @@ class EDD_Discount extends Discount {
 	/**
 	 * Discount Type (Percentage or Flat Amount).
 	 *
-	 * @since 3.0
+	 * @since 2.7
 	 * @access protected
 	 * @var string
 	 */
-	protected $amount_type = null;
+	protected $type = null;
 
 	/**
 	 * Discount Amount.
@@ -532,7 +532,7 @@ class EDD_Discount extends Discount {
 
 		/**
 		 * Some object vars need to be setup manually as the values need to be
-		 * pulled in from the `edd_adjustmentmeta` table.
+		 * pulled in from the `edd_discountmeta` table.
 		 */
 		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
 		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
@@ -660,7 +660,7 @@ class EDD_Discount extends Discount {
 		 * @param string $code Discount type (percent or flat amount).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_type', $this->amount_type, $this->id );
+		return apply_filters( 'edd_get_discount_type', $this->type, $this->id );
 	}
 
 	/**
@@ -1131,14 +1131,6 @@ class EDD_Discount extends Discount {
 				$this->delete_meta( 'product_requirement' );
 			}
 		}
-
-		// Switch `type` to `amount_type`
-		if ( ! isset( $args['amount_type'] ) && ! empty( $args['type'] ) && 'discount' !== $args['type'] ) {
-			$args['amount_type'] = $args['type'];
-		}
-
-		// Force `type` to `discount`
-		$args['type'] = 'discount';
 
 		/**
 		 * Fires before the discount has been updated in the database.
@@ -1650,7 +1642,7 @@ class EDD_Discount extends Discount {
 		// Start off setting the amount as the base price.
 		$amount = $base_price;
 
-		if ( 'flat' === $this->amount_type ) {
+		if ( 'flat' === $this->type ) {
 			$amount = $base_price - $this->amount;
 
 			if ( $amount < 0 ) {

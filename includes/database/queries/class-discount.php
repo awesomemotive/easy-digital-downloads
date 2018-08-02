@@ -78,7 +78,7 @@ class Discount extends Base {
 	 * @access protected
 	 * @var mixed
 	 */
-	protected $item_shape = '\\EDD\\Database\\Objects\\Discount';
+	protected $item_shape = 'EDD_Discount';
 
 	/** Cache *****************************************************************/
 

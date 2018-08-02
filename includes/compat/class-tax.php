@@ -92,12 +92,12 @@ class Tax extends Base {
 
 			// Check if the tax rate exists.
 			} else {
-				$rate = edd_get_tax_rate( array(
-					'fields'      => 'ids',
-					'name'        => $tax_rate['country'],
-					'description' => $region,
-					'scope'       => $scope,
-				), 'object' );
+				$rate = edd_get_tax_rates( array(
+					'fields'  => 'ids',
+					'country' => $tax_rate['country'],
+					'region'  => $region,
+					'scope'   => $scope,
+				), OBJECT );
 
 				// Tax rate exists.
 				if ( 1 === count( $rate ) ) {
