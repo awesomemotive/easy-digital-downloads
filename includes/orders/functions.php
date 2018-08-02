@@ -2124,9 +2124,9 @@ function edd_refund_order( $order_id = 0, $data = array() ) {
 							'type_id'     => absint( $adjustment['type_id'] ),
 							'type'        => 'credit',
 							'description' => sanitize_text_field( $adjustment['description'] ),
-							'subtotal'    => sanitize_text_field( $adjustment['subtotal'] ),
-							'tax'         => sanitize_text_field( $adjustment['tax'] ),
-							'total'       => sanitize_text_field( $adjustment['total'] ),
+							'subtotal'    => floatval( $adjustment['subtotal'] ),
+							'tax'         => floatval( $adjustment['tax'] ),
+							'total'       => floatval( $adjustment['total'] ),
 						) );
 						break;
 				}
