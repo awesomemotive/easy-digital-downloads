@@ -186,7 +186,6 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
-
 		if ( edd_prices_include_tax() ) {
 			$pre_tax = ( $amount / ( 1 + $rate ) );
 			$tax     = $amount - $pre_tax;
