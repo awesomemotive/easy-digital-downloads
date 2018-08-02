@@ -40,8 +40,8 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-name"><?php _e( 'Name', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input name="name" required="required" id="edd-name" type="text" value="" />
-						<p class="description"><?php _e( 'The name of this discount.', 'easy-digital-downloads' ); ?></p>
+						<input name="name" required="required" id="edd-name" type="text" value="" placeholder="<?php esc_html_e( 'Summer Sale', 'easy-digital-downloads' ); ?>" />
+						<p class="description"><?php _e( 'The name of this discount. Customers will see this on checkout.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -52,25 +52,12 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" required="required" id="edd-code" name="code" value="" pattern="[a-zA-Z0-9-_]+" />
-						<p class="description"><?php _e( 'Enter a code for this discount, such as <code>10PERCENT</code>. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
+						<input type="text" required="required" id="edd-code" name="code" class="code" value="" pattern="[a-zA-Z0-9-_]+" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
+						<p class="description"><?php _e( 'The code customers will enter to apply this discount. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
 				<?php do_action( 'edd_add_discount_form_before_type' ); ?>
-
-				<tr>
-					<th scope="row" valign="top">
-						<label for="edd-amount-type"><?php _e( 'Type', 'easy-digital-downloads' ); ?></label>
-					</th>
-					<td>
-						<select name="amount_type" id="edd-amount-type">
-							<option value="percent"><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
-							<option value="flat"><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
-						</select>
-						<p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'easy-digital-downloads' ); ?></p>
-					</td>
-				</tr>
 
 				<?php do_action( 'edd_add_discount_form_before_amount' ); ?>
 
@@ -79,9 +66,16 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-amount"><?php _e( 'Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" required="required" class="edd-price-field" id="edd-amount" name="amount" value="" />
-						<p class="description edd-amount-description flat-discount" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'easy-digital-downloads' ), edd_get_currency() ); ?></p>
-						<p class="description edd-amount-description percent-discount"><?php _e( 'Enter the discount percentage. 10 = 10%', 'easy-digital-downloads' ); ?></p>
+						<span class="edd-amount-type-wrapper">
+							<span class="edd-amount-type-select-wrapper">
+								<select name="amount_type" id="edd-amount-type">
+									<option value="percent"><?php _e( '%', 'easy-digital-downloads' ); ?></option>
+									<option value="flat"><?php _e( '$', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</span>
+							<input type="text" required="required" class="edd-price-field" id="edd-amount" name="amount" value="" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>"/>
+						</span>
+						<p class="description"><?php _e( 'The amount as a percentage or flat rate. Cannot be left blank.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -118,7 +112,7 @@ $minutes      = edd_get_minute_values();
 								</label>
 							</p>
 						</div>
-						<p class="description"><?php printf( __( 'Select %s relevant to this discount. If left blank, this discount can be used on any product.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
+						<p class="description"><?php printf( __( '%s this discount can only be applied to. Leave blank for any.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
 
@@ -137,7 +131,7 @@ $minutes      = edd_get_minute_values();
 							'chosen'      => true,
 							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 						) ); ?>
-						<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
+						<p class="description"><?php printf( __( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
 
@@ -172,7 +166,7 @@ $minutes      = edd_get_minute_values();
 							'show_option_all'  => false
 						) );
 						?>
-						<p class="description"><?php _e( 'Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'easy-digital-downloads' ); ?></p>
+						<p class="description"><?php _e( 'Pick the date this discount will start on. Leave blank for no start date.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -207,7 +201,7 @@ $minutes      = edd_get_minute_values();
 							'show_option_all'  => false
 						) );
 						?>
-						<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank.', 'easy-digital-downloads' ); ?></p>
+						<p class="description"><?php _e( 'Pick the date this discount will expire on. Leave blank to never expire.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -218,8 +212,8 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="" />
-						<p class="description"><?php _e( 'The minimum dollar amount that must be in the cart before this discount can be used. Leave blank for no minimum.', 'easy-digital-downloads' ); ?></p>
+						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
+						<p class="description"><?php _e( 'The minimum subtotal of item prices in a cart before this discount may be applied.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -230,8 +224,8 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-max-uses"><?php _e( 'Max Uses', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" id="edd-max-uses" name="max_uses" value="" />
-						<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'easy-digital-downloads' ); ?></p>
+						<input type="text" id="edd-max-uses" name="max_uses" value="" placeholder="<?php esc_html_e( 'Unlimited', 'easy-digital-downloads' ); ?>" />
+						<p class="description"><?php _e( 'The maximum number of times this discount can be used.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -243,7 +237,7 @@ $minutes      = edd_get_minute_values();
 					</th>
 					<td>
 						<input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"/>
-						<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'easy-digital-downloads' ); ?></span>
+						<span class="description"><?php _e( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ); ?></span>
 					</td>
 				</tr>
 			</tbody>
