@@ -1370,15 +1370,7 @@ jQuery(document).ready(function ($) {
 	var EDD_Discount = {
 
 		init : function() {
-			this.type_select();
 			this.product_requirements();
-		},
-
-		type_select : function() {
-			$('#edd-amount-type').change(function() {
-				$('.edd-amount-description').hide();
-				$('.edd-amount-description.' + $( this ).val()).show();
-			});
 		},
 
 		product_requirements : function() {
