@@ -172,7 +172,13 @@ function edd_is_odd( $int ) {
  */
 function edd_get_file_extension( $str ) {
 	$parts = explode( '.', $str );
-	return end( $parts );
+	$file_extension = end( $parts );
+
+	if ( false !== strpos( $file_extension, '?' ) ) {
+		$file_extension = substr( $file_extension, 0, strpos( $file_extension, '?' ) );
+	}
+
+	return $file_extension;
 }
 
 /**
