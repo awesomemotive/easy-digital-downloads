@@ -715,6 +715,12 @@ h2.nav-tab-wrapper.edd-tab-clear {
 	margin-top: -14px;
 }
 
+#edd_product_settings .inside strong .edd-help-tip {
+	float: right;
+	font-size: 20px;
+	line-height: 1.3;
+}
+
 
 /* Payment History Styles
 -------------------------------------------------------------- */
