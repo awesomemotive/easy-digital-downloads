@@ -2323,3 +2323,33 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
 		'total'       => floatval( $data['total'] ),
 	) );
 }
+
+/**
+ * Calculate order total. This method is used to calculate the total of an order
+ * by also taking into account any refunds/partial refunds.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return float $total Order total.
+ */
+function edd_get_order_total( $order_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return 0;
+	}
+
+	$total = $wpdb->get_var( $wpdb->prepare( "
+		SELECT SUM(total)
+		FROM {$wpdb->edd_orders}
+		WHERE id = %d OR parent = %d
+	", $order_id, $order_id ) );
+
+	$total = null === $total
+		? 0.00
+		: floatval( $total );
+
+	return $total;
+}
