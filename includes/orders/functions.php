@@ -2411,3 +2411,32 @@ function edd_get_order_total( $order_id = 0 ) {
 
 	return $total;
 }
+
+/**
+ * Check order can be refunded and is within the refund window.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if refundable, false otherwise.
+ */
+function edd_is_order_refundable( $order_id = 0 ) {
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	// Bail if order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
+	// Return true if a refund window hasn't been set meaning a refundable date
+	// is not available.
+	if ( '0000-00-00 00:00:00' === $order->date_refundable ) {
+
+	}
+}
