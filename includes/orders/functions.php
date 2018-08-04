@@ -1945,7 +1945,7 @@ function edd_count_order_transactions( $args = array() ) {
  *
  * @param int   $order_id Order ID.
  *
- * @return boolean True if refund was successful, false otherwise.
+ * @return bool True if refund was successful, false otherwise.
  */
 function edd_refund_order( $order_id = 0 ) {
 	global $wpdb;
@@ -2146,7 +2146,7 @@ function edd_refund_order( $order_id = 0 ) {
  *                              to orders.
  * }
  *
- * @return boolean True if partial refund was successful, false otherwise.
+ * @return bool True if partial refund was successful, false otherwise.
  */
 function edd_refund_order_item( $order_item_id = 0, $data = array() ) {
 
@@ -2291,6 +2291,11 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
 		return false;
 	}
 
+	// Bail if the order total is 0 or will drop below 0.
+	if ( 0 === edd_get_order_total( $order_id ) || 0 > ( edd_get_order_total( $order_id ) - floatval( $data['total'] ) ) ) {
+		return false;
+	}
+
 	/** Insert order *********************************************************/
 
 	$order_data = array(
@@ -2322,6 +2327,8 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
 		'subtotal'    => floatval( $data['subtotal'] ),
 		'total'       => floatval( $data['total'] ),
 	) );
+
+	return true;
 }
 
 /**
@@ -2332,7 +2339,7 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
  * @param int $order_id    Order ID.
  * @param int $discount_id Discount ID.
  *
- * @return int|false New order ID if successful, false otherwise.
+ * @return bool True if successful, false otherwise.
  */
 function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 
@@ -2349,6 +2356,30 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 	if ( ! $order || ! $discount ) {
 		return false;
 	}
+
+	// Fetch the current order total (including all refunds).
+	$current_total = edd_get_order_total( $order_id );
+
+	// Bail if the total is already 0.
+	if ( 0 === $current_total ) {
+		return false;
+	}
+
+	// Ensure the discount can be used.
+	if ( ! edd_validate_discount( $discount_id, wp_parse_id_list( wp_list_pluck( $order->items, 'id' ) ) ) ) {
+		return false;
+	}
+
+	// Percent discount.
+	if ( EDD_Discount::PERCENT === $discount->get_type() ) {
+
+
+	// Flat discount.
+	} else {
+
+	}
+
+	return true;
 }
 
 /**
