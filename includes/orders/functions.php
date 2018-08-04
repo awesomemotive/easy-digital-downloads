@@ -2325,6 +2325,33 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
 }
 
 /**
+ * Retroactively apply a discount code to an order.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id    Order ID.
+ * @param int $discount_id Discount ID.
+ *
+ * @return int|false New order ID if successful, false otherwise.
+ */
+function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
+
+	// Bail if no order ID or discount ID was passed.
+	if ( empty( $order_id ) || empty( $discount_id ) ) {
+		return false;
+	}
+
+	// Fetch from the database.
+	$order    = edd_get_order( $order_id );
+	$discount = edd_get_discount( $discount_id );
+
+	// Bail if either of the objects were not found.
+	if ( ! $order || ! $discount ) {
+		return false;
+	}
+}
+
+/**
  * Calculate order total. This method is used to calculate the total of an order
  * by also taking into account any refunds/partial refunds.
  *
