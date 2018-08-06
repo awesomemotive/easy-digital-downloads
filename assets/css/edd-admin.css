@@ -418,10 +418,6 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
-.edd-amount-type-wrapper {
-	position: relative;
-}
-
 .edd-amount-type-select-wrapper {
 	position: absolute;
 	width: 45px;
