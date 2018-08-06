@@ -418,10 +418,6 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
-.edd-amount-type-wrapper {
-	position: relative;
-}
-
 .edd-amount-type-select-wrapper {
 	position: absolute;
 	width: 45px;
@@ -429,6 +425,7 @@ textarea[name="edd-note"] {
 	background: #fafafa;
 	opacity: 0.9;
 	overflow: hidden;
+	cursor: pointer;
 }
 
 .edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
@@ -713,6 +710,12 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 #edd_product_settings .inside div:first-child strong {
 	margin-top: -14px;
+}
+
+#edd_product_settings .inside strong .edd-help-tip {
+	float: left;
+	font-size: 20px;
+	line-height: 1.3;
 }
 
 
