@@ -2434,9 +2434,34 @@ function edd_is_order_refundable( $order_id = 0 ) {
 		return false;
 	}
 
-	// Return true if a refund window hasn't been set meaning a refundable date
-	// is not available.
-	if ( '0000-00-00 00:00:00' === $order->date_refundable ) {
-
+	// Only completed orders can be refunded.
+	if ( 'publish' !== $order->status ) {
+		return false;
 	}
+
+	// Refund dates may not have been set retroactively so we need to calculate it manually.
+	if ( '0000-00-00 00:00:00' === $order->date_refundable ) {
+		$refund_window = absint( edd_get_option( 'refund_window', 30 ) );
+
+		// Refund window is infinite.
+		if ( 0 === $refund_window ) {
+			return true;
+		} else {
+			$completed_date = \Carbon\Carbon::parse( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() );
+
+			$date_refundable = $completed_date->addDays( $refund_window );
+		}
+
+	// Parse date using Carbon
+	} else {
+		$date_refundable = \Carbon\Carbon::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
+	}
+
+	// Bail if we have passed the refund date.
+	if ( $date_refundable->isPast() ) {
+		return false;
+	}
+
+	// If we have reached here, every other check holds so the order is refundable.
+	return true;
 }
