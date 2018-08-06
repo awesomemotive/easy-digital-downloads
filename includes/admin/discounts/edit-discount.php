@@ -100,8 +100,8 @@ $minutes              = edd_get_minute_values();
 						<span class="edd-amount-type-wrapper">
 							<span class="edd-amount-type-select-wrapper">
 								<select name="amount_type" id="edd-amount-type">
-									<option value="percent" <?php selected( $type, 'percent' ); ?>><?php _e( 'Percentage', 'easy-digital-downloads' ); ?></option>
-									<option value="flat"<?php selected( $type, 'flat' ); ?>><?php _e( 'Flat amount', 'easy-digital-downloads' ); ?></option>
+									<option value="percent" <?php selected( $type, 'percent' ); ?>><?php _e( '%', 'easy-digital-downloads' ); ?></option>
+									<option value="flat"<?php selected( $type, 'flat' ); ?>><?php _e( '$', 'easy-digital-downloads' ); ?></option>
 								</select>
 							</span>
 							<input type="text" required="required" class="edd-price-field" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_format_amount( $discount->amount ) ); ?>" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>" />
@@ -260,6 +260,18 @@ $minutes              = edd_get_minute_values();
                     </td>
                 </tr>
 
+                <?php do_action( 'edd_edit_discount_form_before_use_once', $discount->id, $discount ); ?>
+
+                <tr>
+                    <th scope="row" valign="top">
+                        <label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
+                    </th>
+                    <td>
+                        <input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"<?php checked( true, $single_use ); ?>/>
+                        <span class="description"><?php _e( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ); ?></span>
+                    </td>
+                </tr>
+
                 <?php do_action( 'edd_edit_discount_form_before_status', $discount->id, $discount ); ?>
 
                 <tr>
@@ -272,18 +284,6 @@ $minutes              = edd_get_minute_values();
                             <option value="inactive"<?php selected( $discount->status, 'inactive' ); ?>><?php _e( 'Inactive', 'easy-digital-downloads' ); ?></option>
                         </select>
                         <p class="description"><?php _e( 'The status of this discount code.', 'easy-digital-downloads' ); ?></p>
-                    </td>
-                </tr>
-
-                <?php do_action( 'edd_edit_discount_form_before_use_once', $discount->id, $discount ); ?>
-
-                <tr>
-                    <th scope="row" valign="top">
-                        <label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
-                    </th>
-                    <td>
-                        <input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"<?php checked( true, $single_use ); ?>/>
-                        <span class="description"><?php _e( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ); ?></span>
                     </td>
                 </tr>
 
