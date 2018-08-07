@@ -2412,6 +2412,38 @@ function edd_get_order_total( $order_id = 0 ) {
 }
 
 /**
+ * Calculate order item total. This method is used to calculate the total of an
+ * order item by also taking into account any refunds/partial refunds.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id   Order ID.
+ * @param int $product_id Product ID.
+ *
+ * @return float $total Order total.
+ */
+function edd_get_order_item_total( $order_id = 0, $product_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return 0;
+	}
+
+	$total = $wpdb->get_var( $wpdb->prepare( "
+		SELECT SUM(total)
+		FROM {$wpdb->edd_order_items}
+		WHERE order_id = %d AND product_id = %d
+	", $order_id, $product_id ) );
+
+	$total = null === $total
+		? 0.00
+		: floatval( $total );
+
+	return $total;
+}
+
+/**
  * Check order can be refunded and is within the refund window.
  *
  * @since 3.0
