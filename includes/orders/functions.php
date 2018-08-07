@@ -1961,8 +1961,7 @@ function edd_refund_order( $order_id = 0 ) {
 	// Fetch order.
 	$order = edd_get_order( $order_id );
 
-	// Bail if order was not found or it has been revoked.
-	if ( ! $order || 'revoked' === $order->status ) {
+	if ( ! $order || ! ! edd_is_order_refundable( $order_id ) ) {
 		return false;
 	}
 
