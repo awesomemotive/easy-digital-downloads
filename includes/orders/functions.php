@@ -2369,14 +2369,88 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 		return false;
 	}
 
-	// Percent discount.
-	if ( EDD_Discount::PERCENT === $discount->get_type() ) {
+	/** Generate new order number ********************************************/
 
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", 0 ) );
 
-	// Flat discount.
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+				// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+			// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
 	} else {
-
+		$number = $last_order->id . $refund_suffix . '1';
 	}
+
+	// Build new order data.
+	$order_data = array(
+		'parent'       => $order->id,
+		'order_number' => $number,
+		'type'         => 'refund',
+		'status'       => 'partially_refunded',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+	);
+
+	$new_order_id = edd_add_order( $order_data );
+
+	$order_items = array();
+
+	foreach ( $order->items as $order_item ) {
+		$total     = edd_get_order_item_total( $order->id, $order_item->product_id );
+		$reduction = $discount->get_discounted_amount( $total );
+
+		if ( 0 === $total ) {
+			continue;
+		}
+
+		$item             = $order_item->to_array();
+		$item['order_id'] = $new_order_id;
+		$item['quantity'] = 0; // Quantity is set to 0 to allow for accurate reporting.
+		$item['amount']   = 0;
+		$item['subtotal'] = 0;
+		$item['discount'] = $reduction;
+		$item['total']    = edd_negate_amount( $reduction );
+		unset( $item['id'] );
+		unset( $item['adjustments'] );
+
+		$order_items[] = $item;
+	}
+
+	array_map( 'edd_add_order_item', $order_items );
 
 	return true;
 }
