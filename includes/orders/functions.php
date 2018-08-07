@@ -2125,34 +2125,15 @@ function edd_refund_order( $order_id = 0 ) {
 }
 
 /**
- * Refund an order item. An order item can be fully or partially refunded. By
- * default, it assumes the entire value of the order item is being refunded
- * unless an amount or adjustment is passed.
+ * Refund an order item entirely.
  *
  * @since 3.0
  *
  * @param int $order_item_id Order Item ID.
- * @param array $data {
- *     Refund data. Optional.
- *
- *     @type float $amount      Refund amount. Leave empty for full refund.
- *                              If an amount is supplied and this does not match
- *                              the order item total then a credit adjustment for the
- *                              difference is automatically applied to the refunded
- *                              order item.
- *     @type array $adjustments Adjustments to add to the refunded order (e.g. credit).
- *                              See `edd_add_order_adjustment()` for accepted
- *                              arguments. If adjustments are applied but an
- *                              amount is not passed then the amount is
- *                              automatically calculated. Any discounts that
- *                              are passed will be ignored as discounts cannot
- *                              be retroactively applied to order items; only
- *                              to orders.
- * }
- *
- * @return bool True if partial refund was successful, false otherwise.
+ * @return bool True if refund was successful, false otherwise.
  */
-function edd_refund_order_item( $order_item_id = 0, $data = array() ) {
+function edd_refund_order_item( $order_item_id = 0 ) {
+	global $wpdb;
 
 	// Bail if no order item ID was passed.
 	if ( empty( $order_item_id ) ) {
@@ -2189,13 +2170,69 @@ function edd_refund_order_item( $order_item_id = 0, $data = array() ) {
 		return false;
 	}
 
-	// Update order item status.
-	edd_update_order_item( $order_item_id, array(
-		'status' => 'refunded',
-	) );
+	/** Generate new order number ********************************************/
 
-	// Trigger actions to run.
-	edd_update_order_status( $order->id, 'partial_refund' );
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", 0 ) );
+
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+				// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+			// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $last_order->id . $refund_suffix . '1';
+	}
+
+	/** Insert order *********************************************************/
+
+	$order_data = array(
+		'parent'       => $order->id,
+		'order_number' => $number,
+		'status'       => 'partially_refunded',
+		'type'         => 'refund',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+	);
+
+	// Order is inserted first to allow for conditional checks to run later and
+	// update the order, but we need an INSERT to be executed to generate a new
+	// order ID.
+	$new_order_id = edd_add_order( $order_data );
+
+	return true;
 }
 
 /**
