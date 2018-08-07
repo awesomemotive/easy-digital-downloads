@@ -2341,7 +2341,8 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
  * @return bool True if successful, false otherwise.
  */
 function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
-
+	global $wpdb;
+	
 	// Bail if no order ID or discount ID was passed.
 	if ( empty( $order_id ) || empty( $discount_id ) ) {
 		return false;
