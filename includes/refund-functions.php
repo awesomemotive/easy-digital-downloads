@@ -27,3 +27,38 @@ function edd_get_refundability_types() {
 		'nonrefundable' => __( 'Non-Refundable', 'easy-digital-downloads' )
 	) );
 }
+
+/**
+ * Calculate refund date.
+ *
+ * @since 3.0
+ *
+ * @param string $date        Date order was completed (Accepts UTC).
+ * @param int    $download_id Download ID.
+ *
+ * @return string|false Date refundable (in UTC), false otherwise.
+ */
+function edd_get_refund_date( $date = '', $download_id = 0 ) {
+
+	// Bail if no date was passed.
+	if ( empty( $date ) ) {
+		return false;
+	}
+
+	$refund_window = absint( edd_get_option( 'refund_window', 30 ) );
+
+	// Refund window is infinite.
+	if ( 0 === $refund_window ) {
+		return false;
+	}
+
+	if ( ! empty( $download_id ) ) {
+		$refund_window = edd_get_download_refund_window( $download_id );
+
+		$date_refundable = \Carbon\Carbon::parse( $date, 'UTC' )->addDays( $refund_window );
+	} else {
+		$date_refundable = \Carbon\Carbon::parse( $date, 'UTC' )->addDays( $refund_window );
+	}
+
+	return $date_refundable;
+}

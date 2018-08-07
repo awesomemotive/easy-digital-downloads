@@ -39,27 +39,30 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	$order = edd_get_order( $order_id );
 
-	$completed_date = '0000-00-00 00:00:00' === $order->date_completed ? '' : $order->date_completed;
-	$customer_id    = $order->customer_id;
-	$amount         = $order->total;
-	$order_items    = $order->items;
+	$completed_date = '0000-00-00 00:00:00' === $order->date_completed
+		? ''
+		: $order->date_completed;
+
+	$customer_id = $order->customer_id;
+	$amount      = $order->total;
+	$order_items = $order->items;
 
 	do_action( 'edd_pre_complete_purchase', $order_id );
 
 	if ( is_array( $order_items ) ) {
 
-	    // Increase purchase count and earnings
+		// Increase purchase count and earnings.
 		foreach ( $order_items as $item ) {
-			/** @var EDD\Orders\Order_Item $item */
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $item->product_id );
 
-			// Increase earnings and fire actions once per quantity number
+			// Increase earnings and fire actions once per quantity number.
 			for ( $i = 0; $i < $item->quantity; $i++ ) {
 
 				// Ensure these actions only run once, ever.
 				if ( empty( $completed_date ) ) {
+
 					// For backwards compatibility purposes, we need to construct an array and pass it
 					// to edd_complete_download_purchase.
 					$item_fees = array();
@@ -110,13 +113,11 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 			$fees = $order->get_fees();
 			foreach ( $fees as $fee ) {
-				/** @var EDD\Orders\Order_Adjustment $fee */
-
-				if ( $fee->amount > 0 ) {
+				if ( $fee->total > 0 ) {
 					continue;
 				}
 
-				$increase_earnings += $fee->amount;
+				$increase_earnings += $fee->total;
 			}
 
 			// Increase the earnings for this download ID
@@ -149,10 +150,17 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	// Ensure this action only runs once ever
 	if ( empty( $completed_date ) || '0000-00-00 00:00:00' === $completed_date ) {
+		$date = EDD()->utils->date()->format( 'mysql' );
+
+		$date_refundable = edd_get_refund_date( $date );
+		$date_refundable = false === $date_refundable
+			? ''
+			: $date_refundable;
 
 		// Save the completed date
 		edd_update_order( $order_id, array(
-			'date_completed' => EDD()->utils->date()->format( 'mysql' ),
+			'date_completed'  => $date,
+			'date_refundable' => $date_refundable,
 		) );
 
 		// Required for backwards compatibility.
