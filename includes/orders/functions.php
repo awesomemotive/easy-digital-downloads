@@ -1961,7 +1961,11 @@ function edd_refund_order( $order_id = 0 ) {
 	// Fetch order.
 	$order = edd_get_order( $order_id );
 
-	if ( ! $order || ! edd_is_order_refundable( $order_id ) ) {
+	if ( ! $order ) {
+		return false;
+	}
+
+	if ( ! edd_is_order_refundable( $order_id ) ) {
 		return false;
 	}
 
@@ -2528,6 +2532,7 @@ function edd_get_order_item_total( $order_id = 0, $product_id = 0 ) {
  * @return bool True if refundable, false otherwise.
  */
 function edd_is_order_refundable( $order_id = 0 ) {
+	global $wpdb;
 
 	// Bail if no order ID was passed.
 	if ( empty( $order_id ) ) {
@@ -2543,6 +2548,17 @@ function edd_is_order_refundable( $order_id = 0 ) {
 
 	// Only completed orders can be refunded.
 	if ( 'publish' !== $order->status ) {
+		return false;
+	}
+
+	// Check order hasn't already been refunded.
+	$refunded_order = $wpdb->get_var( $wpdb->prepare( "
+		SELECT COUNT(id) 
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d AND status = %s"
+	, $order_id, esc_sql( 'refunded' ) ) );
+
+	if ( 0 < absint( $refunded_order ) ) {
 		return false;
 	}
 
