@@ -30,7 +30,6 @@ class EDD_Session {
 	 */
 	private $session;
 
-
 	/**
 	 * Whether to use PHP $_SESSION or WP_Session
 	 *
@@ -49,7 +48,6 @@ class EDD_Session {
 	 */
 	private $prefix = '';
 
-
 	/**
 	 * Get things started
 	 *
@@ -62,12 +60,10 @@ class EDD_Session {
 
 		$this->use_php_sessions = $this->use_php_sessions();
 
-		if( $this->use_php_sessions ) {
+		if ( $this->use_php_sessions ) {
 
-			if( is_multisite() ) {
-
+			if ( is_multisite() ) {
 				$this->prefix = '_' . get_current_blog_id();
-
 			}
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
@@ -75,12 +71,11 @@ class EDD_Session {
 
 		} else {
 
-			if( ! $this->should_start_session() ) {
+			if ( ! $this->should_start_session() ) {
 				return;
 			}
 
 			// Use WP_Session (default)
-
 			if ( ! defined( 'WP_SESSION_COOKIE' ) ) {
 				define( 'WP_SESSION_COOKIE', 'edd_wp_session' );
 			}
@@ -95,16 +90,14 @@ class EDD_Session {
 			}
 
 			add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
-			add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
-
+			add_filter( 'wp_session_expiration',         array( $this, 'set_expiration_time'         ), 99999 );
 		}
 
-		if ( empty( $this->session ) && ! $this->use_php_sessions ) {
-			add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
-		} else {
-			add_action( 'init', array( $this, 'init' ), -1 );
-		}
+		$hook = ( empty( $this->session ) && ! $this->use_php_sessions )
+			? 'plugins_loaded'
+			: 'init';
 
+		add_action( $hook, array( $this, 'init' ), -1 );
 	}
 
 	/**
@@ -115,18 +108,21 @@ class EDD_Session {
 	 */
 	public function init() {
 
-		if( $this->use_php_sessions ) {
-			$this->session = isset( $_SESSION['edd' . $this->prefix ] ) && is_array( $_SESSION['edd' . $this->prefix ] ) ? $_SESSION['edd' . $this->prefix ] : array();
+		if ( $this->use_php_sessions ) {
+			$key           = 'edd' . $this->prefix;
+			$this->session = isset( $_SESSION[ $key ] ) && is_array( $_SESSION[ $key ] )
+				? $_SESSION[ $key ]
+				: array();
 		} else {
 			$this->session = WP_Session::get_instance();
 		}
 
 		$use_cookie = $this->use_cart_cookie();
-		$cart       = $this->get( 'edd_cart' );
+		$cart       = $this->get( 'edd_cart'     );
 		$purchase   = $this->get( 'edd_purchase' );
 
 		if ( $use_cookie ) {
-			if( ! empty( $cart ) || ! empty( $purchase ) ) {
+			if ( ! empty( $cart ) || ! empty( $purchase ) ) {
 				$this->set_cart_cookie();
 			} else {
 				$this->set_cart_cookie( false );
@@ -135,7 +131,6 @@ class EDD_Session {
 
 		return $this->session;
 	}
-
 
 	/**
 	 * Retrieve session ID
@@ -146,7 +141,6 @@ class EDD_Session {
 	public function get_id() {
 		return $this->session->session_id;
 	}
-
 
 	/**
 	 * Retrieve a session variable
@@ -187,7 +181,6 @@ class EDD_Session {
 				} else {
 					$return = json_decode( $this->session[ $key ], true );
 				}
-
 			}
 		}
 
@@ -213,9 +206,8 @@ class EDD_Session {
 			$this->session[ $key ] = esc_attr( $value );
 		}
 
-		if( $this->use_php_sessions ) {
-
-			$_SESSION['edd' . $this->prefix ] = $this->session;
+		if ( $this->use_php_sessions ) {
+			$_SESSION[ 'edd' . $this->prefix ] = $this->session;
 		}
 
 		return $this->session[ $key ];
@@ -231,14 +223,16 @@ class EDD_Session {
 	 * @return void
 	 */
 	public function set_cart_cookie( $set = true ) {
-		if( ! headers_sent() ) {
-			if( $set ) {
-				@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
-			} else {
-				if ( isset($_COOKIE['edd_items_in_cart']) ) {
-					@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
-				}
-			}
+
+		// Bail if headers already sent
+		if ( headers_sent() ) {
+			return;
+		}
+
+		if ( $set ) {
+			@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
+		} elseif ( isset( $_COOKIE['edd_items_in_cart'] ) ) {
+			@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 		}
 	}
 
@@ -250,7 +244,7 @@ class EDD_Session {
 	 * @return int
 	 */
 	public function set_expiration_variant_time( $exp ) {
-		return ( 30 * 60 * 23 );
+		return HOUR_IN_SECONDS * 23;
 	}
 
 	/**
@@ -261,7 +255,7 @@ class EDD_Session {
 	 * @return int Cookie expiration time
 	 */
 	public function set_expiration_time( $exp ) {
-		return ( 30 * 60 * 24 );
+		return HOUR_IN_SECONDS * 24;
 	}
 
 	/**
@@ -285,19 +279,16 @@ class EDD_Session {
 		if ( ! $edd_use_php_sessions ) {
 
 			// Attempt to detect if the server supports PHP sessions
-			if( function_exists( 'session_start' ) ) {
+			if ( function_exists( 'session_start' ) ) {
 
 				$this->set( 'edd_use_php_sessions', 1 );
 
-				if( $this->get( 'edd_use_php_sessions' ) ) {
-
+				if ( $this->get( 'edd_use_php_sessions' ) ) {
 					$ret = true;
 
 					// Set the database option
 					update_option( 'edd_use_php_sessions', true );
-
 				}
-
 			}
 
 		} else {
@@ -340,29 +331,27 @@ class EDD_Session {
 
 		$start_session = true;
 
-		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
+		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
 
 			$blacklist = $this->get_blacklist();
 			$uri       = ltrim( $_SERVER[ 'REQUEST_URI' ], '/' );
 			$uri       = untrailingslashit( $uri );
 
-			if( in_array( $uri, $blacklist ) ) {
+			if ( in_array( $uri, $blacklist ) ) {
 				$start_session = false;
 			}
 
-			if( false !== strpos( $uri, 'feed=' ) ) {
+			if ( false !== strpos( $uri, 'feed=' ) ) {
 				$start_session = false;
 			}
 
-			if( false !== strpos( $uri, 'wp_scrape_key' ) ) {
+			if ( false !== strpos( $uri, 'wp_scrape_key' ) ) {
 				// Starting sessions while saving the file editor can break the save process, so don't start
 				$start_session = false;
 			}
-
 		}
 
-		return apply_filters( 'edd_start_session', $start_session );
-
+		return (bool) apply_filters( 'edd_start_session', $start_session );
 	}
 
 	/**
@@ -387,8 +376,8 @@ class EDD_Session {
 		// Look to see if WordPress is in a sub folder or this is a network site that uses sub folders
 		$folder = str_replace( network_home_url(), '', get_site_url() );
 
-		if( ! empty( $folder ) ) {
-			foreach( $blacklist as $path ) {
+		if ( ! empty( $folder ) ) {
+			foreach ( $blacklist as $path ) {
 				$blacklist[] = $folder . '/' . $path;
 			}
 		}
@@ -399,15 +388,25 @@ class EDD_Session {
 	/**
 	 * Starts a new session if one hasn't started yet.
 	 */
-	public function maybe_start_session() {
+   public function maybe_start_session() {
 
-		if( ! $this->should_start_session() ) {
+		// Bail if should not start session
+		if ( ! $this->should_start_session() ) {
 			return;
 		}
 
-		if( ! session_id() && ! headers_sent() ) {
+		// Bail if headers already sent
+		if ( headers_sent() ) {
+			return;
+		}
+
+		// Start if old version of PHP & no session ID exists
+		if ( version_compare( PHP_VERSION, '5.4', '<' ) && ! session_id() ) {
+			session_start();
+
+		// Start if modern PHP and session-status is not active
+		} elseif ( defined( 'PHP_SESSION_ACTIVE' ) && ( session_status() !== PHP_SESSION_ACTIVE ) ) {
 			session_start();
 		}
 	}
-
 }
