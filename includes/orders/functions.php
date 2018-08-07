@@ -1961,7 +1961,7 @@ function edd_refund_order( $order_id = 0 ) {
 	// Fetch order.
 	$order = edd_get_order( $order_id );
 
-	if ( ! $order || ! ! edd_is_order_refundable( $order_id ) ) {
+	if ( ! $order || ! edd_is_order_refundable( $order_id ) ) {
 		return false;
 	}
 
@@ -2036,6 +2036,7 @@ function edd_refund_order( $order_id = 0 ) {
 		'payment_key'  => strtolower( md5( uniqid() ) ),
 		'subtotal'     => edd_negate_amount( $order->subtotal ),
 		'discount'     => edd_negate_amount( $order->discount ),
+		'tax'          => edd_negate_amount( $order->tax ),
 		'total'        => edd_negate_amount( $order->total ),
 	);
 
@@ -2342,7 +2343,7 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
  */
 function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 	global $wpdb;
-	
+
 	// Bail if no order ID or discount ID was passed.
 	if ( empty( $order_id ) || empty( $discount_id ) ) {
 		return false;
