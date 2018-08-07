@@ -2447,12 +2447,10 @@ function edd_is_order_refundable( $order_id = 0 ) {
 		if ( 0 === $refund_window ) {
 			return true;
 		} else {
-			$completed_date = \Carbon\Carbon::parse( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() );
-
-			$date_refundable = $completed_date->addDays( $refund_window );
+			$date_refundable = \Carbon\Carbon::parse( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->addDays( $refund_window );
 		}
 
-	// Parse date using Carbon
+	// Parse date using Carbon.
 	} else {
 		$date_refundable = \Carbon\Carbon::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
 	}
