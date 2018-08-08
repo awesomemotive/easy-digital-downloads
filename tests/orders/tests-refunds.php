@@ -89,6 +89,31 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::edd_refund_order_item
+	 */
+	public function test_refund_order_item() {
+		$order_items = edd_get_order( self::$orders[1] )->items;
+
+		// Refund order item entirely.
+		$refunded_order = edd_refund_order_item( $order_items[0]->id );
+
+		// Fetch refunded order.
+		$o = edd_get_order( $refunded_order );
+
+		// Check a valid Order object was returned.
+		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
+
+		// Verify status.
+		$this->assertSame( 'partially_refunded', $o->status );
+
+		// Verify type.
+		$this->assertSame( 'refund', $o->type );
+
+		// Verify total.
+		$this->assertSame( -120.0, floatval( $o->total ) );
+	}
+
+	/**
 	 * @covers ::edd_get_refundability_types
 	 */
 	public function test_get_refundability_types() {
@@ -105,7 +130,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_refund_date() {
 
-		// Arbitrary date to ensure unit tests don't fail if this test runs for longer than 1 second.
+		// Static date to ensure unit tests don't fail if this test runs for longer than 1 second.
 		$date = '2010-01-01 00:00:00';
 
 		$this->assertSame( Carbon::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );

@@ -1988,7 +1988,7 @@ function edd_refund_order( $order_id = 0 ) {
 		FROM {$wpdb->edd_orders}
 		WHERE parent = %d
 		ORDER BY id DESC
-		LIMIT 1", 0 ) );
+		LIMIT 1", $order_id ) );
 
 	/**
 	 * Filter the suffix applied to order numbers for refunds.
@@ -2019,7 +2019,7 @@ function edd_refund_order( $order_id = 0 ) {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
 	} else {
-		$number = $last_order->id . $refund_suffix . '1';
+		$number = $order->get_number() . $refund_suffix . '1';
 	}
 
 	/** Insert order *********************************************************/
@@ -2129,7 +2129,7 @@ function edd_refund_order( $order_id = 0 ) {
  * @since 3.0
  *
  * @param int $order_item_id Order Item ID.
- * @return bool True if refund was successful, false otherwise.
+ * @return int|false New order ID if successful, false otherwise.
  */
 function edd_refund_order_item( $order_item_id = 0 ) {
 	global $wpdb;
@@ -2175,7 +2175,7 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 		FROM {$wpdb->edd_orders}
 		WHERE parent = %d
 		ORDER BY id DESC
-		LIMIT 1", 0 ) );
+		LIMIT 1", $order->id ) );
 
 	/**
 	 * Filter the suffix applied to order numbers for refunds.
@@ -2206,7 +2206,7 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
 	} else {
-		$number = $last_order->id . $refund_suffix . '1';
+		$number = $order->get_number() . $refund_suffix . '1';
 	}
 
 	/** Insert order *********************************************************/
@@ -2224,6 +2224,10 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 		'mode'         => $order->mode,
 		'currency'     => $order->currency,
 		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'subtotal'     => edd_negate_amount( $order_item->subtotal ),
+		'discount'     => edd_negate_amount( $order_item->discount ),
+		'tax'          => edd_negate_amount( $order_item->tax ),
+		'total'        => edd_negate_amount( $order_item->total ),
 	);
 
 	// Order is inserted first to allow for conditional checks to run later and
@@ -2269,7 +2273,7 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 		) );
 	}
 
-	return true;
+	return $new_order_id;
 }
 
 /**
