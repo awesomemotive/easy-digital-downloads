@@ -44,9 +44,17 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 			'payment_key'     => md5( uniqid() ),
 			'subtotal'        => 100,
 			'discount'        => 5,
-			'tax'             => 20,
+			'tax'             => 25,
 			'total'           => 120,
 		) );
+
+		// Prime cache.
+		$o = edd_get_order( self::$order );
+
+		// Prime item cache.
+		$items = $o->items;
+
+		self::$order_item = $items[0]->id;
 
 		edd_add_order_adjustment( array(
 			'object_type' => 'order',
@@ -66,7 +74,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 120.0, edd_get_order_total( self::$order ) );
 	}
 
-	public function test_get_order_item_total_should_be_100() {
-		$this->assertSame( 100.0, edd_get_order_item_total( self::$order_item ) );
+	public function test_get_order_item_total_should_be_120() {
+		$this->assertSame( 120.0, edd_get_order_item_total( array( self::$order ), 1 ) );
 	}
 }

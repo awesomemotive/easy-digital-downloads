@@ -2732,24 +2732,23 @@ function edd_get_order_total( $order_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int $order_id   Order ID.
- * @param int $product_id Product ID.
+ * @param array $order_ids  Order IDs.
+ * @param int   $product_id Product ID.
  *
  * @return float $total Order total.
  */
-function edd_get_order_item_total( $order_id = 0, $product_id = 0 ) {
+function edd_get_order_item_total( $order_ids = array(), $product_id = 0 ) {
 	global $wpdb;
 
-	// Bail if no order ID was passed.
-	if ( empty( $order_id ) ) {
+	// Bail if no order IDs were passed.
+	if ( empty( $order_ids ) ) {
 		return 0;
 	}
 
-	$total = $wpdb->get_var( $wpdb->prepare( "
-		SELECT SUM(total)
-		FROM {$wpdb->edd_order_items}
-		WHERE order_id = %d AND product_id = %d
-	", $order_id, $product_id ) );
+	$query   = "SELECT SUM(total) FROM {$wpdb->edd_order_items} WHERE order_id IN (%s) AND product_id = %d";
+	$ids     = join( ',', array_map( 'absint', $order_ids ) );
+	$prepare = sprintf( $query, $ids, $product_id );
+	$total   = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
 
 	$total = null === $total
 		? 0.00
@@ -2787,13 +2786,12 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Check order hasn't already been refunded.
-	$refunded_order = $wpdb->get_var( $wpdb->prepare( "
-		SELECT COUNT(id) 
-		FROM {$wpdb->edd_orders}
-		WHERE parent = %d AND status = %s"
-	, $order_id, esc_sql( 'refunded' ) ) );
+	$query          = "SELECT COUNT(id)  FROM {$wpdb->edd_orders} WHERE parent = %d AND status = %s";
+	$prepare        = sprintf( $query, $order_id, esc_sql( 'refunded' ) );
+	$refunded_order = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
 
-	if ( 0 < absint( $refunded_order ) ) {
+	// Ensure already total is not 0.
+	if ( 0 === absint( $refunded_order ) ) {
 		return false;
 	}
 
