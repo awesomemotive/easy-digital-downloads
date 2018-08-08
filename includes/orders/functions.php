@@ -2232,6 +2232,44 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 	// order ID.
 	$new_order_id = edd_add_order( $order_data );
 
+	/** Insert order item ****************************************************/
+
+	$order_item_data = array(
+		'order_id'     => $new_order_id,
+		'product_id'   => $order_item->product_id,
+		'product_name' => $order_item->product_name,
+		'price_id'     => $order_item->price_id,
+		'cart_index'   => $order_item->cart_index,
+		'type'         => 'download',
+		'status'       => 'refunded',
+		'quantity'     => edd_negate_amount( $order_item->quantity ),
+		'amount'       => edd_negate_amount( $order_item->amount ),
+		'subtotal'     => edd_negate_amount( $order_item->subtotal ),
+		'discount'     => edd_negate_amount( $order_item->discount ),
+		'tax'          => edd_negate_amount( $order_item->tax ),
+		'total'        => edd_negate_amount( $order_item->total ),
+	);
+
+	$new_order_item_id = edd_add_order_item( $order_item_data );
+
+	/** Insert adjustments ***************************************************/
+
+	foreach ( $order_item->adjustments as $adjustment ) {
+		if ( 'tax_rate' === $adjustment->type ) {
+			continue;
+		}
+
+		edd_add_order_adjustment( array(
+			'object_type' => 'order_item',
+			'object_id'   => $new_order_item_id,
+			'type'        => $adjustment->type,
+			'description' => $adjustment->description,
+			'subtotal'    => edd_negate_amount( $adjustment->subtotal ),
+			'tax'         => edd_negate_amount( $adjustment->tax ),
+			'total'       => edd_negate_amount( $adjustment->total ),
+		) );
+	}
+
 	return true;
 }
 
