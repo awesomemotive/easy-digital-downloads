@@ -1,6 +1,8 @@
 <?php
 namespace EDD\Orders;
 
+use Carbon\Carbon;
+
 /**
  * Refund Tests.
  *
@@ -84,5 +86,28 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 
 		// Verify total.
 		$this->assertSame( -120.0, floatval( $o->total ) );
+	}
+
+	/**
+	 * @covers ::edd_get_refundability_types
+	 */
+	public function test_get_refundability_types() {
+		$expected = array(
+			'refundable'    => __( 'Refundable', 'easy-digital-downloads' ),
+			'nonrefundable' => __( 'Non-Refundable', 'easy-digital-downloads' ),
+		);
+
+		$this->assertEqualSetsWithIndex( $expected, edd_get_refundability_types() );
+	}
+
+	/**
+	 * @covers ::edd_get_refund_date()
+	 */
+	public function test_get_refund_date() {
+
+		// Arbitrary date to ensure unit tests don't fail if this test runs for longer than 1 second.
+		$date = '2010-01-01 00:00:00';
+
+		$this->assertSame( Carbon::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
 	}
 }
