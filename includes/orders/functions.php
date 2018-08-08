@@ -2410,7 +2410,7 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
 		'total'       => floatval( $data['total'] ),
 	) );
 
-	return true;
+	return $new_order_id;
 }
 
 /**
