@@ -2347,12 +2347,12 @@ function edd_apply_order_credit( $order_id = 0, $data = array() ) {
 				$number = $last_order->order_number;
 				++$number;
 
-				// First revision to order.
+			// First revision to order.
 			} else {
 				$number = $last_order->order_number . $refund_suffix . '1';
 			}
 
-			// Append to ID.
+		// Append to ID.
 		} else {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
@@ -2490,12 +2490,12 @@ function edd_apply_order_item_credit( $order_item_id = 0, $data = array() ) {
 				$number = $last_order->order_number;
 				++$number;
 
-				// First revision to order.
+			// First revision to order.
 			} else {
 				$number = $last_order->order_number . $refund_suffix . '1';
 			}
 
-			// Append to ID.
+		// Append to ID.
 		} else {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
@@ -2581,7 +2581,7 @@ function edd_apply_order_item_credit( $order_item_id = 0, $data = array() ) {
  * @param int $order_id    Order ID.
  * @param int $discount_id Discount ID.
  *
- * @return bool True if successful, false otherwise.
+ * @return int|false New order ID if successful, false otherwise.
  */
 function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 	global $wpdb;
@@ -2640,12 +2640,12 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 				$number = $last_order->order_number;
 				++$number;
 
-				// First revision to order.
+			// First revision to order.
 			} else {
 				$number = $last_order->order_number . $refund_suffix . '1';
 			}
 
-			// Append to ID.
+		// Append to ID.
 		} else {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
@@ -2696,7 +2696,7 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 
 	array_map( 'edd_add_order_item', $order_items );
 
-	return true;
+	return $new_order_id;
 }
 
 /**
