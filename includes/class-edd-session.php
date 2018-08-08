@@ -388,7 +388,7 @@ class EDD_Session {
 	/**
 	 * Starts a new session if one hasn't started yet.
 	 */
-   public function maybe_start_session() {
+	public function maybe_start_session() {
 
 		// Bail if should not start session
 		if ( ! $this->should_start_session() ) {
