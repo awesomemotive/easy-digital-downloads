@@ -60,5 +60,5 @@ function edd_get_refund_date( $date = '', $download_id = 0 ) {
 		$date_refundable = \Carbon\Carbon::parse( $date, 'UTC' )->addDays( $refund_window );
 	}
 
-	return $date_refundable;
+	return $date_refundable->toDateTimeString();
 }
