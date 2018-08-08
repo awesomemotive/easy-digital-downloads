@@ -114,6 +114,13 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::edd_apply_order_credit
+	 */
+	function test_apply_order_credit() {
+		
+	}
+
+	/**
 	 * @covers ::edd_get_refundability_types
 	 */
 	public function test_get_refundability_types() {
