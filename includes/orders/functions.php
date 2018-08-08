@@ -1943,9 +1943,8 @@ function edd_count_order_transactions( $args = array() ) {
  *
  * @since 3.0
  *
- * @param int   $order_id Order ID.
- *
- * @return bool True if refund was successful, false otherwise.
+ * @param int $order_id Order ID.
+ * @return int|false New order ID if successful, false otherwise.
  */
 function edd_refund_order( $order_id = 0 ) {
 	global $wpdb;
@@ -2121,7 +2120,7 @@ function edd_refund_order( $order_id = 0 ) {
 	 */
 	do_action( 'edd_refund_order', $order_id, $new_order_id, floatval( $order->total ) );
 
-	return true;
+	return $new_order_id;
 }
 
 /**
@@ -2786,12 +2785,11 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Check order hasn't already been refunded.
-	$query          = "SELECT COUNT(id)  FROM {$wpdb->edd_orders} WHERE parent = %d AND status = %s";
+	$query          = "SELECT COUNT(id) FROM {$wpdb->edd_orders} WHERE parent = %d AND status = '%s'";
 	$prepare        = sprintf( $query, $order_id, esc_sql( 'refunded' ) );
 	$refunded_order = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
 
-	// Ensure already total is not 0.
-	if ( 0 === absint( $refunded_order ) ) {
+	if ( 0 < absint( $refunded_order ) ) {
 		return false;
 	}
 

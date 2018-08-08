@@ -13,77 +13,76 @@ namespace EDD\Orders;
 class Refunds_Tests extends \EDD_UnitTestCase {
 
 	/**
-	 * Order fixture.
+	 * Orders fixture.
 	 *
-	 * @var int
+	 * @var array
 	 * @static
 	 */
-	protected static $order = 0;
-
-	/**
-	 * Order item fixture.
-	 *
-	 * @var int
-	 * @static
-	 */
-	protected static $order_item = 0;
+	protected static $orders = array();
 
 	/**
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$order = parent::edd()->order->create( array(
-			'status'          => 'publish',
-			'type'            => 'order',
-			'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
-			'email'           => 'guest@edd.local',
-			'ip'              => '10.0.0.1',
-			'gateway'         => 'stripe',
-			'mode'            => 'live',
-			'currency'        => 'USD',
-			'payment_key'     => md5( uniqid() ),
-			'subtotal'        => 100,
-			'discount'        => 5,
-			'tax'             => 25,
-			'total'           => 120,
-		) );
+		self::$orders = parent::edd()->order->create_many( 5 );
 
-		// Prime cache.
-		$o = edd_get_order( self::$order );
-
-		// Prime item cache.
-		$items = $o->items;
-
-		self::$order_item = $items[0]->id;
-
-		edd_add_order_adjustment( array(
-			'object_type' => 'order',
-			'object_id'   => self::$order,
-			'type'        => 'discount',
-			'description' => '5OFF',
-			'subtotal'    => 0,
-			'total'       => 5,
-		) );
+		foreach ( self::$orders as $order ) {
+			edd_add_order_adjustment( array(
+				'object_type' => 'order',
+				'object_id'   => $order,
+				'type'        => 'discount',
+				'description' => '5OFF',
+				'subtotal'    => 0,
+				'total'       => 5,
+			) );
+		}
 	}
 
 	/**
 	 * @covers ::edd_is_order_refundable
 	 */
 	public function test_is_order_refundable_should_return_true() {
-		$this->assertTrue( edd_is_order_refundable( self::$order ) );
+		$this->assertTrue( edd_is_order_refundable( self::$orders[0] ) );
 	}
 
 	/**
 	 * @covers ::edd_get_order_total
 	 */
 	public function test_get_order_total_should_be_120() {
-		$this->assertSame( 120.0, edd_get_order_total( self::$order ) );
+		$this->assertSame( 120.0, edd_get_order_total( self::$orders[0] ) );
 	}
 
 	/**
 	 * @covers ::edd_get_order_item_total
 	 */
 	public function test_get_order_item_total_should_be_120() {
-		$this->assertSame( 120.0, edd_get_order_item_total( array( self::$order ), 1 ) );
+		$this->assertSame( 120.0, edd_get_order_item_total( array( self::$orders[0] ), 1 ) );
+	}
+
+	/**
+	 * @covers ::edd_refund_order
+	 */
+	public function test_refund_order() {
+
+		// Refund order entirely.
+		$refunded_order = edd_refund_order( self::$orders[0] );
+
+		// Check that a new order ID was returned.
+		$this->assertGreaterThan( 0, $refunded_order );
+
+		// Fetch refunded order.
+		$o = edd_get_order( $refunded_order );
+
+		// Check a valid Order object was returned.
+		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
+
+		// Verify status.
+		$this->assertSame( 'refunded', $o->status );
+
+		// Verify type.
+		$this->assertSame( 'refund', $o->type );
+
+		// Verify total.
+		$this->assertSame( -120.0, floatval( $o->total ) );
 	}
 }

@@ -8,6 +8,9 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 
 		$this->default_generation_definitions = array(
 			'status'          => 'publish',
+			'type'            => 'order',
+			'date_completed'  => EDD()->utils->date( 'now' )->toDateTimeString(),
+			'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
 			'user_id'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'customer_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'email'           => new \WP_UnitTest_Generator_Sequence( 'user%d@edd.test' ),
