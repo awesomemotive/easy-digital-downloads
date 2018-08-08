@@ -2500,7 +2500,7 @@ function edd_apply_order_item_credit( $order_item_id = 0, $data = array() ) {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
 	} else {
-		$number = $last_order->id . $refund_suffix . '1';
+		$number = $order->id . $refund_suffix . '1';
 	}
 
 	// Parse the adjustment data.
@@ -2650,7 +2650,7 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
 	} else {
-		$number = $last_order->id . $refund_suffix . '1';
+		$number = $order->id . $refund_suffix . '1';
 	}
 
 	// Build new order data.
