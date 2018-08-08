@@ -203,6 +203,24 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::edd_apply_order_discount
+	 */
+	public function test_apply_order_discount() {
+		$discount_id = self::edd()->discount->create( array(
+			'name'   => '$5 Off',
+			'code'   => '5OFF',
+			'status' => 'active',
+			'type'   => 'flat',
+			'scope'  => 'global',
+			'amount' => 5,
+		) );
+
+		$refunded_order = edd_apply_order_discount( self::$orders[3], $discount_id );
+
+		$o = edd_get_order( $refunded_order );
+	}
+
+	/**
 	 * @covers ::edd_get_refundability_types
 	 */
 	public function test_get_refundability_types() {
