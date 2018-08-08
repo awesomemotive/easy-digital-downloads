@@ -66,14 +66,23 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		) );
 	}
 
+	/**
+	 * @covers ::edd_is_order_refundable
+	 */
 	public function test_is_order_refundable_should_return_true() {
 		$this->assertTrue( edd_is_order_refundable( self::$order ) );
 	}
 
+	/**
+	 * @covers ::edd_get_order_total
+	 */
 	public function test_get_order_total_should_be_120() {
 		$this->assertSame( 120.0, edd_get_order_total( self::$order ) );
 	}
 
+	/**
+	 * @covers ::edd_get_order_item_total
+	 */
 	public function test_get_order_item_total_should_be_120() {
 		$this->assertSame( 120.0, edd_get_order_item_total( array( self::$order ), 1 ) );
 	}
