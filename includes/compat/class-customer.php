@@ -138,8 +138,6 @@ class Customer extends Base {
 		add_filter( 'get_user_metadata',    array( $this, 'get_user_meta'    ), 99, 4 );
 		add_filter( 'update_user_metadata', array( $this, 'update_user_meta' ), 99, 5 );
 		add_filter( 'add_user_metadata',    array( $this, 'update_user_meta' ), 99, 5 );
-		add_filter( 'query',                array( $this, 'filter_customer_meta_id_column' ), 99, 1 );
-
 
 		/** Actions **********************************************************/
 		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10 );
@@ -311,42 +309,6 @@ class Customer extends Base {
 		}
 
 		return $check;
-	}
-
-	/**
-	 * Backwards compatibility layer for old `customer_id` column.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string  $query   SQL query.
-	 * @return string $request SQL query with column replaced.
-	 */
-	function filter_customer_meta_id_column( $query = '' ) {
-
-		// Get customer meta
-		$customer_meta = edd_get_component_interface( 'customer', 'meta' );
-
-		// Bail if no customer meta
-		if ( empty( $customer_meta ) ) {
-			return $query;
-		}
-
-		// Bail if not a customer meta query
-		if ( ! strpos( $query, $customer_meta->table_name ) ) {
-			return $query;
-		}
-
-		// Bail if not a customer ID query
-		if ( ! strpos( $query, 'customer_id' ) ) {
-			return $query;
-		}
-
-		// Replace, but also avoid double replacements
-		$replaced = str_replace( 'customer_id',         'edd_customer_id', $query );
-		$replaced = str_replace( 'edd_edd_customer_id', 'edd_customer_id', $replaced );
-
-		// Return
-		return $replaced;
 	}
 
 }
