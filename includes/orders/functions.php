@@ -2469,7 +2469,7 @@ function edd_apply_order_item_credit( $order_item_id = 0, $data = array() ) {
 		FROM {$wpdb->edd_orders}
 		WHERE parent = %d
 		ORDER BY id DESC
-		LIMIT 1", 0 ) );
+		LIMIT 1", $order->id ) );
 
 	/**
 	 * Filter the suffix applied to order numbers for refunds.
@@ -2619,7 +2619,7 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 		FROM {$wpdb->edd_orders}
 		WHERE parent = %d
 		ORDER BY id DESC
-		LIMIT 1", 0 ) );
+		LIMIT 1", $order->id ) );
 
 	/**
 	 * Filter the suffix applied to order numbers for refunds.
