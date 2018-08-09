@@ -468,10 +468,85 @@ class Stats {
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return string Average time for an order to be refunded.
+	 * @return string Average time for an order to be refunded in human readable format.
 	 */
 	public function get_average_refund_time( $query = array() ) {
-		// TODO: Implement as per partial refunds.
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'date_completed';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		$type_sql = $this->get_db()->prepare( 'AND o2.type = %s', esc_sql( 'refund' ) );
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
+				FROM {$this->query_vars['table']}
+				INNER JOIN wp_edd_orders o2 ON {$this->query_vars['table']}.id = o2.parent
+				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$time_to_refund = null === $result
+			? ''
+			: $result;
+
+		// Beginning of time.
+		$base = strtotime( '1970-01-01 00:00:00' );
+
+		if ( ! empty( $time_to_refund ) ) {
+			$time_to_refund = absint( $time_to_refund );
+
+			$intervals = array( 'year', 'month', 'day', 'hour', 'minute', 'second' );
+			$diffs     = array();
+
+			foreach ( $intervals as $interval ) {
+				$time = strtotime( '+1 ' . $interval, $base );
+
+				$add    = 1;
+				$looped = 0;
+
+				while ( $time_to_refund >= $time ) {
+					$add++;
+					$time = strtotime( '+' . $add . ' ' . $interval, $base );
+					$looped++;
+				}
+
+				$base               = strtotime( '+' . $looped . ' ' . $interval, $base );
+				$diffs[ $interval ] = $looped;
+			}
+
+			$count = 0;
+			$times = array();
+
+			foreach ( $diffs as $interval => $value ) {
+
+				// Keep precision to 2.
+				if ( $count >= 2 ) {
+					break;
+				}
+
+				// Add value and interval if value is bigger than 0.
+				if ( $value > 0 ) {
+					if ( 1 !== $value ) {
+						$interval .= 's';
+					}
+
+					// Add value and interval to times array.
+					$times[] = $value . ' ' . $interval;
+					$count ++;
+				}
+			}
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return empty( $time_to_refund )
+			? ''
+			: implode( ', ', $times );
 	}
 
 	/**
