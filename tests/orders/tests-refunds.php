@@ -184,9 +184,9 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( -20.0, floatval( $o->total ) );
 
 		// Verify adjustments
-		$this->assertCount( 1, $o->adjustments );
+		$this->assertCount( 1, $o->items[0]->adjustments );
 
-		$a = $o->adjustments;
+		$a = $o->items[0]->adjustments;
 		$a = $a[0];
 
 		// Verify type.
@@ -217,7 +217,40 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 
 		$refunded_order = edd_apply_order_discount( self::$orders[3], $discount_id );
 
+		// Fetch refunded order.
 		$o = edd_get_order( $refunded_order );
+
+		// Check a valid Order object was returned.
+		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
+
+		// Verify status.
+		$this->assertSame( 'partially_refunded', $o->status );
+
+		// Verify type.
+		$this->assertSame( 'refund', $o->type );
+
+		// Verify discount.
+		$this->assertSame( 5.0, floatval( $o->discount ) );
+
+		// Verify total.
+		$this->assertSame( -5.0, floatval( $o->total ) );
+
+		// Verify adjustments
+		$this->assertCount( 1, $o->adjustments );
+
+		$a = $o->adjustments[0];
+
+		// Verify type.
+		$this->assertSame( 'discount', $a->type );
+
+		// Verify subtotal.
+		$this->assertSame( 5.0, floatval( $a->subtotal ) );
+
+		// Verify total.
+		$this->assertSame( 5.0, floatval( $a->total ) );
+
+		// Verify order total.
+		$this->assertSame( 115.0, edd_get_order_total( self::$orders[3] ) );
 	}
 
 	/**

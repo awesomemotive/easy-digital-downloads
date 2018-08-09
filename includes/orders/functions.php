@@ -696,7 +696,8 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount,
-					'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
+					'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
+					'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
 				) );
 			}
 		}
@@ -2667,6 +2668,8 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 		'mode'         => $order->mode,
 		'currency'     => $order->currency,
 		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'discount'     => 0,
+		'total'        => 0,
 	);
 
 	$new_order_id = edd_add_order( $order_data );
@@ -2674,8 +2677,8 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 	$order_items = array();
 
 	foreach ( $order->items as $order_item ) {
-		$total     = edd_get_order_item_total( $order->id, $order_item->product_id );
-		$reduction = $discount->get_discounted_amount( $total );
+		$total     = edd_get_order_item_total( array( $order->id ), $order_item->product_id );
+		$reduction = floatval( $total - $discount->get_discounted_amount( $total ) );
 
 		if ( 0 === $total ) {
 			continue;
@@ -2691,10 +2694,25 @@ function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
 		unset( $item['id'] );
 		unset( $item['adjustments'] );
 
+		$order_data['discount'] += $reduction;
+		$order_data['total']    += edd_negate_amount( $reduction );
+
 		$order_items[] = $item;
 	}
 
 	array_map( 'edd_add_order_item', $order_items );
+
+	edd_add_order_adjustment( array(
+		'object_id'   => $new_order_id,
+		'object_type' => 'order',
+		'type_id'     => $discount_id,
+		'type'        => 'discount',
+		'description' => $discount->code,
+		'subtotal'    => $order_data['discount'],
+		'total'       => $order_data['discount'],
+	) );
+
+	edd_update_order( $new_order_id, $order_data );
 
 	return $new_order_id;
 }
