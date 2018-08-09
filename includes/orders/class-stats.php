@@ -1297,7 +1297,7 @@ class Stats {
 			} );
 		} elseif ( 'SUM' === $this->query_vars['function'] || 'AVG' === $this->query_vars['function'] ) {
 			array_walk( $result, function ( &$value ) {
-				$value->total = floatval( $value->total );
+				$value->total = floatval( abs( $value->total ) );
 			} );
 		}
 
