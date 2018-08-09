@@ -530,12 +530,10 @@ class Stats {
 
 				// Add value and interval if value is bigger than 0.
 				if ( $value > 0 ) {
-					if ( 1 !== $value ) {
-						$interval .= 's';
-					}
+					$interval = substr( $interval, 0, 1 );
 
 					// Add value and interval to times array.
-					$times[] = $value . ' ' . $interval;
+					$times[] = $value . $interval;
 					$count ++;
 				}
 			}
