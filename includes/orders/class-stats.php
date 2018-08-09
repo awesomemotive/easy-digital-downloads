@@ -544,7 +544,7 @@ class Stats {
 
 		return empty( $time_to_refund )
 			? ''
-			: implode( ', ', $times );
+			: implode( ' ', $times );
 	}
 
 	/**
