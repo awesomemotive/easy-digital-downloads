@@ -1156,10 +1156,10 @@ function edd_register_refunds_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
 							 FROM {$wpdb->edd_orders} o
-							 WHERE status = %s AND date_created >= %s AND date_created <= %s
+							 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s
 							 GROUP BY {$sql_clauses['groupby']}
 							 ORDER BY {$sql_clauses['orderby']} ASC",
-							esc_sql( 'refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
+							esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
 
 						$number = array();
 						$amount = array();
@@ -1212,7 +1212,7 @@ function edd_register_refunds_report( $reports ) {
 							}
 
 							$number[ $timestamp ][1] = $result->number;
-							$amount[ $timestamp ][1] = floatval( $result->amount );
+							$amount[ $timestamp ][1] = floatval( abs( $result->amount ) );
 						}
 
 						$number = array_values( $number );
