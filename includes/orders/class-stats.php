@@ -434,7 +434,13 @@ class Stats {
 	public function get_order_refund_amount( $query = array() ) {
 		$query['status'] = array( 'refunded', 'partially_refunded' );
 
-		return $this->get_order_earnings( $query );
+		// Request raw output so we can run `abs()` on the value.
+		$query['output'] = 'raw';
+
+		$retval = $this->get_order_earnings( $query );
+
+		// Format & return.
+		return edd_currency_filter( edd_format_amount( abs( $retval ) ) );
 	}
 
 	/**
