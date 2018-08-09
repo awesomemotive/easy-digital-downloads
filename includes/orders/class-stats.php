@@ -399,7 +399,7 @@ class Stats {
 	 * @return int Number of refunded orders.
 	 */
 	public function get_order_refund_count( $query = array() ) {
-		$query['status'] = array( 'refunded' );
+		$query['status'] = array( 'refunded', 'partially_refunded' );
 
 		return $this->get_order_count( $query );
 	}
@@ -432,7 +432,7 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'refunded' );
+		$query['status'] = array( 'refunded', 'partially_refunded' );
 
 		return $this->get_order_earnings( $query );
 	}
@@ -503,7 +503,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
+		$status_sql = $this->get_db()->prepare( 'AND status IN(%s, %s)', 'refunded', 'partially_refunded' );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
@@ -514,7 +514,7 @@ class Stats {
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$status_sql} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -524,7 +524,7 @@ class Stats {
 
 		if ( 'formatted' === $this->query_vars['output'] ) {
 			$total .= '%';
-			$total = esc_html( $total );
+			$total  = esc_html( $total );
 		}
 
 		// Reset query vars.
@@ -533,7 +533,7 @@ class Stats {
 		return $total;
 	}
 
-	/** Order Item ************************************************************/
+	/** Order Items **********************************************************/
 
 	/**
 	 * Calculate order item earnings.
