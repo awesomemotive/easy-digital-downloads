@@ -1090,7 +1090,10 @@ function edd_register_refunds_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_average_refund_time( array(
+							'range' => $filter['range'],
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
