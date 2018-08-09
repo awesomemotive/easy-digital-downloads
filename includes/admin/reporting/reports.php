@@ -1033,7 +1033,8 @@ function edd_register_refunds_report( $reports ) {
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles'  => array(
-					'refund_count_and_amount',
+					'refund_count',
+					'refund_amount',
 					'average_refund_amount',
 					'average_time_to_refund',
 					'refund_rate',
@@ -1045,25 +1046,40 @@ function edd_register_refunds_report( $reports ) {
 			'filters'   => array( 'products' ),
 		) );
 
-		$reports->register_endpoint( 'refund_count_and_amount', array(
-			'label' => __( 'Number / Amount', 'easy-digital-downloads' ),
+		$reports->register_endpoint( 'refund_count', array(
+			'label' => __( 'Number of Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-						$stats = new EDD\Orders\Stats();
+						$stats  = new EDD\Orders\Stats();
+						$number = $stats->get_order_refund_count( array(
+							'range' => $filter['range'],
+						) );
+						return apply_filters( 'edd_reports_refunds_refund_count_and_amount', esc_html( $number ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'refund_amount', array(
+			'label' => __( 'Total Refund Amount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats  = new EDD\Orders\Stats();
 						$amount = $stats->get_order_refund_amount( array(
 							'range'  => $filter['range'],
 							'output' => 'formatted',
 						) );
 
-						$number = $stats->get_order_refund_count( array(
-							'range' => $filter['range'],
-						) );
-
-						return apply_filters( 'edd_reports_refunds_refund_count_and_amount', esc_html( $number . ' / ' . $amount ) );
+						return apply_filters( 'edd_reports_refunds_refund_count_and_amount', esc_html( $amount ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
+						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1083,7 +1099,7 @@ function edd_register_refunds_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
+						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1101,7 +1117,7 @@ function edd_register_refunds_report( $reports ) {
 						) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
+						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1120,7 +1136,7 @@ function edd_register_refunds_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
+						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
