@@ -425,7 +425,6 @@ textarea[name="edd-note"] {
 	background: #fafafa;
 	opacity: 0.9;
 	overflow: hidden;
-	cursor: pointer;
 }
 
 .edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
@@ -1576,18 +1575,21 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 .edd-vertical-sections .edd-legacy-label {
-	font-size: 8px;
+	font-size: 7px;
+	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
-	padding: 3px 4px 4px;
+	vertical-align: middle;
+	padding: 2px 3px 3px 2px;
 	border-radius: 4px;
 	color: #fff;
-	background-color: #aaa;
+	background-color: #bbb;
+	border: 1px solid #999;
 	opacity: 0.5;
 	display: inline-block;
 	position: absolute;
-	top: 13px;
-	left: 10px;
+	top: 11px;
+	left: 6px;
 }
 
 .edd-reports-wrapper .postbox h3 {
@@ -1603,9 +1605,17 @@ td.edd_order_price {
 
 .edd-reports-wrapper form .edd-from-to-wrapper,
 .edd-reports-wrapper form .edd-select,
+.edd-reports-wrapper form .edd-label,
 .edd-reports-wrapper form input.button {
 	vertical-align: middle;
 	float: right;
+}
+
+.edd-reports-wrapper form .edd-label {
+	height: 29px;
+	line-height: 29px;
+	vertical-align: middle;
+	margin-left: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
