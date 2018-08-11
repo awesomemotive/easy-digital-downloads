@@ -1575,18 +1575,21 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 .edd-vertical-sections .edd-legacy-label {
-	font-size: 8px;
+	font-size: 7px;
+	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
-	padding: 3px 4px 4px;
+	vertical-align: middle;
+	padding: 2px 2px 3px 3px;
 	border-radius: 4px;
 	color: #fff;
-	background-color: #aaa;
+	background-color: #bbb;
+	border: 1px solid #999;
 	opacity: 0.5;
 	display: inline-block;
 	position: absolute;
-	top: 13px;
-	right: 10px;
+	top: 11px;
+	right: 6px;
 }
 
 .edd-reports-wrapper .postbox h3 {
@@ -1602,9 +1605,17 @@ td.edd_order_price {
 
 .edd-reports-wrapper form .edd-from-to-wrapper,
 .edd-reports-wrapper form .edd-select,
+.edd-reports-wrapper form .edd-label,
 .edd-reports-wrapper form input.button {
 	vertical-align: middle;
 	float: left;
+}
+
+.edd-reports-wrapper form .edd-label {
+	height: 29px;
+	line-height: 29px;
+	vertical-align: middle;
+	margin-right: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
