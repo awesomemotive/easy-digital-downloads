@@ -212,7 +212,7 @@ final class Init {
 			$reports->add_report( $report_id, array(
 				'label'            => $legacy_label,
 				'group'            => 'core',
-				'icon'             => 'info',
+				'icon'             => 'chart-area',
 				'priority'         => $priority,
 				'display_callback' => $callback
 			) );
