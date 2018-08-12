@@ -94,10 +94,15 @@ class Orders extends Base {
 					return $carry += $item;
 				} );
 
+				$type = 'refunded' === $result->post_status
+					? 'refund'
+					: 'order';
+
 				$order_data = array(
 					'parent'         => $result->post_parent,
 					'order_number'   => $order_number,
 					'status'         => $result->post_status,
+					'type'           => $type,
 					'date_created'   => $result->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_modified'  => $result->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_completed' => $date_completed,
