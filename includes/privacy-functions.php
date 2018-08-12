@@ -1136,7 +1136,7 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
  */
 function edd_register_privacy_erasers( $erasers = array() ) {
 
-	// The order of these matter, customer needs to be anonymized prior to the customer, so that the payment can adopt
+	// The order of these matter, customer needs to be anonymized prior to the customer, so that the order can adopt
 	// properties of the customer like email.
 
 	$erasers[] = array(
@@ -1205,14 +1205,13 @@ function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
-	$payments = edd_get_payments( array(
-		'customer' => $customer->id,
-		'output'   => 'payments',
-		'page'     => $page,
+	$orders = edd_get_orders( array(
+		'customer_id' => $customer->id,
+		'number'      => 30,
+		'offset'      => ( 30 * $page ) - 30,
 	) );
 
-	if ( empty( $payments ) ) {
-
+	if ( empty( $orders ) ) {
 		$message = 1 === $page
 			? sprintf( __( 'No orders found for %s.', 'easy-digital-downloads' ), $email_address )
 			: sprintf( __( 'All eligible orders anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address );
@@ -1229,8 +1228,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$items_retained = null;
 	$messages       = array();
 
-	foreach ( $payments as $payment ) {
-		$result = _edd_anonymize_payment( $payment->ID );
+	foreach ( $orders as $order ) {
+		$result = _edd_anonymize_payment( $order->id );
 
 		if ( ! is_null( $items_removed ) && $result['success'] ) {
 			$items_removed = true;
@@ -1255,6 +1254,7 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
  * Anonymize the file download logs.
  *
  * @since 2.9.2
+ * @since 3.0 Updated to use new query methods.
  *
  * @param string $email_address
  * @param int    $page
@@ -1267,20 +1267,12 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
 	$log_query = array(
-		'log_type'               => 'file_download',
-		'posts_per_page'         => 25,
-		'paged'                  => $page,
-		'update_post_meta_cache' => false,
-		'update_post_term_cache' => false,
-		'meta_query'             => array(
-			array(
-				'key'   => '_edd_log_customer_id',
-				'value' => $customer->id,
-			),
-		),
+		'customer_id' => $customer->id,
+		'number'      => 30,
+		'offset'      => ( 30 * $page ) - 30,
 	);
 
-	$logs = $edd_logs->get_connected_logs( $log_query );
+	$logs = edd_get_file_download_logs( $log_query );
 
 	if ( empty( $logs ) ) {
 		return array(
@@ -1292,8 +1284,9 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 	}
 
 	foreach ( $logs as $log ) {
-		$current_ip = get_post_meta( $log->ID, '_edd_log_ip', true );
-		update_post_meta( $log->ID, '_edd_log_ip', wp_privacy_anonymize_ip( $current_ip ) );
+		edd_update_file_download_log( $log->id, array(
+			'ip' => wp_privacy_anonymize_ip( $log->ip ),
+		) );
 
 		/**
 		 * Run further anonymization on a file download log
@@ -1341,20 +1334,12 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 	}
 
 	$log_query = array(
-		'log_type'               => 'api_access',
-		'posts_per_page'         => 25,
-		'paged'                  => $page,
-		'update_post_meta_cache' => false,
-		'update_post_term_cache' => false,
-		'meta_query'             => array(
-			array(
-				'key'   => '_edd_log_user',
-				'value' => $user->ID,
-			),
-		),
+		'user_id' => $user->ID,
+		'number'  => 30,
+		'offset'  => ( 30 * $page ) - 30,
 	);
 
-	$logs = $edd_logs->get_connected_logs( $log_query );
+	$logs = edd_get_api_request_logs( $log_query );
 
 	if ( empty( $logs ) ) {
 		return array(
@@ -1366,7 +1351,7 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 	}
 
 	foreach ( $logs as $log ) {
-		wp_delete_post( $log->ID );
+		edd_delete_api_request_log( $log->id );
 
 		/**
 		 * Run further actions on an api access log
@@ -1375,8 +1360,9 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 		 * to complete further actions.
 		 *
 		 * @since 2.9.2
+		 * @since 3.0 Updated to pass \EDD\Logs\Api_Request_Log object.
 		 *
-		 * @param WP_Post $log The WP_Post object for the log
+		 * @param \EDD\Logs\Api_Request_Log $log API request log object.
 		 */
 		do_action( 'edd_delete_api_access_log', $log );
 	}
