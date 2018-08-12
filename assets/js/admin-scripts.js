@@ -1209,6 +1209,28 @@ jQuery(document).ready(function ($) {
 
 				return false;
 			} );
+
+			$( '.edd-order-address-country' ).on( 'change', function() {
+				var select = $( this ),
+					data   = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
+						field_name: 'edd-order-address-country'
+					};
+
+				$.post( ajaxurl, data, function ( response ) {
+					$( 'select.edd-order-address-region' ).find( 'option:gt(0)' ).remove();
+
+					if ( 'nostates' !== response ) {
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd-order-address-region' );
+					}
+
+					$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
+				});
+
+				return false;
+			} );
 		},
 
 		reindex : function () {
