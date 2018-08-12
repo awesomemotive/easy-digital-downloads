@@ -277,7 +277,10 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	), $customer );
 
 	if ( empty( $should_anonymize_customer['should_anonymize'] ) ) {
-		return array( 'success' => false, 'message' => $should_anonymize_customer['message'] );
+		return array(
+			'success' => false,
+			'message' => $should_anonymize_customer['message'],
+		);
 	}
 
 	// Now we should look at payments this customer has associated, and if there are any payments that should not be modified,
@@ -569,7 +572,10 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 	$customer = new EDD_Customer( $email_address );
 
 	if ( empty( $customer->id ) ) {
-		return array( 'data' => array(), 'done' => true );
+		return array(
+			'data' => array(),
+			'done' => true
+		);
 	}
 
 	$export_data = array(
@@ -622,7 +628,10 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 
 	$export_data = apply_filters( 'edd_privacy_customer_record', $export_data, $customer );
 
-	return array( 'data' => array( $export_data ), 'done' => true );
+	return array(
+		'data' => array( $export_data ),
+		'done' => true,
+	);
 }
 
 /**
@@ -916,7 +925,10 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
-		return array( 'data' => array(), 'done' => true );
+		return array(
+			'data' => array(),
+			'done' => true
+		);
 	}
 
 	$log_query = array(
@@ -937,7 +949,10 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 
 	// If we haven't found any api access logs for this page, just return that we're done.
 	if ( empty( $logs ) ) {
-		return array( 'data' => array(), 'done' => true );
+		return array(
+			'data' => array(),
+			'done' => true
+		);
 	}
 
 	$export_items = array();
@@ -1152,7 +1167,7 @@ function edd_register_privacy_erasers( $erasers = array() ) {
 	);
 
 	$erasers[] = array(
-		'eraser_friendly_name' => __( 'Payment Record', 'easy-digital-downloads' ),
+		'eraser_friendly_name' => __( 'Order Record', 'easy-digital-downloads' ),
 		'callback'             => 'edd_privacy_payment_eraser',
 	);
 
@@ -1221,8 +1236,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	if ( empty( $payments ) ) {
 
 		$message = 1 === $page
-			? sprintf( __( 'No payments found for %s.', 'easy-digital-downloads' ), $email_address )
-			: sprintf( __( 'All eligible payments anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address );
+			? sprintf( __( 'No orders found for %s.', 'easy-digital-downloads' ), $email_address )
+			: sprintf( __( 'All eligible orders anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address );
 
 		return array(
 			'items_removed'  => false,
