@@ -646,7 +646,7 @@ function edd_order_details_extras( $order ) {
 				<?php if ( $transaction_id ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
 						<span class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?>:</span>
-						<span><?php echo esc_html( $transaction_id ); ?></span>
+						<span><?php echo $transaction_id; ?></span>
 					</div>
 				<?php endif; ?>
 
