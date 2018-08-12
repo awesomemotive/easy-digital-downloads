@@ -1449,6 +1449,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
 
 			foreach ( $results as $result ) {
+
+				// Check if order has already been migrated.
+				$migrated = $wpdb->get_var( $wpdb->prepare( "SELECT meta_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $result->ID ) );
+				if ( $migrated ) {
+					continue;
+				}
+
 				/** Create a new order ***************************************/
 
 				$meta = get_post_custom( $result->ID );
@@ -1491,10 +1498,15 @@ class EDD_CLI extends WP_CLI_Command {
 					return $carry += $item;
 				} );
 
+				$type = 'refunded' === $result->post_status
+					? 'refund'
+					: 'order';
+
 				$order_data = array(
 					'parent'         => $result->post_parent,
 					'order_number'   => $order_number,
 					'status'         => $result->post_status,
+					'type'           => $type,
 					'date_created'   => $result->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_modified'  => $result->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_completed' => $date_completed,

@@ -52,6 +52,13 @@ class Orders extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
+
+				// Check if order has already been migrated.
+				$migrated = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT meta_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $result->ID ) );
+				if ( $migrated ) {
+					continue;
+				}
+
 				/** Create a new order ***************************************/
 
 				$meta = get_post_custom( $result->ID );
