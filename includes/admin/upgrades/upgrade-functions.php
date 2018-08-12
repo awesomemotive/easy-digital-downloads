@@ -1801,7 +1801,7 @@ function edd_upgrade_render_v30_migration() {
 					<span class="dashicons dashicons-yes"></span>
 				</h2>
 				<div class="inside migrate-customer-notes-control">
-					<p><strong><?php _e( 'Important:', 'easy-digital-downloads' ); ?></strong> <?php _e( 'This remove all legacy data. This action is not reversible. Please backup your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ); ?></p>
+					<p><strong><?php _e( 'Important:', 'easy-digital-downloads' ); ?></strong> <?php _e( 'This remove all legacy data. This action is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ); ?></p>
 					<form method="post" id="edd-remove-legacy-data-form" class="edd-export-form edd-import-export-form">
 					<span class="step-instructions-wrapper">
 						<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
