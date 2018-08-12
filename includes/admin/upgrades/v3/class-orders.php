@@ -129,6 +129,14 @@ class Orders extends Base {
 
 				$order_id = edd_add_order( $order_data );
 
+				// First & last name.
+				$user_info['first_name'] = isset( $user_info['first_name'] )
+					? $user_info['first_name']
+					: '';
+				$user_info['last_name']  = isset( $user_info['last_name'] )
+					? $user_info['last_name']
+					: '';
+
 				// Add order address.
 				$user_info['address'] = isset( $user_info['address'] )
 					? $user_info['address']
