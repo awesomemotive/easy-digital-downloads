@@ -2835,9 +2835,9 @@ function display_export_report() {
                     </div>
 
                     <div class="postbox edd-export-customers">
-                        <h3 class="hndle"><span><?php esc_html_e('Export Customers','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e( 'Export Customers','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of customers.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php printf( esc_html__( 'Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></p>
                             <form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
 				                <?php
 				                $taxonomies = get_object_taxonomies( 'download', 'names' );
@@ -2874,7 +2874,11 @@ function display_export_report() {
 					                'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
 				                ) );
 
-				                echo EDD()->html->product_dropdown( array( 'name' => 'download', 'id' => 'edd_customer_export_download', 'chosen' => true ) );
+				                echo EDD()->html->product_dropdown( array(
+					                'name'   => 'download',
+					                'id'     => 'edd_customer_export_download',
+					                'chosen' => true,
+				                ) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 				                ?>
