@@ -2072,7 +2072,6 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.submit();
-			this.dismiss_message();
 		},
 
 		submit : function() {
@@ -2125,7 +2124,7 @@ jQuery(document).ready(function ($) {
 
 						} else if ( response.success ) {
 							var success_message = response.message;
-							notice_wrap.html('<div id="edd-batch-success" class="updated notice is-dismissible"><p>' + success_message + '<span class="notice-dismiss"></span></p></div>');
+							notice_wrap.html('<div id="edd-batch-success" class="updated notice"><p>' + success_message + '</p></div>');
 
 						} else {
 							notice_wrap.remove();
@@ -2146,12 +2145,6 @@ jQuery(document).ready(function ($) {
 				if ( window.console && window.console.log ) {
 					console.log( response );
 				}
-			});
-		},
-
-		dismiss_message : function() {
-			$(document.body).on( 'click', '#edd-batch-success .notice-dismiss', function() {
-				$('#edd-batch-success').parent().slideUp('fast');
 			});
 		}
 	};
