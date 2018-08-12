@@ -558,6 +558,7 @@ add_filter( 'wp_privacy_personal_data_exporters', 'edd_register_privacy_exporter
  * Retrieves the Customer record for the Privacy Data Exporter
  *
  * @since 2.9.2
+ * @since 3.0 Convert `date_created` for customers to use WordPress time.
  *
  * @param string $email_address Email address.
  * @param int    $page          Page number (for batch exporter).
@@ -590,7 +591,7 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 			),
 			array(
 				'name'  => __( 'Date Created', 'easy-digital-downloads' ),
-				'value' => $customer->date_created,
+				'value' => EDD()->utils->date( $customer->date_created, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString(),
 			),
 			array(
 				'name'  => __( 'All Email Addresses', 'easy-digital-downloads' ),
@@ -625,157 +626,177 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 }
 
 /**
- * Retrieves the billing information for the Privacy Exporter
+ * Retrieves the billing information for the Privacy Exporter.
  *
  * @since 2.9.2
+ * @since 3.0 Updated to use new query methods.
  *
- * @param string $email_address
- * @param int    $page
+ * @param string $email_address Email address.
+ * @param int    $page          Page number (for batch exporter).
  *
  * @return array
  */
 function edd_privacy_billing_information_exporter( $email_address = '', $page = 1 ) {
-
 	$customer = new EDD_Customer( $email_address );
-	$payments = edd_get_payments( array(
-		'customer' => $customer->id,
-		'output'   => 'payments',
-		'page'     => $page,
+
+	$orders = edd_get_orders( array(
+		'customer_id' => $customer->id,
+		'number'      => 30,
+		'offset'      => ( 30 * $page ) - 30,
 	) );
 
-	// If we haven't found any payments for this page, just return that we're done.
-	if ( empty( $payments ) ) {
-		return array( 'data' => array(), 'done' => true );
+	// Bail if we haven't found any orders for this page.
+	if ( empty( $orders ) ) {
+		return array(
+			'data' => array(),
+			'done' => true,
+		);
 	}
 
 	$export_items = array();
-	foreach ( $payments as $payment ) {
 
-		$order_items = array();
-		foreach ( $payment->downloads as $cart_item ) {
-			$download = new EDD_Download( $cart_item['id'] );
-			$name     = $download->get_name();
+	if ( $orders ) {
+		foreach ( $orders as $order ) {
+			$order_items = array();
 
-			if ( $download->has_variable_prices() && isset( $cart_item['options']['price_id'] ) ) {
-				$variation_name = edd_get_price_option_name( $download->ID, $cart_item['options']['price_id'] );
-				if ( ! empty( $variation_name ) ) {
-					$name .= ' - ' . $variation_name;
+			foreach ( $order->items as $order_item ) {
+				$download = edd_get_download( $order_item->product_id );
+				$name     = $download->get_name();
+
+				if ( $download->has_variable_prices() && ! empty( $order_item->price_id ) ) {
+					$variation_name = edd_get_price_option_name( $download->ID, $order_item->price_id );
+					if ( ! empty( $variation_name ) ) {
+						$name .= ' - ' . $variation_name;
+					}
 				}
+
+				$order_items[] = $name . ' &times; ' . $order_item->quantity;
 			}
 
-			$order_items[] = $name . ' &times; ' . $cart_item['quantity'];
+			$items_purchased = implode( ', ', $order_items );
+
+			$billing_name = array();
+			if ( ! empty( $order->address->first_name ) ) {
+				$billing_name[] = $order->address->first_name;
+			}
+
+			if ( ! empty( $order->address->last_name ) ) {
+				$billing_name[] = $order->address->last_name;
+			}
+			$billing_name = implode( ' ', array_values( $billing_name ) );
+
+			$billing_street = array();
+			if ( ! empty( $order->address->address ) ) {
+				$billing_street[] = $order->address->address;
+			}
+
+			if ( ! empty( $order->address->address2 ) ) {
+				$billing_street[] = $order->address->address2;
+			}
+			$billing_street = implode( "\n", array_values( $billing_street ) );
+
+
+			$billing_city_state = array();
+			if ( ! empty( $order->address->city ) ) {
+				$billing_city_state[] = $order->address->city;
+			}
+
+			if ( ! empty( $order->address->region ) ) {
+				$billing_city_state[] = $order->address->region;
+			}
+			$billing_city_state = implode( ', ', array_values( $billing_city_state ) );
+
+			$billing_country_postal = array();
+			if ( ! empty( $order->address->postal_code ) ) {
+				$billing_country_postal[] = $order->address->postal_code;
+			}
+
+			if ( ! empty( $order->address->country ) ) {
+				$billing_country_postal[] = $order->address->country;
+			}
+			$billing_country_postal = implode( "\n", array_values( $billing_country_postal ) );
+
+			$full_billing_address = '';
+			if ( ! empty( $billing_name ) ) {
+				$full_billing_address .= $billing_name . "\n";
+			}
+
+			if ( ! empty( $billing_street ) ) {
+				$full_billing_address .= $billing_street . "\n";
+			}
+
+			if ( ! empty( $billing_city_state ) ) {
+				$full_billing_address .= $billing_city_state . "\n";
+			}
+
+			if ( ! empty( $billing_country_postal ) ) {
+				$full_billing_address .= $billing_country_postal . "\n";
+			}
+
+
+			$data_points = array(
+				array(
+					'name'  => __( 'Order ID / Number', 'easy-digital-downloads' ),
+					'value' => $order->get_number(),
+				),
+				array(
+					'name'  => __( 'Order Date', 'easy-digital-downloads' ),
+					'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( EDD()->utils->date( $order->date_created, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString() ) ),
+				),
+				array(
+					'name'  => __( 'Order Completed Date', 'easy-digital-downloads' ),
+					'value' => ! empty( $order->date_completed ) && '0000-00-00 00:00:00' === $order->date_completed
+						? date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( EDD()->utils->date( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString() ) )
+						: '',
+				),
+				array(
+					'name'  => __( 'Order Total', 'easy-digital-downloads' ),
+					'value' => edd_currency_filter( edd_format_amount( $order->total ), $order->currency ),
+				),
+				array(
+					'name'  => __( 'Order Items', 'easy-digital-downloads' ),
+					'value' => $items_purchased,
+				),
+				array(
+					'name'  => __( 'Email Address', 'easy-digital-downloads' ),
+					'value' => ! empty( $order->email )
+						? $order->email
+						: '',
+				),
+				array(
+					'name'  => __( 'Billing Address', 'easy-digital-downloads' ),
+					'value' => $full_billing_address,
+				),
+				array(
+					'name'  => __( 'IP Address', 'easy-digital-downloads' ),
+					'value' => ! empty( $order->ip )
+						? $order->ip
+						: '',
+				),
+				array(
+					'name'  => __( 'Status', 'easy-digital-downloads' ),
+					'value' => edd_get_payment_status_label( $order->status ),
+				),
+			);
+
+			/**
+			 * Filter each order.
+			 *
+			 * @since 2.9.2
+			 * @since 3.0 Changed EDD_Payment object to \EDD\Orders\Order object.
+			 *
+			 * @param array             $data_points Data points.
+			 * @param \EDD\Orders\Order $order       Order.
+			 */
+			$data_points = apply_filters( 'edd_privacy_order_details_item', $data_points, $order );
+
+			$export_items[] = array(
+				'group_id'    => 'edd-order-details',
+				'group_label' => __( 'Customer Orders', 'easy-digital-downloads' ),
+				'item_id'     => "edd-order-details-{$order->id}",
+				'data'        => $data_points,
+			);
 		}
-
-		$items_purchased = implode( ', ', $order_items );
-
-		$billing_name = array();
-		if ( ! empty( $payment->user_info['first_name'] ) ) {
-			$billing_name[] = $payment->user_info['first_name'];
-		}
-
-		if ( ! empty( $payment->user_info['last_name'] ) ) {
-			$billing_name[] = $payment->user_info['last_name'];
-		}
-		$billing_name = implode( ' ', array_values( $billing_name ) );
-
-		$billing_street = array();
-		if ( ! empty( $payment->address['line1'] ) ) {
-			$billing_street[] = $payment->address['line1'];
-		}
-
-		if ( ! empty( $payment->address['line2'] ) ) {
-			$billing_street[] = $payment->address['line2'];
-		}
-		$billing_street = implode( "\n", array_values( $billing_street ) );
-
-
-		$billing_city_state = array();
-		if ( ! empty( $payment->address['city'] ) ) {
-			$billing_city_state[] = $payment->address['city'];
-		}
-
-		if ( ! empty( $payment->address['state'] ) ) {
-			$billing_city_state[] = $payment->address['state'];
-		}
-		$billing_city_state = implode( ', ', array_values( $billing_city_state ) );
-
-		$billing_country_postal = array();
-		if ( ! empty( $payment->address['zip'] ) ) {
-			$billing_country_postal[] = $payment->address['zip'];
-		}
-
-		if ( ! empty( $payment->address['country'] ) ) {
-			$billing_country_postal[] = $payment->address['country'];
-		}
-		$billing_country_postal = implode( "\n", array_values( $billing_country_postal ) );
-
-		$full_billing_address = '';
-		if ( ! empty( $billing_name ) ) {
-			$full_billing_address .= $billing_name . "\n";
-		}
-
-		if ( ! empty( $billing_street ) ) {
-			$full_billing_address .= $billing_street . "\n";
-		}
-
-		if ( ! empty( $billing_city_state ) ) {
-			$full_billing_address .= $billing_city_state . "\n";
-		}
-
-		if ( ! empty( $billing_country_postal ) ) {
-			$full_billing_address .= $billing_country_postal . "\n";
-		}
-
-
-		$data_points = array(
-			array(
-				'name'  => __( 'Order ID / Number', 'easy-digital-downloads' ),
-				'value' => $payment->number,
-			),
-			array(
-				'name'  => __( 'Order Date', 'easy-digital-downloads' ),
-				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $payment->date ) ),
-			),
-			array(
-				'name'  => __( 'Order Completed Date', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->completed_date )
-					? date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $payment->completed_date ) )
-					: '',
-			),
-			array(
-				'name'  => __( 'Order Total', 'easy-digital-downloads' ),
-				'value' => edd_currency_filter( edd_format_amount( $payment->total ), $payment->currency ),
-			),
-			array(
-				'name'  => __( 'Order Items', 'easy-digital-downloads' ),
-				'value' => $items_purchased,
-			),
-			array(
-				'name'  => __( 'Email Address', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->email ) ? $payment->email : '',
-			),
-			array(
-				'name'  => __( 'Billing Address', 'easy-digital-downloads' ),
-				'value' => $full_billing_address,
-			),
-			array(
-				'name'  => __( 'IP Address', 'easy-digital-downloads' ),
-				'value' => ! empty( $payment->ip ) ? $payment->ip : '',
-			),
-			array(
-				'name'  => __( 'Status', 'easy-digital-downloads' ),
-				'value' => edd_get_payment_status_label( $payment->status ),
-			),
-		);
-
-		$data_points = apply_filters( 'edd_privacy_order_details_item', $data_points, $payment );
-
-		$export_items[] = array(
-			'group_id'    => 'edd-order-details',
-			'group_label' => __( 'Customer Orders', 'easy-digital-downloads' ),
-			'item_id'     => "edd-order-details-{$payment->ID}",
-			'data'        => $data_points,
-		);
 	}
 
 	// Add the data to the list, and tell the exporter to come back for the next page of payments.
