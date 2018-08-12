@@ -336,9 +336,9 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 }
 
 /**
- * Given a payment ID, anonymize the data related to that payment.
+ * Given an order ID, anonymize the data related to that order.
  *
- * Only the payment record is affected in this function. The data that is changed:
+ * Only the order record is affected in this function. The data that is changed:
  * - First Name is made blank
  * - Last  Name is made blank
  * - All email addresses are converted to the anonymized email address on the customer
@@ -346,112 +346,101 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
  * - Address line 1 is made blank
  * - Address line 2 is made blank
  *
- * @param int $payment_id
- *
+ * @param int $order_id Order ID.
  * @return array
  */
-function _edd_anonymize_payment( $payment_id = 0 ) {
+function _edd_anonymize_payment( $order_id = 0 ) {
 
-	$payment = edd_get_payment( $payment_id );
-	if ( false === $payment ) {
+	$order = edd_get_order( $order_id );
+	if ( ! $order ) {
 		return array(
 			'success' => false,
-			'message' => sprintf( __( 'No payment with ID %d.', 'easy-digital-downloads' ), $payment_id ),
+			'message' => sprintf( __( 'No order with ID %d.', 'easy-digital-downloads' ), $order_id ),
 		);
 	}
 
 	/**
-	 * Determines if this payment should be allowed to be anonymized.
+	 * Determines if this order should be allowed to be anonymized.
 	 *
-	 * Developers and extensions can use this filter to make it possible to not anonymize a payment. A sample use case
-	 * would be if the payment is pending orders, and the payment requires shipping, anonymizing the payment may
-	 * not be ideal.
+	 * Developers and extensions can use this filter to make it possible to not
+	 * anonymize an order. A sample use case would be if the order is pending,
+	 * and the order requires shipping, anonymizing the order may not be ideal.
 	 *
 	 * @since 2.9.2
 	 *
 	 * @param array {
-	 *                                Contains data related to if the anonymization should take place
+	 *     Contains data related to if the anonymization should take place
 	 *
-	 * @type bool   $should_anonymize If the payment should be anonymized.
-	 * @type string $message          A message to display if the customer could not be anonymized.
+	 *     @type bool   $should_anonymize If the payment should be anonymized.
+	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
+	 * @param \EDD\Orders\Order Order object.
 	 */
 	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array(
 		'should_anonymize' => true,
 		'message'          => '',
-	), $payment );
+	), $order );
 
 	if ( empty( $should_anonymize_payment['should_anonymize'] ) ) {
 		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
 	}
 
-	$action = _edd_privacy_get_payment_action( $payment );
+	$action = _edd_privacy_get_payment_action( $order );
 
 	switch ( $action ) {
-
 		case 'none':
 		default:
 			$return = array(
 				'success' => false,
-				'message' => sprintf( __( 'Payment not modified, due to status: %s.', 'easy-digital-downloads' ), $payment->status ),
+				'message' => sprintf( __( 'Order not modified, due to status: %s.', 'easy-digital-downloads' ), $order->status ),
 			);
 			break;
 
 		case 'delete':
-			edd_delete_purchase( $payment->ID, true, true );
+			edd_delete_purchase( $order->id, true, true );
 
 			$return = array(
 				'success' => true,
-				'message' => sprintf( __( 'Payment %d with status %s deleted.', 'easy-digital-downloads' ), $payment->ID, $payment->status ),
+				'message' => sprintf( __( 'Order %d with status %s deleted.', 'easy-digital-downloads' ), $order->id, $order->status ),
 			);
 			break;
 
 		case 'anonymize':
-			$customer = new EDD_Customer( $payment->customer_id );
+			$customer = new EDD_Customer( $order->customer_id );
 
-			$payment->ip    = wp_privacy_anonymize_ip( $payment->ip );
-			$payment->email = $customer->email;
+			$order_data = array(
+				'ip'    => wp_privacy_anonymize_ip( $order->ip ),
+				'email' => $customer->email,
+			);
+
+			edd_update_order( $order->id, $order_data );
 
 			// Anonymize the line 1 and line 2 of the address. City, state, zip, and country are possibly needed for taxes.
-			$address = $payment->address;
-			if ( isset( $address['line1'] ) ) {
-				$address['line1'] = '';
-			}
+			$order_address_data = array(
+				'first_name' => '',
+				'last_name'  => '',
+				'address'    => '',
+				'address2'   => '',
+			);
 
-			if ( isset( $address['line2'] ) ) {
-				$address['line2'] = '';
-			}
-
-			$payment->address = $address;
-
-			$payment->first_name = '';
-			$payment->last_name  = '';
-
-			wp_update_post( array(
-				'ID'         => $payment->ID,
-				'post_title' => __( 'Anonymized Customer', 'easy-digital-downloads' ),
-				'post_name'  => sanitize_title( __( 'Anonymized Customer', 'easy-digital-downloads' ) ),
-			) );
-
-			// Because we changed the post_name, WordPress sets a meta on the item for the `old slug`, we need to kill that.
-			delete_post_meta( $payment->ID, '_wp_old_slug' );
+			edd_update_order_address( $order->address->id, $order_address_data );
 
 			/**
-			 * Run further anonymization on a payment
+			 * Run further anonymization on an order.
 			 *
-			 * Developers and extensions can use the EDD_Payment object passed into the edd_anonymize_payment action
-			 * to complete further anonymization.
+			 * Developers and extensions can use the \EDD\Orders\Order object passed
+			 * into the edd_anonymize_payment action to complete further anonymization.
 			 *
 			 * @since 2.9.2
+			 * @since 3.0 Updated to pass \EDD\Orders\Order object.
 			 *
-			 * @param EDD_Payment $payment The EDD_Payment object that was found.
+			 * @param \EDD\Orders\Order Order object.
 			 */
-			do_action( 'edd_anonymize_payment', $payment );
+			do_action( 'edd_anonymize_payment', $order );
 
-			$payment->save();
 			$return = array(
 				'success' => true,
-				'message' => sprintf( __( 'Payment ID %d successfully anonymized.', 'easy-digital-downloads' ), $payment_id ),
+				'message' => sprintf( __( 'Order ID %d successfully anonymized.', 'easy-digital-downloads' ), $order_id ),
 			);
 			break;
 	}
@@ -463,17 +452,18 @@ function _edd_anonymize_payment( $payment_id = 0 ) {
  * Given an EDD_Payment, determine what action should be taken during the eraser processes.
  *
  * @since 2.9.2
+ * @since 3.0 Updated to allow \EDD\Orders\Order objects to be passed.
  *
- * @param EDD_Payment $payment
+ * @param EDD_Payment|\EDD\Orders\Order $order
  *
  * @return string
  */
-function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
-	$action = edd_get_option( 'payment_privacy_status_action_' . $payment->status, false );
+function _edd_privacy_get_payment_action( $order ) {
+	$action = edd_get_option( 'payment_privacy_status_action_' . $order->status, false );
 
 	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
 	if ( empty( $action ) ) {
-		switch ( $payment->status ) {
+		switch ( $order->status ) {
 			case 'publish':
 			case 'refunded':
 			case 'revoked':
@@ -494,17 +484,17 @@ function _edd_privacy_get_payment_action( EDD_Payment $payment ) {
 	}
 
 	/**
-	 * Allow filtering of what type of action should be taken for a payment.
+	 * Allow filtering of what type of action should be taken for an order.
 	 *
 	 * Developers and extensions can use this filter to modify how Easy Digital Downloads will treat an order
 	 * that has been requested to be deleted or anonymized.
 	 *
 	 * @since 2.9.2
 	 *
-	 * @param string      $action  What action will be performed (none, delete, anonymize)
-	 * @param EDD_Payment $payment The EDD_Payment object that has been requested to be anonymized or deleted.
+	 * @param string      $action                  What action will be performed (none, delete, anonymize)
+	 * @param EDD_Payment|\EDD\Orders\Order $order The order object that has been requested to be anonymized or deleted.
 	 */
-	$action = apply_filters( 'edd_privacy_payment_status_action_' . $payment->status, $action, $payment );
+	$action = apply_filters( 'edd_privacy_payment_status_action_' . $order->status, $action, $order );
 
 	return $action;
 
@@ -531,16 +521,14 @@ function _edd_privacy_get_customer_id_for_email( $email_address ) {
 /** Exporter Functions */
 
 /**
- * Register any of our Privacy Data Exporters
+ * Register any of our Privacy Data Exporters.
  *
  * @since 2.9.2
  *
- * @param $exporters
- *
+ * @param array $exporters Privacy exporters.
  * @return array
  */
 function edd_register_privacy_exporters( $exporters = array() ) {
-
 	$exporters[] = array(
 		'exporter_friendly_name' => __( 'Customer Record', 'easy-digital-downloads' ),
 		'callback'               => 'edd_privacy_customer_record_exporter',
@@ -563,9 +551,7 @@ function edd_register_privacy_exporters( $exporters = array() ) {
 	);
 
 	return $exporters;
-
 }
-
 add_filter( 'wp_privacy_personal_data_exporters', 'edd_register_privacy_exporters' );
 
 /**
@@ -573,13 +559,12 @@ add_filter( 'wp_privacy_personal_data_exporters', 'edd_register_privacy_exporter
  *
  * @since 2.9.2
  *
- * @param string $email_address
- * @param int    $page
+ * @param string $email_address Email address.
+ * @param int    $page          Page number (for batch exporter).
  *
  * @return array
  */
 function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) {
-
 	$customer = new EDD_Customer( $email_address );
 
 	if ( empty( $customer->id ) ) {
