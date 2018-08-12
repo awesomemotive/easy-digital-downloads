@@ -875,7 +875,7 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 		 * Filter item.
 		 *
 		 * @since 2.9.2
-		 * @since 3.0 Updated pass \EDD\Logs\File_Download_Log object to filter.
+		 * @since 3.0 Updated to pass \EDD\Logs\File_Download_Log object to filter.
 		 *
 		 * @param array                       $data_points Data points.
 		 * @param \EDD\Logs\File_Download_Log $log         File download log.
@@ -908,8 +908,6 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
  * @return array
  */
 function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
-	global $edd_logs;
-
 	$user = get_user_by( 'email', $email_address );
 
 	if ( false === $user ) {
@@ -919,56 +917,53 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 		);
 	}
 
-	$log_query = array(
-		'log_type'               => 'api_access',
-		'posts_per_page'         => 100,
-		'paged'                  => $page,
-		'update_post_meta_cache' => false,
-		'update_post_term_cache' => false,
-		'meta_query'             => array(
-			array(
-				'key'   => '_edd_log_user',
-				'value' => $user->ID,
-			),
-		),
-	);
-
-	$logs = $edd_logs->get_connected_logs( $log_query );
+	$logs = edd_get_api_request_logs( array(
+		'user_id' => $user->ID,
+		'number'  => 100,
+		'offset'  => ( 100 * $page ) - 100,
+	) );
 
 	// If we haven't found any api access logs for this page, just return that we're done.
 	if ( empty( $logs ) ) {
 		return array(
 			'data' => array(),
-			'done' => true
+			'done' => true,
 		);
 	}
 
 	$export_items = array();
+
 	foreach ( $logs as $log ) {
-
-		$ip_address = get_post_meta( $log->ID, '_edd_log_request_ip', true );
-
 		$data_points = array(
 			array(
 				'name'  => __( 'Date', 'easy-digital-downloads' ),
-				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( $log->post_date ) ),
+				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( EDD()->utils->date( $log->date_created, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString() ) ),
 			),
 			array(
 				'name'  => __( 'Request', 'easy-digital-downloads' ),
-				'value' => $log->post_excerpt,
+				'value' => $log->request,
 			),
 			array(
 				'name'  => __( 'IP Address', 'easy-digital-downloads' ),
-				'value' => $ip_address,
+				'value' => $log->ip,
 			),
 		);
 
+		/**
+		 * Filter item.
+		 *
+		 * @since 2.9.2
+		 * @since 3.0 Updated to pass \EDD\Logs\\EDD\Logs\Api_Request_Log object to filter.
+		 *
+		 * @param array                     $data_points Data points.
+		 * @param \EDD\Logs\Api_Request_Log $log         API request log.
+		 */
 		$data_points = apply_filters( 'edd_privacy_api_access_log_item', $data_points, $log );
 
 		$export_items[] = array(
 			'group_id'    => 'edd-api-access-logs',
 			'group_label' => __( 'API Access Logs', 'easy-digital-downloads' ),
-			'item_id'     => "edd-api-access-logs-{$log->ID}",
+			'item_id'     => "edd-api-access-logs-{$log->id}",
 			'data'        => $data_points,
 		);
 

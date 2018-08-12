@@ -351,7 +351,7 @@ function edd_get_api_request_log_by( $field = '', $value = '' ) {
  * @since 3.0
  *
  * @param array $args
- * @return array
+ * @return \EDD\Logs\Api_Request_Log[]
  */
 function edd_get_api_request_logs( $args = array() ) {
 
