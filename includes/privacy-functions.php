@@ -995,7 +995,6 @@ function edd_register_privacy_eraser_customer_id_lookup( $erasers = array() ) {
 
 	return $erasers;
 }
-
 add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_customer_id_lookup', 5, 1 );
 
 /**
@@ -1039,7 +1038,6 @@ function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
 
 	return $erasers;
 }
-
 add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_customer_id_removal', 9999, 1 );
 
 /**
@@ -1066,6 +1064,7 @@ function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
  * for the requested customer, go ahead and delete the customer
  *
  * @since 2.9.2
+ * @since 3.0 Updated to use new query methods.
  *
  * @param string $email_address The email address requesting anonymization/erasure
  * @param int    $page          The page (not needed for this query)
@@ -1084,13 +1083,13 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
 		);
 	}
 
-	$payments = edd_get_payments( array(
-		'customer' => $customer->id,
-		'output'   => 'payments',
-		'page'     => $page,
+	$orders = edd_get_orders( array(
+		'customer_id' => $customer->id,
+		'number'      => 30,
+		'offset'      => ( 30 * $page ) - 30,
 	) );
 
-	if ( ! empty( $payments ) ) {
+	if ( ! empty( $orders ) ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
@@ -1101,14 +1100,10 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
 		);
 	}
 
-	if ( empty( $payments ) ) {
-		global $wpdb;
+	if ( empty( $orders ) ) {
+		$deleted_customer = edd_destroy_customer( $customer->id );
 
-		$deleted_customer = EDD()->customers->delete( $customer->id );
 		if ( $deleted_customer ) {
-			$customer_meta_table = EDD()->customer_meta->table_name;
-			$deleted_meta        = $wpdb->query( "DELETE FROM {$customer_meta_table} WHERE customer_id = {$customer->id}" );
-
 			return array(
 				'items_removed'  => true,
 				'items_retained' => false,
