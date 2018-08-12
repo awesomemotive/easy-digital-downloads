@@ -226,7 +226,7 @@ function edd_get_file_download_log_by( $field = '', $value = '' ) {
  * @since 3.0
  *
  * @param array $args
- * @return array
+ * @return \EDD\Logs\File_Download_Log[]
  */
 function edd_get_file_download_logs( $args = array() ) {
 
