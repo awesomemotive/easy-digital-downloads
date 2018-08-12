@@ -66,11 +66,40 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
+		global $wpdb;
+
 		$data = array();
 
 		// Taxonomy.
 		if ( ! empty( $this->taxonomy ) ) {
+			$taxonomy = $wpdb->prepare( 't.term_id = %d', $this->taxonomy );
 
+			$limit = $wpdb->prepare( '%d, %d', 30 * ( $this->step - 1 ), 30 );
+
+			$sql = "SELECT DISTINCT o.customer_id
+					FROM {$wpdb->terms} t
+					INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+					INNER JOIN {$wpdb->term_relationships} tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+					INNER JOIN {$wpdb->edd_order_items} oi ON tr.object_id = oi.product_id
+					INNER JOIN {$wpdb->edd_orders} o ON oi.order_id = o.id
+					WHERE {$taxonomy}
+					LIMIT {$limit}";
+
+			$results = $wpdb->get_col( $sql ); // WPCS: unprepared SQL ok.
+
+			if ( $results ) {
+				foreach ( $results as $customer_id ) {
+					$customer = new EDD_Customer( $customer_id );
+
+					$data[] = array(
+						'id'        => $customer->id,
+						'name'      => $customer->name,
+						'email'     => $customer->email,
+						'purchases' => $customer->purchase_count,
+						'amount'    => edd_format_amount( $customer->purchase_value ),
+					);
+				}
+			}
 
 		// Download.
 		} elseif ( ! empty( $this->download ) ) {
