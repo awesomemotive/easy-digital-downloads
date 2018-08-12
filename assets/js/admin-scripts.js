@@ -1161,7 +1161,7 @@ jQuery(document).ready(function ($) {
 
 				$.post( ajaxurl, data, function( response ) {
 
-				    // Store response for later use.
+					// Store response for later use.
 					edd_admin_globals.customer_address_ajax_result = response;
 
 					if ( response.html ) {
@@ -1180,9 +1180,8 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
 					val   = $this.val(),
-					select = $( '#edd-add-order-form select#edd_order_address_country' );
-
-				var address = edd_admin_globals.customer_address_ajax_result['addresses'][ val ];
+					select = $( '#edd-add-order-form select#edd_order_address_country' ),
+					address = edd_admin_globals.customer_address_ajax_result.addresses[ val ];
 
 				$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
 				$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
