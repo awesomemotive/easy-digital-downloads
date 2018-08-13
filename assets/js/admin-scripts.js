@@ -1260,6 +1260,11 @@ jQuery(document).ready(function ($) {
 
 		recalculate_taxes : function() {
 			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
+
+			// Bail if taxes are not enabled.
+			if ( '1' != edd_global_vars.taxes_enabled ) {
+				return;
+			}
 		},
 
 		recalculate_total : function() {
