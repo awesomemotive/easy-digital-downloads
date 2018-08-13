@@ -170,12 +170,10 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * Enqueues the required admin scripts.
  *
  * @since 1.0
- * @global $post
  * @param string $hook Page hook
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-	global $post;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
@@ -224,7 +222,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'edd-admin-scripts' );
 
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
-		'post_id'                     => isset( $post->ID ) ? $post->ID : null,
+		'post_id'                     => get_the_ID(),
 		'edd_version'                 => $version,
 		'add_new_download'            => __( 'Add New Download', 'easy-digital-downloads' ),
 		'use_this_file'               => __( 'Use This File', 'easy-digital-downloads' ),
@@ -299,15 +297,10 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_media();
 
 	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $js_suffix . '.js' );
-//	wp_enqueue_script( 'jquery-flot' );
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
 	wp_enqueue_script( 'jquery-ui-tooltip' );
-
-	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
-	wp_register_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $css_suffix . '.css' );
-	wp_enqueue_style( 'jquery-ui-css' );
 
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
