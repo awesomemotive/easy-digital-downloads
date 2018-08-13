@@ -1215,7 +1215,7 @@ jQuery(document).ready(function ($) {
 					data   = {
 						action:    'edd_get_shop_states',
 						country:    select.val(),
-						nonce:      select.data('nonce'),
+						nonce:      select.data( 'nonce' ),
 						field_name: 'edd-order-address-country'
 					};
 
@@ -1227,9 +1227,15 @@ jQuery(document).ready(function ($) {
 					}
 
 					$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
-				});
+				} ).done(function ( response ) {
+					EDD_Add_Order.recalculate_taxes();
+				} );
 
 				return false;
+			} );
+
+			$( '.edd-order-address-region' ).on( 'change', function() {
+				EDD_Add_Order.recalculate_taxes();
 			} );
 		},
 
@@ -1250,6 +1256,10 @@ jQuery(document).ready(function ($) {
 
 				key++;
 			});
+		},
+
+		recalculate_taxes : function() {
+			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
 		},
 
 		recalculate_total : function() {
