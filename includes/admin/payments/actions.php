@@ -106,7 +106,7 @@ function edd_update_payment_details( $data = array() ) {
 		$minute = 00;
 	}
 
-	$address = array_map( 'trim', $data['edd-payment-address'][0] );
+	$address = $data['edd_order_address'];
 
 	$curr_total = edd_sanitize_amount( $order->total );
 	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
