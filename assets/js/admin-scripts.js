@@ -1751,7 +1751,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Insert new tax rate row
-			$('#edd_add_tax_rate').on('click', function() {
+			$( '#edd_add_tax_rate' ).on( 'click', function() {
 				var row   = $('#edd_tax_rates tr:last'),
 					clone = row.clone(),
 					count = row.parent().find( 'tr' ).length;
@@ -1770,6 +1770,16 @@ jQuery(document).ready(function ($) {
 					var name = $( this ).attr( 'for' );
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 					$( this ).attr( 'for', name );
+				});
+
+				// Setup datepickers
+				clone.find( 'input.edd_datepicker' ).removeClass( 'hasDatepicker' ).attr( 'autocomplete', 'off' ).datepicker( {
+					dateFormat: edd_vars.date_picker_format,
+					beforeShow: function() {
+						$( '#ui-datepicker-div' )
+							.removeClass( 'ui-datepicker' )
+							.addClass( 'edd-datepicker' );
+					}
 				});
 
 				clone.insertAfter( row );
