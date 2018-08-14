@@ -25,10 +25,9 @@ function edd_plugin_action_links( $links = array(), $file = '' ) {
 
 	// Only EDD plugin row
 	if ( EDD_PLUGIN_BASE === $file ) {
-		$settings_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-settings'
-		), admin_url( 'edit.php' ) );
+		$settings_url = edd_get_admin_url( array(
+			'page' => 'edd-settings'
+		) );
 
 		$links['settings'] = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'easy-digital-downloads' ) . '</a>';
 	}

@@ -44,11 +44,10 @@ function edd_maybe_add_test_mode_admin_bar_link( $wp_admin_bar ) {
         'id'     => 'edd-store-menu',
         'title'  => sprintf( __( 'Store Status: %s', 'easy-digital-downloads' ), '<span class="edd-mode edd-mode-' . esc_attr( $mode ) . '">' . $text . '</span>' ),
         'parent' => false,
-        'href'   => add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-settings',
-			'tab'       => 'gateways'
-		), admin_url( 'edit.php' ) )
+        'href'   => edd_get_admin_url( array(
+			'page' => 'edd-settings',
+			'tab'  => 'gateways'
+		) )
 	) );
 }
 add_action( 'admin_bar_menu', 'edd_maybe_add_test_mode_admin_bar_link', 9999 );
@@ -2074,6 +2073,9 @@ function edd_gateway_select_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	$html     = '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '">';
@@ -2342,6 +2344,9 @@ function edd_select_callback( $args ) {
 
 	if ( isset( $args['chosen'] ) ) {
 		$class .= ' edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	// Nonce
@@ -2396,6 +2401,9 @@ function edd_color_select_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 	if ( $args['chosen'] ) {
 		$class .= 'edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']"/>';
@@ -2532,6 +2540,9 @@ function edd_shop_states_callback( $args ) {
 
 	if ( $args['chosen'] ) {
 		$class .= 'edd-select-chosen';
+		if ( is_rtl() ) {
+			$class .= ' chosen-rtl';
+		}
 	}
 
 	if ( empty( $states ) ) {
@@ -2683,6 +2694,26 @@ function edd_tax_rates_callback( $args ) {
 				</td>
 				<td class="edd_tax_rate">
 					<input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/>
+				</td>
+				<td class="edd_tax_rate_from">
+					<?php
+					echo EDD()->html->date_field( array(
+						'id'          => 'tax_rates[0][from]',
+						'name'        => 'tax_rates[0][from]',
+						'value'       => '',
+						'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+					) );
+					?>
+				</td>
+				<td class="edd_tax_rate_to">
+					<?php
+					echo EDD()->html->date_field( array(
+						'id'          => 'tax_rates[0][to]',
+						'name'        => 'tax_rates[0][to]',
+						'value'       => '',
+						'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+					) );
+					?>
 				</td>
 				<td>
 					<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></span>

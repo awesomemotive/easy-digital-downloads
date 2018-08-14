@@ -260,7 +260,7 @@ function edd_is_order_recoverable( $order_id = 0 ) {
  */
 function edd_build_order( $order_data = array() ) {
 
-	// Bail if no order data
+	// Bail if no order data passed.
 	if ( empty( $order_data ) ) {
 		return false;
 	}
@@ -450,6 +450,8 @@ function edd_build_order( $order_data = array() ) {
 
 	/** Insert order items ****************************************************/
 
+	$decimal_filter = edd_currency_decimal_filter();
+
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
 		foreach ( $order_data['cart_details'] as $key => $item ) {
 
@@ -544,10 +546,10 @@ function edd_build_order( $order_data = array() ) {
 				: 1;
 
 			// Subtotal needs to be updated with the sanitized amount.
-			$order_item_args['subtotal'] = round( $item_price * $quantity, edd_currency_decimal_filter() );
+			$order_item_args['subtotal'] = round( $item_price * $quantity, $decimal_filter );
 
 			if ( edd_prices_include_tax() ) {
-				$order_item_args['subtotal'] -= round( $order_item_args['tax'], edd_currency_decimal_filter() );
+				$order_item_args['subtotal'] -= round( $order_item_args['tax'], $decimal_filter );
 			}
 
 			$total = $order_item_args['subtotal'] - $order_item_args['discount'] + $order_item_args['tax'];
@@ -559,10 +561,10 @@ function edd_build_order( $order_data = array() ) {
 			}
 
 			// Sanitize all the amounts.
-			$order_item_args['amount']   = round( $item_price,                  edd_currency_decimal_filter() );
-			$order_item_args['subtotal'] = round( $order_item_args['subtotal'], edd_currency_decimal_filter() );
-			$order_item_args['tax']      = round( $order_item_args['tax'],      edd_currency_decimal_filter() );
-			$order_item_args['total']    = round( $total,                       edd_currency_decimal_filter() );
+			$order_item_args['amount']   = round( $item_price,                  $decimal_filter );
+			$order_item_args['subtotal'] = round( $order_item_args['subtotal'], $decimal_filter );
+			$order_item_args['tax']      = round( $order_item_args['tax'],      $decimal_filter );
+			$order_item_args['total']    = round( $total,                       $decimal_filter );
 
 			$order_item_id = edd_add_order_item( $order_item_args );
 
@@ -570,22 +572,24 @@ function edd_build_order( $order_data = array() ) {
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
 
-					// Add the adjustment.
-					$adjustment_id = edd_add_order_adjustment( array(
+					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
-						'type_id'     => '',
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'amount'      => $fee['amount'],
-					) );
+						'subtotal'    => $fee['amount'],
+						'total'       => $fee['amount'],
+					);
+
+					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
+						$adjustment_data['tax'] = 0.00;
+					}
+
+					// Add the adjustment.
+					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-						edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-					}
 
 					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
@@ -608,17 +612,19 @@ function edd_build_order( $order_data = array() ) {
 					: false;
 
 				$tax_rate = isset( $item['tax_rate'] )
-					? (float) $item['tax_rate']
+					? floatval( $item['tax_rate'] )
 					: edd_get_cart_tax_rate( $country, $state, $zip );
 
-				// Always store order tax, even if empty.
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_item_id,
-					'object_type' => 'order_item',
-					'type_id'     => 0,
-					'type'        => 'tax_rate',
-					'total'       => $tax_rate,
-				) );
+				if ( 0 < $tax_rate ) {
+
+					// Always store tax rate, even if empty.
+					edd_add_order_adjustment( array(
+						'object_id'   => $order_item_id,
+						'object_type' => 'order_item',
+						'type'        => 'tax_rate',
+						'total'       => $tax_rate,
+					) );
+				}
 			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
@@ -652,7 +658,6 @@ function edd_build_order( $order_data = array() ) {
 			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
-				'type_id'     => '',
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'subtotal'    => floatval( $fee['amount'] ),
@@ -680,24 +685,26 @@ function edd_build_order( $order_data = array() ) {
 		: array();
 
 	if ( ! is_array( $discounts ) ) {
+		/** @var string $discounts */
 		$discounts = explode( ',', $discounts );
 	}
 
 	if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
+		/** @var array $discounts */
 		foreach ( $discounts as $discount ) {
-
-			/** @var EDD_Discount $discount */
 			$discount = edd_get_discount_by( 'code', $discount );
 
-			if ( $discount instanceof EDD_Discount ) {
+			if ( $discount ) {
+				$discounted_amount = $subtotal - $discount->get_discounted_amount( $subtotal );
+
 				edd_add_order_adjustment( array(
 					'object_id'   => $order_id,
 					'object_type' => 'order',
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount,
-					'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
-					'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
+					'subtotal'    => $discounted_amount,
+					'total'       => $discounted_amount,
 				) );
 			}
 		}
@@ -715,7 +722,7 @@ function edd_build_order( $order_data = array() ) {
 		update_option( 'edd_last_payment_number', $number );
 	}
 
-	// Update the order with all of the newly computed values
+	// Update the order with all of the newly computed values.
 	edd_update_order( $order_id, array(
 		'order_number' => $order_args['order_number'],
 		'subtotal'     => $subtotal,
@@ -724,13 +731,33 @@ function edd_build_order( $order_data = array() ) {
 		'total'        => $order_total,
 	) );
 
+	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) { // WPCS: CSRF ok.
+		$order_data['agree_to_terms_time'] = current_time( 'timestamp' );
+	}
+
+	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) && ! empty( $_POST['edd_agree_to_privacy_policy'] ) ) { // WPCS: CSRF ok.
+		$order_data['agree_to_privacy_time'] = current_time( 'timestamp' );
+	}
+
+	/**
+	 * Fires after an order has been inserted.
+	 *
+	 * @internal This hook exists for backwards compatibility.
+	 *
+	 * @since 1.0
+	 *
+	 * @param int   $order_id   ID of the new order.
+	 * @param array $order_data Array of original order data.
+	 */
+	do_action( 'edd_insert_payment', $order_id, $order_data );
+
 	/**
 	 * Executes after an order has been fully built from the sum of its parts.
 	 *
 	 * @since 3.0
 	 *
-	 * @param int   $order_id   ID of the new order
-	 * @param array $order_data Array of original order data
+	 * @param int   $order_id   ID of the new order.
+	 * @param array $order_data Array of original order data.
 	 */
 	do_action( 'edd_built_order', $order_id, $order_data );
 
@@ -834,21 +861,24 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
  * @return int $order_id Order ID.
  */
 function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
-	global $wpdb;
+
+	// Default return value
+	$retval = 0;
 
 	// Bail if no transaction ID passed.
-	if ( empty( $transaction_id ) ) {
-		return 0;
+	if ( ! empty( $transaction_id ) ) {
+
+		// Look for a transaction by gateway transaction ID
+		$transaction = edd_get_order_transaction_by( 'transaction_id', $transaction_id );
+
+		// Return object ID if found
+		if ( ! empty( $transaction->object_id ) ) {
+			$retval = $transaction->object_id;
+		}
 	}
 
-	$order_id = $wpdb->get_var( $wpdb->prepare(
-		"SELECT object_id FROM {$wpdb->edd_order_transactions} WHERE transaction_id = %s",
-		$transaction_id
-	) );
-
-	return empty( $order_id )
-		? 0
-		: $order_id;
+	// Return
+	return absint( $retval );
 }
 
 /**

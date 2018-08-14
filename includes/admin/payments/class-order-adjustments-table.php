@@ -112,7 +112,7 @@ class Order_Adjustments_Table extends \WP_List_Table {
 	public function get_base_url() {
 
 		// Remove some query arguments
-		$base = remove_query_arg( edd_admin_removable_query_args(), admin_url( 'edit.php' ) );
+		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
 		$id = isset( $_GET['id'] )
 			? absint( $_GET['id'] )
@@ -120,10 +120,9 @@ class Order_Adjustments_Table extends \WP_List_Table {
 
 		// Add base query args
 		return add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
-			'id'        => $id,
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
+			'id'   => $id,
 		), $base );
 	}
 
@@ -220,7 +219,7 @@ class Order_Adjustments_Table extends \WP_List_Table {
 	public function column_amount( $order_adjustment ) {
 		$currency = edd_get_order( $order_adjustment->object_id )->currency;
 
-		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->amount );
+		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->total );
 	}
 
 	/**

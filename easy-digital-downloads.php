@@ -123,7 +123,7 @@ final class EDD_Requirements_Check {
 	private function load() {
 		require_once dirname( $this->file ) . '/includes/class-edd.php';
 		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
-			add_action( 'plugins_loaded', array( $this, 'bootstrap' ) );
+			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
 		}
 		do_action( 'edd_loaded' );
 	}

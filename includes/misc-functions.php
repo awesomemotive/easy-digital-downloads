@@ -13,6 +13,44 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Return the base admin-area URL.
+ *
+ * Use this to avoid typing all of it out a million times.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_admin_base_url() {
+
+	// Default args
+	$args = array(
+		'post_type' => 'download'
+	);
+
+	// Default URL
+	$admin_url = admin_url( 'edit.php' );
+
+	// Get the base admin URL
+	$url = add_query_arg( $args, $admin_url );
+
+	// Filter & return
+	return apply_filters( 'edd_get_admin_base_url', $url, $args, $admin_url );
+}
+
+/**
+ * Get the admin URL, maybe with arguments added
+ *
+ * @since 3.0
+ *
+ * @param array $args
+ * @return string
+ */
+function edd_get_admin_url( $args = array() ) {
+	return add_query_arg( $args, edd_get_admin_base_url() );
+}
+
+/**
  * Is Test Mode
  *
  * @since 1.0
@@ -134,7 +172,13 @@ function edd_is_odd( $int ) {
  */
 function edd_get_file_extension( $str ) {
 	$parts = explode( '.', $str );
-	return end( $parts );
+	$file_extension = end( $parts );
+
+	if ( false !== strpos( $file_extension, '?' ) ) {
+		$file_extension = substr( $file_extension, 0, strpos( $file_extension, '?' ) );
+	}
+
+	return $file_extension;
 }
 
 /**

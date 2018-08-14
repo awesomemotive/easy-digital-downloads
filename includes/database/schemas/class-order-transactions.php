@@ -63,7 +63,8 @@ class Order_Transactions extends Base {
 		array(
 			'name'       => 'transaction_id',
 			'type'       => 'varchar',
-			'length'     => '64'
+			'length'     => '64',
+			'cache_key'  => true
 		),
 
 		// gateway
@@ -112,6 +113,11 @@ class Order_Transactions extends Base {
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true
+		),
+
+		// uuid
+		array(
+			'uuid'       => true,
 		)
 	);
 }

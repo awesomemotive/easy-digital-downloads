@@ -81,44 +81,6 @@ class Orders extends Base {
 			'sortable'   => true
 		),
 
-		// date_created
-		array(
-			'name'       => 'date_created',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'created'    => true,
-			'date_query' => true,
-			'sortable'   => true
-		),
-
-		// date_modified
-		array(
-			'name'       => 'date_modified',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'modified'   => true,
-			'date_query' => true,
-			'sortable'   => true
-		),
-
-		// date_completed
-		array(
-			'name'       => 'date_completed',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'date_query' => true,
-			'sortable'   => true
-		),
-
-		// date_refundable
-		array(
-			'name'       => 'date_refundable',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'date_query' => true,
-			'sortable'   => true
-		),
-
 		// user_id
 		array(
 			'name'       => 'user_id',
@@ -224,6 +186,49 @@ class Orders extends Base {
 			'searchable' => true,
 			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// date_created
+		array(
+			'name'       => 'date_created',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'created'    => true,
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// date_modified
+		array(
+			'name'       => 'date_modified',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'modified'   => true,
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// date_completed
+		array(
+			'name'       => 'date_completed',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// date_refundable
+		array(
+			'name'       => 'date_refundable',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// uuid
+		array(
+			'uuid'       => true,
 		)
 	);
 }

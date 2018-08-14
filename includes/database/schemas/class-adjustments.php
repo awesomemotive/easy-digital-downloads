@@ -172,6 +172,26 @@ class Adjustments extends Base {
 			'default'    => '',
 		),
 
+		// start_date
+		array(
+			'name'       => 'start_date',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'searchable' => true,
+			'sortable'   => true
+		),
+
+		// end_date
+		array(
+			'name'       => 'end_date',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'date_query' => true,
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// date_created
 		array(
 			'name'       => 'date_created',
@@ -194,24 +214,9 @@ class Adjustments extends Base {
 			'sortable'   => true
 		),
 
-		// start_date
+		// uuid
 		array(
-			'name'       => 'start_date',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'date_query' => true,
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// end_date
-		array(
-			'name'       => 'end_date',
-			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
-			'date_query' => true,
-			'searchable' => true,
-			'sortable'   => true
+			'uuid'       => true,
 		)
 	);
 }

@@ -1023,11 +1023,20 @@ class EDD_CLI extends WP_CLI_Command {
 						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
 					}
 
+					$post_meta = wp_parse_args( $post_meta, array(
+						'_edd_log_request_ip' => '',
+						'_edd_log_user'       => 0,
+						'_edd_log_key'        => 'public',
+						'_edd_log_token'      => 'public',
+						'_edd_log_version'    => '',
+						'_edd_log_time'       => '',
+					) );
+
 					$log_data = array(
 						'ip'            => $post_meta['_edd_log_request_ip'],
-						'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-						'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-						'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+						'user_id'       => $post_meta['_edd_log_user'],
+						'api_key'       => $post_meta['_edd_log_key'],
+						'token'         => $post_meta['_edd_log_token'],
 						'version'       => $post_meta['_edd_log_version'],
 						'time'          => $post_meta['_edd_log_time'],
 						'request'       => $old_log->post_excerpt,
@@ -1449,6 +1458,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
 
 			foreach ( $results as $result ) {
+
+				// Check if order has already been migrated.
+				$migrated = $wpdb->get_var( $wpdb->prepare( "SELECT meta_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $result->ID ) );
+				if ( $migrated ) {
+					continue;
+				}
+
 				/** Create a new order ***************************************/
 
 				$meta = get_post_custom( $result->ID );
@@ -1491,10 +1507,15 @@ class EDD_CLI extends WP_CLI_Command {
 					return $carry += $item;
 				} );
 
+				$type = 'refunded' === $result->post_status
+					? 'refund'
+					: 'order';
+
 				$order_data = array(
 					'parent'         => $result->post_parent,
 					'order_number'   => $order_number,
 					'status'         => $result->post_status,
+					'type'           => $type,
 					'date_created'   => $result->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_modified'  => $result->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 					'date_completed' => $date_completed,
@@ -1513,6 +1534,14 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 
 				$order_id = edd_add_order( $order_data );
+
+				// First & last name.
+				$user_info['first_name'] = isset( $user_info['first_name'] )
+					? $user_info['first_name']
+					: '';
+				$user_info['last_name']  = isset( $user_info['last_name'] )
+					? $user_info['last_name']
+					: '';
 
 				// Add order address.
 				$user_info['address'] = isset( $user_info['address'] )

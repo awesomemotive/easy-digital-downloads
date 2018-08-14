@@ -36,7 +36,7 @@ final class Adjustments extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807110001;
+	protected $version = 201807270003;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -47,7 +47,7 @@ final class Adjustments extends Base {
 	 */
 	protected $upgrades = array(
 		'201806140002' => 201806140002,
-		'201807110001' => 201807110001
+		'201807270003' => 201807270003
 	);
 
 	/**
@@ -73,10 +73,11 @@ final class Adjustments extends Base {
 			once_per_customer int(1) NOT NULL default '0',
 			min_charge_amount decimal(18,9) NOT NULL default '0',
 			product_condition varchar(20) NOT NULL DEFAULT 'all',
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			start_date datetime NOT NULL default '0000-00-00 00:00:00',
 			end_date datetime NOT NULL default '0000-00-00 00:00:00',
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20),amount_type(20)),
 			KEY date_created (date_created),
@@ -167,5 +168,29 @@ final class Adjustments extends Base {
 
 		// Return success/fail
 		return $this->is_success( $retval );
+	}
+
+	/**
+	 * Upgrade to version 201807270003
+	 * - Add the `uuid` varchar column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201807270003() {
+
+		// Look for column
+		$result = $this->column_exists( 'uuid' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+			" );
+		}
+
+		// Return success/fail
+		return $this->is_success( $result );
 	}
 }

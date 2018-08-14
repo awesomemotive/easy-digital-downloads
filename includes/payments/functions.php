@@ -1484,13 +1484,15 @@ function edd_get_payment_transaction_id( $order_id = 0 ) {
  *
  * @since 2.1
  * @since 3.0 Updated to use new methods and store data in the new tables.
+ *            Added $amount parameter.
  *
  * @param int    $order_id       Order ID.
  * @param string $transaction_id Transaction ID from the gateway.
+ * @param mixed  $amount         Transaction amount.
  *
  * @return mixed Meta ID if successful, false if unsuccessful.
  */
-function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
+function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '', $amount = false ) {
 
 	// Bail if nothing was passed.
 	if ( empty( $order_id ) || empty( $transaction_id ) ) {
@@ -1510,6 +1512,10 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
 	$order = edd_get_order( $order_id );
 
 	if ( $order ) {
+		$amount = false === $amount
+			? $order->total
+			: floatval( $amount );
+
 		$transaction_ids = array_values( edd_get_order_transactions( array(
 			'fields'      => 'ids',
 			'number'      => 1,
@@ -1525,6 +1531,7 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
 			return edd_update_order_transaction( $transaction_id, array(
 				'transaction_id' => $transaction_id,
 				'gateway'        => $order->gateway,
+				'total'          => $amount,
 			) );
 		} else {
 			return edd_add_order_transaction( array(
@@ -1533,6 +1540,7 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '' ) {
 				'transaction_id' => $transaction_id,
 				'gateway'        => $order->gateway,
 				'status'         => 'complete',
+				'total'          => $amount,
 			) );
 		}
 	}

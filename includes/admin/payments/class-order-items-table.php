@@ -107,7 +107,7 @@ class Order_Items_Table extends \WP_List_Table {
 	public function get_base_url() {
 
 		// Remove some query arguments
-		$base = remove_query_arg( edd_admin_removable_query_args(), admin_url( 'edit.php' ) );
+		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
 		$id = isset( $_GET['id'] )
 			? absint( $_GET['id'] )
@@ -115,10 +115,9 @@ class Order_Items_Table extends \WP_List_Table {
 
 		// Add base query args
 		return add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
-			'id'        => $id,
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
+			'id'   => $id,
 		), $base );
 	}
 

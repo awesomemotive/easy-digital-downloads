@@ -757,24 +757,22 @@ function get_dates_filter_day_by_day() {
 
 	// Determine graph options
 	switch ( $dates['range'] ) {
-		case 'today' :
-		case 'yesterday' :
+		case 'today':
+		case 'yesterday':
 			$day_by_day = true;
 			break;
-		case 'last_quarter' :
-		case 'this_quarter' :
+		case 'last_quarter':
+		case 'this_quarter':
 			$day_by_day = true;
 			break;
 		case 'this_year':
 		case 'last_year':
 			$day_by_day = false;
 			break;
-		case 'other' :
-			$difference = ( $dates['start']->getTimestamp() - $dates['end']->getTimestamp() );
+		case 'other':
+			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
 
-			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true )
-			     || $difference >= YEAR_IN_SECONDS
-			) {
+			if ( $difference >= ( YEAR_IN_SECONDS / 4 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;

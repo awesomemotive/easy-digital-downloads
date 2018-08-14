@@ -68,10 +68,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'ajax'     => false
 		) );
 
-		$this->base_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history'
-		), admin_url( 'edit.php' ) );
+		$this->base_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history'
+		) );
 
 		$this->filter_bar_hooks();
 		$this->process_bulk_action();
@@ -246,7 +245,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					) );
 					?>
 
-					<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
+					<input type="number" name="order-amount-filter-value" min="0" step="0.01" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
 				</fieldset>
 
 				<fieldset>
@@ -277,12 +276,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					) );
 				?>
 				</fieldset>
+
+				<?php
+
+				// Third party plugin support
+				if ( has_action( 'edd_payment_advanced_filters_after_fields' ) ) : ?>
+
+					<fieldset class="edd-add-on-filters">
+						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?></legend>
+
+						<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
+
+					</fieldset>
+
+				<?php endif; ?>
 			</div>
 		</span>
 
 		<span id="edd-after-core-filters">
-			<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
-
 			<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
@@ -338,7 +349,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		<p class="search-form">
 			<?php do_action( 'edd_payment_history_search' ); ?>
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" placeholder="<?php esc_html_e( 'Search payments...', 'easy-digital-downloads' ); ?>" value="<?php _admin_search_query(); ?>" />
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" placeholder="<?php esc_html_e( 'Search orders...', 'easy-digital-downloads' ); ?>" value="<?php _admin_search_query(); ?>" />
 		</p>
 
 		<?php
@@ -565,12 +576,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		}
 
 		// View URL
-		$view_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
-			'id'        => $order->id,
-		), admin_url( 'edit.php' ) );
+		$view_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
+			'id'   => $order->id,
+		) );
 
 		// Default row actions
 		$row_actions = array(
@@ -622,12 +632,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				: __( 'No Name', 'easy-digital-downloads' );
 
 			// Link to View Customer
-			$url = add_query_arg( array(
-				'post_type' => 'download',
-				'page'      => 'edd-customers',
-				'view'      => 'overview',
-				'id'        => $customer_id,
-			), admin_url( 'edit.php' ) );
+			$url = edd_get_admin_url( array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => $customer_id,
+			) );
 
 			$name = '<a href="' . esc_url( $url ) . '">' . $name . '</a>';
 		} else {
@@ -856,6 +865,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 		$gateway    = isset( $_GET['gateway'] )    ? sanitize_text_field( $_GET['gateway'] )    : null;
 		$mode       = isset( $_GET['mode'] )       ? sanitize_text_field( $_GET['mode'] )       : null;
+		$type       = isset( $_GET['type'] )       ? sanitize_text_field( $_GET['type'] )       : 'order';
 
 		/**
 		 * Introduced as part of #6063. Allow a gateway to specified based on the context.
@@ -885,13 +895,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'status'   => $status,
 			'gateway'  => $gateway,
 			'mode'     => $mode,
+			'type'     => $type,
 			's'        => $search,
 		);
 
 		// Search
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
 			$args['search_in_notes'] = true;
-			$args['search']          = trim( str_replace( 'txn:', '', $args['search'] ) );
+			$args['search']          = trim( str_replace( 'txn:', '', $args['s'] ) );
 		}
 
 		// Date query
@@ -960,7 +971,24 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$r['output'] = 'orders';
 		$p = new EDD_Payments_Query( $r );
 
-		return $p->get_payments();
+		// Setup items
+		$items = $p->get_payments();
+
+		// Get customer IDs and count from payments
+		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
+		$cust_count   = count( $customer_ids );
+
+		// Maybe prime customer objects (if more than number of queries)
+		if ( $cust_count > 1 ) {
+			edd_get_customers( array(
+				'id__in'        => $customer_ids,
+				'no_found_rows' => true,
+				'number'        => $cust_count
+			) );
+		}
+
+		// Return items
+		return $items;
 	}
 
 	/**

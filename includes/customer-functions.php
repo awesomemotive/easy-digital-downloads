@@ -53,6 +53,48 @@ function edd_delete_customer( $customer_id = 0 ) {
 }
 
 /**
+ * Destroy a customer.
+ *
+ * Completely deletes a customer, and the addresses and email addresses with it.
+ *
+ * @since 3.0
+ *
+ * @param int $customer_id Customer ID.
+ * @return int
+ */
+function edd_destroy_customer( $customer_id = 0 ) {
+
+	// Get email addresses.
+	$email_addresses = edd_get_customer_email_addresses( array(
+		'customer_id'   => $customer_id,
+		'no_found_rows' => true,
+	) );
+
+	// Destroy email addresses.
+	if ( ! empty( $email_addresses ) ) {
+		foreach ( $email_addresses as $email_address ) {
+			edd_delete_customer_email_address( $email_address->id );
+		}
+	}
+
+	// Get addresses.
+	$addresses = edd_get_customer_addresses( array(
+		'customer_id'   => $customer_id,
+		'no_found_rows' => true,
+	) );
+
+	// Destroy addresses.
+	if ( ! empty( $addresses ) ) {
+		foreach ( $addresses as $address ) {
+			edd_delete_customer_address( $address->id );
+		}
+	}
+
+	// Delete the customer.
+	return edd_delete_customer( $customer_id );
+}
+
+/**
  * Update a customer.
  *
  * @since 3.0

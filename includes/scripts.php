@@ -181,11 +181,13 @@ function edd_load_admin_scripts( $hook ) {
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	$version = edd_admin_get_script_version();
+	$css_suffix  = is_rtl() ? '-rtl' : '';
+	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$js_suffix   = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	$version     = edd_admin_get_script_version();
 
-	// Always enqueue the main admin CSS
-	wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $suffix . '.css', array(), $version );
+	// Always enqueue the main admin menu CSS (using the JS suffix due to not having RTL styling)
+	wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $js_suffix . '.css', array(), $version );
 	wp_enqueue_style( 'edd-admin-menu' );
 
 	// Bail if not an EDD admin page
@@ -193,11 +195,11 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 	}
 
-	// These have to be global
-	wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), $version );
+	// These have to be global (use the JS prefix)
+	wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $js_suffix . '.css', array(), $version );
 	wp_enqueue_style( 'jquery-chosen' );
 
-	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), $version );
+	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $js_suffix . '.js', array( 'jquery' ), $version );
 	wp_enqueue_script( 'jquery-chosen' );
 
 	wp_enqueue_script( 'jquery-form' );
@@ -211,13 +213,13 @@ function edd_load_admin_scripts( $hook ) {
 	}
 
 	wp_register_script( 'edd-moment-js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js', array(), '2.20.1' );
-	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $suffix . '.js', array( 'edd-moment-js' ), '2.7.1', false );
+	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $js_suffix . '.js', array( 'edd-moment-js' ), '2.7.1', false );
 
 	if ( edd_is_admin_page( $hook, 'reports' ) ) {
 		$admin_deps[] = 'edd-chart-js';
 	}
 
-	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, $version, false );
+	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $js_suffix . '.js', $admin_deps, $version, false );
 
 	wp_enqueue_script( 'edd-admin-scripts' );
 
@@ -274,7 +276,7 @@ function edd_load_admin_scripts( $hook ) {
 	 *
 	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
 	 */
-	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $suffix . '.js', array( 'jquery', 'edd-admin-scripts' ), $version );
+	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $js_suffix . '.js', array( 'jquery', 'edd-admin-scripts' ), $version );
 	wp_localize_script( 'edd-admin-scripts-compatibility', 'edd_backcompat_vars', array(
 		'purchase_limit_settings'     => __( 'Purchase Limit Settings', 'easy-digital-downloads' ),
 		'simple_shipping_settings'    => __( 'Simple Shipping Settings', 'easy-digital-downloads' ),
@@ -287,7 +289,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
 
-	wp_register_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
+	wp_register_style( 'colorbox', $css_dir . 'colorbox' . $css_suffix . '.css', array(), '1.3.20' );
 	wp_enqueue_style( 'colorbox' );
 
 	wp_register_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
@@ -296,7 +298,7 @@ function edd_load_admin_scripts( $hook ) {
 	//call for media manager
 	wp_enqueue_media();
 
-	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
+	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $js_suffix . '.js' );
 //	wp_enqueue_script( 'jquery-flot' );
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -304,17 +306,17 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'jquery-ui-tooltip' );
 
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
-	wp_register_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
+	wp_register_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $css_suffix . '.css' );
 	wp_enqueue_style( 'jquery-ui-css' );
 
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_style( 'thickbox' );
 
-	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $suffix . '.css', array(), $version );
+	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $css_suffix . '.css', array(), $version );
 	wp_enqueue_style( 'edd-admin' );
 
-	wp_register_style( 'edd-admin-datepicker', $css_dir . 'edd-admin-datepicker' . $suffix . '.css', array( 'edd-admin' ), $version );
+	wp_register_style( 'edd-admin-datepicker', $css_dir . 'edd-admin-datepicker' . $css_suffix . '.css', array( 'edd-admin' ), $version );
 	wp_enqueue_style( 'edd-admin-datepicker' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
@@ -377,7 +379,8 @@ function edd_load_head_styles() {
 	}
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	$suffix  = is_rtl() ? '-rtl' : '';
+	$suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 	$file          = 'edd' . $suffix . '.css';
 	$templates_dir = edd_get_theme_template_dir_name();

@@ -33,11 +33,10 @@ function edd_customers_sections( $customer ) {
 	$sections->current_section = ! empty( $_GET['view'] )
 		? sanitize_key( $_GET['view'] )
 		: 'overview';
-	$sections->base_url = add_query_arg( array(
-		'post_type' => 'download',
-		'page'      => 'edd-customers',
-		'id'        => $customer->id
-	), admin_url( 'edit.php' ) );
+	$sections->base_url = edd_get_admin_url( array(
+		'page' => 'edd-customers',
+		'id'   => $customer->id
+	) );
 
 	// Get all registered tabs & views
 	$tabs  = edd_customer_tabs();
@@ -702,12 +701,11 @@ function edd_customers_view( $customer = null ) {
 					}
 
 					// View URL
-					$view_url = add_query_arg( array(
-						'post_type' => 'download',
-						'page'      => 'edd-payment-history',
-						'view'      => 'view-order-details',
-						'id'        => $order->id,
-					), admin_url( 'edit.php' ) );
+					$view_url = edd_get_admin_url( array(
+						'page' => 'edd-payment-history',
+						'view' => 'view-order-details',
+						'id'   => $order->id,
+					) );
 
 					$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>';
 					?>
