@@ -772,7 +772,7 @@ function get_dates_filter_day_by_day() {
 		case 'other':
 			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
 
-			if ( in_array( $dates['range'], array( 'this_year', 'last_year' ), true ) || $difference >= YEAR_IN_SECONDS ) {
+			if ( $difference >= ( YEAR_IN_SECONDS / 4 ) ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;

@@ -186,14 +186,9 @@ abstract class Base extends \EDD\Database\Base {
 		if ( $this->exists() ) {
 			$this->upgrade();
 
-		// Create
+		// Install
 		} else {
-			$created = $this->create();
-
-			// Set the DB version if create was successful
-			if ( true === $created ) {
-				$this->set_db_version();
-			}
+			$this->install();
 		}
 	}
 
@@ -259,6 +254,34 @@ abstract class Base extends \EDD\Database\Base {
 		return $this->db_version;
 	}
 
+	/**
+	 * Install a database table by creating the table and setting the version.
+	 *
+	 * @since 3.0
+	 */
+	public function install() {
+		$created = $this->create();
+
+		// Set the DB version if create was successful
+		if ( true === $created ) {
+			$this->set_db_version();
+		}
+	}
+
+	/**
+	 * Destroy a database table by dropping the table and deleting the version.
+	 *
+	 * @since 3.0
+	 */
+	public function uninstall() {
+		$dropped = $this->drop();
+
+		// Delete the DB version if drop was successful
+		if ( true === $dropped ) {
+			$this->delete_db_version();
+		}
+	}
+
 	/** Public Management *****************************************************/
 
 	/**
@@ -283,6 +306,33 @@ abstract class Base extends \EDD\Database\Base {
 		$like     = $db->esc_like( $this->table_name );
 		$prepared = $db->prepare( $query, $like );
 		$result   = $db->get_var( $prepared );
+
+		// Does the table exist?
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Check if table already exists
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function column_exists( $name = '' ) {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
+		$query    = "SHOW COLUMNS FROM {$this->table_name} LIKE %s";
+		$like     = $db->esc_like( $name );
+		$prepared = $db->prepare( $query, $like );
+		$result   = $db->query( $prepared );
 
 		// Does the table exist?
 		return $this->is_success( $result );
@@ -405,8 +455,8 @@ abstract class Base extends \EDD\Database\Base {
 			return version_compare( $value, $this->db_version, '>' );
 		} );
 
-		// Bail if no upgrades
-		if ( empty( $upgrades ) ) {
+		// Bail if no upgrades or database version is missing
+		if ( empty( $upgrades ) || empty( $this->db_version ) ) {
 			$this->set_db_version();
 			return true;
 		}
@@ -478,7 +528,7 @@ abstract class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed Database interface or False
+	 * @return wpdb Database interface or False
 	 */
 	protected static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
@@ -619,6 +669,17 @@ abstract class Base extends \EDD\Database\Base {
 		$this->db_version = $this->is_global()
 			? get_network_option( get_main_network_id(), $this->db_version_key, false )
 			:         get_option(                        $this->db_version_key, false );
+	}
+
+	/**
+	 * Delete the table version from the database
+	 *
+	 * @since 3.0
+	 */
+	private function delete_db_version() {
+		$this->db_version = $this->is_global()
+			? delete_network_option( get_main_network_id(), $this->db_version_key, false )
+			:         delete_option(                        $this->db_version_key, false );
 	}
 
 	/**

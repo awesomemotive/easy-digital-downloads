@@ -140,4 +140,47 @@ final class Discounts extends Base {
 		// Return success
 		return true;
 	}
+
+	/**
+	 * Upgrade to version 201807110001
+	 * - Rename min_cart_price to min_charge_amount
+	 *
+	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807110001() {
+		$retval = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} CHANGE `min_cart_price` `min_charge_amount` decimal(18,9) NOT NULL default '0';
+		" );
+
+		// Return success/fail
+		return $this->is_success( $retval );
+	}
+
+	/**
+	 * Upgrade to version 201807270003
+	 * - Add the `uuid` varchar column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201807270003() {
+
+		// Look for column
+		$result = $this->column_exists( 'uuid' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+			" );
+		}
+
+		// Return success/fail
+		return $this->is_success( $result );
+	}
 }

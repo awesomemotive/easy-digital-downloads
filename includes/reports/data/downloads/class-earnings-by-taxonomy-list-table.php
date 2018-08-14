@@ -95,11 +95,11 @@ class Earnings_By_Taxonomy_List_Table extends \WP_List_Table {
 
 			$result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
 
-			$earnings = null === $result->total
+			$earnings = null === $result && null === $result->total
 				? 0.00
 				: floatval( $result->total );
 
-			$sales = null === $result->sales
+			$sales = null === $result && null === $result->sales
 				? 0
 				: absint( $result->sales );
 

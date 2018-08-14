@@ -99,10 +99,20 @@ final class Customers extends Base {
 				ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
 				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
 				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
-				ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`;
-					 UPDATE {$this->table_name} SET 'date_modified' = 'date_created';
 			" );
+
+			if ( ! $this->column_exists( 'status' ) ) {
+				$this->get_db()->query( "
+					ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;
+				" );
+			}
+
+			if ( ! $this->column_exists( 'date_modified' ) ) {
+				$this->get_db()->query( "
+					ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`;
+						 UPDATE {$this->table_name} SET 'date_modified' = 'date_created';
+				" );
+			}
 		}
 
 		parent::maybe_upgrade();
@@ -121,7 +131,10 @@ final class Customers extends Base {
 
 		// Alter the database
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`" );
+
+		if ( ! $this->column_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`" );
+		}
 
 		// Return success/fail
 		return $this->is_success( true );
@@ -137,8 +150,9 @@ final class Customers extends Base {
 	 */
 	protected function __201807130001() {
 
-		// Alter the database
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
+		if ( ! $this->column_exists( 'date_modified' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
+		}
 
 		// Return success/fail
 		return $this->is_success( true );
@@ -171,10 +185,15 @@ final class Customers extends Base {
 	 */
 	protected function __201807270003() {
 
-		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-		" );
+		// Look for column
+		$result = $this->column_exists( 'uuid' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+			" );
+		}
 
 		// Return success/fail
 		return $this->is_success( $result );

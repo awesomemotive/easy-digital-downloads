@@ -612,16 +612,19 @@ function edd_build_order( $order_data = array() ) {
 					: false;
 
 				$tax_rate = isset( $item['tax_rate'] )
-					? (float) $item['tax_rate']
+					? floatval( $item['tax_rate'] )
 					: edd_get_cart_tax_rate( $country, $state, $zip );
 
-				// Always store tax rate, even if empty.
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_item_id,
-					'object_type' => 'order_item',
-					'type'        => 'tax_rate',
-					'total'       => $tax_rate,
-				) );
+				if ( 0 < $tax_rate ) {
+
+					// Always store tax rate, even if empty.
+					edd_add_order_adjustment( array(
+						'object_id'   => $order_item_id,
+						'object_type' => 'order_item',
+						'type'        => 'tax_rate',
+						'total'       => $tax_rate,
+					) );
+				}
 			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];

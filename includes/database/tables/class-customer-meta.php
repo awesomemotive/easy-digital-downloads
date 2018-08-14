@@ -82,9 +82,12 @@ final class Customer_Meta extends Base {
 	public function maybe_upgrade() {
 		if ( false !== get_option( $this->prefix . 'edd_customermeta_version', false ) ) {
 			delete_option( $this->prefix . 'edd_customermeta_version' );
-			$this->get_db()->query( "
-				ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';
-			" );
+
+			if ( ! $this->column_exists( 'edd_customer_id' ) ) {
+				$this->get_db()->query( "
+					ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';
+				" );
+			}
 		}
 
 		parent::maybe_upgrade();
@@ -102,9 +105,11 @@ final class Customer_Meta extends Base {
 	protected function __201807110001() {
 
 		// Alter the database with separate queries so indexes succeed
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0'" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );
+		if ( ! $this->column_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0'" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );
+		}
 
 		// Return success/fail
 		return $this->is_success( true );

@@ -382,26 +382,27 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
-		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : '';
-		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id';
+		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : ''; // WPCS: CSRF ok.
+		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
 
-		$args    = array(
+		$args = array(
 			'limit'   => $this->per_page,
 			'offset'  => $offset,
 			'order'   => $order,
 			'orderby' => $orderby,
-			'status'  => $status
+			'status'  => $status,
 		);
 
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 		} elseif ( is_numeric( $search ) ) {
-			$args['id']    = $search;
+			$args['id'] = $search;
 		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
 		} else {
-			$args['name']  = $search;
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'name', 'email' );
 		}
 
 		$this->args = $args;
@@ -410,13 +411,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		if ( $customers ) {
 			foreach ( $customers as $customer ) {
 				$data[] = array(
-					'id'            => $customer->id,
-					'user_id'       => $customer->user_id,
-					'name'          => $customer->name,
-					'email'         => $customer->email,
-					'order_count'   => $customer->purchase_count,
-					'spent'         => $customer->purchase_value,
-					'date_created'  => $customer->date_created
+					'id'           => $customer->id,
+					'user_id'      => $customer->user_id,
+					'name'         => $customer->name,
+					'email'        => $customer->email,
+					'order_count'  => $customer->purchase_count,
+					'spent'        => $customer->purchase_value,
+					'date_created' => $customer->date_created,
 				);
 			}
 		}

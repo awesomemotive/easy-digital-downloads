@@ -418,9 +418,48 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
-#edd-add-discount input.edd-price-field,
-#edd-edit-discount input.edd-price-field {
-	padding: 3px 5px;
+.edd-amount-type-select-wrapper {
+	position: absolute;
+	width: 45px;
+	margin: 2px;
+	background: #fafafa;
+	opacity: 0.9;
+	overflow: hidden;
+}
+
+.edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	left: 2px;
+	top: 3px;
+	font-family: dashicons;
+	font-size: 15px;
+	content: '\f140';
+	color: #555;
+	margin-top: 1px;
+	z-index: 2;
+}
+
+.edd-amount-type-wrapper select {
+	border: 0;
+	background: transparent;
+	height: 27px;
+	width: 45px;
+	padding: 0 9px 0 7px;
+	margin: 0;
+	text-align: center;
+	border-left: 1px solid #ddd;
+	-webkit-appearance: none;
+	box-shadow: none;
+	position: relative;
+	z-index: 3;
+}
+
+.edd-amount-type-wrapper #edd-amount {
+	height: 29px;
+	padding: 3px 52px 3px 5px;
 	width: 80%;
 	max-width: 125px;
 }
@@ -528,6 +567,11 @@ textarea[name="edd-note"] {
 
 #edd-filters {
 	padding: 0 10px;
+	margin: 0;
+}
+
+.download_page_edd-reports #edd-filters {
+	margin-top: 8px;
 }
 
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
@@ -592,6 +636,14 @@ textarea[name="edd-note"] {
 	padding-bottom: 5px;
 }
 
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters label,
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters span,
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters p,
+#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters div {
+	display: block;
+	margin-bottom: 2px;
+}
+
 #edd-filters #edd-advanced-filters div.edd-select-chosen:not(:last-child) {
 	margin-bottom: 10px;
 }
@@ -617,7 +669,7 @@ textarea[name="edd-note"] {
 -------------------------------------------------------------- */
 
 #edd-add-ons {
-	margin: 29px 2px -9px 20px;
+	margin: 9px 2px -9px 20px;
 }
 
 .edd-tab-wrap {
@@ -625,15 +677,14 @@ textarea[name="edd-note"] {
 }
 
 h2.nav-tab-wrapper.edd-tab-clear {
-	margin: -20px 0 0 0;
+	margin: -19px 0 0 0;
 }
 
 .edit-tags-php.post-type-download .wrap > .wp-heading-inline,
 .edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-addons .wrap .wp-heading-inline,
+.download_page_edd-payment-history .wrap .wp-heading-inline,
 .edit-tags-php.post-type-download .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .subtitle,
-.download_page_edd-addons .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .page-title-action,
 .download_page_edd-addons .wrap > .page-title-action {
 	display: none;
@@ -641,7 +692,7 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
-.download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
+.download_page_edd-payment-history .wrap .nav-tab-wrapper .page-title-action {
 	top: 3px;
 	margin-right: 10px;
 	line-height: 24px;
@@ -658,6 +709,12 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 #edd_product_settings .inside div:first-child strong {
 	margin-top: -14px;
+}
+
+#edd_product_settings .inside strong .edd-help-tip {
+	float: left;
+	font-size: 20px;
+	line-height: 1.3;
 }
 
 
@@ -1518,18 +1575,21 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 .edd-vertical-sections .edd-legacy-label {
-	font-size: 8px;
+	font-size: 7px;
+	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
-	padding: 3px 4px 4px;
+	vertical-align: middle;
+	padding: 2px 3px 3px 2px;
 	border-radius: 4px;
 	color: #fff;
-	background-color: #aaa;
+	background-color: #bbb;
+	border: 1px solid #999;
 	opacity: 0.5;
 	display: inline-block;
 	position: absolute;
-	top: 13px;
-	left: 10px;
+	top: 11px;
+	left: 6px;
 }
 
 .edd-reports-wrapper .postbox h3 {
@@ -1545,9 +1605,17 @@ td.edd_order_price {
 
 .edd-reports-wrapper form .edd-from-to-wrapper,
 .edd-reports-wrapper form .edd-select,
+.edd-reports-wrapper form .edd-label,
 .edd-reports-wrapper form input.button {
 	vertical-align: middle;
 	float: right;
+}
+
+.edd-reports-wrapper form .edd-label {
+	height: 29px;
+	line-height: 29px;
+	vertical-align: middle;
+	margin-left: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {

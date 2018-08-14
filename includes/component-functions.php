@@ -246,3 +246,76 @@ function edd_setup_components() {
 	// Action to allow third party components to be setup.
 	do_action( 'edd_setup_components' );
 }
+
+/**
+ * Install all component database tables
+ *
+ * This function installs all database tables used by all components (including
+ * third-party and add-ons that use the Component API)
+ *
+ * This is used by unit tests and tools.
+ *
+ * @since 3.0
+ */
+function edd_install_component_database_tables() {
+
+	// Get the components
+	$components = EDD()->components;
+
+	// Bail if no components setup yet
+	if ( empty( $components ) ) {
+		return;
+	}
+
+	// Drop all component tables
+	foreach ( $components as $component ) {
+		$thing = $component->get_interface( 'table' );
+
+		if ( $thing instanceof \EDD\Database\Tables\Base && ! $thing->exists() ) {
+			$thing->install();
+		}
+
+		$thing = $component->get_interface( 'meta' );
+
+		if ( $thing instanceof \EDD\Database\Tables\Base && ! $thing->exists() ) {
+			$thing->install();
+		}
+	}
+}
+
+/**
+ * Uninstall all component database tables
+ *
+ * This function is destructive and disastrous, so do not call it directly
+ * unless you fully intend to destroy all data (including third-party add-ons
+ * that use the Component API)
+ *
+ * This is used by unit tests and tools.
+ *
+ * @since 3.0
+ */
+function edd_uninstall_component_database_tables() {
+
+	// Get the components
+	$components = EDD()->components;
+
+	// Bail if no components setup yet
+	if ( empty( $components ) ) {
+		return;
+	}
+
+	// Drop all component tables
+	foreach ( $components as $component ) {
+		$thing = $component->get_interface( 'table' );
+
+		if ( $thing instanceof \EDD\Database\Tables\Base && $thing->exists() ) {
+			$thing->uninstall();
+		}
+
+		$thing = $component->get_interface( 'meta' );
+
+		if ( $thing instanceof \EDD\Database\Tables\Base && $thing->exists() ) {
+			$thing->uninstall();
+		}
+	}
+}
