@@ -296,6 +296,49 @@ a.edd-delete:hover {
 	height: auto;
 }
 
+/* Insert Download
+-------------------------------------------------------------- */
+
+#TB_window {
+	overflow: hidden;
+}
+#TB_ajaxContent {
+	width: calc(100% - 30px) !important;
+	padding: 15px;
+	margin: 0;
+	height: calc(100% - 118px) !important;
+}
+
+#choose-download-wrapper {
+	width: 100%;
+}
+
+#choose-download-wrapper .wrap {
+	overflow-y: scroll;
+	margin: 0;
+	padding: 0;
+	height: calc(100% - 50px);
+}
+
+#choose-download-wrapper .submit-wrapper {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	padding: 0;
+	margin: 0 0 0 -15px;
+	text-align: right;
+}
+
+#choose-download-wrapper .submit-wrapper div {
+	background-color: #fafafa;
+	padding: 15px;
+	border-top: 1px solid #ddd;
+}
+
+.wp-media-buttons .button.edd-thickbox {
+	padding-left: 0;
+}
+
 /* Add/View Order Styles
 -------------------------------------------------------------- */
 .edd-vertical-sections .new-customer strong {
@@ -2121,15 +2164,6 @@ td.edd_order_price {
 }
 .wrap-licenses p.submit {
 	clear: both;
-}
-
-/* Button styles
--------------------------------------------------------------- */
-
-#TB_window #edd-add-download:hover,
-#TB_window #edd-add-download:active,
-#TB_window #edd-add-download:focus {
-	color: #fff;
 }
 
 /* Global Graph Styles

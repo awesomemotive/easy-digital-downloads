@@ -56,7 +56,7 @@ function edd_media_button() {
 	$icon = '<span class="wp-media-buttons-icon dashicons dashicons-download" id="edd-media-button"></span>';
 
 	// Output the thickbox button
-	echo '<a href="#TB_inline?width=640&height=300&inlineId=choose-download" class="thickbox button edd-thickbox" style="padding-left: .4em;">' . $icon . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</a>';
+	echo '<a href="#TB_inline?&width=600&height=300&inlineId=choose-download" class="thickbox button edd-thickbox">' . $icon . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</a>';
 }
 add_action( 'media_buttons', 'edd_media_button', 11 );
 
@@ -119,91 +119,96 @@ function edd_admin_footer_for_thickbox() {
 
 		jQuery(document).ready(function ($) {
 			$('#select-edd-style').change(function () {
-				if ($(this).val() === 'button') {
-					$('#edd-color-choice').slideDown();
-				} else {
-					$('#edd-color-choice').slideUp();
-				}
+				( $(this).val() === 'button' )
+					? $('#edd-color-choice').show()
+					: $('#edd-color-choice').hide();
 			});
 		});
 	</script>
 
 	<div id="choose-download" style="display: none;">
-		<div class="wrap">
-			<table class="form-table">
-				<tbody>
-					<tr>
-						<th scope="row" valign="top">
-							<?php echo edd_get_label_singular(); ?>
-							<?php esc_html_e( '', 'easy-digital-downloads' ); ?>
-						</th>
-						<td>
-							<?php echo EDD()->html->product_dropdown( array( 'chosen' => true ) ); ?>
-						</td>
-					</tr>
-
-					<?php if ( edd_shop_supports_buy_now() ) : ?>
+		<div id="choose-download-wrapper">
+			<div class="wrap">
+				<table class="form-table">
+					<tbody>
 						<tr>
 							<th scope="row" valign="top">
-								<?php esc_html_e( 'Behavior', 'easy-digital-downloads' ); ?>
+								<?php echo edd_get_label_singular(); ?>
 							</th>
 							<td>
-								<select id="select-edd-direct">
-									<option value="1"><?php _e( 'Add to Cart', 'easy-digital-downloads' ); ?></option>
-									<option value="2"><?php _e( 'Direct Link', 'easy-digital-downloads' ); ?></option>
-								</select>
+								<?php echo EDD()->html->product_dropdown( array( 'chosen' => true ) ); ?>
+								<p class="description"><?php esc_html_e( 'Choose an existing product', 'easy-digital-downloads' ); ?></p>
 							</td>
 						</tr>
-					<?php endif; ?>
 
-					<tr>
-						<th scope="row" valign="top">
-							<?php esc_html_e( 'Style', 'easy-digital-downloads' ); ?>
-						</th>
-						<td>
-							<select id="select-edd-style">
-								<?php
-								foreach ( $styles as $style => $label ) {
-									echo '<option value="' . esc_attr( $style ) . '">' . esc_html( $label ) . '</option>';
-								}
-								?>
-							</select>
+						<?php if ( edd_shop_supports_buy_now() ) : ?>
+							<tr>
+								<th scope="row" valign="top">
+									<?php esc_html_e( 'Behavior', 'easy-digital-downloads' ); ?>
+								</th>
+								<td>
+									<select id="select-edd-direct">
+										<option value="1"><?php _e( 'Add to Cart', 'easy-digital-downloads' ); ?></option>
+										<option value="2"><?php _e( 'Direct Link', 'easy-digital-downloads' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'How do you want this to work?', 'easy-digital-downloads' ); ?></p>
+								</td>
+							</tr>
+						<?php endif; ?>
 
-						</td>
-					</tr>
-
-					<?php if ( ! empty( $colors ) ) : ?>
-						<tr id="edd-color-choice" style="display: none;">
+						<tr>
 							<th scope="row" valign="top">
-								<?php esc_html_e( 'Color', 'easy-digital-downloads' ); ?>
+								<?php esc_html_e( 'Style', 'easy-digital-downloads' ); ?>
 							</th>
 							<td>
-								<select id="select-edd-color">
+								<select id="select-edd-style">
 									<?php
-										foreach ( $colors as $key => $color ) {
-											echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
+										foreach ( $styles as $style => $label ) {
+											echo '<option value="' . esc_attr( $style ) . '">' . esc_html( $label ) . '</option>';
 										}
 									?>
 								</select>
+								<p class="description"><?php esc_html_e( 'Choose between a Button or a Link', 'easy-digital-downloads' ); ?></p>
 							</td>
 						</tr>
-					<?php endif; ?>
 
-					<tr>
-						<th scope="row" valign="top">
-							<?php esc_html_e( 'Text', 'easy-digital-downloads' ); ?>
-						</th>
-						<td>
-							<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'View Product', 'easy-digital-downloads' ); ?>"/>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+						<?php if ( ! empty( $colors ) ) : ?>
+							<tr id="edd-color-choice" style="display: none;">
+								<th scope="row" valign="top">
+									<?php esc_html_e( 'Color', 'easy-digital-downloads' ); ?>
+								</th>
+								<td>
+									<select id="select-edd-color">
+										<?php
+											foreach ( $colors as $key => $color ) {
+												echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
+											}
+										?>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose the button color', 'easy-digital-downloads' ); ?></p>
+								</td>
+							</tr>
+						<?php endif; ?>
 
-			<p class="submit">
-				<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
-				<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
-			</p>
+						<tr>
+							<th scope="row" valign="top">
+								<?php esc_html_e( 'Text', 'easy-digital-downloads' ); ?>
+							</th>
+							<td>
+								<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'View Product', 'easy-digital-downloads' ); ?>"/>
+								<p class="description"><?php esc_html_e( 'This is the text inside the button or link', 'easy-digital-downloads' ); ?></p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="submit-wrapper">
+				<div>
+					<a id="edd-cancel-download-insert" class="button" onclick="tb_remove();"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
+				</div>
+			</div>
 		</div>
 	</div>
 
