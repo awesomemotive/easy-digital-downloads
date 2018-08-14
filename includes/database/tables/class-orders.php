@@ -100,10 +100,15 @@ final class Orders extends Base {
 	 */
 	protected function __201806110001() {
 
-		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_completed`;
-		" );
+		// Look for column
+		$result = $this->get_db()->query( "SHOW COLUMNS FROM {$this->table_name} LIKE 'date_refundable'" );
+
+		// Maybe add column
+		if ( ! $this->is_success( $result ) ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_completed`;
+			" );
+		}
 
 		// Return success/fail
 		return $this->is_success( $result );
@@ -119,10 +124,15 @@ final class Orders extends Base {
 	 */
 	protected function __201807270003() {
 
-		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
-		" );
+		// Look for column
+		$result = $this->column_exists( 'uuid' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+			" );
+		}
 
 		// Return success/fail
 		return $this->is_success( $result );
