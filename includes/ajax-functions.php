@@ -916,6 +916,14 @@ function edd_ajax_add_order_item() {
 		? edd_parse_product_dropdown_value( sanitize_text_field( $_POST['download'] ) )
 		: array();
 
+	$country = isset( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] )
+		: '';
+
+	$region = isset( $_POST['region'] )
+		? sanitize_text_field( $_POST['region'] )
+		: '';
+
 	// Bail if missing any data.
 	if ( empty( $nonce ) || empty( $download ) ) {
 		edd_die( '-1' );
@@ -947,7 +955,7 @@ function edd_ajax_add_order_item() {
 
 		$response['name']     = $name;
 		$response['discount'] = 0.00;
-		$response['tax']      = edd_calculate_tax( $amount * $quantity );
+		$response['tax']      = edd_calculate_tax( $amount * $quantity, $country, $region );
 		$response['quantity'] = $quantity;
 		$response['amount']   = $amount;
 		$response['total']    = floatval( ( $amount * $quantity ) + $response['tax'] );
