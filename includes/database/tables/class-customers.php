@@ -36,7 +36,7 @@ final class Customers extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807130002;
+	protected $version = 201807270003;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -49,6 +49,7 @@ final class Customers extends Base {
 		'201807110001' => 201807110001,
 		'201807130001' => 201807130001,
 		'201807130002' => 201807130002,
+		'201807270003' => 201807270003,
 	);
 
 	/**
@@ -68,6 +69,7 @@ final class Customers extends Base {
 			purchase_count bigint(20) unsigned NOT NULL default '0',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			UNIQUE KEY email (email),
 			KEY user (user_id),
@@ -92,15 +94,25 @@ final class Customers extends Base {
 			delete_option( $this->prefix . 'edd_customers_version' );
 
 			$this->get_db()->query( "
-				ALTER TABLE {$this->table_name} MODIFY `email` VARCHAR(100) NOT NULL default '';
+				ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default '';
 				ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
 				ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
 				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
 				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
-				ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active' AFTER 'name';
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER 'date_created';
-					 UPDATE {$this->table_name} SET 'date_modified' = 'date_created';
 			" );
+
+			if ( ! $this->column_exists( 'status' ) ) {
+				$this->get_db()->query( "
+					ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;
+				" );
+			}
+
+			if ( ! $this->column_exists( 'date_modified' ) ) {
+				$this->get_db()->query( "
+					ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`;
+						 UPDATE {$this->table_name} SET 'date_modified' = 'date_created';
+				" );
+			}
 		}
 
 		parent::maybe_upgrade();
@@ -119,7 +131,10 @@ final class Customers extends Base {
 
 		// Alter the database
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` VARCHAR(20) NOT NULL default 'active' AFTER 'name'" );
+
+		if ( ! $this->column_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`" );
+		}
 
 		// Return success/fail
 		return $this->is_success( true );
@@ -135,8 +150,9 @@ final class Customers extends Base {
 	 */
 	protected function __201807130001() {
 
-		// Alter the database
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER 'date_created'" );
+		if ( ! $this->column_exists( 'date_modified' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
+		}
 
 		// Return success/fail
 		return $this->is_success( true );
@@ -157,5 +173,29 @@ final class Customers extends Base {
 
 		// Return success/fail
 		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 201807270003
+	 * - Add the `uuid` varchar column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201807270003() {
+
+		// Look for column
+		$result = $this->column_exists( 'uuid' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+			" );
+		}
+
+		// Return success/fail
+		return $this->is_success( $result );
 	}
 }

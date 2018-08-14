@@ -69,12 +69,12 @@
 
 .edd-datepicker .ui-datepicker-prev,
 .edd-datepicker .ui-datepicker-prev-hover {
-    left: 0;
+    right: 0;
 }
 
 .edd-datepicker .ui-datepicker-next,
 .edd-datepicker .ui-datepicker-next-hover {
-    right: 0;
+    left: 0;
 }
 
 .edd-datepicker .ui-datepicker-next span,
@@ -83,17 +83,17 @@
 }
 
 .edd-datepicker .ui-datepicker-prev {
-    float: left;
+    float: right;
 }
 
 .edd-datepicker .ui-datepicker-next {
-    float: right;
+    float: left;
 }
 
 .edd-datepicker .ui-datepicker-prev:before,
 .edd-datepicker .ui-datepicker-next:before {
     font: normal 20px/34px 'dashicons';
-    padding-left: 7px;
+    padding-right: 7px;
     color: #fff;
     speak: none;
     -webkit-font-smoothing: antialiased;

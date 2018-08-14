@@ -133,7 +133,7 @@ function edd_get_discount_by_code( $code = '' ) {
  *
  * @param string $field The field to retrieve the discount with.
  * @param mixed  $value The value for $field.
- * @return mixed object|bool EDD_Discount object or false if not found.
+ * @return mixed EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by( $field = '', $value = '' ) {
 	$discounts = new EDD\Compat\Discount_Query();

@@ -1161,7 +1161,7 @@ jQuery(document).ready(function ($) {
 
 				$.post( ajaxurl, data, function( response ) {
 
-				    // Store response for later use.
+					// Store response for later use.
 					edd_admin_globals.customer_address_ajax_result = response;
 
 					if ( response.html ) {
@@ -1180,9 +1180,8 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
 					val   = $this.val(),
-					select = $( '#edd-add-order-form select#edd_order_address_country' );
-
-				var address = edd_admin_globals.customer_address_ajax_result['addresses'][ val ];
+					select = $( '#edd-add-order-form select#edd_order_address_country' ),
+					address = edd_admin_globals.customer_address_ajax_result.addresses[ val ];
 
 				$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
 				$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
@@ -1206,6 +1205,28 @@ jQuery(document).ready(function ($) {
 
 					$( 'select#edd_order_address_region' ).trigger( 'chosen:updated' );
 					$( 'select#edd_order_address_region' ).val( address.region ).trigger( 'chosen:updated' );
+				});
+
+				return false;
+			} );
+
+			$( '.edd-order-address-country' ).on( 'change', function() {
+				var select = $( this ),
+					data   = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
+						field_name: 'edd-order-address-country'
+					};
+
+				$.post( ajaxurl, data, function ( response ) {
+					$( 'select.edd-order-address-region' ).find( 'option:gt(0)' ).remove();
+
+					if ( 'nostates' !== response ) {
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd-order-address-region' );
+					}
+
+					$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
 				});
 
 				return false;
@@ -1370,15 +1391,7 @@ jQuery(document).ready(function ($) {
 	var EDD_Discount = {
 
 		init : function() {
-			this.type_select();
 			this.product_requirements();
-		},
-
-		type_select : function() {
-			$('#edd-amount-type').change(function() {
-				$('.edd-amount-description').hide();
-				$('.edd-amount-description.' + $( this ).val()).show();
-			});
 		},
 
 		product_requirements : function() {

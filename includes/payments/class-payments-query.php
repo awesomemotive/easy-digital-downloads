@@ -73,6 +73,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			'user'            => null,
 			'customer'        => null,
 			'status'          => edd_get_payment_status_keys(),
+			'mode'            => null,
+			'type'            => 'order',
 			'meta_key'        => null,
 			'year'            => null,
 			'month'           => null,
@@ -643,6 +645,14 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {
 			$arguments['mode'] = $this->args['mode'];
+		}
+
+		if ( ! empty( $this->args['type'] ) ) {
+			$arguments['type'] = $this->args['type'];
+		}
+
+		if ( ! empty( $this->args['s'] ) ) {
+			$arguments['search'] = $this->args['s'];
 		}
 
 		if ( ! empty( $this->args['post_parent'] ) ) {

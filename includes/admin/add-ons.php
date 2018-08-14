@@ -92,10 +92,8 @@ function edd_add_ons_page() {
 	ob_start(); ?>
 
 	<div class="wrap" id="edd-add-ons">
-		<h1 class="wp-heading-inline"><?php echo edd_get_label_plural(); ?></h1>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Extensions', 'easy-digital-downloads' ); ?></h1>
 		<hr class="wp-header-end">
-
-		<?php edd_display_product_tabs(); ?>
 
 		<ul class="subsubsub"><?php echo implode( ' | ', $tabs ); ?></ul>
 

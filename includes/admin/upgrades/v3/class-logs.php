@@ -85,11 +85,20 @@ class Logs extends Base {
 						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
 					}
 
+					$post_meta = wp_parse_args( $post_meta, array(
+						'_edd_log_request_ip' => '',
+						'_edd_log_user'       => 0,
+						'_edd_log_key'        => 'public',
+						'_edd_log_token'      => 'public',
+						'_edd_log_version'    => '',
+						'_edd_log_time'       => '',
+					) );
+
 					$log_data = array(
 						'ip'            => $post_meta['_edd_log_request_ip'],
-						'user_id'       => isset( $post_meta['_edd_log_user'] ) ? $post_meta['_edd_log_user'] : 0,
-						'api_key'       => isset( $post_meta['_edd_log_key'] ) ? $post_meta['_edd_log_key'] : 'public',
-						'token'         => isset( $post_meta['_edd_log_token'] ) ? $post_meta['_edd_log_token'] : 'public',
+						'user_id'       => $post_meta['_edd_log_user'],
+						'api_key'       => $post_meta['_edd_log_key'],
+						'token'         => $post_meta['_edd_log_token'],
 						'version'       => $post_meta['_edd_log_version'],
 						'time'          => $post_meta['_edd_log_time'],
 						'request'       => $old_log->post_excerpt,

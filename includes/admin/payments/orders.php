@@ -295,12 +295,14 @@ function edd_order_details_addresses( $order ) {
 						'options'          => edd_get_country_list(),
 						'name'             => 'edd_order_address[country]',
 						'id'               => 'edd-order-address-country',
+						'class'            => 'edd-order-address-country',
 						'selected'         => esc_attr( $address->country ),
 						'show_option_all'  => false,
 						'show_option_none' => false,
 						'chosen'           => true,
 						'placeholder'      => esc_html__( 'Select a country', 'easy-digital-downloads' ),
 						'data'             => array(
+							'nonce'              => wp_create_nonce( 'edd-country-field-nonce' ),
 							'search-type'        => 'no_ajax',
 							'search-placeholder' => esc_html__( 'Search Countries', 'easy-digital-downloads' ),
 						),
@@ -319,6 +321,7 @@ function edd_order_details_addresses( $order ) {
 							'options'          => $states,
 							'name'             => 'edd_order_address[region]',
 							'id'               => 'edd-order-address-region',
+							'class'            => 'edd-order-address-region',
 							'selected'         => esc_attr( $address->region ),
 							'show_option_all'  => false,
 							'show_option_none' => false,
@@ -666,7 +669,7 @@ function edd_order_details_extras( $order ) {
 
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-send-purchase-receipt edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Receipt' ); ?>:</span>
+						<span class="label"><?php esc_html_e( 'Receipt', 'easy-digital-downloads' ); ?>:</span>
 						<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
 						<label class="description" for="edd-order-send-receipt"><?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?></label>
 						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
@@ -720,6 +723,11 @@ function edd_order_details_logs( $order ) {
  * @param object $order
  */
 function edd_order_details_attributes( $order ) {
+	
+	$rtl_class = is_rtl()
+		? ' chosen-rtl'
+		: '';
+
 	$recovery_url = edd_is_add_order_page()
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
@@ -737,7 +745,7 @@ function edd_order_details_attributes( $order ) {
 			<div class="edd-order-update-box edd-admin-box">
 				<div class="edd-admin-box-inside">
 					<span class="label"><?php esc_html_e( 'Status:', 'easy-digital-downloads' ); ?></span>
-					<select name="edd-payment-status" class="edd-select-chosen">
+					<select name="edd-payment-status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
 						<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 							<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 						<?php endforeach; ?>

@@ -29,10 +29,9 @@ defined( 'ABSPATH' ) || exit;
 function edd_admin_load_report() {
 
 	// Redirect URL (on error)
-	$redirect_url =  add_query_arg( array(
-		'post_type' => 'download',
-		'page'      => 'edd-reports'
-	), admin_url( 'edit.php' ) );
+	$redirect_url = edd_get_admin_url( array(
+		'page' => 'edd-reports'
+	) );
 
 	// Redirect if user cannot view reports
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
@@ -74,11 +73,10 @@ function edd_reports_sections() {
 	$sections->use_js          = false;
 	$sections->current_section = Reports\get_current_report();
 	$sections->item            = null;
-	$sections->base_url = add_query_arg( array(
-		'post_type'        => 'download',
+	$sections->base_url = edd_get_admin_url( array(
 		'page'             => 'edd-reports',
 		'settings-updated' => false
-	), admin_url( 'edit.php' ) );
+	) );
 
 	// Get all registered tabs & views
 	$tabs = Reports\get_reports();
@@ -733,7 +731,7 @@ function edd_register_downloads_report( $reports ) {
         }
 
         $reports->register_endpoint( 'earnings_by_taxonomy', array(
-			'label' => __( 'Earnings in Categories & Tags', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'label' => __( 'Earnings By Taxonomy', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
@@ -2720,6 +2718,7 @@ add_action( 'edd_reports_init', 'edd_register_export_report' );
  * @since 3.0
  */
 function display_export_report() {
+	global $wpdb;
     ?>
     <div id="edd-dashboard-widgets-wrap">
         <div class="metabox-holder">
@@ -2734,7 +2733,7 @@ function display_export_report() {
                             <form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
 								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
 								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
-								<?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?>
+								<span class="edd-label"><?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
 								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
 								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
@@ -2902,12 +2901,53 @@ function display_export_report() {
                     </div>
 
                     <div class="postbox edd-export-customers">
-                        <h3 class="hndle"><span><?php esc_html_e('Export Customers','easy-digital-downloads' ); ?></span></h3>
+                        <h3 class="hndle"><span><?php esc_html_e( 'Export Customers','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of customers.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php printf( esc_html__( 'Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></p>
                             <form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
-				                <?php echo EDD()->html->product_dropdown( array( 'name' => 'download', 'id' => 'edd_customer_export_download', 'chosen' => true ) ); ?>
-				                <?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+				                <?php
+				                $taxonomies = get_object_taxonomies( 'download', 'names' );
+				                $taxonomies = array_map( 'sanitize_text_field', $taxonomies );
+
+				                $placeholders = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
+
+				                $taxonomy__in = $wpdb->prepare( "tt.taxonomy IN ({$placeholders})", $taxonomies );
+
+				                $sql = "SELECT t.*, tt.*, tr.object_id
+										FROM {$wpdb->terms} AS t
+										INNER JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id
+										INNER JOIN {$wpdb->term_relationships} AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+										WHERE {$taxonomy__in}";
+
+				                $results = $wpdb->get_results( $sql );
+
+				                $taxonomies = array();
+
+				                if ( $results ) {
+					                foreach ( $results as $r ) {
+						                $t = get_taxonomy( $r->taxonomy );
+						                $taxonomies[ absint( $r->term_id ) ] = $t->labels->singular_name . ': ' . esc_html( $r->name );
+					                }
+				                }
+
+				                echo EDD()->html->select( array(
+					                'name'             => 'taxonomy',
+					                'options'          => $taxonomies,
+					                'chosen'           => true,
+					                'selected'         => false,
+					                'show_option_none' => false,
+					                'placeholder'      => __( 'Select a Taxonomy', 'easy-digital-downloads' ),
+					                'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
+				                ) );
+
+				                echo EDD()->html->product_dropdown( array(
+					                'name'   => 'download',
+					                'id'     => 'edd_customer_export_download',
+					                'chosen' => true,
+				                ) );
+
+				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
+				                ?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
                                 <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
                             </form>

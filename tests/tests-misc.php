@@ -56,6 +56,10 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( 'php', edd_get_file_extension( 'file.php' ) );
 	}
 
+	public function test_get_file_extension_with_query_string() {
+		$this->assertEquals( 'pdf', edd_get_file_extension( 'file.pdf?test=1' ) );
+	}
+
 	public function test_string_is_image_url() {
 		$this->assertTrue( edd_string_is_image_url( 'jpg' ) );
 		$this->assertFalse( edd_string_is_image_url( 'php' ) );
