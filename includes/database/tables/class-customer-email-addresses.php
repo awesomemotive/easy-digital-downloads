@@ -82,10 +82,15 @@ final class Customer_Email_Addresses extends Base {
 	 */
 	protected function __201807270003() {
 
-		// Alter the database
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-		" );
+		// Look for column
+		$result = $this->column_exists( 'uuid' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+			" );
+		}
 
 		// Return success/fail
 		return $this->is_success( $result );
