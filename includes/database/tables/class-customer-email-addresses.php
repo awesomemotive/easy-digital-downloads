@@ -36,7 +36,7 @@ final class Customer_Email_Addresses extends Base {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201808140001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -46,7 +46,7 @@ final class Customer_Email_Addresses extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270003' => 201807270003,
+		'201808140001' => 201808140001,
 	);
 
 	/**
@@ -73,14 +73,14 @@ final class Customer_Email_Addresses extends Base {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201808140001
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201808140001() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -88,7 +88,7 @@ final class Customer_Email_Addresses extends Base {
 		// Maybe add column
 		if ( false === $result ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
 			" );
 		}
 
