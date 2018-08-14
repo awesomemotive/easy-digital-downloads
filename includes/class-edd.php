@@ -163,6 +163,7 @@ final class Easy_Digital_Downloads {
 		// Bootstrap
 		self::$instance->setup_constants();
 		self::$instance->setup_files();
+		self::$instance->setup_application();
 		self::$instance->setup_compat();
 
 		// APIs
@@ -316,20 +317,19 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function setup_files() {
-		$this->setup_options();
-		$this->setup_utilities();
-		$this->setup_reports();
-		$this->setup_components();
-		$this->setup_backcompat();
-		$this->setup_objects();
-		$this->setup_functions();
-		$this->setup_gateways();
+		$this->include_options();
+		$this->include_utilities();
+		$this->include_reports();
+		$this->include_components();
+		$this->include_backcompat();
+		$this->include_objects();
+		$this->include_functions();
 
 		// Admin
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			$this->setup_admin();
+			$this->include_admin();
 		} else {
-			$this->setup_frontend();
+			$this->include_frontend();
 		}
 	}
 
@@ -353,6 +353,22 @@ final class Easy_Digital_Downloads {
 	}
 
 	/**
+	 * Setup the rest of the application
+	 *
+	 * @since 3.0
+	 */
+	private function setup_application() {
+		edd_setup_components();
+
+		$GLOBALS['edd_options'] = edd_get_settings();
+
+		// Load Amazon Payments.
+		PayWithAmazon\EDD_Amazon_Payments::getInstance();
+	}
+
+	/** Includes **************************************************************/
+
+	/**
 	 * Setup all of the custom database tables
 	 *
 	 * This method invokes all of the classes for each custom database table,
@@ -366,7 +382,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 * @return array
 	 */
-	private function setup_components() {
+	private function include_components() {
 
 		// Component helpers are loaded before everything
 		require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
@@ -446,9 +462,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-transaction.php';
-
-		// Call the component setup function
-		edd_setup_components();
 	}
 
 	/**
@@ -456,9 +469,8 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_options() {
+	private function include_options() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
-		$GLOBALS['edd_options'] = edd_get_settings();
 	}
 
 	/**
@@ -466,7 +478,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_utilities() {
+	private function include_utilities() {
 		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
 	}
@@ -476,7 +488,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_reports() {
+	private function include_reports() {
 		require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 	}
 
@@ -485,7 +497,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_backcompat() {
+	private function include_backcompat() {
 
 		// PHP functions
 		require_once EDD_PLUGIN_DIR . 'includes/compat-functions.php';
@@ -530,7 +542,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_objects() {
+	private function include_objects() {
 
 		// CLI
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -611,7 +623,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_functions() {
+	private function include_functions() {
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
@@ -648,7 +660,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_admin() {
+	private function include_admin() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
@@ -698,20 +710,9 @@ final class Easy_Digital_Downloads {
 	 *
 	 * @since 3.0
 	 */
-	private function setup_frontend() {
+	private function include_frontend() {
 		require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
-	}
-
-	/**
-	 * Setup gateways.
-	 *
-	 * @since 3.0
-	 */
-	private function setup_gateways() {
-
-		// Load Amazon Payments.
-		PayWithAmazon\EDD_Amazon_Payments::getInstance();
 	}
 }
 endif; // End if class_exists check.
