@@ -1265,13 +1265,38 @@ jQuery(document).ready(function ($) {
 				action: 'edd_add_order_recalculate_taxes',
 				country: $( '.edd-order-address-country' ).val(),
 				region: $( '.edd-order-address-region' ).val(),
-				nonce: $( '#edd_add_order_nonce' ).val(),
+				nonce: $( '#edd_add_order_nonce' ).val()
 			};
 
 			$.post( ajaxurl, data, function ( response ) {
-				console.log( response );
-			} ).done( function() {
+				if ( '' !== response.tax_rate ) {
+					var tax_rate = parseFloat( response.tax_rate );
+
+					$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
+						var amount = parseFloat( $( '.amount .value', this ).text() ),
+							quantity = parseFloat( $( '.quantity', this ).text() ),
+							calculated = amount * quantity,
+							tax = 0;
+
+						if ( response.prices_include_tax ) {
+							var pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
+							tax = parseFloat( calculated - pre_tax );
+						} else {
+							tax = calculated * tax_rate;
+						}
+
+						var storeCurrency = edd_vars.currency,
+							decimalPlaces = edd_vars.currency_decimals,
+							total         = calculated + tax;
+
+						$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+						$( '.total .value', this ).text( total.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+					} );
+				}
+			}, 'json' ).done( function() {
 				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
+
+				EDD_Add_Order.update_totals();
 			} );
 		},
 

@@ -1250,6 +1250,7 @@ function edd_ajax_add_order_recalculate_taxes() {
 	$rate = edd_get_tax_rate( $country, $region );
 
 	$response['tax_rate'] = $rate;
+	$response['prices_include_tax'] = (bool) edd_prices_include_tax();
 
 	echo wp_json_encode( $response );
 
