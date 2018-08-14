@@ -1085,6 +1085,8 @@ jQuery(document).ready(function ($) {
 					data = {
 						action: 'edd_add_order_item',
 						nonce: $( '#edd_add_order_nonce' ).val(),
+						country: $( '.edd-order-address-country' ).val(),
+						region: $( '.edd-order-address-region' ).val(),
 						download: select.val(),
 						quantity: $( '.edd-add-order-quantity' ).val()
 					};
@@ -1161,7 +1163,7 @@ jQuery(document).ready(function ($) {
 
 				$.post( ajaxurl, data, function( response ) {
 
-				    // Store response for later use.
+					// Store response for later use.
 					edd_admin_globals.customer_address_ajax_result = response;
 
 					if ( response.html ) {
@@ -1180,9 +1182,8 @@ jQuery(document).ready(function ($) {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
 					val   = $this.val(),
-					select = $( '#edd-add-order-form select#edd_order_address_country' );
-
-				var address = edd_admin_globals.customer_address_ajax_result['addresses'][ val ];
+					select = $( '#edd-add-order-form select#edd_order_address_country' ),
+					address = edd_admin_globals.customer_address_ajax_result.addresses[ val ];
 
 				$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
 				$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
@@ -1210,6 +1211,34 @@ jQuery(document).ready(function ($) {
 
 				return false;
 			} );
+
+			$( '.edd-order-address-country' ).on( 'change', function() {
+				var select = $( this ),
+					data   = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data( 'nonce' ),
+						field_name: 'edd-order-address-country'
+					};
+
+				$.post( ajaxurl, data, function ( response ) {
+					$( 'select.edd-order-address-region' ).find( 'option:gt(0)' ).remove();
+
+					if ( 'nostates' !== response ) {
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd-order-address-region' );
+					}
+
+					$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
+				} ).done(function ( response ) {
+					EDD_Add_Order.recalculate_taxes();
+				} );
+
+				return false;
+			} );
+
+			$( '.edd-order-address-region' ).on( 'change', function() {
+				EDD_Add_Order.recalculate_taxes();
+			} );
 		},
 
 		reindex : function () {
@@ -1229,6 +1258,48 @@ jQuery(document).ready(function ($) {
 
 				key++;
 			});
+		},
+
+		recalculate_taxes : function() {
+			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
+
+			var data = {
+				action: 'edd_add_order_recalculate_taxes',
+				country: $( '.edd-order-address-country' ).val(),
+				region: $( '.edd-order-address-region' ).val(),
+				nonce: $( '#edd_add_order_nonce' ).val()
+			};
+
+			$.post( ajaxurl, data, function ( response ) {
+				if ( '' !== response.tax_rate ) {
+					var tax_rate = parseFloat( response.tax_rate );
+
+					$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
+						var amount = parseFloat( $( '.amount .value', this ).text() ),
+							quantity = parseFloat( $( '.quantity', this ).text() ),
+							calculated = amount * quantity,
+							tax = 0;
+
+						if ( response.prices_include_tax ) {
+							var pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
+							tax = parseFloat( calculated - pre_tax );
+						} else {
+							tax = calculated * tax_rate;
+						}
+
+						var storeCurrency = edd_vars.currency,
+							decimalPlaces = edd_vars.currency_decimals,
+							total         = calculated + tax;
+
+						$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+						$( '.total .value', this ).text( total.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+					} );
+				}
+			}, 'json' ).done( function() {
+				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
+
+				EDD_Add_Order.update_totals();
+			} );
 		},
 
 		recalculate_total : function() {
@@ -1370,15 +1441,7 @@ jQuery(document).ready(function ($) {
 	var EDD_Discount = {
 
 		init : function() {
-			this.type_select();
 			this.product_requirements();
-		},
-
-		type_select : function() {
-			$('#edd-amount-type').change(function() {
-				$('.edd-amount-description').hide();
-				$('.edd-amount-description.' + $( this ).val()).show();
-			});
 		},
 
 		product_requirements : function() {

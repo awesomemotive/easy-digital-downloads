@@ -418,9 +418,48 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
-#edd-add-discount input.edd-price-field,
-#edd-edit-discount input.edd-price-field {
-	padding: 3px 5px;
+.edd-amount-type-select-wrapper {
+	position: absolute;
+	width: 45px;
+	margin: 2px;
+	background: #fafafa;
+	opacity: 0.9;
+	overflow: hidden;
+}
+
+.edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
+	display: block;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 2px;
+	top: 3px;
+	font-family: dashicons;
+	font-size: 15px;
+	content: '\f140';
+	color: #555;
+	margin-top: 1px;
+	z-index: 2;
+}
+
+.edd-amount-type-wrapper select {
+	border: 0;
+	background: transparent;
+	height: 27px;
+	width: 45px;
+	padding: 0 7px 0 9px;
+	margin: 0;
+	text-align: center;
+	border-right: 1px solid #ddd;
+	-webkit-appearance: none;
+	box-shadow: none;
+	position: relative;
+	z-index: 3;
+}
+
+.edd-amount-type-wrapper #edd-amount {
+	height: 29px;
+	padding: 3px 5px 3px 52px;
 	width: 80%;
 	max-width: 125px;
 }
@@ -670,6 +709,12 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 #edd_product_settings .inside div:first-child strong {
 	margin-top: -14px;
+}
+
+#edd_product_settings .inside strong .edd-help-tip {
+	float: right;
+	font-size: 20px;
+	line-height: 1.3;
 }
 
 
@@ -1530,18 +1575,21 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 .edd-vertical-sections .edd-legacy-label {
-	font-size: 8px;
+	font-size: 7px;
+	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
-	padding: 3px 4px 4px;
+	vertical-align: middle;
+	padding: 2px 2px 3px 3px;
 	border-radius: 4px;
 	color: #fff;
-	background-color: #aaa;
+	background-color: #bbb;
+	border: 1px solid #999;
 	opacity: 0.5;
 	display: inline-block;
 	position: absolute;
-	top: 13px;
-	right: 10px;
+	top: 11px;
+	right: 6px;
 }
 
 .edd-reports-wrapper .postbox h3 {
@@ -1557,9 +1605,17 @@ td.edd_order_price {
 
 .edd-reports-wrapper form .edd-from-to-wrapper,
 .edd-reports-wrapper form .edd-select,
+.edd-reports-wrapper form .edd-label,
 .edd-reports-wrapper form input.button {
 	vertical-align: middle;
 	float: left;
+}
+
+.edd-reports-wrapper form .edd-label {
+	height: 29px;
+	line-height: 29px;
+	vertical-align: middle;
+	margin-right: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {

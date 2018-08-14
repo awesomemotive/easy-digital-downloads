@@ -245,7 +245,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					) );
 					?>
 
-					<input type="number" name="order-amount-filter-value" min="0" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
+					<input type="number" name="order-amount-filter-value" min="0" step="0.01" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
 				</fieldset>
 
 				<fieldset>

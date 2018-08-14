@@ -17,17 +17,17 @@ require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-actions.php';
 
 /**
- * Process batch exports via ajax
+ * Process batch exports via AJAX.
  *
  * @since 2.4
- * @return void
  */
 function edd_do_ajax_export() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
 
-	parse_str( $_POST['form'], $form );
+	parse_str( $_POST['form'], $form ); // WPCS: CSRF ok.
 
-	$_REQUEST = $form = (array) $form;
+	$_REQUEST = $form;
+	$form     = (array) $form;
 
 	if ( ! wp_verify_nonce( $_REQUEST['edd_ajax_export'], 'edd_ajax_export' ) ) {
 		die( '-2' );
@@ -80,7 +80,9 @@ function edd_do_ajax_export() {
 
 		exit;
 	} elseif ( true === $export->done && true === $export->is_void ) {
-		$message = ! empty( $export->message ) ? $export->message : __( 'Batch Processing Complete', 'easy-digital-downloads' );
+		$message = ! empty( $export->message )
+			? $export->message
+			: __( 'Batch Processing Complete', 'easy-digital-downloads' );
 
 		echo wp_json_encode( array(
 			'success' => true,

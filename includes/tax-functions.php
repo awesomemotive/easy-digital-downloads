@@ -173,16 +173,19 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
 }
 
 /**
- * Calculate the taxed amount
+ * Calculate the taxed amount.
  *
  * @since 1.3.3
- * @param $amount float The original amount to calculate a tax cost
- * @param $country string The country to calculate tax for. Will use default if not passed
- * @param $state string The state to calculate tax for. Will use default if not passed
- * @return float $tax Taxed amount
+ * @since 3.0 Renamed $state parameter to $region.
+ *
+ * @param float  $amount  Amount.
+ * @param string $country Country. Default base country.
+ * @param string $region  Region. Default base region.
+ *
+ * @return float $tax Taxed amount.
  */
-function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
-	$rate = edd_get_tax_rate( $country, $state );
+function edd_calculate_tax( $amount = 0.00, $country = '', $region = '' ) {
+	$rate = edd_get_tax_rate( $country, $region );
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
@@ -194,7 +197,17 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 		}
 	}
 
-	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $state );
+	/**
+	 * Filter the taxed amount.
+	 *
+	 * @since 1.5.3
+	 *
+	 * @param float $tax      Taxed amount.
+	 * @param float $rate     Tax rate applied.
+	 * @param string $country Country.
+	 * @param string $region  Region.
+	 */
+	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $region );
 }
 
 /**
