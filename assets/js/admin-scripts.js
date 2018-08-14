@@ -1085,6 +1085,8 @@ jQuery(document).ready(function ($) {
 					data = {
 						action: 'edd_add_order_item',
 						nonce: $( '#edd_add_order_nonce' ).val(),
+						country: $( '.edd-order-address-country' ).val(),
+						region: $( '.edd-order-address-region' ).val(),
 						download: select.val(),
 						quantity: $( '.edd-add-order-quantity' ).val()
 					};
