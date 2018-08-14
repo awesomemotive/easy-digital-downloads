@@ -2731,9 +2731,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	border-top: 1px solid #e5e5e5;
 }
 #edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 13px;
-	vertical-align: middle;
-	line-height: 1.5em;
+	font-size: 14px;
+	line-height: 14px;
+	height: 14px;
+	width: 14px;
+	padding: 2px 0;
 }
 #edd-item-tables-wrapper .emails input {
 	vertical-align: middle;
