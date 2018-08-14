@@ -677,7 +677,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function process_bulk_action() {
 		$action = $this->current_action();
 		$ids    = isset( $_GET['order'] )
-			? wp_parse_id_list( $_GET['order'] )
+			? $_GET['order']
 			: false;
 
 		if ( ! is_array( $ids ) ) {
