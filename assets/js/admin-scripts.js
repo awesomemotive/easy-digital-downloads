@@ -1261,10 +1261,18 @@ jQuery(document).ready(function ($) {
 		recalculate_taxes : function() {
 			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
 
-			// Bail if taxes are not enabled.
-			if ( '1' != edd_global_vars.taxes_enabled ) {
-				return;
-			}
+			var data = {
+				action: 'edd_add_order_recalculate_taxes',
+				country: $( '.edd-order-address-country' ).val(),
+				region: $( '.edd-order-address-region' ).val(),
+				nonce: $( '#edd_add_order_nonce' ).val(),
+			};
+
+			$.post( ajaxurl, data, function ( response ) {
+				console.log( response );
+			} ).done( function() {
+				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
+			} );
 		},
 
 		recalculate_total : function() {

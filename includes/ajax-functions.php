@@ -157,7 +157,7 @@ function edd_ajax_remove_from_cart() {
 			);
 
 			if ( edd_use_taxes() ) {
-				$cart_tax = (float) edd_get_cart_tax();
+				$cart_tax      = (float) edd_get_cart_tax();
 				$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
 			}
 		}
@@ -1209,3 +1209,50 @@ function edd_ajax_customer_addresses() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );
+
+/**
+ * Recalculate taxes when adding a new order and the country/region field is changed.
+ *
+ * @since 3.0
+ */
+function edd_ajax_add_order_recalculate_taxes() {
+
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_die( '-1' );
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$country = isset( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] )
+		: '';
+
+	$region = isset( $_POST['region'] )
+		? sanitize_text_field( $_POST['region'] )
+		: '';
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) ) {
+		edd_die( '-1' );
+	}
+
+	// Bail if nonce verification failed.
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+		edd_die( '-1' );
+	}
+
+	$response = array();
+
+	$rate = edd_get_tax_rate( $country, $region );
+
+	$response['tax_rate'] = $rate;
+
+	echo wp_json_encode( $response );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_add_order_recalculate_taxes', 'edd_ajax_add_order_recalculate_taxes' );
