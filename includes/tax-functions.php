@@ -31,85 +31,6 @@ function edd_use_taxes() {
 }
 
 /**
- * Retrieve tax rates
- *
- * @since 1.6
- * @since 3.0 Updated to use new query class.
- *            Added $output parameter to output an array of EDD\Adjustments\Adjustment objects, if set to `object`.
- *            Added $type parameter.
- *            Added $args parameter.
- *
- * @param string $output Type of data to output. Default `array`.
- * @param string $type   Type of tax rates. Accepts `all` or `active`. Default `active`.
- * @param array  $args   Query arguments.
- *
- * @return array|\EDD\Adjustments\Adjustment[] Tax rates.
- */
-function edd_get_tax_rates( $output = 'array', $type = 'active', $args = array() ) {
-
-	if ( 'active' === $type ) {
-		add_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
-	}
-
-	// Fetch from adjustments table.
-	$tax_rates = edd_get_adjustments( wp_parse_args( $args, array(
-		'type'  => 'tax_rate',
-		'order' => 'ASC',
-	) ) );
-
-	if ( 'active' === $type ) {
-		remove_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
-	}
-
-	if ( 'object' === $output ) {
-		return $tax_rates;
-	}
-
-	$rates = array();
-
-	if ( $tax_rates ) {
-		foreach ( $tax_rates as $tax_rate ) {
-			$rate = array(
-				'id'      => absint( $tax_rate->id ),
-				'country' => esc_attr( $tax_rate->name ),
-				'rate'    => floatval( $tax_rate->amount ),
-			);
-
-			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
-				$rate['state'] = esc_attr( $tax_rate->description );
-			}
-
-			if ( 'country' === $tax_rate->scope ) {
-				$rate['global'] = '1';
-			}
-
-			$rates[] = $rate;
-		}
-	}
-
-	return (array) apply_filters( 'edd_get_tax_rates', $rates );
-}
-
-/**
- * Add a WHERE clause to ensure only active tax rates are returned.
- *
- * @since 3.0
- *
- * @param array $clauses Query clauses.
- * @return array $clauses Updated query clauses.
- */
-function edd_active_tax_rates_query_clauses( $clauses ) {
-	$date = \Carbon\Carbon::now( edd_get_timezone_id() )->toDateTimeString();
-
-	$clauses['where'] .= "
-		AND ( start_date < '{$date}' OR start_date = '0000-00-00 00:00:00' )
-		AND ( end_date > '{$date}' OR end_date = '0000-00-00 00:00:00' )
-	";
-
-	return $clauses;
-}
-
-/**
  * Get taxation rate.
  *
  * @since 1.3.3
@@ -178,16 +99,17 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 
 		// Fetch all the tax rates from the database.
 		// The region is not passed in deliberately in order to check for country-wide tax rates.
-		$tax_rates = edd_get_tax_rates( 'object', 'active', array(
-			'name' => $country,
-		) );
+		$tax_rates = edd_get_tax_rates( array(
+			'country' => $country,
+			'status'  => 'active',
+		), OBJECT );
 
 		// Save processing if only one tax rate is returned.
 		if ( 1 === count( $tax_rates ) ) {
 			$tax_rate = $tax_rates[0];
 
-			if ( $tax_rate->name === $country && $tax_rate->description === $region ) {
-				$rate = number_format( $tax_rate->amount, 4 );
+			if ( $tax_rate->country === $country && $tax_rate->region === $region ) {
+				$rate = number_format( $tax_rate->rate, 4 );
 			}
 		}
 
@@ -196,15 +118,15 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 
 				// Countrywide tax rate.
 				if ( 'country' === $tax_rate->scope ) {
-					$rate = number_format( $tax_rate->amount, 4 );
+					$rate = number_format( $tax_rate->rate, 4 );
 
 				// Regional tax rate.
 				} else {
-					if ( empty( $tax_rate->description ) || strtolower( $region ) !== strtolower( $tax_rate->description ) ) {
+					if ( empty( $tax_rate->region ) || strtolower( $region ) !== strtolower( $tax_rate->region ) ) {
 						continue;
 					}
 
-					$regional_rate = $tax_rate->amount;
+					$regional_rate = $tax_rate->rate;
 
 					if ( ( 0 !== $regional_rate || ! empty( $regional_rate ) ) && '' !== $regional_rate ) {
 						$rate = number_format( $regional_rate, 4 );
@@ -267,7 +189,6 @@ function edd_calculate_tax( $amount = 0.00, $country = '', $region = '' ) {
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
-
 		if ( edd_prices_include_tax() ) {
 			$pre_tax = ( $amount / ( 1 + $rate ) );
 			$tax     = $amount - $pre_tax;
