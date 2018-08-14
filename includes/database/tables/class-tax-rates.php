@@ -125,9 +125,7 @@ final class Tax_Rates extends Base {
 		delete_option( 'wpdb_edd_adjustments_version' );
 
 		// Attempt to drop the old table
-		$this->get_db()->query( "
-			DROP TABLE {$table_name};
-		" );
+		$this->get_db()->query( "DROP TABLE {$table_name};" );
 
 		// Return success/fail
 		return true;
