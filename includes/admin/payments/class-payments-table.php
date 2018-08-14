@@ -54,8 +54,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 	/**
 	 * Constructor.
-     *
-     * @see \WP_List_Table::__construct()
+	 *
+	 * @see \WP_List_Table::__construct()
 	 *
 	 * @since 1.4
 	 */
@@ -88,10 +88,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-     * Retrieve the status.
-     *
-     * @since 3.0
-     *
+	 * Retrieve the status.
+	 *
+	 * @since 3.0
+	 *
 	 * @return string Status, if selected.
 	 */
 	public function get_status() {
@@ -561,7 +561,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the ID column.
 	 *
 	 * @since 2.0
-     * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
