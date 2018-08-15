@@ -549,7 +549,7 @@ function edd_customers_view( $customer = null ) {
 
 							echo ! empty( $city )
 								? $city
-								: '&mdash';
+								: '&mdash;';
 							?>
 						</td>
 						<td>
@@ -558,7 +558,7 @@ function edd_customers_view( $customer = null ) {
 
 							echo ! empty( $region )
 								? edd_get_state_name( esc_attr( $address->country ), $region )
-								: '&mdash';
+								: '&mdash;';
 							?>
 						</td>
 						<td>
@@ -567,7 +567,7 @@ function edd_customers_view( $customer = null ) {
 
 							echo ! empty( $postal_code )
 								? $postal_code
-								: '&mdash';
+								: '&mdash;';
 							?>
 						</td>
 						<td>
@@ -576,7 +576,7 @@ function edd_customers_view( $customer = null ) {
 
 							echo ! empty( $country )
 								? edd_get_country_name( $country )
-								: '&mdash';
+								: '&mdash;';
 							?>
 						</td>
 						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>

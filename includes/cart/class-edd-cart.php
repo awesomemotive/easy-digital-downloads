@@ -244,7 +244,7 @@ class EDD_Cart {
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 
-				if( $fee_amount > 0 ) {
+				if ( $fee_amount > 0 ) {
 					continue;
 				}
 
@@ -263,7 +263,7 @@ class EDD_Cart {
 				$total = 0;
 			}
 
-			$details[ $key ]  = array(
+			$details[ $key ] = array(
 				'name'        => get_the_title( $item['id'] ),
 				'id'          => $item['id'],
 				'item_number' => $item,
