@@ -1,6 +1,6 @@
 <?php
 /**
- * Advanced Query Class.
+ * Compare Class.
  *
  * @package     EDD
  * @subpackage  Database\Queries
@@ -13,6 +13,15 @@ namespace EDD\Database\Queries;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class used for generating SQL for compare clauses.
+ *
+ * This class is used to generate the SQL when a `compare` argument is passed to
+ * the `Base` query class. It extends `WP_Meta_Query` so the `compare` key accepts
+ * the same parameters as the ones passed to `WP_Meta_Query`.
+ *
+ * @since 3.0
+ */
 class Compare extends \WP_Meta_Query {
 
 	/**
