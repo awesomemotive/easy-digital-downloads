@@ -724,7 +724,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-			$args['advanced_query'] = array(
+			$args['compare'] = array(
 				array(
 					'key'     => 'total',
 					'value'   => $filter_amount,
@@ -873,7 +873,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				$args['advanced_query'] = array(
+				$args['compare'] = array(
 					array(
 						'key'     => 'total',
 						'value'   => $filter_amount,
