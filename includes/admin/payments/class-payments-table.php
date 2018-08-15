@@ -721,16 +721,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
-			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+			if ( ! empty( $_GET['order-amount-filter-value'] ) && 0 !== strlen( $_GET['order-amount-filter-value'] ) ) {
+				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-			$args['compare'] = array(
-				array(
-					'key'     => 'total',
-					'value'   => $filter_amount,
-					'compare' => $filter_type,
-				),
-			);
+				$args['compare'] = array(
+					array(
+						'key'     => 'total',
+						'value'   => $filter_amount,
+						'compare' => $filter_type,
+					),
+				);
+			}
 		}
 
 		// Maybe filter by country.
@@ -869,7 +871,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			if ( ! empty( $_GET['order-amount-filter-value'] ) || '0' === $_GET['order-amount-filter-value'] ) {
+			if ( ! empty( $_GET['order-amount-filter-value'] ) && 0 !== strlen( $_GET['order-amount-filter-value'] ) ) {
 				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
@@ -934,7 +936,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @since 1.4
 	 */
 	public function prepare_items() {
-		wp_reset_vars( array( 'action', 'payment', 'orderby', 'order', 's' ) );
+		wp_reset_vars( array( 'action', 'order', 'orderby', 'order', 's' ) );
 
 		$hidden      = array(); // No hidden columns
 		$columns     = $this->get_columns();

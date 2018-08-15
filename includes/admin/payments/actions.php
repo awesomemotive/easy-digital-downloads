@@ -455,6 +455,11 @@ function edd_orders_list_table_process_bulk_actions() {
 		? sanitize_text_field( $_REQUEST['action'] )
 		: '';
 
+	// Bail if we aren't processing bulk actions.
+	if ( 'action' !== $action ) {
+		return;
+	}
+
 	$ids = isset( $_GET['order'] ) // WPCS: CSRF ok.
 		? $_GET['order']
 		: false;

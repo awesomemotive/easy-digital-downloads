@@ -49,6 +49,14 @@ class EDD_Payments_Query extends EDD_Stats {
 	public $payments = array();
 
 	/**
+	 * Items returned from query.
+	 *
+	 * @since 3.0
+	 * @var   array|null
+	 */
+	private $items = array();
+
+	/**
 	 * Default query arguments.
 	 *
 	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
@@ -162,16 +170,21 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$this->remap_args();
 
-		$orders = edd_get_orders( $this->args );
+		// Check if $items is null after parsing the query.
+		if ( null === $this->items ) {
+			return array();
+		}
+
+		$this->items = edd_get_orders( $this->args );
 
 		if ( $should_output_order_objects ) {
-			return $orders;
+			return $this->items;
 		}
 
 		if ( $should_output_wp_post_objects ) {
 			$posts = array();
 
-			foreach ( $orders as $order ) {
+			foreach ( $this->items as $order ) {
 				$p = new WP_Post( new stdClass() );
 
 				$p->ID                = $order->id;
@@ -189,10 +202,10 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( $should_output_order_objects ) {
-			return $orders;
+			return $this->items;
 		}
 
-		foreach ( $orders as $order ) {
+		foreach ( $this->items as $order ) {
 			$payment = edd_get_payment( $order->id );
 
 			if ( edd_get_option( 'enable_sequential' ) ) {
@@ -665,6 +678,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['count'] ) ) {
 			$arguments['count'] = (bool) $this->args['count'];
+			unset( $arguments['number'] );
 		}
 
 		if ( isset( $this->args['groupby'] ) ) {
@@ -726,18 +740,12 @@ class EDD_Payments_Query extends EDD_Stats {
 			unset( $arguments['status'] );
 		}
 
-		if ( isset( $this->args['country'] ) && ! empty( $this->args['country'] ) ) {
-			$region = ! empty( $this->args['region'] )
+		if ( isset( $this->args['country'] ) && ! empty( $this->args['country'] ) && 'all' !== $this->args['country'] ) {
+			$country = $wpdb->prepare( 'AND edd_oa.country = %s', esc_sql( $this->args['country'] ) );
+			$region  = ! empty( $this->args['region'] ) && 'all' !== $this->args['region']
 				? $wpdb->prepare( 'AND edd_oa.region = %s', esc_sql( $this->args['region'] ) )
 				: '';
-
-			$country = ! empty( $this->args['country'] )
-				? $wpdb->prepare( 'AND edd_oa.country = %s', esc_sql( $this->args['country'] ) )
-				: '';
-
-			$join = ! empty( $country ) || ! empty( $region )
-				? "INNER JOIN {$wpdb->edd_order_addresses} edd_oa ON edd_o.id = edd_oa.order_id"
-				: '';
+			$join    = "INNER JOIN {$wpdb->edd_order_addresses} edd_oa ON edd_o.id = edd_oa.order_id";
 
 			$date_query = '';
 
@@ -745,8 +753,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$date_query = ' AND ';
 
 				if ( ! empty( $this->start_date ) ) {
-					$date_query .= 'edd_o.date_created ';
-					$date_query .= $wpdb->prepare( '>= %s', $this->start_date );
+					$date_query .= $wpdb->prepare( 'edd_o.date_created >= %s', $this->start_date );
 				}
 
 				// Join dates with `AND` if start and end date set.
@@ -774,14 +781,32 @@ class EDD_Payments_Query extends EDD_Stats {
 				WHERE 1=1 {$country} {$region} {$mode} {$gateway} {$date_query}
 			";
 
-			$ids = $wpdb->get_col( $sql, 0 );
+			$ids = $wpdb->get_col( $sql, 0 ); // WPCS: unprepared SQL ok.
 
 			if ( ! empty( $ids ) ) {
-				$ids = wp_parse_id_list( $ids );
+				$ids                 = wp_parse_id_list( $ids );
 				$arguments['id__in'] = isset( $arguments['id__in'] )
 					? array_merge( $ids, $arguments['id__in'] )
 					: $ids;
+			} else {
+				$this->items = null;
 			}
+		}
+
+		if ( isset( $this->args['date_query'] ) ) {
+			$arguments['date_query'] = $this->args['date_query'];
+		}
+
+		if ( isset( $this->args['date_created_query'] ) ) {
+			$arguments['date_created_query'] = $this->args['date_created_query'];
+		}
+
+		if ( isset( $this->args['date_modified_query'] ) ) {
+			$arguments['date_modified_query'] = $this->args['date_modified_query'];
+		}
+
+		if ( isset( $this->args['date_refundable_query'] ) ) {
+			$arguments['date_refundable_query'] = $this->args['date_refundable_query'];
 		}
 
 		$this->args = $arguments;
