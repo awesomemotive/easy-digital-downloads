@@ -78,36 +78,38 @@ class Tax extends Base {
 				? sanitize_text_field( $tax_rate['state'] )
 				: '';
 
-			$tax_rate_data = array(
-				'status'  => 'active',
-				'country' => $tax_rate['country'],
-				'region'  => $region,
-				'scope'   => $scope,
-				'rate'    => floatval( $tax_rate['rate'] ),
+			$adjustment_data = array(
+				'name'        => $tax_rate['country'],
+				'status'      => 'active',
+				'type'        => 'tax_rate',
+				'scope'       => $scope,
+				'amount_type' => 'percent',
+				'amount'      => floatval( $tax_rate['rate'] ),
+				'description' => $region,
 			);
 
 			// Update database if adjustment ID was supplied.
-			if ( isset( $tax_rate['edd_tax_rate_id'] ) ) {
-				edd_update_tax_rate( $tax_rate['edd_tax_rate_id'], $tax_rate_data );
+			if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
+				edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
 
 			// Check if the tax rate exists.
 			} else {
-				$rate = edd_get_tax_rates( array(
-					'fields'  => 'ids',
-					'country' => $tax_rate['country'],
-					'region'  => $region,
-					'scope'   => $scope,
-				), OBJECT );
+				$rate = edd_get_adjustments( array(
+					'fields'      => 'ids',
+					'name'        => $tax_rate['country'],
+					'description' => $region,
+					'scope'       => $scope,
+				) );
 
 				// Tax rate exists.
 				if ( 1 === count( $rate ) ) {
-					$tax_rate_id = absint( $rate[0] );
+					$adjustment_id = absint( $rate[0] );
 
-					edd_update_tax_rate( $tax_rate_id, $tax_rate_data );
+					edd_update_adjustment( $adjustment_id, $adjustment_data );
 
 				// Add the tax rate to the database.
 				} else {
-					edd_add_tax_rate( $tax_rate_data );
+					edd_add_adjustment( $adjustment_data );
 				}
 			}
 		}

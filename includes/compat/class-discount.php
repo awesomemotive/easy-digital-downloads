@@ -77,7 +77,7 @@ class Discount extends Base {
 		$message = sprintf(
 			__( 'As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information.', 'easy-digital-downloads' ),
 			'<code>' . $wpdb->posts . '</code>',
-			'<code>' . edd_get_component_interface( 'discount', 'table' )->table_name . '</code>',
+			'<code>' . edd_get_component_interface( 'adjustment', 'table' )->table_name . '</code>',
 			'<code>edd_get_discounts()</code>',
 			'<code>edd_get_discount()</code>',
 			'<code>EDD_Discount</code>',
@@ -101,7 +101,7 @@ class Discount extends Base {
 		$expected = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = 'edd_discount' GROUP BY post_status";
 
 		if ( $expected === $query ) {
-			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_discounts} GROUP BY post_status";
+			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_adjustments} WHERE type = 'discount' GROUP BY post_status";
 		}
 
 		return $query;
@@ -132,11 +132,11 @@ class Discount extends Base {
 			}
 
 			// Check if the ID matches a legacy ID.
-			$table_name = edd_get_component_interface( 'discount', 'meta' )->table_name;
+			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
 
 			$object_id = $wpdb->get_var( $wpdb->prepare(
 				"
-				SELECT edd_discount_id
+				SELECT edd_adjustment_id
 				FROM {$table_name}
 				WHERE meta_key = %s AND meta_value = %d
 				", 'legacy_discount_id', $object_id
@@ -413,7 +413,7 @@ class Discount extends Base {
 
 			// We didn't find a discount record with this ID...so let's check and
 			// see if it was a migrated one.
-			$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = $object_id" );
+			$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_adjustmentmeta WHERE meta_key = 'legacy_discount_id' AND meta_value = $object_id" );
 
 			if ( ! empty( $object_id ) ) {
 				$discount = edd_get_discount( $object_id );
@@ -442,7 +442,7 @@ class Discount extends Base {
 				$value = $discount->{$key};
 
 				if ( $this->show_notices ) {
-					_doing_it_wrong( 'get_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_discount_meta()</code> instead.', 'EDD 3.0' );
+					_doing_it_wrong( 'get_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_adjustment_meta()</code> instead.', 'EDD 3.0' );
 
 					if ( $this->show_backtrace ) {
 						$backtrace = debug_backtrace();
@@ -456,7 +456,7 @@ class Discount extends Base {
 				$value = $discount->get_once_per_customer();
 
 				if ( $this->show_notices ) {
-					_doing_it_wrong( 'get_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_discount_meta()</code> instead.', 'EDD 3.0' );
+					_doing_it_wrong( 'get_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_adjustment_meta()</code> instead.', 'EDD 3.0' );
 
 					if ( $this->show_backtrace ) {
 						$backtrace = debug_backtrace();
@@ -470,7 +470,7 @@ class Discount extends Base {
 				$value = $discount->get_scope();
 
 				if ( $this->show_notices ) {
-					_doing_it_wrong( 'get_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_discount_meta()</code> instead.', 'EDD 3.0' );
+					_doing_it_wrong( 'get_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_adjustment_meta()</code> instead.', 'EDD 3.0' );
 
 					if ( $this->show_backtrace ) {
 						$backtrace = debug_backtrace();
@@ -532,10 +532,10 @@ class Discount extends Base {
 		if ( empty( $discount->id ) ) {
 
 			// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
-			$table_name = edd_get_component_interface( 'discount', 'meta' )->table_name;
+			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
 
 			$object_id = $wpdb->get_var( $wpdb->prepare( "
-				SELECT edd_discount_id
+				SELECT edd_adjustment_id
 				FROM {$table_name}
 				WHERE meta_key = %s AND meta_value = %d",
 				'legacy_discount_id', $object_id
@@ -568,7 +568,7 @@ class Discount extends Base {
 				$check            = $discount->save();
 
 				if ( $this->show_notices ) {
-					_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_discount_meta()/edd_update_discount_meta()</code> instead.', 'EDD 3.0' );
+					_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_adjustment_meta()/edd_update_adjustment_meta()</code> instead.', 'EDD 3.0' );
 
 					if ( $this->show_backtrace ) {
 						$backtrace = debug_backtrace();
@@ -583,7 +583,7 @@ class Discount extends Base {
 
 				// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 				if ( $this->show_notices ) {
-					_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_discount_meta()/edd_update_discount_meta()</code> instead.', 'EDD 3.0' );
+					_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_adjustment_meta()/edd_update_adjustment_meta()</code> instead.', 'EDD 3.0' );
 
 					if ( $this->show_backtrace ) {
 						$backtrace = debug_backtrace();
@@ -598,7 +598,7 @@ class Discount extends Base {
 
 				// Since the old discounts data was simply stored in a single post meta entry, just don't let it be added.
 				if ( $this->show_notices ) {
-					_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_discount_meta()/edd_update_discount_meta()</code> instead.', 'EDD 3.0' );
+					_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All discount postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_adjustment_meta()/edd_update_adjustment_meta()</code> instead.', 'EDD 3.0' );
 
 					if ( $this->show_backtrace ) {
 						$backtrace = debug_backtrace();

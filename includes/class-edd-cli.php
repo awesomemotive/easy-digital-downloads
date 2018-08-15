@@ -890,12 +890,12 @@ class EDD_CLI extends WP_CLI_Command {
 				// Migrate any additional meta.
 				if ( ! empty( $meta_to_migrate ) ) {
 					foreach ( $meta_to_migrate as $key => $value ) {
-						edd_add_discount_meta( $discount_id, $key, $value );
+						edd_add_adjustment_meta( $discount_id, $key, $value );
 					}
 				}
 
 				// Store legacy discount ID.
-				edd_add_discount_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
+				edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
 
 				$progress->tick();
 			}
@@ -1380,15 +1380,17 @@ class EDD_CLI extends WP_CLI_Command {
 					? sanitize_text_field( $tax_rate['state'] )
 					: '';
 
-				$tax_rate_data = array(
-					'status'  => 'active',
-					'country' => $tax_rate['country'],
-					'region'  => $region,
-					'scope'   => $scope,
-					'rate'    => floatval( $tax_rate['rate'] ),
+				$adjustment_data = array(
+					'name'        => $tax_rate['country'],
+					'status'      => 'active',
+					'type'        => 'tax_rate',
+					'scope'       => $scope,
+					'amount_type' => 'percent',
+					'amount'      => floatval( $tax_rate['rate'] ),
+					'description' => $region,
 				);
 
-				edd_add_tax_rate( $tax_rate_data );
+				edd_add_adjustment( $adjustment_data );
 
 				$progress->tick();
 			}

@@ -9,7 +9,7 @@
  * @since       2.7
  */
 
-use EDD\Database\Objects\Discount;
+use EDD\Database\Objects\Adjustment;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,13 +18,13 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0 Extends EDD\Database\Objects\Discount instead of EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
  *
  * @property int $id
  * @property string $name
  * @property string $code
  * @property string $status
- * @property string $type
+ * @property string $amount_type
  * @property float $amount
  * @property array $product_reqs
  * @property string $scope
@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float $min_cart_price
  * @property bool $once_per_customer
  */
-class EDD_Discount extends Discount {
+class EDD_Discount extends Adjustment {
 
 	/**
 	 * Flat discount.
@@ -96,11 +96,11 @@ class EDD_Discount extends Discount {
 	/**
 	 * Discount Type (Percentage or Flat Amount).
 	 *
-	 * @since 2.7
+	 * @since 3.0
 	 * @access protected
 	 * @var string
 	 */
-	protected $type = null;
+	protected $amount_type = null;
 
 	/**
 	 * Discount Amount.
@@ -548,10 +548,10 @@ class EDD_Discount extends Discount {
 
 		/**
 		 * Some object vars need to be setup manually as the values need to be
-		 * pulled in from the `edd_discountmeta` table.
+		 * pulled in from the `edd_adjustmentmeta` table.
 		 */
-		$this->excluded_products = (array) edd_get_discount_meta( $this->id, 'excluded_product',    false );
-		$this->product_reqs      = (array) edd_get_discount_meta( $this->id, 'product_requirement', false );
+		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product',    false );
+		$this->product_reqs      = (array) edd_get_adjustment_meta( $this->id, 'product_requirement', false );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -676,7 +676,7 @@ class EDD_Discount extends Discount {
 		 * @param string $code Discount type (percent or flat amount).
 		 * @param int    $ID   Discount ID.
 		 */
-		return apply_filters( 'edd_get_discount_type', $this->type, $this->id );
+		return apply_filters( 'edd_get_discount_type', $this->amount_type, $this->id );
 	}
 
 	/**
@@ -1030,7 +1030,7 @@ class EDD_Discount extends Discount {
 				if ( isset( $args['excluded_products'] ) ) {
 					if ( is_array( $args['excluded_products'] ) ) {
 						foreach ( $args['excluded_products'] as $product ) {
-							edd_add_discount_meta( $this->id, 'excluded_product', absint( $product ) );
+							edd_add_adjustment_meta( $this->id, 'excluded_product', absint( $product ) );
 						}
 					}
 				}
@@ -1038,7 +1038,7 @@ class EDD_Discount extends Discount {
 				if ( isset( $args['product_reqs'] ) ) {
 					if ( is_array( $args['product_reqs'] ) ) {
 						foreach ( $args['product_reqs'] as $product ) {
-							edd_add_discount_meta( $this->id, 'product_requirement', absint( $product ) );
+							edd_add_adjustment_meta( $this->id, 'product_requirement', absint( $product ) );
 						}
 					}
 				}
@@ -1147,6 +1147,14 @@ class EDD_Discount extends Discount {
 				$this->delete_meta( 'product_requirement' );
 			}
 		}
+
+		// Switch `type` to `amount_type`
+		if ( ! isset( $args['amount_type'] ) && ! empty( $args['type'] ) && 'discount' !== $args['type'] ) {
+			$args['amount_type'] = $args['type'];
+		}
+
+		// Force `type` to `discount`
+		$args['type'] = 'discount';
 
 		/**
 		 * Fires before the discount has been updated in the database.
@@ -1658,7 +1666,7 @@ class EDD_Discount extends Discount {
 		// Start off setting the amount as the base price.
 		$amount = $base_price;
 
-		if ( 'flat' === $this->type ) {
+		if ( 'flat' === $this->amount_type ) {
 			$amount = $base_price - $this->amount;
 
 			if ( $amount < 0 ) {
