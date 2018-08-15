@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_orders_page_primary_nav( $active_tab = '' ) {
 
-	$add_new_url = add_query_arg( array( 'view' => 'add-order' ) );
+	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
 
 	ob_start();?>
 
