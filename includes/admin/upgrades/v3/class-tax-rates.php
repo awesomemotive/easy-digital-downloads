@@ -54,15 +54,17 @@ class Tax_Rates extends Base {
 					? sanitize_text_field( $result['state'] )
 					: '';
 
-				$tax_rate_data = array(
-					'status'  => 'active',
-					'country' => $result['country'],
-					'region'  => $region,
-					'scope'   => $scope,
-					'rate'    => floatval( $result['rate'] ),
+				$adjustment_data = array(
+					'name'        => $result['country'],
+					'status'      => 'active',
+					'type'        => 'tax_rate',
+					'scope'       => $scope,
+					'amount_type' => 'percent',
+					'amount'      => floatval( $result['rate'] ),
+					'description' => $region,
 				);
 
-				edd_add_tax_rate( $tax_rate_data );
+				edd_add_adjustment( $adjustment_data );
 			}
 
 			return true;

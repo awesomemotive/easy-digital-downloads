@@ -1,6 +1,6 @@
 <?php
 /**
- * Discount Meta Table.
+ * Adjustment Meta Table.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -14,11 +14,11 @@ namespace EDD\Database\Tables;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup the global "edd_discountmeta" database table
+ * Setup the global "edd_adjustmentmeta" database table
  *
  * @since 3.0
  */
-final class Discount_Meta extends Base {
+final class Adjustment_Meta extends Base {
 
 	/**
 	 * Table name
@@ -27,27 +27,27 @@ final class Discount_Meta extends Base {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_discountmeta';
+	protected $name = 'edd_adjustmentmeta';
 
-	/**
-	 * Database version
-	 *
-	 * @access protected
-	 * @since 3.0
-	 * @var int
-	 */
-	protected $version = 201808010002;
+    /**
+     * Database version
+     *
+     * @access protected
+     * @since 3.0
+     * @var int
+     */
+    protected $version = 201806140002;
 
-	/**
-	 * Array of upgrade versions and methods
-	 *
-	 * @since 3.0
-	 *
-	 * @var array
-	 */
-	protected $upgrades = array(
-		'201808010002' => 201808010002
-	);
+    /**
+     * Array of upgrade versions and methods
+     *
+     * @since 3.0
+     *
+     * @var array
+     */
+    protected $upgrades = array(
+        '201806140002' => 201806140002
+    );
 
 	/**
 	 * Setup the database schema
@@ -59,28 +59,28 @@ final class Discount_Meta extends Base {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_discount_id bigint(20) unsigned NOT NULL default '0',
+			edd_adjustment_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
-			KEY edd_discount_id (edd_discount_id),
+			KEY edd_adjustment_id (edd_adjustment_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 
-	/**
-	 * Upgrade to version 201808010002
-	 * - Migrate data from edd_adjustmentmeta to edd_discountmeta.
-	 *
+    /**
+     * Upgrade to version 201806140002
+     * - Migrate data from edd_discounts to edd_adjustments
+     *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
 	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808010002() {
+     * @since 3.0
+     *
+     * @return boolean
+     */
+    protected function __201806140002() {
 
-		// Old adjustments table
-		$table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_adjustmentmeta';
+        // Old discounts table
+        $table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discountmeta';
 
 		// Does old table exist?
 		$query    = "SHOW TABLES LIKE %s";
@@ -93,29 +93,29 @@ final class Discount_Meta extends Base {
 			return true;
 		}
 
-		// Get the contents
-		$discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name}" );
+        // Get the contents
+        $discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name}" );
 
 		// Migrate discounts to adjustments
 		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
 				$this->get_db()->insert( $this->table_name, array(
-					'edd_discount_id' => $discount->edd_adjustment_id,
-					'meta_key'        => $discount->meta_key,
-					'meta_value'      => $discount->meta_value,
+					'edd_adjustment_id' => $discount->edd_discount_id,
+					'meta_key'          => $discount->meta_key,
+					'meta_value'        => $discount->meta_value
 				) );
 			}
 		}
 
 		// Delete the old option
-		delete_option( 'wpdb_edd_adjustmentmeta_version' );
+		delete_option( 'wpdb_edd_discountmeta_version' );
 
 		// Attempt to drop the old table
 		$this->get_db()->query( "
 			DROP TABLE {$table_name};
 		" );
 
-		// Return success/fail
-		return true;
-	}
+        // Return success/fail
+        return true;
+    }
 }

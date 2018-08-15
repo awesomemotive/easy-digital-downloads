@@ -35,9 +35,6 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_add_rewrite_endpoints( $wp_rewrite );
 
-		// Disable taxes
-		edd_update_option( 'enable_taxes', false );
-
 		$current_user = new WP_User( 1 );
 		$current_user->set_role( 'administrator' );
 

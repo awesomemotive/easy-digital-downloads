@@ -24,10 +24,10 @@ activate_plugin( 'easy-digital-downloads/easy-digital-downloads.php' );
 
 echo "Setting up Easy Digital Downloads...\n";
 
-// Block HTTP requests.
-add_filter( 'pre_http_request', function() {
-	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests are disabled when running unit tests.', 'easy-digital-downloads' ) );
-} );
+function _disable_reqs( $status = false, $args = array(), $url = '') {
+	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disbaled for unit tests', 'easy-digital-downloads' ) );
+}
+add_filter( 'pre_http_request', '_disable_reqs' );
 
 // Include helpers
 require_once 'helpers/shims.php';
@@ -36,4 +36,3 @@ require_once 'helpers/class-helper-payment.php';
 require_once 'helpers/class-helper-discount.php';
 require_once 'phpunit/class-ajax-unittestcase.php';
 require_once 'phpunit/class-edd-unittestcase.php';
-

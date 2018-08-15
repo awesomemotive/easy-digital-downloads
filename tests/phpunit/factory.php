@@ -13,5 +13,4 @@ require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-addr
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-items.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-adjustments.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-order-transactions.php' );
-require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-tax-rates.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory.php' );

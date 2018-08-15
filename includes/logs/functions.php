@@ -111,7 +111,7 @@ function edd_get_logs( $args = array() ) {
 	// Instantiate a query object
 	$logs = new EDD\Database\Queries\Log();
 
-	// Return logs
+	// Return notes
 	return $logs->query( $r );
 }
 

@@ -141,13 +141,13 @@ function edd_setup_components() {
 		'meta'   => false
 	) );
 
-	// Register discount.
-	edd_register_component( 'discount', array(
-		'schema' => '\\EDD\\Database\\Schema\\Discounts',
-		'table'  => '\\EDD\\Database\\Tables\\Discounts',
-		'meta'   => '\\EDD\\Database\\Tables\\Discount_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Discount',
-		'object' => 'EDD_Discount'
+	// Register adjustment.
+	edd_register_component( 'adjustment', array(
+		'schema' => '\\EDD\\Database\\Schema\\Adjustments',
+		'table'  => '\\EDD\\Database\\Tables\\Adjustments',
+		'meta'   => '\\EDD\\Database\\Tables\\Adjustment_Meta',
+		'query'  => '\\EDD\\Database\\Queries\\Adjustment',
+		'object' => '\\EDD\\Adjustments\\Adjustment'
 	) );
 
 	// Register note.
@@ -228,15 +228,6 @@ function edd_setup_components() {
 		'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',
 		'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
 		'object' => '\\EDD\\Logs\\File_Download_Log',
-		'meta'   => false
-	) );
-
-	// Register tax rates.
-	edd_register_component( 'tax_rate', array(
-		'schema' => '\\EDD\\Database\\Schema\\Tax_Rates',
-		'table'  => '\\EDD\\Database\\Tables\\Tax_Rates',
-		'query'  => '\\EDD\\Database\\Queries\\Tax_Rate',
-		'object' => '\\EDD\\Tax_Rates\\Tax_Rate',
 		'meta'   => false
 	) );
 

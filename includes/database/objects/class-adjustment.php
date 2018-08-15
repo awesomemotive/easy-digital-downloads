@@ -1,6 +1,6 @@
 <?php
 /**
- * Tax Rate Database Object Class.
+ * Adjustment Database Object Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -14,7 +14,7 @@ namespace EDD\Database\Objects;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Tax rate database row class.
+ * Adjustment database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +26,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Tax_Rate extends Base {
+class Adjustment extends Base {
 
 }
