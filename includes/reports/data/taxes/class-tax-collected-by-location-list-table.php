@@ -96,7 +96,7 @@ class Tax_Collected_By_Location extends \WP_List_Table {
 
 		$data = array();
 
-		$tax_rates = edd_get_tax_rates( 'object' );
+		$tax_rates = edd_get_tax_rates( array(), OBJECT );
 
 		foreach ( $tax_rates as $tax_rate ) {
 			$location = edd_get_country_name( $tax_rate->name );
