@@ -76,7 +76,7 @@ class Orders extends Base {
 			'name'       => 'type',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'order',
+			'default'    => 'sale',
 			'searchable' => true,
 			'sortable'   => true
 		),

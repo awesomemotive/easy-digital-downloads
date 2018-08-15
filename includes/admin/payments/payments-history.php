@@ -74,7 +74,7 @@ function edd_get_order_pages() {
 
 	// Default tabs
 	$tabs = array(
-		'order'   => __( 'Orders',   'easy-digital-downloads' ),
+		'sale'    => __( 'Orders',   'easy-digital-downloads' ),
 		'refund'  => __( 'Refunds',  'easy-digital-downloads' ),
 		'invoice' => __( 'Invoices', 'easy-digital-downloads' )
 	);
@@ -103,7 +103,7 @@ function edd_payment_history_page() {
 
 		$active_tab = ! empty( $_GET['type'] )
 			? sanitize_key( $_GET['type'] )
-			: 'order';
+			: 'sale';
 
 		$admin_url = edd_get_admin_url( array(
 			'page' => 'edd-payment-history'
