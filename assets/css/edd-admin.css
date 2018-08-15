@@ -1574,6 +1574,11 @@ td.edd_order_price {
 /* Reports Styles
 -------------------------------------------------------------- */
 
+/* Force a scrollbar when on the reports page (https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6718) */
+body.download_page_edd-reports {
+	overflow-y: scroll;
+}
+
 .edd-vertical-sections .edd-legacy-label {
 	font-size: 7px;
 	text-transform: uppercase;
