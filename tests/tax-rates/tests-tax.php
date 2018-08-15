@@ -1,22 +1,25 @@
 <?php
 
+namespace EDD\Tax_Rates;
 
 /**
- * @group edd_tax
+ * Tax Tests.
+ *
+ * @group edd_tax_rates
  */
-class Tests_Taxes extends EDD_UnitTestCase {
+class Tests_Taxes extends \EDD_UnitTestCase {
 
 	/**
 	 * Order test fixture.
 	 *
-	 * @var EDD\Orders\Order
+	 * @var \EDD\Orders\Order
 	 */
 	protected static $order;
 
 	/**
 	 * Download test fixture.
 	 *
-	 * @var EDD_Download
+	 * @var \EDD_Download
 	 */
 	protected static $download;
 
@@ -39,7 +42,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		self::$download = edd_get_download( $post_id );
 
-		self::$order = edd_get_order( EDD_Helper_Payment::create_simple_payment_with_tax() );
+		self::$order = edd_get_order( \EDD_Helper_Payment::create_simple_payment_with_tax() );
 
 		edd_update_order_status( self::$order->ID, 'publish' );
 
@@ -49,13 +52,38 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		edd_update_option( 'tax_rate', '3.6' );
 
 		// Setup country / state tax rates
-		$tax_rates   = array();
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'AZ', 'rate' => .15 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'TX', 'rate' => .13 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'AR', 'rate' => .09 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'HI', 'rate' => .63 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'LA', 'rate' => .96 );
+		$tax_rates = array(
+			array(
+				'country' => 'US',
+				'state'   => 'AL',
+				'rate'    => 15,
+			),
+			array(
+				'country' => 'US',
+				'state'   => 'AZ',
+				'rate'    => .15,
+			),
+			array(
+				'country' => 'US',
+				'state'   => 'TX',
+				'rate'    => .13,
+			),
+			array(
+				'country' => 'US',
+				'state'   => 'AR',
+				'rate'    => .09,
+			),
+			array(
+				'country' => 'US',
+				'state'   => 'HI',
+				'rate'    => .63,
+			),
+			array(
+				'country' => 'US',
+				'state'   => 'LA',
+				'rate'    => .96,
+			),
+		);
 
 		update_option( 'edd_tax_rates', $tax_rates );
 	}
@@ -118,7 +146,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		global $current_user;
 
-		$current_user = new WP_User( 1 );
+		$current_user = new \WP_User( 1 );
 		$user_id      = get_current_user_id();
 
 		update_user_meta( $user_id, '_edd_user_address', array(
