@@ -86,7 +86,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null,
 			'gateway'         => null,
 			'post__in'        => null,
-			'advanced_query'  => null,
+			'compare'         => null,
 			'country'         => null,
 			'region'          => null,
 		);
@@ -675,8 +675,8 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['order'] = $this->args['order'];
 		}
 
-		if ( isset( $this->args['advanced_query'] ) && is_array( $this->args['advanced_query'] ) ) {
-			$arguments['advanced_query'] = $this->args['advanced_query'];
+		if ( isset( $this->args['compare'] ) && is_array( $this->args['compare'] ) ) {
+			$arguments['compare'] = $this->args['compare'];
 		}
 
 		// Re-map post_status to status.

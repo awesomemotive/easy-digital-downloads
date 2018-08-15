@@ -13,7 +13,7 @@ namespace EDD\Database\Queries;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class Advanced_Query extends \WP_Meta_Query {
+class Compare extends \WP_Meta_Query {
 
 	/**
 	 * Generate SQL WHERE clauses for a first-order query clause.
