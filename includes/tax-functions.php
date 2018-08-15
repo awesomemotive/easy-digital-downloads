@@ -45,7 +45,7 @@ function edd_use_taxes() {
  */
 function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 
-	if ( isset( $args['type'] ) && 'active' === $args['type'] ) {
+	if ( isset( $args['status'] ) && 'active' === $args['status'] ) {
 		add_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
 	}
 
@@ -60,7 +60,7 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 		'order'   => 'ASC',
 	) );
 
-	if ( isset( $args['type'] ) && 'active' === $args['type'] ) {
+	if ( isset( $args['status'] ) && 'active' === $args['status'] ) {
 		remove_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
 	}
 
@@ -183,9 +183,10 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 
 		// Fetch all the tax rates from the database.
 		// The region is not passed in deliberately in order to check for country-wide tax rates.
-		$tax_rates = edd_get_tax_rates( 'object', 'active', array(
-			'name' => $country,
-		) );
+		$tax_rates = edd_get_tax_rates( array(
+			'name'   => $country,
+			'status' => 'active',
+		), OBJECT );
 
 		// Save processing if only one tax rate is returned.
 		if ( 1 === count( $tax_rates ) ) {
