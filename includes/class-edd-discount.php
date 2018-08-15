@@ -1704,6 +1704,8 @@ class EDD_Discount extends Adjustment {
 
 		$args = array( 'use_count' => $this->use_count );
 
+		$this->max_uses = absint( $this->max_uses );
+
 		if ( 0 !== $this->max_uses && $this->max_uses <= $this->use_count ) {
 			$args['status'] = 'inactive';
 		}
