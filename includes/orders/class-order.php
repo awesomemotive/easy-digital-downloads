@@ -23,10 +23,12 @@ defined( 'ABSPATH' ) || exit;
  * @property int $id
  * @property int $parent
  * @property string $order_number
+ * @property string $type
  * @property string $status
  * @property string $date_created
  * @property string $date_modified
  * @property string $date_completed
+ * @property string $date_refundable
  * @property int $user_id
  * @property int $customer_id
  * @property string $email
@@ -78,6 +80,14 @@ class Order extends Objects\Order {
 	protected $status;
 
 	/**
+	 * Order type.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $type;
+
+	/**
 	 * Date created.
 	 *
 	 * @since 3.0
@@ -100,6 +110,14 @@ class Order extends Objects\Order {
 	 * @var   string
 	 */
 	protected $date_completed;
+
+	/**
+	 * Date refundable.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	protected $date_refundable;
 
 	/**
 	 * User ID.
