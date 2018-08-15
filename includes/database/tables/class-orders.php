@@ -36,7 +36,7 @@ final class Orders extends Base {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 201808140001;
+	protected $version = 201808150001;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -49,6 +49,7 @@ final class Orders extends Base {
 		'201806110001' => 201806110001,
 		'201807270003' => 201807270003,
 		'201808140001' => 201808140001,
+		'201808150001' => 201808150001,
 	);
 
 	/**
@@ -63,7 +64,7 @@ final class Orders extends Base {
 			parent bigint(20) unsigned NOT NULL default '0',
 			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
-			type varchar(20) NOT NULL default 'order',
+			type varchar(20) NOT NULL default 'sale',
 			user_id bigint(20) unsigned NOT NULL default '0',
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
@@ -116,30 +117,6 @@ final class Orders extends Base {
 	}
 
 	/**
-	 * Upgrade to version 201808140001
-	 * - Add the `type` column.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808140001() {
-
-		// Look for column
-		$result = $this->column_exists( 'type' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'order' AFTER status;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
 	 * Upgrade to version 201807270001
 	 * - Add the `uuid` varchar column
 	 *
@@ -161,5 +138,52 @@ final class Orders extends Base {
 
 		// Return success/fail.
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201808140001
+	 * - Add the `type` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201808140001() {
+
+		// Look for column
+		$result = $this->column_exists( 'type' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'sale' AFTER status;
+			" );
+		}
+
+		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201808150001
+	 * - Change the default value of the `type` column to `sale`.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201808150001() {
+
+		// Alter the database
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `type` varchar(20) NOT NULL default 'sale';
+		" );
+
+		$this->get_db()->query( "
+			UPDATE {$this->table_name} SET `type` = 'sale';
+		" );
+
+		// Return success/fail.
+		return $this->is_success( true );
 	}
 }
