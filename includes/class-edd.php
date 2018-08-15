@@ -448,7 +448,7 @@ final class Easy_Digital_Downloads {
 
 		// Database Table Query Interfaces
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-base.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-advanced-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-compare.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-email-address.php';

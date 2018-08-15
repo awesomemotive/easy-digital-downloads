@@ -6,7 +6,7 @@
  * @subpackage  Database\Schemas
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Database\Schemas;
 
@@ -21,11 +21,10 @@ defined( 'ABSPATH' ) || exit;
 class Orders extends Base {
 
 	/**
-	 * Array of database column objects
+	 * Array of database column objects.
 	 *
 	 * @since 3.0
-	 * @access public
-	 * @var array
+	 * @var   array
 	 */
 	public $columns = array(
 
@@ -70,6 +69,16 @@ class Orders extends Base {
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
+		),
+
+		// type
+		array(
+			'name'       => 'type',
+			'type'       => 'varchar',
+			'length'     => '20',
+			'default'    => 'sale',
+			'searchable' => true,
+			'sortable'   => true
 		),
 
 		// user_id

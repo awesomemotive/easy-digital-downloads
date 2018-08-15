@@ -129,34 +129,37 @@ function edd_tools_banned_emails_display() {
  * @since 2.5
  */
 function edd_tools_recount_stats_display() {
+
+	// Bail if the user does not have the required capabilities.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
 
 	do_action( 'edd_tools_recount_stats_before' );
 	?>
-    <div class="postbox">
-        <h3><span><?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside recount-stats-controls">
-            <p><?php _e( 'Use these tools to recount / reset store stats.', 'easy-digital-downloads' ); ?></p>
-            <form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">
+
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Recount Stats', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside recount-stats-controls">
+			<p><?php esc_html_e( 'Use these tools to recount / reset store stats.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" id="edd-tools-recount-form" class="edd-export-form edd-import-export-form">
 				<span>
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
-                    <select name="edd-export-class" id="recount-stats-type">
+					<select name="edd-export-class" id="recount-stats-type">
 						<option value="0" selected="selected"
-                                disabled="disabled"><?php _e( 'Please select an option', 'easy-digital-downloads' ); ?></option>
+								disabled="disabled"><?php esc_html_e( 'Please select an option', 'easy-digital-downloads' ); ?></option>
 						<option data-type="recount-store"
-                                value="EDD_Tools_Recount_Store_Earnings"><?php _e( 'Recount Store Earnings and Sales', 'easy-digital-downloads' ); ?></option>
+								value="EDD_Tools_Recount_Store_Earnings"><?php esc_html_e( 'Recount Store Earnings and Sales', 'easy-digital-downloads' ); ?></option>
 						<option data-type="recount-download"
-                                value="EDD_Tools_Recount_Download_Stats"><?php printf( __( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></option>
+								value="EDD_Tools_Recount_Download_Stats"><?php printf( __( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></option>
 						<option data-type="recount-all"
-                                value="EDD_Tools_Recount_All_Stats"><?php printf( __( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></option>
+								value="EDD_Tools_Recount_All_Stats"><?php printf( __( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></option>
 						<option data-type="recount-customer-stats"
-                                value="EDD_Tools_Recount_Customer_Stats"><?php _e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></option>
+								value="EDD_Tools_Recount_Customer_Stats"><?php esc_html_e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></option>
 						<?php do_action( 'edd_recount_tool_options' ); ?>
-                        <option data-type="reset-stats"
-                                value="EDD_Tools_Reset_Stats"><?php _e( 'Reset Store', 'easy-digital-downloads' ); ?></option>
+						<option data-type="reset-stats"
+								value="EDD_Tools_Reset_Stats"><?php esc_html_e( 'Reset Store', 'easy-digital-downloads' ); ?></option>
 					</select>
 
 					<span id="tools-product-dropdown" style="display: none">
@@ -171,7 +174,7 @@ function edd_tools_recount_stats_display() {
 					</span>
 
 					<input type="submit" id="recount-stats-submit"
-                           value="<?php _e( 'Submit', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+						   value="<?php _e( 'Submit', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 
 					<br/>
 
@@ -181,16 +184,17 @@ function edd_tools_recount_stats_display() {
 						<span id="recount-all"><?php printf( __( 'Recalculates the earnings and sales stats for all %s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></span>
 						<span id="recount-customer-stats"><?php _e( 'Recalculates the lifetime value and purchase counts for all customers.', 'easy-digital-downloads' ); ?></span>
 						<?php do_action( 'edd_recount_tool_descriptions' ); ?>
-                        <span id="reset-stats"><?php _e( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ); ?></span>
+						<span id="reset-stats"><?php _e( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ); ?></span>
 					</span>
 
 					<span class="spinner"></span>
 
 				</span>
-            </form>
+			</form>
 			<?php do_action( 'edd_tools_recount_forms' ); ?>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+
 	<?php
 	do_action( 'edd_tools_recount_stats_after' );
 }

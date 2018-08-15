@@ -42,6 +42,22 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Discount extends Adjustment {
 
 	/**
+	 * Flat discount.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	const FLAT = 'flat';
+
+	/**
+	 * Percent discount.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	const PERCENT = 'percent';
+
+	/**
 	 * Discount ID.
 	 *
 	 * @since 2.7
