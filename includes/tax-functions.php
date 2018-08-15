@@ -36,39 +36,44 @@ function edd_use_taxes() {
  * @since 1.6
  * @since 3.0 Updated to use new query class.
  *            Added $output parameter to output an array of EDD\Adjustments\Adjustment objects, if set to `object`.
- *            Added $type parameter.
  *            Added $args parameter.
  *
- * @param string $output Type of data to output. Default `array`.
- * @param string $type   Type of tax rates. Accepts `all` or `active`. Default `active`.
- * @param array  $args   Query arguments.
+ * @param array  $args   Query arguments
+ * @param string $output Optional. Type of data to output. Any of ARRAY_N | OBJECT.
  *
  * @return array|\EDD\Adjustments\Adjustment[] Tax rates.
  */
-function edd_get_tax_rates( $output = 'array', $type = 'active', $args = array() ) {
+function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 
-	if ( 'active' === $type ) {
+	if ( isset( $args['type'] ) && 'active' === $args['type'] ) {
 		add_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
 	}
 
-	// Fetch from adjustments table.
-	$tax_rates = edd_get_adjustments( wp_parse_args( $args, array(
-		'type'  => 'tax_rate',
-		'order' => 'ASC',
-	) ) );
+	// Instantiate a query object
+	$adjustments = new EDD\Database\Queries\Adjustment();
 
-	if ( 'active' === $type ) {
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number'  => 30,
+		'type'  => 'tax_rate',
+		'orderby' => 'date_created',
+		'order'   => 'ASC',
+	) );
+
+	if ( isset( $args['type'] ) && 'active' === $args['type'] ) {
 		remove_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
 	}
 
-	if ( 'object' === $output ) {
-		return $tax_rates;
+	$adjustments->query( $r );
+
+	if ( OBJECT === $output ) {
+		return $adjustments->items;
 	}
 
 	$rates = array();
 
-	if ( $tax_rates ) {
-		foreach ( $tax_rates as $tax_rate ) {
+	if ( $adjustments->items ) {
+		foreach ( $adjustments->items as $tax_rate ) {
 			$rate = array(
 				'id'      => absint( $tax_rate->id ),
 				'country' => esc_attr( $tax_rate->name ),
