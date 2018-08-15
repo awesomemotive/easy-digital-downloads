@@ -34,8 +34,8 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 
 		// Loop through order pages and create tabs
 		foreach ( $tabs as $tab_id => $tab_name ) {
-			
-			// Remove 
+
+			// Remove
 			$tab_url = add_query_arg( array(
 				'settings-updated' => false,
 				'type'             => $tab_id,
@@ -43,12 +43,12 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
-			$active  = $active_tab == $tab_id
+			$active  = $active_tab === $tab_id
 				? ' nav-tab-active'
 				: '';
 
 			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">';
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
 				echo esc_html( $tab_name );
 			echo '</a>';
 		}
@@ -58,7 +58,7 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 
 	<?php
 
-	echo ob_get_clean();
+	echo ob_get_clean(); // WPCS: XSS ok.
 }
 
 /**
@@ -91,23 +91,20 @@ function edd_get_order_pages() {
  *            Add a link to manually all orders.
 */
 function edd_payment_history_page() {
-
-	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) {
+	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
-	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) {
+	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
-		$payments_table = new EDD_Payment_History_Table();
-		$payments_table->prepare_items();
+		$orders_table = new EDD_Payment_History_Table();
+		$orders_table->prepare_items();
 
-		$active_tab = ! empty( $_GET['type'] )
+		$active_tab = ! empty( $_GET['type'] ) // WPCS: CSRF ok.
 			? sanitize_key( $_GET['type'] )
 			: 'sale';
 
-		$admin_url = edd_get_admin_url( array(
-			'page' => 'edd-payment-history'
-		) ); ?>
+		$admin_url = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
 
 		<div class="wrap">
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
@@ -122,9 +119,9 @@ function edd_payment_history_page() {
 				<input type="hidden" name="page" value="edd-payment-history" />
 				<input type="hidden" name="type" value="<?php echo esc_attr( $active_tab ); ?>" />
 				<?php
-				$payments_table->views();
-				$payments_table->advanced_filters();
-				$payments_table->display();
+				$orders_table->views();
+				$orders_table->advanced_filters();
+				$orders_table->display();
 				?>
 			</form>
 
@@ -145,7 +142,7 @@ function edd_payment_history_mobile_link() {
 	?>
 	<span class="edd-mobile-link">
 		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
-			<?php _e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
+			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
 		</a>
 	</span>
 	<?php
@@ -156,18 +153,21 @@ add_action( 'edd_after_admin_filter_bar_reports', 'edd_payment_history_mobile_li
  * Orders admin titles.
  *
  * @since 1.6
+ * @since 3.0 Updated to use new nomenclature.
  *
- * @param $admin_title
- * @param $title
+ * @param string $admin_title
+ * @param string $title
  *
- * @return string
+ * @return string Updated admin title.
  */
 function edd_view_order_details_title( $admin_title, $title ) {
+
+	// Bail if we aren't on the Orders page.
 	if ( 'download_page_edd-payment-history' !== get_current_screen()->base ) {
 		return $admin_title;
 	}
 
-	if ( ! isset( $_GET['view'] ) ) {
+	if ( ! isset( $_GET['view'] ) ) { // WPCS: CSRF ok.
 		return $admin_title;
 	}
 
