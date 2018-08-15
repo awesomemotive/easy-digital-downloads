@@ -74,7 +74,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'customer'        => null,
 			'status'          => edd_get_payment_status_keys(),
 			'mode'            => null,
-			'type'            => 'order',
+			'type'            => 'sale',
 			'meta_key'        => null,
 			'year'            => null,
 			'month'           => null,
