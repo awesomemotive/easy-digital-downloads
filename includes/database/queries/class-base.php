@@ -2486,7 +2486,7 @@ class Base extends \EDD\Database\Base {
 			$primary = $this->get_primary_column_name();
 			$query   = "SELECT * FROM {$table} WHERE {$primary} IN (%s)";
 			$ids     = join( ',', array_map( 'absint', $ids ) );
-			$prepare = sprintf( $query , $ids );
+			$prepare = sprintf( $query, $ids );
 			$results = $this->get_db()->get_results( $prepare );
 
 			// Update item caches
