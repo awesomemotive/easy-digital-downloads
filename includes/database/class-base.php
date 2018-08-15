@@ -85,4 +85,15 @@ class Base {
 		// Return null if not exists
 		return null;
 	}
+
+	/**
+	 * Converts the given object to an array.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Array version of the given object.
+	 */
+	public function to_array() {
+		return get_object_vars( $this );
+	}
 }

@@ -399,9 +399,116 @@ class Stats {
 	 * @return int Number of refunded orders.
 	 */
 	public function get_order_refund_count( $query = array() ) {
-		$query['status'] = array( 'refunded' );
+		$query['status'] = isset( $query['status'] )
+			? $query['status']
+			: array( 'refunded', 'partially_refunded' );
 
 		return $this->get_order_count( $query );
+	}
+
+	/**
+	 * Calculate number of refunded order items.
+	 *
+	 * @since 3.0
+	 *
+	 * @see \EDD\Orders\Stats::get_order_item_count()
+	 *
+	 * @param array $query {
+	 *     Optional. Array of query parameters.
+	 *     Default empty.
+	 *
+	 *     Each method accepts query parameters to be passed. Parameters passed to methods override the ones passed in
+	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
+	 *     this class.
+	 *
+	 *     @type string $start     Start day and time (based on the beginning of the given day).
+	 *     @type string $end       End day and time (based on the end of the given day).
+	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
+	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                             query.
+	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 * }
+	 *
+	 * @return int Number of refunded orders.
+	 */
+	public function get_order_item_refund_count( $query = array() ) {
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_order_items;
+		$this->query_vars['column']            = 'id';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		// Base value for status.
+		$query['status'] = isset( $query['status'] )
+			? $query['status']
+			: array( 'refunded', 'partially_refunded' );
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		// Only `COUNT` and `AVG` are accepted by this method.
+		$accepted_functions = array( 'COUNT', 'AVG' );
+
+		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
+			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
+			: "COUNT({$this->query_vars['table']}.id)";
+
+		$product_id = ! empty( $this->query_vars['product_id'] )
+			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
+			: '';
+
+		$price_id = ! empty( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+
+		// Calculating an average requires a subquery.
+		if ( 'AVG' === $this->query_vars['function'] ) {
+			$sql = "SELECT AVG(id) AS total
+					FROM (
+						SELECT COUNT(id) AS id
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						GROUP BY order_id
+					) AS counts";
+		} elseif ( true === $this->query_vars['grouped'] ) {
+			$sql = "SELECT product_id, price_id, {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					GROUP BY product_id, price_id
+					ORDER BY total DESC";
+		} else {
+			$sql = "SELECT {$function} AS total
+					FROM {$this->query_vars['table']}
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		}
+
+		$result = $this->get_db()->get_results( $sql );
+
+		if ( true === $this->query_vars['grouped'] ) {
+			array_walk( $result, function ( &$value ) {
+
+				// Format resultant object.
+				$value->product_id = absint( $value->product_id );
+				$value->price_id   = absint( $value->price_id );
+				$value->total      = absint( $value->total );
+
+				// Add instance of EDD_Download to resultant object.
+				$value->object = edd_get_download( $value->product_id );
+			} );
+		} else {
+			$result = null === $result[0]->total
+				? 0.00
+				: absint( $result[0]->total );
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $result;
+
+		return $this->get_order_item_count( $query );
 	}
 
 	/**
@@ -432,9 +539,15 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'refunded' );
+		$query['status'] = array( 'refunded', 'partially_refunded' );
 
-		return $this->get_order_earnings( $query );
+		// Request raw output so we can run `abs()` on the value.
+		$query['output'] = 'raw';
+
+		$retval = $this->get_order_earnings( $query );
+
+		// Format & return.
+		return edd_currency_filter( edd_format_amount( abs( $retval ) ) );
 	}
 
 	/**
@@ -462,10 +575,83 @@ class Stats {
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return string Average time for an order to be refunded.
+	 * @return string Average time for an order to be refunded in human readable format.
 	 */
 	public function get_average_refund_time( $query = array() ) {
-		// TODO: Implement as per partial refunds.
+
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['column']            = 'date_completed';
+		$this->query_vars['date_query_column'] = 'date_created';
+
+		$type_sql = $this->get_db()->prepare( 'AND o2.type = %s', esc_sql( 'refund' ) );
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
+				FROM {$this->query_vars['table']}
+				INNER JOIN wp_edd_orders o2 ON {$this->query_vars['table']}.id = o2.parent
+				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+
+		$result = $this->get_db()->get_var( $sql );
+
+		$time_to_refund = null === $result
+			? ''
+			: $result;
+
+		// Beginning of time.
+		$base = strtotime( '1970-01-01 00:00:00' );
+
+		if ( ! empty( $time_to_refund ) ) {
+			$time_to_refund = absint( $time_to_refund );
+
+			$intervals = array( 'year', 'month', 'day', 'hour', 'minute', 'second' );
+			$diffs     = array();
+
+			foreach ( $intervals as $interval ) {
+				$time = strtotime( '+1 ' . $interval, $base );
+
+				$add    = 1;
+				$looped = 0;
+
+				while ( $time_to_refund >= $time ) {
+					$add++;
+					$time = strtotime( '+' . $add . ' ' . $interval, $base );
+					$looped++;
+				}
+
+				$base               = strtotime( '+' . $looped . ' ' . $interval, $base );
+				$diffs[ $interval ] = $looped;
+			}
+
+			$count = 0;
+			$times = array();
+
+			foreach ( $diffs as $interval => $value ) {
+
+				// Keep precision to 2.
+				if ( $count >= 2 ) {
+					break;
+				}
+
+				// Add value and interval if value is bigger than 0.
+				if ( $value > 0 ) {
+					$interval = substr( $interval, 0, 1 );
+
+					// Add value and interval to times array.
+					$times[] = $value . $interval;
+					$count ++;
+				}
+			}
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return empty( $time_to_refund )
+			? ''
+			: implode( ' ', $times );
 	}
 
 	/**
@@ -503,18 +689,18 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
+		$status_sql = $this->get_db()->prepare( 'AND status IN(%s, %s)', esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ) );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
-		$sql = "SELECT COUNT(id) / o.total * 100 AS `refund_rate`
+		$sql = "SELECT SUM(ABS({$this->query_vars['table']}.total)) / o.total * 100 AS `refund_rate`
 				FROM {$this->query_vars['table']}
 				CROSS JOIN (
-					SELECT COUNT(id) AS total
+					SELECT SUM(id) AS total
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$status_sql} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -524,7 +710,7 @@ class Stats {
 
 		if ( 'formatted' === $this->query_vars['output'] ) {
 			$total .= '%';
-			$total = esc_html( $total );
+			$total  = esc_html( $total );
 		}
 
 		// Reset query vars.
@@ -533,7 +719,7 @@ class Stats {
 		return $total;
 	}
 
-	/** Order Item ************************************************************/
+	/** Order Items **********************************************************/
 
 	/**
 	 * Calculate order item earnings.
@@ -706,21 +892,21 @@ class Stats {
 						SELECT COUNT(id) AS id
 						FROM {$this->query_vars['table']}
 						{$join}
-						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1218,7 +1404,7 @@ class Stats {
 			} );
 		} elseif ( 'SUM' === $this->query_vars['function'] || 'AVG' === $this->query_vars['function'] ) {
 			array_walk( $result, function ( &$value ) {
-				$value->total = floatval( $value->total );
+				$value->total = floatval( abs( $value->total ) );
 			} );
 		}
 

@@ -460,6 +460,7 @@ class EDD_Download {
 	 * Retrieve whether the product is refundable.
 	 *
 	 * @since 3.0
+	 *
 	 * @return string `refundable` or `nonrefundable`
 	 */
 	public function get_refundability() {
