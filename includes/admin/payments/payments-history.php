@@ -74,7 +74,7 @@ function edd_get_order_pages() {
 
 	// Default tabs
 	$tabs = array(
-		'sale'    => __( 'Orders',   'easy-digital-downloads' ),
+		'sale'    => __( 'Sales',    'easy-digital-downloads' ),
 		'refund'  => __( 'Refunds',  'easy-digital-downloads' ),
 		'invoice' => __( 'Invoices', 'easy-digital-downloads' )
 	);
