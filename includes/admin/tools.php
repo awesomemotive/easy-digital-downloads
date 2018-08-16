@@ -1354,17 +1354,37 @@ function edd_tools_sysinfo_get() {
 		// Object
 		$thing = $component->get_interface( 'table' );
 		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ': ', 26, ' ' ) . $thing->get_version() . "\n";
+			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->get_version() . "\n";
 		}
 
 		// Meta
 		$thing = $component->get_interface( 'meta' );
 		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ': ', 26, ' ' ) . $thing->get_version() . "\n";
+			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->get_version() . "\n";
 		}
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_edd_database_tables', $return );
+
+	// EDD Database tables
+	$return .= "\n" . '-- EDD Database Row Counts' . "\n\n";
+
+	foreach ( EDD()->components as $component ) {
+
+		// Object
+		$thing = $component->get_interface( 'table' );
+		if ( ! empty( $thing ) ) {
+			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->count() . "\n";
+		}
+
+		// Meta
+		$thing = $component->get_interface( 'meta' );
+		if ( ! empty( $thing ) ) {
+			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->count() . "\n";
+		}
+	}
+
+	$return = apply_filters( 'edd_sysinfo_after_edd_database_row_counts', $return );
 
 	// EDD pages
 	$purchase_page = edd_get_option( 'purchase_page', '' );
