@@ -9,13 +9,10 @@
  * @since       2.4
  */
 
+use EDD\Admin\List_Table;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
-
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
 
 /**
  * EDD_Categories_Reports_Table Class
@@ -24,7 +21,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since 2.4
  */
-class EDD_Categories_Reports_Table extends WP_List_Table {
+class EDD_Categories_Reports_Table extends List_Table {
 
 	/**
 	 * Get things started

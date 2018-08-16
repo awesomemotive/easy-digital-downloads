@@ -7,16 +7,12 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
- * @since       3.0 - Updated to work with the discount code migration to custom tables.
  */
+
+use EDD\Admin\List_Table;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
-
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
 
 /**
  * EDD_Discount_Codes_Table Class
@@ -24,9 +20,10 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the Discount Codes table on the Discount Codes page
  *
  * @since 1.4
- * @since 3.0 - Updated to work with the discount code migration to custom tables.
+ * @since 3.0 Updated to work with the discount code migration to custom tables.
  */
-class EDD_Discount_Codes_Table extends WP_List_Table {
+class EDD_Discount_Codes_Table extends List_Table {
+
 	/**
 	 * Number of results to show per page
 	 *
@@ -66,40 +63,36 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Show the search field
+	 * Show the search field.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
 
 		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) { // WPCS: CSRF ok.
 			return;
 		}
 
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
+		if ( ! empty( $_REQUEST['orderby'] ) ) { // WPCS: CSRF ok.
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
 		}
 
-		if ( ! empty( $_REQUEST['order'] ) ) {
+		if ( ! empty( $_REQUEST['order'] ) ) { // WPCS: CSRF ok.
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 		}
-
 		?>
 
-        <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ) ?>"><?php echo esc_html( $text ); ?>:</label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-        </p>
+		</p>
 
 		<?php
 	}
@@ -125,7 +118,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the view types
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @return array $views All the views available
@@ -152,7 +144,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @return array $columns Array of all the list table columns
@@ -172,7 +163,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Retrieve the sortable columns
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @return array Array of all the sortable columns
@@ -202,7 +192,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param EDD_Discount $discount Discount object.
@@ -217,7 +206,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * This function renders the amount column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @param EDD_Discount $discount Data for the discount code.
@@ -230,7 +218,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * This function renders the start column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @param EDD_Discount $discount Discount object.
@@ -249,13 +236,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * This function renders the expiration column.
+	 * Render the Expiration column.
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @param EDD_Discount $discount Discount object.
-	 * @return string Expiration  date
+	 * @return string Expiration date.
 	 */
 	public function column_end_date( $discount ) {
 		$expiration = $discount->end_date;
@@ -270,19 +256,20 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render the Name Column
+	 * Render the Name column.
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param EDD_Discount $discount Discount object.
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $discount ) {
-		$base         = $this->get_base_url();
-		$state        = '';
-		$status       = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$row_actions  = array();
+		$base        = $this->get_base_url();
+		$state       = '';
+		$row_actions = array();
+		$status      = ! empty( $_GET['status'] ) // WPCS: CSRF ok.
+			? sanitize_key( $_GET['status'] )
+			: '';
 
 		// Bail if current user cannot manage discounts
 		if ( ! current_user_can( 'manage_shop_discounts' ) ) {
@@ -290,7 +277,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		}
 
 		// State
-		if ( ( ! empty( $status ) && ( $status !== $discount->status ) ) || ( $discount->status !== 'active' ) ) {
+		if ( ( ! empty( $status ) && ( $status !== $discount->status ) ) || ( 'active' !== $discount->status ) ) {
 			$state = ' &mdash; ' . edd_get_discount_status_label( $discount->id );
 		}
 
@@ -339,12 +326,10 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Render the checkbox column
 	 *
-	 * @access public
 	 * @since 1.4
 	 *
 	 * @param EDD_Discount $discount Discount object.
-	 *
-	 * @return string Displays a checkbox
+	 * @return string Checkbox HTML.
 	 */
 	public function column_cb( $discount ) {
 		return sprintf(
@@ -355,32 +340,29 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Return discount code wrapped in a code tag
+	 * Return discount code wrapped in a `<code>` tag.
 	 *
 	 * @since 3.0
 	 *
 	 * @param EDD_Discount $discount Discount object.
-	 *
-	 * @return string
+	 * @return string Discount code HTML.
 	 */
 	public function column_code( $discount ) {
 		return '<code class="edd-discount-code">' . $discount->code . '</code>';
 	}
 
 	/**
-	 * Message to be displayed when there are no items
+	 * Message to be displayed when there are no items.
 	 *
 	 * @since 1.7.2
-	 * @access public
 	 */
 	public function no_items() {
-		_e( 'No discounts found.', 'easy-digital-downloads' );
+		esc_html_e( 'No discounts found.', 'easy-digital-downloads' );
 	}
 
 	/**
 	 * Retrieve the bulk actions
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @return array $actions Array of the bulk actions
 	 */
@@ -393,14 +375,14 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Process the bulk actions
+	 * Process bulk actions.
 	 *
-	 * @access public
 	 * @since 1.4
-	 * @return void
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+
+		// Bail if a nonce was not supplied.
+		if ( ! isset( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
 
@@ -416,15 +398,17 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			$ids = array( $ids );
 		}
 
+		$ids = wp_parse_id_list( $_GET['discount'] );
+
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'delete' :
+				case 'delete':
 					edd_delete_discount( $id );
 					break;
-				case 'activate' :
+				case 'activate':
 					edd_update_discount_status( $id, 'active' );
 					break;
-				case 'deactivate' :
+				case 'deactivate':
 					edd_update_discount_status( $id, 'inactive' );
 					break;
 			}
@@ -432,22 +416,20 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the discount code counts
+	 * Retrieve the discount code counts.
 	 *
-	 * @access public
 	 * @since 1.4
-	 * @return void
 	 */
 	public function get_counts() {
 		$this->counts = edd_get_discount_counts();
 	}
 
 	/**
-	 * Retrieve all the data for all the discount codes
+	 * Retrieve all the data for all the discount codes.
 	 *
-	 * @access public
 	 * @since 1.4
-	 * @return array $discount_codes_data Array of all the data for the discount codes
+	 *
+	 * @return array Discount codes.
 	 */
 	public function discount_codes_data() {
 
@@ -472,14 +454,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access public
 	 * @since 1.4
-	 * @uses EDD_Discount_Codes_Table::get_columns()
-	 * @uses EDD_Discount_Codes_Table::get_sortable_columns()
-	 * @uses EDD_Discount_Codes_Table::discount_codes_data()
-	 * @uses WP_List_Table::get_pagenum()
-	 * @uses WP_List_Table::set_pagination_args()
-	 * @return void
 	 */
 	public function prepare_items() {
 		$columns  = $this->get_columns();
@@ -489,7 +464,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->discount_codes_data();
 
-		$status = isset( $_GET['status'] )
+		$status = isset( $_GET['status'] ) // WPCS: CSRF ok.
 			? sanitize_key( $_GET['status'] )
 			: 'total';
 
