@@ -54,9 +54,10 @@ function edd_media_button() {
 
 	// Setup the icon
 	$icon = '<span class="wp-media-buttons-icon dashicons dashicons-download" id="edd-media-button"></span>';
+	$text = sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() );
 
 	// Output the thickbox button
-	echo '<a href="#TB_inline?&width=600&height=300&inlineId=choose-download" class="thickbox button edd-thickbox">' . $icon . sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</a>';
+	echo '<a href="#TB_inline?&width=600&height=300&inlineId=choose-download" name="' . esc_attr( $text ) . '" class="thickbox button edd-thickbox">' . $icon . esc_html( $text ) . '</a>';
 }
 add_action( 'media_buttons', 'edd_media_button', 11 );
 
