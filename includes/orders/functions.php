@@ -1198,8 +1198,7 @@ function edd_add_manual_order( $data ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
 	}
 
-	$customer->increase_purchase_count();
-	$customer->increase_value( $order_total );
+	$customer->recalculate_stats();
 	edd_increase_total_earnings( $order_total );
 
 	// Update totals.

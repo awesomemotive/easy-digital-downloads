@@ -312,6 +312,49 @@ a.edd-delete:hover {
 	height: auto;
 }
 
+/* Insert Download
+-------------------------------------------------------------- */
+
+#TB_window {
+	overflow: hidden;
+}
+#TB_ajaxContent {
+	width: calc(100% - 30px) !important;
+	padding: 15px;
+	margin: 0;
+	height: calc(100% - 118px) !important;
+}
+
+#choose-download-wrapper {
+	width: 100%;
+}
+
+#choose-download-wrapper .wrap {
+	overflow-y: scroll;
+	margin: 0;
+	padding: 0;
+	height: calc(100% - 50px);
+}
+
+#choose-download-wrapper .submit-wrapper {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	padding: 0;
+	margin: 0 0 0 -15px;
+	text-align: right;
+}
+
+#choose-download-wrapper .submit-wrapper div {
+	background-color: #fafafa;
+	padding: 15px;
+	border-top: 1px solid #ddd;
+}
+
+.wp-media-buttons .button.edd-thickbox {
+	padding-left: 0;
+}
+
 /* Add/View Order Styles
 -------------------------------------------------------------- */
 .edd-vertical-sections .new-customer strong {
@@ -1594,18 +1637,22 @@ body.download_page_edd-reports {
 	overflow-y: scroll;
 }
 
-.edd-vertical-sections .edd-legacy-label {
+.edd-chip {
 	font-size: 7px;
 	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
 	vertical-align: middle;
 	padding: 2px 2px 3px 3px;
+	margin: -1px 0 0 2px;
 	border-radius: 4px;
 	color: #fff;
 	background-color: #bbb;
 	border: 1px solid #999;
-	opacity: 0.5;
+	opacity: 0.8;
+}
+
+.edd-vertical-sections .edd-legacy-label {
 	display: inline-block;
 	position: absolute;
 	top: 11px;
@@ -2141,15 +2188,6 @@ body.download_page_edd-reports {
 }
 .wrap-licenses p.submit {
 	clear: both;
-}
-
-/* Button styles
--------------------------------------------------------------- */
-
-#TB_window #edd-add-download:hover,
-#TB_window #edd-add-download:active,
-#TB_window #edd-add-download:focus {
-	color: #fff;
 }
 
 /* Global Graph Styles
@@ -2751,9 +2789,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	border-top: 1px solid #e5e5e5;
 }
 #edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 13px;
-	vertical-align: middle;
-	line-height: 1.5em;
+	font-size: 14px;
+	line-height: 14px;
+	height: 14px;
+	width: 14px;
+	padding: 2px 0;
 }
 #edd-item-tables-wrapper .emails input {
 	vertical-align: middle;

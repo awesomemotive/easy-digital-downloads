@@ -55,6 +55,7 @@ class Customers extends Base {
 			'name'       => 'email',
 			'type'       => 'varchar',
 			'length'     => '100',
+			'cache_key'  => true,
 			'searchable' => true,
 			'sortable'   => true
 		),
