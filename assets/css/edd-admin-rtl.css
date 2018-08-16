@@ -302,11 +302,24 @@ a.edd-delete:hover {
 #TB_window {
 	overflow: hidden;
 }
+#TB_title {
+	padding: 5px;
+}
 #TB_ajaxContent {
 	width: calc(100% - 30px) !important;
 	padding: 15px;
 	margin: 0;
 	height: calc(100% - 118px) !important;
+}
+#TB_ajaxWindowTitle {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 30px;
+}
+
+#TB_closeWindowButton {
+	left: 6px;
+	top: 6px;
 }
 
 #choose-download-wrapper {
