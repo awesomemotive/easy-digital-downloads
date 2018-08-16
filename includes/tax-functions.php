@@ -96,6 +96,45 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 }
 
 /**
+ * Query for and return array of tax rates counts, keyed by status.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_tax_rate_counts() {
+
+	// Default statuses.
+	$defaults = array_fill_keys( array_keys( array( 'active', 'inactive' ) ), 0 );
+
+	// Query for count.
+	$counts = edd_get_tax_rates( array(
+		'count'   => true,
+		'groupby' => 'status',
+	), OBJECT );
+
+	// Default array.
+	$o = array(
+		'total' => 0,
+	);
+
+	// Loop through counts and shape return value.
+	if ( ! empty( $counts ) ) {
+
+		// Loop through statuses.
+		foreach ( $counts as $item ) {
+			$o[ $item['status'] ] = absint( $item['count'] );
+		}
+
+		// Total.
+		$o['total'] = array_sum( $o );
+	}
+
+	// Return counts.
+	return array_merge( $defaults, $o );
+}
+
+/**
  * Add a WHERE clause to ensure only active tax rates are returned.
  *
  * @since 3.0
