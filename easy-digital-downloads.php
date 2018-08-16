@@ -123,6 +123,7 @@ final class EDD_Requirements_Check {
 	private function load() {
 		require_once dirname( $this->file ) . '/includes/class-edd.php';
 		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
+			register_activation_hook( $this->file, array( $this, 'activation' ) );
 			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
 		}
 		do_action( 'edd_loaded' );
@@ -135,6 +136,15 @@ final class EDD_Requirements_Check {
 	 */
 	public function bootstrap() {
 		Easy_Digital_Downloads::instance( $this->file );
+	}
+
+	/**
+	 * Set up initial data and populate initial database values on installation.
+	 *
+	 * @since 3.0
+	 */
+	public function activation() {
+
 	}
 
 	/**

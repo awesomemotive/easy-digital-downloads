@@ -481,6 +481,7 @@ final class Easy_Digital_Downloads {
 	private function include_utilities() {
 		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-list-table.php';
 	}
 
 	/**
