@@ -106,7 +106,7 @@ function edd_update_payment_details( $data = array() ) {
 		$minute = 00;
 	}
 
-	$address = array_map( 'trim', $data['edd-payment-address'][0] );
+	$address = $data['edd_order_address'];
 
 	$curr_total = edd_sanitize_amount( $order->total );
 	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
@@ -435,3 +435,95 @@ function edd_ajax_generate_file_download_link() {
 	die( $file_urls );
 }
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );
+
+/**
+ * Process Orders list table bulk actions. This is necessary because we need to
+ * redirect to ensure filters do not get applied when bulk actions are being
+ * processed. This processing cannot happen within the `EDD_Payment_History_Table`
+ * class as at that point, it is too late to do a redirect.
+ *
+ * @since 3.0
+ */
+function edd_orders_list_table_process_bulk_actions() {
+
+	// Bail if this method was called directly.
+	if ( 'load-download_page_edd-payment-history' !== current_action() ) {
+		_doing_it_wrong( __FUNCTION__, 'This method is not meant to be called directly.', 'EDD 3.0' );
+	}
+
+	$action = isset( $_REQUEST['action'] ) // WPCS: CSRF ok.
+		? sanitize_text_field( $_REQUEST['action'] )
+		: '';
+
+	// Bail if we aren't processing bulk actions.
+	if ( 'action' !== $action ) {
+		return;
+	}
+
+	$ids = isset( $_GET['order'] ) // WPCS: CSRF ok.
+		? $_GET['order']
+		: false;
+
+	if ( ! is_array( $ids ) ) {
+		$ids = array( $ids );
+	}
+
+	if ( empty( $action ) ) {
+		return;
+	}
+
+	$ids = wp_parse_id_list( $ids );
+
+	foreach ( $ids as $id ) {
+		switch ( $action ) {
+			case 'delete':
+				edd_delete_purchase( $id );
+				break;
+
+			case 'set-status-publish':
+				edd_update_payment_status( $id, 'publish' );
+				break;
+
+			case 'set-status-pending':
+				edd_update_payment_status( $id, 'pending' );
+				break;
+
+			case 'set-status-processing':
+				edd_update_payment_status( $id, 'processing' );
+				break;
+
+			case 'set-status-refunded':
+				edd_update_payment_status( $id, 'refunded' );
+				break;
+
+			case 'set-status-revoked':
+				edd_update_payment_status( $id, 'revoked' );
+				break;
+
+			case 'set-status-failed':
+				edd_update_payment_status( $id, 'failed' );
+				break;
+
+			case 'set-status-abandoned':
+				edd_update_payment_status( $id, 'abandoned' );
+				break;
+
+			case 'set-status-preapproval':
+				edd_update_payment_status( $id, 'preapproval' );
+				break;
+
+			case 'set-status-cancelled':
+				edd_update_payment_status( $id, 'cancelled' );
+				break;
+
+			case 'resend-receipt':
+				edd_email_purchase_receipt( $id, false );
+				break;
+		}
+
+		do_action( 'edd_payments_table_do_bulk_action', $id, $action );
+	}
+
+	wp_redirect( wp_get_referer() );
+}
+add_action( 'load-download_page_edd-payment-history', 'edd_orders_list_table_process_bulk_actions' );

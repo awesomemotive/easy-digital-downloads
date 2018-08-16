@@ -1232,7 +1232,6 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside span.label {
 	display: inline-block;
 	width: 85px;
-	white-space: nowrap;
 	text-align: right;
 	margin-right: 10px;
 }
@@ -1616,6 +1615,11 @@ td.edd_order_price {
 
 /* Reports Styles
 -------------------------------------------------------------- */
+
+/* Force a scrollbar when on the reports page (https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6718) */
+body.download_page_edd-reports {
+	overflow-y: scroll;
+}
 
 .edd-vertical-sections .edd-legacy-label {
 	font-size: 7px;
@@ -2765,9 +2769,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	border-top: 1px solid #e5e5e5;
 }
 #edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 13px;
-	vertical-align: middle;
-	line-height: 1.5em;
+	font-size: 14px;
+	line-height: 14px;
+	height: 14px;
+	width: 14px;
+	padding: 2px 0;
 }
 #edd-item-tables-wrapper .emails input {
 	vertical-align: middle;

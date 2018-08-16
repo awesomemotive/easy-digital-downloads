@@ -487,20 +487,24 @@ function edd_get_registered_settings() {
 						),
 					),
 					'thousands_separator' => array(
-						'id'   => 'thousands_separator',
-						'name' => __( 'Thousands Separator', 'easy-digital-downloads' ),
-						'desc' => __( 'The symbol (usually , or .) to separate thousands.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'small',
-						'std'  => ',',
+						'id'          => 'thousands_separator',
+						'name'        => __( 'Thousandths Separator', 'easy-digital-downloads' ),
+						'desc'        => __( 'The symbol to separate thousandths. Usually <code>,</code> or <code>.</code>.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'size'        => 'small',
+						'field_class' => 'code',
+						'std'         => ',',
+						'placeholder' => ','
 					),
 					'decimal_separator' => array(
-						'id'   => 'decimal_separator',
-						'name' => __( 'Decimal Separator', 'easy-digital-downloads' ),
-						'desc' => __( 'The symbol (usually , or .) to separate decimal points.', 'easy-digital-downloads' ),
-						'type' => 'text',
-						'size' => 'small',
-						'std'  => '.',
+						'id'          => 'decimal_separator',
+						'name'        => __( 'Decimal Separator', 'easy-digital-downloads' ),
+						'desc'        => __( 'The symbol to separate decimal points. Usually <code>,</code> or <code>.</code>.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'size'        => 'small',
+						'field_class' => 'code',
+						'std'         => '.',
+						'placeholder' => '.'
 					),
 				),
 				'moderation' => array(
@@ -2133,7 +2137,7 @@ function edd_text_callback( $args ) {
 		: '';
 
 	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
-	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+	$readonly = $args['readonly'] === true   ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . $disabled . $placeholder . ' />';
 	$html    .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';

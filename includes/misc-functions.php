@@ -1425,3 +1425,15 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 
 	?></div><?php
 }
+
+/**
+ * Negate an amount.
+ *
+ * @since 3.0
+ *
+ * @param int|float $value Amount to negate.
+ * @return float Negated amount.
+ */
+function edd_negate_amount( $value = 0 ) {
+	return abs( floatval( $value ) ) * -1;
+}

@@ -6,7 +6,7 @@
  * @subpackage  Orders
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 
 // Exit if accessed directly
@@ -491,7 +491,7 @@ function edd_build_order( $order_data = array() ) {
 				'discount'     => $item['discount'],
 				'tax'          => $item['tax'],
 				'total'        => $item['price'],
-				'item_price'   => $item['item_price'] // Added for backwards compatibility
+				'item_price'   => $item['item_price'], // Added for backwards compatibility
 			);
 
 			/**
@@ -835,7 +835,7 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 		 * is changing to something that requires interception by the payment gateway (e.g. refunds).
 		 */
 		$payment->status = $new_status;
-		$updated = $payment->save();
+		$updated         = $payment->save();
 
 		/**
 		 * Action triggered when updating order status.
@@ -1222,6 +1222,163 @@ function edd_add_manual_order( $data ) {
 	}
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
+
+/**
+ * Clone an existing order.
+ *
+ * @since 3.0
+ *
+ * @param int     $order_id            Order ID.
+ * @param boolean $clone_relationships True to clone order items and adjustments,
+ *                                     false otherwise.
+ * @param array $args                  Arguments that are used in place of cloned
+ *                                     order attributes.
+ *
+ * @return int|boolean New order ID on success, false on failure.
+ */
+function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = array() ) {
+
+	// Bail if no order ID passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	// Fetch the order.
+	$order = edd_get_order( $order_id );
+
+	// Bail if the order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
+	// Parse arguments.
+	$args = wp_parse_args( $args, $order->to_array() );
+
+	// Remove order ID and order number.
+	unset( $args['id'] );
+	unset( $args['order_number'] );
+
+	// Remove dates.
+	unset( $args['date_created'] );
+	unset( $args['date_modified'] );
+	unset( $args['date_completed'] );
+	unset( $args['date_refundable'] );
+
+	// Remove payment key.
+	unset( $args['payment_key'] );
+
+	// Remove object vars.
+	unset( $args['address'] );
+	unset( $args['adjustments'] );
+	unset( $args['items'] );
+
+	$new_order_id = edd_add_order( $args );
+
+	if ( $clone_relationships ) {
+		$items = edd_get_order_items( array(
+			'order_id' => $order_id,
+		) );
+
+		if ( $items ) {
+			foreach ( $items as $item ) {
+				$args = $item->to_array();
+
+				// Remove original item data.
+				unset( $args['id'] );
+				unset( $args['date_created'] );
+				unset( $args['date_modified'] );
+
+				// Point order item to the new order ID.
+				$args['order_id'] = $new_order_id;
+
+				$order_item_id = edd_add_order_item( $args );
+
+				$metadata = edd_get_order_item_meta( $item->id );
+
+				if ( $metadata ) {
+					foreach ( $metadata as $meta_key => $meta_value ) {
+						edd_add_order_item_meta( $order_item_id, $meta_key, $meta_value );
+					}
+				}
+
+				$adjustments = edd_get_order_adjustments( array(
+					'object_id'   => $item->id,
+					'object_type' => 'order_item',
+				) );
+
+				if ( $adjustments ) {
+					foreach ( $adjustments as $adjustment ) {
+						$args = $adjustment->to_array();
+
+						// Remove original adjustment data.
+						unset( $args['id'] );
+						unset( $args['date_created'] );
+						unset( $args['date_modified'] );
+
+						// Point order item to the new order ID.
+						$args['object_id']   = $order_item_id;
+						$args['object_type'] = 'order_item';
+
+						$adjustment_id = edd_add_order_adjustment( $args );
+
+						$metadata = edd_get_order_adjustment_meta( $adjustment->id );
+
+						if ( $metadata ) {
+							foreach ( $metadata as $meta_key => $meta_value ) {
+								edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value );
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+		) );
+
+		if ( $adjustments ) {
+			foreach ( $adjustments as $adjustment ) {
+				$args = $adjustment->to_array();
+
+				// Remove original adjustment data.
+				unset( $args['id'] );
+				unset( $args['date_created'] );
+				unset( $args['date_modified'] );
+
+				// Point order item to the new order ID.
+				$args['object_id']   = $new_order_id;
+				$args['object_type'] = 'order';
+
+				$adjustment_id = edd_add_order_adjustment( $args );
+
+				$metadata = edd_get_order_adjustment_meta( $adjustment->id );
+
+				if ( $metadata ) {
+					foreach ( $metadata as $meta_key => $meta_value ) {
+						edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value );
+					}
+				}
+			}
+		}
+
+		if ( $order->address ) {
+			$args = $order->address->to_array();
+
+			// Remove original address data.
+			unset( $args['order_id'] );
+			unset( $args['date_created'] );
+			unset( $args['date_modified'] );
+
+			$args['order_id'] = $new_order_id;
+
+			edd_add_order_address( $args );
+		}
+	}
+
+	return $new_order_id;
+}
 
 /** Order Items ***************************************************************/
 
@@ -1808,4 +1965,907 @@ function edd_count_order_transactions( $args = array() ) {
 
 	// Return count(s).
 	return absint( $transactions->found_items );
+}
+
+/** Refunds ******************************************************************/
+
+/**
+ * Refund entire order.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return int|false New order ID if successful, false otherwise.
+ */
+function edd_refund_order( $order_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	// Ensure the order ID is an integer.
+	$order_id = absint( $order_id );
+
+	// Fetch order.
+	$order = edd_get_order( $order_id );
+
+	if ( ! $order ) {
+		return false;
+	}
+
+	if ( ! edd_is_order_refundable( $order_id ) ) {
+		return false;
+	}
+
+	/**
+	 * Filter whether refunds should be allowed.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $order_id Order ID.
+	 */
+	$should_refund = apply_filters( 'edd_should_process_order_refund', '__return_true', $order_id );
+
+	// Bail if refund is blocked.
+	if ( ! $should_refund ) {
+		return false;
+	}
+
+	/** Generate new order number ********************************************/
+
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", $order_id ) );
+
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+			// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+		// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $order->get_number() . $refund_suffix . '1';
+	}
+
+	/** Insert order *********************************************************/
+
+	$order_data = array(
+		'parent'       => $order_id,
+		'order_number' => $number,
+		'status'       => 'refunded',
+		'type'         => 'refund',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'subtotal'     => edd_negate_amount( $order->subtotal ),
+		'discount'     => edd_negate_amount( $order->discount ),
+		'tax'          => edd_negate_amount( $order->tax ),
+		'total'        => edd_negate_amount( $order->total ),
+	);
+
+	// Full refund is inserted first to allow for conditional checks to run later
+	// and update the order, but we need an INSERT to be executed to generate a
+	// new order ID.
+	$new_order_id = edd_add_order( $order_data );
+
+	/** Insert order items ***********************************************/
+
+	foreach ( $order->items as $item ) {
+		$order_item_id = edd_add_order_item( array(
+			'order_id'     => $new_order_id,
+			'product_id'   => $item->product_id,
+			'product_name' => $item->product_name,
+			'price_id'     => $item->price_id,
+			'cart_index'   => $item->cart_index,
+			'type'         => $item->type,
+			'status'       => 'refunded',
+			'quantity'     => edd_negate_amount( $item->quantity ),
+			'amount'       => edd_negate_amount( $item->amount ),
+			'subtotal'     => edd_negate_amount( $item->subtotal ),
+			'discount'     => edd_negate_amount( $item->discount ),
+			'tax'          => edd_negate_amount( $item->tax ),
+			'total'        => edd_negate_amount( $item->total ),
+		) );
+
+		foreach ( $item->adjustments as $adjustment ) {
+			edd_add_order_adjustment( array(
+				'object_id'   => $order_item_id,
+				'object_type' => 'order_item',
+				'type_id'     => $adjustment->type_id,
+				'type'        => $adjustment->type,
+				'description' => $adjustment->description,
+				'subtotal'    => edd_negate_amount( $adjustment->subtotal ),
+				'tax'         => edd_negate_amount( $adjustment->tax ),
+				'total'       => edd_negate_amount( $adjustment->total ),
+			) );
+		}
+	}
+
+	/** Insert order adjustments *****************************************/
+
+	foreach ( $order->adjustments as $adjustment ) {
+		edd_add_order_adjustment( array(
+			'object_id'   => $new_order_id,
+			'object_type' => 'order',
+			'type_id'     => $adjustment->type_id,
+			'type'        => $adjustment->type,
+			'description' => $adjustment->description,
+			'subtotal'    => edd_negate_amount( $adjustment->subtotal ),
+			'tax'         => edd_negate_amount( $adjustment->tax ),
+			'total'       => edd_negate_amount( $adjustment->total ),
+		) );
+	}
+
+	// Log the refund.
+	edd_add_log( array(
+		'object_id'   => $order_id,
+		'object_type' => 'order',
+		'user_id'     => get_current_user_id(),
+		'type'        => 'refund',
+		'title'       => __( 'Refund Issued', 'easy-digital-downloads' ),
+		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
+	) );
+
+	// Trigger actions to run.
+	edd_update_order_status( $new_order_id, 'refunded' );
+
+	/**
+	 * Fires when an order has been refunded.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int   $order_id     Order ID of the original order.
+	 * @param int   $new_order_id Order ID of the refunded order.
+	 * @param float $total        Amount refunded.
+	 */
+	do_action( 'edd_refund_order', $order_id, $new_order_id, floatval( $order->total ) );
+
+	return $new_order_id;
+}
+
+/**
+ * Refund an order item entirely.
+ *
+ * @since 3.0
+ *
+ * @param int $order_item_id Order Item ID.
+ * @return int|false New order ID if successful, false otherwise.
+ */
+function edd_refund_order_item( $order_item_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order item ID was passed.
+	if ( empty( $order_item_id ) ) {
+		return false;
+	}
+
+	// Fetch order item.
+	$order_item = edd_get_order_item( $order_item_id );
+
+	// Bail if order item was not found.
+	if ( ! $order_item ) {
+		return false;
+	}
+
+	// Fetch order.
+	$order = edd_get_order( $order_item->order_id );
+
+	// Bail if order has been revoked.
+	if ( 'revoked' === $order_item->status ) {
+		return false;
+	}
+
+	/**
+	 * Allow refunds to be stopped.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $order_item Order item ID.
+	 */
+	$should_refund = apply_filters( 'edd_should_process_partial_refund', '__return_true', $order_item_id );
+
+	// Bail if refund is blocked.
+	if ( ! $should_refund ) {
+		return false;
+	}
+
+	/** Generate new order number ********************************************/
+
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", $order->id ) );
+
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+				// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+			// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $order->get_number() . $refund_suffix . '1';
+	}
+
+	/** Insert order *********************************************************/
+
+	$order_data = array(
+		'parent'       => $order->id,
+		'order_number' => $number,
+		'status'       => 'partially_refunded',
+		'type'         => 'refund',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'subtotal'     => edd_negate_amount( $order_item->subtotal ),
+		'discount'     => edd_negate_amount( $order_item->discount ),
+		'tax'          => edd_negate_amount( $order_item->tax ),
+		'total'        => edd_negate_amount( $order_item->total ),
+	);
+
+	// Order is inserted first to allow for conditional checks to run later and
+	// update the order, but we need an INSERT to be executed to generate a new
+	// order ID.
+	$new_order_id = edd_add_order( $order_data );
+
+	/** Insert order item ****************************************************/
+
+	$order_item_data = array(
+		'order_id'     => $new_order_id,
+		'product_id'   => $order_item->product_id,
+		'product_name' => $order_item->product_name,
+		'price_id'     => $order_item->price_id,
+		'cart_index'   => $order_item->cart_index,
+		'type'         => 'download',
+		'status'       => 'refunded',
+		'quantity'     => edd_negate_amount( $order_item->quantity ),
+		'amount'       => edd_negate_amount( $order_item->amount ),
+		'subtotal'     => edd_negate_amount( $order_item->subtotal ),
+		'discount'     => edd_negate_amount( $order_item->discount ),
+		'tax'          => edd_negate_amount( $order_item->tax ),
+		'total'        => edd_negate_amount( $order_item->total ),
+	);
+
+	$new_order_item_id = edd_add_order_item( $order_item_data );
+
+	/** Insert adjustments ***************************************************/
+
+	foreach ( $order_item->adjustments as $adjustment ) {
+		if ( 'tax_rate' === $adjustment->type ) {
+			continue;
+		}
+
+		edd_add_order_adjustment( array(
+			'object_type' => 'order_item',
+			'object_id'   => $new_order_item_id,
+			'type'        => $adjustment->type,
+			'description' => $adjustment->description,
+			'subtotal'    => edd_negate_amount( $adjustment->subtotal ),
+			'tax'         => edd_negate_amount( $adjustment->tax ),
+			'total'       => edd_negate_amount( $adjustment->total ),
+		) );
+	}
+
+	return $new_order_id;
+}
+
+/**
+ * Apply credit to an order. This method should be used to apply a flat amount
+ * of credit to an order.
+ *
+ * @since 3.0
+ *
+ * @param int   $order_id Order ID.
+ * @param array $data     Credit data. For accepted parameters, see `edd_add_order_adjustment()`.
+ *
+ * @return int|false New order ID if successful, false otherwise.
+ */
+function edd_apply_order_credit( $order_id = 0, $data = array() ) {
+	global $wpdb;
+
+	// Bail if invalid data passed.
+	if ( empty( $order_id ) || empty( $data ) ) {
+		return false;
+	}
+
+	// Ensure the order ID is an integer.
+	$order_id = absint( $order_id );
+
+	// Fetch order.
+	$order = edd_get_order( $order_id );
+
+	// Bail if order was not found or it has been revoked.
+	if ( ! $order || 'revoked' === $order->status ) {
+		return false;
+	}
+
+	/**
+	 * Filter whether refunds should be allowed.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $order_id Order ID.
+	 */
+	$should_apply_credit = apply_filters( 'edd_should_apply_order_credit', '__return_true', $order_id );
+
+	// Bail if refund is blocked.
+	if ( ! $should_apply_credit ) {
+		return false;
+	}
+
+	/** Generate new order number ********************************************/
+
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", 0 ) );
+
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+			// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+		// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $last_order->id . $refund_suffix . '1';
+	}
+
+	// Parse the adjustment data.
+	$data = wp_parse_args( $data, array(
+		'type_id'     => 0,
+		'description' => '',
+		'subtotal'    => 0.00,
+		'total'       => 0.00,
+	) );
+
+	// Bail if the adjustment is worth nothing.
+	if ( 0.00 === floatval( $data['total'] ) ) {
+		return false;
+	}
+
+	// Bail if the order total is 0 or will drop below 0.
+	if ( 0 === edd_get_order_total( $order_id ) || 0 > ( edd_get_order_total( $order_id ) - floatval( $data['total'] ) ) ) {
+		return false;
+	}
+
+	/** Insert order *********************************************************/
+
+	$order_data = array(
+		'parent'       => $order_id,
+		'order_number' => $number,
+		'status'       => 'partially_refunded',
+		'type'         => 'refund',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'total'        => edd_negate_amount( $data['total'] ),
+	);
+
+	$new_order_id = edd_add_order( $order_data );
+
+	/** Insert adjustment *****************************************************/
+
+	edd_add_order_adjustment( array(
+		'object_type' => 'order',
+		'object_id'   => $new_order_id,
+		'type_id'     => absint( $data['type_id'] ),
+		'type'        => 'credit',
+		'description' => sanitize_text_field( $data['description'] ),
+		'subtotal'    => floatval( $data['subtotal'] ),
+		'total'       => floatval( $data['total'] ),
+	) );
+
+	return $new_order_id;
+}
+
+/**
+ * Apply credit to an order item. This method should be used to apply a flat
+ * amount of credit to an order item.
+ *
+ * @since 3.0
+ *
+ * @param int   $order_item_id Order item ID.
+ * @param array $data          Credit data. For accepted parameters, see `edd_add_order_adjustment()`.
+ *
+ * @return int|false New order ID if successful, false otherwise.
+ */
+function edd_apply_order_item_credit( $order_item_id = 0, $data = array() ) {
+	global $wpdb;
+
+	// Bail if invalid data passed.
+	if ( empty( $order_item_id ) || empty( $data ) ) {
+		return false;
+	}
+
+	// Ensure the order ID is an integer.
+	$order_item_id = absint( $order_item_id );
+
+	$order_item = edd_get_order_item( $order_item_id );
+
+	// Bail if order item was not found .
+	if ( ! $order_item ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_item->order_id );
+
+	// Bail if order item was not found or it has been revoked.
+	if ( ! $order || 'revoked' === $order->status ) {
+		return false;
+	}
+
+	/**
+	 * Filter whether refunds should be allowed.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $order_item_id Order item ID.
+	 */
+	$should_apply_credit = apply_filters( 'edd_should_apply_order_item_credit', '__return_true', $order_item_id );
+
+	// Bail if refund is blocked.
+	if ( ! $should_apply_credit ) {
+		return false;
+	}
+
+	/** Generate new order number ********************************************/
+
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", $order->id ) );
+
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+			// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+		// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $order->id . $refund_suffix . '1';
+	}
+
+	// Parse the adjustment data.
+	$data = wp_parse_args( $data, array(
+		'type_id'     => 0,
+		'description' => '',
+		'subtotal'    => 0.00,
+		'total'       => 0.00,
+	) );
+
+	// Bail if the adjustment is worth nothing.
+	if ( 0.00 === floatval( $data['total'] ) ) {
+		return false;
+	}
+
+	// Bail if the order total is 0 or will drop below 0.
+	if ( 0 === edd_get_order_total( $order->id ) || 0 > ( edd_get_order_total( $order->id ) - floatval( $data['total'] ) ) ) {
+		return false;
+	}
+
+	/** Insert order *********************************************************/
+
+	$order_data = array(
+		'parent'       => $order->id,
+		'order_number' => $number,
+		'status'       => 'partially_refunded',
+		'type'         => 'refund',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'total'        => edd_negate_amount( $data['total'] ),
+	);
+
+	$new_order_id = edd_add_order( $order_data );
+
+	/** Insert order item ****************************************************/
+
+	$order_item_data = array(
+		'order_id'     => $new_order_id,
+		'product_id'   => $order_item->product_id,
+		'product_name' => $order_item->product_name,
+		'price_id'     => $order_item->price_id,
+		'cart_index'   => $order_item->cart_index,
+		'type'         => 'download',
+		'status'       => 'partially_refunded',
+		'amount'       => $order_item->amount,
+		'subtotal'     => edd_negate_amount( floatval( $data['subtotal'] ) ),
+		'total'        => edd_negate_amount( floatval( $data['total'] ) ),
+	);
+
+	$new_order_item_id = edd_add_order_item( $order_item_data );
+
+	/** Insert adjustment *****************************************************/
+
+	edd_add_order_adjustment( array(
+		'object_type' => 'order_item',
+		'object_id'   => $new_order_item_id,
+		'type_id'     => absint( $data['type_id'] ),
+		'type'        => 'credit',
+		'description' => sanitize_text_field( $data['description'] ),
+		'subtotal'    => floatval( $data['subtotal'] ),
+		'total'       => floatval( $data['total'] ),
+	) );
+
+	return $new_order_id;
+}
+
+/**
+ * Retroactively apply a discount code to an order.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id    Order ID.
+ * @param int $discount_id Discount ID.
+ *
+ * @return int|false New order ID if successful, false otherwise.
+ */
+function edd_apply_order_discount( $order_id = 0, $discount_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order ID or discount ID was passed.
+	if ( empty( $order_id ) || empty( $discount_id ) ) {
+		return false;
+	}
+
+	// Fetch from the database.
+	$order    = edd_get_order( $order_id );
+	$discount = edd_get_discount( $discount_id );
+
+	// Bail if either of the objects were not found.
+	if ( ! $order || ! $discount ) {
+		return false;
+	}
+
+	// Fetch the current order total (including all refunds).
+	$current_total = edd_get_order_total( $order_id );
+
+	// Bail if the total is already 0.
+	if ( 0 === $current_total ) {
+		return false;
+	}
+
+	// Ensure the discount can be used.
+	if ( ! edd_validate_discount( $discount_id, wp_parse_id_list( wp_list_pluck( $order->items, 'id' ) ) ) ) {
+		return false;
+	}
+
+	/** Generate new order number ********************************************/
+
+	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
+		FROM {$wpdb->edd_orders}
+		WHERE parent = %d
+		ORDER BY id DESC
+		LIMIT 1", $order->id ) );
+
+	/**
+	 * Filter the suffix applied to order numbers for refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string Suffix.
+	 */
+	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
+
+	if ( $last_order ) {
+
+		// Check for order number first.
+		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
+
+			// Order has been previously revised.
+			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
+				$number = $last_order->order_number;
+				++$number;
+
+			// First revision to order.
+			} else {
+				$number = $last_order->order_number . $refund_suffix . '1';
+			}
+
+		// Append to ID.
+		} else {
+			$number = $last_order->id . $refund_suffix . '1';
+		}
+	} else {
+		$number = $order->id . $refund_suffix . '1';
+	}
+
+	// Build new order data.
+	$order_data = array(
+		'parent'       => $order->id,
+		'order_number' => $number,
+		'type'         => 'refund',
+		'status'       => 'partially_refunded',
+		'user_id'      => $order->user_id,
+		'customer_id'  => $order->customer_id,
+		'email'        => $order->email,
+		'ip'           => $order->ip,
+		'gateway'      => $order->gateway,
+		'mode'         => $order->mode,
+		'currency'     => $order->currency,
+		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'discount'     => 0,
+		'total'        => 0,
+	);
+
+	$new_order_id = edd_add_order( $order_data );
+
+	$order_items = array();
+
+	foreach ( $order->items as $order_item ) {
+		$total     = edd_get_order_item_total( array( $order->id ), $order_item->product_id );
+		$reduction = floatval( $total - $discount->get_discounted_amount( $total ) );
+
+		if ( 0 === $total ) {
+			continue;
+		}
+
+		$item             = $order_item->to_array();
+		$item['order_id'] = $new_order_id;
+		$item['quantity'] = 0; // Quantity is set to 0 to allow for accurate reporting.
+		$item['amount']   = 0;
+		$item['subtotal'] = 0;
+		$item['discount'] = $reduction;
+		$item['total']    = edd_negate_amount( $reduction );
+		unset( $item['id'] );
+		unset( $item['adjustments'] );
+
+		$order_data['discount'] += $reduction;
+		$order_data['total']    += edd_negate_amount( $reduction );
+
+		$order_items[] = $item;
+	}
+
+	array_map( 'edd_add_order_item', $order_items );
+
+	edd_add_order_adjustment( array(
+		'object_id'   => $new_order_id,
+		'object_type' => 'order',
+		'type_id'     => $discount_id,
+		'type'        => 'discount',
+		'description' => $discount->code,
+		'subtotal'    => $order_data['discount'],
+		'total'       => $order_data['discount'],
+	) );
+
+	edd_update_order( $new_order_id, $order_data );
+
+	return $new_order_id;
+}
+
+/**
+ * Calculate order total. This method is used to calculate the total of an order
+ * by also taking into account any refunds/partial refunds.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return float $total Order total.
+ */
+function edd_get_order_total( $order_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return 0;
+	}
+
+	$total = $wpdb->get_var( $wpdb->prepare( "
+		SELECT SUM(total)
+		FROM {$wpdb->edd_orders}
+		WHERE id = %d OR parent = %d
+	", $order_id, $order_id ) );
+
+	$total = null === $total
+		? 0.00
+		: floatval( $total );
+
+	return $total;
+}
+
+/**
+ * Calculate order item total. This method is used to calculate the total of an
+ * order item by also taking into account any refunds/partial refunds.
+ *
+ * @since 3.0
+ *
+ * @param array $order_ids  Order IDs.
+ * @param int   $product_id Product ID.
+ *
+ * @return float $total Order total.
+ */
+function edd_get_order_item_total( $order_ids = array(), $product_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order IDs were passed.
+	if ( empty( $order_ids ) ) {
+		return 0;
+	}
+
+	$query   = "SELECT SUM(total) FROM {$wpdb->edd_order_items} WHERE order_id IN (%s) AND product_id = %d";
+	$ids     = join( ',', array_map( 'absint', $order_ids ) );
+	$prepare = sprintf( $query, $ids, $product_id );
+	$total   = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
+
+	$total = null === $total
+		? 0.00
+		: floatval( $total );
+
+	return $total;
+}
+
+/**
+ * Check order can be refunded and is within the refund window.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if refundable, false otherwise.
+ */
+function edd_is_order_refundable( $order_id = 0 ) {
+	global $wpdb;
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	// Bail if order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
+	// Only completed orders can be refunded.
+	if ( 'publish' !== $order->status ) {
+		return false;
+	}
+
+	// Check order hasn't already been refunded.
+	$query          = "SELECT COUNT(id) FROM {$wpdb->edd_orders} WHERE parent = %d AND status = '%s'";
+	$prepare        = sprintf( $query, $order_id, esc_sql( 'refunded' ) );
+	$refunded_order = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
+
+	if ( 0 < absint( $refunded_order ) ) {
+		return false;
+	}
+
+	// Refund dates may not have been set retroactively so we need to calculate it manually.
+	if ( '0000-00-00 00:00:00' === $order->date_refundable ) {
+		$refund_window = absint( edd_get_option( 'refund_window', 30 ) );
+
+		// Refund window is infinite.
+		if ( 0 === $refund_window ) {
+			return true;
+		} else {
+			$date_refundable = \Carbon\Carbon::parse( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->addDays( $refund_window );
+		}
+
+	// Parse date using Carbon.
+	} else {
+		$date_refundable = \Carbon\Carbon::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
+	}
+
+	// Bail if we have passed the refund date.
+	if ( $date_refundable->isPast() ) {
+		return false;
+	}
+
+	// If we have reached here, every other check holds so the order is refundable.
+	return true;
 }

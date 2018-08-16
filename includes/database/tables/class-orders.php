@@ -6,7 +6,7 @@
  * @subpackage  Database\Tables
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Database\Tables;
 
@@ -21,41 +21,42 @@ defined( 'ABSPATH' ) || exit;
 final class Orders extends Base {
 
 	/**
-	 * Table name
+	 * Table name.
 	 *
 	 * @access protected
-	 * @since 3.0
-	 * @var string
+	 * @since  3.0
+	 * @var    string
 	 */
 	protected $name = 'edd_orders';
 
 	/**
-	 * Database version
+	 * Database version.
 	 *
 	 * @access protected
-	 * @since 3.0
-	 * @var int
+	 * @since  3.0
+	 * @var    int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201808150001;
 
 	/**
-	 * Array of upgrade versions and methods
+	 * Array of upgrade versions and methods.
 	 *
-	 * @since 3.0
-	 *
-	 * @var array
+	 * @access protected
+	 * @since  3.0
+	 * @var    array
 	 */
 	protected $upgrades = array(
 		'201806110001' => 201806110001,
-		'201807270003' => 201807270003
+		'201807270003' => 201807270003,
+		'201808140001' => 201808140001,
+		'201808150001' => 201808150001,
 	);
 
 	/**
-	 * Setup the database schema
+	 * Setup the database schema.
 	 *
 	 * @access protected
-	 * @since 3.0
-	 * @return void
+	 * @since  3.0
 	 */
 	protected function set_schema() {
 		$max_index_length = 191;
@@ -63,6 +64,7 @@ final class Orders extends Base {
 			parent bigint(20) unsigned NOT NULL default '0',
 			order_number varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default 'pending',
+			type varchar(20) NOT NULL default 'sale',
 			user_id bigint(20) unsigned NOT NULL default '0',
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
@@ -92,7 +94,7 @@ final class Orders extends Base {
 
 	/**
 	 * Upgrade to version 201806110001
-	 * - Add the `date_refundable` datetime column
+	 * - Add the `date_refundable` datetime column.
 	 *
 	 * @since 3.0
 	 *
@@ -134,7 +136,54 @@ final class Orders extends Base {
 			" );
 		}
 
-		// Return success/fail
+		// Return success/fail.
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201808140001
+	 * - Add the `type` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201808140001() {
+
+		// Look for column
+		$result = $this->column_exists( 'type' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'sale' AFTER status;
+			" );
+		}
+
+		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201808150001
+	 * - Change the default value of the `type` column to `sale`.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201808150001() {
+
+		// Alter the database
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `type` varchar(20) NOT NULL default 'sale';
+		" );
+
+		$this->get_db()->query( "
+			UPDATE {$this->table_name} SET `type` = 'sale';
+		" );
+
+		// Return success/fail.
+		return $this->is_success( true );
 	}
 }

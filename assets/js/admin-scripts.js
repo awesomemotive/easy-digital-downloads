@@ -1085,6 +1085,8 @@ jQuery(document).ready(function ($) {
 					data = {
 						action: 'edd_add_order_item',
 						nonce: $( '#edd_add_order_nonce' ).val(),
+						country: $( '.edd-order-address-country' ).val(),
+						region: $( '.edd-order-address-region' ).val(),
 						download: select.val(),
 						quantity: $( '.edd-add-order-quantity' ).val()
 					};
@@ -1215,7 +1217,7 @@ jQuery(document).ready(function ($) {
 					data   = {
 						action:    'edd_get_shop_states',
 						country:    select.val(),
-						nonce:      select.data('nonce'),
+						nonce:      select.data( 'nonce' ),
 						field_name: 'edd-order-address-country'
 					};
 
@@ -1227,9 +1229,15 @@ jQuery(document).ready(function ($) {
 					}
 
 					$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
-				});
+				} ).done(function ( response ) {
+					EDD_Add_Order.recalculate_taxes();
+				} );
 
 				return false;
+			} );
+
+			$( '.edd-order-address-region' ).on( 'change', function() {
+				EDD_Add_Order.recalculate_taxes();
 			} );
 		},
 
@@ -1250,6 +1258,48 @@ jQuery(document).ready(function ($) {
 
 				key++;
 			});
+		},
+
+		recalculate_taxes : function() {
+			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
+
+			var data = {
+				action: 'edd_add_order_recalculate_taxes',
+				country: $( '.edd-order-address-country' ).val(),
+				region: $( '.edd-order-address-region' ).val(),
+				nonce: $( '#edd_add_order_nonce' ).val()
+			};
+
+			$.post( ajaxurl, data, function ( response ) {
+				if ( '' !== response.tax_rate ) {
+					var tax_rate = parseFloat( response.tax_rate );
+
+					$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
+						var amount = parseFloat( $( '.amount .value', this ).text() ),
+							quantity = parseFloat( $( '.quantity', this ).text() ),
+							calculated = amount * quantity,
+							tax = 0;
+
+						if ( response.prices_include_tax ) {
+							var pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
+							tax = parseFloat( calculated - pre_tax );
+						} else {
+							tax = calculated * tax_rate;
+						}
+
+						var storeCurrency = edd_vars.currency,
+							decimalPlaces = edd_vars.currency_decimals,
+							total         = calculated + tax;
+
+						$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+						$( '.total .value', this ).text( total.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+					} );
+				}
+			}, 'json' ).done( function() {
+				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
+
+				EDD_Add_Order.update_totals();
+			} );
 		},
 
 		recalculate_total : function() {
@@ -1701,7 +1751,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Insert new tax rate row
-			$('#edd_add_tax_rate').on('click', function() {
+			$( '#edd_add_tax_rate' ).on( 'click', function() {
 				var row   = $('#edd_tax_rates tr:last'),
 					clone = row.clone(),
 					count = row.parent().find( 'tr' ).length;
@@ -1720,6 +1770,16 @@ jQuery(document).ready(function ($) {
 					var name = $( this ).attr( 'for' );
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 					$( this ).attr( 'for', name );
+				});
+
+				// Setup datepickers
+				clone.find( 'input.edd_datepicker' ).removeClass( 'hasDatepicker' ).attr( 'autocomplete', 'off' ).datepicker( {
+					dateFormat: edd_vars.date_picker_format,
+					beforeShow: function() {
+						$( '#ui-datepicker-div' )
+							.removeClass( 'ui-datepicker' )
+							.addClass( 'edd-datepicker' );
+					}
 				});
 
 				clone.insertAfter( row );
