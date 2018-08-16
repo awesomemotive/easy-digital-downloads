@@ -666,6 +666,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-list-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
@@ -696,8 +697,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-tax-rates-list-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';

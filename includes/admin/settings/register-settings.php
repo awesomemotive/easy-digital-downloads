@@ -2578,7 +2578,7 @@ function edd_shop_states_callback( $args ) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( 'object', 'all' );
+	$rates = edd_get_tax_rates( array(), OBJECT );
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
