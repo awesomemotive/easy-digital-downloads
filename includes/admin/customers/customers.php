@@ -279,7 +279,7 @@ function edd_customers_view( $customer = null ) {
 	// Address
 	$address = $customer->get_address();
 
-	if ( $address ) {
+	if ( ! empty( $address ) ) {
 		$address = $address->to_array();
 		$address = wp_parse_args( $address, $address_args );
 
@@ -287,7 +287,43 @@ function edd_customers_view( $customer = null ) {
 		$address = $address_args;
 	}
 
-	do_action( 'edd_customer_card_top', $customer ); ?>
+	do_action( 'edd_customer_card_top', $customer );
+
+	// Country
+	$selected_country = $address['country'];
+	$countries        = edd_get_country_list();
+
+	// State
+	$selected_state = edd_get_shop_state();
+	$states         = edd_get_shop_states( $selected_country );
+	$selected_state = isset( $address['region'] )
+		? $address['region']
+		: $selected_state;
+
+	// Email addresses
+	$all_emails = array( 'primary' => $customer->email );
+
+	foreach ( $customer->emails as $key => $email ) {
+		if ( $customer->email === $email ) {
+			continue;
+		}
+
+		$all_emails[ $key ] = $email;
+	}
+
+	// Physical addresses
+	$addresses = $customer->get_addresses();
+
+	// Orders
+	$orders = edd_get_orders( array(
+		'customer_id' => $customer->id,
+		'number'      => 10,
+	) );
+
+	// Downloads
+	$downloads = edd_get_users_purchased_products( $customer->email );
+
+	?>
 
 	<div class="info-wrapper customer-section">
 		<form id="edit-customer-info" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>">
@@ -334,10 +370,6 @@ function edd_customers_view( $customer = null ) {
 							<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
 							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>">
 								<?php
-
-								$selected_country = $address['country'];
-								$countries        = edd_get_country_list();
-
 								foreach ( $countries as $country_code => $country ) {
 									echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
 								}
@@ -345,24 +377,23 @@ function edd_customers_view( $customer = null ) {
 							</select>
 
 							<?php
-							$selected_state = edd_get_shop_state();
-							$states         = edd_get_shop_states( $selected_country );
-
-							$selected_state = isset( $address['region'] )
-								? $address['region']
-								: $selected_state;
 
 							if ( ! empty( $states ) ) : ?>
+
 								<select data-key="state" name="customerinfo[region]" id="card_state" class="card_state edd-select info-item">
-								<?php
-								foreach( $states as $state_code => $state ) {
-									echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . esc_html( $state ) . '</option>';
-								}
-								?>
-							</select>
+									<?php
+									foreach( $states as $state_code => $state ) {
+										echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . esc_html( $state ) . '</option>';
+									}
+									?>
+								</select>
+
 							<?php else : ?>
+
 								<input type="text" size="6" data-key="region" name="customerinfo[region]" id="card_state" class="card_state edd-input info-item" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+
 							<?php endif; ?>
+
 							<input class="info-item" type="text" data-key="postal_code" name="customerinfo[postal_code]" placeholder="<?php _e( 'Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['postal_code'] ); ?>" />
 						</span>
 					</fieldset>
@@ -400,22 +431,28 @@ function edd_customers_view( $customer = null ) {
 					</span>
 					<span class="customer-user-id info-item editable">
 						<?php if ( ! empty( $user_id ) ) : ?>
+
 							<span data-key="user_id">
 								<?php if ( empty( $user_login ) ) :
 									printf( __( 'User %s missing', 'easy-digital-downloads' ), '<code>' . $user_id . '</code>');
 								endif; ?>
 								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $user_id ); ?>"><?php echo esc_html( $user_login ); ?></a>
 							</span>
+
 						<?php else : ?>
+
 							<span data-key="user_id">
 								<?php _e( 'Not a registered user', 'easy-digital-downloads' ); ?>
 							</span>
+
 						<?php endif; ?>
 
 						<?php if ( current_user_can( $customer_edit_role ) && intval( $user_id ) > 0 ) : ?>
+
 							<span class="disconnect-user">
 								<a id="disconnect-customer" href="#disconnect" class="dashicons dashicons-editor-unlink"></a>
 							</span>
+
 						<?php endif; ?>
 					</span>
 				</div>
@@ -441,7 +478,6 @@ function edd_customers_view( $customer = null ) {
 		</ul>
 	</div>
 
-
 	<?php do_action( 'edd_customer_before_agreements', $customer ); ?>
 
 	<div id="edd-item-agreements-wrapper" class="customer-agreements-wrapper customer-section">
@@ -450,6 +486,7 @@ function edd_customers_view( $customer = null ) {
 			<?php
 			if ( ! empty( $agreement_timestamp ) ) {
 				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timestamp ) );
+
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
 
 				if ( ! empty( $agreement_timestamps ) ) : ?>
@@ -460,8 +497,10 @@ function edd_customers_view( $customer = null ) {
 
 			} elseif ( empty( $last_payment_date ) ) {
 				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
+
 			} else {
 				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date ) );
+
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
 				?>
 
@@ -474,6 +513,7 @@ function edd_customers_view( $customer = null ) {
 		<p class="customer-privacy-policy-date info-item">
 			<?php if ( ! empty( $privacy_timestamp ) ) {
 				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $privacy_timestamp ) );
+
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
 
 				if ( ! empty( $privacy_timestamps ) ) : ?>
@@ -484,8 +524,10 @@ function edd_customers_view( $customer = null ) {
 
 			} elseif ( empty( $last_payment_date ) ) {
 				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
+
 			} else {
 				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date ) );
+
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
 				?>
 
@@ -509,73 +551,56 @@ function edd_customers_view( $customer = null ) {
 		<table class="wp-list-table widefat striped addresses">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Address', 'easy-digital-downloads' ); ?></th>
-					<th><?php esc_html_e( 'City', 'easy-digital-downloads' ); ?></th>
-					<th><?php esc_html_e( 'Region', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Address',     'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'City',        'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Region',      'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'Postal Code', 'easy-digital-downloads' ); ?></th>
-					<th><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></th>
-					<th><?php esc_html_e( 'First Used', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Country',     'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'First Used',  'easy-digital-downloads' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
-			<?php
-				$addresses = $customer->get_addresses();
+			<?php if ( ! empty( $addresses ) ) :
 
-				if ( ! empty( $addresses ) ) : ?>
-
-				<?php foreach ( $addresses as $address ) : ?>
+				foreach ( $addresses as $address ) : ?>
 
 					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
 						<td class="column-primary">
 							<?php
-							$address1 = esc_attr( $address->address );
+							echo ! empty( $address->address )
+								? esc_html( $address->address )
+								: '&mdash;';
 
-							if ( ! empty( $address1 ) ) {
-								echo $address1;
-							} else {
-								echo '&mdash;';
-							}
-
-							$address2 = esc_attr( $address->address2 );
-
-							if ( ! empty( $address2 ) ) {
-								echo '<br>' . $address2;
-							}
+							echo ! empty( $address->address2 )
+								? esc_html( $address->address2 )
+								: '';
 							?>
 						</td>
 						<td>
 							<?php
-							$city = esc_attr( $address->city );
-
-							echo ! empty( $city )
-								? $city
+							echo ! empty( $address->city )
+								? esc_html( $address->city )
 								: '&mdash;';
 							?>
 						</td>
 						<td>
 							<?php
-							$region = esc_attr( $address->region );
-
-							echo ! empty( $region )
-								? edd_get_state_name( esc_attr( $address->country ), $region )
+							echo ! empty( $address->region )
+								? edd_get_state_name( esc_attr( $address->country ), $address->region )
 								: '&mdash;';
 							?>
 						</td>
 						<td>
 							<?php
-							$postal_code = esc_attr( $address->postal_code );
-
-							echo ! empty( $postal_code )
-								? $postal_code
+							echo ! empty( $address->postal_code )
+								? esc_html( $address->postal_code )
 								: '&mdash;';
 							?>
 						</td>
 						<td>
 							<?php
-							$country = esc_attr( $address->country );
-
-							echo ! empty( $country )
-								? edd_get_country_name( $country )
+							echo ! empty( $address->country )
+								? edd_get_country_name( $address->country )
 								: '&mdash;';
 							?>
 						</td>
@@ -598,50 +623,39 @@ function edd_customers_view( $customer = null ) {
 			<?php esc_html_e( 'Customer Emails', 'easy-digital-downloads' ); ?>
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ); ?>"></span>
 		</h3>
-		<?php
-
-		// Setup customer emails view
-		$all_emails = array( 'primary' => $customer->email );
-		foreach ( $customer->emails as $key => $email ) {
-			if ( $customer->email === $email ) {
-				continue;
-			}
-
-			$all_emails[ $key ] = $email;
-		}
-		?>
 
 		<div class="notice-wrap"></div>
 
 		<table class="wp-list-table widefat striped emails">
 			<thead>
-			<tr>
-				<th class="column-primary"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?></th>
-				<th><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
-			</tr>
+				<tr>
+					<th class="column-primary"><?php esc_html_e( 'Email',   'easy-digital-downloads' ); ?></th>
+					<th class="column-actions"><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
+				</tr>
 			</thead>
 			<tbody>
-			<?php if ( ! empty( $all_emails ) ) : ?>
+			<?php if ( ! empty( $all_emails ) ) :
 
-				<?php foreach ( $all_emails as $key => $email ) : ?>
+				foreach ( $all_emails as $key => $email ) : ?>
 
 					<tr data-key="<?php echo esc_attr( $key ); ?>">
-						<td class="column-primary">
-							<?php echo esc_html( $email ); ?>
+						<td class="column-actions">
+							<span><?php echo esc_html( $email ); ?></span>
+
 							<?php if ( 'primary' === $key ) : ?>
-								<span class="dashicons dashicons-star-filled primary-email-icon"></span>
+								<span class="edd-chip"><?php esc_html_e( 'Primary', 'easy-digital-downloads' ); ?></span>
 							<?php endif; ?>
 						</td>
-						<td class="column-actions">
+						<td class="column-type">
 							<?php if ( 'primary' !== $key ) : ?>
 								<?php
 								$base_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
 								$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-primary-email' ), $base_url ), 'edd-set-customer-primary-email' );
 								$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email ), 'edd_action' => 'customer-remove-email'  ), $base_url ), 'edd-remove-customer-email'      );
 								?>
-								<a href="<?php echo esc_url( $promote_url ); ?>"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></a>&nbsp;|&nbsp;<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></a>
-							<?php else : ?>
-								&mdash;
+								<a href="<?php echo esc_url( $promote_url ); ?>"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></a>
+								&nbsp;|&nbsp;
+								<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></a>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -672,12 +686,6 @@ function edd_customers_view( $customer = null ) {
 		</table>
 
 		<h3><?php _e( 'Recent Orders', 'easy-digital-downloads' ); ?></h3>
-		<?php
-		$orders = edd_get_orders( array(
-			'customer_id' => $customer->id,
-			'number'      => 10,
-		) );
-		?>
 		<table class="wp-list-table widefat striped customer-payments">
 			<thead>
 			<tr>
@@ -688,11 +696,8 @@ function edd_customers_view( $customer = null ) {
 			</tr>
 			</thead>
 			<tbody>
-			<?php if ( ! empty( $orders ) ) : ?>
-				<?php foreach ( $orders as $order ) : ?>
-					<?php
-					$payment = edd_get_payment( $order->id );
-
+			<?php if ( ! empty( $orders ) ) :
+				foreach ( $orders as $order ) :
 					$state  = '';
 
 					// State
@@ -707,47 +712,45 @@ function edd_customers_view( $customer = null ) {
 						'id'   => $order->id,
 					) );
 
-					$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>';
-					?>
+					$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>'; ?>
+
 					<tr>
 						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
 						<td><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
 						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
 					</tr>
-				<?php endforeach; ?>
-			<?php else: ?>
+
+				<?php endforeach;
+			else: ?>
 				<tr><td colspan="5" class="no-items"><?php esc_html_e( 'No Payments Found', 'easy-digital-downloads' ); ?></td></tr>
 			<?php endif; ?>
 			</tbody>
 		</table>
 
 		<h3><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></h3>
-		<?php
-		$downloads = edd_get_users_purchased_products( $customer->email );
-		?>
 		<table class="wp-list-table widefat striped customer-downloads">
 			<thead>
-			<tr>
-				<th class="column-primary"><?php echo edd_get_label_singular(); ?></th>
-			</tr>
+				<tr>
+					<th class="column-primary"><?php echo edd_get_label_singular(); ?></th>
+				</tr>
 			</thead>
 			<tbody>
-			<?php if ( ! empty( $downloads ) ) : ?>
+				<?php if ( ! empty( $downloads ) ) : ?>
 
-				<?php foreach ( $downloads as $download ) : ?>
+					<?php foreach ( $downloads as $download ) : ?>
 
-					<tr>
-						<td class="column-primary"><strong><a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>"><?php echo esc_html( $download->post_title ); ?></a></strong></td>
-					</tr>
+						<tr>
+							<td class="column-primary"><strong><a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>"><?php echo esc_html( $download->post_title ); ?></a></strong></td>
+						</tr>
 
-				<?php endforeach; ?>
+					<?php endforeach; ?>
 
-			<?php else: ?>
+				<?php else: ?>
 
-				<tr><td class="no-items"><?php printf( __( 'No %s Found', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></td></tr>
+					<tr><td class="no-items"><?php printf( __( 'No %s Found', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></td></tr>
 
-			<?php endif; ?>
+				<?php endif; ?>
 			</tbody>
 		</table>
 
