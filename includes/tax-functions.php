@@ -105,7 +105,10 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 function edd_get_tax_rate_counts() {
 
 	// Default statuses.
-	$defaults = array_fill_keys( array_keys( array( 'active', 'inactive' ) ), 0 );
+	$defaults = array(
+		'active'   => 0,
+		'inactive' => 0,
+	);
 
 	// Query for count.
 	$counts = edd_get_tax_rates( array(
