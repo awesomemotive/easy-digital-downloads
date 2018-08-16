@@ -481,7 +481,6 @@ final class Easy_Digital_Downloads {
 	private function include_utilities() {
 		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-list-table.php';
 	}
 
 	/**
@@ -667,6 +666,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-list-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
