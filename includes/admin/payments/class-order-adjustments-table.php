@@ -98,7 +98,7 @@ class Order_Adjustments_Table extends List_Table {
 	}
 
 	/**
-	 * Get the base URL for the order adjustments list table/.
+	 * Get the base URL for the order adjustments list table.
 	 *
 	 * @since 3.0
 	 *
@@ -122,7 +122,7 @@ class Order_Adjustments_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the view types
+	 * Retrieve the view types.
 	 *
 	 * @since 3.0
 	 *
@@ -133,11 +133,11 @@ class Order_Adjustments_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the table columns
+	 * Retrieve the table columns.
 	 *
 	 * @since 3.0
 	 *
-	 * @return array $columns Array of all the list table columns
+	 * @return array $columns Array of all the list table columns.
 	 */
 	public function get_columns() {
 		$columns = array(
