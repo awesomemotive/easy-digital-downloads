@@ -447,8 +447,8 @@ class Order_Adjustments_Table extends List_Table {
 
 		$this->items = $this->order_adjustments_data();
 
-		$type = isset( $_GET['type'] )
-			? sanitize_key( $_GET['type'] )
+		$type = isset( $_GET['adjustment_type'] )
+			? sanitize_key( $_GET['adjustment_type'] )
 			: 'total';
 
 		// Setup pagination

@@ -801,7 +801,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 		$gateway    = isset( $_GET['gateway'] )    ? sanitize_text_field( $_GET['gateway'] )    : null;
 		$mode       = isset( $_GET['mode'] )       ? sanitize_text_field( $_GET['mode'] )       : null;
-		$type       = isset( $_GET['type'] )       ? sanitize_text_field( $_GET['type'] )       : 'sale';
+		$type       = isset( $_GET['order_type'] ) ? sanitize_text_field( $_GET['order_type'] ) : 'sale';
 
 		/**
 		 * Introduced as part of #6063. Allow a gateway to specified based on the context.

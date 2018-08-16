@@ -296,6 +296,49 @@ a.edd-delete:hover {
 	height: auto;
 }
 
+/* Insert Download
+-------------------------------------------------------------- */
+
+#TB_window {
+	overflow: hidden;
+}
+#TB_ajaxContent {
+	width: calc(100% - 30px) !important;
+	padding: 15px;
+	margin: 0;
+	height: calc(100% - 118px) !important;
+}
+
+#choose-download-wrapper {
+	width: 100%;
+}
+
+#choose-download-wrapper .wrap {
+	overflow-y: scroll;
+	margin: 0;
+	padding: 0;
+	height: calc(100% - 50px);
+}
+
+#choose-download-wrapper .submit-wrapper {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	padding: 0;
+	margin: 0 -15px 0 0;
+	text-align: left;
+}
+
+#choose-download-wrapper .submit-wrapper div {
+	background-color: #fafafa;
+	padding: 15px;
+	border-top: 1px solid #ddd;
+}
+
+.wp-media-buttons .button.edd-thickbox {
+	padding-right: 0;
+}
+
 /* Add/View Order Styles
 -------------------------------------------------------------- */
 .edd-vertical-sections .new-customer strong {
@@ -1189,7 +1232,6 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside span.label {
 	display: inline-block;
 	width: 85px;
-	white-space: nowrap;
 	text-align: left;
 	margin-left: 10px;
 }
@@ -1574,18 +1616,27 @@ td.edd_order_price {
 /* Reports Styles
 -------------------------------------------------------------- */
 
-.edd-vertical-sections .edd-legacy-label {
+/* Force a scrollbar when on the reports page (https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6718) */
+body.download_page_edd-reports {
+	overflow-y: scroll;
+}
+
+.edd-chip {
 	font-size: 7px;
 	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
 	vertical-align: middle;
 	padding: 2px 3px 3px 2px;
+	margin: -1px 2px 0 0;
 	border-radius: 4px;
 	color: #fff;
 	background-color: #bbb;
 	border: 1px solid #999;
-	opacity: 0.5;
+	opacity: 0.8;
+}
+
+.edd-vertical-sections .edd-legacy-label {
 	display: inline-block;
 	position: absolute;
 	top: 11px;
@@ -2121,15 +2172,6 @@ td.edd_order_price {
 }
 .wrap-licenses p.submit {
 	clear: both;
-}
-
-/* Button styles
--------------------------------------------------------------- */
-
-#TB_window #edd-add-download:hover,
-#TB_window #edd-add-download:active,
-#TB_window #edd-add-download:focus {
-	color: #fff;
 }
 
 /* Global Graph Styles
@@ -2731,9 +2773,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	border-top: 1px solid #e5e5e5;
 }
 #edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 13px;
-	vertical-align: middle;
-	line-height: 1.5em;
+	font-size: 14px;
+	line-height: 14px;
+	height: 14px;
+	width: 14px;
+	padding: 2px 0;
 }
 #edd-item-tables-wrapper .emails input {
 	vertical-align: middle;

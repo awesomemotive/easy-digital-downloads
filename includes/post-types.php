@@ -133,6 +133,20 @@ function edd_setup_edd_post_types() {
 add_action( 'init', 'edd_setup_edd_post_types', 1 );
 
 /**
+ * Adds support to post-types that should allow for Downloads to be inserted
+ * into their post_content areas.
+ *
+ * By default, this coveres only core Post and Page types.
+ *
+ * @since 3.0
+ */
+function edd_setup_post_type_support() {
+	add_post_type_support( 'post', 'edd_insert_download' );
+	add_post_type_support( 'page', 'edd_insert_download' );
+}
+add_action( 'init', 'edd_setup_post_type_support' );
+
+/**
  * Get Default Labels
  *
  * @since 1.0.8.3
