@@ -13,11 +13,6 @@ namespace EDD\Admin;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded.
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
 /**
  * Order_Items_Table Class.
  *
@@ -25,7 +20,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since 3.0
  */
-class Order_Items_Table extends \WP_List_Table {
+class Order_Items_Table extends List_Table {
 
 	/**
 	 * Number of results to show per page
