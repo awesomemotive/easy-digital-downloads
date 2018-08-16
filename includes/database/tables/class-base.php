@@ -438,6 +438,31 @@ abstract class Base extends \EDD\Database\Base {
 		return $deleted;
 	}
 
+	/**
+	 * Count the number of items in the database table
+	 *
+	 * @since 3.0
+	 *
+	 * @return mixed
+	 */
+	public function count() {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Query statement
+		$query = "SELECT COUNT(*) FROM {$this->table_name}";
+		$count = $db->get_var( $query );
+
+		// Query success/fail
+		return $count;
+	}
+
 	/** Upgrades **************************************************************/
 
 	/**
