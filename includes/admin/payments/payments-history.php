@@ -38,7 +38,7 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 			// Remove
 			$tab_url = add_query_arg( array(
 				'settings-updated' => false,
-				'type'             => $tab_id,
+				'order_type'       => $tab_id
 			) );
 
 			// Remove the section from the tabs so we always end up at the main section
@@ -100,8 +100,8 @@ function edd_payment_history_page() {
 		$orders_table = new EDD_Payment_History_Table();
 		$orders_table->prepare_items();
 
-		$active_tab = ! empty( $_GET['type'] ) // WPCS: CSRF ok.
-			? sanitize_key( $_GET['type'] )
+		$active_tab = ! empty( $_GET['order_type'] )
+			? sanitize_key( $_GET['order_type'] )
 			: 'sale';
 
 		$admin_url = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
@@ -117,7 +117,7 @@ function edd_payment_history_page() {
 			<form id="edd-payments-filter" method="get" action="<?php echo esc_url( $admin_url ); ?>">
 				<input type="hidden" name="post_type" value="download" />
 				<input type="hidden" name="page" value="edd-payment-history" />
-				<input type="hidden" name="type" value="<?php echo esc_attr( $active_tab ); ?>" />
+				<input type="hidden" name="order_type" value="<?php echo esc_attr( $active_tab ); ?>" />
 				<?php
 				$orders_table->views();
 				$orders_table->advanced_filters();

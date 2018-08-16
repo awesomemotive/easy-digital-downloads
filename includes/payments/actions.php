@@ -135,8 +135,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	// Increase the customer's purchase stats
 	$customer = new EDD_Customer( $customer_id );
-	$customer->increase_purchase_count();
-	$customer->increase_value( $amount );
+	$customer->recalculate_stats();
 
 	edd_increase_total_earnings( $amount );
 

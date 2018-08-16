@@ -9,13 +9,10 @@
  * @since       1.4
  */
 
+use EDD\Admin\List_Table;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
-
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
 
 /**
  * EDD_Payment_History_Table Class
@@ -26,7 +23,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @since 3.0 Updated to use new query methods.
  *            Updated to use new nomenclature.
  */
-class EDD_Payment_History_Table extends WP_List_Table {
+class EDD_Payment_History_Table extends List_Table {
 
 	/**
 	 * Number of orders to show per page.
@@ -804,7 +801,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 		$gateway    = isset( $_GET['gateway'] )    ? sanitize_text_field( $_GET['gateway'] )    : null;
 		$mode       = isset( $_GET['mode'] )       ? sanitize_text_field( $_GET['mode'] )       : null;
-		$type       = isset( $_GET['type'] )       ? sanitize_text_field( $_GET['type'] )       : 'sale';
+		$type       = isset( $_GET['order_type'] ) ? sanitize_text_field( $_GET['order_type'] ) : 'sale';
 
 		/**
 		 * Introduced as part of #6063. Allow a gateway to specified based on the context.
