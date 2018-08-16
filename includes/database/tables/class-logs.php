@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 final class Logs extends Base {
 
 	/**
-	 * Table name
+	 * Table name.
 	 *
 	 * @access protected
 	 * @since 3.0
@@ -30,7 +30,7 @@ final class Logs extends Base {
 	protected $name = 'edd_logs';
 
 	/**
-	 * Database version
+	 * Database version.
 	 *
 	 * @access protected
 	 * @since 3.0
@@ -46,11 +46,12 @@ final class Logs extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270003' => 201807270003,
+		'201807240001' => 201807240001,
+		'201807270003' => 201807270003
 	);
 
 	/**
-	 * Setup the database schema
+	 * Setup the database schema.
 	 *
 	 * @access protected
 	 * @since 3.0
@@ -60,6 +61,7 @@ final class Logs extends Base {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 		object_id bigint(20) unsigned NOT NULL default '0',
 		object_type varchar(20) DEFAULT NULL,
+		user_id bigint(20) unsigned NOT NULL default '0',
 		type varchar(20) DEFAULT NULL,
 		title varchar(200) DEFAULT NULL,
 		content longtext DEFAULT NULL,
@@ -68,8 +70,29 @@ final class Logs extends Base {
 		uuid varchar(100) NOT NULL default '',
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
+		KEY user_id (user_id),
 		KEY type (type(20)),
 		KEY date_created (date_created)";
+	}
+
+	/**
+	 * Upgrade to version 201807230001
+	 * - Add `user_id` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201807240001() {
+
+		// Alter the database
+		if ( ! $this->column_exists( 'user_id' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN user_id bigint(20) unsigned NOT NULL default '0' AFTER object_type" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX user_id (user_id)" );
+		}
+
+		// Return success/fail
+		return $this->is_success( true );
 	}
 
 	/**

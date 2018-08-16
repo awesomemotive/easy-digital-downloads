@@ -56,7 +56,7 @@ class Customer_Email_Addresses extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'secondary',
-			'searchable' => true,
+			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -67,7 +67,7 @@ class Customer_Email_Addresses extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'active',
-			'searchable' => true,
+			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),

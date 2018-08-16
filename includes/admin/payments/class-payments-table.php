@@ -54,8 +54,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 	/**
 	 * Constructor.
-     *
-     * @see \WP_List_Table::__construct()
+	 *
+	 * @see \WP_List_Table::__construct()
 	 *
 	 * @since 1.4
 	 */
@@ -73,7 +73,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		) );
 
 		$this->filter_bar_hooks();
-		$this->process_bulk_action();
 		$this->get_payment_counts();
 	}
 
@@ -88,10 +87,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
-     * Retrieve the status.
-     *
-     * @since 3.0
-     *
+	 * Retrieve the status.
+	 *
+	 * @since 3.0
+	 *
 	 * @return string Status, if selected.
 	 */
 	public function get_status() {
@@ -552,7 +551,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_cb( $order ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			'payment',
+			'order',
 			$order->id
 		);
 	}
@@ -561,7 +560,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Render the ID column.
 	 *
 	 * @since 2.0
-     * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
 	 * @param EDD\Orders\Order $order Order object.
 	 * @return string Displays a checkbox.
@@ -673,74 +672,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * Process the bulk actions.
 	 *
 	 * @since 1.4
+	 * @since 3.0 Updated to display _doing_it_wrong().
+	 *
+	 * @see edd_orders_list_table_process_bulk_actions()
 	 */
 	public function process_bulk_action() {
-		$action = $this->current_action();
-		$ids    = isset( $_GET['payment'] )
-			? $_GET['payment']
-			: false;
-
-		if ( ! is_array( $ids ) ) {
-			$ids = array( $ids );
-		}
-
-		if ( empty( $action ) ) {
-			return;
-		}
-
-		$ids = wp_parse_id_list( $ids );
-
-		foreach ( $ids as $id ) {
-
-			// Detect when a bulk action is being triggered...
-			switch ( $this->current_action() ) {
-				case 'delete':
-					edd_delete_purchase( $id );
-					break;
-
-				case 'set-status-publish':
-					edd_update_payment_status( $id, 'publish' );
-					break;
-
-				case 'set-status-pending':
-					edd_update_payment_status( $id, 'pending' );
-					break;
-
-				case 'set-status-processing':
-					edd_update_payment_status( $id, 'processing' );
-					break;
-
-				case 'set-status-refunded':
-					edd_update_payment_status( $id, 'refunded' );
-					break;
-
-				case 'set-status-revoked':
-					edd_update_payment_status( $id, 'revoked' );
-					break;
-
-				case 'set-status-failed':
-					edd_update_payment_status( $id, 'failed' );
-					break;
-
-				case 'set-status-abandoned':
-					edd_update_payment_status( $id, 'abandoned' );
-					break;
-
-				case 'set-status-preapproval':
-					edd_update_payment_status( $id, 'preapproval' );
-					break;
-
-				case 'set-status-cancelled':
-					edd_update_payment_status( $id, 'cancelled' );
-					break;
-
-				case 'resend-receipt':
-					edd_email_purchase_receipt( $id, false );
-					break;
-			}
-
-			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
-		}
+		_doing_it_wrong( __FUNCTION__, 'Orders list table bulk actions are now handled by edd_orders_list_table_process_bulk_actions(). Please do not call this method directly.', 'EDD 3.0' );
 	}
 
 	/**
@@ -784,16 +721,18 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
-			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+			if ( ! empty( $_GET['order-amount-filter-value'] ) && 0 !== strlen( $_GET['order-amount-filter-value'] ) ) {
+				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
+				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-			$args['advanced_query'] = array(
-				array(
-					'key'     => 'total',
-					'value'   => $filter_amount,
-					'compare' => $filter_type,
-				),
-			);
+				$args['compare'] = array(
+					array(
+						'key'     => 'total',
+						'value'   => $filter_amount,
+						'compare' => $filter_type,
+					),
+				);
+			}
 		}
 
 		// Maybe filter by country.
@@ -865,7 +804,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 		$gateway    = isset( $_GET['gateway'] )    ? sanitize_text_field( $_GET['gateway'] )    : null;
 		$mode       = isset( $_GET['mode'] )       ? sanitize_text_field( $_GET['mode'] )       : null;
-		$type       = isset( $_GET['type'] )       ? sanitize_text_field( $_GET['type'] )       : 'order';
+		$type       = isset( $_GET['type'] )       ? sanitize_text_field( $_GET['type'] )       : 'sale';
 
 		/**
 		 * Introduced as part of #6063. Allow a gateway to specified based on the context.
@@ -932,11 +871,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			if ( ! empty( $_GET['order-amount-filter-value'] ) || '0' === $_GET['order-amount-filter-value'] ) {
+			if ( ! empty( $_GET['order-amount-filter-value'] ) && 0 !== strlen( $_GET['order-amount-filter-value'] ) ) {
 				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				$args['advanced_query'] = array(
+				$args['compare'] = array(
 					array(
 						'key'     => 'total',
 						'value'   => $filter_amount,
@@ -997,7 +936,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @since 1.4
 	 */
 	public function prepare_items() {
-		wp_reset_vars( array( 'action', 'payment', 'orderby', 'order', 's' ) );
+		wp_reset_vars( array( 'action', 'order', 'orderby', 'order', 's' ) );
 
 		$hidden      = array(); // No hidden columns
 		$columns     = $this->get_columns();

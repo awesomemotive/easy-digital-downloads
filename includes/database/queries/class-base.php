@@ -430,7 +430,7 @@ class Base extends \EDD\Database\Base {
 			'count'             => false,
 			'meta_query'        => null, // See WP_Meta_Query
 			'date_query'        => null, // See WP_Date_Query
-			'advanced_query'    => null, // See WP_Meta_Query
+			'compare'           => null, // See WP_Meta_Query
 			'no_found_rows'     => true,
 
 			// Caching
@@ -1269,17 +1269,17 @@ class Base extends \EDD\Database\Base {
 			}
 		}
 
-		// Maybe perform an advanced query
-		$advanced_query = $this->query_vars['advanced_query'];
-		if ( ! empty( $advanced_query ) && is_array( $advanced_query ) ) {
-			$meta_query = new Advanced_Query( $advanced_query );
-			$table      = $this->apply_prefix( $this->item_name );
-			$clauses    = $meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
+		// Maybe perform a compare.
+		$compare = $this->query_vars['compare'];
+		if ( ! empty( $compare ) && is_array( $compare ) ) {
+			$query   = new Compare( $compare );
+			$table   = $this->apply_prefix( $this->item_name );
+			$clauses = $query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
 
 			if ( false !== $clauses ) {
 
 				// Remove " AND " from query where clause.
-				$where['advanced_query'] = preg_replace( $and, '', $clauses['where'] );
+				$where['compare'] = preg_replace( $and, '', $clauses['where'] );
 			}
 		}
 
@@ -2486,7 +2486,7 @@ class Base extends \EDD\Database\Base {
 			$primary = $this->get_primary_column_name();
 			$query   = "SELECT * FROM {$table} WHERE {$primary} IN (%s)";
 			$ids     = join( ',', array_map( 'absint', $ids ) );
-			$prepare = sprintf( $query , $ids );
+			$prepare = sprintf( $query, $ids );
 			$results = $this->get_db()->get_results( $prepare );
 
 			// Update item caches
@@ -2763,5 +2763,127 @@ class Base extends \EDD\Database\Base {
 
 		// Delete the cache
 		wp_cache_delete( $key, $group );
+	}
+
+	/**
+	 * Fetch raw results directly from the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array  $cols       Columns for `SELECT`.
+	 * @param array  $where_cols Where clauses. Each key-value pair in the array
+	 *                           represents a column and a comparison.
+	 * @param int    $limit      Optional. LIMIT value. Default 25.
+	 * @param null   $offset     Optional. OFFSET value. Default null.
+	 * @param string $output     Optional. Any of ARRAY_A | ARRAY_N | OBJECT | OBJECT_K constants.
+	 *                           Default OBJECT.
+	 *                           With one of the first three, return an array of
+	 *                           rows indexed from 0 by SQL result row number.
+	 *                           Each row is an associative array (column => value, ...),
+	 *                           a numerically indexed array (0 => value, ...),
+	 *                           or an object. ( ->column = value ), respectively.
+	 *                           With OBJECT_K, return an associative array of
+	 *                           row objects keyed by the value of each row's
+	 *                           first column's value.
+	 *
+	 * @return array|object|null Database query results.
+	 */
+	public function get_results( $cols = array(), $where_cols = array(), $limit = 25, $offset = null, $output = OBJECT ) {
+
+		// Bail if no columns have been passed.
+		if ( empty( $cols ) ) {
+			return null;
+		}
+
+		// Fetch all the columns for the table being queried.
+		$column_names = $this->get_column_names();
+
+		// Ensure valid column names have been passed for the `SELECT` clause.
+		foreach ( $cols as $index => $column ) {
+			if ( ! in_array( $column, $column_names, true ) ) {
+				unset( $cols[ $index ] );
+			}
+		}
+
+		// Ensure valid columns have been passed for the `WHERE` clause.
+		if ( ! empty( $where_cols ) ) {
+			foreach ( $where_cols as $column => $values ) {
+				if ( ! array_key_exists( $column, $column_names ) ) {
+					unset( $where_cols[ $column ] );
+				}
+			}
+		}
+
+		// Setup base SQL query.
+		$query  = 'SELECT ';
+		$query .= implode( ',', $cols );
+		$query .= " FROM {$this->get_table_name()} {$this->table_alias} ";
+		$query .= ' WHERE 1=1 ';
+
+		// Parse WHERE clauses.
+		foreach ( $where_cols as $column => $compare ) {
+
+			// Basic WHERE clause.
+			if ( ! is_array( $compare ) ) {
+				$query .= " AND {$this->table_alias}.{$column} = {$compare} ";
+
+			// More complex WHERE clause.
+			} else {
+				$value = isset( $compare['value'] )
+					? $compare['value']
+					: false;
+
+				// Skip if a value was not provided.
+				if ( false === $value ) {
+					continue;
+				}
+
+				$compare_clause = isset( $compare['compare'] )
+					? strtoupper( $compare['compare'] )
+					: '=';
+
+				// Array (unprepared)
+				if ( is_array( $compare['value'] ) ) {
+
+					// Default to IN if clause not specified.
+					if ( 'IN' !== $compare_clause && 'NOT IN' !== $compare_clause && 'BETWEEN' !== $compare_clause ) {
+						$compare_clause = 'IN';
+					}
+
+					// Parse & escape for IN and NOT IN.
+					if ( 'IN' === $compare_clause || 'NOT IN' === $compare_clause ) {
+						$value = "('" . implode( "','", $this->get_db()->_escape( $compare['value'] ) ) . "')";
+
+					// Parse & escape for BETWEEN.
+					} elseif ( is_array( $value ) && 2 === count( $value ) && 'BETWEEN' === $compare_clause ) {
+						$value = " {$this->get_db()->_escape( $value[0] )} AND {$this->get_db()->_escape( $value[1] )} ";
+					}
+				}
+
+				// Add WHERE clause.
+				$query .= " AND {$this->table_alias}.{$column} {$compare_clause} {$value} ";
+			}
+		}
+
+		// Maybe set an offset.
+		if ( ! empty( $offset ) ) {
+			$offset_values = explode( ',', $offset );
+			$offset_values = array_filter( $offset_values, 'intval' );
+			$offset        = implode( ',', $offset_values );
+
+			$query .= " OFFSET {$offset} ";
+		}
+
+		// Maybe set a limit.
+		if ( ! empty( $limit ) && $limit > 0 ) {
+			$limit  = intval( $limit );
+			$query .= " LIMIT {$limit} ";
+		}
+
+		// Execute query.
+		$results = $this->get_db()->get_results( $query, $output );
+
+		// Return results.
+		return $results;
 	}
 }

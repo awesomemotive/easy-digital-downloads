@@ -42,6 +42,22 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Discount extends Adjustment {
 
 	/**
+	 * Flat discount.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	const FLAT = 'flat';
+
+	/**
+	 * Percent discount.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	const PERCENT = 'percent';
+
+	/**
 	 * Discount ID.
 	 *
 	 * @since 2.7
@@ -1687,6 +1703,8 @@ class EDD_Discount extends Adjustment {
 		}
 
 		$args = array( 'use_count' => $this->use_count );
+
+		$this->max_uses = absint( $this->max_uses );
 
 		if ( 0 !== $this->max_uses && $this->max_uses <= $this->use_count ) {
 			$args['status'] = 'inactive';

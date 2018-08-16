@@ -6,7 +6,7 @@
  * @subpackage  Logs
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Logs;
 
@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $id
  * @property int $object_id
  * @property string $object_type
+ * @property int $user_id
  * @property string $type
  * @property string $title
  * @property string $content
@@ -34,7 +35,7 @@ class Log extends Base_Object {
 	/**
 	 * Log ID.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
@@ -43,7 +44,7 @@ class Log extends Base_Object {
 	/**
 	 * Object ID.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
@@ -52,16 +53,25 @@ class Log extends Base_Object {
 	/**
 	 * Object type.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
 	protected $object_type;
 
 	/**
+	 * User ID.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    int
+	 */
+	protected $user_id;
+
+	/**
 	 * Log type.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -70,7 +80,7 @@ class Log extends Base_Object {
 	/**
 	 * Log title.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -79,7 +89,7 @@ class Log extends Base_Object {
 	/**
 	 * Log content.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -88,7 +98,7 @@ class Log extends Base_Object {
 	/**
 	 * Date log was created.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */
@@ -97,7 +107,7 @@ class Log extends Base_Object {
 	/**
 	 * Date log was last modified.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    string
 	 */

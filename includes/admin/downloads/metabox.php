@@ -902,8 +902,8 @@ function edd_render_refund_row( $post_id ) {
 	$global_ability    = edd_get_option( 'refundability', 'refundable' );
 	$refundability     = isset( $types[ $global_ability ] ) ? $types[ $global_ability ] : __( 'Unknown', 'easy-digital-downloads' );
 	$global_window     = edd_get_option( 'refund_window', 30 );
-	$edd_refundability = edd_get_file_refundability( $post_id );
-	$edd_refund_window = edd_get_file_refund_window( $post_id ); ?>
+	$edd_refundability = edd_get_download_refundability( $post_id );
+	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
 		<p><strong><?php _e( 'Refundability', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refundability</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.', 'easy-digital-downloads' ); ?>"></span></strong></p>

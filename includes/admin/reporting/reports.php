@@ -204,6 +204,7 @@ function edd_register_overview_report( $reports ) {
 				),
 				'charts' => array(
 					'overview_sales_earnings_chart',
+					'refunds_chart'
 				),
 			),
 		) );
@@ -289,8 +290,12 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
-
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Orders\Stats();
+						return apply_filters( 'edd_reports_overview_refunds', $stats->get_order_refund_count( array(
+							'range' => $filter['range'],
+							'relative' => true,
+						) ) );
 					},
 					'display_args'  => array(
 						'context'          => 'secondary',
@@ -418,7 +423,7 @@ function edd_register_overview_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'overview_sales_earnings_chart', array(
-			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ),
+			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function () use ( $filter ) {
@@ -1026,7 +1031,10 @@ function edd_register_refunds_report( $reports ) {
 			'priority'  => 15,
 			'endpoints' => array(
 				'tiles'  => array(
-					'refund_count_and_amount',
+					'refund_count',
+					'fully_refunded_order_count',
+					'fully_refunded_order_item_count',
+					'refund_amount',
 					'average_refund_amount',
 					'average_time_to_refund',
 					'refund_rate',
@@ -1038,22 +1046,77 @@ function edd_register_refunds_report( $reports ) {
 			'filters'   => array( 'products' ),
 		) );
 
-		$reports->register_endpoint( 'refund_count_and_amount', array(
-			'label' => __( 'Number / Amount', 'easy-digital-downloads' ),
+		$reports->register_endpoint( 'refund_count', array(
+			'label' => __( 'Number of Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-						$stats = new EDD\Orders\Stats();
+						$stats  = new EDD\Orders\Stats();
+						$number = $stats->get_order_refund_count( array(
+							'range' => $filter['range'],
+						) );
+						return apply_filters( 'edd_reports_refunds_refund_count', esc_html( $number ) );
+					},
+					'display_args'  => array(
+						'context'          => 'primary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'fully_refunded_order_count', array(
+			'label' => __( 'Number of Fully Refunded Orders', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats  = new EDD\Orders\Stats();
+						$number = $stats->get_order_refund_count( array(
+							'range'  => $filter['range'],
+							'status' => array( 'refunded' ),
+						) );
+						return apply_filters( 'edd_reports_refunds_fully_refunded_order_count', esc_html( $number ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'fully_refunded_order_item_count', array(
+			'label' => __( 'Number of Fully Refunded Items', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats  = new EDD\Orders\Stats();
+						$number = $stats->get_order_item_refund_count( array(
+							'range'  => $filter['range'],
+							'status' => array( 'refunded' ),
+						) );
+						return apply_filters( 'edd_reports_refunds_fully_refunded_order_item_count', esc_html( $number ) );
+					},
+					'display_args'  => array(
+						'context'          => 'tertiary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'refund_amount', array(
+			'label' => __( 'Total Refund Amount', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats  = new EDD\Orders\Stats();
 						$amount = $stats->get_order_refund_amount( array(
 							'range'  => $filter['range'],
 							'output' => 'formatted',
 						) );
 
-						$number = $stats->get_order_refund_count( array(
-							'range' => $filter['range'],
-						) );
-
-						return apply_filters( 'edd_reports_refunds_refund_count_and_amount', esc_html( $number . ' / ' . $amount ) );
+						return apply_filters( 'edd_reports_refunds_refund_amount', esc_html( $amount ) );
 					},
 					'display_args'  => array(
 						'context'          => 'primary',
@@ -1088,7 +1151,10 @@ function edd_register_refunds_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
-
+						$stats = new EDD\Orders\Stats();
+						return $stats->get_average_refund_time( array(
+							'range' => $filter['range'],
+						) );
 					},
 					'display_args'  => array(
 						'context'          => 'tertiary',
@@ -1151,10 +1217,10 @@ function edd_register_refunds_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
 							 FROM {$wpdb->edd_orders} o
-							 WHERE status = %s AND date_created >= %s AND date_created <= %s
+							 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s
 							 GROUP BY {$sql_clauses['groupby']}
 							 ORDER BY {$sql_clauses['orderby']} ASC",
-							esc_sql( 'refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
+							esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
 
 						$number = array();
 						$amount = array();
@@ -1207,7 +1273,7 @@ function edd_register_refunds_report( $reports ) {
 							}
 
 							$number[ $timestamp ][1] = $result->number;
-							$amount[ $timestamp ][1] = floatval( $result->amount );
+							$amount[ $timestamp ][1] = floatval( abs( $result->amount ) );
 						}
 
 						$number = array_values( $number );
