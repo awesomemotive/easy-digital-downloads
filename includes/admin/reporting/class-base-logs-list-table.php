@@ -10,20 +10,17 @@
  * @since       3.0 Updated to use the custom tables.
  */
 
+use EDD\Admin\List_Table;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
-
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
 
 /**
  * EDD_Base_Log_List_Table Class
  *
  * @since 3.0
  */
-class EDD_Base_Log_List_Table extends WP_List_Table {
+class EDD_Base_Log_List_Table extends List_Table {
 
 	/**
 	 * Number of items per page
