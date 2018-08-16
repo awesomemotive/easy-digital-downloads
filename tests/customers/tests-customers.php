@@ -49,9 +49,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 			'user_id' => self::$user,
 		) );
 
-		self::$customers[0]->add_email( 'admin@example.org', true );
 		self::$customers[0]->attach_payment( self::$order );
-
 		self::$customers[0] = edd_get_customer( $customers[0] );
 
 		edd_update_payment_status( self::$order, 'complete' );
@@ -136,7 +134,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertSame( 90.0, self::$customers[4]->purchase_value );
 	}
 
-	public function test_decrease_purchase_count_should_return_1() {
+	public function test_decrease_purchase_count_should_return_0() {
 		self::$customers[3]->increase_purchase_count();
 		self::$customers[3]->decrease_purchase_count();
 
@@ -154,7 +152,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 
 		$this->assertCount( 1, self::$customers[0]->get_notes( 1, 2 ) );
 	}
-	
+
 	public function test_get_payment_ids_of_customer_should_return_1() {
 		self::$customers[0]->attach_payment( self::$order );
 
@@ -345,8 +343,8 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertEmpty( $customer->get_payments() );
 	}
 
-	public function test_get_users_purchased_products_should_return_1() {
-		$this->assertCount( 1, (array) edd_get_users_purchased_products( self::$user ) );
+	public function test_get_users_purchased_products_should_return_2() {
+		$this->assertCount( 2, (array) edd_get_users_purchased_products( self::$user ) );
 	}
 
 	public function test_get_purchase_stats_by_user_should_return_true() {

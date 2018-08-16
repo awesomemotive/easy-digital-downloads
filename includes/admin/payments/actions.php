@@ -293,11 +293,8 @@ function edd_update_payment_details( $data = array() ) {
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
 		if ( 'revoked' === $status || 'publish' === $status ) {
-			$previous_customer->decrease_purchase_count();
-			$previous_customer->decrease_value( $new_total );
-
-			$customer->increase_purchase_count();
-			$customer->increase_value( $new_total );
+			$previous_customer->recalculate_stats();
+			$customer->recalculate_stats();
 		}
 
 		$order_update_args['customer_id'] = $customer->id;

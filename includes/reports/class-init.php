@@ -206,7 +206,7 @@ final class Init {
 			};
 
 			// Legacy label
-			$legacy_label = $label . '<span class="edd-legacy-label">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
+			$legacy_label = $label . '<span class="edd-legacy-label edd-chip">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
 
 			// Add report
 			$reports->add_report( $report_id, array(
