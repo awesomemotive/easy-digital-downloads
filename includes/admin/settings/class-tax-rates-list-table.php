@@ -52,6 +52,20 @@ class Tax_Rates_List_Table extends List_Table {
 	}
 
 	/**
+	 * Retrieve the bulk actions.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array $actions Bulk actions.
+	 */
+	public function get_bulk_actions() {
+		return array(
+			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
+			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
+		);
+	}
+
+	/**
 	 * Retrieve the table columns.
 	 *
 	 * @since 3.0
@@ -60,6 +74,7 @@ class Tax_Rates_List_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
+			'cb'      => '<input type="checkbox" />', // Render a checkbox instead of text
 			'country' => __( 'Country', 'easy-digital-downloads' ),
 			'region'  => __( 'Region', 'easy-digital-downloads' ),
 			'rate'    => __( 'Rate', 'easy-digital-downloads' ),
@@ -79,6 +94,22 @@ class Tax_Rates_List_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array();
+	}
+
+	/**
+	 * Render the checkbox column.
+	 *
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 *
+	 * @param \EDD\Adjustments\Adjustment $adjustment Adjustment object.
+	 * @return string Data shown in the Checkbox column.
+	 */
+	public function column_cb( $adjustment ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'adjustment',
+			$adjustment->id
+		);
 	}
 
 	/**
@@ -199,6 +230,54 @@ class Tax_Rates_List_Table extends List_Table {
 	}
 
 	/**
+	 * Retrieve the view types.
+	 *
+	 * @since 1.4
+	 *
+	 * @return array $views All the views available.
+	 */
+	protected function get_views() {
+		$current = isset( $_GET['status'] ) // WPCS: CSRF ok.
+			? sanitize_key( $_GET['status'] )
+			: '';
+
+		$url = remove_query_arg( array( 'status', 'paged' ) );
+
+		$class = in_array( $current, array( '', 'all' ), true )
+			? ' class="current"'
+			: '';
+
+		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
+
+		$label = __( 'All', 'easy-digital-downloads' ) . $count;
+		$views = array(
+			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
+		);
+
+		$counts = $this->counts;
+		unset( $counts['total'] );
+
+		// Loop through known statuses.
+		foreach ( $counts as $status => $count ) {
+			$url = add_query_arg( array(
+				'status' => $status,
+				'paged'  => false,
+			) );
+
+			$class = ( $current === $status )
+				? ' class="current"'
+				: '';
+
+			$count = '&nbsp;<span class="count">(' . $this->counts[ $status ] . ')</span>';
+
+			$label            = ucwords( $status ) . $count;
+			$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label );
+		}
+
+		return (array) $views;
+	}
+
+	/**
 	 * Retrieve all the data for all the tax rates table.
 	 *
 	 * @access private
@@ -257,8 +336,19 @@ class Tax_Rates_List_Table extends List_Table {
 	public function print_column_headers( $with_id = true ) {
 		list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
+		if ( ! empty( $columns['cb'] ) ) {
+			static $cb_counter = 1;
+			$columns['cb']     = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __( 'Select All' ) . '</label>'
+				. '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
+			$cb_counter++;
+		}
+
 		foreach ( $columns as $column_key => $column_display_name ) {
 			$class = array( 'manage-column', "column-$column_key" );
+
+			if ( 'cb' === $column_key ) {
+				$class[] = 'check-column';
+			}
 
 			if ( $column_key === $primary ) {
 				$class[] = 'column-primary';
