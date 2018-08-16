@@ -26,4 +26,20 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 abstract class List_Table extends \WP_List_Table {
 
+	/**
+	 * Number of results to show per page.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	public $per_page = 30;
+
+	/**
+	 * Counts.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	public $counts = array();
+
 }
