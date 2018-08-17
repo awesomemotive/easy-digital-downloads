@@ -458,14 +458,33 @@ a.edd-delete:hover {
 textarea[name="edd-note"] {
 	width: 100%;
 	min-height: 70px;
+	margin-top: 0;
 }
 
 .edd-notes-wrapper {
 	width: 80%;
 }
 
-#edd-customer-notes {
-	margin-bottom: 50px;
+.edd-note-pagination {
+	float: right;
+	margin: -35px 5px 15px 5px;
+}
+
+.edd-note-pagination a,
+.edd-note-pagination span.page-numbers {
+	padding: 5px 8px;
+	margin: 2px;
+	text-decoration: none;
+}
+
+.edd-note-pagination a {
+	border: 1px solid #e5e5e5;
+	background: #fcfcfc;
+}
+
+.edd-note-pagination a:last-child,
+.edd-note-pagination span.page-numbers:last-child {
+	margin-right: 0;
 }
 
 /* Discount Code Styles

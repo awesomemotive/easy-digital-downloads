@@ -777,7 +777,11 @@ function edd_customer_notes_view( $customer ) {
 
 	$per_page   = apply_filters( 'edd_customer_notes_per_page', 20 );
 	$notes      = $customer->get_notes( $per_page, $paged );
-	$note_count = $customer->get_notes_count(); ?>
+	$note_count = $customer->get_notes_count();
+	$args       = array(
+		'total'        => $note_count,
+		'add_fragment' => '#edd_general_notes'
+	); ?>
 
 	<div id="edd-item-notes-wrapper">
 		<div class="edd-item-header-small">
@@ -785,14 +789,14 @@ function edd_customer_notes_view( $customer ) {
 		</div>
 		<h3><?php esc_html_e( 'Notes', 'easy-digital-downloads' ); ?></h3>
 
-		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
+		<?php echo edd_admin_get_notes_pagination( $args ); ?>
 
 		<div id="edd-customer-notes">
 			<?php echo edd_admin_get_notes_html( $notes ); ?>
 			<?php echo edd_admin_get_new_note_form( $customer->id, 'customer' ); ?>
 		</div>
 
-		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
+		<?php echo edd_admin_get_notes_pagination( $args ); ?>
 	</div>
 
 	<?php

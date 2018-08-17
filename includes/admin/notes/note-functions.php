@@ -167,36 +167,36 @@ function edd_get_note_delete_redirect_url() {
  * Return the HTML used to paginate through notes.
  *
  * @since 3.0
- * @param int $total The total number of notes for this view
+ * @param array $args
  */
-function edd_admin_get_notes_pagination( $total = 0, $pag_arg = 'paged' ) {
+function edd_admin_get_notes_pagination( $args = array() ) {
 
-	// Default pagination arg
-	if ( empty( $pag_arg ) ) {
-		$pag_arg = 'paged';
-	}
-
-	// Don't allow pagination beyond the boundaries
-	$paged = ! empty( $_GET[ $pag_arg ] ) && is_numeric( $_GET[ $pag_arg ] )
-		? absint( $_GET[ $pag_arg ] )
-		: 1;
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'total'        => 0,
+		'pag_arg'      => 'paged',
+		'base'         => '%_%',
+		'show_all'     => true,
+		'prev_text'    => is_rtl() ? '&rarr;' : '&larr;',
+		'next_text'    => is_rtl() ? '&larr;' : '&rarr;',
+		'add_fragment' => ''
+	) );
 
 	// Maximum notes per page
-	$per_page        = apply_filters( 'edd_notes_per_page', 20 );
-	$total_pages     = ceil( $total / $per_page );
-	$pagination_args = array(
-		'base'     => '%_%',
-		'format'   => "?{$pag_arg}=%#%",
-		'total'    => $total_pages,
-		'current'  => $paged,
-		'show_all' => true
-	);
+	$per_page    = apply_filters( 'edd_notes_per_page', 20 );
+	$r['total']  = ceil( $r['total'] / $per_page );
+	$r['format'] = "?{$r['pag_arg']}=%#%";
+
+	// Don't allow pagination beyond the boundaries
+	$r['current'] = ! empty( $_GET[ $r['pag_arg'] ] ) && is_numeric( $_GET[ $r['pag_arg'] ] )
+		? absint( $_GET[ $r['pag_arg'] ] )
+		: 1;
 
 	// Start a buffer
 	ob_start(); ?>
 
 	<div class="edd-note-pagination">
-		<?php echo paginate_links( $pagination_args ); ?>
+		<?php echo paginate_links( $r ); ?>
 	</div>
 
 	<?php
