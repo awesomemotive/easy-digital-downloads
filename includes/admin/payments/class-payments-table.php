@@ -65,12 +65,35 @@ class EDD_Payment_History_Table extends List_Table {
 			'ajax'     => false
 		) );
 
-		$this->base_url = edd_get_admin_url( array(
-			'page' => 'edd-payment-history'
-		) );
-
+		$this->set_base_url();
 		$this->filter_bar_hooks();
 		$this->get_payment_counts();
+	}
+
+	/**
+	 * Set the base URL.
+	 *
+	 * This retains the current order-type, or 'sale' by default.
+	 *
+	 * @since 3.0
+	 */
+	private function set_base_url() {
+
+		// Use registered types
+		$types = array_keys( edd_get_order_types() );
+		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
+			$type = sanitize_key( $_GET['order_type'] );
+
+		// Default to 'sale' if type is unrecognized
+		} else {
+			$type = 'sale';
+		}
+
+		// Carry the type over to the base URL
+		$this->base_url = edd_get_admin_url( array(
+			'page'       => 'edd-payment-history',
+			'order_type' => $type
+		) );
 	}
 
 	/**
@@ -685,14 +708,19 @@ class EDD_Payment_History_Table extends List_Table {
 	public function get_payment_counts() {
 		$args = array();
 
+		// User
 		if ( isset( $_GET['user'] ) ) {
 			$args['user'] = urldecode( $_GET['user'] );
+
+		// Customer
 		} elseif ( isset( $_GET['customer'] ) ) {
 			$args['customer'] = absint( $_GET['customer'] );
+
+		// Search
 		} elseif ( isset( $_GET['s'] ) ) {
 			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
 
-			if ( $is_user ) {
+			if ( true === $is_user ) {
 				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
 				unset( $args['s'] );
 			} else {
@@ -700,20 +728,32 @@ class EDD_Payment_History_Table extends List_Table {
 			}
 		}
 
+		// Start
 		if ( ! empty( $_GET['start-date'] ) ) {
 			$args['start-date'] = urldecode( $_GET['start-date'] );
 		}
 
+		// End
 		if ( ! empty( $_GET['end-date'] ) ) {
 			$args['end-date'] = urldecode( $_GET['end-date'] );
 		}
 
+		// Gateway
 		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
 			$args['gateway'] = sanitize_key( $_GET['gateway'] );
 		}
 
+		// Mode
 		if ( ! empty( $_GET['mode'] ) && $_GET['mode'] !== 'all' ) {
 			$args['mode'] = sanitize_key( $_GET['mode'] );
+		}
+
+		// Types
+		$types = array_keys( edd_get_order_types() );
+		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
+			$args['type'] = sanitize_key( $_GET['order_type'] );
+		} else {
+			$args['type'] = 'sale';
 		}
 
 		// Maybe filter by order amount.
@@ -755,7 +795,6 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Force EDD\Orders\Order objects to be returned
 		$r['output'] = 'orders';
-
 		$r['count']   = true;
 		$r['groupby'] = 'status';
 
