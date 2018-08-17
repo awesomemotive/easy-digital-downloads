@@ -217,6 +217,22 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+/* =Tax Settings Style
+-------------------------------------------------------------- */
+.download_page_edd-settings .taxrates th,
+.download_page_edd-settings .taxrates td {
+	padding: 8px 10px;
+}
+
+.download_page_edd-settings .taxrates td {
+	line-height: 1.5em;
+	vertical-align: top;
+	margin: 0;
+}
+
+.download_page_edd-settings .taxrates .regular-text {
+	width: 100%;
+}
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -442,14 +458,33 @@ a.edd-delete:hover {
 textarea[name="edd-note"] {
 	width: 100%;
 	min-height: 70px;
+	margin-top: 0;
 }
 
 .edd-notes-wrapper {
 	width: 80%;
 }
 
-#edd-customer-notes {
-	margin-bottom: 50px;
+.edd-note-pagination {
+	float: left;
+	margin: -35px 5px 15px 5px;
+}
+
+.edd-note-pagination a,
+.edd-note-pagination span.page-numbers {
+	padding: 5px 8px;
+	margin: 2px;
+	text-decoration: none;
+}
+
+.edd-note-pagination a {
+	border: 1px solid #e5e5e5;
+	background: #fcfcfc;
+}
+
+.edd-note-pagination a:last-child,
+.edd-note-pagination span.page-numbers:last-child {
+	margin-left: 0;
 }
 
 /* Discount Code Styles
