@@ -41,13 +41,18 @@ class EDD_SL_Plugin_Updater {
 		$store_hash = md5( $this->api_url );
 		if ( ! is_array( $edd_plugin_url_available ) || ! isset( $edd_plugin_url_available[ $store_hash ] ) ) {
 			$test_url_parts = parse_url( $this->api_url );
-			$scheme = $test_url_parts['scheme'];
-			$host   = $test_url_parts['host'];
-			$port   = ! empty( $test_url_parts['port'] ) ? ':' . $test_url_parts['port'] : '';
 
-			$test_url = $scheme . '://' . $host . $port;
-			$response = wp_remote_get( $test_url, array( 'timeout' => $this->health_check_timeout, 'sslverify' => true ) );
-			$edd_plugin_url_available[ $store_hash ] = is_wp_error( $response ) ? false : true;
+			$scheme = ! empty( $test_url_parts['scheme'] ) ? $test_url_parts['scheme']     : 'http';
+			$host   = ! empty( $test_url_parts['host'] )   ? $test_url_parts['host']       : '';
+			$port   = ! empty( $test_url_parts['port'] )   ? ':' . $test_url_parts['port'] : '';
+
+			if ( empty( $host ) ) {
+				$edd_plugin_url_available[ $store_hash ] = false;
+			} else {
+				$test_url = $scheme . '://' . $host . $port;
+				$response = wp_remote_get( $test_url, array( 'timeout' => $this->health_check_timeout, 'sslverify' => true ) );
+				$edd_plugin_url_available[ $store_hash ] = is_wp_error( $response ) ? false : true;
+			}
 		}
 
 		if ( false === $edd_plugin_url_available[ $store_hash ] ) {
