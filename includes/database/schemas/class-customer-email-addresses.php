@@ -32,22 +32,23 @@ class Customer_Email_Addresses extends Base {
 
 		// id
 		array(
-			'name'     => 'id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'extra'    => 'auto_increment',
-			'primary'  => true,
-			'sortable' => true
+			'name'       => 'id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'extra'      => 'auto_increment',
+			'primary'    => true,
+			'sortable'   => true
 		),
 
 		// customer_id
 		array(
-			'name'     => 'customer_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'default'  => '0'
+			'name'       => 'customer_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'cache_key'  => true
 		),
 
 		// type
@@ -75,7 +76,10 @@ class Customer_Email_Addresses extends Base {
 		// email
 		array(
 			'name'       => 'email',
-			'type'       => 'mediumtext',
+			'type'       => 'varchar',
+			'length'     => '100',
+			'default'    => '',
+			'cache_key'  => true,
 			'searchable' => true,
 			'sortable'   => true
 		),
