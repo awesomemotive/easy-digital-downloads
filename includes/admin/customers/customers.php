@@ -151,15 +151,25 @@ function edd_customers_sections( $customer ) {
  * @return void
  */
 function edd_customers_page() {
+
+	// Views
 	$default_views  = edd_customer_views();
 	$requested_view = isset( $_GET['view'] )
 		? sanitize_key( $_GET['view'] )
 		: 'customers';
 
+	// Tabs
+	$active_tab = ! empty( $_GET['page_type'] )
+		? sanitize_key( $_GET['page_type'] )
+		: 'customers';
+
+	// Single customer view
 	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[ $requested_view ] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
+
+	// List table view
 	} else {
-		edd_customers_list();
+		edd_customers_list( $active_tab );
 	}
 }
 
@@ -189,30 +199,58 @@ function edd_customer_tabs() {
  * @since  2.3
  * @return void
  */
-function edd_customers_list() {
-	include_once dirname( __FILE__ ) . '/class-customer-table.php';
+function edd_customers_list( $active_tab = 'customers' ) {
 
-	// What view?
-	$active_tab = ! empty( $_GET['page_type'] )
-		? sanitize_key( $_GET['page_type'] )
-		: 'customers';
+	// Get the possible pages
+	$pages = edd_get_customer_pages();
 
-	$customers_table = new EDD_Customer_Reports_Table();
+	// Reset page if not a registered page
+	if ( ! in_array( $active_tab, array_keys( $pages ), true ) ) {
+		$active_tab = 'customers';
+	}
+
+	// Get the label/name from the active tab
+	$name = $pages[ $active_tab ];
+
+	// Get the action url from the active tab
+	$action_url = edd_get_admin_url( array(
+		'page_type' => $active_tab,
+		'page'      => 'edd-' . $active_tab
+	) );
+
+	// Setup the list table class
+	switch ( $active_tab ) {
+		case 'customers' :
+			include_once dirname( __FILE__ ) . '/class-customer-table.php';
+			$list_table_class = 'EDD_Customer_Reports_Table';
+			break;
+		case 'emails' :
+			include_once dirname( __FILE__ ) . '/class-customer-table.php';
+			$list_table_class = 'EDD_Customer_Reports_Table';
+			break;
+		case 'physical' :
+			include_once dirname( __FILE__ ) . '/class-customer-table.php';
+			$list_table_class = 'EDD_Customer_Reports_Table';
+			break;
+	}
+
+	// Initialize the list table
+	$customers_table = new $list_table_class;
 	$customers_table->prepare_items(); ?>
 
 	<div class="wrap">
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'easy-digital-downloads' ); ?></h1>
+		<h1 class="wp-heading-inline"><?php echo esc_html( $name ); ?></h1>
 		<hr class="wp-header-end">
 
 		<?php edd_customers_page_primary_nav( $active_tab ); ?>
 		<br>
 
-		<?php do_action( 'edd_customers_table_top' ); ?>
+		<?php do_action( 'edd_' . $active_tab. '_table_top' ); ?>
 
-		<form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
+		<form id="edd-customers-filter" method="get" action="<?php echo esc_url( $action_url ); ?>">
 			<?php
 			$customers_table->views();
-			$customers_table->search_box( __( 'Search Customers', 'easy-digital-downloads' ), 'edd-customers' );
+			$customers_table->search_box( sprintf( __( 'Search %s', 'easy-digital-downloads' ), $name ), 'edd-customers' );
 			$customers_table->display();
 			?>
 			<input type="hidden" name="post_type" value="download" />
