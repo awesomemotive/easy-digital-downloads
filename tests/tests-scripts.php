@@ -166,7 +166,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 			array( 'jquery-chosen', 'enqueued' ),
 			array( 'wp-color-picker', 'enqueued' ),
 			array( 'colorbox', 'enqueued' ),
-			array( 'jquery-ui-css', 'enqueued' ),
 			array( 'thickbox', 'enqueued' ),
 			array( 'edd-admin', 'enqueued' ),
 		);

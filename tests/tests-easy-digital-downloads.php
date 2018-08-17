@@ -163,8 +163,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'assets/css/chosen.min.css' ),
 			array( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' ),
 			array( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' ),
-			array( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' ),
-			array( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomCenter.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomLeft.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomRight.png' ),
