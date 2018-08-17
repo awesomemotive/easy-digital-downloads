@@ -18,7 +18,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * EDD_Customer_Reports_Table Class
+ * EDD_Customer_Email_Addresses_Table Class
  *
  * Renders the Customer Reports table
  *
