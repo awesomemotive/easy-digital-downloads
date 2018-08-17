@@ -724,3 +724,47 @@ function edd_count_customer_email_addresses( $args = array() ) {
 	// Return count(s)
 	return absint( $customer_email_addresses->found_items );
 }
+
+/**
+ * Query for and return array of customer counts, keyed by status
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_customer_email_address_counts() {
+
+	// Default statuses
+	$defaults = array(
+		'active'   => 0,
+		'pending'  => 0,
+		'inactive' => 0,
+		'spam'     => 0,
+		'deleted'  => 0,
+		'total'    => 0
+	);
+
+	// Query for count
+	$counts = new EDD\Database\Queries\Customer_Email_Address( array(
+		'count'   => true,
+		'groupby' => 'status'
+	) );
+
+	// Default array
+	$r = array();
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts->items ) ) {
+
+		// Loop through statuses
+		foreach ( $counts->items as $status ) {
+			$r[ $status['status'] ] = absint( $status['count'] );
+		}
+
+		// Total
+		$r['total'] = array_sum( $r );
+	}
+
+	// Return counts
+	return array_merge( $defaults, $r );
+}
