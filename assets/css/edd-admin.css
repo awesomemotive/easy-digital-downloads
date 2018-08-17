@@ -575,6 +575,8 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-status,
 .wp-list-table.discounts .column-amount,
 .wp-list-table.discounts .column-status,
+.wp-list-table.physical .column-type,
+.wp-list-table.emails .column-type,
 .wp-list-table.orders .column-amount,
 .wp-list-table.orders .column-status {
 	width: 11%;
@@ -596,6 +598,8 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-end_date,
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
+.wp-list-table.physical .column-date_created,
+.wp-list-table.emails .column-date_created,
 .wp-list-table.orders .column-date {
 	width: 14%;
 }
@@ -614,6 +618,10 @@ textarea[name="edd-note"] {
 .wp-list-table.orders .column-gateway,
 .wp-list-table.orders .column-customer {
 	width: 18%;
+}
+
+.wp-list-table.emails .column-customer {
+	width: 35%;
 }
 
 .wp-list-table.customers .column-email {
@@ -646,6 +654,7 @@ textarea[name="edd-note"] {
 	color: #ff8c00;
 }
 
+.wp-list-table.emails .column-customer .avatar,
 .wp-list-table.customers .column-primary .avatar {
 	float: left;
 	margin-right: 10px;

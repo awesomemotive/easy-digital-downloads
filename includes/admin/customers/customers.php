@@ -225,12 +225,12 @@ function edd_customers_list( $active_tab = 'customers' ) {
 			$list_table_class = 'EDD_Customer_Reports_Table';
 			break;
 		case 'emails' :
-			include_once dirname( __FILE__ ) . '/class-customer-table.php';
-			$list_table_class = 'EDD_Customer_Reports_Table';
+			include_once dirname( __FILE__ ) . '/class-customer-email-addresses-table.php';
+			$list_table_class = 'EDD_Customer_Email_Addresses_Table';
 			break;
 		case 'physical' :
-			include_once dirname( __FILE__ ) . '/class-customer-table.php';
-			$list_table_class = 'EDD_Customer_Reports_Table';
+			include_once dirname( __FILE__ ) . '/class-customer-addresses-table.php';
+			$list_table_class = 'EDD_Customer_Addresses_Table';
 			break;
 	}
 
