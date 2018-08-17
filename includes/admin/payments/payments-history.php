@@ -64,23 +64,25 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 /**
  * Retrieve the order pages.
  *
- * Used only by the primary tab navigation for orders currently.
+ * Used only by the primary tab navigation for orders.
  *
  * @since 3.0
  *
  * @return array
  */
 function edd_get_order_pages() {
+	$types  = edd_get_order_types();
+	$retval = array();
 
-	// Default tabs
-	$tabs = array(
-		'sale'    => __( 'Sales',    'easy-digital-downloads' ),
-		'refund'  => __( 'Refunds',  'easy-digital-downloads' ),
-		'invoice' => __( 'Invoices', 'easy-digital-downloads' )
-	);
+	// Loop through and get type IDs and labels
+	foreach ( $types as $type_id => $type ) {
+		$retval[ $type_id ] = ! empty( $type['labels']['plural'] )
+			? $type['labels']['plural']
+			: ucwords( $type_id );
+	}
 
 	// Filter & return
-	return (array) apply_filters( 'edd_get_order_pages', $tabs );
+	return (array) apply_filters( 'edd_get_order_pages', $retval );
 }
 
 /**
