@@ -12,6 +12,80 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** Navigation ****************************************************************/
+
+/**
+ * Output the primary customers page navigation
+ *
+ * @since 3.0
+ * @param string $active_tab
+ */
+function edd_customers_page_primary_nav( $active_tab = '' ) {
+
+	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
+
+	ob_start();?>
+
+	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<?php
+
+		// Get the pages
+		$tabs = edd_get_customer_pages();
+
+		// Loop through pages and create tabs
+		foreach ( $tabs as $tab_id => $tab_name ) {
+
+			// Remove
+			$tab_url = add_query_arg( array(
+				'settings-updated' => false,
+				'page_type'        => $tab_id
+			) );
+
+			// Remove the section from the tabs so we always end up at the main section
+			$tab_url = remove_query_arg( 'section', $tab_url );
+			$active  = $active_tab === $tab_id
+				? ' nav-tab-active'
+				: '';
+
+			// Link
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
+				echo esc_html( $tab_name );
+			echo '</a>';
+		}
+		?>
+		<!--<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>-->
+	</h2>
+
+	<?php
+
+	echo ob_get_clean(); // WPCS: XSS ok.
+}
+
+/**
+ * Retrieve the order pages.
+ *
+ * Used only by the primary tab navigation for orders.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_customer_pages() {
+	static $pages = null;
+
+	// Filter
+	if ( null === $pages ) {
+		$pages = (array) apply_filters( 'edd_get_order_pages', array(
+			'customers' => esc_html__( 'Customers',          'easy-digital-downloads' ),
+			'emails'    => esc_html__( 'Email Addresses',    'easy-digital-downloads' ),
+			'physical'  => esc_html__( 'Physical Addresses', 'easy-digital-downloads' )
+		) );
+	}
+
+	// Return
+	return $pages;
+}
+
 /**
  * Display customer sections
  *
@@ -118,13 +192,20 @@ function edd_customer_tabs() {
 function edd_customers_list() {
 	include_once dirname( __FILE__ ) . '/class-customer-table.php';
 
+	// What view?
+	$active_tab = ! empty( $_GET['page_type'] )
+		? sanitize_key( $_GET['page_type'] )
+		: 'customers';
+
 	$customers_table = new EDD_Customer_Reports_Table();
 	$customers_table->prepare_items(); ?>
 
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Customers', 'easy-digital-downloads' ); ?></h1>
-
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'easy-digital-downloads' ); ?></h1>
 		<hr class="wp-header-end">
+
+		<?php edd_customers_page_primary_nav( $active_tab ); ?>
+		<br>
 
 		<?php do_action( 'edd_customers_table_top' ); ?>
 
@@ -137,6 +218,7 @@ function edd_customers_list() {
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-customers" />
 			<input type="hidden" name="view" value="customers" />
+			<input type="hidden" name="page_type" value="<?php echo esc_attr( $active_tab ); ?>" />
 		</form>
 
 		<?php do_action( 'edd_customers_table_bottom' ); ?>
