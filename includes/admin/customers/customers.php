@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_customers_page_primary_nav( $active_tab = '' ) {
 
-	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
+	$add_new_url = add_query_arg( array( 'view' => 'add-customer' ), edd_get_admin_url( array( 'page' => 'edd-customers' ) ) );
 
 	ob_start();?>
 
@@ -62,9 +62,9 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 }
 
 /**
- * Retrieve the order pages.
+ * Retrieve the customer pages.
  *
- * Used only by the primary tab navigation for orders.
+ * Used only by the primary tab navigation for customers.
  *
  * @since 3.0
  *
@@ -75,7 +75,7 @@ function edd_get_customer_pages() {
 
 	// Filter
 	if ( null === $pages ) {
-		$pages = (array) apply_filters( 'edd_get_order_pages', array(
+		$pages = (array) apply_filters( 'edd_get_customer_pages', array(
 			'customers' => esc_html__( 'Customers',          'easy-digital-downloads' ),
 			'emails'    => esc_html__( 'Email Addresses',    'easy-digital-downloads' ),
 			'physical'  => esc_html__( 'Physical Addresses', 'easy-digital-downloads' )
