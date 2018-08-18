@@ -18,13 +18,13 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * EDD_Customer_Email_Addresses_Table Class
+ * EDD_Customer_Addresses_Table Class
  *
  * Renders the Customer Reports table
  *
  * @since 3.0
  */
-class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
+class EDD_Customer_Addresses_Table extends WP_List_Table {
 
 	/**
 	 * Number of items per page
@@ -64,8 +64,8 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Email',  'easy-digital-downloads' ),
-			'plural'   => __( 'Emails', 'easy-digital-downloads' ),
+			'singular' => __( 'Address',   'easy-digital-downloads' ),
+			'plural'   => __( 'Addresses', 'easy-digital-downloads' ),
 			'ajax'     => false
 		) );
 
@@ -136,14 +136,6 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 
-			case 'id' :
-				$value = $item['id'];
-				break;
-
-			case 'email' :
-				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
-				break;
-
 			case 'type' :
 				$value = ( 'primary' === $item['type'] )
 					? esc_html_e( 'Primary',   'easy-digital-downloads' )
@@ -155,9 +147,9 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 				break;
 
 			default:
-				$value = isset( $item[ $column_name ] )
-					? $item[ $column_name ]
-					: null;
+				$value = ! empty( $item[ $column_name ] )
+					? esc_html( $item[ $column_name ] )
+					: '&mdash;';
 				break;
 		}
 
@@ -173,10 +165,23 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 	 * @param array $item
 	 * @return string
 	 */
-	public function column_email( $item ) {
-		$state    = '';
-		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$email    = ! empty( $item['email']  ) ? $item['email'] : '&mdash;';
+	public function column_address( $item ) {
+		$state    = $extra = '';
+		$status   = ! empty( $_GET['status']      ) ? sanitize_key( $_GET['status'] ) : '';
+		$address  = ! empty( $item['address']     ) ? $item['address']     : '&mdash;';
+		$address2 = ! empty( $item['address2']    ) ? $item['address2']    : '';
+		$city     = ! empty( $item['city']        ) ? $item['city']        : '';
+		$code     = ! empty( $item['postal_code'] ) ? $item['postal_code'] : '';
+
+		// Address2
+		if ( ! empty( $address2 ) ) {
+			$extra .= '<br>' . $address2;
+		}
+
+		// City & Zip
+		if ( ! empty( $city ) || ! empty( $code ) ) {
+			$extra .= '<br>' . implode( ' ', array( $city, $code ) );
+		}
 
 		// Get the item status
 		$item_status = ! empty( $item['status'] )
@@ -222,7 +227,7 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 		}
 
 		// Concatenate and return
-		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '">' . esc_html( $address ) . '</a>' . esc_html( $state ) . '</strong>' . $extra . $this->row_actions( $actions );
 	}
 
 	/**
@@ -256,7 +261,7 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 		// Link to customer
 		$customer_url = edd_get_admin_url( array(
 			'page'      => 'edd-customers',
-			'page_type' => 'emails',
+			'page_type' => 'physical',
 			's'         => 'c:' . absint( $customer_id )
 		) );
 
@@ -290,7 +295,7 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function get_counts() {
-		$this->counts = edd_get_customer_email_address_counts();
+		$this->counts = edd_get_customer_address_counts();
 	}
 
 	/**
@@ -329,10 +334,12 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
 			'cb'            => '<input type="checkbox" />',
-			'email'         => __( 'Email',    'easy-digital-downloads' ),
-			'customer'      => __( 'Customer', 'easy-digital-downloads' ),
-			'type'          => __( 'Type',     'easy-digital-downloads' ),
-			'date_created'  => __( 'Date',     'easy-digital-downloads' )
+			'address'       => __( 'Address',     'easy-digital-downloads' ),
+			'region'        => __( 'Region',      'easy-digital-downloads' ),
+			'country'       => __( 'Country',     'easy-digital-downloads' ),
+			'customer'      => __( 'Customer',    'easy-digital-downloads' ),
+			'type'          => __( 'Type',        'easy-digital-downloads' ),
+			'date_created'  => __( 'Date',        'easy-digital-downloads' )
 		) );
 	}
 
@@ -345,7 +352,9 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 	public function get_sortable_columns() {
 		return array(
 			'date_created'  => array( 'date_created',   true  ),
-			'email'         => array( 'email',          true  ),
+			'address'       => array( 'address',        false ),
+			'region'        => array( 'region',         true  ),
+			'country'       => array( 'country',        true  ),
 			'customer'      => array( 'customer_id',    false ),
 			'type'          => array( 'type',           false )
 		);
@@ -390,7 +399,7 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
 				case 'delete' :
-					edd_delete_customer_email_address( $id );
+					edd_delete_customer_address( $id );
 					break;
 			}
 		}
@@ -444,9 +453,7 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 			'status'  => $status,
 		);
 
-		if ( is_email( $search ) ) {
-			$args['email'] = $search;
-		} elseif ( is_numeric( $search ) ) {
+		if ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
@@ -456,17 +463,23 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 		}
 
 		$this->args = $args;
-		$emails  = edd_get_customer_email_addresses( $args );
+		$addresses  = edd_get_customer_addresses( $args );
 
-		if ( $emails ) {
-			foreach ( $emails as $customer ) {
+		if ( $addresses ) {
+			foreach ( $addresses as $address ) {
 				$data[] = array(
-					'id'           => $customer->id,
-					'email'        => $customer->email,
-					'customer_id'  => $customer->customer_id,
-					'status'       => $customer->status,
-					'type'         => $customer->type,
-					'date_created' => $customer->date_created,
+					'id'            => $address->id,
+					'customer_id'   => $address->customer_id,
+					'status'        => $address->status,
+					'type'          => $address->type,
+					'address'       => $address->address,
+					'address2'      => $address->address2,
+					'city'          => $address->city,
+					'region'        => $address->region,
+					'postal_code'   => $address->postal_code,
+					'country'       => $address->country,
+					'date_created'  => $address->date_created,
+					'date_modified' => $address->date_modified,
 				);
 			}
 		}
