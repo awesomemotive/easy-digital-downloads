@@ -110,6 +110,33 @@ function edd_add_extentions_link() {
 add_action( 'admin_menu', 'edd_add_extentions_link', 99999 );
 
 /**
+ * Whether the current admin area page is one that allows the insertion of a
+ * button to make inserting Downloads easier.
+ *
+ * @since 3.0
+ * @global $pagenow $pagenow
+ * @global $typenow $typenow
+ * @return boolean
+ */
+function edd_is_insertable_admin_page() {
+	global $pagenow, $typenow;
+
+	// Allowed pages
+	$pages = array(
+		'post.php',
+		'page.php',
+		'post-new.php',
+		'post-edit.php'
+	);
+
+	// Allowed post types
+	$types = get_post_types_by_support( 'edd_insert_download' );
+
+	// Return if page and type are allowed
+	return in_array( $pagenow, $pages, true ) && in_array( $typenow, $types, true );
+}
+
+/**
  * Determines whether the current admin page is a specific EDD admin page.
  *
  * Only works after the `wp_loaded` hook, & most effective
