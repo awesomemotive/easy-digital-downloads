@@ -277,11 +277,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
 			'cb'            => '<input type="checkbox" />',
-			'name'          => __( 'Name',        'easy-digital-downloads' ),
-			'email'         => __( 'Email',       'easy-digital-downloads' ),
-			'order_count'   => __( 'Orders',      'easy-digital-downloads' ),
-			'spent'         => __( 'Spent',       'easy-digital-downloads' ),
-			'date_created'  => __( 'Established', 'easy-digital-downloads' )
+			'name'          => __( 'Name',   'easy-digital-downloads' ),
+			'email'         => __( 'Email',  'easy-digital-downloads' ),
+			'order_count'   => __( 'Orders', 'easy-digital-downloads' ),
+			'spent'         => __( 'Spent',  'easy-digital-downloads' ),
+			'date_created'  => __( 'Date',   'easy-digital-downloads' )
 		) );
 	}
 
