@@ -103,7 +103,7 @@ function edd_upgrades_screen() {
 			<div id="edd-upgrade-status">
 				<p>
 					<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?>
-					<img src="<?php echo EDD_PLUGIN_URL . '/assets/images/loading.gif'; ?>" id="edd-upgrade-loader"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/loading.gif'; ?>" id="edd-upgrade-loader"/>
 				</p>
 			</div>
 

@@ -12,6 +12,80 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** Navigation ****************************************************************/
+
+/**
+ * Output the primary customers page navigation
+ *
+ * @since 3.0
+ * @param string $active_tab
+ */
+function edd_customers_page_primary_nav( $active_tab = '' ) {
+
+	$add_new_url = add_query_arg( array( 'view' => 'add-customer' ), edd_get_admin_url( array( 'page' => 'edd-customers' ) ) );
+
+	ob_start();?>
+
+	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<?php
+
+		// Get the pages
+		$tabs = edd_get_customer_pages();
+
+		// Loop through pages and create tabs
+		foreach ( $tabs as $tab_id => $tab_name ) {
+
+			// Remove
+			$tab_url = add_query_arg( array(
+				'settings-updated' => false,
+				'page_type'        => $tab_id
+			) );
+
+			// Remove the section from the tabs so we always end up at the main section
+			$tab_url = remove_query_arg( 'section', $tab_url );
+			$active  = $active_tab === $tab_id
+				? ' nav-tab-active'
+				: '';
+
+			// Link
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
+				echo esc_html( $tab_name );
+			echo '</a>';
+		}
+		?>
+		<!--<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>-->
+	</h2>
+
+	<?php
+
+	echo ob_get_clean(); // WPCS: XSS ok.
+}
+
+/**
+ * Retrieve the customer pages.
+ *
+ * Used only by the primary tab navigation for customers.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_customer_pages() {
+	static $pages = null;
+
+	// Filter
+	if ( null === $pages ) {
+		$pages = (array) apply_filters( 'edd_get_customer_pages', array(
+			'customers' => esc_html__( 'Customers',          'easy-digital-downloads' ),
+			'emails'    => esc_html__( 'Email Addresses',    'easy-digital-downloads' ),
+			'physical'  => esc_html__( 'Physical Addresses', 'easy-digital-downloads' )
+		) );
+	}
+
+	// Return
+	return $pages;
+}
+
 /**
  * Display customer sections
  *
@@ -77,15 +151,25 @@ function edd_customers_sections( $customer ) {
  * @return void
  */
 function edd_customers_page() {
+
+	// Views
 	$default_views  = edd_customer_views();
 	$requested_view = isset( $_GET['view'] )
 		? sanitize_key( $_GET['view'] )
 		: 'customers';
 
+	// Tabs
+	$active_tab = ! empty( $_GET['page_type'] )
+		? sanitize_key( $_GET['page_type'] )
+		: 'customers';
+
+	// Single customer view
 	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[ $requested_view ] ) ) {
 		edd_render_customer_view( $requested_view, $default_views );
+
+	// List table view
 	} else {
-		edd_customers_list();
+		edd_customers_list( $active_tab );
 	}
 }
 
@@ -115,28 +199,64 @@ function edd_customer_tabs() {
  * @since  2.3
  * @return void
  */
-function edd_customers_list() {
-	include_once dirname( __FILE__ ) . '/class-customer-table.php';
+function edd_customers_list( $active_tab = 'customers' ) {
 
-	$customers_table = new EDD_Customer_Reports_Table();
+	// Get the possible pages
+	$pages = edd_get_customer_pages();
+
+	// Reset page if not a registered page
+	if ( ! in_array( $active_tab, array_keys( $pages ), true ) ) {
+		$active_tab = 'customers';
+	}
+
+	// Get the label/name from the active tab
+	$name = $pages[ $active_tab ];
+
+	// Get the action url from the active tab
+	$action_url = edd_get_admin_url( array(
+		'page_type' => $active_tab,
+		'page'      => 'edd-' . $active_tab
+	) );
+
+	// Setup the list table class
+	switch ( $active_tab ) {
+		case 'customers' :
+			include_once dirname( __FILE__ ) . '/class-customer-table.php';
+			$list_table_class = 'EDD_Customer_Reports_Table';
+			break;
+		case 'emails' :
+			include_once dirname( __FILE__ ) . '/class-customer-email-addresses-table.php';
+			$list_table_class = 'EDD_Customer_Email_Addresses_Table';
+			break;
+		case 'physical' :
+			include_once dirname( __FILE__ ) . '/class-customer-addresses-table.php';
+			$list_table_class = 'EDD_Customer_Addresses_Table';
+			break;
+	}
+
+	// Initialize the list table
+	$customers_table = new $list_table_class;
 	$customers_table->prepare_items(); ?>
 
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Customers', 'easy-digital-downloads' ); ?></h1>
-
+		<h1 class="wp-heading-inline"><?php echo esc_html( $name ); ?></h1>
 		<hr class="wp-header-end">
 
-		<?php do_action( 'edd_customers_table_top' ); ?>
+		<?php edd_customers_page_primary_nav( $active_tab ); ?>
+		<br>
 
-		<form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers' ); ?>">
+		<?php do_action( 'edd_' . $active_tab. '_table_top' ); ?>
+
+		<form id="edd-customers-filter" method="get" action="<?php echo esc_url( $action_url ); ?>">
 			<?php
 			$customers_table->views();
-			$customers_table->search_box( __( 'Search Customers', 'easy-digital-downloads' ), 'edd-customers' );
+			$customers_table->search_box( sprintf( __( 'Search %s', 'easy-digital-downloads' ), $name ), 'edd-customers' );
 			$customers_table->display();
 			?>
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-customers" />
 			<input type="hidden" name="view" value="customers" />
+			<input type="hidden" name="page_type" value="<?php echo esc_attr( $active_tab ); ?>" />
 		</form>
 
 		<?php do_action( 'edd_customers_table_bottom' ); ?>
@@ -360,8 +480,8 @@ function edd_customers_view( $customer = null ) {
 							<span class="info-item" data-key="address2"><?php echo esc_html( $address['address2'] ); ?></span>
 							<span class="info-item" data-key="city"><?php echo esc_html( $address['city'] ); ?></span>
 							<span class="info-item" data-key="region"><?php echo edd_get_state_name( $address['country'], $address['region'] ); ?></span>
-							<span class="info-item" data-key="country"><?php echo esc_html( $address['country'] ); ?></span>
 							<span class="info-item" data-key="postal_code"><?php echo esc_html( $address['postal_code'] ); ?></span>
+							<span class="info-item" data-key="country"><?php echo edd_get_country_name( $address['country'] ); ?></span>
 						</span>
 
 						<span class="customer-address info-item edit-item">
@@ -777,7 +897,11 @@ function edd_customer_notes_view( $customer ) {
 
 	$per_page   = apply_filters( 'edd_customer_notes_per_page', 20 );
 	$notes      = $customer->get_notes( $per_page, $paged );
-	$note_count = $customer->get_notes_count(); ?>
+	$note_count = $customer->get_notes_count();
+	$args       = array(
+		'total'        => $note_count,
+		'add_fragment' => '#edd_general_notes'
+	); ?>
 
 	<div id="edd-item-notes-wrapper">
 		<div class="edd-item-header-small">
@@ -785,14 +909,14 @@ function edd_customer_notes_view( $customer ) {
 		</div>
 		<h3><?php esc_html_e( 'Notes', 'easy-digital-downloads' ); ?></h3>
 
-		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
+		<?php echo edd_admin_get_notes_pagination( $args ); ?>
 
 		<div id="edd-customer-notes">
 			<?php echo edd_admin_get_notes_html( $notes ); ?>
 			<?php echo edd_admin_get_new_note_form( $customer->id, 'customer' ); ?>
 		</div>
 
-		<?php echo edd_admin_get_notes_pagination( $note_count ); ?>
+		<?php echo edd_admin_get_notes_pagination( $args ); ?>
 	</div>
 
 	<?php

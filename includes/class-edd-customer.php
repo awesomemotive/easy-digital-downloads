@@ -806,7 +806,7 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			'object_type' => 'customer',
 			'number'      => $length,
 			'offset'      => $offset,
-			'order'       => 'asc',
+			'order'       => 'desc',
 		) );
 	}
 
