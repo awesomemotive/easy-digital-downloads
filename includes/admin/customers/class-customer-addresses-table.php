@@ -453,13 +453,38 @@ class EDD_Customer_Addresses_Table extends WP_List_Table {
 			'status'  => $status,
 		);
 
-		if ( is_numeric( $search ) ) {
-			$args['id'] = $search;
-		} elseif ( strpos( $search, 'c:' ) !== false ) {
+		// Customer ID
+		if ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
+
+		// Country
+		} elseif ( strpos( $search, 'country:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'country:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'country' );
+
+		// Zip
+		} elseif ( strpos( $search, 'zip:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'zip:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'zip' );
+
+		// Region
+		} elseif ( strpos( $search, 'region:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'region:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'region' );
+
+		// City
+		} elseif ( strpos( $search, 'city:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'city:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'city' );
+
+		// Any...
 		} else {
 			$args['search']         = $search;
-			$args['search_columns'] = array( 'email' );
+			$args['search_columns'] = array( 'address', 'address2', 'city', 'region', 'country', 'postal_code' );
 		}
 
 		$this->args = $args;

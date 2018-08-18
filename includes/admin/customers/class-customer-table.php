@@ -394,12 +394,23 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'status'  => $status,
 		);
 
+		// Email search
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
+
+		// Customer ID
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
+		} elseif ( strpos( $search, 'c:' ) !== false ) {
+			$args['id'] = trim( str_replace( 'c:', '', $search ) );
+
+		// User ID
 		} elseif ( strpos( $search, 'user:' ) !== false ) {
-			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
+			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
+		} elseif ( strpos( $search, 'u:' ) !== false ) {
+			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
+
+		// Other...
 		} else {
 			$args['search']         = $search;
 			$args['search_columns'] = array( 'name', 'email' );

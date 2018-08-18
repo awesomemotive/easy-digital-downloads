@@ -444,12 +444,19 @@ class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
 			'status'  => $status,
 		);
 
+		// Email
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
+
+		// Address ID
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
+
+		// Customer ID
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
+
+		// Any...
 		} else {
 			$args['search']         = $search;
 			$args['search_columns'] = array( 'email' );

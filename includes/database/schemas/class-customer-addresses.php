@@ -56,7 +56,7 @@ class Customer_Addresses extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'billing',
-			'searchable' => true,
+			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -67,7 +67,7 @@ class Customer_Addresses extends Base {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'active',
-			'searchable' => true,
+			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
