@@ -1,12 +1,12 @@
 <?php
 /**
- * Customer Reports Table Class
+ * Customer Email Addresses Table Class
  *
  * @package     EDD
  * @subpackage  Reports
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.5
+ * @since       3.0
  */
 
 // Exit if accessed directly
@@ -18,19 +18,19 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * EDD_Customer_Reports_Table Class
+ * EDD_Customer_Addresses_Table Class
  *
  * Renders the Customer Reports table
  *
- * @since 1.5
+ * @since 3.0
  */
-class EDD_Customer_Reports_Table extends WP_List_Table {
+class EDD_Customer_Addresses_Table extends WP_List_Table {
 
 	/**
 	 * Number of items per page
 	 *
 	 * @var int
-	 * @since 1.5
+	 * @since 3.0
 	 */
 	public $per_page = 30;
 
@@ -41,9 +41,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since 3.0
 	 */
 	public $counts = array(
-		'active'   => 0,
-		'inactive' => 0,
-		'expired'  => 0,
+		'pending'  => 0,
+		'verified' => 0,
+		'spam'     => 0,
+		'deleted'  => 0,
 		'total'    => 0
 	);
 
@@ -58,13 +59,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @since 1.5
+	 * @since 3.0
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Customer',  'easy-digital-downloads' ),
-			'plural'   => __( 'Customers', 'easy-digital-downloads' ),
+			'singular' => __( 'Address',   'easy-digital-downloads' ),
+			'plural'   => __( 'Addresses', 'easy-digital-downloads' ),
 			'ajax'     => false
 		) );
 
@@ -119,13 +120,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'name';
+		return 'email';
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @since 1.5
+	 * @since 3.0
 	 *
 	 * @param array $item Contains all the data of the customers
 	 * @param string $column_name The name of the column
@@ -135,24 +136,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 
-			case 'id' :
-				$value = $item['id'];
-				break;
-
-			case 'email' :
-				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
-				break;
-
-			case 'order_count' :
-				$url = edd_get_admin_url( array(
-					'page'     => 'edd-payment-history',
-					'customer' => $item['id']
-				) );
-				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $item['order_count'] ) . '</a>';
-				break;
-
-			case 'spent' :
-				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+			case 'type' :
+				$value = ( 'primary' === $item['type'] )
+					? esc_html_e( 'Primary',   'easy-digital-downloads' )
+					: esc_html_e( 'Secondary', 'easy-digital-downloads' );
 				break;
 
 			case 'date_created' :
@@ -160,9 +147,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				break;
 
 			default:
-				$value = isset( $item[ $column_name ] )
-					? $item[ $column_name ]
-					: null;
+				$value = ! empty( $item[ $column_name ] )
+					? esc_html( $item[ $column_name ] )
+					: '&mdash;';
 				break;
 		}
 
@@ -178,20 +165,50 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @param array $item
 	 * @return string
 	 */
-	public function column_name( $item ) {
-		$state    = '';
-		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
-		$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
-		$actions  = array(
-			'view'   => '<a href="' . $view_url . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
-			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $item['id'] ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
-		);
+	public function column_address( $item ) {
+		$state    = $extra = '';
+		$status   = ! empty( $_GET['status']      ) ? sanitize_key( $_GET['status'] ) : '';
+		$address  = ! empty( $item['address']     ) ? $item['address']     : '&mdash;';
+		$address2 = ! empty( $item['address2']    ) ? $item['address2']    : '';
+		$city     = ! empty( $item['city']        ) ? $item['city']        : '';
+		$code     = ! empty( $item['postal_code'] ) ? $item['postal_code'] : '';
 
+		// Address2
+		if ( ! empty( $address2 ) ) {
+			$extra .= '<br>' . $address2;
+		}
+
+		// City & Zip
+		if ( ! empty( $city ) || ! empty( $code ) ) {
+			$extra .= '<br>' . implode( ' ', array( $city, $code ) );
+		}
+
+		// Get the item status
 		$item_status = ! empty( $item['status'] )
 			? $item['status']
 			: 'active';
+
+		// Get the customer ID
+		$customer_id = ! empty( $item['customer_id'] )
+			? absint( $item['customer_id'] )
+			: 0;
+
+		// Link to customer
+		$customer_url = edd_get_admin_url( array(
+			'page' => 'edd-customers',
+			'view' => 'overview',
+			'id'   => $customer_id
+		) );
+
+		// Actions
+		$actions  = array(
+			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+		);
+
+		// Non-primary email actions
+		if ( 'primary' !== $item_status ) {
+			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		}
 
 		// State
 		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
@@ -209,11 +226,47 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$state = ' &mdash; ' . $value;
 		}
 
-		// Get the customer's avatar
-		$avatar = get_avatar( $item['email'], 32 );
+		// Concatenate and return
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '">' . esc_html( $address ) . '</a>' . esc_html( $state ) . '</strong>' . $extra . $this->row_actions( $actions );
+	}
+
+	/**
+	 * Return the contents of the "Name" column
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $item
+	 * @return string
+	 */
+	public function column_customer( $item ) {
+
+		// Get the customer ID
+		$customer_id = ! empty( $item['customer_id'] )
+			? absint( $item['customer_id'] )
+			: 0;
+
+		// Bail if no customer ID
+		if ( empty( $customer_id ) ) {
+			return '&mdash;';
+		}
+
+		// Try to get the customer
+		$customer = edd_get_customer( $customer_id );
+
+		// Bail if customer no longer exists
+		if ( empty( $customer ) ) {
+			return '&mdash;';
+		}
+
+		// Link to customer
+		$customer_url = edd_get_admin_url( array(
+			'page'      => 'edd-customers',
+			'page_type' => 'physical',
+			's'         => 'c:' . absint( $customer_id )
+		) );
 
 		// Concatenate and return
-		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return '<a href="' . esc_url( $customer_url ) . '">' . esc_html( $customer->name ) . '</a>';
 	}
 
 	/**
@@ -242,7 +295,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function get_counts() {
-		$this->counts = edd_get_customer_counts();
+		$this->counts = edd_get_customer_address_counts();
 	}
 
 	/**
@@ -259,29 +312,34 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$is_all        = empty( $current ) || ( 'all' === $current );
 		$total_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
 		$active_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']  ) . ')</span>';
+		$spam_count    = '&nbsp;<span class="count">(' . esc_html( $this->counts['spam']    ) . ')</span>';
+		$deleted_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['deleted'] ) . ')</span>';
 		$pending_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
 
 		return array(
-			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',     'easy-digital-downloads' ) . $total_count   ),
-			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Active',  'easy-digital-downloads' ) . $active_count  ),
-			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending', 'easy-digital-downloads' ) . $pending_count )
+			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',      'easy-digital-downloads' ) . $total_count   ),
+			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Verified', 'easy-digital-downloads' ) . $active_count  ),
+			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending',  'easy-digital-downloads' ) . $pending_count ),
+			'spam'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'spam',    $base ) ), 'spam'    === $current ? ' class="current"' : '', __( 'Spam',     'easy-digital-downloads' ) . $spam_count    ),
+			'deleted' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'deleted', $base ) ), 'deleted' === $current ? ' class="current"' : '', __( 'Deleted',  'easy-digital-downloads' ) . $deleted_count )
 		);
 	}
 
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @since 1.5
+	 * @since 3.0
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
 		return apply_filters( 'edd_report_customer_columns', array(
 			'cb'            => '<input type="checkbox" />',
-			'name'          => __( 'Name',   'easy-digital-downloads' ),
-			'email'         => __( 'Email',  'easy-digital-downloads' ),
-			'order_count'   => __( 'Orders', 'easy-digital-downloads' ),
-			'spent'         => __( 'Spent',  'easy-digital-downloads' ),
-			'date_created'  => __( 'Date',   'easy-digital-downloads' )
+			'address'       => __( 'Address',     'easy-digital-downloads' ),
+			'region'        => __( 'Region',      'easy-digital-downloads' ),
+			'country'       => __( 'Country',     'easy-digital-downloads' ),
+			'customer'      => __( 'Customer',    'easy-digital-downloads' ),
+			'type'          => __( 'Type',        'easy-digital-downloads' ),
+			'date_created'  => __( 'Date',        'easy-digital-downloads' )
 		) );
 	}
 
@@ -294,10 +352,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function get_sortable_columns() {
 		return array(
 			'date_created'  => array( 'date_created',   true  ),
-			'name'          => array( 'name',           true  ),
-			'email'         => array( 'email',          true  ),
-			'order_count'   => array( 'purchase_count', false ),
-			'spent'         => array( 'purchase_value', false )
+			'address'       => array( 'address',        false ),
+			'region'        => array( 'region',         true  ),
+			'country'       => array( 'country',        true  ),
+			'customer'      => array( 'customer_id',    false ),
+			'type'          => array( 'type',           false )
 		);
 	}
 
@@ -340,7 +399,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
 				case 'delete' :
-					edd_delete_customer( $id );
+					edd_delete_customer_address( $id );
 					break;
 			}
 		}
@@ -349,7 +408,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @since 1.5
+	 * @since 3.0
 	 * @return int Current page number
 	 */
 	public function get_paged() {
@@ -371,13 +430,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Get all of the items to display, given the current filters
 	 *
-	 * @since 1.5
+	 * @since 3.0
 	 *
-	 * @return array $reports_data All the data for customer reports
+	 * @return array $data All the row data
 	 */
-	public function reports_data() {
+	public function get_items() {
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
@@ -394,41 +453,58 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'status'  => $status,
 		);
 
-		// Email search
-		if ( is_email( $search ) ) {
-			$args['email'] = $search;
-
 		// Customer ID
-		} elseif ( is_numeric( $search ) ) {
-			$args['id'] = $search;
-		} elseif ( strpos( $search, 'c:' ) !== false ) {
-			$args['id'] = trim( str_replace( 'c:', '', $search ) );
+		if ( strpos( $search, 'c:' ) !== false ) {
+			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
 
-		// User ID
-		} elseif ( strpos( $search, 'user:' ) !== false ) {
-			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
-		} elseif ( strpos( $search, 'u:' ) !== false ) {
-			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
+		// Country
+		} elseif ( strpos( $search, 'country:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'country:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'country' );
 
-		// Other...
+		// Zip
+		} elseif ( strpos( $search, 'zip:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'zip:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'zip' );
+
+		// Region
+		} elseif ( strpos( $search, 'region:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'region:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'region' );
+
+		// City
+		} elseif ( strpos( $search, 'city:' ) !== false ) {
+			$search                 = substr( $search, strlen( 'city:' ) );
+			$args['search']         = $search;
+			$args['search_columns'] = array( 'city' );
+
+		// Any...
 		} else {
 			$args['search']         = $search;
-			$args['search_columns'] = array( 'name', 'email' );
+			$args['search_columns'] = array( 'address', 'address2', 'city', 'region', 'country', 'postal_code' );
 		}
 
 		$this->args = $args;
-		$customers  = edd_get_customers( $args );
+		$addresses  = edd_get_customer_addresses( $args );
 
-		if ( $customers ) {
-			foreach ( $customers as $customer ) {
+		if ( $addresses ) {
+			foreach ( $addresses as $address ) {
 				$data[] = array(
-					'id'           => $customer->id,
-					'user_id'      => $customer->user_id,
-					'name'         => $customer->name,
-					'email'        => $customer->email,
-					'order_count'  => $customer->purchase_count,
-					'spent'        => $customer->purchase_value,
-					'date_created' => $customer->date_created,
+					'id'            => $address->id,
+					'customer_id'   => $address->customer_id,
+					'status'        => $address->status,
+					'type'          => $address->type,
+					'address'       => $address->address,
+					'address2'      => $address->address2,
+					'city'          => $address->city,
+					'region'        => $address->region,
+					'postal_code'   => $address->postal_code,
+					'country'       => $address->country,
+					'date_created'  => $address->date_created,
+					'date_modified' => $address->date_modified,
 				);
 			}
 		}
@@ -439,7 +515,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @since 1.5
+	 * @since 3.0
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -449,7 +525,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$this->get_sortable_columns()
 		);
 
-		$this->items = $this->reports_data();
+		$this->items = $this->get_items();
 
 		$status = isset( $_GET['status'] )
 			? sanitize_key( $_GET['status'] )

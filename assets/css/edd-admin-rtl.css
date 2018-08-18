@@ -217,6 +217,22 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+/* =Tax Settings Style
+-------------------------------------------------------------- */
+.download_page_edd-settings .taxrates th,
+.download_page_edd-settings .taxrates td {
+	padding: 8px 10px;
+}
+
+.download_page_edd-settings .taxrates td {
+	line-height: 1.5em;
+	vertical-align: top;
+	margin: 0;
+}
+
+.download_page_edd-settings .taxrates .regular-text {
+	width: 100%;
+}
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -442,14 +458,33 @@ a.edd-delete:hover {
 textarea[name="edd-note"] {
 	width: 100%;
 	min-height: 70px;
+	margin-top: 0;
 }
 
 .edd-notes-wrapper {
 	width: 80%;
 }
 
-#edd-customer-notes {
-	margin-bottom: 50px;
+.edd-note-pagination {
+	float: left;
+	margin: -35px 5px 15px 5px;
+}
+
+.edd-note-pagination a,
+.edd-note-pagination span.page-numbers {
+	padding: 5px 8px;
+	margin: 2px;
+	text-decoration: none;
+}
+
+.edd-note-pagination a {
+	border: 1px solid #e5e5e5;
+	background: #fcfcfc;
+}
+
+.edd-note-pagination a:last-child,
+.edd-note-pagination span.page-numbers:last-child {
+	margin-left: 0;
 }
 
 /* Discount Code Styles
@@ -540,9 +575,20 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-status,
 .wp-list-table.discounts .column-amount,
 .wp-list-table.discounts .column-status,
+.wp-list-table.addresses .column-type,
 .wp-list-table.orders .column-amount,
 .wp-list-table.orders .column-status {
 	width: 11%;
+}
+
+.wp-list-table.addresses .column-region,
+.wp-list-table.addresses .column-country {
+	width: 10%;
+}
+
+.wp-list-table.addresses .column-type,
+.wp-list-table.emails .column-type {
+	width: 21%;
 }
 
 .wp-list-table.posts .column-earnings {
@@ -561,6 +607,8 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-end_date,
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
+.wp-list-table.addresses .column-date_created,
+.wp-list-table.emails .column-date_created,
 .wp-list-table.orders .column-date {
 	width: 14%;
 }
@@ -581,8 +629,10 @@ textarea[name="edd-note"] {
 	width: 18%;
 }
 
+.wp-list-table.addresses .column-customer,
+.wp-list-table.emails .column-customer,
 .wp-list-table.customers .column-email {
-	width: 25%;
+	width: 20%;
 }
 
 .wp-list-table.orderadjustments .column-desc {
@@ -611,6 +661,7 @@ textarea[name="edd-note"] {
 	color: #ff8c00;
 }
 
+.wp-list-table.emails .column-customer .avatar,
 .wp-list-table.customers .column-primary .avatar {
 	float: right;
 	margin-left: 10px;
@@ -739,6 +790,7 @@ h2.nav-tab-wrapper.edd-tab-clear {
 .edit-tags-php.post-type-download .wrap > .wp-heading-inline,
 .edit-php.post-type-download .wrap .wp-heading-inline,
 .download_page_edd-payment-history .wrap .wp-heading-inline,
+.download_page_edd-customers .wrap .wp-heading-inline,
 .edit-tags-php.post-type-download .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .page-title-action,
@@ -748,6 +800,7 @@ h2.nav-tab-wrapper.edd-tab-clear {
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
+.download_page_edd-customers .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-payment-history .wrap .nav-tab-wrapper .page-title-action {
 	top: 3px;
 	margin-right: 10px;
@@ -2685,6 +2738,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	min-height: 125px;
 	overflow: visible;
 }
+.edd-sections-wrap .section-wrap .customer-address span[data-key="address"],
+.edd-sections-wrap .section-wrap .customer-address span[data-key="address2"],
+.edd-sections-wrap .section-wrap .customer-address span[data-key="country"] {
+	display: block;
+}
 .edd-sections-wrap .section-wrap a.delete {
 	color: #ff0000;
 	margin-left: 5px;
@@ -2728,6 +2786,9 @@ only screen and ( min-resolution: 1.5dppx ) {
 	margin-top: -20px;
 }
 
+.edd-sections-wrap .section-wrap .customer-address.edit-item {
+	margin-top: 3px;
+}
 .edd-sections-wrap .section-wrap span.edit-item {
 	display: none;
 }

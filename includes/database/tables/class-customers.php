@@ -93,13 +93,11 @@ final class Customers extends Base {
 		if ( false !== get_option( $this->prefix . 'edd_customers_version', false ) ) {
 			delete_option( $this->prefix . 'edd_customers_version' );
 
-			$this->get_db()->query( "
-				ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default '';
-				ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0';
-				ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0';
-				ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0';
-				ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00';
-			" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0'" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00'" );
 
 			if ( ! $this->column_exists( 'status' ) ) {
 				$this->get_db()->query( "
@@ -108,10 +106,8 @@ final class Customers extends Base {
 			}
 
 			if ( ! $this->column_exists( 'date_modified' ) ) {
-				$this->get_db()->query( "
-					ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`;
-						 UPDATE {$this->table_name} SET 'date_modified' = 'date_created';
-				" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`" );
+				$this->get_db()->query( "UPDATE {$this->table_name} SET 'date_modified' = 'date_created'" );
 			}
 		}
 

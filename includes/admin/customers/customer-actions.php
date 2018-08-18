@@ -147,6 +147,12 @@ function edd_edit_customer( $args = array() ) {
 	$output         = array();
 	$previous_email = $customer->email;
 
+	// Add new address before update to skip exists checks
+	if ( $previous_email !== $customer_data['email'] ) {
+		$customer->add_email( $customer_data['email'], true );
+	}
+
+	// Update customer
 	if ( $customer->update( $customer_data ) ) {
 		$current_address        = $customer->get_address( 'primary' );
 		$address['customer_id'] = $customer->id;
@@ -160,12 +166,6 @@ function edd_edit_customer( $args = array() ) {
 
 		// Update some payment meta if we need to
 		$payments_array = explode( ',', $customer->payment_ids );
-
-		if ( $customer->email !== $previous_email ) {
-			foreach ( $payments_array as $payment_id ) {
-				edd_update_payment_meta( $payment_id, 'email', $customer->email );
-			}
-		}
 
 		if ( (int) $customer->user_id !== (int) $previous_user_id ) {
 			foreach ( $payments_array as $payment_id ) {
