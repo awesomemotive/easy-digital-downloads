@@ -581,6 +581,50 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = ar
 	return $address_id;
 }
 
+
+/**
+ * Query for and return array of customer address counts, keyed by status
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_customer_address_counts() {
+
+	// Default statuses
+	$defaults = array(
+		'pending'  => 0,
+		'verified' => 0,
+		'spam'     => 0,
+		'deleted'  => 0,
+		'total'    => 0
+	);
+
+	// Query for count
+	$counts = new EDD\Database\Queries\Customer_Address( array(
+		'count'   => true,
+		'groupby' => 'status'
+	) );
+
+	// Default array
+	$r = array();
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts->items ) ) {
+
+		// Loop through statuses
+		foreach ( $counts->items as $status ) {
+			$r[ $status['status'] ] = absint( $status['count'] );
+		}
+
+		// Total
+		$r['total'] = array_sum( $r );
+	}
+
+	// Return counts
+	return array_merge( $defaults, $r );
+}
+
 /** Customer Email Addresses *************************************************/
 
 /**
@@ -726,7 +770,7 @@ function edd_count_customer_email_addresses( $args = array() ) {
 }
 
 /**
- * Query for and return array of customer counts, keyed by status
+ * Query for and return array of customer email counts, keyed by status
  *
  * @since 3.0
  *
@@ -736,9 +780,8 @@ function edd_get_customer_email_address_counts() {
 
 	// Default statuses
 	$defaults = array(
-		'active'   => 0,
 		'pending'  => 0,
-		'inactive' => 0,
+		'verified' => 0,
 		'spam'     => 0,
 		'deleted'  => 0,
 		'total'    => 0

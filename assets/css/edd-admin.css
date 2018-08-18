@@ -575,11 +575,20 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-status,
 .wp-list-table.discounts .column-amount,
 .wp-list-table.discounts .column-status,
-.wp-list-table.physical .column-type,
-.wp-list-table.emails .column-type,
+.wp-list-table.addresses .column-type,
 .wp-list-table.orders .column-amount,
 .wp-list-table.orders .column-status {
 	width: 11%;
+}
+
+.wp-list-table.addresses .column-region,
+.wp-list-table.addresses .column-country {
+	width: 10%;
+}
+
+.wp-list-table.addresses .column-type,
+.wp-list-table.emails .column-type {
+	width: 21%;
 }
 
 .wp-list-table.posts .column-earnings {
@@ -598,7 +607,7 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-end_date,
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
-.wp-list-table.physical .column-date_created,
+.wp-list-table.addresses .column-date_created,
 .wp-list-table.emails .column-date_created,
 .wp-list-table.orders .column-date {
 	width: 14%;
@@ -620,12 +629,10 @@ textarea[name="edd-note"] {
 	width: 18%;
 }
 
-.wp-list-table.emails .column-customer {
-	width: 35%;
-}
-
+.wp-list-table.addresses .column-customer,
+.wp-list-table.emails .column-customer,
 .wp-list-table.customers .column-email {
-	width: 25%;
+	width: 20%;
 }
 
 .wp-list-table.orderadjustments .column-desc {
