@@ -480,8 +480,8 @@ function edd_customers_view( $customer = null ) {
 							<span class="info-item" data-key="address2"><?php echo esc_html( $address['address2'] ); ?></span>
 							<span class="info-item" data-key="city"><?php echo esc_html( $address['city'] ); ?></span>
 							<span class="info-item" data-key="region"><?php echo edd_get_state_name( $address['country'], $address['region'] ); ?></span>
-							<span class="info-item" data-key="country"><?php echo esc_html( $address['country'] ); ?></span>
 							<span class="info-item" data-key="postal_code"><?php echo esc_html( $address['postal_code'] ); ?></span>
+							<span class="info-item" data-key="country"><?php echo edd_get_country_name( $address['country'] ); ?></span>
 						</span>
 
 						<span class="customer-address info-item edit-item">

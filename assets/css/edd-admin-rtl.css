@@ -2738,6 +2738,11 @@ only screen and ( min-resolution: 1.5dppx ) {
 	min-height: 125px;
 	overflow: visible;
 }
+.edd-sections-wrap .section-wrap .customer-address span[data-key="address"],
+.edd-sections-wrap .section-wrap .customer-address span[data-key="address2"],
+.edd-sections-wrap .section-wrap .customer-address span[data-key="country"] {
+	display: block;
+}
 .edd-sections-wrap .section-wrap a.delete {
 	color: #ff0000;
 	margin-left: 5px;
@@ -2781,6 +2786,9 @@ only screen and ( min-resolution: 1.5dppx ) {
 	margin-top: -20px;
 }
 
+.edd-sections-wrap .section-wrap .customer-address.edit-item {
+	margin-top: 3px;
+}
 .edd-sections-wrap .section-wrap span.edit-item {
 	display: none;
 }
