@@ -1251,14 +1251,14 @@ function edd_doing_autosave() {
 }
 
 /**
- * Get the bot name. Usually "EDD Bot" unless filtered.
+ * Get the bot name. Usually "Store Bot" unless filtered.
  *
  * @since 3.0
  *
  * @return string
  */
 function edd_get_bot_name() {
-	$retval = esc_html__( 'EDD Bot', 'easy-digital-downloads' );
+	$retval = esc_html__( 'Store Bot', 'easy-digital-downloads' );
 
 	return (string) apply_filters( 'edd_get_bot_name', $retval );
 }
