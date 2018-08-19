@@ -65,6 +65,10 @@ class EDD_API_V2 extends EDD_API_V1 {
 					$query_args['meta_key'] = '_edd_download_earnings';
 					$query_args['orderby']  = 'meta_value_num';
 					break;
+
+				default:
+					$query_args['orderby'] = 'date';
+					break;
 			}
 
 			if( ! empty( $args['category'] ) ) {
