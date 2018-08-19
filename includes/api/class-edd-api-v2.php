@@ -50,6 +50,23 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$query_args['s'] = sanitize_text_field( $args['s'] );
 			}
 
+			switch ( $query_args['orderby'] ) {
+				case 'price':
+					$query_args['meta_key'] = 'edd_price';
+					$query_args['orderby']  = 'meta_value_num';
+					break;
+
+				case 'sales':
+					$query_args['meta_key'] = '_edd_download_sales';
+					$query_args['orderby']  = 'meta_value';
+					break;
+
+				case 'earnings':
+					$query_args['meta_key'] = '_edd_download_earnings';
+					$query_args['orderby']  = 'meta_value_num';
+					break;
+			}
+
 			if( ! empty( $args['category'] ) ) {
 				if ( strpos( $args['category'], ',' ) ) {
 					$args['category'] = explode( ',', $args['category'] );
