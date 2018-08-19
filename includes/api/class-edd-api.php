@@ -723,6 +723,38 @@ class EDD_API {
 	}
 
 	/**
+	 * Designates the ascending or descending order of the 'orderby' parameter.
+	 *
+	 * @access public
+	 * @since 2.9.7
+	 * @global $wp_query
+	 * @return string $order 
+	 */
+	public function order() {
+		global $wp_query;
+
+		$order = isset( $wp_query->query_vars['order'] ) ? $wp_query->query_vars['order'] : 'DESC';
+
+		return $order;
+	}
+
+	/**
+	 * Sort retrieved downloads by 'orderby' parameter.
+	 *
+	 * @access public
+	 * @since 2.9.7
+	 * @global $wp_query
+	 * @return string $orderby 
+	 */
+	public function orderby() {
+		global $wp_query;
+
+		$orderby = isset( $wp_query->query_vars['orderby'] ) ? $wp_query->query_vars['orderby'] : 'date';
+
+		return $orderby;
+	}
+
+	/**
 	 * Sets up the dates used to retrieve earnings/sales
 	 *
 	 * @since 1.5.1

@@ -40,8 +40,10 @@ class EDD_API_V2 extends EDD_API_V1 {
 			$query_args = array(
 				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
-				'suppress_filters' => true,
+				'suppress_filters'  => true,
 				'paged'            => $this->get_paged(),
+				'order'            => $this->order(),
+				'orderby'          => $this->orderby(),
 			);
 
 			if( ! empty( $args['s'] ) ) {
