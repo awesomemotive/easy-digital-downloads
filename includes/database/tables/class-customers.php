@@ -90,8 +90,8 @@ final class Customers extends Base {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->prefix . 'edd_customers_version', false ) ) {
-			delete_option( $this->prefix . 'edd_customers_version' );
+		if ( false !== get_option( $this->prefix . 'edd_customers_db_version', false ) ) {
+			delete_option( $this->prefix . 'edd_customers_db_version' );
 
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0'" );

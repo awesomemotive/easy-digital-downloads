@@ -80,8 +80,8 @@ final class Customer_Meta extends Base {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->prefix . 'edd_customermeta_version', false ) ) {
-			delete_option( $this->prefix . 'edd_customermeta_version' );
+		if ( false !== get_option( $this->prefix . 'edd_customermeta_db_version', false ) ) {
+			delete_option( $this->prefix . 'edd_customermeta_db_version' );
 
 			if ( ! $this->column_exists( 'edd_customer_id' ) ) {
 				$this->get_db()->query( "
