@@ -28,7 +28,7 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 
-		edd_get_component_interface( 'customer', 'meta' )->delete_all();
+		edd_get_component_interface( 'customer', 'meta' )->truncate();
 	}
 
 	/**

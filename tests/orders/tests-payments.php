@@ -29,14 +29,8 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$component = edd_get_component_interface( 'order_transaction', 'table' );
 
 		if ( $component instanceof \EDD\Database\Tables\Base ) {
-			$component->delete_all();
 			$component->truncate();
 		}
-
-		// Make sure we're working off a clean object caching in WP Core.
-		// Prevents some payment_meta from not being present.
-		clean_post_cache( self::$payment->ID );
-		update_postmeta_cache( array( self::$payment->ID ) );
 
 		self::$payment = null;
 	}
@@ -362,7 +356,6 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$component = edd_get_component_interface( 'order', 'table' );
 
 		if ( $component instanceof \EDD\Database\Tables\Base ) {
-			$component->delete_all();
 			$component->truncate();
 		}
 

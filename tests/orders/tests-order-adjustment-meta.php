@@ -26,7 +26,7 @@ class Order_Adjustment_Meta_Tests extends \EDD_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 
-		edd_get_component_interface( 'order_adjustment', 'meta' )->delete_all();
+		edd_get_component_interface( 'order_adjustment', 'meta' )->truncate();
 	}
 
 	/**
