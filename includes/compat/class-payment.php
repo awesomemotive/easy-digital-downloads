@@ -105,16 +105,18 @@ class Payment extends Base {
 			// Check if the ID matches a legacy ID.
 			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
 
-			$object_id = $wpdb->get_var( $wpdb->prepare(
-				"
-				SELECT edd_order_id
-				FROM {$table_name}
-				WHERE meta_key = %s AND meta_value = %d
-				", 'legacy_payment_id', $object_id
-			) );
+			if ( isset( $wpdb->$table_name ) ) {
+				$object_id = $wpdb->get_var( $wpdb->prepare(
+					"
+					SELECT edd_order_id
+					FROM {$table_name}
+					WHERE meta_key = %s AND meta_value = %d
+					", 'legacy_payment_id', $object_id
+				) );
 
-			if ( ! empty( $object_id ) ) {
-				$query = str_replace( $matches[1][0], $object_id, $query );
+				if ( ! empty( $object_id ) ) {
+					$query = str_replace( $matches[1][0], $object_id, $query );
+				}
 			}
 		}
 
