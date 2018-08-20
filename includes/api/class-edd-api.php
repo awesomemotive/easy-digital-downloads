@@ -572,7 +572,7 @@ class EDD_API {
 					'category'      => isset( $wp_query->query_vars['category'] )      ? $this->sanitize_request_term( $wp_query->query_vars['category'] )      : null,
 					'tag'           => isset( $wp_query->query_vars['tag'] )           ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )           : null,
 					'term_relation' => isset( $wp_query->query_vars['term_relation'] ) ? $this->sanitize_request_term( $wp_query->query_vars['term_relation'] ) : null,
-					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                       : null,
+					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                      : null,
 					'order'         => isset( $wp_query->query_vars['order'] )         ? $wp_query->query_vars['order']                                         : 'DESC',
 					'orderby'       => isset( $wp_query->query_vars['orderby'] )       ? $wp_query->query_vars['orderby']                                       : 'date',
 				);
