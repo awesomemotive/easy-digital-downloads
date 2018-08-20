@@ -134,16 +134,18 @@ class Discount extends Base {
 			// Check if the ID matches a legacy ID.
 			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
 
-			$object_id = $wpdb->get_var( $wpdb->prepare(
-				"
-				SELECT edd_adjustment_id
-				FROM {$table_name}
-				WHERE meta_key = %s AND meta_value = %d
-				", 'legacy_discount_id', $object_id
-			) );
+			if ( isset( $wpdb->$table_name ) ) {
+				$object_id = $wpdb->get_var( $wpdb->prepare(
+					"
+					SELECT edd_adjustment_id
+					FROM {$table_name}
+					WHERE meta_key = %s AND meta_value = %d
+					", 'legacy_discount_id', $object_id
+				) );
 
-			if ( ! empty( $object_id ) ) {
-				$query = str_replace( $matches[1][0], $object_id, $query );
+				if ( ! empty( $object_id ) ) {
+					$query = str_replace( $matches[1][0], $object_id, $query );
+				}
 			}
 		}
 
