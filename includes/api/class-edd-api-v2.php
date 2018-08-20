@@ -42,8 +42,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters'  => true,
 				'paged'            => $this->get_paged(),
-				'order'            => $this->order(),
-				'orderby'          => $this->orderby(),
+				'order'            => $args['order'],
+				'orderby'          => $args['orderby'],
 			);
 
 			if( ! empty( $args['s'] ) ) {
@@ -70,9 +70,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 					}
 					break;
 
-				default:
-					$query_args['orderby'] = 'date';
-					break;
 			}
 
 			if( ! empty( $args['category'] ) ) {

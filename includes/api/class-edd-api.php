@@ -572,7 +572,9 @@ class EDD_API {
 					'category'      => isset( $wp_query->query_vars['category'] )      ? $this->sanitize_request_term( $wp_query->query_vars['category'] )      : null,
 					'tag'           => isset( $wp_query->query_vars['tag'] )           ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )           : null,
 					'term_relation' => isset( $wp_query->query_vars['term_relation'] ) ? $this->sanitize_request_term( $wp_query->query_vars['term_relation'] ) : null,
-					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                      : null,
+					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                       : null,
+					'order'         => isset( $wp_query->query_vars['order'] )         ? $wp_query->query_vars['order']                                         : 'DESC',
+					'orderby'       => isset( $wp_query->query_vars['orderby'] )       ? $wp_query->query_vars['orderby']                                       : 'date',
 				);
 
 				$data = $this->routes->get_products( $args );
@@ -720,38 +722,6 @@ class EDD_API {
 		}
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
-	}
-
-	/**
-	 * Designates the ascending or descending order of the 'orderby' parameter.
-	 *
-	 * @access public
-	 * @since 2.9.7
-	 * @global $wp_query
-	 * @return string $order 
-	 */
-	public function order() {
-		global $wp_query;
-
-		$order = isset( $wp_query->query_vars['order'] ) ? $wp_query->query_vars['order'] : 'DESC';
-
-		return $order;
-	}
-
-	/**
-	 * Sort retrieved downloads by 'orderby' parameter.
-	 *
-	 * @access public
-	 * @since 2.9.7
-	 * @global $wp_query
-	 * @return string $orderby 
-	 */
-	public function orderby() {
-		global $wp_query;
-
-		$orderby = isset( $wp_query->query_vars['orderby'] ) ? $wp_query->query_vars['orderby'] : 'date';
-
-		return $orderby;
 	}
 
 	/**
