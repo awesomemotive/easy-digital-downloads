@@ -10,8 +10,12 @@
  */
 namespace EDD\Reports\Data\File_Downloads;
 
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
+
 use EDD\Reports as Reports;
 use EDD\Orders as Orders;
+use EDD\Admin\List_Table;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -21,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Top_Five_Most_Downloaded_List_Table extends \WP_List_Table {
+class Top_Five_Most_Downloaded_List_Table extends List_Table {
 
 	/**
 	 * Query the database and fetch the top five most downloaded products.

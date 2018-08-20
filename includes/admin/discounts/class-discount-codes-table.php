@@ -9,10 +9,10 @@
  * @since       1.4
  */
 
-use EDD\Admin\List_Table;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Discount_Codes_Table Class

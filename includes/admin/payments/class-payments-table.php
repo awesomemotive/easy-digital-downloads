@@ -9,10 +9,10 @@
  * @since       1.4
  */
 
-use EDD\Admin\List_Table;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Payment_History_Table Class
@@ -52,7 +52,7 @@ class EDD_Payment_History_Table extends List_Table {
 	/**
 	 * Constructor.
 	 *
-	 * @see \WP_List_Table::__construct()
+	 * @see WP_List_Table::__construct()
 	 *
 	 * @since 1.4
 	 */

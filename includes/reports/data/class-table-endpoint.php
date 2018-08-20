@@ -10,6 +10,9 @@
  */
 namespace EDD\Reports\Data;
 
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handler for building a table endpoint in the Reports API.
  *
@@ -29,7 +32,7 @@ final class Table_Endpoint extends Endpoint {
 	 * List table instance.
 	 *
 	 * @since 3.0
-	 * @var   \WP_List_Table
+	 * @var   WP_List_Table
 	 */
 	private $list_table;
 
@@ -167,7 +170,7 @@ final class Table_Endpoint extends Endpoint {
 	 *
 	 * @since 3.0
 	 *
-	 * @return \WP_List_Table|null List table instance if set, otherwise null.
+	 * @return WP_List_Table|null List table instance if set, otherwise null.
 	 */
 	public function get_list_table() {
 		return $this->list_table;

@@ -10,10 +10,10 @@
  * @since       3.0 Updated to use the custom tables.
  */
 
-use EDD\Admin\List_Table;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Base_Log_List_Table Class
