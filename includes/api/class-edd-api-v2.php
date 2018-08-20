@@ -59,7 +59,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				case 'sales':
 					if ( user_can( $this->user_id, 'view_shop_sensitive_data' ) || current_user_can( 'view_shop_sensitive_data' ) || $this->override ) {
 						$query_args['meta_key'] = '_edd_download_sales';
-						$query_args['orderby']  = 'meta_value';
+						$query_args['orderby']  = 'meta_value_num';
 					}
 					break;
 
