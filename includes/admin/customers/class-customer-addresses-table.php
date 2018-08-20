@@ -186,7 +186,7 @@ class EDD_Customer_Addresses_Table extends WP_List_Table {
 		// Get the item status
 		$item_status = ! empty( $item['status'] )
 			? $item['status']
-			: 'active';
+			: 'verified';
 
 		// Get the customer ID
 		$customer_id = ! empty( $item['customer_id'] )
@@ -211,12 +211,12 @@ class EDD_Customer_Addresses_Table extends WP_List_Table {
 		}
 
 		// State
-		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
+		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'verified' ) ) {
 			switch ( $status ) {
 				case 'pending' :
 					$value = __( 'Pending', 'easy-digital-downloads' );
 					break;
-				case 'active' :
+				case 'verified' :
 				case '' :
 				default :
 					$value = __( 'Active', 'easy-digital-downloads' );
@@ -307,21 +307,21 @@ class EDD_Customer_Addresses_Table extends WP_List_Table {
 	 * @return array $views All the views available
 	 */
 	public function get_views() {
-		$base          = $this->get_base_url();
-		$current       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$is_all        = empty( $current ) || ( 'all' === $current );
-		$total_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
-		$active_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']  ) . ')</span>';
-		$spam_count    = '&nbsp;<span class="count">(' . esc_html( $this->counts['spam']    ) . ')</span>';
-		$deleted_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['deleted'] ) . ')</span>';
-		$pending_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
+		$base           = $this->get_base_url();
+		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$is_all         = empty( $current ) || ( 'all' === $current );
+		$total_count    = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
+		$verified_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['verified']  ) . ')</span>';
+		$spam_count     = '&nbsp;<span class="count">(' . esc_html( $this->counts['spam']    ) . ')</span>';
+		$deleted_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['deleted'] ) . ')</span>';
+		$pending_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
 
 		return array(
-			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',      'easy-digital-downloads' ) . $total_count   ),
-			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Verified', 'easy-digital-downloads' ) . $active_count  ),
-			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending',  'easy-digital-downloads' ) . $pending_count ),
-			'spam'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'spam',    $base ) ), 'spam'    === $current ? ' class="current"' : '', __( 'Spam',     'easy-digital-downloads' ) . $spam_count    ),
-			'deleted' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'deleted', $base ) ), 'deleted' === $current ? ' class="current"' : '', __( 'Deleted',  'easy-digital-downloads' ) . $deleted_count )
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base          ) ), $is_all                 ? ' class="current"' : '', __( 'All',      'easy-digital-downloads' ) . $total_count    ),
+			'verified' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'verified', $base ) ), 'verified' === $current ? ' class="current"' : '', __( 'Verified', 'easy-digital-downloads' ) . $verified_count ),
+			'pending'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending',  $base ) ), 'pending'  === $current ? ' class="current"' : '', __( 'Pending',  'easy-digital-downloads' ) . $pending_count  ),
+			'spam'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'spam',     $base ) ), 'spam'     === $current ? ' class="current"' : '', __( 'Spam',     'easy-digital-downloads' ) . $spam_count     ),
+			'deleted'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'deleted',  $base ) ), 'deleted'  === $current ? ' class="current"' : '', __( 'Deleted',  'easy-digital-downloads' ) . $deleted_count  )
 		);
 	}
 
