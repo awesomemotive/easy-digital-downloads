@@ -30,7 +30,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 
-		edd_get_component_interface( 'log', 'meta' )->delete_all();
+		edd_get_component_interface( 'log', 'meta' )->truncate();
 	}
 
 	/**

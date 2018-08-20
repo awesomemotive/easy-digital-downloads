@@ -29,7 +29,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 
-		edd_get_component_interface( 'note', 'meta' )->delete_all();
+		edd_get_component_interface( 'note', 'meta' )->truncate();
 	}
 
 	/**
