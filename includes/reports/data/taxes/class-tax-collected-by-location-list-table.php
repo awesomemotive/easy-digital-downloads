@@ -13,12 +13,14 @@ namespace EDD\Reports\Data\Taxes;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Admin\List_Table;
+
 /**
  * Tax_Collected_by_Location class.
  *
  * @since 3.0
  */
-class Tax_Collected_By_Location extends \WP_List_Table {
+class Tax_Collected_By_Location extends List_Table {
 
 	/**
 	 * @var int Number of items per page

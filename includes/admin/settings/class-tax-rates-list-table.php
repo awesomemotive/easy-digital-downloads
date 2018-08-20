@@ -10,6 +10,9 @@
  */
 namespace EDD\Admin\Settings;
 
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
+
 use EDD\Admin\List_Table;
 
 /**

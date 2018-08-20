@@ -10,18 +10,19 @@
  */
 namespace EDD\Reports\Data\Downloads;
 
-use EDD\Reports as Reports;
-use EDD\Orders as Orders;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Reports as Reports;
+use EDD\Orders as Orders;
+use EDD\Admin\List_Table;
 
 /**
  * Top_Selling_Downloads_List_Table class.
  *
  * @since 3.0
  */
-class Top_Selling_Downloads_List_Table extends \WP_List_Table {
+class Top_Selling_Downloads_List_Table extends List_Table {
 
 	/**
 	 * Query the database and fetch the top five most downloaded products.

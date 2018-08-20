@@ -9,10 +9,10 @@
  * @since       2.4
  */
 
-use EDD\Admin\List_Table;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Categories_Reports_Table Class

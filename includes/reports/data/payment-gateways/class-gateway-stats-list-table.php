@@ -13,17 +13,14 @@ namespace EDD\Reports\Data\Payment_Gateways;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load \EDD_Customer_Reports_Table if not loaded
-if ( ! class_exists( '\EDD_Customer_Reports_Table' ) ) {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/customers/class-customer-table.php';
-}
+use EDD\Admin\List_Table;
 
 /**
  * Top_Five_Customers_List_Table class.
  *
  * @since 3.0
  */
-class Gateway_Stats extends \WP_List_Table {
+class Gateway_Stats extends List_Table {
 
 	/**
 	 * @var int Number of items per page
@@ -80,10 +77,10 @@ class Gateway_Stats extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
-			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
+			'label'          => __( 'Gateway',                'easy-digital-downloads' ),
+			'complete_sales' => __( 'Complete Sales',         'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
+			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' ),
 		);
 	}
 

@@ -12,10 +12,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Customer_Email_Addresses_Table Class
@@ -24,7 +21,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since 3.0
  */
-class EDD_Customer_Email_Addresses_Table extends WP_List_Table {
+class EDD_Customer_Email_Addresses_Table extends List_Table {
 
 	/**
 	 * Number of items per page
