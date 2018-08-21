@@ -21,18 +21,16 @@ defined( 'ABSPATH' ) || exit;
 function edd_do_automatic_upgrades() {
 
 	$did_upgrade = false;
-	$edd_version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
+	$edd_version = edd_get_db_version();
 
 	if ( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
 
 		// Let us know that an upgrade has happened
 		$did_upgrade = true;
-
 	}
 
 	if ( $did_upgrade ) {
-
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 
 		// Send a check in. Note: this only sends if data tracking has been enabled
 		$tracking = new EDD_Tracking;
@@ -59,14 +57,13 @@ function edd_show_upgrade_notices() {
 	global $wpdb;
 
 	// Don't show notices on the upgrades page
-	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' ) {
+	if ( ! empty( $_GET['page'] ) && ( 'edd-upgrades' === $_GET['page'] ) ) {
 		return;
 	}
 
-	$edd_version = get_option( 'edd_version', '1.3' );
-	$edd_version = preg_replace( '/[^0-9.].*/', '', $edd_version );
+	$edd_version = edd_get_db_version();
 
-	if ( ! get_option( 'edd_payment_totals_upgraded' ) && ! get_option( 'edd_version' ) ) {
+	if ( ! get_option( 'edd_payment_totals_upgraded' ) && !edd_get_db_version() ) {
 		if ( wp_count_posts( 'edd_payment' )->publish < 1 ) {
 			return; // No payment exist yet
 		}
@@ -151,44 +148,55 @@ function edd_show_upgrade_notices() {
 			);
 		}
 
-		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
-			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
-			);
+		if ( version_compare( $edd_version, '2.3', '<' ) ) {
+			if ( ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
+				printf(
+					'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the customer database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customer_payments_association' ) )
+				);
+			}
 		}
 
-		if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
-			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
-			);
+		if ( version_compare( $edd_version, '2.3', '<' ) ) {
+			if ( ! edd_has_upgrade_completed( 'upgrade_payment_taxes' ) ) {
+				printf(
+					'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_payment_taxes' ) )
+				);
+			}
 		}
 
-		if ( version_compare( $edd_version, '2.4', '<' ) || ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
-			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
-			);
+		if ( version_compare( $edd_version, '2.4', '<' ) ) {
+			if ( ! edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
+				printf(
+					'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the API Key database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_user_api_keys' ) )
+				);
+			}
 		}
 
-		if ( version_compare( $edd_version, '2.4.3', '<' ) || ! edd_has_upgrade_completed( 'remove_refunded_sale_logs' ) ) {
-			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
-			);
+		if ( version_compare( $edd_version, '2.4.3', '<' ) ) {
+			if ( ! edd_has_upgrade_completed( 'remove_refunded_sale_logs' ) ) {
+				printf(
+					'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the payments database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=remove_refunded_sale_logs' ) )
+				);
+			}
 		}
 
-		if ( version_compare( $edd_version, '2.9.2', '<' ) || ! edd_has_upgrade_completed( 'update_file_download_log_data' ) ) {
-			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the file download logs database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=update_file_download_log_data' ) )
-			);
+		if ( version_compare( $edd_version, '2.9.2', '<' ) ) {
+			if ( ! edd_has_upgrade_completed( 'update_file_download_log_data' ) ) {
+				printf(
+					'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade the file download logs database, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=update_file_download_log_data' ) )
+				);
+			}
 		}
 
-		/** 3.0 Upgrades *****************************************************/
+		/** 3.0 Upgrades ******************************************************/
 
-		$upgrades = array(
+		// Possible upgrades
+		$upgrades = array_map( 'edd_has_upgrade_completed', array(
 			'migrate_orders'                   => 'migrate_orders',
 			'migrate_customer_addresses'       => 'migrate_customer_addresses',
 			'migrate_customer_email_addresses' => 'migrate_customer_email_addresses',
@@ -197,9 +205,7 @@ function edd_show_upgrade_notices() {
 			'migrate_tax_rates'                => 'migrate_tax_rates',
 			'migrate_discounts'                => 'migrate_discounts',
 			'migrate_order_notes'              => 'migrate_order_notes',
-		);
-
-		$upgrades = array_map( 'edd_has_upgrade_completed', $upgrades );
+		) );
 
 		// Check if we need to do any upgrades.
 		if ( count( $upgrades ) !== count( array_filter( $upgrades ) ) ) {
@@ -232,11 +238,10 @@ function edd_show_upgrade_notices() {
 		}
 
 		/*
-		 *  NOTICE:
+		 * NOTICE:
 		 *
-		 *  When adding new upgrade notices, please be sure to put the action into the upgrades array during install:
-		 *  /includes/install.php @ Appox Line 156
-		 *
+		 * When adding new upgrade notices, please be sure to put the action
+		 * into the upgrades array during install: /includes/install.php @ Appox Line 156
 		 */
 
 		// End 'Stepped' upgrade process notices
@@ -254,19 +259,25 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
  */
 function edd_trigger_upgrades() {
 
+	// Bail if user is not capable
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$edd_version = get_option( 'edd_version' );
+	// Get the current version from the database
+	$edd_version = edd_get_db_version();
 
-	if ( ! $edd_version ) {
-		// 1.3 is the first version to use this option so we must add it
+	// 1.3 is the first version to use this option so we must add it here, but
+	// only if settings exist and this is not a new install
+	if ( empty( $edd_version ) && ! get_option( 'edd_settings' ) ) {
 		$edd_version = '1.3';
 		add_option( 'edd_version', $edd_version );
 	}
 
-	if ( version_compare( EDD_VERSION, $edd_version, '>' ) ) {
+	// Get the current version
+	$current_version = edd_format_db_version( EDD_VERSION );
+
+	if ( version_compare( $current_version, $edd_version, '>' ) ) {
 		edd_v131_upgrades();
 	}
 
@@ -286,7 +297,7 @@ function edd_trigger_upgrades() {
 		edd_v20_upgrades();
 	}
 
-	update_option( 'edd_version', EDD_VERSION );
+	edd_update_db_version();
 
 	// Let AJAX know that the upgrade is complete
 	if ( edd_doing_ajax() ) {
@@ -346,7 +357,9 @@ function edd_v131_upgrades() {
 		return;
 	}
 
-	if ( version_compare( get_option( 'edd_version' ), '1.3', '>=' ) ) {
+	$edd_version = edd_get_db_version();
+
+	if ( version_compare( $edd_version, '1.3', '>=' ) ) {
 		return;
 	}
 
@@ -714,7 +727,7 @@ function edd_v21_upgrade_customers_db() {
 
 	// No more customers found, finish up
 	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		delete_option( 'edd_doing_upgrade' );
 
 		edd_redirect( admin_url() );
@@ -751,7 +764,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		$has_variable = $wpdb->get_col( $sql );
 		if ( empty( $has_variable ) ) {
 			// We had no variable priced products, so go ahead and just complete
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
 		}
@@ -828,8 +841,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 		edd_redirect( $redirect );
 	} else {
-		// No more payments found, finish up
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
 	}
@@ -866,7 +878,7 @@ function edd_v23_upgrade_payment_taxes() {
 
 		if ( empty( $has_payments ) ) {
 			// We had no payments, just complete
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
@@ -905,7 +917,7 @@ function edd_v23_upgrade_payment_taxes() {
 
 	// No more payments found, finish up
 	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
@@ -943,7 +955,7 @@ function edd_v23_upgrade_customer_purchases() {
 
 		if ( empty( $has_payments ) ) {
 			// We had no payments, just complete
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
@@ -1024,7 +1036,7 @@ function edd_v23_upgrade_customer_purchases() {
 
 	// No more customers found, finish up
 	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 		delete_option( 'edd_doing_upgrade' );
 
@@ -1061,9 +1073,9 @@ function edd_upgrade_user_api_keys() {
 		$sql     = "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' LIMIT 1";
 		$has_key = $wpdb->get_col( $sql );
 
+		// We had no key, just complete
 		if ( empty( $has_key ) ) {
-			// We had no key, just complete
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
@@ -1108,7 +1120,7 @@ function edd_upgrade_user_api_keys() {
 
 	// No more customers found, finish up
 	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
@@ -1170,7 +1182,7 @@ function edd_remove_refunded_sale_logs() {
 
 	// No more refunded payments found, finish up
 	} else {
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
