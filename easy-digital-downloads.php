@@ -121,11 +121,16 @@ final class EDD_Requirements_Check {
 	 * @since 3.0
 	 */
 	private function load() {
-		require_once dirname( $this->file ) . '/includes/class-edd.php';
+
+		// Maybe include the bundled bootstrapper
+		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+			require_once dirname( $this->file ) . '/includes/class-edd.php';
+		}
+
+		// Maybe hook-in the bootstrapper
 		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
 		}
-		do_action( 'edd_loaded' );
 	}
 
 	/**
