@@ -129,8 +129,28 @@ final class EDD_Requirements_Check {
 
 		// Maybe hook-in the bootstrapper
 		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
+
+			// Bootstrap to plugins_loaded before priority 10 to make sure
+			// add-ons are loaded after us.
 			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
+
+			// Register the activation hook
+			register_activation_hook( $this->file, array( $this, 'install' ) );
 		}
+	}
+
+	/**
+	 * Install, usually on an activation hook.
+	 *
+	 * @since 3.0
+	 */
+	public function install() {
+
+		// Bootstrap to include all of the necessary files
+		$this->bootstrap();
+
+		// Call the installer directly during the activation hook
+		edd_install();
 	}
 
 	/**
