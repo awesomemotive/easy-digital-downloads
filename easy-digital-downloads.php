@@ -149,8 +149,13 @@ final class EDD_Requirements_Check {
 		// Bootstrap to include all of the necessary files
 		$this->bootstrap();
 
+		// Network wide?
+		$network_wide = ! empty( $_GET['networkwide'] )
+			? (bool) $_GET['networkwide']
+			: false;
+
 		// Call the installer directly during the activation hook
-		edd_install();
+		edd_install( $network_wide );
 	}
 
 	/**

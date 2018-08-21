@@ -908,7 +908,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_discounts' );
 
 			WP_CLI::confirm( __( 'Remove legacy discount records?', 'easy-digital-downloads' ), array() );
@@ -1088,7 +1088,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_logs' );
 
 			WP_CLI::confirm( __( 'Remove legacy logs?', 'easy-digital-downloads' ), array() );
@@ -1182,7 +1182,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_notes' );
 
 			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), array() );
@@ -1323,7 +1323,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
 
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_customer_data' );
 	}
 
@@ -1400,7 +1400,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
 
-		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
 	}
 
@@ -1860,7 +1860,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_payments' );
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
