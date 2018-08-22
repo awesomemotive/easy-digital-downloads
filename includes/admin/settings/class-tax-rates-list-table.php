@@ -28,7 +28,7 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @since 3.0
 	 * @var array
 	 */
-	private $tooltips = array();
+	protected $tooltips = array();
 
 	/**
 	 * Constructor.
