@@ -427,6 +427,12 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 				$found = true;
 			}
 			break;
+		case 'index.php' :
+			if ( 'index.php' === $pagenow ) {
+				$found = true;
+			}
+			break;
+
 		default:
 			$admin_pages = edd_get_admin_pages();
 
