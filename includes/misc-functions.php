@@ -1101,7 +1101,7 @@ function edd_get_svg( $args = array() ) {
 	$height = ! empty( $args['height'] ) ? ' height="' . esc_attr( $args['height'] ).'"' : '';
 
 	// Begin SVG markup.
-	$svg = '<svg ' . $width . $height . ' class="'. implode( ' ', array_filter( $args['classes'] ) ) .'"' . $aria_hidden . $aria_labelledby . ' role="img">';
+	$svg = '<svg' . $width . $height . ' class="'. implode( ' ', array_filter( $args['classes'] ) ) .'"' . $aria_hidden . $aria_labelledby . ' role="img">';
 
 	// Display the title.
 	if ( $args['title'] ) {
