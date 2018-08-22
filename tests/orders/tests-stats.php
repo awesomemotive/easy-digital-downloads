@@ -1,5 +1,5 @@
 <?php
-namespace EDD\Orders;
+namespace EDD;
 
 /**
  * Stats Tests.
@@ -7,7 +7,7 @@ namespace EDD\Orders;
  * @group edd_orders
  * @group edd_stats
  *
- * @coversDefaultClass \EDD\Orders\Stats
+ * @coversDefaultClass \EDD\Stats
  */
 class Stats_Tests extends \EDD_UnitTestCase {
 
