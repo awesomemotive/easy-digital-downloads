@@ -324,7 +324,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 	}
 
 	/**
-	 * Render the checkbox column
+	 * Render the checkbox column.
 	 *
 	 * @since 1.4
 	 *
@@ -332,11 +332,13 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Checkbox HTML.
 	 */
 	public function column_cb( $discount ) {
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ 'discount',
-			/*$2%s*/ $discount->id
-		);
+		return 0 < $discount->use_count
+			? '<input type="checkbox" title="' . esc_html__( 'This discount code cannot be deleted as it has already been used.', 'easy-digital-downloads' ) . '" disabled="disabled" />'
+			: sprintf(
+				'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+				/*$1%s*/ 'discount',
+				/*$2%s*/ $discount->id
+			);
 	}
 
 	/**
