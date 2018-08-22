@@ -1000,6 +1000,52 @@ function edd_doing_cron() {
 }
 
 /**
+ * SVG dimensions
+ * 
+ * @since 2.9.x
+ *
+ * @return array $sizes Sizes array (width and height) of the icon requested.
+ */
+function edd_svg_dimensions( $icon ) {
+	
+	if ( empty( $icon ) ) {
+		return false;
+	}
+	
+	$sizes = apply_filters( 'edd_svg_dimensions', 
+		array(
+			'mastercard' => array(
+				'width'  => 50,
+				'height' => 32
+			),
+			'americanexpress' => array(
+				'width'  => 32,
+				'height' => 32
+			),
+			'visa' => array(
+				'width'  => 50,
+				'height' => 32
+			),
+			'discover' => array(
+				'width'  => 50,
+				'height' => 32
+			),
+			'paypal' => array(
+				'width'  => 50,
+				'height' => 32
+			),
+			'amazon' => array(
+				'width'  => 50,
+				'height' => 32
+			),
+		)
+	);
+
+	return $sizes[$icon];
+
+}
+
+/**
  * Return SVG markup.
  * 
  * @since 2.9.x
