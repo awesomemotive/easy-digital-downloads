@@ -660,21 +660,21 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 */
 function edd_show_payment_icons() {
 
-	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
+	if ( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
 		return;
 	}
 
 	$payment_methods = edd_get_option( 'accepted_cards', array() );
 
-	if( empty( $payment_methods ) ) {
+	if ( empty( $payment_methods ) ) {
 		return;
 	}
 
 	echo '<div class="edd-payment-icons">';
 
-	foreach( $payment_methods as $key => $card ) {
+	foreach ( $payment_methods as $key => $card ) {
 
-		if( edd_string_is_image_url( $key ) ) {
+		if ( edd_string_is_image_url( $key ) ) {
 
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 
@@ -682,7 +682,7 @@ function edd_show_payment_icons() {
 
 			$card_lowercase = strtolower( str_replace( ' ', '', $card ) );
 
-			if( has_filter( 'edd_accepted_payment_' . $card_lowercase . '_image' ) ) {
+			if ( has_filter( 'edd_accepted_payment_' . $card_lowercase . '_image' ) ) {
 
 				$image = apply_filters( 'edd_accepted_payment_' . $card_lowercase . '_image', '' );
 
@@ -700,7 +700,7 @@ function edd_show_payment_icons() {
 
 			}
 
-			if( edd_is_ssl_enforced() || is_ssl() ) {
+			if ( edd_is_ssl_enforced() || is_ssl() ) {
 
 				$image = edd_enforced_ssl_asset_filter( $image );
 
