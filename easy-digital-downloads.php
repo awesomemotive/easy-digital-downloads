@@ -124,7 +124,7 @@ final class EDD_Requirements_Check {
 
 		// Maybe include the bundled bootstrapper
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
-			require_once dirname( $this->file ) . '/includes/class-edd.php';
+			require_once dirname( $this->file ) . '/includes/class-easy-digital-downloads.php';
 		}
 
 		// Maybe hook-in the bootstrapper
