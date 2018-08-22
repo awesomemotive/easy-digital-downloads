@@ -930,7 +930,7 @@ function edd_add_manual_order( $data ) {
 	$email       = '';
 
 	// Create a new customer record.
-	if ( isset( $data['edd-new-customer'] ) && 1 === (int) absint( $data['edd-new-customer'] ) ) {
+	if ( isset( $data['edd-new-customer'] ) && 1 === absint( $data['edd-new-customer'] ) ) {
 		$name = isset( $data['edd-new-customer-name'] )
 			? sanitize_text_field( $data['edd-new-customer-name'] )
 			: '';
