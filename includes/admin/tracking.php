@@ -277,7 +277,7 @@ class EDD_Tracking {
 			update_option( 'edd_tracking_notice', '1' );
 
 		// Notify the user
-		} else {
+		} elseif ( edd_is_admin_page() && ! edd_is_admin_page( 'index.php' ) && ! edd_is_insertable_admin_page() ) {
 			$optin_url      = add_query_arg( 'edd_action', 'opt_into_tracking'   );
 			$optout_url     = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
