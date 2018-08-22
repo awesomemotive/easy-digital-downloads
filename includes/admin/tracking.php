@@ -264,30 +264,8 @@ class EDD_Tracking {
 			return;
 		}
 
-		// Get this one time and use it below
-		$network_url = network_site_url( '/' );
-
 		// No notices for local installs
-		if (
-
-			// Popular development TLDs
-			stristr( $network_url, '.dev'        ) !== false || // VVV
-			stristr( $network_url, '.local'      ) !== false || // Local
-			stristr( $network_url, '.test'       ) !== false || // IETF
-			stristr( $network_url, '.example'    ) !== false || // IETF
-			stristr( $network_url, '.invalid'    ) !== false || // IETF
-			stristr( $network_url, '.localhost'  ) !== false || // IETF
-
-			// Popular development subdomains
-			stristr( $network_url, 'dev.'        ) !== false ||
-
-			// Popular development domains
-			stristr( $network_url, 'localhost'   ) !== false ||
-			stristr( $network_url, 'example.com' ) !== false ||
-
-			// Popular port suffixes
-			stristr( $network_url, ':8888'       ) !== false // This is common with MAMP on OS X
-		) {
+		if ( edd_is_dev_environment() ) {
 			update_option( 'edd_tracking_notice', '1' );
 
 		// Notify the user

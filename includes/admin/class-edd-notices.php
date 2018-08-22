@@ -240,6 +240,16 @@ class EDD_Notices {
 	 */
 	private function add_system_notices() {
 
+		// Bail if not an EDD admin page
+		if ( ! edd_is_admin_page() || edd_is_dev_environment() || edd_is_admin_page( 'index.php' ) ) {
+			return;
+		}
+
+		// Bail if user cannot manage options
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		// Bail if uploads directory is protected
 		if ( edd_is_uploads_url_protected() ) {
 			return;
