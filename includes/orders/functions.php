@@ -948,7 +948,7 @@ function edd_add_manual_order( $data ) {
 		$customer = edd_get_customer( $customer_id );
 
 	// Existing customer.
-	} elseif ( isset( $data['edd-new-customer'] ) && 0 === (int) absint( $data['edd-new-customer'] ) && isset( $data['customer-id'] ) ) {
+	} elseif ( isset( $data['edd-new-customer'] ) && 0 === absint( $data['edd-new-customer'] ) && isset( $data['customer-id'] ) ) {
 		$customer_id = absint( $data['customer-id'] );
 
 		$customer = edd_get_customer( $customer_id );
