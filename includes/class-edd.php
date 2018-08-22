@@ -596,7 +596,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-transaction.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/class-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/meta.php';
 
@@ -616,6 +615,9 @@ final class Easy_Digital_Downloads {
 
 		// Structured Data
 		require_once EDD_PLUGIN_DIR . 'includes/class-structured-data.php';
+
+		// Stats
+		require_once EDD_PLUGIN_DIR . 'includes/class-stats.php';
 	}
 
 	/**
