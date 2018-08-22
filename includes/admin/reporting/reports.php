@@ -2797,7 +2797,7 @@ function display_export_report() {
                     <div class="postbox edd-export-orders">
                         <h3 class="hndle"><span><?php esc_html_e( 'Export Orders', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of all orders taxed.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of all orders.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
 								<span class="edd-from-to-wrapper">
 									<?php
@@ -2839,7 +2839,7 @@ function display_export_report() {
                     <div class="postbox edd-export-taxed-orders">
                         <h3 class="hndle"><span><?php esc_html_e( 'Export Taxed Orders', 'easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of all orders taxed.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of all orders, taxed by Country and/or Region.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-taxed-orders" class="edd-export-form edd-import-export-form" method="post">
 								<span class="edd-from-to-wrapper">
 									<?php
