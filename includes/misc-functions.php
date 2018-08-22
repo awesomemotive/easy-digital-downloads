@@ -998,3 +998,90 @@ function edd_doing_cron() {
 	// Default to false
 	return false;
 }
+
+/**
+ * Return SVG markup.
+ * 
+ * @since 2.9.x
+ *
+ * @return string SVG markup.
+ */
+function edd_get_svg( $args = array() ) {
+
+	// Make sure $args are an array.
+	if ( empty( $args ) ) {
+		return __( 'Please define default parameters in the form of an array.', 'easy-digital-downloads' );
+	}
+
+	// Define an icon.
+	if ( false === array_key_exists( 'icon', $args ) ) {
+		return __( 'Please define an SVG icon filename.', 'easy-digital-downloads' );
+	}
+
+	// Set defaults.
+	$defaults = array(
+		'icon'     => '',
+		'title'    => '',
+		'desc'     => '',
+		'fallback' => false,
+		'width'    => '',
+		'height'   => '',
+		'classes'  => array()
+	);
+
+	// Parse args.
+	$args = wp_parse_args( $args, $defaults );
+
+	$args['classes'][] = 'icon-' . esc_attr( $args['icon'] );
+
+	// Set aria hidden.
+	$aria_hidden = ' aria-hidden="true"';
+
+	// Set ARIA.
+	$aria_labelledby = '';
+
+	if ( $args['title'] ) {
+		$aria_hidden     = '';
+		$unique_id       = uniqid();
+		$aria_labelledby = ' aria-labelledby="title-' . $unique_id . '"';
+
+		if ( $args['desc'] ) {
+			$aria_labelledby = ' aria-labelledby="title-' . $unique_id . ' desc-' . $unique_id . '"';
+		}
+	}
+
+	// Set width and height.
+	$width = ! empty( $args['width'] ) ? ' width="' . esc_attr( $args['width'] ).'"' : '';
+	$height = ! empty( $args['height'] ) ? ' height="' . esc_attr( $args['height'] ).'"' : '';
+
+	// Begin SVG markup.
+	$svg = '<svg ' . $width . $height . ' class="'. implode( ' ', array_filter( $args['classes'] ) ) .'"' . $aria_hidden . $aria_labelledby . ' role="img">';
+
+	// Display the title.
+	if ( $args['title'] ) {
+		$svg .= '<title id="title-' . $unique_id . '">' . esc_html( $args['title'] ) . '</title>';
+
+		// Display the desc only if the title is already set.
+		if ( $args['desc'] ) {
+			$svg .= '<desc id="desc-' . $unique_id . '">' . esc_html( $args['desc'] ) . '</desc>';
+		}
+	}
+
+	/*
+	 * Display the icon.
+	 *
+	 * The whitespace around `<use>` is intentional - it is a work around to a keyboard navigation bug in Safari 10.
+	 *
+	 * See https://core.trac.wordpress.org/ticket/38387.
+	 */
+	$svg .= ' <use href="#icon-' . esc_html( $args['icon'] ) . '" xlink:href="#icon-' . esc_html( $args['icon'] ) . '"></use> ';
+
+	// Add some markup to use as a fallback for browsers that do not support SVGs.
+	if ( $args['fallback'] ) {
+		$svg .= '<span class="svg-fallback icon-' . esc_attr( $args['icon'] ) . '"></span>';
+	}
+
+	$svg .= '</svg>';
+
+	return $svg;
+}
