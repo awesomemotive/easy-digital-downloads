@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Orders;
+namespace EDD;
 
 use EDD\Reports as Reports;
 
@@ -376,7 +376,7 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_order_count()
+	 * @see \EDD\Stats::get_order_count()
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
@@ -411,7 +411,7 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_order_item_count()
+	 * @see \EDD\Stats::get_order_item_count()
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
@@ -516,7 +516,7 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_order_earnings()
+	 * @see \EDD\Stats::get_order_earnings()
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
@@ -555,7 +555,7 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_order_earnings()
+	 * @see \EDD\Stats::get_order_earnings()
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
@@ -1461,16 +1461,16 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_gateway_data()
+	 * @see \EDD\Stats::get_gateway_data()
 	 *
-	 * @param array $query See \EDD\Orders\Stats::get_gateway_data().
+	 * @param array $query See \EDD\Stats::get_gateway_data().
 	 *
 	 * @return array List of objects containing the number of sales processed either for every gateway or the gateway
 	 *               passed as a query parameter.
 	 */
 	public function get_gateway_sales( $query = array() ) {
 
-		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		// Dispatch to \EDD\Stats::get_gateway_data().
 		return $this->get_gateway_data( $query );
 	}
 
@@ -1479,9 +1479,9 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_gateway_data()
+	 * @see \EDD\Stats::get_gateway_data()
 	 *
-	 * @param array $query See \EDD\Orders\Stats::get_gateway_data().
+	 * @param array $query See \EDD\Stats::get_gateway_data().
 	 *
 	 * @return array List of objects containing the amount processed either for every gateway or the gateway
 	 *               passed as a query parameter.
@@ -1493,7 +1493,7 @@ class Stats {
 			? $query['function']
 			: 'SUM';
 
-		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		// Dispatch to \EDD\Stats::get_gateway_data().
 		$result = $this->get_gateway_data( $query );
 
 		// Rename object var.
@@ -1519,9 +1519,9 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_gateway_earnings()
+	 * @see \EDD\Stats::get_gateway_earnings()
 	 *
-	 * @param array $query See \EDD\Orders\Stats::get_gateway_earnings().
+	 * @param array $query See \EDD\Stats::get_gateway_earnings().
 	 *
 	 * @return array List of objects containing the amount for refunded orders processed either for every
 	 *               gateway or the gateway passed as a query parameter.
@@ -1531,7 +1531,7 @@ class Stats {
 		// Ensure orders are refunded.
 		$this->query_vars['where_sql'] = $this->get_db()->prepare( 'AND status = %s', 'refunded' );
 
-		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		// Dispatch to \EDD\Stats::get_gateway_data().
 		$result = $this->get_gateway_earnings( $query );
 
 		// Reset query vars.
@@ -1546,9 +1546,9 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_gateway_data()
+	 * @see \EDD\Stats::get_gateway_data()
 	 *
-	 * @param array $query See \EDD\Orders\Stats::get_gateway_data().
+	 * @param array $query See \EDD\Stats::get_gateway_data().
 	 *
 	 * @return array List of objects containing the average order value processed either for every gateway
 	 *               pr the gateway passed as a query parameter.
@@ -1558,7 +1558,7 @@ class Stats {
 		// Function needs to be `AVG`.
 		$query['function'] = 'AVG';
 
-		// Dispatch to \EDD\Orders\Stats::get_gateway_data().
+		// Dispatch to \EDD\Stats::get_gateway_data().
 		$result = $this->get_gateway_data( $query );
 
 		// Rename object var.
@@ -2072,7 +2072,7 @@ class Stats {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Orders\Stats::get_order_count()
+	 * @see \EDD\Stats::get_order_count()
 	 *
 	 * @param array $query {
 	 *     Optional. Array of query parameters.
@@ -2425,9 +2425,9 @@ class Stats {
 	 * @since 3.0
 	 * @access private
 	 *
-	 * @see \EDD\Orders\Stats::__construct()
+	 * @see \EDD\Stats::__construct()
 	 *
-	 * @param array $query Array of arguments. See \EDD\Orders\Stats::__construct().
+	 * @param array $query Array of arguments. See \EDD\Stats::__construct().
 	 */
 	private function parse_query( $query = array() ) {
 		$query_var_defaults = array(
@@ -2546,7 +2546,7 @@ class Stats {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Orders\Stats &$this The \EDD\Orders\Stats (passed by reference).
+		 * @param \EDD\Stats &$this The \EDD\Stats (passed by reference).
 		 */
 		do_action_ref_array( 'edd_order_stats_parse_query', array( &$this ) );
 	}

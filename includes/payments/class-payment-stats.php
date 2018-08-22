@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Stats can be retrieved for date ranges and pre-defined periods.
  *
- * This class remains here for backwards compatibility purposes. The EDD\Orders\Stats class should be used instead.
+ * This class remains here for backwards compatibility purposes. The EDD\Stats class should be used instead.
  *
  * @since 1.8
  * @since 3.0 Refactored to work with custom tables.
