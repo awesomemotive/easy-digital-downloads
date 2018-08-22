@@ -680,15 +680,15 @@ function edd_show_payment_icons() {
 
 		} else {
 
-			$card = strtolower( str_replace( ' ', '', $card ) );
+			$card_lowercase = strtolower( str_replace( ' ', '', $card ) );
 
-			if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
+			if( has_filter( 'edd_accepted_payment_' . $card_lowercase . '_image' ) ) {
 
-				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+				$image = apply_filters( 'edd_accepted_payment_' . $card_lowercase . '_image', '' );
 
 			} else {
 
-				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
+				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card_lowercase . '.png', false );
 
 				// Replaces backslashes with forward slashes for Windows systems
 				$plugin_dir  = wp_normalize_path( WP_PLUGIN_DIR );
