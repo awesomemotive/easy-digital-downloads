@@ -351,6 +351,48 @@ function edd_is_host( $host = false ) {
 	return $return;
 }
 
+/**
+ * Check the network site URL for signs of being a development environment.
+ *
+ * @since 3.0
+ *
+ * @return bool $retval True if dev, false if not.
+ */
+function edd_is_dev_environment() {
+
+	// Assume not a development environment
+	$retval = false;
+
+	// Get this one time and use it below
+	$network_url = network_site_url( '/' );
+
+	// No notices for local installs
+	if (
+
+		// Popular development TLDs
+		stristr( $network_url, '.dev'        ) !== false || // VVV
+		stristr( $network_url, '.local'      ) !== false || // Local
+		stristr( $network_url, '.test'       ) !== false || // IETF
+		stristr( $network_url, '.example'    ) !== false || // IETF
+		stristr( $network_url, '.invalid'    ) !== false || // IETF
+		stristr( $network_url, '.localhost'  ) !== false || // IETF
+
+		// Popular development subdomains
+		stristr( $network_url, 'dev.'        ) !== false ||
+
+		// Popular development domains
+		stristr( $network_url, 'localhost'   ) !== false ||
+		stristr( $network_url, 'example.com' ) !== false ||
+
+		// Popular port suffixes
+		stristr( $network_url, ':8888'       ) !== false // This is common with MAMP on OS X
+	) {
+		$retval = true;
+	}
+
+	// Filter & return
+	return (bool) apply_filters( 'edd_is_dev_environment', $retval );
+}
 
 /**
  * Get Currencies
