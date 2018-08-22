@@ -1868,7 +1868,9 @@ class EDD_Discount extends Adjustment {
 		foreach ( $old as $old_key => $new_key ) {
 			if ( isset( $args[ $old_key ] ) ) {
 				if ( 'is_not_global' === $old_key ) {
-					$args[ $new_key ] = $args[ $old_key ] ? 'not_global' : 'global';
+					$args[ $new_key ] = $args[ $old_key ]
+						? 'not_global'
+						: 'global';
 				} else {
 					$args[ $new_key ] = $args[ $old_key ];
 				}
