@@ -1879,6 +1879,12 @@ class EDD_Discount extends Adjustment {
 			}
 		}
 
+		// Default status needs to be active for regression purposes.
+		// See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6806
+		if ( ! isset( $args['status'] ) ) {
+			$args['status'] = 'active';
+		}
+
 		return $args;
 	}
 }
