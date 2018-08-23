@@ -217,6 +217,34 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+/* =Payment Icon Styling
+-------------------------------------------------------------- */
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper {
+	margin-top: 5px;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper input {
+	margin-top: 1px;
+}
+
+.download_page_edd-settings .form-table .edd-settings-payment-icon-wrapper input[type="checkbox"] + label {
+	margin: 0;
+	display: inline-block;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper .payment-icon-image {
+	margin-left: 5px;
+	width: 32px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper .payment-option-name {
+	vertical-align: middle;
+}
+
+
 /* =Tax Settings Style
 -------------------------------------------------------------- */
 .download_page_edd-settings .taxrates th,
@@ -233,6 +261,7 @@ a.edd-delete:hover {
 .download_page_edd-settings .taxrates .regular-text {
 	width: 100%;
 }
+
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
