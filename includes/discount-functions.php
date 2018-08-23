@@ -172,6 +172,9 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
 
+	// Pre-3.0 pre action
+	do_action( 'edd_pre_update_discount', $data, $discount_id );
+
 	// Product requirements.
 	if ( isset( $data['product_reqs'] ) ) {
 		if ( is_string( $data['product_reqs'] ) ) {
@@ -208,7 +211,12 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 
 	$discounts = new EDD\Compat\Discount_Query();
 
-	return $discounts->update_item( $discount_id, $data );
+	$retval = $discounts->update_item( $discount_id, $data );
+
+	// Pre-3.0 post action
+	do_action( 'edd_post_update_discount', $data, $discount_id );
+
+	return $retval;
 }
 
 /**
@@ -368,19 +376,48 @@ function edd_has_active_discounts() {
  * @return mixed bool|int The discount ID of the discount code, or false on failure.
  */
 function edd_store_discount( $details, $discount_id = 0 ) {
+
+	// Set default return value to false.
 	$return = false;
 
-	// Back-compat for dates.
+	// Back-compat for start date.
 	if ( isset( $details['start'] ) && strstr( $details['start'], '/' ) ) {
 		$details['start_date'] = date( 'Y-m-d', strtotime( $details['start'] ) ) . ' 00:00:00';
 		unset( $details['start'] );
 	}
 
+	// Back-compat for end date.
 	if ( isset( $details['expiration'] ) && strstr( $details['expiration'], '/' ) ) {
 		$details['end_date'] = date( 'Y-m-d', strtotime( $details['expiration'] ) ) . ' 23:59:59';
 		unset( $details['expiration'] );
 	}
 
+	/**
+	 * Filters the args before being inserted into the database. This hook
+	 * exists for backwards compatibility purposes.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $details Discount args.
+	 */
+	$details = apply_filters( 'edd_insert_discount', $details );
+
+	/**
+	 * Fires before the discount has been added to the database. This hook
+	 * exists for backwards compatibility purposes. It fires before the
+	 * call to `EDD_Discount::convert_legacy_args` to ensure the arguments
+	 * maintain backwards compatible array keys.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $details Discount args.
+	 */
+	do_action( 'edd_pre_insert_discount', $details );
+
+	// Necessary for edd_post_insert_discount action.
+	$pre_convert_args = $details;
+
+	// Convert legacy arguments to new ones accepted by `edd_add_discount()`.
 	$details = EDD_Discount::convert_legacy_args( $details );
 
 	if ( 0 === $discount_id ) {
@@ -389,6 +426,18 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 		edd_update_discount( $discount_id, $details );
 		$return = $discount_id;
 	}
+
+	/**
+	 * Fires after the discount code is inserted. This hook exists for
+	 * backwards compatibility purposes. It uses the $pre_convert_args variable
+	 * to ensure the arguments maintain backwards compatible array keys
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $pre_convert_args Discount args.
+	 * @param int   $return           Discount ID.
+	 */
+	do_action( 'edd_post_insert_discount', $pre_convert_args, $return );
 
 	return $return;
 }
