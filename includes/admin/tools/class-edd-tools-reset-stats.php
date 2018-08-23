@@ -23,23 +23,26 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 
 	/**
-	 * Our export type. Used for export-type specific filters/actions
-	 * @var string
+	 * Our export type. Used for export-type specific filters/actions.
+	 *
 	 * @since 2.5
+	 * @var string
 	 */
 	public $export_type = '';
 
 	/**
 	 * Allows for a non-download batch processing to be run.
-	 * @since  2.5
-	 * @var boolean
+	 *
+	 * @since 2.5
+	 * @var bool
 	 */
 	public $is_void = true;
 
 	/**
-	 * Sets the number of items to pull on each step
-	 * @since  2.5
-	 * @var integer
+	 * Sets the number of items to pull on each step.
+	 *
+	 * @since 2.5
+	 * @var int
 	 */
 	public $per_step = 30;
 
@@ -131,10 +134,11 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Return the calculated completion percentage
+	 * Return the percentage completed.
 	 *
 	 * @since 2.5
-	 * @return int
+	 *
+	 * @return float Percentage complete.
 	 */
 	public function get_percentage_complete() {
 		$items = $this->get_stored_data( 'edd_temp_reset_ids', false );
@@ -154,18 +158,20 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Set the properties specific to the payments export
+	 * Set the properties specific to the export.
 	 *
 	 * @since 2.5
-	 * @param array $request The Form Data passed into the batch processing
+	 *
+	 * @param array $request Form data passed into the batch processor.
 	 */
 	public function set_properties( $request ) {}
 
 	/**
-	 * Process a step
+	 * Process a step.
 	 *
 	 * @since 2.5
-	 * @return bool
+	 *
+	 * @return bool True if more data exists, false otherwise.
 	 */
 	public function process_step() {
 		if ( ! $this->can_export() ) {
@@ -195,15 +201,19 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		}
 	}
 
+	/**
+	 * Export headers.
+	 *
+	 * @since 2.5
+	 */
 	public function headers() {
 		edd_set_time_limit();
 	}
 
 	/**
-	 * Perform the export
+	 * Perform the export.
 	 *
 	 * @since 2.5
-	 * @return void
 	 */
 	public function export() {
 
@@ -213,6 +223,11 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		edd_die();
 	}
 
+	/**
+	 * Fetch data prior to batch processing starting.
+	 *
+	 * @since 2.5
+	 */
 	public function pre_fetch() {
 		if ( 1 === $this->step ) {
 			$this->delete_data( 'edd_temp_reset_ids' );
@@ -258,11 +273,12 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Given a key, get the information from the Database Directly
+	 * Given a key, get the information from the database directly.
 	 *
-	 * @since  2.5
-	 * @param  string $key The option_name
-	 * @return mixed       Returns the data from the database
+	 * @since 2.5
+	 *
+	 * @param string $key Option name.
+	 * @return mixed Returns the data from the database.
 	 */
 	private function get_stored_data( $key ) {
 		global $wpdb;
@@ -282,18 +298,27 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Give a key, store the value
+	 * Store a value in the wp_options table.
 	 *
-	 * @since  2.5
-	 * @param  string $key   The option_name
-	 * @param  mixed  $value  The value to store
-	 * @return void
+	 * @since 2.5
+	 *
+	 * @param string $key   Option name.
+	 * @param mixed  $value Option value.
 	 */
-	private function store_data( $key, $value ) {
+	private function store_data( $key = '', $value ) {
 		global $wpdb;
 
-		$value = is_array( $value ) ? wp_json_encode( $value ) : esc_attr( $value );
+		// Bail if no key was passed.
+		if ( empty( $key ) ) {
+			return;
+		}
 
+		// Parse value.
+		$value = is_array( $value )
+			? wp_json_encode( $value )
+			: esc_attr( $value );
+
+		// Prepare data.
 		$data = array(
 			'option_name'  => $key,
 			'option_value' => $value,
@@ -302,19 +327,26 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 
 		$formats = array( '%s', '%s', '%s' );
 
+		// Update database.
 		$wpdb->replace( $wpdb->options, $data, $formats );
 	}
 
 	/**
-	 * Delete an option
+	 * Delete an option.
 	 *
-	 * @since  2.5
-	 * @param  string $key The option_name to delete
-	 * @return void
+	 * @since 2.5
+	 *
+	 * @param string $key Option name.
 	 */
-	private function delete_data( $key ) {
+	private function delete_data( $key = '' ) {
 		global $wpdb;
 
+		// Bail if no key was passed.
+		if ( empty( $key ) ) {
+			return;
+		}
+
+		// Delete from the database.
 		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
 }
