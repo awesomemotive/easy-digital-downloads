@@ -1055,6 +1055,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.add_order_item();
 			this.add_adjustment();
+			this.remove();
 			this.fetch_addresses();
 			this.select_address();
 			this.recalculate_total();
@@ -1149,6 +1150,26 @@ jQuery(document).ready(function ($) {
 
 					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
+			} );
+		},
+
+		remove : function() {
+			$( document.body ).on( 'click', '.orderitems .remove-item, .orderadjustments .remove-item', function( e ) {
+				e.preventDefault();
+
+				var $this = $( this ),
+					tbody = $this.parents( 'tbody' );
+
+				$this.parents( 'tr' ).remove();
+
+				if ( 1 === $( 'tr', tbody ).length ) {
+					$( '.no-items', tbody ).show();
+				}
+
+				EDD_Add_Order.update_totals();
+				EDD_Add_Order.reindex();
+
+				return false;
 			} );
 		},
 
