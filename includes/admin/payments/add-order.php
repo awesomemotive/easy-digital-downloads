@@ -17,7 +17,7 @@ if ( ! isset( $_GET['view'] ) || 'add-order' !== $_GET['view'] ) { // WPCS: inpu
 	wp_die( esc_html__( 'Something went wrong.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 }
 
-// Load list table if not already loaded
+// Load list table if not already loaded.
 if ( ! class_exists( 'EDD_Order_Item_Table' ) ) {
 	require_once 'class-order-items-table.php';
 }
