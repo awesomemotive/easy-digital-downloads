@@ -677,7 +677,7 @@ function edd_show_payment_icons() {
 		if ( edd_string_is_image_url( $key ) ) {
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 		} else {
-			$type = 'image';
+			$type = '';
 
 			$card_lowercase = strtolower( str_replace( ' ', '', $card ) );
 
