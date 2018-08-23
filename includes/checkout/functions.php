@@ -615,8 +615,8 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
  * @since 2.9.x
  */
 function edd_payment_svg_icons() {
-	
-	if ( ! edd_is_checkout() ) {
+
+	if ( ! ( edd_is_checkout() || edd_is_admin_page( 'settings', 'gateways' ) ) ) {
 		return;
 	}
 
@@ -699,3 +699,4 @@ function edd_payment_svg_icons() {
 	<?php
 }
 add_action( 'wp_footer', 'edd_payment_svg_icons', 9999 );
+add_action( 'admin_footer', 'edd_payment_svg_icons', 9999 );
