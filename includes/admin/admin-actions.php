@@ -84,3 +84,16 @@ function edd_display_product_tabs() {
 	<br />
 	<?php
 }
+
+/**
+ * Loads SVG icons into the admin footer.
+ * 
+ * @since 2.9.x
+ */
+function edd_svg_admin_icons() {
+	// Load SVG icons for the "General" tab of the "Payment Gateways" admin page.
+	if ( edd_is_admin_page( 'settings', 'gateways' ) ) {
+		return edd_svg_icons( array( 'mastercard', 'visa', 'americanexpress', 'discover', 'paypal', 'amazon' ) );
+	}
+}
+add_action( 'admin_footer', 'edd_svg_admin_icons', 9999 );
