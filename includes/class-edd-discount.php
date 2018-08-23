@@ -986,7 +986,7 @@ class EDD_Discount extends Adjustment {
 			/**
 			 * Filters the args before being inserted into the database.
 			 *
-			 * @since 3.0
+			 * @since 2.7
 			 *
 			 * @param array $args Discount args.
 			 */
@@ -996,6 +996,7 @@ class EDD_Discount extends Adjustment {
 			 * Filters the args before being inserted into the database (kept for backwards compatibility purposes)
 			 *
 			 * @since 2.7
+			 * @since 3.0 Updated parameters to pass $args twice for backwards compatibility.
 			 *
 			 * @param array $args Discount args.
 			 */
@@ -1046,6 +1047,8 @@ class EDD_Discount extends Adjustment {
 
 			/**
 			 * Fires after the discount code is inserted.
+			 *
+			 * @since 2.7
 			 *
 			 * @param array $meta {
 			 *     The discount details.
