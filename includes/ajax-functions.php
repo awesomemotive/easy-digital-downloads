@@ -1078,6 +1078,7 @@ function edd_ajax_add_adjustment_to_order() {
 				<td class="type column-type"><?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?></td>
 				<td class="description column-description"><code><?php echo esc_html( $discount->code ); ?></code></span></td>
 				<td class="amount column-amount"><span class="value"><?php echo edd_format_discount_rate( $discount->type, $discount->amount ); ?></span></td>
+				<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 				<input type="hidden" class="discount-id" name="adjustments[discount][0][id]" value="<?php echo $discount->id; // WPCS: XSS ok. ?>" />
 				<input type="hidden" class="discount-amount" name="adjustments[discount][0][amount]" value="<?php echo $discount->amount; // WPCS: XSS ok. ?>" />
 				<input type="hidden" class="discount-type" name="adjustments[discount][0][type]" value="<?php echo $discount->type; // WPCS: XSS ok. ?>" />
