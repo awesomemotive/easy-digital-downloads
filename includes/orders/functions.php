@@ -1225,6 +1225,13 @@ function edd_add_manual_order( $data ) {
 	if ( 'publish' === $status ) {
 		edd_update_order_status( $order_id, $status );
 	}
+
+	// Redirect to `Edit Order` page.
+	wp_redirect( edd_get_admin_url( array(
+		'page' => 'edd-payment-history',
+		'view' => 'view-order-details',
+		'id'   => $order_id,
+	) ) );
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
 
