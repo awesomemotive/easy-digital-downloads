@@ -63,7 +63,7 @@ final class EDD_Requirements_Check {
 
 		// PHP
 		'php' => array(
-			'minimum' => '5.3.0',
+			'minimum' => '5.4.0',
 			'name'    => 'PHP',
 			'exists'  => true,
 			'current' => false,
