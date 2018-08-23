@@ -978,6 +978,7 @@ function edd_ajax_add_order_item() {
 				<td class="tax column-tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
 			<?php endif; ?>
 			<td class="total column-total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
+			<th scope="row" class="check-column"><a href="#" class="remove-order-item"><span class="dashicons dashicons-no"></span></a></th>
 			<input type="hidden" class="download-id" name="downloads[0][id]" value="<?php echo esc_attr( $download['download_id'] ); ?>" />
 			<input type="hidden" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" />
 			<input type="hidden" class="download-price-id" name="downloads[0][price_id]" value="<?php echo esc_attr( $download['price_id'] ); // WPCS: XSS ok. ?>" />
