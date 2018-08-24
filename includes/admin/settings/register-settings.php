@@ -1957,9 +1957,8 @@ function edd_payment_icons_callback( $args = array() ) {
 
 					<?php endif; ?>
 
-					<span class="payment-option-name"><?php echo $option; ?></span>
 				<?php endif; ?>
-
+					<span class="payment-option-name"><?php echo $option; ?></span>
 				</label>
 			</li>
 
