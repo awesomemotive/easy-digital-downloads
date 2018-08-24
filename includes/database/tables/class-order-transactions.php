@@ -90,7 +90,7 @@ final class Order_Transactions extends Base {
 		// Maybe add column
 		if ( false === $result ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
 			" );
 		}
 
