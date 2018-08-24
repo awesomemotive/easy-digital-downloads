@@ -6,7 +6,7 @@
  * @subpackage  Database\Tables
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0.0
+ * @since       3.0
  */
 namespace EDD\Database\Tables;
 
@@ -111,7 +111,7 @@ final class Order_Adjustments extends Base {
 		// Maybe add column
 		if ( false === $result ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
+				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
 			" );
 		}
 

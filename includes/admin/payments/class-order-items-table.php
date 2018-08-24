@@ -161,6 +161,12 @@ class Order_Items_Table extends List_Table {
 		if ( edd_is_add_order_page() ) {
 			unset( $columns['cb'] );
 			unset( $columns['discount'] );
+
+			// Move pointer to the end of the array.
+			end( $columns );
+
+			// Add a `cb` column to display a remove icon when adding a new order.
+			$columns['cb'] = '';
 		}
 
 		// Return columns.
@@ -431,7 +437,7 @@ class Order_Items_Table extends List_Table {
 
 		// Maybe retrieve counts.
 		if ( ! edd_is_add_order_page() ) {
-			$this->counts = edd_get_order_item_counts( $_GET['id'] );
+			$this->counts = edd_get_order_item_counts( $_GET['id'] ); // WPCS: CSRF ok.
 		}
 	}
 
@@ -512,7 +518,8 @@ class Order_Items_Table extends List_Table {
 		) );
 
 		// Turn into a string.
-		$class = implode( ' ', $classes ); ?>
+		$class = implode( ' ', $classes );
+		?>
 
 		<tr id="order-item-<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
 			<?php $this->single_row_columns( $item ); ?>
