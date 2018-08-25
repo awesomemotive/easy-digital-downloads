@@ -14,7 +14,7 @@ namespace EDD\Reports\Data\Discounts;
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Reports as Reports;
-use EDD\Orders as Orders;
+use EDD\Stats as Stats;
 use EDD\Admin\List_Table;
 
 /**
@@ -34,7 +34,7 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	public function discount_codes_data() {
 		$filter = Reports\get_filter_value( 'dates' );
 
-		$stats = new Orders\Stats();
+		$stats = new Stats();
 
 		$d = $stats->get_most_popular_discounts( array(
 			'number' => 5,
