@@ -562,7 +562,7 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'   => 'none',
 		);
 
-		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payments', $number );
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Orders', $number );
 
 		for ( $i = 0; $i < $number; $i ++ ) {
 			$products = array();
@@ -590,7 +590,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$cart_details = array();
 
-			// Create the purchases
+			// Add each download to the order.
 			foreach ( $products as $key => $download ) {
 				if ( ! $download instanceof WP_Post ) {
 					continue;
@@ -599,9 +599,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$options         = array();
 				$final_downloads = array();
 
-				// Deal with variable pricing
+				// Variable price.
 				if ( edd_has_variable_prices( $download->ID ) ) {
-
 					$prices = edd_get_variable_prices( $download->ID );
 
 					if ( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
@@ -612,6 +611,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 					$item_price          = $prices[ $item_price_id ]['amount'];
 					$options['price_id'] = $item_price_id;
+
+				// Flat price.
 				} else {
 					$item_price = edd_get_download_price( $download->ID );
 				}
@@ -639,6 +640,7 @@ class EDD_CLI extends WP_CLI_Command {
 				$total += $item_price;
 			}
 
+			// Generate random date.
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
 				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp' ) );
@@ -657,6 +659,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			// Maybe generate users.
 			if ( $generate_users ) {
 				$fname  = $this->get_fname();
 				$lname  = $this->get_lname();
@@ -674,6 +677,7 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 			}
 
+			// Build purchase data.
 			$purchase_data = array(
 				'price'	        => edd_sanitize_amount( $total ),
 				'tax'           => edd_calculate_tax( $total ),
@@ -694,7 +698,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 
-			if ( $status != 'pending' ) {
+			if ( $status !== 'pending' ) {
 				edd_update_payment_status( $payment_id, $status );
 			}
 
@@ -709,7 +713,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		$progress->finish();
 
-		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
+		WP_CLI::success( sprintf( __( 'Created %s orders', 'easy-digital-downloads' ), $number ) );
 
 		return;
 	}
