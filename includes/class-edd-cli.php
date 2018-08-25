@@ -528,22 +528,14 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$generate_users = ( array_key_exists( 'generate_users', $assoc_args ) ) ? (bool) absint( $assoc_args['generate_users'] ) : $generate_users;
 
-			// Status requires a bit more validation
+			// Status requires a bit more validation.
 			if ( array_key_exists( 'status', $assoc_args ) ) {
-				$stati = array(
-					'publish',
-					'complete',
-					'pending',
-					'refunded',
-					'revoked',
-					'failed',
-					'abandoned',
-					'preapproval',
-					'cancelled',
-				);
+				$statuses = edd_get_payment_statuses();
 
-				if ( in_array( $assoc_args['status'], $stati, true ) ) {
-					$status = ( 'complete' === $assoc_args['status'] ) ? 'publish' : $assoc_args['status'];
+				if ( in_array( $assoc_args['status'], $statuses, true ) ) {
+					$status = ( 'complete' === $assoc_args['status'] )
+						? 'publish'
+						: $assoc_args['status'];
 				} else {
 					WP_CLI::warning( sprintf(
 						__( "Invalid status '%s', defaulting to 'complete'", 'easy-digital-downloads' ),
@@ -553,7 +545,7 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 		}
 
-		// Build the user info array
+		// Build the user info array.
 		$user_info = array(
 			'id'         => 0,
 			'email'      => $email,
@@ -679,31 +671,33 @@ class EDD_CLI extends WP_CLI_Command {
 
 			// Build purchase data.
 			$purchase_data = array(
-				'price'	        => edd_sanitize_amount( $total ),
-				'tax'           => edd_calculate_tax( $total ),
-				'purchase_key'  => strtolower( md5( uniqid() ) ),
-				'user_email'    => $email,
-				'user_info'     => $user_info,
-				'currency'      => edd_get_currency(),
-				'downloads'     => $final_downloads,
-				'cart_details'  => $cart_details,
-				'status'        => 'pending',
+				'price'        => edd_sanitize_amount( $total ),
+				'tax'          => edd_calculate_tax( $total ),
+				'purchase_key' => strtolower( md5( uniqid() ) ),
+				'user_email'   => $email,
+				'user_info'    => $user_info,
+				'currency'     => edd_get_currency(),
+				'downloads'    => $final_downloads,
+				'cart_details' => $cart_details,
+				'status'       => 'pending',
 			);
 
 			if ( ! empty( $timestring ) ) {
 				$purchase_data['date_created'] = $timestring;
 			}
 
-			$payment_id = edd_build_order( $purchase_data );
+			$order_id = edd_build_order( $purchase_data );
 
+			// Ensure purchase receipts do not get sent.
 			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 
-			if ( $status !== 'pending' ) {
-				edd_update_payment_status( $payment_id, $status );
+			// Trigger payment status actions.
+			if ( 'pending' !== $status ) {
+				edd_update_order_status( $order_id, $status );
 			}
 
 			if ( ! empty( $timestring ) ) {
-				$payment                 = new EDD_Payment( $payment_id );
+				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
 				$payment->save();
 			}
