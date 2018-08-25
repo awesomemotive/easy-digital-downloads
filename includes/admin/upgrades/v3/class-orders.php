@@ -54,8 +54,7 @@ class Orders extends Base {
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				$migrated = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT meta_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $result->ID ) );
-				if ( $migrated ) {
+				if ( $result->ID === $this->remap_id( $result->ID, static::ORDERS ) ) {
 					continue;
 				}
 
