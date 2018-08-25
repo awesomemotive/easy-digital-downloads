@@ -57,7 +57,7 @@ function edd_show_upgrade_notices() {
 	global $wpdb;
 
 	// Don't show notices on the upgrades page
-	if ( ! empty( $_GET['page'] ) && ( 'edd-upgrades' === $_GET['page'] ) ) {
+	if ( ! empty( $_GET['tab'] ) && ( 'upgrades' === $_GET['tab'] ) ) {
 		return;
 	}
 
@@ -111,14 +111,17 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
-	// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade
+	// Sequential Orders was the first stepped upgrade, so check if we have a
+	// stalled upgrade
 	$resume_upgrade = edd_maybe_resume_upgrade();
 	if ( ! empty( $resume_upgrade ) ) {
 
-		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
+		$resume_url = edd_get_admin_url( $resume_upgrade );
+		$cancel_url = edd_get_admin_url( array( 'page' => 'edd-tools' ) );
 		printf(
-			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
-			esc_url( $resume_url )
+			'<div class="error"><p>' . __( 'Easy Digital Downloads detected an incomplete database upgrade. <a href="%s">Resume</a> the upgrade, or <a href="%s">Cancel</a> it', 'easy-digital-downloads' ) . '</p></div>',
+			esc_url( $resume_url ),
+			esc_url( $cancel_url )
 		);
 
 	} else {
@@ -264,6 +267,11 @@ function edd_trigger_upgrades() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
+	// Bail if nonce cannot be verified
+	if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_upgrades' ) ) {
+		die( 'failed' );
+	}
+
 	// Get the current version from the database
 	$edd_version = edd_get_db_version();
 
@@ -307,26 +315,34 @@ function edd_trigger_upgrades() {
 add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
- * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+ * For use when doing 'stepped' upgrade routines, to see if we need to start
+ * somewhere in the middle
+ *
  * @since 2.2.6
  * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
  */
 function edd_maybe_resume_upgrade() {
 
-	$doing_upgrade = get_option( 'edd_doing_upgrade', false );
+	// Get the upgrade arguments
+	$args = get_option( 'edd_doing_upgrade', false );
 
-	if ( empty( $doing_upgrade ) ) {
+	// Bail if no upgrade
+	if ( empty( $args ) ) {
 		return false;
 	}
 
-	return $doing_upgrade;
+	// Return parsed arguments, with new defaults since 3.0
+	return wp_parse_args( $args, array(
+		'page' => 'edd-tools',
+		'tab'  => 'upgrades'
+	) );
 }
 
 /**
  * Adds an upgrade action to the completed upgrades array
  *
  * @since  2.3
- * @param  string $upgrade_action The action to add to the copmleted upgrades array
+ * @param  string $upgrade_action The action to add to the completed upgrades array
  * @return bool                   If the function was successfully added
  */
 function edd_set_upgrade_complete( $upgrade_action = '' ) {
@@ -616,13 +632,14 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 		// Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'upgrade_sequential_payment_numbers',
 			'step'        => $step,
 			'custom'      => $number,
 			'total'       => $total
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 
@@ -717,11 +734,12 @@ function edd_v21_upgrade_customers_db() {
 
 		// Customers found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'upgrade_customers_db',
 			'step'        => $step
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 
@@ -833,11 +851,12 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 		// More Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'upgrade_payments_price_logs_db',
 			'step'        => $step
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 	} else {
@@ -905,13 +924,14 @@ function edd_v23_upgrade_payment_taxes() {
 
 		// Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'upgrade_payment_taxes',
 			'step'        => $step,
 			'number'      => $number,
 			'total'       => $total
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 
@@ -1024,13 +1044,14 @@ function edd_v23_upgrade_customer_purchases() {
 
 		// More Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'upgrade_customer_payments_association',
 			'step'        => $step,
 			'number'      => $number,
 			'total'       => $total
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 
@@ -1108,13 +1129,14 @@ function edd_upgrade_user_api_keys() {
 
 		// More Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'upgrade_user_api_keys',
 			'step'        => $step,
 			'number'      => $number,
 			'total'       => $total
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 
@@ -1171,12 +1193,13 @@ function edd_remove_refunded_sale_logs() {
 		}
 
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-tools',
+			'tab'         => 'upgrades',
 			'edd-upgrade' => 'remove_refunded_sale_logs',
 			'step'        => $step,
 			'total'       => $total
-		), admin_url( 'index.php' ) );
+		) );
 
 		edd_redirect( $redirect );
 

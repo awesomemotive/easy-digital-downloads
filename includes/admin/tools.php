@@ -20,43 +20,58 @@ defined( 'ABSPATH' ) || exit;
  * @author Daniel J Griffiths
  */
 function edd_tools_page() {
+
+	// Get all tabs
+	$all_tabs   = edd_get_tools_tabs();
+
+	// Get the current tab
 	$active_tab = isset( $_GET['tab'] )
 		? sanitize_key( $_GET['tab'] )
-		: 'general'; ?>
+		: 'general';
+
+	// Start an output buffer
+	ob_start(); ?>
 
     <div class="wrap">
         <h2><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h2>
         <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
 			<?php
 
-			foreach ( edd_get_tools_tabs() as $tab_id => $tab_name ) {
+			foreach ( $all_tabs as $tab_id => $tab_name ) :
 
+				// Get the URL for the current tab
 				$tab_url = edd_get_admin_url( array(
 					'page' => 'edd-tools',
-					'tab'  => $tab_id
+					'tab'  => sanitize_key( $tab_id )
 				) );
 
+				// Remove some arguments
 				$tab_url = remove_query_arg( array(
 					'edd-message',
 				), $tab_url );
 
+				// Setup the active tab class
 				$active = ( $active_tab === $tab_id )
 					? ' nav-tab-active'
 					: '';
 
-				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
-			}
-			?>
+				// Output the nav tab
+				?><a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab <?php echo esc_attr( $active ); ?>">
+					<?php echo esc_html( $tab_name ); ?>
+				</a><?php
+
+			endforeach;?>
         </h2>
 
         <div class="metabox-holder">
-			<?php
-			do_action( 'edd_tools_tab_' . $active_tab );
-			?>
+			<?php do_action( 'edd_tools_tab_' . $active_tab ); ?>
         </div><!-- .metabox-holder -->
     </div><!-- .wrap -->
 
 	<?php
+
+	// Output the current buffer
+	echo ob_get_clean();
 }
 
 /**
@@ -67,24 +82,29 @@ function edd_tools_page() {
  * @return array Tabs for the 'Tools' page.
  */
 function edd_get_tools_tabs() {
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['api_keys'] = __( 'API Keys', 'easy-digital-downloads' );
 
+	// Default tabs
+	$tabs = array(
+		'general'       => __( 'General',       'easy-digital-downloads' ),
+		'api_keys'      => __( 'API Keys',      'easy-digital-downloads' ),
+		'import_export' => __( 'Import/Export', 'easy-digital-downloads' ),
+		'upgrades'      => __( 'Upgrades',      'easy-digital-downloads' ),
+		'system_info'   => __( 'System Info',   'easy-digital-downloads' ),
+		'logs'          => __( 'Logs',          'easy-digital-downloads' )
+	);
+
+	// Add the betas tab
 	if ( count( edd_get_beta_enabled_extensions() ) > 0 ) {
 		$tabs['betas'] = __( 'Beta Versions', 'easy-digital-downloads' );
 	}
 
-	$tabs['system_info'] = __( 'System Info', 'easy-digital-downloads' );
-	$tabs['logs']        = __( 'Logs', 'easy-digital-downloads' );
-
+	// Add the debug log tab
 	if ( edd_is_debug_mode() ) {
 		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
 	}
 
-	$tabs['import_export'] = __( 'Import/Export', 'easy-digital-downloads' );
-
-	return apply_filters( 'edd_tools_tabs', $tabs );
+	// Filter & return
+	return (array) apply_filters( 'edd_tools_tabs', $tabs );
 }
 
 /**
@@ -211,15 +231,21 @@ function edd_tools_clear_doing_upgrade_display() {
 		return;
 	}
 
-	do_action( 'edd_tools_clear_doing_upgrade_before' );
-	?>
+	// Get the URL for the form action
+	$form_action = edd_get_admin_url( array(
+		'page' => 'edd-tools',
+		'tab'  => 'general'
+	) );
+
+	do_action( 'edd_tools_clear_doing_upgrade_before' ); ?>
+
     <div class="postbox">
         <h3><span><?php _e( 'Clear Incomplete Upgrade Notice', 'easy-digital-downloads' ); ?></span></h3>
         <div class="inside">
-            <p><?php _e( 'Sometimes a database upgrade notice may not be cleared after an upgrade is completed due to conflicts with other extensions or other minor issues.', 'easy-digital-downloads' ); ?></p>
-            <p><?php _e( 'If you\'re certain these upgrades have been completed, you can clear these upgrade notices by clicking the button below. If you have any questions about this, please contact the Easy Digital Downloads support team and we\'ll be happy to help.', 'easy-digital-downloads' ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
+            <p><?php _e( 'Sometimes a database upgrade notice will get stuck, due to conflicts with other extensions or other minor issues.', 'easy-digital-downloads' ); ?></p>
+            <p><?php _e( 'If you are certain these upgrades completed successfully, you can clear the notices using the button below.', 'easy-digital-downloads' ); ?></p>
+            <p><?php _e( 'If you have any questions, please contact the Easy Digital Downloads support team.', 'easy-digital-downloads' ); ?></p>
+            <form method="post" action="<?php echo esc_url( $form_action ); ?>">
                 <p>
                     <input type="hidden" name="edd_action" value="clear_doing_upgrade"/>
 					<?php wp_nonce_field( 'edd_clear_upgrades_nonce', 'edd_clear_upgrades_nonce' ); ?>
@@ -228,8 +254,8 @@ function edd_tools_clear_doing_upgrade_display() {
             </form>
         </div><!-- .inside -->
     </div><!-- .postbox -->
-	<?php
-	do_action( 'edd_tools_clear_doing_upgrade_after' );
+
+	<?php do_action( 'edd_tools_clear_doing_upgrade_after' );
 }
 
 add_action( 'edd_tools_tab_general', 'edd_tools_clear_doing_upgrade_display' );

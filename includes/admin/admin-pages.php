@@ -91,7 +91,10 @@ function edd_add_options_link() {
 	$edd_tools_page      = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Tools',    'easy-digital-downloads' ), __( 'Tools',     'easy-digital-downloads' ), 'manage_shop_settings',  'edd-tools',           'edd_tools_page'           );
 
 	// Setup hidden upgrades page
-	$edd_upgrades_screen = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
+	//
+	// This page was deprecated in 3.0, but it's necessary to keep this here
+	// for backwards compatibilty.
+	$edd_upgrades_screen = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
@@ -453,3 +456,45 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 
 	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view, $passed_page, $passed_view );
 }
+
+/**
+ * Maybe redirect from the pre-3.0 Upgrades page to the post-3.0 one.
+ *
+ * @since 3.0
+ */
+function edd_redirect_from_dashboard_page_to_upgrades_page() {
+
+	// Get the step
+	$step = ! empty( $_GET['step'] )
+		? absint( $_GET['step'] )
+		: 1;
+
+	// Get the steps
+	$steps = ! empty( $_GET['steps'] )
+		? absint( $_GET['steps'] )
+		: 1;
+
+	// Get the steps
+	$custom = ! empty( $_GET['custom'] )
+		? absint( $_GET['custom'] )
+		: 1;
+
+	// Get the steps
+	$upgrade = ! empty( $_GET['edd-upgrade'] )
+		? sanitize_key( $_GET['edd-upgrade'] )
+		: '';
+
+	// Setup the arguments
+	$args = array(
+		'page'        => 'edd-tools',
+		'tab'         => 'upgrades',
+		'edd-upgrade' => $upgrade,
+		'step'        => $step,
+		'steps'       => $steps,
+		'custom'      => $custom
+	);
+
+	// Redirect to new Upgrades page
+	edd_redirect( edd_get_admin_url( $args ) );
+}
+add_action( 'load-dashboard_page_edd-upgrades', 'edd_redirect_from_dashboard_page_to_upgrades_page' );
