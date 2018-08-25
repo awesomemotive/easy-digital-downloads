@@ -51,6 +51,12 @@ class Discounts extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $old_discount ) {
+
+				// Check if discount has already been migrated.
+				if ( $old_discount->ID === $this->remap_id( $old_discount->ID, static::DISCOUNTS ) ) {
+					continue;
+				}
+
 				$old_discount = get_post( $old_discount->ID );
 
 				$args            = array();
