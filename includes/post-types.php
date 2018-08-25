@@ -441,7 +441,7 @@ add_filter( 'bulk_post_updated_messages', 'edd_bulk_updated_messages', 10, 2 );
  */
 function  edd_download_row_actions( $actions, $post ) {
 	if ( 'download' === $post->post_type ) {
-		return array_merge( array( 'id' => 'ID: ' . $post->ID ), $actions );
+		return array_merge( array( 'id' => '#' . $post->ID ), $actions );
 	}
 
 	return $actions;
