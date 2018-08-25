@@ -1509,7 +1509,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 				$type = 'refunded' === $result->post_status
 					? 'refund'
-					: 'order';
+					: 'sale';
 
 				$order_data = array(
 					'parent'         => $result->post_parent,
