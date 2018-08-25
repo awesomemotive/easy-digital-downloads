@@ -1,0 +1,40 @@
+.edd-email-tags-filter {
+  margin: -2px -15px 15px;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  background: #f3f3f3;
+}
+
+.edd-email-tags-filter__input {
+  padding: 10px;
+  width: 100%;
+}
+
+.edd-email-tags-list {
+  margin: 0;
+}
+
+.edd-email-tags-list__tag {
+  margin-bottom: 15px;
+}
+
+.edd-email-tags-list__tag::last-child {
+	margin-bottom: 0;
+}
+
+.edd-email-tags-list__insert {
+  cursor: pointer;
+  color: #666;
+  text-align: left;
+  padding: 1rem;
+  width: 100%;
+  background: 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.edd-email-tags-list__insert strong {
+  color: #444;
+  display: block;
+  margin-bottom: 3px;
+}
