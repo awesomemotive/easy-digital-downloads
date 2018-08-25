@@ -279,6 +279,13 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
 		if ( ! empty( $customer_id ) ) {
 
+			// Add the primary email address for this customer
+			edd_add_customer_email_address( array(
+				'customer_id' => $customer_id,
+				'email'       => $args['email'],
+				'type'        => 'primary'
+			) );
+
 			// Maybe add payments
 			if ( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
 				$payment_ids = array_unique( array_values( $args['payment_ids'] ) );
