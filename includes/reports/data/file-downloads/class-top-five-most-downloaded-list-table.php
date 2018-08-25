@@ -14,7 +14,7 @@ namespace EDD\Reports\Data\File_Downloads;
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Reports as Reports;
-use EDD\Orders as Orders;
+use EDD\Stats as Stats;
 use EDD\Admin\List_Table;
 
 // Exit if accessed directly
@@ -37,7 +37,7 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 	public function download_data() {
 		$filter = Reports\get_filter_value( 'dates' );
 
-		$stats = new Orders\Stats();
+		$stats = new Stats();
 
 		return $stats->get_most_downloaded_products( array(
 			'number' => 5,
