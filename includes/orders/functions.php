@@ -2026,10 +2026,12 @@ function edd_count_order_transactions( $args = array() ) {
  *
  * @since 3.0
  *
- * @param int $order_id Order ID.
+ * @param int    $order_id Order ID.
+ * @param string $status   Optional. Refund status. Default `complete`.
+ *
  * @return int|false New order ID if successful, false otherwise.
  */
-function edd_refund_order( $order_id = 0 ) {
+function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 	global $wpdb;
 
 	// Bail if no order ID was passed.
@@ -2039,6 +2041,14 @@ function edd_refund_order( $order_id = 0 ) {
 
 	// Ensure the order ID is an integer.
 	$order_id = absint( $order_id );
+
+	// Sanitize status.
+	$status = strtolower( sanitize_text_field( $status ) );
+
+	// Status can only either be `complete` or `pending`.
+	if ( ! in_array( $status, array( 'pending', 'complete' ), true ) ) {
+		$status = 'complete'; // Default to `complete`.
+	}
 
 	// Fetch order.
 	$order = edd_get_order( $order_id );
@@ -2110,7 +2120,7 @@ function edd_refund_order( $order_id = 0 ) {
 	$order_data = array(
 		'parent'       => $order_id,
 		'order_number' => $number,
-		'status'       => 'refunded',
+		'status'       => $status,
 		'type'         => 'refund',
 		'user_id'      => $order->user_id,
 		'customer_id'  => $order->customer_id,
@@ -2189,8 +2199,12 @@ function edd_refund_order( $order_id = 0 ) {
 		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
 	) );
 
-	// Trigger actions to run.
-	edd_update_order_status( $new_order_id, 'refunded' );
+	// Update order status to `refunded` once refund is complete.
+	if ( 'complete' === $status ) {
+		edd_update_order( $order_id, array(
+			'status' => 'refunded',
+		) );
+	}
 
 	/**
 	 * Fires when an order has been refunded.
