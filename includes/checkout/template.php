@@ -229,19 +229,17 @@ function edd_get_cc_form() {
 		<legend><?php _e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
 		<?php if( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
-				<span class="padlock">
-					<?php
-						echo edd_get_svg(
-							array(
-								'icon'    => 'lock',
-								'width'   => 18,
-								'height'  => 28,
-								'title'   => __( 'Secure SSL encrypted payment', 'easy-digital-downloads' ),
-								'classes' => array( 'edd-icon', 'edd-icon-lock' )
-							)
-						);
-					?>
-				</span>
+				<?php
+					echo edd_get_svg(
+						array(
+							'icon'    => 'lock',
+							'width'   => 16,
+							'height'  => 16,
+							'title'   => __( 'Secure SSL encrypted payment', 'easy-digital-downloads' ),
+							'classes' => array( 'edd-icon', 'edd-icon-lock' )
+						)
+					);
+				?>
 				<span><?php _e( 'This is a secure SSL encrypted payment.', 'easy-digital-downloads' ); ?></span>
 			</div>
 		<?php endif; ?>
