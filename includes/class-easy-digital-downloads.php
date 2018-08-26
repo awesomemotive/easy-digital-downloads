@@ -364,6 +364,9 @@ final class Easy_Digital_Downloads {
 
 		// Load Amazon Payments.
 		PayWithAmazon\EDD_Amazon_Payments::getInstance();
+
+		// Load cache helper.
+		new EDD_Cache_Helper();
 	}
 
 	/** Includes **************************************************************/
