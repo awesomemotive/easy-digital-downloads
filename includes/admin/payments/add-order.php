@@ -69,7 +69,9 @@ $order = (object) $order;
 ?>
 
 <div class="wrap edd-wrap">
-	<h2><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h2>
+	<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
+
+	<hr class="wp-header-end">
 
 	<div class="notice notice-error" id="edd-add-order-customer-error" style="display: none;">
 		<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>

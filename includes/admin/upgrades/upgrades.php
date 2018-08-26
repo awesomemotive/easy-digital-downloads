@@ -26,7 +26,8 @@ function edd_upgrades_screen() {
 		: ''; ?>
 
 	<div class="wrap">
-	<h2><?php _e( 'Upgrades', 'easy-digital-downloads' ); ?></h2>
+	<h1><?php _e( 'Upgrades', 'easy-digital-downloads' ); ?></h1>
+	<hr class="wp-header-end">
 
 	<?php if ( is_callable( 'edd_upgrade_render_' . $action ) ) {
 
