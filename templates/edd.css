@@ -14,14 +14,7 @@
 	display: inline-block;
 	fill: currentColor;
 	position: relative; /* Align more nicely with capital letters */
-	top: -0.0625em;
 	vertical-align: middle;
-	width: 1em;
-	height: 1em;
-}
-
-.edd-icon-lock {
-	top: -0.125rem;
 }
 
 .edd-icon-spin {
@@ -343,6 +336,9 @@
 #edd_secure_site_wrapper {
 	padding: 4px 4px 4px 0;
 	font-weight: bold;
+}
+#edd_secure_site_wrapper span { 
+	vertical-align: middle;
 }
 #edd_checkout_form_wrap input.edd-input.card-number.valid {
 	background-image: url(images/tick.png);
