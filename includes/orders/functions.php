@@ -931,9 +931,15 @@ function edd_add_manual_order( $data ) {
 
 	// Create a new customer record.
 	if ( isset( $data['edd-new-customer'] ) && 1 === absint( $data['edd-new-customer'] ) ) {
-		$name = isset( $data['edd-new-customer-name'] )
-			? sanitize_text_field( $data['edd-new-customer-name'] )
+		$first_name = isset( $data['edd-new-customer-first-name'] )
+			? sanitize_text_field( $data['edd-new-customer-first-name'] )
 			: '';
+
+		$last_name = isset( $data['edd-new-customer-last-name'] )
+			? sanitize_text_field( $data['edd-new-customer-last-name'] )
+			: '';
+
+		$name = $first_name . ' ' . $last_name;
 
 		$email = isset( $data['edd-new-customer-email'] )
 			? sanitize_email( $data['edd-new-customer-email'] )
@@ -1219,6 +1225,13 @@ function edd_add_manual_order( $data ) {
 	if ( 'publish' === $status ) {
 		edd_update_order_status( $order_id, $status );
 	}
+
+	// Redirect to `Edit Order` page.
+	wp_redirect( edd_get_admin_url( array(
+		'page' => 'edd-payment-history',
+		'view' => 'view-order-details',
+		'id'   => $order_id,
+	) ) );
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
 

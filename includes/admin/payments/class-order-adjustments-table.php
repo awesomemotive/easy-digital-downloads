@@ -71,24 +71,24 @@ class Order_Adjustments_Table extends List_Table {
 	public function search_box( $text, $input_id ) {
 
 		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_adjustments() ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_adjustments() ) { // WPCS: CSRF ok.
 			return;
 		}
 
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
+		if ( ! empty( $_REQUEST['orderby'] ) ) { // WPCS: CSRF ok.
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
 		}
 
-		if ( ! empty( $_REQUEST['order'] ) ) {
+		if ( ! empty( $_REQUEST['order'] ) ) { // WPCS: CSRF ok.
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 		}
 
 		?>
 
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ) ?>"><?php echo esc_html( $text ); ?>
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>
 				:</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
@@ -109,7 +109,7 @@ class Order_Adjustments_Table extends List_Table {
 		// Remove some query arguments
 		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
-		$id = isset( $_GET['id'] )
+		$id = isset( $_GET['id'] ) // WPCS: CSRF ok.
 			? absint( $_GET['id'] )
 			: 0;
 
@@ -151,6 +151,12 @@ class Order_Adjustments_Table extends List_Table {
 		// Remove checkbox column if we're adding an order.
 		if ( edd_is_add_order_page() ) {
 			unset( $columns['cb'] );
+
+			// Move pointer to the end of the array.
+			end( $columns );
+
+			// Add a `cb` column to display a remove icon when adding a new adjustment.
+			$columns['cb'] = '';
 		}
 
 		return $columns;
@@ -232,15 +238,15 @@ class Order_Adjustments_Table extends List_Table {
 
 		// Edit
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-				'edd-action'       => 'edit_order_adjustment',
-				'order_adjustment' => $order_adjustment->id,
-			), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+			'edd-action'       => 'edit_order_adjustment',
+			'order_adjustment' => $order_adjustment->id,
+		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Delete
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action'       => 'delete_order_adjustment',
-				'order_adjustment' => $order_adjustment->id,
-			), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			'edd-action'       => 'delete_order_adjustment',
+			'order_adjustment' => $order_adjustment->id,
+		), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all order_adjustment row actions
 		$row_actions = apply_filters( 'edd_order_adjustment_row_actions', $row_actions, $order_adjustment );
@@ -261,9 +267,9 @@ class Order_Adjustments_Table extends List_Table {
 
 		// Wrap order_adjustment title in strong anchor
 		$order_adjustment_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-				'edd-action'       => 'edit_order_adjustment',
-				'order_adjustment' => $order_adjustment->id,
-			), $base ) . '">' . esc_html( $name ) . '</a></strong>';
+			'edd-action'       => 'edit_order_adjustment',
+			'order_adjustment' => $order_adjustment->id,
+		), $base ) . '">' . esc_html( $name ) . '</a></strong>';
 
 		// Return order_adjustment title & row actions
 		return $order_adjustment_title . $this->row_actions( $row_actions );
@@ -394,7 +400,7 @@ class Order_Adjustments_Table extends List_Table {
 
 		// Maybe retrieve the counts.
 		if ( ! edd_is_add_order_page() ) {
-			$this->counts = edd_get_order_adjustment_counts( $_GET['id'] );
+			$this->counts = edd_get_order_adjustment_counts( $_GET['id'] ); // WPCS: CSRF ok.
 		}
 	}
 
@@ -447,7 +453,7 @@ class Order_Adjustments_Table extends List_Table {
 
 		$this->items = $this->order_adjustments_data();
 
-		$type = isset( $_GET['adjustment_type'] )
+		$type = isset( $_GET['adjustment_type'] ) // WPCS: CSRF ok.
 			? sanitize_key( $_GET['adjustment_type'] )
 			: 'total';
 
