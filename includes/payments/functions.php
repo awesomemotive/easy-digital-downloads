@@ -233,9 +233,12 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * @since 3.0 Updated to use new refunds API and new query methods.
  *            Updated to use new nomenclature.
  *            Set default value of order ID to 0.
+ *            Method now returns the refunded order ID.
  *
  * @param int $download_id Download ID.
  * @param int $order_id    Order ID.
+ *
+ * @return int|false Refunded order ID, false otherwise.
  */
 function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 
@@ -250,7 +253,7 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 
 	// Bail if no order ID was passed.
 	if ( empty( $order_id ) ) {
-		return;
+		return false;
 	}
 
 	$payment = edd_get_payment( $order_id );
@@ -258,10 +261,10 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 	$cart_details = $payment->cart_details;
 	$user_info    = $payment->user_info;
 
-	if ( is_array( $cart_details ) ) {
+	// Refund the order.
+	$new_order_id = edd_refund_order( $order_id );
 
-		// Refund the order entirely.
-		edd_refund_order( $order_id );
+	if ( is_array( $cart_details ) ) {
 
 		// Loop through each cart item.
 		foreach ( $cart_details as $item ) {
@@ -318,6 +321,8 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 			}
 		}
 	}
+
+	return $new_order_id;
 }
 
 /**

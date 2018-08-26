@@ -1932,11 +1932,13 @@ class EDD_Payment {
 			unset( $update_fields['ID'], $update_fields['post_status'] );
 
 			/**
-			 * As per the new refund API introduce in 3.0, we no longer update
-			 * the order, instead, we create a new order with negated amounts
-			 * for refunds to be accurately tracked and accounted for.
+			 * As per the new refund API introduce in 3.0, the order is only
+			 * marked as refunded when `EDD_Payment::process_refund()` has called
+			 * `edd_refund_order()` and a new order has been generated with a
+			 * type of `refund`.
 			 *
 			 * @since 3.0
+			 * @see EDD_Payment::process_refund()
 			 * @see edd_refund_order()
 			 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2721
 			 */
@@ -2786,7 +2788,15 @@ class EDD_Payment {
 	 * @param bool $alter_customer_purchase_count If the method should reduce the customer's purchase count
 	 */
 	private function maybe_alter_stats( $alter_store_earnings, $alter_customer_value, $alter_customer_purchase_count ) {
-		edd_undo_purchase( false, $this->ID );
+		if ( edd_undo_purchase( false, $this->ID ) ) {
+			$this->status      = 'refunded';
+			$this->post_status = 'refunded';
+
+			$statuses              = edd_get_payment_statuses();
+			$this->status_nicename = array_key_exists( 'refunded', $statuses )
+				? $statuses['refunded']
+				: ucfirst( 'refunded' );
+		}
 
 		// Decrease store earnings
 		if ( true === $alter_store_earnings ) {
