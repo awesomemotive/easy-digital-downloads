@@ -633,6 +633,10 @@ function edd_svg_checkout_icons() {
 		}
 	}
 
+	if ( is_ssl() ) {
+		$icons[] = 'lock';
+	}
+
 	return edd_svg_icons( $icons );
 }
 add_action( 'wp_footer', 'edd_svg_checkout_icons', 9999 );
