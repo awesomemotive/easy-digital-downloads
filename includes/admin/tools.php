@@ -25,7 +25,7 @@ function edd_tools_page() {
 		: 'general'; ?>
 
     <div class="wrap">
-        <h2><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h2>
+        <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
         <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
 			<?php
 

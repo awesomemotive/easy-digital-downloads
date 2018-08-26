@@ -38,8 +38,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
+			'singular' => 'log',
+			'plural'   => 'logs',
 			'ajax'     => false
 		) );
 

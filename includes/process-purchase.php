@@ -109,8 +109,9 @@ function edd_process_purchase_form() {
 	$address = wp_parse_args( $user_info['address'], array(
 		'line1'   => '',
 		'line2'   => '',
-		'country' => '',
+		'city'    => '',
 		'state'   => '',
+		'country' => '',
 		'zip'     => '',
 	) );
 
