@@ -13,25 +13,27 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Retrieve a download by a given field
+ * Retrieve a download by a given field.
  *
- * @since       2.0
- * @param       string $field The field to retrieve the discount with
- * @param       mixed $value The value for field
- * @return      mixed
+ * @since 2.0
+ *
+ * @param string $field Field to retrieve the download with.
+ * @param mixed  $value Value of the row.
+ *
+ * @return WP_Post|false WP_Post object if download found, false otherwise.
  */
 function edd_get_download_by( $field = '', $value = '' ) {
 
-	if( empty( $field ) || empty( $value ) ) {
+	// Bail if empty values passed.
+	if ( empty( $field ) || empty( $value ) ) {
 		return false;
 	}
 
-	switch( strtolower( $field ) ) {
-
+	switch ( strtolower( $field ) ) {
 		case 'id':
 			$download = get_post( $value );
 
-			if( get_post_type( $download ) != 'download' ) {
+			if ( 'download' !== get_post_type( $download ) ) {
 				return false;
 			}
 
@@ -46,7 +48,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
 				'post_status'    => 'any'
 			) );
 
-			if( $download ) {
+			if ( $download ) {
 				$download = $download[0];
 			}
 
@@ -61,7 +63,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
 				'post_status'    => 'any'
 			) );
 
-			if( $download ) {
+			if ( $download ) {
 				$download = $download[0];
 			}
 
@@ -71,11 +73,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
 			return false;
 	}
 
-	if( $download ) {
-		return $download;
-	}
-
-	return false;
+	return $download ?: false;
 }
 
 /**
