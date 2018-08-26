@@ -1668,6 +1668,15 @@ function edd_svg_icons( $icons = array() ) {
 				<rect y="30.292" width="50" height="1.684" fill="#f90"/>
 			</symbol>
 		<?php endif; ?>
+
+		<?php
+		$icon = 'lock';
+		if ( in_array( $icon, $icons ) ) : ?>
+			<symbol id="icon-<?php echo $icon; ?>" viewBox="0 0 18 28">
+				<path d="M5 12h8V9c0-2.203-1.797-4-4-4S5 6.797 5 9v3zm13 1.5v9c0 .828-.672 1.5-1.5 1.5h-15C.672 24 0 23.328 0 22.5v-9c0-.828.672-1.5 1.5-1.5H2V9c0-3.844 3.156-7 7-7s7 3.156 7 7v3h.5c.828 0 1.5.672 1.5 1.5z"/>
+			</symbol>
+		<?php endif; ?>
+
 		</defs>
 	</svg>
 	<?php
