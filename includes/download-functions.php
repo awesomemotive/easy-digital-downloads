@@ -127,7 +127,7 @@ function edd_get_download( $download_id = 0 ) {
  */
 function edd_is_free_download( $download_id = 0, $price_id = false ) {
 
-	// Bail if no download ID passed.
+	// Bail if no download ID was passed.
 	if ( empty( $download_id ) ) {
 		return false;
 	}
@@ -148,7 +148,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  */
 function edd_get_download_price( $download_id = 0 ) {
 
-	// Bail if no download ID passed.
+	// Bail if no download ID was passed.
 	if ( empty( $download_id ) ) {
 		return false;
 	}
@@ -173,7 +173,7 @@ function edd_get_download_price( $download_id = 0 ) {
  */
 function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
-	// Attempt the get the ID of the current item in the WordPress loop.
+	// Attempt to get the ID of the current item in the WordPress loop.
 	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
 	}
@@ -393,7 +393,7 @@ function edd_get_price_option_amount( $download_id = 0, $price_id = 0 ) {
  */
 function edd_get_lowest_price_option( $download_id = 0 ) {
 
-	// Attempt the get the ID of the current item in the WordPress loop.
+	// Attempt to get the ID of the current item in the WordPress loop.
 	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
 	}
@@ -450,7 +450,7 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
  */
 function edd_get_lowest_price_id( $download_id = 0 ) {
 
-	// Attempt the get the ID of the current item in the WordPress loop.
+	// Attempt to get the ID of the current item in the WordPress loop.
 	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
 	}
@@ -501,7 +501,7 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
  */
 function edd_get_highest_price_option( $download_id = 0 ) {
 
-	// Attempt the get the ID of the current item in the WordPress loop.
+	// Attempt to get the ID of the current item in the WordPress loop.
 	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
 	}
@@ -556,7 +556,7 @@ function edd_get_highest_price_option( $download_id = 0 ) {
  */
 function edd_price_range( $download_id = 0 ) {
 
-	// Bail if no download ID passed.
+	// Bail if no download ID was passed.
 	if ( empty( $download_id ) ) {
 		return false;
 	}
@@ -580,7 +580,7 @@ function edd_price_range( $download_id = 0 ) {
  */
 function edd_single_price_option_mode( $download_id = 0 ) {
 
-	// Attempt the get the ID of the current item in the WordPress loop.
+	// Attempt to get the ID of the current item in the WordPress loop.
 	if ( empty( $download_id ) ) {
 		$download_id = get_the_ID();
 	}
