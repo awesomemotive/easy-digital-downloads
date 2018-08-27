@@ -809,6 +809,7 @@ h2.nav-tab-wrapper.edd-tab-clear {
 .edit-php.post-type-download .wrap .wp-heading-inline,
 .download_page_edd-payment-history .wrap .wp-heading-inline,
 .download_page_edd-customers .wrap .wp-heading-inline,
+.download_page_edd-discounts .wrap .wp-heading-inline,
 .edit-tags-php.post-type-download .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .subtitle,
 .edit-php.post-type-download .wrap > .page-title-action,
@@ -819,6 +820,7 @@ h2.nav-tab-wrapper.edd-tab-clear {
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-customers .wrap .nav-tab-wrapper .page-title-action,
+.download_page_edd-discounts .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-payment-history .wrap .nav-tab-wrapper .page-title-action {
 	top: 3px;
 	margin-left: 10px;
