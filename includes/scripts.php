@@ -181,11 +181,11 @@ function edd_load_admin_scripts( $hook ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$css_suffix  = is_rtl() ? '-rtl' : '';
 	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$js_suffix   = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	$js_suffix   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	$version     = edd_admin_get_script_version();
 
 	// Always enqueue the main admin menu CSS (using the JS suffix due to not having RTL styling)
-	wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $js_suffix . '.css', array(), $version );
+	wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $css_suffix . '.css', array(), $version );
 	wp_enqueue_style( 'edd-admin-menu' );
 
 	// Bail if not an EDD admin page

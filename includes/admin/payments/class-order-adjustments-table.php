@@ -23,27 +23,6 @@ defined( 'ABSPATH' ) || exit;
 class Order_Adjustments_Table extends List_Table {
 
 	/**
-	 * Number of results to show per page.
-	 *
-	 * @since 3.0
-	 * @var   int
-	 */
-	public $per_page = 30;
-
-	/**
-	 * Order Adjustment counts, keyed by status.
-	 *
-	 * @since 3.0
-	 * @var   array
-	 */
-	public $counts = array(
-		'tax_rate' => 0,
-		'discount' => 0,
-		'fee'      => 0,
-		'total'    => 0,
-	);
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 3.0
@@ -51,50 +30,13 @@ class Order_Adjustments_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Order Adjustment', 'easy-digital-downloads' ),
+			'singular' => __( 'Order Adjustment',  'easy-digital-downloads' ),
 			'plural'   => __( 'Order Adjustments', 'easy-digital-downloads' ),
 			'ajax'     => false,
 		) );
 
 		$this->process_bulk_action();
 		$this->get_counts();
-	}
-
-	/**
-	 * Show the search field.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $text     Label for the search box.
-	 * @param string $input_id ID of the search box.
-	 */
-	public function search_box( $text, $input_id ) {
-
-		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_adjustments() ) { // WPCS: CSRF ok.
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) { // WPCS: CSRF ok.
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-
-		if ( ! empty( $_REQUEST['order'] ) ) { // WPCS: CSRF ok.
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-
-		?>
-
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>
-				:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
-			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
-
-		<?php
 	}
 
 	/**

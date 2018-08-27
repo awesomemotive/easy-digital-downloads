@@ -47,6 +47,68 @@ abstract class Base_Object {
 	}
 
 	/**
+	 * Magic isset'ter for immutability.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __isset( $key = '' ) {
+
+		// No more uppercase ID properties ever
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
+
+		// Class method to try and call
+		$method = "get_{$key}";
+
+		// Return property if exists
+		if ( method_exists( $this, $method ) ) {
+			return true;
+
+		// Return get method results if exists
+		} elseif ( property_exists( $this, $key ) ) {
+			return true;
+		}
+
+		// Return false if not exists
+		return false;
+	}
+
+	/**
+	 * Magic getter for immutability.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __get( $key = '' ) {
+
+		// No more uppercase ID properties ever
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
+
+		// Class method to try and call
+		$method = "get_{$key}";
+
+		// Return property if exists
+		if ( method_exists( $this, $method ) ) {
+			return call_user_func( array( $this, $method ) );
+
+		// Return get method results if exists
+		} elseif ( property_exists( $this, $key ) ) {
+			return $this->{$key};
+		}
+
+		// Return null if not exists
+		return null;
+	}
+
+	/**
 	 * Converts the given object to an array.
 	 *
 	 * @since 3.0
@@ -58,33 +120,26 @@ abstract class Base_Object {
 	}
 
 	/**
-	 * Magic __get method to dispatch a call to retrieve a protected property.
+	 * Set class variables from arguments.
 	 *
 	 * @since 3.0
-	 *
-	 * @param mixed $key The field you are trying to get
-	 *
-	 * @return mixed Either the method or property that best matches the key
+	 * @param array $args
 	 */
-	public function __get( $key = '' ) {
-		$retval = null;
-		$key    = sanitize_key( $key );
+	protected function set_vars( $args = array() ) {
 
-		// Never allow for uppercase ID fields in our own
-		if ( 'ID' === $key ) {
-			$key = 'id';
+		// Bail if empty or not an array
+		if ( empty( $args ) ) {
+			return;
 		}
 
-		// Try the method first.
-		if ( method_exists( $this, "get_{$key}" ) ) {
-			$retval = call_user_func( array( $this, "get_{$key}" ) );
-
-		// Try the property last.
-		} elseif ( property_exists( $this, $key ) ) {
-			$retval = $this->{$key};
+		// Cast to an array
+		if ( ! is_array( $args ) ) {
+			$args = (array) $args;
 		}
 
-		// Return whatever was gettable.
-		return $retval;
+		// Set all properties
+		foreach ( $args as $key => $value ) {
+			$this->{$key} = $value;
+		}
 	}
 }
