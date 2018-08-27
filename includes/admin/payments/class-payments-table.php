@@ -26,28 +26,12 @@ use EDD\Admin\List_Table;
 class EDD_Payment_History_Table extends List_Table {
 
 	/**
-	 * Number of orders to show per page.
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $per_page = 30;
-
-	/**
 	 * URL of this page.
 	 *
 	 * @var string
 	 * @since 1.4.1
 	 */
 	public $base_url;
-
-	/**
-	 * Total number of orders, grouped by status.
-	 *
-	 * @var array
-	 * @since 3.0
-	 */
-	public $counts = array();
 
 	/**
 	 * Constructor.

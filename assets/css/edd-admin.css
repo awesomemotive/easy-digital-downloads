@@ -577,7 +577,8 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-status,
 .wp-list-table.addresses .column-type,
 .wp-list-table.orders .column-amount,
-.wp-list-table.orders .column-status {
+.wp-list-table.orders .column-status,
+.wp-list-table.posts .column-earnings {
 	width: 11%;
 }
 
@@ -587,14 +588,7 @@ textarea[name="edd-note"] {
 }
 
 .wp-list-table.addresses .column-type,
-.wp-list-table.emails .column-type {
-	width: 21%;
-}
-
-.wp-list-table.posts .column-earnings {
-	width: 11%;
-}
-
+.wp-list-table.emails .column-type,
 .wp-list-table.posts .column-download_category,
 .wp-list-table.posts .column-download_tag,
 .wp-list-table.posts .column-price {
@@ -640,6 +634,8 @@ textarea[name="edd-note"] {
 }
 
 .wp-list-table.customers .column-primary strong,
+.wp-list-table.emails .column-primary strong,
+.wp-list-table.addresses .column-primary strong,
 .wp-list-table.discounts .column-primary strong,
 .wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
@@ -659,7 +655,7 @@ textarea[name="edd-note"] {
 	float: left;
 	margin-right: 10px;
 	margin-top: 1px;
-	border-radius: 20%;
+	border-radius: 5px;
 }
 
 /* Row Actions
@@ -2703,7 +2699,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	text-align: center;
 }
 .edd-sections-wrap .section-wrap img.avatar {
-	border-radius: 22%;
+	border-radius: 5px;
 	margin-bottom: 10px;
 }
 .edd-sections-wrap .section-wrap .customer-id {
