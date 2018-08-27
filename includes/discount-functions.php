@@ -857,9 +857,14 @@ function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_
 function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 	$discount = edd_get_discount_by_code( $code );
 
-	return ! empty( $discount->id )
-		? $discount->is_valid( $user, $set_error )
-		: false;
+	if ( ! empty( $discount->id ) ) {
+		return $discount->is_valid( $user, $set_error );
+	} elseif ( $set_error ) {
+		edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration', 'easy-digital-downloads' ) );
+		return false;
+	} else {
+		return false;
+	}
 }
 
 /**

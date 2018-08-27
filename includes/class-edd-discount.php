@@ -1605,7 +1605,7 @@ class EDD_Discount extends Adjustment {
 				$return = true;
 			}
 		} elseif ( $set_error ) {
-			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration' , 'easy-digital-downloads' ) );
+			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration', 'easy-digital-downloads' ) );
 		}
 
 		/**

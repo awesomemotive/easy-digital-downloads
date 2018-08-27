@@ -274,13 +274,12 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
  * @return void
  */
 function edd_ajax_apply_discount() {
-	if ( isset( $_POST['code'] ) ) {
-
+	if ( isset( $_POST['code'] ) ) { // WPCS: CSRF ok.
 		$discount_code = sanitize_text_field( $_POST['code'] );
 
 		$return = array(
 			'msg'  => '',
-			'code' => $discount_code
+			'code' => $discount_code,
 		);
 
 		$user = '';
@@ -288,7 +287,7 @@ function edd_ajax_apply_discount() {
 		if ( is_user_logged_in() ) {
 			$user = get_current_user_id();
 		} else {
-			parse_str( $_POST['form'], $form );
+			parse_str( $_POST['form'], $form ); // WPCS: CSRF ok.
 			if ( ! empty( $form['edd_email'] ) ) {
 				$user = urldecode( $form['edd_email'] );
 			}
@@ -306,19 +305,20 @@ function edd_ajax_apply_discount() {
 				'total_plain' => $total,
 				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
 				'code'        => $discount_code,
-				'html'        => edd_get_cart_discounts_html( $discounts )
+				'html'        => edd_get_cart_discounts_html( $discounts ),
 			);
 		} else {
-			$errors = edd_get_errors();
-			$return['msg']  = $errors['edd-discount-error'];
+			$errors        = edd_get_errors();
+			$return['msg'] = $errors['edd-discount-error'];
 			edd_unset_error( 'edd-discount-error' );
 		}
 
 		// Allow for custom discount code handling
 		$return = apply_filters( 'edd_ajax_discount_response', $return );
 
-		echo json_encode($return);
+		echo wp_json_encode( $return );
 	}
+
 	edd_die();
 }
 add_action( 'wp_ajax_edd_apply_discount',        'edd_ajax_apply_discount' );
