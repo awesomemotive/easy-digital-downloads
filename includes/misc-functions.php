@@ -76,6 +76,55 @@ function edd_is_debug_mode() {
 }
 
 /**
+ * Check the network site URL for signs of being a development environment.
+ *
+ * @since 3.0
+ *
+ * @return bool $retval True if dev, false if not.
+ */
+function edd_is_dev_environment() {
+
+	// Assume not a development environment
+	$retval = false;
+
+	// Get this one time and use it below
+	$network_url = network_site_url( '/' );
+
+	// Possible strings
+	$strings = array(
+
+		// Popular port suffixes
+		':8888',      // This is common with MAMP on OS X
+
+		// Popular development TLDs
+		'.dev',       // VVV
+		'.local',     // Local
+		'.test',      // IETF
+		'.example',   // IETF
+		'.invalid',   // IETF
+		'.localhost', // IETF
+
+		// Popular development subdomains
+		'dev.',
+
+		// Popular development domains
+		'localhost',
+		'example.com',
+	);
+
+	// Loop through all strings
+	foreach ( $strings as $string ) {
+		if ( stristr( $network_url, $string ) ) {
+			$retval = $string;
+			break;
+		}
+	}
+
+	// Filter & return
+	return apply_filters( 'edd_is_dev_environment', $retval );
+}
+
+/**
  * Checks if Guest checkout is enabled
  *
  * @since 1.0
@@ -349,49 +398,6 @@ function edd_is_host( $host = false ) {
 	}
 
 	return $return;
-}
-
-/**
- * Check the network site URL for signs of being a development environment.
- *
- * @since 3.0
- *
- * @return bool $retval True if dev, false if not.
- */
-function edd_is_dev_environment() {
-
-	// Assume not a development environment
-	$retval = false;
-
-	// Get this one time and use it below
-	$network_url = network_site_url( '/' );
-
-	// No notices for local installs
-	if (
-
-		// Popular development TLDs
-		stristr( $network_url, '.dev'        ) !== false || // VVV
-		stristr( $network_url, '.local'      ) !== false || // Local
-		stristr( $network_url, '.test'       ) !== false || // IETF
-		stristr( $network_url, '.example'    ) !== false || // IETF
-		stristr( $network_url, '.invalid'    ) !== false || // IETF
-		stristr( $network_url, '.localhost'  ) !== false || // IETF
-
-		// Popular development subdomains
-		stristr( $network_url, 'dev.'        ) !== false ||
-
-		// Popular development domains
-		stristr( $network_url, 'localhost'   ) !== false ||
-		stristr( $network_url, 'example.com' ) !== false ||
-
-		// Popular port suffixes
-		stristr( $network_url, ':8888'       ) !== false // This is common with MAMP on OS X
-	) {
-		$retval = true;
-	}
-
-	// Filter & return
-	return (bool) apply_filters( 'edd_is_dev_environment', $retval );
 }
 
 /**
