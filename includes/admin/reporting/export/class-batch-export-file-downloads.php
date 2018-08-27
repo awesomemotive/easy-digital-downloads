@@ -5,24 +5,25 @@
  * This class handles file downloads export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_File_Downloads_Export Class
  *
  * @since 2.4
+ * @since 3.0 Refactored to use new query methods.
  */
 class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 
 	/**
-	 * Our export type. Used for export-type specific filters/actions
+	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @var string
 	 * @since 2.4
@@ -30,143 +31,131 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	public $export_type = 'file_downloads';
 
 	/**
-	 * Set the CSV columns
+	 * Set the CSV columns.
 	 *
 	 * @since 2.4
-	 * @return array $cols All the columns
+	 * @since 3.0 Updated to add 'User Agent' column.
+	 *
+	 * @return array $cols All the columns.
 	 */
 	public function csv_cols() {
-
 		$cols = array(
-			'date'     => __( 'Date',   'easy-digital-downloads' ),
-			'user'     => __( 'Downloaded by', 'easy-digital-downloads' ),
-			'ip'       => __( 'IP Address', 'easy-digital-downloads' ),
-			'download' => __( 'Product', 'easy-digital-downloads' ),
-			'file'     => __( 'File', 'easy-digital-downloads' )
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'user'       => __( 'Downloaded by', 'easy-digital-downloads' ),
+			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
+			'download'   => __( 'Product', 'easy-digital-downloads' ),
+			'file'       => __( 'File', 'easy-digital-downloads' ),
 		);
 
 		return $cols;
 	}
 
 	/**
-	 * Get the Export Data
+	 * Get the export data.
 	 *
 	 * @since 2.4
- 	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Refactored to use new query methods.
+	 *
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
-
-		global $edd_logs;
-
 		$data = array();
 
 		$args = array(
-			'log_type'       => 'file_download',
-			'posts_per_page' => 30,
-			'paged'          => $this->step
+			'number' => 30,
+			'offset' => ( $this->step * 30 ) - 30,
 		);
 
-		if( ! empty( $this->start ) || ! empty( $this->end ) ) {
-
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
-
 		}
 
 		if ( 0 !== $this->download_id ) {
-			$args['post_parent'] = $this->download_id;
+			$args['product_id'] = $this->download_id;
 		}
 
-		$logs = $edd_logs->get_connected_logs( $args );
+		$logs = edd_get_file_download_logs( $args );
 
-		if ( $logs ) {
-			foreach ( $logs as $log ) {
-				$customer_id = get_post_meta( $log->ID, '_edd_log_customer_id', true );
-				$customer    = false;
-				if ( ! empty( $customer_id ) ) {
-					$customer = new EDD_Customer( $customer_id );
+		foreach ( $logs as $log ) {
+			/** @var EDD\Logs\File_Download_Log $log */
+
+			$files     = edd_get_download_files( $log->product_id );
+			$file_id   = $log->file_id;
+			$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+			$customer  = edd_get_customer( $log->customer_id );
+
+			if ( $customer ) {
+				$customer = ! empty( $customer->name )
+					? $customer->name
+					: $customer->email;
+			} else {
+				$order = edd_get_order( $log->order_id );
+
+				if ( $order ) {
+					$customer = $order->email;
 				}
-
-				$files       = edd_get_download_files( $log->post_parent );
-				$file_id     = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
-				$file_name   = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-
-				if ( ! empty( $customer ) ) {
-					$user = ! empty( $customer->name ) ? $customer->name : $customer->email;
-				} else {
-					$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-					$user       = edd_get_payment_user_email( $payment_id );
-				}
-
-				$data[]    = array(
-					'date'     => $log->post_date,
-					'user'     => $user,
-					'ip'       => get_post_meta( $log->ID, '_edd_log_ip', true ),
-					'download' => get_the_title( $log->post_parent ),
-					'file'     => $file_name
-				);
 			}
 
-			$data = apply_filters( 'edd_export_get_data', $data );
-			$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
-
-			return $data;
+			$data[] = array(
+				'date'       => $log->date_created,
+				'user'       => $customer,
+				'ip'         => $log->ip,
+				'user_agent' => $log->user_agent,
+				'download'   => get_the_title( $log->product_id ),
+				'file'       => $file_name,
+			);
 		}
 
-		return false;
+		$data = apply_filters( 'edd_export_get_data', $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
 
+		return ! empty( $data )
+			? $data
+			: false;
 	}
 
 	/**
-	 * Return the calculated completion percentage
+	 * Return the calculated completion percentage.
 	 *
 	 * @since 2.4
-	 * @return int
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return int Percentage complete.
 	 */
 	public function get_percentage_complete() {
-
-		global $edd_logs;
-
 		$args = array(
-			'post_type'		   => 'edd_log',
-			'posts_per_page'   => -1,
-			'post_status'	   => 'publish',
-			'fields'           => 'ids',
-			'tax_query'        => array(
-				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> 'file_download'
-				)
-			),
-			'date_query'        => array(
+			'fields' => 'ids',
+		);
+
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = array(
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
+					'inclusive' => true,
 				)
-			)
-		);
-
-		if ( 0 !== $this->download_id ) {
-			$args['post_parent'] = $this->download_id;
+			);
 		}
 
-		$logs       = new WP_Query( $args );
-		$total      = (int) $logs->post_count;
+		if ( 0 !== $this->download_id ) {
+			$args['download_id'] = $this->download_id;
+		}
+
+		$total      = edd_count_file_download_logs( $args );
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( 30 * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 

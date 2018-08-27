@@ -51,7 +51,6 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_username_invalid_pass() {
-
 		edd_process_login_form( array(
 			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
 			'edd_user_login'  => 'admin@example.org',
@@ -63,7 +62,6 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 
 		// Clear errors for other test
 		edd_clear_errors();
-
 	}
 
 	/**
@@ -72,19 +70,14 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_login() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
-		ob_start();
-			edd_process_login_form( array(
-				'edd_login_nonce' 	=> wp_create_nonce( 'edd-login-nonce' ),
-				'edd_user_login' 	=> 'admin@example.org',
-				'edd_user_pass' 	=> 'password',
-			) );
-			$return = ob_get_contents();
-		ob_end_clean();
+		edd_process_login_form( array(
+			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+			'edd_user_login'  => 'admin@example.org',
+			'edd_user_pass'   => 'password',
+			'edd_redirect'    => '',
+		) );
 
 		$this->assertEmpty( edd_get_errors() );
-		*/
 	}
 
 	/**
@@ -102,12 +95,9 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_log_user_in() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
 		wp_logout();
-		edd_log_user_in( 1 );
+		edd_log_user_in( 1, 'admin', 'password' );
 		$this->assertTrue( is_user_logged_in() );
-		*/
 	}
 
 	/**
@@ -238,30 +228,4 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 		// Clear errors for other test
 		edd_clear_errors();
 	}
-
-	/**
-	 * Test that the registration success.
-	 *
-	 * @since 2.2.3
-	 */
-	public function test_process_register_form_success() {
-		$this->markTestIncomplete( 'Causes headers already sent errors');
-		/*
-		$_POST['edd_register_submit'] 	= 1;
-		$_POST['edd_user_pass'] 		= 'password';
-		$_POST['edd_user_pass2'] 		= 'password';
-		edd_process_register_form( array(
-			'edd_register_submit' 	=> 1,
-			'edd_user_login' 		=> 'random_username',
-			'edd_user_email' 		=> 'random_username@example.org',
-			'edd_payment_email' 	=> 'random_username@example.org',
-			'edd_user_pass' 		=> 'password',
-			'edd_redirect' 			=> '/',
-		) );
-
-		// Clear errors for other test
-		edd_clear_errors();
-		*/
-	}
-
 }

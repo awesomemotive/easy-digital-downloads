@@ -18,14 +18,14 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
  * @author      Barry Kooij
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 class EDD_Email_Template_Tags {
 
@@ -55,11 +55,11 @@ class EDD_Email_Template_Tags {
 	 */
 	public function add( $tag, $description, $func, $label = null ) {
 		if ( is_callable( $func ) ) {
-			$this->tags[$tag] = array(
+			$this->tags[ $tag ] = array(
 				'tag'         => $tag,
 				'label'       => $label,
 				'description' => $description,
-				'func'        => $func
+				'func'        => $func,
 			);
 		}
 	}
@@ -72,7 +72,7 @@ class EDD_Email_Template_Tags {
 	 * @param string $tag Email tag to remove hook from
 	 */
 	public function remove( $tag ) {
-		unset( $this->tags[$tag] );
+		unset( $this->tags[ $tag ] );
 	}
 
 	/**
@@ -96,7 +96,7 @@ class EDD_Email_Template_Tags {
 	 * @return array
 	 */
 	public function get_tags() {
-		return $this->tags;
+		return (array) $this->tags;
 	}
 
 	/**
@@ -111,14 +111,14 @@ class EDD_Email_Template_Tags {
 	 */
 	public function do_tags( $content, $payment_id ) {
 
-		// Check if there is atleast one tag added
+		// Check if there is at least one tag added.
 		if ( empty( $this->tags ) || ! is_array( $this->tags ) ) {
 			return $content;
 		}
 
 		$this->payment_id = $payment_id;
 
-		$new_content = preg_replace_callback( "/{([A-z0-9\-\_]+)}/s", array( $this, 'do_tag' ), $content );
+		$new_content = preg_replace_callback( '/{([A-z0-9\-\_]+)}/s', array( $this, 'do_tag' ), $content );
 
 		$this->payment_id = null;
 
@@ -144,7 +144,6 @@ class EDD_Email_Template_Tags {
 			return $m[0];
 		}
 
-		return call_user_func( $this->tags[$tag]['func'], $this->payment_id, $tag );
+		return call_user_func( $this->tags[ $tag ]['func'], $this->payment_id, $tag );
 	}
-
 }

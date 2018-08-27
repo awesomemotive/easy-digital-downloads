@@ -2,7 +2,7 @@
 namespace PayWithAmazon;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /* ResponseParser
  * Methods provided to convert the Response from the POST to XML, Array or JSON
