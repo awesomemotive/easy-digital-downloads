@@ -53,7 +53,7 @@ class Discounts extends Base {
 			foreach ( $results as $old_discount ) {
 
 				// Check if discount has already been migrated.
-				if ( $old_discount->ID !== $this->remap_id( $old_discount->ID, static::DISCOUNTS ) ) {
+				if ( $this->find_legacy_id( $old_discount->ID, static::DISCOUNTS ) ) {
 					continue;
 				}
 
