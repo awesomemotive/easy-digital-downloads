@@ -343,7 +343,7 @@ function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
 	}
 
 	return apply_filters( 'edd_get_taxonomy_labels', $labels, $taxonomy );
-}edd_load_gateway
+}
 
 /**
  * Registers custom post statuses which are used by the Payments and Discount
