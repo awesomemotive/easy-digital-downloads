@@ -143,7 +143,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		}
 
 		// State
-		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'verified' ) ) {
+		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
 			switch ( $status ) {
 				case 'pending' :
 					$value = __( 'Pending', 'easy-digital-downloads' );
