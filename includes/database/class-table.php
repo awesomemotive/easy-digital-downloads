@@ -553,7 +553,7 @@ abstract class Table extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return wpdb Database interface or False
+	 * @return \wpdb Database interface or False
 	 */
 	protected static function get_db() {
 		return isset( $GLOBALS['wpdb'] )
