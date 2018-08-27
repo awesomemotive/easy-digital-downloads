@@ -161,7 +161,7 @@ class Order_Adjustments_Table extends List_Table {
 	 */
 	public function column_amount( $order_adjustment ) {
 		if ( 'tax_rate' === $order_adjustment->type ) {
-			return edd_format_amount( $order_adjustment->total ) . '%';
+			return edd_format_amount( $order_adjustment->total * 100 ) . '%';
 		} else {
 			$currency = edd_get_order( $order_adjustment->object_id )->currency;
 
