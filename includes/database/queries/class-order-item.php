@@ -13,6 +13,8 @@ namespace EDD\Database\Queries;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Query;
+
 /**
  * Class used for querying order items.
  *
@@ -20,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see \EDD\Database\Queries\Order_Item::__construct() for accepted arguments.
  */
-class Order_Item extends Base {
+class Order_Item extends Query {
 
 	/** Table Properties ******************************************************/
 

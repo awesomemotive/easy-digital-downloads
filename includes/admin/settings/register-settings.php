@@ -49,6 +49,20 @@ function edd_maybe_add_test_mode_admin_bar_link( $wp_admin_bar ) {
 			'tab'  => 'gateways'
 		) )
 	) );
+
+	// Is development environment?
+	$is_dev = edd_is_dev_environment();
+	if ( ! empty( $is_dev ) ) {
+		$wp_admin_bar->add_menu( array(
+			'id'     => 'edd-is-dev',
+			'title'  => sprintf( __( 'Development Domain %s', 'easy-digital-downloads' ), '<span class="edd-mode">' . $is_dev . '</span>' ),
+			'parent' => 'edd-store-menu',
+			'href'   => edd_get_admin_url( array(
+				'page' => 'edd-settings',
+				'tab'  => 'gateways'
+			) )
+		) );
+	}
 }
 add_action( 'admin_bar_menu', 'edd_maybe_add_test_mode_admin_bar_link', 9999 );
 

@@ -14,12 +14,14 @@ namespace EDD\Database\Schemas;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Schema;
+
 /**
  * Customer Email Addresses Schema Class.
  *
  * @since 3.0
  */
-class Customer_Email_Addresses extends Base {
+class Customer_Email_Addresses extends Schema {
 
 	/**
 	 * Array of database column objects

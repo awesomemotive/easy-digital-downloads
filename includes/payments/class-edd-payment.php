@@ -1865,13 +1865,27 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Set the payment status and run any status specific changes necessary
+	 * Change the status of an order to refunded, and run the necessary changes.
+	 *
+	 * @since 2.5.7
+	 */
+	public function refund() {
+		$this->old_status        = $this->status;
+		$this->status            = 'refunded';
+		$this->pending['status'] = $this->status;
+
+		$this->save();
+	}
+
+	/**
+	 * Set the order status and run any status specific changes necessary.
 	 *
 	 * @since 2.5
+	 * @since 3.0 Updated to work with the new refunds API and new query methods
+	 *            introduced.
 	 *
-	 * @param string $status The status to set the payment to.
-	 *
-	 * @return bool Returns if the status was successfully updated
+	 * @param string $status New order status.
+	 * @return bool True if the status was successfully updated, false otherwise.
 	 */
 	public function update_status( $status = '' ) {
 
@@ -1880,16 +1894,20 @@ class EDD_Payment {
 			return false;
 		}
 
+		// Override to `publish`.
 		if ( 'completed' === $status || 'complete' === $status ) {
 			$status = 'publish';
 		}
 
+		// Get the old (current) status.
 		$old_status = ! empty( $this->old_status )
 			? $this->old_status
 			: false;
 
+		// We do not allow status changes if the status is the same to that stored in the database.
+		// This prevents the `edd_update_payment_status` action from being triggered unnecessarily.
 		if ( $old_status === $status ) {
-			return false; // Don't permit status changes that aren't changes
+			return false;
 		}
 
 		$do_change = apply_filters( 'edd_should_update_payment_status', true, $this->ID, $status, $old_status );
@@ -1910,23 +1928,44 @@ class EDD_Payment {
 			 */
 			$update_fields['status'] = $update_fields['post_status'];
 
-			unset( $update_fields['ID'] );
-			unset( $update_fields['post_status'] );
+			// Strip data that does not need to be passed to `edd_update_order()`.
+			unset( $update_fields['ID'], $update_fields['post_status'] );
 
-			edd_update_order( $this->ID, $update_fields );
+			/**
+			 * As per the new refund API introduce in 3.0, the order is only
+			 * marked as refunded when `EDD_Payment::process_refund()` has called
+			 * `edd_refund_order()` and a new order has been generated with a
+			 * type of `refund`.
+			 *
+			 * @since 3.0
+			 * @see EDD_Payment::process_refund()
+			 * @see edd_refund_order()
+			 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2721
+			 */
+			if ( 'refunded' !== $status ) {
+				edd_update_order( $this->ID, $update_fields );
 
-			// Update each order item.
-			foreach ( $this->order->items as $item ) {
-				edd_update_order_item( $item->id, $update_fields );
+				// Update each order item.
+				foreach ( $this->order->items as $item ) {
+					edd_update_order_item( $item->id, $update_fields );
+				}
 			}
 
+			/**
+			 * Albeit the order itself is not updated (for refunds), the EDD_Payment
+			 * class vars are updated for backwards compatibility purposes and
+			 * for anyone/anything that is checking that the status of the object
+			 * has successfully changed.
+			 */
 			$this->status      = $status;
 			$this->post_status = $status;
 
 			$all_payment_statuses  = edd_get_payment_statuses();
-			$this->status_nicename = array_key_exists( $status, $all_payment_statuses ) ? $all_payment_statuses[ $status ] : ucfirst( $status );
+			$this->status_nicename = array_key_exists( $status, $all_payment_statuses )
+				? $all_payment_statuses[ $status ]
+				: ucfirst( $status );
 
-			// Process any specific status functions
+			// Process any specific status functions.
 			switch ( $status ) {
 				case 'refunded':
 					$this->process_refund();
@@ -1943,21 +1982,6 @@ class EDD_Payment {
 		}
 
 		return $updated;
-
-	}
-
-	/**
-	 * Change the status of the payment to refunded, and run the necessary changes
-	 *
-	 * @since  2.5.7
-	 * @return void
-	 */
-	public function refund() {
-		$this->old_status        = $this->status;
-		$this->status            = 'refunded';
-		$this->pending['status'] = $this->status;
-
-		$this->save();
 	}
 
 	/**
@@ -2764,7 +2788,15 @@ class EDD_Payment {
 	 * @param bool $alter_customer_purchase_count If the method should reduce the customer's purchase count
 	 */
 	private function maybe_alter_stats( $alter_store_earnings, $alter_customer_value, $alter_customer_purchase_count ) {
-		edd_undo_purchase( false, $this->ID );
+		if ( edd_undo_purchase( false, $this->ID ) ) {
+			$this->status      = 'refunded';
+			$this->post_status = 'refunded';
+
+			$statuses              = edd_get_payment_statuses();
+			$this->status_nicename = array_key_exists( 'refunded', $statuses )
+				? $statuses['refunded']
+				: ucfirst( 'refunded' );
+		}
 
 		// Decrease store earnings
 		if ( true === $alter_store_earnings ) {

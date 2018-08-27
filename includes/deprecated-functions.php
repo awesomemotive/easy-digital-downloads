@@ -1078,3 +1078,36 @@ function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $cont
 		'id'   => $post_id
 	) );
 }
+
+/**
+ * Record sale as a log.
+ *
+ * Stores log information for a download sale.
+ *
+ * @since 1.0
+ * @deprecated 3.0 Sales logs are no longed stored.
+ *
+ * @param int    $download_id Download ID
+ * @param int    $payment_id  Payment ID.
+ * @param int    $price_id    Optional. Price ID.
+ * @param string $sale_date   Optional. Date of the sale.
+ */
+function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = false, $sale_date = null ) {
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	global $edd_logs;
+
+	$log_data = array(
+		'post_parent'   => $download_id,
+		'log_type'      => 'sale',
+		'post_date'     => ! empty( $sale_date ) ? $sale_date : null,
+		'post_date_gmt' => ! empty( $sale_date ) ? get_gmt_from_date( $sale_date ) : null,
+	);
+
+	$log_meta = array(
+		'payment_id' => $payment_id,
+		'price_id'   => (int) $price_id,
+	);
+
+	$edd_logs->insert_log( $log_data, $log_meta );
+}

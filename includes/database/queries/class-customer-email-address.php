@@ -13,6 +13,8 @@ namespace EDD\Database\Queries;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Query;
+
 /**
  * Class used for querying customer email addresses.
  *
@@ -20,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see \EDD\Database\Queries\Customer_Email_Address::__construct() for accepted arguments.
  */
-class Customer_Email_Address extends Base {
+class Customer_Email_Address extends Query {
 
 	/** Table Properties ******************************************************/
 

@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Queries;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @see \EDD\Database\Queries\Base::__construct() for accepted arguments.
+ * @see \EDD\Database\Query::__construct() for accepted arguments.
  *
  * @property string $prefix
  * @property string $table_name
@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
  * @property mixed $last_error
  * @property string $date_query_sql
  */
-class Base extends \EDD\Database\Base {
+class Query extends Base {
 
 	/** Global Properties *****************************************************/
 
@@ -115,14 +115,14 @@ class Base extends \EDD\Database\Base {
 	/**
 	 * Name of class used to turn IDs into first-class objects.
 	 *
-	 * I.E. `\\EDD\\Database\\Object` or `\\EDD\\Database\\Objects\\Customer`
+	 * I.E. `\\EDD\\Database\\Row` or `\\EDD\\Database\\Rows\\Customer`
 	 *
 	 * This is used when looping through return values to guarantee their shape.
 	 *
 	 * @since 3.0
 	 * @var   mixed
 	 */
-	protected $item_shape = '\\EDD\\Database\\Objects\\Base';
+	protected $item_shape = '\\EDD\\Database\\Row';
 
 	/** Cache *****************************************************************/
 
@@ -406,7 +406,7 @@ class Base extends \EDD\Database\Base {
 	 */
 	private function set_item_shape() {
 		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
-			$this->item_shape = 'EDD\\Database\\Objects\\Base';
+			$this->item_shape = 'EDD\\Database\\Row';
 		}
 	}
 
@@ -830,7 +830,7 @@ class Base extends \EDD\Database\Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Database\Queries\Base &$this Current instance of \EDD\Database\Queries\Base, passed by reference.
+		 * @param \EDD\Database\Query &$this Current instance of \EDD\Database\Query, passed by reference.
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
@@ -1078,9 +1078,9 @@ class Base extends \EDD\Database\Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Database\Queries\Base::__construct()
+	 * @see \EDD\Database\Query::__construct()
 	 *
-	 * @param string|array $query Array or string of \EDD\Database\Queries\Base arguments. See \EDD\Database\Queries\Base::__construct().
+	 * @param string|array $query Array or string of \EDD\Database\Query arguments. See \EDD\Database\Query::__construct().
 	 */
 	private function parse_query( $query = array() ) {
 
@@ -1098,7 +1098,7 @@ class Base extends \EDD\Database\Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Database\Queries\Base &$this The \EDD\Database\Queries\Base instance (passed by reference).
+		 * @param \EDD\Database\Query &$this The \EDD\Database\Query instance (passed by reference).
 		 */
 		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
@@ -1237,13 +1237,13 @@ class Base extends \EDD\Database\Base {
 			}
 
 			/**
-			 * Filters the columns to search in a \EDD\Database\Queries\Base search.
+			 * Filters the columns to search in a \EDD\Database\Query search.
 			 *
 			 * @since 3.0
 			 *
 			 * @param array  $search_columns Array of column names to be searched.
 			 * @param string $search         Text being searched.
-			 * @param object $this           The current \EDD\Database\Queries\Base instance.
+			 * @param object $this           The current \EDD\Database\Query instance.
 			 */
 			$search_columns = (array) apply_filters( $this->apply_prefix( "{$this->item_name_plural}_search_columns" ), $search_columns, $this->query_vars['search'], $this );
 
@@ -1490,7 +1490,7 @@ class Base extends \EDD\Database\Base {
 		 * @since 3.0
 		 *
 		 * @param array  $retval An array of items.
-		 * @param object &$this  Current instance of \EDD\Database\Queries\Base, passed by reference.
+		 * @param object &$this  Current instance of \EDD\Database\Query, passed by reference.
 		 */
 		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 

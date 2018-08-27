@@ -9,7 +9,7 @@
  * @since       2.7
  */
 
-use EDD\Database\Objects\Adjustment;
+use EDD\Database\Rows\Adjustment;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Rows\Adjustment instead of EDD_DB_Discount
  *
  * @property int $id
  * @property string $name

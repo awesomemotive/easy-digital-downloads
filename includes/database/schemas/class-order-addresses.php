@@ -14,12 +14,14 @@ namespace EDD\Database\Schemas;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Schema;
+
 /**
  * Order Addresses Schema Class.
  *
  * @since 3.0
  */
-class Order_Addresses extends Base {
+class Order_Addresses extends Schema {
 
 	/**
 	 * Array of database column objects

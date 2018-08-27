@@ -1,20 +1,22 @@
 <?php
 /**
- * Order Transaction Database Object Class.
+ * Note Database Object Class.
  *
  * @package     EDD
- * @subpackage  Database\Objects
+ * @subpackage  Database\Rows
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Objects;
+namespace EDD\Database\Rows;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
- * Order transaction database row class.
+ * Note database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Order_Transaction extends Base {
+class Note extends Row {
 
 }

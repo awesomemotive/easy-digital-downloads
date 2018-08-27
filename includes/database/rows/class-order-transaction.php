@@ -1,20 +1,22 @@
 <?php
 /**
- * Adjustment Database Object Class.
+ * Order Transaction Database Object Class.
  *
  * @package     EDD
- * @subpackage  Database\Objects
+ * @subpackage  Database\Rows
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Objects;
+namespace EDD\Database\Rows;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
- * Adjustment database row class.
+ * Order transaction database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Adjustment extends Base {
+class Order_Transaction extends Row {
 
 }
