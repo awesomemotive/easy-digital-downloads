@@ -39,13 +39,13 @@ ul#adminmenu #menu-posts-download a.wp-has-current-submenu:after {
 
 /* Show Submenu Arrow */
 ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
-	right: 0;
+	left: 0;
 	border: solid 8px transparent;
 	content: " ";
 	height: 0;
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-right-color: #f1f1f1;
+	border-left-color: #f1f1f1;
 	margin-top: 2px;
 }
