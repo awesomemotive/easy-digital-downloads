@@ -84,13 +84,13 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 		foreach ( $components as $component ) {
 			$thing = $component->get_interface( 'table' );
 
-			if ( $thing instanceof \EDD\Database\Tables\Base ) {
+			if ( $thing instanceof \EDD\Database\Table ) {
 				$thing->truncate();
 			}
 
 			$thing = $component->get_interface( 'meta' );
 
-			if ( $thing instanceof \EDD\Database\Tables\Base ) {
+			if ( $thing instanceof \EDD\Database\Table ) {
 				$thing->truncate();
 			}
 		}

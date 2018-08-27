@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Schemas;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see \EDD\Database\Schemas\Column::__construct() for accepted arguments.
  */
-class Column {
+class Column extends Base {
 
 	/** Table Attributes ******************************************************/
 
@@ -441,9 +441,9 @@ class Column {
 		// Parse arguments
 		$r = $this->parse_args( $args );
 
-		// Maybe set arguments
+		// Maybe set variables from arguments
 		if ( ! empty( $r ) ) {
-			$this->set_args( $r );
+			$this->set_vars( $r );
 		}
 	}
 
@@ -511,7 +511,7 @@ class Column {
 		$r = $this->special_args( $r );
 
 		// Set the args before they are sanitized
-		$this->set_args( $r );
+		$this->set_vars( $r );
 
 		// Return array
 		return $this->validate_args( $r );
@@ -609,18 +609,6 @@ class Column {
 
 		// Return args
 		return (array) $args;
-	}
-
-	/**
-	 * Set column arguments
-	 *
-	 * @since 3.0
-	 * @param array $args
-	 */
-	private function set_args( $args = array() ) {
-		foreach ( $args as $key => $value ) {
-			$this->{$key} = $value;
-		}
 	}
 
 	/** Public Helpers ********************************************************/

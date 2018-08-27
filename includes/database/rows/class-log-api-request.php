@@ -1,20 +1,22 @@
 <?php
 /**
- * Customer Email Address Database Object Class.
+ * API Request Log Database Object Class.
  *
  * @package     EDD
- * @subpackage  Database\Objects
+ * @subpackage  Database\Rows
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Objects;
+namespace EDD\Database\Rows;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
- * Customer email address database row class.
+ * API Request Log database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Customer_Email_Address extends Base {
+class Log_Api_Request extends Row {
 
 }

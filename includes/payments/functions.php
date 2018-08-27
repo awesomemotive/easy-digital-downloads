@@ -230,11 +230,17 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * when refunding or deleting a purchase.
  *
  * @since 1.0.8.1
+ * @since 3.0 Updated to use new refunds API and new query methods.
+ *            Updated to use new nomenclature.
+ *            Set default value of order ID to 0.
+ *            Method now returns the refunded order ID.
  *
- * @param int $download_id Download (Post) ID.
- * @param int $payment_id  Payment ID.
+ * @param int $download_id Download ID.
+ * @param int $order_id    Order ID.
+ *
+ * @return int|false Refunded order ID, false otherwise.
  */
-function edd_undo_purchase( $download_id = 0, $payment_id ) {
+function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 
 	/**
 	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
@@ -242,28 +248,44 @@ function edd_undo_purchase( $download_id = 0, $payment_id ) {
 	 */
 
 	if ( ! empty( $download_id ) ) {
-		$download_id = false;
 		_edd_deprected_argument( 'download_id', 'edd_undo_purchase', '2.5.7' );
 	}
 
-	$payment = edd_get_payment( $payment_id );
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$payment = edd_get_payment( $order_id );
 
 	$cart_details = $payment->cart_details;
 	$user_info    = $payment->user_info;
 
+	// Refund the order.
+	$new_order_id = edd_refund_order( $order_id );
+
 	if ( is_array( $cart_details ) ) {
+
+		// Loop through each cart item.
 		foreach ( $cart_details as $item ) {
 
 			// Get the item's price.
-			$amount = isset( $item['price'] ) ? $item['price'] : false;
+			$amount = isset( $item['price'] )
+				? $item['price']
+				: false;
 
 			// Decrease earnings/sales and fire action once per quantity number.
 			for ( $i = 0; $i < $item['quantity']; $i++ ) {
 
 				// Handle variable priced downloads.
 				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
-					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$amount   = ! isset( $item['price'] ) && 0 !== $item['price'] ? edd_get_price_option_amount( $item['id'], $price_id ) : $item['price'];
+					$price_id = isset( $item['item_number']['options']['price_id'] )
+						? $item['item_number']['options']['price_id']
+						: null;
+
+					$amount = ! isset( $item['price'] ) && 0 !== $item['price']
+						? edd_get_price_option_amount( $item['id'], $price_id )
+						: $item['price'];
 				}
 
 				if ( ! $amount ) {
@@ -299,6 +321,8 @@ function edd_undo_purchase( $download_id = 0, $payment_id ) {
 			}
 		}
 	}
+
+	return $new_order_id;
 }
 
 /**
@@ -316,8 +340,7 @@ function edd_undo_purchase( $download_id = 0, $payment_id ) {
 function edd_count_payments( $args = array() ) {
 	global $wpdb;
 
-	// Setup defaults.
-	$defaults = array(
+	$args = wp_parse_args( $args, array(
 		'user'       => null,
 		'customer'   => null,
 		's'          => null,
@@ -325,12 +348,7 @@ function edd_count_payments( $args = array() ) {
 		'end-date'   => null,
 		'download'   => null,
 		'gateway'    => null,
-	);
-
-	// Default statuses
-	$stats = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-	$args = wp_parse_args( $args, $defaults );
+	) );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
 	$from    = "FROM {$wpdb->edd_orders} edd_o";
@@ -448,6 +466,7 @@ function edd_count_payments( $args = array() ) {
 		unset( $statuses['private'] );
 	}
 
+	$stats = array();
 	foreach ( $statuses as $status ) {
 		$stats[ $status ] = 0;
 	}
@@ -559,7 +578,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
  * @return bool|mixed
  */
 function edd_get_payment_status_label( $status = '' ) {
-	$default  = strtoupper( $status );
+	$default  = ucwords( $status );
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {

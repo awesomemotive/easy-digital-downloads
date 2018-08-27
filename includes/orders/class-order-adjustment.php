@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_completed
  * @property string $date_modified
  */
-class Order_Adjustment extends \EDD\Database\Objects\Order_Adjustment {
+class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 
 	/**
 	 * Order Discount ID.

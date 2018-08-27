@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_modified
  * @property Order_Adjustment[] $adjustments
  */
-class Order_Item extends \EDD\Database\Objects\Order_Item {
+class Order_Item extends \EDD\Database\Rows\Order_Item {
 
 	/**
 	 * Order Item ID.

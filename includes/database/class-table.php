@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Tables;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -31,7 +31,7 @@ if ( ! class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
  *
  * @since 3.0
  */
-abstract class Base extends \EDD\Database\Base {
+abstract class Table extends \EDD\Database\Base {
 
 	/**
 	 * @var string Table name, without the global table prefix

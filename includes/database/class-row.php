@@ -1,14 +1,14 @@
 <?php
 /**
- * Base Database Object Class.
+ * Base Database Row Class.
  *
  * @package     EDD
- * @subpackage  Database\Objects
+ * @subpackage  Database\Rows
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Objects;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Base extends \EDD\Database\Base {
+class Row extends Base {
 
 	/**
 	 * Construct a database object
@@ -49,18 +49,11 @@ class Base extends \EDD\Database\Base {
 	 * @param array $data
 	 */
 	private function init( $data = array() ) {
-
-		// Convert to an array for speedy looping
-		$data = (array) $data;
-
-		// Loop through keys and set object values
-		foreach ( $data as $key => $value ) {
-			$this->{$key} = $value;
-		}
+		$this->set_vars( $data );
 	}
 
 	/**
-	 * Determines whether the current item exists.
+	 * Determines whether the current row exists.
 	 *
 	 * @since 3.0
 	 *

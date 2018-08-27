@@ -190,36 +190,20 @@ function edd_count_orders( $args = array() ) {
  *
  * @return array
  */
-function edd_get_order_counts() {
+function edd_get_order_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-	// Query for count
-	$counts = edd_get_orders( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status',
+		'type'    => 'sale'
 	) );
 
-	// Default array
-	$o = array(
-		'total' => 0,
-	);
+	// Query for count
+	$counts = new EDD\Database\Queries\Order( $r );
 
-	// Loop through counts and shape return value
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses
-		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
-		}
-
-		// Total
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts
-	return array_merge( $defaults, $o );
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /**
@@ -1566,37 +1550,20 @@ function edd_count_order_items( $args = array() ) {
  *
  * @return array
  */
-function edd_get_order_item_counts( $order_id = 0 ) {
+function edd_get_order_item_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-	// Query for count
-	$counts = edd_get_order_items( array(
-		'order_id' => $order_id,
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
+		'order_id' => 0,
 		'count'    => true,
 		'groupby'  => 'status',
 	) );
 
-	// Default array
-	$o = array(
-		'total' => 0,
-	);
+	// Query for count
+	$counts = new EDD\Database\Queries\Order_Item( $r );
 
-	// Loop through counts and shape return value
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses
-		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
-		}
-
-		// Total
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts
-	return array_merge( $defaults, $o );
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /** Order Adjustments *********************************************************/
@@ -1729,43 +1696,23 @@ function edd_count_order_adjustments( $args = array() ) {
  *
  * @since 3.0
  *
- * @param int    $object_id   ID of the object
- * @param string $object_type Type of object. Default `order`.
- *
  * @return array
  */
-function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order' ) {
+function edd_get_order_adjustment_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array_fill_keys( array( 'tax_rate', 'fee', 'discount' ), 0 );
-
-	// Query for count
-	$counts = edd_get_order_adjustments( array(
-		'object_id'   => $object_id,
-		'object_type' => $object_type,
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
+		'object_id'   => 0,
+		'object_type' => 'order',
 		'count'       => true,
 		'groupby'     => 'type',
 	) );
 
-	// Default array
-	$o = array(
-		'total' => 0,
-	);
+	// Query for count
+	$counts = new EDD\Database\Queries\Order_Adjustment( $r );
 
-	// Loop through counts and shape return value
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses
-		foreach ( $counts as $item ) {
-			$o[ $item['type'] ] = absint( $item['count'] );
-		}
-
-		// Total
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts
-	return array_merge( $defaults, $o );
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /** Order Addresses **********************************************************/
@@ -2026,10 +1973,12 @@ function edd_count_order_transactions( $args = array() ) {
  *
  * @since 3.0
  *
- * @param int $order_id Order ID.
+ * @param int    $order_id Order ID.
+ * @param string $status   Optional. Refund status. Default `complete`.
+ *
  * @return int|false New order ID if successful, false otherwise.
  */
-function edd_refund_order( $order_id = 0 ) {
+function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 	global $wpdb;
 
 	// Bail if no order ID was passed.
@@ -2039,6 +1988,14 @@ function edd_refund_order( $order_id = 0 ) {
 
 	// Ensure the order ID is an integer.
 	$order_id = absint( $order_id );
+
+	// Sanitize status.
+	$status = strtolower( sanitize_text_field( $status ) );
+
+	// Status can only either be `complete` or `pending`.
+	if ( ! in_array( $status, array( 'pending', 'complete' ), true ) ) {
+		$status = 'complete'; // Default to `complete`.
+	}
 
 	// Fetch order.
 	$order = edd_get_order( $order_id );
@@ -2110,7 +2067,7 @@ function edd_refund_order( $order_id = 0 ) {
 	$order_data = array(
 		'parent'       => $order_id,
 		'order_number' => $number,
-		'status'       => 'refunded',
+		'status'       => $status,
 		'type'         => 'refund',
 		'user_id'      => $order->user_id,
 		'customer_id'  => $order->customer_id,
@@ -2189,8 +2146,12 @@ function edd_refund_order( $order_id = 0 ) {
 		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
 	) );
 
-	// Trigger actions to run.
-	edd_update_order_status( $new_order_id, 'refunded' );
+	// Update order status to `refunded` once refund is complete.
+	if ( 'complete' === $status ) {
+		edd_update_order( $order_id, array(
+			'status' => 'refunded',
+		) );
+	}
 
 	/**
 	 * Fires when an order has been refunded.

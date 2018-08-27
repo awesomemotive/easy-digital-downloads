@@ -8,12 +8,30 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Schemas;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-class Base extends \EDD\Database\Base {
+if ( ! class_exists( '\\EDD\\Database\\Schema' ) ) :
+/**
+ * A base WordPress database table class, which facilitates the creation of
+ * and schema changes to individual database tables.
+ *
+ * This class is intended to be extended for each unique database table,
+ * including global multisite tables and users tables.
+ *
+ * It exists to make managing database tables in WordPress as easy as possible.
+ *
+ * Extending this class comes with several automatic benefits:
+ * - Activation hook makes it great for plugins
+ * - Tables store their versions in the database independently
+ * - Tables upgrade via independent upgrade abstract methods
+ * - Multisite friendly - site tables switch on "switch_blog" action
+ *
+ * @since 3.0
+ */
+class Schema extends Base {
 
 	/**
 	 * Array of database column objects to turn into \EDD\Database\Column
@@ -51,3 +69,4 @@ class Base extends \EDD\Database\Base {
 		}
 	}
 }
+endif;

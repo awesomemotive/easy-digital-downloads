@@ -85,16 +85,6 @@ class EDD_Gateway_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
-	/**
 	 * Outputs the reporting views
 	 *
 	 * @since 1.5

@@ -175,8 +175,8 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array                      $clauses A compacted array of item query clauses.
-	 * @param \EDD\Database\Queries\Base $base    Instance passed by reference.
+	 * @param array               $clauses A compacted array of item query clauses.
+	 * @param \EDD\Database\Query $base    Instance passed by reference.
 	 *
 	 * @return array
 	 */
