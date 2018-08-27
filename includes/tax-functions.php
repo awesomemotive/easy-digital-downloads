@@ -102,22 +102,19 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
  *
  * @return array
  */
-function edd_get_tax_rate_counts() {
+function edd_get_tax_rate_counts( $args = array() ) {
 
-	// Default statuses.
-	$defaults = array(
-		'active'   => 0,
-		'inactive' => 0,
-	);
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
+		'count'   => true,
+		'groupby' => 'status'		
+	) );
 
 	// Query for count.
-	$counts = edd_get_tax_rates( array(
-		'count'   => true,
-		'groupby' => 'status',
-	), OBJECT );
+	$counts = edd_get_tax_rates( $r, OBJECT );
 
 	// Default array.
-	$o = array(
+	$c = array(
 		'total' => 0,
 	);
 
@@ -126,15 +123,15 @@ function edd_get_tax_rate_counts() {
 
 		// Loop through statuses.
 		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
+			$c[ $item['status'] ] = absint( $item['count'] );
 		}
 
 		// Total.
-		$o['total'] = array_sum( $o );
+		$c['total'] = array_sum( $c );
 	}
 
 	// Return counts.
-	return array_merge( $defaults, $o );
+	return $c;
 }
 
 /**

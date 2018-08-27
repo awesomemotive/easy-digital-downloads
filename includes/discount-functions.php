@@ -276,24 +276,19 @@ function edd_get_discount_count( $args = array() ) {
  *
  * @return array
  */
-function edd_get_discount_counts() {
+function edd_get_discount_counts( $args = array() ) {
 
-	// Default statuses.
-	$defaults = array(
-		'active'   => 0,
-		'inactive' => 0,
-		'expired'  => 0,
-		'total'    => 0
-	);
-
-	// Query for count.
-	$counts = new EDD\Compat\Discount_Query( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status'
 	) );
 
+	// Query for count.
+	$counts = new EDD\Compat\Discount_Query( $r );
+
 	// Default array.
-	$r = array(
+	$c = array(
 		'total' => 0
 	);
 
@@ -302,15 +297,15 @@ function edd_get_discount_counts() {
 
 		// Loop through statuses.
 		foreach ( $counts->items as $status ) {
-			$r[ $status['status'] ] = absint( $status['count'] );
+			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
 		}
 
 		// Total.
-		$r['total'] = array_sum( $r );
+		$c['total'] = array_sum( $c );
 	}
 
 	// Return counts.
-	return array_merge( $defaults, $r );
+	return $c;
 }
 
 /**

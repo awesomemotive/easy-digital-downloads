@@ -437,7 +437,16 @@ class Order_Items_Table extends List_Table {
 
 		// Maybe retrieve counts.
 		if ( ! edd_is_add_order_page() ) {
-			$this->counts = edd_get_order_item_counts( $_GET['id'] ); // WPCS: CSRF ok.
+
+			// Check for an order ID
+			$order_id = ! empty( $_GET['id'] )
+				? absint( $_GET['id'] ) // WPCS: CSRF ok.
+				: 0;
+
+			// Get counts
+			$this->counts = edd_get_order_item_counts( array(
+				'order_id' => $order_id
+			) );
 		}
 	}
 
