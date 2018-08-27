@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Transaction Database Object Class.
+ * Order Database Object Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -13,8 +13,10 @@ namespace EDD\Database\Objects;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
- * Order transaction database row class.
+ * Order database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Order_Transaction extends Base {
+class Order extends Row {
 
 }

@@ -13,12 +13,14 @@ namespace EDD\Database\Schemas;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Schema;
+
 /**
  * File Download Logs Schema Class.
  *
  * @since 3.0
  */
-class Logs_File_Downloads extends Base {
+class Logs_File_Downloads extends Schema {
 
 	/**
 	 * Array of database column objects

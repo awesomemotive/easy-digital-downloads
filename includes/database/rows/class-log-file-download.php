@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Adjustment Database Object Class.
+ * File Download Log Database Object Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -13,8 +13,10 @@ namespace EDD\Database\Objects;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
-* Order adjustment database row class.
+ * File Download Log database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Order_Adjustment extends Base {
+class Log_File_Download extends Row {
 
 }
