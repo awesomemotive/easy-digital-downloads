@@ -80,7 +80,7 @@ class Adjustment extends Query {
 	 * @access protected
 	 * @var mixed
 	 */
-	protected $item_shape = '\\EDD\\Database\\Objects\\Adjustment';
+	protected $item_shape = '\\EDD\\Database\\Rows\\Adjustment';
 
 	/** Cache *****************************************************************/
 

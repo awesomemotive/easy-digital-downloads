@@ -50,10 +50,10 @@ function edd_register_component( $name = '', $args = array() ) {
 	// Parse arguments
 	$r = wp_parse_args( $args, array(
 		'name'   => $name,
-		'schema' => '\\EDD\\Database\\Schemas\\Base',
-		'table'  => '\\EDD\\Database\\Tables\\Base',
-		'query'  => '\\EDD\\Database\\Queries\\Base',
-		'object' => '\\EDD\\Database\\Objects\\Base',
+		'schema' => '\\EDD\\Database\\Schema',
+		'table'  => '\\EDD\\Database\\Table',
+		'query'  => '\\EDD\\Database\\Query',
+		'object' => '\\EDD\\Database\\Row',
 		'meta'   => false
 	) );
 
@@ -262,13 +262,13 @@ function edd_install_component_database_tables() {
 	foreach ( $components as $component ) {
 		$thing = $component->get_interface( 'table' );
 
-		if ( $thing instanceof \EDD\Database\Tables\Base && ! $thing->exists() ) {
+		if ( $thing instanceof \EDD\Database\Table && ! $thing->exists() ) {
 			$thing->install();
 		}
 
 		$thing = $component->get_interface( 'meta' );
 
-		if ( $thing instanceof \EDD\Database\Tables\Base && ! $thing->exists() ) {
+		if ( $thing instanceof \EDD\Database\Table && ! $thing->exists() ) {
 			$thing->install();
 		}
 	}
@@ -299,13 +299,13 @@ function edd_uninstall_component_database_tables() {
 	foreach ( $components as $component ) {
 		$thing = $component->get_interface( 'table' );
 
-		if ( $thing instanceof \EDD\Database\Tables\Base && $thing->exists() ) {
+		if ( $thing instanceof \EDD\Database\Table && $thing->exists() ) {
 			$thing->uninstall();
 		}
 
 		$thing = $component->get_interface( 'meta' );
 
-		if ( $thing instanceof \EDD\Database\Tables\Base && $thing->exists() ) {
+		if ( $thing instanceof \EDD\Database\Table && $thing->exists() ) {
 			$thing->uninstall();
 		}
 	}

@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $user_id
  * @property string $notes
  */
-class EDD_Customer extends \EDD\Database\Objects\Customer {
+class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 	/**
 	 * Customer ID.

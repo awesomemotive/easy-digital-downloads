@@ -10,7 +10,7 @@
  */
 namespace EDD\Orders;
 
-use EDD\Database\Objects as Objects;
+use EDD\Database\Rows as Rows;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
  * @property Order_Adjustment[] $adjustments
  * @property Order_Address $address
  */
-class Order extends Objects\Order {
+class Order extends Rows\Order {
 
 	/**
 	 * Order ID.
