@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get registered emails.
@@ -19,11 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 3.0
  *
- * @return array.
+ * @return array $emails Registered emails.
  */
 function edd_email_tags_inserter_get_registered_emails() {
 	$settings = edd_get_registered_settings();
-	$emails = $settings['emails'];
+	$emails   = $settings['emails'];
 
 	unset( $emails['main'] );
 
@@ -36,8 +36,9 @@ function edd_email_tags_inserter_get_registered_emails() {
  *
  * @since 3.0
  */
-function edd_email_tags_inserter_regiser() {
+function edd_email_tags_inserter_register() {
 	foreach ( edd_email_tags_inserter_get_registered_emails() as $email ) {
+
 		// Add Thickbox button.
 		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_media_button' );
 
@@ -48,7 +49,7 @@ function edd_email_tags_inserter_regiser() {
 		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_enqueue_scripts' );
 	}
 }
-add_action( 'admin_menu', 'edd_email_tags_inserter_regiser' );
+add_action( 'admin_menu', 'edd_email_tags_inserter_register' );
 
 /**
  * Wait until `media_buttons` action is called.
@@ -62,19 +63,18 @@ function edd_email_tags_inserter_media_button() {
 }
 
 /**
- * Adds an "Insert Email Tag" button above the TinyMCE Editor on email-related wp_editor() instances.
+ * Adds an 'Insert Email Tag' button above the TinyMCE Editor on email-related
+ * `wp_editor()` instances.
  *
  * @since 3.0
  */
 function edd_email_tags_inserter_media_button_output() {
-?>
-
-<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
-	<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
-	<?php esc_html_e( 'Insert Email Tag', 'easy-digital-downloads' ); ?>
-</a>
-
-<?php
+	?>
+	<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
+		<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
+		<?php esc_html_e( 'Insert Email Tag', 'easy-digital-downloads' ); ?>
+	</a>
+	<?php
 }
 
 /**
@@ -117,28 +117,22 @@ function edd_email_tags_inserter_enqueue_scripts() {
  */
 function edd_email_tags_inserter_thickbox_content() {
 	$tags = edd_get_email_tags();
-?>
+	?>
+	<div id="edd-insert-email-tag" style="display: none;">
+		<div class="edd-email-tags-filter">
+			<input type="search" class="edd-email-tags-filter__input" placeholder="<?php echo esc_attr( __( 'Find a tag...', 'easy-digital-downloads' ) ); ?>" />
+		</div>
 
-<div id="edd-insert-email-tag" style="display: none;">
-
-	<div class="edd-email-tags-filter">
-		<input type="search" class="edd-email-tags-filter__input" placeholder="<?php echo esc_attr( __( 'Find a tag...', 'easy-digital-downloads' ) ); ?>" />
+		<ul class="edd-email-tags-list">
+			<?php foreach ( $tags as $tag ) : ?>
+			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list__tag">
+				<button class="edd-email-tags-list__insert" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
+					<strong><?php echo esc_html( $tag['label'] ?: '{' . $tag['tag'] . '}' ); ?></strong>
+					<span><?php echo esc_html( $tag['description'] ); ?></span>
+				</button>
+			</li>
+			<?php endforeach; ?>
+		</ul>
 	</div>
-
-	<ul class="edd-email-tags-list">
-	<?php foreach ( $tags as $tag ) : ?>
-
-		<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag' ] ); ?>" class="edd-email-tags-list__tag">
-			<button class="edd-email-tags-list__insert" data-to_insert="{<?php echo esc_attr( $tag['tag' ] ); ?>}">
-				<strong><?php echo esc_html( $tag['label'] ? $tag['label'] : $tag['tag' ] ); ?></strong>
-				<span><?php echo esc_html( $tag['description'] ); ?></span>
-			</button>
-		</li>
-
-	<?php endforeach; ?>
-	</ul>
-
-</div>
-
-<?php
+	<?php
 }
