@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer Email Address Database Object Class.
+ * Adjustment Database Object Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -13,8 +13,10 @@ namespace EDD\Database\Objects;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
- * Customer email address database row class.
+ * Adjustment database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Customer_Email_Address extends Base {
+class Adjustment extends Row {
 
 }

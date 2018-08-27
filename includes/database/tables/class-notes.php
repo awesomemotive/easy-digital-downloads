@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_notes" database table
  *
  * @since 3.0
  */
-final class Notes extends Base {
+final class Notes extends Table {
 
 	/**
 	 * Table name

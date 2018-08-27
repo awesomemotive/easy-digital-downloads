@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Queries;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
  * @property mixed $last_error
  * @property string $date_query_sql
  */
-class Base extends \EDD\Database\Base {
+class Query extends Base {
 
 	/** Global Properties *****************************************************/
 

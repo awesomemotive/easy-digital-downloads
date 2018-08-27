@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_logs" database table
  *
  * @since 3.0
  */
-final class Logs extends Base {
+final class Logs extends Table {
 
 	/**
 	 * Table name.

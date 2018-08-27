@@ -13,6 +13,8 @@ namespace EDD\Database\Objects;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Row;
+
 /**
  * Customer address database row class.
  *
@@ -26,6 +28,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Customer_Address extends Base {
+class Customer_Address extends Row {
 
 }

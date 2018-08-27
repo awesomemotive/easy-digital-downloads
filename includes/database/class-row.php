@@ -1,6 +1,6 @@
 <?php
 /**
- * Base Database Object Class.
+ * Base Database Row Class.
  *
  * @package     EDD
  * @subpackage  Database\Objects
@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Database\Objects;
+namespace EDD\Database;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  */
-class Base extends \EDD\Database\Base {
+class Row extends Base {
 
 	/**
 	 * Construct a database object
@@ -60,7 +60,7 @@ class Base extends \EDD\Database\Base {
 	}
 
 	/**
-	 * Determines whether the current item exists.
+	 * Determines whether the current row exists.
 	 *
 	 * @since 3.0
 	 *
