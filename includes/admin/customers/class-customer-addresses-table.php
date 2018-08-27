@@ -164,7 +164,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 */
 	public function column_address( $item ) {
 		$state    = $extra = '';
-		$status   = ! empty( $_GET['status']      ) ? sanitize_key( $_GET['status'] ) : '';
+		$status   = $this->get_status();
 		$address  = ! empty( $item['address']     ) ? $item['address']     : '&mdash;';
 		$address2 = ! empty( $item['address2']    ) ? $item['address2']    : '';
 		$city     = ! empty( $item['city']        ) ? $item['city']        : '';
@@ -296,33 +296,6 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @since 1.4
-	 *
-	 * @return array $views All the views available
-	 */
-	public function get_views() {
-		$base           = $this->get_base_url();
-		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$is_all         = empty( $current ) || ( 'all' === $current );
-		$total_count    = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
-		$verified_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['verified']  ) . ')</span>';
-		$spam_count     = '&nbsp;<span class="count">(' . esc_html( $this->counts['spam']    ) . ')</span>';
-		$deleted_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['deleted'] ) . ')</span>';
-		$pending_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
-
-		return array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base          ) ), $is_all                 ? ' class="current"' : '', __( 'All',      'easy-digital-downloads' ) . $total_count    ),
-			'verified' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'verified', $base ) ), 'verified' === $current ? ' class="current"' : '', __( 'Verified', 'easy-digital-downloads' ) . $verified_count ),
-			'pending'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending',  $base ) ), 'pending'  === $current ? ' class="current"' : '', __( 'Pending',  'easy-digital-downloads' ) . $pending_count  ),
-			'spam'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'spam',     $base ) ), 'spam'     === $current ? ' class="current"' : '', __( 'Spam',     'easy-digital-downloads' ) . $spam_count     ),
-			'deleted'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'deleted',  $base ) ), 'deleted'  === $current ? ' class="current"' : '', __( 'Deleted',  'easy-digital-downloads' ) . $deleted_count  )
-		);
-	}
-
-	/**
 	 * Retrieve the table columns
 	 *
 	 * @since 3.0
@@ -403,30 +376,6 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 3.0
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
-	}
-
-	/**
-	 * Retrieves the search query string
-	 *
-	 * @since 1.7
-	 * @return mixed string If search is present, false otherwise
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] )
-			? urldecode( trim( $_GET['s'] ) )
-			: false;
-	}
-
-	/**
 	 * Get all of the items to display, given the current filters
 	 *
 	 * @since 3.0
@@ -438,7 +387,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
-		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : ''; // WPCS: CSRF ok.
+		$status  = $this->get_status();
 		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
 
@@ -524,9 +473,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 
 		$this->items = $this->get_items();
 
-		$status = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: 'total';
+		$status = $this->get_status( 'total' );
 
 		// Setup pagination
 		$this->set_pagination_args( array(

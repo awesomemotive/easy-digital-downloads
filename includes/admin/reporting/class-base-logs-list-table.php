@@ -141,9 +141,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_start_date() {
-		return ! empty( $_GET['start-date'] )
-			? sanitize_text_field( $_GET['start-date'] )
-			: null;
+		return sanitize_text_field( $this->get_request_var( 'start-date', null ) );
 	}
 
 	/**
@@ -154,9 +152,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_end_date() {
-		return ! empty( $_GET['end-date'] )
-			? sanitize_text_field( $_GET['end-date'] )
-			: null;
+		return sanitize_text_field( $this->get_request_var( 'end-date', null ) );
 	}
 
 	/**
@@ -167,9 +163,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return int Download ID.
 	 */
 	public function get_filtered_download() {
-		return ! empty( $_GET['download'] )
-			? absint( $_GET['download'] )
-			: false;
+		return absint( $this->get_request_var( 'download', false ) );
 	}
 
 	/**
@@ -180,22 +174,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return int Payment ID.
 	 */
 	public function get_filtered_payment() {
-		return ! empty( $_GET['payment'] )
-			? absint( $_GET['payment'] )
-			: false;
-	}
-
-	/**
-	 * Return the search query string.
-	 *
-	 * @since 3.0
-     *
-	 * @return String The search string.
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] )
-			? urldecode( trim( $_GET['s'] ) )
-			: '';
+		return absint( $this->get_request_var( 'payment', false ) );
 	}
 
 	/**
@@ -209,19 +188,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 */
 	public function get_meta_query() {
 		return array();
-	}
-
-	/**
-	 * Retrieve the current page number.
-	 *
-	 * @since 3.0
-     *
-	 * @return int Current page number.
-	 */
-	function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
 	}
 
 	/**
@@ -322,6 +288,15 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 */
 	public function get_total( $log_query = array() ) {
 		return count( array() );
+	}
+
+	/**
+	 * Empty method to hide view links on all logs table
+	 *
+	 * @since 3.0
+	 */
+	public function get_views() {
+		// Intentionally empty
 	}
 
 	/**
@@ -484,7 +459,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) ) : ?>
 				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
-					<?php esc_html_e( 'Clear Filter', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
 				</a>
 			<?php endif; ?>
 		</span>

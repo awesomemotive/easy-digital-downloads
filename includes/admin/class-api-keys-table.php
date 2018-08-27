@@ -225,18 +225,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 2.0
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
-	}
-
-	/**
 	 * Performs the key query
 	 *
 	 * @since 2.0

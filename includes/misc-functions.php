@@ -1448,3 +1448,82 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 function edd_negate_amount( $value = 0 ) {
 	return abs( floatval( $value ) ) * -1;
 }
+
+/**
+ * Get the label for a status
+ *
+ * @since 3.0
+ *
+ * @param string $status
+ *
+ * @return string Label for the status
+ */
+function edd_get_status_label( $status = '' ) {
+	static $labels = null;
+
+	// Array of status labels
+	if ( null === $labels ) {
+		$labels = array(
+
+			// Payments
+			'processing' => __( 'Processing', 'easy-digital-downloads' ),
+			'publish'    => __( 'Completed',  'easy-digital-downloads' ),
+			'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
+			'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
+			'failed'     => __( 'Failed',     'easy-digital-downloads' ),
+			'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' ),
+
+			// Discounts
+			'active'     => __( 'Active',     'easy-digital-downloads' ),
+			'inactive'   => __( 'Inactive',   'easy-digital-downloads' ),
+			'expired'    => __( 'Expired',    'easy-digital-downloads' ),
+
+			// Common
+			'pending'    => __( 'Pending',    'easy-digital-downloads' ),
+			'verified'   => __( 'Verified',   'easy-digital-downloads' ),
+			'spam'       => __( 'Spam',       'easy-digital-downloads' ),
+			'deleted'    => __( 'Deleted',    'easy-digital-downloads' ),
+			'cancelled'  => __( 'Cancelled',  'easy-digital-downloads' ),
+		);
+	}
+
+	// Return the label if set, or uppercase the first letter if not
+	$retval = isset( $labels[ $status ] )
+		? $labels[ $status ]
+		: ucwords( $status );
+
+	// Filter & return
+	return apply_filters( 'edd_get_status_label', $retval, $status );
+}
+
+/**
+ * Format an array of count objects, using the $groupby key.
+ *
+ * @since 3.0
+ *
+ * @param array  $counts
+ * @param string $groupby
+ * @return array
+ */
+function edd_format_counts( $counts = array(), $groupby = '' ) {
+
+	// Default array
+	$c = array(
+		'total' => 0
+	);
+
+	// Loop through counts and shape return value
+	if ( ! empty( $counts->items ) ) {
+
+		// Loop through statuses
+		foreach ( $counts->items as $count ) {
+			$c[ $count[ $groupby ] ] = absint( $count['count'] );
+		}
+
+		// Total
+		$c['total'] = array_sum( $c );
+	}
+
+	// Return array of counts
+	return $c;
+}
