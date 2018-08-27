@@ -81,63 +81,69 @@ function edd_show_purchase_form() {
 	$payment_mode = edd_get_chosen_gateway();
 
 	/**
-	 * Hooks in at the top of the purchase form
+	 * Hooks in at the top of the purchase form.
 	 *
 	 * @since 1.4
 	 */
 	do_action( 'edd_purchase_form_top' );
 
+	// Maybe load purchase form.
 	if ( edd_can_checkout() ) {
 
+		/**
+		 * Fires before the register/login form.
+		 *
+		 * @since 1.4
+		 */
 		do_action( 'edd_purchase_form_before_register_login' );
 
-		$show_register_form = edd_get_option( 'show_register_form', 'none' ) ;
-		if( ( $show_register_form === 'registration' || ( $show_register_form === 'both' && ! isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
+		$show_register_form = edd_get_option( 'show_register_form', 'none' );
+		if ( ( 'registration' === $show_register_form || ( 'both' === $show_register_form && ! isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_register_fields' ); ?>
 			</div>
-		<?php elseif( ( $show_register_form === 'login' || ( $show_register_form === 'both' && isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
+		<?php elseif ( ( 'login' === $show_register_form || ( 'both' === $show_register_form && isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_login_fields' ); ?>
 			</div>
 		<?php endif; ?>
 
-		<?php if( ( ! isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $show_register_form ) || 'none' === $show_register_form || 'login' === $show_register_form ) {
+		<?php
+		if ( ( ! isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $show_register_form ) || 'none' === $show_register_form || 'login' === $show_register_form ) { // WPCS: CSRF ok.
 			do_action( 'edd_purchase_form_after_user_info' );
 		}
 
 		/**
-		 * Hooks in before Credit Card Form
+		 * Hooks in before the credit card form.
 		 *
 		 * @since 1.4
 		 */
 		do_action( 'edd_purchase_form_before_cc_form' );
 
-		if( edd_get_cart_total() > 0 ) {
+		if ( edd_get_cart_total() > 0 ) {
 
-			// Load the credit card form and allow gateways to load their own if they wish
+			// Load the credit card form and allow gateways to load their own if they wish.
 			if ( has_action( 'edd_' . $payment_mode . '_cc_form' ) ) {
 				do_action( 'edd_' . $payment_mode . '_cc_form' );
 			} else {
 				do_action( 'edd_cc_form' );
 			}
-
 		}
 
 		/**
-		 * Hooks in after Credit Card Form
+		 * Hooks in after the credit card form.
 		 *
 		 * @since 1.4
 		 */
 		do_action( 'edd_purchase_form_after_cc_form' );
 
+	// Can't checkout.
 	} else {
-		// Can't checkout
 		do_action( 'edd_purchase_form_no_access' );
 	}
 
 	/**
-	 * Hooks in at the bottom of the purchase form
+	 * Hooks in at the bottom of the purchase form.
 	 *
 	 * @since 1.4
 	 */
@@ -153,20 +159,17 @@ add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
  * @return void
  */
 function edd_user_info_fields() {
-
 	$customer = EDD()->session->get( 'customer' );
 	$customer = wp_parse_args( $customer, array( 'first_name' => '', 'last_name' => '', 'email' => '' ) );
 
-	if( is_user_logged_in() ) {
+	if ( is_user_logged_in() ) {
 		$user_data = get_userdata( get_current_user_id() );
-		foreach( $customer as $key => $field ) {
-
-			if ( 'email' == $key && empty( $field ) ) {
+		foreach ( $customer as $key => $field ) {
+			if ( 'email' === $key && empty( $field ) ) {
 				$customer[ $key ] = $user_data->user_email;
 			} elseif ( empty( $field ) ) {
 				$customer[ $key ] = $user_data->$key;
 			}
-
 		}
 	}
 
@@ -178,9 +181,9 @@ function edd_user_info_fields() {
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
 				<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>
-				<?php if( edd_field_is_required( 'edd_email' ) ) { ?>
+				<?php if ( edd_field_is_required( 'edd_email' ) ) : ?>
 					<span class="edd-required-indicator">*</span>
-				<?php } ?>
+				<?php endif; ?>
 			</label>
 			<span class="edd-description" id="edd-email-description"><?php esc_html_e( 'We will send the purchase receipt to this address.', 'easy-digital-downloads' ); ?></span>
 			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php esc_html_e( 'Email address', 'easy-digital-downloads' ); ?>" id="edd-email" value="<?php echo esc_attr( $customer['email'] ); ?>" aria-describedby="edd-email-description"<?php if( edd_field_is_required( 'edd_email' ) ) {  echo ' required '; } ?>/>
@@ -189,9 +192,9 @@ function edd_user_info_fields() {
 		<p id="edd-first-name-wrap">
 			<label class="edd-label" for="edd-first">
 				<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>
-				<?php if( edd_field_is_required( 'edd_first' ) ) { ?>
+				<?php if ( edd_field_is_required( 'edd_first' ) ) : ?>
 					<span class="edd-required-indicator">*</span>
-				<?php } ?>
+				<?php endif; ?>
 			</label>
 			<span class="edd-description" id="edd-first-description"><?php esc_html_e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
 			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?> aria-describedby="edd-first-description" />
@@ -199,9 +202,9 @@ function edd_user_info_fields() {
 		<p id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
 				<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>
-				<?php if( edd_field_is_required( 'edd_last' ) ) { ?>
+				<?php if ( edd_field_is_required( 'edd_last' ) ) : ?>
 					<span class="edd-required-indicator">*</span>
-				<?php } ?>
+				<?php endif; ?>
 			</label>
 			<span class="edd-description" id="edd-last-description"><?php esc_html_e( 'We will use this as well to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
 			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?> aria-describedby="edd-last-description"/>
@@ -227,7 +230,7 @@ function edd_get_cc_form() {
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
 		<legend><?php _e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
-		<?php if( is_ssl() ) : ?>
+		<?php if ( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<span class="padlock">
 					<svg class="edd-icon edd-icon-lock" xmlns="http://www.w3.org/2000/svg" width="18" height="28" viewBox="0 0 18 28" aria-hidden="true">
@@ -296,16 +299,18 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
 function edd_default_cc_address_fields() {
 	$logged_in = is_user_logged_in();
 
-	$customer  = EDD()->session->get( 'customer' );
+	$customer = EDD()->session->get( 'customer' );
 
-	$customer  = wp_parse_args( $customer, array( 'address' => array(
-		'line1'   => '',
-		'line2'   => '',
-		'city'    => '',
-		'zip'     => '',
-		'state'   => '',
-		'country' => ''
-	) ) );
+	$customer = wp_parse_args( $customer, array(
+		'address' => array(
+			'line1'   => '',
+			'line2'   => '',
+			'city'    => '',
+			'zip'     => '',
+			'state'   => '',
+			'country' => '',
+		),
+	) );
 
 	$customer['address'] = array_map( 'sanitize_text_field', $customer['address'] );
 
@@ -592,7 +597,6 @@ add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
  * automatically selected.
  *
  * @since 1.2.2
- * @return void
  */
 function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways( true );
