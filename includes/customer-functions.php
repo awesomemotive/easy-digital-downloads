@@ -210,38 +210,36 @@ function edd_count_customers( $args = array() ) {
  *
  * @return array
  */
-function edd_get_customer_counts() {
+function edd_get_customer_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array(
-		'active'  => 0,
-		'pending' => 0,
-		'total'   => 0
-	);
-
-	// Query for count
-	$counts = new EDD\Database\Queries\Customer( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status'
 	) );
 
+	// Query for count
+	$counts = new EDD\Database\Queries\Customer( $r );
+
 	// Default array
-	$r = array();
+	$c = array(
+		'total' => 0
+	);
 
 	// Loop through counts and shape return value
 	if ( ! empty( $counts->items ) ) {
 
 		// Loop through statuses
 		foreach ( $counts->items as $status ) {
-			$r[ $status['status'] ] = absint( $status['count'] );
+			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
 		}
 
 		// Total
-		$r['total'] = array_sum( $r );
+		$c['total'] = array_sum( $c );
 	}
 
 	// Return counts
-	return array_merge( $defaults, $r );
+	return $c;
 }
 
 /**
@@ -589,40 +587,36 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = ar
  *
  * @return array
  */
-function edd_get_customer_address_counts() {
+function edd_get_customer_address_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array(
-		'pending'  => 0,
-		'verified' => 0,
-		'spam'     => 0,
-		'deleted'  => 0,
-		'total'    => 0
-	);
-
-	// Query for count
-	$counts = new EDD\Database\Queries\Customer_Address( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status'
 	) );
 
+	// Query for count
+	$counts = new EDD\Database\Queries\Customer_Address( $r );
+
 	// Default array
-	$r = array();
+	$c = array(
+		'total' => 0
+	);
 
 	// Loop through counts and shape return value
 	if ( ! empty( $counts->items ) ) {
 
 		// Loop through statuses
 		foreach ( $counts->items as $status ) {
-			$r[ $status['status'] ] = absint( $status['count'] );
+			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
 		}
 
 		// Total
-		$r['total'] = array_sum( $r );
+		$c['total'] = array_sum( $c );
 	}
 
 	// Return counts
-	return array_merge( $defaults, $r );
+	return $c;
 }
 
 /** Customer Email Addresses *************************************************/
@@ -776,38 +770,34 @@ function edd_count_customer_email_addresses( $args = array() ) {
  *
  * @return array
  */
-function edd_get_customer_email_address_counts() {
+function edd_get_customer_email_address_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array(
-		'pending'  => 0,
-		'verified' => 0,
-		'spam'     => 0,
-		'deleted'  => 0,
-		'total'    => 0
-	);
-
-	// Query for count
-	$counts = new EDD\Database\Queries\Customer_Email_Address( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status'
 	) );
 
+	// Query for count
+	$counts = new EDD\Database\Queries\Customer_Email_Address( $r );
+
 	// Default array
-	$r = array();
+	$c = array(
+		'total' => 0
+	);
 
 	// Loop through counts and shape return value
 	if ( ! empty( $counts->items ) ) {
 
 		// Loop through statuses
 		foreach ( $counts->items as $status ) {
-			$r[ $status['status'] ] = absint( $status['count'] );
+			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
 		}
 
 		// Total
-		$r['total'] = array_sum( $r );
+		$c['total'] = array_sum( $c );
 	}
 
 	// Return counts
-	return array_merge( $defaults, $r );
+	return $c;
 }

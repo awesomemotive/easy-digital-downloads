@@ -340,8 +340,7 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 function edd_count_payments( $args = array() ) {
 	global $wpdb;
 
-	// Setup defaults.
-	$defaults = array(
+	$args = wp_parse_args( $args, array(
 		'user'       => null,
 		'customer'   => null,
 		's'          => null,
@@ -349,12 +348,7 @@ function edd_count_payments( $args = array() ) {
 		'end-date'   => null,
 		'download'   => null,
 		'gateway'    => null,
-	);
-
-	// Default statuses
-	$stats = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-	$args = wp_parse_args( $args, $defaults );
+	) );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
 	$from    = "FROM {$wpdb->edd_orders} edd_o";
@@ -472,6 +466,7 @@ function edd_count_payments( $args = array() ) {
 		unset( $statuses['private'] );
 	}
 
+	$stats = array();
 	foreach ( $statuses as $status ) {
 		$stats[ $status ] = 0;
 	}

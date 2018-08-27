@@ -190,16 +190,17 @@ function edd_count_orders( $args = array() ) {
  *
  * @return array
  */
-function edd_get_order_counts() {
+function edd_get_order_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-	// Query for count
-	$counts = edd_get_orders( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status',
+		'type'    => 'sale'
 	) );
+
+	// Query for count
+	$counts = edd_get_orders( $r );
 
 	// Default array
 	$o = array(
@@ -219,7 +220,7 @@ function edd_get_order_counts() {
 	}
 
 	// Return counts
-	return array_merge( $defaults, $o );
+	return $o;
 }
 
 /**
@@ -1566,17 +1567,17 @@ function edd_count_order_items( $args = array() ) {
  *
  * @return array
  */
-function edd_get_order_item_counts( $order_id = 0 ) {
+function edd_get_order_item_counts( $args = array() ) {
 
-	// Default statuses
-	$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-	// Query for count
-	$counts = edd_get_order_items( array(
-		'order_id' => $order_id,
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
+		'order_id' => 0,
 		'count'    => true,
 		'groupby'  => 'status',
 	) );
+
+	// Query for count
+	$counts = edd_get_order_items( $r );
 
 	// Default array
 	$o = array(
@@ -1596,7 +1597,7 @@ function edd_get_order_item_counts( $order_id = 0 ) {
 	}
 
 	// Return counts
-	return array_merge( $defaults, $o );
+	return $o;
 }
 
 /** Order Adjustments *********************************************************/
@@ -1736,9 +1737,6 @@ function edd_count_order_adjustments( $args = array() ) {
  */
 function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order' ) {
 
-	// Default statuses
-	$defaults = array_fill_keys( array( 'tax_rate', 'fee', 'discount' ), 0 );
-
 	// Query for count
 	$counts = edd_get_order_adjustments( array(
 		'object_id'   => $object_id,
@@ -1765,7 +1763,7 @@ function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order'
 	}
 
 	// Return counts
-	return array_merge( $defaults, $o );
+	return $o;
 }
 
 /** Order Addresses **********************************************************/

@@ -706,116 +706,16 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 1.4
 	 */
 	public function get_payment_counts() {
-		$args = array();
 
-		// User
-		if ( isset( $_GET['user'] ) ) {
-			$args['user'] = urldecode( $_GET['user'] );
+		// Get the type to get counts for
+		$type = ! empty( $_GET['order_type'] )
+			? sanitize_key( $_GET['order_type'] )
+			: 'sale';
 
-		// Customer
-		} elseif ( isset( $_GET['customer'] ) ) {
-			$args['customer'] = absint( $_GET['customer'] );
-
-		// Search
-		} elseif ( isset( $_GET['s'] ) ) {
-			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
-
-			if ( true === $is_user ) {
-				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
-				unset( $args['s'] );
-			} else {
-				$args['s'] = sanitize_text_field( $_GET['s'] );
-			}
-		}
-
-		// Start
-		if ( ! empty( $_GET['start-date'] ) ) {
-			$args['start-date'] = urldecode( $_GET['start-date'] );
-		}
-
-		// End
-		if ( ! empty( $_GET['end-date'] ) ) {
-			$args['end-date'] = urldecode( $_GET['end-date'] );
-		}
-
-		// Gateway
-		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
-			$args['gateway'] = sanitize_key( $_GET['gateway'] );
-		}
-
-		// Mode
-		if ( ! empty( $_GET['mode'] ) && $_GET['mode'] !== 'all' ) {
-			$args['mode'] = sanitize_key( $_GET['mode'] );
-		}
-
-		// Types
-		$types = array_keys( edd_get_order_types() );
-		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
-			$args['type'] = sanitize_key( $_GET['order_type'] );
-		} else {
-			$args['type'] = 'sale';
-		}
-
-		// Maybe filter by order amount.
-		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			if ( ! empty( $_GET['order-amount-filter-value'] ) && 0 !== strlen( $_GET['order-amount-filter-value'] ) ) {
-				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
-				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
-
-				$args['compare'] = array(
-					array(
-						'key'     => 'total',
-						'value'   => $filter_amount,
-						'compare' => $filter_type,
-					),
-				);
-			}
-		}
-
-		// Maybe filter by country.
-		if ( isset( $_GET['order-country-filter-value'] ) ) {
-			$country = ! empty( $_GET['order-country-filter-value'] )
-				? sanitize_text_field( $_GET['order-country-filter-value'] )
-				: '';
-
-			$args['country'] = $country;
-		}
-
-		// Maybe filter by region.
-		if ( isset( $_GET['order-region-filter-value'] ) ) {
-			$region = ! empty( $_GET['order-region-filter-value'] )
-				? sanitize_text_field( $_GET['order-region-filter-value'] )
-				: '';
-
-			$args['region'] = $region;
-		}
-
-		// No empties
-		$r = wp_parse_args( array_filter( $args ) );
-
-		// Force EDD\Orders\Order objects to be returned
-		$r['output'] = 'orders';
-		$r['count']   = true;
-		$r['groupby'] = 'status';
-
-		$p      = new EDD_Payments_Query( $r );
-		$counts = $p->get_payments();
-
-		$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-		$o = array(
-			'total' => 0,
-		);
-
-		if ( ! empty( $counts ) ) {
-			foreach ( $counts as $item ) {
-				$o[ $item['status'] ] = absint( $item['count'] );
-			}
-
-			$o['total'] = array_sum( $o );
-		}
-
-		$this->counts = array_merge( $defaults, $o );
+		// Get order counts by type
+		$this->counts = edd_get_order_counts( array(
+			'type' => $type
+		) );
 	}
 
 	/**
