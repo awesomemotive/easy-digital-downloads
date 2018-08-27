@@ -344,16 +344,26 @@ function recalculate_taxes(state) {
 
 	var $edd_cc_address = jQuery('#edd_cc_address');
 
-	if( ! state ) {
-		state = $edd_cc_address.find('#card_state').val();
+	var billing_country = $edd_cc_address.find('#billing_country').val(),
+		card_address = $edd_cc_address.find('#card_address').val(),
+		card_address_2 = $edd_cc_address.find('#card_address_2').val(),
+		card_city = $edd_cc_address.find('#card_city').val(),
+		card_state = $edd_cc_address.find('#card_state').val(),
+		card_zip = $edd_cc_address.find('#card_zip').val();
+
+	if ( ! state ) {
+		state = card_state;
 	}
 
 	var postData = {
 		action: 'edd_recalculate_taxes',
-		billing_country: $edd_cc_address.find('#billing_country').val(),
+		card_address: card_address,
+		card_address_2: card_address_2,
+		card_city: card_city,
+		card_zip: card_zip,
 		state: state,
-		card_zip: $edd_cc_address.find('input[name=card_zip]').val(),
-		nonce: jQuery('#edd-checkout-address-fields-nonce').val(),
+		billing_country: billing_country,
+		nonce: jQuery('#edd-checkout-address-fields-nonce').val()
 	};
 
 	jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');

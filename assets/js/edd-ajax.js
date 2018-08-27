@@ -1,4 +1,4 @@
-var edd_scripts;
+/* global edd_scripts, edd_global_vars */
 jQuery(document).ready(function ($) {
 
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
@@ -49,10 +49,10 @@ jQuery(document).ready(function ($) {
 					});
 
 					// Check to see if the purchase form(s) for this download is present on this page
-					if( $( '[id^=edd_purchase_' + id + ']' ).length ) {
+					if ( $( '[id^=edd_purchase_' + id + ']' ).length ) {
 						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
 						$( '[id^=edd_purchase_' + id + '] a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
-						if ( edd_scripts.quantities_enabled == '1' ) {
+						if ( edd_scripts.quantities_enabled === '1' ) {
 							$( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).show();
 						}
 					}
@@ -66,13 +66,13 @@ jQuery(document).ready(function ($) {
 
 					$('.cart_item.edd_total span').html( response.total );
 
-					if( response.cart_quantity == 0 ) {
+					if ( response.cart_quantity === 0 ) {
 						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').hide();
 						$('.edd-cart').each( function() {
 
 							var cart_wrapper = $(this).parent();
 							if ( cart_wrapper ) {
-								cart_wrapper.addClass('cart-empty')
+								cart_wrapper.addClass('cart-empty');
 								cart_wrapper.removeClass('cart-not-empty');
 							}
 
@@ -118,7 +118,7 @@ jQuery(document).ready(function ($) {
 		var item_price_ids = [];
 		var free_items     = true;
 
-		if( variable_price == 'yes' ) {
+		if ( variable_price === 'yes' ) {
 
 			if ( form.find('.edd_price_option_' + download + '[type="hidden"]').length > 0 ) {
 				item_price_ids[0] = $('.edd_price_option_' + download, form).val();
@@ -126,7 +126,7 @@ jQuery(document).ready(function ($) {
 					free_items = false;
 				}
 			} else {
-				if( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
+				if ( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
 					 // hide the spinner
 					$this.removeAttr( 'data-edd-loading' );
 					alert( edd_scripts.select_option );
@@ -162,7 +162,7 @@ jQuery(document).ready(function ($) {
 			form.find('.edd_action_input').val('add_to_cart');
 		}
 
-		if( 'straight_to_gateway' == form.find('.edd_action_input').val() ) {
+		if ( 'straight_to_gateway' === form.find('.edd_action_input').val() ) {
 			form.submit();
 			return true; // Submit the form
 		}
@@ -185,10 +185,10 @@ jQuery(document).ready(function ($) {
 				withCredentials: true
 			},
 			success: function (response) {
-				var store_redirect = edd_scripts.redirect_to_checkout == '1';
-				var item_redirect  = form.find( '#edd_redirect_to_checkout' ).val() == '1';
+				var store_redirect = edd_scripts.redirect_to_checkout === '1';
+				var item_redirect  = form.find( '#edd_redirect_to_checkout' ).val() === '1';
 
-				if( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
+				if ( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
 
 					window.location = edd_scripts.checkout_page;
 
@@ -214,7 +214,7 @@ jQuery(document).ready(function ($) {
 
 						var cart_wrapper = $(this).parent();
 						if ( cart_wrapper ) {
-							cart_wrapper.addClass('cart-not-empty')
+							cart_wrapper.addClass('cart-not-empty');
 							cart_wrapper.removeClass('cart-empty');
 						}
 
@@ -237,32 +237,32 @@ jQuery(document).ready(function ($) {
 					});
 
 					// Show the "number of items in cart" message
-					if ( $('.edd-cart-number-of-items').css('display') == 'none') {
+					if ( $('.edd-cart-number-of-items').css('display') === 'none') {
 						$('.edd-cart-number-of-items').show('slow');
 					}
 
-					if( variable_price == 'no' || price_mode != 'multi' ) {
+					if ( variable_price === 'no' || price_mode !== 'multi' ) {
 						// Switch purchase to checkout if a single price item or variable priced with radio buttons
 						$('a.edd-add-to-cart', container).toggle();
 						$('.edd_go_to_checkout', container).css('display', 'inline-block');
 					}
 
-					if ( price_mode == 'multi' ) {
+					if ( price_mode === 'multi' ) {
 						// remove spinner for multi
 						$this.removeAttr( 'data-edd-loading' );
 					}
 
 					// Update all buttons for same download
-					if( $( '.edd_download_purchase_form' ).length && ( variable_price == 'no' || ! form.find('.edd_price_option_' + download).is('input:hidden') ) ) {
+					if ( $( '.edd_download_purchase_form' ).length && ( variable_price === 'no' || ! form.find('.edd_price_option_' + download).is('input:hidden') ) ) {
 						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
 						$( 'a.edd-add-to-cart', parent_form ).hide();
-						if( price_mode != 'multi' ) {
+						if ( price_mode !== 'multi' ) {
 							parent_form.find('.edd_download_quantity_wrapper').slideUp();
 						}
 						$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
 					}
 
-					if( response != 'incart' ) {
+					if ( response !== 'incart' ) {
 						// Show the added message
 						$('.edd-cart-added-alert', container).fadeIn();
 						setTimeout(function () {
@@ -329,7 +329,7 @@ jQuery(document).ready(function ($) {
 
 		$.post(edd_global_vars.ajaxurl, data, function(data) {
 
-			if ( $.trim(data) == 'success' ) {
+			if ( $.trim(data) === 'success' ) {
 				$('.edd_errors').remove();
 				window.location = edd_scripts.checkout_page;
 			} else {
@@ -347,7 +347,7 @@ jQuery(document).ready(function ($) {
 
 		var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 
-		if( payment_mode == '0' ) {
+		if ( payment_mode === '0' ) {
 			return false;
 		}
 
@@ -357,7 +357,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Auto load first payment gateway
-	if( edd_scripts.is_checkout == '1' ) {
+	if ( edd_scripts.is_checkout === '1' ) {
 
 		var chosen_gateway = false;
 		var ajax_needed    = false;
@@ -367,7 +367,7 @@ jQuery(document).ready(function ($) {
 			ajax_needed    = true;
 		}
 
-		if( ! chosen_gateway ) {
+		if ( ! chosen_gateway ) {
 			chosen_gateway = edd_scripts.default_gateway;
 		}
 
@@ -391,7 +391,7 @@ jQuery(document).ready(function ($) {
 
 		var eddPurchaseform = document.getElementById('edd_purchase_form');
 
-		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+		if ( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
 			return;
 		}
 
@@ -406,7 +406,7 @@ jQuery(document).ready(function ($) {
 		$(this).after('<span class="edd-loading-ajax edd-loading"></span>');
 
 		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
-			if ( $.trim(data) == 'success' ) {
+			if ( $.trim(data) === 'success' ) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$(eddPurchaseform).submit();
@@ -433,11 +433,11 @@ jQuery(document).ready(function ($) {
 		var $form;
 		var is_checkout = typeof edd_global_vars !== 'undefined';
 		var field_name  = 'card_state';
-		if ( $(this).attr('id') == 'edd_address_country' ) {
+		if ( $(this).attr('id') === 'edd_address_country' ) {
 			field_name = 'edd_address_state';
 		}
 
-		if( 'card_state' != $this.attr('id') ) {
+		if ( 'card_state' !== $this.attr('id') ) {
 			var nonce = $(this).data('nonce');
 
 			// If the country field has changed, we need to update the state/province field
@@ -445,7 +445,7 @@ jQuery(document).ready(function ($) {
 				action: 'edd_get_shop_states',
 				country: $this.val(),
 				field_name: field_name,
-				nonce: nonce,
+				nonce: nonce
 			};
 
 			$.ajax({
@@ -464,7 +464,7 @@ jQuery(document).ready(function ($) {
 
 					var state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
 
-					if( 'nostates' == $.trim(response) ) {
+					if ( 'nostates' === $.trim(response) ) {
 						var text_field = '<input type="text" name="card_state" class="card-state edd-input required" value=""/>';
 						$form.find(state_inputs).replaceWith( text_field );
 					} else {

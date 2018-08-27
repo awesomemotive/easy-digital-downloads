@@ -8,23 +8,25 @@
  *
  * @package     EDD
  * @subpackage  Functions/Taxes
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.3
-*/
+ */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Checks if taxes are enabled by using the option set from the EDD Settings.
  * The value returned can be filtered.
  *
  * @since 1.3.3
- * @return bool Whether or not taxes are enabled
+ *
+ * @return bool True if taxes are enabled, false otherwise..
  */
 function edd_use_taxes() {
 	$ret = edd_get_option( 'enable_taxes', false );
+
 	return (bool) apply_filters( 'edd_use_taxes', $ret );
 }
 
@@ -32,70 +34,209 @@ function edd_use_taxes() {
  * Retrieve tax rates
  *
  * @since 1.6
- * @return array Defined tax rates
+ * @since 3.0 Updated to use new query class.
+ *            Added $output parameter to output an array of EDD\Adjustments\Adjustment objects, if set to `object`.
+ *            Added $args parameter.
+ *
+ * @param array  $args   Query arguments
+ * @param string $output Optional. Type of data to output. Any of ARRAY_N | OBJECT.
+ *
+ * @return array|\EDD\Adjustments\Adjustment[] Tax rates.
  */
-function edd_get_tax_rates() {
-	$rates = get_option( 'edd_tax_rates', array() );
-	return apply_filters( 'edd_get_tax_rates', $rates );
+function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
+
+	if ( isset( $args['status'] ) && 'active' === $args['status'] ) {
+		add_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
+	}
+
+	// Instantiate a query object
+	$adjustments = new EDD\Database\Queries\Adjustment();
+
+	// Parse args
+	$r = wp_parse_args( $args, array(
+		'number'  => 30,
+		'type'    => 'tax_rate',
+		'orderby' => 'date_created',
+		'order'   => 'ASC',
+	) );
+
+	if ( isset( $args['status'] ) && 'active' === $args['status'] ) {
+		remove_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
+	}
+
+	$adjustments->query( $r );
+
+	if ( OBJECT === $output ) {
+		return $adjustments->items;
+	}
+
+	$rates = array();
+
+	if ( $adjustments->items ) {
+		foreach ( $adjustments->items as $tax_rate ) {
+			$rate = array(
+				'id'      => absint( $tax_rate->id ),
+				'country' => esc_attr( $tax_rate->name ),
+				'rate'    => floatval( $tax_rate->amount ),
+			);
+
+			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
+				$rate['state'] = esc_attr( $tax_rate->description );
+			}
+
+			if ( 'country' === $tax_rate->scope ) {
+				$rate['global'] = '1';
+			}
+
+			$rates[] = $rate;
+		}
+	}
+
+	return (array) apply_filters( 'edd_get_tax_rates', $rates );
 }
 
 /**
- * Get taxation rate
+ * Query for and return array of tax rates counts, keyed by status.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_tax_rate_counts( $args = array() ) {
+
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
+		'count'   => true,
+		'groupby' => 'status',
+		'type'    => 'tax_rate'
+	) );
+
+	// Query for count.
+	$counts = new EDD\Database\Queries\Adjustment( $r );
+
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
+}
+
+/**
+ * Add a WHERE clause to ensure only active tax rates are returned.
+ *
+ * @since 3.0
+ *
+ * @param array $clauses Query clauses.
+ * @return array $clauses Updated query clauses.
+ */
+function edd_active_tax_rates_query_clauses( $clauses ) {
+	$date = \Carbon\Carbon::now( edd_get_timezone_id() )->toDateTimeString();
+
+	$clauses['where'] .= "
+		AND ( start_date < '{$date}' OR start_date = '0000-00-00 00:00:00' )
+		AND ( end_date > '{$date}' OR end_date = '0000-00-00 00:00:00' )
+	";
+
+	return $clauses;
+}
+
+/**
+ * Get taxation rate.
  *
  * @since 1.3.3
- * @param bool $country
- * @param bool $state
+ * @since 3.0 Refactored to work with custom tables and start and end dates.
+ *            Renamed $state parameter to $region.
+ *
+ * @param string $country Country.
+ * @param string $region  Region.
+ *
  * @return mixed|void
  */
-function edd_get_tax_rate( $country = false, $state = false ) {
+function edd_get_tax_rate( $country = '', $region = '' ) {
+
+	// Default rate
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
+	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
 
-	if( empty( $country ) ) {
-		if( ! empty( $_POST['billing_country'] ) ) {
+	$address_line_1 = ! empty( $_POST['card_address'] )
+		? sanitize_text_field( $_POST['card_address'] )
+		: '';
+
+	$address_line_2 = ! empty( $_POST['card_address_2'] )
+		? sanitize_text_field( $_POST['card_address_2'] )
+		: '';
+
+	$city = ! empty( $_POST['card_city'] )
+		? sanitize_text_field( $_POST['card_city'] )
+		: '';
+
+	$zip = ! empty( $_POST['card_zip'] )
+		? sanitize_text_field( $_POST['card_zip'] )
+		: '';
+
+	// Country
+	if ( empty( $country ) ) {
+		if ( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
-		} elseif( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
+		} elseif ( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
 			$country = $user_address['country'];
 		}
-		$country = ! empty( $country ) ? $country : edd_get_shop_country();
+
+		$country = empty( $country )
+			? edd_get_shop_country()
+			: $country;
 	}
 
-	if( empty( $state ) ) {
-		if( ! empty( $_POST['state'] ) ) {
-			$state = $_POST['state'];
-		} elseif( ! empty( $_POST['card_state'] ) ) {
-			$state = $_POST['card_state'];
-		} elseif( is_user_logged_in() && ! empty( $user_address['state'] ) ) {
-			$state = $user_address['state'];
+	// Region
+	if ( empty( $region ) ) {
+		if ( ! empty( $_POST['state'] ) ) {
+			$region = $_POST['state'];
+		} elseif ( ! empty( $_POST['card_state'] ) ) {
+			$region = $_POST['card_state'];
+		} elseif ( is_user_logged_in() && ! empty( $user_address['state'] ) ) {
+			$region = $user_address['state'];
 		}
-		$state = ! empty( $state ) ? $state : edd_get_shop_state();
+
+		$region = empty( $region )
+			? edd_get_shop_state()
+			: $region;
 	}
 
-	if( ! empty( $country ) ) {
-		$tax_rates   = edd_get_tax_rates();
+	// Attempt to determine the applicable tax rate.
+	if ( ! empty( $country ) ) {
 
-		if( ! empty( $tax_rates ) ) {
+		// Fetch all the tax rates from the database.
+		// The region is not passed in deliberately in order to check for country-wide tax rates.
+		$tax_rates = edd_get_tax_rates( array(
+			'name'   => $country,
+			'status' => 'active',
+		), OBJECT );
 
-			// Locate the tax rate for this country / state, if it exists
-			foreach( $tax_rates as $key => $tax_rate ) {
+		// Save processing if only one tax rate is returned.
+		if ( 1 === count( $tax_rates ) ) {
+			$tax_rate = $tax_rates[0];
 
-				if( $country != $tax_rate['country'] )
-					continue;
+			if ( $tax_rate->name === $country && $tax_rate->description === $region ) {
+				$rate = number_format( $tax_rate->amount, 4 );
+			}
+		}
 
-				if( ! empty( $tax_rate['global'] ) ) {
-					if( ! empty( $tax_rate['rate'] ) ) {
-						$rate = number_format( $tax_rate['rate'], 4 );
-					}
+		if ( ! empty( $tax_rates ) ) {
+			foreach ( $tax_rates as $tax_rate ) {
+
+				// Countrywide tax rate.
+				if ( 'country' === $tax_rate->scope ) {
+					$rate = number_format( $tax_rate->amount, 4 );
+
+				// Regional tax rate.
 				} else {
-
-					if( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) ) {
+					if ( empty( $tax_rate->description ) || strtolower( $region ) !== strtolower( $tax_rate->description ) ) {
 						continue;
 					}
 
-					$state_rate = $tax_rate['rate'];
-					if( ( 0 !== $state_rate || ! empty( $state_rate ) ) && '' !== $state_rate ) {
-						$rate = number_format( $state_rate, 4 );
+					$regional_rate = $tax_rate->amount;
+
+					if ( ( 0 !== $regional_rate || ! empty( $regional_rate ) ) && '' !== $regional_rate ) {
+						$rate = number_format( $regional_rate, 4 );
 					}
 				}
 			}
@@ -105,7 +246,21 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	// Convert to a number we can use
 	$rate = $rate / 100;
 
-	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
+	/**
+	 * Allow the tax rate to be filtered.
+	 *
+	 * @since 1.3.3
+	 * @since 3.0 Added entire customer address.
+	 *
+	 * @param float  $rate           Calculated tax rate.
+	 * @param string $country        Country.
+	 * @param string $region         Region.
+	 * @param string $address_line_1 First line of address.
+	 * @param string $address_line_2 Second line of address.
+	 * @param string $city           City.
+	 * @param string $zip            ZIP code.
+	 */
+	return apply_filters( 'edd_tax_rate', $rate, $country, $region, $address_line_1, $address_line_2, $city, $zip );
 }
 
 /**
@@ -117,23 +272,27 @@ function edd_get_tax_rate( $country = false, $state = false ) {
  * @return string Formatted rate
  */
 function edd_get_formatted_tax_rate( $country = false, $state = false ) {
-	$rate = edd_get_tax_rate( $country, $state );
-	$rate = round( $rate * 100, 4 );
+	$rate      = edd_get_tax_rate( $country, $state );
+	$rate      = round( $rate * 100, 4 );
 	$formatted = $rate .= '%';
+
 	return apply_filters( 'edd_formatted_tax_rate', $formatted, $rate, $country, $state );
 }
 
 /**
- * Calculate the taxed amount
+ * Calculate the taxed amount.
  *
  * @since 1.3.3
- * @param $amount float The original amount to calculate a tax cost
- * @param $country string The country to calculate tax for. Will use default if not passed
- * @param $state string The state to calculate tax for. Will use default if not passed
- * @return float $tax Taxed amount
+ * @since 3.0 Renamed $state parameter to $region.
+ *
+ * @param float  $amount  Amount.
+ * @param string $country Country. Default base country.
+ * @param string $region  Region. Default base region.
+ *
+ * @return float $tax Taxed amount.
  */
-function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
-	$rate = edd_get_tax_rate( $country, $state );
+function edd_calculate_tax( $amount = 0.00, $country = '', $region = '' ) {
+	$rate = edd_get_tax_rate( $country, $region );
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
@@ -144,10 +303,19 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 		} else {
 			$tax = $amount * $rate;
 		}
-
 	}
 
-	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $state );
+	/**
+	 * Filter the taxed amount.
+	 *
+	 * @since 1.5.3
+	 *
+	 * @param float $tax      Taxed amount.
+	 * @param float $rate     Tax rate applied.
+	 * @param string $country Country.
+	 * @param string $region  Region.
+	 */
+	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $region );
 }
 
 /**
@@ -157,7 +325,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
  * @param $year int The year to retrieve taxes for, i.e. 2012
  * @uses edd_get_sales_tax_for_year()
  * @return void
-*/
+ */
 function edd_sales_tax_for_year( $year = null ) {
 	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
@@ -177,27 +345,17 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	$tax = 0;
 
 	if ( ! empty( $year ) ) {
+		$year = absint( $year );
 
-
-		$args = array(
-			'post_type'      => 'edd_payment',
-			'post_status'    => array( 'publish', 'revoked' ),
-			'posts_per_page' => -1,
-			'year'           => $year,
-			'fields'         => 'ids'
-		);
-
-		$payments    = get_posts( $args );
-		$payment_ids = implode( ',', $payments );
-
-		if ( count( $payments ) > 0 ) {
-			$sql = "SELECT SUM( meta_value ) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN( $payment_ids )";
-			$tax = $wpdb->get_var( $sql );
-		}
-
+		$tax = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(tax) FROM {$wpdb->edd_orders} WHERE status IN('publish', 'revoked') AND YEAR(date_created) = %d", $year ) );
 	}
 
-	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
+	if ( ! $tax || is_null( $tax ) ) {
+		$tax = 0.00;
+	}
+
+	// Filter & return
+	return (float) apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
 }
 
 /**
@@ -217,9 +375,9 @@ function edd_is_cart_taxed() {
  *
  * @since 1.5
  * @return bool $include_tax
-*/
+ */
 function edd_prices_include_tax() {
-	$ret = ( edd_get_option( 'prices_include_tax', false ) == 'yes' && edd_use_taxes() );
+	$ret = ( edd_get_option( 'prices_include_tax', false ) === 'yes' && edd_use_taxes() );
 
 	return apply_filters( 'edd_prices_include_tax', $ret );
 }
@@ -231,7 +389,7 @@ function edd_prices_include_tax() {
  * @return bool $include_tax
  */
 function edd_prices_show_tax_on_checkout() {
-	$ret = ( edd_get_option( 'checkout_include_tax', false ) == 'yes' && edd_use_taxes() );
+	$ret = ( edd_get_option( 'checkout_include_tax', false ) === 'yes' && edd_use_taxes() );
 
 	return apply_filters( 'edd_taxes_on_prices_on_checkout', $ret );
 }
@@ -259,11 +417,11 @@ function edd_display_tax_rate() {
  */
 function edd_cart_needs_tax_address_fields() {
 
-	if( ! edd_is_cart_taxed() )
+	if ( ! edd_is_cart_taxed() ) {
 		return false;
+	}
 
 	return ! did_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
-
 }
 
 /**
@@ -274,5 +432,6 @@ function edd_cart_needs_tax_address_fields() {
  */
 function edd_download_is_tax_exclusive( $download_id = 0 ) {
 	$ret = (bool) get_post_meta( $download_id, '_edd_download_tax_exclusive', true );
-	return apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
+
+	return (Bool) apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
 }

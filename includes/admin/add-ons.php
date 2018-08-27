@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Add-ons
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Add-ons Page
@@ -21,75 +21,100 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_ons_page() {
-	$add_ons_tabs = apply_filters( 'edd_add_ons_tabs', array( 'popular' => __( 'Popular', 'easy-digital-downloads' ), 'new' => __( 'New', 'easy-digital-downloads' ), 'all' => __( 'View all Integrations', 'easy-digital-downloads' ) ) );
-	$active_tab   = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $add_ons_tabs ) ? $_GET['tab'] : 'popular';
+
+	// Filter the add-ons tabs
+	$add_ons_tabs = apply_filters( 'edd_add_ons_tabs', array(
+		'popular' => __( 'Popular', 'easy-digital-downloads' ),
+		'new'     => __( 'New',     'easy-digital-downloads' ),
+		'all'     => __( 'All',     'easy-digital-downloads' )
+	) );
+
+	// Active tab
+	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $add_ons_tabs )
+		? sanitize_key( $_GET['tab'] )
+		: 'popular';
 
 	// Set a new campaign for tracking purposes
-	$campaign = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'EDDIntegrationsPage' : 'EDDAddonsPage';
+	$campaign = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations'
+		? 'EDDIntegrationsPage'
+		: 'EDDAddonsPage';
 
+	// Empty tabs array
+	$tabs = array();
+
+	// Loop through add-ons and make array of tabs
+	foreach( $add_ons_tabs as $tab_id => $tab_name ) {
+
+		// "All"
+		if ( 'all' === $tab_id ) {
+			$tab_url = 'https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=' . $campaign . '&utm_content=All%20Extensions';
+
+		// All other tabs besides "All"
+		} else {
+			$tab_url = add_query_arg( array(
+				'settings-updated' => false,
+				'tab'              => $tab_id
+			) );
+		}
+
+		// Active?
+		$active = ( $active_tab === $tab_id )
+			? 'current'
+			: '';
+
+		// Count
+		$count = ( 'all' === $tab_id )
+			? '150+'
+			: '29';
+
+		// The link
+		$tab  = '<li class="' . esc_attr( $tab_id ) . '">';
+		$tab .= ( 'all' === $tab_id )
+			? '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $active ) . '" target="_blank">'
+			: '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $active ) . '">';
+
+		$tab .= esc_html( $tab_name );
+		$tab .= ' <span class="count">(' . esc_html( $count ) . ')</span>';
+
+		// "All" is an external link, so denote it as such
+		if ( 'all' === $tab_id ) {
+			$tab .= '<span class="dashicons dashicons-external"></span>';
+		}
+
+		$tab .= '</a>';
+		$tab .= '</li>';
+
+		// Set the tab
+		$tabs[] = $tab;
+	}
+
+	// Start a buffer
 	ob_start(); ?>
+
 	<div class="wrap" id="edd-add-ons">
-		<h1 class="wp-heading-inline"><?php echo edd_get_label_plural(); ?></h1>
-		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action">Add New</a>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Extensions', 'easy-digital-downloads' ); ?></h1>
 		<hr class="wp-header-end">
-		<?php edd_display_product_tabs(); ?>
-		<h2>
-			<?php _e( 'Apps and Integrations for Easy Digital Downloads', 'easy-digital-downloads' ); ?>
-			<span>
-				&nbsp;&nbsp;<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
-			</span>
-		</h2>
-		<p><?php _e( 'These <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></p>
-		<div class="edd-add-ons-view-wrapper">
-			<ul class="subsubsub">
-				<?php
-				$total_tabs = count( $add_ons_tabs );
-				$i = 1;
-				foreach( $add_ons_tabs as $tab_id => $tab_name ) {
 
-					$tab_url = add_query_arg( array(
-						'settings-updated' => false,
-						'tab' => $tab_id
-					) );
+		<ul class="subsubsub"><?php echo implode( ' | ', $tabs ); ?></ul>
 
-					if ( 'all' === $tab_id ) {
-						$tab_url = 'https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=' . $campaign . '&utm_content=All%20Extensions';
-					}
+		<p class="search-box">
+			<span><?php _e( 'Add <em><strong>awesome</strong></em> new functionality to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></span>
+			<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button button-secondary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?><span class="dashicons dashicons-external"></span></a>
+		</p>
 
-					$active = $active_tab == $tab_id ? 'current' : '';
-
-					echo '<li class="' . $tab_id . '">';
-					echo '<a href="' . esc_url( $tab_url ) . '" class="' . $active . '">';
-					echo esc_html( $tab_name );
-					echo '</a>';
-
-					if ( 'all' === $tab_id ) {
-						$count = '150+';
-					} else {
-						$count = '29';
-					}
-
-					echo ' <span class="count">(' . $count . ')</span>';
-					echo '</li>';
-
-					if ( $i !== $total_tabs ) {
-						echo ' | ';
-					}
-
-					$i++;
-				}
-				?>
-			</ul>
-		</div>
-		<div id="tab_container">
+		<div class="edd-add-ons-container">
 			<?php echo edd_add_ons_get_feed( $active_tab ); ?>
 			<div class="clear"></div>
-			<div class="edd-add-ons-footer">
-				<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
-			</div>
-		</div><!-- #tab_container-->
+		</div>
+
+		<div class="edd-add-ons-footer">
+			<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
+		</div>
 	</div>
+
 	<?php
+
+	// Output the current buffer
 	echo ob_get_clean();
 }
 
@@ -102,29 +127,36 @@ function edd_add_ons_page() {
  * @return void
  */
 function edd_add_ons_get_feed( $tab = 'popular' ) {
-	$cache = get_transient( 'easydigitaldownloads_add_ons_feed_' . $tab );
 
+	// Transient
+	$trans_key = 'easydigitaldownloads_add_ons_feed_' . $tab;
+	$cache     = get_transient( $trans_key );
+
+	// No add ons, so reach out and get some
 	if ( false === $cache ) {
 		$url = 'https://easydigitaldownloads.com/?feed=addons';
 
+		// Popular
 		if ( 'popular' !== $tab ) {
 			$url = add_query_arg( array( 'display' => $tab ), $url );
 		}
 
+		// Remote request
 		$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
 
-		if ( ! is_wp_error( $feed ) ) {
-			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
-				$cache = wp_remote_retrieve_body( $feed );
-				set_transient( 'easydigitaldownloads_add_ons_feed_' . $tab, $cache, 3600 );
-			}
-		} else {
-			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the extensions list from the server. Please try again later.', 'easy-digital-downloads' ) . '</div>';
+		// Handle error
+		if ( empty( $feed ) || is_wp_error( $feed ) ) {
+			$cache = '<div class="error"><p>' . __( 'These extensions could not be retrieved from the server. Please try again later.', 'easy-digital-downloads' ) . '</div>';
+
+		// Cache the results
+		} elseif ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
+			$cache = wp_remote_retrieve_body( $feed );
+			set_transient( $trans_key, $cache, HOUR_IN_SECONDS );
 		}
 	}
 
+	// Set a new campaign for tracking purposes
 	if ( isset( $_GET['view'] ) && 'integrations' === $_GET['view'] ) {
-		// Set a new campaign for tracking purposes
 		$cache = str_replace( 'EDDAddonsPage', 'EDDIntegrationsPage', $cache );
 	}
 

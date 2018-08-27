@@ -38,7 +38,7 @@ class Tests_Activation extends EDD_UnitTestCase {
 
 		$origin_edd_options   = $edd_options;
 		$origin_upgraded_from = get_option( 'edd_version_upgraded_from' );
-		$origin_edd_version   = get_option( 'edd_version' );
+		$origin_edd_version   = edd_get_db_version();
 
 		// Prepare values for testing
 		delete_option( 'edd_settings' ); // Needed for the install test to succeed
@@ -66,7 +66,7 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'purchase_history_page', $new_settings );
 		$this->assertNotEquals( $origin_edd_options['purchase_history_page'], $new_settings['purchase_history_page'] );
 
-		$this->assertEquals( EDD_VERSION, get_option( 'edd_version' ) );
+		$this->assertEquals( edd_format_db_version( EDD_VERSION ), get_option( 'edd_version' ) );
 
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_manager' ) );
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_accountant' ) );

@@ -2,7 +2,7 @@
 namespace PayWithAmazon;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /* Interface class to showcase the public API methods for Pay With Amazon */
 

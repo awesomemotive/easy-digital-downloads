@@ -8,11 +8,54 @@ module.exports = function(grunt) {
 
 		pkg: grunt.file.readJSON('package.json'),
 
-		cssmin: {
+		rtlcss: {
 			options: {
-				mergeIntoShorthands: false,
+				opts: {
+					processUrls: false,
+					autoRename: false,
+					clean: true
+				},
+				saveUnmodified: false
 			},
 			target: {
+				files: [
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-menu.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-datepicker.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'templates',
+						src: ['edd.css'],
+						dest: 'templates',
+						ext: '-rtl.css'
+					}
+				]
+			}
+		},
+
+		cssmin: {
+			options: {
+				mergeIntoShorthands: false
+			},
+			ltr: {
 				files: [
 					{
 						expand: true,
@@ -23,18 +66,64 @@ module.exports = function(grunt) {
 					},
 					{
 						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-menu.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-datepicker.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
 						cwd: 'templates',
 						src: ['edd.css'],
 						dest: 'templates',
 						ext: '.min.css'
 					}
-				],
+				]
+			},
+			rtl: {
+				files: [
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-menu-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-datepicker-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'templates',
+						src: ['edd-rtl.css'],
+						dest: 'templates',
+						ext: '.min.css'
+					}
+				]
 			}
 		},
 
 		uglify: {
 			options: {
-				mangle: false,
+				mangle: false
 			},
 			target: {
 				files: [{
@@ -43,7 +132,7 @@ module.exports = function(grunt) {
 					src: [ '*.js', '!*.min.js', '!*jquery*.js' ],
 					dest: 'assets/js',
 					ext: '.min.js',
-					extDot: 'last',
+					extDot: 'last'
 				}]
 			}
 		},
@@ -92,7 +181,7 @@ module.exports = function(grunt) {
 					potHeaders: {
 						poedit: true,                 // Includes common Poedit headers.
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
-								},
+					},
 					type: 'wp-plugin',    // Type of project (wp-plugin or wp-theme).
 					updateTimestamp: true,    // Whether the POT-Creation-Date should be updated without other changes.
 					processPot: function( pot, options ) {
@@ -106,15 +195,15 @@ module.exports = function(grunt) {
 								'Plugin URI of the plugin/theme',
 								'Author of the plugin/theme',
 								'Author URI of the plugin/theme'
-								];
-									for ( translation in pot.translations[''] ) {
-										if ( 'undefined' !== typeof pot.translations[''][ translation ].comments.extracted ) {
-											if ( excluded_meta.indexOf( pot.translations[''][ translation ].comments.extracted ) >= 0 ) {
-												console.log( 'Excluded meta: ' + pot.translations[''][ translation ].comments.extracted );
-													delete pot.translations[''][ translation ];
-												}
-											}
-										}
+							];
+							for ( translation in pot.translations[''] ) {
+								if ( 'undefined' !== typeof pot.translations[''][ translation ].comments.extracted ) {
+									if ( excluded_meta.indexOf( pot.translations[''][ translation ].comments.extracted ) >= 0 ) {
+										console.log( 'Excluded meta: ' + pot.translations[''][ translation ].comments.extracted );
+										delete pot.translations[''][ translation ];
+									}
+								}
+							}
 						return pot;
 					}
 				}
@@ -153,11 +242,10 @@ module.exports = function(grunt) {
 				src: ['**/*'],
 				dest: '<%= pkg.name %>/'
 			}
-		},
-
+		}
 	});
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'cssmin', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'build', [ 'cssmin:ltr', 'rtlcss', 'cssmin:rtl', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
 
 };

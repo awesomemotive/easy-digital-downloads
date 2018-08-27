@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
-Requires at least: 4.4
+Requires at least: 4.6
 Tested up to: 4.9.7
-Stable Tag: 2.9.6
+Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.

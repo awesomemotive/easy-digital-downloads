@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Customers_Export Class
@@ -35,10 +35,7 @@ class EDD_Customers_Export extends EDD_Export {
 	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
-			set_time_limit( 0 );
+		edd_set_time_limit();
 
 		$extra = '';
 
@@ -48,8 +45,8 @@ class EDD_Customers_Export extends EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_customers_export_filename', 'edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="' . apply_filters( 'edd_customers_export_filename', 'edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 	/**
@@ -96,7 +93,6 @@ class EDD_Customers_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $wpdb;
 
 		$data = array();
 
@@ -138,7 +134,9 @@ class EDD_Customers_Export extends EDD_Export {
 		} else {
 
 			// Export all customers
-			$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
+			$customers = edd_get_customers( array(
+				'limit' => -1
+			) );
 
 			$i = 0;
 

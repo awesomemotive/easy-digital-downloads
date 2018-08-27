@@ -1,52 +1,136 @@
 <?php
 /**
- * Admin Payment History
+ * Functions to render Orders page.
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+/** Navigation ****************************************************************/
 
 /**
- * Payment History Page
+ * Output the primary orders page navigation
  *
- * Renders the payment history page contents.
+ * @since 3.0
+ * @param string $active_tab
+ */
+function edd_orders_page_primary_nav( $active_tab = '' ) {
+
+	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
+
+	ob_start();?>
+
+	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<?php
+
+		// Get the order pages
+		$tabs = edd_get_order_pages();
+
+		// Loop through order pages and create tabs
+		foreach ( $tabs as $tab_id => $tab_name ) {
+
+			// Remove
+			$tab_url = add_query_arg( array(
+				'settings-updated' => false,
+				'order_type'       => $tab_id
+			) );
+
+			// Remove the section from the tabs so we always end up at the main section
+			$tab_url = remove_query_arg( 'section', $tab_url );
+			$active  = $active_tab === $tab_id
+				? ' nav-tab-active'
+				: '';
+
+			// Link
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
+				echo esc_html( $tab_name );
+			echo '</a>';
+		}
+		?>
+		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
+	</h2>
+
+	<?php
+
+	echo ob_get_clean(); // WPCS: XSS ok.
+}
+
+/**
+ * Retrieve the order pages.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * Used only by the primary tab navigation for orders.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_order_pages() {
+	$types  = edd_get_order_types();
+	$retval = array();
+
+	// Loop through and get type IDs and labels
+	foreach ( $types as $type_id => $type ) {
+		$retval[ $type_id ] = ! empty( $type['labels']['plural'] )
+			? $type['labels']['plural']
+			: ucwords( $type_id );
+	}
+
+	// Filter & return
+	return (array) apply_filters( 'edd_get_order_pages', $retval );
+}
+
+/**
+ * Render Orders page.
+ *
+ * @since 1.0
+ * @since 3.0 Nomenclature updated for consistency.
+ *            Add a link to manually all orders.
 */
 function edd_payment_history_page() {
-	$edd_payment = get_post_type_object( 'edd_payment' );
-
-	if ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
+	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) { // WPCS: CSRF ok.
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
-		$payments_table = new EDD_Payment_History_Table();
-		$payments_table->prepare_items();
-	?>
-	<div class="wrap">
-		<h1><?php echo $edd_payment->labels->menu_name ?></h1>
-		<?php do_action( 'edd_payments_page_top' ); ?>
-		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
-			<input type="hidden" name="post_type" value="download" />
-			<input type="hidden" name="page" value="edd-payment-history" />
+		$orders_table = new EDD_Payment_History_Table();
+		$orders_table->prepare_items();
 
-			<?php $payments_table->views() ?>
+		$active_tab = ! empty( $_GET['order_type'] )
+			? sanitize_key( $_GET['order_type'] )
+			: 'sale';
 
-			<?php $payments_table->advanced_filters(); ?>
+		$admin_url = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
 
-			<?php $payments_table->display() ?>
-		</form>
-		<?php do_action( 'edd_payments_page_bottom' ); ?>
-	</div>
-<?php
+		<div class="wrap">
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
+			<hr class="wp-header-end">
+
+			<?php edd_orders_page_primary_nav( $active_tab ); ?>
+
+			<?php do_action( 'edd_payments_page_top' ); ?>
+
+			<form id="edd-payments-filter" method="get" action="<?php echo esc_url( $admin_url ); ?>">
+				<input type="hidden" name="post_type" value="download" />
+				<input type="hidden" name="page" value="edd-payment-history" />
+				<input type="hidden" name="order_type" value="<?php echo esc_attr( $active_tab ); ?>" />
+				<?php
+				$orders_table->views();
+				$orders_table->advanced_filters();
+				$orders_table->display();
+				?>
+			</form>
+
+			<?php do_action( 'edd_payments_page_bottom' ); ?>
+		</div>
+
+		<?php
 	}
 }
 
@@ -54,74 +138,56 @@ function edd_payment_history_page() {
  * Renders the mobile link at the bottom of the payment history page
  *
  * @since 1.8.4
- * @return void
+ * @since 3.0 Updated filter to display link next to the reports filters.
 */
 function edd_payment_history_mobile_link() {
 	?>
-	<p class="edd-mobile-link">
+	<span class="edd-mobile-link">
 		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
-			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>" alt="<?php _e( 'Easy Digital Downloads iOS App', 'easy-digital-downloads' ); ?>"/>
-			<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'easy-digital-downloads' ); ?>
+			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
 		</a>
-	</p>
+	</span>
 	<?php
 }
-add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
+add_action( 'edd_after_admin_filter_bar_reports', 'edd_payment_history_mobile_link' );
 
 /**
- * Payment History admin titles
+ * Orders admin titles.
  *
  * @since 1.6
+ * @since 3.0 Updated to use new nomenclature.
  *
- * @param $admin_title
- * @param $title
- * @return string
+ * @param string $admin_title
+ * @param string $title
+ *
+ * @return string Updated admin title.
  */
 function edd_view_order_details_title( $admin_title, $title ) {
-	if ( 'download_page_edd-payment-history' != get_current_screen()->base )
+
+	// Bail if we aren't on the Orders page.
+	if ( 'download_page_edd-payment-history' !== get_current_screen()->base ) {
 		return $admin_title;
+	}
 
-	if( ! isset( $_GET['edd-action'] ) )
+	if ( ! isset( $_GET['view'] ) ) { // WPCS: CSRF ok.
 		return $admin_title;
+	}
 
-	switch( $_GET['edd-action'] ) :
+	$action = sanitize_text_field( $_GET['view'] );
 
-		case 'view-order-details' :
-			$title = __( 'View Order Details', 'easy-digital-downloads' ) . ' - ' . $admin_title;
+	switch ( $action ) {
+		case 'view-order-details':
+		case 'edit-payment':
+			$title = __( 'Edit Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
 			break;
-		case 'edit-payment' :
-			$title = __( 'Edit Payment', 'easy-digital-downloads' ) . ' - ' . $admin_title;
+		case 'add-order':
+			$title = __( 'Add New Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
 			break;
 		default:
 			$title = $admin_title;
 			break;
-	endswitch;
+	}
 
 	return $title;
 }
 add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
-
-/**
- * Intercept default Edit post links for EDD payments and rewrite them to the View Order Details screen
- *
- * @since 1.8.3
- *
- * @param $url
- * @param $post_id
- * @param $context
- * @return string
- */
-function edd_override_edit_post_for_payment_link( $url, $post_id = 0, $context ) {
-
-	$post = get_post( $post_id );
-	if( ! $post )
-		return $url;
-
-	if( 'edd_payment' != $post->post_type )
-		return $url;
-
-	$url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
-
-	return $url;
-}
-add_filter( 'get_edit_post_link', 'edd_override_edit_post_for_payment_link', 10, 3 );
