@@ -49,14 +49,7 @@ class Row extends Base {
 	 * @param array $data
 	 */
 	private function init( $data = array() ) {
-
-		// Convert to an array for speedy looping
-		$data = (array) $data;
-
-		// Loop through keys and set object values
-		foreach ( $data as $key => $value ) {
-			$this->{$key} = $value;
-		}
+		$this->set_vars( $data );
 	}
 
 	/**
