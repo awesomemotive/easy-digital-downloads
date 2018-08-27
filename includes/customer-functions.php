@@ -221,25 +221,8 @@ function edd_get_customer_counts( $args = array() ) {
 	// Query for count
 	$counts = new EDD\Database\Queries\Customer( $r );
 
-	// Default array
-	$c = array(
-		'total' => 0
-	);
-
-	// Loop through counts and shape return value
-	if ( ! empty( $counts->items ) ) {
-
-		// Loop through statuses
-		foreach ( $counts->items as $status ) {
-			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
-		}
-
-		// Total
-		$c['total'] = array_sum( $c );
-	}
-
-	// Return counts
-	return $c;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /**
@@ -598,25 +581,8 @@ function edd_get_customer_address_counts( $args = array() ) {
 	// Query for count
 	$counts = new EDD\Database\Queries\Customer_Address( $r );
 
-	// Default array
-	$c = array(
-		'total' => 0
-	);
-
-	// Loop through counts and shape return value
-	if ( ! empty( $counts->items ) ) {
-
-		// Loop through statuses
-		foreach ( $counts->items as $status ) {
-			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
-		}
-
-		// Total
-		$c['total'] = array_sum( $c );
-	}
-
-	// Return counts
-	return $c;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /** Customer Email Addresses *************************************************/
@@ -781,23 +747,6 @@ function edd_get_customer_email_address_counts( $args = array() ) {
 	// Query for count
 	$counts = new EDD\Database\Queries\Customer_Email_Address( $r );
 
-	// Default array
-	$c = array(
-		'total' => 0
-	);
-
-	// Loop through counts and shape return value
-	if ( ! empty( $counts->items ) ) {
-
-		// Loop through statuses
-		foreach ( $counts->items as $status ) {
-			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
-		}
-
-		// Total
-		$c['total'] = array_sum( $c );
-	}
-
-	// Return counts
-	return $c;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }

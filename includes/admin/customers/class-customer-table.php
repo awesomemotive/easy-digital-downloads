@@ -177,7 +177,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function column_name( $item ) {
 		$state    = '';
-		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$status   = $this->get_status();
 		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 		$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions  = array(
@@ -240,29 +240,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function get_counts() {
 		$this->counts = edd_get_customer_counts();
-	}
-
-	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @since 1.4
-	 *
-	 * @return array $views All the views available
-	 */
-	public function get_views() {
-		$base          = $this->get_base_url();
-		$current       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$is_all        = empty( $current ) || ( 'all' === $current );
-		$total_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
-		$active_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']  ) . ')</span>';
-		$pending_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
-
-		return array(
-			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',     'easy-digital-downloads' ) . $total_count   ),
-			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Active',  'easy-digital-downloads' ) . $active_count  ),
-			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending', 'easy-digital-downloads' ) . $pending_count )
-		);
 	}
 
 	/**
@@ -344,30 +321,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
-	}
-
-	/**
-	 * Retrieves the search query string
-	 *
-	 * @since 1.7
-	 * @return mixed string If search is present, false otherwise
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] )
-			? urldecode( trim( $_GET['s'] ) )
-			: false;
-	}
-
-	/**
 	 * Build all the reports data
 	 *
 	 * @since 1.5
@@ -379,7 +332,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
-		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : ''; // WPCS: CSRF ok.
+		$status  = $this->get_status();
 		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
 
@@ -448,9 +401,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		$this->items = $this->reports_data();
 
-		$status = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: 'total';
+		$status = $this->get_status( 'total' );
 
 		// Setup pagination
 		$this->set_pagination_args( array(

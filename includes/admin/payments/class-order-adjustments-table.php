@@ -400,7 +400,9 @@ class Order_Adjustments_Table extends List_Table {
 
 		// Maybe retrieve the counts.
 		if ( ! edd_is_add_order_page() ) {
-			$this->counts = edd_get_order_adjustment_counts( $_GET['id'] ); // WPCS: CSRF ok.
+			$this->counts = edd_get_order_adjustment_counts( array(
+				'object_id' => $_GET['id'] // WPCS: CSRF ok.
+			) );
 		}
 	}
 

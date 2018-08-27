@@ -287,25 +287,8 @@ function edd_get_discount_counts( $args = array() ) {
 	// Query for count.
 	$counts = new EDD\Compat\Discount_Query( $r );
 
-	// Default array.
-	$c = array(
-		'total' => 0
-	);
-
-	// Loop through counts and shape return value.
-	if ( ! empty( $counts->items ) ) {
-
-		// Loop through statuses.
-		foreach ( $counts->items as $status ) {
-			$c[ $status[ $r['groupby'] ] ] = absint( $status['count'] );
-		}
-
-		// Total.
-		$c['total'] = array_sum( $c );
-	}
-
-	// Return counts.
-	return $c;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /**

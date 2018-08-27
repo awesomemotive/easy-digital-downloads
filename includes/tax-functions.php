@@ -55,7 +55,7 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 	// Parse args
 	$r = wp_parse_args( $args, array(
 		'number'  => 30,
-		'type'  => 'tax_rate',
+		'type'    => 'tax_rate',
 		'orderby' => 'date_created',
 		'order'   => 'ASC',
 	) );
@@ -107,31 +107,15 @@ function edd_get_tax_rate_counts( $args = array() ) {
 	// Parse arguments
 	$r = wp_parse_args( $args, array(
 		'count'   => true,
-		'groupby' => 'status'		
+		'groupby' => 'status',
+		'type'    => 'tax_rate'
 	) );
 
 	// Query for count.
-	$counts = edd_get_tax_rates( $r, OBJECT );
+	$counts = new EDD\Database\Queries\Adjustment( $r );
 
-	// Default array.
-	$c = array(
-		'total' => 0,
-	);
-
-	// Loop through counts and shape return value.
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses.
-		foreach ( $counts as $item ) {
-			$c[ $item['status'] ] = absint( $item['count'] );
-		}
-
-		// Total.
-		$c['total'] = array_sum( $c );
-	}
-
-	// Return counts.
-	return $c;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /**

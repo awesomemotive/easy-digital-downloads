@@ -464,9 +464,9 @@ class Order_Items_Table extends List_Table {
 		}
 
 		// Query args.
+		$status  = $this->get_status();
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'id';
 		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 		$paged   = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
@@ -497,9 +497,7 @@ class Order_Items_Table extends List_Table {
 
 		$this->items = $this->order_items_data();
 
-		$status = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: 'total';
+		$status = $this->get_status( 'total' );
 
 		// Maybe setup pagination.
 		if ( ! edd_is_add_order_page() ) {

@@ -233,54 +233,6 @@ class Tax_Rates_List_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the view types.
-	 *
-	 * @since 1.4
-	 *
-	 * @return array $views All the views available.
-	 */
-	protected function get_views() {
-		$current = isset( $_GET['status'] ) // WPCS: CSRF ok.
-			? sanitize_key( $_GET['status'] )
-			: '';
-
-		$url = remove_query_arg( array( 'status', 'paged' ) );
-
-		$class = in_array( $current, array( '', 'all' ), true )
-			? ' class="current"'
-			: '';
-
-		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
-
-		$label = __( 'All', 'easy-digital-downloads' ) . $count;
-		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
-		);
-
-		$counts = $this->counts;
-		unset( $counts['total'] );
-
-		// Loop through known statuses.
-		foreach ( $counts as $status => $count ) {
-			$url = add_query_arg( array(
-				'status' => $status,
-				'paged'  => false,
-			) );
-
-			$class = ( $current === $status )
-				? ' class="current"'
-				: '';
-
-			$count = '&nbsp;<span class="count">(' . $this->counts[ $status ] . ')</span>';
-
-			$label            = ucwords( $status ) . $count;
-			$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label );
-		}
-
-		return (array) $views;
-	}
-
-	/**
 	 * Retrieve all the data for all the tax rates table.
 	 *
 	 * @access private
@@ -318,11 +270,15 @@ class Tax_Rates_List_Table extends List_Table {
 			? sanitize_key( $_GET['type'] )
 			: 'active';
 
+		$total = ! empty( $this->counts[ $type ] )
+			? $this->counts[ $type ]
+			: 1;
+
 		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_items' => $this->counts[ $type ],
+			'total_items' => $total,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page ),
+			'total_pages' => ceil( $total / $this->per_page ),
 		) );
 	}
 

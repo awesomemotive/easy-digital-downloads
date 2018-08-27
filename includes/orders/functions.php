@@ -200,27 +200,10 @@ function edd_get_order_counts( $args = array() ) {
 	) );
 
 	// Query for count
-	$counts = edd_get_orders( $r );
+	$counts = new EDD\Database\Queries\Order( $r );
 
-	// Default array
-	$o = array(
-		'total' => 0,
-	);
-
-	// Loop through counts and shape return value
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses
-		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
-		}
-
-		// Total
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts
-	return $o;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /**
@@ -1577,27 +1560,10 @@ function edd_get_order_item_counts( $args = array() ) {
 	) );
 
 	// Query for count
-	$counts = edd_get_order_items( $r );
+	$counts = new EDD\Database\Queries\Order_Item( $r );
 
-	// Default array
-	$o = array(
-		'total' => 0,
-	);
-
-	// Loop through counts and shape return value
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses
-		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
-		}
-
-		// Total
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts
-	return $o;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /** Order Adjustments *********************************************************/
@@ -1730,40 +1696,23 @@ function edd_count_order_adjustments( $args = array() ) {
  *
  * @since 3.0
  *
- * @param int    $object_id   ID of the object
- * @param string $object_type Type of object. Default `order`.
- *
  * @return array
  */
-function edd_get_order_adjustment_counts( $object_id = 0, $object_type = 'order' ) {
+function edd_get_order_adjustment_counts( $args = array() ) {
 
-	// Query for count
-	$counts = edd_get_order_adjustments( array(
-		'object_id'   => $object_id,
-		'object_type' => $object_type,
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
+		'object_id'   => 0,
+		'object_type' => 'order',
 		'count'       => true,
 		'groupby'     => 'type',
 	) );
 
-	// Default array
-	$o = array(
-		'total' => 0,
-	);
+	// Query for count
+	$counts = new EDD\Database\Queries\Order_Adjustment( $r );
 
-	// Loop through counts and shape return value
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses
-		foreach ( $counts as $item ) {
-			$o[ $item['type'] ] = absint( $item['count'] );
-		}
-
-		// Total
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts
-	return $o;
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /** Order Addresses **********************************************************/
