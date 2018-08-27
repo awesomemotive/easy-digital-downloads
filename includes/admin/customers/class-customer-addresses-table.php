@@ -57,7 +57,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'email';
+		return 'address';
 	}
 
 	/**
