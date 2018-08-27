@@ -615,6 +615,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-emails.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/tags.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/tags-inserter.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
 
