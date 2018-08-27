@@ -98,7 +98,7 @@ function edd_get_emails_tags_list() {
 		foreach ( $email_tags as $email_tag ) {
 
 			// Add email tag to list.
-			$list .= '{' . $email_tag['tag'] . '} - ' . $email_tag['description'] . '<br/>';
+			$list .= '<code>{' . $email_tag['tag'] . '}</code> - ' . $email_tag['description'] . '<br/><br/>';
 		}
 	}
 
