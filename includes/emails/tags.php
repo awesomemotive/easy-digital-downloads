@@ -27,14 +27,17 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Add an email tag
+ * Add an email tag.
  *
  * @since 1.9
+ * @since 3.0 Added $label parameter.
  *
- * @param string   $tag  Email tag to be replace in email
- * @param callable $func Hook to run when email tag is found
+ * @param string $tag         Email tag to be replace in email.
+ * @param string $description Tag description.
+ * @param string $func        Callback function to run when email tag is found.
+ * @param string $label       Tag label.
  */
-function edd_add_email_tag( $tag, $description, $func, $label ) {
+function edd_add_email_tag( $tag = '', $description = '', $func = '', $label = '' ) {
 	EDD()->email_tags->add( $tag, $description, $func, $label );
 }
 
