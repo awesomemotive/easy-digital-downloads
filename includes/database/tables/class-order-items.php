@@ -93,6 +93,16 @@ final class Order_Items extends Table {
 	protected function __201807270002() {
 
 		// Look for column
+		$result = $this->column_exists( 'date_created' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00' AFTER `total`;
+			" );
+		}
+
+		// Look for column
 		$result = $this->column_exists( 'date_modified' );
 
 		// Maybe add column
