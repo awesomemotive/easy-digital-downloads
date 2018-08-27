@@ -1058,7 +1058,9 @@ function edd_add_manual_order( $data ) {
 				}
 
 				$quantity = absint( $quantity );
-				$amount   = floatval( $amount );
+				$amount   = isset( $data['edd_add_order_override'] )
+					? floatval( $download['total'] )
+					: floatval( $amount );
 				$subtotal = floatval( $amount * $quantity );
 
 				// Apply percent discounts.
@@ -1083,10 +1085,16 @@ function edd_add_manual_order( $data ) {
 					$tax = edd_prices_include_tax()
 						? 0.00
 						: edd_calculate_tax( $subtotal - $discount, $address['country'], $address['region'] );
+
+					$tax = isset( $data['edd_add_order_override'] )
+						? floatval( $download['tax'] )
+						: $tax;
 				}
 
 				// Calculate total.
-				$total = floatval( $subtotal - $discount + $tax );
+				$total = isset( $data['edd_add_order_override'] )
+					? $download['total']
+					: floatval( $subtotal - $discount + $tax );
 
 				// Add to edd_order_items table.
 				edd_add_order_item( array(
