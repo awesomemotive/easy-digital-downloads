@@ -578,7 +578,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
  * @return bool|mixed
  */
 function edd_get_payment_status_label( $status = '' ) {
-	$default  = strtoupper( $status );
+	$default  = ucwords( $status );
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
