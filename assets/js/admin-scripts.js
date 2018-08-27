@@ -1055,6 +1055,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.add_order_item();
 			this.add_adjustment();
+			this.override();
 			this.remove();
 			this.fetch_addresses();
 			this.select_address();
@@ -1154,6 +1155,60 @@ jQuery(document).ready(function ($) {
 					spinner.css( 'visibility', 'hidden' );
 				}, 'json' );
 			} );
+		},
+
+		override : function() {
+			$( '.edd-override' ).on( 'click', function() {
+				$( this ).prop( 'disabled', 'disabled' );
+
+				$( this ).attr( 'data-override', 'true' );
+
+				$( document.body ).on( 'click', '.orderitems tr td .value', EDD_Add_Order.switchToInput );
+
+				$( '<input>' ).attr({
+					type: 'hidden',
+					name: 'edd_add_order_override',
+					value: 'true'
+				}).appendTo( '#edd-add-order-form' );
+			} );
+		},
+
+		switchToInput : function() {
+			var input = $( '<input>', {
+				val: $( this ).text(),
+				type: 'text'
+			});
+
+			$( this ).replaceWith( input );
+			input.on( 'blur', EDD_Add_Order.switchToSpan );
+			input.select();
+		},
+
+		switchToSpan : function() {
+			var span = $( '<span>', {
+				text: parseFloat( $( this ).val() ).toLocaleString( edd_vars.currency, {
+					style:                 'decimal',
+					currency:              edd_vars.currency,
+					minimumFractionDigits: edd_vars.currency_decimals,
+					maximumFractionDigits: edd_vars.currency_decimals
+				} )
+			});
+
+			var type = $( this ).parent().data( 'type' ),
+				input = $( this ).parents( 'tr' ).find( '.download-' + type );
+
+			if ( 'quantity' === type ) {
+				span.text( parseInt( $( this ).val() ) );
+			}
+
+			input.val( span.text() );
+
+			span.addClass( 'value' );
+			$( this ).replaceWith( span );
+
+			EDD_Add_Order.update_totals();
+
+			span.on( 'click', EDD_Add_Order.switchToInput );
 		},
 
 		remove : function() {
@@ -1300,7 +1355,7 @@ jQuery(document).ready(function ($) {
 
 					$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
 						var amount = parseFloat( $( '.amount .value', this ).text() ),
-							quantity = parseFloat( $( '.quantity', this ).text() ),
+							quantity = parseFloat( $( '.quantity .value', this ).text() ),
 							calculated = amount * quantity,
 							tax = 0;
 
@@ -1346,7 +1401,12 @@ jQuery(document).ready(function ($) {
 					item_total;
 
 				item_amount = parseFloat( row.find( '.amount .value' ).text() );
-				subtotal += item_amount;
+
+				if ( row.find( '.quantity' ).length ) {
+					item_quantity = parseFloat( row.find( '.quantity .value' ).text() );
+				}
+
+				subtotal += item_amount * item_quantity;
 
 				if ( row.find( '.tax' ).length ) {
 					item_tax = parseFloat( row.find( '.tax .value' ).text() );
@@ -1355,10 +1415,6 @@ jQuery(document).ready(function ($) {
 						item_amount += item_tax;
 						tax += item_tax;
 					}
-				}
-
-				if ( row.find( '.quantity' ).length ) {
-					item_quantity = parseFloat( row.find( '.quantity' ).text() );
 				}
 
 				item_total = item_amount * item_quantity;
@@ -1443,10 +1499,14 @@ jQuery(document).ready(function ($) {
 
 				if ( $( '.orderitems tr.no-items' ).is( ':visible' ) ) {
 					$( '#edd-add-order-no-items-error' ).slideDown();
+				} else {
+					$( '#edd-add-order-no-items-error' ).slideUp();
 				}
 
 				if ( $( '.order-customer-info' ).is( ':visible' ) ) {
 					$( '#edd-add-order-customer-error' ).slideDown();
+				} else {
+					$( '#edd-add-order-customer-error' ).slideUp();
 				}
 
 				if ( $( '.notice' ).is( ':visible' ) ) {

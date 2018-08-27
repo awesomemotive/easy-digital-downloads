@@ -825,7 +825,7 @@ function edd_order_details_attributes( $order ) {
 
 				<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
 				<div id="delete-action">
-					<a href="#" class="edd-override button button-secondary" disabled="disabled"><?php esc_html_e( 'Override', 'easy-digital-downloads' ); ?></a>
+					<button type="button" class="edd-override button button-secondary" disabled="disabled"><?php esc_html_e( 'Override', 'easy-digital-downloads' ); ?></button>
 				</div>
 				<?php endif; ?>
 
