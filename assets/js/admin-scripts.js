@@ -1102,6 +1102,9 @@ jQuery(document).ready(function ($) {
 					EDD_Add_Order.reindex();
 
 					spinner.css( 'visibility', 'hidden' );
+
+					// Display `Override` button if it exists.
+					$( '.edd-override' ).removeAttr( 'disabled' );
 				}, 'json' );
 			} );
 		},
