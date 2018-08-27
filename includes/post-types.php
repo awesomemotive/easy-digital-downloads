@@ -19,12 +19,22 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function edd_setup_edd_post_types() {
+	$archives = defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE
+		? false
+		: true;
 
-	$archives = defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE ? false : true;
-	$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
-	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array('slug' => $slug, 'with_front' => false);
+	$slug = defined( 'EDD_SLUG' )
+		? EDD_SLUG
+		: 'downloads';
 
-	$download_labels =  apply_filters( 'edd_download_labels', array(
+	$rewrite = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE
+		? false
+		: array(
+			'slug'       => $slug,
+			'with_front' => false,
+		);
+
+	$download_labels = apply_filters( 'edd_download_labels', array(
 		'name'                  => _x( '%2$s', 'download post type name', 'easy-digital-downloads' ),
 		'singular_name'         => _x( '%1$s', 'singular download post type name', 'easy-digital-downloads' ),
 		'add_new'               => __( 'Add New', 'easy-digital-downloads' ),
@@ -84,7 +94,7 @@ function edd_setup_edd_post_types() {
 		'not_found'          => __( 'No Payments found', 'easy-digital-downloads' ),
 		'not_found_in_trash' => __( 'No Payments found in Trash', 'easy-digital-downloads' ),
 		'parent_item_colon'  => '',
-		'menu_name'          => __( 'Payment History', 'easy-digital-downloads' )
+		'menu_name'          => __( 'Payment History', 'easy-digital-downloads' ),
 	);
 
 	$payment_args = array(
@@ -95,7 +105,7 @@ function edd_setup_edd_post_types() {
 		'capability_type' => 'shop_payment',
 		'map_meta_cap'    => true,
 		'supports'        => array( 'title' ),
-		'can_export'      => true
+		'can_export'      => true,
 	);
 	register_post_type( 'edd_payment', $payment_args );
 
@@ -114,7 +124,7 @@ function edd_setup_edd_post_types() {
 		'not_found'          => __( 'No Discounts found', 'easy-digital-downloads' ),
 		'not_found_in_trash' => __( 'No Discounts found in Trash', 'easy-digital-downloads' ),
 		'parent_item_colon'  => '',
-		'menu_name'          => __( 'Discounts', 'easy-digital-downloads' )
+		'menu_name'          => __( 'Discounts', 'easy-digital-downloads' ),
 	);
 
 	$discount_args = array(
@@ -126,7 +136,7 @@ function edd_setup_edd_post_types() {
 		'capability_type' => 'shop_discount',
 		'map_meta_cap'    => true,
 		'supports'        => array( 'title' ),
-		'can_export'      => true
+		'can_export'      => true,
 	);
 	register_post_type( 'edd_discount', $discount_args );
 }
@@ -136,7 +146,7 @@ add_action( 'init', 'edd_setup_edd_post_types', 1 );
  * Adds support to post-types that should allow for Downloads to be inserted
  * into their post_content areas.
  *
- * By default, this coveres only core Post and Page types.
+ * By default, this covers only core Post and Page types.
  *
  * @since 3.0
  */
@@ -147,66 +157,79 @@ function edd_setup_post_type_support() {
 add_action( 'init', 'edd_setup_post_type_support' );
 
 /**
- * Get Default Labels
+ * Get default labels.
  *
  * @since 1.0.8.3
+ *
  * @return array $defaults Default labels
  */
 function edd_get_default_labels() {
 	$defaults = array(
-	   'singular' => __( 'Download', 'easy-digital-downloads' ),
-	   'plural'   => __( 'Downloads','easy-digital-downloads' )
+		'singular' => __( 'Download', 'easy-digital-downloads' ),
+		'plural'   => __( 'Downloads', 'easy-digital-downloads' ),
 	);
+
 	return apply_filters( 'edd_default_downloads_name', $defaults );
 }
 
 /**
- * Get Singular Label
+ * Get singular label.
  *
  * @since 1.0.8.3
  *
- * @param bool $lowercase
- * @return string $defaults['singular'] Singular label
+ * @param bool $lowercase Optional. Default false.
+ * @return string Singular label.
  */
 function edd_get_label_singular( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
-	return ($lowercase) ? strtolower( $defaults['singular'] ) : $defaults['singular'];
+
+	return $lowercase
+		? strtolower( $defaults['singular'] )
+		: $defaults['singular'];
 }
 
 /**
- * Get Plural Label
+ * Get plural label.
  *
  * @since 1.0.8.3
- * @return string $defaults['plural'] Plural label
+ *
+ * @param bool $lowercase Optional. Default false.
+ * @return string Plural label.
  */
 function edd_get_label_plural( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['plural'] ) : $defaults['plural'];
+
+	return $lowercase
+		? strtolower( $defaults['plural'] )
+		: $defaults['plural'];
 }
 
 /**
- * Change default "Enter title here" input
+ * Change default "Enter title here" input.
  *
  * @since 1.4.0.2
- * @param string $title Default title placeholder text
- * @return string $title New placeholder text
+ *
+ * @param string $title Default title placeholder text.
+ * @return string $title New placeholder text.
  */
 function edd_change_default_title( $title ) {
-	 // If a frontend plugin uses this filter (check extensions before changing this function)
-	 if ( !is_admin() ) {
+
+	// If a frontend plugin uses this filter (check extensions before changing this function).
+	if ( ! is_admin() ) {
 		$label = edd_get_label_singular();
 		$title = sprintf( __( 'Enter %s name here', 'easy-digital-downloads' ), $label );
+
 		return $title;
-	 }
+	}
 
-	 $screen = get_current_screen();
+	$screen = get_current_screen();
 
-	 if ( 'download' == $screen->post_type ) {
+	if ( 'download' === $screen->post_type ) {
 		$label = edd_get_label_singular();
 		$title = sprintf( __( 'Enter %s name here', 'easy-digital-downloads' ), $label );
-	 }
+	}
 
-	 return $title;
+	return $title;
 }
 add_filter( 'enter_title_here', 'edd_change_default_title' );
 
@@ -217,8 +240,7 @@ add_filter( 'enter_title_here', 'edd_change_default_title' );
  * @return void
 */
 function edd_setup_download_taxonomies() {
-
-	$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+	$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
 
 	/** Categories */
 	$category_labels = array(
@@ -237,14 +259,19 @@ function edd_setup_download_taxonomies() {
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
 			'hierarchical' => true,
-			'labels'       => apply_filters('edd_download_category_labels', $category_labels),
+			'labels'       => apply_filters( 'edd_download_category_labels', $category_labels ),
 			'show_ui'      => true,
 			'query_var'    => 'download_category',
-			'rewrite'      => array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
-			'capabilities' => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
+			'rewrite'      => array( 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
+			'capabilities' => array(
+				'manage_terms' => 'manage_product_terms',
+				'edit_terms'   => 'edit_product_terms',
+				'assign_terms' => 'assign_product_terms',
+				'delete_terms' => 'delete_product_terms',
+			),
 		)
 	);
-	register_taxonomy( 'download_category', array('download'), $category_args );
+	register_taxonomy( 'download_category', array( 'download' ), $category_args );
 	register_taxonomy_for_object_type( 'download_category', 'download' );
 
 	/** Tags */
@@ -268,10 +295,16 @@ function edd_setup_download_taxonomies() {
 			'labels'       => apply_filters( 'edd_download_tag_labels', $tag_labels ),
 			'show_ui'      => true,
 			'query_var'    => 'download_tag',
-			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  ),
-			'capabilities' => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
+			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true ),
+			'capabilities' => array(
+				'manage_terms' => 'manage_product_terms',
+				'edit_terms'   => 'edit_product_terms',
+				'assign_terms' => 'assign_product_terms',
+				'delete_terms' => 'delete_product_terms',
+			),
 		)
 	);
+
 	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
 	register_taxonomy_for_object_type( 'download_tag', 'download' );
 }
@@ -285,9 +318,12 @@ add_action( 'init', 'edd_setup_download_taxonomies', 0 );
  * @return array            Associative array of labels (name = plural)
  */
 function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
-	$allowed_taxonomies = apply_filters( 'edd_allowed_download_taxonomies', array( 'download_category', 'download_tag' ) );
+	$allowed_taxonomies = apply_filters( 'edd_allowed_download_taxonomies', array(
+		'download_category',
+		'download_tag',
+	) );
 
-	if ( ! in_array( $taxonomy, $allowed_taxonomies ) ) {
+	if ( ! in_array( $taxonomy, $allowed_taxonomies, true ) ) {
 		return false;
 	}
 
@@ -310,13 +346,13 @@ function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
 }
 
 /**
- * Registers Custom Post Statuses which are used by the Payments and Discount
- * Codes
+ * Registers custom post statuses which are used by the Payments and Discount
+ * Codes.
  *
  * @since 1.0.9.1
- * @return void
  */
 function edd_register_post_type_statuses() {
+
 	// Payment Statuses
 	register_post_status( 'refunded', array(
 		'label'                     => _x( 'Refunded', 'Refunded payment status', 'easy-digital-downloads' ),
@@ -380,11 +416,10 @@ function edd_register_post_type_statuses() {
 add_action( 'init', 'edd_register_post_type_statuses', 2 );
 
 /**
- * Updated Messages
- *
- * Returns an array of with all updated messages.
+ * Post updated messages.
  *
  * @since 1.0
+ *
  * @param array $messages Post updated message
  * @return array $messages New post updated messages
  */
@@ -408,11 +443,14 @@ function edd_updated_messages( $messages ) {
 add_filter( 'post_updated_messages', 'edd_updated_messages' );
 
 /**
- * Updated bulk messages
+ * Add bulk action updated messages for downloads.
  *
  * @since 2.3
- * @param array $bulk_messages Post updated messages
- * @param array $bulk_counts Post counts
+ *
+ * @param array[] $bulk_messages Arrays of messages, each keyed by the corresponding post type. Messages are
+ *                               keyed with 'updated', 'locked', 'deleted', 'trashed', and 'untrashed'.
+ * @param int[]   $bulk_counts   Array of item counts for each message, used to build internationalized strings.
+ *
  * @return array $bulk_messages New post updated messages
  */
 function edd_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
@@ -435,11 +473,15 @@ add_filter( 'bulk_post_updated_messages', 'edd_bulk_updated_messages', 10, 2 );
  * Add row actions for the downloads custom post type
  *
  * @since 2.5
- * @param  array $actions
- * @param  WP_Post $post
+ *
+ * @param string[] $actions An array of row action links. Defaults are
+ *                          'Edit', 'Quick Edit', 'Restore', 'Trash',
+ *                          'Delete Permanently', 'Preview', and 'View'.
+ * @param WP_Post  $post    The post object.
+ *
  * @return array
  */
-function  edd_download_row_actions( $actions, $post ) {
+function edd_download_row_actions( $actions, $post ) {
 	if ( 'download' === $post->post_type ) {
 		return array_merge( array( 'id' => '#' . $post->ID ), $actions );
 	}
