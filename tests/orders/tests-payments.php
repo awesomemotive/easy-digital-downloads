@@ -28,7 +28,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 
 		$component = edd_get_component_interface( 'order_transaction', 'table' );
 
-		if ( $component instanceof \EDD\Database\Tables\Base ) {
+		if ( $component instanceof \EDD\Database\Table ) {
 			$component->truncate();
 		}
 
@@ -355,7 +355,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		 */
 		$component = edd_get_component_interface( 'order', 'table' );
 
-		if ( $component instanceof \EDD\Database\Tables\Base ) {
+		if ( $component instanceof \EDD\Database\Table ) {
 			$component->truncate();
 		}
 

@@ -10,7 +10,7 @@
  */
 namespace EDD\Orders;
 
-use EDD\Database\Objects as Objects;
+use EDD\Database\Rows as Rows;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created
  * @property string $date_modified
  */
-class Order_Transaction extends Objects\Order_Transaction {
+class Order_Transaction extends Rows\Order_Transaction {
 
 	/**
 	 * Order Transaction ID.
