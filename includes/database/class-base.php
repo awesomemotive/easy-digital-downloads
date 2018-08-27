@@ -96,4 +96,28 @@ class Base {
 	public function to_array() {
 		return get_object_vars( $this );
 	}
+
+	/**
+	 * Set class variables from arguments.
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	protected function set_vars( $args = array() ) {
+
+		// Bail if empty or not an array
+		if ( empty( $args ) ) {
+			return;
+		}
+
+		// Cast to an array
+		if ( ! is_array( $args ) ) {
+			$args = (array) $args;
+		}
+
+		// Set all properties
+		foreach ( $args as $key => $value ) {
+			$this->{$key} = $value;
+		}
+	}
 }
