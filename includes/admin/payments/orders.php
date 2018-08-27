@@ -823,6 +823,12 @@ function edd_order_details_attributes( $order ) {
 				</div>
 				<?php endif; ?>
 
+				<?php if ( edd_is_add_order_page() ) : ?>
+				<div id="delete-action">
+					<a href="#" class="edd-override button button-secondary" disabled="disabled"><?php esc_html_e( 'Override', 'easy-digital-downloads' ); ?></a>
+				</div>
+				<?php endif; ?>
+
 				<div id="publishing-action">
 					<span class="spinner"></span>
 					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
