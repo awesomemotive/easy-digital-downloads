@@ -898,6 +898,8 @@ add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
 /**
  * Search for download, build, and return HTML.
  *
+ * This is used in the Admin for Adding items to an order.
+ * 
  * @since 3.0
  */
 function edd_ajax_add_order_item() {
@@ -944,9 +946,10 @@ function edd_ajax_add_order_item() {
 		if ( false === $download['price_id'] ) {
 			$amount = floatval( $d->get_price() );
 		} else {
-			$prices = wp_filter_object_list( $d->get_prices(), array( 'index' => $download['price_id'] ) );
-			$amount = floatval( implode( wp_list_pluck( $prices, 'amount' ) ) );
-			$name .= ' &mdash; ' . implode( wp_list_pluck( $prices, 'name' ) );
+			$prices = $d->get_prices();
+			$price  = $prices[ $download['price_id'] ];
+			$amount = floatval( $price['amount'] );
+			$name  .= ' &mdash; ' . $price['name'];
 		}
 
 		$quantity = edd_item_quantities_enabled() && isset( $_POST['quantity'] )
