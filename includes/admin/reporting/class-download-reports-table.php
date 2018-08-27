@@ -24,12 +24,6 @@ use EDD\Admin\List_Table;
 class EDD_Download_Reports_Table extends List_Table {
 
 	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
-	/**
 	 * @var object Query results
 	 * @since 1.5.2
 	 */

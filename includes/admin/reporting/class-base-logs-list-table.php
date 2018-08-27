@@ -23,14 +23,6 @@ use EDD\Admin\List_Table;
 class EDD_Base_Log_List_Table extends List_Table {
 
 	/**
-	 * Number of items per page
-	 *
-	 * @var int
-	 * @since 3.0
-	 */
-	public $per_page = 30;
-
-	/**
 	 * Get things started
 	 *
 	 * @since 3.0
