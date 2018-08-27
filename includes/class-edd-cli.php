@@ -1586,7 +1586,8 @@ class EDD_CLI extends WP_CLI_Command {
 				// Maybe add email address to customer record
 				$customer = edd_get_customer( $customer_id );
 				if ( $customer ) {
-					$customer->add_email( $payment_meta['email'] );
+					$primary = ( $customer->email === $payment_meta['email'] );
+					$customer->add_email( $payment_meta['email'], $primary );
 				}
 
 				if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
