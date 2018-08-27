@@ -284,7 +284,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
+			'total_pages' => $total_items > 0 ? ceil( $total_items / $this->per_page ) : 0,
 		) );
 	}
 }
