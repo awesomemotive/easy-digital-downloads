@@ -148,4 +148,42 @@ abstract class List_Table extends \WP_List_Table {
 
 		return $views;
 	}
+
+	/**
+	 * Show the search field.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $text     Label for the search box
+	 * @param string $input_id ID of the search box
+	 */
+	public function search_box( $text, $input_id ) {
+
+		// Bail if no customers and no search
+		if ( ! $this->get_search() && ! $this->has_items() ) {
+			return;
+		}
+
+		$orderby  = $this->get_request_var( 'orderby' );
+		$order    = $this->get_request_var( 'order'   );
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $orderby ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $orderby ) . '" />';
+		}
+
+		if ( ! empty( $order ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $order ) . '" />';
+		}
+
+		?>
+
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
+		</p>
+
+		<?php
+	}
 }

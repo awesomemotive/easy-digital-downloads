@@ -659,7 +659,7 @@ textarea[name="edd-note"] {
 	float: right;
 	margin-left: 10px;
 	margin-top: 1px;
-	border-radius: 20%;
+	border-radius: 5px;
 }
 
 /* Row Actions
@@ -2703,7 +2703,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	text-align: center;
 }
 .edd-sections-wrap .section-wrap img.avatar {
-	border-radius: 22%;
+	border-radius: 5px;
 	margin-bottom: 10px;
 }
 .edd-sections-wrap .section-wrap .customer-id {
