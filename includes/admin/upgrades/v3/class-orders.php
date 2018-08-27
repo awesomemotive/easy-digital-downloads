@@ -182,7 +182,8 @@ class Orders extends Base {
 				// Maybe add email address to customer record
 				$customer = edd_get_customer( $customer_id );
 				if ( $customer ) {
-					$customer->add_email( $payment_meta['email'] );
+					$primary = ( $customer->email === $payment_meta['email'] );
+					$customer->add_email( $payment_meta['email'], $primary );
 				}
 
 				/** Migrate meta *********************************************/
