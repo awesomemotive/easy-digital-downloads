@@ -2594,17 +2594,17 @@ function edd_tax_rates_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
-    <p><?php echo $args['desc']; ?></p>
+	<p><?php echo $args['desc']; ?></p>
 	<?php
 	$tax_rates_table = new \EDD\Admin\Settings\Tax_Rates_List_Table();
 	$tax_rates_table->prepare_items();
 	$tax_rates_table->display();
 	?>
-    <p>
-        <span class="button-secondary" id="edd_add_tax_rate">
+	<p>
+		<span class="button-secondary" id="edd_add_tax_rate">
 			<?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?>
 		</span>
-    </p>
+	</p>
 	<?php
 	echo ob_get_clean();
 }
