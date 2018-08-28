@@ -82,11 +82,9 @@ function edd_test_mode_admin_bar_link_styles() {
 		#wp-admin-bar-edd-store-menu .edd-mode {
 			color: #fff;
 			background-color: #0073aa;
-			font-size: 10px;
 			padding: 3px 7px;
 			font-weight: 600;
-			border-radius: 4px;
-			line-height: 10px;
+			border-radius: 3px;
 		}
 		#wp-admin-bar-edd-store-menu .edd-mode-live {
 			background-color: #32CD32;
