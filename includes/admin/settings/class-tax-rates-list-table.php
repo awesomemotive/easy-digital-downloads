@@ -81,8 +81,6 @@ class Tax_Rates_List_Table extends List_Table {
 			'country' => __( 'Country', 'easy-digital-downloads' ),
 			'region'  => __( 'Region', 'easy-digital-downloads' ),
 			'rate'    => __( 'Rate', 'easy-digital-downloads' ),
-			'from'    => __( 'From', 'easy-digital-downloads' ),
-			'to'      => __( 'To', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -190,40 +188,6 @@ class Tax_Rates_List_Table extends List_Table {
 	}
 
 	/**
-	 * Render the From column.
-	 *
-	 * @since 3.0
-	 *
-	 * @param \EDD\Adjustments\Adjustment $adjustment Adjustment object.
-	 * @return string Data shown in the From column.
-	 */
-	public function column_from( $adjustment ) {
-		return EDD()->html->date_field( array(
-			'id'          => 'tax_rates[' . $adjustment->id . '][from]',
-			'name'        => 'tax_rates[' . $adjustment->id . '][from]',
-			'value'       => ( '0000-00-00 00:00:00' === $adjustment->start_date ) ? '' : edd_date_i18n( $adjustment->start_date, 'Y-m-d' ),
-			'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-		) );
-	}
-
-	/**
-	 * Render the To column.
-	 *
-	 * @since 3.0
-	 *
-	 * @param \EDD\Adjustments\Adjustment $adjustment Adjustment object.
-	 * @return string Data shown in the To column.
-	 */
-	public function column_to( $adjustment ) {
-		return EDD()->html->date_field( array(
-			'id'          => 'tax_rates[' . $adjustment->id . '][to]',
-			'name'        => 'tax_rates[' . $adjustment->id . '][to]',
-			'value'       => ( '0000-00-00 00:00:00' === $adjustment->end_date ) ? '' : edd_date_i18n( $adjustment->end_date, 'Y-m-d' ),
-			'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-		) );
-	}
-
-	/**
 	 * Message to be displayed when there are no tax rates.
 	 *
 	 * @since 3.0
@@ -327,5 +291,58 @@ class Tax_Rates_List_Table extends List_Table {
 
 			echo "<{$tag} {$scope} {$id} {$class}>{$column_display_name}{$tooltip}</{$tag}>"; // WPCS: XSS ok.
 		}
+	}
+
+	/**
+	 * Generate the tbody element for the list table.
+	 *
+	 * @since 3.1.0
+	 */
+	public function display_rows_or_placeholder() {
+		if ( $this->has_items() ) {
+			$this->display_rows();
+		} else {
+			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+			$this->no_items();
+			echo '</td></tr>';
+			$item = new \stdClass();
+			$item->id = 0;
+			$item->parent = 0;
+			$item->name = '';
+			$item->code = '';
+			$item->status = 'active';
+			$item->type = 'tax_rate';
+			$item->scope = 'region';
+			$item->amount_type = 'percent';
+			$item->amount = 0;
+			$item->description = '';
+			echo '<tr class="edd-tax-rate-initial" style="display:none" >';
+			$this->single_row_columns( $item );
+			echo '</tr>';
+		}
+	}
+
+	/**
+	 * Generate the table navigation above or below the table
+	 *
+	 * @since 3.1.0
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+			<?php if ( $this->has_items() ): ?>
+				<div class="alignleft actions bulkactions">
+					<?php $this->bulk_actions( $which ); ?>
+				</div>
+			<?php endif;
+			$this->extra_tablenav( $which );
+			$this->pagination( $which );
+			?>
+
+			<br class="clear" />
+		</div>
+		<?php
 	}
 }
