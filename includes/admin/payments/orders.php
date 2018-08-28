@@ -909,5 +909,5 @@ function edd_order_details_amounts( $order ) {
  * @return boolean True if on the `Add Order` page, false otherwise.
  */
 function edd_is_add_order_page() {
-	return isset( $_GET['view'] ) && 'add-order' === sanitize_text_field( $_GET['view'] ); // WPCS: CSRF ok.
+	return isset( $_GET['view'] ) && 'add-order' === sanitize_key( $_GET['view'] ); // WPCS: CSRF ok.
 }
