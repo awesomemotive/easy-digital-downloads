@@ -1453,8 +1453,6 @@ function edd_settings_sanitize_taxes( $input ) {
 			'amount_type' => 'percent',
 			'amount'      => floatval( $tax_rate['rate'] ),
 			'description' => $region,
-			'start_date'  => $tax_rate['from'],
-			'end_date'    => $tax_rate['to'],
 		);
 
 		// Update database if adjustment ID was supplied.

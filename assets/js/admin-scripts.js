@@ -1836,37 +1836,50 @@ jQuery(document).ready(function ($) {
 
 			// Insert new tax rate row
 			$( '#edd_add_tax_rate' ).on( 'click', function() {
-				var row   = $('#edd_tax_rates tr:last'),
-					clone = row.clone(),
-					count = row.parent().find( 'tr' ).length;
+				var $tax_table = $('#the-list');
 
-				clone.find( 'td input' ).not(':input[type=checkbox]').val( '' );
-				clone.find( 'td [type="checkbox"]' ).attr('checked', false);
-				clone.find( 'input, select' ).each(function() {
-					var name = $( this ).attr( 'name' );
-					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
-					$( this ).attr( 'name', name ).attr( 'id', name );
-				});
+				if ( $tax_table.find('.no-items').length !== 0 ) {
+					$tax_table.find('.no-items').remove();
+					$tax_table.find('.edd-tax-rate-initial').show();
+					$( '.edd-select-chosen' ).css( 'width', '100%' );
+				} else {
+					var row   = $tax_table.find('tr:last'),
+						clone = row.clone(),
+						count = $tax_table.find( 'tr' ).length;
 
-				clone.find( 'input[data-type="edd-adjustment-id"]' ).remove();
+					clone.find( '.search-choice' ).remove();
+					clone.find( '.chosen-container' ).remove();
 
-				clone.find( 'label' ).each(function() {
-					var name = $( this ).attr( 'for' );
-					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
-					$( this ).attr( 'for', name );
-				});
+					clone.find( 'td input' ).not(':input[type=checkbox]').val( '' );
+					clone.find( 'td [type="checkbox"]' ).attr('checked', false);
+					clone.find( 'input, select, checkbox' ).each(function() {
+						var name = $( this ).attr( 'name' );
+						if ( typeof name !== 'undefined' ) {
+							name = name.replace( /\[(\d+)\]/, '[' + parseInt( count + 1 ) + ']');
+							$( this ).attr( 'name', name ).attr( 'id', name );
+						}
+					});
 
-				// Setup datepickers
-				clone.find( 'input.edd_datepicker' ).removeClass( 'hasDatepicker' ).attr( 'autocomplete', 'off' ).datepicker( {
-					dateFormat: edd_vars.date_picker_format,
-					beforeShow: function() {
-						$( '#ui-datepicker-div' )
-							.removeClass( 'ui-datepicker' )
-							.addClass( 'edd-datepicker' );
-					}
-				});
+					clone.find('label').each(function() {
+						var for_attr = $(this).attr('for');
+						for_attr = for_attr.replace( /\[(\d+)\]/, '[' + parseInt( count + 1 ) + ']');
+						$( this ).attr( 'for', for_attr ).attr( 'id', for_attr );
+					});
 
-				clone.insertAfter( row );
+					clone.find( 'input[data-type="edd-adjustment-id"]' ).remove();
+
+					clone.find( 'label' ).each(function() {
+						var name = $( this ).attr( 'for' );
+						name = name.replace( /\[(\d+)\]/, '[' + parseInt( count + 1 ) + ']');
+						$( this ).attr( 'for', name ).attr('id', name);
+					});
+
+					clone.insertAfter( row );
+
+					clone.find('.edd-select-chosen').val('');
+					clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
+					clone.find( '.edd-select-chosen').css('width', '100%');
+				}
 
 				return false;
 			});
