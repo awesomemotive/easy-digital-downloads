@@ -804,33 +804,12 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 
 	if ( ! empty( $do_change ) ) {
 		/**
-		 * Action triggered before updating order status.
-		 *
-		 * @since 3.0
-		 *
-		 * @param int    $order_id   Order ID.
-		 * @param string $new_status New order status.
-		 * @param string $old_status Old order status.
-		 */
-		do_action( 'edd_before_order_status_change', $order_id, $new_status, $old_status );
-
-		/**
-		 * We need to update the status on the EDD_Payment instance so that the correct actions are invoked if the status
-		 * is changing to something that requires interception by the payment gateway (e.g. refunds).
+		 * We need to update the status on the EDD_Payment instance so that the
+		 * correct actions are invoked if the status is changing to something
+		 * that requires interception by the payment gateway (e.g. refunds).
 		 */
 		$payment->status = $new_status;
 		$updated         = $payment->save();
-
-		/**
-		 * Action triggered when updating order status.
-		 *
-		 * @since 3.0
-		 *
-		 * @param int    $order_id   Order ID.
-		 * @param string $new_status New order status.
-		 * @param string $old_status Old order status.
-		 */
-		do_action( 'edd_transition_order_status', $order_id, $new_status, $old_status );
 	}
 
 	return $updated;
