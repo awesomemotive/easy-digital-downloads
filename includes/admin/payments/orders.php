@@ -573,17 +573,21 @@ function edd_order_details_sections( $order ) {
  *
  * @param object $order
  */
-function edd_order_details_extras( $order ) {
-	$transaction_id = edd_is_add_order_page()
-		? ''
-		: $order->get_transaction_id();
+function edd_order_details_extras( $order = false ) {
+	$transaction_id = ! empty( $order->id )
+		? $order->get_transaction_id()
+		: '';
 
-	$unlimited = edd_is_add_order_page()
-		? false
-		: $order->has_unlimited_downloads();
+	$unlimited = ! empty( $order->id )
+		? $order->has_unlimited_downloads()
+		: false;
+
+	$readonly = ! empty( $order->id )
+		? 'readonly'
+		: '';
 
 	// Setup gateway list.
-	if ( edd_is_add_order_page() ) {
+	if ( empty( $order->id ) ) {
 		$known_gateways = edd_get_payment_gateways();
 
 		$gateways = array();
@@ -601,10 +605,6 @@ function edd_order_details_extras( $order ) {
 			'show_option_all'  => false,
 		) );
 	}
-
-	$readonly = edd_is_add_order_page()
-		? ''
-		: 'readonly';
 
 	// Filter the transaction ID (here specifically for back-compat)
 	if ( ! empty( $transaction_id ) ) {
