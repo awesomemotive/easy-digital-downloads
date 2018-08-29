@@ -54,7 +54,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_admin_enqueue_scripts() {
 		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_load_admin_scripts', $wp_filter['admin_enqueue_scripts'][100] );
+		$this->assertArrayHasKey( 'edd_load_admin_scripts', $wp_filter['admin_print_scripts'][10] );
 	}
 
 	public function test_upload_mimes() {
