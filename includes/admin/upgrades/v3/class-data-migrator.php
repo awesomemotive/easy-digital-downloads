@@ -195,6 +195,7 @@ class Data_Migrator {
 	 * @param object $data Data to migrate.
 	 */
 	public static function logs( $data = null ) {
+		global $wpdb;
 
 		// Bail if no data passed.
 		if ( ! $data ) {
@@ -202,7 +203,7 @@ class Data_Migrator {
 		}
 
 		if ( 'file_download' === $data->slug ) {
-			$meta = $this->get_db()->get_results( $this->get_db()->prepare( "SELECT meta_key, meta_value FROM {$this->get_db()->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
+			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
 			$post_meta = array();
 
@@ -223,7 +224,7 @@ class Data_Migrator {
 
 			edd_add_file_download_log( $log_data );
 		} elseif ( 'api_request' === $data->slug ) {
-			$meta = $this->get_db()->get_results( $this->get_db()->prepare( "SELECT meta_key, meta_value FROM {$this->get_db()->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
+			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
 			$post_meta = array();
 
