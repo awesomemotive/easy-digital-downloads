@@ -309,8 +309,9 @@ class Tax_Rates_List_Table extends List_Table {
 	/**
 	 * Generate the table navigation above or below the table
 	 *
-	 * @since 3.1.0
+	 * @since 3.0
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {}
+	
 }
