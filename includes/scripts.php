@@ -12,18 +12,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Return the current script version
- *
- * @since 3.0
- *
- * @return string
- */
-function edd_admin_get_script_version() {
-	return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
-		? current_time( 'timestamp' )
-		: EDD_VERSION;
-}
+/** Front End *****************************************************************/
 
 /**
  * Load Scripts
@@ -167,6 +156,82 @@ function edd_register_styles() {
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
 /**
+ * Load head styles
+ *
+ * Ensures download styling is still shown correctly if a theme is using the CSS template file
+ *
+ * @since 2.5
+ * @global $post
+ * @return void
+ */
+function edd_load_head_styles() {
+	global $post;
+
+	// Bail if styles are disabled
+	if ( edd_get_option( 'disable_styles', false ) || ! is_object( $post ) ) {
+		return;
+	}
+
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix  = is_rtl() ? '-rtl' : '';
+	$suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+	$file          = 'edd' . $suffix . '.css';
+	$templates_dir = edd_get_theme_template_dir_name();
+
+	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
+	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
+	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
+	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
+
+	if ( has_shortcode( $post->post_content, 'downloads' ) &&
+		file_exists( $child_theme_style_sheet    ) ||
+		file_exists( $child_theme_style_sheet_2  ) ||
+		file_exists( $parent_theme_style_sheet   ) ||
+		file_exists( $parent_theme_style_sheet_2 )
+	) {
+		$has_css_template = apply_filters( 'edd_load_head_styles', true );
+	} else {
+		$has_css_template = false;
+	}
+
+	// Bail if no template
+	if ( empty( $has_css_template ) ) {
+		return;
+	}
+
+	?>
+	<style id="edd-head-styles">.edd_download{float:left;}.edd_download_columns_1 .edd_download{width: 100%;}.edd_download_columns_2 .edd_download{width:50%;}.edd_download_columns_0 .edd_download,.edd_download_columns_3 .edd_download{width:33%;}.edd_download_columns_4 .edd_download{width:25%;}.edd_download_columns_5 .edd_download{width:20%;}.edd_download_columns_6 .edd_download{width:16.6%;}</style>
+	<?php
+}
+add_action( 'wp_head', 'edd_load_head_styles' );
+
+/**
+ * Determine if the frontend scripts should be loaded in the footer or header (default: footer)
+ *
+ * @since 2.8.6
+ * @return mixed
+ */
+function edd_scripts_in_footer() {
+	return apply_filters( 'edd_load_scripts_in_footer', true );
+}
+
+/** Admin Area ****************************************************************/
+
+/**
+ * Return the current script version
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_admin_get_script_version() {
+	return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
+		? current_time( 'timestamp' )
+		: EDD_VERSION;
+}
+
+/**
  * Register all admin area scripts
  *
  * @since 3.0
@@ -293,43 +358,14 @@ function edd_localize_admin_scripts() {
 add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );
 
 /**
- * Enqueue admin area scripts.
- *
- * Only enqueue on EDD pages.
- *
- * @since 1.0
- * @deprecated 3.0
- */
-function edd_load_admin_scripts( $hook ) {
-
-	// Bail if not an EDD admin page
-	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
-		return;
-	}
-
-	// Register all scripts and styles
-	edd_register_admin_scripts();
-	edd_register_admin_styles();
-
-	// Load scripts and styles for back-compat
-	edd_print_admin_scripts( $hook );
-	edd_print_admin_styles( $hook );
-}
-
-/**
  * Print admin area scripts
  *
  * @since 3.0
  */
 function edd_print_admin_scripts( $hook = '' ) {
 
-	// Back compat for hook suffix
-	$hook_suffix = empty( $hook )
-		? $GLOBALS['hook_suffix']
-		: $hook;
-
 	// Bail if not an EDD admin page
-	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook_suffix ) ) {
+	if ( ! edd_should_load_admin_scripts( $hook ) ) {
 		return;
 	}
 
@@ -356,7 +392,7 @@ function edd_print_admin_scripts( $hook = '' ) {
 		wp_enqueue_script( $script );
 	}
 }
-add_action( 'admin_print_scripts', 'edd_load_admin_scripts' );
+add_action( 'admin_print_scripts', 'edd_print_admin_scripts' );
 
 /**
  * Enqueue admin area styling.
@@ -370,13 +406,8 @@ function edd_print_admin_styles( $hook = '' ) {
 	// Always enqueue the admin menu CSS
 	wp_enqueue_style( 'edd-admin-menu' );
 
-	// Back compat for hook suffix
-	$hook_suffix = empty( $hook )
-		? $GLOBALS['hook_suffix']
-		: $hook;
-
 	// Bail if not an EDD admin page
-	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook_suffix ) ) {
+	if ( ! edd_should_load_admin_scripts( $hook ) ) {
 		return;
 	}
 
@@ -437,62 +468,46 @@ function edd_admin_downloads_icon() {
 add_action( 'admin_head','edd_admin_downloads_icon' );
 
 /**
- * Load head styles
+ * Should we be loading admin scripts
  *
- * Ensures download styling is still shown correctly if a theme is using the CSS template file
+ * @since 3.0
  *
- * @since 2.5
- * @global $post
- * @return void
+ * @param string $hook
+ * @return bool
  */
-function edd_load_head_styles() {
-	global $post;
+function edd_should_load_admin_scripts( $hook = '' ) {
 
-	// Bail if styles are disabled
-	if ( edd_get_option( 'disable_styles', false ) || ! is_object( $post ) ) {
-		return;
-	}
+	// Back compat for hook suffix
+	$hook_suffix = empty( $hook )
+		? $GLOBALS['hook_suffix']
+		: $hook;
 
-	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix  = is_rtl() ? '-rtl' : '';
-	$suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-	$file          = 'edd' . $suffix . '.css';
-	$templates_dir = edd_get_theme_template_dir_name();
-
-	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
-	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
-	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
-	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
-
-	if ( has_shortcode( $post->post_content, 'downloads' ) &&
-		file_exists( $child_theme_style_sheet    ) ||
-		file_exists( $child_theme_style_sheet_2  ) ||
-		file_exists( $parent_theme_style_sheet   ) ||
-		file_exists( $parent_theme_style_sheet_2 )
-	) {
-		$has_css_template = apply_filters( 'edd_load_head_styles', true );
-	} else {
-		$has_css_template = false;
-	}
-
-	// Bail if no template
-	if ( empty( $has_css_template ) ) {
-		return;
-	}
-
-	?>
-	<style id="edd-head-styles">.edd_download{float:left;}.edd_download_columns_1 .edd_download{width: 100%;}.edd_download_columns_2 .edd_download{width:50%;}.edd_download_columns_0 .edd_download,.edd_download_columns_3 .edd_download{width:33%;}.edd_download_columns_4 .edd_download{width:25%;}.edd_download_columns_5 .edd_download{width:20%;}.edd_download_columns_6 .edd_download{width:16.6%;}</style>
-	<?php
+	// Filter & return
+	return (bool) apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook_suffix );
 }
-add_action( 'wp_head', 'edd_load_head_styles' );
+
+/** Deprecated ****************************************************************/
 
 /**
- * Determine if the frontend scripts should be loaded in the footer or header (default: footer)
+ * Enqueue admin area scripts.
  *
- * @since 2.8.6
- * @return mixed
+ * Only enqueue on EDD pages.
+ *
+ * @since 1.0
+ * @deprecated 3.0
  */
-function edd_scripts_in_footer() {
-	return apply_filters( 'edd_load_scripts_in_footer', true );
+function edd_load_admin_scripts( $hook ) {
+
+	// Bail if not an EDD admin page
+	if ( ! edd_should_load_admin_scripts( $hook ) ) {
+		return;
+	}
+
+	// Register all scripts and styles
+	edd_register_admin_scripts();
+	edd_register_admin_styles();
+
+	// Load scripts and styles for back-compat
+	edd_print_admin_scripts( $hook );
+	edd_print_admin_styles( $hook );
 }
