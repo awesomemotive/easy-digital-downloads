@@ -52,36 +52,7 @@ class Customer_Notes extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
-				$customer_id = absint( $result->id );
-
-				if ( property_exists( $result, 'notes' ) && ! empty( $result->notes ) ) {
-					$notes = array_reverse( array_filter( explode( "\n\n", $result->notes ) ) );
-
-					$notes = array_map( function( $val ) {
-						return explode( ' - ', $val );
-					}, $notes );
-
-					if ( ! empty( $notes ) ) {
-						foreach ( $notes as $note ) {
-							$date = isset( $note[0] )
-								? Carbon::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
-								: '';
-
-							$note_content = isset( $note[1] )
-								? $note[1]
-								: '';
-
-							edd_add_note( array(
-								'user_id'       => 0,
-								'object_id'     => $customer_id,
-								'object_type'   => 'customer',
-								'content'       => $note_content,
-								'date_created'  => $date,
-								'date_modified' => $date,
-							) );
-						}
-					}
-				}
+				Data_Migrator::customer_notes( $result );
 			}
 
 			return true;

@@ -51,12 +51,7 @@ class Customer_Email_Addresses extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
-				$customer_id = absint( $result->edd_customer_id );
-
-				edd_add_customer_email_address( array(
-					'customer_id' => $customer_id,
-					'email'       => $result->meta_value,
-				) );
+				Data_Migrator::customer_email_addresses( $result );
 			}
 
 			return true;
