@@ -1847,6 +1847,8 @@ jQuery(document).ready(function ($) {
 						clone = row.clone(),
 						count = $tax_table.find( 'tr' ).length;
 
+					clone.removeClass('.edd-tax-rate-initial');
+
 					clone.find( '.search-choice' ).remove();
 					clone.find( '.chosen-container' ).remove();
 
