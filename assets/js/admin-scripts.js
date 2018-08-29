@@ -1808,7 +1808,7 @@ jQuery(document).ready(function ($) {
 			} );
 
 			// Update tax rate state field based on selected rate country
-			$( document.body ).on('change', '#edd_tax_rates select.edd-tax-country', function() {
+			$( document.body ).on('change', '#the-list select.edd-tax-country', function() {
 				var select = $( this ),
 					data   = {
 						action:     'edd_get_shop_states',
@@ -1822,12 +1822,16 @@ jQuery(document).ready(function ($) {
 						return;
 					}
 
+					var $target_td = select.parent().next('td');
+					$target_td.find('.chosen-container').remove();
+					
 					if ( 'nostates' === response ) {
 						var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
 						select.parent().next().find('select').replaceWith( text_field );
 					} else {
-						select.parent().next().find('input[type="text"],select').css( 'opacity');
-						select.parent().next().find('input[type="text"],select').replaceWith( response );
+						$target_td.find('input[type="text"],select').css( 'opacity');
+						$target_td.find('input[type="text"],select').replaceWith( response );
+						$target_td.find('.edd-select-chosen').chosen(chosen_vars);
 					}
 				});
 
