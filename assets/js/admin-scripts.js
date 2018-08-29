@@ -1838,8 +1838,8 @@ jQuery(document).ready(function ($) {
 			$( '#edd_add_tax_rate' ).on( 'click', function() {
 				var $tax_table = $('#the-list');
 
-				if ( $tax_table.find('.no-items').length !== 0 ) {
-					$tax_table.find('.no-items').remove();
+				if ( $tax_table.find('.no-items:visible').length !== 0 ) {
+					$tax_table.find('.no-items').hide();
 					$tax_table.find('.edd-tax-rate-initial').show();
 					$( '.edd-select-chosen' ).css( 'width', '100%' );
 				} else {
@@ -1885,27 +1885,20 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Remove tax row
-			$( document.body ).on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
-				var tax_rates = $('#edd_tax_rates tbody tr:visible'),
+			$( document.body ).on('click', '.edd_remove_tax_rate', function() {
+				var tax_rates = $('#the-list tr:visible'),
 					count     = tax_rates.length;
 
-				if ( count === 1 ) {
-					$('#edd_tax_rates select').val('');
-					$('#edd_tax_rates input[type="text"]').val('');
-					$('#edd_tax_rates input[type="number"]').val('');
-					$('#edd_tax_rates input[type="checkbox"]').attr('checked', false);
+				var target_row = $(this).closest('tr');
+				if ( target_row.hasClass('edd-tax-rate-initial')) {
+					$(this).closest('tr').hide();
 				} else {
-					$( this ).closest('tr').remove();
+					$(this).closest('tr').remove();
 				}
 
-				/* re-index after deleting */
-				$('#edd_tax_rates tr').each( function( rowIndex ) {
-					$( this ).children().find( 'input, select' ).each(function() {
-						var name = $( this ).attr( 'name' );
-						name = name.replace( /\[(\d+)\]/, '[' + ( rowIndex - 1 ) + ']');
-						$( this ).attr( 'name', name ).attr( 'id', name );
-					});
-				});
+				if ( count === 1 ) {
+					$('#the-list .no-items').show();
+				}
 
 				return false;
 			});

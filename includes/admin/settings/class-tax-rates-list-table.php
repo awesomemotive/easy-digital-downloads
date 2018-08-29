@@ -37,6 +37,10 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
+		global $settings_array_key;
+		
+		$settings_array_key = 1;
+
 		parent::__construct( array(
 			'singular' => __( 'Tax Rate', 'easy-digital-downloads' ),
 			'plural'   => __( 'Tax Rates', 'easy-digital-downloads' ),
@@ -77,10 +81,10 @@ class Tax_Rates_List_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'      => '<input type="checkbox" />', // Render a checkbox instead of text
 			'country' => __( 'Country', 'easy-digital-downloads' ),
 			'region'  => __( 'Region', 'easy-digital-downloads' ),
 			'rate'    => __( 'Rate', 'easy-digital-downloads' ),
+			'actions' => __( 'Actions', 'easy-digital-downloads' ),
 		);
 
 		return $columns;
@@ -98,22 +102,6 @@ class Tax_Rates_List_Table extends List_Table {
 	}
 
 	/**
-	 * Render the checkbox column.
-	 *
-	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
-	 *
-	 * @param \EDD\Adjustments\Adjustment $adjustment Adjustment object.
-	 * @return string Data shown in the Checkbox column.
-	 */
-	public function column_cb( $adjustment ) {
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			'adjustment',
-			$adjustment->id
-		);
-	}
-
-	/**
 	 * Render the Country column.
 	 *
 	 * @since 3.0
@@ -122,9 +110,11 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Country column.
 	 */
 	public function column_country( $adjustment ) {
+		global $settings_array_key;
+
 		return EDD()->html->select( array(
 			'options'          => edd_get_country_list(),
-			'name'             => 'tax_rates[' . $adjustment->id . '][country]',
+			'name'             => 'tax_rates[' . $settings_array_key . '][country]',
 			'selected'         => $adjustment->name,
 			'show_option_all'  => false,
 			'show_option_none' => false,
@@ -146,12 +136,13 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Region column.
 	 */
 	public function column_region( $adjustment ) {
+		global $settings_array_key;
 		$states = edd_get_shop_states( $adjustment->name );
 
 		if ( ! empty( $states ) ) {
 			$select = EDD()->html->select( array(
 				'options'          => $states,
-				'name'             => 'tax_rates[' . $adjustment->id . '][state]',
+				'name'             => 'tax_rates[' . $settings_array_key . '][state]',
 				'selected'         => $adjustment->description,
 				'disabled'         => 'country' === $adjustment->scope,
 				'show_option_all'  => false,
@@ -161,13 +152,13 @@ class Tax_Rates_List_Table extends List_Table {
 			) );
 		} else {
 			$select = EDD()->html->text( array(
-				'name'  => 'tax_rates[' . $adjustment->id . '][state]',
+				'name'  => 'tax_rates[' . $settings_array_key . '][state]',
 				'value' => $adjustment->description,
 			) );
 		}
 
 		$checkbox = '<span class="edd-tax-whole-country">' . EDD()->html->checkbox( array(
-			'name'    => 'tax_rates[' . $adjustment->id . '][global]',
+			'name'    => 'tax_rates[' . $settings_array_key . '][global]',
 			'current' => (bool) 'country' === $adjustment->scope,
 			'label'   => __( 'Apply to whole country', 'easy-digital-downloads' ),
 		) ) . '</span>';
@@ -184,7 +175,17 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Rate column.
 	 */
 	public function column_rate( $adjustment ) {
-		return '<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[' . $adjustment->id . '][rate]" value="' . esc_attr( floatval( $adjustment->amount ) ) . '" autocomplete="off" />';
+		global $settings_array_key;
+		return '<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[' . $settings_array_key . '][rate]" value="' . esc_attr( floatval( $adjustment->amount ) ) . '" autocomplete="off" />';
+	}
+
+	public function column_actions( $adjustment ) {
+		global $settings_array_key;
+		?>
+		<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span>
+		<?php
+
+		$settings_array_key++;
 	}
 
 	/**
@@ -205,15 +206,8 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return array Array of all the data for the tax rates table.
 	 */
 	private function tax_rates_data() {
-		$paged = isset( $_GET['paged'] ) // WPCS: CSRF ok.
-			? absint( $_GET['paged'] )
-			: 1;
-
 		// Get tax rates
-		return edd_get_tax_rates( array(
-			'number' => $this->per_page,
-			'offset' => ( $paged - 1 ) * $this->per_page,
-		), OBJECT );
+		return edd_get_tax_rates( array( 'number' => 1000, 'status' => 'active' ), OBJECT );
 	}
 
 	/**
@@ -236,14 +230,7 @@ class Tax_Rates_List_Table extends List_Table {
 
 		$total = ! empty( $this->counts[ $type ] )
 			? $this->counts[ $type ]
-			: 1;
-
-		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_items' => $total,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total / $this->per_page ),
-		) );
+			: 0;
 	}
 
 	/**
@@ -299,26 +286,29 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @since 3.1.0
 	 */
 	public function display_rows_or_placeholder() {
-		if ( $this->has_items() ) {
+		$has_items = $this->has_items();
+		
+		$show_no_items = $has_items ? ' style="display:none"' : '';
+		echo '<tr ' . $show_no_items . ' class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+		$this->no_items();
+		echo '</td></tr>';
+		$item = new \stdClass();
+		$item->id = 0;
+		$item->parent = 0;
+		$item->name = '';
+		$item->code = '';
+		$item->status = 'active';
+		$item->type = 'tax_rate';
+		$item->scope = 'region';
+		$item->amount_type = 'percent';
+		$item->amount = 0;
+		$item->description = '';
+		echo '<tr class="edd-tax-rate-initial" style="display:none" >';
+		$this->single_row_columns( $item );
+		echo '</tr>';
+
+		if ( $has_items ) {
 			$this->display_rows();
-		} else {
-			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
-			$this->no_items();
-			echo '</td></tr>';
-			$item = new \stdClass();
-			$item->id = 0;
-			$item->parent = 0;
-			$item->name = '';
-			$item->code = '';
-			$item->status = 'active';
-			$item->type = 'tax_rate';
-			$item->scope = 'region';
-			$item->amount_type = 'percent';
-			$item->amount = 0;
-			$item->description = '';
-			echo '<tr class="edd-tax-rate-initial" style="display:none" >';
-			$this->single_row_columns( $item );
-			echo '</tr>';
 		}
 	}
 
@@ -328,21 +318,5 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @since 3.1.0
 	 * @param string $which
 	 */
-	protected function display_tablenav( $which ) {
-		?>
-		<div class="tablenav <?php echo esc_attr( $which ); ?>">
-
-			<?php if ( $this->has_items() ): ?>
-				<div class="alignleft actions bulkactions">
-					<?php $this->bulk_actions( $which ); ?>
-				</div>
-			<?php endif;
-			$this->extra_tablenav( $which );
-			$this->pagination( $which );
-			?>
-
-			<br class="clear" />
-		</div>
-		<?php
-	}
+	protected function display_tablenav( $which ) {}
 }
