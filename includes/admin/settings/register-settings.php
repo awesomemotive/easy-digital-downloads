@@ -647,6 +647,8 @@ function edd_get_registered_settings() {
 							'discover'        => 'Discover',
 							'paypal'          => 'PayPal'
 						) ),
+						'tooltip_title' => __( 'Adjust the Order', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Drag and drop the payment method icons to determine the order they appear in the checkout.', 'easy-digital-downloads' ),
 					),
 				),
 			) ),
@@ -1917,7 +1919,7 @@ function edd_payment_icons_callback( $args ) {
 
 			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
 			$html .= '<label>';
-			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
+			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>';
 
 			if ( edd_string_is_image_url( $key ) ) {
 				$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" />';
@@ -1947,7 +1949,7 @@ function edd_payment_icons_callback( $args ) {
 				$html .= '<img class="payment-icon" src="' . esc_url( $image ) . '" />';
 			}
 
-			$html .= $option . '</label>';
+			$html .= '<span>&nbsp;' . $option . '</span></label>';
 			$html .= '</li>';
 		}
 
@@ -2051,8 +2053,8 @@ function edd_gateways_callback( $args ) {
 
 			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
 			$html .= '<label>';
-			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
-			$html .= esc_html( $option['admin_label'] );
+			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked( '1', $enabled, false ) . '/>';
+			$html .= '<span>&nbsp;' . esc_html( $option['admin_label'] ) . '</span>';
 			$html .= '</label>';
 			$html .= '</li>';
 		}

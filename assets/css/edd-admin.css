@@ -167,7 +167,7 @@ a.edd-delete:hover {
 	vertical-align: middle;
 }
 
-.edd-sortable-list li label:after {
+.edd-sortable-list li label:hover::after {
 	display: block;
 	width: 17px;
 	height: 17px;
@@ -177,7 +177,7 @@ a.edd-delete:hover {
 	color: #aaa;
 	font-family: dashicons;
 	font-size: 17px;
-	content: '\f228';
+	content: '\f545';
 }
 
 .form-table .edd-sortable-list li label {
@@ -186,6 +186,10 @@ a.edd-delete:hover {
 	padding: 0;
 	margin: 0;
 	cursor: move;
+}
+
+.form-table .edd-sortable-list li label span {
+	cursor: pointer;
 }
 
 .edd-sortable-list .payment-icon {
