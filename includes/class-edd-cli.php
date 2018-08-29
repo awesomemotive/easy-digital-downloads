@@ -1040,6 +1040,11 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
 
 			foreach ( $results as $result ) {
+				$result->object_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
+					$result->comment_post_ID
+				) );
+
 				\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
 
 				$progress->tick();
