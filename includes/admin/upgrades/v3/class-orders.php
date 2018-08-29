@@ -54,7 +54,7 @@ class Orders extends Base {
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				if ( $result->ID !== $this->remap_id( $result->ID, static::ORDERS ) ) {
+				if ( $this->find_legacy_id( $result->ID, static::ORDERS ) ) {
 					continue;
 				}
 
@@ -182,7 +182,8 @@ class Orders extends Base {
 				// Maybe add email address to customer record
 				$customer = edd_get_customer( $customer_id );
 				if ( $customer ) {
-					$customer->add_email( $payment_meta['email'] );
+					$primary = ( $customer->email === $payment_meta['email'] );
+					$customer->add_email( $payment_meta['email'], $primary );
 				}
 
 				/** Migrate meta *********************************************/

@@ -898,6 +898,8 @@ add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
 /**
  * Search for download, build, and return HTML.
  *
+ * This is used in the Admin for Adding items to an order.
+ * 
  * @since 3.0
  */
 function edd_ajax_add_order_item() {
@@ -944,9 +946,10 @@ function edd_ajax_add_order_item() {
 		if ( false === $download['price_id'] ) {
 			$amount = floatval( $d->get_price() );
 		} else {
-			$prices = wp_filter_object_list( $d->get_prices(), array( 'index' => $download['price_id'] ) );
-			$amount = floatval( implode( wp_list_pluck( $prices, 'amount' ) ) );
-			$name .= ' &mdash; ' . implode( wp_list_pluck( $prices, 'name' ) );
+			$prices = $d->get_prices();
+			$price  = $prices[ $download['price_id'] ];
+			$amount = floatval( $price['amount'] );
+			$name  .= ' &mdash; ' . $price['name'];
 		}
 
 		$quantity = edd_item_quantities_enabled() && isset( $_POST['quantity'] )
@@ -970,17 +973,20 @@ function edd_ajax_add_order_item() {
 
 		<tr data-key="0">
 			<td class="name column-name column-primary"><a class="row-title" href=""><?php echo esc_html( $response['name'] ); ?></a></td>
-			<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['amount'] ) ); ?></span></td>
+			<td class="overridable amount column-amount" data-type="amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['amount'] ) ); ?></span></td>
 			<?php if ( edd_item_quantities_enabled() ) : ?>
-				<td class="quantity column-quantity"><?php echo esc_html( $quantity ); ?></td>
+				<td class="overridable quantity column-quantity" data-type="quantity"><span class="value"><?php echo esc_html( $quantity ); ?></span></td>
 			<?php endif; ?>
 			<?php if ( edd_use_taxes() ) : ?>
-				<td class="tax column-tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
+				<td class="overridable tax column-tax" data-type="tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
 			<?php endif; ?>
-			<td class="total column-total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
+			<td class="overridable total column-total" data-type="total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
 			<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 			<input type="hidden" class="download-id" name="downloads[0][id]" value="<?php echo esc_attr( $download['download_id'] ); ?>" />
+			<input type="hidden" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" />
 			<input type="hidden" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" />
+			<input type="hidden" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" />
+			<input type="hidden" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" />
 			<input type="hidden" class="download-price-id" name="downloads[0][price_id]" value="<?php echo esc_attr( $download['price_id'] ); // WPCS: XSS ok. ?>" />
 		</tr>
 
@@ -988,20 +994,6 @@ function edd_ajax_add_order_item() {
 		$html = ob_get_contents();
 
 		ob_end_clean();
-
-		$downloads = EDD()->session->get( 'add_order_downloads' );
-
-		$downloads = false === $downloads
-			? array()
-			: $downloads;
-
-		$downloads[] = array(
-			'download_id' => $download['download_id'],
-			'price_id'    => $download['price_id'],
-			'quantity'    => $quantity,
-		);
-
-		EDD()->session->set( 'add_order_downloads', $downloads );
 
 		$response['html'] = $html;
 	}

@@ -804,33 +804,12 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 
 	if ( ! empty( $do_change ) ) {
 		/**
-		 * Action triggered before updating order status.
-		 *
-		 * @since 3.0
-		 *
-		 * @param int    $order_id   Order ID.
-		 * @param string $new_status New order status.
-		 * @param string $old_status Old order status.
-		 */
-		do_action( 'edd_before_order_status_change', $order_id, $new_status, $old_status );
-
-		/**
-		 * We need to update the status on the EDD_Payment instance so that the correct actions are invoked if the status
-		 * is changing to something that requires interception by the payment gateway (e.g. refunds).
+		 * We need to update the status on the EDD_Payment instance so that the
+		 * correct actions are invoked if the status is changing to something
+		 * that requires interception by the payment gateway (e.g. refunds).
 		 */
 		$payment->status = $new_status;
 		$updated         = $payment->save();
-
-		/**
-		 * Action triggered when updating order status.
-		 *
-		 * @since 3.0
-		 *
-		 * @param int    $order_id   Order ID.
-		 * @param string $new_status New order status.
-		 * @param string $old_status Old order status.
-		 */
-		do_action( 'edd_transition_order_status', $order_id, $new_status, $old_status );
 	}
 
 	return $updated;
@@ -870,13 +849,13 @@ function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
  *
  * @since 3.0
  *
- * @param array $data Order form data.
+ * @param array $args Order form data.
  * @return int|bool Order ID if successful, false otherwise.
  */
-function edd_add_manual_order( $data ) {
+function edd_add_manual_order( $args = array() ) {
 
 	// Bail if user cannot manage shop settings or no data was passed.
-	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $data ) ) {
+	if ( empty( $args ) || ! current_user_can( 'manage_shop_settings' ) ) {
 		return false;
 	}
 
@@ -890,41 +869,47 @@ function edd_add_manual_order( $data ) {
 		return false;
 	}
 
-	// Set defaults.
-	$defaults = array(
+	// Get now one time to avoid microsecond issues
+	$now = EDD()->utils->date( 'now' )->timestamp;
+
+	// Parse args.
+	$data = wp_parse_args( $args, array(
 		'downloads'               => array(),
 		'edd-payment-status'      => 'publish',
 		'payment_key'             => '',
 		'gateway'                 => '',
 		'transaction_id'          => '',
 		'receipt'                 => '',
-		'edd-payment-date'        => date( 'Y-m-d', EDD()->utils->date( 'now' )->timestamp ),
-		'edd-payment-time-hour'   => date( 'G', EDD()->utils->date( 'now' )->timestamp ),
-		'edd-payment-time-min'    => date( 'i', EDD()->utils->date( 'now' )->timestamp ),
+		'edd-payment-date'        => date( 'Y-m-d', $now ),
+		'edd-payment-time-hour'   => date( 'G',     $now ),
+		'edd-payment-time-min'    => date( 'i',     $now ),
 		'edd-unlimited-downloads' => 0,
-	);
+	) );
 
-	// Parse args.
-	$data = wp_parse_args( $data, $defaults );
+	/** Customer data *********************************************************/
 
-	/** Customer data ********************************************************/
-
+	// Defaults
 	$customer_id = 0;
 	$user_id     = 0;
 	$email       = '';
 
 	// Create a new customer record.
 	if ( isset( $data['edd-new-customer'] ) && 1 === absint( $data['edd-new-customer'] ) ) {
+
+		// Sanitize first name
 		$first_name = isset( $data['edd-new-customer-first-name'] )
 			? sanitize_text_field( $data['edd-new-customer-first-name'] )
 			: '';
 
+		// Sanitize last name
 		$last_name = isset( $data['edd-new-customer-last-name'] )
 			? sanitize_text_field( $data['edd-new-customer-last-name'] )
 			: '';
 
+		// Combine
 		$name = $first_name . ' ' . $last_name;
 
+		// Sanitize the email address
 		$email = isset( $data['edd-new-customer-email'] )
 			? sanitize_email( $data['edd-new-customer-email'] )
 			: '';
@@ -949,7 +934,7 @@ function edd_add_manual_order( $data ) {
 		}
 	}
 
-	/** Insert order *********************************************************/
+	/** Insert order **********************************************************/
 
 	// Parse order status.
 	$status = sanitize_text_field( $data['edd-payment-status'] );
@@ -961,24 +946,35 @@ function edd_add_manual_order( $data ) {
 	// Parse date.
 	$date = $data['edd-payment-date'] . ' ' . $data['edd-payment-time-hour'] . ':' . $data['edd-payment-time-min'];
 
-	$order_data = array(
+	// Get mode
+	$mode = edd_is_test_mode()
+		? 'test'
+		: 'live';
+
+	// Get completed date if publish
+	$completed = ( 'publish' === $data['edd-payment-status'] )
+		? $date
+		: '';
+
+	// Add the order ID
+	$order_id = edd_add_order( array(
 		'status'         => 'pending', // Always insert as pending initially.
 		'user_id'        => $user_id,
 		'customer_id'    => $customer_id,
 		'email'          => $email,
 		'ip'             => sanitize_text_field( $data['ip'] ),
 		'gateway'        => sanitize_text_field( $data['gateway'] ),
-		'mode'           => edd_is_test_mode() ? 'test' : 'live',
+		'mode'           => $mode,
 		'currency'       => edd_get_currency(),
 		'payment_key'    => sanitize_text_field( $data['payment_key'] ),
 		'date_created'   => $date,
-		'date_completed' => 'publish' === $data['edd-payment-status'] ? $date : '',
-	);
-
-	$order_id = edd_add_order( $order_data );
+		'date_completed' => $completed,
+	) );
 
 	// Attach order to the customer record.
-	$customer->attach_payment( $order_id, false );
+	if ( ! empty( $customer ) ) {
+		$customer->attach_payment( $order_id, false );
+	}
 
 	// Declare variables to store amounts for the order.
 	$order_subtotal = 0.00;
@@ -986,18 +982,19 @@ function edd_add_manual_order( $data ) {
 	$total_discount = 0.00;
 	$order_total    = 0.00;
 
-	/** Insert order address *************************************************/
+	/** Insert order address **************************************************/
+
 	if ( isset( $data['edd_order_address'] ) ) {
-		$address = array(
+
+		// Parse args
+		$address = wp_parse_args( $data['edd_order_address'], array(
 			'address'     => '',
 			'address2'    => '',
 			'city'        => '',
 			'postal_code' => '',
 			'country'     => '',
 			'region'      => '',
-		);
-
-		$address = wp_parse_args( $data['edd_order_address'], $address );
+		) );
 
 		$order_address_data             = $address;
 		$order_address_data['order_id'] = $order_id;
@@ -1017,7 +1014,7 @@ function edd_add_manual_order( $data ) {
 		edd_maybe_add_customer_address( $customer->id, $customer_address_data );
 	}
 
-	/** Insert order items ***************************************************/
+	/** Insert order items ****************************************************/
 
 	if ( ! empty( $data['downloads'] ) ) {
 
@@ -1027,98 +1024,108 @@ function edd_add_manual_order( $data ) {
 		foreach ( $data['downloads'] as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
 
-			if ( $d ) {
-				$discount = 0.00;
-				$tax      = 0.00;
-
-				// Quantity.
-				$quantity = isset( $download['quantity'] )
-					? absint( $download['quantity'] )
-					: 1;
-
-				// Price ID.
-				$price_id = isset( $download['price_id'] )
-					? absint( $download['price_id'] )
-					: false;
-
-				// Fetch variable price.
-				if ( $d->has_variable_prices() && false !== $price_id ) {
-					$prices = $d->get_prices();
-
-					if ( isset( $prices[ $price_id ] ) ) {
-						$amount = $prices[ $price_id ]['amount'];
-					} else {
-						$amount   = edd_get_lowest_price_option( $d->ID );
-						$price_id = edd_get_lowest_price_id( $d->ID );
-					}
-
-				// Fetch flat price.
-				} else {
-					$amount = $d->get_price();
-				}
-
-				$quantity = absint( $quantity );
-				$amount   = floatval( $amount );
-				$subtotal = floatval( $amount * $quantity );
-
-				// Apply percent discounts.
-				if ( isset( $data['adjustments']['discount'] ) ) {
-					$discounts = wp_filter_object_list( $data['adjustments']['discount'], array( 'type' => 'percent' ) );
-
-					if ( $discounts ) {
-						foreach ( $discounts as $discount ) {
-							$d = edd_get_discount( absint( $discount['id'] ) );
-
-							// Skip if discount not found.
-							if ( ! $d ) {
-								continue;
-							}
-
-							$discount = $subtotal * ( $d->amount / 100 );
-						}
-					}
-				}
-
-				if ( edd_use_taxes() ) {
-					$tax = edd_prices_include_tax()
-						? 0.00
-						: edd_calculate_tax( $subtotal - $discount, $address['country'], $address['region'] );
-				}
-
-				// Calculate total.
-				$total = floatval( $subtotal - $discount + $tax );
-
-				// Add to edd_order_items table.
-				edd_add_order_item( array(
-					'order_id'     => $order_id,
-					'product_id'   => absint( $download['id'] ),
-					'product_name' => $d->post_title,
-					'price_id'     => absint( $price_id ),
-					'cart_index'   => $cart_key,
-					'type'         => 'download',
-					'status'       => 'complete',
-					'quantity'     => $quantity,
-					'amount'       => $amount,
-					'subtotal'     => $subtotal,
-					'discount'     => $discount,
-					'tax'          => $tax,
-					'total'        => $total,
-				) );
-
-				// Increase the earnings for this download.
-				edd_increase_earnings( absint( $download['id'] ), $total );
-				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
-
-				// Update running totals.
-				$order_subtotal += $subtotal;
-				$total_tax      += $tax;
-				$total_discount += $discount;
-				$order_total    += $total;
+			// Skip if download no longer exists
+			if ( empty( $d ) ) {
+				continue;
 			}
+
+			$discount = 0.00;
+			$tax      = 0.00;
+
+			// Quantity.
+			$quantity = isset( $download['quantity'] )
+				? absint( $download['quantity'] )
+				: 1;
+
+			// Price ID.
+			$price_id = isset( $download['price_id'] )
+				? absint( $download['price_id'] )
+				: false;
+
+			// Fetch variable price.
+			if ( $d->has_variable_prices() && false !== $price_id ) {
+				$prices = $d->get_prices();
+
+				if ( isset( $prices[ $price_id ] ) ) {
+					$amount = $prices[ $price_id ]['amount'];
+				} else {
+					$amount   = edd_get_lowest_price_option( $d->ID );
+					$price_id = edd_get_lowest_price_id( $d->ID );
+				}
+
+			// Fetch flat price.
+			} else {
+				$amount = $d->get_price();
+			}
+
+			$amount   = isset( $data['edd_add_order_override'] )
+				? floatval( $download['total'] )
+				: floatval( $amount );
+			$subtotal = floatval( $amount * $quantity );
+
+			// Apply percent discounts.
+			if ( isset( $data['adjustments']['discount'] ) ) {
+				$discounts = wp_filter_object_list( $data['adjustments']['discount'], array( 'type' => 'percent' ) );
+
+				if ( ! empty( $discounts ) ) {
+					foreach ( $discounts as $discount ) {
+						$dis = edd_get_discount( absint( $discount['id'] ) );
+
+						// Skip if discount not found.
+						if ( empty( $dis ) ) {
+							continue;
+						}
+
+						$discount = $subtotal * ( $dis->amount / 100 );
+					}
+				}
+			}
+
+			if ( edd_use_taxes() ) {
+				$tax = edd_prices_include_tax()
+					? 0.00
+					: edd_calculate_tax( $subtotal - $discount, $address['country'], $address['region'] );
+
+				$tax = isset( $data['edd_add_order_override'] )
+					? floatval( $download['tax'] )
+					: $tax;
+			}
+
+			// Calculate total.
+			$total = isset( $data['edd_add_order_override'] )
+				? $download['total']
+				: floatval( $subtotal - $discount + $tax );
+
+			// Add to edd_order_items table.
+			edd_add_order_item( array(
+				'order_id'     => $order_id,
+				'product_id'   => absint( $download['id'] ),
+				'product_name' => $d->post_title,
+				'price_id'     => absint( $price_id ),
+				'cart_index'   => $cart_key,
+				'type'         => 'download',
+				'status'       => 'complete',
+				'quantity'     => $quantity,
+				'amount'       => $amount,
+				'subtotal'     => $subtotal,
+				'discount'     => $discount,
+				'tax'          => $tax,
+				'total'        => $total,
+			) );
+
+			// Increase the earnings for this download.
+			edd_increase_earnings( absint( $download['id'] ), $total );
+			edd_increase_purchase_count( absint( $download['id'] ), $quantity );
+
+			// Update running totals.
+			$order_subtotal += $subtotal;
+			$total_tax      += $tax;
+			$total_discount += $discount;
+			$order_total    += $total;
 		}
 	}
 
-	/** Insert adjustments ***************************************************/
+	/** Insert adjustments ****************************************************/
 
 	// Credit needs to be applied first.
 	if ( ! empty( $data['adjustments']['credit'] ) ) {
@@ -1141,33 +1148,35 @@ function edd_add_manual_order( $data ) {
 		foreach ( $data['adjustments']['discount'] as $adjustment ) {
 			$discount = edd_get_discount( absint( $adjustment['id'] ) );
 
-			if ( $discount ) {
-
-				// Only add flat discounts to $total_discount.
-				if ( 'flat' === $discount->amount_type ) {
-					$amount          = floatval( $discount->amount );
-					$total_discount += $amount;
-				} else {
-					$amount = floatval( $order_subtotal * ( $discount->amount / 100 ) );
-				}
-
-				// Store discount.
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type_id'     => $discount->id,
-					'type'        => 'discount',
-					'description' => $discount->code,
-					'subtotal'    => $amount,
-					'total'       => $amount,
-				) );
-
-				// Increase discount usage.
-				$discount->increase_usage();
-
-				// Subtract from order total.
-				$order_total -= $amount;
+			// Skip if discount doesn't exist
+			if ( empty( $discount ) ) {
+				continue;
 			}
+
+			// Only add flat discounts to $total_discount.
+			if ( 'flat' === $discount->amount_type ) {
+				$amount          = floatval( $discount->amount );
+				$total_discount += $amount;
+			} else {
+				$amount = floatval( $order_subtotal * ( $discount->amount / 100 ) );
+			}
+
+			// Store discount.
+			edd_add_order_adjustment( array(
+				'object_id'   => $order_id,
+				'object_type' => 'order',
+				'type_id'     => $discount->id,
+				'type'        => 'discount',
+				'description' => $discount->code,
+				'subtotal'    => $amount,
+				'total'       => $amount,
+			) );
+
+			// Increase discount usage.
+			$discount->increase_usage();
+
+			// Subtract from order total.
+			$order_total -= $amount;
 		}
 	}
 
@@ -1199,9 +1208,8 @@ function edd_add_manual_order( $data ) {
 		'total'    => $order_total,
 	) );
 
+	// Stop purchase receipt from being sent.
 	if ( ! isset( $data['edd_order_send_receipt'] ) ) {
-
-		// Stop purchase receipt from being sent.
 		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 	}
 
@@ -1211,7 +1219,7 @@ function edd_add_manual_order( $data ) {
 	}
 
 	// Redirect to `Edit Order` page.
-	wp_redirect( edd_get_admin_url( array(
+	edd_redirect( edd_get_admin_url( array(
 		'page' => 'edd-payment-history',
 		'view' => 'view-order-details',
 		'id'   => $order_id,
