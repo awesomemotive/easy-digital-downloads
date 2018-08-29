@@ -165,9 +165,9 @@ class Base extends \EDD_Batch_Export {
 	 * @param int    $legacy_id Legacy ID.
 	 * @param string $type      Type.
 	 *
-	 * @return int New ID if found, otherwise legacy ID.
+	 * @return int|false New ID if found, false otherwise.
 	 */
-	protected function remap_id( $legacy_id = 0, $type = '' ) {
+	protected function find_legacy_id( $legacy_id = 0, $type = '' ) {
 
 		// Bail if nothing passed.
 		if ( empty( $legacy_id ) || empty( $type ) ) {
@@ -191,9 +191,9 @@ class Base extends \EDD_Batch_Export {
 				break;
 		}
 
-		return empty( $id )
-			? $legacy_id
-			: absint( $id );
+		return ! empty( $id )
+			? absint( $id )
+			: false;
 	}
 
 	/**

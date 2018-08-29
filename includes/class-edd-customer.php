@@ -420,7 +420,10 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 	/**
 	 * Check if an email address already exists somewhere in the known universe
-	 * of WordPress Users, EDD Customers, or additional customer email addresses.
+	 * of WordPress Users, or EDD customer email addresses.
+	 *
+	 * We intentionally skip the edd_customers table, to avoid race conditions
+	 * when adding new customers and their email addresses at the same time.
 	 *
 	 * @since 3.0
 	 *
@@ -439,19 +442,11 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			return true;
 		}
 
-		// Return true if found in customers table.
-		if ( edd_get_customer_by( 'email', $email ) ) {
-			return true;
-		}
+		// Query email addresses table for this address
+		$exists = edd_get_customer_email_address_by( 'email' , $email );
 
-		// Query all customer email addresses.
-		$count = edd_count_customer_email_addresses( array(
-			'customer_id' => $this->id,
-			'email'       => $email,
-		) );
-
-		// Return true if found in additional email addresses
-		if ( 0 < $count ) {
+		// Return true if found in email addresses table
+		if ( ! empty( $exists ) ) {
 			return true;
 		}
 

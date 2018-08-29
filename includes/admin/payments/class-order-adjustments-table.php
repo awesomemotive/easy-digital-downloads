@@ -160,9 +160,13 @@ class Order_Adjustments_Table extends List_Table {
 	 * @return string Formatted amount.
 	 */
 	public function column_amount( $order_adjustment ) {
-		$currency = edd_get_order( $order_adjustment->object_id )->currency;
+		if ( 'tax_rate' === $order_adjustment->type ) {
+			return edd_format_amount( $order_adjustment->total * 100 ) . '%';
+		} else {
+			$currency = edd_get_order( $order_adjustment->object_id )->currency;
 
-		return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->total );
+			return edd_currency_symbol( $currency ) . edd_format_amount( $order_adjustment->total );
+		}
 	}
 
 	/**

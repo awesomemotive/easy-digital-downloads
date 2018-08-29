@@ -108,7 +108,7 @@ final class Customers extends Table {
 
 			if ( ! $this->column_exists( 'date_modified' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`" );
-				$this->get_db()->query( "UPDATE {$this->table_name} SET 'date_modified' = 'date_created'" );
+				$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_created (date_created)" );
 			}
 		}

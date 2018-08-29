@@ -31,7 +31,7 @@ if ( empty( $order ) ) {
 } ?>
 
 <div class="wrap edd-wrap">
-    <h1><?php printf( __( 'Edit Order - %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+    <h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
 	<hr class="wp-header-end">
 

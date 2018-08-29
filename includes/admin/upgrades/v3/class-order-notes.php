@@ -53,7 +53,7 @@ class Order_Notes extends Base {
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $old_note ) {
 				$note_data = array(
-					'object_id'     => $this->remap_id( $old_note->comment_post_ID, 'orders' ),
+					'object_id'     => $this->find_legacy_id( $old_note->comment_post_ID, 'orders' ),
 					'object_type'   => 'order',
 					'date_created'  => $old_note->comment_date_gmt,
 					'date_modified' => $old_note->comment_date_gmt,

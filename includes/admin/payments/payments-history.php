@@ -93,45 +93,59 @@ function edd_get_order_pages() {
  *            Add a link to manually all orders.
 */
 function edd_payment_history_page() {
+
+	// Edit
 	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+
+	// Add
 	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
+		edd_add_order_page_content();
+
+	// List Table
 	} else {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
-		$orders_table = new EDD_Payment_History_Table();
-		$orders_table->prepare_items();
-
-		$active_tab = ! empty( $_GET['order_type'] )
-			? sanitize_key( $_GET['order_type'] )
-			: 'sale';
-
-		$admin_url = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
-
-		<div class="wrap">
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
-			<hr class="wp-header-end">
-
-			<?php edd_orders_page_primary_nav( $active_tab ); ?>
-
-			<?php do_action( 'edd_payments_page_top' ); ?>
-
-			<form id="edd-payments-filter" method="get" action="<?php echo esc_url( $admin_url ); ?>">
-				<input type="hidden" name="post_type" value="download" />
-				<input type="hidden" name="page" value="edd-payment-history" />
-				<input type="hidden" name="order_type" value="<?php echo esc_attr( $active_tab ); ?>" />
-				<?php
-				$orders_table->views();
-				$orders_table->advanced_filters();
-				$orders_table->display();
-				?>
-			</form>
-
-			<?php do_action( 'edd_payments_page_bottom' ); ?>
-		</div>
-
-		<?php
+		edd_order_list_table_content();
 	}
+}
+
+/**
+ * Output the list table used to list out all orders.
+ *
+ * @since 3.0
+ */
+function edd_order_list_table_content() {
+	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
+	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-items-table.php';
+	$orders_table = new EDD_Payment_History_Table();
+	$orders_table->prepare_items();
+
+	$active_tab = sanitize_key( $orders_table->get_request_var( 'order_type', 'sale' ) );
+	$admin_url  = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
+
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
+		<hr class="wp-header-end">
+
+		<?php edd_orders_page_primary_nav( $active_tab ); ?>
+
+		<?php do_action( 'edd_payments_page_top' ); ?>
+
+		<form id="edd-payments-filter" method="get" action="<?php echo esc_url( $admin_url ); ?>">
+			<input type="hidden" name="post_type" value="download" />
+			<input type="hidden" name="page" value="edd-payment-history" />
+			<input type="hidden" name="order_type" value="<?php echo esc_attr( $active_tab ); ?>" />
+			<?php
+			$orders_table->views();
+			$orders_table->advanced_filters();
+			$orders_table->display();
+			?>
+		</form>
+
+		<?php do_action( 'edd_payments_page_bottom' ); ?>
+	</div>
+
+	<?php
 }
 
 /**
