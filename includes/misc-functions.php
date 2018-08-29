@@ -125,30 +125,6 @@ function edd_is_dev_environment() {
 }
 
 /**
- * Is there a `view` request variable, and does it match a specific one?
- *
- * Explicitly false if you want to confirm no view request variable exists.
- *
- * @since 3.0
- *
- * @param string $view
- * @return bool
- */
-function edd_is_view( $view = '' ) {
-
-	// Is this a view request?
-	$request = ! empty( $_REQUEST['view'] )
-		? sanitize_key( $_REQUEST['view'] )
-		: false;
-
-	// Is this the view we are looking for?
-	$retval = ( $view === $request );
-
-	// Filter & return
-	return (bool) apply_filters( 'edd_is_view', $retval, $view, $request );
-}
-
-/**
  * Checks if Guest checkout is enabled
  *
  * @since 1.0
