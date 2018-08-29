@@ -30,6 +30,8 @@ class Tax_Rates_List_Table extends List_Table {
 	 */
 	protected $tooltips = array();
 
+	protected $tax_rate_key = 1;
+
 	/**
 	 * Constructor.
 	 *
@@ -37,9 +39,6 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $settings_array_key;
-		
-		$settings_array_key = 1;
 
 		parent::__construct( array(
 			'singular' => __( 'Tax Rate', 'easy-digital-downloads' ),
@@ -110,11 +109,9 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Country column.
 	 */
 	public function column_country( $adjustment ) {
-		global $settings_array_key;
-
 		return EDD()->html->select( array(
 			'options'          => edd_get_country_list(),
-			'name'             => 'tax_rates[' . $settings_array_key . '][country]',
+			'name'             => 'tax_rates[' . $this->tax_rate_key . '][country]',
 			'selected'         => $adjustment->name,
 			'show_option_all'  => false,
 			'show_option_none' => false,
@@ -136,13 +133,12 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Region column.
 	 */
 	public function column_region( $adjustment ) {
-		global $settings_array_key;
 		$states = edd_get_shop_states( $adjustment->name );
 
 		if ( ! empty( $states ) ) {
 			$select = EDD()->html->select( array(
 				'options'          => $states,
-				'name'             => 'tax_rates[' . $settings_array_key . '][state]',
+				'name'             => 'tax_rates[' . $this->tax_rate_key . '][state]',
 				'selected'         => $adjustment->description,
 				'disabled'         => 'country' === $adjustment->scope,
 				'show_option_all'  => false,
@@ -152,13 +148,13 @@ class Tax_Rates_List_Table extends List_Table {
 			) );
 		} else {
 			$select = EDD()->html->text( array(
-				'name'  => 'tax_rates[' . $settings_array_key . '][state]',
+				'name'  => 'tax_rates[' . $this->tax_rate_key . '][state]',
 				'value' => $adjustment->description,
 			) );
 		}
 
 		$checkbox = '<span class="edd-tax-whole-country">' . EDD()->html->checkbox( array(
-			'name'    => 'tax_rates[' . $settings_array_key . '][global]',
+			'name'    => 'tax_rates[' . $this->tax_rate_key . '][global]',
 			'current' => (bool) 'country' === $adjustment->scope,
 			'label'   => __( 'Apply to whole country', 'easy-digital-downloads' ),
 		) ) . '</span>';
@@ -175,17 +171,15 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Rate column.
 	 */
 	public function column_rate( $adjustment ) {
-		global $settings_array_key;
-		return '<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[' . $settings_array_key . '][rate]" value="' . esc_attr( floatval( $adjustment->amount ) ) . '" autocomplete="off" />';
+		return '<input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[' . $this->tax_rate_key . '][rate]" value="' . esc_attr( floatval( $adjustment->amount ) ) . '" autocomplete="off" />';
 	}
 
 	public function column_actions( $adjustment ) {
-		global $settings_array_key;
 		?>
 		<span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'easy-digital-downloads' ); ?></span>
 		<?php
 
-		$settings_array_key++;
+		$this->tax_rate_key++;
 	}
 
 	/**
