@@ -36,6 +36,13 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['edd-admin-email-tags.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin-datepicker.css'],
 						dest: 'assets/css',
 						ext: '-rtl.css'
@@ -74,6 +81,13 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['edd-admin-email-tags.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin-datepicker.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
@@ -100,6 +114,13 @@ module.exports = function(grunt) {
 						expand: true,
 						cwd: 'assets/css',
 						src: ['edd-admin-menu-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-email-tags-rtl.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
 					},
