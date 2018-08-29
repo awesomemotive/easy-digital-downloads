@@ -46,25 +46,7 @@ class Tax_Rates extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
-				$scope = isset( $result['global'] )
-					? 'country'
-					: 'region';
-
-				$region = isset( $result['state'] )
-					? sanitize_text_field( $result['state'] )
-					: '';
-
-				$adjustment_data = array(
-					'name'        => $result['country'],
-					'status'      => 'active',
-					'type'        => 'tax_rate',
-					'scope'       => $scope,
-					'amount_type' => 'percent',
-					'amount'      => floatval( $result['rate'] ),
-					'description' => $region,
-				);
-
-				edd_add_adjustment( $adjustment_data );
+				Data_Migrator::tax_rates( $result );
 			}
 
 			return true;
