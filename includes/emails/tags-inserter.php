@@ -84,14 +84,6 @@ function edd_email_tags_inserter_media_button_output() {
  */
 function edd_email_tags_inserter_enqueue_scripts() {
 
-	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$css_suffix  = is_rtl() ? '-rtl' : '';
-	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$js_suffix   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-	wp_register_style( 'edd-tags-media-button', EDD_PLUGIN_URL . 'assets/css/edd-admin-email-tags' . $css_suffix . '.css' );
-	wp_register_script( 'edd-tags-media-button', EDD_PLUGIN_URL . 'assets/js/edd-admin-email-tags' . $js_suffix . '.js', array( 'thickbox', 'wp-util' ) );
-
 	wp_enqueue_style( 'edd-tags-media-button' );
 	wp_enqueue_script( 'edd-tags-media-button') ;
 
