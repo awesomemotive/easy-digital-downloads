@@ -83,8 +83,17 @@ function edd_email_tags_inserter_media_button_output() {
  * @since 3.0
  */
 function edd_email_tags_inserter_enqueue_scripts() {
-	wp_enqueue_style( 'edd-tags-media-button', EDD_PLUGIN_URL . 'assets/css/edd-admin-email-tags.css' );
-	wp_enqueue_script( 'edd-tags-media-button', EDD_PLUGIN_URL . 'assets/js/edd-admin-email-tags.js', array( 'thickbox', 'wp-util' ) );
+
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$css_suffix  = is_rtl() ? '-rtl' : '';
+	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$js_suffix   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+	wp_register_style( 'edd-tags-media-button', EDD_PLUGIN_URL . 'assets/css/edd-admin-email-tags' . $css_suffix . '.css' );
+	wp_register_script( 'edd-tags-media-button', EDD_PLUGIN_URL . 'assets/js/edd-admin-email-tags' . $js_suffix . '.js', array( 'thickbox', 'wp-util' ) );
+
+	wp_enqueue_style( 'edd-tags-media-button' );
+	wp_enqueue_script( 'edd-tags-media-button') ;
 
 	// Send information about tags to script.
 	$items = array();
@@ -120,13 +129,13 @@ function edd_email_tags_inserter_thickbox_content() {
 	?>
 	<div id="edd-insert-email-tag" style="display: none;">
 		<div class="edd-email-tags-filter">
-			<input type="search" class="edd-email-tags-filter__input" placeholder="<?php echo esc_attr( __( 'Find a tag...', 'easy-digital-downloads' ) ); ?>" />
+			<input type="search" class="edd-email-tags-filter-search" placeholder="<?php echo esc_attr( __( 'Find a tag...', 'easy-digital-downloads' ) ); ?>" />
 		</div>
 
 		<ul class="edd-email-tags-list">
 			<?php foreach ( $tags as $tag ) : ?>
-			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list__tag">
-				<button class="edd-email-tags-list__insert" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
+			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list-item">
+				<button class="edd-email-tags-list-button" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
 					<strong><?php echo esc_html( $tag['label'] ?: '{' . $tag['tag'] . '}' ); ?></strong>
 					<span><?php echo esc_html( $tag['description'] ); ?></span>
 				</button>

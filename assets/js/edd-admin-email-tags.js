@@ -44,7 +44,7 @@ function normalizeTerm( term ) {
  */
 function setupEmailTags() {
 	// Find all of the buttons.
-	var insertButtons = document.querySelectorAll( '.edd-email-tags-list__insert' );
+	var insertButtons = document.querySelectorAll( '.edd-email-tags-list-button' );
 
 	/**
 	 * Listen for clicks on tag buttons.
@@ -69,8 +69,8 @@ function setupEmailTags() {
  * Filter tags.
  */
 function filterEmailTags() {
-	var filterInput = document.querySelector( '.edd-email-tags-filter__input' );
-	var tagItems = document.querySelectorAll( '.edd-email-tags-list__tag' );
+	var filterInput = document.querySelector( '.edd-email-tags-filter-search' );
+	var tagItems = document.querySelectorAll( '.edd-email-tags-list-item' );
 
 	filterInput.addEventListener( 'keyup', function( event ) {
 		var searchTerm = event.target.value;
