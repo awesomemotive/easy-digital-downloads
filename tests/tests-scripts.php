@@ -11,12 +11,10 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_file_hooks() {
-
-		$this->assertNotFalse( has_action( 'wp_enqueue_scripts', 'edd_load_scripts' ) );
-		$this->assertNotFalse( has_action( 'wp_enqueue_scripts', 'edd_register_styles' ) );
-		$this->assertNotFalse( has_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts' ) );
-		$this->assertNotFalse( has_action( 'admin_head', 'edd_admin_downloads_icon' ) );
-
+		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_load_scripts'         ) );
+		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_register_styles'      ) );
+		$this->assertNotFalse( has_action( 'admin_print_scripts', 'edd_load_admin_scripts'   ) );
+		$this->assertNotFalse( has_action( 'admin_head',          'edd_admin_downloads_icon' ) );
 	}
 
 	/**
@@ -36,7 +34,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		$this->assertTrue( wp_script_is( 'edd-ajax', 'enqueued' ) );
 
 		$this->go_to( '/' );
-
 	}
 
 	/**
@@ -56,7 +53,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 
 		// Reset to origin
 		edd_update_option( 'disable_styles', $origin_disable_styles );
-
 	}
 
 	/**
@@ -70,7 +66,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		edd_register_styles();
 
 		$this->assertTrue( wp_style_is( 'edd-styles', 'enqueued' ) );
-
 	}
 
 	/**
@@ -89,7 +84,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 
 		$this->go_to( '/' );
 		unset( $_SERVER['HTTPS'] );
-
 	}
 
 	/**
@@ -113,7 +107,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 
 		// Reset to origin
 		$pagenow = $origin_pagenow;
-
 	}
 
 	/**
@@ -134,14 +127,13 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 */
 	public function _admin_scripts_dp() {
 		return array(
-			array( 'jquery-chosen', 'enqueued' ),
-			array( 'edd-admin-scripts', 'enqueued' ),
-			array( 'colorbox', 'enqueued' ),
+			array( 'jquery-chosen',        'enqueued' ),
+			array( 'edd-admin-scripts',    'enqueued' ),
+			array( 'colorbox',             'enqueued' ),
 			array( 'jquery-ui-datepicker', 'enqueued' ),
-			array( 'jquery-ui-dialog', 'enqueued' ),
-//			array( 'jquery-flot', 'enqueued' ),
-			array( 'media-upload', 'enqueued' ),
-			array( 'thickbox', 'enqueued' ),
+			array( 'jquery-ui-dialog',     'enqueued' ),
+			array( 'media-upload',         'enqueued' ),
+			array( 'thickbox',             'enqueued' ),
 		);
 	}
 
@@ -163,11 +155,11 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 */
 	public function _admin_styles_dp() {
 		return array(
-			array( 'jquery-chosen', 'enqueued' ),
+			array( 'jquery-chosen',   'enqueued' ),
 			array( 'wp-color-picker', 'enqueued' ),
-			array( 'colorbox', 'enqueued' ),
-			array( 'thickbox', 'enqueued' ),
-			array( 'edd-admin', 'enqueued' ),
+			array( 'colorbox',        'enqueued' ),
+			array( 'thickbox',        'enqueued' ),
+			array( 'edd-admin',       'enqueued' ),
 		);
 	}
 

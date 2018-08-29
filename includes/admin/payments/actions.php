@@ -85,10 +85,10 @@ function edd_update_payment_details( $data = array() ) {
 
 	$order_update_args = array();
 
-	$status    = $data['edd-payment-status'];
-	$unlimited = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
-	$date      = sanitize_text_field( $data['edd-payment-date'] );
-	$hour      = sanitize_text_field( $data['edd-payment-time-hour'] );
+	$unlimited  = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
+	$new_status = sanitize_key( $data['edd-payment-status'] );
+	$date       = sanitize_text_field( $data['edd-payment-date'] );
+	$hour       = sanitize_text_field( $data['edd-payment-time-hour'] );
 
 	// Restrict to our high and low
 	if ( $hour > 23 ) {
@@ -105,24 +105,33 @@ function edd_update_payment_details( $data = array() ) {
 	} elseif ( $minute < 0 ) {
 		$minute = 00;
 	}
+	
+	// Date
+	$date = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
 
+	// Address
 	$address = $data['edd_order_address'];
 
+	// Totals
 	$curr_total = edd_sanitize_amount( $order->total );
-	$new_total  = edd_sanitize_amount( $_POST['edd-payment-total'] );
-	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
-	$date       = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
+	$curr_tax   = edd_sanitize_amount( $order->tax   );
+	$new_total  = isset( $data['edd-payment-total']  ) ? edd_sanitize_amount( $data['edd-payment-total'] ) : $curr_total;
+	$tax        = isset( $data['edd-payment-tax']    ) ? edd_sanitize_amount( $data['edd-payment-tax']   ) : $curr_tax;
 
+	// Customer
 	$curr_customer_id = sanitize_text_field( $data['edd-current-customer'] );
 	$new_customer_id  = sanitize_text_field( $data['customer-id'] );
 
+	// Totals
 	$new_subtotal = 0.00;
 	$new_tax      = 0.00;
 
 	// Setup purchased Downloads and price options
-	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
+	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] )
+		? $_POST['edd-payment-details-downloads']
+		: false;
 
-	if ( $updated_downloads ) {
+	if ( ! empty( $updated_downloads ) && is_array( $updated_downloads ) ) {
 		foreach ( $updated_downloads as $cart_index => $download ) {
 
 			// Check if the item exists in the database.
@@ -132,13 +141,13 @@ function edd_update_payment_details( $data = array() ) {
 				/** @var EDD\Orders\Order_Item $order_item */
 				$order_item = edd_get_order_item( absint( $download['order_item_id'] ) );
 
-				$quantity   = isset( $download['quantity'] ) ? absint( $download['quantity'] ) : 1;
-				$item_price = isset( $download['item_price'] ) ? $download['item_price'] : 0;
-				$item_tax   = isset( $download['item_tax'] ) ? $download['item_tax'] : 0;
+				$quantity   = isset( $download['quantity']   ) ? absint( $download['quantity'] ) : 1;
+				$item_price = isset( $download['item_price'] ) ? $download['item_price']         : 0;
+				$item_tax   = isset( $download['item_tax']   ) ? $download['item_tax']           : 0;
 
 				// Format any items that have a currency.
 				$item_price = edd_format_amount( $item_price );
-				$item_tax   = edd_format_amount( $item_tax );
+				$item_tax   = edd_format_amount( $item_tax   );
 
 				// Increase running totals.
 				$new_subtotal += ( floatval( $item_price ) * $quantity ) - $order_item->discount;
@@ -338,13 +347,19 @@ function edd_update_payment_details( $data = array() ) {
 		}
 	}
 
+	// Don't set the status in the update call (for back compat)
+	unset( $order_update_args['status'] );
+
+	// Attempt to update the order
 	$updated = edd_update_order( $order_id, $order_update_args );
 
-	// Check if the status has changed, if so, we need to invoke the pertinent status processing method.
-	if ( $order_update_args['status'] !== $order->status ) {
-		edd_update_order_status( $order_id, $status );
+	// Check if the status has changed, if so, we need to invoke the pertinent
+	// status processing method (for back compat)
+	if ( $new_status !== $order->status ) {
+		edd_update_order_status( $order_id, $new_status );
 	}
 
+	// Bail if an error occurred
 	if ( false === $updated ) {
 		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
 	}
