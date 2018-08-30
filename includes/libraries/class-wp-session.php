@@ -179,7 +179,9 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 	 */
 	protected function read_data() {
 		$session         = edd_get_session_by( 'hash', $this->session_id );
-		$this->container = $session->content;
+		$this->container = ! empty( $session->content )
+			? $session->content
+			: '';
 
 		return $this->container;
 	}
