@@ -107,7 +107,7 @@ class Recursive_ArrayAccess implements ArrayAccess {
 	 * @link http://php.net/manual/en/arrayaccess.offsetset.php
 	 *
 	 * @param mixed $offset The offset to assign the value to.
-	 * @param mixed $value  The value to set.
+	 * @param mixed $data   The value to set.
 	 *
 	 * @return void
 	 */
@@ -115,6 +115,7 @@ class Recursive_ArrayAccess implements ArrayAccess {
 		if ( is_array( $data ) ) {
 			$data = new self( $data );
 		}
+
 		if ( $offset === null ) { // don't forget this!
 			$this->container[] = $data;
 		} else {

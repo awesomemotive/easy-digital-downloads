@@ -89,11 +89,7 @@ class EDD_Session {
 			add_filter( 'wp_session_expiration',         array( $this, 'set_expiration_time'         ), 99999 );
 		}
 
-		$hook = ( empty( $this->session ) && ! $this->use_php_sessions )
-			? 'plugins_loaded'
-			: 'init';
-
-		add_action( $hook, array( $this, 'init' ), -1 );
+		$this->init();
 	}
 
 	/**
@@ -146,35 +142,38 @@ class EDD_Session {
 	 * @return mixed Session variable.
 	 */
 	public function get( $key ) {
-		$key    = sanitize_key( $key );
+		$key = sanitize_key( $key );
+
+		if ( empty( $this->session[ $key ] ) ) {
+			return false;
+		}
+
 		$return = false;
 
-		if ( isset( $this->session[ $key ] ) && ! empty( $this->session[ $key ] ) ) {
-			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $this->session[ $key ], $matches );
+		preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $this->session[ $key ], $matches );
 
-			if ( ! empty( $matches ) ) {
-				$this->set( $key, null );
-				return false;
-			}
+		if ( ! empty( $matches ) ) {
+			$this->set( $key, null );
+			return false;
+		}
 
-			if ( is_numeric( $this->session[ $key ] ) ) {
-				$return = $this->session[ $key ];
-			} else {
-				$maybe_json = json_decode( $this->session[ $key ] );
+		if ( is_numeric( $this->session[ $key ] ) ) {
+			$return = $this->session[ $key ];
+		} else {
+			$maybe_json = json_decode( $this->session[ $key ] );
 
-				// Since json_last_error is PHP 5.3+, we have to rely on a `null` value for failing to parse JSON.
-				if ( is_null( $maybe_json ) ) {
-					$is_serialized = is_serialized( $this->session[ $key ] );
-					if ( $is_serialized ) {
-						$value = @unserialize( $this->session[ $key ] );
-						$this->set( $key, (array) $value );
-						$return = $value;
-					} else {
-						$return = $this->session[ $key ];
-					}
+			// Since json_last_error is PHP 5.3+, we have to rely on a `null` value for failing to parse JSON.
+			if ( is_null( $maybe_json ) ) {
+				$is_serialized = is_serialized( $this->session[ $key ] );
+				if ( $is_serialized ) {
+					$value = @unserialize( $this->session[ $key ] );
+					$this->set( $key, (array) $value );
+					$return = $value;
 				} else {
-					$return = json_decode( $this->session[ $key ], true );
+					$return = $this->session[ $key ];
 				}
+			} else {
+				$return = json_decode( $this->session[ $key ], true );
 			}
 		}
 
@@ -223,10 +222,12 @@ class EDD_Session {
 			return;
 		}
 
+		$now = time();
+
 		if ( $set ) {
-			@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
+			@setcookie( 'edd_items_in_cart', '1', $now + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
 		} elseif ( isset( $_COOKIE['edd_items_in_cart'] ) ) {
-			@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+			@setcookie( 'edd_items_in_cart', '', $now - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 		}
 	}
 
@@ -298,7 +299,7 @@ class EDD_Session {
 		}
 
 		// Filter & return.
-		return (bool) apply_filters( 'edd_use_php_sessions', $ret );
+		return (bool) apply_filters( 'edd_use_php_sessions', false );
 	}
 
 	/**
