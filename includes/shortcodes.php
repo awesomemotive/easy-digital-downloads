@@ -590,6 +590,12 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	do_action( 'edd_downloads_list_before', $atts );
 
+	// Adjust excerpt lengths.
+	add_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	// Ensure buttons are not appended to content.
+	remove_filter( 'the_content', 'edd_after_download_content' );
+
 	if ( $downloads->have_posts() ) :
 		$i = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
@@ -651,6 +657,12 @@ function edd_downloads_query( $atts, $content = null ) {
 	endif;
 
 	do_action( 'edd_downloads_list_after', $atts, $downloads );
+
+	// Let other excerpt lengths act independently again.
+	remove_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	// Ensure buttons are appended to content.
+	add_filter( 'the_content', 'edd_after_download_content' );
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
