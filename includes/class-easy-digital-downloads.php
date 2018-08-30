@@ -414,6 +414,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-items.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-transactions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-sessions.php';
 
 		// Database Objects
 		require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-adjustment.php';
@@ -429,6 +430,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-session.php';
 
 		// Database Tables
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustments.php';
@@ -445,6 +447,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-items.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-transactions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-sessions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustment-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-meta.php';
@@ -467,6 +470,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-session.php';
 	}
 
 	/**

@@ -231,6 +231,15 @@ function edd_setup_components() {
 		'meta'   => false
 	) );
 
+	// Register session.
+	edd_register_component( 'session', array(
+		'schema' => '\\EDD\\Database\\Schema\\Sessions',
+		'table'  => '\\EDD\\Database\\Tables\\Sessions',
+		'query'  => '\\EDD\\Database\\Queries\\Session',
+		'object' => '\\EDD\\Database\\Row\\Session',
+		'meta'   => false
+	) );
+
 	// Set the locally static setup var.
 	$setup = true;
 

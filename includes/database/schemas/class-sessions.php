@@ -1,0 +1,101 @@
+<?php
+/**
+ * Sessions Schema Class.
+ *
+ * @package     EDD
+ * @subpackage  Database\Schemas
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.0
+ */
+namespace EDD\Database\Schemas;
+
+// Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
+
+use EDD\Database\Schema;
+
+/**
+ * Notes Schema Class.
+ *
+ * @since 3.0
+ */
+class Sessions extends Schema {
+
+	/**
+	 * Array of database column objects
+	 *
+	 * @since 3.0
+	 * @access public
+	 * @var array
+	 */
+	public $columns = array(
+
+		// id
+		array(
+			'name'       => 'id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'extra'      => 'auto_increment',
+			'primary'    => true,
+			'sortable'   => true
+		),
+
+		// key
+		array(
+			'name'       => 'hash',
+			'type'       => 'varchar',
+			'length'     => '100',
+			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true,
+			'cache_key'  => true,
+		),
+
+		// content
+		array(
+			'name'       => 'content',
+			'type'       => 'longtext',
+			'default'    => '',
+			'searchable' => false,
+			'in'         => false,
+			'not_in'     => false
+		),
+
+		// date_created
+		array(
+			'name'       => 'date_created',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'created'    => true,
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// date_modified
+		array(
+			'name'       => 'date_modified',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'modified'   => true,
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// date_expires
+		array(
+			'name'       => 'date_expires',
+			'type'       => 'datetime',
+			'default'    => '0000-00-00 00:00:00',
+			'modified'   => true,
+			'date_query' => true,
+			'sortable'   => true
+		),
+
+		// uuid
+		array(
+			'uuid'       => true,
+		)
+	);
+}
