@@ -155,7 +155,7 @@ class Tax_Rates_List_Table extends List_Table {
 
 		$checkbox = '<span class="edd-tax-whole-country">' . EDD()->html->checkbox( array(
 			'name'    => 'tax_rates[' . $this->tax_rate_key . '][global]',
-			'current' => (bool) 'country' === $adjustment->scope,
+			'current' => 'country' === $adjustment->scope ? '1' : null,
 			'label'   => __( 'Apply to whole country', 'easy-digital-downloads' ),
 		) ) . '</span>';
 
@@ -201,7 +201,7 @@ class Tax_Rates_List_Table extends List_Table {
 	 */
 	private function tax_rates_data() {
 		// Get tax rates
-		return edd_get_tax_rates( array( 'number' => 1000, 'status' => 'active' ), OBJECT );
+		return edd_get_tax_rates( array( 'number' => 1000, 'status' => 'active', 'orderby' => 'date_modified' ), OBJECT );
 	}
 
 	/**
