@@ -626,6 +626,8 @@ function edd_get_registered_settings() {
 						'desc'    => __( 'Choose the payment gateways you want to enable.', 'easy-digital-downloads' ),
 						'type'    => 'gateways',
 						'options' => $gateways,
+						'tooltip_title' => __( 'Adjust the Order', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Drag and drop the payment gateways to determine the order they appear in the checkout. Default gateway always appears first.', 'easy-digital-downloads' ),
 					),
 					'default_gateway' => array(
 						'id'      => 'default_gateway',
