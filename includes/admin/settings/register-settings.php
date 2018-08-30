@@ -994,6 +994,7 @@ function edd_settings_sanitize( $input = array() ) {
 		$doing_section = true;
 	}
 
+	$settings      = edd_get_registered_settings();
 	$setting_types = edd_get_registered_settings_types();
 	$input         = $input ? $input : array();
 
@@ -1041,6 +1042,8 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 
 		if ( $doing_section ) {
+			$registered_setting = $settings[ $tab ][ $section ][ $key ];
+
 			switch( $type ) {
 				case 'checkbox':
 				case 'gateways':
@@ -1050,10 +1053,17 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'rich_editor':
 				case 'text':
 					if ( array_key_exists( $key, $input ) && ! isset( $input[ $key ] ) ) {
 						unset( $output[ $key ] );
 					}
+					
+					// Override a blank setting with the standard.
+					if ( isset( $registered_setting['allow_blank'] ) && ! $registered_setting['allow_blank'] && '' === $input[ $key ] ) {
+						$output[ $key ] = $registered_setting['std'];
+					}
+
 					break;
 				default:
 					if ( ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
