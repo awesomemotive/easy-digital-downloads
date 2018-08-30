@@ -1186,7 +1186,7 @@ function edd_tools_sysinfo_get() {
 	// Try to identify the hosting provider
 	$host = edd_get_host();
 
-	$return  = '### Begin System Info ###' . "\n\n";
+	$return  = '### Begin System Info (Generated ' . date( 'Y-m-d H:i:s' ) . ') ###' . "\n\n";
 
 	// Start with the basics...
 	$return .= '-- Site Info' . "\n\n";
