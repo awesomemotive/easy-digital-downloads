@@ -97,7 +97,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 		this.$el.html( this.template( _.extend(
 			this.model.toJSON(),
 			{
-				amount: this.model.formattedAmount(),
+				formattedAmount: this.model.formattedAmount(),
 			}
 		) ) );
 

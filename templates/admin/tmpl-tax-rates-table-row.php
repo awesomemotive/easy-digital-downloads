@@ -31,8 +31,8 @@
 </td>
 
 <td>
-	{{ data.amount }}
-	<input type="hidden" name="tax_rates[{{ data.id }}][rate]" value="{{ data.rate }}" />
+	{{ data.formattedAmount }}
+	<input type="hidden" name="tax_rates[{{ data.id }}][rate]" value="{{ data.amount }}" />
 </td>
 
 <td class="edd-tax-rates-table-actions">
