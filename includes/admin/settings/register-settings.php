@@ -843,16 +843,10 @@ function edd_get_registered_settings() {
 					),
 				),
 				'rates' => array(
-					'tax_rates' => array(
-						'id'   => 'tax_rates',
-						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions. Enter <code>6.5</code> for 6.5%.', 'easy-digital-downloads' ),
-						'type' => 'tax_rates',
-					),
 					'tax_rate' => array(
 						'id'            => 'tax_rate',
-						'name'          => __( 'General Rate', 'easy-digital-downloads' ),
-						'desc'          => __( 'Customers not in a region above will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
+						'name'          => __( 'Base Rate', 'easy-digital-downloads' ),
+						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
 						'type'          => 'number',
 						'size'          => 'small',
 						'step'          => '0.0001',
@@ -860,7 +854,13 @@ function edd_get_registered_settings() {
 						'max'           => '99',
 						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-					)
+					),
+					'tax_rates' => array(
+						'id'   => 'tax_rates',
+						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
+						'desc' => __( 'Add tax rates for specific regions to override the base rate.', 'easy-digital-downloads' ),
+						'type' => 'tax_rates',
+					),
 				)
 			) ),
 
@@ -2603,22 +2603,37 @@ function edd_shop_states_callback( $args ) {
  */
 function edd_tax_rates_callback( $args ) {
 	$rates = edd_get_tax_rates( array(), OBJECT );
-	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	ob_start(); ?>
-	<p><?php echo $args['desc']; ?></p>
-	<?php
-	$tax_rates_table = new \EDD\Admin\Settings\Tax_Rates_List_Table();
-	$tax_rates_table->prepare_items();
-	$tax_rates_table->display();
-	?>
-	<p>
-		<span class="button-secondary" id="edd_add_tax_rate">
-			<?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?>
-		</span>
-	</p>
-	<?php
-	echo ob_get_clean();
+	wp_enqueue_script( 'edd-admin-tax-rates' );
+	wp_enqueue_style( 'edd-admin-tax-rates' );
+
+	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
+		'rates' => $rates,
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+	) );
+?>
+
+<p><?php echo $args['desc']; ?></p>
+
+<div id="edd-admin-tax-rates"></div>
+
+<script type="text/html" id="tmpl-edd-admin-tax-rates-table-meta">
+	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-meta' ); ?>
+</script>
+
+<script type="text/html" id="tmpl-edd-admin-tax-rates-table-row">
+	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-row' ); ?>
+</script>
+
+<script type="text/html" id="tmpl-edd-admin-tax-rates-table-add">
+	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-add' ); ?>
+</script>
+
+<script type="text/html" id="tmpl-edd-admin-tax-rates-table-bulk-actions">
+	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-bulk-actions' ); ?>
+</script>
+
+<?php
 }
 
 /**
