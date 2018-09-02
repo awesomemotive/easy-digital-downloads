@@ -529,10 +529,11 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		collection: new TaxRates(),
 	} );
 
-	// Populate collection with bootstrapped data.
-	// @todo Can set these all at once if the schema is updated to reflect the columns used.
+	var rates = [];
+
+	// Normalize rate data.
 	_.each( eddTaxRates.rates, function( rate ) {
-		eddTaxRatesManager.collection.add( {
+		rates.push( {
 			id: rate.id,
 			country: rate.name,
 			region: rate.description,
@@ -541,6 +542,9 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			status: rate.status,
 		} );
 	} );
+
+	// Add initial rates.
+	eddTaxRatesManager.collection.set( rates );
 
 	// Render manager.
 	eddTaxRatesManager.render();
