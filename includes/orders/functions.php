@@ -1235,6 +1235,10 @@ add_action( 'edd_add_order', 'edd_add_manual_order' );
  * @param WP_Admin_Bar $wp_admin_bar Admin bar object.
  */
 function edd_wp_admin_bar_new_order( $wp_admin_bar ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	$href_query_args = array(
 		'post_type' => 'download',
 		'page'      => 'edd-payment-history',
