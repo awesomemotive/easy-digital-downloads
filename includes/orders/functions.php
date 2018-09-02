@@ -1200,12 +1200,24 @@ function edd_add_manual_order( $args = array() ) {
 	$customer->recalculate_stats();
 	edd_increase_total_earnings( $order_total );
 
-	// Update totals.
+	// Setup order number.
+	$order_number = '';
+
+	if ( edd_get_option( 'enable_sequential' ) ) {
+		$number = edd_get_next_payment_number();
+
+		$order_number = edd_format_payment_number( $number );
+
+		update_option( 'edd_last_payment_number', $number );
+	}
+
+	// Update totals & maybe add order number.
 	edd_update_order( $order_id, array(
-		'subtotal' => $order_subtotal,
-		'tax'      => $total_tax,
-		'discount' => $total_discount,
-		'total'    => $order_total,
+		'order_number' => $order_number,
+		'subtotal'     => $order_subtotal,
+		'tax'          => $total_tax,
+		'discount'     => $total_discount,
+		'total'        => $order_total,
 	) );
 
 	// Stop purchase receipt from being sent.
