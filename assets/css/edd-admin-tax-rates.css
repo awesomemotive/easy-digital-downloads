@@ -48,6 +48,14 @@
 	margin-left: 2px;
 }
 
+#edd-admin-tax-rates .edd-tax-rate-row--inactive {
+	display: none;
+}
+
+#edd-admin-tax-rates .has-inactive .edd-tax-rate-row--inactive {
+	display: table-row;
+}
+
 #edd-admin-tax-rates .edd-tax-rate-row--inactive td {
 	color: #ccc;
 }

@@ -1421,24 +1421,11 @@ function edd_settings_sanitize_taxes( $input ) {
 		return $input;
 	}
 
-	$new_rates = ! empty( $_POST['tax_rates'] )
-		? array_values( $_POST['tax_rates'] )
+	$tax_rates = ! empty( $_POST['tax_rates'] )
+		? $_POST['tax_rates']
 		: array();
 
-	foreach ( $new_rates as $key => $rate ) {
-		$rate = array_filter( $rate );
-		if ( empty( $rate ) ) {
-			unset( $new_rates[ $key ] );
-		}
-	}
-
-	$new_rates = ! empty( $new_rates )
-		? array_values( $new_rates )
-		: array();
-
-		$active_tax_adjustment_ids = array();
-
-	foreach ( $new_rates as $tax_rate ) {
+	foreach ( $tax_rates as $tax_rate ) {
 
 		$scope = isset( $tax_rate['global'] )
 			? 'country'
@@ -1449,50 +1436,23 @@ function edd_settings_sanitize_taxes( $input ) {
 			: '';
 
 		$adjustment_data = array(
-			'name'        => $tax_rate['country'],
+			'name'        => sanitize_text_field( $tax_rate['country'] ),
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
 			'amount'      => floatval( $tax_rate['rate'] ),
 			'description' => $region,
+			'status'      => sanitize_text_field( $tax_rate['status'] ),
 		);
 
 		$existing_adjustment = edd_get_adjustments( $adjustment_data );
 
 		if ( ! empty( $existing_adjustment ) ) {
-			
-			// An adjustment with these arguments already exists.
-			$adjustment = $existing_adjustment[0];
-
-			// If the status is 'inactive', just add it as 'active'.
-			if ( 'active' !== $adjustment->status ) {
-				edd_update_adjustment( $adjustment->id, array( 'status' => 'active' ) );
-			}
-
-			$active_tax_adjustment_ids[] = $adjustment->id;
-
+			edd_update_adjustment( $adjustment->id, $adjustment_data );
 		} else {
-			
-			// No adjustment was found for these areguments, add it as a new one.
-			$adjustment_data['status']   = 'active';
-			$active_tax_adjustment_ids[] = edd_add_adjustment( $adjustment_data );
-
+			edd_add_adjustment( $adjustment_data );
 		}
 
-	}
-
-	// Now that we have set the tax rates we want active, we need to mark the rest as inactive.
-	$old_tax_rates = edd_get_adjustments(
-		array(
-			'type'       => 'tax_rate',
-			'status'     => 'active',
-			'id__not_in' => $active_tax_adjustment_ids,
-			'number'     => 1000,
-		)
-	);
-
-	foreach ( $old_tax_rates as $old_tax_rate ) {
-		edd_update_adjustment( $old_tax_rate->id, array( 'status' => 'inactive' ) );
 	}
 
 	return $input;
