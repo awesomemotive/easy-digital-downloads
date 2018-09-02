@@ -52,33 +52,7 @@ class Customer_Addresses extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
-				$address = maybe_unserialize( $result->meta_value );
-
-				$user_id = absint( $result->user_id );
-
-				$customer = edd_get_customer_by( 'user_id', $user_id );
-
-				$address = wp_parse_args( $address, array(
-					'line1'   => '',
-					'line2'   => '',
-					'city'    => '',
-					'state'   => '',
-					'zip'     => '',
-					'country' => '',
-				) );
-
-				if ( $customer ) {
-					edd_add_customer_address( array(
-						'customer_id' => $customer->id,
-						'type'        => 'primary',
-						'address'     => $address['line1'],
-						'address2'    => $address['line2'],
-						'city'        => $address['city'],
-						'region'      => $address['state'],
-						'postal_code' => $address['zip'],
-						'country'     => $address['country'],
-					) );
-				}
+				Data_Migrator::customer_addresses( $result );
 			}
 
 			return true;
