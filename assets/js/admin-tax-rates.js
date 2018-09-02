@@ -59,6 +59,17 @@ var TaxRates = Backbone.Collection.extend( {
 } );
 
 /**
+ * Empty tax rates table.
+ */
+var TaxRatesTableEmpty = wp.Backbone.View.extend( {
+	// Insert as a <tr>
+	tagName: 'tr',
+
+	// See https://codex.wordpress.org/Javascript_Reference/wp.template
+	template: wp.template( 'edd-admin-tax-rates-table-row-empty' ),
+} );
+
+/**
  * A row inside a table of rates.
  */
 var TaxRatesTableRow = wp.Backbone.View.extend( {
@@ -173,7 +184,8 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 		this.listenTo( this.collection, 'change', this.render );
 		this.listenTo( this.collection, 'sort', this.render );
 
-		this.listenTo( this.collection, 'add', this.addOne );
+		// Rerender the whole list so the "empty" placeholder can be removed.
+		this.listenTo( this.collection, 'add', this.render );
 	},
 
 	/**
@@ -184,6 +196,11 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 
 		// Clear to handle sorting.
 		this.views.remove();
+
+		// Show empty placeholder.
+		if ( 0 === this.collection.models.length ) {
+			return this.views.add( new TaxRatesTableEmpty() );
+		}
 
 		// Remove inactive if needed.
 		var toShow = this.collection.models;
@@ -201,17 +218,6 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 				model: rate,
 			} ) );
 		} );
-	},
-
-	/**
-	 * Add ad single rate.
-	 *
-	 * @param {Object} rate Tax rate.
-	 */
-	addOne: function( rate ) {
-		this.views.add( new TaxRatesTableRow( {
-			model: rate,
-		} ) );
 	},
 } );
 
