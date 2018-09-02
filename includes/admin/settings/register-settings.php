@@ -1442,14 +1442,18 @@ function edd_settings_sanitize_taxes( $input ) {
 			'amount_type' => 'percent',
 			'amount'      => floatval( $tax_rate['rate'] ),
 			'description' => $region,
-			'status'      => sanitize_text_field( $tax_rate['status'] ),
 		);
 
 		$existing_adjustment = edd_get_adjustments( $adjustment_data );
 
 		if ( ! empty( $existing_adjustment ) ) {
+			$adjustment                = $existing_adjustment[0];
+			$adjustment_data['status'] = sanitize_text_field( $tax_rate['status'] );
+
 			edd_update_adjustment( $adjustment->id, $adjustment_data );
 		} else {
+			$adjustment_data['status'] = 'active';
+
 			edd_add_adjustment( $adjustment_data );
 		}
 
