@@ -13,7 +13,8 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	public function test_file_hooks() {
 		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_load_scripts'         ) );
 		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_register_styles'      ) );
-		$this->assertNotFalse( has_action( 'admin_print_scripts', 'edd_load_admin_scripts'   ) );
+		$this->assertNotFalse( has_action( 'admin_print_scripts', 'edd_print_admin_scripts'  ) );
+		$this->assertNotFalse( has_action( 'admin_print_styles',  'edd_print_admin_styles'   ) );
 		$this->assertNotFalse( has_action( 'admin_head',          'edd_admin_downloads_icon' ) );
 	}
 
