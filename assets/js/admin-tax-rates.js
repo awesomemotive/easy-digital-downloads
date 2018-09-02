@@ -324,10 +324,13 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	 * Initialize.
 	 */
 	initialize: function() {
-		this.data = {
+		this.model = new TaxRate( {
 			global: true,
 			unsaved: true,
-		};
+		} );
+
+		this.listenTo( this.model, 'change:country', this.updateRegion );
+		this.listenTo( this.model, 'change:global', this.updateRegion );
 	},
 
 	/**
@@ -346,7 +349,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 
 		var data = {
 			action: 'edd_get_shop_states',
-			country: this.data.country,
+			country: this.model.get( 'country' ),
 			nonce: eddTaxRates.nonce,
 			field_name: 'tax_rate_region'
 		};
@@ -354,7 +357,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 		$.post( ajaxurl, data, function( response ) {
 			self.views.set( '#tax_rate_region_wrapper', new TaxRatesTableRegion( {
 				states: response,
-				global: self.data.global,
+				global: self.model.get( 'global' ),
 			} ) );
 		} );
 	},
@@ -365,8 +368,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setCountry: function( event ) {
-		this.data.country = event.target.options[event.target.selectedIndex].value;
-		this.updateRegion();
+		this.model.set( 'country', event.target.options[event.target.selectedIndex].value );
 	},
 
 	/**
@@ -383,7 +385,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 			value = event.target.options[event.target.selectedIndex].value;
 		}
 
-		this.data.region = value;
+		this.model.set( 'region', value );
 	},
 
 	/**
@@ -392,8 +394,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setGlobal: function( event ) {
-		this.data.global = event.target.checked;
-		this.updateRegion();
+		this.model.set( 'global', event.target.checked );
 	},
 
 	/**
@@ -402,7 +403,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setAmount: function( event ) {
-		this.data.amount = event.target.value;
+		this.model.set( 'amount', event.target.value );
 	},
 
 	/**
@@ -413,11 +414,21 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	addTaxRate: function( event ) {
 		event.preventDefault();
 
-		this.collection.add( this.data );
+		// Merge cid as ID to make this a unique model.
+		this.collection.add( _.extend(
+			this.model.attributes,
+			{
+				id: this.model.cid,
+			}
+		) );
+
 		this.render();
 
-		// Ensure state matches default template output.
-		this.data.global = true;
+		// Reset model.
+		this.model = new TaxRate( {
+			global: true,
+			unsaved: true,
+		} );
 	},
 } );
 
@@ -538,6 +549,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	// @todo Can set these all at once if the schema is updated to reflect the columns used.
 	_.each( eddTaxRates.rates, function( rate ) {
 		eddTaxRatesManager.collection.add( {
+			id: rate.id,
 			country: rate.name,
 			region: rate.description,
 			global: 'country' === rate.scope,
