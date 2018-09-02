@@ -37,7 +37,7 @@
 
 <td class="edd-tax-rates-table-actions">
 	<# if ( data.unsaved ) { #>
-		<button class="button button-secondary button-small button-link remove" data-cid="{{ data.cid }}"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></button>
+		<button class="button button-secondary button-small button-link remove" data-cid="{{ data.id }}"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></button>
 	<# } else if ( 'active' === data.status ) { #>
 		<button class="button button-secondary button-small button-link deactivate"><?php esc_html_e( 'Deactivate', 'easy-digital-downloads' ); ?></button>
 	<# } else { #>

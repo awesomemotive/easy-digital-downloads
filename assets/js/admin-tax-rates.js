@@ -86,10 +86,10 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 
 	// Watch events.
 	events: {
-		'click .remove': 'remove',
-		'click .activate': 'activate',
-		'click .deactivate': 'deactivate',
-		'change [type="checkbox"]': 'select',
+		'click .remove': 'removeRow',
+		'click .activate': 'activateRow',
+		'click .deactivate': 'deactivateRow',
+		'change [type="checkbox"]': 'selectRow',
 	},
 
 	/**
@@ -119,12 +119,14 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 	/**
 	 * Remove a rate (can only be done if it has not been saved to the database).
 	 *
+	 * Don't use this.model.destroy() to avoid sending a DELETE request.
+	 *
 	 * @param {Object} event Event.
 	 */
-	deactivate: function( event ) {
+	removeRow: function( event ) {
 		event.preventDefault();
 
-		this.model.destroy();
+		this.collection.remove( this.model );
 	},
 
 	/**
@@ -132,7 +134,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 	 *
 	 * @param {Object} event Event.
 	 */
-	activate: function( event ) {
+	activateRow: function( event ) {
 		event.preventDefault();
 
 		this.model.set( 'status', 'active' );
@@ -143,7 +145,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 	 *
 	 * @param {Object} event Event.
 	 */
-	deactivate: function( event ) {
+	deactivateRow: function( event ) {
 		event.preventDefault();
 
 		this.model.set( 'status', 'inactive' );
@@ -154,7 +156,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 	 *
 	 * @param {Object} event Event.
 	 */
-	select: function( event ) {
+	selectRow: function( event ) {
 		var self = this;
 		var checked = event.target.checked;
 
@@ -181,11 +183,8 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 	 * @return {undefined}
 	 */
 	initialize: function() {
-		this.listenTo( this.collection, 'change', this.render );
-		this.listenTo( this.collection, 'sort', this.render );
-
-		// Rerender the whole list so the "empty" placeholder can be removed.
 		this.listenTo( this.collection, 'add', this.render );
+		this.listenTo( this.collection, 'remove', this.render );
 	},
 
 	/**
@@ -202,17 +201,8 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 			return this.views.add( new TaxRatesTableEmpty() );
 		}
 
-		// Remove inactive if needed.
-		var toShow = this.collection.models;
-
-		if ( ! this.collection.showAll ) {
-			toShow = _.filter( this.collection.models, function( model ) {
-				return 'active' === model.get( 'status' );
-			} );
-		}
-
 		// Add items.
-		_.each( toShow, function( rate ) {
+		_.each( this.collection.models, function( rate ) {
 			self.views.add( new TaxRatesTableRow( {
 				collection: self.collection,
 				model: rate,
@@ -423,12 +413,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 		) );
 
 		this.render();
-
-		// Reset model.
-		this.model = new TaxRate( {
-			global: true,
-			unsaved: true,
-		} );
+		this.initialize();
 	},
 } );
 
@@ -440,7 +425,7 @@ var TaxRatesTable = wp.Backbone.View.extend( {
 	tagName: 'table',
 
 	// Set class.
-	className: 'wp-list-table widefat fixed striped tax-rates',
+	className: 'wp-list-table widefat fixed tax-rates',
 
 	// Set ID.
 	id: 'edd_tax_rates',
@@ -511,7 +496,9 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 	 */
 	showHide: function( event ) {
 		this.collection.showAll = ! event.target.checked;
-		this.collection.trigger( 'change' );
+
+		// @hack -- shouldn't access this table directly.
+		document.getElementById( 'edd_tax_rates' ).classList.toggle( 'has-inactive', this.collection.showAll );
 	},
 } );
 
