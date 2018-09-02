@@ -1,4 +1,4 @@
-/* global _, Backbone, wp, eddTaxRates, ajaxurl */
+/* global _, edd_vars, Backbone, wp, eddTaxRates, ajaxurl */
 
 // These should be defined globally for all of EDD.
 var eddTaxRatesChosenVars = {
@@ -23,7 +23,7 @@ var TaxRate = Backbone.Model.extend( {
 		amount: 0,
 		status: 'active',
 		unsaved: false,
-		selected: false,
+		selected: false
 	},
 
 	/**
@@ -39,7 +39,7 @@ var TaxRate = Backbone.Model.extend( {
 		}
 
 		return amount + '%';
-	},
+	}
 } );
 
 /**
@@ -55,7 +55,7 @@ var TaxRates = Backbone.Collection.extend( {
 	initialize: function() {
 		this.showAll = false;
 		this.selected = [];
-	},
+	}
 } );
 
 /**
@@ -66,7 +66,7 @@ var TaxRatesTableEmpty = wp.Backbone.View.extend( {
 	tagName: 'tr',
 
 	// See https://codex.wordpress.org/Javascript_Reference/wp.template
-	template: wp.template( 'edd-admin-tax-rates-table-row-empty' ),
+	template: wp.template( 'edd-admin-tax-rates-table-row-empty' )
 } );
 
 /**
@@ -89,7 +89,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 		'click .remove': 'removeRow',
 		'click .activate': 'activateRow',
 		'click .deactivate': 'deactivateRow',
-		'change [type="checkbox"]': 'selectRow',
+		'change [type="checkbox"]': 'selectRow'
 	},
 
 	/**
@@ -108,7 +108,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 		this.$el.html( this.template( _.extend(
 			this.model.toJSON(),
 			{
-				formattedAmount: this.model.formattedAmount(),
+				formattedAmount: this.model.formattedAmount()
 			}
 		) ) );
 
@@ -167,7 +167,7 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 		} else {
 			this.collection.selected.push( this.model.cid );
 		}
-	},
+	}
 } );
 
 /**
@@ -205,10 +205,10 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 		_.each( this.collection.models, function( rate ) {
 			self.views.add( new TaxRatesTableRow( {
 				collection: self.collection,
-				model: rate,
+				model: rate
 			} ) );
 		} );
-	},
+	}
 } );
 
 /**
@@ -220,7 +220,7 @@ var TaxRatesTableMeta = wp.Backbone.View.extend( {
 
 	// Watch events.
 	events: {
-		'change [type="checkbox"]': 'selectAll',
+		'change [type="checkbox"]': 'selectAll'
 	},
 
 	/**
@@ -239,7 +239,7 @@ var TaxRatesTableMeta = wp.Backbone.View.extend( {
 			// Add to global selection.
 			self.collection.selected.push( model.cid );
 		} );
-	},
+	}
 } );
 
 var TaxRatesTableRegion = wp.Backbone.View.extend( {
@@ -266,7 +266,7 @@ var TaxRatesTableRegion = wp.Backbone.View.extend( {
 			this.$el.html( this.states );
 			this.$el.find( 'select' ).chosen( eddTaxRatesChosenVars );
 		}
-	},
+	}
 } );
 
 /**
@@ -293,7 +293,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 
 		// Can be click increase or keyboard.
 		'keyup #tax_rate_amount': 'setAmount',
-		'change #tax_rate_amount': 'setAmount',
+		'change #tax_rate_amount': 'setAmount'
 	},
 
 	/**
@@ -302,7 +302,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	initialize: function() {
 		this.model = new TaxRate( {
 			global: true,
-			unsaved: true,
+			unsaved: true
 		} );
 
 		this.listenTo( this.model, 'change:country', this.updateRegion );
@@ -333,7 +333,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 		$.post( ajaxurl, data, function( response ) {
 			self.views.set( '#tax_rate_region_wrapper', new TaxRatesTableRegion( {
 				states: response,
-				global: self.model.get( 'global' ),
+				global: self.model.get( 'global' )
 			} ) );
 		} );
 	},
@@ -394,13 +394,13 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 		this.collection.add( _.extend(
 			this.model.attributes,
 			{
-				id: this.model.cid,
+				id: this.model.cid
 			}
 		) );
 
 		this.render();
 		this.initialize();
-	},
+	}
 } );
 
 /**
@@ -411,7 +411,7 @@ var TaxRatesTable = wp.Backbone.View.extend( {
 	tagName: 'table',
 
 	// Set class.
-	className: 'wp-list-table widefat fixed tax-rates',
+	className: 'wp-list-table widefat fixed striped tax-rates',
 
 	// Set ID.
 	id: 'edd_tax_rates',
@@ -422,22 +422,22 @@ var TaxRatesTable = wp.Backbone.View.extend( {
 	render: function() {
 		this.views.add( new TaxRatesTableMeta( {
 			tagName: 'thead',
-			collection: this.collection,
+			collection: this.collection
 		} ) );
 
 		this.views.add( new TaxRatesTableRows( {
-			collection: this.collection,
+			collection: this.collection
 		} ) );
 
 		this.views.add( new TaxRatesTableAdd( {
-			collection: this.collection,
+			collection: this.collection
 		} ) );
 
 		this.views.add( new TaxRatesTableMeta( {
 			tagName: 'tfoot',
-			collection: this.collection,
+			collection: this.collection
 		} ) );
-	},
+	}
 } );
 
 /**
@@ -450,7 +450,7 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 	// Watch events.
 	events: {
 		'click .edd-admin-tax-rates-table-filter': 'filter',
-		'change .edd-admin-tax-rates-table-hide input': 'showHide',
+		'change .edd-admin-tax-rates-table-hide input': 'showHide'
 	},
 
 	/**
@@ -470,7 +470,7 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 
 		_.each( this.collection.selected, function( cid ) {
 			var model = self.collection.get( {
-				cid: cid,
+				cid: cid
 			} );
 
 			model.set( 'status', status.value );
@@ -487,7 +487,7 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 
 		// @hack -- shouldn't access this table directly.
 		document.getElementById( 'edd_tax_rates' ).classList.toggle( 'has-inactive', this.collection.showAll );
-	},
+	}
 } );
 
 /**
@@ -502,13 +502,13 @@ var TaxManager = wp.Backbone.View.extend( {
 	 */
 	render: function() {
 		this.views.add( new TaxRatesBulkActions( {
-			collection: this.collection,
+			collection: this.collection
 		} ) );
 
 		this.views.add( new TaxRatesTable( {
-			collection: this.collection,
+			collection: this.collection
 		} ) );
-	},
+	}
 } );
 
 /**
@@ -517,7 +517,7 @@ var TaxManager = wp.Backbone.View.extend( {
 document.addEventListener( 'DOMContentLoaded', function() {
 	// Start manager with a blank collection.
 	var eddTaxRatesManager = new TaxManager( {
-		collection: new TaxRates(),
+		collection: new TaxRates()
 	} );
 
 	var rates = [];
@@ -530,7 +530,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			region: rate.description,
 			global: 'country' === rate.scope,
 			amount: rate.amount,
-			status: rate.status,
+			status: rate.status
 		} );
 	} );
 
