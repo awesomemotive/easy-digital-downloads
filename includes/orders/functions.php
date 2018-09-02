@@ -1228,6 +1228,31 @@ function edd_add_manual_order( $args = array() ) {
 add_action( 'edd_add_order', 'edd_add_manual_order' );
 
 /**
+ * Add "Order" to the "+ New" admin menu bar.
+ *
+ * @since 3.0
+ *
+ * @param WP_Admin_Bar $wp_admin_bar Admin bar object.
+ */
+function edd_wp_admin_bar_new_order( $wp_admin_bar ) {
+	$href_query_args = array(
+		'post_type' => 'download',
+		'page'      => 'edd-payment-history',
+		'view'      => 'add-order',
+	);
+
+	$menu = array(
+		'id'     => 'new-order',
+		'title'  => __( 'Order', 'easy-digital-downloads' ),
+		'parent' => 'new-content',
+		'href'   => esc_url( add_query_arg( $href_query_args, admin_url( 'edit.php' ) ) ),
+	);
+
+	$wp_admin_bar->add_menu( $menu );
+}
+add_action( 'admin_bar_menu', 'edd_wp_admin_bar_new_order', 99 );
+
+/**
  * Clone an existing order.
  *
  * @since 3.0
