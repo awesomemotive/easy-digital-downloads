@@ -108,7 +108,8 @@ function edd_clear_errors() {
  */
 function edd_unset_error( $error_id ) {
 	$errors = edd_get_errors();
-	if ( $errors ) {
+
+	if ( $errors && isset( $errors[ $error_id ] ) ) {
 		unset( $errors[ $error_id ] );
 		EDD()->session->set( 'edd_errors', $errors );
 	}
