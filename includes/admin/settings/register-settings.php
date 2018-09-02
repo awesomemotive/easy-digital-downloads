@@ -2611,29 +2611,29 @@ function edd_tax_rates_callback( $args ) {
 		'rates' => $rates,
 		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
 	) );
+
+	$templates = array(
+		'meta',
+		'row',
+		'row-empty',
+		'add',
+		'bulk-actions'
+	);
+
+	echo '<p>' . $args['desc'] . '</p>';
+
+	echo '<div id="edd-admin-tax-rates"></div>';
+
+	foreach ( $templates as $tmpl ) {
 ?>
 
-<p><?php echo $args['desc']; ?></p>
-
-<div id="edd-admin-tax-rates"></div>
-
-<script type="text/html" id="tmpl-edd-admin-tax-rates-table-meta">
-	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-meta' ); ?>
-</script>
-
-<script type="text/html" id="tmpl-edd-admin-tax-rates-table-row">
-	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-row' ); ?>
-</script>
-
-<script type="text/html" id="tmpl-edd-admin-tax-rates-table-add">
-	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-add' ); ?>
-</script>
-
-<script type="text/html" id="tmpl-edd-admin-tax-rates-table-bulk-actions">
-	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-bulk-actions' ); ?>
+<script type="text/html" id="tmpl-edd-admin-tax-rates-table-<?php echo esc_attr( $tmpl ); ?>">
+	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-' . $tmpl ); ?>
 </script>
 
 <?php
+	}
+
 }
 
 /**
