@@ -224,15 +224,6 @@ var TaxRatesTableMeta = wp.Backbone.View.extend( {
 	},
 
 	/**
-	 * Render a collection of rows.
-	 */
-	render: function() {
-		this.$el.html( this.template( {
-			selected: this.selected ? 'checked' : '',
-		} ) );
-	},
-
-	/**
 	 * Select all items in the collection.
 	 *
 	 * @param {Object} event Event.
