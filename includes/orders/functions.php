@@ -1200,12 +1200,24 @@ function edd_add_manual_order( $args = array() ) {
 	$customer->recalculate_stats();
 	edd_increase_total_earnings( $order_total );
 
-	// Update totals.
+	// Setup order number.
+	$order_number = '';
+
+	if ( edd_get_option( 'enable_sequential' ) ) {
+		$number = edd_get_next_payment_number();
+
+		$order_number = edd_format_payment_number( $number );
+
+		update_option( 'edd_last_payment_number', $number );
+	}
+
+	// Update totals & maybe add order number.
 	edd_update_order( $order_id, array(
-		'subtotal' => $order_subtotal,
-		'tax'      => $total_tax,
-		'discount' => $total_discount,
-		'total'    => $order_total,
+		'order_number' => $order_number,
+		'subtotal'     => $order_subtotal,
+		'tax'          => $total_tax,
+		'discount'     => $total_discount,
+		'total'        => $order_total,
 	) );
 
 	// Stop purchase receipt from being sent.
@@ -1226,6 +1238,41 @@ function edd_add_manual_order( $args = array() ) {
 	) ) );
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
+
+/**
+ * Add "Order" to the "+ New" admin menu bar.
+ *
+ * @since 3.0
+ *
+ * @param WP_Admin_Bar $wp_admin_bar Admin bar object.
+ */
+function edd_wp_admin_bar_new_order( $wp_admin_bar ) {
+	// Bail if no admin bar
+	if ( empty( $wp_admin_bar ) ) {
+		return;
+	}
+
+	// Bail if incorrect user.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	$href_query_args = array(
+		'post_type' => 'download',
+		'page'      => 'edd-payment-history',
+		'view'      => 'add-order',
+	);
+
+	$menu = array(
+		'id'     => 'new-order',
+		'title'  => __( 'Order', 'easy-digital-downloads' ),
+		'parent' => 'new-content',
+		'href'   => esc_url( add_query_arg( $href_query_args, admin_url( 'edit.php' ) ) ),
+	);
+
+	$wp_admin_bar->add_menu( $menu );
+}
+add_action( 'admin_bar_menu', 'edd_wp_admin_bar_new_order', 99 );
 
 /**
  * Clone an existing order.
