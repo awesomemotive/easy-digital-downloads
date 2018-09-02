@@ -279,12 +279,7 @@ var TaxRatesTableRegion = wp.Backbone.View.extend( {
 } );
 
 /**
- * Add a new rate "form"
- *
- * A rate is managed through a "dumb" object instead of a model to avoid
- * issues with Backbone thinking the same model is being added more than once.
- *
- * @todo Try to manage this view through a proper model for easier event tracking.
+ * Add a new rate "form".
  */
 var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	// Use <tfoot>
@@ -470,6 +465,8 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 	/**
 	 * Bulk actions for selected items.
 	 *
+	 * Currently only supports changing the status.
+	 *
 	 * @param {Object} event Event.
 	 */
 	filter: function( event ) {
@@ -477,7 +474,7 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 
 		var self   = this;
 
-		// Need to access the DOM directly here because the dropdown is not tied to the button event.
+		// @hack - need to access the DOM directly here because the dropdown is not tied to the button event.
 		var status = document.getElementById( 'edd-admin-tax-rates-table-bulk-actions' );
 
 		_.each( this.collection.selected, function( cid ) {
