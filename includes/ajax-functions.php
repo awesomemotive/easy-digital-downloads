@@ -507,11 +507,11 @@ add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes'
 function edd_ajax_get_states_field() {
 
 	// Check a nonce was sent.
-	if ( ! isset( $_POST['nonce'] ) ) {
+	if ( empty( $_POST['nonce'] ) ) {
 		edd_debug_log( __( 'Missing nonce when retrieving state list. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
 	}
 
-	$nonce = isset( $_POST['nonce'] )
+	$nonce = ! empty( $_POST['nonce'] )
 		? sanitize_text_field( $_POST['nonce'] )
 		: '';
 
@@ -523,9 +523,9 @@ function edd_ajax_get_states_field() {
 	}
 
 	// Get country.
-	$country = empty( $_POST['country'] )
-		? edd_get_shop_country()
-		: sanitize_text_field( $_POST['country'] ); // Exactly matched
+	$country = ! empty( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] ) // Exactly matched
+		: edd_get_shop_country();
 
 	// Get states for country.
 	$states = edd_get_shop_states( $country );
@@ -536,10 +536,10 @@ function edd_ajax_get_states_field() {
 		$response   = EDD()->html->select( array(
 			'name'             => $field_name,
 			'id'               => $field_name,
-			'class'            => $field_name . '  edd-select',
+			'class'            => $field_name . ' edd-select',
 			'options'          => $states,
 			'chosen'           => true,
-			'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
+			'placeholder'      => __( 'Select a region', 'easy-digital-downloads' ),
 			'show_option_all'  => false,
 			'show_option_none' => false,
 		) );
@@ -898,7 +898,7 @@ add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
  * Search for download, build, and return HTML.
  *
  * This is used in the Admin for Adding items to an order.
- * 
+ *
  * @since 3.0
  */
 function edd_ajax_add_order_item() {
@@ -907,7 +907,7 @@ function edd_ajax_add_order_item() {
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		edd_die( '-1' );
 	}
-	
+
 	// Set up parameters.
 	$nonce = isset( $_POST['nonce'] )
 		? sanitize_text_field( $_POST['nonce'] )
@@ -967,7 +967,7 @@ function edd_ajax_add_order_item() {
 		if ( null === $symbol ) {
 			$symbol = edd_currency_symbol( edd_get_currency() );
 		}
-		
+
 		ob_start(); ?>
 
 		<tr data-key="0">
@@ -1028,7 +1028,7 @@ function edd_ajax_add_adjustment_to_order() {
 	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
 		edd_die( '-1' );
 	}
-	
+
 	$response = array();
 
 	$valid_types = array( 'fee', 'discount', 'credit' );
@@ -1199,7 +1199,7 @@ function edd_ajax_customer_addresses() {
 					$html .= '<option data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_attr( $value ). '</option>';
 				}
 				$html .= '</select>';
-				
+
 				$response['html'] = $html;
 			}
 		}
