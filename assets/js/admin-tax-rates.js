@@ -497,7 +497,7 @@ var TaxManager = wp.Backbone.View.extend( {
 	 * Set bind changes to collection.
 	 */
 	initialize: function() {
-		this.listenTo( this.collection, 'add', this.makeDirty );
+		this.listenTo( this.collection, 'add change', this.makeDirty );
 
 		// Clear unload confirmation when submitting parent form.
 		document.querySelector( '.edd-settings-form #submit' ).addEventListener( 'click', this.makeClean );
