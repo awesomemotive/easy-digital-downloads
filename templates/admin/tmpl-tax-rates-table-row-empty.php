@@ -12,5 +12,5 @@
 ?>
 
 <td colspan="5">
-  <?php esc_html_e( 'No rates found.', 'easy-digital-downlodas' ); ?>
+  <?php esc_html_e( 'No rates found.', 'easy-digital-downloads' ); ?>
 </td>
