@@ -50,7 +50,7 @@ var TaxRates = Backbone.Collection.extend( {
 	model: TaxRate,
 
 	/**
-	 * Initial state.
+	 * Set initial state.
 	 */
 	initialize: function() {
 		this.showAll = false;
@@ -94,8 +94,6 @@ var TaxRatesTableRow = wp.Backbone.View.extend( {
 
 	/**
 	 * Bind model to view.
-	 *
-	 * @return {undefined}
 	 */
 	initialize: function() {
 		this.listenTo( this.model, 'change', this.render );
@@ -178,9 +176,7 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 	tagName: 'tbody',
 
 	/**
-	 * Bind model to view.
-	 *
-	 * @return {undefined}
+	 * Bind events to collection.
 	 */
 	initialize: function() {
 		this.listenTo( this.collection, 'add', this.render );
@@ -297,7 +293,7 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	},
 
 	/**
-	 * Initialize.
+	 * Set initial state and bind changes to model.
 	 */
 	initialize: function() {
 		this.model = new TaxRate( {
@@ -498,6 +494,13 @@ var TaxManager = wp.Backbone.View.extend( {
 	el: '#edd-admin-tax-rates',
 
 	/**
+	 * Set bind changes to collection.
+	 */
+	initialize: function() {
+		this.listenTo( this.collection, 'add', this.makeDirty );
+	},
+
+	/**
 	 * Output the manager.
 	 */
 	render: function() {
@@ -508,6 +511,20 @@ var TaxManager = wp.Backbone.View.extend( {
 		this.views.add( new TaxRatesTable( {
 			collection: this.collection
 		} ) );
+	},
+
+	/**
+	 * Collection has changed so warn the user before exiting.
+	 */
+	makeDirty: function() {
+		$( window ).bind( 'beforeunload', this.confirmUnload );
+	},
+
+	/**
+	 * Confirm page unload.
+	 */
+	confirmUnload: function() {
+		return eddTaxRates.ays;
 	}
 } );
 
@@ -535,7 +552,9 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	} );
 
 	// Add initial rates.
-	eddTaxRatesManager.collection.set( rates );
+	eddTaxRatesManager.collection.set( rates, {
+		silent: true
+	} );
 
 	// Render manager.
 	eddTaxRatesManager.render();
