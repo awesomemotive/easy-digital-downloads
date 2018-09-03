@@ -2592,7 +2592,7 @@ function edd_tax_rates_callback( $args ) {
 ?>
 
 <script type="text/html" id="tmpl-edd-admin-tax-rates-table-<?php echo esc_attr( $tmpl ); ?>">
-	<?php edd_get_template_part( 'admin/tmpl', 'tax-rates-table-' . $tmpl ); ?>
+	<?php require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-tax-rates-table-' . $tmpl . '.php'; ?>
 </script>
 
 <?php
