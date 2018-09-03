@@ -407,7 +407,7 @@ var TaxRatesTable = wp.Backbone.View.extend( {
 	tagName: 'table',
 
 	// Set class.
-	className: 'wp-list-table widefat fixed striped tax-rates',
+	className: 'wp-list-table widefat fixed tax-rates',
 
 	// Set ID.
 	id: 'edd_tax_rates',
