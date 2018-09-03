@@ -2573,8 +2573,7 @@ function edd_tax_rates_callback( $args ) {
 
 	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
 		'rates' => $rates,
-		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
-		'ays'   => esc_js( __( 'You have unsaved tax rate changes. Are you sure you want to leave the page?', 'easy-digital-downloads' ) )
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
 	) );
 
 	$templates = array(

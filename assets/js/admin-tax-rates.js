@@ -520,21 +520,25 @@ var TaxManager = wp.Backbone.View.extend( {
 	 * Collection has changed so warn the user before exiting.
 	 */
 	makeDirty: function() {
-		$( window ).bind( 'beforeunload', this.confirmUnload );
+		window.onbeforeunload = this.confirmUnload;
 	},
 
 	/**
 	 * When submitting the main form remove the dirty check.
 	 */
 	makeClean: function() {
-		$( window ).unbind( 'beforeunload', this.confirmUnload );
+		window.onbeforeunload = null;
 	},
 
 	/**
 	 * Confirm page unload.
+	 *
+	 * @param {Object} event Close event.
 	 */
-	confirmUnload: function() {
-		return eddTaxRates.ays;
+	confirmUnload: function( event ) {
+		event.preventDefault();
+
+		return '';
 	}
 } );
 
