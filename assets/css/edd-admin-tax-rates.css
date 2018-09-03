@@ -6,6 +6,10 @@
 	width: 100% !important;
 }
 
+#edd-admin-tax-rates tbody tr:not(:last-of-type) td {
+	border-bottom: 1px solid #eee;
+}
+
 #edd-admin-tax-rates th {
 	vertical-align: middle;
 	padding: 8px;
@@ -54,6 +58,7 @@
 
 #edd-admin-tax-rates .has-inactive .edd-tax-rate-row--inactive {
 	display: table-row;
+	background-color: #fafafa;
 }
 
 #edd-admin-tax-rates .edd-tax-rate-row--inactive td {
@@ -62,6 +67,10 @@
 
 #edd-admin-tax-rates .edd-admin-tax-rates-table-hide {
 	margin-left: 1em;
+}
+
+#edd-admin-tax-rates .edd-tax-rate-table-add {
+	background-color: #f8f8f8;
 }
 
 #edd-admin-tax-rates .edd-tax-rate-table-add th {
