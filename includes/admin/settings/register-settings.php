@@ -462,12 +462,12 @@ function edd_get_registered_settings() {
 					),
 					'base_state' => array(
 						'id'          => 'base_state',
-						'name'        => __( 'Base State / Province', 'easy-digital-downloads' ),
-						'desc'        => __( 'What state / province does your store operate from?', 'easy-digital-downloads' ),
+						'name'        => __( 'Base Region', 'easy-digital-downloads' ),
+						'desc'        => __( 'What state/province/territory does your store operate from?', 'easy-digital-downloads' ),
 						'type'        => 'shop_states',
 						'class'       => empty( $states ) ? 'hidden' : '',
 						'chosen'      => true,
-						'placeholder' => __( 'Select a state', 'easy-digital-downloads' ),
+						'placeholder' => __( 'Select a region', 'easy-digital-downloads' ),
 					),
 				),
 				'currency' => array(
