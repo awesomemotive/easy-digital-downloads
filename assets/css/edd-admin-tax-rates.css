@@ -24,6 +24,10 @@
 	vertical-align: top;
 }
 
+#edd-admin-tax-rates tfoot.add-new th {
+	padding: 12px 8px 10px 8px;
+}
+
 .edd-tax-rate-table-add th select,
 .edd-tax-rate-table-add th input[type="text"],
 .edd-tax-rate-table-add th input[type="number"] {
@@ -41,11 +45,6 @@
 #edd-admin-tax-rates th.edd-tax-rates-table-rate,
 #edd-admin-tax-rates th.edd-tax-rates-table-actions {
 	width: 15%;
-}
-
-#edd-admin-tax-rates td.edd-tax-rates-table-actions,
-#edd-admin-tax-rates th.edd-tax-rates-table-actions {
-	text-align: right;
 }
 
 #edd-admin-tax-rates th.edd-tax-rates-table-checkbox input {

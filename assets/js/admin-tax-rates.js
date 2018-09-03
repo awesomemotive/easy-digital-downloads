@@ -272,6 +272,9 @@ var TaxRatesTableAdd = wp.Backbone.View.extend( {
 	// Use <tfoot>
 	tagName: 'tfoot',
 
+	// Set class.
+	className: 'add-new',
+
 	// See https://codex.wordpress.org/Javascript_Reference/wp.template
 	template: wp.template( 'edd-admin-tax-rates-table-add' ),
 
