@@ -498,6 +498,9 @@ var TaxManager = wp.Backbone.View.extend( {
 	 */
 	initialize: function() {
 		this.listenTo( this.collection, 'add', this.makeDirty );
+
+		// Clear unload confirmation when submitting parent form.
+		document.querySelector( '.edd-settings-form #submit' ).addEventListener( 'click', this.makeClean );
 	},
 
 	/**
@@ -518,6 +521,13 @@ var TaxManager = wp.Backbone.View.extend( {
 	 */
 	makeDirty: function() {
 		$( window ).bind( 'beforeunload', this.confirmUnload );
+	},
+
+	/**
+	 * When submitting the main form remove the dirty check.
+	 */
+	makeClean: function() {
+		$( window ).unbind( 'beforeunload', this.confirmUnload );
 	},
 
 	/**
