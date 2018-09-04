@@ -49,6 +49,13 @@ module.exports = function(grunt) {
 					},
 					{
 						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-tax-rates.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
 						cwd: 'templates',
 						src: ['edd.css'],
 						dest: 'templates',
@@ -94,6 +101,13 @@ module.exports = function(grunt) {
 					},
 					{
 						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-tax-rates.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
 						cwd: 'templates',
 						src: ['edd.css'],
 						dest: 'templates',
@@ -128,6 +142,13 @@ module.exports = function(grunt) {
 						expand: true,
 						cwd: 'assets/css',
 						src: ['edd-admin-datepicker-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-tax-rates-rtl.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
 					},
