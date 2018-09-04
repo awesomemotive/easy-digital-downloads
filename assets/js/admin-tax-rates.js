@@ -210,15 +210,15 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 		} );
 
 		// Immediately filter for empty state (without re-rendering)
-		this.filtered( false );
+		this.filtered( true );
 	},
 
 	/**
 	 * Show an empty state if all items are deactivated.
 	 *
-	 * @param {bool} render Whether to call the render method or not
+	 * @param {bool} skipRender Whether to skip rendering (to avoid recursion)
 	 */
-	filtered: function( render = true ) {
+	filtered: function( skipRender ) {
 		var disabledRates = this.collection.where( {
 			status: 'inactive'
 		} );
@@ -228,7 +228,7 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 			this.views.add( new TaxRatesTableEmpty() );
 
 		// Possibly re-render the view
-		} else if ( true === render ) {
+		} else if ( ! skipRender ) {
 			this.render();
 		}
 	}
